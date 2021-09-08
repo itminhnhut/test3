@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "checkJs": true,
+    "jsx": "react",
+    "paths": {
+      "*": ["src/*"],
+      "src": ["src/*"],
+      "test/*": ["test/*"],
+      "underscore": ["lodash"]
+    }
+  }
+}

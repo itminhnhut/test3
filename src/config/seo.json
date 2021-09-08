@@ -1,0 +1,26 @@
+{
+    "title": "Nami Exchange",
+    "titleTemplate": "%s",
+    "description": "Nami Exchange",
+    "openGraph": {
+        "title": "Nami Exchange",
+        "description": "Nami Exchange",
+        "type": "website",
+        "locale": "en_IE",
+        "url": "https://nami.exchange",
+        "site_name": "Nami Exchange",
+        "images": [
+            {
+                "url": "/card.png",
+                "width": 800,
+                "height": 600,
+                "alt": "Nami Exchange"
+            }
+        ]
+    },
+    "twitter": {
+        "handle": "@attlas",
+        "site": "@attlas",
+        "cardType": "summary_large_image"
+    }
+}

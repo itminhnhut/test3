@@ -1,0 +1,86 @@
+const API_PREFIX = '/api/v1/';
+export const API_LOG_OUT = '/logout';
+export const API_GET_ME = API_PREFIX + 'user/me';
+export const API_REFRESH_TOKEN = API_PREFIX + 'web/refresh_token';
+
+export const API_GET_ASSET_CONFIG = API_PREFIX + 'asset/config';
+export const API_GET_USER_WALLET = API_PREFIX + 'user/wallet';
+export const API_GET_ALL_USER_WALLET = API_PREFIX + 'user/all_wallet';
+export const API_GET_SOCKETIO_AUTH_KEY = API_PREFIX + 'user/auth-key';
+export const API_GET_EXCHANGE_CONFIG = API_PREFIX + 'exchange/config';
+
+export const API_GET_MARKET_WATCH = API_PREFIX + 'exchange/market_watch';
+export const API_GET_ORDER_BOOK = API_PREFIX + 'exchange/depth';
+export const API_GET_RECENT_TRADE = API_PREFIX + 'exchange/recent_trade';
+export const API_GET_HISTORY_TRADE = API_PREFIX + 'exchange/trade_history';
+export const API_GET_OPEN_ORDER = API_PREFIX + 'exchange/open_order';
+
+export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list';
+
+// Swap
+
+export const API_GET_SWAP_HISTORY = API_PREFIX + 'swap/history';
+
+// Coinbase
+export const API_GET_NOTIFICATIONS = API_PREFIX + 'notifications/all';
+export const API_MARK_NOTIFICATIONS_READ = API_PREFIX + 'notifications/read';
+export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
+
+export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
+export const API_METRIC_VIEW = API_PREFIX + 'metric/view';
+export const API_CATEGORY_AVATAR_LIST = API_PREFIX + 'market/watch_list_avatar';
+
+export const API_KYC_COUNTRY_LIST = API_PREFIX + 'country';
+
+export const API_KYC_STATUS = API_PREFIX + 'kyc/status';
+export const API_KYC_INFORMATION = API_PREFIX + 'kyc/information';
+export const API_KYC_BANK_INFORMATION = API_PREFIX + 'kyc/bank';
+export const API_KYC_IMAGES = API_PREFIX + 'kyc/documents';
+export const API_KYC_SUBMIT = API_PREFIX + 'kyc/submit';
+
+export const API_TRADING_HISTORY = API_PREFIX + 'transaction/history';
+export const API_TRADING_HISTORY_CATEGORY = API_PREFIX + 'transaction/category';
+export const API_TRADING_HISTORY_DETAIL = API_PREFIX + 'transaction/detail';
+
+export const API_BROKER_INCOME = API_PREFIX + 'commission/income_history';
+export const API_BROKER_USER = API_PREFIX + 'commission/users';
+export const API_BROKER_CHART_DATA = API_PREFIX + 'commission/chart_data';
+export const API_BROKER_USER_ANALYTICS = API_PREFIX + 'commission/user_analytic';
+
+export const API_PROFILE_NAME = API_PREFIX + 'user/name';
+export const API_PROFILE_PHONE = API_PREFIX + 'user/phone';
+export const API_PROFILE_PASSWORD = API_PREFIX + 'user/password';
+export const API_CHECK_PASS = API_PREFIX + 'checkpass/send';
+export const API_CHECK_PASS_AUTH = API_PREFIX + 'checkpass/authorize';
+export const API_GET_AVATAR_LIST = API_PREFIX + 'user/avatars';
+export const API_PROFILE_AVATAR = API_PREFIX + 'user/avatar';
+export const API_PROFILE_EMAIL = API_PREFIX + 'user/email';
+export const API_PROFILE_USERNAME = API_PREFIX + 'user/username';
+
+export const API_2FA_GENERATE_SECRET = API_PREFIX + 'totp/new';
+export const API_2FA_CHECK_PASS = API_PREFIX + 'totp/set';
+
+export const API_DEPOSIT_CONFIG = API_PREFIX + 'deposit/config';
+export const API_ONBOARDING_QUESTION = API_PREFIX + 'onboarding/status';
+export const API_ONBOARDING_QUESTION_SUBMIT = API_PREFIX + 'onboarding/questionnaire/answer';
+export const API_ONBOARDING_OPEN_BOX = API_PREFIX + 'promo/open_box/claim';
+export const API_ONBOARDING_PROMOTION_STATUS = API_PREFIX + 'promo/open_box/status';
+
+export const API_PROMOTION_1VIDB = API_PREFIX + 'promo/airdrop_1vidb/status';
+export const API_PROMOTION_1VIDB_CLAIM = API_PREFIX + 'promo/airdrop_1vidb/claim';
+
+export const API_USER_REFERRAL = API_PREFIX + 'user/ref_of';
+
+export const API_SIGNAL_ASSET_NOTIFICATION = API_PREFIX + 'signal/notification';
+
+export const API_WITHDRAW_ONCHAIN = API_PREFIX + 'deposit/withdraw';
+
+export const API_IEO_PROJECTS = API_PREFIX + 'ieo/projects';
+
+export const API_MEMBERSHIP_STAKE_ATS = API_PREFIX + 'membership/stake';
+export const API_MEMBERSHIP_UNSTAKE_ATS = API_PREFIX + 'membership/unstake';
+export const API_MEMBERSHIP_TRADING_HISTORY = API_PREFIX + 'membership/history';
+
+export const API_EARNING_POOLS = API_PREFIX + 'earning/pools';
+export const API_EARNING_POOL_DEPOSIT = API_PREFIX + 'earning/pool/charge';
+export const API_EARNING_POOL_WITHDRAW = API_PREFIX + 'earning/pool/withdraw';

@@ -1,0 +1,76 @@
+.btn {
+  @apply px-8 py-2.5 whitespace-nowrap text-sm font-semibold rounded-md text-black-700;
+  cursor: pointer;
+  &.btn-icon {
+    @apply p-2.5 inline-flex items-center justify-center;
+    &.icon {
+      @apply text-black-500;
+    }
+  }
+  &.btn-lg {
+    @apply py-3.5;
+  }
+}
+.btn-primary {
+  @apply bg-violet-700 hover:bg-violet-300 text-white;
+  &.btn-clean {
+    @apply bg-transparent text-violet-700
+  }
+}
+.btn-black {
+  @apply bg-black-700 text-white;
+}
+.btn-primary-reserve {
+  @apply text-violet-700 hover:bg-opacity-[0.9] bg-white;
+}
+.btn-green {
+  @apply bg-green text-white;
+}
+.btn-red {
+  @apply bg-red text-white;
+}
+.btn-secondary {
+  @apply bg-black-5 bg-opacity-80;
+}
+.button-common {
+  @apply bg-violet-700 hover:bg-violet-300 text-white font-bold rounded-md;
+}
+.btn-outline-primary-light {
+  @apply border-violet-200 border text-white
+}
+.btn-primary-light {
+  @apply bg-violet-200 hover:bg-violet-300 text-white
+}
+button:focus {
+  outline: none;
+}
+.btn-group {
+  @apply relative inline-flex align-middle border border-black-200 rounded-md;
+  &.btn-group-sm {
+    .btn {
+      @apply py-1 px-3 text-black-500 font-medium;
+    }
+  }
+  .btn:last-child {
+    @apply border-r-0
+  }
+  .btn:first-child {
+    @apply border-l-0
+  }
+  .btn {
+    border-right: 1px solid rgba(238, 242, 250);
+    @apply rounded-none;
+    //&:focus {
+    //  @apply border bg-black-200 text-black-700 rounded-md border-white;
+    //}
+    &.active {
+      @apply border bg-black-200 text-black-700 rounded-md border-white;
+      &+ .btn {
+        border-left: 1px solid rgba(238, 242, 250);
+      }
+    }
+  }
+}
+button.btn:disabled {
+  @apply bg-opacity-50 select-none cursor-not-allowed
+}

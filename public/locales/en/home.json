@@ -1,0 +1,48 @@
+{
+  "title": "Anasayfa",
+  "section_1": {
+    "title": "Nami Exchange",
+    "description": "A digital asset exchange that delivers simple </1> and personalized investment experience",
+    "button": "Register",
+    "banner": "Ra mắt phiên bản Beta của ứng dụng Nami Exchange vào ngày 20/05"
+  },
+  "section_2": {
+    "button": "Go to Markets"
+  },
+  "section_3": {
+    "title": "Optimize the experience & solve Vietnam-specific investor’s current problems when investing in cryptocurrency",
+    "description": "Trading experience optimized",
+    "feature_fast": "Quick deposit/withdrawal process",
+    "feature_fast_description": "Depositing and withdrawing digital assets is fast, convenient and completely FREE.",
+    "feature_fast_button": "Trade now",
+    "feature_ui": "Lean user Interface/User Experience",
+    "feature_ui_description": "A simple UI/UX design with only two base currencies of USDT and VNDC to minimize the fuss for first-time user",
+    "feature_ui_button": "Download App",
+    "feature_instant": "Instant customer service",
+    "feature_instant_description": "Round-the-clock customer service process that aims to handle all inquiries within five minutes",
+    "feature_instant_button": "Read more"
+  },
+  "section_4": {
+    "title": "<0>Nami</0><br />Trading Platform",
+    "description": "Simple, minimalist trading interface with real-time charts and order books.",
+    "button": "Follow markets"
+  },
+  "section_5": {
+    "title": "<0>Nami</0><br />Signals Alert",
+    "description": "Optimize performance of professional traders by semi-automating their trading process.",
+    "button": "Trade now"
+  },
+  "section_6": {
+    "title": "<0>Nami</0></1>Crypto Masterified",
+    "description": "Professional trader profile that is verified by Nami Exchange and its user community.",
+    "button": "Trade now"
+  },
+  "section_7": {
+    "title": "Bắt đầu giao dịch chỉ với vài bước",
+    "description": "Nami là sàn giao dịch tối ưu cho nhà đầu tư Việt",
+    "step_1": "Tạo tài khoản",
+    "step_2": "Xác thực tài khoản",
+    "step_3": "Bắt đầu giao dịch",
+    "button": "Tạo tài khoản"
+  }
+}

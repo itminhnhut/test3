@@ -1,0 +1,51 @@
+import { useEffect, useState } from 'react';
+import { useDebounce } from 'react-use';
+import { IconSearch } from 'src/components/common/Icons';
+
+const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handleFilterAssetsList, customWrapperStyle }) => {
+    const [debouncedValue, setDebouncedValue] = useState('');
+    const [queryFilter, setQueryFilter] = useState('');
+
+    useDebounce(
+        () => {
+            setDebouncedValue(queryFilter);
+        },
+        600,
+        [queryFilter],
+    );
+
+    useEffect(() => {
+        if (handleFilterCategoryList && typeof handleFilterCategoryList === 'function') {
+            handleFilterCategoryList(debouncedValue);
+        }
+        if (handleFilterAssetsList && typeof handleFilterAssetsList === 'function') {
+            handleFilterAssetsList(debouncedValue);
+        }
+    }, [debouncedValue]);
+
+    return (
+        <div className="form-group" style={customWrapperStyle}>
+            <div className="input-group">
+                <input
+                    type="text"
+                    placeholder={placeholder}
+                    onChange={({ currentTarget }) => setQueryFilter(currentTarget.value)}
+                    value={queryFilter}
+                    className="form-control form-control-sm"
+                    style={customStyle}
+                />
+
+                <div
+                    className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
+                >
+                    <span className="input-group-text text-black-500">
+                        <IconSearch />
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    );
+};
+
+export default SearchInput;

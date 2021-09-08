@@ -1,0 +1,23 @@
+{
+    "title": "Fee structure",
+    "trading_fee": "Normal account trading fee",
+    "trading_fee_desc": "per each matching order",
+    "trading_fee_membership": "Membership account trading fee",
+    "trading_fee_membership_desc": "per each matching order",
+    "buying_vndc": "Buying VNDC fee",
+    "buying_vndc_detail": "Free",
+    "buying_vndc_desc": "for all buying VNDC transactions",
+    "selling_vndc": "Selling VNDC fee",
+    "selling_vndc_detail": "Free",
+    "selling_vndc_desc": "3 transactions per month",
+    "deposit_withdraw_fee": "On-Chain deposit/withdraw fee",
+    "deposit_withdraw_fee_1": "All on-chain deposit to Nami Exchange will be free.",
+    "deposit_withdraw_fee_2": "All on-chain deposit to Nami Exchange will be free, Nami only collects a small gas fee on behalf of the blockchain network when user withdraw their token on-chain. This gas fee is designated according to each blockchain's smart contract and subject to volatility from time to time.",
+    "coin": "Coin",
+    "network": "Network",
+    "minWithdraw": "Minimum withdraw",
+    "depositFee": "Deposit fee",
+    "withdrawFee": "Withdraw fee",
+    "search": "Search a coin...",
+    "selling_vndc_hint": "If you exceed 3 transactions per month, the selling fee will be: 10,000 VNDC + 0.01% per transaction"
+}

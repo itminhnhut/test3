@@ -1,0 +1,35 @@
+{
+    "presets": [
+        "next/babel"
+    ],
+    "plugins": [
+        "@babel/plugin-proposal-optional-chaining",
+        [
+            "styled-components",
+            {
+                "ssr": true, "displayName": true, "preprocess": false
+            }
+        ],
+        [
+            "module-resolver",
+            {
+                "root": [
+                    "./"
+                ],
+                "alias": {
+                    "src": "./src",
+                    "public": "./public",
+                    "components": "./src/components",
+                    "pages": "./src/pages",
+                    "utils": "./src/utils",
+                    "actions": "./src/redux/actions",
+                    "reducers": "./src/redux/reducers",
+                    "config": "./src/config"
+                }
+            }
+        ]
+    ],
+    "ignore": [
+        "node_modules"
+    ]
+}

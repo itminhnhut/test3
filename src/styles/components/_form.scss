@@ -1,0 +1,80 @@
+.form-group {
+  label {
+    @apply mb-2 text-xs block
+  }
+  input {
+    @apply focus-visible:ring-0 focus-visible:outline-none
+  }
+  &:not(:last-child) {
+    @apply mb-5
+  }
+  .form-control {
+    @apply focus:ring-0 focus:border-violet block w-full text-sm border-gray-300 rounded-md text-black-700 placeholder-black-400 border px-4 py-3;
+    line-height: 1.315rem;
+    letter-spacing: -0.01em;
+    height: 44px;
+    &.form-control-sm {
+      height: 36px;
+      @apply pl-7 pr-12  py-1.5;
+    }
+    &.form-control-lg {
+    }
+    &.form-control-solid {
+      @apply bg-black-50
+    }
+    &.is-error {
+      @apply border-red
+    }
+  }
+
+  .input-group {
+    @apply relative flex flex-wrap items-stretch w-full border border-gray-300 rounded-md focus:ring-0 focus-within:border-violet-700 focus:outline-none;
+    &.is-error {
+      @apply border-red
+    }
+    .form-control {
+      width: 1%;
+      min-width: 0;
+      margin-bottom: 0;
+      @apply relative flex-grow border-0;
+    }
+    .form-control:not(:last-child) {
+    }
+    .input-group-append, .input-group-prepend {
+      display: flex;
+    }
+    .input-group-append, .input-group-prepend {
+      margin-left: -1px;
+      @apply px-3;
+      .btn {
+        @apply px-0 py-0;
+      }
+      .input-group-text {
+        line-height: 1.315rem!important;
+        @apply flex items-center text-center whitespace-nowrap text-xs;
+      }
+    }
+    .input-group-separator {
+      align-self: stretch;
+      margin-bottom: 8px;
+      margin-top: 8px;
+      width: 1px;
+      box-sizing: border-box;
+      @apply bg-black-300
+    }
+  }
+}
+
+.form-section {
+  .form-group {
+    &:not(:last-child) {
+      @apply mb-4
+    }
+  }
+  .form-section-title {
+    @apply text-sm mb-5 font-semibold
+  }
+  .form-section-subtitle {
+    @apply text-xs mb-4
+  }
+}

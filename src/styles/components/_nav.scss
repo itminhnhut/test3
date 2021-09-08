@@ -1,0 +1,19 @@
+.navbar {
+  .navbar-item {
+    @apply text-sm leading-6 font-semibold text-black-700 hover:text-gray-500;
+    letter-spacing: -0.01em;
+    &.active {
+      @apply text-violet-700;
+    }
+
+  }
+  .navbar-item-link {
+    @apply py-4 px-6 flex items-start hover:bg-black-5;
+    &.disabled {
+      > * {
+        @apply text-black-400 hover:text-black-400 cursor-not-allowed;
+      }
+    }
+  }
+}
+

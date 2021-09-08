@@ -1,0 +1,28 @@
+@import "pages/home";
+@import "pages/spot";
+@import "pages/wallet";
+@import "pages/referral";
+@import "pages/beta";
+@import "pages/convert";
+@import "pages/my";
+@import "pages/blog";
+@import "pages/trading-history.scss";
+@import "pages/brokers.scss";
+@import "pages/signals.scss";
+@import "pages/campaign.scss";
+@import "pages/earning.scss";
+
+
+@import "components/button";
+@import "components/nav";
+@import "components/tabs";
+@import "components/form";
+@import "components/orderbook";
+@import "components/cards";
+@import "components/labels";
+@import "components/input_slider";
+@import "components/pagination";
+@import "components/loader";
+@import "components/onboarding";
+
+@import "helpers/custom";

@@ -1,0 +1,47 @@
+{
+  "section_1": {
+    "title": "Nami Exchange",
+    "description": "Giao dịch tài sản số an toàn, tiện lợi </1> và nhanh chóng.",
+    "button": "Đăng ký ngay",
+    "banner": "Ra mắt phiên bản Beta của ứng dụng Nami Exchange vào ngày 20/05"
+  },
+  "section_2": {
+    "button": "Đi đến Thị trường"
+  },
+  "section_3": {
+    "title": "Mua bán tài sản số thật đơn giản với Nami Exchange",
+    "description": "Tối ưu hoá trải nghiệm giao dịch",
+    "feature_fast": "Nạp rút nhanh chóng",
+    "feature_fast_description": "Nạp rút tài sản số nhanh chóng, thuận tiện và hoàn toàn MIỄN PHÍ.",
+    "feature_fast_button": "Giao dịch ngay",
+    "feature_ui": "Giao diện tinh gọn",
+    "feature_ui_description": "Giao diện tối giản, thân thiện với người dùng mới và cả các chuyên gia tiền kỹ thuật số.",
+    "feature_ui_button": "Tải ứng dụng",
+    "feature_instant": "Dịch vụ tức thì",
+    "feature_instant_description": "Đội ngũ chuyên viên của Nami Exchange luôn sẵn sàng hỗ trợ bạn trong thời gian ngắn nhất.",
+    "feature_instant_button": "Xem thêm"
+  },
+  "section_4": {
+    "title": "<0>Nami</0><br />Trading Platform",
+    "description": "Giao diện trực quan với bảng gía cập nhật thời gian thực, cùng với các công cụ biểu đồ và quy trình đặt lệnh đơn giản để khách hàng có thể giao dịch ngay từ lần trải nghiệm đầu tiên",
+    "button": "Theo dõi thị trường"
+  },
+  "section_5": {
+    "title": "<0>Nami</0><br />Signals Alert",
+    "description": "Tối ưu hoá lợi nhuận của các nhà giao dịch crypto chuyên nghiệp và tiết kiệm thời gian/công sức bằng cách tự động hoá một phần quá trình ra quyết định giao dịch của họ.",
+    "button": "Bắt đầu giao dịch"
+  },
+  "section_6": {
+    "title": "<0>Nami</0><br />Crypto Masterified",
+    "description": "Các chuyên gia tư vấn đầu tư có thể xây dựng hồ sơ chuyên nghiệp và được kiểm chứng bởi đội ngũ Nami. Có thể chia sẻ các Portfolio và Signals cho các Followers.",
+    "button": "Bắt đầu giao dịch"
+  },
+  "section_7": {
+    "title": "Bắt đầu giao dịch chỉ với vài bước",
+    "description": "Nami là sàn giao dịch tối ưu cho nhà đầu tư Việt",
+    "step_1": "Tạo tài khoản",
+    "step_2": "Xác thực tài khoản",
+    "step_3": "Bắt đầu giao dịch",
+    "button": "Tạo tài khoản"
+  }
+}

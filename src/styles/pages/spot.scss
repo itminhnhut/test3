@@ -1,0 +1,60 @@
+// This file is used for structure only
+
+.spot-symbol-list {
+    &__container {
+        height: 60rem;
+    }
+
+    &__table {
+        height: 52rem;
+    }
+}
+
+.spot-chart {}
+
+.spot-symbol-detail {
+    @apply h-20;
+}
+
+.spot-chart {}
+
+.spot-order-book {
+    height: 60rem;
+}
+
+.spot-place-orders-container {
+    box-shadow: -2px 12px 24px rgba(7, 12, 61, 0.08);
+    .spot-place-orders-tabs {
+        @apply flex items-center;
+        .spot-place-orders-tab {
+            @apply w-1/2 text-center h-8 flex items-center justify-center;
+            cursor: pointer;
+            @apply bg-black-200 text-black-600 text-sm font-semibold;
+            transition: all 0.3s;
+            &.block--left {
+                flex: 1;
+                padding: 0;
+                margin-right: -2rem;
+                clip-path: polygon(0 0, 100% 0, calc(100% - 1rem) 100%, 0% 100%);
+                &.active {
+                    @apply bg-green text-white;
+                }
+            }
+            &.block--right {
+                flex: 1;
+                padding: 0;
+                margin-left: 1rem;
+                clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0% 100%);
+                &.active {
+                    @apply bg-red text-white;
+                }
+            }
+        }
+    }
+}
+.leading-table {
+    line-height: 1.125rem;
+}
+.max-w-400 {
+    max-width: 400px;
+}

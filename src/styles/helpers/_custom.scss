@@ -1,0 +1,26 @@
+
+//Custom Scrollbar
+//@mixin customScrollbar() {
+//  &:not(.emoji-mart)::-webkit-scrollbar {
+//    height: 0.375rem;
+//    width: 0.375rem;
+//  }
+//  /* Track */
+//  &:not(.emoji-mart)::-webkit-scrollbar-track {
+//    //background: $color-table;
+//  }
+//  /* Handle */
+//  &:not(.emoji-mart)::-webkit-scrollbar-thumb {
+//    @apply bg-black-300;
+//    @apply rounded;
+//  }
+//  /* Handle on hover */
+//  &:not(.emoji-mart)::-webkit-scrollbar-thumb:hover {
+//    @apply bg-violet-400;
+//    @apply rounded;
+//  }
+//};
+//
+//*{
+//  @include customScrollbar
+//}

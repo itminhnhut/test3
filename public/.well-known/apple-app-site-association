@@ -1,0 +1,38 @@
+{
+    "applinks": {
+        "details": [
+            {
+                "appIDs": [
+                    "LXD5NS4W8W.io.attlas"
+                ],
+                "components": [
+                    {
+                        "/": "/spot/*",
+                        "comment": "Spot trading"
+                    },
+                    {
+                        "/": "/swap/*",
+                        "comment": "Swap"
+                    },
+                    {
+                        "/": "/membership",
+                        "comment": "Nami Membership"
+                    },
+                    {
+                        "/": "/earning/*",
+                        "comment": "Nami Earning"
+                    },
+                    {
+                        "/": "/starter/*",
+                        "comment": "Nami Starter"
+                    }
+                ]
+            }
+        ]
+    },
+    "webcredentials": {
+        "apps": [
+            "LXD5NS4W8W.io.attlas"
+        ]
+    }
+}

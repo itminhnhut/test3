@@ -1,0 +1,23 @@
+.bg-home-section4 {
+  // background-image: url("https://attlas-cdn.sgp1.cdn.digitaloceanspaces.com/attlas.io/public/images/bg/home-section4.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  @apply bg-violet-700
+}
+
+.steps-number {
+  font-size: 90px;
+  line-height: 108.92px;
+  letter-spacing: -0.01em;
+  margin-bottom: 9px;
+  @apply text-violet-700 font-black;
+}
+
+.footer-divider {
+  background: #EEEEEE;
+  height: 1px;
+}
+.bg-section2 {
+  background: linear-gradient(#F7F6FD 50%, #ffffff 50%)
+}
