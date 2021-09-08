@@ -12,6 +12,7 @@ const Head = () => {
             {/* <DefaultSeo {...config} /> */}
             <NextHead>
                 <title data-shuvi-head="true">Nami Exchange | Sàn giao dịch Spot và Futures an toàn</title>
+                <meta name="description" content="Nami - Nơi giao dịch tiền điện tử cho người dùng cần sự đơn giản, nhanh chóng, đòn bẩy cao (lên tới x100), phí thấp, ổn định." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="manifest" href="/site.webmanifest" key="site-manifest" />
                 {
