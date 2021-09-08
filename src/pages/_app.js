@@ -1,26 +1,24 @@
 /* eslint-disable no-alert, no-console */
 
-import { Provider } from 'react-redux';
-import { appWithTranslation } from 'next-i18next';
-import { useStore } from 'src/redux/store';
-import 'public/css/font.css';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import AuthStorage from 'src/utils/auth-storage';
-import initPublicSocket from 'src/redux/actions/publicSocket';
-import { useEffect } from 'react';
-import Head from 'components/common/Head';
-import { getAllWallet, getMe, setQuoteAsset } from 'actions/user';
-import { getAssetConfig, getExchangeConfig } from 'actions/market';
-import initUserSocket from 'actions/userSocket';
 import * as types from 'actions/types';
-
-import NProgress from 'nprogress';
+import { getAllWallet, getMe } from 'actions/user';
+import initUserSocket from 'actions/userSocket';
+import Head from 'components/common/Head';
+import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import NProgress from 'nprogress';
+import 'public/css/font.css';
+import { useEffect } from 'react';
+import { Provider } from 'react-redux';
 import { useAsync } from 'react-use';
-import * as ga from 'src/utils/ga';
+import Tracking from 'src/components/common/Tracking';
+import initPublicSocket from 'src/redux/actions/publicSocket';
+import { useStore } from 'src/redux/store';
 // import * as fpixel from 'src/utils/fpixel';
 import 'src/styles/app.scss';
-import Tracking from 'src/components/common/Tracking';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import AuthStorage from 'src/utils/auth-storage';
+import * as ga from 'src/utils/ga';
 
 export function reportWebVitals(metric) {
     switch (metric.name) {
@@ -77,14 +75,8 @@ const App = ({ Component, pageProps }) => {
 
     // Khởi tạo access token
     useAsync(async () => {
-        if (AuthStorage.accessToken) {
-            await store.dispatch(getMe());
-            lastToken = AuthStorage.accessToken;
-            store.dispatch({
-                type: types.SET_ACCESS_TOKEN,
-                payload: AuthStorage.accessToken,
-            });
-        }
+        console.log('__ check get me');
+        await store.dispatch(getMe());
         store.dispatch({
             type: types.SET_LOADING_USER,
             payload: false,
@@ -94,18 +86,23 @@ const App = ({ Component, pageProps }) => {
     useEffect(() => {
         if (!initConfig && !ignoreConfigUrls.includes(router.pathname)) {
             console.log('Init all configs');
-            // Init asset config
-            const lsQuoteAsset = localStorage.getItem('wallet:quote_asset');
-            store.dispatch(setQuoteAsset(['USDT', 'VNDC'].includes(lsQuoteAsset) ? lsQuoteAsset : 'USDT'));
-
             store.dispatch(initPublicSocket());
             // Get config
-            store.dispatch(getAssetConfig());
-            store.dispatch(getExchangeConfig());
+            // store.dispatch(getAssetConfig());
+            // store.dispatch(getExchangeConfig());
             initConfig = true;
             // Get common data
         }
     }, []);
+
+    // store.subscribe(watch(Store.getState, 'User.user')((newVal, oldVal) => {
+    //     authSocialSocket();
+
+    //     // if (newVal) {
+    //     //     this.props.getUserBalance();
+    //     //     this.props.getUserFuturesBalance();
+    //     // }
+    // }));
 
     store.subscribe(() => {
         if (!ignoreAuthUrls.includes(router.pathname)) {
@@ -134,7 +131,6 @@ const App = ({ Component, pageProps }) => {
     return (
         <>
             <Head />
-
             <Provider store={store}>
                 <Tracking>
                     <Component {...pageProps} />

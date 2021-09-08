@@ -6,6 +6,7 @@ const path = require('path');
 
 const {
     NEXT_PUBLIC_SENTRY_DSN: SENTRY_DSN,
+    NEXT_PUBLIC_API_URL,
     SENTRY_ORG,
     SENTRY_PROJECT,
     SENTRY_AUTH_TOKEN,
@@ -29,10 +30,6 @@ module.exports = withPlugins([
     [withFonts],
 ],
 {
-    // productionBrowserSourceMaps: NODE_ENV === 'production',
-    // generateBuildId: async () => {
-    //     return BUILD_NUMBER;
-    // },
     async headers() {
         return [
             {
@@ -51,6 +48,16 @@ module.exports = withPlugins([
         // your project has ESLint errors.
         ignoreDuringBuilds: true,
     },
+    // async rewrites() {
+    //     return {
+    //         fallback: [
+    //             {
+    //                 source: '/authenticated/:id*',
+    //                 destination: `${NEXT_PUBLIC_API_URL}/authenticated/:id.*`,
+    //             },
+    //         ],
+    //     };
+    // },
     env: {
         // Make the COMMIT_SHA available to the client so that Sentry events can be
         // marked for the release they belong to. It may be undefined if running

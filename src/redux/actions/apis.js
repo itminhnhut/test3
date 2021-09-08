@@ -1,4 +1,7 @@
 const API_PREFIX = '/api/v1/';
+export const API_REGISTER = API_PREFIX + 'user/register';
+export const API_LOGIN = API_PREFIX + 'user/login';
+export const API_LOGIN_SSO = '/login/nami';
 export const API_LOG_OUT = '/logout';
 export const API_GET_ME = API_PREFIX + 'user/me';
 export const API_REFRESH_TOKEN = API_PREFIX + 'web/refresh_token';

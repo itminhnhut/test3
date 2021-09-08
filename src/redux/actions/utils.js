@@ -51,8 +51,8 @@ export function getLoginUrl(mode, action = 'login', options = {}) {
             mobile_web: false,
         });
 
-        const referral = sessionStorage && sessionStorage.getItem('REF_CODE')
-            ? sessionStorage.getItem('REF_CODE')
+        const referral = sessionStorage && sessionStorage.getItem('refCode')
+            ? sessionStorage.getItem('refCode')
             : _options.referral;
 
         params = {
@@ -67,7 +67,7 @@ export function getLoginUrl(mode, action = 'login', options = {}) {
             if (action === 'register') {
                 return `${process.env.NEXT_PUBLIC_API_URL}/register?${qs.stringify(params)}`;
             }
-            return `${process.env.NEXT_PUBLIC_API_URL}/login?${qs.stringify(params)}`;
+            return `${process.env.NEXT_PUBLIC_API_URL}/login/nami?${qs.stringify(params)}`;
 
         default:
             break;

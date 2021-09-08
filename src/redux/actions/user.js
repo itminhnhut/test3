@@ -68,34 +68,28 @@ export function refreshToken() {
         }
     };
 }
-
 export function getMe() {
     return async dispatch => {
         try {
-            const res = await fetchAPI({
+            console.log('__ check api', API_GET_ME);
+            const { status, data } = await fetchAPI({
                 url: API_GET_ME,
                 options: {
                     method: 'GET',
                 },
             });
-            const { status, data, code } = res;
-            if (status === ApiStatus.SUCCESS) {
+            console.log('__ check data 111', data);
+            if (status === 'ok') {
                 dispatch({
-                    type: types.SET_USER,
+                    type: SET_USER,
                     payload: data,
                 });
-            } else if (code === ApiError.UNAUTHORIZED.code) {
-                dispatch(refreshToken());
             }
         } catch (e) {
+            console.log('__ get me error', e);
             dispatch({
-                type: types.SET_USER,
+                type: SET_USER,
                 payload: null,
-            });
-        } finally {
-            dispatch({
-                type: types.SET_LOADING_USER,
-                payload: false,
             });
         }
     };
