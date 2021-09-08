@@ -1,6 +1,6 @@
 module.exports = {
     apps: [{
-        name: 'attlas-exchange-web',
+        name: 'nami-exchange-web-v2',
         script: 'yarn',
         args: 'start',
         interpreter: '/bin/bash',
