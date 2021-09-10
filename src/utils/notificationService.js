@@ -7,7 +7,7 @@ import 'animate.css/animate.min.css';
 const NotificationContent = (props) => {
     const { type, title, message } = props;
     return (
-        <div className="flex items-center py-3 px-5 bg-white rounded-md notification-shadow w-full">
+        <div className="flex items-center py-3 px-5 bg-white rounded notification-shadow w-full">
             <div className="mr-3">
                 <Image src={`/images/icons/icon-${type}.svg`} width={32} height={32} />
             </div>

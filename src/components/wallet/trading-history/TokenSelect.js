@@ -48,7 +48,7 @@ const TokenSelect = ({ baseAssetList, data, onChange, initValue }) => {
                 <React.Fragment key={index}>
                     <Listbox.Option
                         value={asset}
-                        className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#4021D0] hover:text-white rounded-md flex flex-row items-center"
+                        className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#4021D0] hover:text-white rounded flex flex-row items-center"
                     >
                         <AssetLogo assetCode={asset?.assetCode} assetId={asset?.id} /> <span className="ml-2">{asset.assetCode}</span>
                     </Listbox.Option>
@@ -60,7 +60,7 @@ const TokenSelect = ({ baseAssetList, data, onChange, initValue }) => {
                 <React.Fragment key={index}>
                     <Listbox.Option
                         value={asset}
-                        className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#4021D0] hover:text-white rounded-md flex flex-row items-center"
+                        className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#4021D0] hover:text-white rounded flex flex-row items-center"
                     >
                         <AssetLogo assetCode={asset?.assetCode} assetId={asset?.id} /> <span className="ml-2">{asset.assetCode}</span>
                     </Listbox.Option>
@@ -75,7 +75,7 @@ const TokenSelect = ({ baseAssetList, data, onChange, initValue }) => {
             as="div"
             value={selectedAsset}
             onChange={asset => handleSelectAsset(asset)}
-            className="bg-white px-4 py-[10px] border border-[#E1E2ED] box-border rounded-md md:w-[290px] focus:outline-none relative flex flex-row items-center"
+            className="bg-white px-4 py-[10px] border border-[#E1E2ED] box-border rounded md:w-[290px] focus:outline-none relative flex flex-row items-center"
         >
             <Listbox.Button
                 className="w-full text-left text-[#02083D] text-sm"
@@ -97,7 +97,7 @@ const TokenSelect = ({ baseAssetList, data, onChange, initValue }) => {
                 leaveTo="opacity-0"
             >
                 <Listbox.Options
-                    className="absolute top-14 left-0 w-full bg-white z-10 rounded-md cursor-pointer focus:outline-none"
+                    className="absolute top-14 left-0 w-full bg-white z-10 rounded cursor-pointer focus:outline-none"
                     style={{ boxShadow: '0px 12px 24px rgba(7, 12, 61, 0.06)' }}
                 >
                     <SearchInput
@@ -110,7 +110,7 @@ const TokenSelect = ({ baseAssetList, data, onChange, initValue }) => {
                         <Listbox.Option
                             key="all"
                             value={null}
-                            className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#4021D0] hover:text-white rounded-md"
+                            className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#4021D0] hover:text-white rounded"
                         >
                             <p className="h-8 pl-10 flex flex-row items-center">- {t('filter_all')} -</p>
                         </Listbox.Option>

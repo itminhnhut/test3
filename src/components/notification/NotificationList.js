@@ -164,7 +164,7 @@ const NotificationList = (props) => {
                     ref={popoverDropdownRef}
                     className={
                         (dropdownPopoverShow ? 'block ' : 'hidden ')
-                        + 'absolute z-10 transform w-screen max-w-[385px] rounded-md border border-black-200 right-0 bg-white shadow-lg text-sm'
+                        + 'absolute z-10 transform w-screen max-w-[385px] rounded border border-black-200 right-0 bg-white shadow-lg text-sm'
                     }
                 >
                     <div className="">
@@ -185,13 +185,13 @@ const NotificationList = (props) => {
                                             <>
                                                 {
                                                     notificationLoading ?
-                                                        <span className="ml-3 text-black-700 hover:text-violet-700 cursor-pointer">
+                                                        <span className="ml-3 text-black-700 hover:text-teal-700 cursor-pointer">
                                                             {t('loading')}
                                                         </span>
                                                         : (
                                                             <span
                                                                 onClick={loadMoreNotification}
-                                                                className="ml-3 text-black-700 hover:text-violet-700 cursor-pointer"
+                                                                className="ml-3 text-black-700 hover:text-teal-700 cursor-pointer"
                                                             >
                                                                 {t('load_more')}
                                                             </span>
@@ -201,7 +201,7 @@ const NotificationList = (props) => {
                                         )
                                         :
                                         (
-                                            <span className="ml-3 text-black-700 hover:text-violet-700 cursor-pointer">
+                                            <span className="ml-3 text-black-700 hover:text-teal-700 cursor-pointer">
                                                 {t('navbar:read_all_noti')}
                                             </span>
                                         )

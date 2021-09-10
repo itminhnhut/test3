@@ -526,7 +526,7 @@ export const IconTrash = () => (
 );
 
 export const IconLoading = ({ color }) => (
-    <svg className={`animate-spin h-5 w-5 ${color ? `text-[${color}]` : 'text-violet-600'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <svg className={`animate-spin h-5 w-5 ${color ? `text-[${color}]` : 'text-teal-600'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
     </svg>
@@ -701,11 +701,11 @@ export const IconFutures = () => (
 );
 
 export const IconTooltip = ({ isReverse, color }) => (
-    <svg className={`absolute ${color ? `text-[${color}]` : 'text-violet-100'} h-2 ${isReverse ? 'right-0 mr-3 -top-2 transform rotate-180' : 'left-0 ml-3 top-full'}`} x="0px" y="0px" viewBox="0 0 255 255" xmlSpace="preserve"><polygon className="fill-current" points="0,0 127.5,127.5 255,0" /></svg>
+    <svg className={`absolute ${color ? `text-[${color}]` : 'text-teal-100'} h-2 ${isReverse ? 'right-0 mr-3 -top-2 transform rotate-180' : 'left-0 ml-3 top-full'}`} x="0px" y="0px" viewBox="0 0 255 255" xmlSpace="preserve"><polygon className="fill-current" points="0,0 127.5,127.5 255,0" /></svg>
 );
 
 export const IconTooltipMiddle = ({ isReverse, color }) => (
-    <svg className={`mx-auto 'text-violet-100' h-2 ${isReverse ? 'transform rotate-180' : 'top-full'}`} style={color ? { color } : null} x="0px" y="0px" viewBox="0 0 255 255" xmlSpace="preserve"><polygon className="fill-current" points="0,0 127.5,127.5 255,0" /></svg>
+    <svg className={`mx-auto 'text-teal-100' h-2 ${isReverse ? 'transform rotate-180' : 'top-full'}`} style={color ? { color } : null} x="0px" y="0px" viewBox="0 0 255 255" xmlSpace="preserve"><polygon className="fill-current" points="0,0 127.5,127.5 255,0" /></svg>
 );
 
 export const IconPaymentMethod = ({ size = 22 }) => (

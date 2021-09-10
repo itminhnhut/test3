@@ -21,6 +21,7 @@ import { ApiStatus } from 'actions/const';
 import * as Error from 'actions/apiError';
 import AssetLogo from 'components/wallet/AssetLogo';
 import SwapOrderList from 'components/trade/SwapOrderList';
+import Footer from 'components/common/Footer';
 import { iconColor } from '../config/colors';
 import showNotification from '../utils/notificationService';
 import fetchAPI from '../utils/fetch-api';
@@ -380,11 +381,11 @@ const Swap = () => {
     return (
         <LayoutWithHeader>
             <div className="flex flex-col flex-grow">
-                <div className="convert-header py-[3.75rem]">
-                    <div className="text-4xl text-white">
+                <div className="py-[3.75rem] text-center">
+                    <div className="text-4xl text-teal ">
                         {t('navbar:submenu.convert')}
                     </div>
-                    <div className="text-lg text-black-400">
+                    <div className="text-lg text-teal-400">
                         {t('navbar:submenu.convert_description')}
                     </div>
                 </div>
@@ -445,7 +446,7 @@ const Swap = () => {
 
                                     <div className="input-group-append">
                                         <button className="btn" type="button" onClick={setMaximumQty}>
-                                            <span className="input-group-text text-violet-700 font-semibold">
+                                            <span className="input-group-text text-teal-700 font-semibold">
                                                 {t('convert:max')}
                                             </span>
                                         </button>
@@ -549,9 +550,6 @@ const Swap = () => {
 
                             </div>
                         </div>
-                    </div>
-                    <div className="card bg-white rounded-3xl mt-10 lg:w-[1024px] mx-auto">
-                        <SwapOrderList successOrder={successOrder} />
                     </div>
                 </div>
 
@@ -671,6 +669,7 @@ const Swap = () => {
                     </Dialog>
                 </Transition>
             </div>
+            <Footer />
         </LayoutWithHeader>
     );
 };

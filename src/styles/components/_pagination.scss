@@ -20,13 +20,13 @@ ul.pagination {
     &.active {
       @apply bg-black-5;
       .page-link {
-        @apply text-violet
+        @apply text-teal
       }
     }
     .page-link {
       width: 40px;
       height: 40px;
-      @apply text-sm group-hover:text-violet inline-flex justify-center items-center
+      @apply text-sm group-hover:text-teal inline-flex justify-center items-center
     }
   }
   .break-me {

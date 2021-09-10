@@ -234,7 +234,7 @@ const GoogleAuthModal = ({
                                         <div className="relative flex flex-row items-center ">
                                             <input
                                                 type="text"
-                                                className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-24 text-[#02083D] text-sm"
+                                                className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-24 text-[#02083D] text-sm"
                                                 onChange={e => setAuthCodeEmail(e.target.value)}
                                                 value={authCodeEmail}
                                                 placeholder={t('profile:enter_verification_code')}
@@ -267,7 +267,7 @@ const GoogleAuthModal = ({
                                         <div className="relative flex flex-row items-center ">
                                             <input
                                                 type="text"
-                                                className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
+                                                className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
                                                 onChange={e => setAuthCodePhone(e.target.value)}
                                                 value={authCodePhone}
                                                 placeholder={t('profile:enter_verification_code')}
@@ -299,7 +299,7 @@ const GoogleAuthModal = ({
                                     <div className="relative flex flex-row items-center ">
                                         <input
                                             type="text"
-                                            className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
+                                            className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
                                             onChange={e => setAuthCodeGoogle(e.target.value)}
                                             value={authCodeGoogle}
                                             placeholder={t('profile:enter_verification_code')}
@@ -316,7 +316,7 @@ const GoogleAuthModal = ({
                         type="submit"
                         disabled={isVerifying}
                         onClick={handleSubmit}
-                        className={`${isVerifying ? 'cursor-not-allowed' : 'cursor-pointer'} mt-[102px] bg-[rgba(64,33,208,1)] w-full px-[36px] py-[11px] rounded-md text-white font-bold text-sm flex flex-row items-center justify-center`}
+                        className={`${isVerifying ? 'cursor-not-allowed' : 'cursor-pointer'} mt-[102px] bg-[rgba(64,33,208,1)] w-full px-[36px] py-[11px] rounded text-white font-bold text-sm flex flex-row items-center justify-center`}
                     >
                         { isVerifying && <IconLoading color="#FFFFFF" />} <span className="ml-2">{t('common:verify')}</span>
                     </button>
@@ -341,7 +341,7 @@ const GoogleAuthModal = ({
                                         <div className="relative flex flex-row items-center ">
                                             <input
                                                 type="text"
-                                                className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
+                                                className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
                                                 onChange={e => setValidateAuthCodeGoogle(e.target.value)}
                                                 value={validateAuthCodeGoogle}
                                                 placeholder={t('profile:enter_verification_code')}
@@ -360,7 +360,7 @@ const GoogleAuthModal = ({
                                         <div className="relative flex flex-row items-center ">
                                             <input
                                                 type="text"
-                                                className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-24 text-[#02083D] text-sm"
+                                                className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-24 text-[#02083D] text-sm"
                                                 onChange={e => setAuthCodeEmail(e.target.value)}
                                                 value={authCodeEmail}
                                                 placeholder={t('profile:enter_verification_code')}
@@ -393,7 +393,7 @@ const GoogleAuthModal = ({
                                         <div className="relative flex flex-row items-center ">
                                             <input
                                                 type="text"
-                                                className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
+                                                className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
                                                 onChange={e => setAuthCodePhone(e.target.value)}
                                                 value={authCodePhone}
                                                 placeholder={t('profile:enter_verification_code')}
@@ -438,7 +438,7 @@ const GoogleAuthModal = ({
                         type="submit"
                         disabled={isVerifying}
                         onClick={handleSubmit}
-                        className={`${isVerifying ? 'cursor-not-allowed' : 'cursor-pointer'} bg-[rgba(64,33,208,1)] w-full px-[36px] py-[11px] rounded-md text-white font-bold text-sm flex flex-row items-center justify-center`}
+                        className={`${isVerifying ? 'cursor-not-allowed' : 'cursor-pointer'} bg-[rgba(64,33,208,1)] w-full px-[36px] py-[11px] rounded text-white font-bold text-sm flex flex-row items-center justify-center`}
                     >
                         { isVerifying && <IconLoading color="#FFFFFF" />} <span className="ml-2">{t('common:verify')}</span>
                     </button>
@@ -460,7 +460,7 @@ const GoogleAuthModal = ({
                         <button
                             type="button"
                             onClick={() => setStep(step + 1)}
-                            className="w-full rounded-md bg-[#4021D0] px-[36px] py-[11px] font-bold text-sm text-white"
+                            className="w-full rounded bg-[#4021D0] px-[36px] py-[11px] font-bold text-sm text-white"
                         >{t('profile:google_auth_landing_btn')}
                         </button>
                     </>
@@ -492,7 +492,7 @@ const GoogleAuthModal = ({
                         <div className="relative flex flex-row items-center mt-6 mb-4">
                             <input
                                 type="text"
-                                className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
+                                className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
                                 // onChange={e => setAuthCodeGoogle(e.target.value)}
                                 disabled
                                 value={authCodeGoogle}
@@ -504,7 +504,7 @@ const GoogleAuthModal = ({
                         <button
                             type="button"
                             onClick={() => { setStep(step + 1); setIsCopied(false); }}
-                            className="w-full rounded-md bg-[#4021D0] px-[36px] py-[11px] font-bold text-sm text-white"
+                            className="w-full rounded bg-[#4021D0] px-[36px] py-[11px] font-bold text-sm text-white"
                         >{t('common:continue')}
                         </button>
                     </div>
@@ -523,7 +523,7 @@ const GoogleAuthModal = ({
                         <div className="relative flex flex-row items-center mt-6 mb-4">
                             <input
                                 type="text"
-                                className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
+                                className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-20 text-[#02083D] text-sm truncate"
                                 value={authCodeGoogle}
                                 disabled
                             />
@@ -534,7 +534,7 @@ const GoogleAuthModal = ({
                         <button
                             type="button"
                             onClick={() => { setStep(step + 1); setIsCopied(false); }}
-                            className="w-full rounded-md bg-[#4021D0] mt-[226px] px-[36px] py-[11px] font-bold text-sm text-white"
+                            className="w-full rounded bg-[#4021D0] mt-[226px] px-[36px] py-[11px] font-bold text-sm text-white"
                         >{t('common:continue')}
                         </button>
                     </div>

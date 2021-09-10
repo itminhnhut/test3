@@ -36,12 +36,12 @@ const Select = ({ options = [], onChange, loading, error }) => {
                         >
                             <Listbox.Options
                                 static
-                                className="absolute w-full mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10"
+                                className="absolute w-full mt-1 overflow-auto text-base bg-white rounded shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10"
                             >
                                 {options.map((option, index) => (
                                     <Listbox.Option
                                         key={index}
-                                        className={({ active }) => `${active ? 'text-white bg-violet-700' : ''} cursor-pointer select-none relative px-4 py-3 rounded-lg`}
+                                        className={({ active }) => `${active ? 'text-white bg-teal-700' : ''} cursor-pointer select-none relative px-4 py-3 rounded-lg`}
                                         value={option}
                                     >
                                         {({
@@ -55,7 +55,7 @@ const Select = ({ options = [], onChange, loading, error }) => {
                                                     {option.label}
                                                 </span>
                                                 {selected ? (<span
-                                                    className={`${active ? 'text-violet-600' : 'text-white'} absolute inset-y-0 left-0 flex items-center pl-3`}
+                                                    className={`${active ? 'text-teal-600' : 'text-white'} absolute inset-y-0 left-0 flex items-center pl-3`}
                                                 />) : null}
                                             </>
                                         )}

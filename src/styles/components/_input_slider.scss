@@ -36,7 +36,7 @@
 .input-range__slider {
   z-index: 12;
   appearance: none;
-  @apply bg-violet border border-white shadow;
+  @apply bg-teal border border-white shadow;
   border-width: 3px;
   border-radius: 100%;
   cursor: pointer;
@@ -115,7 +115,7 @@
   top: 50%; }
 
 .input-range__track--active {
-  @apply bg-violet
+  @apply bg-teal
 }
 
 .input-range {

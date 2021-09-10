@@ -744,8 +744,8 @@ const PlaceOrderForm = ({ symbol }) => {
                                         <Listbox.Option
                                             key={mode.id}
                                             className={({ selected, active }) => classNames(
-                                                selected ? 'text-violet font-medium' : 'text-black-600',
-                                                'text-sm  cursor-pointer hover:text-violet py-1 text-center hover:bg-gray-100 px-4',
+                                                selected ? 'text-teal font-medium' : 'text-black-600',
+                                                'text-sm  cursor-pointer hover:text-teal py-1 text-center hover:bg-gray-100 px-4',
                                             )}
                                             value={mode}
                                         >
@@ -1086,7 +1086,7 @@ const PlaceOrderForm = ({ symbol }) => {
                                             <span className="text-black-500">{quote}</span>
                                         </div>
                                     </div>
-                                    {/* <div className="rounded-md border bg-black-100 px-3 py-4 text-xs text-black-500"> */}
+                                    {/* <div className="rounded border bg-black-100 px-3 py-4 text-xs text-black-500"> */}
                                     {/*    <Trans i18nKey="alert_stop_limit" t={t}> */}
                                     {/*        Nếu giá gần nhất lớn hơn hoặc bằng <span className="font-semibold text-black-700">{{ stop: '12,245,235,111 VNDC' }}</span>, một lệnh mua mua <span className="font-semibold text-black-700">{{ amount: '0,01 BTC' }}</span> ở mức giá <span className="font-semibold text-black-700">{{ price: '12,600,000,000 VNDC' }}</span> sẽ được đặt tự động. */}
                                     {/*    </Trans> */}
@@ -1100,7 +1100,7 @@ const PlaceOrderForm = ({ symbol }) => {
                                                         defaultChecked={needConfirm !== 'true'}
                                                         onChange={(event) => setNeedConfirm(event?.target?.checked ? 'false' : 'true')}
                                                         type="checkbox"
-                                                        className="form-checkbox h-3 w-3 text-violet-700 ring-0 focus:ring-0 outline-none focus:outline-none border-black-400 rounded-sm"
+                                                        className="form-checkbox h-3 w-3 text-teal-700 ring-0 focus:ring-0 outline-none focus:outline-none border-black-400 rounded-sm"
                                                     />
                                                     <span className="ml-2 text-black-600 text-xs select-none">
                                                         Đặt ngay không cần xem trước

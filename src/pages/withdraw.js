@@ -58,7 +58,7 @@ const SuccessModal = ({
                 <button
                     type="button"
                     onClick={handleClose}
-                    className="px-8 py-[9px] bg-[#4021D0] rounded-md w-full text-white mt-5"
+                    className="px-8 py-[9px] bg-[#4021D0] rounded w-full text-white mt-5"
                     style={{ fontWeight: 500 }}
                 >
                     {t('common:confirm')}
@@ -563,7 +563,7 @@ const Wallet = () => {
                                                 ),
                                             )}
                                         >
-                                            <span className="input-group-text text-violet-700 font-semibold">
+                                            <span className="input-group-text text-teal-700 font-semibold">
                                                 {t('common:max')}
                                             </span>
                                         </button>

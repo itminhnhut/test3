@@ -73,7 +73,7 @@ body {
   height: 90px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-violet-400;
+  @apply bg-teal-400;
   cursor: pointer;
 }
 
@@ -131,7 +131,7 @@ input[type=number] {
   height: 14px !important;
   width: 12px !important;
 }
-.ats-container {
+.nami-container {
   @apply px-5 xl:px-20 2xl:px-0 2xl:max-w-screen-xl mx-auto w-full lg:px-10
 }
 .terms-page, .policies-page {

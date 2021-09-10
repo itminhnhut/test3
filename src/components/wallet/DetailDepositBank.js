@@ -15,7 +15,7 @@ const ItemWithCopy = ({ label, value }) => {
                 ? (
                     <CopyToClipboard
                         text={value}
-                        className="cursor-pointer text-sm text-violet-700 font-semibold"
+                        className="cursor-pointer text-sm text-teal-700 font-semibold"
                         onCopy={() => setCopied(true)}
                     >
                         <span>{copied ? t('referral:copied') : t('referral:copy')}</span>
@@ -94,7 +94,7 @@ const DetailDepositBank = ({ order, onClose }) => {
                             value={order?.metadata?.contentSend}
                         />
                     </div>
-                    <div className="rounded-md border border-black-200 bg-black-100 p-3 text-xs mt-5">
+                    <div className="rounded border border-black-200 bg-black-100 p-3 text-xs mt-5">
                         <div className="font-semibold text-sm mb-2">
                             { t('wallet:note') }
                         </div>

@@ -622,6 +622,6 @@ export const DOWNLOAD_APP_LINK = {
 };
 
 export const CATEGORY_SPOT_SIGNAL = {
-    ALL: 'ats_cat_all',
-    SIGNAL: 'ats_cat_signal',
+    ALL: 'nami_cat_all',
+    SIGNAL: 'nami_cat_signal',
 };

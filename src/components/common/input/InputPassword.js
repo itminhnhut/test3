@@ -11,7 +11,7 @@ const InputPassword = ({ id, name, onChange, value, initValue }) => {
                 id={id}
                 name={name}
                 type={isHide ? 'password' : 'text'}
-                className="border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-14 text-sm text-[#02083D] w-full"
+                className="border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-14 text-sm text-[#02083D] w-full"
                 placeholder={t('profile:set_password_placeholder')}
                 onChange={onChange}
                 value={value}

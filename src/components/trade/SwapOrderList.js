@@ -129,7 +129,7 @@ const SpotOrderList = (props) => {
                 <div className="card-header-text">{t('convert:history')}</div>
                 <div className="card-header-actions">
                     <Link href="/wallet/history">
-                        <span className="text-sm text-violet-700 font-bold cursor-pointer">{t('convert:view_all')}</span>
+                        <span className="text-sm text-teal-700 font-bold cursor-pointer">{t('convert:view_all')}</span>
                     </Link>
                 </div>
             </div>

@@ -32,7 +32,7 @@ const VerificationModal = ({ type }) => {
                     <div className="relative flex flex-row items-center">
                         <input
                             type="text"
-                            className="w-full border border-[#E1E2ED] rounded-md focus:outline-none py-[10px] pl-4 pr-14 text-[#02083D] text-sm"
+                            className="w-full border border-[#E1E2ED] rounded focus:outline-none py-[10px] pl-4 pr-14 text-[#02083D] text-sm"
                             placeholder={t('active_account_placeholder')}
                             onChange={e => setCode(e.target.value)}
                             value={code}

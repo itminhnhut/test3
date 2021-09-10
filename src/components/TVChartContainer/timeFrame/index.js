@@ -275,7 +275,7 @@ export default class TimeFrame extends Component {
                                                         {ListTimeFrame.map((item, index) => (
                                                             <Listbox.Option
                                                                 key={index}
-                                                                className={({ selected, active }) => `${selected ? 'font-medium text-violet' : 'text-black-500'} text-sm  cursor-pointer hover:text-violet py-1 text-center hover:bg-gray-100 px-4`}
+                                                                className={({ selected, active }) => `${selected ? 'font-medium text-teal' : 'text-black-500'} text-sm  cursor-pointer hover:text-teal py-1 text-center hover:bg-gray-100 px-4`}
                                                                 value={item.value}
                                                             >
                                                                 {({ selected, active }) => item.text}
@@ -336,7 +336,7 @@ export default class TimeFrame extends Component {
                                             leaveFrom="opacity-100 translate-y-0"
                                             leaveTo="opacity-0 translate-y-1"
                                         >
-                                            <Popover.Panel static className="absolute z-[3] transform w-screen max-w-xs rounded-md border border-black-200 left-0 top-10 bg-white shadow-lg text-sm max-w-[585px]">
+                                            <Popover.Panel static className="absolute z-[3] transform w-screen max-w-xs rounded border border-black-200 left-0 top-10 bg-white shadow-lg text-sm max-w-[585px]">
                                                 <div className="flex">
                                                     <div className="panel-left w-[218px] p-6 border-0 border-r border-black-200">
                                                         <div className="mb-6">
@@ -347,7 +347,7 @@ export default class TimeFrame extends Component {
                                                                 {fastIndicators.primary.map((indicator, index) => (
                                                                     <div
                                                                         key={index}
-                                                                        className={`${this.state.activeStudiesMap.get(indicator.id) ? 'text-violet' : 'text-black-500'} hover:cursor-pointer hover:text-violet text-xs font-medium select-none`}
+                                                                        className={`${this.state.activeStudiesMap.get(indicator.id) ? 'text-teal' : 'text-black-500'} hover:cursor-pointer hover:text-teal text-xs font-medium select-none`}
                                                                         onClick={() => this.toggleFastStudy(indicator.id)}
                                                                     >
                                                                         {indicator.alias}
@@ -363,7 +363,7 @@ export default class TimeFrame extends Component {
                                                                 {fastIndicators.secondary.map((indicator, index) => (
                                                                     <div
                                                                         key={index}
-                                                                        className={`${this.state.activeStudiesMap.get(indicator.id) ? 'text-violet' : 'text-black-500'} hover:cursor-pointer hover:text-violet text-xs font-medium select-none`}
+                                                                        className={`${this.state.activeStudiesMap.get(indicator.id) ? 'text-teal' : 'text-black-500'} hover:cursor-pointer hover:text-teal text-xs font-medium select-none`}
                                                                         onClick={() => this.toggleFastStudy(indicator.id)}
                                                                     >
                                                                         {indicator.alias}
@@ -420,7 +420,7 @@ export default class TimeFrame extends Component {
                     )}
                 </div>
                 <div className="flex items-center">
-                    <button type="button" onClick={customChartFullscreen} className="border border-[#EEF2FA] rounded-md p-[6px]">
+                    <button type="button" onClick={customChartFullscreen} className="border border-[#EEF2FA] rounded p-[6px]">
                         {fullScreen ? <IconFullScreenChartDisable /> : <IconFullScreenChart />}
                     </button>
                     <div className={fullScreen ? 'hidden' : 'btn-group btn-group-sm ml-3'} role="group" aria-label="Large button group">

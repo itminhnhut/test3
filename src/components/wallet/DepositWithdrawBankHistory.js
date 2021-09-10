@@ -102,7 +102,7 @@ const DepositWithdrawBankHistory = ({ id }) => {
                 </div>
                 <div className="card-header-actions">
                     <Link href="/wallet/history">
-                        <span className="text-sm text-violet-700 font-bold cursor-pointer">
+                        <span className="text-sm text-teal-700 font-bold cursor-pointer">
                             {t('wallet:all')}
                         </span>
                     </Link>

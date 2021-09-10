@@ -136,7 +136,7 @@ const SignalFilter = ({ templates, filteredTemplates, isComponentVisible, setIsC
                                             value={template?.category}
                                             checked={selectedCategory.includes(template?.category)}
                                             onChange={() => handleFilter(template)}
-                                            className="appearance-none cursor-pointer h-6 w-6 border border-[#C5C6D2] rounded-md checked:bg-[#4021D0] checked:border-transparent focus:outline-none"
+                                            className="appearance-none cursor-pointer h-6 w-6 border border-[#C5C6D2] rounded checked:bg-[#4021D0] checked:border-transparent focus:outline-none"
                                         />
                                         <div className="absolute inset-2 left-[7px] pointer-events-none"><IconCustomCheckbox /></div>
                                     </div>
@@ -148,13 +148,13 @@ const SignalFilter = ({ templates, filteredTemplates, isComponentVisible, setIsC
                 <div className="flex items-center justify-between mt-4">
                     <button
                         type="button"
-                        className="flex-1 py-3 bg-[#F7F6FD] rounded-md font-bold"
+                        className="flex-1 py-3 bg-[#F7F6FD] rounded font-bold"
                         onClick={() => resetFilter()}
                     >{t('signals:cancel_filter')}
                     </button>
                     <button
                         type="button"
-                        className="flex-1 py-3 bg-[#4021D0] rounded-md font-bold text-white ml-2 disabled:bg-[#9F90E7] disabled:cursor-not-allowed focus:bg-[#2A11AC] hover:bg-[#4822FA]"
+                        className="flex-1 py-3 bg-[#4021D0] rounded font-bold text-white ml-2 disabled:bg-[#9F90E7] disabled:cursor-not-allowed focus:bg-[#2A11AC] hover:bg-[#4822FA]"
                         onClick={() => submitFilter()}
                         disabled={selectedCategory.length === 0}
                     >{t('signals:apply_filter')}

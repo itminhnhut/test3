@@ -48,14 +48,6 @@ module.exports = withPlugins([
         // your project has ESLint errors.
         ignoreDuringBuilds: true,
     },
-    // async rewrites() {
-    //     return [
-    //         {
-    //             source: '/authenticated/:id*',
-    //             destination: `${NEXT_PUBLIC_API_URL}/authenticated/:id.*`,
-    //         },
-    //     ];
-    // },
     env: {
         // Make the COMMIT_SHA available to the client so that Sentry events can be
         // marked for the release they belong to. It may be undefined if running

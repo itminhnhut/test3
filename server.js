@@ -8,10 +8,6 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-console.log(
-    '__ check target ', process.env.NEXT_PUBLIC_API_URL,
-);
-
 app.prepare().then(() => {
     const server = express();
 
@@ -24,7 +20,7 @@ app.prepare().then(() => {
             '/referral/',
 
         ], createProxyMiddleware({
-            target: 'http://localhost:9328',
+            target: process.env.NEXT_PUBLIC_API_URL,
             changeOrigin: true,
             headers: { nami_product: 'exchange' },
             'secure': false,

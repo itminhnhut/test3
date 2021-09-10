@@ -11,8 +11,8 @@
     "about": "Về chúng tôi"
   },
   "submenu": {
-    "convert": "Quy đổi nhanh",
-    "convert_description": "Mua bán nhanh crypto bằng VNDC & USDT",
+    "convert": "Nami Swap",
+    "convert_description": "Giao dịch crypto chỉ với một lần click",
     "spot": "Giao dịch SPOT",
     "spot_description": "Mua bán crypto như một trader chuyên nghiệp",
     "futures": "Futures",

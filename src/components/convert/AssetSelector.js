@@ -24,7 +24,7 @@ const AssetSelector = ({ assets, type, selectedAsset, setSearch, onSelectAsset }
             leaveTo="opacity-0 translate-y-1"
         >
             <Popover.Panel
-                className="absolute z-10 transform w-[101%] rounded-md border border-black-200 -left-0.5 -top-0.5 -right-0.5 bg-white shadow-dropdown"
+                className="absolute z-10 transform w-[101%] rounded border border-black-200 -left-0.5 -top-0.5 -right-0.5 bg-white shadow-dropdown"
             >
                 <div className="form-group px-8 pt-6 pb-4 !mb-0">
                     <div className="input-group bg-black-5">

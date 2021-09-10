@@ -461,7 +461,7 @@ const SpotComp = () => {
                                         </div>
                                         <div className="px-6 py-8 text-center !font-bold">
                                             <div className="text-xl">{t('landing:download_app_hint')}</div>
-                                            <div className="text-xl text-violet mb-[30px]">Nami Exchange</div>
+                                            <div className="text-xl text-teal mb-[30px]">Nami Exchange</div>
                                             <div className="">
                                                 <a
                                                     href={DOWNLOAD_APP_LINK.IOS}

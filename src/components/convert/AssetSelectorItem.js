@@ -16,7 +16,7 @@ const AssetSelectorItem = ({ asset, selected, onSelect }) => {
             {
                 selected
                 && (
-                    <span className="text-violet-700 ">
+                    <span className="text-teal-700 ">
                         <IconCheck />
                     </span>
                 )

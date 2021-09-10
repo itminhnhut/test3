@@ -1,7 +1,7 @@
 .form-wrapper {
   box-sizing: border-box;
   box-shadow: 0px 12px 24px rgba(7, 12, 61, 0.06);
-  @apply p-2 rounded-md border-black-200 border bg-white pl-6 ;
+  @apply p-2 rounded border-black-200 border bg-white pl-6 ;
   .btn {
     @screen lg {
       @apply px-12 py-4 ml-5;

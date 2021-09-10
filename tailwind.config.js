@@ -78,8 +78,11 @@ module.exports = {
                 800: '#384562',
                 900: '#223050',
             },
-            gray: colors.trueGray,
-            violet: {
+            darkBlue: {
+                DEFAULT: '#223050',
+            },
+            gray: { DEFAULT: '#8D9091', ...colors.gray },
+            teal: {
                 DEFAULT: '#00c8bc',
                 50: '#b3efeb',
                 100: '#99e9e4',

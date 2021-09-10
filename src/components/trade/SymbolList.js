@@ -216,7 +216,7 @@ const SymbolList = (props) => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                 >
-                    <Menu.Items className="absolute left-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md focus:outline-none" style={{ boxShadow: '0px 16px 24px rgba(7, 12, 61, 0.04)' }}>
+                    <Menu.Items className="absolute left-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded focus:outline-none" style={{ boxShadow: '0px 16px 24px rgba(7, 12, 61, 0.04)' }}>
                         {
                             categoryList.map((category, index) => {
                                 return (
@@ -225,8 +225,8 @@ const SymbolList = (props) => {
                                             <button
                                                 type="button"
                                                 className={`${
-                                                    active ? 'bg-violet-500 text-white' : 'text-[#52535C]'
-                                                } group flex rounded-md items-center w-full px-6 h-14 box-border text-sm`}
+                                                    active ? 'bg-teal-500 text-white' : 'text-[#52535C]'
+                                                } group flex rounded items-center w-full px-6 h-14 box-border text-sm`}
                                                 onClick={() => handleSelectCategory(category)}
                                             >
                                                 {category.value === CATEGORY_SPOT_SIGNAL.SIGNAL && <div className="text-[#4021D0] w-8 min-w-[32px] h-8 rounded-full bg-[#EEF2FA] flex items-center justify-center"><IconBell /></div> }
@@ -361,7 +361,7 @@ const SymbolList = (props) => {
                         </h3>
                         <div className="px-3">
                             <input
-                                className="border border-gray-200 bg-white w-full h-11 px-4 py-3 rounded-md text-sm focus:outline-none mb-4"
+                                className="border border-gray-200 bg-white w-full h-11 px-4 py-3 rounded text-sm focus:outline-none mb-4"
                                 type="text"
                                 name="search"
                                 placeholder={t('spot:search')}

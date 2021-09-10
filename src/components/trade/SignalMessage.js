@@ -45,7 +45,7 @@ const SignalMessage = ({ filteredSignals, signal, handleChangeSymbol, signalInde
             <div className={`w-full text-left ml-[10px] py-3 ${(signalIndex !== (filteredSignals.length - 1)) && 'border-b border-[#EEF2FA]'}`}>
                 <div className="w-full flex flex-row items-center justify-between">
                     <p className="text-sm" style={{ fontWeight: 500 }}>{signal?.title[i18n.language]}</p>
-                    {status === 0 && <span className="bg-violet-500 rounded-full w-[6px] h-[6px] min-w-[6px] ml-1" />}
+                    {status === 0 && <span className="bg-teal-500 rounded-full w-[6px] h-[6px] min-w-[6px] ml-1" />}
                 </div>
                 <p className="text-xs text-[#8B8C9B]">{getTimeAgo(signal?.createdAt, { locale: i18n.language === 'vi' ? vi : enUS })} {i18n.language === 'vi' ? 'trước' : 'ago'}</p>
             </div>

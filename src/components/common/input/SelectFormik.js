@@ -36,7 +36,7 @@ const SelectFormik = ({ options = [], loading, onChange, initValue, type }) => {
 
                         {
                             (isCountrySelect || isPhoneCountrySelect) ? (
-                                <Listbox.Button className={`relative !flex flex-row items-center justify-between w-full min-w-max h-full py-2 px-3 text-left bg-white ${isPhoneCountrySelect ? 'rounded-tl-md rounded-bl-md border-r' : 'form-control form-control-lg border rounded-md'} cursor-pointer border-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm`}>
+                                <Listbox.Button className={`relative !flex flex-row items-center justify-between w-full min-w-max h-full py-2 px-3 text-left bg-white ${isPhoneCountrySelect ? 'rounded-tl-md rounded-bl-md border-r' : 'form-control form-control-lg border rounded'} cursor-pointer border-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm`}>
                                     <div className="flex items-center">
                                         <Image src={getS3Url(selectedValue?.flag)} width={27} height={18} />
                                         <span className={`block truncate ${isPhoneCountrySelect ? 'uppercase' : ''} ml-2`}>{isPhoneCountrySelect ? selectedValue?.code : selectedValue?.name}</span>
@@ -69,12 +69,12 @@ const SelectFormik = ({ options = [], loading, onChange, initValue, type }) => {
                         >
                             <Listbox.Options
                                 static
-                                className={`absolute ${isPhoneCountrySelect ? 'w-[300px]' : 'w-full'} mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10`}
+                                className={`absolute ${isPhoneCountrySelect ? 'w-[300px]' : 'w-full'} mt-1 overflow-auto text-base bg-white rounded shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10`}
                             >
                                 {options.map((option, index) => (
                                     <Listbox.Option
                                         key={index}
-                                        className={({ active }) => `${active ? 'text-white bg-violet-700' : ''} cursor-pointer select-none relative px-4 py-3 rounded-lg`}
+                                        className={({ active }) => `${active ? 'text-white bg-teal-700' : ''} cursor-pointer select-none relative px-4 py-3 rounded-lg`}
                                         value={option}
                                     >
                                         {({
@@ -97,7 +97,7 @@ const SelectFormik = ({ options = [], loading, onChange, initValue, type }) => {
                                                     )
                                                 }
                                                 {selected ? (<span
-                                                    className={`${active ? 'text-violet-600' : 'text-white'} absolute inset-y-0 left-0 flex items-center pl-3`}
+                                                    className={`${active ? 'text-teal-600' : 'text-white'} absolute inset-y-0 left-0 flex items-center pl-3`}
                                                 />) : null}
                                             </>
                                         )}

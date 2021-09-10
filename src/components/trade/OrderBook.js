@@ -226,7 +226,7 @@ const OrderBook = (props) => {
                                                 {tickSizeOptions.map((item, index) => (
                                                     <Listbox.Option
                                                         key={index}
-                                                        className={({ selected, active }) => `${selected ? 'font-medium text-violet' : 'text-black-500'} text-sm  cursor-pointer hover:text-violet py-1 text-right hover:bg-gray-100 px-4`}
+                                                        className={({ selected, active }) => `${selected ? 'font-medium text-teal' : 'text-black-500'} text-sm  cursor-pointer hover:text-teal py-1 text-right hover:bg-gray-100 px-4`}
                                                         value={item}
                                                     >
                                                         {({ selected, active }) => item.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 20 })}
@@ -284,7 +284,7 @@ const OrderBook = (props) => {
                                 {/* <span className="text-black-500"> ≈ </span> */}
                                 {/* <span className="text-black-500 ">1,412,232.23 VNDC</span> */}
                             </div>
-                            {/* <div className="text-violet-700 font-semibold">Xem thêm</div> */}
+                            {/* <div className="text-teal-700 font-semibold">Xem thêm</div> */}
                         </div>
                         <div className="flex flex-col justify-start flex-1">
                             {

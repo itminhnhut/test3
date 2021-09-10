@@ -11,8 +11,8 @@
     "about": "About us"
   },
   "submenu": {
-    "convert": "Quick Swap",
-    "convert_description": "One-click buy/sell crypto with VNDC & USDT",
+    "convert": "Nami Swap",
+    "convert_description": "Trade cryptocurrencies in one click",
     "spot": "Spot Trading",
     "spot_description": "Buy & Sell crypto like a professional trader",
     "futures": "Futures",

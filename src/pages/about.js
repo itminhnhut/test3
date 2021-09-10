@@ -8,7 +8,7 @@ const About = () => {
     return (
         <LayoutWithHeader>
             <div className="bg-white pt-[40px] pb-[70px] lg:pt-[120px] lg:pb-[350px]">
-                <div className="ats-container text-center">
+                <div className="nami-container text-center">
                     <div className="mb-12">
                         <svg className="mx-auto" width="146" height="81" viewBox="0 0 146 81" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M28.2451 79.6185L24.8437 70.8655H9.20195L5.80052 79.6185H0L13.6451 45.2891H20.6057L34.2508 79.6185H28.2451ZM22.7918 65.6185L17.0149 50.8106L11.238 65.6185H22.7918Z" fill="#020A3A" />
@@ -32,7 +32,7 @@ const About = () => {
                 </div>
             </div>
             <div className="bg-white lg:bg-[#F6F5FB] lg:py-[100px] py-[30px]">
-                <div className="ats-container relative">
+                <div className="nami-container relative">
                     <div className="grid lg:grid-cols-3 ">
                         <div className="lg:col-span-2">
                             <img
@@ -57,7 +57,7 @@ const About = () => {
                 &nbsp;
             </div>
             <div className="bg-white lg:bg-[#F6F5FB] lg:py-[100px] py-[30px]">
-                <div className="ats-container relative">
+                <div className="nami-container relative">
                     <div className="grid lg:grid-cols-3 ">
                         <div className="order-2 lg:order-1">
                             <div className="text-3xl mb-5 font-bold">
@@ -82,7 +82,7 @@ const About = () => {
                 &nbsp;
             </div>
             <div className="bg-white lg:bg-[#F6F5FB] lg:py-[48px] py-[30px]">
-                <div className="ats-container relative">
+                <div className="nami-container relative">
                     <div className="grid lg:grid-cols-3 ">
                         <div className="lg:col-span-2">
                             <img
@@ -112,7 +112,7 @@ const About = () => {
                 &nbsp;
             </div>
             <div className="bg-white lg:bg-[#F6F5FB] lg:py-[66px] py-[30px]">
-                <div className="ats-container relative">
+                <div className="nami-container relative">
                     <div className="grid lg:grid-cols-12 ">
                         <div className="order-2 lg:order-1 lg:col-span-5">
                             <div className="lg:max-w-[440px]">

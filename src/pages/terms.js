@@ -10,7 +10,7 @@ const Terms = () => {
 
     return (
         <LayoutWithHeader>
-            <div className="ats-container my-20 terms-page">
+            <div className="nami-container my-20 terms-page">
                 { locale === 'vi' ? (
                     <>
                         <div className="text-center">

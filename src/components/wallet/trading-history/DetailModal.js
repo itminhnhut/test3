@@ -127,7 +127,7 @@ const DetailModal = ({ detail, assetConfig, closeModal, fullCategory, isComponen
             <>
                 <p className="text-sm text-[#52535C]">{t('origin_transaction_id')}</p>
                 <p className="text-sm text-[#02083D] flex flex-row items-center justify-end">{detail?.metadata?.originTransactionId || '-'}
-                    <button type="button" onClick={() => handleCopy(detail?.metadata?.originTransactionId || '-')} className="text-violet-400 ml-1 font-bold">
+                    <button type="button" onClick={() => handleCopy(detail?.metadata?.originTransactionId || '-')} className="text-teal-400 ml-1 font-bold">
                         <span className="whitespace-nowrap">{copied ? t('common:copied') : t('common:copy')}</span>
                     </button>
                 </p>
@@ -289,7 +289,7 @@ const DetailModal = ({ detail, assetConfig, closeModal, fullCategory, isComponen
                     <div className="flex flex-col items-center justify-center">
                         <AssetLogo assetCode={asset?.assetCode} assetId={asset?.id} size={64} />
                         <p className="text-[#02083D] text-3xl break-word text-center mt-3" style={{ fontWeight: 500 }}>{renderMoney()}</p>
-                        <div className={`${detail?.status === 1 ? 'bg-[rgba(5,177,105,0.1)]' : 'bg-[rgba(233,95,103,0.1)]'} rounded-md px-3 py-[5px] mt-2 flex flex-row items-center`}>
+                        <div className={`${detail?.status === 1 ? 'bg-[rgba(5,177,105,0.1)]' : 'bg-[rgba(233,95,103,0.1)]'} rounded px-3 py-[5px] mt-2 flex flex-row items-center`}>
                             <span className={`text-sm font-bold ${detail?.status === 1 ? 'text-[#05B169]' : 'text-[#E95F67]'}`}>
                                 {detail?.status === 1 ? t('status_success_detail') : t('status_expired')}
                             </span>
