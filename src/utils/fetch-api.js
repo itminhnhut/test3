@@ -21,15 +21,14 @@ const FetchApi = async ({ url, options, params, cancelToken, timeout } = mandato
             method: 'GET',
             baseURL: API_URL,
             url,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+            withCredentials: true,
+            // headers: {
+            //     'Accept': 'application/json',
+            //     'Content-Type': 'application/json',
+            // },
             cancelToken,
             timeout,
         };
-
-        console.log('__ check api url', API_URL, options);
 
         const opts = merge(defaultOptions, options);
 

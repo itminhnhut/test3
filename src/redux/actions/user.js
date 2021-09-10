@@ -71,7 +71,6 @@ export function refreshToken() {
 export function getMe() {
     return async dispatch => {
         try {
-            console.log('__ check api', API_GET_ME);
             const { status, data } = await fetchAPI({
                 url: API_GET_ME,
                 options: {
@@ -86,7 +85,6 @@ export function getMe() {
                 });
             }
         } catch (e) {
-            console.log('__ get me error', e);
             dispatch({
                 type: SET_USER,
                 payload: null,

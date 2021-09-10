@@ -75,7 +75,6 @@ const App = ({ Component, pageProps }) => {
 
     // Khởi tạo access token
     useAsync(async () => {
-        console.log('__ check get me');
         await store.dispatch(getMe());
         store.dispatch({
             type: types.SET_LOADING_USER,
