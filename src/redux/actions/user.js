@@ -30,6 +30,7 @@ import {
     API_WITHDRAW_ONCHAIN,
 } from './apis';
 import ApiError from './apiError';
+import { SET_USER } from './types';
 
 export const setUser = (user) => (dispatch) => dispatch({ type: types.SET_USER, payload: user });
 
@@ -77,7 +78,6 @@ export function getMe() {
                     method: 'GET',
                 },
             });
-            console.log('__ check data 111', data);
             if (status === 'ok') {
                 dispatch({
                     type: SET_USER,

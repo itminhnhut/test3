@@ -16,7 +16,14 @@ app.prepare().then(() => {
     const server = express();
 
     if (isDevelopment) {
-        server.use('/authenticated/', createProxyMiddleware({
+        server.use([
+            '/authenticated/',
+            '/api/',
+            '/login/',
+            '/logout/',
+            '/referral/',
+
+        ], createProxyMiddleware({
             target: 'http://localhost:9328',
             changeOrigin: true,
             headers: { nami_product: 'exchange' },
