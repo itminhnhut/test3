@@ -14,7 +14,7 @@ module.exports = {
             center: true,
         },
         fontFamily: {
-            sans: ['Mark Pro', 'sans-serif'],
+            sans: ['Barlow', 'sans-serif'],
             serif: ['serif'],
         },
         fontSize: {
@@ -36,20 +36,20 @@ module.exports = {
             transparent: 'transparent',
             current: 'currentColor',
             background: {
-                DEFAULT: '#F6F9FC',
-                dark: '#1c0046',
+                DEFAULT: '#fff',
+                dark: '#223050',
             },
             bgContainer: {
                 DEFAULT: '#fff',
-                dark: '#230053',
+                dark: '#223050',
             },
             textPrimaryColor: {
-                DEFAULT: '#070C3D',
-                dark: '#f8f8f8',
+                DEFAULT: '#000',
+                dark: '#fff',
             },
             textSecondaryColor: {
-                DEFAULT: '#52535C',
-                dark: '#e6e6e6',
+                DEFAULT: '#EFEFEF',
+                dark: '#7B8CB2',
             },
             black: {
                 DEFAULT: '#02083D',

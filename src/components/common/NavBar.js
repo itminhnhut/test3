@@ -8,36 +8,11 @@ import { Fragment, useRef, useState } from 'react';
 import { ChevronRight, XCircle } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { iconColor } from 'src/config/colors';
-import { DOWNLOAD_APP_LINK, LS_KEYS, KYC_STATUS } from 'src/redux/actions/const';
-import { actionLogout, setQuoteAsset } from 'src/redux/actions/user';
-import dynamic from 'next/dynamic';
-import NotificationList from '../notification/NotificationList';
+import { DOWNLOAD_APP_LINK, LS_KEYS } from 'src/redux/actions/const';
+import { setQuoteAsset } from 'src/redux/actions/user';
 import {
-    IconArrowRight,
-    IconBell,
-    IconBroker,
-    IconCategory,
-    IconCircleCheck,
     IconConvert,
-    IconDashboard,
-    IconDeposit,
-    IconEarning,
-    IconFutures,
-    IconGift,
-    IconHistory,
-    IconLanguage,
-    IconLogout,
-    IconMargin,
-    IconMembership,
-    IconPnL,
-    IconProfile,
-    IconReferral,
-    IconSecurity,
-    IconStarter,
-    IconSupport,
-    IconTicket,
-    IconVerification,
-    IconWithdraw,
+    IconDashboard, IconFutures, IconMargin, IconPnL,
 } from './Icons';
 
 const NavBar = () => {
@@ -109,111 +84,11 @@ const NavBar = () => {
                 },
             ],
         },
-        {
-            name: 'markets',
-            route: '/markets',
-            icon: '',
-        },
-        {
-            name: 'blog',
-            route: '/blog',
-            icon: '',
-        },
-        {
-            name: 'support',
-            route: '/',
-            icon: '',
-        },
-        // {
-        //     name: 'api',
-        //     route: '/',
-        //     icon: '',
-        //     disabled: true,
-        // },
-        {
-            name: 'fee',
-            route: '/fee-structure',
-            icon: '',
-        },
     ];
     const menuGrid = [
-        {
-            name: 'deposit',
-            route: '/wallet/spot/deposit/fiat/VNDC',
-            icon: <IconDeposit />,
-        },
-        {
-            name: 'withdraw',
-            route: '/wallet/spot/withdraw/fiat/VNDC',
-            icon: <IconWithdraw />,
-        },
-        {
-            name: 'convert',
-            route: '/swap',
-            icon: <IconConvert />,
-        },
-        // {
-        //     name: 'brokers',
-        //     route: '/brokers',
-        //     icon: <IconBroker />,
-        // },
-        {
-            name: 'earning',
-            route: '/earning',
-            icon: <IconEarning />,
-        },
-        {
-            name: 'signals',
-            route: '/my/signals',
-            icon: <IconBell />,
-        },
-        {
-            name: 'membership',
-            route: '/membership',
-            icon: <IconMembership />,
-        },
-        {
-            name: 'brokers',
-            route: '/brokers',
-            icon: <IconBroker />,
-        },
-        // {
-        //     name: 'history',
-        //     route: '/wallet/history',
-        //     icon: <IconHistory />,
-        // },
-        {
-            name: 'starter',
-            route: '/starter',
-            icon: <IconStarter />,
-        },
-        {
-            name: 'referral',
-            route: '/my/referral',
-            icon: <IconGift />,
-        },
+
     ];
     const menuMobile = [
-        {
-            name: 'home',
-            route: '/',
-            disabled: false,
-        },
-        {
-            name: 'blog',
-            route: '/blog',
-            disabled: false,
-        },
-        {
-            name: 'about',
-            route: '/about',
-            disabled: false,
-        },
-        {
-            name: 'fee',
-            route: '/fee-structure',
-            disabled: false,
-        },
         {
             name: 'api',
             route: '/',
@@ -331,75 +206,6 @@ const NavBar = () => {
             )}
         </Popover>
     );
-    const _renderMenu = (item, key) => {
-        if (item.disabled) {
-            return (
-                <div
-                    className="flex items-center cursor-not-allowed"
-                    key={key}
-                >
-                    <p
-                        className="navbar-item text-black-400"
-                    >
-                        {t(`menu.${item.name}`)}
-                    </p>
-                    <span className="label label-red ml-3">{t('coming_soon')}</span>
-                </div>
-            );
-        }
-        if (item.name === 'support') {
-            return (
-                <a
-                    className="navbar-item"
-                    href={`https://attlas.zendesk.com/hc/${locale}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    key={key}
-                >
-                    {t(`menu.${item.name}`)}
-                </a>
-            );
-        }
-        return (
-            <Link href={item.route} locale={locale} key={key} prefetch={false}>
-                <a className="navbar-item">
-                    {t(`menu.${item.name}`)}
-                </a>
-            </Link>
-        );
-    };
-
-    const _renderUserKycStatus = () => {
-        if (user?.kycStatus === KYC_STATUS.APPROVED || user?.kycStatus === KYC_STATUS.ADVANCE_KYC) {
-            return (
-                <div className="px-6 py-4 flex items-center border-0 border-b border-black-200 text-green font-medium">
-                    <IconCircleCheck />
-                    <span className="ml-2">
-                        {t('navbar:verified')}
-                    </span>
-                </div>
-            );
-        }
-        if (user?.kycStatus === KYC_STATUS.PENDING_APPROVAL || user?.kycStatus === KYC_STATUS.APPROVED_PENDING_APPROVAL_ADVANCE || user?.kycStatus === KYC_STATUS.PENDING_APPROVAL_ADVANCE) {
-            return (
-                <div className="px-6 py-4 flex items-center border-0 border-b border-black-200 text-gray-400 font-medium">
-                    <span className="">
-                        {t('navbar:pending_approval')}
-                    </span>
-                </div>
-            );
-        }
-        return (
-            <div className="px-6 py-4 flex items-center border-0 border-b border-black-200 text-violet font-medium">
-                <Link href="/my/verification" className="" prefetch={false}>
-                    {t('navbar:not_verified')}
-                </Link>
-                <div className="flex items-center text-violet ml-3">
-                    <IconArrowRight />
-                </div>
-            </div>
-        );
-    };
 
     return (
         <>
@@ -409,43 +215,10 @@ const NavBar = () => {
                         <div className="flex justify-start">
                             <Link href="/" locale={locale} prefetch={false}>
                                 <div className="flex-shrink-0 flex items-center">
-                                    <img
-                                        className="hidden lg:block h-10 w-auto clickable"
-                                        src="/images/header-logo.png"
-                                        alt="Nami Exchange"
-                                    />
+                                    Nami.Exchange
                                 </div>
                             </Link>
                         </div>
-                        <div className="-mr-2 -my-2 md:hidden">
-                            <button
-                                type="button"
-                                className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-0 focus:ring-inset"
-                                aria-expanded="false"
-                                onClick={openModal}
-                            >
-                                <span className="sr-only">Open menu</span>
-                                <svg
-                                    className="h-6 w-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    aria-hidden="true"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                        <nav className="navbar hidden md:flex 2xl:space-x-10 xl:space-x-5 space-x-3 items-center">
-                            {menu.map((m, iM) => (m.submenu ? _renderMenuHaveSubMenu(m, iM) : _renderMenu(m, iM)),
-                            )}
-                        </nav>
 
                         {
                             loadingUser
@@ -538,187 +311,6 @@ const NavBar = () => {
                                         </button>
                                     </Link>
                                 </div>
-                                <NotificationList />
-                                <Popover className="relative">
-                                    <Popover.Button
-                                        type="button"
-                                        className="inline-flex items-center focus:outline-none"
-                                        aria-expanded="false"
-                                    >
-                                        <span className="mr-3">
-                                            <img src={urlAvatar()} width={36} height={36} className="rounded-full w-9 h-9 min-w-[36px]" />
-                                        </span>
-                                        <span
-                                            className="text-sm font-semibold"
-                                        >{user?.username || (user?.email || 'Nami User').substring(0, 30)}
-                                        </span>
-
-                                    </Popover.Button>
-                                    <Popover.Panel
-                                        // static
-                                        className="absolute z-10 transform w-screen max-w-xs rounded-md border border-black-200 right-0 bg-white shadow-lg text-sm"
-                                    >
-                                        <div className="overflow-hidden">
-                                            {_renderUserKycStatus()}
-
-                                            <div>
-                                                <div className="p-6 flex items-center justify-between">
-                                                    <span className="text-xs text-black-500 font-medium">
-                                                        {t('base_currency')}
-                                                    </span>
-                                                    <div className="bg-black-200 rounded-md p-[2px] transition-all" role="group" aria-label=" button group">
-                                                        <button
-                                                            type="button"
-                                                            className={`btn btn-outline-secondary !py-1.5 !px-6 !text-xs ${quoteAsset === 'VNDC' ? 'active !bg-white' : '!text-black-500'}`}
-                                                            onClick={() => setBaseCurrencyDb('VNDC')}
-                                                        >VNDC
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className={`btn btn-outline-secondary !py-1.5 !px-6 !text-xs ${quoteAsset === 'USDT' ? 'active !bg-white' : '!text-black-500'}`}
-                                                            onClick={() => setBaseCurrencyDb('USDT')}
-                                                        >USDT
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <Link href="/my/account/profile" locale={locale} prefetch={false}>
-                                                    <div
-                                                        className="px-6 py-3 flex items-center hover:bg-black-5 font-medium cursor-pointer group"
-                                                    >
-                                                        <span className="text-black-500 group-hover:text-violet-700">
-                                                            <IconProfile />
-                                                        </span>
-                                                        <span
-                                                            className="ml-3 flex-grow text-black-700 group-hover:text-violet-700"
-                                                        >{t('account')}
-                                                        </span>
-                                                    </div>
-                                                </Link>
-                                                <Link href="/my/verification" locale={locale} prefetch={false}>
-                                                    <div
-                                                        className="px-6 py-3 flex items-center hover:bg-black-5 font-medium cursor-pointer group"
-                                                    >
-                                                        <span className="text-black-500 group-hover:text-violet-700">
-                                                            <IconVerification />
-                                                        </span>
-                                                        <span
-                                                            className="ml-3 flex-grow text-black-700 group-hover:text-violet-700"
-                                                        >{t('account_verification')}
-                                                        </span>
-                                                    </div>
-                                                </Link>
-                                                <Link href="/my/security" locale={locale} prefetch={false}>
-                                                    <div
-                                                        className="px-6 py-3 flex items-center hover:bg-black-5 font-medium cursor-pointer group"
-                                                    >
-                                                        <span className="text-black-500 group-hover:text-violet-700">
-                                                            <IconSecurity />
-                                                        </span>
-                                                        <span
-                                                            className="ml-3 flex-grow text-black-700 group-hover:text-violet-700"
-                                                        >{t('menu_grid.security')}
-                                                        </span>
-                                                    </div>
-                                                </Link>
-                                                <button
-                                                    type="button"
-                                                    className="w-full px-6 py-3 flex items-center hover:bg-black-5 font-medium cursor-pointer group justify-between"
-                                                    onClick={changeLanguage}
-                                                >
-                                                    <div className="flex flex-row items-center">
-                                                        <span className="text-black-500 group-hover:text-violet-700">
-                                                            <IconLanguage />
-                                                        </span>
-                                                        <span
-                                                            className="ml-3 flex-grow text-black-700 group-hover:text-violet-700"
-                                                        >{t('language')}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center text-black-400">
-                                                        <img src={locale === 'vi' ? getS3Url('/public/images/flags/vn.svg') : getS3Url('/public/images/flags/en.svg')} className="w-6 h-4 min-w-[24px] object-cover" />
-                                                    </div>
-                                                </button>
-                                                <a
-                                                    href={`https://attlas.zendesk.com/hc/${locale}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    <div
-                                                        className="px-6 py-3 flex items-cente</div>r hover:bg-black-5 font-medium cursor-pointer group"
-                                                    >
-                                                        <span className="text-black-500 group-hover:text-violet-700">
-                                                            <IconSupport />
-                                                        </span>
-                                                        <span
-                                                            className="ml-3 flex-grow text-black-700 group-hover:text-violet-700"
-                                                        >{t('support')}
-                                                        </span>
-                                                        <div className="flex items-center text-black-400">
-                                                            <IconArrowRight />
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <a
-                                                    href={`https://attlas.zendesk.com/hc/${locale}/requests/new`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    <div
-                                                        className="px-6 py-3 flex items-cente</div>r hover:bg-black-5 font-medium cursor-pointer group"
-                                                    >
-                                                        <span className="text-black-500 group-hover:text-violet-700">
-                                                            <IconTicket />
-                                                        </span>
-                                                        <span
-                                                            className="ml-3 flex-grow text-black-700 group-hover:text-violet-700"
-                                                        >{t('ticket')}
-                                                        </span>
-                                                        <div className="flex items-center text-black-400">
-                                                            <IconArrowRight />
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <Link href="/my/referral" locale={locale} prefetch={false}>
-                                                    <div
-                                                        className="px-6 py-3 flex items-center hover:bg-black-5 font-medium cursor-pointer group"
-                                                    >
-                                                        <span className="text-black-500 group-hover:text-violet-700">
-                                                            <IconReferral />
-                                                        </span>
-                                                        <span className="ml-3 flex-grow flex items-center ">
-                                                            <span
-                                                                className="text-black-700 group-hover:text-violet-700"
-                                                            >{t('menu_grid.referral')}
-                                                            </span>
-                                                            <span
-                                                                className="label label-warning ml-3"
-                                                            >{t('make_money')}
-                                                            </span>
-                                                        </span>
-                                                    </div>
-                                                </Link>
-
-                                            </div>
-                                            <div className="border-0 border-t border-black-200 font-medium">
-                                                <div
-                                                    className="p-6 flex items-center hover:bg-black-5 font-medium cursor-pointer group"
-                                                    onClick={async () => {
-                                                        await dispatch(await actionLogout());
-                                                        clearLS();
-                                                    }}
-                                                >
-                                                    <span className="text-black-500 group-hover:text-violet-700">
-                                                        <IconLogout />
-                                                    </span>
-                                                    <span
-                                                        className="ml-3 text-black-700 group-hover:text-violet-700"
-                                                    >{t('logout')}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Popover.Panel>
-                                </Popover>
                             </div>
                         }
                     </div>

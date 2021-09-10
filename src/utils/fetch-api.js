@@ -29,7 +29,7 @@ const FetchApi = async ({ url, options, params, cancelToken, timeout } = mandato
             timeout,
         };
 
-        console.log('__ check api url', API_URL);
+        console.log('__ check api url', API_URL, options);
 
         const opts = merge(defaultOptions, options);
 

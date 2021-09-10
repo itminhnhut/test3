@@ -2,20 +2,26 @@ const express = require('express');
 const next = require('next');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
+console.log(
+    '__ check target ', process.env.NEXT_PUBLIC_API_URL,
+);
 
 app.prepare().then(() => {
     const server = express();
 
     if (isDevelopment) {
-        server.use('/authenticated', createProxyMiddleware({
-            target: process.env.NEXT_PUBLIC_API_URL,
+        server.use('/authenticated/', createProxyMiddleware({
+            target: 'http://localhost:9328',
             changeOrigin: true,
+            headers: { nami_product: 'exchange' },
+            'secure': false,
+            logLevel: 'debug',
         }));
     }
 

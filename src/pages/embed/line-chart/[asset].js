@@ -70,7 +70,7 @@ const AssetLineChart = () => {
                     fill="#05B169"
                     xmlSpace="preserve"
                     style={{ whiteSpace: 'pre', dominantBaseline: 'central', textAnchor: 'middle', fontWeight: 500 }}
-                    fontFamily="Mark Pro"
+                    fontFamily="Barlow"
                     fontSize="21"
                     letterSpacing="-0.02em"
                 >
@@ -84,7 +84,7 @@ const AssetLineChart = () => {
                 fill="#E95F67"
                 xmlSpace="preserve"
                 style={{ whiteSpace: 'pre', dominantBaseline: 'central', textAnchor: 'middle', fontWeight: 500, padding: '0 24px' }}
-                fontFamily="Mark Pro"
+                fontFamily="Barlow"
                 fontSize="21"
                 letterSpacing="-0.02em"
             >
@@ -120,7 +120,7 @@ const AssetLineChart = () => {
                         fill=" #02083D"
                         xmlSpace="preserve"
                         style={{ whiteSpace: 'pre', dominantBaseline: 'central', textAnchor: 'middle', fontWeight: 600 }}
-                        fontFamily="Mark Pro"
+                        fontFamily="Barlow"
                         fontSize="24"
                         letterSpacing="-0.02em"
                     >
@@ -133,7 +133,7 @@ const AssetLineChart = () => {
                             fill="#02083D"
                             xmlSpace="preserve"
                             style={{ whiteSpace: 'pre', dominantBaseline: 'auto', textAnchor: 'middle' }}
-                            fontFamily="Mark Pro"
+                            fontFamily="Barlow"
                             fontSize="28"
                             letterSpacing="-0.02em"
                         >
@@ -155,7 +155,7 @@ const AssetLineChart = () => {
                             fill="#4021D0"
                             xmlSpace="preserve"
                             style={{ whiteSpace: 'pre', textAnchor: 'end' }}
-                            fontFamily="Mark Pro"
+                            fontFamily="Barlow"
                             fontSize="14"
                             letterSpacing="-0.01em"
                         >
@@ -167,7 +167,7 @@ const AssetLineChart = () => {
                     fill="#02083D"
                     xmlSpace="preserve"
                     style={{ whiteSpace: 'pre' }}
-                    fontFamily="Mark Pro"
+                    fontFamily="Barlow"
                     fontSize="14"
                     letterSpacing="-0.01em"
                 >
@@ -178,7 +178,7 @@ const AssetLineChart = () => {
                         fill="#4021D0"
                         xmlSpace="preserve"
                         style={{ whiteSpace: 'pre', fontWeight: 600 }}
-                        fontFamily="Mark Pro"
+                        fontFamily="Barlow"
                         fontSize="14"
                         fontWeight="bold"
                         letterSpacing="-0.01em"

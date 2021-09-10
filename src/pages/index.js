@@ -10,24 +10,7 @@ const Index = () => {
 
     return (
         <LayoutWithHeader showBanner>
-            <div className="bg-black-5 lg:pt-[4.5rem] pt-10">
-                <div className="ats-container">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 items-center justify-center lg:-mt-14 mt-10">
-                        <div className="lg:order-1 order-2">
-                            <div className="text-6xl font-semibold mb-6 lg:max-w-[448px] letter-spacing-02">
-                                Nami <br />
-                                Exchange
-                            </div>
-                            <div className="text-xl text-black-600 mb-10">
-                                {t('landing:welcome_text_1')} <br
-                                    className="xl:inline xl:visible hidden invisible"
-                                />{t('landing:welcome_text_2')}
-                            </div>
-                        </div>
-                        <div className="lg:order-2 order-1 col-span-2" />
-                    </div>
-                </div>
-            </div>
+            Nami.Exchange
             <Footer />
 
         </LayoutWithHeader>

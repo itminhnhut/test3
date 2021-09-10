@@ -49,14 +49,12 @@ module.exports = withPlugins([
         ignoreDuringBuilds: true,
     },
     // async rewrites() {
-    //     return {
-    //         fallback: [
-    //             {
-    //                 source: '/authenticated/:id*',
-    //                 destination: `${NEXT_PUBLIC_API_URL}/authenticated/:id.*`,
-    //             },
-    //         ],
-    //     };
+    //     return [
+    //         {
+    //             source: '/authenticated/:id*',
+    //             destination: `${NEXT_PUBLIC_API_URL}/authenticated/:id.*`,
+    //         },
+    //     ];
     // },
     env: {
         // Make the COMMIT_SHA available to the client so that Sentry events can be

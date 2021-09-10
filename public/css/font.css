@@ -1,43 +1,38 @@
 @font-face {
-    font-family: 'Mark Pro';
-    src: url('/css/fonts/MarkPro-Medium.woff2') format('woff2'),
-    url('/css/fonts/MarkPro-Medium.woff') format('woff');
+    font-family: 'Barlow';
+    src: url('/css/fonts/Barlow-Medium.ttf') format('ttf');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'Mark Pro';
-    src: url('/css/fonts/MarkPro-Regular.woff2') format('woff2'),
-    url('/css/fonts/MarkPro-Regular.woff') format('woff');
+    font-family: 'Barlow';
+    src: url('/css/fonts/Barlow-Regular.ttf') format('ttf');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'Mark Pro';
-    src: url('/css/fonts/MarkPro-Black.woff2') format('woff2'),
-    url('/css/fonts/MarkPro-Black.woff') format('woff');
+    font-family: 'Barlow';
+    src: url('/css/fonts/Barlow-Black.ttf') format('ttf');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'Mark Pro';
-    src: url('/css/fonts/MarkPro-Light.woff2') format('woff2'),
-    url('/css/fonts/MarkPro-Light.woff') format('woff');
+    font-family: 'Barlow';
+    src: url('/css/fonts/Barlow-Light.ttf') format('ttf');
     font-weight: 300;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'Mark Pro';
-    src: url('/css/fonts/MarkPro-Bold.woff2') format('woff2'),
-    url('/css/fonts/MarkPro-Bold.woff') format('woff');
+    font-family: 'Barlow';
+    src: url('/css/fonts/Barlow-Bold.ttf') format('ttf');
     font-weight: 600;
     font-style: normal;
     font-display: swap;

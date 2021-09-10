@@ -109,7 +109,7 @@ const DepthChart = ({ symbol, chartSize }) => {
             tickLength: 0,
             labels: {
                 style: {
-                    fontFamily: 'Mark Pro',
+                    fontFamily: 'Barlow',
                     color: '#8B8C9B',
                     cursor: 'default',
                     fontSize: '12px',
@@ -145,7 +145,7 @@ const DepthChart = ({ symbol, chartSize }) => {
             tickColor: '#C4C4C4',
             labels: {
                 style: {
-                    fontFamily: 'Mark Pro',
+                    fontFamily: 'Barlow',
                     color: '#8B8C9B',
                     cursor: 'default',
                     fontSize: '12px',
