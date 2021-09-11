@@ -7,11 +7,15 @@ class MyDocument extends Document {
         return (
             <Html className="">
                 <Head>
-                    <link rel="preload" href="/css/fonts/Barlow-Medium.ttf" as="font" crossOrigin="anonymous" />
+                    <link rel="preconnect" href="https://fonts.googleapis.com" />
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+                    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&display=swap" rel="stylesheet" />
+
+                    {/* <link rel="preload" href="/css/fonts/Barlow-Medium.ttf" as="font" crossOrigin="anonymous" />
                     <link rel="preload" href="/css/fonts/Barlow-Regular.ttf" as="font" crossOrigin="anonymous" />
                     <link rel="preload" href="/css/fonts/Barlow-Black.ttf" as="font" crossOrigin="anonymous" />
                     <link rel="preload" href="/css/fonts/Barlow-Light.ttf" as="font" crossOrigin="anonymous" />
-                    <link rel="preload" href="/css/fonts/Barlow-Bold.ttf" as="font" crossOrigin="anonymous" />
+                    <link rel="preload" href="/css/fonts/Barlow-Bold.ttf" as="font" crossOrigin="anonymous" /> */}
                     <script dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
