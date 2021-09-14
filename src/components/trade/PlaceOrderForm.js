@@ -738,7 +738,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             >
                                 <Listbox.Options
                                     static
-                                    className="absolute z-10 mt-1 w-32 bg-white border border-black-200 rounded transform  shadow-lg outline-none"
+                                    className="absolute z-10 mt-1 w-32 bg-white border border-black-200 rounded transform  shadow-xl outline-none"
                                 >
                                     {QuantityMode.map((mode) => (
                                         <Listbox.Option

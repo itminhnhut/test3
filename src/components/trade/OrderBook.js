@@ -221,7 +221,7 @@ const OrderBook = (props) => {
                                         >
                                             <Listbox.Options
                                                 static
-                                                className="absolute right-0 z-10 mt-1 bg-white border border-black-200 rounded transform  shadow-lg outline-none"
+                                                className="absolute right-0 z-10 mt-1 bg-white border border-black-200 rounded transform  shadow-xl outline-none"
                                             >
                                                 {tickSizeOptions.map((item, index) => (
                                                     <Listbox.Option

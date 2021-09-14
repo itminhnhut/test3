@@ -1,6 +1,9 @@
 {
   "menu": {
     "trade": "Trade",
+    "swap": "Swap",
+    "wallet": "Wallet",
+    "futures": "Futures",
     "markets": "Markets",
     "utilities": "Utilities",
     "support": "Support",

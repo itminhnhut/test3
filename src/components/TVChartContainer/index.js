@@ -3,12 +3,12 @@ import { widget } from 'public/static/charting_library';
 import { getTradingViewTimezone } from 'actions/utils';
 
 import {
-    BOLLAttlas,
-    EMAAttlas,
-    MAAttlas,
-    MACDAttlas,
-    VWAPAttlas,
-    WMAAttlas,
+    BOLLNami,
+    EMANami,
+    MANami,
+    MACDNami,
+    VWAPNami,
+    WMANami,
 } from 'src/components/TVChartContainer/studies';
 import SymbolDetail from 'components/trade/SymbolDetail';
 import styles from './tradingview.module.scss';
@@ -257,12 +257,12 @@ export class TVChartContainer extends React.PureComponent {
             },
             custom_indicators_getter(PineJS) {
                 return Promise.resolve([
-                    MAAttlas(PineJS),
-                    EMAAttlas(PineJS),
-                    WMAAttlas(PineJS),
-                    BOLLAttlas(PineJS),
-                    VWAPAttlas(PineJS),
-                    MACDAttlas(PineJS),
+                    MANami(PineJS),
+                    EMANami(PineJS),
+                    WMANami(PineJS),
+                    BOLLNami(PineJS),
+                    VWAPNami(PineJS),
+                    MACDNami(PineJS),
                 ]);
             },
             time_frames: [],

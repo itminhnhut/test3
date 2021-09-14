@@ -203,7 +203,7 @@ export function render24hChange(ticker) {
 }
 
 export function getS3Url(url) {
-    return (process.env.NEXT_PUBLIC_CDN + '/attlas.io' || '') + url;
+    return (process.env.NEXT_PUBLIC_CDN + '/nami.exchange' || '') + url;
 }
 
 function encodeData(data) {

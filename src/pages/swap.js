@@ -106,7 +106,7 @@ const Swap = () => {
         if (!(requestQty && requestAsset)) return;
         setLoadingPrice(true);
         const { data, status } = await fetchAPI({
-            url: '/api/v1/swap/estimate_price',
+            url: '/api/v3/swap/estimate_price',
             options: {
                 method: 'GET',
             },
@@ -133,7 +133,7 @@ const Swap = () => {
 
     useAsync(async () => {
         const { data, status } = await fetchAPI({
-            url: '/api/v1/swap/config',
+            url: '/api/v3/swap/config',
             options: {
                 method: 'GET',
             },
@@ -223,7 +223,7 @@ const Swap = () => {
     const fetchPreSwapOrder = async () => {
         setLoadingPrice(true);
         const res = await fetchAPI({
-            url: '/api/v1/swap/pre_order',
+            url: '/api/v3/swap/pre_order',
             options: {
                 method: 'POST',
             },
@@ -250,7 +250,7 @@ const Swap = () => {
     const fetchConfirmSwapOrder = async () => {
         setLoadingPost(true);
         const res = await fetchAPI({
-            url: '/api/v1/swap/confirm_order',
+            url: '/api/v3/swap/confirm_order',
             options: {
                 method: 'POST',
             },
@@ -358,11 +358,7 @@ const Swap = () => {
         }
 
         return (
-            <>
-                <div className="mr-3 flex-grow">
-                    <span className="font-semibold">1 {displayCoinFrom} = {price} {displayCoinTo}</span>
-                </div>
-            </>
+            <div className="font-semibold">1 {displayCoinFrom} = {price} {displayCoinTo}</div>
         );
     };
 
@@ -380,24 +376,57 @@ const Swap = () => {
 
     return (
         <LayoutWithHeader>
-            <div className="flex flex-col flex-grow">
-                <div className="py-[3.75rem] text-center">
+            <div className="bg-blue-50 flex flex-col flex-grow">
+                {/* <div className="py-[3.75rem] text-center">
                     <div className="text-4xl text-teal ">
                         {t('navbar:submenu.convert')}
                     </div>
                     <div className="text-lg text-teal-400">
                         {t('navbar:submenu.convert_description')}
                     </div>
-                </div>
+                </div> */}
                 <div className="convert-container my-[6.25rem] ">
-                    <div className="card card-shadow bg-white rounded-xl lg:w-[480px] mx-auto">
-                        <div className="card-body !py-12 !px-8">
-                            <div className="form-group">
-                                <label htmlFor="">{t('you_pay')}</label>
-                                <div
-                                    className={`input-group relative ${!isEmpty(coinFromErrors) ? 'is-error' : ''}`}
-                                >
-                                    <div className="input-group-prepend md:w-[115px]">
+                    <div className="card card-shadow bg-white rounded-xl lg:w-[480px] max-w-[480px] mx-auto">
+                        <div className="card-body !py-6 !px-6">
+                            <div className="font-bold text-xl pb-4">Quy đổi</div>
+                            <div className="group hover:border-teal swap-form-group">
+                                <div className="flex justify-between">
+                                    <span className="text-sm font-bold">{t('you_pay')}</span>
+                                    <span className="text-sm font-bold">
+                                        {t('convert:available_balance')}:&nbsp;
+                                        {getAvailableText()}&nbsp;
+                                        {coinFrom}
+                                    </span>
+                                </div>
+
+                                <div className="swap-input-group relative">
+                                    <NumberFormat
+                                        getInputRef={coinFromQtyRef}
+                                        className="swap-form-control"
+                                        placeholder={t('convert:coin_from_placeholder', {
+                                            min: +getCoinConfig.filters?.[0].minQty,
+                                            max: +getCoinConfig.filters?.[0].maxQty,
+                                        })}
+                                        decimalScale={getDecimalScale(+getCoinConfig.filters?.[0].stepSize)}
+                                        thousandSeparator
+                                        allowNegative={false}
+                                        value={coinFromQty}
+                                        onFocus={() => {
+                                            setFocus('from');
+                                        }}
+                                        onValueChange={({ value }) => {
+                                            setCoinFromQty(value);
+                                        }}
+                                    />
+
+                                    <div className="swap-input-group-append">
+                                        <button className="py-3" type="button" onClick={setMaximumQty}>
+                                            <span className="swap-input-group-text text-teal-700 font-semibold">
+                                                MAX
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div className="swap-input-group-prepend md:w-[115px]">
                                         <Popover className="flex items-center">
                                             {({ open }) => (
                                                 <>
@@ -424,48 +453,37 @@ const Swap = () => {
                                             )}
                                         </Popover>
                                     </div>
-                                    <div className="input-group-separator" />
-                                    <NumberFormat
-                                        getInputRef={coinFromQtyRef}
-                                        className="form-control form-control-lg"
-                                        placeholder={t('convert:coin_from_placeholder', {
-                                            min: +getCoinConfig.filters?.[0].minQty,
-                                            max: +getCoinConfig.filters?.[0].maxQty,
-                                        })}
-                                        decimalScale={getDecimalScale(+getCoinConfig.filters?.[0].stepSize)}
-                                        thousandSeparator
-                                        allowNegative={false}
-                                        value={coinFromQty}
-                                        onFocus={() => {
-                                            setFocus('from');
-                                        }}
-                                        onValueChange={({ value }) => {
-                                            setCoinFromQty(value);
-                                        }}
-                                    />
 
-                                    <div className="input-group-append">
-                                        <button className="btn" type="button" onClick={setMaximumQty}>
-                                            <span className="input-group-text text-teal-700 font-semibold">
-                                                {t('convert:max')}
-                                            </span>
-                                        </button>
-                                    </div>
                                 </div>
-                                <div className="text-xs text-red mt-2">
+                                <div className="text-xs font-semibold text-red">
                                     <CoinFromErrorText />
                                 </div>
                             </div>
-
-                            <div className="flex justify-end -my-2 cursor-pointer">
+                            <div className="flex justify-center -my-2 cursor-pointer">
                                 <button className="btn !p-0" type="button" onClick={handleSwitchCoin}>
                                     <IconSwitch />
                                 </button>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="">{t('you_get')}</label>
-                                <div className="input-group relative">
-                                    <div className="input-group-prepend md:w-[115px]">
+                            <div className="group hover:border-teal swap-form-group">
+                                <div className="flex justify-between">
+                                    <span className="text-sm font-bold">{t('you_get')}</span>
+                                    <span className="text-sm font-bold">Available: 10,000 NAMI</span>
+                                </div>
+                                <div className="swap-input-group relative">
+                                    <NumberFormat
+                                        getInputRef={coinToQtyRef}
+                                        className="swap-form-control"
+                                        placeholder="--"
+                                        decimalScale={8}
+                                        thousandSeparator
+                                        allowNegative={false}
+                                        value={coinToQty}
+                                        onFocus={() => setFocus('to')}
+                                        onValueChange={({ value }) => {
+                                            setCoinToQty(value);
+                                        }}
+                                    />
+                                    <div className="swap-input-group-prepend md:w-[115px]">
                                         <Popover className="flex items-center">
                                             {({ open }) => (
                                                 <>
@@ -492,37 +510,20 @@ const Swap = () => {
                                             )}
                                         </Popover>
                                     </div>
-                                    <div className="input-group-separator" />
-                                    <NumberFormat
-                                        getInputRef={coinToQtyRef}
-                                        className="form-control form-control-lg"
-                                        placeholder="--"
-                                        decimalScale={8}
-                                        thousandSeparator
-                                        allowNegative={false}
-                                        value={coinToQty}
-                                        onFocus={() => setFocus('to')}
-                                        onValueChange={({ value }) => {
-                                            setCoinToQty(value);
-                                        }}
-                                    />
+
                                 </div>
                             </div>
-
-                            <div className="mt-3 text-xs ">
+                            <div className="mt-4 text-sm font-medium flex items-center justify-between">
                                 <span className="text-black-600">
-                                    {t('convert:available_balance')}:&nbsp;
-                                </span>
-                                <span className="font-semibold">
-                                    {getAvailableText()}&nbsp;
-                                    {coinFrom}
-                                </span>
-                            </div>
-                            <div className="mt-1 text-xs flex items-center">
-                                <span className="text-black-600">
-                                    {t('convert:rate')}: &nbsp;
+                                    {t('convert:rate')}
                                 </span>
                                 {priceData ? <Rate /> : null}
+                            </div>
+                            <div className="mt-4 text-sm font-medium flex items-center justify-between">
+                                <span className="text-black-600">
+                                    Slippage
+                                </span>
+                                <div className="font-semibold">0.5%</div>
                             </div>
 
                             <div className="mt-8">
@@ -535,7 +536,7 @@ const Swap = () => {
                                                 onClick={fetchPreSwapOrder}
                                                 type="button"
                                                 disabled={!isEmpty(coinFromErrors) || loadingPrice}
-                                            >{t('convert:btn_swap')}
+                                            >{t('convert:btn_preview')}
                                             </button>
                                         )
                                         : (
@@ -592,7 +593,7 @@ const Swap = () => {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <div
-                                    className="inline-block w-full max-w-[400px] my-8 overflow-hidden align-middle transition-all text-left transform  shadow-dropdown rounded-2xl border border-black-200"
+                                    className="inline-block w-full max-w-[480px] my-8 overflow-hidden align-middle transition-all text-left transform  shadow-dropdown rounded"
                                 >
                                     <Dialog.Title className="bg-white p-6">
                                         <div className="flex justify-between items-center">
@@ -612,26 +613,26 @@ const Swap = () => {
                                     </Dialog.Title>
                                     <div className="bg-black-100 p-6">
                                         <div className="flex items-center justify-between mb-2">
-                                            <div className="text-sm text-black-500">
+                                            <div className="text-sm font-semibold text-black-500">
                                                 {t('convert:from')}
                                             </div>
-                                            <div className="font-medium text-right">
+                                            <div className="font-semibold text-right">
                                                 {formatSwapValue(preOrderData?.fromQty)} {preOrderData?.fromAsset}
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between mb-2">
-                                            <div className="text-sm text-black-500">
+                                            <div className="text-sm font-semibold text-black-500">
                                                 {t('convert:fee')}
                                             </div>
-                                            <div className="font-medium text-right">
+                                            <div className="font-semibold text-right">
                                                 {formatSwapValue(preOrderData?.feeMetadata?.value)} {preOrderData?.feeMetadata?.asset}
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between mb-6">
-                                            <div className="text-sm text-black-500">
+                                            <div className="text-sm font-semibold text-black-500">
                                                 {t('convert:rate')}
                                             </div>
-                                            <div className="font-medium flex items-center">
+                                            <div className="font-semibold flex items-center">
                                                 {formatSwapValue(preOrderData?.displayingPrice)}
                                             </div>
                                         </div>

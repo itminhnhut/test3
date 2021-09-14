@@ -1,4 +1,5 @@
 const API_PREFIX = '/api/v1/';
+const API_V3_PREFIX = '/api/v3/';
 export const API_REGISTER = API_PREFIX + 'user/register';
 export const API_LOGIN = API_PREFIX + 'user/login';
 export const API_LOGIN_SSO = '/login/nami';
@@ -6,17 +7,17 @@ export const API_LOG_OUT = '/logout';
 export const API_GET_ME = API_PREFIX + 'user/me';
 export const API_REFRESH_TOKEN = API_PREFIX + 'web/refresh_token';
 
-export const API_GET_ASSET_CONFIG = API_PREFIX + 'asset/config';
+export const API_GET_ASSET_CONFIG = API_V3_PREFIX + 'asset/config';
 export const API_GET_USER_WALLET = API_PREFIX + 'user/wallet';
 export const API_GET_ALL_USER_WALLET = API_PREFIX + 'user/all_wallet';
 export const API_GET_SOCKETIO_AUTH_KEY = API_PREFIX + 'user/auth-key';
-export const API_GET_EXCHANGE_CONFIG = API_PREFIX + 'exchange/config';
+export const API_GET_EXCHANGE_CONFIG = API_V3_PREFIX + 'spot/config';
 
-export const API_GET_MARKET_WATCH = API_PREFIX + 'exchange/market_watch';
-export const API_GET_ORDER_BOOK = API_PREFIX + 'exchange/depth';
-export const API_GET_RECENT_TRADE = API_PREFIX + 'exchange/recent_trade';
-export const API_GET_HISTORY_TRADE = API_PREFIX + 'exchange/trade_history';
-export const API_GET_OPEN_ORDER = API_PREFIX + 'exchange/open_order';
+export const API_GET_MARKET_WATCH = API_V3_PREFIX + 'spot/market_watch';
+export const API_GET_ORDER_BOOK = API_V3_PREFIX + 'spot/depth';
+export const API_GET_RECENT_TRADE = API_V3_PREFIX + 'spot/recent_trade';
+export const API_GET_HISTORY_TRADE = API_V3_PREFIX + 'spot/trade_history';
+export const API_GET_OPEN_ORDER = API_V3_PREFIX + 'spot/open_order';
 
 export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list';
 

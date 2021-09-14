@@ -69,7 +69,7 @@ const SelectFormik = ({ options = [], loading, onChange, initValue, type }) => {
                         >
                             <Listbox.Options
                                 static
-                                className={`absolute ${isPhoneCountrySelect ? 'w-[300px]' : 'w-full'} mt-1 overflow-auto text-base bg-white rounded shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10`}
+                                className={`absolute ${isPhoneCountrySelect ? 'w-[300px]' : 'w-full'} mt-1 overflow-auto text-base bg-white rounded shadow-xl max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10`}
                             >
                                 {options.map((option, index) => (
                                     <Listbox.Option

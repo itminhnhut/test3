@@ -7,7 +7,7 @@ import AssetSelectorItem from './AssetSelectorItem';
 const AssetSelector = ({ assets, type, selectedAsset, setSearch, onSelectAsset }) => {
     const { t } = useTranslation();
     const NoItem = () => (
-        <div className="px-8 py-2 mb-4 hover:bg-black-5 cursor-pointer text-sm font-medium flex items-center">
+        <div className="px-6 py-2 mb-4 hover:bg-teal-5 cursor-pointer text-sm font-medium flex items-center">
             {t('common:not_found')}
         </div>
     );
@@ -24,14 +24,14 @@ const AssetSelector = ({ assets, type, selectedAsset, setSearch, onSelectAsset }
             leaveTo="opacity-0 translate-y-1"
         >
             <Popover.Panel
-                className="absolute z-10 transform w-[101%] rounded border border-black-200 -left-0.5 -top-0.5 -right-0.5 bg-white shadow-dropdown"
+                className="absolute z-10 transform w-[101%] rounded border border-black-200 -left-0.5 top-11 -right-0.5 bg-white shadow-dropdown"
             >
-                <div className="form-group px-8 pt-6 pb-4 !mb-0">
-                    <div className="input-group bg-black-5">
+                <div className="form-group px-6 pt-6 pb-4 !mb-0">
+                    <div className="input-group">
                         <input
                             type="text"
                             placeholder="Tìm kiếm"
-                            className="form-control form-control-sm form-control-solid"
+                            className="form-control form-control-sm"
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <div className="input-group-append">
@@ -41,7 +41,7 @@ const AssetSelector = ({ assets, type, selectedAsset, setSearch, onSelectAsset }
                         </div>
                     </div>
                 </div>
-                <div className="max-h-[300px] overflow-y-auto pb-4">
+                <div className="max-h-[250px] overflow-y-auto pb-4">
                     {
                         assets?.length > 0
                             ? assets.map((a, index) => {

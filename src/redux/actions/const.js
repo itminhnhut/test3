@@ -413,7 +413,7 @@ export const WalletTypeName = {
 };
 
 export const ApiStatus = {
-    SUCCESS: 'success',
+    SUCCESS: 'ok',
     ERROR: 'error',
 };
 

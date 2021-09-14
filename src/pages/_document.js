@@ -11,16 +11,11 @@ class MyDocument extends Document {
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
                     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&display=swap" rel="stylesheet" />
 
-                    {/* <link rel="preload" href="/css/fonts/Barlow-Medium.ttf" as="font" crossOrigin="anonymous" />
-                    <link rel="preload" href="/css/fonts/Barlow-Regular.ttf" as="font" crossOrigin="anonymous" />
-                    <link rel="preload" href="/css/fonts/Barlow-Black.ttf" as="font" crossOrigin="anonymous" />
-                    <link rel="preload" href="/css/fonts/Barlow-Light.ttf" as="font" crossOrigin="anonymous" />
-                    <link rel="preload" href="/css/fonts/Barlow-Bold.ttf" as="font" crossOrigin="anonymous" /> */}
                     <script dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                        })(window,document,'script','dataLayer','GTM-TV5NQ44');` }}
+                        })(window,document,'script','dataLayer','GTM-PTWQXJB');` }}
                     />
                     <script dangerouslySetInnerHTML={{
                         __html: `
@@ -37,7 +32,7 @@ class MyDocument extends Document {
                     />
                     <script
                         async
-                        src="https://www.googletagmanager.com/gtag/js?id=G-RGS9ZWC4NW"
+                        src="https://www.googletagmanager.com/gtag/js?id=AW-802059455"
                     />
                     <script
                         dangerouslySetInnerHTML={{
@@ -48,6 +43,23 @@ class MyDocument extends Document {
                                 gtag('config', 'G-RGS9ZWC4NW', {
                                   page_path: window.location.pathname,
                                 });
+                                `,
+                        }}
+                    />
+                    <script
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                            function initFreshChat() {
+                                window.fcWidget.init({
+                                    token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
+                                    host: "https://wchat.freshchat.com"
+                                    // config: {
+                                    //     showFAQOnOpen: true,
+                                    //     hideFAQ: false,
+                                    // }
+                                });
+                            }
+                            function initialize(i,t){var e;i.getElementById(t)?initFreshChat():((e=i.createElement("script")).id=t,e.async=!0,e.src="https://wchat.freshchat.com/js/widget.js",e.onload=initFreshChat,i.head.appendChild(e))}function initiateCall(){initialize(document,"freshchat-js-sdk")}window.addEventListener?window.addEventListener("load",initiateCall,!1):window.attachEvent("load",initiateCall,!1);
                                 `,
                         }}
                     />

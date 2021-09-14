@@ -164,7 +164,7 @@ const NotificationList = (props) => {
                     ref={popoverDropdownRef}
                     className={
                         (dropdownPopoverShow ? 'block ' : 'hidden ')
-                        + 'absolute z-10 transform w-screen max-w-[385px] rounded border border-black-200 right-0 bg-white shadow-lg text-sm'
+                        + 'absolute z-10 transform w-screen max-w-[385px] rounded border border-black-200 right-0 bg-white shadow-xl text-sm'
                     }
                 >
                     <div className="">

@@ -31,7 +31,7 @@ const Trades = (props) => {
 
     const fetchRecentTrade = async () => {
         const newRecentTrade = await getRecentTrade(getSymbolString(symbol));
-        temp = newRecentTrade;
+        temp = newRecentTrade || [];
         temp = temp.slice(0, MAX_LENGTH);
         setRecentTrade(temp);
         setLoading(false);

@@ -227,9 +227,9 @@ export const IconStepArrowShort = (props) => (
 );
 
 export const IconSearch = () => (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fillRule="evenodd" clipRule="evenodd" d="M8.00004 14.6663C11.6819 14.6663 14.6667 11.6816 14.6667 7.99967C14.6667 4.31778 11.6819 1.33301 8.00004 1.33301C4.31814 1.33301 1.33337 4.31778 1.33337 7.99967C1.33337 11.6816 4.31814 14.6663 8.00004 14.6663Z" stroke="#8B8C9B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M16.6667 16.6665L12.714 12.7139" stroke="#8B8C9B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z" stroke="#8D9091" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M14 13.9996L11.1 11.0996" stroke="#8D9091" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 
 );
@@ -242,18 +242,19 @@ export const IconCheck = () => (
 );
 
 export const IconSelectSmall = () => (
-    <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3.3962 4.48532C3.19605 4.74532 2.80395 4.74532 2.6038 4.48532L0.155585 1.305C-0.0975138 0.976212 0.136868 0.5 0.551788 0.5L5.44821 0.5C5.86313 0.5 6.09751 0.976213 5.84441 1.305L3.3962 4.48532Z" fill="#C5C6D2" />
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6L8 10L12 6" stroke="#223050" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 
 );
 
 export const IconSwitch = () => (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="14" cy="14" r="14" fill="#EEF2FA" />
-        <path d="M14.0008 28C21.7324 27.9996 28 21.7317 28 14C28 6.26801 21.732 0 14 0C6.26801 0 0 6.26801 0 14C0 21.732 6.26881 28 14.0008 28C6.2728 28 0 21.728 0 14C0 6.272 6.272 0 14 0C21.728 0 28 6.272 28 14C28 21.7277 21.7284 27.9996 14.0008 28Z" fill="#52535C" />
-        <path d="M11.2 4.9L6.3 9.8H9.8V15.4H12.6V9.8H16.1L11.2 4.9Z" fill="#52535C" />
-        <path d="M16.8 23.1L21.7 18.2H18.2V12.6H15.4V18.2H11.9L16.8 23.1Z" fill="#52535C" />
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 30C6.71573 30 -2.93554e-07 23.2843 -6.55671e-07 15C-1.01779e-06 6.71573 6.71573 -2.93554e-07 15 -6.55671e-07C23.2843 -1.01779e-06 30 6.71573 30 15C30 23.2843 23.2843 30 15 30Z" fill="#F5F5F5" />
+        <path d="M11.25 22.5L11.25 8.4375" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M7.5 12.1875L11.25 8.4375L15 12.1875" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M18.75 8.4375L18.75 22.5" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M22.5 18.75L18.75 22.5L15 18.75" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 
 );
@@ -373,8 +374,8 @@ export const IconReferral = ({ size = 24 }) => (
     </svg>
 
 );
-export const IconLogout = () => (
-    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const IconLogout = ({ size = 26 }) => (
+    <svg width={size} height={size} viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M2.41406 17.5002C4.55299 22.5305 9.93723 25.36 15.2933 24.2686C20.6494 23.1771 24.4971 18.4663 24.4971 13.0002C24.4971 7.53402 20.6494 2.82319 15.2933 1.73175C9.93723 0.640303 4.55299 3.46988 2.41406 8.50017" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M13.5 17L17.5 13L13.5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M17.5 13H1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

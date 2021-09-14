@@ -24,7 +24,7 @@ const DropdownContainer = ({ children, toggleButton }) => {
                     <div className="relative inline-flex align-middle w-full">
                         <button
                             className={
-                                'text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ' +
+                                'text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-xl outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ' +
                                 bgColor
                             }
                             type="button"
@@ -43,7 +43,7 @@ const DropdownContainer = ({ children, toggleButton }) => {
                             className={
                                 (dropdownPopoverShow ? 'block ' : 'hidden ') +
                                 'white' +
-                                'text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1'
+                                'text-base z-50 float-left py-2 list-none text-left rounded shadow-xl mt-1'
                             }
                             style={{ minWidth: '12rem' }}
                         >

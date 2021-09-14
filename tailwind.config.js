@@ -84,6 +84,7 @@ module.exports = {
             gray: { DEFAULT: '#8D9091', ...colors.gray },
             teal: {
                 DEFAULT: '#00c8bc',
+                5: '#03bdce17',
                 50: '#b3efeb',
                 100: '#99e9e4',
                 200: '#80e4de',

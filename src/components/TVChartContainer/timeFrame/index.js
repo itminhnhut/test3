@@ -270,7 +270,7 @@ export default class TimeFrame extends Component {
                                                 >
                                                     <Listbox.Options
                                                         static
-                                                        className="absolute z-10 mt-1 w-32 bg-white border border-black-200 rounded transform  shadow-lg outline-none"
+                                                        className="absolute z-10 mt-1 w-32 bg-white border border-black-200 rounded transform  shadow-xl outline-none"
                                                     >
                                                         {ListTimeFrame.map((item, index) => (
                                                             <Listbox.Option
@@ -336,7 +336,7 @@ export default class TimeFrame extends Component {
                                             leaveFrom="opacity-100 translate-y-0"
                                             leaveTo="opacity-0 translate-y-1"
                                         >
-                                            <Popover.Panel static className="absolute z-[3] transform w-screen max-w-xs rounded border border-black-200 left-0 top-10 bg-white shadow-lg text-sm max-w-[585px]">
+                                            <Popover.Panel static className="absolute z-[3] transform w-screen max-w-xs rounded border border-black-200 left-0 top-10 bg-white shadow-xl text-sm max-w-[585px]">
                                                 <div className="flex">
                                                     <div className="panel-left w-[218px] p-6 border-0 border-r border-black-200">
                                                         <div className="mb-6">

@@ -127,7 +127,7 @@ const Footer = () => {
                             </div> */}
 
                         </div>
-                        <div className="col-span-2 grid grid-cols-4  lg:grid-cols-4">
+                        <div className="col-span-2 grid grid-cols-2  lg:grid-cols-4">
                             {menu.map((m, index) => (
                                 <div key={index}>
                                     <div className="uppercase text-xs font-bold mb-4 text-teal">

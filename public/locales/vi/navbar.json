@@ -1,6 +1,9 @@
 {
   "menu": {
     "trade": "Giao dịch",
+    "swap": "Quy đổi",
+    "wallet": "Ví",
+    "futures": "Futures",
     "markets": "Thị trường",
     "utilities": "Tiện ích",
     "support": "Hỗ trợ",

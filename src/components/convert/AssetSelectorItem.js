@@ -4,7 +4,7 @@ import { IconCheck } from '../common/Icons';
 const AssetSelectorItem = ({ asset, selected, onSelect }) => {
     return (
         <div
-            className="px-8 py-2 hover:bg-black-5 cursor-pointer text-sm font-medium flex items-center"
+            className="px-6 py-2 hover:bg-teal-5 cursor-pointer text-sm font-medium flex items-center"
             key={asset}
             onClick={() => onSelect(asset)}
 

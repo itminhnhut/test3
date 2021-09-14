@@ -11,6 +11,7 @@ import 'public/css/font.css';
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { useAsync } from 'react-use';
+import { getAssetConfig, getExchangeConfig } from 'redux/actions/market';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
 import { useStore } from 'src/redux/store';
@@ -87,8 +88,8 @@ const App = ({ Component, pageProps }) => {
             console.log('Init all configs');
             store.dispatch(initPublicSocket());
             // Get config
-            // store.dispatch(getAssetConfig());
-            // store.dispatch(getExchangeConfig());
+            store.dispatch(getAssetConfig());
+            store.dispatch(getExchangeConfig());
             initConfig = true;
             // Get common data
         }

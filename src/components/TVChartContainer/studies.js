@@ -1,4 +1,4 @@
-export const MAAttlas = function (PineJS) {
+export const MANami = function (PineJS) {
     return {
         // Replace the <study name> with your study name
         // The name will be used internally by the Charting Library
@@ -197,7 +197,7 @@ export const MAAttlas = function (PineJS) {
         },
     };
 };
-export const EMAAttlas = function (PineJS) {
+export const EMANami = function (PineJS) {
     return {
         // Replace the <study name> with your study name
         // The name will be used internally by the Charting Library
@@ -397,7 +397,7 @@ export const EMAAttlas = function (PineJS) {
         },
     };
 };
-export const WMAAttlas = function (PineJS) {
+export const WMANami = function (PineJS) {
     return {
         name: 'Moving Average Weighted Nami',
         metainfo: {
@@ -479,7 +479,7 @@ export const WMAAttlas = function (PineJS) {
         },
     };
 };
-export const BOLLAttlas = function (PineJS) {
+export const BOLLNami = function (PineJS) {
     return {
         name: 'Bollinger Bands Nami',
         metainfo: {
@@ -612,7 +612,7 @@ export const BOLLAttlas = function (PineJS) {
         },
     };
 };
-export const VWAPAttlas = function (PineJS) {
+export const VWAPNami = function (PineJS) {
     return {
         name: 'VWAP Nami',
         metainfo: {
@@ -674,7 +674,7 @@ export const VWAPAttlas = function (PineJS) {
         },
     };
 };
-export const MACDAttlas = function (PineJS) {
+export const MACDNami = function (PineJS) {
     return {
         name: 'Moving Average Convergence/Divergence Nami',
         metainfo: {

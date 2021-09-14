@@ -13,8 +13,8 @@
     "not_enough_balance": "Insufficient balance",
     "unknown_error": "Unknown error"
   },
-  "you_pay": "You pay",
-  "you_get": "You get",
+  "you_pay": "From",
+  "you_get": "To",
   "you_will_get": "You will get",
   "coin_from_placeholder": "Please enter {{min}} - {{max}}",
   "convert": "Convert",
@@ -23,6 +23,7 @@
   "please_enter": "Please enter",
   "please_input": "Please input the amount you want to swap",
   "btn_swap": "Swap",
+  "btn_preview": "Preview",
   "max": "Max",
   "fee": "Fee",
   "from": "From",

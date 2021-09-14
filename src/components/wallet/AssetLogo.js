@@ -1,6 +1,6 @@
-import { getS3Url } from 'src/redux/actions/utils';
 import { useSelector } from 'react-redux';
 import find from 'lodash/find';
+import { getS3Url } from 'redux/actions/utils';
 
 const AssetLogo = (props) => {
     const { size, assetCode, assetId } = props;
@@ -14,7 +14,7 @@ const AssetLogo = (props) => {
     if (assetId !== undefined) filter.id = assetId;
     const config = find(assetConfig, filter);
     if (config) {
-        const logoUrl = config?.s3LogoUrl ? getS3Url(config?.s3LogoUrl) : '/images/coins/no_logo.png';
+        const logoUrl = getS3Url(`/images/coins/64/${config?.id}.png`);
         return <img src={logoUrl} style={{ minWidth: logoSize }} width={logoSize} height={logoSize} alt={config?.assetCode} />;
     }
     return <img src="/images/coins/no_logo.png" style={{ minWidth: logoSize }} width={logoSize} height={logoSize} alt="no-logo" />;
