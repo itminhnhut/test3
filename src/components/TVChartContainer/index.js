@@ -1,20 +1,15 @@
-import * as React from 'react';
-import { widget } from 'public/static/charting_library';
 import { getTradingViewTimezone } from 'actions/utils';
-
+import { widget } from 'public/library/trading_view/charting_library';
+import * as React from 'react';
 import {
     BOLLNami,
-    EMANami,
-    MANami,
-    MACDNami,
-    VWAPNami,
+    EMANami, MACDNami, MANami, VWAPNami,
     WMANami,
 } from 'src/components/TVChartContainer/studies';
-import SymbolDetail from 'components/trade/SymbolDetail';
-import styles from './tradingview.module.scss';
 import Datafeed from './api';
-import TimeFrame from './timeFrame';
 import DepthChart from './depth';
+import TimeFrame from './timeFrame';
+import styles from './tradingview.module.scss';
 
 function getLanguageFromURL() {
     // const regex = new RegExp('[\\?&]lang=([^&#]*)');
@@ -86,26 +81,9 @@ export class TVChartContainer extends React.PureComponent {
         this.initWidget(this.props.symbol);
     }
 
-    // componentDidUpdate(prevProps, prevState, snapshot) {
-    //     if (this.props.symbol !== prevProps.symbol) {
-    //         this.initWidget(this.props.symbol);
-    //     }
-    // }
-
-    // setChartSymbol = (symbol) => {
-    //     if (this.widget && this.state.chartStatus === ChartStatus.LOADED) {
-    //         this.widget.remove();
-    //         this.setState({ chartStatus: ChartStatus.NOT_LOADED });
-    //         this.initWidget(symbol);
-    //     }
-    // };
-
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.symbol !== prevProps.symbol || this.props.chartSize !== prevProps.chartSize) {
             if (this.widget && this.state.chartStatus === ChartStatus.LOADED) {
-                // this.widget.remove();
-                // this.setState({ chartStatus: ChartStatus.NOT_LOADED });
-                // this.initWidget(this.props.symbol, this.state.interval);
                 this.widget.setSymbol(this.props.symbol, this.state.interval, () => {
                     this.widget.applyOverrides({
                         'mainSeriesProperties.priceAxisProperties.autoScale': true,
@@ -338,7 +316,7 @@ export class TVChartContainer extends React.PureComponent {
         return (
             <>
                 <div className={`${this.props.fullScreen ? 'flex items-center py-6 -mb-4' : ''}`}>
-                    <SymbolDetail
+                    {/* <SymbolDetail
                         symbol={this.props.symbol}
                         isOnSidebar={this.props.isOnSidebar}
                         changeSymbolList={this.props.changeSymbolList}
@@ -346,7 +324,7 @@ export class TVChartContainer extends React.PureComponent {
                         favorite={this.props.favorite}
                         parentCallback={this.props.parentCallback}
                         fullScreen={this.props.fullScreen}
-                    />
+                    /> */}
                     <div className="w-full">
                         {
                             this.state.chartStatus === ChartStatus.LOADED ? <TimeFrame
@@ -390,7 +368,7 @@ TVChartContainer.defaultProps = {
     interval: '1',
     containerId: 'tv_chart_container',
     datafeedUrl: 'https://demo_feed.tradingview.com',
-    libraryPath: '/static/charting_library/',
+    libraryPath: '/library/trading_view/charting_library/',
     chartsStorageUrl: 'https://saveload.tradingview.com',
     chartsStorageApiVersion: '1.1',
     clientId: 'tradingview.com',

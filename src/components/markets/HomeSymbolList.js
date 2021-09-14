@@ -60,7 +60,7 @@ const HomeSymbolList = (props) => {
             ignoreRowClick: true,
             right: true,
             cell: (row) => (
-                <span className={!row?.u ? 'text-red' : 'text-green'}>
+                <span className={!row?.u ? 'text-pink' : 'text-mint'}>
                     {row?.p > 0 ? formatPrice(row?.p) : '-'}
                 </span>
             ),

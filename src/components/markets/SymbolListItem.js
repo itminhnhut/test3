@@ -70,17 +70,17 @@ const SymbolListItem = (props) => {
             <Link href={`/spot/${base}_${quote}`} prefetch={false} shallow>
                 <div className="flex items-center w-full">
                     <div
-                        className="flex-1 text-xs font-medium leading-table flex items-center truncate min-w-0 mr-1.5"
+                        className="flex-1 text-xs font-semibold leading-table flex items-center truncate min-w-0 mr-1.5"
                     >
-                        {base}
+                        {base} <span className="text-black-500">/{quote}</span>
                     </div>
                     <div
-                        className={`flex-1 text-xs leading-table text-right mr-1.5 ${!up ? 'text-green' : 'text-red'}`}
+                        className={`flex-1 text-xs font-semibold leading-table text-right mr-1.5 ${!up ? 'text-mint' : 'text-pink'}`}
                     >
                         {formatPrice(+symbolTicker?.p, exchangeConfig, quote)}
                     </div>
                     <div
-                        className="flex-1 text-green text-xs leading-table text-right"
+                        className="flex-1 text-mint font-semibold text-xs leading-table text-right"
                     >{render24hChange(symbolTicker)}
                     </div>
                 </div>

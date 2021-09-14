@@ -1,71 +1,45 @@
-import RGL, { WidthProvider } from 'react-grid-layout';
-import 'react-grid-layout/css/styles.css';
-import { Fragment, useEffect, useRef, useState, useMemo } from 'react';
-import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
-import { getSymbolString } from 'src/redux/actions/utils';
-import { useAsync } from 'react-use';
-import LayoutWithHeader from 'src/components/common/layouts/layoutWithHeader';
-import SymbolList from 'src/components/trade/SymbolList';
-import OrderBook from 'src/components/trade/OrderBook';
-import PlaceOrderForm from 'src/components/trade/PlaceOrderForm';
-import SpotOrderList from 'src/components/trade/SpotOrderList';
-import Trades from 'src/components/trade/Trades';
-import Chart from 'src/components/trade/Chart';
-import { getMarketWatch, getUserSymbolList, postSymbolViews } from 'src/redux/actions/market';
-import SpotHead from 'src/components/trade/SpotHead';
-import { DOWNLOAD_APP_LINK, LS_KEYS, OLD_LS_KEYS, PublicSocketEvent } from 'src/redux/actions/const';
-import Emitter from 'src/redux/actions/emitter';
-import size from 'lodash/size';
+import { Dialog, Transition } from '@headlessui/react';
+import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
+import SymbolDetail from 'components/trade/SymbolDetail';
 import find from 'lodash/find';
 import maxBy from 'lodash/maxBy';
-import { BrowserView, MobileView } from 'react-device-detect';
-import { Dialog, Transition } from '@headlessui/react';
+import size from 'lodash/size';
 import { useTranslation } from 'next-i18next';
-import FetchApi from 'utils/fetch-api';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { BrowserView, MobileView } from 'react-device-detect';
+import RGL, { WidthProvider } from 'react-grid-layout';
+import 'react-grid-layout/css/styles.css';
+import { useSelector } from 'react-redux';
+import { useAsync } from 'react-use';
+import LayoutWithHeader from 'src/components/common/layouts/layoutWithHeader';
+import Chart from 'src/components/trade/Chart';
+import OrderBook from 'src/components/trade/OrderBook';
+import PlaceOrderForm from 'src/components/trade/PlaceOrderForm';
+import SpotHead from 'src/components/trade/SpotHead';
+import SpotOrderList from 'src/components/trade/SpotOrderList';
+import SymbolList from 'src/components/trade/SymbolList';
+import Trades from 'src/components/trade/Trades';
+import { DOWNLOAD_APP_LINK, PublicSocketEvent } from 'src/redux/actions/const';
+import Emitter from 'src/redux/actions/emitter';
+import { getMarketWatch, getUserSymbolList, postSymbolViews } from 'src/redux/actions/market';
+import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
-import { fi } from 'date-fns/locale';
+import FetchApi from 'utils/fetch-api';
 
 const ReactGridLayout = WidthProvider(RGL);
 
 const layoutOnSidebar = [
-    { i: 'symbolList', x: 0, y: 0, w: 7, h: 52, isBounded: true, isDraggable: false, isResizable: false, static: true },
-    { i: 'chart', x: 7, y: 0, w: 19, h: 32, isBounded: true, isDraggable: true, isResizable: true, minW: 19, maxW: 26, minH: 30 },
-    { i: 'orderList', x: 7, y: 32, w: 19, h: 20, isBounded: true, isDraggable: true, isResizable: true, minH: 20 },
-    { i: 'orderbook', x: 26, y: 0, w: 7, h: 32, isBounded: true, isDraggable: true, isResizable: true, minW: 7, minH: 32 },
-    { i: 'trades', x: 26, y: 32, w: 7, h: 20, isBounded: true, isDraggable: true, isResizable: true },
-    { i: 'placeOrderForm', x: 33, y: 0, w: 7, h: 32, isBounded: true, isDraggable: true, isResizable: false, static: false },
-];
-const layout = [
-    { i: 'symbolList', x: 0, y: 0, w: 2, h: 52, isBounded: true, isDraggable: false, isResizable: false, static: true },
-    { i: 'chart', x: 2, y: 0, w: 22, h: 32, isBounded: true, isDraggable: true, isResizable: true, minW: 22, maxW: 30, minH: 32 },
-    { i: 'orderList', x: 2, y: 32, w: 22, h: 20, isBounded: true, isDraggable: true, isResizable: true, minH: 20 },
-    { i: 'orderbook', x: 24, y: 0, w: 8, h: 32, isBounded: true, isDraggable: true, isResizable: true, minW: 8, minH: 32 },
-    { i: 'trades', x: 24, y: 32, w: 8, h: 20, isBounded: true, isDraggable: true, isResizable: true },
-    { i: 'placeOrderForm', x: 32, y: 0, w: 8, h: 32, isBounded: true, isDraggable: true, isResizable: false, static: false },
-];
-const layoutFullScreenChart = [
-    { i: 'chart', x: 0, y: 0, w: 22, h: 32, isBounded: true, isDraggable: false, isResizable: false, minW: 22, maxW: 30, minH: 32 },
+    { i: 'symbolDetail', x: 0, y: 0, w: 12, h: 2, isBounded: true, isDraggable: true, isResizable: true },
+    { i: 'orderbook', x: 0, y: 3, w: 4, h: 24, isBounded: true, isDraggable: true, isResizable: true },
+    { i: 'chart', x: 4, y: 3, w: 8, h: 12, isBounded: true, isDraggable: true, isResizable: true },
+    { i: 'placeOrderForm', x: 4, y: 6, w: 8, h: 12, isBounded: true, isDraggable: true, isResizable: true },
+    { i: 'orderList', x: 0, y: 24, w: 12, h: 8, isBounded: true, isDraggable: true, isResizable: true },
+    { i: 'symbolList', x: 12, y: 3, w: 4, h: 12, isBounded: true, isDraggable: true, isResizable: true },
+    { i: 'trades', x: 12, y: 24, w: 4, h: 5, isBounded: true, isDraggable: true, isResizable: true },
 ];
 
-const initialIsOnSidebar = JSON.parse(localStorage.getItem(LS_KEYS.SPOT_ON_SIDEBAR));
-const initialIsMaxChart = JSON.parse(localStorage.getItem(LS_KEYS.SPOT_MAX_CHART));
-const initialLayoutOnSidebarLocal = JSON.parse(localStorage.getItem(LS_KEYS.SPOT_LAYOUT_ON_SIDEBAR)) || layoutOnSidebar;
-const initialLayoutLocal = JSON.parse(localStorage.getItem(LS_KEYS.SPOT_LAYOUT)) || layout;
-let initialLayout = initialIsOnSidebar === 'true' ? initialLayoutOnSidebarLocal : initialLayoutLocal;
-const symbolList = find(initialLayout, e => e.i === 'symbolList') || {};
-
-// fix wrong layout || unknown error || auto reset layout
-if (initialIsOnSidebar === 'true') {
-    if (symbolList.w !== 7) {
-        initialLayout = layoutOnSidebar;
-    }
-}
-if (initialIsOnSidebar === 'false') {
-    if (symbolList.w !== 2) {
-        initialLayout = layout;
-    }
-}
+const initialLayout = layoutOnSidebar;
 
 const SpotComp = () => {
     const router = useRouter();
@@ -74,6 +48,7 @@ const SpotComp = () => {
     const [chartSize, setChartSize] = useState('');
     const [orderBookLayout, setOrderBookLayout] = useState({});
     const [tradesLayout, setTradesLayout] = useState({});
+    const [symbolDetailLayout, setSymbolDetailLayout] = useState({});
 
     // Check pattern
     let symbolFromUrl = null;
@@ -84,8 +59,6 @@ const SpotComp = () => {
         }
     }
     const [symbol, setSymbol] = useState(symbolFromUrl);
-    // const [layoutLocal, setLayoutLocal] = useLocalStorage(LS_KEYS.SPOT_LAYOUT, layout);
-    // const [layoutOnSidebarLocal, setLayoutOnSidebarLocal] = useLocalStorage(LS_KEYS.SPOT_LAYOUT_ON_SIDEBAR, layoutOnSidebar);
     const publicSocket = useSelector(state => state.socket.publicSocket);
 
     // Spot layout
@@ -96,8 +69,8 @@ const SpotComp = () => {
 
     const [gridLayout, setGridLayout] = useState(initialLayout);
 
-    const [isMaxChart, setIsMaxChart] = useState(initialIsMaxChart === 'true');
-    const [isOnSidebar, setIsOnSidebar] = useState(initialIsOnSidebar === 'true');
+    const [isMaxChart, setIsMaxChart] = useState(false);
+    const [isOnSidebar, setIsOnSidebar] = useState(true);
     const [initTimeFrame, setInitTimeFrame] = useState('');
     const [extendsIndicators, setExtendsIndicators] = useState('');
     const [isResizingOrderList, setIsResizingOrderList] = useState(false);
@@ -173,19 +146,9 @@ const SpotComp = () => {
         publicSocket.emit('unsubscribe:all', s);
     };
 
-    const clearOldData = () => {
-        OLD_LS_KEYS.forEach((e) => {
-            localStorage.removeItem(e);
-        });
-    };
-
     useEffect(() => {
         postSymbolViews(getSymbolString(symbol));
     }, [symbol]);
-
-    useEffect(() => {
-        clearOldData();
-    }, []);
 
     useEffect(() => {
         if (symbolFromUrl?.quote !== symbol?.quote
@@ -214,137 +177,19 @@ const SpotComp = () => {
         };
     }, [publicSocket, symbol]);
 
-    const onLayoutChange = (_layout) => {
-        if (!fullScreen) {
-            if (isOnSidebar) {
-                localStorage.setItem(LS_KEYS.SPOT_LAYOUT_ON_SIDEBAR, JSON.stringify(_layout));
-            } else {
-                localStorage.setItem(LS_KEYS.SPOT_LAYOUT, JSON.stringify(_layout));
-            }
-        }
-    };
-
     useEffect(() => {
-        let _layout;
-        if (fullScreen) {
-            _layout = layoutFullScreenChart;
-        } else {
-            const _layoutOnSidebarLocal = JSON.parse(localStorage.getItem(LS_KEYS.SPOT_LAYOUT_ON_SIDEBAR)) || layoutOnSidebar;
-            const _layoutLocal = JSON.parse(localStorage.getItem(LS_KEYS.SPOT_LAYOUT)) || layout;
-
-            _layout = isOnSidebar ? _layoutOnSidebarLocal : _layoutLocal;
-
-            const notSymbolListAndFirstItem = _layout.filter(e => e.i !== 'symbolList' && e.y !== 0);
-            const highestGridItem = maxBy(notSymbolListAndFirstItem, e => (e.y + e.h));
-            const orderListLayout = find(_layout, e => e.i === 'orderList');
-            const sameYOrderListLayout = _layout.filter(e => e.y === orderListLayout.y);
-            const highestSameYOrderListLayout = maxBy(sameYOrderListLayout, 'h');
-
-            _layout = _layout.map(e => {
-                const newLayout = { ...e };
-                if (newLayout.i === 'chart') {
-                    if (isMaxChart) {
-                        newLayout.w = e.maxW;
-                    } else {
-                        newLayout.w = e.minW;
-                    }
-                }
-                if (newLayout.i === 'orderbook') {
-                    if (isMaxChart) {
-                        newLayout.w = 0;
-                        newLayout.h = 0;
-                        newLayout.isDraggable = false;
-                        newLayout.isResizable = false;
-                    } else {
-                        newLayout.w = e.minW;
-                        newLayout.h = e.minH;
-                        newLayout.isDraggable = true;
-                        newLayout.isResizable = true;
-                    }
-                }
-                if (newLayout.i === 'trades') {
-                }
-                if (newLayout.i === 'symbolList') {
-                    newLayout.h = highestGridItem.y + highestGridItem.h;
-                }
-                if (newLayout.i === 'orderList' && highestSameYOrderListLayout) {
-                // newLayout.h = highestSameYOrderListLayout.h;
-                }
-                return newLayout;
-            });
-
-            const _orderbookLayout = find(_layout, { i: 'orderbook' });
-            const _chartLayout = find(_layout, { i: 'chart' });
-            const _tradesLayout = find(_layout, { i: 'trades' });
-            setChartSize(_chartLayout?.w);
-            setOrderBookLayout(_orderbookLayout);
-            setTradesLayout(_tradesLayout);
-        }
+        const _layout = layoutOnSidebar;
+        const _orderbookLayout = find(_layout, { i: 'orderbook' });
+        const _chartLayout = find(_layout, { i: 'chart' });
+        const _tradesLayout = find(_layout, { i: 'trades' });
+        const _symbolDetailLayout = find(_layout, { i: 'symbolDetail' });
+        setChartSize(_chartLayout?.w);
+        setOrderBookLayout(_orderbookLayout);
+        setSymbolDetailLayout(_symbolDetailLayout);
+        setTradesLayout(_tradesLayout);
         setGridLayout(_layout);
     }, [isOnSidebar, isMaxChart, fullScreen]);
 
-    const handleResize = (_layout, _oldItem, _newItem, _placeholder, _e, _element) => {
-        if (_newItem?.i === 'orderbook') {
-            setOrderBookLayout(_newItem);
-        }
-        if (_newItem?.i === 'trades') {
-            setTradesLayout(_newItem);
-        }
-        if (_newItem?.i === 'orderList') {
-            setIsResizingOrderList(true);
-        }
-    };
-
-    const handleResizeStop = (_layout, _oldItem, _newItem, _placeholder, _e, _element) => {
-        if (_newItem?.i === 'chart') {
-            setChartSize(_newItem?.w + _newItem?.h);
-        }
-        if (_newItem?.i === 'orderbook') {
-            // setOrderBookLayout(_newItem);
-        }
-        // if (_newItem?.i === 'trades') {
-        //     setTradesLayout(_newItem);
-        // }
-        if (_newItem?.i === 'orderList') {
-            setIsResizingOrderList(false);
-        }
-    };
-    const handleDragStop = (_layout, _oldItem, _newItem, _placeholder, _e, _elemen) => {
-        const notSymbolListAndFirstItem = _layout.filter(e => e.i !== 'symbolList' && e.y !== 0);
-        const highestGridItem = maxBy(notSymbolListAndFirstItem, e => (e.y + e.h));
-        const orderListLayout = find(_layout, e => e.i === 'orderList');
-        const sameYOrderListLayout = _layout.filter(e => e.y === orderListLayout.y);
-        const highestSameYOrderListLayout = maxBy(sameYOrderListLayout, 'h');
-
-        const updatedLayout = _layout.map(e => {
-            const newLayout = { ...e };
-            if (newLayout.i === 'chart') {
-                if (isMaxChart) {
-                    newLayout.w = e.maxW;
-                } else {
-                    newLayout.w = e.minW;
-                }
-            }
-            if (newLayout.i === 'trades') {
-            }
-            if (newLayout.i === 'symbolList') {
-                newLayout.h = highestGridItem.y + highestGridItem.h;
-            }
-            if (newLayout.i === 'orderList' && highestSameYOrderListLayout) {
-                // newLayout.h = highestSameYOrderListLayout.h;
-            }
-            return newLayout;
-        });
-
-        const _chartLayout = find(_layout, { i: 'chart' });
-        const _orderbookLayout = find(_layout, { i: 'orderbook' });
-        const _tradesLayout = find(_layout, { i: 'trades' });
-        setChartSize(_chartLayout?.w);
-        setOrderBookLayout(_orderbookLayout);
-        setTradesLayout(_tradesLayout);
-
-        setGridLayout(updatedLayout);
-    };
     const handleCallback = (childData) => {
         const isTrue = (childData === 'true');
         setIsOnSidebar(isTrue);
@@ -353,22 +198,8 @@ const SpotComp = () => {
         const isTrue = (childData === 'true');
         setIsMaxChart(isTrue);
     };
-    const handleReadSignal = (userId, symId) => {
-        FetchApi({
-            url: '/api/v1/signal/read',
-            options: {
-                method: 'PUT',
-            },
-            params: {
-                userId,
-                id: symId,
-            },
-        });
-    };
+
     const handleChangeSymbol = async (sym, time_frame, userId, symId, extIndicator) => {
-        if (typeof userId === 'number' && typeof symId === 'string') {
-            await handleReadSignal(userId, symId);
-        }
         if (extIndicator) {
             setExtendsIndicators(extIndicator);
         }
@@ -499,20 +330,40 @@ const SpotComp = () => {
             </MobileView>
             <BrowserView>
                 <ReactGridLayout
-                    className="layout"
+                    className="layout bg-black-5"
                     layout={gridLayout}
                     breakpoints={{ xl: 1400, lg: 1200 }}
-                    cols={40}
+                    cols={16}
                     margin={[8, 8]}
                     containerPadding={[8, 8]}
-                    rowHeight={width > 2000 ? 20 : 10}
-                    onLayoutChange={(_layout, _layouts) => onLayoutChange(_layout, _layouts)}
+                    // rowHeight={width > 2000 ? 20 : 10}
+                    rowHeight={30}
+                    // onLayoutChange={(_layout, _layouts) => onLayoutChange(_layout, _layouts)}
                     draggableHandle=".dragHandleArea"
                     draggableCancel=".dragCancelArea"
-                    onResizeStop={handleResizeStop}
-                    onDragStop={handleDragStop}
-                    onResize={handleResize}
+                    // onResizeStop={handleResizeStop}
+                    // onDragStop={handleDragStop}
+                    // onResize={handleResize}
                 >
+                    <div key="symbolDetail">
+                        <SymbolDetail
+                            symbol={symbol}
+                            layoutConfig={symbolDetailLayout}
+                            changeSymbolList={changeSymbolList}
+                            watchList={watchList}
+                            favorite={favorite}
+                            parentCallback={handleCallbackChart}
+                            fullScreen={false}
+                        />
+                    </div>
+
+                    <div key="orderbook">
+                        <OrderBook
+                            layoutConfig={orderBookLayout}
+                            symbol={symbol}
+                        />
+                    </div>
+
                     <div key="symbolList" className={`${fullScreen && 'hidden'} z-[3]`}>
                         {renderSymbolList}
                         {/* <SymbolList
@@ -541,27 +392,21 @@ const SpotComp = () => {
                             fullScreen={fullScreen}
                         />
                     </div>
-                    <div key="orderList" className={`${fullScreen && 'hidden'}`}>
+                    <div key="orderList">
                         <div ref={orderListWrapperRef} className="h-full">
                             <SpotOrderList isOnSidebar={isOnSidebar} orderListWrapperHeight={orderListWrapperHeight} />
                         </div>
                     </div>
-                    <div key="orderbook" className={`${fullScreen && 'hidden'}`}>
-                        <OrderBook
-                            layoutConfig={orderBookLayout}
-                            symbol={symbol}
-                            isOnSidebar={isOnSidebar}
-                        />
-                    </div>
-                    <div key="trades" className={`${fullScreen && 'hidden'}`}>
+
+                    <div key="trades">
                         <Trades
                             layoutConfig={tradesLayout}
                             symbol={symbol}
                             publicSocket={publicSocket}
                         />
                     </div>
-                    <div key="placeOrderForm" className={`${fullScreen && 'hidden'}`}>
-                        <PlaceOrderForm
+                    <div key="placeOrderForm">
+                        <SimplePlaceOrderForm
                             symbol={symbol}
                         />
                     </div>

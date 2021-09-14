@@ -70,16 +70,16 @@ const Trades = (props) => {
     }, [publicSocket, MAX_LENGTH, symbol]);
 
     return (
-        <div className="spot-order-book- rounded bg-white px-1.5 pb-6 row-span-1 h-full" ref={ref}>
+        <div className="h-full rounded bg-white px-1.5 pb-6 row-span-1 h-full" ref={ref}>
             <h3 className="font-semibold text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('trades')}</h3>
             <div className="ats-tbheader px-1.5">
                 <div className="flex justify-between items-center mb-3">
-                    <div className="flex flex-1 justify-start text-black-500 text-xs font-medium">{t('common:price')}</div>
-                    <div className="flex flex-1 justify-end text-black-500 text-xs font-medium">{t('common:quantity')}</div>
-                    <div className="flex flex-1 justify-end text-black-500 text-xs font-medium">{t('common:time')}</div>
+                    <div className="flex flex-1 justify-start text-black-600 text-xs font-medium">{t('common:price')}</div>
+                    <div className="flex flex-1 justify-end text-black-600 text-xs font-medium">{t('common:quantity')}</div>
+                    <div className="flex flex-1 justify-end text-black-600 text-xs font-medium">{t('common:time')}</div>
                 </div>
             </div>
-            <div className="overflow-y-auto max-h-[calc(100%-85px)] px-1.5">
+            <div className="overflow-y-auto max-h-[calc(100%-12px)] px-1.5">
                 {loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#4021D0" /></div> : (recentTrade && recentTrade.map((trade, index) => {
                     const {
                         S: side,
@@ -92,9 +92,9 @@ const Trades = (props) => {
                         // const [p, q] = order;
                     return (
                         <div className="flex mb-2 cursor-pointer hover:bg-blue-50" key={index}>
-                            <div className={'flex-1 text-xs leading-table ' + ((side === 'SELL') ? 'text-red' : 'text-green')}>{formatPrice(price, exchangeConfig, symbol?.quote)}</div>
-                            <div className="flex-1 text-black-700 text-xs leading-table text-right">{formatPrice(quantity, exchangeConfig, symbol?.base)}</div>
-                            <div className="flex-1 text-black-700 text-xs leading-table text-right">{formatTime(timestamp, 'HH:mm:ss')}</div>
+                            <div className={'flex-1 text-xs font-semibold leading-table ' + ((side === 'SELL') ? 'text-pink' : 'text-mint')}>{formatPrice(price, exchangeConfig, symbol?.quote)}</div>
+                            <div className="flex-1 text-black-600 font-semibold text-xs leading-table text-right">{formatPrice(quantity, exchangeConfig, symbol?.base)}</div>
+                            <div className="flex-1 text-black-600 font-semibold text-xs leading-table text-right">{formatTime(timestamp, 'HH:mm:ss')}</div>
                         </div>);
                 }))}
             </div>

@@ -367,6 +367,36 @@ const NavBar = () => {
                                                     </div>
                                                 </Link>
                                             </div>
+                                            <div>
+                                                <Link href="/my/account/profile" locale={locale} prefetch={false}>
+                                                    <div
+                                                        className="px-2 py-2 flex items-center hover:bg-teal-5 font-medium cursor-pointer group"
+                                                    >
+                                                        <span className="text-black group-hover:text-teal">
+                                                            <IconProfile size={16} />
+                                                        </span>
+                                                        <span
+                                                            className="ml-3 flex-grow text-black-700 group-hover:text-teal"
+                                                        >{t('account')}
+                                                        </span>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                            <div>
+                                                <Link href="/my/account/profile" locale={locale} prefetch={false}>
+                                                    <div
+                                                        className="px-2 py-2 flex items-center hover:bg-teal-5 font-medium cursor-pointer group"
+                                                    >
+                                                        <span className="text-black group-hover:text-teal">
+                                                            <IconProfile size={16} />
+                                                        </span>
+                                                        <span
+                                                            className="ml-3 flex-grow text-black-700 group-hover:text-teal"
+                                                        >{t('account')}
+                                                        </span>
+                                                    </div>
+                                                </Link>
+                                            </div>
                                             <div className="border-0 border-t border-black-200 font-medium">
                                                 <div
                                                     className="px-2 py-2 flex items-center hover:bg-teal-5 font-medium cursor-pointer group"

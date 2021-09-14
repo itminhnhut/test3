@@ -189,10 +189,10 @@ export function render24hChange(ticker) {
         let sign;
         if (change24h > 0) {
             sign = '+';
-            className += ' text-green';
+            className += ' text-mint';
         } else if (change24h < 0) {
             sign = '';
-            className += ' text-red';
+            className += ' text-pink';
         } else sign = '';
 
         text = `${sign}${formatPercentage(change24h, 2, true)}%`;
@@ -288,12 +288,12 @@ export function getPercentageOf(a, b) {
         percentage = (a) / b * 100;
     }
     let sign = '';
-    let className = 'text-green';
+    let className = 'text-mint';
     if (percentage > 0) {
         sign = '+';
     } else if (percentage < 0) {
         sign = '';
-        className = 'text-red';
+        className = 'text-pink';
     }
     return <span className={className}>{`${sign}${formatPercentage(percentage, 2, true)}%`}</span>;
 }
@@ -309,12 +309,12 @@ export function getChangePercentage(from, to) {
         percentage = (to - from) / from * 100;
     }
     let sign = '';
-    let className = 'text-green';
+    let className = 'text-mint';
     if (percentage > 0) {
         sign = '+';
     } else if (percentage < 0) {
         sign = '';
-        className = 'text-red';
+        className = 'text-pink';
     }
     return <span className={className}>{`${sign}${formatPercentage(percentage, 2, true)}%`}</span>;
 }

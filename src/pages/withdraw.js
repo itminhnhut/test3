@@ -569,7 +569,7 @@ const Wallet = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="text-xs text-red mt-2">
+                                <div className="text-xs text-pink mt-2">
                                     {errors?.min
                                         ? `${t('convert:errors.min', {
                                             amount: formatWallet(

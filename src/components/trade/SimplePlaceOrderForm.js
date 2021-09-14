@@ -64,7 +64,7 @@ const allSubTabs = [
     ExchangeOrderEnum.Type.LIMIT,
 ];
 
-const PlaceOrderForm = ({ symbol }) => {
+const SimplePlaceOrderForm = ({ symbol }) => {
     const [priceRef, setPriceFocus] = useFocus();
     const [quantityRef, setQuantityFocus] = useFocus();
     const [quoteQtyRef, setQuoteQtyFocus] = useFocus();
@@ -90,7 +90,7 @@ const PlaceOrderForm = ({ symbol }) => {
     const [percentage, setPercentage] = useState(0);
     const [placing, setPlacing] = useState(false);
     const [orderSide, setOrderSide] = useState(ExchangeOrderEnum.Side.BUY);
-    const [orderType, setOrderType] = useState(ExchangeOrderEnum.Type.MARKET);
+    const [orderType, setOrderType] = useState(ExchangeOrderEnum.Type.LIMIT);
     const [quantity, setQuantity] = useState(0);
     const [quoteQty, setQuoteQty] = useState(0);
     const [focus, setFocus] = useState();
@@ -571,7 +571,7 @@ const PlaceOrderForm = ({ symbol }) => {
         // if (orderType !== ExchangeOrderEnum.Type.LIMIT) return null;
         return (
             <div className="flex justify-between items-center mb-2">
-                <div className="text-sm text-black-600">{t('common:price')}</div>
+                <div className="text-sm text-black-500 font-semibold">{t('common:price')}</div>
                 <div className="form-group md:w-[100px] xl:w-4/6">
                     <div className="input-group">
                         {
@@ -580,7 +580,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             (
                                 <NumberFormat
                                     getInputRef={priceRef}
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right outline-none"
+                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold outline-none"
                                     name="stop_buy_input"
                                     thousandSeparator
                                     onFocus={() => {
@@ -600,7 +600,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             &&
                             (
                                 <input
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right bg-white"
+                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold bg-white"
                                     name="stop_buy_input"
                                     type="text"
                                     disabled
@@ -707,7 +707,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             <Listbox.Button
                                 className="relative w-full text-left cursor-pointer focus:outline-none sm:text-sm"
                             >
-                                <div className="text-sm text-black-600">
+                                <div className="text-sm text-black-500 font-semibold">
                                     <span className="w-[100px]">
                                         {quantityMode.name}
                                     </span>
@@ -770,14 +770,14 @@ const PlaceOrderForm = ({ symbol }) => {
                 {
                     orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
                         ? _renderQuantityMode
-                        : <div className="text-sm text-black-600 ">{t('total')}</div>
+                        : <div className="text-sm text-black-500 font-semibold ">{t('total')}</div>
                 }
                 <div className="form-group md:w-[100px] xl:w-4/6">
                     <div className="input-group">
 
                         <NumberFormat
                             getInputRef={quoteQtyRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right outline-none"
+                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold outline-none"
                             name="quoteQty"
                             onFocus={() => {
                                 setFocus('quoteQty');
@@ -813,14 +813,14 @@ const PlaceOrderForm = ({ symbol }) => {
                 {
                     orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
                         ? _renderQuantityMode
-                        : <div className="text-sm text-black-600 ">{t('common:amount')}</div>
+                        : <div className="text-sm text-black-500 font-semibold ">{t('common:amount')}</div>
                 }
 
                 <div className="form-group md:w-[100px] xl:w-4/6">
                     <div className="input-group">
                         <NumberFormat
                             getInputRef={quantityRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right outline-none"
+                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold outline-none"
                             name="quantity"
                             onFocus={() => {
                                 setFocus('quantity');
@@ -887,7 +887,7 @@ const PlaceOrderForm = ({ symbol }) => {
             <>
                 <h3 className="font-semibold text-lg text-black mb-3">{t('spot:balance')}</h3>
                 <div className="flex justify-between items-center">
-                    <div className="text-sm text-black-600 ">{t('spot:available_balance')}</div>
+                    <div className="text-sm text-black-500 font-semibold ">{t('spot:available_balance')}</div>
                     <div className="text-sm text-black-700 font-semibold text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
@@ -902,36 +902,34 @@ const PlaceOrderForm = ({ symbol }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     };
 
-    const _renderAssetPortfolio = () => {
-        if (orderSide === ExchangeOrderEnum.Side.BUY) return null;
-        // const multi = quote === 'VNDC' ? 24000 : 1;
-        const additionDigits = quote === 'VNDC' ? 0 : 2;
-        return (
-            <>
-                <div className="flex justify-between items-center mt-2">
-                    <div className="text-sm text-black-600 inline-block">{t('initial_price')}</div>
-                    <div className="text-sm text-black-700 font-semibold text-right">
-                        {loadingInitialPrice ? <span><TextLoader height={18} /></span> : `${formatWallet(multiValue * initialPrice, additionDigits)} ${quote}`}
-                    </div>
-                </div>
-                <div className="flex justify-between items-center mt-2">
-                    <div className="text-sm text-black-600 ">{t('pnl')}</div>
-                    <div className="text-sm text-black-700 font-semibold text-right">
-                        {loadingInitialPrice ? <span><TextLoader height={18} /></span> : <AssetPnL initialPrice={initialPrice} value={getBalance(baseAssetId)} multiValue={multiValue} symbolTicker={symbolTicker} /> }
-                    </div>
-                </div>
-            </>
-        );
-    };
-
     return (
         <>
-            <div className="bg-white px-3 pb-6 spot-place-orders-container rounded">
-                <h3 className="font-semibold text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('spot:place_order')}</h3>
-                {_renderOrderSide}
+            <div className="bg-white h-full px-3 pb-6 spot-place-orders-container rounded">
+                {/* <h3 className="font-semibold text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('spot:place_order')}</h3> */}
+                {/* {_renderOrderSide} */}
                 {_renderOrderType}
 
-                <div className="tab-content">
+                <div className="grid grid-cols-2 gap-8">
+                    <div className="">
+
+                        {_renderOrderPrice}
+                        {_renderOrderQuantity}
+                        {_renderOrderQuoteQty}
+                        {_renderQuantitySlider}
+                        {currentExchangeConfig?.status === 'MAINTAIN' && <p className="text-sm mb-3 flex"><span className="mr-2"><IconLock width={12} height={16} /></span> <span>{t('spot:pair_under_maintenance', { base: symbol?.base, quote: symbol?.quote })}</span></p>}
+                        {_renderPlaceOrderButton()}
+                    </div>
+                    <div className="">
+
+                        {_renderOrderPrice}
+                        {_renderOrderQuantity}
+                        {_renderOrderQuoteQty}
+                        {_renderQuantitySlider}
+                        {currentExchangeConfig?.status === 'MAINTAIN' && <p className="text-sm mb-3 flex"><span className="mr-2"><IconLock width={12} height={16} /></span> <span>{t('spot:pair_under_maintenance', { base: symbol?.base, quote: symbol?.quote })}</span></p>}
+                        {_renderPlaceOrderButton()}
+                    </div>
+                </div>
+                {/* <div className="tab-content">
 
                     {_renderOrderPrice}
                     {_renderOrderQuantity}
@@ -939,8 +937,8 @@ const PlaceOrderForm = ({ symbol }) => {
                     {_renderQuantitySlider}
                     {currentExchangeConfig?.status === 'MAINTAIN' && <p className="text-sm mb-3 flex"><span className="mr-2"><IconLock width={12} height={16} /></span> <span>{t('spot:pair_under_maintenance', { base: symbol?.base, quote: symbol?.quote })}</span></p>}
                     {_renderPlaceOrderButton()}
-                </div>
-                {_renderUserBalance()}
+                </div> */}
+                {/* {_renderUserBalance()} */}
                 {/* {_renderAssetPortfolio()} */}
 
             </div>
@@ -1129,4 +1127,4 @@ const PlaceOrderForm = ({ symbol }) => {
     );
 };
 
-export default PlaceOrderForm;
+export default SimplePlaceOrderForm;

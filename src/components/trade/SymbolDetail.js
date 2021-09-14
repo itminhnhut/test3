@@ -1,26 +1,22 @@
+import AssetLogo from 'components/wallet/AssetLogo';
+import AssetName from 'components/wallet/AssetName';
 import { useTranslation } from 'next-i18next';
-import { formatPrice, render24hChange } from 'src/redux/actions/utils';
-import { useEffect, useState } from 'react';
-import Emitter from 'src/redux/actions/emitter';
-import { LS_KEYS, PublicSocketEvent } from 'src/redux/actions/const';
-import { setUserSymbolList } from 'src/redux/actions/market';
-import { useLocalStorage } from 'react-use';
-import { iconColor400 } from 'src/config/colors';
-import { ChevronsLeft, ChevronsRight } from 'react-feather';
-import { useSelector } from 'react-redux';
 import * as React from 'react';
-import { useWindowSize } from 'utils/customHooks';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { PublicSocketEvent } from 'src/redux/actions/const';
+import Emitter from 'src/redux/actions/emitter';
+import { setUserSymbolList } from 'src/redux/actions/market';
+import { formatPrice, render24hChange } from 'src/redux/actions/utils';
 import { IconStar, IconStarFilled } from '../common/Icons';
 
 const SymbolDetail = (props) => {
-    const { symbol, favorite, changeSymbolList, watchList, parentCallback, isOnSidebar, fullScreen } = props;
+    const { symbol, favorite, changeSymbolList, watchList, parentCallback, isOnSidebar, fullScreen, layoutConfig } = props;
     const { t } = useTranslation('common');
     const [symbolTicker, setSymbolTicker] = useState(null);
     const [favoriteId, setFavoriteId] = useState('');
-    const [isMaxChart, setIsMaxChart] = useLocalStorage(LS_KEYS.SPOT_MAX_CHART, 'false');
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
-    const { width } = useWindowSize();
-
+    const ref = React.useRef(null);
     useEffect(() => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
             setSymbolTicker(data);
@@ -34,10 +30,10 @@ const SymbolDetail = (props) => {
         setFavoriteId(watchList.filter(list => list.type === 'FAVORITE')[0]?.id);
     }, [watchList]);
     useEffect(() => {
-        parentCallback(isMaxChart);
-    }, [isMaxChart]);
-
-    const shouldShowHighLow = isMaxChart === 'true' || !isOnSidebar;
+        if (ref.current) {
+            setHeight(ref.current.clientHeight);
+        }
+    }, [ref.current, layoutConfig?.h]);
 
     const handleSetFavorite = async (asset) => {
         let newFavoriteList = [];
@@ -60,83 +56,60 @@ const SymbolDetail = (props) => {
     return (
         <>
             <div
-                className={`flex flex-row items-center justify-start dragHandleArea ${fullScreen ? '' : 'py-7 mx-4 border-b border-black-200'}`}
+                className="h-full w-full flex flex-row items-center justify-start dragHandleArea bg-white rounded border-b border-black-200"
             >
-                <div className="flex flex-row font-semibold text-xl items-center mr-4 ml-2 dragCancelArea">
-                    <span onClick={() => handleSetFavorite(symbolTicker?.b)} className="pr-2 cursor-pointer">{favorite && favorite.length && favorite.includes(symbolTicker?.b) ? <IconStarFilled /> : <IconStar />}</span>
-                    <span>{symbolTicker?.b}/{symbolTicker?.q}</span>
+                <div className="flex flex-row  items-center px-4 dragCancelArea">
+                    <AssetLogo assetCode={symbolTicker?.b} size={32} />
+                    <div className="flex flex-col pl-4">
+                        <span className="font-bold">
+                            {symbolTicker?.b}/{symbolTicker?.q}
+                        </span>
+                        <span className="text-xs">
+                            <AssetName assetCode={symbolTicker?.b} />
+                        </span>
+                    </div>
                 </div>
                 <div className={fullScreen ? 'hidden' : 'flex items-center w-full'}>
                     <div className="flex  flex-col content-end text-right mr-7.5 min-w-[100px] min-0 dragCancelArea">
                         <div
-                            className="block text-black-700 text-sm font-semibold "
+                            className="block text-black-700 font-semibold "
                         >{formatPrice(symbolTicker?.p, exchangeConfig, symbol?.quote)}
                         </div>
-                        <div className="block text-black-500 text-xxs font-normal">{symbolTicker?.q}</div>
                     </div>
                     <div className="flex  flex-col min-w-max mr-7.5">
-                        <div className="block text-black-500 text-xxs text-left font-normal">{t('change')} 24h</div>
+                        <div className="block text-black-500 text-xs text-left font-normal">{t('change')} 24h</div>
                         <div
-                            className="block text-sm font-semibold "
+                            className="block text-xs font-semibold "
                         >{render24hChange(symbolTicker)}
                         </div>
                     </div>
-                    { (shouldShowHighLow && width > 1400) && (
-                        <>
-                            <div className="flex  flex-col mr-7.5 min-w-max">
-                                <div className="block text-black-500 text-xxs text-left font-normal">{t('high')} 24h</div>
-                                <div
-                                    className="block text-black-700 text-sm font-semibold "
-                                >{formatPrice(symbolTicker?.h, exchangeConfig, symbol?.quote)}
-                                </div>
-                            </div>
-                            <div className="flex  flex-col mr-7.5 min-w-max">
-                                <div className="block text-black-500 text-xxs text-left font-normal">{t('low')} 24h</div>
-                                <div
-                                    className="block text-black-700 text-sm font-semibold "
-                                >{formatPrice(symbolTicker?.l, exchangeConfig, symbol?.quote)}
-                                </div>
-                            </div>
-                        </>
-                    )}
-                    <div className="flex  flex-col min-w-max">
-                        <div className="block text-black-500 text-xxs text-left font-normal">{t('volume')} 24h ({symbolTicker?.b})</div>
+                    <div className="flex  flex-col mr-7.5 min-w-max">
+                        <div className="block text-black-500 text-xs text-left font-normal">{t('high')} 24h</div>
                         <div
-                            className="block text-black-700 text-sm font-semibold "
+                            className="block text-black-700 text-xs font-semibold "
+                        >{formatPrice(symbolTicker?.h, exchangeConfig, symbol?.quote)}
+                        </div>
+                    </div>
+                    <div className="flex  flex-col mr-7.5 min-w-max">
+                        <div className="block text-black-500 text-xs text-left font-normal">{t('low')} 24h</div>
+                        <div
+                            className="block text-black-700 text-xs font-semibold "
+                        >{formatPrice(symbolTicker?.l, exchangeConfig, symbol?.quote)}
+                        </div>
+                    </div>
+                    <div className="flex  flex-col min-w-max">
+                        <div className="block text-black-500 text-xs text-left font-normal">{t('volume')} 24h ({symbolTicker?.b})</div>
+                        <div
+                            className="block text-black-700 text-xs font-semibold "
                         >{formatPrice(symbolTicker?.vb, 2)}
                         </div>
                     </div>
-                    {
-                        isMaxChart === 'true' && (
-                            <div className="2xl:flex hidden ml-7.5 flex-col min-w-max">
-                                <div className="block text-black-500 text-xxs text-left font-normal">{t('vol')} 24h ({symbolTicker?.q})</div>
-                                <div
-                                    className="block text-black-700 text-sm font-semibold "
-                                >{formatPrice(symbolTicker?.vq, 2)}
-                                </div>
-                            </div>
-                        )
-                    }
-                    <div className="ml-auto">
-                        {
-                            isMaxChart === 'true' ? (
-                                <button
-                                    className="btn btn-icon dragCancelArea"
-                                    type="button"
-                                    onClick={() => setIsMaxChart('false')}
-                                >
-                                    <ChevronsLeft color={iconColor400} size={24} />
-                                </button>
-                            ) : (
-                                <button
-                                    className="btn btn-icon dragCancelArea"
-                                    type="button"
-                                    onClick={() => setIsMaxChart('true')}
-                                >
-                                    <ChevronsRight color={iconColor400} size={24} />
-                                </button>
-                            )
-                        }
+                    <div className="2xl:flex ml-7.5 flex-col min-w-max">
+                        <div className="block text-black-500 text-xs text-left font-normal">{t('vol')} 24h ({symbolTicker?.q})</div>
+                        <div
+                            className="block text-black-700 text-xs font-semibold "
+                        >{formatPrice(symbolTicker?.vq, 2)}
+                        </div>
                     </div>
                 </div>
             </div>

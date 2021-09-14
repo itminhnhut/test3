@@ -90,15 +90,15 @@ export const IconDashboard = () => (
 
 );
 
-export const IconStar = ({ size = 16 }) => (
+export const IconStar = ({ size = 12 }) => (
     <svg width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" stroke="#C5C6D2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
-export const IconStarFilled = ({ size = 16 }) => (
+export const IconStarFilled = ({ size = 12, color = 'F1C617' }) => (
     <svg width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#F1C617" stroke="#F1C617" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill={color} stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
@@ -260,16 +260,23 @@ export const IconSwitch = () => (
 );
 
 export const IconSortDown = () => (
-    <svg className="ats-icon" width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className="nami-icon" width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fillRule="evenodd" clipRule="evenodd" d="M1.40302 0.735352C0.527003 0.735352 0.0743933 1.78182 0.674314 2.42018L3.31339 5.22836C3.71105 5.65149 4.38427 5.64811 4.77765 5.221L7.3641 2.41282C7.95434 1.77199 7.49979 0.735352 6.62855 0.735352H1.40302Z" fill="#8B8C9B" />
     </svg>
 
 );
 
 export const IconSort = () => (
-    <svg className="ats-icon" width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fillRule="evenodd" clipRule="evenodd" d="M2.40302 6.73535C1.527 6.73535 1.07439 7.78182 1.67431 8.42018L4.31339 11.2284C4.71105 11.6515 5.38427 11.6481 5.77765 11.221L8.3641 8.41282C8.95434 7.77199 8.49979 6.73535 7.62855 6.73535H2.40302Z" fill="#8B8C9B" />
-        <path fillRule="evenodd" clipRule="evenodd" d="M2.40302 5.27637C1.527 5.27637 1.07439 4.2299 1.67431 3.59154L4.31339 0.783361C4.71105 0.36023 5.38427 0.363611 5.77765 0.790716L8.3641 3.5989C8.95434 4.23973 8.49979 5.27637 7.62855 5.27637H2.40302Z" fill="#C5C6D2" />
+    <svg width="18" height="18" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#00C8BC" />
+        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill="#C4C4C4" />
+    </svg>
+
+);
+export const IconNoSort = () => (
+    <svg width="18" height="18" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#00C8BC" />
+        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill="#C4C4C4" />
     </svg>
 
 );

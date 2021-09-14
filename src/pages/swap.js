@@ -455,7 +455,7 @@ const Swap = () => {
                                     </div>
 
                                 </div>
-                                <div className="text-xs font-semibold text-red">
+                                <div className="text-xs font-semibold text-pink">
                                     <CoinFromErrorText />
                                 </div>
                             </div>

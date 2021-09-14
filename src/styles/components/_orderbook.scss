@@ -11,10 +11,10 @@
     height: 22px;
     width: 100%;
     &.ask-bar {
-      @apply bg-red;
+      @apply bg-pink;
     }
     &.bid-bar {
-      @apply bg-green;
+      @apply bg-mint;
     }
   }
 }

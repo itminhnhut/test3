@@ -26,7 +26,7 @@ const AssetPnL = (props) => {
 
     if (isLoading) return <span><TextLoader height={18} /></span>;
 
-    return <span className={Number(percentage) >= 0 ? 'text-green' : 'text-red'}>{percentage}%</span>;
+    return <span className={Number(percentage) >= 0 ? 'text-mint' : 'text-pink'}>{percentage}%</span>;
 };
 
 export default AssetPnL;

@@ -48,7 +48,7 @@ const SliderItem = (props) => {
                 <div className="flex item-center justify-between">
                     <div>
                         <div
-                            className={`font-semibold mb-1 ${!data?.u ? 'text-red' : 'text-green'}`}
+                            className={`font-semibold mb-1 ${!data?.u ? 'text-pink' : 'text-mint'}`}
                         >{formatPrice(data?.p)}
                         </div>
                         <div className="text-xs text-black-500 truncate">

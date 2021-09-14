@@ -60,7 +60,7 @@ module.exports = {
                 300: '#E1E2ED', // 5
                 400: '#C5C6D2', // 4
                 500: '#8B8C9B', // 3
-                600: '#52535C', // 2
+                600: '#3e3b3b', // 2
                 700: '#02083D', // 1,
                 800: '#000000',
             },
@@ -118,6 +118,12 @@ module.exports = {
             red: {
                 DEFAULT: '#C5292A',
                 ...colors.red,
+            },
+            pink: {
+                DEFAULT: '#ff0065',
+            },
+            mint: {
+                DEFAULT: '#09becf',
             },
         },
         extend: {

@@ -51,7 +51,7 @@ const LastPrice = (props) => {
                 loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#4021D0" /></div> :
                     colored
                         ? (
-                            <div className={symbolTicker?.u ? 'text-green' : 'text-red'}>
+                            <div className={symbolTicker?.u ? 'text-mint' : 'text-pink'}>
                                 {formatPrice(symbolTicker?.p, exchangeConfig, symbol?.base)}
                             </div>
                         )

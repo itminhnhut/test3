@@ -153,19 +153,15 @@ const OrderBook = (props) => {
                 onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
             >
                 <div className="flex items-center flex-1">
-                    <div className={`flex-1  text-xs leading-table ${side === 'buy' ? 'text-red' : 'text-green'}`}>
+                    <div className={`flex-1  text-xs font-semibold leading-table ${side === 'buy' ? 'text-pink' : 'text-mint'}`}>
                         {p ? formatPrice(p, exchangeConfig, symbolString) : '-'}
                     </div>
-                    <div className="flex-1 text-black-700 text-xs leading-table text-right">
+                    <div className="flex-1 text-black-600 text-xs font-semibold leading-table text-right">
                         {q ? formatPrice(+q, exchangeConfig, symbolString) : '-'}
                     </div>
-                    {
-                        showTotal && (
-                            <div className="flex-1 text-black-700 text-xs leading-table text-right">
-                                {p > 0 ? formatPrice(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
-                            </div>
-                        )
-                    }
+                    <div className="flex-1 text-black-600 text-xs font-semibold leading-table text-right">
+                        {p > 0 ? formatPrice(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
+                    </div>
                 </div>
                 <div
                     className={`progress-bar ${side === 'buy' ? 'ask-bar' : 'bid-bar'} `}
@@ -178,80 +174,20 @@ const OrderBook = (props) => {
         <>
             <div className="relative h-full rounded bg-white px-1.5 pb-[26px] flex flex-col box-border" ref={ref}>
                 <div className="flex items-center justify-between pt-[24px] pb-[16px] px-1.5 dragHandleArea">
-                    <div className="font-semibold text-lg text-black">{t('orderbook')}</div>
-                    {/* <div className="max-w-max">
-                        <Listbox
-                            value={tickSize}
-                            onChange={setTickSize}
-                        >
-                            {({ open }) => (
-                                <>
-                                    <div className="relative z-50">
-                                        <Listbox.Button
-                                            className="relative w-full text-left cursor-pointer focus:outline-none sm:text-sm border border-black-200 rounded px-[0.75rem] py-[0.25rem] h-[30px]"
-                                        >
-                                            <div className="text-xs text-black-500 font-medium text-right flex items-center">
-                                                <span className>
-                                                    {tickSize.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 20 })}
-                                                </span>
-                                                <svg
-                                                    className="ml-1.5 inline"
-                                                    width="8"
-                                                    height="5"
-                                                    viewBox="0 0 8 5"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        clipRule="evenodd"
-                                                        d="M1.31208 0C0.43606 0 -0.0165491 1.04647 0.583372 1.68483L3.22245 4.49301C3.6201 4.91614 4.29333 4.91276 4.68671 4.48565L7.27316 1.67747C7.8634 1.03664 7.40884 0 6.53761 0H1.31208Z"
-                                                        fill="#8B8C9B"
-                                                    />
-                                                </svg>
-                                            </div>
-                                        </Listbox.Button>
-
-                                        <Transition
-                                            show={open}
-                                            as={Fragment}
-                                            leave="transition ease-in duration-100"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
-                                        >
-                                            <Listbox.Options
-                                                static
-                                                className="absolute right-0 z-10 mt-1 bg-white border border-black-200 rounded transform  shadow-xl outline-none"
-                                            >
-                                                {tickSizeOptions.map((item, index) => (
-                                                    <Listbox.Option
-                                                        key={index}
-                                                        className={({ selected, active }) => `${selected ? 'font-medium text-teal' : 'text-black-500'} text-sm  cursor-pointer hover:text-teal py-1 text-right hover:bg-gray-100 px-4`}
-                                                        value={item}
-                                                    >
-                                                        {({ selected, active }) => item.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 20 })}
-                                                    </Listbox.Option>
-                                                ))}
-                                            </Listbox.Options>
-                                        </Transition>
-                                    </div>
-                                </>
-                            )}
-                        </Listbox>
-                    </div> */}
+                    {/* <div className="font-semibold text-lg text-black-600">{t('orderbook')}</div> */}
                 </div>
                 <div className="flex flex-col flex-1">
                     <div className="ats-tbheader px-1.5">
                         <div className="flex justify-between items-center mb-3">
-                            <div className="flex flex-1 justify-start text-black-500 text-xs font-medium">
+                            <div className="flex flex-1 justify-start text-black-600-500 text-xs font-medium">
                                 {t('price')}
                             </div>
-                            <div className="flex flex-1 justify-end text-black-500 text-xs font-medium">
+                            <div className="flex flex-1 justify-end text-black-600-500 text-xs font-medium">
                                 {t('quantity')}
                             </div>
                             {
                                 (shouldShowTotalCol) && (
-                                    <div className="flex flex-1 justify-end text-black-500 text-xs font-medium">
+                                    <div className="flex flex-1 justify-end text-black-600-500 text-xs font-medium">
                                         {t('total')}
                                     </div>
                                 )
@@ -281,8 +217,8 @@ const OrderBook = (props) => {
                                         exchangeConfig={exchangeConfig}
                                     />
                                 </span>
-                                {/* <span className="text-black-500"> ≈ </span> */}
-                                {/* <span className="text-black-500 ">1,412,232.23 VNDC</span> */}
+                                {/* <span className="text-black-600-500"> ≈ </span> */}
+                                {/* <span className="text-black-600-500 ">1,412,232.23 VNDC</span> */}
                             </div>
                             {/* <div className="text-teal-700 font-semibold">Xem thêm</div> */}
                         </div>
