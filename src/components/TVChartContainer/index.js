@@ -148,7 +148,7 @@ export class TVChartContainer extends React.PureComponent {
         try {
             if (this.widget) {
                 this.widget.save(data => {
-                    console.log('__ check save chart', data);
+                    // console.log('__ check save chart', data);
                     let currentData = localStorage.getItem(this.getChartKey);
                     if (currentData) {
                         try {

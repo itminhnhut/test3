@@ -35,7 +35,7 @@ function updateBar(data, sub) {
     const rounded = Math.floor(data.ts / coeff) * coeff;
     const lastBarSec = lastBar.time / 1000;
     let _lastBar;
-    // console.log('__ rounded', rounded, data.ts, lastBarSec);
+    // // console.log('__ rounded', rounded, data.ts, lastBarSec);
     if (rounded > lastBarSec) {
         // create a new candle, use last close as open **PERSONAL CHOICE**
         _lastBar = {

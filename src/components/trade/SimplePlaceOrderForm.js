@@ -288,7 +288,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
     }, [baseAssetId, symbol]);
 
     const createOrder = async (_orderSide) => {
-        console.log('__ check cerate', _orderSide);
+        // console.log('__ check cerate', _orderSide);
         // Filter input
         try {
             const _quantity = _orderSide === ExchangeOrderEnum.Side.BUY ? +buyQuantity : +sellQuantity;
@@ -304,7 +304,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                 price: _price,
                 useQuoteQty: isUseQuoteQuantity,
             };
-            console.log('__ check params order', params);
+            // console.log('__ check params order', params);
             // console.log(orderType, quantityMode.id, ExchangeOrderEnum.Type.MARKET, ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY);
 
             // if (orderType === ExchangeOrderEnum.Type.MARKET && quantityMode.id === ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) {
@@ -384,9 +384,9 @@ const SimplePlaceOrderForm = ({ symbol }) => {
     };
 
     const confirmModal = async (_orderSide) => {
-        console.log('__ chekc order', _orderSide);
+        // console.log('__ chekc order', _orderSide);
         setPlacing(true);
-        console.log('__ chekc order 2', _orderSide);
+        // console.log('__ chekc order 2', _orderSide);
         await createOrder(_orderSide);
     };
 
@@ -404,7 +404,6 @@ const SimplePlaceOrderForm = ({ symbol }) => {
 
     useDebounce(
         () => {
-            console.log('__ use debounce buy', buyPercentage, buyPrice);
             if (focus !== 'percentage') return;
             if (!(baseAssetId && quoteAssetId)) return;
             const available = getAvailable(quoteAssetId);
@@ -425,7 +424,6 @@ const SimplePlaceOrderForm = ({ symbol }) => {
     );
     useDebounce(
         () => {
-            console.log('__ use debounce sell', sellPercentage, sellPrice);
             if (focus !== 'percentage') return;
             if (!(baseAssetId && quoteAssetId)) return;
             const available = getAvailable(baseAssetId);

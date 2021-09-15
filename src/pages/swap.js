@@ -374,7 +374,7 @@ const Swap = () => {
         return null;
     };
 
-    console.log('__ check coin from, to', coinFrom, coinTo);
+    // console.log('__ check coin from, to', coinFrom, coinTo);
 
     return (
         <LayoutWithHeader>

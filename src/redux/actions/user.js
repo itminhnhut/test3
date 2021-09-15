@@ -152,7 +152,7 @@ export function getAllWallet() {
                     method: 'GET',
                 },
             });
-            console.log('__ chekc user balance', res);
+            // console.log('__ chekc user balance', res);
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
                 dispatch({

@@ -99,7 +99,7 @@ const App = ({ Component, pageProps }) => {
     store.subscribe(() => {
         if (!ignoreAuthUrls.includes(router.pathname)) {
             const newUserId = store.getState()?.auth?.user?.code;
-            console.log('__ chekc new user', newUserId);
+            // console.log('__ chekc new user', newUserId);
             if (!!newUserId && newUserId !== lastUserId) {
                 lastUserId = newUserId;
                 store.dispatch(getWallet());

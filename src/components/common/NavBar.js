@@ -15,6 +15,8 @@ import {
     IconLogout, IconProfile,
 } from './Icons';
 
+const { NEXT_PUBLIC_API_URL } = process.env;
+
 const NavBar = () => {
     const { t } = useTranslation(['navbar', 'common']);
     const router = useRouter();
@@ -64,34 +66,22 @@ const NavBar = () => {
         {
             name: 'wallet',
             submenu: [
-                {
-                    name: 'spot',
-                    route: 'https://nami.exchange/wallet/account?type=farming',
-                },
-                {
-                    name: 'futures',
-                    route: 'https://nami.exchange/wallet/account?type=farming',
-                },
-                {
-                    name: 'farming',
-                    route: 'https://nami.exchange/wallet/account?type=farming',
-                },
-                {
-                    name: 'stake',
-                    route: 'https://nami.exchange/wallet/account?type=stake',
-                },
+                { name: 'spot', route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming` },
+                { name: 'futures', route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming` },
+                { name: 'farming', route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming` },
+                { name: 'stake', route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=stake` },
             ],
         },
         {
             name: 'futures',
-            route: 'https://nami.exchange/futures',
+            route: `${NEXT_PUBLIC_API_URL}/futures`,
             icon: '',
         },
     ];
     const menuMobile = [
         {
             name: 'home',
-            route: 'https://nami.exchange',
+            route: `${NEXT_PUBLIC_API_URL}`,
             disabled: false,
         },
     ];
@@ -229,7 +219,7 @@ const NavBar = () => {
                 <div className="mx-auto px-2 sm:px-6 lg:px-8">
                     <div className="flex justify-between py-2.5 md:space-x-10">
                         <div className="flex justify-start">
-                            <Link href="https://nami.exchange" locale={locale} prefetch={false}>
+                            <Link href={NEXT_PUBLIC_API_URL} locale={locale} prefetch={false}>
                                 <div className="flex-shrink-0 flex items-center">
                                     <Image
                                         className="hidden lg:block h-10 w-auto clickable"

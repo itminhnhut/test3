@@ -7,7 +7,7 @@ import 'animate.css/animate.min.css';
 const NotificationContent = (props) => {
     const { type, title, message } = props;
 
-    console.log('__ chek noti', props);
+    // console.log('__ chek noti', props);
     let bgColor = 'bg-teal';
     if (type !== 'success') {
         bgColor = 'bg-pink';
