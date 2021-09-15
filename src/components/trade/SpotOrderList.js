@@ -20,7 +20,7 @@ const SpotOrderList = (props) => {
 
     return (
         <>
-            <div className="bg-bgContainer dark:bg-bgContainer-dark rounded pb-6 h-full" ref={elementRef}>
+            <div className="bg-bgContainer dark:bg-bgContainer-dark pb-6 h-full" ref={elementRef}>
                 <div className="flex items-center justify-between relative">
                     <ul className="tabs pt-6 mb-4 px-3 dragHandleArea flex-1">
                         <li className="tab-item">
@@ -51,7 +51,7 @@ const SpotOrderList = (props) => {
                                 <IconCustomCheckbox size={14} />
                             </div>
                         </div>
-                        <label htmlFor="pair" className="cursor-pointer">{t('spot:filter_by_current_pair')}</label>
+                        <label htmlFor="pair" className="cursor-pointer text-xs">{t('spot:filter_by_current_pair')}</label>
                     </div>
                 </div>
                 <div className="px-3" style={{ height: 'calc(100% - 120px)' }}>

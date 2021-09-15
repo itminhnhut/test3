@@ -28,6 +28,7 @@ import {
     API_PROFILE_USERNAME,
     API_USER_REFERRAL,
     API_WITHDRAW_ONCHAIN,
+    API_GET_USER_BALANCE,
 } from './apis';
 import ApiError from './apiError';
 import { SET_USER } from './types';
@@ -120,7 +121,7 @@ export function getWallet() {
     return async dispatch => {
         try {
             const res = await fetchAPI({
-                url: API_GET_USER_WALLET,
+                url: API_GET_USER_BALANCE,
                 options: {
                     method: 'GET',
                 },
@@ -146,11 +147,12 @@ export function getAllWallet() {
     return async dispatch => {
         try {
             const res = await fetchAPI({
-                url: API_GET_ALL_USER_WALLET,
+                url: API_GET_USER_BALANCE,
                 options: {
                     method: 'GET',
                 },
             });
+            console.log('__ chekc user balance', res);
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
                 dispatch({

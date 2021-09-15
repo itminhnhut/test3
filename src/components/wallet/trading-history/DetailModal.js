@@ -290,7 +290,7 @@ const DetailModal = ({ detail, assetConfig, closeModal, fullCategory, isComponen
                         <AssetLogo assetCode={asset?.assetCode} assetId={asset?.id} size={64} />
                         <p className="text-[#02083D] text-3xl break-word text-center mt-3" style={{ fontWeight: 500 }}>{renderMoney()}</p>
                         <div className={`${detail?.status === 1 ? 'bg-[rgba(5,177,105,0.1)]' : 'bg-[rgba(233,95,103,0.1)]'} rounded px-3 py-[5px] mt-2 flex flex-row items-center`}>
-                            <span className={`text-sm font-bold ${detail?.status === 1 ? 'text-[#05B169]' : 'text-[#E95F67]'}`}>
+                            <span className={`text-sm font-bold ${detail?.status === 1 ? 'text-[#09becf]' : 'text-[#E95F67]'}`}>
                                 {detail?.status === 1 ? t('status_success_detail') : t('status_expired')}
                             </span>
                         </div>

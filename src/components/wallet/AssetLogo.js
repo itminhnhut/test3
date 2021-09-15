@@ -20,7 +20,7 @@ const AssetLogo = (props) => {
             return <img src={logoUrl} style={{ minWidth: logoSize }} width={logoSize} height={logoSize} alt={config?.assetCode} />;
         }
         return <img src="/images/coins/no_logo.png" style={{ minWidth: logoSize }} width={logoSize} height={logoSize} alt="no-logo" />;
-    }, [size, assetCode, assetId]);
+    }, [size, assetCode, assetId, assetConfig]);
 
     return assetLogo;
 };

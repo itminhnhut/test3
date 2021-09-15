@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { useAsync } from 'react-use';
 import { getAssetConfig, getExchangeConfig } from 'redux/actions/market';
+import { getSpotBalance, getWallet } from 'redux/actions/user';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
 import { useStore } from 'src/redux/store';
@@ -51,7 +52,7 @@ const ignoreConfigUrls = [
     '/authenticated', '/blog', '/blog/[slug]',
 ];
 let lastUserId = null;
-let lastToken = null;
+const lastToken = null;
 let initConfig = false;
 const App = ({ Component, pageProps }) => {
     const store = useStore(pageProps.initialReduxState);
@@ -95,35 +96,14 @@ const App = ({ Component, pageProps }) => {
         }
     }, []);
 
-    // store.subscribe(watch(Store.getState, 'User.user')((newVal, oldVal) => {
-    //     authSocialSocket();
-
-    //     // if (newVal) {
-    //     //     this.props.getUserBalance();
-    //     //     this.props.getUserFuturesBalance();
-    //     // }
-    // }));
-
     store.subscribe(() => {
         if (!ignoreAuthUrls.includes(router.pathname)) {
-            // Thay đổi access token -> gọi authen
-            const newAccessToken = store.getState()?.auth?.accessToken;
-            if (!!AuthStorage.accessToken
-                && newAccessToken === AuthStorage.accessToken
-                && newAccessToken !== lastToken
-            ) {
-                lastToken = AuthStorage.accessToken;
-                store.dispatch(getMe());
-            }
-
-            // Thay đổi user -> khởi tạo function
-            const newUserId = store.getState()?.auth?.user?.id;
+            const newUserId = store.getState()?.auth?.user?.code;
+            console.log('__ chekc new user', newUserId);
             if (!!newUserId && newUserId !== lastUserId) {
-                if (AuthStorage.loggedIn) {
-                    lastUserId = newUserId;
-                    store.dispatch(initUserSocket());
-                    store.dispatch(getAllWallet());
-                }
+                lastUserId = newUserId;
+                store.dispatch(getWallet());
+                store.dispatch(initUserSocket());
             }
         }
     });

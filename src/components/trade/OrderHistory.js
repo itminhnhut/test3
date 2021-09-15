@@ -98,7 +98,7 @@ const OrderHistory = (props) => {
                 {
                     when: row => row.side === 'BUY',
                     style: {
-                        color: '#05B169 !important',
+                        color: '#09becf !important',
                     },
                 }],
         },
@@ -146,7 +146,7 @@ const OrderHistory = (props) => {
                     case ExchangeOrderEnum.Status.CANCELED:
                         return (
                             <span
-                                className="text-xxs font-semibold inline-block py-1 px-2 rounded text-black-500 bg-black-200 uppercase last:mr-0 mr-1"
+                                className="text-xs font-semibold inline-block py-1 px-2 rounded text-black last:mr-0 mr-1"
                             >
                                 {t('common:canceled')}
                             </span>
@@ -154,7 +154,7 @@ const OrderHistory = (props) => {
                     case ExchangeOrderEnum.Status.FILLED:
                         return (
                             <span
-                                className="text-xxs font-semibold inline-block py-1 px-2 rounded text-mint-600 bg-teal-200 uppercase last:mr-0 mr-1"
+                                className="text-xs font-semibold inline-block py-1 px-2 rounded text-mint last:mr-0 mr-1"
                             >
                                 {t('common:filled')}
                             </span>
@@ -202,6 +202,10 @@ const OrderHistory = (props) => {
                 noDataComponent={<TableNoData />}
                 progressPending={loading}
                 progressComponent={<TableLoader height={props.height} />}
+                paginationPerPage={50}
+                paginationComponentOptions={{ rowsPerPageText: 'Rows:', rangeSeparatorText: '/', noRowsPerPage: false }}
+                paginationIconFirstPage={null}
+                paginationIconLastPage={null}
             />
         );
     }

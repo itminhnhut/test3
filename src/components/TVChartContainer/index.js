@@ -1,10 +1,9 @@
 import { getTradingViewTimezone } from 'actions/utils';
+import { IconLoading } from 'components/common/Icons';
 // import { widget } from 'public/library/trading_view/charting_library';
 import * as React from 'react';
-import { MANami, exampleEA } from 'src/components/TVChartContainer/studies';
 import { widget } from '../TradingView/charting_library/charting_library.min';
 import Datafeed from './api';
-import DepthChart from './depth';
 import styles from './tradingview.module.scss';
 
 function getLanguageFromURL() {
@@ -266,12 +265,14 @@ export class TVChartContainer extends React.PureComponent {
         return (
             <>
 
-                <div className="flex flex-grow flex-col min-w-max chartWrapper h-full" id="chart-container">
+                <div className="relative flex flex-grow flex-col min-w-max chartWrapper h-full" id="chart-container">
+                    <div className={`absolute w-full h-full bg-white z-10 flex justify-center items-center ${this.state.chartStatus === ChartStatus.LOADED ? 'hidden' : ''}`}>
+                        <IconLoading color="#09becf" />
+                    </div>
                     <div
                         id={this.containerId}
                         className={`${styles.TVChartContainer} flex-grow h-full w-full  ${chartType === 'depth' && 'hidden'}`}
                     />
-                    {chartType === 'depth' && <DepthChart symbol={this.props.symbol} chartSize={this.props.chartSize} />}
                 </div>
             </>
         );

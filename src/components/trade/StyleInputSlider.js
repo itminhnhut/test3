@@ -16,7 +16,7 @@ export const Track = styled.div`
 
 export const Active = styled.div`
   position: absolute;
-  background-color: #09becf;
+  background-color: #8D9091;
   border-radius: 4px;
   user-select: none;
   box-sizing: border-box;
@@ -27,7 +27,7 @@ export const Active = styled.div`
 
 export const SliderBackground = styled.div`
   position: absolute;
-  background-color: #ddd;
+  background-color: #CCCCCC;
   border-radius: 4px;
   user-select: none;
   box-sizing: border-box;
@@ -45,19 +45,20 @@ export const DotContainer = styled.div`
 
 export const Dot = styled.span`
   position: absolute;
-  top: -5px;
+  top: -4px;
   //top: 10px;
   left: ${({ percentage }) => `calc(${percentage}% - 6px)`};
   border-radius: 50%;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   box-sizing: content-box;
-   background-color:   ${({ active }) => (active ? '#09becf' : '#ddd')};;
+   background-color:   ${({ active }) => (active ? '#8D9091' : '#CCCCCC')};;
+   ${'' /* background-color:'#8D9091' */}
   z-index: 30;
-  border: solid 2px white;
+  ${'' /* border: solid 2px white; */}
   transition: transform .2s; /* Animation */
   &:hover {
-    background-color: #09becf;
+    background-color: #8D9091;
     transform: scale(1.4);
   }
 `;
@@ -66,10 +67,10 @@ export const Thumb = styled.div`
   position: relative;
   display: block;
   content: "";
-  width: 14px;
-  height: 14px;
-  background-color: #09becf;
-  border: solid 2px white;
+  width: 12px;
+  height: 12px;
+  background-color: #8D9091;
+  ${'' /* border: solid 2px white; */}
   border-radius: 50%;
   ${'' /* box-shadow: 0px 4px 8px 1px rgba(2, 8, 61, 0.13); */}
   user-select: none;
@@ -81,7 +82,7 @@ export const ThumbLabel = styled.div`
   top: -1.25rem;
   right: -10px;
   text-align: center;
-  color: #09becf;
+  color: #8D9091;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;

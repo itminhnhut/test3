@@ -96,11 +96,11 @@ const Swap = () => {
 
     const getAvailableText = () => {
         const _config = getCoinConfig;
-        return formatWallet(wallets?.[_config?.fromAssetId]?.value - wallets?.[_config?.fromAssetId]?.lockedValue);
+        return formatWallet(wallets?.[_config?.fromAssetId]?.value - wallets?.[_config?.fromAssetId]?.locked_value);
     };
     const getAvailable = () => {
         const _config = getCoinConfig;
-        return wallets?.[_config?.fromAssetId]?.value - wallets?.[_config?.fromAssetId]?.lockedValue;
+        return wallets?.[_config?.fromAssetId]?.value - wallets?.[_config?.fromAssetId]?.locked_value;
     };
     const getPrice = async (requestQty, requestAsset, updateQty = true) => {
         if (!(requestQty && requestAsset)) return;
@@ -171,7 +171,7 @@ const Swap = () => {
         let result = uniqBy(swapConfig, 'fromAsset').filter(e => (e?.fromAsset?.toLowerCase()?.includes(search?.toLowerCase()))) || [];
         result = result.map(e => ({
             ...e,
-            available: wallets?.[e.fromAssetId]?.value - wallets?.[e?.fromAssetId]?.lockedValue,
+            available: wallets?.[e.fromAssetId]?.value - wallets?.[e?.fromAssetId]?.locked_value,
         }));
         result = orderBy(result, ['available', 'fromAsset'], ['desc', 'asc']);
         setListCoinFrom(result);
@@ -184,7 +184,7 @@ const Swap = () => {
         });
         result = result.map(e => ({
             ...e,
-            available: wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.lockedValue,
+            available: wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.locked_value,
         }));
         result = orderBy(result, ['available', 'toAsset'], ['desc', 'asc']);
         setListCoinTo(result);
@@ -202,7 +202,7 @@ const Swap = () => {
         });
         result = result.map(e => ({
             ...e,
-            available: wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.lockedValue,
+            available: wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.locked_value,
         }));
         result = orderBy(result, ['available', 'toAsset'], ['desc', 'asc']);
         if (result.length) {
@@ -374,6 +374,8 @@ const Swap = () => {
         return null;
     };
 
+    console.log('__ check coin from, to', coinFrom, coinTo);
+
     return (
         <LayoutWithHeader>
             <div className="bg-blue-50 flex flex-col flex-grow">
@@ -467,7 +469,6 @@ const Swap = () => {
                             <div className="group hover:border-teal swap-form-group">
                                 <div className="flex justify-between">
                                     <span className="text-sm font-bold">{t('you_get')}</span>
-                                    <span className="text-sm font-bold">Available: 10,000 NAMI</span>
                                 </div>
                                 <div className="swap-input-group relative">
                                     <NumberFormat

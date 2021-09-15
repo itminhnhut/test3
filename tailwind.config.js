@@ -38,6 +38,8 @@ module.exports = {
             background: {
                 DEFAULT: '#fff',
                 dark: '#223050',
+                red: '#C5292A',
+                yellow: '#FFD965',
             },
             bgContainer: {
                 DEFAULT: '#fff',
@@ -83,7 +85,7 @@ module.exports = {
             },
             gray: { DEFAULT: '#8D9091', ...colors.gray },
             teal: {
-                DEFAULT: '#00c8bc',
+                DEFAULT: '#09becf',
                 5: '#03bdce17',
                 50: '#b3efeb',
                 100: '#99e9e4',
@@ -91,8 +93,8 @@ module.exports = {
                 300: '#4dd9d0',
                 400: '#33d3c9',
                 500: '#1acec3',
-                600: '#00c8bc',
-                700: '#00c8bc',
+                600: '#09becf',
+                700: '#09becf',
             },
             cyan: {
                 DEFAULT: '#11EFE3',
@@ -107,20 +109,20 @@ module.exports = {
                 800: '#008c84',
                 900: '#00645e',
             },
-            yellow: {
-                DEFAULT: '#FFD965',
-                ...colors.amber,
-            },
             green: {
                 DEFAULT: '#22b02e',
                 ...colors.green,
+            },
+            yellow: {
+                DEFAULT: '#FFD965',
+                ...colors.amber,
             },
             red: {
                 DEFAULT: '#C5292A',
                 ...colors.red,
             },
             pink: {
-                DEFAULT: '#ff0065',
+                DEFAULT: '#E95F67',
             },
             mint: {
                 DEFAULT: '#09becf',

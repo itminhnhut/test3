@@ -4,7 +4,7 @@
   "stop": "Stop",
   "oco": "OCO",
   "open_orders": "Lệnh đang mở",
-  "order_history": "Lịch sử khớp lệnh",
+  "order_history": "Lịch sử lệnh",
   "trade_history": "Lịch sử giao dịch",
   "order_book": "Sổ lệnh",
   "trades": "Giao dịch",
@@ -23,9 +23,9 @@
   "place_success_market": "Bạn vừa đặt lệnh [{{side}} {{type}} {{token}}] thành công. OrderID: #{{displayingId}}.",
   "place_success_limit": "Bạn vừa đặt lệnh [{{side}} {{type}} {{token}}] thành công. OrderID: #{{displayingId}}.",
   "balance": "Số dư",
-  "available_balance": "Số dư khả dụng",
+  "available_balance": "Khả dụng",
   "close_order_success": "Lệnh #{{displayingId}} [{{side}} {{type}} {{token}}] đã được đóng thành công.",
   "close_order_failed": "Đóng lệnh #{{displayingId}} [{{side}} {{type}} {{token}}] thất bại.",
-  "filter_by_current_pair": "Chỉ hiện thị với cặp hiện tại",
+  "filter_by_current_pair": "Ẩn cặp khác",
   "pair_under_maintenance": "Giao dịch {{base}}/{{quote}} đang bảo trì"
 }

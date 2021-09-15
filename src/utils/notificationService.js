@@ -6,14 +6,17 @@ import 'animate.css/animate.min.css';
 
 const NotificationContent = (props) => {
     const { type, title, message } = props;
+
+    console.log('__ chek noti', props);
+    let bgColor = 'bg-teal';
+    if (type !== 'success') {
+        bgColor = 'bg-pink';
+    }
     return (
-        <div className="flex items-center py-3 px-5 bg-white rounded notification-shadow w-full">
-            <div className="mr-3">
-                <Image src={`/images/icons/icon-${type}.svg`} width={32} height={32} />
-            </div>
+        <div className={`flex items-center py-3 px-5 w-full ${bgColor}`}>
             <div className="flex flex-grow flex-col">
-                <div>{title}</div>
-                <div className="text-black-500 text-sm">{message}</div>
+                <div className="text-white font-semibold">{title}</div>
+                <div className="text-white text-sm">{message}</div>
             </div>
         </div>
     );
@@ -35,7 +38,7 @@ const showNotification = (options = {}, position = 'top', container = 'top-right
         animationIn: ['animate__animated', 'animate__slideInRight', 'animate__faster'],
         animationOut: ['animate__animated', 'animate__slideOutRight', 'animate__faster'],
         dismiss: {
-            duration: 30000,
+            duration: 300000,
             onScreen: false,
         },
         content: <NotificationContent title={title} message={message} type={type} />,

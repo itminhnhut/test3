@@ -36,7 +36,7 @@ const SpotOrderList = (props) => {
 
     const closeOrder = async (displayingId) => {
         const res = await fetchAPI({
-            url: '/api/v1/exchange/order',
+            url: '/api/v3/spot/order',
             options: {
                 method: 'DELETE',
             },
@@ -119,7 +119,7 @@ const SpotOrderList = (props) => {
                 {
                     when: row => row.side === 'BUY',
                     style: {
-                        color: '#05B169 !important',
+                        color: '#09becf !important',
                     },
                 }],
         },
@@ -157,11 +157,11 @@ const SpotOrderList = (props) => {
             // omit: !toggle,
             cell: (row) => (
                 <button
-                    className="w-40 flex items-center text-teal background-transparent  px-3 py-1 text-xs outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 whitespace-nowrap font-medium"
+                    className="flex items-center text-white bg-pink  px-3 py-1 text-xs outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 whitespace-nowrap font-medium"
                     type="button"
                     onClick={() => closeOrder(row.displayingId)}
                 >
-                    <X height={14} color={iconColor} /> <span>{t('common:cancel')}</span>
+                    <span>{t('common:cancel')}</span>
                 </button>
             ),
         },
@@ -196,8 +196,8 @@ const SpotOrderList = (props) => {
             fixedHeader
             fixedHeaderScrollHeight={`${props.orderListWrapperHeight - 184}px`}
             dense
-            pagination
-            paginationPerPage={30}
+            // pagination
+            // paginationPerPage={100}
             paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
             noDataComponent={<TableNoData />}
             progressPending={loading}

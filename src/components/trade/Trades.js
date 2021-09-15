@@ -70,8 +70,8 @@ const Trades = (props) => {
     }, [publicSocket, MAX_LENGTH, symbol]);
 
     return (
-        <div className="h-full rounded bg-white px-1.5 pb-6 row-span-1 h-full" ref={ref}>
-            <h3 className="font-semibold text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('trades')}</h3>
+        <div className="h-full bg-white px-1.5 pb-6 row-span-1 h-full" ref={ref}>
+            <h3 className="font-semibold border-b text-black pt-3 pb-2 mb-2 px-1.5 dragHandleArea">{t('trades')}</h3>
             <div className="ats-tbheader px-1.5">
                 <div className="flex justify-between items-center mb-3">
                     <div className="flex flex-1 justify-start text-black-600 text-xs font-medium">{t('common:price')}</div>

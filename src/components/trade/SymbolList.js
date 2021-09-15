@@ -204,7 +204,7 @@ const SymbolList = (props) => {
     return (
         <>
             <div
-                className="spot-symbol-list__container- bg-bgContainer dark:bg-bgContainer-dark rounded py-6 h-full transition-all	duration-700 ease-in"
+                className="spot-symbol-list__container- bg-bgContainer dark:bg-bgContainer-dark py-6 h-full transition-all	duration-700 ease-in"
             >
                 <>
                     <div className="mx-3 mb-3">
@@ -218,21 +218,20 @@ const SymbolList = (props) => {
                     <div className="mx-3 mb-3 flex items-center">
 
                         <div
-                            className={'w-12 h-[23px] flex justify-center items-center text-sm mx-1 border cursor-pointer ' + (activeTab === 'favorite' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
+                            className={'w-12 h-[23px] flex justify-center items-center text-sm mr-2 border cursor-pointer ' + (activeTab === 'favorite' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
                             onClick={() => setActiveTab('favorite')}
                         >
                             <IconStarFilled size={14} color={activeTab === 'favorite' ? '#09becf' : '#C5C6D2'} />
                         </div>
-
                         <a
-                            className={'w-12 text-sm text-center mx-1 font-medium border   cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
-                            onClick={() => setActiveTab('VNDC')}
-                        > VNDC
-                        </a>
-                        <a
-                            className={'w-12 text-sm text-center mx-1 font-medium border   cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
+                            className={'w-12 text-sm text-center mr-2 font-medium border   cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
                             onClick={() => setActiveTab('USDT')}
                         > USDT
+                        </a>
+                        <a
+                            className={'w-12 text-sm text-center mr-2 font-medium border   cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
+                            onClick={() => setActiveTab('VNDC')}
+                        > VNDC
                         </a>
                     </div>
                     {renderList()}

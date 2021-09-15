@@ -293,7 +293,7 @@ export const Notification = () => (
 );
 export const NotificationUp = () => (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="16" r="16" fill="#05B169" />
+        <circle cx="16" cy="16" r="16" fill="#09becf" />
         <path d="M16.5303 9.46967C16.2374 9.17678 15.7626 9.17678 15.4697 9.46967L10.6967 14.2426C10.4038 14.5355 10.4038 15.0104 10.6967 15.3033C10.9896 15.5962 11.4645 15.5962 11.7574 15.3033L16 11.0607L20.2426 15.3033C20.5355 15.5962 21.0104 15.5962 21.3033 15.3033C21.5962 15.0104 21.5962 14.5355 21.3033 14.2426L16.5303 9.46967ZM16.75 22L16.75 10L15.25 10L15.25 22L16.75 22Z" fill="white" />
     </svg>
 
@@ -534,9 +534,28 @@ export const IconTrash = () => (
 );
 
 export const IconLoading = ({ color }) => (
-    <svg className={`animate-spin h-5 w-5 ${color ? `text-[${color}]` : 'text-teal-600'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+
+    <svg
+        style={{
+            margin: 'auto', display: 'block', shapeRendering: 'auto',
+        }}
+        width="32px"
+        height="32px"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid"
+    >
+        <rect x="18" y="32" width="10" height="36" fill={color}>
+            <animate attributeName="y" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.5;1" values="14;32;32" keySplines="0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.2s" />
+            <animate attributeName="height" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.5;1" values="72;36;36" keySplines="0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.2s" />
+        </rect>
+        <rect x="43" y="32" width="10" height="36" fill={color}>
+            <animate attributeName="y" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.5;1" values="18.5;32;32" keySplines="0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.1s" />
+            <animate attributeName="height" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.5;1" values="63;36;36" keySplines="0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.1s" />
+        </rect>
+        <rect x="68" y="32" width="10" height="36" fill={color}>
+            <animate attributeName="y" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.5;1" values="18.5;32;32" keySplines="0 0.5 0.5 1;0 0.5 0.5 1" />
+            <animate attributeName="height" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.5;1" values="63;36;36" keySplines="0 0.5 0.5 1;0 0.5 0.5 1" />
+        </rect>
     </svg>
 );
 
@@ -600,7 +619,7 @@ export const IconIndicator = () => (
 
 export const IconSuccess = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path fillRule="evenodd" clipRule="evenodd" d="M0 8C0 3.58172 3.58172 0 8 0C12.4161 0.00514317 15.9949 3.58385 16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8ZM8.05467 11.6593L12.618 5.46659C12.7723 5.27564 12.8091 5.01537 12.7139 4.7891C12.6187 4.56283 12.4069 4.40718 12.1625 4.38394C11.9182 4.36071 11.6808 4.47365 11.5447 4.67792L7.39333 10.3119L4.676 8.13792C4.38844 7.9078 3.96879 7.95436 3.73867 8.24192C3.50855 8.52947 3.55511 8.94913 3.84267 9.17925L7.10133 11.7846C7.24379 11.8959 7.42501 11.9454 7.60428 11.9218C7.78355 11.8983 7.94584 11.8036 8.05467 11.6593Z" fill="#05B169" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M0 8C0 3.58172 3.58172 0 8 0C12.4161 0.00514317 15.9949 3.58385 16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8ZM8.05467 11.6593L12.618 5.46659C12.7723 5.27564 12.8091 5.01537 12.7139 4.7891C12.6187 4.56283 12.4069 4.40718 12.1625 4.38394C11.9182 4.36071 11.6808 4.47365 11.5447 4.67792L7.39333 10.3119L4.676 8.13792C4.38844 7.9078 3.96879 7.95436 3.73867 8.24192C3.50855 8.52947 3.55511 8.94913 3.84267 9.17925L7.10133 11.7846C7.24379 11.8959 7.42501 11.9454 7.60428 11.9218C7.78355 11.8983 7.94584 11.8036 8.05467 11.6593Z" fill="#09becf" />
     </svg>
 );
 
@@ -638,8 +657,8 @@ export const IconSecurityEmail = () => (
 
 export const IconValueIncrease = () => (
     <svg width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0.833496 9.16732L5.72416 3.66732C5.97259 3.39306 6.3924 3.36169 6.67883 3.59598L9.65483 6.07598C9.94112 6.31031 10.3611 6.278 10.6082 6.00265L15.1668 0.833984" stroke="#05B169" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M10.5415 0.833984H15.1668V4.81998" stroke="#05B169" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M0.833496 9.16732L5.72416 3.66732C5.97259 3.39306 6.3924 3.36169 6.67883 3.59598L9.65483 6.07598C9.94112 6.31031 10.3611 6.278 10.6082 6.00265L15.1668 0.833984" stroke="#09becf" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M10.5415 0.833984H15.1668V4.81998" stroke="#09becf" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 

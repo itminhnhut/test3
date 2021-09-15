@@ -172,7 +172,7 @@ const OrderBook = (props) => {
     };
     return (
         <>
-            <div className="relative h-full rounded bg-white px-1.5 pb-[26px] flex flex-col box-border" ref={ref}>
+            <div className="relative h-full bg-white px-1.5 pb-[26px] flex flex-col box-border" ref={ref}>
                 <div className="flex items-center justify-between pt-[24px] pb-[16px] px-1.5 dragHandleArea">
                     {/* <div className="font-semibold text-lg text-black-600">{t('orderbook')}</div> */}
                 </div>
@@ -207,7 +207,7 @@ const OrderBook = (props) => {
                             }
                         </div>
                         <div
-                            className="border-t-2 border-b-2 border-black-200 my-3 py-2 flex justify-between items-center px-1.5 min-h-[41px]"
+                            className="border-t-2 border-b-2 border-black-200 my-3 py-1 flex justify-between items-center px-1.5 min-h-[36px]"
                         >
                             <div className="text-sm w-full">
                                 <span className="font-semibold">

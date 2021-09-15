@@ -32,7 +32,7 @@
   "receiver_memo": "Memo người nhận",
   "receiver_address_placeholder": "Nhập địa chỉ người nhận",
   "blockchain_network": "Mạng lưới BlockChain",
-  "available_balance": "Số dư khả dụng",
+  "available_balance": "Khả dụng",
   "withdraw_enable_warn": {
       "first": "Tính năng gửi onchain cho",
       "second": "qua mạng",

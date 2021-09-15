@@ -115,7 +115,7 @@
   "category": "Chủ đề",
   "share": "Chia sẻ",
   "related_posts": "Những bài viết liên quan",
-  "order_id": "Mã lệnh",
+  "order_id": "ID",
   "order_type": "Loại lệnh",
   "order_price": "Giá đặt",
   "order_quantity": "Khối lượng khớp",
@@ -131,6 +131,6 @@
   "SELL": "Bán",
   "confirm": "Xác nhận",
   "vol": "KL",
-  "cancel": "Huỷ bỏ",
+  "cancel": "Đóng",
   "view_all": "Xem tất cả"
 }

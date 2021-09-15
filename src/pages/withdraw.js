@@ -432,7 +432,7 @@ const Wallet = () => {
                                     <div className="text-sm">
                                         {e.value
                                             ? formatWallet(
-                                                e.value - e.lockedValue,
+                                                e.value - e.locked_value,
                                                 e.displayDigit,
                                             )
                                             : '---'}
@@ -443,9 +443,9 @@ const Wallet = () => {
                                         </span>
                                         <span>
                                             {' '}
-                                            {e.lockedValue
+                                            {e.locked_value
                                                 ? formatWallet(
-                                                    e.lockedValue,
+                                                    e.locked_value,
                                                     e.displayDigit,
                                                 )
                                                 : '--'}
@@ -493,7 +493,7 @@ const Wallet = () => {
                                 {selectedAsset.value
                                     ? formatWallet(
                                         selectedAsset.value -
-                                              selectedAsset.lockedValue,
+                                              selectedAsset.locked_value,
                                         selectedAsset.displayDigit,
                                     )
                                     : '---'}{' '}
@@ -507,9 +507,9 @@ const Wallet = () => {
                                 </span>
                                 <span>
                                     {' '}
-                                    {selectedAsset.lockedValue
+                                    {selectedAsset.locked_value
                                         ? formatWallet(
-                                            selectedAsset.lockedValue,
+                                            selectedAsset.locked_value,
                                             selectedAsset.displayDigit,
                                         )
                                         : '--'}
@@ -557,7 +557,7 @@ const Wallet = () => {
                                                 roundByWithdraw(
                                                     Number(
                                                         selectedAsset.value -
-                                                                selectedAsset.lockedValue,
+                                                                selectedAsset.locked_value,
                                                     ),
                                                     withdrawIntegerMultiple,
                                                 ),

@@ -206,7 +206,7 @@ const DepthChart = ({ symbol, chartSize }) => {
                     [1, 'rgba(5, 177, 105, 0)'],
                 ],
             },
-            color: '#05B169',
+            color: '#09becf',
             marker: {
                 enabled: false,
             },

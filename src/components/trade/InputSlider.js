@@ -201,7 +201,6 @@ const Slider = ({
     if (yreverse) valueStyle.top = 100 - pos.top + '%';
 
     const handleStyle = {
-        border: '1px solid #EEF2FA',
         borderRadius: '50%',
         zIndex: 20,
         position: 'absolute',

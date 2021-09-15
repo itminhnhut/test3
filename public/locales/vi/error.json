@@ -70,7 +70,7 @@
   "FILTER_MAX_AMOUNT": "Số lượng ATS vượt quá giới hạn tham gia staking.",
   "BALANCE_INSUFFICIENT": "Số lượng ATS trong tài khoản của bạn không đủ, vui lòng thử lại.",
   "MAX_PENDING_ORDER_EXCEEDED": "Bạn đang có quá nhiều lệnh staking đang chờ, vui lòng thử lại sau.",
-  "IEO_BUY_BALANCE_INSUFFICIENT": "Số dư khả dụng không đủ.",
+  "IEO_BUY_BALANCE_INSUFFICIENT": "Khả dụng không đủ.",
   "IEO_PROJECT_NOT_FOUND": "Không tìm thấy dự án IEO, vui lòng thử lại.",
   "IEO_BUY_AMOUNT_INVALID": "Số lượng mua không hợp lệ, vui lòng thử lại.",
   "IEO_BUY_TIME_INVALID": "Dự án đang không diễn ra, vui lòng thử lại vào lúc khác",

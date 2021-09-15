@@ -212,7 +212,7 @@ function encodeData(data) {
     }).join('&');
 }
 
-export function getSparkLine(symbol, color = '#05B169', resolution) {
+export function getSparkLine(symbol, color = '#09becf', resolution) {
     const query = {
         symbol,
         broker: 'ATTLAS_SPOT',

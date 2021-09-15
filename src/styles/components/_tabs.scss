@@ -15,7 +15,7 @@
       cursor: pointer;
       @apply text-sm;
       &.active {
-        @apply border-teal-500 border-b-2 text-black-700
+        @apply border-teal border-b-4 text-teal
       }
     }
     &:first-child {

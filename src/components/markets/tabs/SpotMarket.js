@@ -92,7 +92,7 @@ const SpotMarket = ({
                 return (
                     <span>
                         <Image
-                            src={getSparkLine(`${row?.b}${row?.q}`, change24h >= 0 ? '#05B169' : '#E95F67')}
+                            src={getSparkLine(`${row?.b}${row?.q}`, change24h >= 0 ? '#09becf' : '#E95F67')}
                             height={30.75}
                             width={90}
                             unoptimized

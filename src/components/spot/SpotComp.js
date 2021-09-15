@@ -28,11 +28,11 @@ const ReactGridLayout = WidthProvider(RGL);
 
 const layoutOnSidebar = [
     { i: 'symbolDetail', x: 0, y: 0, w: 23, h: 2, isDraggable: true, isResizable: false },
-    { i: 'orderbook', x: 0, y: 3, w: 7, h: 20, isDraggable: true, isResizable: false },
+    { i: 'orderbook', x: 0, y: 3, w: 7, h: 22, isDraggable: true, isResizable: false },
     { i: 'chart', x: 7, y: 3, w: 16, h: 12, isDraggable: true, isResizable: false },
-    { i: 'placeOrderForm', x: 7, y: 6, w: 16, h: 8, isDraggable: true, isResizable: false },
-    { i: 'symbolList', x: 23, y: 3, w: 7, h: 12, isDraggable: true, isResizable: false },
-    { i: 'trades', x: 23, y: 14, w: 7, h: 10, isDraggable: true, isResizable: false },
+    { i: 'placeOrderForm', x: 7, y: 6, w: 16, h: 10, isDraggable: true, isResizable: false },
+    { i: 'symbolList', x: 23, y: 3, w: 7, h: 13, isDraggable: true, isResizable: false },
+    { i: 'trades', x: 23, y: 14, w: 7, h: 11, isDraggable: true, isResizable: false },
     { i: 'orderList', x: 0, y: 26, w: 30, h: 10, isDraggable: true, isResizable: false },
 ];
 
@@ -331,8 +331,8 @@ const SpotComp = () => {
                     layout={gridLayout}
                     breakpoints={{ xl: 1400, lg: 2200 }}
                     cols={30}
-                    margin={[8, 8]}
-                    containerPadding={[8, 8]}
+                    margin={[4, 4]}
+                    containerPadding={[4, 4]}
                     // rowHeight={width > 2000 ? 20 : 10}
                     rowHeight={30}
                     // onLayoutChange={(_layout, _layouts) => onLayoutChange(_layout, _layouts)}

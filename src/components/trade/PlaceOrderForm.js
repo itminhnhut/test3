@@ -329,7 +329,7 @@ const PlaceOrderForm = ({ symbol }) => {
             }
 
             const res = await fetchAPI({
-                url: '/api/v1/exchange/order',
+                url: '/api/v3/spot/order',
                 options: {
                     method: 'POST',
                 },
@@ -365,7 +365,7 @@ const PlaceOrderForm = ({ symbol }) => {
                 let shortRequestId = null;
                 let content = null;
                 if (typeof requestId === 'string' && requestId?.length > 0) {
-                    shortRequestId = requestId.split('-')[0] + '-' + requestId.split('-')[1];
+                    shortRequestId = (requestId.split('-')[0]).toUpperCase();
                     content = error
                         ? t(`error:${error.message}`) + ` (Code: ${shortRequestId})`
                         : t('error:ERROR_COMMON') + ` (Code: ${shortRequestId})`;
@@ -403,11 +403,11 @@ const PlaceOrderForm = ({ symbol }) => {
     };
 
     const getAvailableText = (assetId) => {
-        return formatBalance(balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.lockedValue, 6);
+        return formatBalance(balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value, 6);
     };
 
     const getAvailable = (assetId) => {
-        return balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.lockedValue;
+        return balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value;
     };
 
     const getBalance = (assetId) => {

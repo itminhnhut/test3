@@ -6,7 +6,7 @@ const Chart = (props) => {
     const { t } = useTranslation();
     if (!symbol) return null;
     return (
-        <div className="bg-white rounded px-3 h-full">
+        <div className="bg-white h-full">
             <div className="spot-chart h-full flex flex-col">
                 <SpotChart
                     isOnSidebar={isOnSidebar}

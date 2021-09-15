@@ -8,7 +8,7 @@ import { PublicSocketEvent } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import { setUserSymbolList } from 'src/redux/actions/market';
 import { formatPrice, render24hChange } from 'src/redux/actions/utils';
-import { IconStar, IconStarFilled } from '../common/Icons';
+import { IconLoading, IconStar, IconStarFilled } from '../common/Icons';
 
 const SymbolDetail = (props) => {
     const { symbol, favorite, changeSymbolList, watchList, parentCallback, isOnSidebar, fullScreen, layoutConfig } = props;
@@ -51,12 +51,16 @@ const SymbolDetail = (props) => {
         changeSymbolList(newFavoriteList);
         return setUserSymbolList(favoriteId, newFavoriteList);
     };
-    if (!symbolTicker) return null;
+    if (!symbolTicker) {
+        return <div className="absolute w-full h-full bg-white z-10 flex justify-center items-center">
+            <IconLoading color="#09becf" />
+        </div>;
+    }
 
     return (
         <>
             <div
-                className="h-full w-full flex flex-row items-center justify-start dragHandleArea bg-white rounded border-b border-black-200"
+                className="h-full w-full flex flex-row items-center justify-start dragHandleArea bg-white border-b border-black-200"
             >
                 <div className="flex flex-row  items-center px-4 dragCancelArea">
                     <AssetLogo assetCode={symbolTicker?.b} size={32} />
