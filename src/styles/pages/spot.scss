@@ -37,7 +37,7 @@
                 margin-right: -2rem;
                 clip-path: polygon(0 0, 100% 0, calc(100% - 1rem) 100%, 0% 100%);
                 &.active {
-                    @apply bg-green text-white;
+                    @apply bg-teal text-white;
                 }
             }
             &.block--right {
@@ -46,7 +46,7 @@
                 margin-left: 1rem;
                 clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0% 100%);
                 &.active {
-                    @apply bg-red text-white;
+                    @apply bg-pink text-white;
                 }
             }
         }

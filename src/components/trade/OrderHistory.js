@@ -154,7 +154,7 @@ const OrderHistory = (props) => {
                     case ExchangeOrderEnum.Status.FILLED:
                         return (
                             <span
-                                className="text-xxs font-semibold inline-block py-1 px-2 rounded text-mint-600 bg-green-200 uppercase last:mr-0 mr-1"
+                                className="text-xxs font-semibold inline-block py-1 px-2 rounded text-mint-600 bg-teal-200 uppercase last:mr-0 mr-1"
                             >
                                 {t('common:filled')}
                             </span>

@@ -38,7 +38,7 @@ export default {
                     time, open, high, low, close, volume,
                 ] = data[i];
                 bars.push({
-                    time: time * 1000, low, high, open, close, volume,
+                    time: time * 1000, timeSecond: time, low, high, open, close, volume,
                 });
             }
             if (first) {

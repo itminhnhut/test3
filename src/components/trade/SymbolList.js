@@ -225,12 +225,12 @@ const SymbolList = (props) => {
                         </div>
 
                         <a
-                            className={'w-12 text-sm text-center mx-1 font-bold border   cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
+                            className={'w-12 text-sm text-center mx-1 font-medium border   cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
                             onClick={() => setActiveTab('VNDC')}
                         > VNDC
                         </a>
                         <a
-                            className={'w-12 text-sm text-center mx-1 font-bold border   cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
+                            className={'w-12 text-sm text-center mx-1 font-medium border   cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
                             onClick={() => setActiveTab('USDT')}
                         > USDT
                         </a>

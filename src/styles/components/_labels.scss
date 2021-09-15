@@ -4,7 +4,7 @@
   @apply text-xxs rounded inline-flex items-center justify-center font-semibold p-1;
   &.label-red {
     color: #fff;
-    @apply bg-red
+    @apply bg-pink
   }
   &.label-warning {
     @apply text-black-700;

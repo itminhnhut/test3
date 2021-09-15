@@ -45,7 +45,7 @@ const SpotOrderList = (props) => {
                                 id="pair"
                                 onChange={() => setFilterByCurrentPair(!filterByCurrentPair)}
                                 checked={filterByCurrentPair}
-                                className="appearance-none focus:outline-white w-[18px] h-[18px] border border-gray-200 rounded-[4px] mr-2 checked:bg-[#4021D0] checked:border-[#4021D0]"
+                                className="appearance-none focus:outline-white w-[18px] h-[18px] border border-gray-200 rounded-[4px] mr-2 checked:bg-[#09becf] checked:border-[#09becf]"
                             />
                             <div className="absolute inset-0 top-[5px] left-1 w-min pointer-events-none">
                                 <IconCustomCheckbox size={14} />

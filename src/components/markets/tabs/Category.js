@@ -173,7 +173,7 @@ const Category = ({ symbolList, quoteAsset, renderPriceData, renderPercentageCha
             return (
                 <div
                     key={avatar}
-                    className={`mr-3 py-0 my-0 box-border rounded-lg cursor-pointer ${selectedAvatar === avatar && 'ring-1 ring-[#4021D0]'}`}
+                    className={`mr-3 py-0 my-0 box-border rounded-lg cursor-pointer ${selectedAvatar === avatar && 'ring-1 ring-[#09becf]'}`}
                     onClick={handleSelectAvatar(avatar)}
                 >
                     <img

@@ -2,7 +2,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
 import SymbolDetail from 'components/trade/SymbolDetail';
 import find from 'lodash/find';
-import maxBy from 'lodash/maxBy';
 import size from 'lodash/size';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -15,7 +14,6 @@ import { useAsync } from 'react-use';
 import LayoutWithHeader from 'src/components/common/layouts/layoutWithHeader';
 import Chart from 'src/components/trade/Chart';
 import OrderBook from 'src/components/trade/OrderBook';
-import PlaceOrderForm from 'src/components/trade/PlaceOrderForm';
 import SpotHead from 'src/components/trade/SpotHead';
 import SpotOrderList from 'src/components/trade/SpotOrderList';
 import SymbolList from 'src/components/trade/SymbolList';
@@ -25,18 +23,17 @@ import Emitter from 'src/redux/actions/emitter';
 import { getMarketWatch, getUserSymbolList, postSymbolViews } from 'src/redux/actions/market';
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
-import FetchApi from 'utils/fetch-api';
 
 const ReactGridLayout = WidthProvider(RGL);
 
 const layoutOnSidebar = [
-    { i: 'symbolDetail', x: 0, y: 0, w: 12, h: 2, isBounded: true, isDraggable: true, isResizable: true },
-    { i: 'orderbook', x: 0, y: 3, w: 4, h: 24, isBounded: true, isDraggable: true, isResizable: true },
-    { i: 'chart', x: 4, y: 3, w: 8, h: 12, isBounded: true, isDraggable: true, isResizable: true },
-    { i: 'placeOrderForm', x: 4, y: 6, w: 8, h: 12, isBounded: true, isDraggable: true, isResizable: true },
-    { i: 'orderList', x: 0, y: 24, w: 12, h: 8, isBounded: true, isDraggable: true, isResizable: true },
-    { i: 'symbolList', x: 12, y: 3, w: 4, h: 12, isBounded: true, isDraggable: true, isResizable: true },
-    { i: 'trades', x: 12, y: 24, w: 4, h: 5, isBounded: true, isDraggable: true, isResizable: true },
+    { i: 'symbolDetail', x: 0, y: 0, w: 23, h: 2, isDraggable: true, isResizable: false },
+    { i: 'orderbook', x: 0, y: 3, w: 7, h: 20, isDraggable: true, isResizable: false },
+    { i: 'chart', x: 7, y: 3, w: 16, h: 12, isDraggable: true, isResizable: false },
+    { i: 'placeOrderForm', x: 7, y: 6, w: 16, h: 8, isDraggable: true, isResizable: false },
+    { i: 'symbolList', x: 23, y: 3, w: 7, h: 12, isDraggable: true, isResizable: false },
+    { i: 'trades', x: 23, y: 14, w: 7, h: 10, isDraggable: true, isResizable: false },
+    { i: 'orderList', x: 0, y: 26, w: 30, h: 10, isDraggable: true, isResizable: false },
 ];
 
 const initialLayout = layoutOnSidebar;
@@ -332,8 +329,8 @@ const SpotComp = () => {
                 <ReactGridLayout
                     className="layout bg-black-5"
                     layout={gridLayout}
-                    breakpoints={{ xl: 1400, lg: 1200 }}
-                    cols={16}
+                    breakpoints={{ xl: 1400, lg: 2200 }}
+                    cols={30}
                     margin={[8, 8]}
                     containerPadding={[8, 8]}
                     // rowHeight={width > 2000 ? 20 : 10}
@@ -392,11 +389,6 @@ const SpotComp = () => {
                             fullScreen={fullScreen}
                         />
                     </div>
-                    <div key="orderList">
-                        <div ref={orderListWrapperRef} className="h-full">
-                            <SpotOrderList isOnSidebar={isOnSidebar} orderListWrapperHeight={orderListWrapperHeight} />
-                        </div>
-                    </div>
 
                     <div key="trades">
                         <Trades
@@ -409,6 +401,11 @@ const SpotComp = () => {
                         <SimplePlaceOrderForm
                             symbol={symbol}
                         />
+                    </div>
+                    <div key="orderList">
+                        <div ref={orderListWrapperRef} className="h-full">
+                            <SpotOrderList isOnSidebar={isOnSidebar} orderListWrapperHeight={orderListWrapperHeight} />
+                        </div>
                     </div>
                 </ReactGridLayout>
             </BrowserView>

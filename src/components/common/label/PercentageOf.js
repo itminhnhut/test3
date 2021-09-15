@@ -14,13 +14,13 @@ const PercentageOf = ({ a, b, withBackground }) => {
         }
         let sign = '';
         let className = 'text-mint';
-        let bgClass = 'bg-green';
+        let bgClass = 'bg-teal';
         if (percentage > 0) {
             sign = '+';
         } else if (percentage < 0) {
             sign = '';
             className = 'text-pink';
-            bgClass = 'bg-red';
+            bgClass = 'bg-pink';
         }
         if (withBackground) {
             return (

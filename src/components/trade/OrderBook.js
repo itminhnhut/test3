@@ -197,7 +197,7 @@ const OrderBook = (props) => {
                     <div className="flex flex-col flex-1">
                         <div className="flex flex-col justify-end flex-1">
                             {
-                                loadingAsks ? <div className="flex items-center justify-center h-full"><IconLoading color="#4021D0" /></div> : (
+                                loadingAsks ? <div className="flex items-center justify-center h-full"><IconLoading color="#09becf" /></div> : (
                                     <div className="px-1.5">
                                         {asks.map((order, index) => {
                                             return renderOrderRow(order, index, 'buy', shouldShowTotalCol);
@@ -224,7 +224,7 @@ const OrderBook = (props) => {
                         </div>
                         <div className="flex flex-col justify-start flex-1">
                             {
-                                loadingBids ? <div className="flex items-center justify-center h-full"><IconLoading color="#4021D0" /></div> : (
+                                loadingBids ? <div className="flex items-center justify-center h-full"><IconLoading color="#09becf" /></div> : (
                                     <div className="px-1.5">
                                         {bids.map((order, index) => {
                                             return renderOrderRow(order, index, 'sell', shouldShowTotalCol);

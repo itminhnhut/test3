@@ -86,7 +86,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
     const selectedOrder = useSelector(state => state.spot?.selectedOrder);
     const cancelButtonRef = useRef();
     const [open, setOpen] = useState(false);
-    const [quantityMode, setQuantityMode] = useState(QuantityMode[0]);
+    const [quantityMode, setQuantityMode] = useState(QuantityMode[1]);
     const [percentage, setPercentage] = useState(0);
     const [placing, setPlacing] = useState(false);
     const [orderSide, setOrderSide] = useState(ExchangeOrderEnum.Side.BUY);
@@ -571,9 +571,13 @@ const SimplePlaceOrderForm = ({ symbol }) => {
         // if (orderType !== ExchangeOrderEnum.Type.LIMIT) return null;
         return (
             <div className="flex justify-between items-center mb-2">
-                <div className="text-sm text-black-500 font-semibold">{t('common:price')}</div>
-                <div className="form-group md:w-[100px] xl:w-4/6">
+
+                <div className="form-group w-full">
                     <div className="input-group">
+                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
+                            <div className="text-sm text-black-500 font-semibold">{t('common:price')}</div>
+                        </div>
+
                         {
                             orderType === ExchangeOrderEnum.Type.LIMIT
                             &&
@@ -738,7 +742,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                             >
                                 <Listbox.Options
                                     static
-                                    className="absolute z-10 mt-1 w-32 bg-white border border-black-200 rounded transform  shadow-xl outline-none"
+                                    className="absolute z-10 mt-1 w-32 bg-white border border-black-200 rounded transform  outline-none"
                                 >
                                     {QuantityMode.map((mode) => (
                                         <Listbox.Option
@@ -766,15 +770,16 @@ const SimplePlaceOrderForm = ({ symbol }) => {
             && quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) return null;
         return (
             <div className="flex justify-between items-center mb-3">
-
-                {
-                    orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
-                        ? _renderQuantityMode
-                        : <div className="text-sm text-black-500 font-semibold ">{t('total')}</div>
-                }
-                <div className="form-group md:w-[100px] xl:w-4/6">
+                <div className="form-group w-full">
                     <div className="input-group">
-
+                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
+                            {/* {
+                                orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
+                                    ? _renderQuantityMode
+                                    : <div className="text-sm text-black-500 font-semibold ">{t('total')}</div>
+                            } */}
+                            <div className="text-sm text-black-500 font-semibold ">{t('total')}</div>
+                        </div>
                         <NumberFormat
                             getInputRef={quoteQtyRef}
                             className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold outline-none"
@@ -810,14 +815,17 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                 && quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUANTITY) return null;
         return (
             <div className="flex justify-between items-center mb-3">
-                {
-                    orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
-                        ? _renderQuantityMode
-                        : <div className="text-sm text-black-500 font-semibold ">{t('common:amount')}</div>
-                }
 
-                <div className="form-group md:w-[100px] xl:w-4/6">
+                <div className="form-group w-full">
                     <div className="input-group">
+                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
+                            {/* {
+                                orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
+                                    ? _renderQuantityMode
+                                    : <div className="text-sm text-black-500 font-semibold ">{t('common:amount')}</div>
+                            } */}
+                            <div className="text-sm text-black-500 font-semibold ">{t('common:amount')}</div>
+                        </div>
                         <NumberFormat
                             getInputRef={quantityRef}
                             className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold outline-none"
@@ -857,7 +865,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
         );
     }, [price, quantity, symbol]);
 
-    const _renderPlaceOrderButton = () => {
+    const _renderPlaceOrderButton = (_orderSide) => {
         if (!user) {
             return (
                 <div className="mb-6">
@@ -875,8 +883,8 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                     onClick={confirmModal}
                     type="button"
                     disabled={placing || currentExchangeConfig?.status === 'MAINTAIN'}
-                    className={'btn w-full capitalize disabled:bg-black-400 ' + (orderSide === ExchangeOrderEnum.Side.BUY ? 'btn-green' : 'btn-red')}
-                >{t(orderSide)} {base}
+                    className={'btn btn-xs w-full capitalize disabled:bg-black-400 ' + (_orderSide === ExchangeOrderEnum.Side.BUY ? 'btn-green' : 'btn-red')}
+                >{t(_orderSide)} {base}
                 </button>
             </div>
         );
@@ -915,18 +923,18 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                         {_renderOrderPrice}
                         {_renderOrderQuantity}
                         {_renderOrderQuoteQty}
-                        {_renderQuantitySlider}
+                        {/* {_renderQuantitySlider} */}
                         {currentExchangeConfig?.status === 'MAINTAIN' && <p className="text-sm mb-3 flex"><span className="mr-2"><IconLock width={12} height={16} /></span> <span>{t('spot:pair_under_maintenance', { base: symbol?.base, quote: symbol?.quote })}</span></p>}
-                        {_renderPlaceOrderButton()}
+                        {_renderPlaceOrderButton(ExchangeOrderEnum.Side.BUY)}
                     </div>
                     <div className="">
 
                         {_renderOrderPrice}
                         {_renderOrderQuantity}
                         {_renderOrderQuoteQty}
-                        {_renderQuantitySlider}
+                        {/* {_renderQuantitySlider} */}
                         {currentExchangeConfig?.status === 'MAINTAIN' && <p className="text-sm mb-3 flex"><span className="mr-2"><IconLock width={12} height={16} /></span> <span>{t('spot:pair_under_maintenance', { base: symbol?.base, quote: symbol?.quote })}</span></p>}
-                        {_renderPlaceOrderButton()}
+                        {_renderPlaceOrderButton(ExchangeOrderEnum.Side.SELL)}
                     </div>
                 </div>
                 {/* <div className="tab-content">
@@ -981,7 +989,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                             leaveTo="opacity-0 scale-95"
                         >
                             <div
-                                className="inline-block min-w-[400px] py-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                                className="inline-block min-w-[400px] py-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded"
                             >
                                 <Dialog.Title className="border-b px-5">
                                     <div className="flex justify-between items-center mb-3">

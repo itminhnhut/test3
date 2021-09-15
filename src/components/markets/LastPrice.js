@@ -48,7 +48,7 @@ const LastPrice = (props) => {
         <>
             {
                 // eslint-disable-next-line no-nested-ternary
-                loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#4021D0" /></div> :
+                loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#09becf" /></div> :
                     colored
                         ? (
                             <div className={symbolTicker?.u ? 'text-mint' : 'text-pink'}>

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 const SpotDefault = ({ token }) => {
     const router = useRouter();
     if (typeof window !== 'undefined') {
-        router.push('/spot/ATS_VNDC', undefined, { shallow: true });
+        router.push('/spot/BTC_USDT', undefined, { shallow: true });
     }
     return null;
 };

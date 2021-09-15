@@ -10,6 +10,10 @@
   &.btn-lg {
     @apply py-3.5;
   }
+  &.btn-xs {
+    @apply py-2;
+    line-height: 0.875rem;
+  }
 }
 .btn-primary {
   @apply bg-teal-700 hover:bg-teal-300 text-white;
@@ -24,10 +28,10 @@
   @apply text-teal-700 hover:bg-opacity-[0.9] bg-white;
 }
 .btn-green {
-  @apply bg-green text-white;
+  @apply bg-teal text-white;
 }
 .btn-red {
-  @apply bg-red text-white;
+  @apply bg-pink text-white;
 }
 .btn-secondary {
   @apply bg-black-5 bg-opacity-80;

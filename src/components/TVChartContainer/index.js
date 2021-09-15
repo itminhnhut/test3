@@ -1,14 +1,10 @@
 import { getTradingViewTimezone } from 'actions/utils';
-import { widget } from 'public/library/trading_view/charting_library';
+// import { widget } from 'public/library/trading_view/charting_library';
 import * as React from 'react';
-import {
-    BOLLNami,
-    EMANami, MACDNami, MANami, VWAPNami,
-    WMANami,
-} from 'src/components/TVChartContainer/studies';
+import { MANami, exampleEA } from 'src/components/TVChartContainer/studies';
+import { widget } from '../TradingView/charting_library/charting_library.min';
 import Datafeed from './api';
 import DepthChart from './depth';
-import TimeFrame from './timeFrame';
 import styles from './tradingview.module.scss';
 
 function getLanguageFromURL() {
@@ -153,6 +149,7 @@ export class TVChartContainer extends React.PureComponent {
         try {
             if (this.widget) {
                 this.widget.save(data => {
+                    console.log('__ check save chart', data);
                     let currentData = localStorage.getItem(this.getChartKey);
                     if (currentData) {
                         try {
@@ -191,27 +188,21 @@ export class TVChartContainer extends React.PureComponent {
             library_path: this.props.libraryPath,
             locale: getLanguageFromURL() || 'en',
             disabled_features: [
-                'compare_symbol',
-                'display_market_status',
-                'go_to_date',
-                'volume_force_overlay',
-                'header_interval_dialog_button',
-                'header_settings',
-                // 'timeframes_toolbar',
-                'source_selection_markers',
+                'use_localstorage_for_settings',
                 'header_symbol_search',
+                'symbol_search_hot_key',
+                'header_settings',
+                'control_bar',
+                'timeframes_toolbar',
                 'header_compare',
                 'header_undo_redo',
-                'symbol_info',
-                'source_selection_markers',
-                'popup_hints',
-                'header_widget',
-                'axis_pressed_mouse_move_scale',
-                // 'main_series_scale_menu',
-                // 'show_chart_property_page'
-                // 'context_menus',
+                'compare_symbol',
+                'border_around_the_chart',
+                'header_screenshot',
+                'volume_force_overlay',
             ],
             enabled_features: [
+                'move_logo_to_main_pane',
                 'edit_buttons_in_legend',
                 // 'use_localstorage_for_settings',
                 // 'study_templates'
@@ -222,84 +213,43 @@ export class TVChartContainer extends React.PureComponent {
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            studies_overrides: this.props.studiesOverrides,
+            loading_screen: { backgroundColor: '#fff' },
+            studies_overrides: {
+                'volume.volume.color.0': '#03BBCC',
+                'volume.volume.color.1': '#ff0065',
+                'volume.volume ma.color': '#ff0065',
+                'volume.volume ma.linewidth': 5,
+                'volume.volume ma.visible': true,
+            },
             timezone: getTradingViewTimezone(),
             overrides: {
-                'mainSeriesProperties.candleStyle.upColor': '#12B886',
-                'mainSeriesProperties.candleStyle.downColor': '#FA5252',
-                'mainSeriesProperties.hollowCandleStyle.borderColor': '#12B886',
-                'mainSeriesProperties.hollowCandleStyle.borderDownColor': '#FA5252',
+                'scalesProperties.fontSize': 10,
+                // 'paneProperties.background': this.props.theme === "dark" ? '#101621' : '#ffffff',
+                // "mainSeriesProperties.minTick": minTick,
+                'mainSeriesProperties.candleStyle.borderUpColor': '#03BBCC',
+                'mainSeriesProperties.candleStyle.borderDownColor': '#ff0065',
+                'mainSeriesProperties.candleStyle.wickUpColor': '#03BBCC',
+                'mainSeriesProperties.candleStyle.wickDownColor': '#ff0065',
+                'mainSeriesProperties.candleStyle.upColor': '#03BBCC',
+                'mainSeriesProperties.candleStyle.downColor': '#ff0065',
+                'mainSeriesProperties.hollowCandleStyle.borderColor': '#03BBCC',
+                'mainSeriesProperties.hollowCandleStyle.borderDownColor': '#ff0065',
                 'volumePaneSize': 'small',
-                'scalesProperties.fontSize': 11,
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
             },
-            custom_indicators_getter(PineJS) {
-                return Promise.resolve([
-                    MANami(PineJS),
-                    EMANami(PineJS),
-                    WMANami(PineJS),
-                    BOLLNami(PineJS),
-                    VWAPNami(PineJS),
-                    MACDNami(PineJS),
-                ]);
-            },
-            time_frames: [],
+            time_frames: [
+                { text: '1m', resolution: '1', description: '1m' },
+            ],
         };
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
         this.widget.onChartReady(() => {
-            // Load saved data
-            const savedChart = localStorage.getItem(this.getChartKey);
-            // console.log('__ saved chart data', savedChart);
-            if (savedChart) {
-                try {
-                    const data = JSON.parse(savedChart);
-                    if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
-                    // if (typeof data === 'object' && data.chart_all) {
-                        this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
-                    } else {
-                        this.handleCreateStudy('Moving Average Exponential Nami');
-                    }
-                } catch (err) {
-                    console.error('Load chart error', err);
-                }
-            } else {
-                this.handleCreateStudy('Moving Average Exponential Nami');
-            }
             this.widget.applyOverrides({
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
             });
-
             this.setState({ chartStatus: ChartStatus.LOADED });
-            // setTimeout(this.drawOrderAfterChartLoaded, 1000)
-
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(() => this.saveChart(), 5000);
-
-            this.widget.subscribe('study_event', (studyId, eventType) => {
-                if (eventType === 'remove') {
-                    this.timeFrame.current.syncStudies();
-                }
-            });
-
-            this.widget.subscribe('study', (studyId, eventType) => {
-                this.saveChart();
-            });
-
-            this.widget.subscribe('mouse_down', () => {
-                this.timeFrame?.current?.setOpen(false);
-            });
-
-            this.widget.setSymbol(this.props.symbol, this.state.interval, () => {
-                const to = new Date().getTime() / 1000;
-                const from = to - 24 * 60 * 60 * getMultiValue(this.state.interval);
-
-                this.widget
-                    .activeChart()
-                    .setVisibleRange(
-                        { from, to },
-                        { applyDefaultRightMargin: true });
-            });
         });
     };
 
@@ -315,42 +265,7 @@ export class TVChartContainer extends React.PureComponent {
         const { chartType } = this.state;
         return (
             <>
-                <div className={`${this.props.fullScreen ? 'flex items-center py-6 -mb-4' : ''}`}>
-                    {/* <SymbolDetail
-                        symbol={this.props.symbol}
-                        isOnSidebar={this.props.isOnSidebar}
-                        changeSymbolList={this.props.changeSymbolList}
-                        watchList={this.props.watchList}
-                        favorite={this.props.favorite}
-                        parentCallback={this.props.parentCallback}
-                        fullScreen={this.props.fullScreen}
-                    /> */}
-                    <div className="w-full">
-                        {
-                            this.state.chartStatus === ChartStatus.LOADED ? <TimeFrame
-                                handleActiveTime={this.handleActiveTime}
-                                chartType={chartType}
-                                widget={this.widget}
-                                handleChartType={this.handleChartType}
-                                ref={this.timeFrame}
-                                handleCreateStudy={this.handleCreateStudy}
-                                handleRemoveStudy={this.handleRemoveStudy}
-                                handleRemoveAllStudies={this.handleRemoveAllStudies}
-                                interval={this.state.interval}
-                                studies={this.state.studies}
-                                isOnSidebar={this.props.isOnSidebar}
-                                t={this.t}
-                                initTimeFrame={this.props.initTimeFrame}
-                                extendsIndicators={this.props.extendsIndicators}
-                                clearExtendsIndicators={this.props.clearExtendsIndicators}
-                                customChartFullscreen={this.props.customChartFullscreen}
-                                fullScreen={this.props.fullScreen}
-                            /> : (
-                                <div className="h-[46px]" />
-                            )
-                        }
-                    </div>
-                </div>
+
                 <div className="flex flex-grow flex-col min-w-max chartWrapper h-full" id="chart-container">
                     <div
                         id={this.containerId}
@@ -368,6 +283,7 @@ TVChartContainer.defaultProps = {
     interval: '1',
     containerId: 'tv_chart_container',
     datafeedUrl: 'https://demo_feed.tradingview.com',
+    // libraryPath: '/library/trading_view/charting_library/',
     libraryPath: '/library/trading_view/charting_library/',
     chartsStorageUrl: 'https://saveload.tradingview.com',
     chartsStorageApiVersion: '1.1',
@@ -378,5 +294,13 @@ TVChartContainer.defaultProps = {
     time_frames: [
         { text: '1m', resolution: '1', description: '1m' },
     ],
-    studiesOverrides: {},
+    studies_overrides: {
+        'volume.volume.color.0': '#03BBCC',
+        'volume.volume.color.1': '#ff0065',
+        'volume.volume ma.color': '#ff0065',
+        'volume.volume ma.linewidth': 5,
+        'volume.volume ma.visible': true,
+        'bollinger bands.median.color': '#33FF88',
+        'bollinger bands.upper.linewidth': 7,
+    },
 };

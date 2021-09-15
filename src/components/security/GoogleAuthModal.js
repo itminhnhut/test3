@@ -242,7 +242,7 @@ const GoogleAuthModal = ({
                                             {isLoadingEmail
                                                 ? (
                                                     <button type="button" disabled={isLoadingEmail} className="absolute top-2 right-4 cursor-not-allowed mt-[0.5px]">
-                                                        <span className="text-[12px] text-[#4021D0] font-bold">{t('profile:sent_code')} {isLoadingEmail ? renderCountDownEmail : null}
+                                                        <span className="text-[12px] text-[#09becf] font-bold">{t('profile:sent_code')} {isLoadingEmail ? renderCountDownEmail : null}
                                                         </span>
                                                     </button>
                                                 )
@@ -253,7 +253,7 @@ const GoogleAuthModal = ({
                                                         className="absolute top-2 right-4 cursor-pointer mt-[0.5px]"
                                                         onClick={() => handleSendCode({ method: method?.name })}
                                                     >
-                                                        <span className="text-[12px] text-[#4021D0] font-bold">{t('profile:send_code')}</span>
+                                                        <span className="text-[12px] text-[#09becf] font-bold">{t('profile:send_code')}</span>
                                                     </button>
                                                 )}
                                         </div>
@@ -275,7 +275,7 @@ const GoogleAuthModal = ({
                                             {isLoadingPhone
                                                 ? (
                                                     <button type="button" disabled={isLoadingPhone} className="absolute top-2 right-4 cursor-not-allowed mt-[0.5px]">
-                                                        <span className="text-[12px] text-[#4021D0] font-bold">{t('profile:sent_code')} {isLoadingPhone ? renderCountDownPhone : null}
+                                                        <span className="text-[12px] text-[#09becf] font-bold">{t('profile:sent_code')} {isLoadingPhone ? renderCountDownPhone : null}
                                                         </span>
                                                     </button>
                                                 )
@@ -286,7 +286,7 @@ const GoogleAuthModal = ({
                                                         className="absolute top-2 right-4 cursor-pointer mt-[0.5px]"
                                                         onClick={() => handleSendCode({ method: method?.name })}
                                                     >
-                                                        <span className="text-[12px] text-[#4021D0] font-bold">{t('profile:send_code')}</span>
+                                                        <span className="text-[12px] text-[#09becf] font-bold">{t('profile:send_code')}</span>
                                                     </button>
                                                 )}
                                         </div>
@@ -305,7 +305,7 @@ const GoogleAuthModal = ({
                                             placeholder={t('profile:enter_verification_code')}
                                         />
                                         <div className="absolute top-2 right-4 cursor-pointer mt-[0.5px]" onClick={handleClipboard}>
-                                            <span className="text-[12px] text-[#4021D0] font-bold">{t('common:paste')}</span>
+                                            <span className="text-[12px] text-[#09becf] font-bold">{t('common:paste')}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -347,7 +347,7 @@ const GoogleAuthModal = ({
                                                 placeholder={t('profile:enter_verification_code')}
                                             />
                                             <div className="absolute top-2 right-4 cursor-pointer mt-[0.5px]" onClick={handleClipboard}>
-                                                <span className="text-[12px] text-[#4021D0] font-bold">{t('common:paste')}</span>
+                                                <span className="text-[12px] text-[#09becf] font-bold">{t('common:paste')}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -368,7 +368,7 @@ const GoogleAuthModal = ({
                                             {isLoadingEmail
                                                 ? (
                                                     <button type="button" disabled={isLoadingEmail} className="absolute top-2 right-4 cursor-not-allowed mt-[0.5px]">
-                                                        <span className="text-[12px] text-[#4021D0] font-bold">{t('profile:sent_code')} {isLoadingEmail ? renderCountDownEmail : null}
+                                                        <span className="text-[12px] text-[#09becf] font-bold">{t('profile:sent_code')} {isLoadingEmail ? renderCountDownEmail : null}
                                                         </span>
                                                     </button>
                                                 )
@@ -379,7 +379,7 @@ const GoogleAuthModal = ({
                                                         className="absolute top-2 right-4 cursor-pointer mt-[0.5px]"
                                                         onClick={() => handleSendCode({ method: method?.name })}
                                                     >
-                                                        <span className="text-[12px] text-[#4021D0] font-bold">{t('profile:send_code')}</span>
+                                                        <span className="text-[12px] text-[#09becf] font-bold">{t('profile:send_code')}</span>
                                                     </button>
                                                 )}
                                         </div>
@@ -401,7 +401,7 @@ const GoogleAuthModal = ({
                                             {isLoadingPhone
                                                 ? (
                                                     <button type="button" disabled={isLoadingPhone} className="absolute top-2 right-4 cursor-not-allowed mt-[0.5px]">
-                                                        <span className="text-[12px] text-[#4021D0] font-bold">{t('profile:sent_code')} {isLoadingPhone ? renderCountDownPhone : null}
+                                                        <span className="text-[12px] text-[#09becf] font-bold">{t('profile:sent_code')} {isLoadingPhone ? renderCountDownPhone : null}
                                                         </span>
                                                     </button>
                                                 )
@@ -412,7 +412,7 @@ const GoogleAuthModal = ({
                                                         className="absolute top-2 right-4 cursor-pointer mt-[0.5px]"
                                                         onClick={() => handleSendCode({ method: method?.name })}
                                                     >
-                                                        <span className="text-[12px] text-[#4021D0] font-bold">{t('profile:send_code')}</span>
+                                                        <span className="text-[12px] text-[#09becf] font-bold">{t('profile:send_code')}</span>
                                                     </button>
                                                 )}
                                         </div>
@@ -430,7 +430,7 @@ const GoogleAuthModal = ({
                         <button
                             type="button"
                             onClick={() => {}}
-                            className="w-full bg-transparent px-[36px] py-[11px] font-bold text-sm text-[#4021D0]"
+                            className="w-full bg-transparent px-[36px] py-[11px] font-bold text-sm text-[#09becf]"
                         >{t('profile:reset_google_auth')}
                         </button>
                     </a>
@@ -460,7 +460,7 @@ const GoogleAuthModal = ({
                         <button
                             type="button"
                             onClick={() => setStep(step + 1)}
-                            className="w-full rounded bg-[#4021D0] px-[36px] py-[11px] font-bold text-sm text-white"
+                            className="w-full rounded bg-[#09becf] px-[36px] py-[11px] font-bold text-sm text-white"
                         >{t('profile:google_auth_landing_btn')}
                         </button>
                     </>
@@ -498,13 +498,13 @@ const GoogleAuthModal = ({
                                 value={authCodeGoogle}
                             />
                             <div className="absolute top-2 right-4 cursor-pointer mt-[0.5px]" onClick={() => handleCopy(authCodeGoogle)}>
-                                <span className="text-[12px] text-[#4021D0] font-bold">{isCopied ? t('common:copied') : t('common:copy')}</span>
+                                <span className="text-[12px] text-[#09becf] font-bold">{isCopied ? t('common:copied') : t('common:copy')}</span>
                             </div>
                         </div>
                         <button
                             type="button"
                             onClick={() => { setStep(step + 1); setIsCopied(false); }}
-                            className="w-full rounded bg-[#4021D0] px-[36px] py-[11px] font-bold text-sm text-white"
+                            className="w-full rounded bg-[#09becf] px-[36px] py-[11px] font-bold text-sm text-white"
                         >{t('common:continue')}
                         </button>
                     </div>
@@ -528,13 +528,13 @@ const GoogleAuthModal = ({
                                 disabled
                             />
                             <div className="absolute top-2 right-4 cursor-pointer mt-[0.5px]" onClick={() => handleCopy(authCodeGoogle)}>
-                                <span className="text-[12px] text-[#4021D0] font-bold">{isCopied ? t('common:copied') : t('common:copy')}</span>
+                                <span className="text-[12px] text-[#09becf] font-bold">{isCopied ? t('common:copied') : t('common:copy')}</span>
                             </div>
                         </div>
                         <button
                             type="button"
                             onClick={() => { setStep(step + 1); setIsCopied(false); }}
-                            className="w-full rounded bg-[#4021D0] mt-[226px] px-[36px] py-[11px] font-bold text-sm text-white"
+                            className="w-full rounded bg-[#09becf] mt-[226px] px-[36px] py-[11px] font-bold text-sm text-white"
                         >{t('common:continue')}
                         </button>
                     </div>

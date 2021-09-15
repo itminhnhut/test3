@@ -5,7 +5,6 @@ const Chart = (props) => {
     const { symbol, isOnSidebar, favorite, watchList, changeSymbolList, chartSize, parentCallback, initTimeFrame, extendsIndicators, clearExtendsIndicators, customChartFullscreen, fullScreen } = props;
     const { t } = useTranslation();
     if (!symbol) return null;
-    console.log('__ check symbol', symbol);
     return (
         <div className="bg-white rounded px-3 h-full">
             <div className="spot-chart h-full flex flex-col">

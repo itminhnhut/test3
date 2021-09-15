@@ -36,16 +36,15 @@ const FetchApi = async ({ url, options, params, cancelToken, timeout } = mandato
         }
 
         if (process.env.NODE_ENV !== 'production') {
-            console.log('Call API: url, options, params', opts, options);
+            // console.log('Call API: url, options, params', opts, options);
         }
 
         const { data } = await axios(opts);
-        console.log(`fetchApi: ${url} ------------`, opts, data);
         cb(null, data);
         return data;
     } catch (err) {
         if (process.env.NODE_ENV !== 'production') {
-            console.error('Call API Error: ', err, err?.response?.data);
+            // console.error('Call API Error: ', err, err?.response?.data);
         }
         if (err?.response?.data) {
             return err?.response?.data;

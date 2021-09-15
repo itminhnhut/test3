@@ -15,7 +15,6 @@ const AssetLogo = (props) => {
         if (assetCode !== undefined) filter.assetCode = assetCode;
         if (assetId !== undefined) filter.id = assetId;
         const config = find(assetConfig, filter);
-        console.log('__ get asset logo', props);
         if (config) {
             const logoUrl = getS3Url(`/images/coins/64/${config?.id}.png`);
             return <img src={logoUrl} style={{ minWidth: logoSize }} width={logoSize} height={logoSize} alt={config?.assetCode} />;

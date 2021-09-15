@@ -153,7 +153,7 @@ const NotificationList = (props) => {
                     {unreadCount > 0
                     && (
                         <div
-                            className="absolute w-4 h-4 rounded-full flex items-center justify-center bg-red text-white text-xxs top-1 right-2	"
+                            className="absolute w-4 h-4 rounded-full flex items-center justify-center bg-pink text-white text-xxs top-1 right-2	"
                         >{unreadCount}
                         </div>
                     )}

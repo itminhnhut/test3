@@ -17,9 +17,6 @@
 .input-range__dot-container{
   width: 100%;
   height: 8px;
-  /* position: absolute; */
-  /* top: 12.5px; */
-  //background: green;
   position: absolute;
   display: flex;
   justify-content: space-between;
@@ -87,7 +84,8 @@
   font-size: 0.75rem;
   bottom: -1.7rem;
   font-weight: 700;
-  color: #4021d0;
+  color: #09becf;
+  @apply text-teal;
 }
 
 .input-range__label-container {

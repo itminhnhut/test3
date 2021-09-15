@@ -80,7 +80,7 @@ const Trades = (props) => {
                 </div>
             </div>
             <div className="overflow-y-auto max-h-[calc(100%-12px)] px-1.5">
-                {loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#4021D0" /></div> : (recentTrade && recentTrade.map((trade, index) => {
+                {loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#09becf" /></div> : (recentTrade && recentTrade.map((trade, index) => {
                     const {
                         S: side,
                         // s,

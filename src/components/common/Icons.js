@@ -308,7 +308,7 @@ export const NotificationDown = () => (
 
 export const NotificationSwap = () => (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="16" r="16" fill="#4021D0" />
+        <circle cx="16" cy="16" r="16" fill="#09becf" />
         <g clipPath="url(#clip0)">
             <path d="M23.2718 11.6359H10.4821L12.8769 9.24104C13.1609 8.95706 13.1609 8.49655 12.8769 8.21253C12.5929 7.92851 12.1324 7.92851 11.8484 8.21253L8.21204 11.8489C7.92802 12.1329 7.92802 12.5934 8.21204 12.8774L11.8484 16.5138C11.9904 16.6558 12.1766 16.7268 12.3627 16.7268C12.5488 16.7268 12.735 16.6558 12.8769 16.5138C13.1609 16.2298 13.1609 15.7693 12.8769 15.4852L10.4821 13.0904H23.2718C23.6734 13.0904 23.999 12.7648 23.999 12.3632C23.999 11.9615 23.6734 11.6359 23.2718 11.6359Z" fill="white" />
             <path d="M20.1506 15.4857C19.8666 15.2017 19.4061 15.2017 19.1221 15.4857C18.8381 15.7697 18.8381 16.2302 19.1221 16.5142L21.5169 18.9091H8.72727C8.32562 18.9091 8 19.2347 8 19.6363C8 20.038 8.32562 20.3636 8.72727 20.3636H21.5169L19.1221 22.7585C18.8381 23.0424 18.8381 23.503 19.1221 23.787C19.2641 23.9289 19.4502 24 19.6364 24C19.8225 24 20.0086 23.9289 20.1506 23.7869L23.787 20.1506C24.071 19.8666 24.071 19.4061 23.787 19.1221L20.1506 15.4857Z" fill="white" />
@@ -448,7 +448,7 @@ export const IconArrowDownSlim = ({ isActive }) => {
     if (isActive) {
         return (
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                <path d="M12.75 7.17383L7.187 0.885829C7.13955 0.832357 7.07149 0.801754 7 0.801754C6.92851 0.801754 6.86045 0.832357 6.813 0.885829L1.25 7.17383" stroke="#4021D0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12.75 7.17383L7.187 0.885829C7.13955 0.832357 7.07149 0.801754 7 0.801754C6.92851 0.801754 6.86045 0.832357 6.813 0.885829L1.25 7.17383" stroke="#09becf" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
         );
     }
@@ -463,9 +463,9 @@ export const IconDisclosureAction = ({ isActive }) => {
     if (isActive) {
         return (
             <svg xmlns="http://www.w3.org/2000/svg" width="4" height="20" viewBox="0 0 4 20" fill="none">
-                <circle cx="2" cy="2" r="2" fill="#4021D0" />
-                <circle cx="2" cy="10" r="2" fill="#4021D0" />
-                <circle cx="2" cy="18" r="2" fill="#4021D0" />
+                <circle cx="2" cy="2" r="2" fill="#09becf" />
+                <circle cx="2" cy="10" r="2" fill="#09becf" />
+                <circle cx="2" cy="18" r="2" fill="#09becf" />
             </svg>
         );
     }
@@ -482,9 +482,9 @@ export const IconAddAction = ({ isActive }) => {
     if (isActive) {
         return (
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path fillRule="evenodd" clipRule="evenodd" d="M9.00033 16.3346C13.0504 16.3346 16.3337 13.0514 16.3337 9.0013C16.3337 4.95121 13.0504 1.66797 9.00033 1.66797C4.95024 1.66797 1.66699 4.95121 1.66699 9.0013C1.66699 13.0514 4.95024 16.3346 9.00033 16.3346Z" stroke="#4021D0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M9 5V13" stroke="#4021D0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M13 9H5" stroke="#4021D0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path fillRule="evenodd" clipRule="evenodd" d="M9.00033 16.3346C13.0504 16.3346 16.3337 13.0514 16.3337 9.0013C16.3337 4.95121 13.0504 1.66797 9.00033 1.66797C4.95024 1.66797 1.66699 4.95121 1.66699 9.0013C1.66699 13.0514 4.95024 16.3346 9.00033 16.3346Z" stroke="#09becf" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9 5V13" stroke="#09becf" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M13 9H5" stroke="#09becf" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
         );
     }
@@ -749,7 +749,7 @@ export const IconHistory = () => (
 
 export const IconWhitePaper = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path fillRule="evenodd" clipRule="evenodd" d="M13.0002 1.52174C13.0002 1.23359 12.7666 1 12.4784 1H3.08717C2.79902 1 2.56543 1.23359 2.56543 1.52174V10.913C2.56543 11.2011 2.79902 11.4347 3.08717 11.4347H12.4784C12.7666 11.4347 13.0002 11.2011 13.0002 10.913V1.52174Z" stroke="#4021D0" strokeLinecap="round" strokeLinejoin="round" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M13.0002 1.52174C13.0002 1.23359 12.7666 1 12.4784 1H3.08717C2.79902 1 2.56543 1.23359 2.56543 1.52174V10.913C2.56543 11.2011 2.79902 11.4347 3.08717 11.4347H12.4784C12.7666 11.4347 13.0002 11.2011 13.0002 10.913V1.52174Z" stroke="#09becf" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M4.65015 3.08594H10.911" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M4.65015 5.17188H10.911" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M4.65015 7.25781H10.911" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
@@ -828,8 +828,8 @@ export const IconEarning = () => (
 
 export const IconFilter = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M15.0004 13.1294L21.2488 7.24851C21.4744 7.03618 21.6004 6.74931 21.6004 6.45001V3.52932C21.6004 2.90588 21.0628 2.3999 20.4004 2.3999H3.60039C2.93799 2.3999 2.40039 2.90588 2.40039 3.52932V6.45001C2.40039 6.74931 2.52639 7.03731 2.75199 7.24851L9.00039 13.1294" stroke="#4021D0" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M9 13.1294V20.1872C9 21.1054 9.9168 21.7796 10.8636 21.5571L13.8636 20.8513C14.5308 20.6943 15 20.1296 15 19.4813V13.1294" stroke="#4021D0" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M15.0004 13.1294L21.2488 7.24851C21.4744 7.03618 21.6004 6.74931 21.6004 6.45001V3.52932C21.6004 2.90588 21.0628 2.3999 20.4004 2.3999H3.60039C2.93799 2.3999 2.40039 2.90588 2.40039 3.52932V6.45001C2.40039 6.74931 2.52639 7.03731 2.75199 7.24851L9.00039 13.1294" stroke="#09becf" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 13.1294V20.1872C9 21.1054 9.9168 21.7796 10.8636 21.5571L13.8636 20.8513C14.5308 20.6943 15 20.1296 15 19.4813V13.1294" stroke="#09becf" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 

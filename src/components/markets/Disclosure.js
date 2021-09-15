@@ -659,7 +659,7 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                             <button
                                 type="button"
                                 onClick={handleToggleModal({ type: 'add_assets', itemName, id })}
-                                className="text-sm text-[#4021D0] font-bold inline-flex items-center"
+                                className="text-sm text-[#09becf] font-bold inline-flex items-center"
                             ><i className="mr-2"><IconAddAction isActive /></i> {t('category_disc_table_action_add_assets')}
                             </button>
                         )
