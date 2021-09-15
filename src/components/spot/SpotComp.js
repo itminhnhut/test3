@@ -1,4 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
+import Footer from 'components/common/Footer';
 import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
 import SymbolDetail from 'components/trade/SymbolDetail';
 import find from 'lodash/find';
@@ -27,13 +28,13 @@ import { useWindowSize } from 'utils/customHooks';
 const ReactGridLayout = WidthProvider(RGL);
 
 const layoutOnSidebar = [
-    { i: 'symbolDetail', x: 0, y: 0, w: 23, h: 2, isDraggable: true, isResizable: false },
-    { i: 'orderbook', x: 0, y: 3, w: 7, h: 22, isDraggable: true, isResizable: false },
-    { i: 'chart', x: 7, y: 3, w: 16, h: 12, isDraggable: true, isResizable: false },
-    { i: 'placeOrderForm', x: 7, y: 6, w: 16, h: 10, isDraggable: true, isResizable: false },
-    { i: 'symbolList', x: 23, y: 3, w: 7, h: 13, isDraggable: true, isResizable: false },
-    { i: 'trades', x: 23, y: 14, w: 7, h: 11, isDraggable: true, isResizable: false },
-    { i: 'orderList', x: 0, y: 26, w: 30, h: 10, isDraggable: true, isResizable: false },
+    { i: 'symbolDetail', x: 0, y: 0, w: 23, h: 2, isDraggable: false, isResizable: false },
+    { i: 'orderbook', x: 0, y: 3, w: 7, h: 22, isDraggable: false, isResizable: false },
+    { i: 'chart', x: 7, y: 3, w: 16, h: 12, isDraggable: false, isResizable: false },
+    { i: 'placeOrderForm', x: 7, y: 6, w: 16, h: 10, isDraggable: false, isResizable: false },
+    { i: 'symbolList', x: 23, y: 3, w: 7, h: 13, isDraggable: false, isResizable: false },
+    { i: 'trades', x: 23, y: 14, w: 7, h: 11, isDraggable: false, isResizable: false },
+    { i: 'orderList', x: 0, y: 26, w: 30, h: 10, isDraggable: false, isResizable: false },
 ];
 
 const initialLayout = layoutOnSidebar;
@@ -284,7 +285,7 @@ const SpotComp = () => {
                                         </div>
                                     </Dialog.Title>
                                     <div className="text-sm rounded-2xl bg-white">
-                                        <div className="bg-black-5 rounded-t-2xl py-4">
+                                        <div className="bg-blue-50 rounded-t-2xl py-4">
                                             <img src="/images/bg/dialog-register-header.svg" alt="" className="mx-auto" />
                                         </div>
                                         <div className="px-6 py-8 text-center !font-bold">
@@ -325,45 +326,41 @@ const SpotComp = () => {
                     </Dialog>
                 </Transition>
             </MobileView>
-            <BrowserView>
-                <ReactGridLayout
-                    className="layout bg-black-5"
-                    layout={gridLayout}
-                    breakpoints={{ xl: 1400, lg: 2200 }}
-                    cols={30}
-                    margin={[4, 4]}
-                    containerPadding={[4, 4]}
-                    // rowHeight={width > 2000 ? 20 : 10}
-                    rowHeight={30}
-                    // onLayoutChange={(_layout, _layouts) => onLayoutChange(_layout, _layouts)}
-                    draggableHandle=".dragHandleArea"
-                    draggableCancel=".dragCancelArea"
-                    // onResizeStop={handleResizeStop}
-                    // onDragStop={handleDragStop}
-                    // onResize={handleResize}
-                >
-                    <div key="symbolDetail">
-                        <SymbolDetail
-                            symbol={symbol}
-                            layoutConfig={symbolDetailLayout}
-                            changeSymbolList={changeSymbolList}
-                            watchList={watchList}
-                            favorite={favorite}
-                            parentCallback={handleCallbackChart}
-                            fullScreen={false}
-                        />
-                    </div>
+            <BrowserView className="bg-blue-50">
+                <div className="2xl:container">
+                    <ReactGridLayout
+                        className="layout"
+                        layout={gridLayout}
+                        breakpoints={{ xl: 1400, lg: 2200 }}
+                        cols={30}
+                        margin={[4, 4]}
+                        containerPadding={[4, 4]}
+                        rowHeight={30}
+                        draggableHandle=".dragHandleArea"
+                        draggableCancel=".dragCancelArea"
+                    >
+                        <div key="symbolDetail">
+                            <SymbolDetail
+                                symbol={symbol}
+                                layoutConfig={symbolDetailLayout}
+                                changeSymbolList={changeSymbolList}
+                                watchList={watchList}
+                                favorite={favorite}
+                                parentCallback={handleCallbackChart}
+                                fullScreen={false}
+                            />
+                        </div>
 
-                    <div key="orderbook">
-                        <OrderBook
-                            layoutConfig={orderBookLayout}
-                            symbol={symbol}
-                        />
-                    </div>
+                        <div key="orderbook">
+                            <OrderBook
+                                layoutConfig={orderBookLayout}
+                                symbol={symbol}
+                            />
+                        </div>
 
-                    <div key="symbolList" className={`${fullScreen && 'hidden'} z-[3]`}>
-                        {renderSymbolList}
-                        {/* <SymbolList
+                        <div key="symbolList" className={`${fullScreen && 'hidden'} z-[3]`}>
+                            {renderSymbolList}
+                            {/* <SymbolList
                             parentCallback={handleCallback}
                             publicSocket={publicSocket}
                             symbol={symbol}
@@ -372,42 +369,44 @@ const SpotComp = () => {
                             favorite={favorite}
                             handleChangeSymbol={handleChangeSymbol}
                         /> */}
-                    </div>
-                    <div key="chart" className={`${fullScreen && '!w-screen !h-screen transition !transform-none'} z-[2]`}>
-                        <Chart
-                            parentCallback={handleCallbackChart}
-                            symbol={symbol}
-                            isOnSidebar={isOnSidebar}
-                            changeSymbolList={changeSymbolList}
-                            watchList={watchList}
-                            favorite={favorite}
-                            chartSize={chartSize}
-                            initTimeFrame={initTimeFrame}
-                            extendsIndicators={extendsIndicators}
-                            clearExtendsIndicators={clearExtendsIndicators}
-                            customChartFullscreen={customChartFullscreen}
-                            fullScreen={fullScreen}
-                        />
-                    </div>
-
-                    <div key="trades">
-                        <Trades
-                            layoutConfig={tradesLayout}
-                            symbol={symbol}
-                            publicSocket={publicSocket}
-                        />
-                    </div>
-                    <div key="placeOrderForm">
-                        <SimplePlaceOrderForm
-                            symbol={symbol}
-                        />
-                    </div>
-                    <div key="orderList">
-                        <div ref={orderListWrapperRef} className="h-full">
-                            <SpotOrderList isOnSidebar={isOnSidebar} orderListWrapperHeight={orderListWrapperHeight} />
                         </div>
-                    </div>
-                </ReactGridLayout>
+                        <div key="chart" className={`${fullScreen && '!w-screen !h-screen transition !transform-none'} z-[2]`}>
+                            <Chart
+                                parentCallback={handleCallbackChart}
+                                symbol={symbol}
+                                isOnSidebar={isOnSidebar}
+                                changeSymbolList={changeSymbolList}
+                                watchList={watchList}
+                                favorite={favorite}
+                                chartSize={chartSize}
+                                initTimeFrame={initTimeFrame}
+                                extendsIndicators={extendsIndicators}
+                                clearExtendsIndicators={clearExtendsIndicators}
+                                customChartFullscreen={customChartFullscreen}
+                                fullScreen={fullScreen}
+                            />
+                        </div>
+
+                        <div key="trades">
+                            <Trades
+                                layoutConfig={tradesLayout}
+                                symbol={symbol}
+                                publicSocket={publicSocket}
+                            />
+                        </div>
+                        <div key="placeOrderForm">
+                            <SimplePlaceOrderForm
+                                symbol={symbol}
+                            />
+                        </div>
+                        <div key="orderList">
+                            <div ref={orderListWrapperRef} className="h-full">
+                                <SpotOrderList isOnSidebar={isOnSidebar} orderListWrapperHeight={orderListWrapperHeight} />
+                            </div>
+                        </div>
+                    </ReactGridLayout>
+                </div>
+                <Footer />
             </BrowserView>
         </LayoutWithHeader>
     );
