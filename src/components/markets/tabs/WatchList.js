@@ -57,7 +57,7 @@ const WatchList = ({ favoriteList, symbolList, handleSetFavorite, quoteAsset, re
             ignoreRowClick: true,
             cell: (row) => (
                 <>
-                    <Link href={`/spot/${row?.b}_${row?.q}`} prefetch={false}>
+                    <Link href={`/trade/${row?.b}-${row?.q}`} prefetch={false}>
                         <div className="flex items-center justify-between">
                             <AssetLogo assetCode={row?.b} size={24} />
                             <div className="ml-2">
@@ -416,7 +416,7 @@ const WatchList = ({ favoriteList, symbolList, handleSetFavorite, quoteAsset, re
             ignoreRowClick: true,
             right: true,
             cell: (row) => (
-                <Link href={`/spot/${row?.b}_${row?.q}`} prefetch={false}>
+                <Link href={`/trade/${row?.b}-${row?.q}`} prefetch={false}>
                     <span className="cursor-pointer text-violet font-semibold"> {t('markets:place_order')}</span>
                 </Link>),
         },

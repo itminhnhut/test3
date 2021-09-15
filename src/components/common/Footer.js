@@ -8,106 +8,48 @@ const Footer = () => {
     const { t } = useTranslation('footer');
     const router = useRouter();
     const { route, locale } = router;
-    const changeLanguage = (lang) => {
-        if (route === '/blog/[slug]') {
-            router.push('/blog', null, { locale: lang });
-        } else {
-            router.push(route, null, { locale: lang });
-        }
-    };
     const menu = [
         {
             name: t('product'),
             submenu: [
-                {
-                    name: t('nami_swap'),
-                    route: '/swap',
-                },
-                {
-                    name: t('nami_spot'),
-                    route: '/spot',
-                },
-                {
-                    name: t('nami_futures'),
-                    route: '/',
-                },
-                {
-                    name: t('nami_margin'),
-                    route: '/',
-                },
-                {
-                    name: t('nami_margin'),
-                    route: '/',
-                },
+                { name: t('nami_exchange'), route: 'https://nami.exchange' },
+                { name: t('nami_futures'), route: 'https://nami.futures' },
+                { name: t('nami_explained'), route: 'https://explained.nami.exchange' },
+                { name: t('nami_trade'), route: 'https://nami.trade' },
+                { name: t('nami_io'), route: 'https://nami.io' },
+                { name: t('nami_assistant'), route: 'https://nami.assistant' },
+                { name: t('nami_today'), route: 'https://nami.today' },
+                { name: t('nami_tv'), route: 'https://nami.tv' },
             ],
         },
         {
             name: t('community'),
-
             submenu: [
-                {
-                    name: 'CoinGecko',
-                    route: '/',
-                },
-                {
-                    name: 'Facebook',
-                    route: '/',
-                },
-                {
-                    name: 'Twitter',
-                    route: '/',
-                },
-                {
-                    name: 'Telegram',
-                    route: '/',
-                },
-                {
-                    name: 'Telegram',
-                    route: '/',
-                },
-                {
-                    name: 'Youtube',
-                    route: '/',
-                },
+                { name: t('social_coingecko'), route: 'https://www.coingecko.com/en/exchanges/nami_exchange' },
+                { name: t('social_facebook'), route: 'https://www.facebook.com/nami.trade.official' },
+                { name: t('social_twitter'), route: 'https://twitter.com/NamiTrade' },
+                { name: t('social_telegram'), route: 'https://t.me/namitradevn' },
+                { name: t('social_youtube'), route: 'https://www.youtube.com/channel/UCYAqEagemhtu0MOtnE7rNJQ' },
             ],
+
         },
         {
             name: t('support'),
             submenu: [
-                {
-                    name: 'API Documents',
-                    route: '/',
-                },
-                {
-                    name: 'Chat with support',
-                    route: '/',
-                },
-                {
-                    name: 'System Status',
-                    route: '/',
-                },
+                { name: 'API', route: 'https://namiexchange.github.io/docs/#introduction' },
+                { name: 'System Status', route: 'https://nami.exchange/system-status' },
 
             ],
         },
         {
             name: t('resources'),
             submenu: [
-                {
-                    name: t('nami_blog'),
-                    route: '/blog',
-                },
-                {
-                    name: t('nami_academy'),
-                    route: '/',
-                },
-                {
-                    name: t('support'),
-                    route: '/',
-                },
-                {
-                    name: t('beginner'),
-                    route: '/',
-                },
+                { name: t('policies'), route: '/privacy' },
+                { name: t('terms'), route: '/terms-of-sersvice' },
+                { name: t('whitepaper'), route: 'https://nami.exchange/files/whitepaper_vi_1510.pdf' },
+                { name: t('team'), route: 'https://ico.nami.trade/#nami-team' },
+                { name: t('fee_schedule'), route: 'https://nami.exchange/fee-schedule' },
+                { name: t('api'), route: 'https://nami.exchange/settings/api-management' },
             ],
         },
     ];
@@ -120,11 +62,11 @@ const Footer = () => {
                             <div className="mb-5">
                                 <Image src="/images/logo/nami-logo.png" height="40" width="160" />
                             </div>
-                            {/* <div className="mb-9">
-                                <div className="mt-3 text-teal">
+                            <div className="mb-9">
+                                <div className="font-semibold mt-3 text-white">
                                     Change mindset, make giant steps
                                 </div>
-                            </div> */}
+                            </div>
 
                         </div>
                         <div className="col-span-2 grid grid-cols-2  lg:grid-cols-4">

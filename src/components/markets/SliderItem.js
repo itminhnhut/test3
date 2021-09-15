@@ -29,7 +29,7 @@ const SliderItem = (props) => {
     }
     const change24h = getExchange24hPercentageChange(data);
     return (
-        <Link href={`/spot/${data?.b}_${data?.q}`} prefetch={false}>
+        <Link href={`/trade/${data?.b}-${data?.q}`} prefetch={false}>
             <div
                 className="card bg-white rounded-xl px-5 py-6 slider-item mx-auto slider-shadow my-10 cursor-pointer"
             >

@@ -679,7 +679,7 @@ const Swap = () => {
 export async function getStaticProps({ locale }) {
     return {
         props: {
-            ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'convert', 'error']),
+            ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'convert', 'error', 'footer']),
         },
     };
 }

@@ -590,7 +590,7 @@ export const OLD_LS_KEYS = [
     'spot:layouts__1.0.2', 'spot:isOnSidebar:layouts__1.0.2', 'spot:isOnSidebar__1.0.2', 'spot:maxChart__1.0.2',
     'spot:layouts__1.0.3', 'spot:isOnSidebar:layouts__1.0.3', 'spot:isOnSidebar__1.0.3', 'spot:maxChart__1.0.3',
     'spot:layouts__1.0.5', 'spot:isOnSidebar:layouts__1.0.5', 'spot:isOnSidebar__1.0.5', 'spot:maxChart__1.0.5', 'spot:layout__1.0.5',
-    'attlas-chart__1.0.4', 'attlas-chart__1.0.5',
+    'nami-tv__1.0.4', 'nami-tv__1.0.5',
     'spot:layouts__1.0.6', 'spot:isOnSidebar:layouts__1.0.6', 'spot:isOnSidebar__1.0.6', 'spot:maxChart__1.0.6', 'spot:layout__1.0.6',
     'spot:layouts__1.0.7', 'spot:isOnSidebar:layouts__1.0.7', 'spot:isOnSidebar__1.0.7', 'spot:maxChart__1.0.7', 'spot:layout__1.0.7',
 ];
@@ -617,8 +617,8 @@ export const SECURITY_VERIFICATION = {
 };
 
 export const DOWNLOAD_APP_LINK = {
-    IOS: 'https://apps.apple.com/us/app/attlas-exchange/id1565481713',
-    ANDROID: 'https://play.google.com/store/apps/details?id=io.attlas',
+    IOS: 'https://apps.apple.com/us/app/id1480302334',
+    ANDROID: 'https://play.google.com/store/apps/details?id=com.namicorp.exchange',
 };
 
 export const CATEGORY_SPOT_SIGNAL = {

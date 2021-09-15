@@ -98,7 +98,7 @@ const HomeSymbolList = (props) => {
             right: true,
             omit: isMobile,
             cell: (row) => (
-                <Link href={`/spot/${row?.b}_${row?.q}`} prefetch={false}>
+                <Link href={`/trade/${row?.b}-${row?.q}`} prefetch={false}>
                     <button className="btn btn-green" type="button">{t('common:buy')}</button>
                 </Link>),
         },

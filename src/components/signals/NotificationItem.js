@@ -159,7 +159,7 @@ const NotificationItem = (props) => {
                 {renderMetaData()}
             </div>
             <div className="mt-5 xl:px-0 xl:mt-0 col-span-12 xl:col-span-3 xl:mx-0 xl:justify-self-end">
-                <a href={`/spot/${notification?.metadata?.baseAsset}_${quoteAsset}?timeframe=${notification.timeframe}&indicator=${selectedIndicator}`} target="_blank" rel="noreferrer">
+                <a href={`/trade/${notification?.metadata?.baseAsset}-${quoteAsset}?timeframe=${notification.timeframe}&indicator=${selectedIndicator}`} target="_blank" rel="noreferrer">
                     <button
                         className="btn btn-primary w-full xl:w-[155px] xl:max-w-[155px] hover:!bg-[#4822FA] focus:!bg-[#2A11AC]"
                         type="button"

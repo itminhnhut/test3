@@ -42,7 +42,7 @@ function getMultiValue(time) {
     }
 }
 
-const CONTAINER_ID = 'attlas-chart';
+const CONTAINER_ID = 'nami-tv';
 const CHART_VERSION = '1.0.6';
 const ChartStatus = {
     NOT_LOADED: 1,
@@ -140,7 +140,7 @@ export class TVChartContainer extends React.PureComponent {
 
     // eslint-disable-next-line class-methods-use-this
     get getChartKey() {
-        return `attlas-chart__${CHART_VERSION}`;
+        return `nami-tv__${CHART_VERSION}`;
     }
 
     // eslint-disable-next-line class-methods-use-this

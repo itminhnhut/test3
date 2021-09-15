@@ -67,7 +67,7 @@ const SymbolListItem = (props) => {
             <div onClick={() => handleSetFavorite(base)} className="mr-1.5 cursor-pointer">
                 {isFavorite ? <IconStarFilled /> : <IconStar />}
             </div>
-            <Link href={`/spot/${base}_${quote}`} prefetch={false} shallow>
+            <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>
                 <div className="flex items-center w-full">
                     <div
                         className="flex-1 text-xs font-semibold leading-table flex items-center truncate min-w-0 mr-1.5"

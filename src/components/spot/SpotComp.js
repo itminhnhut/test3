@@ -51,7 +51,7 @@ const SpotComp = () => {
     // Check pattern
     let symbolFromUrl = null;
     if (typeof id === 'string' && id.length) {
-        const [base, quote] = id.split('_');
+        const [base, quote] = id.split('-');
         if (base && quote) {
             symbolFromUrl = { base, quote };
         }
@@ -201,7 +201,7 @@ const SpotComp = () => {
         if (extIndicator) {
             setExtendsIndicators(extIndicator);
         }
-        router.push(`/spot/${sym.base}_${sym.quote}`, undefined, { shallow: true });
+        router.push(`/trade/${sym.base}-${sym.quote}`, undefined, { shallow: true });
         setInitTimeFrame(time_frame);
     };
 
@@ -406,7 +406,6 @@ const SpotComp = () => {
                         </div>
                     </ReactGridLayout>
                 </div>
-                <Footer />
             </BrowserView>
         </LayoutWithHeader>
     );

@@ -1,38 +1,19 @@
 {
-    "applinks": {
-        "details": [
-            {
-                "appIDs": [
-                    "LXD5NS4W8W.io.attlas"
-                ],
-                "components": [
-                    {
-                        "/": "/spot/*",
-                        "comment": "Spot trading"
-                    },
-                    {
-                        "/": "/swap/*",
-                        "comment": "Swap"
-                    },
-                    {
-                        "/": "/membership",
-                        "comment": "Nami Membership"
-                    },
-                    {
-                        "/": "/earning/*",
-                        "comment": "Nami Earning"
-                    },
-                    {
-                        "/": "/starter/*",
-                        "comment": "Nami Starter"
-                    }
-                ]
-            }
-        ]
-    },
     "webcredentials": {
         "apps": [
-            "LXD5NS4W8W.io.attlas"
+            "463J59SZNF.com.namicorp.exchange"
         ]
+    },
+    "applinks": {
+        "apps": [],
+        "details": [{
+            "appID": "463J59SZNF.com.namicorp.exchange",
+            "paths": [
+                "*/trade/*",
+                "*/futures/*",
+                "*/wallet*",
+                "NOT */event/*"
+            ]
+        }]
     }
 }

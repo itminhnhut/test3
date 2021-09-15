@@ -1,39 +1,18 @@
 import { Dialog, Popover, Transition } from '@headlessui/react';
 import { getLoginUrl, getS3Url } from 'actions/utils';
-import UserLoader from 'components/loader/UserLoader';
 import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useRef, useState } from 'react';
 import { ChevronRight, XCircle } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { iconColor } from 'src/config/colors';
-import { DOWNLOAD_APP_LINK, KYC_STATUS, LS_KEYS } from 'src/redux/actions/const';
-import { actionLogout, setQuoteAsset } from 'src/redux/actions/user';
+import { DOWNLOAD_APP_LINK, LS_KEYS } from 'src/redux/actions/const';
+import { actionLogout } from 'src/redux/actions/user';
 import NotificationList from '../notification/NotificationList';
 import {
-    IconArrowRight,
-    IconBell,
-    IconBroker, IconCircleCheck,
-    IconConvert,
-    IconDashboard,
-    IconDeposit,
-    IconEarning,
-    IconFutures,
-    IconGift, IconLanguage,
-    IconLogout,
-    IconMargin,
-    IconMembership,
-    IconPnL,
-    IconProfile,
-    IconReferral,
-    IconSecurity,
-    IconStarter,
-    IconSupport,
-    IconTicket,
-    IconVerification,
-    IconWithdraw,
+    IconLogout, IconProfile,
 } from './Icons';
 
 const NavBar = () => {
@@ -62,13 +41,6 @@ const NavBar = () => {
         setOpen(false);
         setOpenRegister(true);
     };
-    const setBaseCurrencyDb = (asset) => {
-        dispatch(setQuoteAsset(asset));
-        if (route === '/spot/[id]') {
-            const [base, quote] = query?.id?.split('_');
-            router.push(`/spot/${base}_${asset}`);
-        }
-    };
 
     const urlAvatar = () => {
         if (user?.avatar) {
@@ -81,7 +53,7 @@ const NavBar = () => {
     const menu = [
         {
             name: 'trade',
-            route: '/spot',
+            route: '/trade',
             icon: '',
         },
         {
@@ -93,50 +65,34 @@ const NavBar = () => {
             name: 'wallet',
             submenu: [
                 {
-                    name: 'convert',
-                    route: '/swap',
+                    name: 'spot',
+                    route: 'https://nami.exchange/wallet/account?type=farming',
                 },
                 {
-                    name: 'convert',
-                    route: '/swap',
+                    name: 'futures',
+                    route: 'https://nami.exchange/wallet/account?type=farming',
                 },
                 {
-                    name: 'convert',
-                    route: '/swap',
+                    name: 'farming',
+                    route: 'https://nami.exchange/wallet/account?type=farming',
+                },
+                {
+                    name: 'stake',
+                    route: 'https://nami.exchange/wallet/account?type=stake',
                 },
             ],
         },
         {
             name: 'futures',
-            route: '/futures',
+            route: 'https://nami.exchange/futures',
             icon: '',
         },
     ];
     const menuMobile = [
         {
             name: 'home',
-            route: '/',
+            route: 'https://nami.exchange',
             disabled: false,
-        },
-        {
-            name: 'blog',
-            route: '/blog',
-            disabled: false,
-        },
-        {
-            name: 'about',
-            route: '/about',
-            disabled: false,
-        },
-        {
-            name: 'fee',
-            route: '/fee-structure',
-            disabled: false,
-        },
-        {
-            name: 'api',
-            route: '/',
-            disabled: true,
         },
     ];
     const clearLS = () => {
@@ -273,7 +229,7 @@ const NavBar = () => {
                 <div className="mx-auto px-2 sm:px-6 lg:px-8">
                     <div className="flex justify-between py-2.5 md:space-x-10">
                         <div className="flex justify-start">
-                            <Link href="/" locale={locale} prefetch={false}>
+                            <Link href="https://nami.exchange" locale={locale} prefetch={false}>
                                 <div className="flex-shrink-0 flex items-center">
                                     <Image
                                         className="hidden lg:block h-10 w-auto clickable"

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 const SpotDefault = ({ token }) => {
     const router = useRouter();
     if (typeof window !== 'undefined') {
-        router.push('/spot/BTC_USDT', undefined, { shallow: true });
+        router.push('/trade/BTC-USDT', undefined, { shallow: true });
     }
     return null;
 };

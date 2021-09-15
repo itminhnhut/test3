@@ -18,7 +18,7 @@ export const getStaticProps = async ({ locale }) => ({
 export async function getStaticPaths() {
     return {
         paths: [
-            { params: { id: 'BTC_VNDC' } },
+            { params: { id: 'BTC-USDT' } },
         ],
         fallback: true,
     };
