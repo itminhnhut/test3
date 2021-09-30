@@ -297,7 +297,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
 
             const params = {
                 symbol: `${base}${quote}`,
-                side: orderSide,
+                side: _orderSide,
                 type: orderType,
                 quantity: _quantity,
                 quoteOrderQty: _quoteOrderQty,
@@ -310,12 +310,12 @@ const SimplePlaceOrderForm = ({ symbol }) => {
             // if (orderType === ExchangeOrderEnum.Type.MARKET && quantityMode.id === ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) {
             //     params.useQuoteQty = true;
             // }
-            const filterResult = filterOrderInputApi(params);
-            if (filterResult) {
-                const { code, message } = filterResult;
-                showNotification({ message: `(${code}) ${t(`error:${message}`)}`, title: 'Error', type: 'failure' }, 'bottom', 'bottom-right');
-                return;
-            }
+            // const filterResult = filterOrderInputApi(params);
+            // if (filterResult) {
+            //     const { code, message } = filterResult;
+            //     showNotification({ message: `(${code}) ${t(`error:${message}`)}`, title: 'Error', type: 'failure' }, 'bottom', 'bottom-right');
+            //     return;
+            // }
 
             const res = await fetchAPI({
                 url: '/api/v3/spot/order',
