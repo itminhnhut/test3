@@ -1,7 +1,11 @@
 import { ChevronDown, ChevronUp } from 'react-feather'
 import Link from 'next/link'
+import { useTranslation } from 'next-i18next'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 const PocketFooter = ({ active, parentState }) => {
+    const { t, i18n: { language } } = useTranslation(['navbar'])
+
     return (
         <div className="mal-footer___pocket">
             <div className="mal-footer___pocket___company">
@@ -21,7 +25,7 @@ const PocketFooter = ({ active, parentState }) => {
                 <div className="mal-footer___pocket__links___group__item">
                     <div className="mal-footer___pocket__links___group__item__expander"
                          onClick={() => parentState({active: { about: !active.about }})}>
-                        Về Nami Corporation
+                        {language === LANGUAGE_TAG.VI ? 'Về Nami Corporation' : 'About Nami Corp.,'}
                         {active?.about ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links
@@ -29,7 +33,7 @@ const PocketFooter = ({ active, parentState }) => {
                                       'mal-footer___pocket__links___group__item__links__active' : ''}`}>
                         <Link href="/">
                             <a>
-                                Về chúng tôi
+                                {t('navbar:menu.about')}
                             </a>
                         </Link>
                         <Link href="/">
@@ -39,27 +43,27 @@ const PocketFooter = ({ active, parentState }) => {
                         </Link>
                         <Link href="/">
                             <a>
-                                Nền tảng của Nami
+                                {language === LANGUAGE_TAG.VI ? 'Nền tảng của Nami' : 'Nami Platform'}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Thông báo
+                                {language === LANGUAGE_TAG.VI ? 'Thông báo' : 'Notice'}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Đối tác kinh doanh
+                                {language === LANGUAGE_TAG.VI ? 'Đối tác kinh doanh' : 'Partners'}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Điều khoản
+                                {language === LANGUAGE_TAG.VI ? 'Điều khoản' : 'Terms of Services'}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Biểu phí
+                                {t('navbar:menu.fee')}
                             </a>
                         </Link>
                     </div>
@@ -69,7 +73,7 @@ const PocketFooter = ({ active, parentState }) => {
                 <div className="mal-footer___pocket__links___group__item">
                     <div className="mal-footer___pocket__links___group__item__expander"
                          onClick={() => parentState({active: { product: !active.product }})}>
-                        Sản phẩm
+                        {t('navbar:menu.product')}
                         {active?.product ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links
@@ -77,12 +81,12 @@ const PocketFooter = ({ active, parentState }) => {
                         'mal-footer___pocket__links___group__item__links__active' : ''}`}>
                         <Link href="/">
                             <a>
-                                Giao dịch Spot
+                                {t('navbar:menu.spot')}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Giao dịch Futures
+                                {t('navbar:menu.futures')}
                             </a>
                         </Link>
                         <Link href="/">
@@ -107,12 +111,12 @@ const PocketFooter = ({ active, parentState }) => {
                         </Link>
                         <Link href="/">
                             <a>
-                                Referral
+                                {t('navbar:submenu.referral')}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Swap
+                                {t('navbar:menu.swap')}
                             </a>
                         </Link>
                     </div>
@@ -122,7 +126,7 @@ const PocketFooter = ({ active, parentState }) => {
                 <div className="mal-footer___pocket__links___group__item">
                     <div className="mal-footer___pocket__links___group__item__expander"
                          onClick={() => parentState({active: { community: !active.community }})}>
-                        Cộng đồng
+                        {language === LANGUAGE_TAG.VI ? 'Cộng đồng' : 'Community'}
                         {active?.community ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links
@@ -175,7 +179,7 @@ const PocketFooter = ({ active, parentState }) => {
                 <div className="mal-footer___pocket__links___group__item">
                     <div className="mal-footer___pocket__links___group__item__expander"
                          onClick={() => parentState({active: { support: !active.support }})}>
-                        Hỗ trợ
+                        {t('navbar:menu.support')}
                         {active?.support ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links
@@ -183,22 +187,22 @@ const PocketFooter = ({ active, parentState }) => {
                         'mal-footer___pocket__links___group__item__links__active' : ''}`}>
                         <Link href="/">
                             <a>
-                                Trung tâm hỗ trợ
+                                {language === LANGUAGE_TAG.VI ? 'Trung tâm hỗ trợ' : 'Support Center'}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Phản hồi
+                                {language === LANGUAGE_TAG.VI ? 'Phản hồi' : 'Feedback'}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Gửi yêu cầu hỗ trợ
+                                {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}
                             </a>
                         </Link>
                         <Link href="/">
                             <a>
-                                Cẩm nang Nami
+                                {language === LANGUAGE_TAG.VI ? 'Cẩm nang Nami' : `Nami's Handbook`}
                             </a>
                         </Link>
                     </div>

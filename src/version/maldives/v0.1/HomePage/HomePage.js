@@ -22,15 +22,15 @@ const HomePage = () => {
     const setState = (state) => set(prevState => ({...prevState, ...state}))
 
     // * Use Hooks
-    const { t } = useTranslation(['home'])
+    const { t } = useTranslation(['home', 'modal'])
 
     // * Render Handler
     const renderQrCodeModal = useCallback(() => {
         return (
             <Modal isVisible={state.showQR}
-                   title="QR Code"
+                   title={t('modal:scan_qr_to_download')}
                    type="confirm-one-choice"
-                   positiveLabel="Đóng"
+                   positiveLabel={t('common:cancel')}
                    onConfirmCb={() => setState({ showQR: false })}
                    onBackdropCb={() => setState({ showQR: false })}>
                 <div className="flex items-center justify-center">

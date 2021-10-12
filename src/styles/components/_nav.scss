@@ -13,7 +13,7 @@
   }
 
   .mal-navbar__link__group___item {
-    @apply text-textPrimary dark:text-textPrimary-dark #{!important};
+    @apply h-full flex items-center text-textPrimary dark:text-textPrimary-dark #{!important};
 
     div svg path {
       @apply stroke-current #{!important};
@@ -53,11 +53,37 @@
     @apply flex items-center;
   }
 
+  .mal-navbar__user___avatar {
+    @apply block ml-4;
+
+    max-width: 25px;
+    max-height: 25px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    @media (min-width: 576px) {
+      @apply ml-6
+    }
+
+    @media (min-width: 768px) {
+      @apply ml-8
+    }
+
+    @media (min-width: 1366px) {
+      @apply ml-10
+    }
+  }
+
   .mal-navbar__link__group {
-    @apply flex flex-grow items-center;
+    @apply h-full flex flex-grow items-center;
 
     .mal-navbar__link__group___item {
-      @apply text-sm font-medium text-textPrimary-dark ml-8
+      @apply flex items-center h-full text-sm font-medium text-textPrimary-dark ml-8
       relative transition duration-100 ease-in-out;
 
       cursor: pointer;
@@ -66,18 +92,21 @@
         @apply text-dominant;
 
         .mal-navbar__link__group___item___childen__lv1 {
-          max-height: 40em;
+          @apply block;
         }
+      }
+
+      @media (min-width: 1440px) {
+        @apply ml-10;
       }
     }
 
     .mal-navbar__link__group___item___childen__lv1 {
-      @apply absolute left-0 z-50 bg-background dark:bg-background-dark;
+      @apply absolute hidden left-0 z-50 bg-background dark:bg-background-dark;
 
       top: 100%;
-      margin-top: 16px;
+      //margin-top: 16px;
       border-radius: 6px;
-      max-height: 0;
       overflow: hidden;
       transition: max-height .3s ease;
       padding-right: 16px;
@@ -85,12 +114,13 @@
     }
 
     .mal-navbar__link__group___item___childen__lv1___item {
-      @apply block text-sm font-medium text-textPrimary dark:text-textPrimary-dark;
+      @apply flex items-center text-sm font-medium text-textPrimary dark:text-textPrimary-dark;
 
       padding: 8px 8px;
       border-radius: 6px;
       word-break: normal;
       min-width: 100px;
+      white-space: nowrap;
 
       &:first-child {
         margin-top: 16px;
@@ -148,6 +178,7 @@
   padding-top: 13px;
   padding-bottom: 76px;
   overflow-y: scroll;
+  user-select: none;
 
   .mal-pocket-navbar__drawer__content___wrapper {
     .user__button {
@@ -156,13 +187,13 @@
       margin-top: 20px;
 
       div {
-        width: calc(98% / 2);
+        width: calc(97% / 2);
       }
     }
   }
 
   .mal-pocket-navbar__drawer__navlink__group {
-    @apply border-t border-b border-divider dark:border-divider-dark my-3;
+    @apply border-b border-divider dark:border-divider-dark my-3;
   }
 
   .mal-pocket-navbar__drawer__navlink__group___item {
@@ -195,6 +226,10 @@
   .mal-pocket-nabar__item___hover {
     &:hover {
       @apply bg-listItemSelected dark:bg-listItemSelected-dark;
+
+      span {
+        @apply text-dominant;
+      }
     }
   }
   //@media (min-width: 992px) {

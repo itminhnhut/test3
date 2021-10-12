@@ -1,4 +1,80 @@
 {
+  "introduce": {
+    "title_mobile": "Trading Spots and Futures Exchange now",
+    "title_desktop1": "Safety Spots and",
+    "title_desktop2": "Futures Exchange",
+    "description": "With the most effective cryptocurrency investment and management platform",
+    "total_order_paid": "Total Volume Of Liquidated Orders",
+    "total_user": "Total Number Of Users",
+    "total_pairs": "Total Trading Pairs"
+  },
+  "markettrend": {
+    "title": "Market Trend",
+    "top_gainer": "Top Gainer",
+    "top_loser": "Top Loser",
+    "top_vol": "24h Volume",
+    "explore_market": "Explore Market"
+  },
+  "first_award": {
+    "title_1": "Own The First {{value}} In",
+    "title_2": "Your Account Immediately",
+    "rule_1": "1. Register an account",
+    "rule_2": "2. Join Quizz & Earn at Nami Explained",
+    "rule_3": "3. Get USDT as soon as you complete the Quizz",
+    "following_at": "Follow Our Programs At",
+    "join_nami_by": "Join Nami with"
+  },
+  "journey": {
+    "title": "Start Your Cryptocurrency Journey",
+    "description_mobile": "Nami Exchange is the ideal place for you to trade and change the way you think about finance",
+    "description_desktop1": "Nami Exchange is the ideal place for you to trade and change the way you",
+    "description_desktop2": "think about finance",
+    "reason_1": "Maximize Profit",
+    "reason_1_description": "Trading with the leverage up to x100 (Futures trading)",
+    "reason_2": "Copy Trade (coming soon)",
+    "reason_2_description": "Diversify investment methods with the feature of copying orders and also a percentage of profit from the most experienced investments when participating in Nami Futures.",
+    "reason_3": "Possessing potential Tokens at a favorable price",
+    "reason_3_description": "Offering prestigious projects first launched at Nami Launchpad and potential tokens with lower-than-market asking prices at NextGem.",
+    "reason_4": "Improve Your Knowledge Of Cryptocurrencies",
+    "reason_4_description": "Nami Explained - The place to answer questions about the Crypto market"
+  },
+  "intro_app": {
+    "title_1": "Trade Anytime",
+    "title_2": "Anywhere With Nami App",
+    "description": "Deposit, withdraw and trade 24/7 on iOS and Android apps"
+  },
+  "trade3step": {
+    "title": "Trading Now With Just 3 Steps",
+    "step_1": "Create Account",
+    "step_2": "Deposits Fiat/Crypto",
+    "step_3": "Start Trading",
+    "chill_a_bit": "Only 30 seconds"
+  },
+  "why_nami": {
+    "title": "Why Choose",
+    "description": "The reasons you should choose Nami as a place to trade and invest",
+    "reason_1": "500,000+ Subscribers",
+    "reason_1_description":"Every 30 minutes on average, 9 investors choose Nami Exchange",
+    "reason_2": "Diversified Investment",
+    "reason_2_description": "With {{value}} trading pairs, investors will be provied many choices",
+    "reason_3": "Negative Transaction Fee",
+    "reason_3_description": "One of the rare exchanges with a take fee of {{value}}",
+    "reason_4": "24/7 Support",
+    "reason_4_description": "Support is available 24/7 in multi-language"
+  },
+  "user_activity": {
+    "trading_type": "Trading Type",
+    "status": "Status",
+    "token_name": "Token Name",
+    "quantity": "Quantity",
+    "time": "Time"
+  },
+  "community": {
+    "title": "Nami Exchange Community",
+    "description_mobile": "With more than 10,000 members across the international and Vietnamese communities, join now to exchange and chat with investors and get 24/7 support with us.",
+    "description_desktop1": "With more than 10,000 members across the international and Vietnamese communities,",
+    "description_desktop2": "join now to exchange and chat with investors and get 24/7 support with us."
+  },
   "title": "Anasayfa",
   "section_1": {
     "title": "Nami Exchange",

@@ -1,29 +1,36 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage'
 import Div100vh from 'react-div-100vh'
 import dynamic from 'next/dynamic'
 import SvgIcon from 'components/svg'
 import Button from 'components/common/Button'
+import colors from 'styles/colors'
 import Image from 'next/image'
 import Link from 'next/link'
-import colors from 'styles/colors'
 
 import { memo, useCallback, useEffect, useState } from 'react'
-import { MOBILE_NAV_DATA } from 'components/common/NavBar/constants'
 import { MoreHorizontal, ChevronDown } from 'react-feather'
+import { MOBILE_NAV_DATA } from 'components/common/NavBar/constants'
+import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { useTranslation } from 'next-i18next'
 
-
-const PocketNavDrawer = memo(({isActive, onClose}) => {
+const PocketNavDrawer = memo(({ isActive, onClose }) => {
     const [state, set] = useState({
         navActiveLv1: {},
     })
     const setState = (state) => set(prevState => ({...prevState, ...state}))
 
-    const { t } = useTranslation('navbar')
+    const { user: auth } = useSelector(state => state.auth) || null
+    const { width } = useWindowSize()
+    const { t, i18n: { language } } = useTranslation(['navbar', 'common'])
     const [currentTheme, onThemeSwitch] = useDarkMode()
-    const {width} = useWindowSize()
+    const [, onChangeLang] = useLanguage()
+
+    const themeToggle = () => {
+        onThemeSwitch()
+        onClose()
+    }
 
     const renderNavItem = () => {
        return MOBILE_NAV_DATA.map(nav => {
@@ -40,7 +47,7 @@ const PocketNavDrawer = memo(({isActive, onClose}) => {
                               onClick={() => onClose()}>
                                {getIcon(localized)}
                                <span className="ml-3 font-medium text-sm text-textSecondary dark:text-textSecondary-dark">
-                                   {t(`submenu.${item.localized}`)}
+                                   {t(`navbar:submenu.${item.localized}`)}
                                </span>
                            </a>
                        </Link>
@@ -54,7 +61,7 @@ const PocketNavDrawer = memo(({isActive, onClose}) => {
                                 'mal-pocket-nabar__item___hover' : ''}`}
                             onClick={() => setState({navActiveLv1: { [`${title}_${key}`]: !state.navActiveLv1[`${title}_${key}`] } })}>
                            <div className="flex flex-row items-center">
-                               {t(`menu.${localized}`)} {isNew && <span className="mal-dot__newest"/>}
+                               {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest"/>}
                            </div>
                            <div className={`transition duration-200 ease-in-out ${state.navActiveLv1[`${title}_${key}`] ? 'rotate-180' : ''}`}>
                                <ChevronDown size={16}
@@ -69,21 +76,33 @@ const PocketNavDrawer = memo(({isActive, onClose}) => {
                    </div>
                )
            }
+
+           if (localized === 'support') {
+               return (
+                   <a key={`${title}_${key}`}
+                      className="mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover"
+                      onClick={() => {
+                          onClose()
+                          window.fcWidget.open()
+                      }}>
+                       <div className="flex flex-row items-center">
+                           {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest"/>}
+                       </div>
+                   </a>
+               )
+           }
+
            return (
                <Link key={`${title}_${key}`} href={url}>
                    <a className="mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover" onClick={onClose}>
                        <div className="flex flex-row items-center">
-                           {t(`menu.${localized}`)} {isNew && <span className="mal-dot__newest"/>}
+                           {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest"/>}
                        </div>
                    </a>
                </Link>
            )
        })
     }
-
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watch Theme ', theme)
-    // }, [theme])
 
     return (
         <>
@@ -93,52 +112,57 @@ const PocketNavDrawer = memo(({isActive, onClose}) => {
                     <SvgIcon name="cross" size={20} style={{ cursor: 'pointer', marginRight: 16 }} onClick={onClose}/>
                 </div>
                 <div className="mal-pocket-navbar__drawer__content___wrapper">
-                    <div className="flex flex-row justify-between user__button">
-                        <div>
-                            <Button href="/" title="Đăng nhập" type="secondary"/>
-                        </div>
-                        <div>
-                            <Button href="/" title="Đăng kí" type="primary"/>
-                        </div>
-                    </div>
-                    <div style={{paddingLeft: 16, paddingRight: 16, marginTop: 8, marginBottom: 16}}>
+                    {!auth &&
+                        <>
+                            <div className="flex flex-row justify-between user__button">
+                                <div>
+                                    <Button href="/" title={t('common:sign_in')} type="secondary"/>
+                                </div>
+                                <div>
+                                    <Button href="/" title={t('common:sign_up')} type="primary"/>
+                                </div>
+                            </div>
+                            <div className="border-b border-divider dark:border-divider-dark"
+                                 style={{paddingLeft: 16, paddingRight: 16, marginTop: 16, marginBottom: 16}}/>
+                        </> }
 
-                    </div>
                     {width < 992 && <div className="mal-pocket-navbar__drawer__navlink__group">
                         {renderNavItem()}
                     </div>}
                     <div>
                         <a className="mal-pocket-navbar__drawer__navlink__group___item"
-                           onClick={onThemeSwitch}>
+                           onClick={themeToggle}>
                             <div className="flex flex-row items-center">
-                                Chủ đề
+                                {t('navbar:menu.mode')}
                             </div>
                             <div>
-                                {currentTheme === 'dark' ?
+                                {currentTheme !== 'dark' ?
                                     <SvgIcon name="sun" size={18}/>
                                     : <SvgIcon name="moon" size={18}/>}
                             </div>
                         </a>
-                        <a className="mal-pocket-navbar__drawer__navlink__group___item">
+                        <a className="mal-pocket-navbar__drawer__navlink__group___item" onClick={onChangeLang}>
                             <div className="flex flex-row items-center">
-                                Ngôn ngữ
+                                {t('navbar:menu.lang')}
                             </div>
                             <div>
-                                <Image src="/images/icon/ic_vn_flag.png" width="20" height="20" />
+                                {language === LANGUAGE_TAG.EN ?
+                                    <Image src="/images/icon/ic_us_flag.png" width="20" height="20" />
+                                    : <Image src="/images/icon/ic_vn_flag.png" width="20" height="20" />}
                             </div>
                         </a>
                         <a className="mal-pocket-navbar__drawer__navlink__group___item">
                             <div className="flex flex-row items-center">
-                                Tải ứng dụng
+                                {t('navbar:menu.download_app')}
                             </div>
                         </a>
                         <div style={{padding: '16px 16px 0'}} className="flex flex-row items-center">
-                            <Link href="/">
+                            <Link href="https://apps.apple.com/app/id1480302334">
                                 <a className="block">
                                     <img style={{height: 37, width: 'auto'}} src="/images/download_app_store.png" alt="Nami Exchange"/>
                                 </a>
                             </Link>
-                            <Link href="/">
+                            <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                                 <a className="block ml-4">
                                     <img style={{height: 37, width: 'auto'}} src="/images/download_play_store.png" alt="Nami Exchange"/>
                                 </a>

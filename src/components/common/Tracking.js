@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import * as fbq from 'src/utils/fpixel';
 import * as gtm from 'src/utils/gtm';
+import { getSymbolString } from 'redux/actions/utils'
 
 const handleRouteChange = (url) => {
     fbq.pageview();
@@ -16,9 +17,10 @@ const Tracking = ({ children }) => {
         fbq.pageview();
 
         router.events.on('routeChangeComplete', handleRouteChange);
-        return () => {
+
+        return function cleanup() {
             router.events.off('routeChangeComplete', handleRouteChange);
-        };
+        }
     }, [router.events]);
 
     return children;

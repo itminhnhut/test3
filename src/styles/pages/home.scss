@@ -138,12 +138,14 @@
 
       .homepage-introduce___graphics {
         @apply relative z-20 flex justify-center;
-
-        margin-top: 65px;
-
         img {
+          @apply block;
+
           width: 257px;
           height: auto;
+          object-fit: cover;
+          object-position: center;
+          transform: translateZ(60px);
         }
 
         @media (min-width: 1280px) {
@@ -200,12 +202,15 @@
         .homepage-introduce___statitics____item___value {
           @apply text-textPrimary dark:text-textPrimary-dark font-bold;
           font-size: 16px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
 
           .bott-line {
             @apply bg-dominant;
             width: 28px;
             height: 3px;
-            margin-top: 12px;
+            margin-top: 14px;
             margin-bottom: 8px;
 
             @media (min-width: 576px) {
@@ -214,6 +219,8 @@
 
             @media (min-width: 992px) {
               width: 66px;
+              margin-top: 20px;
+              margin-bottom: 12px;
             }
           }
 
@@ -307,7 +314,6 @@
         overflow-y: auto;
         cursor: pointer;
         user-select: none;
-        -webkit-tap-highlight-color: transparent;
 
         &::-webkit-scrollbar {
           display: none;
@@ -671,6 +677,46 @@
 
       .slick-arrow {
         @apply text-textSecondary dark:text-textSecondary-dark;
+      }
+    }
+
+    .homepage-news___lastest___news {
+        @apply flex items-center;
+
+        padding-left: 16px;
+        padding-right: 16px;
+        margin-top: 32px;
+        margin-bottom: 60px;
+
+      div.homepage-news___lastest___news____left {
+        @apply w-5/6 flex flex-nowrap items-center;
+
+        svg {
+          margin-right: 10px;
+        }
+
+        a {
+          @apply text-textPrimary dark:text-textPrimary-dark;
+
+          white-space: nowrap;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 20px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+
+          &:hover {
+            @apply text-dominant underline;
+          }
+        }
+      }
+
+      div.homepage-news___lastest___news____right {
+        @apply w-1/6 flex justify-end text-dominant cursor-pointer hover:underline;
+
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 24px;
       }
     }
 

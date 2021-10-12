@@ -3,6 +3,7 @@ import { useKeenSlider } from "keen-slider/react"
 import "keen-slider/keen-slider.min.css"
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useWindowSize } from 'utils/customHooks'
+import { useTranslation } from 'next-i18next'
 
 const HomeCurrentActivity = () => {
     // Initial State
@@ -12,6 +13,7 @@ const HomeCurrentActivity = () => {
     const setState = (state) => set(prevState => ({...prevState, ...state}))
 
     const { width } = useWindowSize()
+    const { t } = useTranslation(['home', 'common'])
 
     // Inital Keen Slider
     const [sliderRef, slider] = useKeenSlider({
@@ -42,18 +44,18 @@ const HomeCurrentActivity = () => {
                         </div>
                         <div className="homepage-activity__item__inner specific__case">
                             <div className="homepage-activity__item__inner___text text-dominant">
-                                Nạp
+                                {t('common:deposit')}
                             </div>
                             <div className="homepage-activity__item__inner___label">
-                                Loại lệnh
+                                {t('home:user_activity.trading_type')}
                             </div>
                         </div>
                         <div className="homepage-activity__item__inner">
                             <div className="homepage-activity__item__inner___text text-dominant">
-                                Thành công
+                                {t('common:success')}
                             </div>
                             <div className="homepage-activity__item__inner___label">
-                                Trạng thái
+                                {t('home:user_activity.status')}
                             </div>
                         </div>
                         <div className="homepage-activity__item__inner">
@@ -61,7 +63,7 @@ const HomeCurrentActivity = () => {
                                 Nami Token
                             </div>
                             <div className="homepage-activity__item__inner___label">
-                                Tên Token
+                                {t('home:user_activity.token_name')}
                             </div>
                         </div>
                         <div className="homepage-activity__item__inner">
@@ -69,7 +71,7 @@ const HomeCurrentActivity = () => {
                                 300 Nami
                             </div>
                             <div className="homepage-activity__item__inner___label">
-                                Số lượng
+                                {t('home:user_activity.quantity')}
                             </div>
                         </div>
                         <div className="homepage-activity__item__inner">
@@ -77,7 +79,7 @@ const HomeCurrentActivity = () => {
                                 09:11 06/10/21
                             </div>
                             <div className="homepage-activity__item__inner___label">
-                                Thời gian
+                                {t('home:user_activity.time')}
                             </div>
                         </div>
                     </div>
@@ -99,7 +101,7 @@ const HomeCurrentActivity = () => {
     }, [sliderRef])
 
     useEffect(() => {
-        timer.current = setInterval(() => !state.autoplay && slider && slider.next(), 3800)
+        timer.current = setInterval(() => !state.autoplay && slider && slider.next(), 1800)
         return () => clearInterval(timer.current)
     }, [state.autoplay, slider])
 

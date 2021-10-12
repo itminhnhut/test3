@@ -1,10 +1,33 @@
+import colors from 'styles/colors'
 import Link from 'next/link'
 
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'next-i18next'
+import { getMarketWatch } from 'redux/actions/market'
 import { useWindowSize } from 'utils/customHooks'
-import { useCallback } from 'react'
+import { PulseLoader } from 'react-spinners'
+import { useAsync } from 'react-use'
 
 const HomeIntroduce = ({ parentState }) => {
+    const [state, set] = useState({
+        pairsLength: null,
+        loading: false,
+    })
+    const setState = (state) => set(prevState => ({...prevState, ...state}))
+
+    // Use Hooks
     const { width } = useWindowSize()
+    const { t } = useTranslation(['home'])
+
+    const animRef = useRef()
+
+    // Helper
+    const onMouseOver = (event) => {
+        const element = animRef.current
+        const r = element.getBoundingClientRect()
+
+        element.style
+    }
 
     const renderIntroduce = useCallback(() => {
         return (
@@ -13,12 +36,12 @@ const HomeIntroduce = ({ parentState }) => {
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
                         <div className="homepage-introduce___title">
-                            {width < 576 ? <>Giao dịch Spot và Futures ngay</>
-                                : <>Sàn giao dịch Spot và<br/>Futures an toàn</>
+                            {width < 576 ? <>{t('home:introduce.title_mobile')}</>
+                                : <>{t('home:introduce.title_desktop1')}<br/>{t('home:introduce.title_desktop2')}</>
                             }
                         </div>
                         <div className="homepage-introduce___description">
-                            Với nền tảng quản lý và đầu tư tiền điện tử an toàn nhất
+                            {t('home:introduce.description')}
                         </div>
                         <div className="homepage-introduce___download">
                             <Link href="https://apps.apple.com/app/id1480302334">
@@ -38,8 +61,10 @@ const HomeIntroduce = ({ parentState }) => {
                         </div>
                     </div>
                     <div className="homepage-introduce___wrapper__right">
-                        <div className="homepage-introduce___graphics">
-                            <img src="/images/screen/homepage/dual_coin.png" alt="Nami Exchange"/>
+                        <div ref={animRef} className="homepage-introduce___graphics">
+                            <div className="homepage-introduce___graphics__anim__wrapper">
+                                <img src="/images/screen/homepage/dual_coin.png" alt="Nami Exchange"/>
+                            </div>
                         </div>
                         {width >= 1024 &&
                         <div className="homepage-introduce___graphics__backward">
@@ -53,7 +78,7 @@ const HomeIntroduce = ({ parentState }) => {
                                 <div className="bott-line"/>
                             </div>
                             <div className="homepage-introduce___statitics____item___description">
-                                Khối lượng giao dịch trong 24 giờ
+                                {t('home:introduce.total_order_paid')}
                             </div>
                         </div>
                         <div className="homepage-introduce___statitics____item">
@@ -62,23 +87,35 @@ const HomeIntroduce = ({ parentState }) => {
                                 <div className="bott-line"/>
                             </div>
                             <div className="homepage-introduce___statitics____item___description">
-                                Người dùng đã đăng kí
+                                {t('home:introduce.total_user')}
                             </div>
                         </div>
                         <div className="homepage-introduce___statitics____item">
                             <div className="homepage-introduce___statitics____item___value">
-                                6000 +
+                                {state.loading ? <PulseLoader size={5} color={colors.teal}/>
+                                    : state.pairsLength}
                                 <div className="bott-line"/>
                             </div>
                             <div className="homepage-introduce___statitics____item___description">
-                                Token đã được niêm yết
+                                {t('home:introduce.total_pairs')}
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
         )
-    }, [width])
+    }, [width, state.loading, state.pairsLength])
+
+    useAsync(async () => {
+        setState({ loading: true })
+        const pairs = await getMarketWatch()
+        if (pairs && pairs.length) {
+            setState({ pairsLength: pairs.length })
+        }
+        setState({ loading: false })
+    })
+
+    useEffect(() => console.log('namidev-DEBUG: MarketWatch____' , state), [state])
 
     return renderIntroduce()
 }

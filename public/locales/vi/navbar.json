@@ -10,13 +10,16 @@
     "support": "Hỗ trợ",
     "api": "API",
     "fee": "Biểu phí",
-    "blog": "Nami.Explained",
+    "blog": "Blog",
     "home": "Trang chủ",
     "about": "Về chúng tôi",
     "mode": "Chế độ",
     "lang": "Ngôn ngữ",
     "download_app": "Tải ứng dụng",
-    "product": "Sản phẩm"
+    "product": "Sản phẩm",
+    "market":  "Thị trường",
+    "explained": "Kiến thức",
+    "more": "Thêm"
   },
   "submenu": {
     "convert": "Nami Swap",

@@ -9,14 +9,17 @@
     "utilities": "Utilities",
     "support": "Support",
     "api": "API",
-    "fee": "Fee structure",
+    "fee": "Fee Structure",
     "blog": "Blog",
-    "home": "Home page",
-    "about": "About us",
+    "home": "Homepage",
+    "about": "About Us",
     "mode": "Theme Mode",
     "lang": "Language",
     "download_app": "Download App",
-    "product": "Product"
+    "product": "Product",
+    "market": "Market",
+    "explained": "Explained",
+    "more": "More"
   },
   "submenu": {
     "convert": "Nami Swap",

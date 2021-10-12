@@ -7,10 +7,14 @@ import { Eye, Lock, Mail } from 'react-feather'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
 import { THEME_MODE } from 'hooks/useDarkMode'
+import { useTranslation } from 'next-i18next'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 const HomeAdditional = ({ parentState }) => {
     // * Use Hooks
     const { width } = useWindowSize()
+    const { t, i18n: { language }  } = useTranslation(['home', 'input', 'common', 'navbar'])
+
     const theme = useSelector(state => state.user.theme)
 
     return (
@@ -19,20 +23,21 @@ const HomeAdditional = ({ parentState }) => {
                 <div className="homepage-first_award__wrapper mal-container">
                     <div className="homepage-first_award___step">
                         <div className="homepage-first_award__title">
-                            Sở hữu ngay <span>50 USDT</span> đầu tiên {width >= 1280 && <br/>}trong tài khoản
+                            {t('home:first_award.title_1', { value: '<span>50 USDT</span>' })} {width >= 1280 && <br/>}
+                            {t('home:first_award.title_2')}
                         </div>
                         <div className="homepage-first_award__manual">
                             <div className="homepage-first_award__manual__item">
-                                1. Đăng kí tài khoản
+                                {t('home:first_award.rule_1')}
                             </div>
                             <div className="homepage-first_award__manual__item">
-                                2. Tham gia Quizz & Earn tại Nami Explained
+                                {t('home:first_award.rule_2')}
                             </div>
                             <div className="homepage-first_award__manual__item">
-                                3. Nhận VNDC ngay khi hoàn thành Quizz
+                                {t('home:first_award.rule_3')}
                             </div>
                             <div className="homepage-first_award__manual__item">
-                                Theo dõi chương trình tại
+                                {t('home:first_award.following_at')}
                                 <div className="flex flex-row items-center">
                                     <Link href="/">
                                         <a>
@@ -52,7 +57,7 @@ const HomeAdditional = ({ parentState }) => {
                     </div>
                     <div className="homepage-first_award___form">
                         <div className="homepage-first_award___form___title">
-                            Tạo tài khoản bằng
+                            {t('home:first_award.join_nami_by')}
                         </div>
                         <div className="homepage-first_award___form___platform">
                             <Link href="/">
@@ -72,18 +77,18 @@ const HomeAdditional = ({ parentState }) => {
                             </Link>
                         </div>
                         <div className="homepage-first_award___form___or">
-                            hoặc
+                            {language === LANGUAGE_TAG.VI ? 'hoặc' : 'or'}
                         </div>
                         <div className="homepage-first_award___form___input_group">
                             <div className="homepage-first_award___form___input__wrapper">
                                 <Mail size={16}/>
                                 <input className="homepage-first_award___form___input"
-                                       placeholder="Địa chỉ email"/>
+                                       placeholder={t('input:email_placeholder')}/>
                             </div>
                             <div style={{ marginTop: 12 }} className="homepage-first_award___form___input__wrapper">
                                 <Lock size={20}/>
                                 <input className="homepage-first_award___form___input"
-                                       placeholder="Mật khẩu"/>
+                                       placeholder={t('input:password_placeholder')}/>
                                 <Eye size={16}/>
                             </div>
                             <div>
@@ -94,12 +99,12 @@ const HomeAdditional = ({ parentState }) => {
                                     height: 48,
                                     lineHeight: '35px'
                                 }}
-                                        title="Đăng kí"
+                                        title={t('common:sign_up')}
                                         type="primary"/>
                             </div>
                             <div
                                 className="text-sm text-center text-textSecondary dark:text-textSecondary-dark font-medium mt-3">
-                                Đã có tài khoản? <Link href="/"><a className="text-dominant">Đăng nhập</a></Link>
+                                {t('common:already_have_account')} <Link href="/"><a className="text-dominant">{t('common:sign_in')}</a></Link>
                             </div>
                         </div>
                     </div>
@@ -109,11 +114,15 @@ const HomeAdditional = ({ parentState }) => {
             <section className="homepage-journey">
                 <div className="homepage-journey__wrapper mal-container">
                     <div className="homepage-journey__title">
-                        Bắt đầu hành trình của bạn
+                        {t('home:journey.title')}
                     </div>
                     <div className="homepage-journey__description">
-                        Nami Exchange là nơi lý tưởng để bạn giao dịch cũng như thay đổi suy {width >= 992 && <br/>}nghĩ
-                        của bạn về tài chính
+                        {width >= 992 ?
+                            <>
+                                {t('home:journey.description_desktop1')}<br/>{t('home:journey.description_desktop2')}
+                            </>
+                            : t('home:journey.description_mobile')
+                        }
                     </div>
                     <div className="homepage-journey__group_content">
                         <div className="homepage-journey__group_content___left">
@@ -124,15 +133,14 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
                                     <div className="homepage-journey__group_content___left__item___content__title">
-                                        Tối đa hoá lợi nhuận
+                                        {t('home:journey.reason_1')}
                                     </div>
                                     <div
                                         className="homepage-journey__group_content___left__item___content__description">
-                                        Giao dịch với đòn bẩy lên đến x100 tại Nami Futures
-                                        (giao dịch hợp đồng tương lai).
+                                        {t('home:journey.reason_1_description')}
                                     </div>
                                     <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title="Xem thêm" type="primary"/>
+                                        <Button title={t('common:read_more')} type="primary"/>
                                     </div>
                                 </div>
                             </div>
@@ -143,15 +151,14 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
                                     <div className="homepage-journey__group_content___left__item___content__title">
-                                        Lợi nhuận từ các master
+                                        {t('home:journey.reason_2')}
                                     </div>
                                     <div
                                         className="homepage-journey__group_content___left__item___content__description">
-                                        Đa dạng hoá phương thức đầu tư với tính năng sao chép lệnh giao dịch cũng phần
-                                        trăm lợi nhuận từ những đầu tư kinh nghiệm nhất khi tham gia Nami Futures.
+                                        {t('home:journey.reason_2_description')}
                                     </div>
                                     <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title="Xem thêm" type="primary"/>
+                                        <Button title={t('common:read_more')} type="primary"/>
                                     </div>
                                 </div>
                             </div>
@@ -162,15 +169,14 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
                                     <div className="homepage-journey__group_content___left__item___content__title">
-                                        Sở hữu Token tiềm năng với giá cực thấp
+                                        {t('home:journey.reason_3')}
                                     </div>
                                     <div
                                         className="homepage-journey__group_content___left__item___content__description">
-                                        Cung cấp các dự án uy tín ra mắt lần đầu tiên tại Nami Launchpad và những token
-                                        tiềm năng với giá chào bán thấp hơn thị trường tại NextGem.
+                                        {t('home:journey.reason_3_description')}
                                     </div>
                                     <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title="Xem thêm" type="primary"/>
+                                        <Button title={t('common:read_more')} type="primary"/>
                                     </div>
                                 </div>
                             </div>
@@ -181,15 +187,14 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
                                     <div className="homepage-journey__group_content___left__item___content__title">
-                                        Nâng cao kiến thức về tiền mã hoá
+                                        {t('home:journey.reason_4')}
                                     </div>
                                     <div
                                         className="homepage-journey__group_content___left__item___content__description">
-                                        Chuẩn bị ngay những kiến thức cơ bản và cập nhật xu hướng mới nhất để sáng suốt
-                                        hơn trong mọi giao dịch.
+                                        {t('home:journey.reason_4_description')}
                                     </div>
                                     <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title="Xem thêm" type="primary"/>
+                                        <Button title={t('common:read_more')} type="primary"/>
                                     </div>
                                 </div>
                             </div>
@@ -204,10 +209,11 @@ const HomeAdditional = ({ parentState }) => {
             <section id="nami_exchange_download_app" className="homepage-app_intro">
                 <div className="homepage-app_intro___wrapper mal-container">
                     <div className="homepage-app_intro___content">
-                        <div className="homepage-app_intro___content___title">Giao dịch mọi lúc<br/>
-                            mọi nơi với Mobile App</div>
+                        <div className="homepage-app_intro___content___title">
+                            {t('home:intro_app.title_1')}<br/>
+                            {t('home:intro_app.title_2')}</div>
                         <div className="homepage-app_intro___content___description">
-                            Nạp, rút và giao dịch 24/7 trên ứng dụng dành cho IOS và Android
+                            {t('home:intro_app.description')}
                         </div>
                         <div className="homepage-app_intro___content___button__group">
                             <div onClick={() => window.open('https://apps.apple.com/app/id1480302334', '_blank')}>
@@ -236,7 +242,7 @@ const HomeAdditional = ({ parentState }) => {
             <section className="homepage-trade3step">
                 <div className="homepage-trade3step___wrapper">
                     <div className="homepage-trade3step___title">
-                        Giao dịch ngay chỉ với 3 bước
+                        {t('home:trade3step.title')}
                     </div>
 
                     <div className="homepage-trade3step___step___wrapper">
@@ -244,7 +250,7 @@ const HomeAdditional = ({ parentState }) => {
                             <div className="homepage-trade3step___step___item___inner">
                                 <div className="homepage-trade3step___step___item__label">01</div>
                                 <div className="homepage-trade3step___step___item__sublabel">
-                                    Tạo tài khoản
+                                    {t('home:trade3step.step_1')}
                                 </div>
                             </div>
                             <div className="homepage-trade3step__vertial_dot_line"/>
@@ -254,7 +260,7 @@ const HomeAdditional = ({ parentState }) => {
                             <div className="homepage-trade3step___step___item___inner">
                                 <div className="homepage-trade3step___step___item__label">02</div>
                                 <div className="homepage-trade3step___step___item__sublabel">
-                                    Nạp Token/Coin
+                                    {t('home:trade3step.step_2')}
                                 </div>
                             </div>
                             <div className="homepage-trade3step__vertial_dot_line"/>
@@ -264,16 +270,16 @@ const HomeAdditional = ({ parentState }) => {
                            <div className="homepage-trade3step___step___item___inner">
                                <div className="homepage-trade3step___step___item__label">03</div>
                                <div className="homepage-trade3step___step___item__sublabel">
-                                   Bắt đầu giao dịch
+                                   {t('home:trade3step.step_3')}
                                </div>
                            </div>
                         </div>
                     </div>
 
                     <div className="homepage-trade3step___create_account">
-                        <Button title="Tạo tài khoản" type="primary"/>
+                        <Button title={t('common:create_account')} type="primary"/>
                         <div className="homepage-trade3step___create_account___pr">
-                            Chỉ 30 giây
+                            {t('home:trade3step.chill_a_bit')}
                         </div>
                     </div>
                 </div>
@@ -282,59 +288,60 @@ const HomeAdditional = ({ parentState }) => {
             <section className="homepage-whynami">
                 <div className="homepage-whynami___wrapper mal-container">
                     <div className="homepage-whynami___title">
-                        Tại sao lại chọn
+                        {t('home:why_nami.title')}
                         {width < 992 && <br/>}
                         <span className="text-dominant"> Nami Exchange ?</span>
                     </div>
                     <div className="homepage-whynami___description">
-                        Nền tảng quản lý và giao dịch tiền điện tử hiệu quả nhất
+                        {t('home:why_nami.description')}
                     </div>
 
                     <div className="homepage-whynami___reason__group">
                         <div className="homepage-whynami___reason__item">
                             <Image src="/images/screen/homepage/registered_people.png" width="52" height="52"/>
                             <div className="homepage-whynami___reason__item___title">
-                                500,000+ người đăng kí
+                                {t('home:why_nami.reason_1')}
                             </div>
                             <div className="homepage-whynami___reason__item___description">
-                                Trung bình 30 phút có đến 9 nhà đầu tư<br/>lựa chọn Nami Exchange
+                                {t('home:why_nami.reason_1_description')}
                             </div>
                         </div>
 
                         <div className="homepage-whynami___reason__item">
                             <Image src="/images/screen/homepage/investment_diversity.png" width="52" height="52"/>
                             <div className="homepage-whynami___reason__item___title">
-                                Đầu tư đa dạng
+                                {t('home:why_nami.reason_2')}
                             </div>
                             <div className="homepage-whynami___reason__item___description">
-                                Với 366 cặp giao dịch sẽ giúp các nhà<br/>đầu tư có nhiều sự lựa chọn
+                                {t('home:why_nami.reason_2_description')}
                             </div>
                         </div>
 
                         <div className="homepage-whynami___reason__item">
                             <Image src="/images/screen/homepage/fee_saving.png" width="52" height="52"/>
                             <div className="homepage-whynami___reason__item___title">
-                                Phí giao dịch âm
+                                {t('home:why_nami.reason_3')}
                             </div>
                             <div className="homepage-whynami___reason__item___description">
-                                Một trong những sàn hiếm hoi có mức<br/>phí giao dịch âm với take fee 0,01%
+                                {t('home:why_nami.reason_3_description')}
                             </div>
                         </div>
 
                         <div className="homepage-whynami___reason__item">
                             <Image src="/images/screen/homepage/effective_support.png" width="52" height="52"/>
                             <div className="homepage-whynami___reason__item___title">
-                                Hỗ trợ 24/7
+                                {t('home:why_nami.reason_4')}
                             </div>
                             <div className="homepage-whynami___reason__item___description">
-                                Luôn có nhân viên hỗ trợ trực tiếp<br/>
-                                đa ngôn ngữ 24/7
+                                {t('home:why_nami.reason_4_description')}
+                                {/*Luôn có nhân viên hỗ trợ trực tiếp<br/>*/}
+                                {/*đa ngôn ngữ 24/7*/}
                             </div>
                         </div>
                     </div>
 
                     <div className="homepage-whynami___reason__group__btn___group">
-                        <Button title="Về chúng tôi" type="primary"/>
+                        <Button title={t('navbar:menu.about')} type="primary"/>
                     </div>
                 </div>
             </section>
@@ -344,11 +351,14 @@ const HomeAdditional = ({ parentState }) => {
             <section className="homepage-community">
                 <div className="homepage-community___wrapper mal-container">
                     <div className="homepage-community___title">
-                        Cộng đồng Nami Corporation
+                        {t('home:community.title')}
                     </div>
                     <div className="homepage-community___description">
-                        Với hơn 10 nghìn thành viên trên các cộng đồng quốc tế và Việt Nam, tham gia ngay để{width >= 992 && <br/>}trao đổi
-                        và trò chuyện với các nhà đầu tư và nhận hỗ trợ 24/7 cùng chúng tôi.
+                        {width >= 992 ?
+                            <>
+                                {t('home:community.description_desktop1')}<br/>{t('home:community.description_desktop2')}
+                            </>
+                            : t('home:community.description_mobile')}
                     </div>
                     <div className="homepage-community___channel__group">
                         <Link href="/">

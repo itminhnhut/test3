@@ -9,8 +9,10 @@ import { useWindowSize } from 'utils/customHooks'
 import { ___DEV___, sparkLineBuilder } from 'utils/helpers'
 import { useSelector } from 'react-redux'
 import { formatPercentage, formatPrice, getExchange24hPercentageChange } from 'redux/actions/utils'
+import { useTranslation } from 'next-i18next'
 
 const HomeMarketTrend = () => {
+    // * Initial State
     const [state, set] = useState({
         marketTabIndex: 0,
         trending: null,
@@ -20,7 +22,9 @@ const HomeMarketTrend = () => {
     const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
     // * Use Hooks
-    const { width } = useWindowSize()
+    const { width } = useWindowSize(['home', 'table'])
+    const { t } = useTranslation()
+
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig)
     const publicSocket = useSelector(state => state.socket.publicSocket)
 
@@ -47,7 +51,7 @@ const HomeMarketTrend = () => {
                     <div className={`homepage-markettrend__tab___item
                                          ${state.marketTabIndex === 0 ? 'homepage-markettrend__tab___item__active' : ''}`}
                          onClick={() => setState({ marketTabIndex: 0 })}>
-                        Top tăng giá
+                        {t('home:markettrend.top_gainer')}
                     </div>
                     {width >= 992 && <div className={`homepage-markettrend__tab__item___selector
                                                               ${state.marketTabIndex === 0 ?
@@ -57,7 +61,7 @@ const HomeMarketTrend = () => {
                     <div className={`homepage-markettrend__tab___item
                                          ${state.marketTabIndex === 1 ? 'homepage-markettrend__tab___item__active' : ''}`}
                          onClick={() => setState({ marketTabIndex: 1 })}>
-                        Top giảm giá
+                        {t('home:markettrend.top_loser')}
                     </div>
                     {width >= 992 && <div className={`homepage-markettrend__tab__item___selector
                                                               ${state.marketTabIndex === 1 ?
@@ -67,7 +71,7 @@ const HomeMarketTrend = () => {
                     <div className={`homepage-markettrend__tab___item
                                          ${state.marketTabIndex === 2 ? 'homepage-markettrend__tab___item__active' : ''}`}
                          onClick={() => setState({ marketTabIndex: 2 })}>
-                        Giao dịch 24h
+                        {t('home:markettrend.top_vol')}
                     </div>
                     {width >= 992 && <div className={`homepage-markettrend__tab__item___selector
                                                               ${state.marketTabIndex === 2 ?
@@ -75,7 +79,7 @@ const HomeMarketTrend = () => {
                 </div>
 
                 {width >= 992 && <a href="/trade" className="homepage-markettrend__market_table__explore">
-                    Khám phá thêm
+                    {t('home:markettrend.explore_market')}
                 </a>}
             </>
         )
@@ -84,11 +88,19 @@ const HomeMarketTrend = () => {
     const renderMarketHeader = useCallback(() => {
         return (
             <div className="homepage-markettrend__market_table__row">
-                <div className="homepage-markettrend__market_table__row__col1">Cặp</div>
-                <div className="homepage-markettrend__market_table__row__col2">Giá gần nhất</div>
-                <div className="homepage-markettrend__market_table__row__col3">Thay đổi 24h</div>
+                <div className="homepage-markettrend__market_table__row__col1">
+                    {t('table:pair')}
+                </div>
+                <div className="homepage-markettrend__market_table__row__col2">
+                    {t('table:last_price')}
+                </div>
+                <div className="homepage-markettrend__market_table__row__col3">
+                    {t('table:change_24h')}
+                </div>
                 {width >= 576 &&
-                <div className="homepage-markettrend__market_table__row__col4">Biểu đồ</div>}
+                <div className="homepage-markettrend__market_table__row__col4">
+                    {t('table:mini_chart')}
+                </div>}
             </div>
         )
     }, [width])
@@ -145,7 +157,7 @@ const HomeMarketTrend = () => {
 
                 <div className="homepage-markettrend__tab_and_title">
                     <div className="homepage-markettrend__title">
-                        Xu hướng thị trường
+                        {t('home:markettrend.title')}
                     </div>
                     <div className="homepage-markettrend__tab">
                         {renderTrendTab()}
@@ -162,7 +174,7 @@ const HomeMarketTrend = () => {
                         </div>
                     </div>
                     {width < 992 && <a href="/trade" className="homepage-markettrend__market_table__explore">
-                        Khám phá thêm
+                        {t('home:markettrend.explore_market')}
                     </a>}
                 </div>
 

@@ -62,8 +62,8 @@
   "type": "Type",
   "side": "Side",
   "filled": "Filled",
-  "sign_in": "Sign in",
-  "sign_up": "Sign up",
+  "sign_in": "Sign In",
+  "sign_up": "Sign Up",
   "sign_in_to_continue": "Sign in to continue",
   "sign_up_to_continue": "Sign Up Now",
   "status": "Status",
@@ -132,5 +132,7 @@
   "confirm": "Confirm",
   "vol": "Vol",
   "cancel": "Cancel",
-  "view_all": "View all"
+  "view_all": "View all",
+  "already_have_account": "Already have an account?",
+  "create_account": "Create Account"
 }
