@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { useAsync } from 'react-use';
 import { getAssetConfig, getExchangeConfig } from 'redux/actions/market';
-import { getSpotBalance, getWallet } from 'redux/actions/user';
+import { getSpotBalance, getWallet, setTheme } from 'redux/actions/user'
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
 import { useStore } from 'src/redux/store';
@@ -93,6 +93,9 @@ const App = ({ Component, pageProps }) => {
             store.dispatch(getExchangeConfig());
             initConfig = true;
             // Get common data
+
+            // Init theme
+            store.dispatch(setTheme())
         }
     }, []);
 

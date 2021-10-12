@@ -1,5 +1,6 @@
 {
   "menu": {
+    "spot": "Giao dịch Spot",
     "trade": "Giao dịch",
     "swap": "Quy đổi",
     "wallet": "Ví",
@@ -11,17 +12,31 @@
     "fee": "Biểu phí",
     "blog": "Nami.Explained",
     "home": "Trang chủ",
-    "about": "Về chúng tôi"
+    "about": "Về chúng tôi",
+    "mode": "Chế độ",
+    "lang": "Ngôn ngữ",
+    "download_app": "Tải ứng dụng",
+    "product": "Sản phẩm"
   },
   "submenu": {
     "convert": "Nami Swap",
     "convert_description": "Giao dịch crypto chỉ với một lần click",
-    "spot": "Giao dịch SPOT",
+    "spot": "Giao dịch Spot",
     "spot_description": "Mua bán crypto như một trader chuyên nghiệp",
     "futures": "Futures",
     "futures_description": "",
     "margin": "Margin",
-    "margin_description": ""
+    "margin_description": "",
+    "swap": "Quy đổi",
+    "launchpad": "Launchpad",
+    "copytrade": "Copy Trade",
+    "staking": "Staking",
+    "farming": "Farming",
+    "referral": "Báo cáo hoa hồng",
+    "spot_wallet": "Ví Spot",
+    "futures_wallet": "Ví Futures",
+    "staking_wallet": "Ví Staking",
+    "farming_wallet": "Ví Farming"
   },
   "menu_grid": {
     "deposit": "Nạp",

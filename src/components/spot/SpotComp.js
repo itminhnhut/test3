@@ -24,6 +24,7 @@ import Emitter from 'src/redux/actions/emitter';
 import { getMarketWatch, getUserSymbolList, postSymbolViews } from 'src/redux/actions/market';
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -233,7 +234,7 @@ const SpotComp = () => {
     if (!symbol) return null;
 
     return (
-        <LayoutWithHeader hidden={fullScreen}>
+        <MaldivesLayout hidden={fullScreen}>
             <SpotHead symbol={symbol} />
             <MobileView>
                 <Transition show as={Fragment}>
@@ -407,7 +408,7 @@ const SpotComp = () => {
                     </ReactGridLayout>
                 </div>
             </BrowserView>
-        </LayoutWithHeader>
+        </MaldivesLayout>
     );
 };
 

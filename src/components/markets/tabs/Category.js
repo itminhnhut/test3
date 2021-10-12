@@ -517,8 +517,8 @@ const Category = ({ symbolList, quoteAsset, renderPriceData, renderPercentageCha
                                             <div className="flex flex-row items-center">
                                                 <AssetLogo assetCode={asset?.assetCode} assetId={asset?.id} />
                                                 <div className="flex flex-col ml-3">
-                                                    <p className="text-textPrimaryColor font-semibold text-sm">{asset?.assetCode}</p>
-                                                    <p className="text-textSecondaryColor text-xs">{asset?.assetName}</p>
+                                                    <p className="text-textPrimary font-semibold text-sm">{asset?.assetCode}</p>
+                                                    <p className="text-textSecondary text-xs">{asset?.assetName}</p>
                                                 </div>
                                             </div>
                                             <ToggleAsset

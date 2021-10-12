@@ -19,3 +19,14 @@ export const truncate = (fullStr, strLen, separator) => {
 export const sanitize = (content) => {
     return typeof window === 'undefined' ? content : DOMPurify.sanitize(content);
 };
+
+
+export const ___DEV___ = process.env.NODE_ENV === 'development'
+
+export const sparkLineBuilder = (symbol, color) => {
+    if (___DEV___) {
+        return `https://data-test.bitbattle.io/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
+    } else {
+        return `https://data.bitbattle.io/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
+    }
+}

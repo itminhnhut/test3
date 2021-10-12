@@ -1,5 +1,9 @@
 export const EPS = 0.00000001;
 
+export const LOCAL_STORAGE_KEY = {
+    THEME: 'theme'
+}
+
 export const customModalStyles = {
     content: {
         top: '0%',

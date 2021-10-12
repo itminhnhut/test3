@@ -324,6 +324,9 @@ export default (state = initialState, { type, payload }) => {
                 },
             };
         }
+        case types.SET_THEME: {
+            return {...state, theme: payload}
+        }
         default:
             return state;
     }

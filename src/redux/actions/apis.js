@@ -1,5 +1,6 @@
 const API_PREFIX = '/api/v1/';
 const API_V3_PREFIX = '/api/v3/';
+
 export const API_REGISTER = API_PREFIX + 'user/register';
 export const API_LOGIN = API_PREFIX + 'user/login';
 export const API_LOGIN_SSO = '/login/nami';
@@ -19,6 +20,7 @@ export const API_GET_ORDER_BOOK = API_V3_PREFIX + 'spot/depth';
 export const API_GET_RECENT_TRADE = API_V3_PREFIX + 'spot/recent_trade';
 export const API_GET_HISTORY_TRADE = API_V3_PREFIX + 'spot/history';
 export const API_GET_OPEN_ORDER = API_V3_PREFIX + 'spot/open';
+export const API_GET_TRENDING = API_V3_PREFIX + 'spot/trend'
 
 export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list';
 

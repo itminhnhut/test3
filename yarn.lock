@@ -1929,6 +1929,13 @@ dom-serializer@^1.0.1:
     domhandler "^4.2.0"
     entities "^2.0.0"
 
+dom7@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/dom7/-/dom7-4.0.0.tgz#69c8fb9b170c92d64f385fdc37f81456e82b80a1"
+  integrity sha512-xOJ0LAHFwktyj8Xljz4R2wzRI+Y9mR0plkMP0WlqtwqAkqn/vbdAyRifiW/w8mXe17LGktntcAwsQ5fKVDBNYg==
+  dependencies:
+    ssr-window "^4.0.0"
+
 domain-browser@4.19.0:
   version "4.19.0"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-4.19.0.tgz#1093e17c0a17dbd521182fe90d49ac1370054af1"
@@ -3588,6 +3595,11 @@ jws@^4.0.0:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
+keen-slider@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/keen-slider/-/keen-slider-5.5.1.tgz#1493f552eadf0f5b8229defd83c626eb6dd58c13"
+  integrity sha512-QXGZGt5Hbe0YufR/RYbOG03MmOk43RQEXqkkSvjr8ZS67sVR7LRp5RIvJALfjl+A7BnHNr1wd1QBOemwy65Lfw==
+
 klaw-sync@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/klaw-sync/-/klaw-sync-6.0.0.tgz#1fd2cfd56ebb6250181114f0a581167099c2b28c"
@@ -4989,6 +5001,11 @@ react-device-detect@^1.17.0:
   dependencies:
     ua-parser-js "^0.7.24"
 
+react-div-100vh@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-div-100vh/-/react-div-100vh-0.6.0.tgz#577972d8ac17693edcd44061c1a4b5a7578e49ec"
+  integrity sha512-ErV0VTNXUd8jZqofC0ExZr5u+XDD2kN2te4SbwtqsyTm0UOjVYu53kP+FalGQrTe+DoMG8VYR2dITcAFu7c/5w==
+
 react-dom@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
@@ -5134,7 +5151,7 @@ react-share@^4.4.0:
     classnames "^2.2.5"
     jsonp "^0.2.1"
 
-react-slick@^0.28.1:
+react-slick@lastest:
   version "0.28.1"
   resolved "https://registry.yarnpkg.com/react-slick/-/react-slick-0.28.1.tgz#12c18d991b59432df9c3757ba540a227b3fb85b9"
   integrity sha512-JwRQXoWGJRbUTE7eZI1rGIHaXX/4YuwX6gn7ulfvUZ4vFDVQAA25HcsHSYaUiRCduTr6rskyIuyPMpuG6bbluw==
@@ -5763,6 +5780,11 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
+ssr-window@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ssr-window/-/ssr-window-4.0.0.tgz#4ee82fc360c5f88a022f321740bcfec59ada1a61"
+  integrity sha512-qCg6wJNeGNTVcPK2KFNfwtHU1gA3UZDZdxogu+Ys5+Ue5PMOENxUb7sscpAWWo4mWOBkJRCwQ50IlyA7qZ0hxw==
+
 stack-generator@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/stack-generator/-/stack-generator-2.0.5.tgz#fb00e5b4ee97de603e0773ea78ce944d81596c36"
@@ -6104,6 +6126,14 @@ svg.select.js@^3.0.1:
   dependencies:
     svg.js "^2.6.5"
 
+swiper@^7.0.8:
+  version "7.0.8"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-7.0.8.tgz#5727cf4c34ca11e4b038ccff2a984bbf41d2f6ad"
+  integrity sha512-1IpWjHam98eTNiysi9MauvPHdLgrLesSYGd7JXvQEJkvW/NvI9gogMfRfbv+7jCK3+nIWuCpVnJmKCOBtJi4JA==
+  dependencies:
+    dom7 "^4.0.0"
+    ssr-window "^4.0.0"
+
 table@^6.0.9:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/table/-/table-6.7.1.tgz#ee05592b7143831a8c94f3cee6aae4c1ccef33e2"
@@ -6116,10 +6146,10 @@ table@^6.0.9:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
 
-tailwindcss@^2.2.12:
-  version "2.2.14"
-  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-2.2.14.tgz#7f71ce6783a5e9768bd0e2ad1cb48eefba42e2ca"
-  integrity sha512-gQQPKbV8qb8GthGhJGbRR+lKluSpFq+L78CJZLmqumEBKPMDkD+l5wFlOTzlOhWozG4S1I9AUSaPkD1EfnNsug==
+tailwindcss@^2.2.14:
+  version "2.2.16"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-2.2.16.tgz#32f81bdf1758b639cb83b9d30bf7cbecdda49e5e"
+  integrity sha512-EireCtpQyyJ4Xz8NYzHafBoy4baCOO96flM0+HgtsFcIQ9KFy/YBK3GEtlnD+rXen0e4xm8t3WiUcKBJmN6yjg==
   dependencies:
     arg "^5.0.1"
     bytes "^3.0.0"

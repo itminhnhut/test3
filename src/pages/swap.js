@@ -25,6 +25,7 @@ import Footer from 'components/common/Footer';
 import { iconColor } from '../config/colors';
 import showNotification from '../utils/notificationService';
 import fetchAPI from '../utils/fetch-api';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 
 const swapFee = 0.1 / 100;
 
@@ -377,7 +378,7 @@ const Swap = () => {
     // console.log('__ check coin from, to', coinFrom, coinTo);
 
     return (
-        <LayoutWithHeader>
+        <MaldivesLayout>
             <div className="bg-blue-50 flex flex-col flex-grow">
                 {/* <div className="py-[3.75rem] text-center">
                     <div className="text-4xl text-teal ">
@@ -671,8 +672,7 @@ const Swap = () => {
                     </Dialog>
                 </Transition>
             </div>
-            <Footer />
-        </LayoutWithHeader>
+        </MaldivesLayout>
     );
 };
 
