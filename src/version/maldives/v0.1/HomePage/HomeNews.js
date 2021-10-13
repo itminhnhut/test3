@@ -89,7 +89,7 @@ const HomeNews = () => {
                     <div className="homepage-news___lastest___news____left">
                         <SvgSpeaker/>
                         <Link href={data.guid}>
-                            <a target="_blank">{data.post_title}</a>
+                            <a target="_blank" title={data.post_title}>{data.post_title}</a>
                         </Link>
                     </div>
                     <div className="homepage-news___lastest___news____right">

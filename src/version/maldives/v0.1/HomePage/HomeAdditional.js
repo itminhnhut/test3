@@ -23,7 +23,10 @@ const HomeAdditional = ({ parentState }) => {
                 <div className="homepage-first_award__wrapper mal-container">
                     <div className="homepage-first_award___step">
                         <div className="homepage-first_award__title">
-                            {t('home:first_award.title_1', { value: '<span>50 USDT</span>' })} {width >= 1280 && <br/>}
+                            {language === LANGUAGE_TAG.VI ?
+                            <>Sở hữu ngay <span>50 USDT</span> đầu</>
+                            : <>Own The First <span>50 USDT</span> In</>}
+                            {width >= 1280 && <br/>}
                             {t('home:first_award.title_2')}
                         </div>
                         <div className="homepage-first_award__manual">
