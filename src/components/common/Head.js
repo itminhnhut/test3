@@ -18,9 +18,9 @@ const Head = () => {
                 {
                     route !== '/blog/[slug]' && (
                         <>
-                            <meta
+                            {/* <meta
                                 name="apple-itunes-app"
-                                content="app-id=1565481713, app-argument=https://apps.apple.com/us/app/attlas-exchange/id1565481713"
+                                content="app-id=1565481713, app-argument=https://apps.apple.com/us/app/id1480302334"
                                 id="ember12714851"
                                 className="ember-view"
                             />
@@ -28,17 +28,17 @@ const Head = () => {
                             <meta name="google-play-app" content="app-id=io.attlas" />
                             <meta property="og:locale" content="en_US" />
                             <meta property="og:site_name" content="Nami Exchange" />
-                            <meta property="og:type" content="website" />
-                            <meta
-                                property="og:image"
-                                content="https://nami.exchange/images/featured/attlas-featured.png"
-                                key="fb-image"
-                            />
-                            <meta
-                                name="twitter:image"
-                                content="https://nami.exchange/images/featured/attlas-featured.png"
-                                key="twitter-image"
-                            />
+                            <meta property="og:type" content="website" /> */}
+                            {/*<meta*/}
+                            {/*    property="og:image"*/}
+                            {/*    content="https://nami.exchange/images/featured/attlas-featured.png"*/}
+                            {/*    key="fb-image"*/}
+                            {/*/>*/}
+                            {/*<meta*/}
+                            {/*    name="twitter:image"*/}
+                            {/*    content="https://nami.exchange/images/featured/attlas-featured.png"*/}
+                            {/*    key="twitter-image"*/}
+                            {/*/>*/}
                             <meta name="twitter:card" content="summary" />
                             <meta name="twitter:creator" content="@Nami" />
                             <meta name="twitter:site" content="@Nami" />

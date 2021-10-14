@@ -52,7 +52,7 @@ export default {
     async getSymbolInfo(symbol) {
         const url = `${PRICE_URL}/api/v1/chart/symbol_info`;
         const { data } = await axios.get(url, {
-            params: { broker: 'ATTLAS_SPOT', symbol },
+            params: { broker: 'NAMI_SPOT', symbol },
         },
         );
         return data;

@@ -66,7 +66,7 @@ export default {
         try {
             lastSymbol = symbolInfo.symbol;
             const newSub = {
-                exchange: 'ATTLAS_SPOT',
+                exchange: 'NAMI_SPOT',
                 symbol: symbolInfo.symbol,
                 uid,
                 resolution,

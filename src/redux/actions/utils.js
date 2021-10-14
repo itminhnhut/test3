@@ -215,7 +215,7 @@ function encodeData(data) {
 export function getSparkLine(symbol, color = '#09becf', resolution) {
     const query = {
         symbol,
-        broker: 'ATTLAS_SPOT',
+        broker: 'NAMI_SPOT',
         color,
     };
     if (resolution) query.resolution = resolution;
