@@ -63,7 +63,7 @@ const HomeIntroduce = ({ parentState }) => {
                     <div className="homepage-introduce___wrapper__right">
                         <div ref={animRef} className="homepage-introduce___graphics">
                             <div className="homepage-introduce___graphics__anim__wrapper">
-                                <img src="/images/screen/homepage/dual_coin.png" alt="Nami Exchange"/>
+                                <img src="/images/screen/homepage/banner_graphics.png" alt="Nami Exchange"/>
                             </div>
                         </div>
                         {width >= 1024 &&
@@ -115,7 +115,7 @@ const HomeIntroduce = ({ parentState }) => {
         setState({ loading: false })
     })
 
-    useEffect(() => console.log('namidev-DEBUG: MarketWatch____' , state), [state])
+    // useEffect(() => console.log('namidev-DEBUG: MarketWatch____' , state), [state])
 
     return renderIntroduce()
 }

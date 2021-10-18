@@ -4,11 +4,15 @@ import debounce from 'lodash/debounce';
 import { formatPrice, render24hChange } from 'src/redux/actions/utils';
 import { setUserSymbolList } from 'actions/market';
 import { IconStar, IconStarFilled } from '../common/Icons';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import colors from '../../styles/colors'
 
 const SymbolListItem = (props) => {
     const { symbolString, publicSocket, exchangeConfig, originTicker, currentId, favorite, changeSymbolList, watchList } = props;
     const [symbolTicker, setSymbolTicker] = useState(null);
     const [favoriteId, setFavoriteId] = useState('');
+
+    const [currentTheme, ] = useDarkMode()
 
     useEffect(() => {
         if (watchList && watchList.length) {
@@ -62,17 +66,18 @@ const SymbolListItem = (props) => {
 
     return (
         <div
-            className={`px-3 py-1.5 flex items-center cursor-pointer hover:bg-blue-50 ${currentId === `${base}_${quote}` ? 'bg-black-200' : ' '}`}
+            className={`px-3 py-1.5 flex items-center cursor-pointer hover:bg-get-lightTeal dark:hover:bg-get-darkBlue3 ${currentId === `${base}-${quote}` ? 'bg-get-lightTeal dark:bg-get-darkBlue3' : ''}`}
         >
             <div onClick={() => handleSetFavorite(base)} className="mr-1.5 cursor-pointer">
-                {isFavorite ? <IconStarFilled /> : <IconStar />}
+                {isFavorite ? <IconStarFilled color={colors.yellow} />
+                    : <IconStar color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />}
             </div>
             <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>
                 <div className="flex items-center w-full">
                     <div
-                        className="flex-1 text-xs font-semibold leading-table flex items-center truncate min-w-0 mr-1.5"
+                        className="text-textPrimary dark:text-textPrimary-dark flex-1 text-xs font-semibold leading-table flex items-center truncate min-w-0 mr-1.5"
                     >
-                        {base} <span className="text-black-500">/{quote}</span>
+                        {base} <span className="text-textSecondary dark:text-textSecondary-dark">/{quote}</span>
                     </div>
                     <div
                         className={`flex-1 text-xs font-semibold leading-table text-right mr-1.5 ${!up ? 'text-mint' : 'text-pink'}`}

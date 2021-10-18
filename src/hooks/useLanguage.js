@@ -17,9 +17,9 @@ const useLanguage = () => {
         push(route, query, { locale: nextLang })
     }
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: current Lang___ ', currentLocale)
-    }, [currentLocale])
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: current Lang___ ', currentLocale)
+    // }, [currentLocale])
 
     return [currentLocale, onChangeLang]
 }

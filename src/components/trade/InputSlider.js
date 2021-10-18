@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import ceil from 'lodash/ceil';
 import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track } from './StyleInputSlider';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 
 function getClientPosition(e) {
     const { touches } = e;
@@ -43,6 +44,8 @@ const Slider = ({
     const start = useRef({});
     const offset = useRef({});
     const BIAS = 8;
+
+    const [currentTheme, ] = useDarkMode()
 
     function getPosition() {
         let top = ((y - ymin) / (ymax - ymin)) * 100;
@@ -223,23 +226,24 @@ const Slider = ({
             onMouseDown={handleTrackMouseDown}
         >
             <Active style={valueStyle} />
-            <SliderBackground />
+            <SliderBackground isDark={currentTheme === THEME_MODE.DARK}/>
             <DotContainer>
                 <Dot
                     active={pos.left >= 0}
                     percentage={0}
+                    isDark={currentTheme === THEME_MODE.DARK}
                     onClick={() => {
                         console.log('click', 0);
                     }}
                 />
                 {/* <Dash /> */}
-                <Dot active={pos.left >= 25} percentage={25} />
+                <Dot active={pos.left >= 25} isDark={currentTheme === THEME_MODE.DARK} percentage={25} />
                 {/* <Dash /> */}
-                <Dot active={pos.left >= 50} percentage={50} />
+                <Dot active={pos.left >= 50} isDark={currentTheme === THEME_MODE.DARK} percentage={50} />
                 {/* <Dash /> */}
-                <Dot active={pos.left >= 75} percentage={75} />
+                <Dot active={pos.left >= 75} isDark={currentTheme === THEME_MODE.DARK} percentage={75} />
                 {/* <Dash /> */}
-                <Dot active={pos.left >= 100} percentage={100} />
+                <Dot active={pos.left >= 100} isDark={currentTheme === THEME_MODE.DARK} percentage={100} />
             </DotContainer>
             <div
                 ref={handle}
@@ -251,8 +255,8 @@ const Slider = ({
                     e.nativeEvent.stopImmediatePropagation();
                 }}
             >
-                <Thumb>
-                    <ThumbLabel>
+                <Thumb isZero={pos.left === 0} isDark={currentTheme === THEME_MODE.DARK}>
+                    <ThumbLabel isZero={pos.left === 0} isDark={currentTheme === THEME_MODE.DARK}>
                         {ceil(pos.left, 0)}%
                     </ThumbLabel>
                 </Thumb>

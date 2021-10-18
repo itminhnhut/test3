@@ -40,9 +40,9 @@ const HomePage = () => {
         )
     }, [state.showQR])
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: HomePage | Watch State ', state)
-    }, [state])
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: HomePage | Watch State ', state)
+    // }, [state])
 
     return (
         <MaldivesLayout navOverComponent navBlur>

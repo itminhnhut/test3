@@ -25,13 +25,13 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
 
     return (
         <div className="form-group" style={customWrapperStyle}>
-            <div className="input-group">
+            <div className="input-group border-divider dark:border-divider-dark">
                 <input
                     type="text"
                     placeholder={placeholder}
                     onChange={({ currentTarget }) => setQueryFilter(currentTarget.value)}
                     value={queryFilter}
-                    className="form-control form-control-sm"
+                    className="form-control form-control-sm bg-transparent text-textPrimary dark:text-textPrimary-dark"
                     style={customStyle}
                 />
 

@@ -28,15 +28,24 @@
   }
 
   .input-group {
-    @apply relative flex flex-wrap items-stretch w-full border border-gray-300 rounded focus:ring-0 focus-within:border-teal-700 focus:outline-none;
+    @apply relative flex flex-wrap items-stretch w-full border border-divider dark:border-divider-dark rounded focus:ring-0 focus:outline-none;
     &.is-error {
       @apply border-red
     }
+
+    &:hover {
+      @apply border-teal;
+    }
+
     .form-control {
       width: 1%;
       min-width: 0;
       margin-bottom: 0;
-      @apply relative flex-grow border-0;
+      @apply relative flex-grow border-0 bg-transparent text-textPrimary dark:text-textPrimary-dark;
+
+      ::placeholder {
+        @apply text-textSecondary dark:text-textSecondary-dark;
+      }
     }
     .form-control:not(:last-child) {
     }
@@ -67,6 +76,13 @@
 
 .form-section {
   .form-group {
+
+    input {
+      ::placeholder {
+        @apply text-textSecondary dark:text-textSecondary-dark;
+      }
+    }
+
     &:not(:last-child) {
       @apply mb-4
     }

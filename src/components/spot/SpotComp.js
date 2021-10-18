@@ -76,6 +76,10 @@ const SpotComp = () => {
     const [orderListWrapperHeight, setOrderListWrapperHeight] = useState(0);
     const [fullScreen, setFullScreen] = useState(false);
 
+    // compact state
+    const [state, set] = useState({ orderBook: null })
+    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
+
     const user = useSelector(state => state.auth.user) || null;
     const cancelButtonRegisterRef = useRef();
     const orderListWrapperRef = useRef(null);
@@ -327,7 +331,7 @@ const SpotComp = () => {
                     </Dialog>
                 </Transition>
             </MobileView>
-            <BrowserView className="bg-blue-50">
+            <BrowserView className="bg-backgroundSecondary dark:bg-get-darkBlue4">
                 <div className="2xl:container">
                     <ReactGridLayout
                         className="layout"
@@ -356,6 +360,7 @@ const SpotComp = () => {
                             <OrderBook
                                 layoutConfig={orderBookLayout}
                                 symbol={symbol}
+                                parentState={setState}
                             />
                         </div>
 
@@ -398,6 +403,7 @@ const SpotComp = () => {
                         <div key="placeOrderForm">
                             <SimplePlaceOrderForm
                                 symbol={symbol}
+                                orderBook={state.orderBook}
                             />
                         </div>
                         <div key="orderList">

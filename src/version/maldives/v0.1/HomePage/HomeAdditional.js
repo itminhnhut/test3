@@ -203,7 +203,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                         </div>
                         <div className="homepage-journey__group_content___right">
-                            <img src="/images/screen/homepage/journey_graphics.png" alt="Nami Exchange"/>
+                            <img src="/images/screen/homepage/journey_graphics2.png" alt="Nami Exchange"/>
                         </div>
                     </div>
                 </div>

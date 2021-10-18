@@ -90,9 +90,10 @@ export const IconDashboard = () => (
 
 );
 
-export const IconStar = ({ size = 12 }) => (
+export const IconStar = ({ size = 12, color = false }) => (
     <svg width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" stroke="#C5C6D2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z"
+              stroke={color || '#C5C6D2'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
@@ -241,16 +242,17 @@ export const IconCheck = () => (
 
 );
 
-export const IconSelectSmall = () => (
+export const IconSelectSmall = ({ color }) => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 6L8 10L12 6" stroke="#223050" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4 6L8 10L12 6" stroke={color || '#223050'} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 
 );
 
-export const IconSwitch = () => (
+export const IconSwitch = ({ fill }) => (
     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15 30C6.71573 30 -2.93554e-07 23.2843 -6.55671e-07 15C-1.01779e-06 6.71573 6.71573 -2.93554e-07 15 -6.55671e-07C23.2843 -1.01779e-06 30 6.71573 30 15C30 23.2843 23.2843 30 15 30Z" fill="#F5F5F5" />
+        <path d="M15 30C6.71573 30 -2.93554e-07 23.2843 -6.55671e-07 15C-1.01779e-06 6.71573 6.71573 -2.93554e-07 15 -6.55671e-07C23.2843 -1.01779e-06 30 6.71573 30 15C30 23.2843 23.2843 30 15 30Z"
+              fill={fill || '#F5F5F5'} />
         <path d="M11.25 22.5L11.25 8.4375" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M7.5 12.1875L11.25 8.4375L15 12.1875" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M18.75 8.4375L18.75 22.5" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round" />
@@ -273,10 +275,10 @@ export const IconSort = () => (
     </svg>
 
 );
-export const IconNoSort = () => (
+export const IconNoSort = ({ fill }) => (
     <svg width="18" height="18" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#00C8BC" />
-        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill="#C4C4C4" />
+        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill={fill || '#C4C4C4'} />
     </svg>
 
 );
@@ -852,9 +854,10 @@ export const IconFilter = () => (
     </svg>
 );
 
-export const IconCustomCheckbox = () => (
+export const IconCustomCheckbox = ({ color = false }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none">
-        <path d="M8.27537 0.961033C8.59842 0.637989 9.12217 0.637989 9.44522 0.961033C9.76826 1.28408 9.76826 1.80783 9.44522 2.13088L4.48198 7.09411C4.15894 7.41716 3.63518 7.41716 3.31214 7.09411L0.554783 4.33676C0.231739 4.01372 0.231739 3.48996 0.554783 3.16692C0.877827 2.84387 1.40158 2.84387 1.72463 3.16692L3.89706 5.33935L8.27537 0.961033Z" fill="white" />
+        <path d="M8.27537 0.961033C8.59842 0.637989 9.12217 0.637989 9.44522 0.961033C9.76826 1.28408 9.76826 1.80783 9.44522 2.13088L4.48198 7.09411C4.15894 7.41716 3.63518 7.41716 3.31214 7.09411L0.554783 4.33676C0.231739 4.01372 0.231739 3.48996 0.554783 3.16692C0.877827 2.84387 1.40158 2.84387 1.72463 3.16692L3.89706 5.33935L8.27537 0.961033Z"
+              fill={color || 'white'} />
     </svg>
 );
 

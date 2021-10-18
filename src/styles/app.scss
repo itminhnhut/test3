@@ -55,6 +55,10 @@ body {
     @media (min-width: 1280px) {
       max-width: 1164px;
     }
+
+    @media (min-width: 1920px) {
+      max-width: 1440px;
+    }
   }
 
   .value-up {
@@ -258,8 +262,13 @@ input[type=number] {
     min-height: 365px;
   }
 }
-.rdt_Table > div {
-  background: transparent!important;
+
+.rdt_Table {
+  background-color: transparent !important;
+
+  > div {
+    background-color: transparent !important;
+  }
 }
 // hide tradingview
 [class^="dateRangeWrapper-"] {

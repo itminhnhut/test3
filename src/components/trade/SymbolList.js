@@ -11,6 +11,8 @@ import SymbolListItem from 'src/components/markets/SymbolListItem';
 import { CATEGORY_SPOT_SIGNAL, LS_KEYS } from 'src/redux/actions/const';
 import { getMarketWatch } from 'src/redux/actions/market';
 import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import colors from '../../styles/colors'
 
 const SymbolList = (props) => {
     const { query } = useRouter();
@@ -29,6 +31,8 @@ const SymbolList = (props) => {
 
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
     const user = useSelector(state => state.auth.user) || null;
+
+    const [currentTheme, ] = useDarkMode()
 
     useAsync(async () => {
         const result = await getMarketWatch();
@@ -130,7 +134,7 @@ const SymbolList = (props) => {
                 <div className="ats-tbheader px-3">
                     <div className="flex justify-between items-center mb-3">
                         <div
-                            className="flex flex-1 items-center justify-start text-black-600 text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-start text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('b');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -143,11 +147,11 @@ const SymbolList = (props) => {
                             {
                                 sortField === 'b'
                                     ? <SortIcon direction={sortDirection} />
-                                    : <IconNoSort />
+                                    : <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
                             }
                         </div>
                         <div
-                            className="flex flex-1 items-center justify-end text-black-600 text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('p');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -157,11 +161,11 @@ const SymbolList = (props) => {
                             {
                                 sortField === 'p'
                                     ? <SortIcon direction={sortDirection} />
-                                    : <IconNoSort />
+                                    : <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
                             }
                         </div>
                         <div
-                            className="flex flex-1 items-center justify-end text-black-600 text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('change24h');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -171,7 +175,7 @@ const SymbolList = (props) => {
                             {
                                 sortField === 'change24h'
                                     ? <SortIcon direction={sortDirection} />
-                                    : <IconNoSort />
+                                    : <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
                             }
                         </div>
                     </div>
@@ -179,6 +183,7 @@ const SymbolList = (props) => {
                 <div className="overflow-y-auto max-h-[calc(100%-6rem)]">
                     {/* <div className="overflow-y-scroll"> */}
                     {filteredSymbolList.map((ticker, index) => {
+                        // console.log('namidev-DEBUG: ___', query?.id)
                         return (
                             <Fragment
                                 key={`${search}_${activeTab}_${ticker.b}}`}
@@ -199,12 +204,12 @@ const SymbolList = (props) => {
                 </div>
             </>
         );
-    }, [filteredSymbolList, selectedCategory, filteredSignals, query]);
+    }, [filteredSymbolList, selectedCategory, filteredSignals, query, currentTheme]);
 
     return (
         <>
             <div
-                className="spot-symbol-list__container- bg-bgContainer dark:bg-bgContainer-dark py-6 h-full transition-all	duration-700 ease-in"
+                className="spot-symbol-list__container- bg-bgContainer dark:bg-bgContainer-dark py-6 h-full"
             >
                 <>
                     <div className="mx-3 mb-3">
@@ -218,18 +223,18 @@ const SymbolList = (props) => {
                     <div className="mx-3 mb-3 flex items-center">
 
                         <div
-                            className={'w-12 h-[23px] flex justify-center items-center text-sm mr-2 border cursor-pointer ' + (activeTab === 'favorite' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
+                            className={'w-12 h-[23px] flex justify-center items-center text-sm mr-2 border cursor-pointer ' + (activeTab === 'favorite' ? 'active text-mint border-mint' : 'border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('favorite')}
                         >
-                            <IconStarFilled size={14} color={activeTab === 'favorite' ? '#09becf' : '#C5C6D2'} />
+                            <IconStarFilled size={12} color={activeTab === 'favorite' ? '#09becf' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
                         </div>
                         <a
-                            className={'w-12 text-sm text-center mr-2 font-medium border   cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
+                            className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-textSecondary dark:text-textSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('USDT')}
                         > USDT
                         </a>
                         <a
-                            className={'w-12 text-sm text-center mr-2 font-medium border   cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-black-400 border-black-400')}
+                            className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-textSecondary dark:text-textSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('VNDC')}
                         > VNDC
                         </a>

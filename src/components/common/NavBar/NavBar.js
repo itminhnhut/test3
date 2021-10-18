@@ -177,12 +177,16 @@ const NavBar = ({ style, layoutStateHandler, useBlur }) => {
 
                     {width >= 1366 &&
                     <div className="flex flex-row items-center ml-8">
-                        <a className="text-sm font-medium text-textPrimary-dark uppercase cursor-pointer"
+                        <a className={`text-sm font-medium uppercase cursor-pointer
+                                       ${!useBlur ? 'text-textPrimary dark:text-textPrimary-dark' : 'text-textPrimary-dark'}
+                                           whitespace-nowrap hover:!text-dominant`}
                            onClick={onChangeLang}>
                             {currentLocale}
                         </a>
-                        <a href="#" className="text-sm font-medium text-textPrimary-dark ml-8" onClick={onThemeSwitch}>
-                            {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color={colors.grey4}/> : <SvgSun size={20} color={colors.grey4}/>}
+                        <a href="#" className="ml-8" onClick={onThemeSwitch}>
+                            {currentTheme !== THEME_MODE.LIGHT ?
+                                <SvgMoon size={20} color={useBlur ? colors.grey4 : currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4}/>
+                                : <SvgSun size={20} color={useBlur ? colors.grey4 : currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4}/>}
                         </a>
                     </div>}
 

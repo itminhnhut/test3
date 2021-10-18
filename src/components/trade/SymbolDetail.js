@@ -9,6 +9,7 @@ import Emitter from 'src/redux/actions/emitter';
 import { setUserSymbolList } from 'src/redux/actions/market';
 import { formatPrice, render24hChange } from 'src/redux/actions/utils';
 import { IconLoading, IconStar, IconStarFilled } from '../common/Icons';
+import useDarkMode from 'hooks/useDarkMode'
 
 const SymbolDetail = (props) => {
     const { symbol, favorite, changeSymbolList, watchList, parentCallback, isOnSidebar, fullScreen, layoutConfig } = props;
@@ -16,6 +17,9 @@ const SymbolDetail = (props) => {
     const [symbolTicker, setSymbolTicker] = useState(null);
     const [favoriteId, setFavoriteId] = useState('');
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
+
+    const [currentTheme, ] = useDarkMode()
+
     const ref = React.useRef(null);
     useEffect(() => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
@@ -60,15 +64,15 @@ const SymbolDetail = (props) => {
     return (
         <>
             <div
-                className="h-full w-full flex flex-row items-center justify-start dragHandleArea bg-white border-b border-black-200"
+                className="h-full w-full flex flex-row items-center justify-start dragHandleArea bg-bgContainer dark:bg-bgContainer-dark"
             >
                 <div className="flex flex-row  items-center px-4 dragCancelArea">
                     <AssetLogo assetCode={symbolTicker?.b} size={32} />
                     <div className="flex flex-col pl-4">
-                        <span className="font-bold">
+                        <span className="text-textPrimary dark:text-textPrimary-dark font-bold">
                             {symbolTicker?.b}/{symbolTicker?.q}
                         </span>
-                        <span className="text-xs">
+                        <span className="text-textSecondary dark:text-textSecondary-dark text-xs">
                             <AssetName assetCode={symbolTicker?.b} />
                         </span>
                     </div>
@@ -76,42 +80,42 @@ const SymbolDetail = (props) => {
                 <div className={fullScreen ? 'hidden' : 'flex items-center w-full'}>
                     <div className="flex  flex-col content-end text-right mr-7.5 min-w-[100px] min-0 dragCancelArea">
                         <div
-                            className="block text-black-700 font-semibold "
+                            className={`block font-semibold ${symbolTicker?.u ? 'text-get-teal' : 'text-get-red2'}`}
                         >{formatPrice(symbolTicker?.p, exchangeConfig, symbol?.quote)}
                         </div>
                     </div>
                     <div className="flex  flex-col min-w-max mr-7.5">
-                        <div className="block text-black-500 text-xs text-left font-normal">{t('change')} 24h</div>
+                        <div className="block text-textSecondary dark:text-textSecondary-dark text-xs text-left font-normal">{t('change')} 24h</div>
                         <div
                             className="block text-xs font-semibold "
                         >{render24hChange(symbolTicker)}
                         </div>
                     </div>
                     <div className="flex  flex-col mr-7.5 min-w-max">
-                        <div className="block text-black-500 text-xs text-left font-normal">{t('high')} 24h</div>
+                        <div className="block text-textSecondary dark:text-textSecondary-dark text-xs text-left font-normal">{t('high')} 24h</div>
                         <div
-                            className="block text-black-700 text-xs font-semibold "
+                            className="block text-textPrimary dark:text-textPrimary-dark text-xs font-semibold "
                         >{formatPrice(symbolTicker?.h, exchangeConfig, symbol?.quote)}
                         </div>
                     </div>
                     <div className="flex  flex-col mr-7.5 min-w-max">
-                        <div className="block text-black-500 text-xs text-left font-normal">{t('low')} 24h</div>
+                        <div className="block text-textSecondary dark:text-textSecondary-dark text-xs text-left font-normal">{t('low')} 24h</div>
                         <div
-                            className="block text-black-700 text-xs font-semibold "
+                            className="block text-textPrimary dark:text-textPrimary-dark text-xs font-semibold "
                         >{formatPrice(symbolTicker?.l, exchangeConfig, symbol?.quote)}
                         </div>
                     </div>
                     <div className="flex  flex-col min-w-max">
-                        <div className="block text-black-500 text-xs text-left font-normal">{t('volume')} 24h ({symbolTicker?.b})</div>
+                        <div className="block text-textSecondary dark:text-textSecondary-dark text-xs text-left font-normal">{t('volume')} 24h ({symbolTicker?.b})</div>
                         <div
-                            className="block text-black-700 text-xs font-semibold "
+                            className="block text-textPrimary dark:text-textPrimary-dark text-xs font-semibold "
                         >{formatPrice(symbolTicker?.vb, 2)}
                         </div>
                     </div>
                     <div className="2xl:flex ml-7.5 flex-col min-w-max">
-                        <div className="block text-black-500 text-xs text-left font-normal">{t('vol')} 24h ({symbolTicker?.q})</div>
+                        <div className="block text-textSecondary dark:text-textSecondary-dark text-xs text-left font-normal">{t('vol')} 24h ({symbolTicker?.q})</div>
                         <div
-                            className="block text-black-700 text-xs font-semibold "
+                            className="block text-textPrimary dark:text-textPrimary-dark text-xs font-semibold "
                         >{formatPrice(symbolTicker?.vq, 2)}
                         </div>
                     </div>

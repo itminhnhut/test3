@@ -1,5 +1,5 @@
 .swap-form-group {
-  @apply focus:ring-0 focus:border-teal block w-full text-sm border-gray-300 rounded-xl text-black-700 placeholder-black-400 border px-4 py-3;
+  @apply focus:ring-0 focus:border-teal block w-full text-sm border-divider dark:border-divider-dark rounded-xl text-black-700 placeholder-black-400 border px-4 py-3;
 
   label {
     @apply mb-2 text-xs block
@@ -9,7 +9,7 @@
   }
 
   .swap-form-control {
-    @apply focus:ring-0 block w-full font-bold text-black-700 placeholder-black-500 py-3;
+    @apply focus:ring-0 block w-full font-bold text-black-700 placeholder-black-500 py-3 bg-transparent text-textPrimary dark:text-textPrimary-dark;
     line-height: 1.315rem;
     letter-spacing: -0.01em;
     height: 44px;

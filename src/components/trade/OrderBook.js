@@ -22,7 +22,7 @@ import LastPrice from '../markets/LastPrice';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
-    const { symbol, layoutConfig, isOnSidebar } = props;
+    const { symbol, layoutConfig, isOnSidebar, parentState } = props;
     const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
     const { base, quote } = props.symbol;
     const dispatch = useDispatch();
@@ -55,7 +55,8 @@ const OrderBook = (props) => {
 
     useAsync(async () => {
         // Get symbol list
-        await setOrderBook(await getOrderBook(getSymbolString(symbol)));
+        const _orderBook = await getOrderBook(getSymbolString(symbol))
+        await setOrderBook(_orderBook);
         setLoadingAsks(false);
         setLoadingBids(false);
     }, [symbol]);
@@ -64,6 +65,12 @@ const OrderBook = (props) => {
         setLoadingAsks(true);
         setLoadingBids(true);
     };
+
+    useEffect(() => {
+        if (orderBook) {
+            parentState({ orderBook })
+        }
+    }, [orderBook])
 
     useEffect(() => {
         const event = PublicSocketEvent.SPOT_DEPTH_UPDATE + 'order_book';
@@ -148,7 +155,7 @@ const OrderBook = (props) => {
         const percentage = (q / maxQuote) * 100;
         return (
             <div
-                className="progress-container py-0.5 cursor-pointer hover:bg-blue-50"
+                className="progress-container px-3 py-0.5 cursor-pointer hover:bg-get-lightTeal dark:hover:bg-get-darkBlue3"
                 key={index}
                 onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
             >
@@ -156,10 +163,10 @@ const OrderBook = (props) => {
                     <div className={`flex-1  text-xs font-semibold leading-table ${side === 'buy' ? 'text-pink' : 'text-mint'}`}>
                         {p ? formatPrice(p, exchangeConfig, symbolString) : '-'}
                     </div>
-                    <div className="flex-1 text-black-600 text-xs font-semibold leading-table text-right">
+                    <div className="flex-1 text-Primary dark:text-textPrimary-dark text-xs font-semibold leading-table text-right">
                         {q ? formatPrice(+q, exchangeConfig, symbolString) : '-'}
                     </div>
-                    <div className="flex-1 text-black-600 text-xs font-semibold leading-table text-right">
+                    <div className="flex-1 text-Primary dark:text-textPrimary-dark text-xs font-semibold leading-table text-right">
                         {p > 0 ? formatPrice(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
                     </div>
                 </div>
@@ -172,22 +179,22 @@ const OrderBook = (props) => {
     };
     return (
         <>
-            <div className="relative h-full bg-white px-1.5 pb-[26px] flex flex-col box-border" ref={ref}>
-                <div className="flex items-center justify-between pt-[24px] pb-[16px] px-1.5 dragHandleArea">
+            <div className="relative h-full bg-bgContainer dark:bg-bgContainer-dark pb-[26px] flex flex-col box-border" ref={ref}>
+                <div className="flex items-center justify-between pt-[24px] pb-[16px] dragHandleArea">
                     {/* <div className="font-semibold text-lg text-black-600">{t('orderbook')}</div> */}
                 </div>
                 <div className="flex flex-col flex-1">
-                    <div className="ats-tbheader px-1.5">
+                    <div className="ats-tbheader px-3">
                         <div className="flex justify-between items-center mb-3">
-                            <div className="flex flex-1 justify-start text-black-600-500 text-xs font-medium">
+                            <div className="flex flex-1 justify-start text-textSecondary dark:text-textSecondary-dark text-xs font-medium">
                                 {t('price')}
                             </div>
-                            <div className="flex flex-1 justify-end text-black-600-500 text-xs font-medium">
+                            <div className="flex flex-1 justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-medium">
                                 {t('quantity')}
                             </div>
                             {
                                 (shouldShowTotalCol) && (
-                                    <div className="flex flex-1 justify-end text-black-600-500 text-xs font-medium">
+                                    <div className="flex flex-1 justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-medium">
                                         {t('total')}
                                     </div>
                                 )
@@ -198,7 +205,7 @@ const OrderBook = (props) => {
                         <div className="flex flex-col justify-end flex-1">
                             {
                                 loadingAsks ? <div className="flex items-center justify-center h-full"><IconLoading color="#09becf" /></div> : (
-                                    <div className="px-1.5">
+                                    <div className="">
                                         {asks.map((order, index) => {
                                             return renderOrderRow(order, index, 'buy', shouldShowTotalCol);
                                         })}
@@ -207,7 +214,7 @@ const OrderBook = (props) => {
                             }
                         </div>
                         <div
-                            className="border-t-2 border-b-2 border-black-200 my-3 py-1 flex justify-between items-center px-1.5 min-h-[36px]"
+                            className="border-t-2 border-b-2 border-divider dark:border-divider-dark my-3 py-1 flex justify-between items-center px-1.5 min-h-[36px]"
                         >
                             <div className="text-sm w-full">
                                 <span className="font-semibold">
@@ -225,7 +232,7 @@ const OrderBook = (props) => {
                         <div className="flex flex-col justify-start flex-1">
                             {
                                 loadingBids ? <div className="flex items-center justify-center h-full"><IconLoading color="#09becf" /></div> : (
-                                    <div className="px-1.5">
+                                    <div className="">
                                         {bids.map((order, index) => {
                                             return renderOrderRow(order, index, 'sell', shouldShowTotalCol);
                                         })}

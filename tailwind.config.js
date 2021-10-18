@@ -136,11 +136,11 @@ module.exports = {
             },
             backgroundSecondary: {
                 DEFAULT: _m.grey4,
-                dark: _m.darkBlue2
+                dark: _m.darkBlue5
             },
             bgContainer: {
                 DEFAULT: '#fff',
-                dark: '#223050'
+                dark: _m.darkBlue1
             },
             headerBg: {
                 DEFAULT: 'rgba(0, 0, 0, 0.3)',

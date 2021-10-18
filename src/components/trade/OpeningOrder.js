@@ -191,7 +191,7 @@ const SpotOrderList = (props) => {
             data={filteredOrders}
             columns={columns}
             customStyles={customStyles}
-            className="h-full"
+            className="h-full bg-bgContainer dark:bg-bgContainer-dark"
             noHeader
             fixedHeader
             fixedHeaderScrollHeight={`${props.orderListWrapperHeight - 184}px`}

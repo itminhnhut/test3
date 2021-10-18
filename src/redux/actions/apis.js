@@ -14,6 +14,8 @@ export const API_GET_USER_BALANCE = API_PREFIX + 'user/balance';
 export const API_GET_ALL_USER_WALLET = API_PREFIX + 'user/all_wallet';
 export const API_GET_SOCKETIO_AUTH_KEY = API_PREFIX + 'user/auth-key';
 export const API_GET_EXCHANGE_CONFIG = API_V3_PREFIX + 'spot/config';
+export const GET_SPOT_FEE_CONFIG = API_V3_PREFIX + 'spot/fee_config';
+
 
 export const API_GET_MARKET_WATCH = API_V3_PREFIX + 'spot/market_watch';
 export const API_GET_ORDER_BOOK = API_V3_PREFIX + 'spot/depth';
