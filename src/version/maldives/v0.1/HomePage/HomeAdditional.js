@@ -9,13 +9,36 @@ import { useSelector } from 'react-redux'
 import { THEME_MODE } from 'hooks/useDarkMode'
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
+import { useEffect, useState } from 'react'
 
 const HomeAdditional = ({ parentState }) => {
+    // * Initial State
+    const [stepCount, setStepCount] = useState(0)
+    const [state, set] = useState({})
+    const setState = (state) => set(prevState => ({...prevState, ...state}))
+
     // * Use Hooks
     const { width } = useWindowSize()
     const { t, i18n: { language }  } = useTranslation(['home', 'input', 'common', 'navbar'])
 
     const theme = useSelector(state => state.user.theme)
+
+    useEffect(() => {
+        let interval = setInterval(() => {
+            setStepCount((lastTimerCount) => {
+                if (lastTimerCount >= 2) {
+                    setStepCount(0)
+                }
+                return lastTimerCount + 1
+            });
+        }, 2800)
+        return () => clearInterval(interval)
+    }, [])
+
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: ', stepCount)
+    // }, [stepCount])
+
 
     return (
         <>
@@ -251,7 +274,7 @@ const HomeAdditional = ({ parentState }) => {
                     <div className="homepage-trade3step___step___wrapper">
                         <div className="homepage-trade3step___step___item">
                             <div className="homepage-trade3step___step___item___inner">
-                                <div className="homepage-trade3step___step___item__label">01</div>
+                                <div className={`homepage-trade3step___step___item__label ${stepCount === 0 ? 'text-get-teal transition-all duration-300 ease-in-out' : ''}`}>01</div>
                                 <div className="homepage-trade3step___step___item__sublabel">
                                     {t('home:trade3step.step_1')}
                                 </div>
@@ -261,7 +284,7 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
                         <div className="homepage-trade3step___step___item">
                             <div className="homepage-trade3step___step___item___inner">
-                                <div className="homepage-trade3step___step___item__label">02</div>
+                                <div className={`homepage-trade3step___step___item__label ${stepCount === 1 ? 'text-get-teal transition-all duration-300 ease-in-out' : ''}`}>02</div>
                                 <div className="homepage-trade3step___step___item__sublabel">
                                     {t('home:trade3step.step_2')}
                                 </div>
@@ -271,7 +294,7 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
                         <div className="homepage-trade3step___step___item">
                            <div className="homepage-trade3step___step___item___inner">
-                               <div className="homepage-trade3step___step___item__label">03</div>
+                               <div className={`homepage-trade3step___step___item__label ${stepCount === 2 ? 'text-get-teal transition-all duration-300 ease-in-out' : ''}`}>03</div>
                                <div className="homepage-trade3step___step___item__sublabel">
                                    {t('home:trade3step.step_3')}
                                </div>

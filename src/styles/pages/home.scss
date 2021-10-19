@@ -697,12 +697,17 @@
 
         svg {
           margin-right: 10px;
+          min-width: 16px;
+          height: auto;
+
+          @media (min-width: 1440px) {
+            margin-right: 16px;
+          }
         }
 
         a {
           @apply block text-textPrimary dark:text-textPrimary-dark;
 
-          max-width: 500px;
           white-space: nowrap;
           font-weight: 500;
           font-size: 12px;
@@ -721,9 +726,19 @@
           @media (min-width: 1366px) {
             font-size: 16px;
           }
+        }
 
-          @media (min-width: 1440px) {
-            max-width: 880px;
+        .homepage-news___lasted_slider {
+          //background-color: red;
+          height: 20px;
+          max-width: 500px;
+
+          .keen-slider {
+            height: 100%;
+
+            .keen-slider__slide {
+
+            }
           }
         }
 
