@@ -70,16 +70,16 @@ const Trades = (props) => {
     }, [publicSocket, MAX_LENGTH, symbol]);
 
     return (
-        <div className="h-full bg-white px-1.5 pb-6 row-span-1 h-full" ref={ref}>
-            <h3 className="font-semibold border-b text-black pt-3 pb-2 mb-2 px-1.5 dragHandleArea">{t('trades')}</h3>
-            <div className="ats-tbheader px-1.5">
+        <div className="h-full bg-bgContainer dark:bg-bgContainer-dark pb-6 row-span-1 h-full" ref={ref}>
+            <h3 className="font-semibold border-b border-divider dark:border-divider-dark text-textPrimary dark:text-textPrimary-dark pt-3 pb-2 mb-2 px-3 dragHandleArea">{t('trades')}</h3>
+            <div className="ats-tbheader px-3">
                 <div className="flex justify-between items-center mb-3">
-                    <div className="flex flex-1 justify-start text-black-600 text-xs font-medium">{t('common:price')}</div>
-                    <div className="flex flex-1 justify-end text-black-600 text-xs font-medium">{t('common:quantity')}</div>
-                    <div className="flex flex-1 justify-end text-black-600 text-xs font-medium">{t('common:time')}</div>
+                    <div className="flex flex-1 justify-start text-textSecondary dark:text-textSecondary-dark text-xs font-medium">{t('common:price')}</div>
+                    <div className="flex flex-1 justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-medium">{t('common:quantity')}</div>
+                    <div className="flex flex-1 justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-medium">{t('common:time')}</div>
                 </div>
             </div>
-            <div className="overflow-y-auto max-h-[calc(100%-12px)] px-1.5">
+            <div className="overflow-y-auto max-h-[calc(100%-12px)]">
                 {loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#09becf" /></div> : (recentTrade && recentTrade.map((trade, index) => {
                     const {
                         S: side,
@@ -91,10 +91,10 @@ const Trades = (props) => {
                     } = trade;
                         // const [p, q] = order;
                     return (
-                        <div className="flex mb-2 cursor-pointer hover:bg-blue-50" key={index}>
+                        <div className="flex py-1 px-3 cursor-pointer hover:bg-get-lightTeal dark:hover:bg-get-darkBlue3" key={index}>
                             <div className={'flex-1 text-xs font-semibold leading-table ' + ((side === 'SELL') ? 'text-pink' : 'text-mint')}>{formatPrice(price, exchangeConfig, symbol?.quote)}</div>
-                            <div className="flex-1 text-black-600 font-semibold text-xs leading-table text-right">{formatPrice(quantity, exchangeConfig, symbol?.base)}</div>
-                            <div className="flex-1 text-black-600 font-semibold text-xs leading-table text-right">{formatTime(timestamp, 'HH:mm:ss')}</div>
+                            <div className="flex-1 text-textPrimary dark:text-textPrimary-dark font-semibold text-xs leading-table text-right">{formatPrice(quantity, exchangeConfig, symbol?.base)}</div>
+                            <div className="flex-1 text-textPrimary dark:text-textPrimary-dark font-semibold text-xs leading-table text-right">{formatTime(timestamp, 'HH:mm:ss')}</div>
                         </div>);
                 }))}
             </div>

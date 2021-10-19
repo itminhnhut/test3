@@ -1,0 +1,16 @@
+@import "../helpers/contants";
+
+.mal-layouts {
+  @apply relative h-full bg-background dark:bg-background-dark;
+
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+.mal-layouts-fix_navbar {
+  height: calc(100% - 74);
+
+  @media (min-width: 992px) {
+    height: calc(100% - 64);
+  }
+}

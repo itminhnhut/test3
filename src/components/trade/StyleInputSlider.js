@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
+import colors from 'styles/colors'
 
 export const Track = styled.div`
   position: relative;
@@ -12,22 +13,22 @@ export const Track = styled.div`
   user-select: none;
   box-sizing: border-box;
   height: 4px;
-`;
+`
 
 export const Active = styled.div`
   position: absolute;
-  background-color: #8D9091;
+  background-color: ${colors.teal};
   border-radius: 4px;
   user-select: none;
   box-sizing: border-box;
   height: 4px;
   top: 6px;
   z-index: 11;
-`;
+`
 
 export const SliderBackground = styled.div`
   position: absolute;
-  background-color: #CCCCCC;
+  background-color: ${({ isDark }) => isDark ? colors.darkBlue4 : colors.grey4};
   border-radius: 4px;
   user-select: none;
   box-sizing: border-box;
@@ -35,13 +36,13 @@ export const SliderBackground = styled.div`
   top: 6px;
   height: 4px;
   z-index: 10;
-`;
+`
 
 export const DotContainer = styled.div`
   position: absolute;
   z-index: 12;
   width: 100%;
-`;
+`
 
 export const Dot = styled.span`
   position: absolute;
@@ -52,16 +53,15 @@ export const Dot = styled.span`
   width: 8px;
   height: 8px;
   box-sizing: content-box;
-   background-color:   ${({ active }) => (active ? '#8D9091' : '#CCCCCC')};;
-   ${'' /* background-color:'#8D9091' */}
+  background-color: ${({ active, isDark }) => (active ? colors.teal : (isDark ? colors.darkBlue4 : colors.grey4))};
   z-index: 30;
-  ${'' /* border: solid 2px white; */}
   transition: transform .2s; /* Animation */
+
   &:hover {
-    background-color: #8D9091;
+    background-color: ${colors.teal};
     transform: scale(1.4);
   }
-`;
+`
 
 export const Thumb = styled.div`
   position: relative;
@@ -69,23 +69,21 @@ export const Thumb = styled.div`
   content: "";
   width: 12px;
   height: 12px;
-  background-color: #8D9091;
-  ${'' /* border: solid 2px white; */}
+  background-color: ${({ isZero, isDark }) => isZero ? (isDark ? colors.darkBlue4 : colors.grey4) : colors.teal};
   border-radius: 50%;
-  ${'' /* box-shadow: 0px 4px 8px 1px rgba(2, 8, 61, 0.13); */}
   user-select: none;
   cursor: pointer;
-`;
+`
 
 export const ThumbLabel = styled.div`
   position: absolute;
   top: -1.25rem;
   right: -10px;
   text-align: center;
-  color: #8D9091;
+  color: ${({ isZero, isDark }) => isZero ? (isDark ? colors.darkBlue4 : colors.grey4) : colors.teal};
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
   line-height: 18px;
 
-`;
+`

@@ -22,19 +22,56 @@ body {
   -ms-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent !important;
 
 a:hover,
 a:active,
 a:focus {
   text-decoration: none !important;
+  outline: none !important;
 }
 }
-
+//
+//html {
+//  overflow: hidden;
+//  height: 100%;
+//}
 
 body {
+  @apply text-textPrimary dark:text-textPrimary-dark;
+
   display: flex;
   flex-direction: column;
-  @apply text-black;
+  height: 100%;
+  //overflow: hidden auto;
+
+  .mal-container {
+    @apply container;
+
+    @media (min-width: 1024px) {
+      max-width: 900px;
+    }
+
+    @media (min-width: 1280px) {
+      max-width: 1164px;
+    }
+
+    @media (min-width: 1920px) {
+      max-width: 1440px;
+    }
+  }
+
+  .value-up {
+    @apply text-get-teal;
+  }
+
+  .value-down {
+    @apply text-get-red2;
+  }
+
+  .value-dominant {
+    @apply text-dominant #{!important};
+  }
 }
 
 //body::-webkit-scrollbar {
@@ -225,11 +262,32 @@ input[type=number] {
     min-height: 365px;
   }
 }
-.rdt_Table > div {
-  background: transparent!important;
+
+.rdt_Table {
+  background-color: transparent !important;
+
+  > div {
+    background-color: transparent !important;
+  }
 }
 // hide tradingview
 [class^="dateRangeWrapper-"] {
   display: none!important;
   visibility: hidden!important;
+}
+
+.mal-overlay {
+  @apply absolute top-0 left-0 z-40;
+
+  width: 100vw;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .45);
+  visibility: hidden;
+  opacity: 0;
+  transition: all .2s ease;
+}
+
+.mal-overlay__active {
+  visibility: visible;
+  opacity: 1;
 }

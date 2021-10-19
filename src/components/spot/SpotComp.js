@@ -24,6 +24,7 @@ import Emitter from 'src/redux/actions/emitter';
 import { getMarketWatch, getUserSymbolList, postSymbolViews } from 'src/redux/actions/market';
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -74,6 +75,10 @@ const SpotComp = () => {
     const [isResizingOrderList, setIsResizingOrderList] = useState(false);
     const [orderListWrapperHeight, setOrderListWrapperHeight] = useState(0);
     const [fullScreen, setFullScreen] = useState(false);
+
+    // compact state
+    const [state, set] = useState({ orderBook: null })
+    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
     const user = useSelector(state => state.auth.user) || null;
     const cancelButtonRegisterRef = useRef();
@@ -233,7 +238,7 @@ const SpotComp = () => {
     if (!symbol) return null;
 
     return (
-        <LayoutWithHeader hidden={fullScreen}>
+        <MaldivesLayout hidden={fullScreen}>
             <SpotHead symbol={symbol} />
             <MobileView>
                 <Transition show as={Fragment}>
@@ -326,7 +331,7 @@ const SpotComp = () => {
                     </Dialog>
                 </Transition>
             </MobileView>
-            <BrowserView className="bg-blue-50">
+            <BrowserView className="bg-backgroundSecondary dark:bg-get-darkBlue4">
                 <div className="2xl:container">
                     <ReactGridLayout
                         className="layout"
@@ -355,6 +360,7 @@ const SpotComp = () => {
                             <OrderBook
                                 layoutConfig={orderBookLayout}
                                 symbol={symbol}
+                                parentState={setState}
                             />
                         </div>
 
@@ -397,6 +403,7 @@ const SpotComp = () => {
                         <div key="placeOrderForm">
                             <SimplePlaceOrderForm
                                 symbol={symbol}
+                                orderBook={state.orderBook}
                             />
                         </div>
                         <div key="orderList">
@@ -407,7 +414,7 @@ const SpotComp = () => {
                     </ReactGridLayout>
                 </div>
             </BrowserView>
-        </LayoutWithHeader>
+        </MaldivesLayout>
     );
 };
 

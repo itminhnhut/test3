@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import NavBar from 'src/components/common/NavBar';
+import NavBar from 'components/common/NavBar/NavBar';
 import Footer from 'src/components/common/Footer';
 import { useRouter } from 'next/router';
 import ReactNotification from 'react-notifications-component';

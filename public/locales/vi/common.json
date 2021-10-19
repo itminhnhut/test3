@@ -63,7 +63,7 @@
   "side": "Bên",
   "filled": "Đã khớp",
   "sign_in": "Đăng nhập",
-  "sign_up": "Đăng ký",
+  "sign_up": "Đăng kí",
   "sign_in_to_continue": "Đăng nhập ngay",
   "sign_up_to_continue": "Đăng ký ngay",
   "status": "Trạng thái",
@@ -132,5 +132,7 @@
   "confirm": "Xác nhận",
   "vol": "KL",
   "cancel": "Đóng",
-  "view_all": "Xem tất cả"
+  "view_all": "Xem tất cả",
+  "already_have_account": "Đã có tài khoản?",
+  "create_account": "Tạo tài khoản"
 }

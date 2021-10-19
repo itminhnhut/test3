@@ -1,5 +1,6 @@
 {
   "menu": {
+    "spot": "Spot",
     "trade": "Trade",
     "swap": "Swap",
     "wallet": "Wallet",
@@ -8,10 +9,17 @@
     "utilities": "Utilities",
     "support": "Support",
     "api": "API",
-    "fee": "Fee structure",
+    "fee": "Fee Structure",
     "blog": "Blog",
-    "home": "Home page",
-    "about": "About us"
+    "home": "Homepage",
+    "about": "About Us",
+    "mode": "Theme Mode",
+    "lang": "Language",
+    "download_app": "Download App",
+    "product": "Product",
+    "market": "Market",
+    "explained": "Explained",
+    "more": "More"
   },
   "submenu": {
     "convert": "Nami Swap",
@@ -21,7 +29,17 @@
     "futures": "Futures",
     "futures_description": "",
     "margin": "Margin",
-    "margin_description": ""
+    "margin_description": "",
+    "swap": "Swap",
+    "launchpad": "Launchpad",
+    "copytrade": "Copy Trade",
+    "staking": "Staking",
+    "farming": "Farming",
+    "referral": "Referral Report",
+    "spot_wallet": "Spot Wallet",
+    "futures_wallet": "Futures Wallet",
+    "staking_wallet": "Staking Wallet",
+    "farming_wallet": "Farming Wallet"
   },
   "menu_grid": {
     "deposit": "Deposit",

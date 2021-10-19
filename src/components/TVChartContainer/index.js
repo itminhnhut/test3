@@ -266,7 +266,7 @@ export class TVChartContainer extends React.PureComponent {
             <>
 
                 <div className="relative flex flex-grow flex-col min-w-max chartWrapper h-full" id="chart-container">
-                    <div className={`absolute w-full h-full bg-white z-10 flex justify-center items-center ${this.state.chartStatus === ChartStatus.LOADED ? 'hidden' : ''}`}>
+                    <div className={`absolute w-full h-full bg-bgContainer dark:bg-bgContainer-dark z-10 flex justify-center items-center ${this.state.chartStatus === ChartStatus.LOADED ? 'hidden' : ''}`}>
                         <IconLoading color="#09becf" />
                     </div>
                     <div

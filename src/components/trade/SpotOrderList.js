@@ -25,14 +25,14 @@ const SpotOrderList = (props) => {
                     <ul className="tabs pt-6 mb-4 px-3 dragHandleArea flex-1">
                         <li className="tab-item">
                             <a
-                                className={'tab-link font-semibold ' + (activeTab === 'open' ? 'active text-black-700' : 'text-black-400')}
+                                className={'tab-link font-semibold ' + (activeTab === 'open' ? 'active text-black-700' : 'text-textSecondary dark:text-textSecondary-dark')}
                                 onClick={() => setActiveTab('open')}
                             > {t('spot:open_orders')}
                             </a>
                         </li>
                         <li className="tab-item">
                             <a
-                                className={'tab-link font-semibold ' + (activeTab === 'history' ? 'active text-black-700' : 'text-black-400')}
+                                className={'tab-link font-semibold ' + (activeTab === 'history' ? 'active text-black-700' : 'text-textSecondary dark:text-textSecondary-dark')}
                                 onClick={() => setActiveTab('history')}
                             > {t('spot:order_history')}
                             </a>
@@ -45,10 +45,10 @@ const SpotOrderList = (props) => {
                                 id="pair"
                                 onChange={() => setFilterByCurrentPair(!filterByCurrentPair)}
                                 checked={filterByCurrentPair}
-                                className="appearance-none focus:outline-white w-[18px] h-[18px] border border-gray-200 rounded-[4px] mr-2 checked:bg-[#09becf] checked:border-[#09becf]"
+                                className="appearance-none focus:outline-white w-[18px] h-[18px] border border-divider dark:border-divider-dark rounded-[4px] mr-2 checked:bg-[#09becf] checked:border-[#09becf]"
                             />
                             <div className="absolute inset-0 top-[5px] left-1 w-min pointer-events-none">
-                                <IconCustomCheckbox size={14} />
+                                {filterByCurrentPair && <IconCustomCheckbox size={14}/>}
                             </div>
                         </div>
                         <label htmlFor="pair" className="cursor-pointer text-xs">{t('spot:filter_by_current_pair')}</label>

@@ -8,11 +8,11 @@ import find from 'lodash/find';
 import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
 import { useAsync, useDebounce, useLocalStorage } from 'react-use';
-import { getMarketWatch } from 'redux/actions/market';
+import { getMarketWatch, getOrderBook } from 'redux/actions/market'
 import InputSlider from 'src/components/trade/InputSlider';
 import * as Error from 'src/redux/actions/apiError';
 import {
@@ -31,6 +31,9 @@ import {
 } from 'src/redux/actions/utils';
 import fetchAPI from 'utils/fetch-api';
 import showNotification from 'utils/notificationService';
+import { GET_SPOT_FEE_CONFIG } from 'redux/actions/apis'
+import { max, min } from 'lodash/math'
+import { isNumber } from 'lodash'
 
 let initPrice = '';
 
@@ -51,7 +54,7 @@ const allSubTabs = [
     ExchangeOrderEnum.Type.LIMIT,
 ];
 
-const SimplePlaceOrderForm = ({ symbol }) => {
+const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const [priceRef, setPriceFocus] = useFocus();
     const [quantityRef, setQuantityFocus] = useFocus();
     const [quoteQtyRef, setQuoteQtyFocus] = useFocus();
@@ -98,6 +101,20 @@ const SimplePlaceOrderForm = ({ symbol }) => {
     const router = useRouter();
     const [discountTransactionFee, setDiscountTransactionFee] = useState(0);
     const [isUseQuoteQuantity, setIsUseQuoteQuantity] = useState(false);
+    const [state, set] = useState({ centerPrice: null, feeConfig: null })
+    const setState = (state) => set(prevState => ({...prevState, ...state}))
+
+
+    const getFeeConfig = async () => {
+        try {
+            const { data: {status, data: feeConfig}} = await axios.get(GET_SPOT_FEE_CONFIG);
+            if (status === 'ok') {
+                setState({feeConfig});
+            }
+        } catch (e) {
+            console.log('Cant get fee config: ', e);
+        }
+    };
 
     useAsync(async () => {
         if (symbol) {
@@ -119,6 +136,11 @@ const SimplePlaceOrderForm = ({ symbol }) => {
             setIsLoadingMultiValueList(false);
         }
     }, []);
+
+    useEffect(() => {
+        getFeeConfig()
+    }, [])
+
     useEffect(() => {
         if (!isLoadingMultiValueList) {
             if (multiValueList[quoteAsset] > 0) setMultiValue(quoteAsset === 'VNDC' ? 1 / multiValueList[quoteAsset] : multiValueList[quoteAsset]);
@@ -162,6 +184,16 @@ const SimplePlaceOrderForm = ({ symbol }) => {
             setSellQuoteQty(floor(selectedOrder?.quantity * selectedOrder?.price, 2));
         }
     }, [selectedOrder]);
+
+    useEffect(() => {
+        if (orderBook) {
+            const asks = orderBook?.asks.map(e => e[0])
+            const bids = orderBook?.bids.map(e => e[0])
+            if (max(bids) && min(asks)) {
+                setState({ centerPrice: (max(bids) + min(asks)) / 2 })
+            }
+        }
+    }, [orderBook])
 
     const currentExchangeConfig = exchangeConfig.find(e => e.symbol === getSymbolString(symbol));
     const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, currentExchangeConfig || []);
@@ -286,6 +318,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
             router.events.off('routeChangeStart', handleRouteCancel(source));
         };
     }, [baseAssetId, symbol]);
+
 
     const createOrder = async (_orderSide) => {
         // console.log('__ check cerate', _orderSide);
@@ -606,7 +639,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                     return (
                         <li className="tab-item pr-3 font-semibold" key={index}>
                             <a
-                                className={'tab-link ' + (orderType === tab ? 'active' : '')}
+                                className={'tab-link text-textSecondary dark:text-textSecondary-dark ' + (orderType === tab ? 'active' : '')}
                                 onClick={() => handleClickSubTab(tab)}
                             > {orderTypeLabels[tab]}
                             </a>
@@ -624,7 +657,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                 <div className="form-group w-full">
                     <div className="input-group">
                         <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-black-500 font-semibold">{t('common:price')}</div>
+                            <div className="text-sm text-textSecondary dark:text-textSecondary-dark font-semibold">{t('common:price')}</div>
                         </div>
 
                         {
@@ -657,7 +690,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                             &&
                             (
                                 <input
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold bg-white"
+                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold"
                                     name="stop_buy_input"
                                     type="text"
                                     disabled
@@ -668,7 +701,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-black-500 ">
+                            <span className="input-group-text text-textSecondary dark:text-textSecondary-dark">
                                 {quote}
                             </span>
                         </div>
@@ -788,7 +821,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                                     ? _renderQuantityMode
                                     : <div className="text-sm text-black-500 font-semibold ">{t('total')}</div>
                             } */}
-                            <div className="text-sm text-black-500 font-semibold ">{t('total')}</div>
+                            <div className="text-sm text-textSecondary dark:text-textSecondary-dark font-semibold ">{t('total')}</div>
                         </div>
                         <NumberFormat
                             getInputRef={quoteQtyRef}
@@ -814,7 +847,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-black-500 ">
+                            <span className="input-group-text text-textSecondary dark:text-textSecondary-dark">
                                 {quote}
                             </span>
                         </div>
@@ -831,7 +864,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                 <div className="form-group w-full">
                     <div className="input-group">
                         <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-black-500 font-semibold ">{t('common:amount')}</div>
+                            <div className="text-sm text-textSecondary dark:text-textSecondary-dark font-semibold ">{t('common:amount')}</div>
                         </div>
                         <NumberFormat
                             getInputRef={quantityRef}
@@ -857,7 +890,7 @@ const SimplePlaceOrderForm = ({ symbol }) => {
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-black-500">
+                            <span className="input-group-text text-textSecondary dark:text-textSecondary-dark">
                                 {base}
                             </span>
                         </div>
@@ -895,8 +928,8 @@ const SimplePlaceOrderForm = ({ symbol }) => {
         return (
             <>
                 <div className="mb-2 flex justify-between items-center">
-                    <div className="text-xs text-black-500 font-semibold ">{t('spot:available_balance')}</div>
-                    <div className="text-xs text-black-700 font-semibold text-right">
+                    <div className="text-xs text-textSecondary dark:text-textSecondary-dark font-semibold ">{t('spot:available_balance')}</div>
+                    <div className="text-xs text-textPrimary dark:text-textPrimary-dark font-semibold text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
                             _orderSide === ExchangeOrderEnum.Side.BUY
@@ -910,27 +943,68 @@ const SimplePlaceOrderForm = ({ symbol }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     };
 
-    const _renderUserFee = (_orderSide) => {
+    const _renderUserFee = useCallback((_orderSide) => {
+        let feeValue = 0;
+        if (currentExchangeConfig && state.feeConfig) {
+            const fee = currentExchangeConfig?.feeMode === 1 ? state.feeConfig?.market_maker_promote : state.feeConfig?.normal;
+            if (orderType === 'LIMIT') {
+                if (currentExchangeConfig?.feeMode === 1) {
+                    // @ts-ignore
+                    const maker = orderSide === 'BUY' ? fee.maker?.buy : fee.maker?.sell;
+                    if (
+                        maker &&
+                        isNumber(state?.centerPrice) &&
+                        state?.centerPrice > 0 &&
+                        sellPrice &&
+                        isNumber(+sellPrice)
+                    ) {
+                        const userPrice = +sellPrice;
+                        const _p =
+                            (100 * (orderSide === 'BUY' ? 1 : -1) * (state.centerPrice - userPrice)) / state.centerPrice;
+
+                        const _fees = [...maker].filter((e, index) => _p <= e.percentage || index === maker.length - 1);
+
+                        const _fee = _fees?.[0];
+                        feeValue = _fee?.fee * 100
+                    }
+                } else {
+                    feeValue = +fee?.maker * 100;
+                }
+            } else if (orderType === 'MARKET') {
+                feeValue = +fee?.taker * 100;
+            }
+        }
+
+        // if (feeValue > 0) {
+        //     return <Text style={styles.orderInfoValue}>{feeValue}%</Text>;
+        // } else if (feeValue < 0) {
+        //     return <Text style={[styles.orderInfoValue, {color: colors.teal}]}>+{-feeValue}%</Text>;
+        // } else {
+        //     return <Text style={[styles.orderInfoValue]}>---</Text>;
+        // }
+
         return (
             <>
                 <div className="mb-2 flex justify-between items-center">
                     <div className="text-xs text-black-500 font-semibold ">Fee</div>
                     <div className="text-xs text-teal font-semibold text-right">
-                        {
-                            // eslint-disable-next-line no-nested-ternary
-                            _orderSide === ExchangeOrderEnum.Side.BUY
-                                ? quoteAssetId ? getAvailableText(quoteAssetId) : 0
-                                : baseAssetId ? getAvailableText(baseAssetId) : 0
-                        } {_orderSide === ExchangeOrderEnum.Side.BUY ? quote : base}
+                        {feeValue > 0 ? `${feeValue}%` : feeValue < 0 ? `+${-feeValue}%` : '---'}
+                        {/*{*/}
+                        {/*    // eslint-disable-next-line no-nested-ternary*/}
+                        {/*    _orderSide === ExchangeOrderEnum.Side.BUY*/}
+                        {/*        ? quoteAssetId ? getAvailableText(quoteAssetId) : 0*/}
+                        {/*        : baseAssetId ? getAvailableText(baseAssetId) : 0*/}
+                        {/*} {_orderSide === ExchangeOrderEnum.Side.BUY ? quote : base}*/}
                     </div>
                 </div>
             </>
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    };
+    }, [state.centerPrice, state.feeConfig, currentExchangeConfig, orderSide, orderType, sellPrice]);
+
     return (
         <>
-            <div className="bg-white h-full px-3 pb-6 spot-place-orders-container">
+            <div className="bg-bgContainer dark:bg-bgContainer-dark h-full px-3 pb-6 spot-place-orders-container">
                 {/* <h3 className="font-semibold text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('spot:place_order')}</h3> */}
                 {/* {_renderOrderSide} */}
                 {_renderOrderType}

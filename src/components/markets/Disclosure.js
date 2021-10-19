@@ -550,7 +550,7 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                             {({ active }) => (
                                 <button
                                     onClick={handleToggleModal({ type: 'add_assets', itemName, id })}
-                                    className={`${active ? 'bg-violet-500 text-white' : 'text-textPrimaryColor'} group flex rounded-md items-center w-full px-4 py-3 text-sm font-semibold`}
+                                    className={`${active ? 'bg-violet-500 text-white' : 'text-textPrimary'} group flex rounded-md items-center w-full px-4 py-3 text-sm font-semibold`}
                                 >
                                     <i className="mr-2"><IconAddAction /></i> {t('category_disc_table_action_manage_assets')}
                                 </button>
@@ -562,7 +562,7 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                             {({ active }) => (
                                 <button
                                     onClick={handleToggleModal({ type: 'edit_category', itemName, itemAvatar, id, assets: data.map(item => item?.b), isDefault })}
-                                    className={`${active ? 'bg-violet-500 text-white' : 'text-textPrimaryColor'} group flex rounded-md items-center w-full px-4 py-3 text-sm font-semibold`}
+                                    className={`${active ? 'bg-violet-500 text-white' : 'text-textPrimary'} group flex rounded-md items-center w-full px-4 py-3 text-sm font-semibold`}
                                 >
                                     <i className="mr-2"><IconEditAction /></i> {t('category_disc_table_action_edit_category')}
                                 </button>
@@ -574,7 +574,7 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                             {({ active }) => (
                                 <button
                                     onClick={handleSetDefault('pin')}
-                                    className={`${active ? 'bg-violet-500 text-white' : 'text-textPrimaryColor'} group flex rounded-md items-center w-full px-4 py-3 text-sm font-semibold`}
+                                    className={`${active ? 'bg-violet-500 text-white' : 'text-textPrimary'} group flex rounded-md items-center w-full px-4 py-3 text-sm font-semibold`}
                                 >
                                     <i className="mr-2"><IconPinAction /></i> {t('category_disc_table_action_pin_assets')}
                                 </button>
@@ -647,12 +647,12 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                         data && data.length > 0 ? (
                             <>
                                 <div className="flex flex-col items-end text-right">
-                                    <p className="text-xs text-textSecondaryColor">{t('category_disc_volume')}</p>
-                                    <p className="text-textPrimaryColor text-sm font-semibold">{calculateVolume()}</p>
+                                    <p className="text-xs text-textSecondary">{t('category_disc_volume')}</p>
+                                    <p className="text-textPrimary text-sm font-semibold">{calculateVolume()}</p>
                                 </div>
                                 <div className="flex flex-col items-end text-right ml-10 lg:ml-32">
-                                    <p className="text-xs text-textSecondaryColor">{t('category_disc_change')}</p>
-                                    <p className="text-textPrimaryColor text-sm font-semibold">{calculateChange()}</p>
+                                    <p className="text-xs text-textSecondary">{t('category_disc_change')}</p>
+                                    <p className="text-textPrimary text-sm font-semibold">{calculateChange()}</p>
                                 </div>
                             </>
                         ) : (

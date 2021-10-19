@@ -1,7 +1,7 @@
 import * as types from 'src/redux/actions/types';
 import fetchAPI from 'utils/fetch-api';
 import AuthStorage from 'utils/auth-storage';
-import { ApiStatus, WalletType } from './const';
+import { ApiStatus, LOCAL_STORAGE_KEY, WalletType } from './const'
 import {
     API_CHECK_PASS,
     API_CHECK_PASS_AUTH,
@@ -31,7 +31,28 @@ import {
     API_GET_USER_BALANCE,
 } from './apis';
 import ApiError from './apiError';
-import { SET_USER } from './types';
+import { SET_USER, SET_THEME } from './types';
+import { THEME_MODE } from 'hooks/useDarkMode'
+
+export const setTheme = () => {
+    let theme = THEME_MODE.LIGHT
+    const localTheme = localStorage.getItem(LOCAL_STORAGE_KEY.THEME)
+
+    if (localTheme) {
+        theme = localTheme
+    }
+
+    const root = window.document.documentElement
+    root.classList.remove(theme === THEME_MODE.LIGHT ? THEME_MODE.DARK : THEME_MODE.LIGHT)
+    root.classList.add(theme)
+
+    return async (dispatch) => {
+        dispatch({
+            type: SET_THEME,
+            payload: theme,
+        })
+    }
+}
 
 export const setUser = (user) => (dispatch) => dispatch({ type: types.SET_USER, payload: user });
 

@@ -1,3 +1,5 @@
+@import "layout/maldives_layout";
+
 @import "pages/home";
 @import "pages/spot";
 @import "pages/wallet";
@@ -16,6 +18,7 @@
 
 @import "components/button";
 @import "components/nav";
+@import "components/footer";
 @import "components/tabs";
 @import "components/form";
 @import "components/orderbook";
@@ -25,5 +28,7 @@
 @import "components/pagination";
 @import "components/loader";
 @import "components/onboarding";
+@import "components/modal";
 
 @import "helpers/custom";
+@import "helpers/contants";
