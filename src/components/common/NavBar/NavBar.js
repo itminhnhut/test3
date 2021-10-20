@@ -1,6 +1,6 @@
 import PocketNavDrawer from 'components/common/NavBar/PocketNavDrawer';
-import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import useLanguage from 'hooks/useLanguage'
 import SvgIcon from 'components/svg'
 import SvgMoon from 'components/svg/Moon'
 import SvgUser from 'components/svg/SvgUser'
@@ -11,24 +11,61 @@ import colors from 'styles/colors'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
+import { NAV_DATA, SPOTLIGHT } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { NAV_DATA, SPOTLIGHT } from 'components/common/NavBar/constants'
+import { log } from 'utils'
 
 
-const NavBar = ({ style, layoutStateHandler, useBlur }) => {
+export const NAVBAR_USE_TYPE = {
+    FLUENT: 'fluent',
+    LIGHT: THEME_MODE.LIGHT,
+    DARK: THEME_MODE.DARK,
+}
+
+const NavBar = ({ style, layoutStateHandler, useOnly }) => {
     // * Initial State
     const [state, set] = useState({ isDrawer: false })
     const setState = (_state) => set(prevState => ({...prevState, ..._state}));
 
     // * Use hooks
     const [currentTheme, onThemeSwitch] = useDarkMode()
+    const [currentLocale, onChangeLang] = useLanguage()
+
     const { user: auth } = useSelector(state => state.auth) || null
     const { width } = useWindowSize()
     const { t } = useTranslation(['navbar', 'common'])
-    const [currentLocale, onChangeLang] = useLanguage()
+
+    // * Memmoized Variable
+    const navTheme = useMemo(() => {
+        const result = { wrapper: '', text: '', color: '' }
+        switch (useOnly) {
+            case NAVBAR_USE_TYPE.FLUENT:
+                result.wrapper = ''
+                result.text = 'text-textPrimary-dark'
+                result.color = colors.grey4
+                break
+            case NAVBAR_USE_TYPE.DARK:
+                result.wrapper = 'mal-navbar__wrapper__use__dark'
+                result.text = 'text-textPrimary-dark'
+                result.color = colors.grey4
+                break
+            case NAVBAR_USE_TYPE.LIGHT:
+                result.wrapper = 'mal-navbar__wrapper__use__light'
+                result.text = 'text-textPrimary'
+                result.color = colors.darkBlue
+                break
+            default:
+                result.wrapper = 'mal-navbar__wrapper__no__blur'
+                result.text = 'text-textPrimary dark:text-textPrimary-dark'
+                result.color = currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4
+                break
+        }
+
+        return result
+    }, [useOnly, currentTheme])
 
 
     // * Helper
@@ -128,7 +165,7 @@ const NavBar = ({ style, layoutStateHandler, useBlur }) => {
     return (
         <>
             <PocketNavDrawer isActive={state.isDrawer} onClose={() => onDrawerAction(false)}/>
-            <div style={style || {}} className={`mal-navbar__wrapper ${!useBlur ? 'mal-navbar__wrapper__no__blur' : ''}`}>
+            <div style={style || {}} className={`mal-navbar__wrapper ${navTheme.wrapper}`}>
                 <Link href="/">
                     <a className="block mal-navbar__logo">
                         <Image src="/images/logo/nami_maldives.png" width="28" height="25"
@@ -157,9 +194,7 @@ const NavBar = ({ style, layoutStateHandler, useBlur }) => {
                     {!auth && <div className="flex flex-row items-center mr-8">
                         {width >= 1366 &&
                         <Link href="/">
-                            <a className={`text-sm font-medium
-                                           ${!useBlur ? 'text-textPrimary dark:text-textPrimary-dark' : 'text-textPrimary-dark'}
-                                           whitespace-nowrap hover:!text-dominant`}>
+                            <a className={`text-sm font-medium ${navTheme.text} whitespace-nowrap hover:!text-dominant`}>
                                 {t('common:sign_in')}
                             </a>
                         </Link>}
@@ -177,16 +212,14 @@ const NavBar = ({ style, layoutStateHandler, useBlur }) => {
 
                     {width >= 1366 &&
                     <div className="flex flex-row items-center ml-8">
-                        <a className={`text-sm font-medium uppercase cursor-pointer
-                                       ${!useBlur ? 'text-textPrimary dark:text-textPrimary-dark' : 'text-textPrimary-dark'}
-                                           whitespace-nowrap hover:!text-dominant`}
+                        <a className={`text-sm font-medium uppercase cursor-pointer ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
                            onClick={onChangeLang}>
                             {currentLocale}
                         </a>
                         <a href="#" className="ml-8" onClick={onThemeSwitch}>
                             {currentTheme !== THEME_MODE.LIGHT ?
-                                <SvgMoon size={20} color={useBlur ? colors.grey4 : currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4}/>
-                                : <SvgSun size={20} color={useBlur ? colors.grey4 : currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4}/>}
+                                <SvgMoon size={20} color={navTheme.color}/>
+                                : <SvgSun size={20} color={navTheme.color}/>}
                         </a>
                     </div>}
 
@@ -195,7 +228,7 @@ const NavBar = ({ style, layoutStateHandler, useBlur }) => {
                            className="mal-navbar__user___avatar cursor-pointer">
                             {auth?.avatar ? <img src={auth?.avatar} alt=""/> :
                                 <SvgUser size={25} className="ml-8 cursor-pointer"
-                                         color={useBlur ? colors.grey4 : currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4}
+                                         color={navTheme.color}
                                          onClick={() => console.log('should open user panel')}/>
                             }
                         </a>
@@ -204,7 +237,7 @@ const NavBar = ({ style, layoutStateHandler, useBlur }) => {
                     {width < 1366 &&
                     <div className="relative">
                         <SvgMenu size={25} className={`${width >= 768 ? 'ml-6' : 'ml-3'} cursor-pointer`}
-                                 color={useBlur ? colors.grey4 : currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4}
+                                 color={navTheme.color}
                                  onClick={() => onDrawerAction(true)}/>
                     </div>}
                 </div>

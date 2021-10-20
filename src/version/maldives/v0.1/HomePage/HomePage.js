@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { QRCode } from 'react-qrcode-logo'
+import { NAVBAR_USE_TYPE } from 'components/common/NavBar/NavBar'
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange'
 
@@ -45,7 +46,7 @@ const HomePage = () => {
     // }, [state])
 
     return (
-        <MaldivesLayout navOverComponent navBlur>
+        <MaldivesLayout navOverComponent navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
                 <HomeIntroduce parentState={setState}/>
                 <HomeMarketTrend/>
