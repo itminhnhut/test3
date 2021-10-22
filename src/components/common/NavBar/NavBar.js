@@ -17,6 +17,7 @@ import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
 import { log } from 'utils'
+import NotificationList from 'components/notification/NotificationList'
 
 
 export const NAVBAR_USE_TYPE = {
@@ -210,6 +211,20 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
                             style={width >= 992 ? {fontSize: 14, padding: '4px 16px', maxWidth: 120} : {fontSize: 12, padding: '1px 12px'}}
                             href="#nami_exchange_download_app"/>
 
+
+                    {auth &&
+                        <a href="https://nami.exchange/profile"
+                           className="mal-navbar__user___avatar cursor-pointer">
+                            {auth?.avatar ? <img src={auth?.avatar} alt=""/> :
+                                <SvgUser size={25} className="ml-8 cursor-pointer"
+                                         color={navTheme.color}
+                                         onClick={() => console.log('should open user panel')}/>
+                            }
+                        </a>
+                    }
+
+                    <NotificationList btnClass="!mr-0"/>
+
                     {width >= 1366 &&
                     <div className="flex flex-row items-center ml-8">
                         <a className={`text-sm font-medium uppercase cursor-pointer ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
@@ -222,17 +237,6 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
                                 : <SvgSun size={20} color={navTheme.color}/>}
                         </a>
                     </div>}
-
-                    {auth &&
-                        <a href="https://nami.exchange/profile"
-                           className="mal-navbar__user___avatar cursor-pointer">
-                            {auth?.avatar ? <img src={auth?.avatar} alt=""/> :
-                                <SvgUser size={25} className="ml-8 cursor-pointer"
-                                         color={navTheme.color}
-                                         onClick={() => console.log('should open user panel')}/>
-                            }
-                        </a>
-                    }
 
                     {width < 1366 &&
                     <div className="relative">

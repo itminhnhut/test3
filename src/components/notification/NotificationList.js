@@ -9,7 +9,7 @@ import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo } from 'src/redux/actions/utils';
 import { IconBell, Notification, NotificationDown, NotificationUp } from '../common/Icons';
 
-const NotificationList = (props) => {
+const NotificationList = ({ btnClass = '' }) => {
     const { t } = useTranslation(['navbar']);
     const dispatch = useDispatch();
     const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
@@ -139,7 +139,7 @@ const NotificationList = (props) => {
             <div className="relative">
                 <button
                     type="button"
-                    className="btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-7"
+                    className={`btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-7 ${btnClass}`}
                     aria-expanded="false"
                     ref={btnDropdownRef}
                     onClick={() => {

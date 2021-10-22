@@ -7,12 +7,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useWindowSize } from 'utils/customHooks'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { useKeenSlider } from 'keen-slider/react'
 import "keen-slider/keen-slider.min.css"
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
 
 const HomeNews = () => {
     // Initial State
@@ -119,7 +119,7 @@ const HomeNews = () => {
     useEffect(() => {
         timer.current = setInterval(() => !state.lastedNewsAutoplay && slider && slider.next(), 2000)
         return () => clearInterval(timer.current)
-    }, [state.lastedNewsAutoplay, slider])
+    }, [state.lastedNewsAutoplay, slider, timer.current])
 
     useEffect(() => {
         width && slider && slider.resize()
