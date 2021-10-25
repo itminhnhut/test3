@@ -147,7 +147,7 @@ const HomeAdditional = ({ parentState }) => {
                             <>
                                 {t('home:journey.description_desktop1')}<br/>{t('home:journey.description_desktop2')}
                             </>
-                            : t('home:journey.description_mobile')
+                            : <>{t('home:journey.description_mobile')}</>
                         }
                     </div>
                     <div className="homepage-journey__group_content">

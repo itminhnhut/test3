@@ -57,7 +57,11 @@ body {
     }
 
     @media (min-width: 1920px) {
-      max-width: 1440px;
+      max-width: 1200px;
+    }
+
+    @media (min-width: 2560px) {
+      max-width: 1366px;
     }
   }
 

@@ -383,7 +383,8 @@ const Swap = () => {
 
     return (
         <MaldivesLayout>
-            <div className="bg-backgroundSecondary dark:bg-get-darkBlue4 flex flex-col flex-grow">
+            <div className="bg-backgroundSecondary dark:bg-get-darkBlue4 flex flex-col flex-grow justify-center
+                            items-center min-h-[680px] h-full">
                 {/* <div className="py-[3.75rem] text-center">
                     <div className="text-4xl text-teal ">
                         {t('navbar:submenu.convert')}
@@ -392,7 +393,7 @@ const Swap = () => {
                         {t('navbar:submenu.convert_description')}
                     </div>
                 </div> */}
-                <div className="convert-container my-[6.25rem] ">
+                <div className="convert-container">
                     <div className="card card-shadow bg-bgContainer dark:bg-get-darkBlue2 rounded-xl lg:w-[480px] max-w-[480px] mx-auto">
                         <div className="card-body !py-6 !px-6">
                             <div className="font-bold text-xl pb-4">{t('navbar:submenu.swap')}</div>

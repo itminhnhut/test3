@@ -21,10 +21,10 @@ const MadivesLayout = ({ navOverComponent, navMode = false, children, hidden }) 
     }
 
     return (
-        <div className="mal-layouts" style={state.isDrawer ? {height, overflow: 'hidden'} : {}}>
+        <div className="mal-layouts flex flex-col" style={state.isDrawer ? {height, overflow: 'hidden'} : {}}>
             {!hidden && <NavBar useOnly={navMode} style={navbarStyle} layoutStateHandler={setState}/>}
             <div style={!navOverComponent ? { paddingTop: width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT } : {}}
-                 className="relative">
+                 className="relative flex-1">
                 {children}
             </div>
             <Footer/>
