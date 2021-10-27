@@ -5,7 +5,7 @@ const Maldives = () => <LandingPage/>
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar']),
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'maldives']),
     },
 });
 

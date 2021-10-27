@@ -1,13 +1,78 @@
 import Link from 'next/link'
 
 import { useWindowSize } from 'utils/customHooks'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
+import { useTranslation } from 'next-i18next'
+import { log } from 'utils'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 const ScreenPresent = () => {
-
+    // use Hooks
     const { width } = useWindowSize()
+    const { i18n: { language } } = useTranslation()
 
-    const renderMobile = useCallback(() => {
+    // Helper
+    const renderTitle = useCallback(() => {
+        let text
+
+        if (language === LANGUAGE_TAG.VI) {
+            text = <>
+                Trải nghiệm mới.<br/>
+                Hành trình mới.
+            </>
+        } else {
+            text = <>
+                New Experiences.<br/>
+                New Journey.
+            </>
+        }
+
+        return <>{text}</>
+    }, [language])
+
+    const renderDescription = useCallback(() => {
+        let text
+
+        if (language === LANGUAGE_TAG.VI) {
+            if (width < 700) {
+                text = <>
+                    Lấy cảm hứng từ sự tự do, thân thiện và phóng khoáng của<br/>
+                    Maldives, Nami Exchange mang đến bản nâng cấp toàn<br/>
+                    diện giao diện, tốc độ tăng gấp 3 lần, số lượng cặp giao dịch<br/>
+                    tăng gấp 2 lần, tối ưu trải nghiệm giúp giảm 50% thao tác.
+                </>
+            } else  {
+                text = <>
+                    Lấy cảm hứng từ sự tự do, thân thiện và phóng khoáng của Maldives,<br/>
+                    Nami Exchange mang đến bản nâng cấp toàn diện giao diện, tốc độ tăng gấp 3 lần, số lượng cặp<br/>
+                    giao dịch tăng gấp 2 lần, tối ưu trải nghiệm giúp giảm 50% thao tác.
+                </>
+            }
+        } else {
+            if (width < 700) {
+                text = <>
+                    Inspired by the freedom, friendliness and<br/>
+                    sophistication of the Maldives,<br/>
+                    Nami Exchange brings a comprehensive upgrade of<br/>
+                    the interface, the speed is increased 3 times, the<br/>
+                    number of trading pairs is doubled, optimizes the<br/>
+                    experience to reduce operations by 50%.<br/>
+                </>
+            } else {
+                text = <>
+                    Inspired by the freedom, friendliness and sophistication of the Maldives,<br/>
+                    Nami Exchange brings a comprehensive upgrade of the interface, the speed is increased 3 times,<br/>
+                    the number of trading pairs is doubled, optimizes the experience to reduce operations by 50%.
+                </>
+            }
+        }
+
+        return <>{text}</>
+    }, [language, width])
+
+
+    // render Handler
+    const renderMobile = () => {
         return (
             <>
                 <div className="landing_page___mb_screen_present__top">
@@ -34,23 +99,10 @@ const ScreenPresent = () => {
                 <div className="landing_page___mb_screen_present__nami">
                     <img src="images/screen/landing-page/nami_maldives.png" alt="Nami Maldives"/>
                     <div className="landing_page___mb_screen_present__title">
-                        Trải nghiệm mới.<br/>
-                        Hành trình mới.
+                        {renderTitle()}
                     </div>
                     <div className="landing_page___mb_screen_present__description">
-                        {width < 700 ?
-                            <>
-                                Lấy cảm hứng từ sự tự do, thân thiện và phóng khoáng của<br/>
-                                Maldives, Nami Exchange mang đến bản nâng cấp toàn<br/>
-                                diện giao diện, tốc độ tăng gấp 3 lần, số lượng cặp giao dịch<br/>
-                                tăng gấp 2 lần, tối ưu trải nghiệm giúp giảm 50% thao tác.
-                            </>
-                            : <>
-                                Lấy cảm hứng từ sự tự do, thân thiện và phóng khoáng của Maldives, Nami Exchange mang đến<br/>
-                                bản nâng cấp toàn diện giao diện, tốc độ tăng gấp 3 lần, số lượng cặp giao dịch<br/>
-                                tăng gấp 2 lần, tối ưu trải nghiệm giúp giảm 50% thao tác.
-                            </>
-                        }
+                        {renderDescription()}
                     </div>
                 </div>
 
@@ -71,7 +123,7 @@ const ScreenPresent = () => {
                 </div>
             </>
         )
-    }, [width])
+    }
 
     const renderDesktop = () => {
         return (
@@ -79,18 +131,24 @@ const ScreenPresent = () => {
                 <div className="landing_page__screen_present__left">
                     <img src="images/screen/landing-page/ip_desk_left_1.png" alt="Nami Maldives"/>
                     <img src="images/screen/landing-page/ip_desk_left_2.png" alt="Nami Maldives"/>
-                </div>
-                <div className="landing_page__screen_present__center">
-                    <div className="landing_page__screen_present__center__left">
-                        <img src="images/screen/landing-page/ip_desk_center_1.png" alt="Nami Maldives"/>
-                        <img src="images/screen/landing-page/ip_desk_center_2.png" alt="Nami Maldives"/>
                     </div>
-                    <div className="landing_page__screen_present__center__right">
-                        <img src="images/screen/landing-page/ip_desk_center_3.png" alt="Nami Maldives"/>
-                        <img src="images/screen/landing-page/ip_desk_center_4.png" alt="Nami Maldives"/>
-                    </div>
-                    <div className="landing_page__screen_present__center__bott">
-                        MALDIVES
+                    <div className="landing_page__screen_present__center">
+                        <div className="landing_page__screen_present__center__left">
+                            <img src="images/screen/landing-page/ip_desk_center_1.png" alt="Nami Maldives"/>
+                            <img src="images/screen/landing-page/ip_desk_center_2.png" alt="Nami Maldives"/>
+                        </div>
+                        <div className="landing_page__screen_present__center__right">
+                            <img src="images/screen/landing-page/ip_desk_center_3.png" alt="Nami Maldives"/>
+                            <img src="images/screen/landing-page/ip_desk_center_4.png" alt="Nami Maldives"/>
+                        </div>
+                        <div className="landing_page__screen_present__center__bott">
+                            <img src="images/screen/landing-page/nami_maldives.png" alt="Nami Maldives"/>
+                            <div className="landing_page___screen_present__title">
+                                {renderTitle()}
+                            </div>
+                            <div className="landing_page___screen_present__description">
+                            {renderDescription()}
+                        </div>
                     </div>
                 </div>
                 <div className="landing_page__screen_present__right">
@@ -100,6 +158,10 @@ const ScreenPresent = () => {
             </div>
         )
     }
+
+    useEffect(() => {
+        log.d('maldives check lang___', language)
+    }, [language])
 
     return (
         <div className="landing_page___screen_present">
