@@ -5,7 +5,7 @@ import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT } from 'components/common/NavBar/
 import { useWindowSize } from 'utils/customHooks'
 import { useMemo, useState } from 'react'
 
-const MadivesLayout = ({ navOverComponent, navMode = false, children, hidden }) => {
+const MadivesLayout = ({ navOverComponent, navMode = false, navStyle = {}, children, hidden }) => {
     // * Initial State
     const [state, set] = useState({ isDrawer: false })
     const setState = (_state) => set(prevState => ({...prevState, ..._state}));
@@ -22,7 +22,7 @@ const MadivesLayout = ({ navOverComponent, navMode = false, children, hidden }) 
 
     return (
         <div className="mal-layouts flex flex-col" style={state.isDrawer ? {height, overflow: 'hidden'} : {}}>
-            {!hidden && <NavBar useOnly={navMode} style={navbarStyle} layoutStateHandler={setState}/>}
+            {!hidden && <NavBar useOnly={navMode} style={{ ...navbarStyle, ...navStyle }} layoutStateHandler={setState}/>}
             <div style={!navOverComponent ? { paddingTop: width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT } : {}}
                  className="relative flex-1">
                 {children}
