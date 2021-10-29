@@ -1,12 +1,14 @@
+import ScreenPresentation from 'version/maldives/v0.1/LandingPage/ScreenPresentation'
+import AttractiveFeatures from 'version/maldives/v0.1/LandingPage/AttractiveFeatures'
+import PaymentAndKYC from 'version/maldives/v0.1/LandingPage/PaymentAndKYC'
+import ThemingSystem from 'version/maldives/v0.1/LandingPage/ThemingSystem'
 import MadivesLayout from 'components/common/layouts/MaldivesLayout'
-import ScreenPresent from 'version/maldives/v0.1/LandingPage/ScreenPresent'
+import {default as MobileScreenPresent } from 'version/maldives/v0.1/LandingPage/ScreenPresent'
 
+import colors from 'styles/colors'
 import { NAVBAR_USE_TYPE } from 'components/common/NavBar/NavBar'
 import { useWindowSize } from 'utils/customHooks'
 import { useTranslation } from 'next-i18next'
-import ThemingSystem from 'version/maldives/v0.1/LandingPage/ThemingSystem'
-import AttractiveFeatures from 'version/maldives/v0.1/LandingPage/AttractiveFeatures'
-import PaymentAndKYC from 'version/maldives/v0.1/LandingPage/PaymentAndKYC'
 
 const LandingPage = () => {
     // Use Hooks
@@ -14,11 +16,17 @@ const LandingPage = () => {
     const { t } = useTranslation(['maldives'])
 
     return (
-        <MadivesLayout navOverComponent={width >= 768}
-                       navMode={NAVBAR_USE_TYPE.FLUENT}
-                       navStyle={{ backgroundColor: 'rgba(21, 29, 47, 0.95)' }}>
+        <MadivesLayout
+            navMode={NAVBAR_USE_TYPE.FLUENT}
+            navStyle={{
+                backgroundColor: colors.darkBlue2
+            }}
+            contentWrapperStyle={{
+                color: `${colors.darkBlue} !important`
+            }}
+        >
             {/* Screen Presentation */}
-            <ScreenPresent/>
+            {width < 992 ? <MobileScreenPresent/> : <ScreenPresentation/>}
 
             {/* Experience Compare */}
             <div className="landing_page___exp_compare">
@@ -30,22 +38,20 @@ const LandingPage = () => {
                         <div className="landing_page___exp_compare__item">
                             <div className="landing_page___exp_compare__item___reason">
                                 <div className="landing_page___exp_compare__item___reason__title">
-                                    Nami - Old Version
+                                    Nami - {t('maldives:landing_page.compare.previous_version')}
                                 </div>
                                 <div className="landing_page___exp_compare__item___reason__item">
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> Processing speed is not optimal when the number of trading
-                                        pairs increases above 400 pairs
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_1')}
                                     </div>
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> The order transfer system is blocked when the number of
-                                        users increases rapidly
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_2')}
                                     </div>
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> Not having Dark Mode - which save battery for user’s phone
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_3')}
                                     </div>
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> The Wallet system is not optimized
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_4')}
                                     </div>
                                 </div>
                             </div>
@@ -61,21 +67,19 @@ const LandingPage = () => {
                                 </div>
                                 <div className="landing_page___exp_compare__item___reason__item">
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> Increase order processing speed by 3 times with more than
-                                        500 trading pairs
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_m1')}
                                     </div>
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> Equipped a system that automatically expands the
-                                        infrastructure when the user’s number increases
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_m2')}
                                     </div>
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> Released Dark Mode - improves the battery life by 30%
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_m3')}
                                     </div>
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> The user's security system is improved
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_m4')}
                                     </div>
                                     <div className="flex flex-row">
-                                        <span>&bull;</span> Optimizing the experience to reduce operations by 50%.
+                                        <span>&bull;</span> {t('maldives:landing_page.compare.compare_m5')}
                                     </div>
                                 </div>
                             </div>
@@ -92,14 +96,81 @@ const LandingPage = () => {
             {/* Attractive Features */}
             <AttractiveFeatures/>
 
-            {/* Portfolio */}
-            <div className="landing_page___portfolio">
-
-            </div>
-
             {/* Spot & Future */}
-            <div className="landing_page___spot_&_futures">
+            <div className="landing_page___spot_futures">
+                <div className="mal-container">
+                    <div className="landing_page___section_title">
+                        Exchange & Futures
+                    </div>
+                    <div className="landing_page___spot_futures__content_wrapper">
+                        <div className="landing_page___spot_futures__left landing_page___card">
+                            <div className="mal-title__gradient">
+                                Exchange
+                            </div>
+                            <div className="landing_page___spot_futures__description">
+                                Giờ đây, 2 lệnh Limit - Market sẽ được tách riêng, giúp người dùng dễ dàng phân biệt và
+                                tránh những sai sót không đáng có.
+                            </div>
+                            <img src="images/screen/landing-page/exchange_input.png" alt="Nami Maldives"/>
+                        </div>
+                        <div style={width < 992 ? { marginTop: 20 } : {}}
+                             className="landing_page___spot_futures__right landing_page___card">
+                            <div>
+                                <div>
+                                    <div className="mal-title__gradient">
+                                        Lệnh mở
+                                    </div>
+                                    <div className="landing_page___spot_futures__description">
+                                        Người dùng có thể xem lại những lệnh mình đã đặt để theo dõi biến động của tài
+                                        sản và thay đổi chúng khi cần thiết.
+                                    </div>
+                                </div>
 
+                                <div>
+                                    <div className="mal-title__gradient">
+                                        Thông tin Token
+                                    </div>
+                                    <div className="landing_page___spot_futures__description">
+                                        Giúp người dùng cập nhật những thông tin nổi bật về token, từ đó đưa ra quyết
+                                        định đầu tư hợp lý.
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <img src="images/screen/landing-page/ip_exchange.png" alt="Nami Maldives"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="landing_page___spot_futures__content_wrapper">
+                        <div style={width < 992 ? { marginTop: 20 } : {}}
+                             className="landing_page___spot_futures__left landing_page___card">
+                            <div className="mal-title__gradient">
+                                Futures
+                            </div>
+                            <div className="landing_page___spot_futures__description">
+                                Hiểu được sự thuận tiện là yếu tố cần thiết khi giao dịch, Nami Maldives đã mang lại một
+                                giao diện tối giản và dễ sử dụng hơn.
+                            </div>
+                            <img src="images/screen/landing-page/futures_input.png" alt="Nami Maldives"/>
+                        </div>
+                        <div style={width < 992 ? { marginTop: 20 } : {}}
+                             className="landing_page___spot_futures__right landing_page___card">
+                            <div>
+                                <div>
+                                    <div className="landing_page___spot_futures__description">
+                                        Nami Maldives mang đến cho các “Futures Trader” một tốc độ xử lý lệnh nhanh hơn
+                                        so với phiên bản tiền nhiệm, đi kèm với hơn 30 bộ chỉ báo hỗ trợ người dùng
+                                        trong việc nhận định và giao dịch Futures một cách hiệu quả.
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <img src="images/screen/landing-page/ip_futures.png" alt="Nami Maldives"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Wallet */}
@@ -162,7 +233,19 @@ const LandingPage = () => {
 
             {/*And More*/}
             <div className="landing_page___more">
-
+                <div className="landing_page___section_title text-center mal-container">
+                    Và còn nhiều thay đổi sắp tới
+                </div>
+                <div className="mal-title__gradient">
+                    Maldives M2
+                </div>
+                <div className="landing_page___more___subtitle">
+                    sẽ được cập nhật vào tháng 11
+                </div>
+                <div className="landing_page___more___wrapper mal-container">
+                    <img src="images/screen/landing-page/ip_more_1.png" alt="Nami Maldives"/>
+                    <img src="images/screen/landing-page/ip_more_2.png" alt="Nami Maldives"/>
+                </div>
             </div>
         </MadivesLayout>
     )

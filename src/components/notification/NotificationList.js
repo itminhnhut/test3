@@ -8,8 +8,9 @@ import { getNotifications, markAllAsRead, truncateNotifications } from 'actions/
 import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo } from 'src/redux/actions/utils';
 import { IconBell, Notification, NotificationDown, NotificationUp } from '../common/Icons';
+import colors from 'styles/colors'
 
-const NotificationList = ({ btnClass = '' }) => {
+const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const { t } = useTranslation(['navbar']);
     const dispatch = useDispatch();
     const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
@@ -149,7 +150,7 @@ const NotificationList = ({ btnClass = '' }) => {
                             : openDropdownPopover();
                     }}
                 >
-                    <IconBell />
+                    <IconBell color={navTheme ? navTheme.color : colors.grey4} />
                     {unreadCount > 0
                     && (
                         <div
@@ -185,13 +186,13 @@ const NotificationList = ({ btnClass = '' }) => {
                                             <>
                                                 {
                                                     notificationLoading ?
-                                                        <span className="ml-3 text-black-700 hover:text-teal-700 cursor-pointer">
+                                                        <span className="text-black-700 hover:text-teal-700 cursor-pointer">
                                                             {t('loading')}
                                                         </span>
                                                         : (
                                                             <span
                                                                 onClick={loadMoreNotification}
-                                                                className="ml-3 text-black-700 hover:text-teal-700 cursor-pointer"
+                                                                className="text-black-700 hover:text-teal-700 cursor-pointer"
                                                             >
                                                                 {t('load_more')}
                                                             </span>
@@ -201,7 +202,7 @@ const NotificationList = ({ btnClass = '' }) => {
                                         )
                                         :
                                         (
-                                            <span className="ml-3 text-black-700 hover:text-teal-700 cursor-pointer">
+                                            <span className="text-black-700 hover:text-teal-700 cursor-pointer">
                                                 {t('navbar:read_all_noti')}
                                             </span>
                                         )

@@ -10,14 +10,13 @@ import Button from 'components/common/Button'
 import colors from 'styles/colors'
 import Image from 'next/image'
 import Link from 'next/link'
+import NotificationList from 'components/notification/NotificationList'
 
 import { useState, useMemo, useCallback } from 'react'
 import { NAV_DATA, SPOTLIGHT } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { log } from 'utils'
-import NotificationList from 'components/notification/NotificationList'
 
 
 export const NAVBAR_USE_TYPE = {
@@ -223,7 +222,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
                         </a>
                     }
 
-                    <NotificationList btnClass="!mr-0"/>
+                    <NotificationList btnClass="!mr-0 ml-8" navTheme={navTheme}/>
 
                     {width >= 1366 &&
                     <div className="flex flex-row items-center ml-8">

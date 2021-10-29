@@ -295,3 +295,11 @@ input[type=number] {
   visibility: visible;
   opacity: 1;
 }
+
+.mal-title__gradient {
+  font-weight: 600;
+  font-size: 16px;
+  background: -webkit-linear-gradient(#00DCC2, #00B6C7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

@@ -1,5 +1,41 @@
 {
   "landing_page": {
-      "exp_compare_title": "Trải nghiệm hoàn toàn khác biệt ở 2 phiên bản"
+    "exp_compare_title": "Trải nghiệm khác biệt",
+    "compare": {
+      "previous_version": "Phiên bản trước",
+      "compare_1": "Tốc độ xử lý chưa tối ưu khi số lượng cặp giao dịch tăng nhanh.",
+      "compare_2": "Hệ thống chuyển lệnh bị nghẽn khi số lượng người dùng lớn.",
+      "compare_3": "Không có giao diện Dark Mode để giúp tiết kiệm pin.",
+      "compare_4": "Hệ thống Ví chưa tối ưu.",
+      "compare_m1": "Tăng tốc độ xử lý lên gấp 3, đáp ứng 500+ cặp giao dịch.",
+      "compare_m2": "Hệ thống tự động mở rộng hạ tầng khi lượng người dùng lớn.",
+      "compare_m3": "Ra mắt Dark Mode giúp cải thiện thời lượng pin thêm 30%.",
+      "compare_m4": "Gia tăng bảo mật.",
+      "compare_m5": "Tối ưu hóa trải nghiệm, giảm số lượng thao tác 50%."
+    },
+    "theming": {
+      "dark_mode": "\"Bầu trời đêm Maldives\" là cụm từ để<br/>lột tả về diện mạo này, Dark Mode tạo<br/>cảm giác chuyên nghiệp và an toàn cho<br/>trải nghiệm của người dùng.",
+      "light_mode": "Giao diện mang tính \"cổ điển\"<br />từ phiên bản cũ nhưng thay đổi<br/>với sự cải tiến về màu sắc.",
+      "mb_dark_mode": "Được truyền cảm hứng từ \"Bầu trời đêm Maldives\", Dark Mode tạo cảm giác chuyên nghiệp và an toàn cho trải nghiệm của người dùng.",
+      "mb_light_mode": "Giao diện mang tính \"cổ điển\" từ phiên bản trước nhưng thay đổi với sự cải tiến về màu sắc."
+    },
+    "attractive_features": {
+      "title": "Nhiều tính năng hấp dẫn",
+      "description": "Sản phẩm đa dạng và các tính năng được tối ưu hoá cho người dùng. Hệ sinh thái của Nami giúp phân bổ vốn và cập nhật kiến thức nhanh nhất từ thị trường.",
+      "favorite_portfolio": "Danh mục yêu thích",
+      "what_can_you_do": "Tính năng nổi bật",
+      "feature_1": "Tự do chọn lựa hơn 300 cặp token.",
+      "feature_2": "Phân loại sắp xếp theo thứ tự mong muốn.",
+      "feature_3": "Lưu lại lịch sử tìm kiếm."
+    },
+    "exchange_futures": {
+      "exchange": "Giờ đây, 2 lệnh Limit - Market sẽ được tách riêng, giúp người dùng dễ dàng phân biệt và tránh những sai sót không đáng có.",
+      "open_orders": "Lệnh đang mở",
+      "open_orders_description": "Người dùng có thể xem lại những lệnh mình đã đặt để theo dõi biến động của tài sản và thay đổi chúng khi cần thiết.",
+      "token_info": "Token's Information",
+      "token_info_description": "Updating the outstanding information about tokens for users, thereby making reasonable investment decisions.",
+      "futures_description": "Nami Maldives gives “Futures Traders” a faster order processing speed than its predecessor, comes with more than 30 sets of indicators to assist users in identifying and trading Futures efficiently.",
+      "futures": "Understanding that convenience is essential when trading Futures, Nami Maldives has brought a “more minimalistic” and “easy-to-use” interface."
+    }
   }
 }

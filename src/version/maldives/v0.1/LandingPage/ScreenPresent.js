@@ -1,10 +1,10 @@
 import Link from 'next/link'
 
-import { useWindowSize } from 'utils/customHooks'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'next-i18next'
-import { log } from 'utils'
+import { useWindowSize } from 'utils/customHooks'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
+import { log } from 'utils'
 
 const ScreenPresent = () => {
     // use Hooks
@@ -165,7 +165,7 @@ const ScreenPresent = () => {
 
     return (
         <div className="landing_page___screen_present">
-            {width >= 768 ? renderDesktop() : renderMobile()}
+            {renderMobile()}
         </div>
     )
 }

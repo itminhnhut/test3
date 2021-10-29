@@ -9,7 +9,7 @@ export const initialState = {
     authorized: false,
 };
 
-export default (state = initialState, action) => {
+const Socket = (state = initialState, action) => {
     switch (action.type) {
         case types.SET_USER_SOCKET:
             return {
@@ -26,3 +26,5 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export default Socket
