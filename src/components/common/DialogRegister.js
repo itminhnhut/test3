@@ -4,6 +4,7 @@ import { XCircle } from 'react-feather';
 import { DOWNLOAD_APP_LINK } from 'src/redux/actions/const';
 import { useTranslation } from 'next-i18next';
 import { iconColor } from 'src/config/colors';
+import { getS3Url } from 'redux/actions/utils';
 
 const DialogRegister = (props, ref) => {
     const { t } = useTranslation();
@@ -70,7 +71,7 @@ const DialogRegister = (props, ref) => {
                             </Dialog.Title>
                             <div className="text-sm rounded-2xl bg-white">
                                 <div className="bg-black-5 rounded-t-2xl py-4">
-                                    <img src="/images/bg/dialog-register-header.svg" alt="" className="mx-auto" />
+                                    <img src={getS3Url("/images/bg/dialog-register-header.svg")} alt="" className="mx-auto" />
                                 </div>
                                 <div className="px-6 py-8 text-center !font-bold">
                                     <div className="text-xl">Vui lòng tải ứng dụng</div>

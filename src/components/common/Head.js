@@ -20,7 +20,7 @@ const Head = () => {
                         <>
                             {/* <meta
                                 name="apple-itunes-app"
-                                content="app-id=1565481713, app-argument=https://apps.apple.com/us/app/id1480302334"
+                                content="app-id=1565481713, app-argument=https://apps.apple.com/us/app/id1480302334"00
                                 id="ember12714851"
                                 className="ember-view"
                             />

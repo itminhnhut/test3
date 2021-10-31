@@ -1,5 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
+import { getS3Url } from 'redux/actions/utils';
 
 const NotKYC = ({ type }) => {
     const { t } = useTranslation();
@@ -21,7 +22,7 @@ const NotKYC = ({ type }) => {
 
             </div>
             <div>
-                <img src="/images/bg/withdraw-vndc-section-1.svg" alt="" />
+                <img src={getS3Url("/images/bg/withdraw-vndc-section-1.svg")} alt="" />
             </div>
         </div>
     );

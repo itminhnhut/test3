@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import LayoutWithHeader from 'components/common/layouts/layoutWithHeader';
 import Footer from 'components/common/Footer';
+import { getS3Url } from 'redux/actions/utils';
 
 const Custom404 = () => {
     const { t } = useTranslation(['404']);
@@ -24,7 +25,7 @@ const Custom404 = () => {
                             </Link>
                         </div>
                         <div className="flex items-center justify-center text-center order-1 lg:order-2">
-                            <img src="/images/bg/bg-error.png" alt="404" className="lg:max-w-[620px]" />
+                            <img src={getS3Url("/images/bg/bg-error.png")} alt="404" className="lg:max-w-[620px]" />
                         </div>
                     </div>
                 </div>
