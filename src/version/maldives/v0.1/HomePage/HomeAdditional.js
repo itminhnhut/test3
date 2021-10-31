@@ -10,6 +10,7 @@ import { THEME_MODE } from 'hooks/useDarkMode'
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { useEffect, useState } from 'react'
+import { getS3Url } from 'redux/actions/utils'
 
 const HomeAdditional = ({ parentState }) => {
     // * Initial State
@@ -226,7 +227,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                         </div>
                         <div className="homepage-journey__group_content___right">
-                            <img src="/images/screen/homepage/journey_graphics2.png" alt="Nami Exchange"/>
+                            <img src={getS3Url("/images/screen/homepage/journey_graphics2.png")} alt="Nami Exchange"/>
                         </div>
                     </div>
                 </div>
@@ -243,25 +244,25 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
                         <div className="homepage-app_intro___content___button__group">
                             <div onClick={() => window.open('https://apps.apple.com/app/id1480302334', '_blank')}>
-                                <img src="/images/screen/homepage/app_store_light.png" alt="Nami Exchange"/>
+                                <img src={getS3Url("/images/screen/homepage/app_store_light.png")} alt="Nami Exchange"/>
                             </div>
                             <div onClick={() => window.open('https://play.google.com/store/apps/details?id=com.namicorp.exchange', '_blank')}>
-                                <img src="/images/screen/homepage/play_store_light.png" alt="Nami Exchange"/>
+                                <img src={getS3Url("/images/screen/homepage/play_store_light.png")} alt="Nami Exchange"/>
                             </div>
                             <div onClick={() => parentState && parentState({ showQR: true })}>
                                 {theme && theme !== THEME_MODE.LIGHT ?
-                                 <img src="/images/icon/ic_qr.png" alt="Nami Exchange"/>
-                                 : <img src="/images/screen/homepage/qr_light.png" alt="Nami Exchange"/>}
+                                 <img src={getS3Url("/images/icon/ic_qr.png")} alt="Nami Exchange"/>
+                                 : <img src={getS3Url("/images/screen/homepage/qr_light.png")} alt="Nami Exchange"/>}
                             </div>
                         </div>
                     </div>
                     <div className="homepage-app_intro___graphics">
-                        <img className="homepage-app_intro___mb_graphics" src="/images/screen/homepage/mobile_dual_ip_light.png" alt="Nami Exchange"/>
-                        <img className="homepage-app_intro___desktop_graphics" src="/images/screen/homepage/dual_ip_light.png" alt="Nami Exchange"/>
+                        <img className="homepage-app_intro___mb_graphics" src={getS3Url("/images/screen/homepage/mobile_dual_ip_light.png")} alt="Nami Exchange"/>
+                        <img className="homepage-app_intro___desktop_graphics" src={getS3Url("/images/screen/homepage/dual_ip_light.png")} alt="Nami Exchange"/>
                     </div>
                     {theme && theme === THEME_MODE.LIGHT &&
                     <img className="homepage-app_intro___graphics__backward"
-                         src="/images/screen/homepage/corner_right.png" alt="Nami Exchange"/>}
+                         src={getS3Url("/images/screen/homepage/corner_right.png")} alt="Nami Exchange"/>}
                 </div>
             </section>
 

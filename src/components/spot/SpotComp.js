@@ -25,6 +25,7 @@ import { getMarketWatch, getUserSymbolList, postSymbolViews } from 'src/redux/ac
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
+import { getS3Url } from 'redux/actions/utils';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -291,7 +292,7 @@ const SpotComp = () => {
                                     </Dialog.Title>
                                     <div className="text-sm rounded-2xl bg-white">
                                         <div className="bg-blue-50 rounded-t-2xl py-4">
-                                            <img src="/images/bg/dialog-register-header.svg" alt="" className="mx-auto" />
+                                            <img src={getS3Url("/images/bg/dialog-register-header.svg")} alt="" className="mx-auto" />
                                         </div>
                                         <div className="px-6 py-8 text-center !font-bold">
                                             <div className="text-xl">{t('landing:download_app_hint')}</div>

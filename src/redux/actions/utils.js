@@ -206,6 +206,10 @@ export function getS3Url(url) {
     return (process.env.NEXT_PUBLIC_CDN + '/nami.exchange' || '') + url;
 }
 
+export function getV1Url(url) {
+    return process.env.NEXT_PUBLIC_WEB_V1 + url;
+}
+
 function encodeData(data) {
     return Object.keys(data).map((key) => {
         return [key, data[key]].map(encodeURIComponent).join('=');

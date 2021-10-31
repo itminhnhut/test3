@@ -7,6 +7,7 @@ import { getMarketWatch } from 'redux/actions/market'
 import { useWindowSize } from 'utils/customHooks'
 import { PulseLoader } from 'react-spinners'
 import { useAsync } from 'react-use'
+import { getS3Url } from 'redux/actions/utils'
 
 const HomeIntroduce = ({ parentState }) => {
     const [state, set] = useState({
@@ -46,29 +47,29 @@ const HomeIntroduce = ({ parentState }) => {
                         <div className="homepage-introduce___download">
                             <Link href="https://apps.apple.com/app/id1480302334">
                                 <a className="homepage-introduce___download__item" target="_blank">
-                                    <img src="/images/download_app_store.png" alt="Nami Exchange"/>
+                                    <img src={getS3Url('/images/download_app_store.png')} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                                 <a className="homepage-introduce___download__item" target="_blank">
-                                    <img src="/images/download_play_store.png" alt="Nami Exchange"/>
+                                    <img src={getS3Url("/images/download_play_store.png")} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                             <div className="homepage-introduce___download__item"
                                  onClick={() => parentState({ showQR: true })}>
-                                <img src="/images/icon/ic_qr.png" alt="Nami Exchange"/>
+                                <img src={getS3Url("/images/icon/ic_qr.png")} alt="Nami Exchange"/>
                             </div>
                         </div>
                     </div>
                     <div className="homepage-introduce___wrapper__right">
                         <div ref={animRef} className="homepage-introduce___graphics">
                             <div className="homepage-introduce___graphics__anim__wrapper">
-                                <img src="/images/screen/homepage/banner_graphics.png" alt="Nami Exchange"/>
+                                <img src={getS3Url("/images/screen/homepage/banner_graphics.png")} alt="Nami Exchange"/>
                             </div>
                         </div>
                         {width >= 1024 &&
                         <div className="homepage-introduce___graphics__backward">
-                            <img src="/images/screen/homepage/electric_pattern.png" alt="Nami Exchange"/>
+                            <img src={getS3Url("/images/screen/homepage/electric_pattern.png")} alt="Nami Exchange"/>
                         </div>}
                     </div>
                     <div className="homepage-introduce___statitics">

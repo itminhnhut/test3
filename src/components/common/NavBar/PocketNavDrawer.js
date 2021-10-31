@@ -14,6 +14,7 @@ import { MOBILE_NAV_DATA } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
+import { getLoginUrl } from 'redux/actions/utils'
 
 const PocketNavDrawer = memo(({ isActive, onClose }) => {
     const [state, set] = useState({
@@ -116,10 +117,10 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                         <>
                             <div className="flex flex-row justify-between user__button">
                                 <div>
-                                    <Button href="/" title={t('common:sign_in')} type="secondary"/>
+                                    <Button href={getLoginUrl('sso', 'login')} title={t('common:sign_in')} type="secondary"/>
                                 </div>
                                 <div>
-                                    <Button href="/" title={t('common:sign_up')} type="primary"/>
+                                    <Button href={getLoginUrl('sso', 'register')} title={t('common:sign_up')} type="primary"/>
                                 </div>
                             </div>
                             <div className="border-b border-divider dark:border-divider-dark"

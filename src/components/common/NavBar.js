@@ -522,7 +522,7 @@ const NavBar = () => {
                                     </Dialog.Title>
                                     <div className="text-sm rounded-2xl bg-white">
                                         <div className="bg-black-5 rounded-t-2xl py-4">
-                                            <img src="/images/bg/dialog-register-header.svg" alt="" className="mx-auto" />
+                                            <img src={getS3Url("/images/bg/dialog-register-header.svg")} alt="" className="mx-auto" />
                                         </div>
                                         <div className="px-6 py-8 text-center !font-bold">
                                             <div className="text-xl">{t('landing:download_app_hint')}</div>
