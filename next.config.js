@@ -61,6 +61,9 @@ module.exports = withPlugins([
     images: {
         domains: [
             'test.nami.exchange',
+            'static.namifutures.com',
+            'nami.io',
+            'datav2.nami.exchange',
         ],
     },
 });
