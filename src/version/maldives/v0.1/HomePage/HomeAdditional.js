@@ -11,7 +11,7 @@ import { THEME_MODE } from 'hooks/useDarkMode'
 import { useTranslation, Trans } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { useEffect, useState } from 'react'
-import { getS3Url } from 'redux/actions/utils'
+import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils'
 
 const HomeAdditional = ({ parentState }) => {
     // * Initial State
@@ -84,14 +84,14 @@ const HomeAdditional = ({ parentState }) => {
                             <div className="homepage-first_award__manual__item">
                                 {t('home:first_award.following_at')}
                                 <div className="flex flex-row items-center">
-                                    <Link href="/">
-                                        <a>
+                                    <Link href="https://www.facebook.com/namifutures">
+                                        <a target="_blank">
                                             <Image src="/images/icon/ic_facebook.png" width={width >= 768 ? '52' : '32'}
                                                    height={width >= 768 ? '52' : '32'}/>
                                         </a>
                                     </Link>
-                                    <Link href="/">
-                                        <a>
+                                    <Link href="https://twitter.com/NamiTrade">
+                                        <a target="_blank">
                                             <Image src="/images/icon/ic_twitter.png" width={width >= 768 ? '52' : '32'}
                                                    height={width >= 768 ? '52' : '32'}/>
                                         </a>
@@ -105,7 +105,7 @@ const HomeAdditional = ({ parentState }) => {
                             {t('home:first_award.join_nami_by')}
                         </div>
                         <div className="homepage-first_award___form___platform">
-                            <Link href="/">
+                            <Link href={getLoginUrl('sso', 'register')}>
                                 <a>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 75 75"
                                          fill="none">
@@ -116,7 +116,7 @@ const HomeAdditional = ({ parentState }) => {
                                     </svg>
                                 </a>
                             </Link>
-                            <Link href="/">
+                            <Link href={getLoginUrl('sso', 'register')}>
                                 <a>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 75 75"
                                          fill="none">
@@ -131,7 +131,7 @@ const HomeAdditional = ({ parentState }) => {
                                     </svg>
                                 </a>
                             </Link>
-                            <Link href="/">
+                            <Link href={getLoginUrl('sso', 'register')}>
                                 <a>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 75 75"
                                          fill="none">
@@ -174,12 +174,13 @@ const HomeAdditional = ({ parentState }) => {
                                     height: 48,
                                     lineHeight: '35px'
                                 }}
+                                        href={getLoginUrl('sso', 'register')}
                                         title={t('common:sign_up')}
                                         type="primary"/>
                             </div>
                             <div
                                 className="text-sm text-center text-textSecondary dark:text-textSecondary-dark font-medium mt-3">
-                                {t('common:already_have_account')} <Link href="/"><a className="text-dominant">{t('common:sign_in')}</a></Link>
+                                {t('common:already_have_account')} <Link href={getLoginUrl('sso', 'login')}><a className="text-dominant">{t('common:sign_in')}</a></Link>
                             </div>
                         </div>
                     </div>
@@ -215,11 +216,11 @@ const HomeAdditional = ({ parentState }) => {
                                         {t('home:journey.reason_1_description')}
                                     </div>
                                     <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title={t('common:read_more')} type="primary"/>
+                                        <Button title={t('common:read_more')} type="primary" href={getV1Url('/futures')}/>
                                     </div>
                                 </div>
                             </div>
-                            <div className="homepage-journey__group_content___left__item">
+                            <div className="homepage-journey__group_content___left__item" style={{marginBottom: 26}}>
                                 <div className="homepage-journey__group_content___left__item___icon">
                                     <Image src="/images/screen/homepage/master_revenue.png"
                                            width={width >= 1366 ? '52' : '44'} height={width >= 1366 ? '52' : '44'}/>
@@ -233,7 +234,7 @@ const HomeAdditional = ({ parentState }) => {
                                         {t('home:journey.reason_2_description')}
                                     </div>
                                     <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title={t('common:read_more')} type="primary"/>
+                                        {/*<Button title={null} type="primary" />*/}
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +252,7 @@ const HomeAdditional = ({ parentState }) => {
                                         {t('home:journey.reason_3_description')}
                                     </div>
                                     <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title={t('common:read_more')} type="primary"/>
+                                        <Button title={t('common:read_more')} type="primary" href="https://launchpad.nami.exchange"/>
                                     </div>
                                 </div>
                             </div>
@@ -269,7 +270,7 @@ const HomeAdditional = ({ parentState }) => {
                                         {t('home:journey.reason_4_description')}
                                     </div>
                                     <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title={t('common:read_more')} type="primary"/>
+                                        <Button title={t('common:read_more')} type="primary" href="https://explained.nami.exchange/"/>
                                     </div>
                                 </div>
                             </div>
@@ -354,7 +355,7 @@ const HomeAdditional = ({ parentState }) => {
                     </div>
 
                     <div className="homepage-trade3step___create_account">
-                        <Button title={t('common:create_account')} type="primary"/>
+                        <Button title={t('common:create_account')} type="primary" href={getLoginUrl('sso', 'register')}/>
                         <div className="homepage-trade3step___create_account___pr">
                             {t('home:trade3step.chill_a_bit')}
                         </div>
@@ -418,7 +419,8 @@ const HomeAdditional = ({ parentState }) => {
                     </div>
 
                     <div className="homepage-whynami___reason__group__btn___group">
-                        <Button title={t('navbar:menu.about')} type="primary"/>
+                        <Button title={t('navbar:menu.about')} target="_blank"
+                                type="primary" href="https://ico.nami.trade/#nami-team"/>
                     </div>
                 </div>
             </section>
@@ -438,8 +440,8 @@ const HomeAdditional = ({ parentState }) => {
                             : <>{t('home:community.description_mobile')}</> }
                     </div>
                     <div className="homepage-community___channel__group">
-                        <Link href="/">
-                            <a className="homepage-community___channel__group___item">
+                        <Link href="https://www.facebook.com/namifutures">
+                            <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
                                     <Image src="/images/icon/ic_facebook.png" width="44" height="44"/>
                                 </div>
@@ -448,8 +450,8 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a className="homepage-community___channel__group___item">
+                        <Link href="https://www.facebook.com/groups/nami.exchange">
+                            <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
                                     <Image src="/images/icon/ic_facebook.png" width="44" height="44"/>
                                 </div>
@@ -458,8 +460,8 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a className="homepage-community___channel__group___item">
+                        <Link href="https://t.me/namitrade">
+                            <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
                                     <Image src="/images/icon/ic_telegram.png" width="44" height="44"/>
                                 </div>
@@ -468,8 +470,8 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a className="homepage-community___channel__group___item">
+                        <Link href="https://t.me/namitradevn">
+                            <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
                                     <Image src="/images/icon/ic_telegram.png" width="44" height="44"/>
                                 </div>
@@ -478,8 +480,8 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a className="homepage-community___channel__group___item">
+                        <Link href="https://twitter.com/NamiTrade">
+                            <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
                                     <Image src="/images/icon/ic_twitter.png" width="44" height="44"/>
                                 </div>
@@ -488,8 +490,8 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a className="homepage-community___channel__group___item">
+                        <Link href="https://www.reddit.com/r/NAMIcoin">
+                            <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
                                     <Image src="/images/icon/ic_reddit.png" width="44" height="44"/>
                                 </div>
@@ -498,8 +500,8 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a className="homepage-community___channel__group___item">
+                        <Link href="https://nami.io">
+                            <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
                                     <Image src="/images/icon/ic_globe.png" width="44" height="44"/>
                                 </div>
@@ -508,7 +510,7 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href={`https://coinmarketcap.com/${language}/currencies/nami-corporation-token/`}>
                             <a className="homepage-community___channel__group___item">
                                 <div className="homepage-community___channel__group___item__icon">
                                     <Image src="/images/icon/ic_cmc.png" width="44" height="44"/>

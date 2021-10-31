@@ -2,7 +2,7 @@ import { ChevronDown, ChevronUp } from 'react-feather';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { getS3Url } from 'redux/actions/utils';
+import { getS3Url, getV1Url } from 'redux/actions/utils'
 
 const PocketFooter = ({ active, parentState }) => {
     const { t, i18n: { language } } = useTranslation(['navbar']);
@@ -35,12 +35,12 @@ const PocketFooter = ({ active, parentState }) => {
                                      ${active.about ?
             'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
-                        <Link href="/">
-                            <a>
+                        <Link href="https://ico.nami.trade/#nami-team">
+                            <a target="_blank">
                                 {t('navbar:menu.about')}
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
                             <a>
                                 Whitepaper
                             </a>
@@ -60,12 +60,12 @@ const PocketFooter = ({ active, parentState }) => {
                                 {language === LANGUAGE_TAG.VI ? 'Đối tác kinh doanh' : 'Partners'}
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href="https://nami.exchange/terms-of-service">
                             <a>
                                 {language === LANGUAGE_TAG.VI ? 'Điều khoản' : 'Terms of Services'}
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href={getV1Url('/fee-schedule')}>
                             <a>
                                 {t('navbar:menu.fee')}
                             </a>
@@ -85,17 +85,17 @@ const PocketFooter = ({ active, parentState }) => {
                                      ${active.product ?
             'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
-                        <Link href="/">
+                        <Link href="/trade">
                             <a>
                                 {t('navbar:menu.spot')}
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href="/futures">
                             <a>
                                 {t('navbar:menu.futures')}
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href={getV1Url('/futures')}>
                             <a>
                                 Launchpad
                             </a>
@@ -105,22 +105,22 @@ const PocketFooter = ({ active, parentState }) => {
                                 Copy Trade
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href={getV1Url('/farming')}>
                             <a>
                                 Farming
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href={getV1Url('/staking')}>
                             <a>
                                 Staking
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href={getV1Url('/reference')}>
                             <a>
                                 {t('navbar:submenu.referral')}
                             </a>
                         </Link>
-                        <Link href="/">
+                        <Link href="/swap">
                             <a>
                                 {t('navbar:menu.swap')}
                             </a>
@@ -140,43 +140,43 @@ const PocketFooter = ({ active, parentState }) => {
                                      ${active.community ?
             'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
-                        <Link href="/">
-                            <a>
+                        <Link href="https://www.facebook.com/namifutures">
+                            <a target="_blank">
                                 Facebook Fanpage
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a>
+                        <Link href="https://www.facebook.com/groups/nami.exchange">
+                            <a target="_blank">
                                 Facebook Group
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a>
+                        <Link href="https://t.me/namitradevn">
+                            <a target="_blank">
                                 Telegram Vietnam
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a>
+                        <Link href="https://t.me/namitrade">
+                            <a target="_blank">
                                 Telegram Global
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a>
+                        <Link href="https://twitter.com/NamiTrade">
+                            <a target="_blank">
                                 Twitter
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a>
+                        <Link href="https://www.reddit.com/r/NAMIcoin">
+                            <a target="_blank">
                                 Reddit
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a>
+                        <Link href="https://nami.io/">
+                            <a target="_blank">
                                 Blog
                             </a>
                         </Link>
-                        <Link href="/">
-                            <a>
+                        <Link href={`https://coinmarketcap.com/${language}/currencies/nami-corporation-token/`}>
+                            <a target="_blank">
                                 CoinMarketCap
                             </a>
                         </Link>
@@ -195,21 +195,24 @@ const PocketFooter = ({ active, parentState }) => {
                                      ${active.support ?
             'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
-                        <Link href="/">
-                            <a>
-                                {language === LANGUAGE_TAG.VI ? 'Trung tâm hỗ trợ' : 'Support Center'}
-                            </a>
-                        </Link>
-                        <Link href="/">
-                            <a>
-                                {language === LANGUAGE_TAG.VI ? 'Phản hồi' : 'Feedback'}
-                            </a>
-                        </Link>
-                        <Link href="/">
-                            <a>
-                                {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}
-                            </a>
-                        </Link>
+                        {/*<Link href="/">*/}
+                        <a onClick={() => window.fcWidget.open()}
+                           className="cursor-pointer">
+                            {language === LANGUAGE_TAG.VI ? 'Trung tâm hỗ trợ' : 'Support Center'}
+                        </a>
+                        {/*</Link>*/}
+                        {/*<Link href="/">*/}
+                        <a onClick={() => window.fcWidget.open()}
+                           className="cursor-pointer">
+                            {language === LANGUAGE_TAG.VI ? 'Phản hồi' : 'Feedback'}
+                        </a>
+                        {/*</Link>*/}
+                        {/*<Link href="/">*/}
+                        <a onClick={() => window.fcWidget.open()}
+                           className="cursor-pointer">
+                            {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}
+                        </a>
+                        {/*</Link>*/}
                         <Link href="/">
                             <a>
                                 {language === LANGUAGE_TAG.VI ? 'Cẩm nang Nami' : 'Nami\'s Handbook'}

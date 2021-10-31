@@ -17,7 +17,6 @@ import { NAV_DATA, SPOTLIGHT } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { log } from 'utils'
 import { getLoginUrl } from 'redux/actions/utils';
 
 
