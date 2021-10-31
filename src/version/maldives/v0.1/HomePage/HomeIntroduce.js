@@ -2,7 +2,7 @@ import colors from 'styles/colors'
 import Link from 'next/link'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'next-i18next'
+import { useTranslation, Trans } from 'next-i18next'
 import { getMarketWatch } from 'redux/actions/market'
 import { useWindowSize } from 'utils/customHooks'
 import { PulseLoader } from 'react-spinners'
@@ -22,14 +22,6 @@ const HomeIntroduce = ({ parentState }) => {
 
     const animRef = useRef()
 
-    // Helper
-    const onMouseOver = (event) => {
-        const element = animRef.current
-        const r = element.getBoundingClientRect()
-
-        element.style
-    }
-
     const renderIntroduce = useCallback(() => {
         return (
             <section className="homepage-introduce">
@@ -42,7 +34,7 @@ const HomeIntroduce = ({ parentState }) => {
                             }
                         </div>
                         <div className="homepage-introduce___description">
-                            {t('home:introduce.description')}
+                            <Trans>{t('home:introduce.description')}</Trans>
                         </div>
                         <div className="homepage-introduce___download">
                             <Link href="https://apps.apple.com/app/id1480302334">

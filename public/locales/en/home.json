@@ -3,8 +3,8 @@
     "title_mobile": "Trading Spots and Futures Exchange now",
     "title_desktop1": "Safety Spots and",
     "title_desktop2": "Futures Exchange",
-    "description": "With the most effective cryptocurrency investment and management platform",
-    "total_order_paid": "Total Volume Of Liquidated Orders",
+    "description": "With the most effective cryptocurrency trading<br/>and investment platform",
+    "total_order_paid": "Total Volume",
     "total_user": "Total Number Of Users",
     "total_pairs": "Total Trading Pairs"
   },
@@ -16,13 +16,17 @@
     "explore_market": "Explore Market"
   },
   "first_award": {
+    "title": "Join Nami Exchange now!",
     "title_1": "Own The First {{value}} In",
     "title_2": "Your Account Immediately",
-    "rule_1": "1. Register an account",
-    "rule_2": "2. Join Quizz & Earn at Nami Explained",
-    "rule_3": "3. Get USDT as soon as you complete the Quizz",
-    "following_at": "Follow Our Programs At",
-    "join_nami_by": "Join Nami with"
+    "rule_1": "1. Simple operation",
+    "rule_2": "2. Ability to process <0>40,000+</0> transactions/second",
+    "rule_3": "3. <0>400+</0> trading pairs",
+    "rule_4": "4. Futures leverage up to <0>125x</0>",
+    "rule_5": "5. Transaction fees only from <0>0,06%</0>",
+    "rule_6": "6. <0>24/7</0> supporting",
+    "following_at": "Follow Us At",
+    "join_nami_by": "Register an account with"
   },
   "journey": {
     "title": "Start Your Cryptocurrency Journey",
@@ -30,7 +34,7 @@
     "description_desktop1": "Nami Exchange is the ideal place for you to trade and change the way you",
     "description_desktop2": "think about finance",
     "reason_1": "Maximize Profit",
-    "reason_1_description": "Trading with the leverage up to x100 (Futures trading)",
+    "reason_1_description": "Trading with the leverage up to x125 (Futures trading)",
     "reason_2": "Copy Trade (coming soon)",
     "reason_2_description": "Diversify investment methods with the feature of copying orders and also a percentage of profit from the most experienced investments when participating in Nami Futures.",
     "reason_3": "Possessing potential Tokens at a favorable price",
@@ -39,8 +43,8 @@
     "reason_4_description": "Nami Explained - The place to answer questions about the Crypto market"
   },
   "intro_app": {
-    "title_1": "Trade Anytime",
-    "title_2": "Anywhere With Nami App",
+    "title_1": "Trade Anytime Anywhere With",
+    "title_2": "Nami Exchange application",
     "description": "Deposit, withdraw and trade 24/7 on iOS and Android apps"
   },
   "trade3step": {
