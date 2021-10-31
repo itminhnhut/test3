@@ -257,8 +257,8 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
                     </div>
                     <div className="homepage-app_intro___graphics">
-                        <img className="homepage-app_intro___mb_graphics" src="/images/screen/homepage/mobile_dual_ip_light.png" alt="Nami Exchange"/>
-                        <img className="homepage-app_intro___desktop_graphics" src="/images/screen/homepage/dual_ip_light.png" alt="Nami Exchange"/>
+                        <img className="homepage-app_intro___mb_graphics" src={getS3Url("/images/screen/homepage/mobile_dual_ip_light.png")} alt="Nami Exchange"/>
+                        <img className="homepage-app_intro___desktop_graphics" src={getS3Url("/images/screen/homepage/dual_ip_light.png")} alt="Nami Exchange"/>
                     </div>
                     {theme && theme === THEME_MODE.LIGHT &&
                     <img className="homepage-app_intro___graphics__backward"
