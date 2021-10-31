@@ -1,37 +1,40 @@
-import { ChevronDown, ChevronUp } from 'react-feather'
-import Link from 'next/link'
-import { useTranslation } from 'next-i18next'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { getS3Url } from 'redux/actions/utils'
+import { ChevronDown, ChevronUp } from 'react-feather';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { getS3Url } from 'redux/actions/utils';
 
 const PocketFooter = ({ active, parentState }) => {
-    const { t, i18n: { language } } = useTranslation(['navbar'])
+    const { t, i18n: { language } } = useTranslation(['navbar']);
 
     return (
         <div className="mal-footer___pocket">
             <div className="mal-footer___pocket___company">
                 <div className="mal-footer___pocket__logo">
-                    <img src={getS3Url("/images/logo/nami-logo.png")} alt="Nami Exchange"/>
+                    <img src={getS3Url('/images/logo/nami-logo.png')} alt="Nami Exchange" />
                 </div>
                 <div className="mal-footer___pocket__slogan">
                     Change mindset, make giant steps
                 </div>
                 <div className="mal-footer___pocket__license">
-                    Copyright © 2020 Nami Corporation.<br/>
+                    Copyright © 2020 Nami Corporation.<br />
                     All rights reserved.
                 </div>
             </div>
 
             <div className="mal-footer___pocket__links___group">
                 <div className="mal-footer___pocket__links___group__item">
-                    <div className="mal-footer___pocket__links___group__item__expander"
-                         onClick={() => parentState({active: { about: !active.about }})}>
+                    <div
+                        className="mal-footer___pocket__links___group__item__expander"
+                        onClick={() => parentState({ active: { about: !active.about } })}
+                    >
                         {language === LANGUAGE_TAG.VI ? 'Về Nami Corporation' : 'About Nami Corp.,'}
-                        {active?.about ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
+                        {active?.about ? <ChevronUp size={16} /> : <ChevronDown size={16} /> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links
-                                     ${active['about'] ?
-                                      'mal-footer___pocket__links___group__item__links__active' : ''}`}>
+                                     ${active.about ?
+            'mal-footer___pocket__links___group__item__links__active' : ''}`}
+                    >
                         <Link href="/">
                             <a>
                                 {t('navbar:menu.about')}
@@ -70,16 +73,18 @@ const PocketFooter = ({ active, parentState }) => {
                     </div>
                 </div>
 
-
                 <div className="mal-footer___pocket__links___group__item">
-                    <div className="mal-footer___pocket__links___group__item__expander"
-                         onClick={() => parentState({active: { product: !active.product }})}>
+                    <div
+                        className="mal-footer___pocket__links___group__item__expander"
+                        onClick={() => parentState({ active: { product: !active.product } })}
+                    >
                         {t('navbar:menu.product')}
-                        {active?.product ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
+                        {active?.product ? <ChevronUp size={16} /> : <ChevronDown size={16} /> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links
-                                     ${active['product'] ?
-                        'mal-footer___pocket__links___group__item__links__active' : ''}`}>
+                                     ${active.product ?
+            'mal-footer___pocket__links___group__item__links__active' : ''}`}
+                    >
                         <Link href="/">
                             <a>
                                 {t('navbar:menu.spot')}
@@ -123,16 +128,18 @@ const PocketFooter = ({ active, parentState }) => {
                     </div>
                 </div>
 
-
                 <div className="mal-footer___pocket__links___group__item">
-                    <div className="mal-footer___pocket__links___group__item__expander"
-                         onClick={() => parentState({active: { community: !active.community }})}>
+                    <div
+                        className="mal-footer___pocket__links___group__item__expander"
+                        onClick={() => parentState({ active: { community: !active.community } })}
+                    >
                         {language === LANGUAGE_TAG.VI ? 'Cộng đồng' : 'Community'}
-                        {active?.community ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
+                        {active?.community ? <ChevronUp size={16} /> : <ChevronDown size={16} /> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links
-                                     ${active['community'] ?
-                        'mal-footer___pocket__links___group__item__links__active' : ''}`}>
+                                     ${active.community ?
+            'mal-footer___pocket__links___group__item__links__active' : ''}`}
+                    >
                         <Link href="/">
                             <a>
                                 Facebook Fanpage
@@ -176,16 +183,18 @@ const PocketFooter = ({ active, parentState }) => {
                     </div>
                 </div>
 
-
                 <div className="mal-footer___pocket__links___group__item">
-                    <div className="mal-footer___pocket__links___group__item__expander"
-                         onClick={() => parentState({active: { support: !active.support }})}>
+                    <div
+                        className="mal-footer___pocket__links___group__item__expander"
+                        onClick={() => parentState({ active: { support: !active.support } })}
+                    >
                         {t('navbar:menu.support')}
-                        {active?.support ? <ChevronUp size={16}/> : <ChevronDown size={16}/> }
+                        {active?.support ? <ChevronUp size={16} /> : <ChevronDown size={16} /> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links
-                                     ${active['support'] ?
-                        'mal-footer___pocket__links___group__item__links__active' : ''}`}>
+                                     ${active.support ?
+            'mal-footer___pocket__links___group__item__links__active' : ''}`}
+                    >
                         <Link href="/">
                             <a>
                                 {language === LANGUAGE_TAG.VI ? 'Trung tâm hỗ trợ' : 'Support Center'}
@@ -203,14 +212,14 @@ const PocketFooter = ({ active, parentState }) => {
                         </Link>
                         <Link href="/">
                             <a>
-                                {language === LANGUAGE_TAG.VI ? 'Cẩm nang Nami' : `Nami's Handbook`}
+                                {language === LANGUAGE_TAG.VI ? 'Cẩm nang Nami' : 'Nami\'s Handbook'}
                             </a>
                         </Link>
                     </div>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default PocketFooter
+export default PocketFooter;

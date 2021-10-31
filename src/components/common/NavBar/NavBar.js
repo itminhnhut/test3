@@ -18,6 +18,7 @@ import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
 import { log } from 'utils'
 import NotificationList from 'components/notification/NotificationList'
+import { getLoginUrl } from 'redux/actions/utils';
 
 
 export const NAVBAR_USE_TYPE = {
@@ -194,13 +195,13 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
 
                     {!auth && <div className="flex flex-row items-center mr-8">
                         {width >= 1366 &&
-                        <Link href="/">
+                        <Link href={getLoginUrl('sso', 'login')}>
                             <a className={`text-sm font-medium ${navTheme.text} whitespace-nowrap hover:!text-dominant`}>
                                 {t('common:sign_in')}
                             </a>
                         </Link>}
                         {width >= 1090 &&
-                        <Link href="/">
+                        <Link href={getLoginUrl('sso', 'register')}>
                             <a className="text-sm font-medium text-dominant whitespace-nowrap ml-8 hover:underline">
                                 {t('common:sign_up')}
                             </a>

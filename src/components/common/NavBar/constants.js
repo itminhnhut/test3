@@ -1,3 +1,5 @@
+import { getV1Url } from "redux/actions/utils"
+
 export const DESKTOP_NAV_HEIGHT = 74
 
 export const MOBILE_NAV_HEIGHT = 58
@@ -72,7 +74,7 @@ export const NAV_DATA = [
                 title: 'Staking',
                 localized: 'staking',
                 isNew: false,
-                url: 'https://nami.exchange/staking',
+                url: getV1Url('/staking'),
                 child_lv2: []
             },
             {
@@ -80,7 +82,7 @@ export const NAV_DATA = [
                 title: 'Farming',
                 localized: 'farming',
                 isNew: false,
-                url: 'https://nami.exchange/farming',
+                url: getV1Url('/farming'),
                 child_lv2: []
             },
             {
@@ -88,7 +90,7 @@ export const NAV_DATA = [
                 title: 'Referral',
                 localized: 'referral',
                 isNew: false,
-                url: 'https://nami.exchange/reference',
+                url: getV1Url('/reference'),
                 child_lv2: []
             },
         ]
@@ -105,7 +107,7 @@ export const NAV_DATA = [
                 title: 'Spot Wallet',
                 localized: 'spot_wallet',
                 isNew: false,
-                url: 'https://nami.exchange/wallet/account?type=spot',
+                url: getV1Url('/wallet/account?type=spot'),
                 child_lv2: []
             },
             {
@@ -113,7 +115,7 @@ export const NAV_DATA = [
                 title: 'Futures Wallet',
                 localized: 'futures_wallet',
                 isNew: false,
-                url: 'https://nami.exchange/wallet/account?type=futures',
+                url: getV1Url('/wallet/account?type=futures'),
                 child_lv2: []
             },
             {
@@ -121,7 +123,7 @@ export const NAV_DATA = [
                 title: 'Staking Wallet',
                 localized: 'staking_wallet',
                 isNew: false,
-                url: 'https://nami.exchange/wallet/account?type=staking',
+                url: getV1Url('/wallet/account?type=staking'),
                 child_lv2: []
             },
             {
@@ -129,53 +131,53 @@ export const NAV_DATA = [
                 title: 'Farming Wallet',
                 localized: 'farming_wallet',
                 isNew: false,
-                url: 'https://nami.exchange/wallet/account?type=farming',
+                url: getV1Url('/wallet/account?type=farming'),
                 child_lv2: []
             },
         ]
     },
-    {
-        key: 3,
-        title: 'Explained',
-        localized: 'explained',
-        isNew: false,
-        url: '/',
-        child_lv1: []
-    },
+    // {
+    //     key: 3,
+    //     title: 'Explained',
+    //     localized: 'explained',
+    //     isNew: false,
+    //     url: 'https://explained.nami.exchange/',
+    //     child_lv1: []
+    // },
     {
         key: 4,
         title: 'Blog',
         localized: 'blog',
         isNew: false,
-        url: '/',
+        url: 'https://nami.io/',
         child_lv1: []
     },
-    {
-        key: 5,
-        title: 'Support',
-        localized: 'support',
-        isNew: false,
-        url: '/',
-        child_lv1: []
-    },
+    // {
+    //     key: 5,
+    //     title: 'Support',
+    //     localized: 'support',
+    //     isNew: false,
+    //     url: '/',
+    //     child_lv1: []
+    // },
     {
         key: 6,
         title: 'Fee Schedule',
         localized: 'fee',
         isNew: false,
-        url: '/',
+        url: getV1Url('/fee-schedule'),
         child_lv1: []
     },
-    {
-        key: 7,
-        title: 'More',
-        localized: 'more',
-        isNew: false,
-        url: '/',
-        child_lv1: [
-            // SPOTLIGHT,
-        ]
-    },
+    // {
+    //     key: 7,
+    //     title: 'More',
+    //     localized: 'more',
+    //     isNew: false,
+    //     url: '/',
+    //     child_lv1: [
+    //         // SPOTLIGHT,
+    //     ]
+    // },
 ]
 
 export const MOBILE_NAV_DATA = [
