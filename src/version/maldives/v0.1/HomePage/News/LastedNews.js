@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useKeenSlider } from 'keen-slider/react'
 import { useWindowSize } from 'utils/customHooks'
 import { useTranslation } from 'next-i18next'
+import "keen-slider/keen-slider.min.css"
 
 const LastedNews = ({ data }) => {
     const [state, set] = useState({
@@ -22,10 +23,10 @@ const LastedNews = ({ data }) => {
         vertical: true,
         loop: true,
         dragStart: () => setState({ lastedNewsAutoplay: false }),
-        dragEnd: () => setState({ lastedNewsAutoplay: true })
+        dragEnd: () => setState({ lastedNewsAutoplay: true }),
     }
 
-    const [sliderRef, slider] = useKeenSlider(options)
+    const [lastedNewsRef, lastedNewSlider] = useKeenSlider(options)
     const timer = useRef()
 
     const renderLastestNews = useCallback(() => {
@@ -39,22 +40,36 @@ const LastedNews = ({ data }) => {
 
 
     useEffect(() => {
-        sliderRef.current.addEventListener("mouseover", () => {
-            setState({ lastedNewsAutoplay: true })
-        })
-        sliderRef.current.addEventListener("mouseout", () => {
+        lastedNewsRef.current.addEventListener("mouseover", () => {
             setState({ lastedNewsAutoplay: false })
         })
-    }, [sliderRef])
+        lastedNewsRef.current.addEventListener("mouseout", () => {
+            setState({ lastedNewsAutoplay: true })
+        })
+    }, [lastedNewsRef])
 
     useEffect(() => {
-        timer.current = setInterval(() => !state.lastedNewsAutoplay && slider && slider.next(), 1800)
+        timer.current = setInterval(() => state.lastedNewsAutoplay && lastedNewSlider && lastedNewSlider.next(), 1800)
         return () => clearInterval(timer.current)
-    }, [state.lastedNewsAutoplay, slider])
+    }, [state.lastedNewsAutoplay, lastedNewSlider])
 
     useEffect(() => {
-        width && slider && slider.resize()
-    }, [width, slider])
+        width && lastedNewSlider && lastedNewSlider.resize()
+    }, [width, lastedNewSlider])
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            setState({options: {
+                    slidesPerView: 1,
+                    centered: true,
+                    vertical: true,
+                    loop: true,
+                    dragStart: () => setState({ lastedNewsAutoplay: false }),
+                    dragEnd: () => setState({ lastedNewsAutoplay: true }),
+                }})
+        }, 10)
+    }, []);
 
     return (
         <div className="homepage-news___lastest_news_wrapper">
@@ -62,7 +77,7 @@ const LastedNews = ({ data }) => {
                 <div className="homepage-news___lastest___news____left">
                     <SvgSpeaker/>
                     <div className="homepage-news___lasted_slider">
-                        <div ref={sliderRef} className="keen-slider">
+                        <div ref={lastedNewsRef} className="keen-slider">
                             {renderLastestNews()}
                         </div>
                     </div>

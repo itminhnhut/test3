@@ -429,7 +429,7 @@
           }
 
           .homepage-markettrend__market_table__row__col4 {
-            //@apply text-right;
+            @apply text-right;
             display: none;
             width: 20%;
 
@@ -545,12 +545,16 @@
 
           // Chart Style
           .homepage-markettrend__market_table__chart {
-              max-width: 100px;
+              @apply w-full flex items-end justify-end;
+
+              //max-width: 100px;
               min-height: 37px;
 
               img {
                 width: 100%;
+                max-width: 100px;
                 max-height: 37px;
+                transform: translateX(6%);
               }
           }
 
@@ -604,19 +608,35 @@
     padding-bottom: 25px;
 
     .homepage-news___news {
-      max-height: 126px;
 
       .slider-container {
+        @apply relative;
+
         padding-left: 80px;
         padding-right: 80px;
 
         .keen-slider___news {
+          @apply z-20;
           overflow: visible !important;
+
+          @media (min-width: 768px) {
+            overflow: hidden !important;
+          }
         }
 
         @media (min-width: 390px) {
-          padding-left: 25px;
-          padding-right: 25px;
+          padding-left: 95px;
+          padding-right: 95px;
+        }
+
+        @media (min-width: 576px) {
+          padding-left: 105px;
+          padding-right: 105px;
+        }
+
+        @media (min-width: 768px) {
+          padding-left: 0;
+          padding-right: 0;
         }
       }
 
@@ -632,6 +652,20 @@
         font-weight: 500;
         border-radius: 6px;
         height: 100%;
+        max-height: 126px;
+
+        img {
+          max-height: 100%;
+          width: auto;
+        }
+
+        @media (min-width: 390px) {
+          max-height: 145px;
+        }
+
+        @media (min-width: 576px) {
+          max-height: 175px;
+        }
       }
     }
 
@@ -1574,6 +1608,12 @@
 
     .keen-slider {
       height: 100%;
+      //pointer-events: none !important;
+
+      .homepage-activity__slide__item {
+        //pointer-events: none !important;
+
+      }
     }
 
     [class^="homepage-activity__slide__item"],

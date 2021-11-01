@@ -7,6 +7,8 @@ import { getSymbolString } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/actions/market';
 import { IconLoading } from 'components/common/Icons';
 import { useRouter } from 'next/router';
+import { PulseLoader } from 'react-spinners'
+import colors from '../../styles/colors'
 
 const LastPrice = (props) => {
     const { symbol, colored, exchangeConfig } = props;
@@ -17,6 +19,7 @@ const LastPrice = (props) => {
 
     useAsync(async () => {
         // Get symbol list
+        setLoading(true)
         const result = await getMarketWatch(getSymbolString(symbol));
         if (result) {
             await setSymbolTicker(result?.[0]);
@@ -42,20 +45,21 @@ const LastPrice = (props) => {
         };
     }, [Emitter, symbol]);
 
-    if (!symbolTicker) return null;
 
     return (
         <>
             {
                 // eslint-disable-next-line no-nested-ternary
-                loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#09becf" /></div> :
+                loading ? <div style={props.styles ? {...props.styles} : undefined} className={`flex items-center justify-center w-full h-full`}>
+                             <PulseLoader size={3} color={colors.teal}/>
+                          </div> :
                     colored
                         ? (
-                            <div className={symbolTicker?.u ? 'text-mint' : 'text-pink'}>
-                                {formatPrice(symbolTicker?.p, exchangeConfig, symbol?.base)}
+                            <div style={props.styles ? {...props.styles} : undefined} className={`${symbolTicker && symbolTicker?.u ? 'text-mint' : 'text-pink'}`}>
+                                {symbolTicker ? formatPrice(symbolTicker?.p, exchangeConfig, symbol?.base) : '---'}
                             </div>
                         )
-                        : <div>{formatPrice(symbolTicker?.p, exchangeConfig, symbol?.base)}</div>
+                        : <div style={props.styles ? {...props.styles} : undefined}>{symbolTicker  ? formatPrice(symbolTicker?.p, exchangeConfig, symbol?.base) : '---'}</div>
             }
 
         </>

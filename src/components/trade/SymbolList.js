@@ -1,16 +1,16 @@
-import { IconNoSort, IconSearch, IconSort, IconStarFilled } from 'components/common/Icons';
-import SearchInput from 'components/markets/SearchInput';
-import compact from 'lodash/compact';
-import orderBy from 'lodash/orderBy';
-import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
-import { Fragment, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useAsync, useInterval, useLocalStorage } from 'react-use';
-import SymbolListItem from 'src/components/markets/SymbolListItem';
-import { CATEGORY_SPOT_SIGNAL, LS_KEYS } from 'src/redux/actions/const';
-import { getMarketWatch } from 'src/redux/actions/market';
-import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
+import { IconNoSort, IconSort, IconStarFilled } from 'components/common/Icons'
+import SearchInput from 'components/markets/SearchInput'
+import compact from 'lodash/compact'
+import orderBy from 'lodash/orderBy'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
+import { Fragment, useCallback, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useAsync, useInterval } from 'react-use'
+import SymbolListItem from 'src/components/markets/SymbolListItem'
+import { CATEGORY_SPOT_SIGNAL } from 'src/redux/actions/const'
+import { getMarketWatch } from 'src/redux/actions/market'
+import { getExchange24hPercentageChange } from 'src/redux/actions/utils'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import colors from '../../styles/colors'
 
@@ -68,13 +68,13 @@ const SymbolList = (props) => {
                 });
             } else if (selectedCategory.value === CATEGORY_SPOT_SIGNAL.SIGNAL) {
                 if (typeof search === 'string' && search.length) {
-                    // console.log(search, signals);
+                    // console.log('namidev-DEBUG: ____ ', search, signals);
                     const filteredSignal = signals.filter(signal => signal?.metadata?.baseAsset.toLowerCase().includes(search.toLowerCase()));
                     setFilteredSignals(filteredSignal);
-                    setHasMoreSignalPage(filteredSignal.length > 0);
+                    // setHasMoreSignalPage(filteredSignal.length > 0);
                 } else {
                     setFilteredSignals(signals);
-                    setHasMoreSignalPage(true);
+                    // setHasMoreSignalPage(true);
                 }
             } else if (selectedCategory?.assets && selectedCategory?.assets.length > 0) {
                 selectedCategory?.assets.forEach(asset => {
@@ -120,6 +120,7 @@ const SymbolList = (props) => {
         }
     }, [symbolList, search, activeTab, favorite, sortDirection, selectedCategory, sortField]);
 
+
     const SortIcon = ({ direction }) => {
         return (
             <div className={`transform ${direction === 'asc' ? 'rotate-180' : ''}`}>
@@ -127,6 +128,7 @@ const SymbolList = (props) => {
             </div>
         );
     };
+
 
     const renderList = useCallback(() => {
         return (
@@ -183,7 +185,6 @@ const SymbolList = (props) => {
                 <div className="overflow-y-auto max-h-[calc(100%-6rem)]">
                     {/* <div className="overflow-y-scroll"> */}
                     {filteredSymbolList.map((ticker, index) => {
-                        // console.log('namidev-DEBUG: ___', query?.id)
                         return (
                             <Fragment
                                 key={`${search}_${activeTab}_${ticker.b}}`}
@@ -216,18 +217,20 @@ const SymbolList = (props) => {
                         <SearchInput
                             placeholder={t('spot:search')}
                             onChange={(e) => setSearch(e.target.value)}
+                            parentState={setSearch}
                             customStyle={{ height: '30px' }}
                         />
                     </div>
 
                     <div className="mx-3 mb-3 flex items-center">
 
-                        <div
+                        {user && <div
                             className={'w-12 h-[23px] flex justify-center items-center text-sm mr-2 border cursor-pointer ' + (activeTab === 'favorite' ? 'active text-mint border-mint' : 'border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('favorite')}
                         >
-                            <IconStarFilled size={12} color={activeTab === 'favorite' ? '#09becf' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
-                        </div>
+                            <IconStarFilled size={12}
+                                            color={activeTab === 'favorite' ? '#09becf' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}/>
+                        </div>}
                         <a
                             className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-textSecondary dark:text-textSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('USDT')}

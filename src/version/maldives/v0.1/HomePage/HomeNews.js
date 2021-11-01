@@ -13,7 +13,7 @@ const HomeNews = () => {
     const [state, set] = useState({
         loadingNews: false,
         news: null,
-        lastedNewsAutoplay: true,
+        lastedNewsAutoplay: true
     })
     const setState = (state) => set(prevState => ({...prevState, ...state}))
 
@@ -42,30 +42,11 @@ const HomeNews = () => {
     return (
         <section className="homepage-news">
             <div className="homepage-news___wrapper mal-container">
-                <News data={state.news}/>
-                <LastedNews data={state.news}/>
+                {state.news && <News data={state.news} />}
+                {state.news && <LastedNews data={state.news}/>}
             </div>
         </section>
     )
-}
-
-const ControlArrows = (props) => {
-    const { className, style, onClick, direction } = props
-    return (
-        <div
-            className={className}
-            style={{ ...style, display: "block"}}
-            onClick={onClick}
-        >
-            {direction === 'next' ? <ChevronRight/> : <ChevronLeft/>}
-        </div>
-    );
-}
-
-const sliderSettings = {
-    dots: true,
-    infinite: true,
-    slidesToShow: 4
 }
 
 export default HomeNews

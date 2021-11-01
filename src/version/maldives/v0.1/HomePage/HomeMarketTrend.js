@@ -10,6 +10,7 @@ import { sparkLineBuilder } from 'utils/helpers'
 import { useSelector } from 'react-redux'
 import { formatPercentage, formatPrice, getExchange24hPercentageChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
+import LastPrice from 'components/markets/LastPrice'
 
 const HomeMarketTrend = () => {
     // * Initial State
@@ -113,6 +114,7 @@ const HomeMarketTrend = () => {
         return pairs.map(pair => {
             const { b, q, s, u, p} = pair
             const sparkLine = sparkLineBuilder(s, u ? colors.teal : colors.red2)
+            // console.log('namidev-DEBUG: ___ ', s)
 
             return (
                 <a href={`/trade/${b}-${q}`} className="homepage-markettrend__market_table__row" key={`markettrend_${s}__${state.marketTabIndex}`}>
@@ -129,7 +131,9 @@ const HomeMarketTrend = () => {
                     </div>
                     <div className="homepage-markettrend__market_table__row__col2">
                         <div className="homepage-markettrend__market_table__price">
-                            {formatPrice(p, exchangeConfig, s)}
+                            <LastPrice symbol={{base: b, quote: q}}
+                                       styles={{justifyContent: 'flex-start'}}
+                                       exchangeConfig={exchangeConfig}/>
                         </div>
                     </div>
                     <div className="homepage-markettrend__market_table__row__col3">
