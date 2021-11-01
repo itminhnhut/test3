@@ -76,7 +76,7 @@ const HomeIntroduce = ({ parentState }) => {
                         </div>
                         <div className="homepage-introduce___statitics____item">
                             <div className="homepage-introduce___statitics____item___value">
-                                1,000,000 +
+                                200,000 +
                                 <div className="bott-line"/>
                             </div>
                             <div className="homepage-introduce___statitics____item___description">
