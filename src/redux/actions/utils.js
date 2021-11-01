@@ -203,7 +203,7 @@ export function render24hChange(ticker) {
 }
 
 export function getS3Url(url) {
-    return (process.env.NEXT_PUBLIC_CDN + '/nami.exchange' || '') + url;
+    return process.env.NEXT_PUBLIC_CDN + url;
 }
 
 export function getV1Url(url) {
