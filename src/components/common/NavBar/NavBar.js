@@ -17,7 +17,9 @@ import { NAV_DATA, SPOTLIGHT } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { getLoginUrl } from 'redux/actions/utils';
+import { getLoginUrl, getV1Url } from 'redux/actions/utils'
+import { actionLogout } from 'redux/actions/user'
+import { buildLogoutUrl } from 'utils'
 
 
 export const NAVBAR_USE_TYPE = {
@@ -214,16 +216,26 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
 
                     {auth &&
                         <a href="https://nami.exchange/profile"
-                           className="mal-navbar__user___avatar cursor-pointer">
+                           className="mal-navbar__user___avatar relative cursor-pointer">
                             {auth?.avatar ? <img src={auth?.avatar} alt=""/> :
                                 <SvgUser size={25} className="ml-8 cursor-pointer"
                                          color={navTheme.color}
                                          onClick={() => console.log('should open user panel')}/>
                             }
+                            {width >= 992 && <div className="mal-navbar__user___cp">
+                                <div className="mal-navbar__user___cp___wrapper">
+                                    <a className="mal-navbar__user___cp___item" href={getV1Url('/profile')}>
+                                        {t('navbar:menu.user.profile')}
+                                    </a>
+                                    <a className="mal-navbar__user___cp___item" href={buildLogoutUrl()}>
+                                        {t('navbar:menu.user.logout')}
+                                    </a>
+                                </div>
+                            </div>}
                         </a>
                     }
 
-                    <NotificationList btnClass="!mr-0 ml-8" navTheme={navTheme}/>
+                    {/*<NotificationList btnClass="!mr-0 ml-8" navTheme={navTheme}/>*/}
 
                     {width >= 1366 &&
                     <div className="flex flex-row items-center ml-8">

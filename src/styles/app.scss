@@ -76,6 +76,76 @@ body {
   .value-dominant {
     @apply text-dominant #{!important};
   }
+
+  .keen-slider__dots__wrapper {
+    margin-top: 20px;
+
+    .dots {
+      display: flex;
+      padding: 10px 0;
+      justify-content: center;
+
+      .dot {
+        @apply block bg-get-lightTeal;
+
+        border: none;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+
+      .dot:focus {
+        outline: none;
+      }
+
+      .dot.active {
+        @apply bg-get-teal;
+        transition: background-color .3s ease;
+      }
+    }
+
+    @media (min-width: 1366px) {
+      margin-top: 28px;
+    }
+  }
+
+  .keen-slider__slide__control__wrapper {
+    @apply flex items-center flex-nowrap justify-between absolute z-10;
+
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+
+    .keen-slider__slide__control__item {
+      @apply flex items-center justify-center cursor-pointer;
+
+      width: 28px;
+      height: 28px;
+
+      svg {
+        @apply text-textPrimary dark:text-textPrimary-dark;
+
+        &:hover {
+          @apply text-get-teal #{!important};
+        }
+      }
+
+      @media (min-width: 1024px) {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .keen-slider__slide__control__prev {
+      margin-left: -50px;
+    }
+
+    .keen-slider__slide__control__next {
+      margin-right: -50px;
+    }
+  }
 }
 
 //body::-webkit-scrollbar {
@@ -272,6 +342,40 @@ input[type=number] {
 
   > div {
     background-color: transparent !important;
+  }
+
+  .rdt_TableBody {
+    &::-webkit-scrollbar {
+      @apply bg-divider dark:bg-divider-dark;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      @apply bg-get-grey2 dark:bg-get-darkBlue5;
+
+      &:hover {
+        @apply bg-get-teal;
+      }
+    }
+  }
+
+  .rdt_TableHeadRow {
+    @apply bg-bgContainer dark:bg-bgContainer-dark;
+
+    .rdt_TableCol_Sortable {
+      @apply text-textSecondary dark:text-textSecondary-dark cursor-pointer;
+
+      &:hover {
+        @apply text-textSecondary dark:text-textSecondary-dark;
+      }
+    }
+  }
+
+  .rdt_TableRow {
+    @apply bg-bgContainer dark:bg-bgContainer-dark;
+
+    .rdt_TableCell {
+      @apply text-textPrimary dark:text-textPrimary-dark;
+    }
   }
 }
 // hide tradingview

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 import { IconSearch } from 'src/components/common/Icons';
+import { log } from 'utils'
 
-const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handleFilterAssetsList, customWrapperStyle }) => {
+const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handleFilterAssetsList, customWrapperStyle, parentState }) => {
     const [debouncedValue, setDebouncedValue] = useState('');
     const [queryFilter, setQueryFilter] = useState('');
 
@@ -29,7 +30,11 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
                 <input
                     type="text"
                     placeholder={placeholder}
-                    onChange={({ currentTarget }) => setQueryFilter(currentTarget.value)}
+                    onChange={({ currentTarget }) => {
+                        // log.d('Check input ____ ', currentTarget.value)
+                        setQueryFilter(currentTarget.value)
+                        parentState && parentState(currentTarget.value)
+                    }}
                     value={queryFilter}
                     className="form-control form-control-sm bg-transparent text-textPrimary dark:text-textPrimary-dark"
                     style={customStyle}

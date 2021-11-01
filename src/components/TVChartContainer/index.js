@@ -5,6 +5,9 @@ import * as React from 'react';
 import { widget } from '../TradingView/charting_library/charting_library.min';
 import Datafeed from './api';
 import styles from './tradingview.module.scss';
+import colors from '../../styles/colors'
+import { getS3Url } from 'redux/actions/utils'
+import NamiExchangeSvg from 'components/svg/NamiExchangeSvg'
 
 function getLanguageFromURL() {
     // const regex = new RegExp('[\\?&]lang=([^&#]*)');
@@ -86,6 +89,20 @@ export class TVChartContainer extends React.PureComponent {
                 });
             } else {
                 this.initWidget(this.props.symbol, this.state.interval);
+            }
+        }
+
+        if (prevProps.theme !== this.props.theme) {
+            const newTheme = this.props.theme === "dark" ? 'Dark' : 'Light';
+            if (this.state.chartStatus === ChartStatus.LOADED && newTheme !== this.theme && this.widget) {
+                this.widget.changeTheme(newTheme);
+                this.widget.applyOverrides(
+                    {
+                        'paneProperties.background': newTheme === 'Dark' ? colors.darkBlue1 : colors.white,
+                        'paneProperties.vertGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
+                        'paneProperties.horzGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
+                    })
+                this.theme = newTheme;
             }
         }
     }
@@ -181,6 +198,7 @@ export class TVChartContainer extends React.PureComponent {
         if (!symbol) return;
         const widgetOptions = {
             symbol,
+            theme: this.props.theme === 'dark' ? 'Dark' : 'Light',
             datafeed: Datafeed,
             interval: this.props.interval,
             container_id: this.containerId,
@@ -214,27 +232,25 @@ export class TVChartContainer extends React.PureComponent {
             autosize: true,
             loading_screen: { backgroundColor: '#fff' },
             studies_overrides: {
-                'volume.volume.color.0': '#03BBCC',
-                'volume.volume.color.1': '#ff0065',
-                'volume.volume ma.color': '#ff0065',
+                'volume.volume.color.0': colors.teal,
+                'volume.volume.color.1': colors.red2,
+                'volume.volume ma.color': colors.red2,
                 'volume.volume ma.linewidth': 5,
                 'volume.volume ma.visible': true,
             },
             timezone: getTradingViewTimezone(),
             overrides: {
                 'scalesProperties.fontSize': 10,
-                // 'paneProperties.background': this.props.theme === "dark" ? '#101621' : '#ffffff',
-                // "mainSeriesProperties.minTick": minTick,
-                'mainSeriesProperties.candleStyle.borderUpColor': '#03BBCC',
-                'mainSeriesProperties.candleStyle.borderDownColor': '#ff0065',
-                'mainSeriesProperties.candleStyle.wickUpColor': '#03BBCC',
-                'mainSeriesProperties.candleStyle.wickDownColor': '#ff0065',
-                'mainSeriesProperties.candleStyle.upColor': '#03BBCC',
-                'mainSeriesProperties.candleStyle.downColor': '#ff0065',
-                'mainSeriesProperties.hollowCandleStyle.borderColor': '#03BBCC',
-                'mainSeriesProperties.hollowCandleStyle.borderDownColor': '#ff0065',
-                'volumePaneSize': 'small',
+                'mainSeriesProperties.candleStyle.borderUpColor': colors.teal,
+                'mainSeriesProperties.candleStyle.borderDownColor': colors.red2,
+                'mainSeriesProperties.candleStyle.wickUpColor': colors.teal,
+                'mainSeriesProperties.candleStyle.wickDownColor': colors.red2,
+                'mainSeriesProperties.candleStyle.upColor': colors.teal,
+                'mainSeriesProperties.candleStyle.downColor': colors.red2,
+                'mainSeriesProperties.hollowCandleStyle.borderColor': colors.teal,
+                'mainSeriesProperties.hollowCandleStyle.borderDownColor': colors.red2,
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
+                'volumePaneSize': 'small',
             },
             time_frames: [
                 { text: '1m', resolution: '1', description: '1m' },
@@ -242,9 +258,13 @@ export class TVChartContainer extends React.PureComponent {
         };
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
+
         this.widget.onChartReady(() => {
             this.widget.applyOverrides({
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
+                'paneProperties.background': this.props.theme === "dark" ? colors.darkBlue1 : '#ffffff',
+                'paneProperties.vertGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
+                'paneProperties.horzGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
@@ -262,6 +282,7 @@ export class TVChartContainer extends React.PureComponent {
 
     render() {
         const { chartType } = this.state;
+
         return (
             <>
 
@@ -273,6 +294,9 @@ export class TVChartContainer extends React.PureComponent {
                         id={this.containerId}
                         className={`${styles.TVChartContainer} flex-grow h-full w-full  ${chartType === 'depth' && 'hidden'}`}
                     />
+                    <div className="cheat-watermark">
+                        <NamiExchangeSvg color={this.props.theme === 'dark' ? colors.grey4 : colors.darkBlue4}/>
+                    </div>
                 </div>
             </>
         );

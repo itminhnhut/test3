@@ -19,7 +19,11 @@
     "product": "Product",
     "market": "Market",
     "explained": "Explained",
-    "more": "More"
+    "more": "More",
+    "user": {
+      "profile": "Personal Profile",
+      "logout": "Log Out"
+    }
   },
   "submenu": {
     "convert": "Nami Swap",

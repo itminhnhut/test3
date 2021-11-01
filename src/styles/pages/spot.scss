@@ -10,13 +10,30 @@
     }
 }
 
-.spot-chart {}
-
 .spot-symbol-detail {
     @apply h-20;
 }
 
-.spot-chart {}
+.spot-chart {
+
+    .cheat-watermark {
+        @apply absolute;
+        //bottom: 20%;
+        //right: 2%;
+        //transform: translate(-50%, -10%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        width: 180px;
+        opacity: 0.1;
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    }
+}
 
 .spot-order-book {
     height: 60rem;

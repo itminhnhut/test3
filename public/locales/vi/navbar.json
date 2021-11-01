@@ -19,7 +19,11 @@
     "product": "Sản phẩm",
     "market":  "Thị trường",
     "explained": "Kiến thức",
-    "more": "Thêm"
+    "more": "Thêm",
+    "user": {
+      "profile": "Thông tin cá nhân",
+      "logout": "Đăng xuất"
+    }
   },
   "submenu": {
     "convert": "Nami Swap",

@@ -25,7 +25,7 @@ const colors = {
 
     // Components
     wildSand: '#F6F6F6',
-    white: '#ffff',
+    white: '#ffffff',
     iceberg: '#E2F6F5',
     listItemTapColor: '#d8d7dc',
     red2: '#E5544B',
