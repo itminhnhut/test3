@@ -675,7 +675,7 @@
         padding-left: 16px;
         padding-right: 16px;
         margin-top: 32px;
-        margin-bottom: 60px;
+        margin-bottom: 30px;
 
       div.homepage-news___lastest___news____left {
         @apply w-5/6 flex flex-nowrap items-center;
@@ -768,7 +768,7 @@
       }
 
       @media (min-width: 340px) {
-        margin-top: 55px;
+        //margin-top: 55px;
         margin-bottom: 32px;
       }
 
@@ -777,13 +777,13 @@
       }
 
       @media (min-width: 992px) {
-        margin-top: 75px;
+        //margin-top: 75px;
         margin-bottom: 0;
       }
     }
 
     @media (min-width: 340px) {
-      padding-bottom: 50px;
+      //padding-bottom: 50px;
     }
 
     @media (min-width: 992px) {

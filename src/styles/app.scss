@@ -77,6 +77,40 @@ body {
     @apply text-dominant #{!important};
   }
 
+  .keen-slider__dots__wrapper {
+    margin-top: 20px;
+
+    .dots {
+      display: flex;
+      padding: 10px 0;
+      justify-content: center;
+
+      .dot {
+        @apply block bg-get-lightTeal;
+
+        border: none;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+
+      .dot:focus {
+        outline: none;
+      }
+
+      .dot.active {
+        @apply bg-get-teal;
+        transition: background-color .3s ease;
+      }
+    }
+
+    @media (min-width: 1366px) {
+      margin-top: 28px;
+    }
+  }
+
   .keen-slider__slide__control__wrapper {
     @apply flex items-center flex-nowrap justify-between absolute z-10;
 

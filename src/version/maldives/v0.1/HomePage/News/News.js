@@ -64,6 +64,18 @@ const News = ({ data }) => {
         )
     }, [slider, width])
 
+    const renderDots = useCallback(() => {
+        if (!slider) return null
+        return (
+            <div className="dots">
+                {[...Array(slider.details().size).keys()].map((idx) => {
+                    return <button key={idx} onClick={() => slider.moveToSlideRelative(idx)}
+                                   className={"dot" + (state.currentSlide === idx ? " active" : "")} />
+                })}
+            </div>
+        )
+    }, [slider, state.currentSlide])
+
     useEffect(() => {
         refNews.current.addEventListener("mouseover", () => {
             setState({ autoplay: false })
@@ -89,6 +101,9 @@ const News = ({ data }) => {
                     {renderNews()}
                 </div>
                 {renderControl()}
+            </div>
+            <div className="keen-slider__dots__wrapper">
+                {renderDots()}
             </div>
         </div>
     )

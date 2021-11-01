@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next'
 import "keen-slider/keen-slider.min.css"
 import { dep, wdl } from 'components/common/NavBar/constants'
 import { formatPrice, formatTime, formatWallet } from 'redux/actions/utils'
+import { log } from 'utils'
 
 const HomeCurrentActivity = () => {
     // Initial State
@@ -29,11 +30,13 @@ const HomeCurrentActivity = () => {
     })
     const timer = useRef()
 
+    const phake = useRef(makeData(35)).current
+
     // Render Handler
-    const renderActivityItem = useCallback(() => {
-        if (!state.phake) return null
-        // console.log('namidev-DEBUG: _____ ', state.phake)
-        return state.phake.map((item, i) => {
+    const renderActivityItem = () => {
+        if (!phake || !Array.isArray(phake)) return null
+        // log.d(phake)
+        return phake.map((item, i) => {
             const phake = item
             return (
                 <div key={`homepage_user_activity_${phake.token}_${i}`} className="keen-slider__slide homepage-activity__slide__item1">
@@ -90,27 +93,19 @@ const HomeCurrentActivity = () => {
                 </div>
             )
         })
-    }, [state.phake])
-
-    useEffect(() => {
-        const phake = []
-        for (let i = 0; i < 45; ++i) {
-            phake.push(makeData())
-        }
-        setState({phake})
-    }, [])
+    }
 
     useEffect(() => {
         sliderRef.current.addEventListener("mouseover", () => {
-            setState({ autoplay: true })
+            setState({ autoplay: false })
         })
         sliderRef.current.addEventListener("mouseout", () => {
-            setState({ autoplay: false })
+            setState({ autoplay: true })
         })
     }, [sliderRef])
 
     useEffect(() => {
-        timer.current = setInterval(() => !state.autoplay && slider && slider.next(), 2800)
+        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 2800)
         return () => clearInterval(timer.current)
     }, [state.autoplay, slider])
 
@@ -129,21 +124,31 @@ const HomeCurrentActivity = () => {
     )
 }
 
-const makeData = () => {
-    const code = `Nami${makeCode()}`
-    const type = Math.random() < 1 / 2 ? 'DEP' : 'WDL'
-    const status = 'success'
-    const token = TOKEN[Math.floor(Math.random() * TOKEN.length)];
+const makeData = (length) => {
+    const _ = []
 
-    const symbol =  token.token
-    const amount = Math.random() * (token.amountRange[1] - token.amountRange[0] + 1)
+    for (let i = 0; i < length; ++i) {
+        const code = `Nami${makeCode()}`
+        const type = Math.random() < 1 / 2 ? 'DEP' : 'WDL'
+        const status = 'success'
+        const token = TOKEN[Math.floor(Math.random() * TOKEN.length)];
 
-    const time = Date.now() - [2003000, 1000000, 900000, 1230000, 300000][Math.floor(Math.random() * 5)]
+        const symbol =  token.token
+        const amount = Math.random() * (token.amountRange[1] - token.amountRange[0] + 1)
 
+        const time = Date.now() - [2003000, 1000000, 900000, 1230000, 300000][Math.floor(Math.random() * 5)]
 
-    return ({
-        code, type, status, symbol, amount: formatWallet(amount, 0), time: formatTime(time, 'HH:mm dd-MM-yyyy')
-    })
+        _.push({
+            code,
+            type,
+            status,
+            symbol,
+            amount: formatWallet(amount, 0),
+            time: formatTime(time, 'HH:mm dd-MM-yyyy')
+        })
+    }
+
+    return _
 }
 
 function makeCode(lengthArr = [3, 3, 3]) {
