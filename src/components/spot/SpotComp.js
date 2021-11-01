@@ -1,5 +1,4 @@
 import { Dialog, Transition } from '@headlessui/react';
-import Footer from 'components/common/Footer';
 import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
 import SymbolDetail from 'components/trade/SymbolDetail';
 import find from 'lodash/find';
@@ -12,7 +11,6 @@ import RGL, { WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import { useSelector } from 'react-redux';
 import { useAsync } from 'react-use';
-import LayoutWithHeader from 'src/components/common/layouts/layoutWithHeader';
 import Chart from 'src/components/trade/Chart';
 import OrderBook from 'src/components/trade/OrderBook';
 import SpotHead from 'src/components/trade/SpotHead';
@@ -332,7 +330,7 @@ const SpotComp = () => {
                     </Dialog>
                 </Transition>
             </MobileView>
-            <BrowserView className="bg-backgroundSecondary dark:bg-get-darkBlue4">
+            <BrowserView className="bg-backgroundSecondary dark:bg-get-darkBlue2">
                 <div className="2xl:container">
                     <ReactGridLayout
                         className="layout"

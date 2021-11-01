@@ -603,93 +603,35 @@
   .homepage-news___wrapper {
     padding-bottom: 25px;
 
-    .slick-slider {
+    .homepage-news___news {
+      max-height: 126px;
 
-      .slick-dots {
-        margin-top: 20px !important;
-        bottom: 0;
+      .slider-container {
+        padding-left: 80px;
+        padding-right: 80px;
 
-        li {
-          width: 6px !important;
-          height: 6px !important;
-
-          button:before {
-            @apply text-dominant;
-            width: 6px !important;
-            height: 6px !important;
-          }
+        .keen-slider___news {
+          overflow: visible !important;
         }
 
-        button {
-          width: 6px !important;
-          height: 6px !important;
-        }
-
-        li.slick-active {
-          button:before {
-            @apply text-dominant;
-          }
-        }
-
-        @media (min-width: 340px) {
-          bottom: -30px;
-        }
-
-        @media (min-width: 992px) {
-          bottom: -48px;
-        }
-
-      }
-
-      .slick-list {
-        max-height: 150px;
-
-        .slick-track {
-
-          .slick-slide  {
-
-            > div {
-              max-height: 126px;
-              margin: 0 6px;
-              &:focus-visible {
-                outline: none !important;
-              }
-
-              @media (min-width: 1366px) {
-                max-height: 158px;
-              }
-            }
-
-            .homepage-news___slider__item {
-              width: 240px !important;
-              height: 126px;
-              border-radius: 12px;
-              overflow-y: hidden;
-
-              &:focus-visible {
-                outline: none !important;
-                border: none !important;
-              }
-
-              @media (min-width: 1366px) {
-                width: 300px !important;
-                height: 158px !important;
-              }
-            }
-          }
-        }
-
-        @media (min-width: 992px) {
-          max-height: 250px;
+        @media (min-width: 390px) {
+          padding-left: 25px;
+          padding-right: 25px;
         }
       }
 
-      .slick-prev:before, .slick-next:before {
-        content: '' !important;
-      }
+      [class^="number-slide"],
+      [class*=" number-slide"] {
+        @apply bg-get-grey2 dark:bg-get-darkBlue4;
 
-      .slick-arrow {
-        @apply text-textSecondary dark:text-textSecondary-dark;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        color: #fff;
+        font-weight: 500;
+        border-radius: 6px;
+        height: 100%;
       }
     }
 

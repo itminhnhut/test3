@@ -1,3 +1,5 @@
+import qs from 'qs'
+
 export const ___DEV___ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev'
 
 export const log =  {
@@ -13,4 +15,12 @@ export const log =  {
     w: (...arg) => {
         ___DEV___ && console.log('%cnamidev-WARNING: ', 'color: orange;font-weight: bold', ...arg)
     }
+}
+
+export function buildLogoutUrl() {
+    const currentUrl = window.location.href;
+    const params = {
+        redirect: currentUrl
+    };
+    return `/logout?${qs.stringify(params)}`;
 }

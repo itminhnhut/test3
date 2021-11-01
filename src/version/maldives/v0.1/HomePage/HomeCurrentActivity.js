@@ -1,9 +1,10 @@
 import { useKeenSlider } from "keen-slider/react"
-
-import "keen-slider/keen-slider.min.css"
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useWindowSize } from 'utils/customHooks'
 import { useTranslation } from 'next-i18next'
+
+import "keen-slider/keen-slider.min.css"
+import { dep, wdl } from 'components/common/NavBar/constants'
 
 const HomeCurrentActivity = () => {
     // Initial State
@@ -28,10 +29,10 @@ const HomeCurrentActivity = () => {
 
     // Render Handler
     const renderActivityItem = useCallback(() => {
-        const mock = []
+        const result = []
 
         for (let i = 0; i < 6; ++i) {
-            mock.push(
+            result.push(
                 <div key={`homepage_user_activity__${i}`} className="keen-slider__slide homepage-activity__slide__item1">
                     <div className="homepage-activity__item___wrapper">
                         <div className="homepage-activity__item__inner">
@@ -87,7 +88,7 @@ const HomeCurrentActivity = () => {
             )
         }
 
-        return mock
+        return result
     }, [])
 
 

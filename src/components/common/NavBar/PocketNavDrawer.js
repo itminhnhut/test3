@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
 import { getLoginUrl } from 'redux/actions/utils'
+import { actionLogout } from 'redux/actions/user'
 
 const PocketNavDrawer = memo(({ isActive, onClose }) => {
     const [state, set] = useState({
@@ -33,9 +34,11 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
         onClose()
     }
 
-    const renderNavItem = () => {
+    const renderNavItem = useCallback(() => {
        return MOBILE_NAV_DATA.map(nav => {
            const { key, title, localized, isNew, url, child_lv1 } = nav
+
+           // if (title === 'Profile' && !auth) return null
 
            if (child_lv1 && child_lv1.length) {
 
@@ -103,7 +106,7 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                </Link>
            )
        })
-    }
+    }, [auth, state.navActiveLv1])
 
     return (
         <>
@@ -169,6 +172,12 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                                 </a>
                             </Link>
                         </div>
+                        {auth && <div className="mal-pocket-navbar__drawer__navlink__group___item"
+                              onClick={() => actionLogout()}>
+                            <div className="w-full text-center mt-4 bg-get-red2 py-3 rounded-xl">
+                                {t('navbar:menu.user.logout')}
+                            </div>
+                        </div>}
                     </div>
                 </div>
             </Div100vh>

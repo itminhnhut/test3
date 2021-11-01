@@ -1476,7 +1476,7 @@ input, textarea, .selectable {
 .chart-page {
     background: transparent;
 }
-html.theme-dark .chart-page{ background: #101621; }
+html.theme-dark .chart-page{ background: #00091F; }
 .chart-page .chart-container {
     position: relative;
     contain: strict;
@@ -8692,7 +8692,7 @@ html.theme-dark .container-2BvS3Fpg- .inner-3YzQuyJx-{ background-color: #171b29
 }html.theme-dark .group-wWM3zP_M-{
      /*background-color: #131722; Origin*/
      /*background-color: #1d2021;  v1*/
-     background-color: #101621;
+     background-color: #00091F;
  }
 
 .group-wWM3zP_M-.noLeftDecoration-15F5a1TB- {
@@ -9507,7 +9507,7 @@ html.theme-dark .inner-1xuW-gY4-{ background-color: #2f3241; }
 html.theme-dark .group-2JyOhh7Z-{
     /* background-color: #131722; */
     /*background-color: #1f1f1f;*/
-    background-color: #101621;
+    background-color: #00091F;
 }
 
 .group-2JyOhh7Z-+.group-2JyOhh7Z- {
