@@ -46,7 +46,7 @@ export function getLoginUrl(mode, action = 'login', options = {}) {
             referral: null,
             utm_source: 'web',
             utm_medium: 'direct',
-            utm_campaign: 'attlas.io',
+            utm_campaign: 'nami.exchange',
             utm_content: LoginButtonPosition.WEB_HEADER,
             mobile_web: false,
         });
