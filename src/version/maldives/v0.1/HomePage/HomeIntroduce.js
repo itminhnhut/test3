@@ -59,10 +59,10 @@ const HomeIntroduce = ({ parentState }) => {
                                 <img src={getS3Url("/images/screen/homepage/banner_graphics.png")} alt="Nami Exchange"/>
                             </div>
                         </div>
-                        {width >= 1024 &&
-                        <div className="homepage-introduce___graphics__backward">
-                            <img src={getS3Url("/images/screen/homepage/electric_pattern.png")} alt="Nami Exchange"/>
-                        </div>}
+                        {/*{width >= 1024 &&*/}
+                        {/*<div className="homepage-introduce___graphics__backward">*/}
+                        {/*    <img src={getS3Url("/images/screen/homepage/electric_pattern.png")} alt="Nami Exchange"/>*/}
+                        {/*</div>}*/}
                     </div>
                     <div className="homepage-introduce___statitics">
                         <div className="homepage-introduce___statitics____item">
