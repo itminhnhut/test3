@@ -1000,7 +1000,7 @@
     }
 
     @media (min-width: 1366px) {
-      padding: 62px 16px;
+      padding: 64px 16px;
     }
   }
 }
@@ -1195,6 +1195,11 @@
           transform: translate(10%, -10%);
         }
       }
+    }
+
+    @media (min-width: 1366px) {
+      padding-top: 80px;
+      padding-bottom: 80px;
     }
   }
 }
@@ -1603,6 +1608,10 @@
     }
   }
 
+  @media (min-width: 1366px) {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
 }
 
 .homepage-activity {
@@ -1820,6 +1829,11 @@
       }
     }
 
+  }
+
+  @media (min-width: 1366px) {
+    padding-top: 80px;
+    padding-bottom: 80px;
   }
 }
 

@@ -14,14 +14,14 @@ export const SPOTLIGHT = {
 }
 
 export const NAV_DATA = [
-    {
-        key: 0,
-        title: 'Market',
-        localized: 'market',
-        isNew: false,
-        url: '/',
-        child_lv1: []
-    },
+    // {
+    //     key: 0,
+    //     title: 'Market',
+    //     localized: 'market',
+    //     isNew: false,
+    //     url: '/',
+    //     child_lv1: []
+    // },
     {
         key: 1,
         title: 'Product',
@@ -254,14 +254,14 @@ export const MOBILE_NAV_DATA = [
             },
         ]
     },
-    {
-        key: 1,
-        title: 'Market',
-        localized: 'market',
-        isNew: false,
-        url: '/',
-        child_lv1: []
-    },
+    // {
+    //     key: 1,
+    //     title: 'Market',
+    //     localized: 'market',
+    //     isNew: false,
+    //     url: '/',
+    //     child_lv1: []
+    // },
     {
         key: 2,
         title: 'Blog',

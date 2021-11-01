@@ -510,13 +510,13 @@ const HomeAdditional = ({ parentState }) => {
                                 </div>
                             </a>
                         </Link>
-                        <Link href={`https://coinmarketcap.com/${language}/currencies/nami-corporation-token/`}>
+                        <Link href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
                             <a className="homepage-community___channel__group___item">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_cmc.png" width="44" height="44"/>
+                                    <Image src="/images/icon/ic_coingecko.png" width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
-                                    CoinMarketCap
+                                    CoinGecko
                                 </div>
                             </a>
                         </Link>
