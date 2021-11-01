@@ -1016,7 +1016,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                         {_renderOrderQuantity((ExchangeOrderEnum.Side.BUY))}
                         {_renderQuantitySlider(ExchangeOrderEnum.Side.BUY)}
                         {_renderOrderQuoteQty((ExchangeOrderEnum.Side.BUY))}
-                        {_renderUserFee(ExchangeOrderEnum.Side.BUY)}
+                        {/* {_renderUserFee(ExchangeOrderEnum.Side.BUY)} */}
                         {currentExchangeConfig?.status === 'MAINTAIN' && <p className="text-sm mb-3 flex"><span className="mr-2"><IconLock width={12} height={16} /></span> <span>{t('spot:pair_under_maintenance', { base: symbol?.base, quote: symbol?.quote })}</span></p>}
                         {_renderPlaceOrderButton(ExchangeOrderEnum.Side.BUY)}
                     </div>
@@ -1027,7 +1027,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                         {_renderOrderQuantity((ExchangeOrderEnum.Side.SELL))}
                         {_renderQuantitySlider(ExchangeOrderEnum.Side.SELL)}
                         {_renderOrderQuoteQty((ExchangeOrderEnum.Side.SELL))}
-                        {_renderUserFee(ExchangeOrderEnum.Side.SELL)}
+                        {/* {_renderUserFee(ExchangeOrderEnum.Side.SELL)} */}
                         {currentExchangeConfig?.status === 'MAINTAIN' && <p className="text-sm mb-3 flex"><span className="mr-2"><IconLock width={12} height={16} /></span> <span>{t('spot:pair_under_maintenance', { base: symbol?.base, quote: symbol?.quote })}</span></p>}
                         {_renderPlaceOrderButton(ExchangeOrderEnum.Side.SELL)}
                     </div>
