@@ -57,7 +57,11 @@ body {
     }
 
     @media (min-width: 1920px) {
-      max-width: 1440px;
+      max-width: 1200px;
+    }
+
+    @media (min-width: 2560px) {
+      max-width: 1366px;
     }
   }
 
@@ -290,4 +294,12 @@ input[type=number] {
 .mal-overlay__active {
   visibility: visible;
   opacity: 1;
+}
+
+.mal-title__gradient {
+  font-weight: 600;
+  font-size: 16px;
+  background: -webkit-linear-gradient(#00DCC2, #00B6C7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

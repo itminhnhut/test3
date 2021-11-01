@@ -42,8 +42,8 @@ const HomePage = () => {
     }, [state.showQR])
 
     // useEffect(() => {
-    //     console.log('namidev-DEBUG: HomePage | Watch State ', state)
-    // }, [state])
+    //     console.log('namidev-DEBUG: ', process.env.NODE_ENV)
+    // }, [])
 
     return (
         <MaldivesLayout navOverComponent navMode={NAVBAR_USE_TYPE.FLUENT}>

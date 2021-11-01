@@ -4,12 +4,13 @@ import Axios from 'axios'
 import Link from 'next/link'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useWindowSize } from 'utils/customHooks'
 import { ChevronLeft, ChevronRight } from 'react-feather'
+import { useWindowSize } from 'utils/customHooks'
 
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { useKeenSlider } from 'keen-slider/react'
+
 import "keen-slider/keen-slider.min.css"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
@@ -84,7 +85,9 @@ const HomeNews = () => {
     const renderNewsItem = useCallback(() => {
         if (!state.news) return null
         return state.news.map(news => (
-            <div key={`home_news_${news.ID}`} className="homepage-news___slider__item">
+            <div key={`home_news_${news.ID}`}
+                 title={news.post_title}
+                 className="homepage-news___slider__item">
                 <Link href={news.guid}>
                     <a className="block" target="_blank">
                         <img src={news.feature_img} alt="nami.io"/>

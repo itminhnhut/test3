@@ -1,0 +1,39 @@
+{
+  "landing_page": {
+    "exp_compare_title": "Completely Different Experience",
+    "compare": {
+      "previous_version": "Previous Version",
+      "compare_1": "Processing speed is not optimal when the number of trading pairs increases above 400 pairs.",
+      "compare_2": "The order transfer system is blocked when the number of users increases rapidly.",
+      "compare_3": "Not having Dark Mode - which save battery for user’s phone.",
+      "compare_4": "The Wallet system is not optimized.",
+      "compare_m1": "Increase order processing speed by 3 times with more than 500 trading pairs.",
+      "compare_m2": "Equipped a system that automatically expands the infrastructure when the user’s number increases.",
+      "compare_m3": "Released Dark Mode - improves the battery life by 30%.",
+      "compare_m4": "The user's security system is improved.",
+      "compare_m5": "Optimizing the experience to reduce operations by 50%."
+    },
+    "theming": {
+      "dark_mode": "“The night sky in Maldives” is what to describe this interface, Dark Mode creates a professional and secured feelings for the user’s experience.",
+      "light_mode": "The Classic interface but changes with color improvements "
+    },
+    "attractive_features": {
+      "title": "More Attractive Features",
+      "description": "The variety of products and features are optimized for users. Nami's ecosystem helps to allocate capital and update knowledge quickly from the market.",
+      "favorite_portfolio": "Favorite portfolio",
+      "what_can_you_do": "What Can You Do?",
+      "feature_1": "Choosing more than 300 trading pairs.",
+      "feature_2": "Sorting by desired order",
+      "feature_3": "Easily saving search history"
+    },
+    "exchange_futures": {
+      "exchange": "From now on, The Limit - Market orders will be separated, making it easier for users to distinguish and avoid unnecessary errors.",
+      "open_orders": "Opening Orders",
+      "open_orders_description": "Users can review the orders they have placed to monitor asset movements and change them as needed.",
+      "token_info": "Token's Information",
+      "token_info_description": "Updating the outstanding information about tokens for users, thereby making reasonable investment decisions.",
+      "futures_description": "Nami Maldives gives “Futures Traders” a faster order processing speed than its predecessor, comes with more than 30 sets of indicators to assist users in identifying and trading Futures efficiently.",
+      "futures": "Understanding that convenience is essential when trading Futures, Nami Maldives has brought a “more minimalistic” and “easy-to-use” interface."
+    }
+  }
+}

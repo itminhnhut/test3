@@ -3,8 +3,8 @@
     "title_mobile": "Giao dịch Spot và Futures ngay",
     "title_desktop1": "Sàn giao dịch Spot và",
     "title_desktop2": "Futures an toàn",
-    "description": "Với nền tảng quản lý và đầu tư tiền điện tử hiệu quả nhất",
-    "total_order_paid": "Tổng khối lượng lệnh đã thanh khoản",
+    "description": "Với nền tảng đầu tư và giao dịch tiền điện tử hiệu quả nhất",
+    "total_order_paid": "Tổng khối lượng",
     "total_user": "Tổng lượng người dùng",
     "total_pairs": "Tổng số cặp giao dịch"
   },
@@ -16,21 +16,25 @@
     "explore_market": "Khám phá thêm"
   },
   "first_award": {
+    "title": "Tham gia Nami Exchange ngay!",
     "title_1": "Sở hữu ngay {{value}} đầu",
     "title_2": "tiên trong tài khoản",
-    "rule_1": "1. Đăng kí tài khoản",
-    "rule_2": "2. Tham gia Quizz & Earn tại Nami Explained",
-    "rule_3": "3. Nhận VNDC ngay khi hoàn thành Quizz",
-    "following_at": "Theo dõi chương trình tại",
-    "join_nami_by": "Tham gia Nami bằng"
+    "rule_1": "1. Thao tác tối giản",
+    "rule_2": "2. Khả năng xử lý <0>40,000+</0> giao dịch/giây",
+    "rule_3": "3. <0>400+</0> cặp giao dịch",
+    "rule_4": "4.Đòn bẩy Futures lên tới <0>125x</0>",
+    "rule_5": "5. Phí giao dịch chỉ từ <0>0,06%</0>",
+    "rule_6": "6. Hỗ trợ <0>24/7</0>",
+    "following_at": "Theo dõi chúng tôi tại",
+    "join_nami_by": "Đăng kí tài khoản bằng"
   },
   "journey": {
     "title": "Bắt đầu hành trình của bạn",
-    "description": "Nami Exchange là nơi lý tưởng để bạn giao dịch cũng như thay đổi suy nghĩ của bạn về tài chính",
-    "description_desktop1": "Nami Exchange là nơi lý tưởng để bạn giao dịch cũng như thay đổi suy",
+    "description_mobile": "Nami Exchange là nơi lý tưởng để bạn giao dịch cũng như thay đổi cách suy nghĩ của bạn về tài chính",
+    "description_desktop1": "Nami Exchange là nơi lý tưởng để bạn giao dịch cũng như thay đổi cách suy",
     "description_desktop2": "nghĩ của bạn về tài chính",
     "reason_1": "Tối đa hoá lợi nhuận",
-    "reason_1_description": "Giao dịch với đòn bẩy lên đến x100 tại Nami Futures (giao dịch hợp đồng tương lai).",
+    "reason_1_description": "Giao dịch với đòn bẩy lên đến x125 tại Nami Futures (giao dịch hợp đồng tương lai).",
     "reason_2": "Copy Trade (sắp ra mắt)",
     "reason_2_description": "Đa dạng hoá phương thức đầu tư với tính năng sao chép lệnh giao dịch cũng phần trăm lợi nhuận từ những đầu tư kinh nghiệm nhất khi tham gia Nami Futures.",
     "reason_3": "Sở hữu Token tiềm năng với giá ưu đãi",
@@ -39,8 +43,8 @@
     "reason_4_description": "Nami Explaied - Nơi mang đến câu trả lời cho câu hỏi tại sao trong thị trường Crypto"
   },
   "intro_app": {
-    "title_1": "Giao dịch mọi lúc",
-    "title_2": "mọi nơi với Nami App",
+    "title_1": "Giao dịch mọi lúc, mọi nơi",
+    "title_2": "ứng dụng Nami Exchange",
     "description": "Nạp, rút và giao dịch 24/7 trên ứng dụng dành cho IOS và Android"
   },
   "trade3step": {
@@ -71,7 +75,7 @@
   },
   "community": {
     "title": "Cộng đồng Nami Exchange",
-    "description": "Với hơn 10 nghìn thành viên trên các cộng đồng quốc tế và Việt Nam, tham gia ngay để trao đổi và trò chuyện với các nhà đầu tư và nhận hỗ trợ 24/7 cùng chúng tôi.",
+    "description_mobile": "Với hơn 10 nghìn thành viên trên các cộng đồng quốc tế và Việt Nam, tham gia ngay để trao đổi và trò chuyện với các nhà đầu tư và nhận hỗ trợ 24/7 cùng chúng tôi.",
     "description_desktop1": "Với hơn 10 nghìn thành viên trên các cộng đồng quốc tế và Việt Nam, tham gia ngay",
     "description_desktop2": "để trao đổi và trò chuyện với các nhà đầu tư và nhận hỗ trợ 24/7 cùng chúng tôi."
   },
