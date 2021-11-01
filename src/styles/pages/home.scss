@@ -654,6 +654,10 @@
               &:focus-visible {
                 outline: none !important;
               }
+
+              @media (min-width: 1366px) {
+                max-height: 158px;
+              }
             }
 
             .homepage-news___slider__item {
@@ -665,6 +669,11 @@
               &:focus-visible {
                 outline: none !important;
                 border: none !important;
+              }
+
+              @media (min-width: 1366px) {
+                width: 300px !important;
+                height: 158px !important;
               }
             }
           }
