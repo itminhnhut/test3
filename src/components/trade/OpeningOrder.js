@@ -34,7 +34,7 @@ const SpotOrderList = (props) => {
         }
     }, [orders, currentPair, filterByCurrentPair]);
 
-    const closeOrder = async (displayingId) => {
+    const closeOrder = async (displayingId, symbol) => {
         const res = await fetchAPI({
             url: '/api/v3/spot/order',
             options: {
@@ -42,6 +42,7 @@ const SpotOrderList = (props) => {
             },
             params: {
                 displayingId,
+                symbol,
             },
         });
         const { status, data } = res;
@@ -159,7 +160,7 @@ const SpotOrderList = (props) => {
                 <button
                     className="flex items-center text-white bg-pink  px-3 py-1 text-xs outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 whitespace-nowrap font-medium"
                     type="button"
-                    onClick={() => closeOrder(row.displayingId)}
+                    onClick={() => closeOrder(row.displayingId, row.symbol)}
                 >
                     <span>{t('common:cancel')}</span>
                 </button>
