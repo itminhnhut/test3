@@ -14,7 +14,7 @@ import { MOBILE_NAV_DATA } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { getLoginUrl } from 'redux/actions/utils'
+import { getLoginUrl, getS3Url } from 'redux/actions/utils'
 import { actionLogout } from 'redux/actions/user'
 
 const PocketNavDrawer = memo(({ isActive, onClose }) => {
@@ -163,12 +163,12 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                         <div style={{padding: '16px 16px 0'}} className="flex flex-row items-center">
                             <Link href="https://apps.apple.com/app/id1480302334">
                                 <a className="block">
-                                    <img style={{height: 37, width: 'auto'}} src="/images/download_app_store.png" alt="Nami Exchange"/>
+                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/images/download_app_store.png')} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                                 <a className="block ml-4">
-                                    <img style={{height: 37, width: 'auto'}} src="/images/download_play_store.png" alt="Nami Exchange"/>
+                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/images/download_play_store.png')} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                         </div>
