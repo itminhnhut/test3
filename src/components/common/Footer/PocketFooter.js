@@ -144,42 +144,42 @@ const PocketFooter = ({ active, parentState }) => {
                     >
                         <Link href="https://www.facebook.com/namifutures">
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('images/icon/ic_footer_fb.png')} className="mr-3" alt="" width="16" height="16"/> Facebook Fanpage
+                                <img src={getS3Url('/images/icon/ic_footer_fb.png')} className="mr-3" alt="" width="16" height="16"/> Facebook Fanpage
                             </a>
                         </Link>
                         <Link href="https://www.facebook.com/groups/nami.exchange">
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('images/icon/ic_footer_fb.png')} className="mr-3" alt="" width="16" height="16"/> Facebook Group
+                                <img src={getS3Url('/images/icon/ic_footer_fb.png')} className="mr-3" alt="" width="16" height="16"/> Facebook Group
                             </a>
                         </Link>
                         <Link href="https://t.me/namitradevn">
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('images/icon/ic_footer_telegram.png')} className="mr-3" alt="" width="16" height="16"/> Telegram Vietnam
+                                <img src={getS3Url('/images/icon/ic_footer_telegram.png')} className="mr-3" alt="" width="16" height="16"/> Telegram Vietnam
                             </a>
                         </Link>
                         <Link href="https://t.me/namitrade">
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('images/icon/ic_footer_telegram.png')} className="mr-3" alt="" width="16" height="16"/> Telegram Global
+                                <img src={getS3Url('/images/icon/ic_footer_telegram.png')} className="mr-3" alt="" width="16" height="16"/> Telegram Global
                             </a>
                         </Link>
                         <Link href="https://twitter.com/NamiTrade">
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('images/icon/ic_footer_twitter.png')} className="mr-3" alt="" width="16" height="16"/> Twitter
+                                <img src={getS3Url('/images/icon/ic_footer_twitter.png')} className="mr-3" alt="" width="16" height="16"/> Twitter
                             </a>
                         </Link>
                         <Link href="https://www.reddit.com/r/NAMIcoin">
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('images/icon/ic_footer_reddit.png')} className="mr-3" alt="" width="16" height="16"/> Reddit
+                                <img src={getS3Url('/images/icon/ic_footer_reddit.png')} className="mr-3" alt="" width="16" height="16"/> Reddit
                             </a>
                         </Link>
                         <Link href="https://nami.io/">
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('images/icon/ic_footer_globe.png')} className="mr-3" alt="" width="16" height="16"/> Blog
+                                <img src={getS3Url('/images/icon/ic_footer_globe.png')} className="mr-3" alt="" width="16" height="16"/> Blog
                             </a>
                         </Link>
                         <Link href={`https://coinmarketcap.com/${language}/currencies/nami-corporation-token/`}>
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('images/icon/ic_footer_coingecko.png')} className="mr-3" alt="" width="16" height="16"/> CoinMarketCap
+                                <img src={getS3Url('/images/icon/ic_footer_coingecko.png')} className="mr-3" alt="" width="16" height="16"/> CoinMarketCap
                             </a>
                         </Link>
                     </div>
