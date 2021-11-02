@@ -31,7 +31,8 @@ class MyDocument extends Document {
                         t.src=v;s=b.getElementsByTagName(e)[0];
                         s.parentNode.insertBefore(t,s)}(window, document,'script',
                         'https://connect.facebook.net/en_US/fbevents.js');
-                        fbq('init', '927448334500314');
+                        fbq('init', '152788662016500');
+                        fbq('track', 'PageView');
                     ` }}
                     />
                     <script
@@ -44,9 +45,8 @@ class MyDocument extends Document {
                                 window.dataLayer = window.dataLayer || [];
                                 function gtag(){dataLayer.push(arguments);}
                                 gtag('js', new Date());
-                                gtag('config', 'G-RGS9ZWC4NW', {
-                                  page_path: window.location.pathname,
-                                });
+                                gtag('config', 'AW-802059455');
+                                gtag('event', 'conversion', {'send_to': 'AW-802059455/2mHCCL26_YMBEL_puf4C'});
                                 `,
                         }}
                     />

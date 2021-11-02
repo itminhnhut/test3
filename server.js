@@ -16,6 +16,7 @@ app.prepare().then(() => {
             '/authenticated/',
             '/api/',
             '/login/',
+            '/register/',
             '/logout/',
             '/referral/',
 
