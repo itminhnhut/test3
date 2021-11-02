@@ -165,6 +165,8 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
         })
     }, [width])
 
+    // console.log('namidev-DEBUG: current lang _____ ', currentLocale)
+
     return (
         <>
             <PocketNavDrawer isActive={state.isDrawer} onClose={() => onDrawerAction(false)}/>
@@ -226,6 +228,9 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
                                 <div className="mal-navbar__user___cp___wrapper">
                                     <a className="mal-navbar__user___cp___item" href={getV1Url('/profile')}>
                                         {t('navbar:menu.user.profile')}
+                                    </a>
+                                    <a className="mal-navbar__user___cp___item" href={getV1Url('/settings/api-management')}>
+                                        {t('navbar:menu.user.api_mng')}
                                     </a>
                                     <a className="mal-navbar__user___cp___item" href={buildLogoutUrl()}>
                                         {t('navbar:menu.user.logout')}

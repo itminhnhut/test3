@@ -207,6 +207,87 @@ const SymbolList = (props) => {
         );
     }, [filteredSymbolList, selectedCategory, filteredSignals, query, currentTheme]);
 
+    const renderFav = useCallback(() => {
+        if (!symbolList) return null
+        const data = symbolList.filter(o => favorite.includes(`${o.bi}_${o.qi}`))
+        // console.log('namidev-DEBUG: __ ', data)
+
+        return (
+            <>
+                <div className="ats-tbheader px-3">
+                    <div className="flex justify-between items-center mb-3">
+                        <div
+                            className="flex flex-1 items-center justify-start text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            onClick={() => {
+                                setSortField('b');
+                                setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
+                            }}
+                        >
+                            <div
+                                className="mr-1"
+                            >{t('common:asset')}
+                            </div>
+                            {
+                                sortField === 'b'
+                                    ? <SortIcon direction={sortDirection} />
+                                    : <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            }
+                        </div>
+                        <div
+                            className="flex flex-1 items-center justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            onClick={() => {
+                                setSortField('p');
+                                setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
+                            }}
+                        >
+                            <div className="mr-1">{t('common:price')}</div>
+                            {
+                                sortField === 'p'
+                                    ? <SortIcon direction={sortDirection} />
+                                    : <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            }
+                        </div>
+                        <div
+                            className="flex flex-1 items-center justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            onClick={() => {
+                                setSortField('change24h');
+                                setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
+                            }}
+                        >
+                            <div className="mr-1">{t('common:change')}</div>
+                            {
+                                sortField === 'change24h'
+                                    ? <SortIcon direction={sortDirection} />
+                                    : <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div className="overflow-y-auto max-h-[calc(100%-6rem)]">
+                    {/* <div className="overflow-y-scroll"> */}
+                    {data.map((ticker, index) => {
+                        return (
+                            <Fragment
+                                key={`favorite_tab_${ticker.b}}`}
+                            >
+                                <SymbolListItem
+                                    changeSymbolList={changeSymbolList}
+                                    exchangeConfig={exchangeConfig}
+                                    favorite={favorite}
+                                    symbolString={ticker?.s}
+                                    publicSocket={publicSocket}
+                                    currentId={query?.id}
+                                    originTicker={ticker}
+                                    watchList={watchList}
+                                />
+                            </Fragment>
+                        );
+                    })}
+                </div>
+            </>)
+        }, [favorite, selectedCategory, query, currentTheme, symbolList, changeSymbolList, exchangeConfig, publicSocket, watchList]);
+
+
     return (
         <>
             <div
@@ -242,7 +323,8 @@ const SymbolList = (props) => {
                         > VNDC
                         </a>
                     </div>
-                    {renderList()}
+                    {activeTab !== 'favorite' && renderList()}
+                    {activeTab === 'favorite' && renderFav()}
                 </>
 
             </div>

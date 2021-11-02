@@ -12,7 +12,7 @@ import Big from 'big.js';
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
-import { log } from 'utils'
+import { ___DEV___, log } from 'utils'
 
 export function getFilter(filterType, config) {
     const filter = find(config.filters, { filterType });
@@ -66,7 +66,7 @@ export function getLoginUrl(mode, action = 'login', options = {}) {
     switch (mode) {
         case 'sso':
             if (action === 'register') {
-                return `${process.env.NEXT_PUBLIC_API_URL}/register?${qs.stringify(params)}`;
+                return `${___DEV___ ? 'https://auth-test.nami.trade/' : 'https://auth.nami.io/'}/register?${qs.stringify(params)}`;
             }
             return `${process.env.NEXT_PUBLIC_API_URL}/login/nami?${qs.stringify(params)}`;
 

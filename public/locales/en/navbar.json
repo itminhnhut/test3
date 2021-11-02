@@ -22,6 +22,7 @@
     "more": "More",
     "user": {
       "profile": "Personal Profile",
+      "api_mng": "API Management",
       "logout": "Log Out"
     }
   },

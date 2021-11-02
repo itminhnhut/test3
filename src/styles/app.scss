@@ -24,12 +24,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent !important;
 
-a:hover,
-a:active,
-a:focus {
-  text-decoration: none !important;
-  outline: none !important;
-}
+  a:hover,
+  a:active,
+  a:focus {
+    text-decoration: none !important;
+    outline: none !important;
+  }
+
+  input[type='checkbox'] {
+    outline: 0;
+  }
 }
 //
 //html {
@@ -337,6 +341,26 @@ input[type=number] {
   }
 }
 
+.rdt_Pagination {
+  @apply bg-bgContainer dark:bg-bgContainer-dark text-textPrimary dark:text-textPrimary-dark;
+}
+
+.rdt_dark {
+  .rdt_Pagination {
+    button svg:first-child {
+      fill: #F2F4F6 !important;
+    }
+  }
+}
+
+.rdt_light {
+  .rdt_Pagination {
+    button svg:first-child {
+      fill: #223050 !important;
+    }
+  }
+}
+
 .rdt_Table {
   background-color: transparent !important;
 
@@ -378,6 +402,8 @@ input[type=number] {
     }
   }
 }
+
+
 // hide tradingview
 [class^="dateRangeWrapper-"] {
   display: none!important;
