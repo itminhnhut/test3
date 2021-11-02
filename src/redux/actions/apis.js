@@ -8,6 +8,8 @@ export const API_LOG_OUT = '/logout';
 export const API_GET_ME = API_PREFIX + 'user/me';
 export const API_REFRESH_TOKEN = API_PREFIX + 'web/refresh_token';
 
+export const API_GET_FAVORITE = API_PREFIX + 'symbols/favorite';
+
 export const API_GET_ASSET_CONFIG = API_V3_PREFIX + 'asset/config';
 export const API_GET_USER_WALLET = API_PREFIX + 'user/wallet';
 export const API_GET_USER_BALANCE = API_PREFIX + 'user/balance';

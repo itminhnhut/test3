@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import DataTable from 'react-data-table-component';
 import { useTranslation } from 'next-i18next';
@@ -24,29 +24,6 @@ const OrderHistory = (props) => {
 
     const { currentPair, filterByCurrentPair } = props;
 
-    useEffect(() => {
-        if (filterByCurrentPair) {
-            const filter = histories.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
-            setFilteredHistories(filter);
-        } else {
-            setFilteredHistories(histories);
-        }
-    }, [histories, currentPair, filterByCurrentPair]);
-
-    useEffect(() => {
-        if (userSocket) {
-            const event = 'exchange:update_history_order';
-            userSocket.removeListener(event, setHistories);
-            userSocket.on(event, setHistories);
-        }
-
-        return function cleanup() {
-            if (userSocket) {
-                const event = 'exchange:update_history_order';
-                userSocket.removeListener(event, setHistories);
-            }
-        };
-    }, [userSocket]);
     const customStyles = {
         ...tableStyle,
         table: {
@@ -176,18 +153,21 @@ const OrderHistory = (props) => {
             },
         });
         if (status === ApiStatus.SUCCESS) {
-            setHistories(data.orders);
+            setHistories(data);
             setLoading(false);
         }
     };
-    useEffect(() => {
-        getOrderList();
-    }, []);
 
-    if (isAuth) {
+    const renderTable = useCallback(() => {
+        if (!isAuth || !histories.length) return <TableNoData />
+        let data = histories
+        if (filterByCurrentPair) {
+            data = histories.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair)
+        }
+
         return (
             <DataTable
-                data={filteredHistories}
+                data={data}
                 columns={columns}
                 customStyles={customStyles}
                 className="h-full"
@@ -196,7 +176,6 @@ const OrderHistory = (props) => {
                 fixedHeaderScrollHeight={`${props.orderListWrapperHeight - 184}px`}
                 overflowYOffset={100}
                 pagination
-                paginationPerPage={30}
                 paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
                 dense
                 noDataComponent={<TableNoData />}
@@ -207,9 +186,43 @@ const OrderHistory = (props) => {
                 paginationIconFirstPage={null}
                 paginationIconLastPage={null}
             />
-        );
-    }
-    return <TableNoData />;
+        )
+    }, [filteredHistories, isAuth, columns, customStyles, loading, filterByCurrentPair, currentPair, props.orderListWrapperHeight])
+
+    useEffect(() => {
+        getOrderList();
+    }, []);
+
+    // useEffect(() => {
+    //     if (filterByCurrentPair) {
+    //         const filter = histories.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
+    //         setFilteredHistories(filter);
+    //     } else {
+    //         setFilteredHistories(histories);
+    //     }
+    // }, [histories, currentPair, filterByCurrentPair]);
+
+    useEffect(() => {
+        if (userSocket) {
+            const event = 'exchange:update_history_order';
+            userSocket.removeListener(event, setHistories);
+            userSocket.on(event, setHistories);
+        }
+
+        return function cleanup() {
+            if (userSocket) {
+                const event = 'exchange:update_history_order';
+                userSocket.removeListener(event, setHistories);
+            }
+        };
+    }, [userSocket]);
+
+    useEffect(() => {
+        console.log('namidev-DEBUG: ____ ', filteredHistories)
+    }, [filteredHistories])
+
+
+    return renderTable()
 };
 
 export default OrderHistory;

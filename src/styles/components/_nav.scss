@@ -25,7 +25,7 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-background dark:bg-background-dark #{!important};
+    @apply bg-background dark:bg-background-dark border dark:border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
   }
 }
@@ -54,7 +54,7 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-background-dark #{!important};
+    @apply bg-background-dark border border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
   }
 }
@@ -85,6 +85,7 @@
   .mal-navbar__link__group___item___childen__lv1 {
     @apply bg-background #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
+    border: none;
   }
 }
 
@@ -139,10 +140,12 @@
 
 
       .mal-navbar__user___cp___wrapper {
-        @apply bg-bgContainer dark:bg-bgContainer-dark;
+        @apply bg-bgContainer dark:bg-bgContainer-dark dark:shadow-none border dark:border-divider-dark;
 
+        border-color: transparent;
         padding: 16px;
         border-radius: 6px;
+        box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
 
         .mal-navbar__user___cp___item {
           @apply block text-textPrimary dark:text-textPrimary-dark text-right;
@@ -206,7 +209,7 @@
     }
 
     .mal-navbar__link__group___item___childen__lv1 {
-      @apply absolute hidden left-0 z-50 bg-background dark:bg-background-dark;
+      @apply absolute hidden left-0 z-50 bg-background dark:bg-background-dark border dark:border-divider-dark;
 
       top: 100%;
       //margin-top: 1px;
@@ -215,6 +218,7 @@
       transition: max-height .3s ease;
       padding-right: 16px;
       padding-left: 16px;
+      border-color: transparent;
     }
 
     .mal-navbar__link__group___item___childen__lv1___item {

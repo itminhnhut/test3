@@ -22,6 +22,7 @@
     "more": "Thêm",
     "user": {
       "profile": "Thông tin cá nhân",
+      "api_mng": "Quản lý API",
       "logout": "Đăng xuất"
     }
   },

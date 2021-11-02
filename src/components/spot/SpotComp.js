@@ -24,6 +24,8 @@ import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import { getS3Url } from 'redux/actions/utils';
+import Axios from 'axios'
+import { API_GET_FAVORITE } from 'redux/actions/apis'
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -120,6 +122,15 @@ const SpotComp = () => {
         }
     }, [user, watchList]);
 
+    useAsync(async () => {
+        if (user) {
+            const { data } = await Axios.get(API_GET_FAVORITE, {params: { tradingMode: 1 } })
+            if (data?.status === 'ok' && data?.data) {
+                setFavorite(data.data)
+            }
+        }
+    }, [user])
+
     const changeSymbolList = (symbList) => {
         setFavorite(symbList);
     };
@@ -214,6 +225,7 @@ const SpotComp = () => {
     };
 
     const renderSymbolList = useMemo(() => {
+
         if (size(tradesLayout) > 0) {
             return (
                 <SymbolList

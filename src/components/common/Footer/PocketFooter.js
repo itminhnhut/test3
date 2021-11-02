@@ -35,31 +35,6 @@ const PocketFooter = ({ active, parentState }) => {
                                      ${active.about ?
             'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
-                        <Link href="https://ico.nami.trade/#nami-team">
-                            <a target="_blank">
-                                {t('navbar:menu.about')}
-                            </a>
-                        </Link>
-                        <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
-                            <a>
-                                Whitepaper
-                            </a>
-                        </Link>
-                        <Link href="/">
-                            <a>
-                                {language === LANGUAGE_TAG.VI ? 'Nền tảng của Nami' : 'Nami Platform'}
-                            </a>
-                        </Link>
-                        <Link href="/">
-                            <a>
-                                {language === LANGUAGE_TAG.VI ? 'Thông báo' : 'Notice'}
-                            </a>
-                        </Link>
-                        <Link href="/">
-                            <a>
-                                {language === LANGUAGE_TAG.VI ? 'Đối tác kinh doanh' : 'Partners'}
-                            </a>
-                        </Link>
                         <Link href="https://nami.exchange/terms-of-service">
                             <a>
                                 {language === LANGUAGE_TAG.VI ? 'Điều khoản' : 'Terms of Services'}
@@ -68,6 +43,33 @@ const PocketFooter = ({ active, parentState }) => {
                         <Link href={getV1Url('/fee-schedule')}>
                             <a>
                                 {t('navbar:menu.fee')}
+                            </a>
+                        </Link>
+
+                        <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
+                            <a className="invisible">
+                                Whitepaper
+                            </a>
+                        </Link>
+
+                        <Link href="/">
+                            <a className="invisible">
+                                {language === LANGUAGE_TAG.VI ? 'Đối tác kinh doanh' : 'Partners'}
+                            </a>
+                        </Link>
+                        <Link href="/">
+                            <a className="invisible">
+                                {language === LANGUAGE_TAG.VI ? 'Nền tảng của Nami' : 'Nami Platform'}
+                            </a>
+                        </Link>
+                        <Link href="/">
+                            <a className="invisible">
+                                {language === LANGUAGE_TAG.VI ? 'Thông báo' : 'Notice'}
+                            </a>
+                        </Link>
+                        <Link href="https://ico.nami.trade/#nami-team">
+                            <a target="_blank" className="invisible">
+                                {t('navbar:menu.about')}
                             </a>
                         </Link>
                     </div>
@@ -203,18 +205,18 @@ const PocketFooter = ({ active, parentState }) => {
                         {/*</Link>*/}
                         {/*<Link href="/">*/}
                         <a onClick={() => window.fcWidget.open()}
-                           className="cursor-pointer">
+                           className="cursor-pointer invisible">
                             {language === LANGUAGE_TAG.VI ? 'Phản hồi' : 'Feedback'}
                         </a>
                         {/*</Link>*/}
                         {/*<Link href="/">*/}
                         <a onClick={() => window.fcWidget.open()}
-                           className="cursor-pointer">
+                           className="cursor-pointer invisible">
                             {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}
                         </a>
                         {/*</Link>*/}
                         <Link href="/">
-                            <a>
+                            <a className="invisible">
                                 {language === LANGUAGE_TAG.VI ? 'Cẩm nang Nami' : 'Nami\'s Handbook'}
                             </a>
                         </Link>
