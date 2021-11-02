@@ -2,7 +2,16 @@
 import historyProvider from './historyProvider';
 import stream from './stream';
 
-const supportedResolutions = ['1', '15', '30', '60', '240', '1D', '2D', '3D', '1W', '3W', '1M', '6M'];
+const supportedResolutions = [
+    '1',
+    '5',
+    '15',
+    '60',
+    '240',
+    '1D',
+    '1W',
+    '1M',
+];
 
 const config = {
     supported_resolutions: supportedResolutions,
