@@ -12,6 +12,7 @@ import Big from 'big.js';
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
+import { log } from 'utils'
 
 export function getFilter(filterType, config) {
     const filter = find(config.filters, { filterType });
@@ -178,6 +179,7 @@ export function getExchange24hPercentageChange(price) {
             change24h = -100;
         }
     }
+    // log.d('get exchange 24h ', change24h)
     return change24h;
 }
 
@@ -189,10 +191,10 @@ export function render24hChange(ticker) {
         let sign;
         if (change24h > 0) {
             sign = '+';
-            className += ' text-mint';
+            className += ' text-get-teal';
         } else if (change24h < 0) {
             sign = '';
-            className += ' text-pink';
+            className += ' text-get-red2';
         } else sign = '';
 
         text = `${sign}${formatPercentage(change24h, 2, true)}%`;

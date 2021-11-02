@@ -8,7 +8,7 @@ import { API_GET_TRENDING } from 'redux/actions/apis'
 import { useWindowSize } from 'utils/customHooks'
 import { sparkLineBuilder } from 'utils/helpers'
 import { useSelector } from 'react-redux'
-import { formatPercentage, formatPrice, getExchange24hPercentageChange } from 'redux/actions/utils'
+import { formatPercentage, formatPrice, getExchange24hPercentageChange, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import LastPrice from 'components/markets/LastPrice'
 
@@ -138,7 +138,7 @@ const HomeMarketTrend = () => {
                     </div>
                     <div className="homepage-markettrend__market_table__row__col3">
                         <div className={`homepage-markettrend__market_table__percent ${u ? 'value-up' : 'value-down'}`}>
-                            {u ? '+ ' : '- '}{formatPercentage(getExchange24hPercentageChange(pair))}%
+                            {render24hChange(pair)}
                         </div>
                     </div>
                     <div className="homepage-markettrend__market_table__row__col4">
