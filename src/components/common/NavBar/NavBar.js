@@ -12,15 +12,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import NotificationList from 'components/notification/NotificationList'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { NAV_DATA, SPOTLIGHT } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
 import { getLoginUrl, getV1Url } from 'redux/actions/utils'
-import { actionLogout } from 'redux/actions/user'
-import { buildLogoutUrl } from 'utils'
-
+import { buildLogoutUrl, log } from 'utils'
+import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -28,14 +27,23 @@ export const NAVBAR_USE_TYPE = {
     DARK: THEME_MODE.DARK,
 }
 
-const NavBar = ({ style, layoutStateHandler, useOnly }) => {
+const NAV_HIDE_THEME_BUTTON = [
+    'maldives_landingpage'
+]
+
+const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     // * Initial State
-    const [state, set] = useState({ isDrawer: false })
+    const [state, set] = useState({ isDrawer: false, hideOnScroll: true })
     const setState = (_state) => set(prevState => ({...prevState, ..._state}));
 
     // * Use hooks
     const [currentTheme, onThemeSwitch] = useDarkMode()
     const [currentLocale, onChangeLang] = useLanguage()
+
+    useScrollPosition(({prevPos, currPos}) => {
+        const shouldShow = currPos?.y > prevPos?.y
+        if (shouldShow !== state.hideOnScroll) setState({ hideOnScroll: shouldShow })
+    }, [state.hideOnScroll], false, false, 300)
 
     const { user: auth } = useSelector(state => state.auth) || null
     const { width } = useWindowSize()
@@ -165,12 +173,27 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
         })
     }, [width])
 
-    // console.log('namidev-DEBUG: current lang _____ ', currentLocale)
+    const renderThemeButton = useCallback(() => {
+        if (NAV_HIDE_THEME_BUTTON.includes(name)) return null
+        return (
+            <a href="#" className="ml-8" onClick={onThemeSwitch}>
+                {currentTheme !== THEME_MODE.LIGHT ?
+                    <SvgMoon size={20} color={navTheme.color}/>
+                    : <SvgSun size={20} color={navTheme.color}/>}
+            </a>
+        )
+    }, [name, currentTheme, navTheme.color])
 
     return (
         <>
             <PocketNavDrawer isActive={state.isDrawer} onClose={() => onDrawerAction(false)}/>
-            <div style={style || {}} className={`mal-navbar__wrapper ${navTheme.wrapper}`}>
+            <div style={style || {}}
+                 className={`mal-navbar__wrapper 
+                            ${state.hideOnScroll ? 
+                            `mal-navbar__visible 
+                            ${useOnly === NAVBAR_USE_TYPE.FLUENT ? 
+                            'mal-navbar__visible__blur' : ''}` 
+                            : 'mal-navbar__hidden'} ${navTheme.wrapper}`}>
                 <Link href="/">
                     <a className="block mal-navbar__logo">
                         <Image src="/images/logo/nami_maldives.png" width="28" height="25"
@@ -213,7 +236,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
 
                     <Button title={t('navbar:menu.download_app')} type="primary"
                             style={width >= 992 ? {fontSize: 14, padding: '4px 16px', maxWidth: 120} : {fontSize: 12, padding: '1px 12px'}}
-                            href="#nami_exchange_download_app"/>
+                            href={`${process.env.NEXT_PUBLIC_APP_URL}#nami_exchange_download_app`}/>
 
 
                     {auth &&
@@ -248,18 +271,17 @@ const NavBar = ({ style, layoutStateHandler, useOnly }) => {
                            onClick={onChangeLang}>
                             {currentLocale}
                         </a>
-                        <a href="#" className="ml-8" onClick={onThemeSwitch}>
-                            {currentTheme !== THEME_MODE.LIGHT ?
-                                <SvgMoon size={20} color={navTheme.color}/>
-                                : <SvgSun size={20} color={navTheme.color}/>}
-                        </a>
+                        {renderThemeButton()}
                     </div>}
 
                     {width < 1366 &&
-                    <div className="relative">
+                    <div className="relative" onClick={(e) => {
+                        // e.stopPropagation()
+                        onDrawerAction(true)}
+                    }>
                         <SvgMenu size={25} className={`${width >= 768 ? 'ml-6' : 'ml-3'} cursor-pointer`}
                                  color={navTheme.color}
-                                 onClick={() => onDrawerAction(true)}/>
+                    />
                     </div>}
                 </div>
             </div>

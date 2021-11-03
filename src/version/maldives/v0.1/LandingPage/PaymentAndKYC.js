@@ -1,47 +1,67 @@
 import { useWindowSize } from 'utils/customHooks'
+import { useTranslation } from 'next-i18next'
+import { getS3Url } from 'redux/actions/utils'
+import Image from 'next/image'
 
 const PaymentAndKYC = () => {
     const { width } = useWindowSize()
+    const { t, i18n: { language } } = useTranslation(['maldives'])
 
     return (
         <div className="landing_page___payment_kyc">
             <div className="landing_page___section_title mal-container">
-                Phương thức thanh toán & KYC
+                {t('maldives:landing_page.method_kyc.title')}
             </div>
             <div className="landing_page___payment_kyc___wrapper mal-container">
                 <div className="landing_page___payment_kyc___item landing_page___card">
-                    <div className="mal-title__gradient">
-                        Thanh toán
-                    </div>
-                    <div className="landing_page___payment_kyc___item__description">
-                        Với Maldives, người dùng có thể sử dụng thẻ ngân hàng của mình như một phương thức thanh toán
-                        trực tiếp.
+                    <div>
+                        <div className="mal-title__gradient">
+                            {t('maldives:landing_page.method_kyc.payment')}
+                        </div>
+                        <div className="landing_page___payment_kyc___item__description">
+                            {t('maldives:landing_page.method_kyc.payment_description')}
+                        </div>
                     </div>
                     <div className="landing_page___payment_kyc___item__img">
-                        <img src="images/screen/landing-page/ip_kyc_1.png" alt="Nami Maldives"/>
+                        <img src={getS3Url(`images/screen/landing-page/ip_kyc_1_${language}.png`)} alt="Nami Maldives"/>
                     </div>
                 </div>
-                <div style={width < 768 ? {marginTop: 20} : {}} className="landing_page___payment_kyc___item landing_page___card">
-                    <div className="mal-title__gradient">
-                        KYC
+                <div style={width < 1200 ? {marginTop: 20} : {}}
+                     className="landing_page___payment_kyc___item landing_page___card">
+                    <div>
+                        <div className="mal-title__gradient">
+                            KYC
+                        </div>
+                        <div className="landing_page___payment_kyc___item__description">
+                            {t('maldives:landing_page.method_kyc.kyc_description')}
+                        </div>
                     </div>
-                    <div className="landing_page___payment_kyc___item__description">
-                        Với Maldives, người dùng có thể sử dụng thẻ ngân hàng của mình như một phương thức thanh toán
-                        trực tiếp.
-                    </div>
-                    <div className="landing_page___payment_kyc___item__img">
-                        <img src="images/screen/landing-page/ip_kyc_1.png" alt="Nami Maldives"/>
+                    {/*<div className="landing_page___payment_kyc___item__img">*/}
+                    {/*    <img src={getS3Url(`images/screen/landing-page/ip_kyc_1_${language}.png`)}alt="Nami Maldives"/>*/}
+                    {/*</div>*/}
+                    <div className="landing_page___payment_kyc___item__with__bubble">
+                        <div>
+                            <Image src="/images/screen/landing-page/kyc_1.png" width="157" height="152"/>
+                        </div>
+                        <div className="w-full flex justify-end">
+                            <Image src="/images/screen/landing-page/kyc_2.png" width="93" height="90"/>
+                        </div>
+                        <div>
+                            <Image src="/images/screen/landing-page/kyc_3.png" width="134" height="130"/>
+                        </div>
                     </div>
                 </div>
-                <div style={width < 768 ? {marginTop: 20} : {}} className="landing_page___payment_kyc___item landing_page___card">
-                    <div className="mal-title__gradient">
-                        Nạp/Rút
-                    </div>
-                    <div className="landing_page___payment_kyc___item__description">
-                        Nạp/Rút trực tiếp,  nhanh chóng, thuận tiện chỉ bằng một bước chạm.
+                <div style={width < 1200 ? {marginTop: 20} : {}} className="landing_page___payment_kyc___item landing_page___card">
+                    <div>
+                        <div className="mal-title__gradient">
+                            {t('maldives:landing_page.method_kyc.depwdl')}
+                        </div>
+                        <div className="landing_page___payment_kyc___item__description">
+                            {t('maldives:landing_page.method_kyc.depwdl_description')}
+                        </div>
                     </div>
                     <div className="landing_page___payment_kyc___item__img">
-                        <img src="images/screen/landing-page/ip_kyc_2.png" alt="Nami Maldives"/>
+                        <img src={getS3Url(`images/screen/landing-page/ip_kyc_2_${language}.png`)} alt="Nami Maldives"/>
                     </div>
                 </div>
             </div>

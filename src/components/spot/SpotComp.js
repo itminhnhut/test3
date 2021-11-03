@@ -249,7 +249,7 @@ const SpotComp = () => {
     if (!symbol) return null;
 
     return (
-        <MaldivesLayout hidden={fullScreen}>
+        <MaldivesLayout hideNavBar={fullScreen}>
             <SpotHead symbol={symbol} />
             <MobileView>
                 <Transition show as={Fragment}>

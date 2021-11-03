@@ -1,15 +1,15 @@
 import Link from 'next/link'
 
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { log } from 'utils'
 
-const ScreenPresent = () => {
+const ScreenPresent = ({ parentState }) => {
     // use Hooks
     const { width } = useWindowSize()
-    const { i18n: { language } } = useTranslation()
+    const { i18n: { language }, t } = useTranslation(['modal'])
 
     // Helper
     const renderTitle = useCallback(() => {
@@ -71,6 +71,7 @@ const ScreenPresent = () => {
     }, [language, width])
 
 
+
     // render Handler
     const renderMobile = () => {
         return (
@@ -117,7 +118,7 @@ const ScreenPresent = () => {
                             <img src="/images/download_play_store.png" alt="Nami Exchange"/>
                         </a>
                     </Link>
-                    <div className="landing_page___mb_screen_present___download__item">
+                    <div className="landing_page___mb_screen_present___download__item" onClick={() => parentState && parentState({ showQR: true })}>
                         <img src="/images/icon/ic_qr.png" alt="Nami Exchange"/>
                     </div>
                 </div>

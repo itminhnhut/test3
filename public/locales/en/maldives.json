@@ -14,8 +14,10 @@
       "compare_m5": "Optimizing the experience to reduce operations by 50%."
     },
     "theming": {
-      "dark_mode": "“The night sky in Maldives” is what to describe this interface, Dark Mode creates a professional and secured feelings for the user’s experience.",
-      "light_mode": "The Classic interface but changes with color improvements "
+      "dark_mode": "\"The night sky in Maldives\" is what to describe this interface, Dark Mode creates a professional and secured feelings for the user’s experience.",
+      "light_mode": "The Classic interface but changes with color improvements.",
+      "mb_dark_mode": "Inspired by \"Maldives night sky\", Dark Mode creates a professional and secured feelings for the user’s experience.",
+      "mb_light_mode": "The Classic interface but changes with color improvements."
     },
     "attractive_features": {
       "title": "More Attractive Features",
@@ -28,12 +30,32 @@
     },
     "exchange_futures": {
       "exchange": "From now on, The Limit - Market orders will be separated, making it easier for users to distinguish and avoid unnecessary errors.",
-      "open_orders": "Opening Orders",
-      "open_orders_description": "Users can review the orders they have placed to monitor asset movements and change them as needed.",
+      "open_orders": "Faster placing orders",
+      "open_orders_description": "The new interface integrates many features and switches the transaction button to the right side, maximize user’s convenience.",
       "token_info": "Token's Information",
       "token_info_description": "Updating the outstanding information about tokens for users, thereby making reasonable investment decisions.",
       "futures_description": "Nami Maldives gives “Futures Traders” a faster order processing speed than its predecessor, comes with more than 30 sets of indicators to assist users in identifying and trading Futures efficiently.",
       "futures": "Understanding that convenience is essential when trading Futures, Nami Maldives has brought a “more minimalistic” and “easy-to-use” interface."
+    },
+    "wallet": {
+      "reason_1": "Limited functions.",
+      "reason_2": "Futures and Spot wallets are not integrated.",
+      "reason_3": "Not display Staking and Farming wallet.",
+      "m_reason_1": "Exchange, Futures, Staking, Farming Wallets are integrated.",
+      "m_reason_2": "Easily Deposit / Withdraw and Transfer token between wallets",
+      "m_reason_3": "Introducing Convert small balances into NAMI Token (coming soon)."
+    },
+    "method_kyc": {
+      "title": "Payment Method & KYC",
+      "payment": "Payment",
+      "payment_description": "With Maldives Version, users can use their bank accounts as a direct payment method.",
+      "kyc_description": "Protecting user' information and assets is Nami's guiding principle, accomplished through a rigorous verification process.",
+      "depwdl": "Deposits / withdrawals",
+      "depwdl_description": "Deposits / Withdrawals directly, quickly and conveniently with One touch."
+    },
+    "more": {
+      "title": "And it’s not over yet",
+      "subtitle": "Coming soon in November"
     }
   }
 }

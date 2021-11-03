@@ -29,13 +29,33 @@
       "feature_3": "Lưu lại lịch sử tìm kiếm."
     },
     "exchange_futures": {
-      "exchange": "Giờ đây, 2 lệnh Limit - Market sẽ được tách riêng, giúp người dùng dễ dàng phân biệt và tránh những sai sót không đáng có.",
-      "open_orders": "Lệnh đang mở",
-      "open_orders_description": "Người dùng có thể xem lại những lệnh mình đã đặt để theo dõi biến động của tài sản và thay đổi chúng khi cần thiết.",
-      "token_info": "Token's Information",
-      "token_info_description": "Updating the outstanding information about tokens for users, thereby making reasonable investment decisions.",
-      "futures_description": "Nami Maldives gives “Futures Traders” a faster order processing speed than its predecessor, comes with more than 30 sets of indicators to assist users in identifying and trading Futures efficiently.",
-      "futures": "Understanding that convenience is essential when trading Futures, Nami Maldives has brought a “more minimalistic” and “easy-to-use” interface."
+      "exchange": "Lệnh Giới hạn & Thị trường được tách riêng, giúp người dùng tránh những sai sót không đáng có.",
+      "open_orders": "Đặt lệnh nhanh chóng",
+      "open_orders_description": "Giao diện mới tích hợp nhiều tính năng và chuyển đổi nút giao dịch sang bên phải, tạo thuận lợi tối đa cho người dùng.",
+      "token_info": "Thông tin Token",
+      "token_info_description": "Giúp người dùng cập nhật những thông tin nổi bật về token, từ đó đưa ra quyết định đầu tư hợp lý.",
+      "futures_description": "Maldives mang đến cho người dùng Futures tốc độ xử lý lệnh nhanh hơn so với phiên bản tiền nhiệm, đi kèm với hơn 30 bộ chỉ báo hỗ trợ nhận định thị trường và giao dịch Futures một cách hiệu quả.",
+      "futures": "Hiểu được sự thuận tiện là yếu tố cần thiết khi giao dịch, Nami Maldives đã mang lại một giao diện tối giản và dễ sử dụng hơn. "
+    },
+    "wallet": {
+      "reason_1": "Tính năng hạn chế.",
+      "reason_2": "Ví Exchange và Futures chưa tích hợp.",
+      "reason_3": "Không hiển thị ví Staking và Farming.",
+      "m_reason_1": "Các ví Exchange, Futures, Staking, Farming được tích hợp chung giúp người dùng quản lý tài sản thuận lợi.",
+      "m_reason_2": "Dễ dàng lựa chọn token để Nạp / Rút / Chuyển đổi giữa các ví.",
+      "m_reason_3": "Tính năng Chuyển đổi số dư nhỏ thành NAMI (sắp ra mắt)."
+    },
+    "method_kyc": {
+      "title": "Phương thức thanh toán & KYC",
+      "payment": "Thanh toán",
+      "payment_description": "Với phiên bản Maldives, người dùng có thể sử dụng tài khoản ngân hàng của mình như một phương thức thanh toán trực tiếp.",
+      "kyc_description": "Bảo vệ thông tin và tài sản của người dùng là tôn chỉ hoạt động của Nami, quy trình này được thực hiện thông qua quá trình xác minh nghiêm ngặt.",
+      "depwdl": "Nạp / Rút",
+      "depwdl_description": "Nạp/Rút trực tiếp,  nhanh chóng, thuận tiện chỉ bằng một bước chạm."
+    },
+    "more": {
+      "title": "Và còn nhiều nâng cấp sắp tới",
+      "subtitle": "Ra mắt vào tháng 11"
     }
   }
 }

@@ -9,7 +9,7 @@ const Maldives = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'maldives']),
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'maldives', 'modal']),
     },
 });
 

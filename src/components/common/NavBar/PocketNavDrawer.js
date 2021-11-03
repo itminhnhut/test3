@@ -98,7 +98,11 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
 
            return (
                <Link key={`${title}_${key}`} href={url}>
-                   <a className="mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover" onClick={onClose}>
+                   <a className="mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover"
+                      onClick={(e) => {
+                          // e.preventDefault()
+                          onClose()
+                      }}>
                        <div className="flex flex-row items-center">
                            {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest"/>}
                        </div>

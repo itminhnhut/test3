@@ -1,5 +1,13 @@
 @import "../helpers/contants";
 
+.mal-layouts___light {
+  @apply bg-background #{!important};
+}
+
+.mal-layouts___dark {
+  @apply dark:bg-background-dark #{!important};
+}
+
 .mal-layouts {
   @apply relative h-full bg-background dark:bg-background-dark;
 

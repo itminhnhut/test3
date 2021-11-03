@@ -5,7 +5,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 
-const ScreenPresentation = () => {
+const ScreenPresentation = ({ parentState }) => {
     // Use Hooks
     const { i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
@@ -124,7 +124,7 @@ const ScreenPresentation = () => {
                                 <img src="/images/download_play_store.png" alt="Nami Exchange"/>
                             </a>
                         </Link>
-                        <div className="nami_maldives__download_app__item">
+                        <div className="nami_maldives__download_app__item cursor-pointer" onClick={() => parentState({ showQR: true })}>
                             <img src="/images/icon/ic_qr.png" alt="Nami Exchange"/>
                         </div>
                     </div>
