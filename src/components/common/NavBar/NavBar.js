@@ -134,6 +134,9 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
 
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = []
+                const itemsLevel1withIcon = []
+                const useDropdownWithIcon = localized === 'product'
+
                 const shouldDot = child_lv1.findIndex(o => o.isNew)
 
                 child_lv1.map(child => {
@@ -141,6 +144,20 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
                             <a className="mal-navbar__link__group___item___childen__lv1___item">
                                 {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest"/>}
+                            </a>
+                        </Link>
+                    )
+                })
+
+                // Dropdown with icon
+                child_lv1.map(child => {
+                    itemsLevel1withIcon.push(
+                        <Link href={child.url} key={`${child.title}_${child.key}`}>
+                            <a className="mal-navbar__link__group___item___childen__lv1___item2">
+                                {/*<Image width="32" height="32" />*/}
+                                <div>
+                                    {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest"/>}
+                                </div>
                             </a>
                         </Link>
                     )
@@ -287,6 +304,27 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
             </div>
         </>
     )
+}
+
+const getIcon = (localized) => {
+    switch (localized) {
+        case 'spot':
+            return '/images/icon/ic_exchange.png'
+        case 'futures':
+            return '/images/icon/ic_futures.png'
+        case 'swap':
+            return '/images/icon/ic_swap.png'
+        case 'copytrade':
+            return '/images/icon/ic_copytrade.png'
+        case 'staking':
+            return '/images/icon/ic_staking.png'
+        case 'farming':
+            return '/images/icon/ic_farming.png'
+        case 'referral':
+            return '/images/icon/ic_referral.png'
+        default:
+            return ''
+    }
 }
 
 

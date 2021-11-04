@@ -2,6 +2,7 @@ import { useWindowSize } from 'utils/customHooks'
 import { useTranslation } from 'next-i18next'
 import { getS3Url } from 'redux/actions/utils'
 import Image from 'next/image'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 const PaymentAndKYC = () => {
     const { width } = useWindowSize()
@@ -11,6 +12,7 @@ const PaymentAndKYC = () => {
         <div className="landing_page___payment_kyc">
             <div className="landing_page___section_title mal-container">
                 {t('maldives:landing_page.method_kyc.title')}
+                <span style={{marginLeft: 8}} className="text-textPrimary">{language === LANGUAGE_TAG.VI ? '(sắp ra mắt)' : '(Coming soon)'}</span>
             </div>
             <div className="landing_page___payment_kyc___wrapper mal-container">
                 <div className="landing_page___payment_kyc___item landing_page___card">

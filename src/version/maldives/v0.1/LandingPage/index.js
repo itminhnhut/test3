@@ -13,6 +13,7 @@ import { useTranslation } from 'next-i18next'
 import { useCallback, useState } from 'react'
 import { getS3Url } from 'redux/actions/utils'
 import { QRCode } from 'react-qrcode-logo'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://nami.exchange'
 
@@ -171,8 +172,18 @@ const LandingPage = () => {
                         <div className="landing_page___spot_futures__content_wrapper">
                             <div style={width < 992 ? { marginTop: 20 } : {}}
                                  className="landing_page___spot_futures__left landing_page___card">
-                                <div className="mal-title__gradient">
-                                    Futures
+                                <div className="flex items-end">
+                                    <div className="mal-title__gradient" style={{width: 'auto'}}>
+                                        Futures
+                                    </div>
+                                    <span style={{
+                                        fontWeight: 500,
+                                        marginLeft: 6,
+                                        color: colors.darkBlue,
+                                        textTransform: language === LANGUAGE_TAG.VI ? 'lowercase' : 'capitalize'}}
+                                    >
+                                            {language === LANGUAGE_TAG.VI ? '(sắp ra mắt)' : '(Coming soon)'}
+                                    </span>
                                 </div>
                                 <div className="landing_page___spot_futures__description">
                                     {t('maldives:landing_page.exchange_futures.futures')}
