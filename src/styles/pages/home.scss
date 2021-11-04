@@ -340,7 +340,7 @@
         }
 
         .homepage-markettrend__tab___item {
-          @apply text-textTabLabelInactive bg-bgTabInactive text-center
+          @apply text-textTabLabelInactive bg-get-grey4 text-center
           dark:text-textTabLabelInactive-dark  dark:bg-bgTabInactive-dark;
 
           padding: 4px 16px;
@@ -348,6 +348,7 @@
           font-weight: 500;
           border-radius: 6px;
           white-space: nowrap;
+          background-color: #ebedf3;
 
           @media (min-width: 992px) {
             //margin-right: 0;

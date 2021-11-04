@@ -1,4 +1,4 @@
-import HomePage from 'version/maldives/v0.1/HomePage/HomePage'
+import HomePage from 'version/maldives/m1/HomePage/HomePage'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const Index = () => <HomePage/>

@@ -1,4 +1,5 @@
 import { getV1Url } from "redux/actions/utils"
+import { buildLogoutUrl } from 'utils'
 
 export const DESKTOP_NAV_HEIGHT = 74
 
@@ -26,6 +27,7 @@ export const NAV_DATA = [
         key: 1,
         title: 'Product',
         localized: 'product',
+        // hide: true,
         isNew: true,
         url: '/',
         child_lv1: [
@@ -44,14 +46,6 @@ export const NAV_DATA = [
                 isNew: false,
                 url: getV1Url('/futures'),
                 child_lv1: []
-            },
-            {
-                key: 7,
-                title: 'Swap',
-                localized: 'swap',
-                isNew: false,
-                url: '/swap',
-                child_lv2: []
             },
             {
                 key: 2,
@@ -93,6 +87,14 @@ export const NAV_DATA = [
                 url: getV1Url('/reference'),
                 child_lv2: []
             },
+            {
+                key: 7,
+                title: 'Swap',
+                localized: 'swap',
+                isNew: false,
+                url: '/swap',
+                child_lv2: []
+            }
         ]
     },
     // {
@@ -378,6 +380,81 @@ export const MOBILE_NAV_DATA = [
     //         }
     //     ]
     // },
+]
+
+export const USER_CP = [
+    {
+        key: 0,
+        title: 'Profile',
+        localized: 'profile',
+        // hide: true,
+        isNew: true,
+        url: getV1Url('/profile'),
+        child_lv1: []
+    },
+    {
+        key: 1,
+        title: 'Security',
+        localized: 'security',
+        // hide: true,
+        isNew: true,
+        url: '/',
+        child_lv1: []
+    },
+    {
+        key: 2,
+        title: 'Identify',
+        localized: 'identify',
+        // hide: true,
+        isNew: true,
+        url: '/',
+        child_lv1: []
+    },
+    {
+        key: 3,
+        title: 'RewardCenter',
+        localized: 'reward_center',
+        // hide: true,
+        isNew: true,
+        url: '/',
+        child_lv1: []
+    },
+    {
+        key: 4,
+        title: 'Referral',
+        localized: 'referral',
+        // hide: true,
+        isNew: true,
+        url: getV1Url('/reference'),
+        child_lv1: []
+    },
+    {
+        key: 5,
+        title: 'TaskCenter',
+        localized: 'task_center',
+        // hide: true,
+        isNew: true,
+        url: '/',
+        child_lv1: []
+    },
+    {
+        key: 6,
+        title: 'APIManagement',
+        localized: 'api_mng',
+        // hide: true,
+        isNew: true,
+        url: getV1Url('/settings/api-management'),
+        child_lv1: []
+    },
+    {
+        key: 7,
+        title: 'LogOut',
+        localized: 'logout',
+        // hide: true,
+        isNew: true,
+        url: '/',
+        child_lv1: []
+    },
 ]
 
 export const wdl = [

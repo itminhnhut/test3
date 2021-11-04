@@ -1,6 +1,6 @@
 import PocketNavDrawer from 'components/common/NavBar/PocketNavDrawer';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import useLanguage from 'hooks/useLanguage'
+import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage'
 import SvgIcon from 'components/svg'
 import SvgMoon from 'components/svg/Moon'
 import SvgUser from 'components/svg/SvgUser'
@@ -10,16 +10,25 @@ import Button from 'components/common/Button'
 import colors from 'styles/colors'
 import Image from 'next/image'
 import Link from 'next/link'
-// import NotificationList from 'components/notification/NotificationList'
 
 import { useState, useMemo, useCallback } from 'react'
-import { NAV_DATA, SPOTLIGHT } from 'components/common/NavBar/constants'
+import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
 import { getLoginUrl, getV1Url } from 'redux/actions/utils'
 import { buildLogoutUrl } from 'utils'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import { User } from 'react-feather'
+import SvgWallet from 'components/svg/Wallet'
+import SvgCheckSuccess from 'components/svg/CheckSuccess'
+import SvgIdentifyCard from 'components/svg/SvgIdentifyCard'
+import SvgUserPlus from 'components/svg/SvgUserPlus'
+import SvgReward from 'components/svg/SvgReward'
+import SvgDocument from 'components/svg/SvgDocument'
+import SvgExit from 'components/svg/SvgExit'
+import SvgLayout from 'components/svg/SvgLayout'
+import SvgLock from 'components/svg/SvgLock'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -92,6 +101,8 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         return NAV_DATA.map(item => {
             const { key, title, localized, isNew, url, child_lv1 } = item
 
+            if (!!item.hide) return null
+
             if (localized === 'fee' && width < 1200) return null
 
             if (localized === 'more') {
@@ -121,7 +132,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                                     {t(`navbar:menu.${localized}`)}
                                     {shouldDot !== -1 && shouldDot >= 0 && <div className="mal-dot__newest"/>}
                                 </div>
-                                <SvgIcon name="chevron_down" size={15} style={{paddingTop: 5, marginLeft: 8}}
+                                <SvgIcon name="chevron_down" size={15} style={{paddingTop: 4, marginLeft: 8}}
                                          color="#F2F4F6"/>
                                 <div className="mal-navbar__link__group___item___childen__lv1">
                                     {itemsLevel1}
@@ -154,9 +165,17 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                     itemsLevel1withIcon.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
                             <a className="mal-navbar__link__group___item___childen__lv1___item2">
-                                {/*<Image width="32" height="32" />*/}
-                                <div>
-                                    {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest"/>}
+                                <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
+                                    <Image src={getIcon(child.localized)} width={width >= 2560 ? '38' : '32'} height={width >= 2560 ? '38' : '32'} />
+                                </div>
+                                <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
+                                    <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
+                                        {t(`navbar:submenu.${child.localized}`)}
+                                        {/*{child.isNew && <div className="mal-dot__newest"/>*/}
+                                    </div>
+                                    <div className="mal-navbar__link__group___item___childen__lv1___item2___c__description">
+                                        {t(`navbar:submenu.${child.localized}_description`)}
+                                    </div>
                                 </div>
                             </a>
                         </Link>
@@ -170,10 +189,11 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                                 {t(`navbar:menu.${localized}`)}
                                 {shouldDot !== -1 && shouldDot >= 0 && <div className="mal-dot__newest"/>}
                             </div>
-                            <SvgIcon name="chevron_down" size={15} style={{paddingTop: 5, marginLeft: 8}}
-                                     color="#F2F4F6"/>
-                            <div className="mal-navbar__link__group___item___childen__lv1">
-                                {itemsLevel1}
+                            <SvgIcon name="chevron_down" size={15} className="chevron__down"
+                                     color={navTheme.color} style={{ marginLeft: 4}}/>
+                            <div className={`mal-navbar__link__group___item___childen__lv1
+                                           ${useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon' : ''}`}>
+                                {useDropdownWithIcon ? itemsLevel1withIcon : itemsLevel1}
                             </div>
                         </div>
                     </div>
@@ -193,13 +213,49 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     const renderThemeButton = useCallback(() => {
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null
         return (
-            <a href="#" className="ml-8" onClick={onThemeSwitch}>
+            <a href="#" className="mal-navbar__hamburger__spacing mal-navbar__svg_dominant" onClick={onThemeSwitch}>
                 {currentTheme !== THEME_MODE.LIGHT ?
                     <SvgMoon size={20} color={navTheme.color}/>
                     : <SvgSun size={20} color={navTheme.color}/>}
             </a>
         )
     }, [name, currentTheme, navTheme.color])
+
+    const renderUserControl = useCallback(() => {
+        const { avatar, username, email } = auth
+        const items = []
+        USER_CP.map(item => {
+            if (!!item.hide) return null
+            items.push(
+                <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
+                    <a className="mal-navbar__dropdown___item">
+                        {getUserControlSvg(item.localized, currentTheme)} {t(`navbar:menu.user.${item.localized}`)}
+                    </a>
+                </Link>
+            )
+        })
+
+        return (
+            <div className="mal-navbar__dropdown">
+                <div className="mal-navbar__dropdown__wrapper">
+                    <div className="mal-navbar__dropdown__user__info">
+                        <div className="mal-navbar__dropdown__user__info__avt">
+                            <img src={avatar} alt=""/>
+                        </div>
+                        <div className="mal-navbar__dropdown__user__info__summary">
+                            <div className="mal-navbar__dropdown__user__info__username">
+                                {username || 'Guest'} <SvgCheckSuccess/>
+                            </div>
+                            <div className="mal-navbar__dropdown__user__info__level">
+                                VIP 999
+                            </div>
+                        </div>
+                    </div>
+                    {items}
+                </div>
+            </div>
+        )
+    }, [auth, currentTheme])
 
     return (
         <>
@@ -251,42 +307,40 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                         </Link>}
                     </div>}
 
-                    <Button title={t('navbar:menu.download_app')} type="primary"
-                            style={width >= 992 ? {fontSize: 14, padding: '4px 16px', maxWidth: 120} : {fontSize: 12, padding: '1px 12px'}}
-                            href={`${process.env.NEXT_PUBLIC_APP_URL}#nami_exchange_download_app`}/>
+                    {/*<Button title={t('navbar:menu.download_app')} type="primary"*/}
+                    {/*        style={width >= 992 ? {fontSize: 14, padding: '4px 16px', maxWidth: 120} : {fontSize: 12, padding: '1px 12px'}}*/}
+                    {/*        href={`${process.env.NEXT_PUBLIC_APP_URL}#nami_exchange_download_app`}/>*/}
 
 
                     {auth &&
-                        <a href="https://nami.exchange/profile"
-                           className="mal-navbar__user___avatar relative cursor-pointer">
-                            {auth?.avatar ? <img src={auth?.avatar} alt=""/> :
-                                <SvgUser size={25} className="ml-8 cursor-pointer"
-                                         color={navTheme.color}
-                                         onClick={() => console.log('should open user panel')}/>
-                            }
-                            {width >= 992 && <div className="mal-navbar__user___cp">
-                                <div className="mal-navbar__user___cp___wrapper">
-                                    <a className="mal-navbar__user___cp___item" href={getV1Url('/profile')}>
-                                        {t('navbar:menu.user.profile')}
-                                    </a>
-                                    <a className="mal-navbar__user___cp___item" href={getV1Url('/settings/api-management')}>
-                                        {t('navbar:menu.user.api_mng')}
-                                    </a>
-                                    <a className="mal-navbar__user___cp___item" href={buildLogoutUrl()}>
-                                        {t('navbar:menu.user.logout')}
-                                    </a>
-                                </div>
-                            </div>}
-                        </a>
+                        <>
+                            <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
+                                <SvgWallet color={navTheme.color}/>
+                                <span className="ml-4" style={{color: navTheme.color}}>
+                                    {t('navbar:menu.wallet')}
+                                </span>
+                                <SvgIcon name="chevron_down" size={15} color={navTheme.color}
+                                         className="chevron__down" style={{ marginLeft: 4}}/>
+                            </div>
+                            <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__svg_dominant mal-navbar__hamburger__spacing">
+                                <SvgUser type={2} size={30} className="cursor-pointer"
+                                         style={{marginTop: -3}} color={navTheme.color}/>
+                                {width >= 992 && renderUserControl()}
+                            </div>
+                        </>
                     }
 
                     {/*<NotificationList btnClass="!mr-0 ml-8" navTheme={navTheme}/>*/}
 
                     {width >= 1366 &&
-                    <div className="flex flex-row items-center ml-8">
-                        <a className={`text-sm font-medium uppercase cursor-pointer ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
+                    <div className="flex flex-row items-center mal-navbar__hamburger__spacing">
+                        <a className={`text-sm font-medium uppercase cursor-pointer flex items-center
+                                       ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
                            onClick={onChangeLang}>
                             {currentLocale}
+                             {/*=== LANGUAGE_TAG.EN ?*/}
+                             {/*   <Image src="/images/icon/ic_us_flag.png" width="20" height="20" />*/}
+                             {/*  : <Image src="/images/icon/ic_vn_flag.png" width="20" height="20" />*/}
                         </a>
                         {renderThemeButton()}
                     </div>}
@@ -296,7 +350,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                         // e.stopPropagation()
                         onDrawerAction(true)}
                     }>
-                        <SvgMenu size={25} className={`${width >= 768 ? 'ml-6' : 'ml-3'} cursor-pointer`}
+                        <SvgMenu size={25} className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`}
                                  color={navTheme.color}
                     />
                     </div>}
@@ -322,8 +376,33 @@ const getIcon = (localized) => {
             return '/images/icon/ic_farming.png'
         case 'referral':
             return '/images/icon/ic_referral.png'
+        case 'launchpad':
+            return '/images/icon/ic_rocket.png'
         default:
             return ''
+    }
+}
+
+const getUserControlSvg = (localized, theme) => {
+    switch (localized) {
+        case 'profile':
+            return <SvgUser type={2} color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
+        case 'identify':
+            return <SvgIdentifyCard color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
+        case 'referral':
+            return <SvgUserPlus color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
+        case 'reward_center':
+            return <SvgReward color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
+        case 'task_center':
+            return <SvgDocument color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
+        case 'logout':
+            return <SvgExit color={colors.red2}/>
+        case 'api_mng':
+            return <SvgLayout color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
+        case 'security':
+            return <SvgLock color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
+        default:
+            return null
     }
 }
 

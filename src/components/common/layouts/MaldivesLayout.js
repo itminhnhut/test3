@@ -41,7 +41,7 @@ const MadivesLayout = ({
                 paddingTop: !navOverComponent ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,
                 ...contentWrapperStyle
             }}
-                 className="relative flex-1">
+                 className="relative flex-1 bg-get-grey4 dark:bg-get-darkBlue2">
                 {children}
             </div>
             <Footer/>

@@ -1,4 +1,4 @@
-import LandingPage from 'version/maldives/v0.1/LandingPage'
+import LandingPage from 'version/maldives/m1/LandingPage'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const Maldives = () => <LandingPage/>

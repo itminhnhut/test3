@@ -25,7 +25,7 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-background dark:bg-background-dark border dark:border-divider-dark #{!important};
+    @apply bg-background dark:bg-get-darkBlue2 border-l border-r border-b dark:border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
   }
 }
@@ -54,8 +54,26 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-background-dark border border-divider-dark #{!important};
+    @apply bg-get-darkBlue2 border-l border-r border-b border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .mal-navbar__link__group___item___childen__lv1___item2 {
+
+    &:hover {
+      @apply bg-get-darkBlue3 #{!important};
+    }
+
+    .mal-navbar__link__group___item___childen__lv1___item2___c {
+
+      .mal-navbar__link__group___item___childen__lv1___item2___c__title {
+        @apply text-textPrimary-dark #{!important};
+      }
+
+      .mal-navbar__link__group___item___childen__lv1___item2___c__description {
+        @apply text-textSecondary-dark #{!important};
+      }
+    }
   }
 }
 
@@ -87,6 +105,24 @@
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
     border: none;
   }
+
+  .mal-navbar__link__group___item___childen__lv1___item2 {
+
+    &:hover {
+      @apply bg-get-lightTeal #{!important};
+    }
+
+    .mal-navbar__link__group___item___childen__lv1___item2___c {
+
+      .mal-navbar__link__group___item___childen__lv1___item2___c__title {
+        @apply text-textPrimary #{!important};
+      }
+
+      .mal-navbar__link__group___item___childen__lv1___item2___c__description {
+        @apply text-textSecondary #{!important};
+      }
+    }
+  }
 }
 
 .mal-navbar__visible {
@@ -105,12 +141,12 @@
 
 .mal-navbar__wrapper {
   @apply relative z-30 w-full flex flex-row items-center justify-between;
-  @apply bg-headerBg dark:shadow-none;
+  @apply bg-headerBg;
 
   height: $MOBILE_NAV_HEIGHT;
   padding: 0 16px;
   transition: all .2s ease;
-  box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.03);
+  //box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.03);
 
   @media (min-width: 992px) {
     height: $DESKTOP_NAV_HEIGHT;
@@ -126,10 +162,27 @@
 
   .mal-navbar__hamburger {
     @apply flex items-center h-full;
+
+    .mal-navbar__hamburger__spacing {
+      margin-left: 28px;
+    }
+
+    .mal-navbar__right_function___dropdown {
+
+    }
+  }
+
+  .mal-navbar__user___wallet {
+    @apply flex items-center cursor-pointer;
+    font-size: 14px;
+
+    span {
+      @apply text-textPrimary dark:text-textPrimary-dark;
+    }
   }
 
   .mal-navbar__user___avatar {
-    @apply block ml-4 h-full;
+    @apply block relative cursor-pointer;
 
     max-width: 25px;
     max-height: 25px;
@@ -137,49 +190,52 @@
     min-height: 25px;
     border-radius: 50%;
     height: 100%;
-    //overflow: hidden;
 
-    &:hover {
-      .mal-navbar__user___cp {
-        @apply block;
-      }
-    }
+    .mal-navbar__dropdown {
+      left: unset !important;
+      right: 0 !important;
+      transform: translateX(25%) !important;
 
-    .mal-navbar__user___cp {
-      @apply absolute hidden;
+      // FOR USER CP
+      .mal-navbar__dropdown__user__info {
+        @apply flex items-center;
+        margin-bottom: 12px;
 
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: 130px;
-      padding-top: 28px;
+        .mal-navbar__dropdown__user__info__avt {
+          min-width: 34px;
+          min-height: 34px;
+          width: 34px;
+          height: 34px;
 
-
-      .mal-navbar__user___cp___wrapper {
-        @apply bg-bgContainer dark:bg-bgContainer-dark dark:shadow-none border dark:border-divider-dark;
-
-        border-color: transparent;
-        padding: 16px;
-        border-radius: 6px;
-        box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
-
-        .mal-navbar__user___cp___item {
-          @apply block text-textPrimary dark:text-textPrimary-dark text-right;
-
-          white-space: nowrap;
-          padding: 8px;
-          border-radius: 6px;
-          font-size: 14px;
-          font-weight: 500;
-
-          &:hover {
-            @apply bg-get-lightTeal dark:bg-get-darkBlue3;
+          img {
+            @apply block;
+            min-width: 100%;
+            height: auto;
           }
         }
 
-        .mal-navbar__user___cp___item:last-child {
-          @apply text-get-red2;
+        .mal-navbar__dropdown__user__info__summary {
+          margin-left: 12px;
+          white-space: nowrap;
+          font-weight: 500;
+          font-size: 14px;
+
+          .mal-navbar__dropdown__user__info__username {
+            @apply w-full flex items-center;
+
+            svg {
+              margin-left: 4px;
+            }
+          }
+
+          .mal-navbar__dropdown__user__info__level {
+            @apply text-dominant;
+          }
         }
+      }
+
+      .mal-navbar__dropdown___item:last-child {
+        @apply text-get-red2 #{!important};
       }
     }
 
@@ -189,33 +245,34 @@
       border-radius: 50%;
     }
 
-    @media (min-width: 576px) {
-      @apply ml-6
-    }
-
-    @media (min-width: 768px) {
-      @apply ml-8
-    }
-
-    @media (min-width: 1366px) {
-      @apply ml-10
-    }
   }
 
   .mal-navbar__link__group {
     @apply h-full flex flex-grow items-center;
 
     .mal-navbar__link__group___item {
-      @apply flex items-center h-full text-sm font-medium text-textPrimary-dark ml-8
+      @apply flex items-center h-full text-sm font-medium text-textPrimary-dark
       relative transition duration-100 ease-in-out;
 
       cursor: pointer;
+      margin-left: 28px;
 
       &:hover {
         @apply text-dominant;
 
         .mal-navbar__link__group___item___childen__lv1 {
           @apply block;
+        }
+
+        .mal-navbar__link__group___item___childen__lv1__w__icon {
+          @apply flex #{!important};
+        }
+
+        .chevron__down {
+          transform: rotate(180deg);
+          svg path {
+            stroke: #00C8BC !important;
+          }
         }
       }
 
@@ -224,12 +281,74 @@
       }
     }
 
+    .mal-navbar__link__group___item___childen__lv1__w__icon {
+      @apply flex-wrap #{!important};
+
+      width: auto;
+      min-width: 700px;
+      border-top-left-radius: 0 !important;
+      border-top-right-radius: 0 !important;
+      padding: 22px 32px !important;
+
+      .mal-navbar__link__group___item___childen__lv1___item2:nth-child(odd) {
+        padding-right: 24px;
+      }
+
+      .mal-navbar__link__group___item___childen__lv1___item2 {
+        @apply w-1/2 flex items-start;
+
+        white-space: nowrap;
+        padding: 16px;
+        border-radius: 6px;
+
+        &:hover {
+          @apply bg-get-lightTeal dark:bg-get-darkBlue3;
+        }
+
+        .mal-navbar__link__group___item___childen__lv1___item2__icon {
+          min-width: 32px;
+          min-height: 32px;
+
+          @media (min-width: 2560px) {
+            min-width: 38px;
+            min-height: 38px;
+          }
+        }
+        .mal-navbar__link__group___item___childen__lv1___item2___c {
+          padding-left: 12px;
+
+          .mal-navbar__link__group___item___childen__lv1___item2___c__title {
+            @apply text-textPrimary dark:text-textPrimary-dark;
+            font-weight: 600;
+
+            @media (min-width: 2560px) {
+              font-size: 16px;
+            }
+          }
+
+          .mal-navbar__link__group___item___childen__lv1___item2___c__description {
+            @apply text-get-grey1;
+
+            padding-top: 4px;
+            white-space: normal;
+            font-weight: 500;
+            font-size: 12px;
+
+            @media (min-width: 2560px) {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
     .mal-navbar__link__group___item___childen__lv1 {
-      @apply absolute hidden left-0 z-50 bg-background dark:bg-background-dark border dark:border-divider-dark;
+      @apply absolute hidden left-0 z-50 bg-background dark:bg-get-darkBlue2
+      border-l border-r border-b dark:border-divider-dark;
 
       top: 100%;
       //margin-top: 1px;
-      border-radius: 6px;
+      border-radius: 12px;
       overflow: hidden;
       transition: max-height .3s ease;
       padding-right: 16px;
@@ -260,12 +379,6 @@
     }
 
 
-    .mal-navbar__link__group___item___childen__lv1___item2 {
-      @apply flex items-center;
-
-    }
-
-
     .mal-navbar__link__spotlight {
       @apply text-sm font-medium text-textPrimary-dark ml-8 pl-8 border-l border-divider-dark;
 
@@ -292,6 +405,79 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
+  }
+
+  .mal-navbar__svg_dominant {
+    &:hover {
+      @apply text-dominant #{!important};
+
+      a, span {
+        //@apply text-dominant #{!important};
+      }
+
+      //svg path {
+      //  stroke: #00C8BC;
+      //}
+    }
+  }
+
+  // Re-used simple dropdown
+  .mal-navbar__with__dropdown {
+    @apply relative;
+
+    &:hover {
+      .chevron__down > svg {
+        transform: rotate(180deg);
+      }
+    }
+
+    &:hover {
+      .mal-navbar__dropdown {
+        @apply block;
+      }
+    }
+
+    // DROP DOWN
+    .mal-navbar__dropdown {
+      @apply absolute hidden;
+
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 130px;
+      padding-top: 25px;
+
+      .mal-navbar__dropdown__wrapper {
+        @apply bg-bgContainer dark:bg-get-darkBlue2 dark:shadow-none
+        border-l border-r border-b dark:border-divider-dark;
+
+        border-color: transparent;
+        padding: 16px;
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+        box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
+        //min-width: 200px;
+
+        .mal-navbar__dropdown___item {
+          @apply flex items-center text-textPrimary dark:text-textPrimary-dark text-right;
+
+          white-space: nowrap;
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-size: 14px;
+          font-weight: 500;
+
+          svg {
+            margin-right: 12px;
+          }
+
+          &:hover {
+            @apply bg-get-lightTeal dark:bg-get-darkBlue3;
+          }
+        }
+
+      }
+    }
   }
 }
 

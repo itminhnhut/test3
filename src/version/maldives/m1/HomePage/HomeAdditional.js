@@ -1,4 +1,4 @@
-import HomeCurrentActivity from 'version/maldives/v0.1/HomePage/HomeCurrentActivity'
+import HomeCurrentActivity from 'version/maldives/m1/HomePage/HomeCurrentActivity'
 import Button from 'components/common/Button'
 import Image from 'next/image'
 import Link from 'next/link'
