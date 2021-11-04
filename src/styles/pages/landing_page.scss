@@ -1128,6 +1128,10 @@
   @media (min-width: 768px) {
     background-color: transparent;
   }
+
+  @media (min-width: 1366px) {
+    padding-top: 100px;
+  }
 }
 
 .landing_page___more {
@@ -1510,6 +1514,12 @@
         height: 44px;
       }
     }
+  }
+}
+
+.landing_page__wallet {
+  @media (min-width: 1366px) {
+    padding-top: 130px !important;
   }
 }
 
