@@ -95,47 +95,47 @@ export const NAV_DATA = [
             },
         ]
     },
-    {
-        key: 2,
-        title: 'Wallet',
-        localized: 'wallet',
-        isNew: false,
-        url: '/',
-        child_lv1: [
-            {
-                key: 0,
-                title: 'Spot Wallet',
-                localized: 'spot_wallet',
-                isNew: false,
-                url: getV1Url('/wallet/account?type=spot'),
-                child_lv2: []
-            },
-            {
-                key: 1,
-                title: 'Futures Wallet',
-                localized: 'futures_wallet',
-                isNew: false,
-                url: getV1Url('/wallet/account?type=futures'),
-                child_lv2: []
-            },
-            {
-                key: 2,
-                title: 'Staking Wallet',
-                localized: 'staking_wallet',
-                isNew: false,
-                url: getV1Url('/wallet/account?type=staking'),
-                child_lv2: []
-            },
-            {
-                key: 3,
-                title: 'Farming Wallet',
-                localized: 'farming_wallet',
-                isNew: false,
-                url: getV1Url('/wallet/account?type=farming'),
-                child_lv2: []
-            },
-        ]
-    },
+    // {
+    //     key: 2,
+    //     title: 'Wallet',
+    //     localized: 'wallet',
+    //     isNew: false,
+    //     url: '/',
+    //     child_lv1: [
+    //         {
+    //             key: 0,
+    //             title: 'Spot Wallet',
+    //             localized: 'spot_wallet',
+    //             isNew: false,
+    //             url: getV1Url('/wallet/account?type=spot'),
+    //             child_lv2: []
+    //         },
+    //         {
+    //             key: 1,
+    //             title: 'Futures Wallet',
+    //             localized: 'futures_wallet',
+    //             isNew: false,
+    //             url: getV1Url('/wallet/account?type=futures'),
+    //             child_lv2: []
+    //         },
+    //         {
+    //             key: 2,
+    //             title: 'Staking Wallet',
+    //             localized: 'staking_wallet',
+    //             isNew: false,
+    //             url: getV1Url('/wallet/account?type=staking'),
+    //             child_lv2: []
+    //         },
+    //         {
+    //             key: 3,
+    //             title: 'Farming Wallet',
+    //             localized: 'farming_wallet',
+    //             isNew: false,
+    //             url: getV1Url('/wallet/account?type=farming'),
+    //             child_lv2: []
+    //         },
+    //     ]
+    // },
     // {
     //     key: 3,
     //     title: 'Explained',
