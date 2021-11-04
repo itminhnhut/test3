@@ -25,7 +25,7 @@ const ThemingSystem = () => {
                                 {t('maldives:landing_page.theming.mb_light_mode')}
                             </div>
                         </div>
-                        <img src={getS3Url('images/screen/landing-page/ip_mb_theming_left.png')} alt="Nami Maldives"/>
+                        <img src={getS3Url('/images/screen/landing-page/ip_mb_theming_left.png')} alt="Nami Maldives"/>
                     </div>
                 </div>
                 <div className="landing_page___theming__right">
@@ -38,7 +38,7 @@ const ThemingSystem = () => {
                                 {t('maldives:landing_page.theming.mb_dark_mode')}
                             </div>
                         </div>
-                        <img src={getS3Url('images/screen/landing-page/ip_mb_theming_right.png')} alt="Nami Maldives"/>
+                        <img src={getS3Url('/images/screen/landing-page/ip_mb_theming_right.png')} alt="Nami Maldives"/>
                     </div>
                 </div>
             </>
@@ -47,7 +47,7 @@ const ThemingSystem = () => {
                 <div className="landing_page___theming__left">
                     <div className="landing_page___theming__item">
                         <div>
-                            <img src={getS3Url(`images/screen/landing-page/ip_desk_theming_1_${language}.png`)} alt=""/>
+                            <img src={getS3Url(`/images/screen/landing-page/ip_desk_theming_1_${language}.png`)} alt=""/>
                         </div>
                         <div className="flex flex-col justify-between">
                             <div className="landing_page___theming__item__content">
@@ -58,14 +58,14 @@ const ThemingSystem = () => {
                                     <Trans>{t('maldives:landing_page.theming.mb_light_mode')}</Trans>
                                 </div>
                             </div>
-                            <img src={getS3Url(`images/screen/landing-page/ip_desk_theming_2_${language}.png`)} alt=""/>
+                            <img src={getS3Url(`/images/screen/landing-page/ip_desk_theming_2_${language}.png`)} alt=""/>
                         </div>
                     </div>
                 </div>
                 <div className="landing_page___theming__right">
                     <div className="landing_page___theming__item">
                         <div>
-                            <img src={getS3Url(`images/screen/landing-page/ip_desk_theming_3_${language}.png`)} alt=""/>
+                            <img src={getS3Url(`/images/screen/landing-page/ip_desk_theming_3_${language}.png`)} alt=""/>
                         </div>
                         <div className="flex flex-col justify-between">
                             <div className="landing_page___theming__item__content">
@@ -76,7 +76,7 @@ const ThemingSystem = () => {
                                     <Trans>{t('maldives:landing_page.theming.mb_dark_mode')}</Trans>
                                 </div>
                             </div>
-                            <img src={getS3Url(`images/screen/landing-page/ip_desk_theming_4_${language}.png`)} alt=""/>
+                            <img src={getS3Url(`/images/screen/landing-page/ip_desk_theming_4_${language}.png`)} alt=""/>
                         </div>
                     </div>
                 </div>

@@ -84,7 +84,7 @@ const LandingPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <img src={getS3Url(`images/screen/landing-page/ip_compare_left_${language}.png`)}
+                                <img src={getS3Url(`/images/screen/landing-page/ip_compare_left_${language}.png`)}
                                      alt="Nami Maldives"/>
                             </div>
                         </div>
@@ -112,7 +112,7 @@ const LandingPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <img src={getS3Url(`images/screen/landing-page/ip_compare_right_${language}.png`)}
+                                <img src={getS3Url(`/images/screen/landing-page/ip_compare_right_${language}.png`)}
                                      alt="Nami Maldives"/>
                             </div>
                         </div>
@@ -139,7 +139,7 @@ const LandingPage = () => {
                                 <div className="landing_page___spot_futures__description">
                                     {t('maldives:landing_page.exchange_futures.exchange')}
                                 </div>
-                                <img src={getS3Url(`images/screen/landing-page/exchange_input_${language}.png`)} alt="Nami Maldives"/>
+                                <img src={getS3Url(`/images/screen/landing-page/exchange_input_${language}.png`)} alt="Nami Maldives"/>
                             </div>
                             <div style={width < 992 ? { marginTop: 20 } : {}}
                                  className="landing_page___spot_futures__right landing_page___card">
@@ -163,7 +163,7 @@ const LandingPage = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <img src={getS3Url(`images/screen/landing-page/ip_exchange_${language}.png`)} alt="Nami Maldives"/>
+                                    <img src={getS3Url(`/images/screen/landing-page/ip_exchange_${language}.png`)} alt="Nami Maldives"/>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ const LandingPage = () => {
                                 <div className="landing_page___spot_futures__description">
                                     {t('maldives:landing_page.exchange_futures.futures')}
                                 </div>
-                                <img src={getS3Url(`images/screen/landing-page/futures_input_${language}.png`)} alt="Nami Maldives"/>
+                                <img src={getS3Url(`/images/screen/landing-page/futures_input_${language}.png`)} alt="Nami Maldives"/>
                             </div>
                             <div style={width < 992 ? { marginTop: 20 } : {}}
                                  className="landing_page___spot_futures__right landing_page___card">
@@ -189,7 +189,7 @@ const LandingPage = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <img src={getS3Url(`images/screen/landing-page/ip_futures_${language}.png`)} alt="Nami Maldives"/>
+                                    <img src={getS3Url(`/images/screen/landing-page/ip_futures_${language}.png`)} alt="Nami Maldives"/>
                                 </div>
                             </div>
                         </div>
@@ -221,7 +221,7 @@ const LandingPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <img src={getS3Url(`images/screen/landing-page/ip_wallet_left_${language}.png`)}
+                                <img src={getS3Url(`/images/screen/landing-page/ip_wallet_left_${language}.png`)}
                                      alt="Nami Maldives"/>
                             </div>
                         </div>
@@ -243,7 +243,7 @@ const LandingPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <img src={getS3Url(`images/screen/landing-page/ip_wallet_right_${language}.png`)}
+                                <img src={getS3Url(`/images/screen/landing-page/ip_wallet_right_${language}.png`)}
                                      alt="Nami Maldives"/>
                             </div>
                         </div>
@@ -265,8 +265,8 @@ const LandingPage = () => {
                         {t('maldives:landing_page.more.subtitle')}
                     </div>
                     <div className="landing_page___more___wrapper mal-container">
-                        <img src={getS3Url(`images/screen/landing-page/ip_more_1_${language}.png`)} alt="Nami Maldives"/>
-                        <img src={getS3Url(`images/screen/landing-page/ip_more_2_${language}.png`)} alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_more_1_${language}.png`)} alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_more_2_${language}.png`)} alt="Nami Maldives"/>
                     </div>
                 </div>
             </div>

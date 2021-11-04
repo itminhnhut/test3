@@ -16,7 +16,7 @@ const AttractiveFeatures = () => {
                 <div className="function__wrapper">
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_swap.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_swap.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Swap
@@ -24,7 +24,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_rocket.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_rocket.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Launchpad
@@ -32,7 +32,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_staking.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_staking.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Staking
@@ -42,7 +42,7 @@ const AttractiveFeatures = () => {
                 <div className="function__wrapper">
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_farming.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_farming.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Farming
@@ -50,7 +50,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_wallet.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_wallet.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             {t('navbar:menu.wallet')}
@@ -60,7 +60,7 @@ const AttractiveFeatures = () => {
                 <div className="function__wrapper">
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_copytrade.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_copytrade.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Copy Trades
@@ -68,7 +68,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_news.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_news.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             News
@@ -76,7 +76,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_explained.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_explained.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Explained
@@ -89,7 +89,7 @@ const AttractiveFeatures = () => {
                 <div className="function__wrapper">
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_swap.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_swap.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Swap
@@ -97,7 +97,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_rocket.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_rocket.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Launchpad
@@ -105,7 +105,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_staking.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_staking.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Staking
@@ -113,7 +113,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_farming.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_farming.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Farming
@@ -123,7 +123,7 @@ const AttractiveFeatures = () => {
                 <div className="function__wrapper">
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_wallet.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_wallet.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             {t('navbar:menu.wallet')}
@@ -131,7 +131,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_copytrade.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_copytrade.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Copy Trades
@@ -139,7 +139,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_news.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_news.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             News
@@ -147,7 +147,7 @@ const AttractiveFeatures = () => {
                     </div>
                     <div className="function__item">
                         <div className="function__item__icon">
-                            <img src={getS3Url('images/icon/ic_explained.png')} alt="Nami Maldives"/>
+                            <img src={getS3Url('/images/icon/ic_explained.png')} alt="Nami Maldives"/>
                         </div>
                         <div className="function__item__label">
                             Explained
@@ -176,7 +176,7 @@ const AttractiveFeatures = () => {
                             <div className="landing_page___attractive_features__content__left__description">
                                 {t('maldives:landing_page.attractive_features.description')}
                             </div>
-                            <img src={getS3Url('images/icon/speaker.png')} alt={null} />
+                            <img src={getS3Url('/images/icon/speaker.png')} alt={null} />
                         </div>
                     </div>
                     <div style={width < 992 ? { marginTop: 20 } : {}}
@@ -212,7 +212,7 @@ const AttractiveFeatures = () => {
                             </div>
                         </div>
                         <div className="landing_page___portfolio__right">
-                            <img src={getS3Url(`images/screen/landing-page/graphics_portfolio_${language}.png`)} alt="Nami Maldives"/>
+                            <img src={getS3Url(`/images/screen/landing-page/graphics_portfolio_${language}.png`)} alt="Nami Maldives"/>
                         </div>
                     </div>
                 </div>

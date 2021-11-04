@@ -23,7 +23,7 @@ const PaymentAndKYC = () => {
                         </div>
                     </div>
                     <div className="landing_page___payment_kyc___item__img">
-                        <img src={getS3Url(`images/screen/landing-page/ip_kyc_1_${language}.png`)} alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_kyc_1_${language}.png`)} alt="Nami Maldives"/>
                     </div>
                 </div>
                 <div style={width < 1200 ? {marginTop: 20} : {}}
@@ -61,7 +61,7 @@ const PaymentAndKYC = () => {
                         </div>
                     </div>
                     <div className="landing_page___payment_kyc___item__img">
-                        <img src={getS3Url(`images/screen/landing-page/ip_kyc_2_${language}.png`)} alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_kyc_2_${language}.png`)} alt="Nami Maldives"/>
                     </div>
                 </div>
             </div>

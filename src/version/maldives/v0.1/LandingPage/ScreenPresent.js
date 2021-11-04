@@ -1,10 +1,11 @@
 import Link from 'next/link'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { log } from 'utils'
+import { getS3Url } from 'redux/actions/utils'
 
 const ScreenPresent = ({ parentState }) => {
     // use Hooks
@@ -78,27 +79,27 @@ const ScreenPresent = ({ parentState }) => {
             <>
                 <div className="landing_page___mb_screen_present__top">
                     <div className="landing_page___mb_screen_present__top__left">
-                        <img src="images/screen/landing-page/ip_mb_top_left.png" alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_mb_top_left.png`)} alt="Nami Maldives"/>
                     </div>
                     <div className="landing_page___mb_screen_present__top__right">
-                        <img src="images/screen/landing-page/ip_mb_top_right_1.png" alt="Nami Maldives"/>
-                        <img src="images/screen/landing-page/ip_mb_top_right_2.png" alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_mb_top_right_1.png`)} alt="Nami Maldives"/>
+                        <img src={getS3Url('/images/screen/landing-page/ip_mb_top_right_2.png')} alt="Nami Maldives"/>
                     </div>
                 </div>
                 <div className="landing_page___mb_screen_present__bott">
                     <div className="">
-                        <img src="images/screen/landing-page/ip_mb_bott_1.png" alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_mb_bott_1.png`)} alt="Nami Maldives"/>
                     </div>
                     <div className="">
-                        <img src="images/screen/landing-page/ip_mb_bott_2.png" alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_mb_bott_2.png`)} alt="Nami Maldives"/>
                     </div>
                     <div className="">
-                        <img src="images/screen/landing-page/ip_mb_bott_3.png" alt="Nami Maldives"/>
+                        <img src={getS3Url(`/images/screen/landing-page/ip_mb_bott_3.png`)} alt="Nami Maldives"/>
                     </div>
                 </div>
 
                 <div className="landing_page___mb_screen_present__nami">
-                    <img src="images/screen/landing-page/nami_maldives.png" alt="Nami Maldives"/>
+                    <img src={getS3Url(`/images/screen/landing-page/nami_maldives.png`)} alt="Nami Maldives"/>
                     <div className="landing_page___mb_screen_present__title">
                         {renderTitle()}
                     </div>
@@ -110,59 +111,21 @@ const ScreenPresent = ({ parentState }) => {
                 <div className="landing_page___mb_screen_present__button___group">
                     <Link href="https://apps.apple.com/app/id1480302334">
                         <a className="landing_page___mb_screen_present___download__item" target="_blank">
-                            <img src="/images/download_app_store.png" alt="Nami Exchange"/>
+                            <img src={getS3Url('/images/download_app_store.png')} alt="Nami Exchange"/>
                         </a>
                     </Link>
                     <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                         <a className="landing_page___mb_screen_present___download__item" target="_blank">
-                            <img src="/images/download_play_store.png" alt="Nami Exchange"/>
+                            <img src={getS3Url('/images/download_play_store.png')} alt="Nami Exchange"/>
                         </a>
                     </Link>
                     <div className="landing_page___mb_screen_present___download__item" onClick={() => parentState && parentState({ showQR: true })}>
-                        <img src="/images/icon/ic_qr.png" alt="Nami Exchange"/>
+                        <img src={getS3Url('/images/icon/ic_qr.png')} alt="Nami Exchange"/>
                     </div>
                 </div>
             </>
         )
     }
-
-    const renderDesktop = () => {
-        return (
-            <div className="landing_page__screen_present">
-                <div className="landing_page__screen_present__left">
-                    <img src="images/screen/landing-page/ip_desk_left_1.png" alt="Nami Maldives"/>
-                    <img src="images/screen/landing-page/ip_desk_left_2.png" alt="Nami Maldives"/>
-                    </div>
-                    <div className="landing_page__screen_present__center">
-                        <div className="landing_page__screen_present__center__left">
-                            <img src="images/screen/landing-page/ip_desk_center_1.png" alt="Nami Maldives"/>
-                            <img src="images/screen/landing-page/ip_desk_center_2.png" alt="Nami Maldives"/>
-                        </div>
-                        <div className="landing_page__screen_present__center__right">
-                            <img src="images/screen/landing-page/ip_desk_center_3.png" alt="Nami Maldives"/>
-                            <img src="images/screen/landing-page/ip_desk_center_4.png" alt="Nami Maldives"/>
-                        </div>
-                        <div className="landing_page__screen_present__center__bott">
-                            <img src="images/screen/landing-page/nami_maldives.png" alt="Nami Maldives"/>
-                            <div className="landing_page___screen_present__title">
-                                {renderTitle()}
-                            </div>
-                            <div className="landing_page___screen_present__description">
-                            {renderDescription()}
-                        </div>
-                    </div>
-                </div>
-                <div className="landing_page__screen_present__right">
-                    <img src="images/screen/landing-page/ip_desk_right_1.png" alt="Nami Maldives"/>
-                    <img src="images/screen/landing-page/ip_desk_right_2.png" alt="Nami Maldives"/>
-                </div>
-            </div>
-        )
-    }
-
-    useEffect(() => {
-        log.d('maldives check lang___', language)
-    }, [language])
 
     return (
         <div className="landing_page___screen_present">
