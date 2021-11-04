@@ -10,15 +10,15 @@ import Button from 'components/common/Button'
 import colors from 'styles/colors'
 import Image from 'next/image'
 import Link from 'next/link'
-import NotificationList from 'components/notification/NotificationList'
+// import NotificationList from 'components/notification/NotificationList'
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { NAV_DATA, SPOTLIGHT } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
 import { getLoginUrl, getV1Url } from 'redux/actions/utils'
-import { buildLogoutUrl, log } from 'utils'
+import { buildLogoutUrl } from 'utils'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
 export const NAVBAR_USE_TYPE = {

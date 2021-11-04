@@ -56,7 +56,7 @@ const SymbolDetail = (props) => {
         return setUserSymbolList(favoriteId, newFavoriteList);
     };
     if (!symbolTicker) {
-        return <div className="absolute w-full h-full bg-white z-10 flex justify-center items-center">
+        return <div className="absolute w-full h-full bg-white z-10 flex justify-center items-center bg-bgContainer dark:bg-bgContainer-dark">
             <IconLoading color="#09becf" />
         </div>;
     }

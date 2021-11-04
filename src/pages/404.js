@@ -1,9 +1,9 @@
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import Link from 'next/link';
+
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import LayoutWithHeader from 'components/common/layouts/layoutWithHeader';
-import Footer from 'components/common/Footer';
 import { getS3Url } from 'redux/actions/utils';
 
 const Custom404 = () => {
@@ -11,8 +11,8 @@ const Custom404 = () => {
     const router = useRouter();
     const { locale } = router;
     return (
-        <LayoutWithHeader>
-            <div className="flex flex-1 justify-center bg-black">
+        <MaldivesLayout>
+            <div className="flex flex-1 justify-center items-center bg-black h-full">
                 <div className="referral-container px-10 xl:px-0 xl:max-w-screen-xl w-full rounded-3xl">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center ">
                         <div className="order-2 lg:order-1">
@@ -30,9 +30,7 @@ const Custom404 = () => {
                     </div>
                 </div>
             </div>
-
-            <Footer />
-        </LayoutWithHeader>
+        </MaldivesLayout>
     );
 };
 
