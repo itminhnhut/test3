@@ -177,9 +177,9 @@ const PocketFooter = ({ active, parentState }) => {
                                 <img src={getS3Url('/images/icon/ic_footer_globe.png')} className="mr-3" alt="" width="16" height="16"/> Blog
                             </a>
                         </Link>
-                        <Link href={`https://coinmarketcap.com/${language}/currencies/nami-corporation-token/`}>
+                        <Link href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
                             <a target="_blank" className="!flex items-center">
-                                <img src={getS3Url('/images/icon/ic_footer_coingecko.png')} className="mr-3" alt="" width="16" height="16"/> CoinMarketCap
+                                <img src={getS3Url('/images/icon/ic_footer_coingecko.png')} className="mr-3" alt="" width="16" height="16"/> CoinGecko
                             </a>
                         </Link>
                     </div>
