@@ -43,7 +43,7 @@ const HomePage = () => {
 
 
     return (
-        <MaldivesLayout navOverComponent navMode={NAVBAR_USE_TYPE.LIGHT}>
+        <MaldivesLayout navOverComponent navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
                 <HomeIntroduce parentState={setState}/>
                 <HomeMarketTrend/>
