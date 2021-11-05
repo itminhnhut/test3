@@ -277,10 +277,20 @@ module.exports = {
                 DEFAULT: '#09becf'
             }
         },
+        screens: {
+            'sm': '640px',
+            'md': '768px',
+            'lg': '1024px',
+            'xl': '1280px',
+            '2xl': '1440px',
+        },
         extend: {
             spacing: {
                 '128': '32rem',
-                '144': '36rem'
+                '144': '36rem',
+                '8': '8px',
+                '12': '12px',
+                '16': '16px'
             },
             borderRadius: {
                 'xl': '0.625rem',

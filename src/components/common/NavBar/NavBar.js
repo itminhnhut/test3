@@ -250,16 +250,18 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         const { avatar, username, email } = auth
         const items = []
 
-        const getUserControlSvg = (localized) => {
-            let color
-            if (useOnly === NAVBAR_USE_TYPE.FLUENT) {
-                color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue
-            } else if (useOnly === NAVBAR_USE_TYPE.DARK) {
-                color = colors.grey4
-            } else if (useOnly === NAVBAR_USE_TYPE.LIGHT) {
-                color = colors.darkBlue
-            }
+        let color
+        if (useOnly === NAVBAR_USE_TYPE.FLUENT) {
+            color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue
+        } else if (useOnly === NAVBAR_USE_TYPE.DARK) {
+            color = colors.grey4
+        } else if (useOnly === NAVBAR_USE_TYPE.LIGHT) {
+            color = colors.darkBlue
+        } else {
+            color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue
+        }
 
+        const getUserControlSvg = (localized) => {
             switch (localized) {
                 case 'profile':
                     return <SvgUser type={2} color={color}/>
