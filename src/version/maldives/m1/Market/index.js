@@ -8,10 +8,10 @@ import { API_GET_TRENDING } from 'redux/actions/apis'
 const MarketIndex = () => {
     // * Initial State
     const [state, set] = useState({
-        loadingTrend: false,
-        trending: null
+       loadingTrend: false,
+       trending: null
     })
-    const setState = (state) => set(prevState => ({...prevState, ...state}))
+    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
     // * Helper
     const getTrending = async () => {
@@ -48,7 +48,7 @@ const MarketIndex = () => {
 
     return (
         <MaldivesLayout>
-            <div className="mal-container">
+            <div className="mal-container mt-20">
                 <MarketTrend data={state.trending} loading={state.loadingTrend}/>
                 <MarketTable/>
             </div>

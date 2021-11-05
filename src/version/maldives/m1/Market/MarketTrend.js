@@ -10,17 +10,13 @@ const MarketTrend = ({ loading, data }) => {
     // * Render Handler
     const renderCard = useCallback(() => {
         return data && data.map(d => (
-            <div key={d.s} className="keen-slider__slide">
+            <div key={d.s}>
                 <TrendItem pair={d}/>
             </div>
         ))
     }, [data])
 
-    return (
-        <div>
-            {renderCard()}
-        </div>
-    )
+    return renderCard()
 }
 
 export default MarketTrend
