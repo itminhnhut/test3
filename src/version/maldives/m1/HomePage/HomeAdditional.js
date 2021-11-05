@@ -58,27 +58,27 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_2'>
-                                    <span className="text-teal">40,000+</span>
+                                    <span className="text-get-teal">40,000+</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_3'>
-                                    <span className="text-teal">400+</span>
+                                    <span className="text-get-teal">400+</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_4'>
-                                    <span className="text-teal">125x</span>
+                                    <span className="text-get-teal">125x</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_5'>
-                                    <span className="text-teal">0,06%</span>
+                                    <span className="text-get-teal">0,06%</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_6'>
-                                    <span className="text-teal">24/7</span>
+                                    <span className="text-get-teal">24/7</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
@@ -93,6 +93,18 @@ const HomeAdditional = ({ parentState }) => {
                                     <Link href="https://twitter.com/NamiTrade">
                                         <a target="_blank">
                                             <Image src="/images/icon/ic_twitter.png" width={width >= 768 ? '52' : '32'}
+                                                   height={width >= 768 ? '52' : '32'}/>
+                                        </a>
+                                    </Link>
+                                    <Link href="https://t.me/namitradevn">
+                                        <a target="_blank" title="Telegram VN">
+                                            <Image src="/images/icon/ic_telegram.png" width={width >= 768 ? '52' : '32'}
+                                                   height={width >= 768 ? '52' : '32'}/>
+                                        </a>
+                                    </Link>
+                                    <Link href="https://t.me/namitrade">
+                                        <a target="_blank" title="Telegram Global">
+                                            <Image src="/images/icon/ic_telegram.png" width={width >= 768 ? '52' : '32'}
                                                    height={width >= 768 ? '52' : '32'}/>
                                         </a>
                                     </Link>

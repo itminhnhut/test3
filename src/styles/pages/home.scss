@@ -836,11 +836,14 @@
           margin-top: 8px;
 
           &:last-child {
-            @apply flex flex-row items-center;
+            @apply flex flex-col;
             margin-top: 27px;
 
             a {
-              @apply flex items-center justify-center ml-4;
+              @apply flex items-center justify-center;
+
+              margin-top: 16px;
+              margin-right: 12px;
             }
           }
 
@@ -851,10 +854,7 @@
 
               a {
                 @apply mt-3;
-              }
-
-              a:first-child {
-                @apply ml-0;
+                margin-right: 16px;
               }
             }
           }
@@ -862,6 +862,7 @@
           @media (min-width: 992px) {
             a {
               margin-top: 20px !important;
+              margin-right: 20px;
             }
           }
 
