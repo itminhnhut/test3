@@ -6,12 +6,12 @@ import SvgMoon from 'components/svg/Moon'
 import SvgUser from 'components/svg/SvgUser'
 import SvgMenu from 'components/svg/Menu'
 import SvgSun from 'components/svg/Sun'
-import Button from 'components/common/Button'
 import colors from 'styles/colors'
 import Image from 'next/image'
 import Link from 'next/link'
+import Axios from 'axios'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
@@ -30,6 +30,8 @@ import SvgLayout from 'components/svg/SvgLayout'
 import SvgLock from 'components/svg/SvgLock'
 import { useAsync } from 'react-use'
 import { getMarketWatch } from 'redux/actions/market'
+import { API_GET_VIP } from 'redux/actions/apis'
+import { PulseLoader } from 'react-spinners'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -47,6 +49,8 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
        isDrawer: false,
        hideOnScroll: true,
        pairsLength: '---',
+       loadingVipLevel: false,
+       vipLevel: null
     })
     const setState = (_state) => set(prevState => ({...prevState, ..._state}));
 
@@ -98,6 +102,21 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         setState({isDrawer: status});
         layoutStateHandler && layoutStateHandler({isDrawer: status})
     }
+
+    const getVip = async () => {
+        setState({loadingVipLevel: true});
+        try {
+            const {data} = await Axios.get(API_GET_VIP);
+            if (data?.status === 'ok' && data?.data) {
+                setState({vipLevel: data?.data.level});
+            }
+        } catch (error) {
+            console.log(`Cant get user vip level: ${error}`)
+        } finally {
+            setState({loadingVipLevel: false});
+        }
+    };
+
 
     // * Render Handler
     const renderDesktopNavItem = useCallback(() => {
@@ -274,6 +293,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
             )
         })
 
+
         return (
             <div className="mal-navbar__dropdown">
                 <div className="mal-navbar__dropdown__wrapper">
@@ -286,7 +306,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                                 {username || 'Guest'} <SvgCheckSuccess/>
                             </div>
                             <div className="mal-navbar__dropdown__user__info__level">
-                                {/*VIP 999*/}
+                                {state.loadingVipLevel ? <PulseLoader size={3} color={colors.teal}/> : `VIP ${state.vipLevel}`}
                             </div>
                         </div>
                     </div>
@@ -294,20 +314,24 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                 </div>
             </div>
         )
-    }, [auth, currentTheme, useOnly])
+    }, [auth, currentTheme, useOnly, state.vipLevel, state.loadingVipLevel])
 
-    const renderWallet = () => {
-        return (
-            <div className="">
-
-            </div>
-        )
-    }
+    // const renderWallet = () => {
+    //     return (
+    //         <div className="">
+    //
+    //         </div>
+    //     )
+    // }
 
     useAsync(async () => {
         const pairs = await getMarketWatch()
         if (pairs && pairs.length) setState({ pairsLength: pairs.length })
     })
+
+    useEffect(() => {
+        getVip()
+    }, [])
 
     return (
         <>
