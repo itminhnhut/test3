@@ -1,4 +1,5 @@
 import qs from 'qs'
+import { get } from 'lodash'
 
 export const ___DEV___ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev'
 
@@ -23,4 +24,26 @@ export function buildLogoutUrl() {
         redirect: currentUrl
     };
     return `/logout?${qs.stringify(params)}`;
+}
+
+export function initMarketWatchItem (pair, debug = false) {
+    const _ = {
+        symbol: get(pair, 's', null),     // this.symbol = source.s;
+        lastPrice: get(pair, 'p', null), // this.lastPrice = +source.p;
+        lastPrice24h: get(pair, 'ld', null), // this.lastPrice24h = +source.ld;
+        high: get(pair, 'h', null), // this.high = +source.h;
+        low: get(pair, 'l', null), // this.low = +source.l;
+        high1h: get(pair, 'hh', null), // this.high1h = +source.hh;
+        low1h: get(pair, 'lh', null), // this.low1h = +source.lh;
+        totalExchangeVolume: get(pair, 'vb', null), // this.totalExchangeVolume = source.vb;
+        volume24h: get(pair, 'vq', null),  // this.volume24h = source.vq;
+        quoteAsset: get(pair, 'q', null),
+        quoteAssetId: get(pair, 'qi', null),
+        baseAsset: get(pair, 'b'),
+        baseAssetId: get(pair, 'bi', null),
+        up: get(pair, 'u', false), // this.up = source.u;
+        lastHistoryId: get(pair, 'li', null)  // this.lastHistoryId = source.li;
+    }
+    debug && log.d('pair___', _)
+    return _
 }

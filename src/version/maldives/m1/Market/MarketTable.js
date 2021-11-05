@@ -4,7 +4,7 @@ const MarketTable = ({ data }) => {
 
     return (
         <div>
-            market table
+            {/*market table*/}
         </div>
     )
 }

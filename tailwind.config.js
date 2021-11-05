@@ -287,12 +287,12 @@ module.exports = {
         extend: {
             spacing: {
                 '128': '32rem',
-                '144': '36rem',
-                '8': '8px',
-                '12': '12px',
-                '16': '16px'
+                '144': '36rem'
             },
             borderRadius: {
+                '4': '4px',
+                '6': '6px',
+                '12': '12px',
                 'xl': '0.625rem',
                 '3xl': '1.25rem'
             },

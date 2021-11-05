@@ -355,7 +355,7 @@
 
     .mal-navbar__link__group___item {
       @apply flex items-center h-full text-sm font-medium text-textPrimary-dark
-      relative transition duration-100 ease-in-out;
+      relative;
 
       cursor: pointer;
       margin-left: 28px;
