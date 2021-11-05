@@ -35,7 +35,7 @@
     "convert": "Nami Swap",
     "convert_description": "Giao dịch crypto chỉ với một lần click",
     "spot": "Giao dịch Spot",
-    "spot_description": "Hơn xxx Token đã được niêm yết với mức thanh khoản cao",
+    "spot_description": "Hơn {{pairsLength}} Token đã được niêm yết với mức thanh khoản cao",
     "futures": "Futures",
     "futures_description": "Đòn bẩy lên đến X100",
     "margin": "Margin",

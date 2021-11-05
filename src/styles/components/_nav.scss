@@ -28,6 +28,40 @@
     @apply bg-background dark:bg-get-darkBlue2 border-l border-r border-b dark:border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
   }
+
+  // Re-used simple dropdown
+  .mal-navbar__with__dropdown {
+
+    .mal-navbar__dropdown {
+      .mal-navbar__dropdown__wrapper {
+        @apply bg-bgContainer dark:bg-get-darkBlue2 dark:shadow-none
+        border-l border-r border-b dark:border-divider-dark #{!important};
+
+        box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
+        border-color: transparent;
+
+        .mal-navbar__dropdown___item {
+          @apply text-textPrimary dark:text-textPrimary-dark text-right #{!important};
+
+          &:hover {
+            @apply bg-get-darkBlue3;
+          }
+        }
+      }
+    }
+  }
+
+  .mal-navbar__user___avatar {
+    .mal-navbar__dropdown {
+      .mal-navbar__dropdown__user__info {
+        .mal-navbar__dropdown__user__info__summary {
+          .mal-navbar__dropdown__user__info__username {
+              @apply text-textPrimary dark:text-textPrimary-dark #{!important};
+          }
+        }
+      }
+    }
+  }
 }
 
 .mal-navbar__wrapper__use__dark {
@@ -72,6 +106,36 @@
 
       .mal-navbar__link__group___item___childen__lv1___item2___c__description {
         @apply text-textSecondary-dark #{!important};
+      }
+    }
+  }
+
+  // Re-used simple dropdown
+  .mal-navbar__with__dropdown {
+
+    .mal-navbar__dropdown {
+      .mal-navbar__dropdown__wrapper {
+        @apply bg-get-darkBlue2 shadow-none border-l border-r border-b border-divider-dark #{!important};
+
+        .mal-navbar__dropdown___item {
+          @apply text-textPrimary-dark #{!important};
+
+          &:hover {
+            @apply bg-get-darkBlue3 #{!important};
+          }
+        }
+      }
+    }
+  }
+
+  .mal-navbar__user___avatar {
+    .mal-navbar__dropdown {
+      .mal-navbar__dropdown__user__info {
+        .mal-navbar__dropdown__user__info__summary {
+          .mal-navbar__dropdown__user__info__username {
+            @apply text-textPrimary-dark #{!important};
+          }
+        }
       }
     }
   }
@@ -120,6 +184,37 @@
 
       .mal-navbar__link__group___item___childen__lv1___item2___c__description {
         @apply text-textSecondary #{!important};
+      }
+    }
+  }
+
+
+  // Re-used simple dropdown
+  .mal-navbar__with__dropdown {
+
+    .mal-navbar__dropdown {
+      .mal-navbar__dropdown__wrapper {
+        @apply bg-bgContainer border-0 #{!important};
+
+        .mal-navbar__dropdown___item {
+          @apply text-textPrimary #{!important};
+
+          &:hover {
+            @apply bg-get-lightTeal #{!important};
+          }
+        }
+      }
+    }
+  }
+
+  .mal-navbar__user___avatar {
+    .mal-navbar__dropdown {
+      .mal-navbar__dropdown__user__info {
+        .mal-navbar__dropdown__user__info__summary {
+          .mal-navbar__dropdown__user__info__username {
+            @apply text-textPrimary #{!important};
+          }
+        }
       }
     }
   }
@@ -243,6 +338,12 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
+    }
+
+    &:hover {
+      > div.user__svg svg path {
+          stroke: #00C8BC;
+      }
     }
 
   }
@@ -412,12 +513,12 @@
       @apply text-dominant #{!important};
 
       a, span {
-        //@apply text-dominant #{!important};
+        @apply text-dominant #{!important};
       }
 
-      //svg path {
-      //  stroke: #00C8BC;
-      //}
+      svg path {
+        stroke: #00C8BC;
+      }
     }
   }
 
@@ -480,7 +581,6 @@
     }
   }
 }
-
 
 
 .mal-pocket-navbar__drawer {

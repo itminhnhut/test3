@@ -52,7 +52,7 @@ const HomeMarketTrend = () => {
                     <div className={`homepage-markettrend__tab___item
                                          ${state.marketTabIndex === 0 ? 'homepage-markettrend__tab___item__active' : ''}`}
                          onClick={() => setState({ marketTabIndex: 0 })}>
-                        {t('home:markettrend.top_gainer')}
+                        {t('home:markettrend.top_vol')}
                     </div>
                     {width >= 992 && <div className={`homepage-markettrend__tab__item___selector
                                                               ${state.marketTabIndex === 0 ?
@@ -62,7 +62,7 @@ const HomeMarketTrend = () => {
                     <div className={`homepage-markettrend__tab___item
                                          ${state.marketTabIndex === 1 ? 'homepage-markettrend__tab___item__active' : ''}`}
                          onClick={() => setState({ marketTabIndex: 1 })}>
-                        {t('home:markettrend.top_loser')}
+                        {t('home:markettrend.top_gainer')}
                     </div>
                     {width >= 992 && <div className={`homepage-markettrend__tab__item___selector
                                                               ${state.marketTabIndex === 1 ?
@@ -72,12 +72,13 @@ const HomeMarketTrend = () => {
                     <div className={`homepage-markettrend__tab___item
                                          ${state.marketTabIndex === 2 ? 'homepage-markettrend__tab___item__active' : ''}`}
                          onClick={() => setState({ marketTabIndex: 2 })}>
-                        {t('home:markettrend.top_vol')}
+                        {t('home:markettrend.top_loser')}
                     </div>
                     {width >= 992 && <div className={`homepage-markettrend__tab__item___selector
                                                               ${state.marketTabIndex === 2 ?
                         'homepage-markettrend__tab__item___selector__active' : ''}`}/>}
                 </div>
+
 
                 {width >= 992 && <a href="/trade" className="homepage-markettrend__market_table__explore">
                     {t('home:markettrend.explore_market')}

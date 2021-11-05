@@ -16,10 +16,9 @@ import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { getLoginUrl, getV1Url } from 'redux/actions/utils'
+import { getLoginUrl } from 'redux/actions/utils'
 import { buildLogoutUrl } from 'utils'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
-import { User } from 'react-feather'
 import SvgWallet from 'components/svg/Wallet'
 import SvgCheckSuccess from 'components/svg/CheckSuccess'
 import SvgIdentifyCard from 'components/svg/SvgIdentifyCard'
@@ -29,6 +28,8 @@ import SvgDocument from 'components/svg/SvgDocument'
 import SvgExit from 'components/svg/SvgExit'
 import SvgLayout from 'components/svg/SvgLayout'
 import SvgLock from 'components/svg/SvgLock'
+import { useAsync } from 'react-use'
+import { getMarketWatch } from 'redux/actions/market'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -42,7 +43,11 @@ const NAV_HIDE_THEME_BUTTON = [
 
 const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     // * Initial State
-    const [state, set] = useState({ isDrawer: false, hideOnScroll: true })
+    const [state, set] = useState({
+       isDrawer: false,
+       hideOnScroll: true,
+       pairsLength: '---',
+    })
     const setState = (_state) => set(prevState => ({...prevState, ..._state}));
 
     // * Use hooks
@@ -174,7 +179,8 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                                         {/*{child.isNew && <div className="mal-dot__newest"/>*/}
                                     </div>
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2___c__description">
-                                        {t(`navbar:submenu.${child.localized}_description`)}
+                                        {t(`navbar:submenu.${child.localized}_description`,
+                                           child.localized === 'spot' ? {pairsLength: state.pairsLength} : undefined)}
                                     </div>
                                 </div>
                             </a>
@@ -208,7 +214,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                 </Link>
             )
         })
-    }, [width])
+    }, [width, state.pairsLength])
 
     const renderThemeButton = useCallback(() => {
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null
@@ -224,12 +230,45 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     const renderUserControl = useCallback(() => {
         const { avatar, username, email } = auth
         const items = []
+
+        const getUserControlSvg = (localized) => {
+            let color
+            if (useOnly === NAVBAR_USE_TYPE.FLUENT) {
+                color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue
+            } else if (useOnly === NAVBAR_USE_TYPE.DARK) {
+                color = colors.grey4
+            } else if (useOnly === NAVBAR_USE_TYPE.LIGHT) {
+                color = colors.darkBlue
+            }
+
+            switch (localized) {
+                case 'profile':
+                    return <SvgUser type={2} color={color}/>
+                case 'identify':
+                    return <SvgIdentifyCard color={color}/>
+                case 'referral':
+                    return <SvgUserPlus color={color}/>
+                case 'reward_center':
+                    return <SvgReward color={color}/>
+                case 'task_center':
+                    return <SvgDocument color={color}/>
+                case 'logout':
+                    return <SvgExit color={colors.red2}/>
+                case 'api_mng':
+                    return <SvgLayout color={color}/>
+                case 'security':
+                    return <SvgLock color={color}/>
+                default:
+                    return null
+            }
+        }
+
         USER_CP.map(item => {
             if (!!item.hide) return null
             items.push(
                 <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
                     <a className="mal-navbar__dropdown___item">
-                        {getUserControlSvg(item.localized, currentTheme)} {t(`navbar:menu.user.${item.localized}`)}
+                        {getUserControlSvg(item.localized)} {t(`navbar:menu.user.${item.localized}`)}
                     </a>
                 </Link>
             )
@@ -255,7 +294,20 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                 </div>
             </div>
         )
-    }, [auth, currentTheme])
+    }, [auth, currentTheme, useOnly])
+
+    const renderWallet = () => {
+        return (
+            <div className="">
+
+            </div>
+        )
+    }
+
+    useAsync(async () => {
+        const pairs = await getMarketWatch()
+        if (pairs && pairs.length) setState({ pairsLength: pairs.length })
+    })
 
     return (
         <>
@@ -321,9 +373,10 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                                 </span>
                                 <SvgIcon name="chevron_down" size={15} color={navTheme.color}
                                          className="chevron__down" style={{ marginLeft: 4}}/>
+                                {width >= 992 && renderWallet()}
                             </div>
-                            <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__svg_dominant mal-navbar__hamburger__spacing">
-                                <SvgUser type={2} size={30} className="cursor-pointer"
+                            <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
+                                <SvgUser type={2} size={30} className="cursor-pointer user__svg"
                                          style={{marginTop: -3}} color={navTheme.color}/>
                                 {width >= 992 && renderUserControl()}
                             </div>
@@ -380,29 +433,6 @@ const getIcon = (localized) => {
             return '/images/icon/ic_rocket.png'
         default:
             return ''
-    }
-}
-
-const getUserControlSvg = (localized, theme) => {
-    switch (localized) {
-        case 'profile':
-            return <SvgUser type={2} color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
-        case 'identify':
-            return <SvgIdentifyCard color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
-        case 'referral':
-            return <SvgUserPlus color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
-        case 'reward_center':
-            return <SvgReward color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
-        case 'task_center':
-            return <SvgDocument color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
-        case 'logout':
-            return <SvgExit color={colors.red2}/>
-        case 'api_mng':
-            return <SvgLayout color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
-        case 'security':
-            return <SvgLock color={theme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}/>
-        default:
-            return null
     }
 }
 
