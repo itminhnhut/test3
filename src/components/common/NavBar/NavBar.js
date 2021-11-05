@@ -366,15 +366,15 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
 
                     {auth &&
                         <>
-                            <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
-                                <SvgWallet color={navTheme.color}/>
-                                <span className="ml-4" style={{color: navTheme.color}}>
-                                    {t('navbar:menu.wallet')}
-                                </span>
-                                <SvgIcon name="chevron_down" size={15} color={navTheme.color}
-                                         className="chevron__down" style={{ marginLeft: 4}}/>
-                                {width >= 992 && renderWallet()}
-                            </div>
+                            {/*<div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">*/}
+                            {/*    <SvgWallet color={navTheme.color}/>*/}
+                            {/*    <span className="ml-4" style={{color: navTheme.color}}>*/}
+                            {/*        {t('navbar:menu.wallet')}*/}
+                            {/*    </span>*/}
+                            {/*    <SvgIcon name="chevron_down" size={15} color={navTheme.color}*/}
+                            {/*             className="chevron__down" style={{ marginLeft: 4}}/>*/}
+                            {/*    {width >= 992 && renderWallet()}*/}
+                            {/*</div>*/}
                             <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
                                 <SvgUser type={2} size={30} className="cursor-pointer user__svg"
                                          style={{marginTop: -3}} color={navTheme.color}/>

@@ -449,7 +449,8 @@
 
       top: 100%;
       //margin-top: 1px;
-      border-radius: 12px;
+      border-bottom-right-radius: 12px;
+      border-bottom-left-radius: 12px;
       overflow: hidden;
       transition: max-height .3s ease;
       padding-right: 16px;
