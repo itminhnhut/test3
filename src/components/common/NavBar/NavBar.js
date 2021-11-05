@@ -170,7 +170,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = []
                 const itemsLevel1withIcon = []
-                const useDropdownWithIcon = localized === 'product'
+                const useDropdownWithIcon = localized === 'nothing'
 
                 const shouldDot = child_lv1.findIndex(o => o.isNew)
 
