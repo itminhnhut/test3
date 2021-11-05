@@ -294,6 +294,8 @@
       // FOR USER CP
       .mal-navbar__dropdown__user__info {
         @apply flex items-center;
+
+        padding-left: 16px;
         margin-bottom: 12px;
 
         .mal-navbar__dropdown__user__info__avt {

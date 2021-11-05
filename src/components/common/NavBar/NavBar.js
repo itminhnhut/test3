@@ -286,7 +286,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                                 {username || 'Guest'} <SvgCheckSuccess/>
                             </div>
                             <div className="mal-navbar__dropdown__user__info__level">
-                                VIP 999
+                                {/*VIP 999*/}
                             </div>
                         </div>
                     </div>
