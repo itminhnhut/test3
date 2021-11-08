@@ -40,7 +40,7 @@ export const API_MARK_NOTIFICATIONS_READ = API_PREFIX + 'notifications/read';
 export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
-export const API_METRIC_VIEW = API_PREFIX + 'metric/view';
+export const API_METRIC_VIEW = API_V3_PREFIX + 'metric/view';
 export const API_CATEGORY_AVATAR_LIST = API_PREFIX + 'market/watch_list_avatar';
 
 export const API_KYC_COUNTRY_LIST = API_PREFIX + 'country';
