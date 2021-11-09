@@ -431,8 +431,8 @@ const HomeAdditional = ({ parentState }) => {
                     </div>
 
                     <div className="homepage-whynami___reason__group__btn___group">
-                        <Button title={t('navbar:menu.about')} target="_blank"
-                                type="primary" href="https://ico.nami.trade/#nami-team"/>
+                        {/*<Button title={t('navbar:menu.about')} target="_blank"*/}
+                        {/*        type="primary" href="https://ico.nami.trade/#nami-team"/>*/}
                     </div>
                 </div>
             </section>

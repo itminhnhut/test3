@@ -342,7 +342,7 @@ const SpotComp = () => {
                     </Dialog>
                 </Transition>
             </MobileView>
-            <BrowserView className="bg-backgroundSecondary dark:bg-get-darkBlue2">
+            <BrowserView className="bg-backgroundSecondary dark:bg-get-darkBlue1">
                 <div className="2xl:container">
                     <ReactGridLayout
                         className="layout"

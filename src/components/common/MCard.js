@@ -1,15 +1,14 @@
 // ********* Maldives Card *********
 // Version: M1
+// Author:
 // ---------------------------------
 
 import { useMemo } from 'react'
 
-const MCard = ({ children, background, addClass }) => {
-
-    const backgroundColor = useMemo(() => background || 'bg-bgContainer dark:bg-bgContainer-dark', [background]);
-
+const MCard = ({ children, addClass, style }) => {
     return (
-        <div className={`px-[16px] py-[20px] rounded-12 ${backgroundColor} ${addClass || ''}`}>
+        <div style={{...style} || {}} className={addClass ? 'px-4 py-5 rounded-xl bg-bgContainer dark:bg-bgContainer-dark ' + addClass
+            : 'px-4 py-5 rounded-xl bg-bgContainer dark:bg-bgContainer-dark '}>
             {children}
         </div>
     )

@@ -53,7 +53,7 @@ const LandingPage = () => {
             }}
         >
             {renderQrCodeModal()}
-            <div className="text-textPrimary">
+            <div className="text-textPrimary bg-get-white">
                 {/* Screen Presentation */}
                 {width < 992 ? <MobileScreenPresent parentState={setState}/>
                     : <ScreenPresentation parentState={setState}/>}

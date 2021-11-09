@@ -4,7 +4,7 @@ import fetchAPI from 'utils/fetch-api';
 import { ApiStatus, StatusBankTransfer } from 'src/redux/actions/const';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import DataTable from 'react-data-table-component';
-import TableNoData from 'src/components/common/table/TableNoData';
+import TableNoData from 'src/components/common/table.old/TableNoData';
 import TableLoader from 'src/components/loader/TableLoader';
 import { tableStyle } from 'src/config/tables';
 import { Dialog, Transition } from '@headlessui/react';

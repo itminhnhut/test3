@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
 import { IconSearch, IconSort, IconStar, IconStarFilled, IconTooltip } from 'components/common/Icons';
-import TableNoData from 'components/common/table/TableNoData';
+import TableNoData from 'components/common/table.old/TableNoData';
 import TableLoader from 'components/loader/TableLoader';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';

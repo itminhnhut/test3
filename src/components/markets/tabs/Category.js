@@ -15,7 +15,7 @@ import {
 import { getLoginUrl, getS3Url } from 'src/redux/actions/utils';
 import Disclosure from 'components/markets/Disclosure';
 import { useSelector } from 'react-redux';
-import TableNoData from 'components/common/table/TableNoData';
+import TableNoData from 'components/common/table.old/TableNoData';
 import TableLoader from 'components/loader/TableLoader';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { debounce } from 'lodash';

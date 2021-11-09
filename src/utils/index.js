@@ -47,3 +47,22 @@ export function initMarketWatchItem (pair, debug = false) {
     debug && log.d('pair___', _)
     return _
 }
+
+export function subscribeExchangeSocket(socket, arr = [], statusCb) {
+    if (!Array.isArray(arr) || !arr.length) return
+    if (!socket) {
+        statusCb && statusCb(!!socket)
+    } else {
+        arr.forEach(item => {
+            const payload = get(item, 'payload', null)
+            const socketString = get(item, 'socketString', null)
+            if (payload && socketString) socket.emit(`subscribe:${socketString}`, `${payload}`)
+        })
+        statusCb && statusCb(!!socket)
+    }
+}
+
+export const unsubscribeExchangeSocket = (socket, symbol) => {
+    if (!socket) return
+    socket.emit('unsubscribe:all', symbol)
+}

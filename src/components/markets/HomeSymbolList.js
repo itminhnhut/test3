@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import TableNoData from 'components/common/table/TableNoData';
+import TableNoData from 'components/common/table.old/TableNoData';
 import DataTable from 'react-data-table-component';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { isMobile } from 'react-device-detect';

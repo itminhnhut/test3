@@ -10,7 +10,7 @@ import { ApiStatus } from 'actions/const';
 import Link from 'next/link';
 import { IconSort } from '../common/Icons';
 import TableLoader from '../loader/TableLoader';
-import TableNoData from '../common/table/TableNoData';
+import TableNoData from '../common/table.old/TableNoData';
 
 const Rate = (props) => {
     const { displayingPriceAsset, displayingPrice, fromAsset, toAsset } = props;

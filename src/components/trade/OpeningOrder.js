@@ -11,7 +11,7 @@ import fetchAPI from 'utils/fetch-api';
 import { tableStyle } from 'src/config/tables';
 import { iconColor } from 'config/colors';
 import showNotification from 'utils/notificationService';
-import TableNoData from '../common/table/TableNoData';
+import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
 
 const SpotOrderList = (props) => {

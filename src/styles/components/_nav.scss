@@ -25,7 +25,7 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-background dark:bg-get-darkBlue2 border-l border-r border-b dark:border-divider-dark #{!important};
+    @apply bg-background dark:bg-get-darkBlue3 border-l border-r border-b dark:border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
   }
 
@@ -34,7 +34,7 @@
 
     .mal-navbar__dropdown {
       .mal-navbar__dropdown__wrapper {
-        @apply bg-bgContainer dark:bg-get-darkBlue2 dark:shadow-none
+        @apply bg-bgContainer dark:bg-get-darkBlue3 dark:shadow-none
         border-l border-r border-b dark:border-divider-dark #{!important};
 
         box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
@@ -44,7 +44,7 @@
           @apply text-textPrimary dark:text-textPrimary-dark text-right #{!important};
 
           &:hover {
-            @apply bg-get-darkBlue3;
+            @apply bg-get-darkBlue4;
           }
         }
       }
@@ -88,7 +88,7 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-get-darkBlue2 border-l border-r border-b border-divider-dark #{!important};
+    @apply bg-get-darkBlue3 border-l border-r border-b border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
   }
 
@@ -115,13 +115,13 @@
 
     .mal-navbar__dropdown {
       .mal-navbar__dropdown__wrapper {
-        @apply bg-get-darkBlue2 shadow-none border-l border-r border-b border-divider-dark #{!important};
+        @apply bg-get-darkBlue3 shadow-none border-l border-r border-b border-divider-dark #{!important};
 
         .mal-navbar__dropdown___item {
           @apply text-textPrimary-dark #{!important};
 
           &:hover {
-            @apply bg-get-darkBlue3 #{!important};
+            @apply bg-get-darkBlue4 #{!important};
           }
         }
       }
@@ -446,7 +446,7 @@
     }
 
     .mal-navbar__link__group___item___childen__lv1 {
-      @apply absolute hidden left-0 z-50 bg-background dark:bg-get-darkBlue2
+      @apply absolute hidden left-0 z-50 bg-background dark:bg-get-darkBlue3
       border-l border-r border-b dark:border-divider-dark;
 
       top: 100%;
@@ -478,7 +478,7 @@
       }
 
       &:hover {
-        @apply bg-listItemSelected dark:bg-listItemSelected-dark;
+        @apply bg-listItemSelected dark:bg-get-darkBlue4;
       }
     }
 
@@ -552,7 +552,7 @@
       padding-top: 25px;
 
       .mal-navbar__dropdown__wrapper {
-        @apply bg-bgContainer dark:bg-get-darkBlue2 dark:shadow-none
+        @apply bg-bgContainer dark:bg-get-darkBlue3 dark:shadow-none
         border-l border-r border-b dark:border-divider-dark;
 
         border-color: transparent;
@@ -576,7 +576,7 @@
           }
 
           &:hover {
-            @apply bg-get-lightTeal dark:bg-get-darkBlue3;
+            @apply bg-get-lightTeal dark:bg-get-darkBlue4;
           }
         }
 
