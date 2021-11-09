@@ -10,7 +10,7 @@ import fetchAPI from 'utils/fetch-api';
 import { tableStyle } from 'config/tables';
 import AuthSelector from 'redux/selectors/authSelectors';
 import { useRouter } from 'next/router';
-import TableNoData from '../common/table/TableNoData';
+import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
 
 const OrderHistory = (props) => {

@@ -132,15 +132,15 @@ module.exports = {
             current: 'currentColor',
             background: {
                 DEFAULT: _m.white,
-                dark: _m.darkBlue1
+                dark: _m.darkBlue2
             },
             backgroundSecondary: {
                 DEFAULT: _m.grey4,
-                dark: _m.darkBlue5
+                dark: _m.darkBlue1
             },
             bgContainer: {
                 DEFAULT: '#fff',
-                dark: _m.darkBlue1
+                dark: _m.darkBlue2
             },
             headerBg: {
                 DEFAULT: 'rgba(0, 0, 0, 0.3)',
@@ -198,6 +198,14 @@ module.exports = {
             divider: {
                 DEFAULT: _m.grey4,
                 dark: _m.darkBlue3
+            },
+            tabIndicatorLabelInactive: {
+              DEFAULT: _m.grey1,
+              dark: _m.darkBlue3,
+            },
+            tabIndicatorLabelActive: {
+              DEFAULT: _m.darkBlue,
+              dark: _m.grey4
             },
             get: { ..._m },
 
@@ -282,10 +290,10 @@ module.exports = {
                 '128': '32rem',
                 '144': '36rem'
             },
-            borderRadius: {
-                'xl': '0.625rem',
-                '3xl': '1.25rem'
-            },
+            // borderRadius: {
+            //     'xl': '0.625rem',
+            //     '3xl': '1.25rem'
+            // },
             borderColor: ['group-focus'],
             fontWeight: {
                 bold: 600
@@ -293,12 +301,7 @@ module.exports = {
         }
     },
     variants: {
-        extend: {
-            backgroundOpacity: ['active'],
-            boxShadow: {
-                lg: ''
-            }
-        }
+
     },
     plugins: [
         require('@tailwindcss/forms')({

@@ -98,7 +98,7 @@ export class TVChartContainer extends React.PureComponent {
                 this.widget.changeTheme(newTheme);
                 this.widget.applyOverrides(
                     {
-                        'paneProperties.background': newTheme === 'Dark' ? colors.darkBlue1 : colors.white,
+                        'paneProperties.background': newTheme === 'Dark' ? colors.darkBlue2 : colors.white,
                         'paneProperties.vertGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
                         'paneProperties.horzGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
                     })
@@ -262,7 +262,7 @@ export class TVChartContainer extends React.PureComponent {
         this.widget.onChartReady(() => {
             this.widget.applyOverrides({
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
-                'paneProperties.background': this.props.theme === "dark" ? colors.darkBlue1 : '#ffffff',
+                'paneProperties.background': this.props.theme === "dark" ? colors.darkBlue2 : '#ffffff',
                 'paneProperties.vertGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
                 'paneProperties.horzGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
             });

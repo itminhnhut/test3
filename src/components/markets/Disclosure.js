@@ -31,7 +31,7 @@ import { Info } from 'react-feather';
 import Image from 'next/image';
 import AssetLogo from 'components/wallet/AssetLogo';
 import TableLoader from '../loader/TableLoader';
-import TableNoData from '../common/table/TableNoData';
+import TableNoData from '../common/table.old/TableNoData';
 
 const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions, handleReloadCategoryList, handleToggleModal, renderPriceData, renderPercentageChange, multiValue }) => {
     const { t } = useTranslation(['markets', 'common']);
