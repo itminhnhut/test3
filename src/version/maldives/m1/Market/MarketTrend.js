@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import { shuffle } from 'lodash'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -10,7 +10,7 @@ import MarketTrendItem from 'components/markets/MarketTrendItem'
 import "swiper/css"
 SwiperCore.use([Autoplay])
 
-const MarketTrend = ({ loading, data }) => {
+const MarketTrend = memo(({ loading, data }) => {
     // * Initial Slider
 
 
@@ -27,6 +27,9 @@ const MarketTrend = ({ loading, data }) => {
         <div className="py-6 px-4 lg:px-0">
             <Swiper
                 loop
+                grabCursor
+                mousewheel
+                direction="horizontal"
                 className="mySwiper"
                 slidesPerView={1}
                 spaceBetween={10}
@@ -52,6 +55,6 @@ const MarketTrend = ({ loading, data }) => {
             </Swiper>
         </div>
     )
-}
+})
 
 export default MarketTrend

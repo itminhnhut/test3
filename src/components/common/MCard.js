@@ -7,8 +7,9 @@ import { useMemo } from 'react'
 
 const MCard = ({ children, addClass, style }) => {
     return (
-        <div style={{...style} || {}} className={addClass ? 'px-4 py-5 rounded-xl bg-bgContainer dark:bg-bgContainer-dark ' + addClass
-            : 'px-4 py-5 rounded-xl bg-bgContainer dark:bg-bgContainer-dark '}>
+        <div style={{ ...style } || {}}
+             className={addClass ? 'px-4 py-5 rounded-xl bg-bgContainer dark:bg-bgContainer-dark ' + addClass
+                 : 'px-4 py-5 rounded-xl bg-bgContainer dark:bg-bgContainer-dark '}>
             {children}
         </div>
     )

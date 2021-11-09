@@ -42,7 +42,9 @@ export function initMarketWatchItem (pair, debug = false) {
         baseAsset: get(pair, 'b'),
         baseAssetId: get(pair, 'bi', null),
         up: get(pair, 'u', false), // this.up = source.u;
-        lastHistoryId: get(pair, 'li', null)  // this.lastHistoryId = source.li;
+        lastHistoryId: get(pair, 'li', null),  // this.lastHistoryId = source.li;
+        supply: get(pair, 'sp', null), // this.supply = source.sp;
+        label: get(pair, 'lbl', null), // this.label = source.lbl;
     }
     debug && log.d('pair___', _)
     return _
