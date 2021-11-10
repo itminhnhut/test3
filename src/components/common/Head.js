@@ -28,12 +28,12 @@ const Head = () => {
                     <meta name="description" content="Sàn giao dịch Spot và Futures an toàn" />
                     <meta
                         property="og:image"
-                        content="https://nami.exchange/images_v2/featured/common-featured.png"
+                        content="https://static.namifutures.com/nami.exchange/images/common-featured.png"
                         key="fb-image"
                     />
                     <meta
                         name="twitter:image"
-                        content="https://nami.exchange/images_v2/featured/common-featured.png"
+                        content="https://static.namifutures.com/nami.exchange/images/common-featured.png"
                         key="twitter-image"
                     />
                 </>
