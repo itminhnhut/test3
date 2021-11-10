@@ -18,7 +18,7 @@ const Footer = memo(() => {
             <div className={`${width >= 1200 ? 'mal-footer___desktop' : ''} mal-footer__wrapper mal-container`}>
                 <PocketFooter active={state.active} parentState={setState}/>
                 {width < 1200 &&
-                <div style={{ fontSize: 12 }} className="font-medium text-get-grey2 mt-6">
+                <div style={{ fontSize: 12 }} className="font-medium text-gray-2 mt-6">
                     Copyright © 2020 Nami Corporation. All rights reserved.
                 </div>
                 }

@@ -36,7 +36,7 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
                         parentState && parentState(currentTarget.value)
                     }}
                     value={queryFilter}
-                    className="form-control form-control-sm bg-transparent text-textPrimary dark:text-textPrimary-dark"
+                    className="form-control form-control-sm bg-transparent text-txtPrimary dark:text-txtPrimary-dark"
                     style={customStyle}
                 />
 

@@ -380,7 +380,7 @@ const Swap = () => {
 
     return (
         <MaldivesLayout>
-            <div className="bg-backgroundSecondary dark:bg-get-darkBlue2 flex flex-col flex-grow justify-center
+            <div className="bg-bgSecondary dark:bg-darkBlue-2 flex flex-col flex-grow justify-center
                             items-center min-h-[680px] h-full">
                 {/* <div className="py-[3.75rem] text-center">
                     <div className="text-4xl text-teal ">
@@ -391,13 +391,13 @@ const Swap = () => {
                     </div>
                 </div> */}
                 <div className="convert-container">
-                    <div className="card card-shadow bg-bgContainer dark:bg-get-darkBlue1 rounded-xl lg:w-[480px] max-w-[480px] mx-auto">
+                    <div className="card card-shadow bg-bgContainer dark:bg-darkBlue-1 rounded-xl lg:w-[480px] max-w-[480px] mx-auto">
                         <div className="card-body !py-6 !px-6">
                             <div className="font-bold text-xl pb-4">{t('navbar:submenu.swap')}</div>
                             <div className="group hover:border-teal swap-form-group">
                                 <div className="flex justify-between">
-                                    <span className="text-sm font-bold text-textPrimary dark:text-textPrimary-dark">{t('you_pay')}</span>
-                                    <span className="text-sm font-bold text-textSecondary dark:text-textSecondary-dark">
+                                    <span className="text-sm font-bold text-txtPrimary dark:text-txtPrimary-dark">{t('you_pay')}</span>
+                                    <span className="text-sm font-bold text-txtSecondary dark:text-txtSecondary-dark">
                                         {t('convert:available_balance')}:&nbsp;
                                         {getAvailableText()}&nbsp;
                                         {coinFrom}
@@ -443,7 +443,7 @@ const Swap = () => {
                                                         disabled={!swapConfig}
                                                     >
                                                         <span><AssetLogo assetCode={coinFrom} size={24} /></span>
-                                                        <span className="mx-1.5 leading-6 text-textPrimary dark:text-textPrimary-dark">{coinFrom}</span>
+                                                        <span className="mx-1.5 leading-6 text-txtPrimary dark:text-txtPrimary-dark">{coinFrom}</span>
                                                         <span><IconSelectSmall color={currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4} /></span>
                                                     </Popover.Button>
                                                     {open
@@ -471,7 +471,7 @@ const Swap = () => {
                             </div>
                             <div className="group hover:border-teal swap-form-group">
                                 <div className="flex justify-between">
-                                    <span className="text-sm font-bold text-textPrimary dark:text-textPrimary-dark">{t('you_get')}</span>
+                                    <span className="text-sm font-bold text-txtPrimary dark:text-txtPrimary-dark">{t('you_get')}</span>
                                 </div>
                                 <div className="swap-input-group relative">
                                     <NumberFormat
@@ -499,7 +499,7 @@ const Swap = () => {
                                                         disabled={!swapConfig}
                                                     >
                                                         <span><AssetLogo assetCode={coinTo} size={24} /></span>
-                                                        <span className="mx-1.5 leading-6 text-textPrimary dark:text-textPrimary-dark">{coinTo}</span>
+                                                        <span className="mx-1.5 leading-6 text-txtPrimary dark:text-txtPrimary-dark">{coinTo}</span>
                                                         <span><IconSelectSmall  color={currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4}  /></span>
                                                     </Popover.Button>
                                                     {open
@@ -518,7 +518,7 @@ const Swap = () => {
                                 </div>
                             </div>
                             <div className="mt-4 text-sm font-medium flex items-center justify-between">
-                                <span className="text-black-600 text-textPrimary dark:text-textPrimary-dark">
+                                <span className="text-black-600 text-txtPrimary dark:text-txtPrimary-dark">
                                     {t('convert:rate')}
                                 </span>
                                 {priceData ? <Rate /> : null}

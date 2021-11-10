@@ -1,5 +1,5 @@
 .mal-footer {
-  @apply bg-get-darkBlue1;
+  @apply bg-darkBlue-1;
 
   .mal-footer__wrapper {
     padding: 52px 16px;
@@ -16,7 +16,7 @@
         }
 
         .mal-footer___pocket__slogan {
-          @apply text-get-white;
+          @apply text-white;
 
           margin-top: 14px;
           font-weight: 500;
@@ -37,7 +37,7 @@
           margin-bottom: 16px;
 
           .mal-footer___pocket__links___group__item__expander {
-            @apply text-get-white flex flex-row justify-between;
+            @apply text-white flex flex-row justify-between;
 
             font-weight: 500;
             font-size: 14px;
@@ -46,7 +46,7 @@
             white-space: nowrap;
 
             svg {
-              @apply text-get-white;
+              @apply text-white;
             }
           }
 
@@ -59,7 +59,7 @@
             transition: max-height .3s ease;
 
             a {
-              @apply block w-1/2 text-get-grey2;
+              @apply block w-1/2 text-gray-2;
 
               margin-top: 8px;
               font-weight: 500;
@@ -98,7 +98,7 @@
         }
 
         .mal-footer___pocket__license {
-          @apply block text-get-grey2;
+          @apply block text-gray-2;
 
           margin-top: 47px;
           font-weight: 500;

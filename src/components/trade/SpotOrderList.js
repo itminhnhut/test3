@@ -27,14 +27,14 @@ const SpotOrderList = (props) => {
                     <ul className="tabs pt-6 mb-4 px-3 dragHandleArea flex-1">
                         <li className="tab-item">
                             <a
-                                className={'tab-link font-semibold ' + (activeTab === 'open' ? 'active text-black-700' : 'text-textSecondary dark:text-textSecondary-dark')}
+                                className={'tab-link font-semibold ' + (activeTab === 'open' ? 'active text-black-700' : 'text-txtSecondary dark:text-txtSecondary-dark')}
                                 onClick={() => setActiveTab('open')}
                             > {t('spot:open_orders')}
                             </a>
                         </li>
                         <li className="tab-item">
                             <a
-                                className={'tab-link font-semibold ' + (activeTab === 'history' ? 'active text-black-700' : 'text-textSecondary dark:text-textSecondary-dark')}
+                                className={'tab-link font-semibold ' + (activeTab === 'history' ? 'active text-black-700' : 'text-txtSecondary dark:text-txtSecondary-dark')}
                                 onClick={() => setActiveTab('history')}
                             > {t('spot:order_history')}
                             </a>

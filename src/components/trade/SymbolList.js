@@ -136,7 +136,7 @@ const SymbolList = (props) => {
                 <div className="ats-tbheader px-3">
                     <div className="flex justify-between items-center mb-3">
                         <div
-                            className="flex flex-1 items-center justify-start text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('b');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -153,7 +153,7 @@ const SymbolList = (props) => {
                             }
                         </div>
                         <div
-                            className="flex flex-1 items-center justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('p');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -167,7 +167,7 @@ const SymbolList = (props) => {
                             }
                         </div>
                         <div
-                            className="flex flex-1 items-center justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('change24h');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -217,7 +217,7 @@ const SymbolList = (props) => {
                 <div className="ats-tbheader px-3">
                     <div className="flex justify-between items-center mb-3">
                         <div
-                            className="flex flex-1 items-center justify-start text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('b');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -234,7 +234,7 @@ const SymbolList = (props) => {
                             }
                         </div>
                         <div
-                            className="flex flex-1 items-center justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('p');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -248,7 +248,7 @@ const SymbolList = (props) => {
                             }
                         </div>
                         <div
-                            className="flex flex-1 items-center justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('change24h');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -313,12 +313,12 @@ const SymbolList = (props) => {
                                             color={activeTab === 'favorite' ? '#09becf' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}/>
                         </div>}
                         <a
-                            className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-textSecondary dark:text-textSecondary-dark border-divider dark:border-divider-dark')}
+                            className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('USDT')}
                         > USDT
                         </a>
                         <a
-                            className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-textSecondary dark:text-textSecondary-dark border-divider dark:border-divider-dark')}
+                            className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('VNDC')}
                         > VNDC
                         </a>

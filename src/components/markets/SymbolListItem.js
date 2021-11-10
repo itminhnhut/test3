@@ -66,7 +66,7 @@ const SymbolListItem = (props) => {
 
     return (
         <div
-            className={`px-3 py-1.5 flex items-center cursor-pointer hover:bg-get-lightTeal dark:hover:bg-get-darkBlue3 ${currentId === `${base}-${quote}` ? 'bg-get-lightTeal dark:bg-get-darkBlue3' : ''}`}
+            className={`px-3 py-1.5 flex items-center cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3 ${currentId === `${base}-${quote}` ? 'bg-teal-50 dark:bg-darkBlue-3' : ''}`}
         >
             <div onClick={() => handleSetFavorite(base)} className="mr-1.5 cursor-pointer">
                 {isFavorite ? <IconStarFilled color={colors.yellow} />
@@ -75,9 +75,9 @@ const SymbolListItem = (props) => {
             <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>
                 <div className="flex items-center w-full">
                     <div
-                        className="text-textPrimary dark:text-textPrimary-dark flex-1 text-xs font-semibold leading-table flex items-center truncate min-w-0 mr-1.5"
+                        className="text-txtPrimary dark:text-txtPrimary-dark flex-1 text-xs font-semibold leading-table flex items-center truncate min-w-0 mr-1.5"
                     >
-                        {base} <span className="text-textSecondary dark:text-textSecondary-dark">/{quote}</span>
+                        {base} <span className="text-txtSecondary dark:text-txtSecondary-dark">/{quote}</span>
                     </div>
                     <div
                         className={`flex-1 text-xs font-semibold leading-table text-right mr-1.5 ${!up ? 'text-mint' : 'text-pink'}`}

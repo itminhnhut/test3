@@ -58,27 +58,27 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_2'>
-                                    <span className="text-get-teal">40,000+</span>
+                                    <span className="text-teal">40,000+</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_3'>
-                                    <span className="text-get-teal">400+</span>
+                                    <span className="text-teal">400+</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_4'>
-                                    <span className="text-get-teal">125x</span>
+                                    <span className="text-teal">125x</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_5'>
-                                    <span className="text-get-teal">0,06%</span>
+                                    <span className="text-teal">0,06%</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
                                 <Trans i18nKey='home:first_award.rule_6'>
-                                    <span className="text-get-teal">24/7</span>
+                                    <span className="text-teal">24/7</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
@@ -191,7 +191,7 @@ const HomeAdditional = ({ parentState }) => {
                                         type="primary"/>
                             </div>
                             <div
-                                className="text-sm text-center text-textSecondary dark:text-textSecondary-dark font-medium mt-3">
+                                className="text-sm text-center text-txtSecondary dark:text-txtSecondary-dark font-medium mt-3">
                                 {t('common:already_have_account')} <Link href={getLoginUrl('sso', 'login')}><a className="text-dominant">{t('common:sign_in')}</a></Link>
                             </div>
                         </div>
@@ -338,7 +338,7 @@ const HomeAdditional = ({ parentState }) => {
                     <div className="homepage-trade3step___step___wrapper">
                         <div className="homepage-trade3step___step___item">
                             <div className="homepage-trade3step___step___item___inner">
-                                <div className={`homepage-trade3step___step___item__label ${stepCount === 0 ? 'text-get-teal transition-all duration-300 ease-in-out' : ''}`}>01</div>
+                                <div className={`homepage-trade3step___step___item__label ${stepCount === 0 ? 'text-teal transition-all duration-300 ease-in-out' : ''}`}>01</div>
                                 <div className="homepage-trade3step___step___item__sublabel">
                                     {t('home:trade3step.step_1')}
                                 </div>
@@ -348,7 +348,7 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
                         <div className="homepage-trade3step___step___item">
                             <div className="homepage-trade3step___step___item___inner">
-                                <div className={`homepage-trade3step___step___item__label ${stepCount === 1 ? 'text-get-teal transition-all duration-300 ease-in-out' : ''}`}>02</div>
+                                <div className={`homepage-trade3step___step___item__label ${stepCount === 1 ? 'text-teal transition-all duration-300 ease-in-out' : ''}`}>02</div>
                                 <div className="homepage-trade3step___step___item__sublabel">
                                     {t('home:trade3step.step_2')}
                                 </div>
@@ -358,7 +358,7 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
                         <div className="homepage-trade3step___step___item">
                            <div className="homepage-trade3step___step___item___inner">
-                               <div className={`homepage-trade3step___step___item__label ${stepCount === 2 ? 'text-get-teal transition-all duration-300 ease-in-out' : ''}`}>03</div>
+                               <div className={`homepage-trade3step___step___item__label ${stepCount === 2 ? 'text-teal transition-all duration-300 ease-in-out' : ''}`}>03</div>
                                <div className="homepage-trade3step___step___item__sublabel">
                                    {t('home:trade3step.step_3')}
                                </div>

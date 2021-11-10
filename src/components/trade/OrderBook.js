@@ -155,7 +155,7 @@ const OrderBook = (props) => {
         const percentage = (q / maxQuote) * 100;
         return (
             <div
-                className="progress-container px-3 py-0.5 cursor-pointer hover:bg-get-lightTeal dark:hover:bg-get-darkBlue3"
+                className="progress-container px-3 py-0.5 cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3"
                 key={index}
                 onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
             >
@@ -163,10 +163,10 @@ const OrderBook = (props) => {
                     <div className={`flex-1  text-xs font-semibold leading-table ${side === 'buy' ? 'text-pink' : 'text-mint'}`}>
                         {p ? formatPrice(p, exchangeConfig, symbolString) : '-'}
                     </div>
-                    <div className="flex-1 text-Primary dark:text-textPrimary-dark text-xs font-semibold leading-table text-right">
+                    <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-semibold leading-table text-right">
                         {q ? formatPrice(+q, exchangeConfig, symbolString) : '-'}
                     </div>
-                    <div className="flex-1 text-Primary dark:text-textPrimary-dark text-xs font-semibold leading-table text-right">
+                    <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-semibold leading-table text-right">
                         {p > 0 ? formatPrice(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
                     </div>
                 </div>
@@ -186,15 +186,15 @@ const OrderBook = (props) => {
                 <div className="flex flex-col flex-1">
                     <div className="ats-tbheader px-3">
                         <div className="flex justify-between items-center mb-3">
-                            <div className="flex flex-1 justify-start text-textSecondary dark:text-textSecondary-dark text-xs font-medium">
+                            <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium">
                                 {t('price')}
                             </div>
-                            <div className="flex flex-1 justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-medium">
+                            <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium">
                                 {t('quantity')}
                             </div>
                             {
                                 (shouldShowTotalCol) && (
-                                    <div className="flex flex-1 justify-end text-textSecondary dark:text-textSecondary-dark text-xs font-medium">
+                                    <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium">
                                         {t('total')}
                                     </div>
                                 )

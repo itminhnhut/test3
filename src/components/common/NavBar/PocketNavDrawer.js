@@ -50,7 +50,7 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                            <a className="mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover"
                               onClick={() => onClose()}>
                                {getIcon(localized)}
-                               <span className="ml-3 font-medium text-sm text-textSecondary dark:text-textSecondary-dark">
+                               <span className="ml-3 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                    {t(`navbar:submenu.${item.localized}`)}
                                </span>
                            </a>

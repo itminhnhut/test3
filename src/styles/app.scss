@@ -17,7 +17,7 @@ body {
   @apply lg:text-base;
   @apply md:text-base;
 
-  @apply bg-background dark:bg-background-dark;
+  @apply bg-bgPrimary dark:bg-bgPrimary-dark;
 
   -ms-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
@@ -42,7 +42,7 @@ body {
 //}
 
 body {
-  @apply text-textPrimary dark:text-textPrimary-dark;
+  @apply text-txtPrimary dark:text-txtPrimary-dark;
 
   display: flex;
   flex-direction: column;
@@ -70,11 +70,11 @@ body {
   }
 
   .value-up {
-    @apply text-get-teal;
+    @apply text-teal;
   }
 
   .value-down {
-    @apply text-get-red2;
+    @apply text-red;
   }
 
   .value-dominant {
@@ -90,7 +90,7 @@ body {
       justify-content: center;
 
       .dot {
-        @apply block bg-get-lightTeal;
+        @apply block bg-teal-50;
 
         border: none;
         width: 6px;
@@ -105,7 +105,7 @@ body {
       }
 
       .dot.active {
-        @apply bg-get-teal;
+        @apply bg-teal;
         transition: background-color .3s ease;
       }
     }
@@ -129,10 +129,10 @@ body {
       height: 28px;
 
       svg {
-        @apply text-textPrimary dark:text-textPrimary-dark;
+        @apply text-txtPrimary dark:text-txtPrimary-dark;
 
         &:hover {
-          @apply text-get-teal #{!important};
+          @apply text-teal #{!important};
         }
       }
 
@@ -342,7 +342,7 @@ input[type=number] {
 }
 
 .rdt_Pagination {
-  @apply bg-bgContainer dark:bg-bgContainer-dark text-textPrimary dark:text-textPrimary-dark;
+  @apply bg-bgContainer dark:bg-bgContainer-dark text-txtPrimary dark:text-txtPrimary-dark;
 }
 
 .rdt_dark {
@@ -374,10 +374,10 @@ input[type=number] {
     }
 
     &::-webkit-scrollbar-thumb {
-      @apply bg-get-grey2 dark:bg-get-darkBlue5;
+      @apply bg-gray-2 dark:bg-darkBlue-5;
 
       &:hover {
-        @apply bg-get-teal;
+        @apply bg-teal;
       }
     }
   }
@@ -386,10 +386,10 @@ input[type=number] {
     @apply bg-bgContainer dark:bg-bgContainer-dark;
 
     .rdt_TableCol_Sortable {
-      @apply text-textSecondary dark:text-textSecondary-dark cursor-pointer;
+      @apply text-txtSecondary dark:text-txtSecondary-dark cursor-pointer;
 
       &:hover {
-        @apply text-textSecondary dark:text-textSecondary-dark;
+        @apply text-txtSecondary dark:text-txtSecondary-dark;
       }
     }
   }
@@ -398,7 +398,7 @@ input[type=number] {
     @apply bg-bgContainer dark:bg-bgContainer-dark;
 
     .rdt_TableCell {
-      @apply text-textPrimary dark:text-textPrimary-dark;
+      @apply text-txtPrimary dark:text-txtPrimary-dark;
     }
   }
 }
