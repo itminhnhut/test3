@@ -1,42 +1,101 @@
-import { Dialog, Transition } from '@headlessui/react';
+import Axios from 'axios';
+import DefaultMobileView from 'components/common/DefaultMobileView';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
 import SymbolDetail from 'components/trade/SymbolDetail';
 import find from 'lodash/find';
 import size from 'lodash/size';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { BrowserView, MobileView } from 'react-device-detect';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import { useSelector } from 'react-redux';
 import { useAsync } from 'react-use';
+import { API_GET_FAVORITE } from 'redux/actions/apis';
 import Chart from 'src/components/trade/Chart';
 import OrderBook from 'src/components/trade/OrderBook';
 import SpotHead from 'src/components/trade/SpotHead';
 import SpotOrderList from 'src/components/trade/SpotOrderList';
 import SymbolList from 'src/components/trade/SymbolList';
 import Trades from 'src/components/trade/Trades';
-import { DOWNLOAD_APP_LINK, PublicSocketEvent } from 'src/redux/actions/const';
+import { PublicSocketEvent } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
-import { getMarketWatch, getUserSymbolList, postSymbolViews } from 'src/redux/actions/market';
+import {
+    getMarketWatch,
+    getUserSymbolList,
+    postSymbolViews
+} from 'src/redux/actions/market';
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import { getS3Url } from 'redux/actions/utils';
-import Axios from 'axios'
-import { API_GET_FAVORITE } from 'redux/actions/apis'
 
 const ReactGridLayout = WidthProvider(RGL);
 
 const layoutOnSidebar = [
-    { i: 'symbolDetail', x: 0, y: 0, w: 23, h: 2, isDraggable: false, isResizable: false },
-    { i: 'orderbook', x: 0, y: 3, w: 7, h: 22, isDraggable: false, isResizable: false },
-    { i: 'chart', x: 7, y: 3, w: 16, h: 12, isDraggable: false, isResizable: false },
-    { i: 'placeOrderForm', x: 7, y: 6, w: 16, h: 10, isDraggable: false, isResizable: false },
-    { i: 'symbolList', x: 23, y: 3, w: 7, h: 13, isDraggable: false, isResizable: false },
-    { i: 'trades', x: 23, y: 14, w: 7, h: 11, isDraggable: false, isResizable: false },
-    { i: 'orderList', x: 0, y: 26, w: 30, h: 10, isDraggable: false, isResizable: false },
+    {
+        i: 'symbolDetail',
+        x: 0,
+        y: 0,
+        w: 23,
+        h: 2,
+        isDraggable: false,
+        isResizable: false,
+    },
+    {
+        i: 'orderbook',
+        x: 0,
+        y: 3,
+        w: 7,
+        h: 22,
+        isDraggable: false,
+        isResizable: false,
+    },
+    {
+        i: 'chart',
+        x: 7,
+        y: 3,
+        w: 16,
+        h: 12,
+        isDraggable: false,
+        isResizable: false,
+    },
+    {
+        i: 'placeOrderForm',
+        x: 7,
+        y: 6,
+        w: 16,
+        h: 10,
+        isDraggable: false,
+        isResizable: false,
+    },
+    {
+        i: 'symbolList',
+        x: 23,
+        y: 3,
+        w: 7,
+        h: 13,
+        isDraggable: false,
+        isResizable: false,
+    },
+    {
+        i: 'trades',
+        x: 23,
+        y: 14,
+        w: 7,
+        h: 11,
+        isDraggable: false,
+        isResizable: false,
+    },
+    {
+        i: 'orderList',
+        x: 0,
+        y: 26,
+        w: 30,
+        h: 10,
+        isDraggable: false,
+        isResizable: false,
+    },
 ];
 
 const initialLayout = layoutOnSidebar;
@@ -59,7 +118,7 @@ const SpotComp = () => {
         }
     }
     const [symbol, setSymbol] = useState(symbolFromUrl);
-    const publicSocket = useSelector(state => state.socket.publicSocket);
+    const publicSocket = useSelector((state) => state.socket.publicSocket);
 
     // Spot layout
     const [lastSymbol, setLastSymbol] = useState(null);
@@ -78,10 +137,10 @@ const SpotComp = () => {
     const [fullScreen, setFullScreen] = useState(false);
 
     // compact state
-    const [state, set] = useState({ orderBook: null })
-    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
+    const [state, set] = useState({ orderBook: null });
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
-    const user = useSelector(state => state.auth.user) || null;
+    const user = useSelector((state) => state.auth.user) || null;
     const cancelButtonRegisterRef = useRef();
     const orderListWrapperRef = useRef(null);
 
@@ -117,19 +176,24 @@ const SpotComp = () => {
                 }
             }
             if (watchList && watchList.length > 0) {
-                setFavorite(watchList.filter(list => list.type === 'FAVORITE')[0]?.assets);
+                setFavorite(
+                    watchList.filter((list) => list.type === 'FAVORITE')[0]
+                        ?.assets,
+                );
             }
         }
     }, [user, watchList]);
 
     useAsync(async () => {
         if (user) {
-            const { data } = await Axios.get(API_GET_FAVORITE, {params: { tradingMode: 1 } })
+            const { data } = await Axios.get(API_GET_FAVORITE, {
+                params: { tradingMode: 1 },
+            });
             if (data?.status === 'ok' && data?.data) {
-                setFavorite(data.data)
+                setFavorite(data.data);
             }
         }
-    }, [user])
+    }, [user]);
 
     const changeSymbolList = (symbList) => {
         setFavorite(symbList);
@@ -141,7 +205,11 @@ const SpotComp = () => {
         if (!publicSocket) {
             setPublicSocketStatus(!!publicSocket);
         } else {
-            if (!lastSymbol || lastSymbol !== s || !!publicSocket !== publicSocketStatus) {
+            if (
+                !lastSymbol ||
+                lastSymbol !== s ||
+                !!publicSocket !== publicSocketStatus
+            ) {
                 // Vao day subscrible thoi
                 publicSocket.emit('subscribe:depth', s);
                 publicSocket.emit('subscribe:recent_trade', s);
@@ -164,8 +232,9 @@ const SpotComp = () => {
     }, [symbol]);
 
     useEffect(() => {
-        if (symbolFromUrl?.quote !== symbol?.quote
-            || symbolFromUrl?.base !== symbol?.base
+        if (
+            symbolFromUrl?.quote !== symbol?.quote ||
+            symbolFromUrl?.base !== symbol?.base
         ) {
             setSymbol(symbolFromUrl);
         }
@@ -173,7 +242,9 @@ const SpotComp = () => {
 
     useAsync(async () => {
         if (symbol) {
-            const [newSymbolTicker] = await getMarketWatch(getSymbolString(symbol));
+            const [newSymbolTicker] = await getMarketWatch(
+                getSymbolString(symbol),
+            );
             Emitter.emit(PublicSocketEvent.SPOT_TICKER_UPDATE, newSymbolTicker);
         }
     }, [symbol]);
@@ -204,19 +275,27 @@ const SpotComp = () => {
     }, [isOnSidebar, isMaxChart, fullScreen]);
 
     const handleCallback = (childData) => {
-        const isTrue = (childData === 'true');
+        const isTrue = childData === 'true';
         setIsOnSidebar(isTrue);
     };
     const handleCallbackChart = (childData) => {
-        const isTrue = (childData === 'true');
+        const isTrue = childData === 'true';
         setIsMaxChart(isTrue);
     };
 
-    const handleChangeSymbol = async (sym, time_frame, userId, symId, extIndicator) => {
+    const handleChangeSymbol = async (
+        sym,
+        time_frame,
+        userId,
+        symId,
+        extIndicator,
+    ) => {
         if (extIndicator) {
             setExtendsIndicators(extIndicator);
         }
-        router.push(`/trade/${sym.base}-${sym.quote}`, undefined, { shallow: true });
+        router.push(`/trade/${sym.base}-${sym.quote}`, undefined, {
+            shallow: true,
+        });
         setInitTimeFrame(time_frame);
     };
 
@@ -225,7 +304,6 @@ const SpotComp = () => {
     };
 
     const renderSymbolList = useMemo(() => {
-
         if (size(tradesLayout) > 0) {
             return (
                 <SymbolList
@@ -251,96 +329,8 @@ const SpotComp = () => {
     return (
         <MaldivesLayout hideNavBar={fullScreen}>
             <SpotHead symbol={symbol} />
-            <MobileView>
-                <Transition show as={Fragment}>
-                    <Dialog
-                        as="div"
-                        className="fixed inset-0 z-10 overflow-y-auto"
-                        initialFocus={cancelButtonRegisterRef}
-                        static
-                        open
-                        onClose={() => {}}
-                    >
-                        <div className="md:min-h-screen min-h-[calc(100%-10rem)] px-4 text-center">
-                            <Transition.Child
-                                as={Fragment}
-                                enter="ease-out duration-300"
-                                enterFrom="opacity-0"
-                                enterTo="opacity-100"
-                                leave="ease-in duration-200"
-                                leaveFrom="opacity-100"
-                                leaveTo="opacity-0"
-                            >
-                                <Dialog.Overlay className="fixed inset-0 bg-black-800 bg-opacity-70" />
-                            </Transition.Child>
-
-                            {/* This element is to trick the browser into centering the modal contents. */}
-                            <span
-                                className="inline-block h-screen align-middle"
-                                aria-hidden="true"
-                            >
-                                &#8203;
-                            </span>
-                            <Transition.Child
-                                as={Fragment}
-                                enter="ease-out duration-300"
-                                enterFrom="opacity-0 scale-95"
-                                enterTo="opacity-100 scale-100"
-                                leave="ease-in duration-200"
-                                leaveFrom="opacity-100 scale-100"
-                                leaveTo="opacity-0 scale-95"
-                            >
-                                <div
-                                    className="inline-block w-full max-w-400 mb-8 overflow-hidden text-left align-middle transition-all transform  shadow-xl "
-                                >
-                                    <Dialog.Title className="">
-                                        <div className="flex justify-between items-center">
-                                            <div
-                                                className="text-xl font-medium leading-8 text-black-800"
-                                            />
-                                        </div>
-                                    </Dialog.Title>
-                                    <div className="text-sm rounded-2xl bg-white">
-                                        <div className="bg-blue-50 rounded-t-2xl py-4">
-                                            <img src={getS3Url("/images/bg/dialog-register-header.svg")} alt="" className="mx-auto" />
-                                        </div>
-                                        <div className="px-6 py-8 text-center !font-bold">
-                                            <div className="text-xl">{t('landing:download_app_hint')}</div>
-                                            <div className="text-xl text-teal mb-[30px]">Nami Exchange</div>
-                                            <div className="">
-                                                <a
-                                                    href={DOWNLOAD_APP_LINK.IOS}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                >
-                                                    <button
-                                                        className="btn btn-black w-full mb-2"
-                                                        type="button"
-                                                        rel="noreferrer"
-                                                    >
-                                                        {t('landing:download_app_hint_appstore')}
-                                                    </button>
-                                                </a>
-                                                <a
-                                                    href={DOWNLOAD_APP_LINK.ANDROID}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                >
-                                                    <button
-                                                        className="btn btn-primary w-full"
-                                                        type="button"
-                                                    >
-                                                        {t('landing:download_app_hint_googleplay')}
-                                                    </button>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Transition.Child>
-                        </div>
-                    </Dialog>
-                </Transition>
+            <MobileView  className="bg-white">
+                <DefaultMobileView />
             </MobileView>
             <BrowserView className="bg-backgroundSecondary dark:bg-get-darkBlue2">
                 <div className="2xl:container">
@@ -375,19 +365,19 @@ const SpotComp = () => {
                             />
                         </div>
 
-                        <div key="symbolList" className={`${fullScreen && 'hidden'} z-[3]`}>
+                        <div
+                            key="symbolList"
+                            className={`${fullScreen && 'hidden'} z-[3]`}
+                        >
                             {renderSymbolList}
-                            {/* <SymbolList
-                            parentCallback={handleCallback}
-                            publicSocket={publicSocket}
-                            symbol={symbol}
-                            changeSymbolList={changeSymbolList}
-                            watchList={watchList}
-                            favorite={favorite}
-                            handleChangeSymbol={handleChangeSymbol}
-                        /> */}
                         </div>
-                        <div key="chart" className={`${fullScreen && '!w-screen !h-screen transition !transform-none'} z-[2]`}>
+                        <div
+                            key="chart"
+                            className={`${
+                                fullScreen &&
+                                '!w-screen !h-screen transition !transform-none'
+                            } z-[2]`}
+                        >
                             <Chart
                                 parentCallback={handleCallbackChart}
                                 symbol={symbol}
@@ -419,7 +409,12 @@ const SpotComp = () => {
                         </div>
                         <div key="orderList">
                             <div ref={orderListWrapperRef} className="h-full">
-                                <SpotOrderList isOnSidebar={isOnSidebar} orderListWrapperHeight={orderListWrapperHeight} />
+                                <SpotOrderList
+                                    isOnSidebar={isOnSidebar}
+                                    orderListWrapperHeight={
+                                        orderListWrapperHeight
+                                    }
+                                />
                             </div>
                         </div>
                     </ReactGridLayout>

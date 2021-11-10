@@ -1,33 +1,30 @@
 /* eslint-disable no-prototype-builtins */
-import { createRef, Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'next-i18next';
-import dynamic from 'next/dynamic';
 import { Dialog, Popover, Transition } from '@headlessui/react';
-import uniqBy from 'lodash/uniqBy';
-import orderBy from 'lodash/orderBy';
+import * as Error from 'actions/apiError';
+import { ApiStatus } from 'actions/const';
+import { formatSwapValue, formatWallet, getDecimalScale, getLoginUrl, safeToFixed } from 'actions/utils';
+import { IconSelectSmall, IconSwitch } from 'components/common/Icons';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import AssetLogo from 'components/wallet/AssetLogo';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
-import { useAsync, useDebounce } from 'react-use';
+import orderBy from 'lodash/orderBy';
+import uniqBy from 'lodash/uniqBy';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import dynamic from 'next/dynamic';
+import { createRef, Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import Countdown from 'react-countdown';
 import { X } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
-import Countdown from 'react-countdown';
+import { useAsync, useDebounce } from 'react-use';
 import TextLoader from 'src/components/loader/TextLoader';
-import { formatSwapValue, formatWallet, getDecimalScale, getLoginUrl, safeToFixed } from 'actions/utils';
-import LayoutWithHeader from 'components/common/layouts/layoutWithHeader';
-import { IconSelectSmall, IconSwitch } from 'components/common/Icons';
-import { ApiStatus } from 'actions/const';
-import * as Error from 'actions/apiError';
-import AssetLogo from 'components/wallet/AssetLogo';
-import SwapOrderList from 'components/trade/SwapOrderList';
-import Footer from 'components/common/Footer';
 import { iconColor } from '../config/colors';
-import showNotification from '../utils/notificationService';
+import colors from '../styles/colors';
 import fetchAPI from '../utils/fetch-api';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import colors from '../styles/colors'
+import showNotification from '../utils/notificationService';
 
 const swapFee = 0.1 / 100;
 
@@ -525,12 +522,6 @@ const Swap = () => {
                                     {t('convert:rate')}
                                 </span>
                                 {priceData ? <Rate /> : null}
-                            </div>
-                            <div className="mt-4 text-sm font-medium flex items-center justify-between">
-                                <span className="text-black-600 text-textPrimary dark:text-textPrimary-dark">
-                                    Slippage
-                                </span>
-                                <div className="font-semibold">0.5%</div>
                             </div>
 
                             <div className="mt-8">
