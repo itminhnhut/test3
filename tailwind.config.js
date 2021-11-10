@@ -20,13 +20,6 @@ const commonColors = {
     white: 'white',
     teal: '#00C8BC',
     lightTeal: '#E2F6F5',
-    green: '#22B02E',
-    red: '#E5544B',
-    lightRed: '#E5544B19',
-    yellow: '#FFD965',
-    navy: '#191489',
-    marina: '#A6D4FF',
-    blue: '#2D9CDB',
 };
 
 module.exports = {
@@ -173,7 +166,7 @@ module.exports = {
                 700: '#00C8BC',
                 lightTeal: '#E2F6F5',
             },
-            green: { DEFAULT: '#22b02e'},
+            green: { DEFAULT: '#22B02E'},
             yellow: { DEFAULT: '#FFD965'},
             red: { DEFAULT: '#E5544B', lightRed: '#E5544B19' },
             pink: { DEFAULT: '#E95F67' },
