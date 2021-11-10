@@ -16,16 +16,6 @@ const LayoutWithHeader = ({ showBanner, children, hidden }) => {
     return (
         <div className="md:h-screen flex flex-col">
             <ReactNotification />
-            {/* { showBanner && !loadingBanner && posts && posts.length ? (
-                <div className="hidden bg-black-700 md:flex w-full items-center justify-center py-3 px-10 lg:px-0">
-                    <a href={`/blog/${posts?.[0]?.slug}`} target="_blank" rel="noreferrer">
-                        <div
-                            className="text-white mx-3 cursor-pointer"
-                            dangerouslySetInnerHTML={{ __html: sanitize(`${posts?.[0]?.title?.rendered}&nbsp;`) }}
-                        />
-                    </a>
-                </div>
-            ) : null} */}
             { !hidden && _renderNav }
             <>{children}</>
         </div>

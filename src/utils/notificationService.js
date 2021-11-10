@@ -1,8 +1,7 @@
-import Image from 'next/image';
+import 'animate.css/animate.min.css';
 import defaults from 'lodash/defaults';
 import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
-import 'animate.css/animate.min.css';
 
 const NotificationContent = (props) => {
     const { type, title, message } = props;
