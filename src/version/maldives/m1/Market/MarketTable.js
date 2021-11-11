@@ -138,12 +138,14 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         let tableStatus
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher)
 
-        if (loading) {
-            tableStatus = <ScaleLoader color={colors.teal} size={12}/>
-        } else if (!dataSource.length) {
-            tableStatus = <Empty/>
-        } else if (!restProps.auth && tab[restProps.tabIndex]?.key === 'favorite') {
+        if (!restProps.auth && tab[restProps.tabIndex]?.key === 'favorite') {
             tableStatus = <NeedLogin/>
+        } else {
+            if (loading) {
+                tableStatus = <ScaleLoader color={colors.teal} size={12}/>
+            } else if (!dataSource.length) {
+                tableStatus = <Empty/>
+            }
         }
 
         return (
@@ -355,7 +357,6 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
         let title = ''
 
         try {
-            console.log('namidev-DEBUG: pre check___ ', mode === 1 ? 'spot' : 'futures', method, pairKey)
             await favoriteAction(method, mode, pairKey)
         } catch (e) {
             console.log(`Can't execute this action `, e)
