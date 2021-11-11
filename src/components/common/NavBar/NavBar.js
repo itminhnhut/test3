@@ -48,11 +48,11 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     const [state, set] = useState({
        isDrawer: false,
        hideOnScroll: true,
-       pairsLength: '---',
+       pairsLength: '--',
        loadingVipLevel: false,
        vipLevel: null
     })
-    const setState = (_state) => set(prevState => ({...prevState, ..._state}));
+    const setState = (_state) => set(prevState => ({...prevState, ..._state}))
 
     // * Use hooks
     const [currentTheme, onThemeSwitch] = useDarkMode()
@@ -170,7 +170,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = []
                 const itemsLevel1withIcon = []
-                const useDropdownWithIcon = localized === 'nothing'
+                const useDropdownWithIcon = localized === 'product'
 
                 const shouldDot = child_lv1.findIndex(o => o.isNew)
 
@@ -184,7 +184,8 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                     )
                 })
 
-                // Dropdown with icon
+                // DROPDOWN WITH ICON
+                // console.log('namidev-DEBUG: ___ ', state.pairsLength)
                 child_lv1.map(child => {
                     itemsLevel1withIcon.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
@@ -329,7 +330,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     useAsync(async () => {
         const pairs = await getMarketWatch()
         if (pairs && pairs.length) setState({ pairsLength: pairs.length })
-    })
+    }, [])
 
     useEffect(() => {
         getVip()

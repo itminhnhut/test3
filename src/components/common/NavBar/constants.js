@@ -40,6 +40,14 @@ export const NAV_DATA = [
                 child_lv2: []
             },
             {
+                key: 7,
+                title: 'Swap',
+                localized: 'swap',
+                isNew: false,
+                url: '/swap',
+                child_lv2: []
+            },
+            {
                 key: 1,
                 title: 'Futures',
                 localized: 'futures',
@@ -64,6 +72,14 @@ export const NAV_DATA = [
                 child_lv2: []
             },
             {
+                key: 6,
+                title: 'Referral',
+                localized: 'referral',
+                isNew: false,
+                url: getV1Url('/reference'),
+                child_lv2: []
+            },
+            {
                 key: 4,
                 title: 'Staking',
                 localized: 'staking',
@@ -79,22 +95,6 @@ export const NAV_DATA = [
                 url: getV1Url('/farming'),
                 child_lv2: []
             },
-            {
-                key: 6,
-                title: 'Referral',
-                localized: 'referral',
-                isNew: false,
-                url: getV1Url('/reference'),
-                child_lv2: []
-            },
-            {
-                key: 7,
-                title: 'Swap',
-                localized: 'swap',
-                isNew: false,
-                url: '/swap',
-                child_lv2: []
-            }
         ]
     },
     {
@@ -138,14 +138,14 @@ export const NAV_DATA = [
             },
         ]
     },
-    // {
-    //     key: 3,
-    //     title: 'Explained',
-    //     localized: 'explained',
-    //     isNew: false,
-    //     url: 'https://explained.nami.exchange/',
-    //     child_lv1: []
-    // },
+    {
+        key: 3,
+        title: 'Nami.Today',
+        localized: 'today',
+        isNew: false,
+        url: 'https://nami.today/',
+        child_lv1: []
+    },
     {
         key: 4,
         title: 'Blog',
@@ -162,14 +162,14 @@ export const NAV_DATA = [
     //     url: '/',
     //     child_lv1: []
     // },
-    {
-        key: 6,
-        title: 'Fee Schedule',
-        localized: 'fee',
-        isNew: false,
-        url: getV1Url('/fee-schedule'),
-        child_lv1: []
-    },
+    // {
+    //     key: 6,
+    //     title: 'Fee Schedule',
+    //     localized: 'fee',
+    //     isNew: false,
+    //     url: getV1Url('/fee-schedule'),
+    //     child_lv1: []
+    // },
     // {
     //     key: 7,
     //     title: 'More',
@@ -191,6 +191,14 @@ export const MOBILE_NAV_DATA = [
     //     url: '/profile',
     //     child_lv1: []
     // },
+    {
+        key: 1,
+        title: 'Market',
+        localized: 'market',
+        isNew: false,
+        url: '/market',
+        child_lv1: []
+    },
     {
         key: 0,
         title: 'Nami Product',
@@ -264,38 +272,6 @@ export const MOBILE_NAV_DATA = [
             },
         ]
     },
-    // {
-    //     key: 1,
-    //     title: 'Market',
-    //     localized: 'market',
-    //     isNew: false,
-    //     url: '/',
-    //     child_lv1: []
-    // },
-    {
-        key: 2,
-        title: 'Blog',
-        localized: 'blog',
-        isNew: false,
-        url: '/',
-        child_lv1: []
-    },
-    {
-        key: 3,
-        title: 'Explained',
-        localized: 'explained',
-        isNew: false,
-        url: 'https://explained.nami.exchange/',
-        child_lv1: []
-    },
-    {
-        key: 4,
-        title: 'Fee',
-        localized: 'fee',
-        isNew: false,
-        url: 'https://nami.exchange/fee-schedule',
-        child_lv1: []
-    },
     {
         key: 5,
         title: 'Wallet',
@@ -337,6 +313,38 @@ export const MOBILE_NAV_DATA = [
             },
         ]
     },
+    {
+        key: 7,
+        title: 'Nami.Today',
+        localized: 'today',
+        isNew: false,
+        url: 'https://nami.today/',
+        child_lv1: []
+    },
+    {
+        key: 2,
+        title: 'Blog',
+        localized: 'blog',
+        isNew: false,
+        url: 'https://nami.io/',
+        child_lv1: []
+    },
+    // {
+    //     key: 3,
+    //     title: 'Explained',
+    //     localized: 'explained',
+    //     isNew: false,
+    //     url: 'https://explained.nami.exchange/',
+    //     child_lv1: []
+    // },
+    // {
+    //     key: 4,
+    //     title: 'Fee',
+    //     localized: 'fee',
+    //     isNew: false,
+    //     url: 'https://nami.exchange/fee-schedule',
+    //     child_lv1: []
+    // },
     {
         key: 6,
         title: 'Support',
