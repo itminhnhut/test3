@@ -12,7 +12,7 @@
 }
 
 .mal-modal {
-  @apply fixed z-50 bg-background dark:bg-background-dark;
+  @apply fixed z-50 bg-bgPrimary dark:bg-bgPrimary-dark;
 
   top: 45%;
   left: 50%;
@@ -24,7 +24,7 @@
     min-width: 282px;
 
     .mal-modal__title {
-      @apply font-bold text-center text-textPrimary dark:text-textPrimary-dark mb-3;
+      @apply font-bold text-center text-txtPrimary dark:text-txtPrimary-dark mb-3;
 
       font-size: 16px;
     }

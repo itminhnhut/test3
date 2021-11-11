@@ -1,33 +1,30 @@
 /* eslint-disable no-prototype-builtins */
-import { createRef, Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'next-i18next';
-import dynamic from 'next/dynamic';
 import { Dialog, Popover, Transition } from '@headlessui/react';
-import uniqBy from 'lodash/uniqBy';
-import orderBy from 'lodash/orderBy';
+import * as Error from 'actions/apiError';
+import { ApiStatus } from 'actions/const';
+import { formatSwapValue, formatWallet, getDecimalScale, getLoginUrl, safeToFixed } from 'actions/utils';
+import { IconSelectSmall, IconSwitch } from 'components/common/Icons';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import AssetLogo from 'components/wallet/AssetLogo';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
-import { useAsync, useDebounce } from 'react-use';
+import orderBy from 'lodash/orderBy';
+import uniqBy from 'lodash/uniqBy';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import dynamic from 'next/dynamic';
+import { createRef, Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import Countdown from 'react-countdown';
 import { X } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
-import Countdown from 'react-countdown';
+import { useAsync, useDebounce } from 'react-use';
 import TextLoader from 'src/components/loader/TextLoader';
-import { formatSwapValue, formatWallet, getDecimalScale, getLoginUrl, safeToFixed } from 'actions/utils';
-import LayoutWithHeader from 'components/common/layouts/layoutWithHeader';
-import { IconSelectSmall, IconSwitch } from 'components/common/Icons';
-import { ApiStatus } from 'actions/const';
-import * as Error from 'actions/apiError';
-import AssetLogo from 'components/wallet/AssetLogo';
-import SwapOrderList from 'components/trade/SwapOrderList';
-import Footer from 'components/common/Footer';
 import { iconColor } from '../config/colors';
-import showNotification from '../utils/notificationService';
+import colors from '../styles/colors';
 import fetchAPI from '../utils/fetch-api';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import colors from '../styles/colors'
+import showNotification from '../utils/notificationService';
 
 const swapFee = 0.1 / 100;
 
@@ -383,7 +380,7 @@ const Swap = () => {
 
     return (
         <MaldivesLayout>
-            <div className="bg-backgroundSecondary dark:bg-get-darkBlue1 flex flex-col flex-grow justify-center
+            <div className="bg-bgSecondary dark:bg-darkBlue-2 flex flex-col flex-grow justify-center
                             items-center min-h-[680px] h-full">
                 {/* <div className="py-[3.75rem] text-center">
                     <div className="text-4xl text-teal ">
@@ -394,13 +391,13 @@ const Swap = () => {
                     </div>
                 </div> */}
                 <div className="convert-container">
-                    <div className="card card-shadow bg-bgContainer dark:bg-get-darkBlue2 rounded-xl lg:w-[480px] max-w-[480px] mx-auto">
+                    <div className="card card-shadow bg-bgContainer dark:bg-darkBlue-1 rounded-xl lg:w-[480px] max-w-[480px] mx-auto">
                         <div className="card-body !py-6 !px-6">
                             <div className="font-bold text-xl pb-4">{t('navbar:submenu.swap')}</div>
                             <div className="group hover:border-teal swap-form-group">
                                 <div className="flex justify-between">
-                                    <span className="text-sm font-bold text-textPrimary dark:text-textPrimary-dark">{t('you_pay')}</span>
-                                    <span className="text-sm font-bold text-textSecondary dark:text-textSecondary-dark">
+                                    <span className="text-sm font-bold text-txtPrimary dark:text-txtPrimary-dark">{t('you_pay')}</span>
+                                    <span className="text-sm font-bold text-txtSecondary dark:text-txtSecondary-dark">
                                         {t('convert:available_balance')}:&nbsp;
                                         {getAvailableText()}&nbsp;
                                         {coinFrom}
@@ -446,7 +443,7 @@ const Swap = () => {
                                                         disabled={!swapConfig}
                                                     >
                                                         <span><AssetLogo assetCode={coinFrom} size={24} /></span>
-                                                        <span className="mx-1.5 leading-6 text-textPrimary dark:text-textPrimary-dark">{coinFrom}</span>
+                                                        <span className="mx-1.5 leading-6 text-txtPrimary dark:text-txtPrimary-dark">{coinFrom}</span>
                                                         <span><IconSelectSmall color={currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4} /></span>
                                                     </Popover.Button>
                                                     {open
@@ -474,7 +471,7 @@ const Swap = () => {
                             </div>
                             <div className="group hover:border-teal swap-form-group">
                                 <div className="flex justify-between">
-                                    <span className="text-sm font-bold text-textPrimary dark:text-textPrimary-dark">{t('you_get')}</span>
+                                    <span className="text-sm font-bold text-txtPrimary dark:text-txtPrimary-dark">{t('you_get')}</span>
                                 </div>
                                 <div className="swap-input-group relative">
                                     <NumberFormat
@@ -502,7 +499,7 @@ const Swap = () => {
                                                         disabled={!swapConfig}
                                                     >
                                                         <span><AssetLogo assetCode={coinTo} size={24} /></span>
-                                                        <span className="mx-1.5 leading-6 text-textPrimary dark:text-textPrimary-dark">{coinTo}</span>
+                                                        <span className="mx-1.5 leading-6 text-txtPrimary dark:text-txtPrimary-dark">{coinTo}</span>
                                                         <span><IconSelectSmall  color={currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4}  /></span>
                                                     </Popover.Button>
                                                     {open
@@ -521,16 +518,10 @@ const Swap = () => {
                                 </div>
                             </div>
                             <div className="mt-4 text-sm font-medium flex items-center justify-between">
-                                <span className="text-black-600 text-textPrimary dark:text-textPrimary-dark">
+                                <span className="text-black-600 text-txtPrimary dark:text-txtPrimary-dark">
                                     {t('convert:rate')}
                                 </span>
                                 {priceData ? <Rate /> : null}
-                            </div>
-                            <div className="mt-4 text-sm font-medium flex items-center justify-between">
-                                <span className="text-black-600 text-textPrimary dark:text-textPrimary-dark">
-                                    Slippage
-                                </span>
-                                <div className="font-semibold">0.5%</div>
                             </div>
 
                             <div className="mt-8">

@@ -9,7 +9,7 @@
   }
 
   .swap-form-control {
-    @apply focus:ring-0 block w-full font-bold text-black-700 placeholder-black-500 py-3 bg-transparent text-textPrimary dark:text-textPrimary-dark;
+    @apply focus:ring-0 block w-full font-bold text-black-700 placeholder-black-500 py-3 bg-transparent text-txtPrimary dark:text-txtPrimary-dark;
     line-height: 1.315rem;
     letter-spacing: -0.01em;
     height: 44px;

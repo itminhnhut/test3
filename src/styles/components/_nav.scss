@@ -2,10 +2,10 @@
 @import "../helpers/contants";
 
 .mal-navbar__wrapper__no__blur {
-  @apply bg-background dark:bg-background-dark #{!important};
+  @apply bg-bgPrimary dark:bg-bgPrimary-dark #{!important};
 
   .mal-navbar__link__spotlight {
-    @apply text-textPrimary dark:text-textPrimary-dark #{!important};
+    @apply text-txtPrimary dark:text-txtPrimary-dark #{!important};
 
     &:hover {
       @apply text-dominant #{!important};
@@ -13,7 +13,7 @@
   }
 
   .mal-navbar__link__group___item {
-    @apply h-full flex items-center text-textPrimary dark:text-textPrimary-dark #{!important};
+    @apply h-full flex items-center text-txtPrimary dark:text-txtPrimary-dark #{!important};
 
     div svg path {
       @apply stroke-current #{!important};
@@ -25,7 +25,7 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-background dark:bg-get-darkBlue3 border-l border-r border-b dark:border-divider-dark #{!important};
+    @apply bg-bgPrimary dark:bg-darkBlue-2 border-l border-r border-b dark:border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
   }
 
@@ -34,17 +34,17 @@
 
     .mal-navbar__dropdown {
       .mal-navbar__dropdown__wrapper {
-        @apply bg-bgContainer dark:bg-get-darkBlue3 dark:shadow-none
+        @apply bg-bgContainer dark:bg-darkBlue-2 dark:shadow-none
         border-l border-r border-b dark:border-divider-dark #{!important};
 
         box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
         border-color: transparent;
 
         .mal-navbar__dropdown___item {
-          @apply text-textPrimary dark:text-textPrimary-dark text-right #{!important};
+          @apply text-txtPrimary dark:text-txtPrimary-dark text-right #{!important};
 
           &:hover {
-            @apply bg-get-darkBlue4;
+            @apply bg-darkBlue-3;
           }
         }
       }
@@ -56,7 +56,7 @@
       .mal-navbar__dropdown__user__info {
         .mal-navbar__dropdown__user__info__summary {
           .mal-navbar__dropdown__user__info__username {
-              @apply text-textPrimary dark:text-textPrimary-dark #{!important};
+              @apply text-txtPrimary dark:text-txtPrimary-dark #{!important};
           }
         }
       }
@@ -65,10 +65,10 @@
 }
 
 .mal-navbar__wrapper__use__dark {
-  @apply bg-background-dark #{!important};
+  @apply bg-bgPrimary-dark #{!important};
 
   .mal-navbar__link__spotlight {
-    @apply text-textPrimary-dark #{!important};
+    @apply text-txtPrimary-dark #{!important};
 
     &:hover {
       @apply text-dominant #{!important};
@@ -76,7 +76,7 @@
   }
 
   .mal-navbar__link__group___item {
-    @apply h-full flex items-center text-textPrimary-dark #{!important};
+    @apply h-full flex items-center text-txtPrimary-dark #{!important};
 
     div svg path {
       @apply stroke-current #{!important};
@@ -88,24 +88,24 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-get-darkBlue3 border-l border-r border-b border-divider-dark #{!important};
+    @apply bg-darkBlue-2 border-l border-r border-b border-divider-dark #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
   }
 
   .mal-navbar__link__group___item___childen__lv1___item2 {
 
     &:hover {
-      @apply bg-get-darkBlue3 #{!important};
+      @apply bg-darkBlue-3 #{!important};
     }
 
     .mal-navbar__link__group___item___childen__lv1___item2___c {
 
       .mal-navbar__link__group___item___childen__lv1___item2___c__title {
-        @apply text-textPrimary-dark #{!important};
+        @apply text-txtPrimary-dark #{!important};
       }
 
       .mal-navbar__link__group___item___childen__lv1___item2___c__description {
-        @apply text-textSecondary-dark #{!important};
+        @apply text-txtSecondary-dark #{!important};
       }
     }
   }
@@ -115,13 +115,13 @@
 
     .mal-navbar__dropdown {
       .mal-navbar__dropdown__wrapper {
-        @apply bg-get-darkBlue3 shadow-none border-l border-r border-b border-divider-dark #{!important};
+        @apply bg-darkBlue-2 shadow-none border-l border-r border-b border-divider-dark #{!important};
 
         .mal-navbar__dropdown___item {
-          @apply text-textPrimary-dark #{!important};
+          @apply text-txtPrimary-dark #{!important};
 
           &:hover {
-            @apply bg-get-darkBlue4 #{!important};
+            @apply bg-darkBlue-3 #{!important};
           }
         }
       }
@@ -133,7 +133,7 @@
       .mal-navbar__dropdown__user__info {
         .mal-navbar__dropdown__user__info__summary {
           .mal-navbar__dropdown__user__info__username {
-            @apply text-textPrimary-dark #{!important};
+            @apply text-txtPrimary-dark #{!important};
           }
         }
       }
@@ -142,10 +142,10 @@
 }
 
 .mal-navbar__wrapper__use__light {
-  @apply bg-background #{!important};
+  @apply bg-bgPrimary #{!important};
 
   .mal-navbar__link__spotlight {
-    @apply text-textPrimary  #{!important};
+    @apply text-txtPrimary  #{!important};
 
     &:hover {
       @apply text-dominant #{!important};
@@ -153,7 +153,7 @@
   }
 
   .mal-navbar__link__group___item {
-    @apply h-full flex items-center text-textPrimary #{!important};
+    @apply h-full flex items-center text-txtPrimary #{!important};
 
     div svg path {
       @apply stroke-current #{!important};
@@ -165,7 +165,7 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
-    @apply bg-background #{!important};
+    @apply bg-bgPrimary #{!important};
     box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05) !important;
     border: none;
   }
@@ -173,17 +173,17 @@
   .mal-navbar__link__group___item___childen__lv1___item2 {
 
     &:hover {
-      @apply bg-get-lightTeal #{!important};
+      @apply bg-teal-50 #{!important};
     }
 
     .mal-navbar__link__group___item___childen__lv1___item2___c {
 
       .mal-navbar__link__group___item___childen__lv1___item2___c__title {
-        @apply text-textPrimary #{!important};
+        @apply text-txtPrimary #{!important};
       }
 
       .mal-navbar__link__group___item___childen__lv1___item2___c__description {
-        @apply text-textSecondary #{!important};
+        @apply text-txtSecondary #{!important};
       }
     }
   }
@@ -197,10 +197,10 @@
         @apply bg-bgContainer border-0 #{!important};
 
         .mal-navbar__dropdown___item {
-          @apply text-textPrimary #{!important};
+          @apply text-txtPrimary #{!important};
 
           &:hover {
-            @apply bg-get-lightTeal #{!important};
+            @apply bg-teal-50 #{!important};
           }
         }
       }
@@ -212,7 +212,7 @@
       .mal-navbar__dropdown__user__info {
         .mal-navbar__dropdown__user__info__summary {
           .mal-navbar__dropdown__user__info__username {
-            @apply text-textPrimary #{!important};
+            @apply text-txtPrimary #{!important};
           }
         }
       }
@@ -272,7 +272,7 @@
     font-size: 14px;
 
     span {
-      @apply text-textPrimary dark:text-textPrimary-dark;
+      @apply text-txtPrimary dark:text-txtPrimary-dark;
     }
   }
 
@@ -332,7 +332,7 @@
       }
 
       .mal-navbar__dropdown___item:last-child {
-        @apply text-get-red2 #{!important};
+        @apply text-red #{!important};
       }
     }
 
@@ -354,7 +354,7 @@
     @apply h-full flex flex-grow items-center;
 
     .mal-navbar__link__group___item {
-      @apply flex items-center h-full text-sm font-medium text-textPrimary-dark
+      @apply flex items-center h-full text-sm font-medium text-txtPrimary-dark
       relative;
 
       cursor: pointer;
@@ -405,7 +405,7 @@
         border-radius: 6px;
 
         &:hover {
-          @apply bg-get-lightTeal dark:bg-get-darkBlue3;
+          @apply bg-teal-50 dark:bg-darkBlue-3;
         }
 
         .mal-navbar__link__group___item___childen__lv1___item2__icon {
@@ -421,7 +421,7 @@
           padding-left: 12px;
 
           .mal-navbar__link__group___item___childen__lv1___item2___c__title {
-            @apply text-textPrimary dark:text-textPrimary-dark;
+            @apply text-txtPrimary dark:text-txtPrimary-dark;
             font-weight: 600;
 
             @media (min-width: 2560px) {
@@ -430,7 +430,7 @@
           }
 
           .mal-navbar__link__group___item___childen__lv1___item2___c__description {
-            @apply text-get-grey1;
+            @apply text-gray-1;
 
             padding-top: 4px;
             white-space: normal;
@@ -446,7 +446,7 @@
     }
 
     .mal-navbar__link__group___item___childen__lv1 {
-      @apply absolute hidden left-0 z-50 bg-background dark:bg-get-darkBlue3
+      @apply absolute hidden left-0 z-50 bg-bgPrimary dark:bg-darkBlue-2
       border-l border-r border-b dark:border-divider-dark;
 
       top: 100%;
@@ -461,7 +461,7 @@
     }
 
     .mal-navbar__link__group___item___childen__lv1___item {
-      @apply flex items-center text-sm font-medium text-textPrimary dark:text-textPrimary-dark;
+      @apply flex items-center text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark;
 
       padding: 8px 8px;
       border-radius: 6px;
@@ -484,7 +484,7 @@
 
 
     .mal-navbar__link__spotlight {
-      @apply text-sm font-medium text-textPrimary-dark ml-8 pl-8 border-l border-divider-dark;
+      @apply text-sm font-medium text-txtPrimary-dark ml-8 pl-8 border-l border-divider-dark;
 
       &:hover {
         @apply text-dominant;
@@ -552,7 +552,7 @@
       padding-top: 25px;
 
       .mal-navbar__dropdown__wrapper {
-        @apply bg-bgContainer dark:bg-get-darkBlue3 dark:shadow-none
+        @apply bg-bgContainer dark:bg-darkBlue-2 dark:shadow-none
         border-l border-r border-b dark:border-divider-dark;
 
         border-color: transparent;
@@ -563,7 +563,7 @@
         //min-width: 200px;
 
         .mal-navbar__dropdown___item {
-          @apply flex items-center text-textPrimary dark:text-textPrimary-dark text-right;
+          @apply flex items-center text-txtPrimary dark:text-txtPrimary-dark text-right;
 
           white-space: nowrap;
           padding: 8px 16px;
@@ -576,7 +576,7 @@
           }
 
           &:hover {
-            @apply bg-get-lightTeal dark:bg-get-darkBlue4;
+            @apply bg-teal-50 dark:bg-darkBlue-3;
           }
         }
 
@@ -587,7 +587,7 @@
 
 
 .mal-pocket-navbar__drawer {
-  @apply absolute top-0 right-0 z-50 bg-background dark:bg-background-dark;
+  @apply absolute top-0 right-0 z-50 bg-bgPrimary dark:bg-bgPrimary-dark;
 
   width: 100%;
   max-width: 375px;

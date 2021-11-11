@@ -73,22 +73,22 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         switch (useOnly) {
             case NAVBAR_USE_TYPE.FLUENT:
                 result.wrapper = ''
-                result.text = 'text-textPrimary-dark'
+                result.text = 'text-txtPrimary-dark'
                 result.color = colors.grey4
                 break
             case NAVBAR_USE_TYPE.DARK:
                 result.wrapper = 'mal-navbar__wrapper__use__dark'
-                result.text = 'text-textPrimary-dark'
+                result.text = 'text-txtPrimary-dark'
                 result.color = colors.grey4
                 break
             case NAVBAR_USE_TYPE.LIGHT:
                 result.wrapper = 'mal-navbar__wrapper__use__light'
-                result.text = 'text-textPrimary'
+                result.text = 'text-txtPrimary'
                 result.color = colors.darkBlue
                 break
             default:
                 result.wrapper = 'mal-navbar__wrapper__no__blur'
-                result.text = 'text-textPrimary dark:text-textPrimary-dark'
+                result.text = 'text-txtPrimary dark:text-txtPrimary-dark'
                 result.color = currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4
                 break
         }

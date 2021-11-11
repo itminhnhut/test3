@@ -12,7 +12,7 @@ const Button = memo((props) => {
     const setState = (_state) => set(prevState => ({...prevState, ..._state}))
 
     const disabledStyle = useMemo(() => {
-        if (type === 'disabled') return '!pointer-events-none !bg-get-grey2 !dark:bg-get-darkBlue3'
+        if (type === 'disabled') return '!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3'
         return ''
     }, [type])
 
@@ -21,8 +21,8 @@ const Button = memo((props) => {
             <Link href={href || '#'}>
                 <a style={{...style, display: 'block', background: color}}
                    target={target}
-                   className={`mal-button ${type === 'primary' ? 'bg-btnPrimary text-btnTxtPrimary'
-                       : 'bg-btnSecondary text-btnTxtSecondary dark:bg-btnSecondary-dark dark:text-btnTxtSecondary-dark'} ${disabledStyle}`}
+                   className={`mal-button ${type === 'primary' ? 'bg-bgBtnPrimary text-txtBtnPrimary'
+                       : 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'} ${disabledStyle}`}
                    onClick={() => onClick && !disabled && onClick()}>
                     {title || 'TITLE_NOT_FOUND'}
                 </a>
@@ -33,8 +33,8 @@ const Button = memo((props) => {
     if (componentType === 'button') {
         return (
             <button style={{...style, background: color}}
-                    className={`mal-button ${type === 'primary' ? 'bg-btnPrimary text-btnTxtPrimary'
-                        : 'bg-btnSecondary text-btnTxtSecondary dark:bg-btnSecondary-dark dark:text-btnTxtSecondary-dark'} ${disabledStyle}`}
+                    className={`mal-button ${type === 'primary' ? 'bg-bgBtnPrimary text-txtBtnPrimary'
+                        : 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'} ${disabledStyle}`}
                     onClick={() => onClick && !disabled && onClick()}>
                 {title || 'TITLE_NOT_FOUND'}
             </button>

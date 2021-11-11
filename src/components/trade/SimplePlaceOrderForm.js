@@ -639,7 +639,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                     return (
                         <li className="tab-item pr-3 font-semibold" key={index}>
                             <a
-                                className={'tab-link text-textSecondary dark:text-textSecondary-dark ' + (orderType === tab ? 'active' : '')}
+                                className={'tab-link text-txtSecondary dark:text-txtSecondary-dark ' + (orderType === tab ? 'active' : '')}
                                 onClick={() => handleClickSubTab(tab)}
                             > {orderTypeLabels[tab]}
                             </a>
@@ -657,7 +657,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 <div className="form-group w-full">
                     <div className="input-group">
                         <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-textSecondary dark:text-textSecondary-dark font-semibold">{t('common:price')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold">{t('common:price')}</div>
                         </div>
 
                         {
@@ -701,7 +701,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-textSecondary dark:text-textSecondary-dark">
+                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {quote}
                             </span>
                         </div>
@@ -821,7 +821,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                                     ? _renderQuantityMode
                                     : <div className="text-sm text-black-500 font-semibold ">{t('total')}</div>
                             } */}
-                            <div className="text-sm text-textSecondary dark:text-textSecondary-dark font-semibold ">{t('total')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold ">{t('total')}</div>
                         </div>
                         <NumberFormat
                             getInputRef={quoteQtyRef}
@@ -847,7 +847,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-textSecondary dark:text-textSecondary-dark">
+                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {quote}
                             </span>
                         </div>
@@ -864,7 +864,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 <div className="form-group w-full">
                     <div className="input-group">
                         <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-textSecondary dark:text-textSecondary-dark font-semibold ">{t('common:amount')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold ">{t('common:amount')}</div>
                         </div>
                         <NumberFormat
                             getInputRef={quantityRef}
@@ -890,7 +890,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-textSecondary dark:text-textSecondary-dark">
+                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {base}
                             </span>
                         </div>
@@ -928,8 +928,8 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         return (
             <>
                 <div className="mb-2 flex justify-between items-center">
-                    <div className="text-xs text-textSecondary dark:text-textSecondary-dark font-semibold ">{t('spot:available_balance')}</div>
-                    <div className="text-xs text-textPrimary dark:text-textPrimary-dark font-semibold text-right">
+                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark font-semibold ">{t('spot:available_balance')}</div>
+                    <div className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-semibold text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
                             _orderSide === ExchangeOrderEnum.Side.BUY

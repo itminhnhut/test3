@@ -41,10 +41,10 @@
       width: 1%;
       min-width: 0;
       margin-bottom: 0;
-      @apply relative flex-grow border-0 bg-transparent text-textPrimary dark:text-textPrimary-dark;
+      @apply relative flex-grow border-0 bg-transparent text-txtPrimary dark:text-txtPrimary-dark;
 
       ::placeholder {
-        @apply text-textSecondary dark:text-textSecondary-dark;
+        @apply text-txtSecondary dark:text-txtSecondary-dark;
       }
     }
     .form-control:not(:last-child) {
@@ -79,7 +79,7 @@
 
     input {
       ::placeholder {
-        @apply text-textSecondary dark:text-textSecondary-dark;
+        @apply text-txtSecondary dark:text-txtSecondary-dark;
       }
     }
 

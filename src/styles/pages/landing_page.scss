@@ -2,7 +2,7 @@
 // Version: 0.1
 
 .landing_page___screen_present {
-  @apply bg-get-white pt-8;
+  @apply bg-white pt-8;
 
   margin-top: -38%;
   padding-bottom: 60px;
@@ -358,7 +358,7 @@
 }
 
 .landing_page___exp_compare {
-  //@apply dark:bg-get-darkBlue2;
+  //@apply dark:bg-darkBlue-2;
 
   background-color: #F8F9FA;
   padding: 60px 0;
@@ -385,7 +385,7 @@
     }
 
     .landing_page___exp_compare__item {
-      @apply bg-get-white h-full;
+      @apply bg-white h-full;
 
       padding: 30px 20px 0;
       border-radius: 20px;
@@ -453,7 +453,7 @@
 }
 
 .landing_page___theming {
-  //@apply dark:bg-get-darkBlue2;
+  //@apply dark:bg-darkBlue-2;
 
   background-color: #F8F9FA;
 
@@ -542,7 +542,7 @@
     .landing_page___attractive_features__content__left {
 
       .landing_page___card {
-        //@apply bg-get-white dark:bg-get-darkBlue1;
+        //@apply bg-white dark:bg-darkBlue-1;
       }
 
       .landing_page___attractive_features__content__left__description {
@@ -993,7 +993,7 @@
     background-color: transparent;
 
     .landing_page___card {
-      @apply bg-get-white;
+      @apply bg-white;
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
     }
   }
@@ -1093,7 +1093,7 @@
       margin-top: 30px;
 
       .landing_page___payment_kyc___item {
-        @apply bg-get-white;
+        @apply bg-white;
 
             margin-right: 20px;
             width: calc(100% / 3);
@@ -1135,7 +1135,7 @@
 }
 
 .landing_page___more {
-  @apply bg-get-white;
+  @apply bg-white;
   margin-top: -1px;
   padding: 60px 0;
 
@@ -1146,7 +1146,7 @@
   }
 
   .landing_page___more___subtitle {
-    @apply text-get-grey2 text-center uppercase mt-3;
+    @apply text-gray-2 text-center uppercase mt-3;
     font-weight: 600;
     letter-spacing: 0.1em;
   }
@@ -1545,7 +1545,7 @@
 }
 
 .landing_page___card {
-  @apply bg-get-white;
+  @apply bg-white;
 
   padding: 30px 20px;
   border-radius: 20px;

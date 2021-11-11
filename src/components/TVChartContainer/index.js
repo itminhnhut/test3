@@ -205,18 +205,35 @@ export class TVChartContainer extends React.PureComponent {
             library_path: this.props.libraryPath,
             locale: getLanguageFromURL() || 'en',
             disabled_features: [
-                'use_localstorage_for_settings',
-                'header_symbol_search',
-                'symbol_search_hot_key',
+
+                'compare_symbol',
+                'display_market_status',
+                'go_to_date',
+                'volume_force_overlay',
+                'header_interval_dialog_button',
                 'header_settings',
-                'control_bar',
-                'timeframes_toolbar',
+                // 'timeframes_toolbar',
+                'source_selection_markers',
+                'header_symbol_search',
                 'header_compare',
                 'header_undo_redo',
-                'compare_symbol',
-                'border_around_the_chart',
-                'header_screenshot',
-                'volume_force_overlay',
+                'symbol_info',
+                'source_selection_markers',
+                'popup_hints',
+                'header_widget',
+                'axis_pressed_mouse_move_scale',
+                // 'use_localstorage_for_settings',
+                // 'header_symbol_search',
+                // 'symbol_search_hot_key',
+                // 'header_settings',
+                // 'control_bar',
+                // 'timeframes_toolbar',
+                // 'header_compare',
+                // 'header_undo_redo',
+                // 'compare_symbol',
+                // 'border_around_the_chart',
+                // 'header_screenshot',
+                // 'volume_force_overlay',
             ],
             enabled_features: [
                 'move_logo_to_main_pane',
@@ -289,6 +306,13 @@ export class TVChartContainer extends React.PureComponent {
                 <div className="relative flex flex-grow flex-col min-w-max chartWrapper h-full" id="chart-container">
                     <div className={`absolute w-full h-full bg-bgContainer dark:bg-bgContainer-dark z-10 flex justify-center items-center ${this.state.chartStatus === ChartStatus.LOADED ? 'hidden' : ''}`}>
                         <IconLoading color="#09becf" />
+                    </div>
+                    <div>
+                        <span>15m</span>
+                        <span>1h</span>
+                        <span>4h</span>
+                        <span>1D</span>
+                        <span>1W</span>
                     </div>
                     <div
                         id={this.containerId}

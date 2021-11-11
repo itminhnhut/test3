@@ -191,10 +191,10 @@ export function render24hChange(ticker) {
         let sign;
         if (change24h > 0) {
             sign = '+';
-            className += ' text-get-teal';
+            className += ' text-teal';
         } else if (change24h < 0) {
             sign = '';
-            className += ' text-get-red2';
+            className += ' text-red';
         } else sign = '';
 
         text = `${sign}${formatPercentage(change24h, 2, true)}%`;

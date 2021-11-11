@@ -1,15 +1,15 @@
 @import "../helpers/contants";
 
 .mal-layouts___light {
-  @apply bg-background #{!important};
+  @apply bg-bgPrimary #{!important};
 }
 
 .mal-layouts___dark {
-  @apply dark:bg-background-dark #{!important};
+  @apply dark:bg-bgPrimary-dark #{!important};
 }
 
 .mal-layouts {
-  @apply relative h-full bg-background dark:bg-background-dark;
+  @apply relative h-full bg-bgPrimary dark:bg-bgPrimary-dark;
 
   min-width: 320px;
   overflow-x: hidden;
