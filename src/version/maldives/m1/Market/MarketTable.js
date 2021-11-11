@@ -327,7 +327,7 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
 const renderPair = (b, q, lbl, w) => {
     return (
         <div className="flex items-center">
-            <AssetLogo assetCode={null} size={w >= 1024 ? 32 : 28}/>
+            <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28}/>
             <div className="ml-3 whitespace-nowrap">
                 <span className="font-bold">{b}</span>
                 <span className="font-normal text-textSecondary dark:text-textSecondary-dark">/{q}</span>

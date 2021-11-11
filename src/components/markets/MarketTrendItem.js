@@ -53,7 +53,7 @@ const MarketTrendItem = memo(({ pair, style = {} }) => {
                 <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-dominant">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                            <AssetLogo assetCode={_?.baseAssetId} size={36}/>
+                            <AssetLogo assetCode={_?.baseAsset} size={36}/>
                             <div className="ml-2"><span className="font-bold">{_?.baseAsset}</span>/{_?.quoteAsset}</div>
                         </div>
                         <div className="w-[95px] xl:w-[65px]">
