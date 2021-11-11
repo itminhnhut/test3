@@ -156,7 +156,7 @@ const MarketTable = memo(({ loading, data, parentState, ...restProps }) => {
                         {t('common:market')}
                     </div>
                     <div
-                        className="flex items-center py-[10px] px-[18px] rounded-[6px] bg-get-grey4 dark:bg-get-darkBlue3 cursor-pointer">
+                        className="flex items-center py-[10px] px-[18px] rounded-[6px] bg-get-grey4 dark:bg-darkBlue-3 cursor-pointer">
                         <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={20}/>
                         <input className="bg-transparent outline-none px-2"
                                value={restProps.search}

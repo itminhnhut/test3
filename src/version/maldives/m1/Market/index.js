@@ -246,7 +246,7 @@ const MarketIndex = () => {
 
     return (
         <MaldivesLayout>
-            <div className="w-full h-full bg-get-grey4 dark:bg-get-darkBlue1">
+            <div className="w-full h-full bg-get-grey4 dark:bg-darkBlue-1">
                 <MarketWrapper>
                     <MarketTrend data={state.trending} loading={state.loadingTrend}/>
                     {renderMarketTable()}
@@ -268,7 +268,7 @@ const MarketWrapper = styled.div.attrs({ className: 'mal-container' })`
   @media (min-width: 1366px) {
     max-width: 1280px !important;
   }
-  
+
   @media (min-width: 1440px) {
     max-width: 1366px !important;
   }
