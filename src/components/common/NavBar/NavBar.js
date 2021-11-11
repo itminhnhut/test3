@@ -58,10 +58,10 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     const [currentTheme, onThemeSwitch] = useDarkMode()
     const [currentLocale, onChangeLang] = useLanguage()
 
-    useScrollPosition(({prevPos, currPos}) => {
-        const shouldShow = currPos?.y > prevPos?.y
-        if (shouldShow !== state.hideOnScroll) setState({ hideOnScroll: shouldShow })
-    }, [state.hideOnScroll], false, false, 300)
+    // useScrollPosition(({prevPos, currPos}) => {
+    //     const shouldShow = currPos?.y > prevPos?.y
+    //     if (shouldShow !== state.hideOnScroll) setState({ hideOnScroll: shouldShow })
+    // }, [state.hideOnScroll], false, false, 300)
 
     const { user: auth } = useSelector(state => state.auth) || null
     const { width } = useWindowSize()
@@ -340,11 +340,10 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
             <PocketNavDrawer isActive={state.isDrawer} onClose={() => onDrawerAction(false)}/>
             <div style={style || {}}
                  className={`mal-navbar__wrapper 
-                            ${state.hideOnScroll ? 
-                            `mal-navbar__visible 
-                            ${useOnly === NAVBAR_USE_TYPE.FLUENT ? 
-                            'mal-navbar__visible__blur' : ''}` 
-                            : 'mal-navbar__hidden'} ${navTheme.wrapper}`}>
+                            // ${useOnly === NAVBAR_USE_TYPE.FLUENT ?  'mal-navbar__visible__blur' : ''}
+                            // ${state.hideOnScroll ?  `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT ?  'mal-navbar__visible__blur' : ''}` : 'mal-navbar__hidden'} 
+                            ${navTheme.wrapper}
+                 `}>
                 <Link href="/">
                     <a className="block mal-navbar__logo">
                         <Image src="/images/logo/nami_maldives.png" width="28" height="25"

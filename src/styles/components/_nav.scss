@@ -220,19 +220,19 @@
   }
 }
 
-.mal-navbar__visible {
-  visibility: visible;
-  transform: none;
-}
-
-.mal-navbar__visible__blur {
-  background-color: rgba(21, 29, 47, 0.88) !important;
-}
-
-.mal-navbar__hidden {
-  visibility: hidden;
-  transform: translate(0, -100%);
-}
+//.mal-navbar__visible {
+//  visibility: visible;
+//  transform: none;
+//}
+//
+//.mal-navbar__visible__blur {
+//  background-color: rgba(21, 29, 47, 0.88) !important;
+//}
+//
+//.mal-navbar__hidden {
+//  visibility: hidden;
+//  transform: translate(0, -100%);
+//}
 
 .mal-navbar__wrapper {
   @apply relative z-30 w-full flex flex-row items-center justify-between;
