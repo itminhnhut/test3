@@ -3,6 +3,8 @@ import SvgFlame from 'components/svg/SvgFlame'
 
 const MarketLabel = ({ labelType }) => {
 
+    if (!labelType) return null
+
     const renderLabel = useCallback(() => {
         if (labelType === 'top_view') return <span className="ml-3"><SvgFlame size={16}/></span>
         return (

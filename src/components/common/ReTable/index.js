@@ -5,20 +5,19 @@
 // Reference: https://table-react-component.vercel.app/
 // **********************************
 
-// ### Columns Defs should look like
+// >>> Columns Defs should look like
 // [
 //     { key: 'coin', dataIndex: 'coin', title: 'Coin', width: 100, fixed: 'left' },
 //     { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', width: 100 },
 //     { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', width: 100 },
-//     { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', width: 100 },
 //     { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', width: 100 },
 //     { key: '24h_high', dataIndex: '24h_high', title: '24h High', width: 100 },
 //     { key: '24h_low', dataIndex: '24h_low', title: '24h Low', width: 100 }
 // ]
 
-// ### Data Source should look like
+// >>> Data Source should look like
 // [
-//     { coin: 'BTC/USDT', last_price: 600000, change_24h: 50%, volume_24h: 1000000, 24_high: 65000, 24h_low: 32000 },
+//     { coin: 'BTC/USDT', last_price: 600000, change_24h: 50%, volume_24h: 1000000, ... },
 //     ...
 // ]
 
@@ -27,23 +26,30 @@
 // 2.
 
 // !USAGE: Support display list, sorting, pagination, resize column, custom style, ...
-//
+// !EXAMPLE: => MarketTable.js => renderTable
 
 import RcTable from 'rc-table'
 import styled from 'styled-components'
 import colors from 'styles/colors'
-
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import RePagination from 'components/common/ReTable/RePagination'
+
+import { useState, memo, useEffect, useCallback } from 'react'
 import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons'
 import { useTranslation } from 'next-i18next'
-import { useState, memo, useEffect } from 'react'
 import { Resizable } from 'react-resizable'
 import { castArray } from 'lodash'
+import { ScaleLoader } from 'react-spinners'
 
 import 'rc-table/assets/index.css'
 import 'react-resizable/css/styles.css'
 
 const HIDE_SORTER = ['star', 'operation']
+
+const DEFAULT_PAGINATION = {
+    current: 1,
+    pageSize: 10,
+}
 
 const ReTable = memo(({
     data,
@@ -52,13 +58,19 @@ const ReTable = memo(({
     resizable,
     sort,
     pagination,
+    paginationProps,
     tableStyle,
     useRowHover,
     ...restProps }) => {
 
     // * Init State
     const [ownColumns, setOwnColumns] = useState(columns)
-    const [state, set] = useState({ })
+    const [current, setCurrent] = useState(DEFAULT_PAGINATION.current)
+    const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.pageSize)
+
+    const [state, set] = useState({
+
+    })
 
     // * Use Hooks
     const { t } = useTranslation(['common'])
@@ -84,6 +96,7 @@ const ReTable = memo(({
             cell: ResizableTitle,
         },
     }
+
     const _columns = ownColumns.map((col, index) => ({
         ...col,
         onHeaderCell: (column) =>
@@ -93,7 +106,52 @@ const ReTable = memo(({
             })
     }))
 
-    // * Side Effect
+    // Render Handler
+    const renderEmpty = useCallback(() => {
+        if (loading) {
+            return <ReTableLoading/>
+        }
+
+        if (!data || !data.length) {
+            return <ReTableEmpty msg={t('common:no_data')}/>
+        }
+    }, [loading, data])
+
+    const renderTable = useCallback(() => {
+        let _ = data
+        if (paginationProps) {
+            if (paginationProps?.current) {
+                _ = data?.slice((paginationProps?.current - 1) * pageSize, paginationProps?.current * pageSize)
+            } else {
+                _ = data?.slice((current - 1) * pageSize, current * pageSize)
+            }
+        }
+
+        return (
+            <RcTable data={_}
+                     columns={resizable ? _columns : ownColumns}
+                     components={resizable && components}
+                     emptyText={renderEmpty()}
+                     {...restProps}
+            />
+        )
+    }, [data, resizable, restProps, paginationProps, current, pageSize])
+
+    const renderPagination = useCallback(() => {
+        if (!paginationProps || data.length <= pageSize) return null
+
+        return (
+            <div className="py-8 flex items-center justify-center">
+                <RePagination total={data?.length}
+                              current={current}
+                              pageSize={pageSize}
+                              onChange={page => setCurrent(page)}
+                              {...paginationProps}
+                />
+            </div>
+        )
+    }, [paginationProps, data, pageSize, current])
+
 
     // Add Sorter
     useEffect(() => {
@@ -128,19 +186,39 @@ const ReTable = memo(({
         }
     }, [sort, columns])
 
+    // Init Pagination
+    useEffect(() => {
+        if (paginationProps && Object.keys(paginationProps).length) {
+            paginationProps?.pageSize && setPageSize(paginationProps.pageSize)
+            paginationProps?.current && setCurrent(paginationProps.current)
+        }
+    }, [paginationProps])
+
     return (
         <ReTableWrapper isDark={currentTheme === THEME_MODE.DARK}
                         useRowHover={useRowHover}
                         {...tableStyle}>
-            <RcTable data={data}
-                     columns={resizable ? _columns : ownColumns}
-                     components={components}
-                     emptyText={t('common:no_data')}
-                     {...restProps}
-            />
+            {renderTable()}
+            {renderPagination()}
         </ReTableWrapper>
     )
 })
+
+export const ReTableEmpty = ({ msg }) => {
+    return (
+        <div className="flex items-center justify-center">
+            {msg}
+        </div>
+    )
+}
+
+export const ReTableLoading = () => {
+    return (
+        <div className="flex items-center justify-center">
+            <ScaleLoader color={colors.teal} size={12}/>
+        </div>
+    )
+}
 
 const Sorter = ({ active }) => {
     return (
@@ -232,6 +310,17 @@ const ReTableWrapper = styled.div`
     }
   }
 
+  .rc-table-expanded-row-fixed {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    ::after {
+      display: none;
+    }
+  }
+
   table {
     width: 100% !important;
     ${({ tableStyle }) => tableStyle ? {...tableStyle} : ''};
@@ -248,7 +337,7 @@ const ReTableWrapper = styled.div`
     }
     
     tbody tr:hover td {
-      background: ${({ useRowHover, isDark }) => useRowHover ? isDark ? colors.darkBlue3 : colors.lightTeal : undefined};
+      background: ${({ useRowHover, isDark }) => useRowHover ? isDark ? 'rgba(38, 52, 89, 0.5)' : colors.lightTeal : undefined};
     }
 
     thead tr th:first-child, tbody tr td:first-child {

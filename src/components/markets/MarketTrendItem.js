@@ -8,6 +8,9 @@ import { memo, useEffect, useState } from 'react'
 import { sparkLineBuilder } from 'utils/helpers'
 import { useSelector } from 'react-redux'
 import { debounce } from 'lodash/function'
+import { formatPrice, render24hChange } from 'redux/actions/utils'
+import { useTranslation } from 'next-i18next'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 const MarketTrendItem = memo(({ pair, style = {} }) => {
     // Init State
@@ -17,28 +20,30 @@ const MarketTrendItem = memo(({ pair, style = {} }) => {
     })
     const setState = (state) => set(prevState => ({...prevState, ...state}))
 
+    const { i18n: { language } } = useTranslation()
+
     // Socket
-    const publicSocket = useSelector(state => state.socket.publicSocket)
+    // const publicSocket = useSelector(state => state.socket.publicSocket)
 
     // Init Pairs Price
     const _ = initMarketWatchItem(pair, false)
 
     // Helper
-    const listenerHandler = debounce(ticker => setState({ ticker }), 1000)
+    // const listenerHandler = debounce(ticker => setState({ ticker }), 1000)
 
-    useEffect(() => {
-        const event = `spot:mini_ticker:update:${_?.symbol}`
-
-        if (publicSocket && _ && _.symbol) {
-            subscribeExchangeSocket(publicSocket, [{ socketString: 'mini_ticker', payload: _.symbol }])
-            publicSocket.removeListener(event, listenerHandler);
-            publicSocket.on(event, listenerHandler);
-        }
-        return () => {
-            _?.symbol && unsubscribeExchangeSocket(publicSocket, _.symbol)
-            publicSocket && publicSocket.removeListener(event, listenerHandler);
-        }
-    }, [_, publicSocket])
+    // useEffect(() => {
+    //     const event = `spot:mini_ticker:update:${_?.symbol}`
+    //
+    //     if (publicSocket && _ && _.symbol) {
+    //         subscribeExchangeSocket(publicSocket, [{ socketString: 'mini_ticker', payload: _.symbol }])
+    //         publicSocket.removeListener(event, listenerHandler);
+    //         publicSocket.on(event, listenerHandler);
+    //     }
+    //     return () => {
+    //         _?.symbol && unsubscribeExchangeSocket(publicSocket, _.symbol)
+    //         publicSocket && publicSocket.removeListener(event, listenerHandler);
+    //     }
+    // }, [_, publicSocket])
 
     // useEffect(() => {
     //     log.d('Market Screen | Watch change ticker ', state.ticker)
@@ -60,18 +65,18 @@ const MarketTrendItem = memo(({ pair, style = {} }) => {
                     <div className="mt-[12px] flex items-center justify-between">
                         <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-get-teal'
                             : 'text-[20px] 2xl:text-[24px] font-medium text-get-red2'}>
-                            3,173.1623
+                            {formatPrice(_.lastPrice)}
                         </div>
                         <div className="text-[16px] font-medium">
-                            +12.34%
+                            {render24hChange(pair)}
                         </div>
                     </div>
                     <div className="mt-[12px] flex items-center justify-between">
                         <div className="text-[14px]">
-                            $ 33,850.29
+                            $ --
                         </div>
                         <div className="text-[14px]">
-                            Vol 3,504,797 USDT
+                            {language === LANGUAGE_TAG.VI ? 'KL' : 'Vol'} {formatPrice(_.volume24h)} {_?.quoteAsset}
                         </div>
                     </div>
 

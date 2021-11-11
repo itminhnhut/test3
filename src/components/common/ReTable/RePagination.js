@@ -5,9 +5,18 @@
 // **********************************
 
 import Pagination from 'rc-pagination'
+import 'rc-pagination/assets/index.css'
 
-const RePagination = ({  }) => {
+const RePagination = ({ total, current, pageSize, onChange, fromZero, ...restProps }) => {
 
+    return (
+        <Pagination hideOnSinglePage
+                    total={total}
+                    current={current}
+                    pageSize={pageSize}
+                    onChange={onChange}
+                    {...restProps}/>
+    )
 }
 
 export default RePagination

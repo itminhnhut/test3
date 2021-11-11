@@ -1,5 +1,4 @@
 import { memo, useCallback } from 'react'
-import { shuffle } from 'lodash'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Autoplay } from 'swiper'
@@ -16,7 +15,7 @@ const MarketTrend = memo(({ loading, data }) => {
 
     // * Render Handler
     const renderCard = useCallback(() => {
-        return data && shuffle(data).map(d => (
+        return data && data.map(d => (
             <SwiperSlide key={d.s}>
                 <MarketTrendItem pair={d}/>
             </SwiperSlide>
@@ -34,7 +33,7 @@ const MarketTrend = memo(({ loading, data }) => {
                 slidesPerView={1}
                 spaceBetween={10}
                 autoplay={{
-                    "delay": 2500,
+                    "delay": 3200,
                     "disableOnInteraction": true
                 }}
                 breakpoints={{

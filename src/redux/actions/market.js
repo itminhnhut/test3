@@ -4,12 +4,12 @@ import { ApiStatus } from './const';
 import {
     API_CATEGORY_AVATAR_LIST,
     API_GET_ASSET_CONFIG,
-    API_GET_EXCHANGE_CONFIG,
+    API_GET_EXCHANGE_CONFIG, API_GET_FUTURES_MARKET_WATCH,
     API_GET_MARKET_WATCH,
     API_GET_ORDER_BOOK,
     API_GET_RECENT_TRADE, API_METRIC_VIEW,
-    API_WATCH_LIST,
-} from './apis';
+    API_WATCH_LIST
+} from './apis'
 
 export const setUser = (user) => (dispatch) => dispatch({ type: types.SET_USER, payload: user });
 
@@ -104,6 +104,19 @@ export async function getMarketWatch(symbol = null) {
         }
     } catch (e) {
         return [];
+    }
+}
+
+export async function getFuturesMarketWatch() {
+    try {
+        const opts = {
+            url: API_GET_FUTURES_MARKET_WATCH,
+            options: { method: 'GET' }
+        }
+        const data = await fetchAPI(opts)
+        if (data?.status === 'ok' && data.data) return data.data
+    } catch (e) {
+        return []
     }
 }
 

@@ -1,7 +1,7 @@
 import * as types from 'src/redux/actions/types';
 import fetchAPI from 'utils/fetch-api';
 import AuthStorage from 'utils/auth-storage';
-import { ApiStatus, LOCAL_STORAGE_KEY, WalletType } from './const'
+import { ApiStatus, LOCAL_STORAGE_KEY, TRADING_MODE, WalletType } from './const'
 import {
     API_CHECK_PASS,
     API_CHECK_PASS_AUTH,
@@ -28,9 +28,10 @@ import {
     API_PROFILE_USERNAME,
     API_USER_REFERRAL,
     API_WITHDRAW_ONCHAIN,
-    API_GET_USER_BALANCE,
-} from './apis';
+    API_GET_USER_BALANCE, API_GET_FAVORITE
+} from './apis'
 import ApiError from './apiError';
+import Axios from 'axios'
 import { SET_USER, SET_THEME } from './types';
 import { THEME_MODE } from 'hooks/useDarkMode'
 
@@ -55,6 +56,24 @@ export const setTheme = () => {
 }
 
 export const setUser = (user) => (dispatch) => dispatch({ type: types.SET_USER, payload: user });
+
+export const favoriteAction = async (method, tradingMode = TRADING_MODE.EXCHANGE, pairKey = null) => {
+    try {
+        let result = {}
+
+        if (method === 'get' && tradingMode) result = await Axios.get(API_GET_FAVORITE, { params: { tradingMode } })
+        if (method === 'put' && pairKey && tradingMode) result = await Axios.put(API_GET_FAVORITE, { pairKey, tradingMode })
+        if (method === 'delete' && pairKey && tradingMode) result = await Axios.delete(API_GET_FAVORITE, { data: { pairKey, tradingMode } })
+
+        const { data } = result
+        if (data?.status === 'ok' && data.data) {
+            return data.data
+        }
+
+    } catch (e) {
+        console.log('Cant execute action')
+    }
+}
 
 export function refreshToken() {
     return async dispatch => {

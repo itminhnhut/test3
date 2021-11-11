@@ -17,9 +17,9 @@ import { useWindowSize } from 'utils/customHooks'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { EMPTY_VALUE } from 'constants/constants'
 import { remove } from 'lodash'
+import { TRADING_MODE } from 'redux/actions/const'
 
 const MarketTable = memo(({ loading, data, parentState, ...restProps }) => {
-
     // Use Hooks
     const { t, i18n: { language } } = useTranslation(['common', 'table'])
     const [currentTheme] = useDarkMode()
@@ -33,9 +33,10 @@ const MarketTable = memo(({ loading, data, parentState, ...restProps }) => {
                     : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5,
                 fontWeight: restProps.tabIndex === index ? 600 : 500,
             }
+
             return (
                 <div key={item.key}
-                     onClick={() => parentState({ tabIndex: index })}
+                     onClick={() => parentState({ tabIndex: index, subTabIndex: 0, currentPage: 1 })}
                      style={{ ...style }}
                      className="relative mr-12 pb-4 capitalize select-none font-medium cursor-pointer flex items-center">
                     {item.key === 'favorite' && <IconStarFilled size={16} color={colors.yellow}/>}
@@ -46,10 +47,24 @@ const MarketTable = memo(({ loading, data, parentState, ...restProps }) => {
     }, [currentTheme, restProps.tabIndex])
 
     const renderSubTab = useCallback(() => {
+        if (tab[restProps.tabIndex]?.key === 'favorite') {
+            return favSubTab.map((item, index) => {
+                return (
+                    <div key={item.key}
+                         onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
+                         className={restProps.subTabIndex === index ?
+                             'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabActive dark:bg-bgTabActive-dark text-textTabLabelActive cursor-pointer select-none'
+                             : 'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabInactive dark:bg-bgTabInactive-dark text-textTabLabelInactive dark:text-textTabLabelInactive-dark cursor-pointer select-none'}>
+                        {item.localized ? t(item.localized) : <span className="capitalize">{item.key}</span>}
+                    </div>
+                )
+            })
+        }
+
         return subTab.map((item, index) => {
             return (
                 <div key={item.key}
-                     onClick={() => parentState({ subTabIndex: index })}
+                     onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
                      className={restProps.subTabIndex === index ?
                         'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabActive dark:bg-bgTabActive-dark text-textTabLabelActive cursor-pointer select-none'
                         : 'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabInactive dark:bg-bgTabInactive-dark text-textTabLabelInactive dark:text-textTabLabelInactive-dark cursor-pointer select-none'}>
@@ -57,7 +72,7 @@ const MarketTable = memo(({ loading, data, parentState, ...restProps }) => {
                 </div>
             )
         })
-    }, [restProps.subTabIndex])
+    }, [restProps.subTabIndex, restProps.tabIndex])
 
     const renderTable = useCallback(() => {
         const modifyColumns = []
@@ -89,29 +104,48 @@ const MarketTable = memo(({ loading, data, parentState, ...restProps }) => {
             modifyColumns.push(item)
         })
 
-        // if (tab[restProps.tabIndex]?.key === 'favorite') {
-        //     remove(modifyColumns, o => o.key === 'star')
-        // }
+        let tradingMode = TRADING_MODE.EXCHANGE
+
+        if (tab[restProps.tabIndex]?.key === 'favorite') {
+            if (favSubTab[restProps.subTabIndex]?.key === 'futures') {
+                tradingMode = TRADING_MODE.FUTURES
+            } else {
+                tradingMode = TRADING_MODE.EXCHANGE
+            }
+        }
+
+        if (tab[restProps.tabIndex]?.key === 'futures'
+        || (tab[restProps.tabIndex]?.key === 'favorite' && favSubTab[restProps.subTabIndex]?.key === 'futures')) {
+            remove(modifyColumns, o => o.key === 'market_cap')
+            tradingMode = TRADING_MODE.FUTURES
+        }
+
+        let rowKey = `${tab[restProps.tabIndex]?.key}_${tradingMode}__`
 
         return (
             <ReTable sort
                      useRowHover
-                     data={dataHandler(data, language, width)}
+                     data={dataHandler(data, language, width, tradingMode)}
+                     paginationProps={{
+                         current: restProps.currentPage,
+                         pageSize: 20,
+                         onChange: (currentPage) => parentState({ currentPage })
+                     }}
                      columns={modifyColumns}
-                     rowKey={item => item?.key}
+                     rowKey={item => `${rowKey}___${item?.key}`}
                      loading={loading}
                      scroll={{ x: true }}
+                     emptyText={!restProps.auth && 'You need to login'}
                      tableStyle={{
                          paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
                          tableStyle: { minWidth: '888px !important' },
                          headerStyle: {},
                          rowStyle: {},
-                         // rowRadius: '12px',
                          shadowWithFixedCol: width < 1366
                      }}
             />
         )
-    }, [data, width, language])
+    }, [data, width, language, loading, restProps.tabIndex, restProps.subTabIndex, restProps.currentPage, restProps.auth])
 
     return (
         <div className="market_table px-4 lg:px-0">
@@ -150,17 +184,22 @@ const MarketTable = memo(({ loading, data, parentState, ...restProps }) => {
     )
 })
 
-const tab = [
+export const tab = [
     { key: 'favorite', localized: null },
     { key: 'exchange', localized: null },
     { key: 'futures', localized: null },
     { key: 'zones', localized: null }
 ]
 
-const subTab = [
+export const subTab = [
     { key: 'all', localized: 'common:all' },
     { key: 'usdt', localized: null },
     { key: 'vndc', localized: null }
+]
+
+export const favSubTab = [
+    { key: 'exchange', localized: null },
+    { key: 'futures', localized: null }
 ]
 
 const columns = [
@@ -175,29 +214,30 @@ const columns = [
     { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 128 }
 ]
 
-
-const dataHandler = (arr, lang, w) => {
-    if (!Array.isArray(arr) || !arr || !arr.length) return
+const dataHandler = (arr, lang, w, mode) => {
+    if (!Array.isArray(arr) || !arr || !arr.length) return []
     const result = []
 
-    arr.slice(0, 20).forEach(item => {
+    arr.forEach(item => {
         const {
             baseAsset, baseAssetId, quoteAsset, quoteAssetId,
             lastPrice, volume24h, high, low, supply, label
         } = initMarketWatchItem(item)
 
-        result.push({
-            key: `market_row___${baseAsset}_${quoteAsset}`,
-            star: renderFavAction(`${baseAssetId}_${quoteAssetId}`),
-            pair: renderPair(baseAsset, quoteAsset, label, w),
-            last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
-            change_24h: render24hChange(item),
-            market_cap: renderMarketCap(lastPrice, supply),
-            volume_24h: <span className="whitespace-nowrap">{formatPrice(volume24h)}</span>,
-            '24h_high': <span className="whitespace-nowrap">{formatPrice(high)}</span>,
-            '24h_low': <span className="whitespace-nowrap">{formatPrice(low)}</span>,
-            operation: renderTradeLink(baseAsset, quoteAsset, lang)
-        })
+        if (baseAsset && quoteAsset) {
+            result.push({
+                            key: `market_row___${baseAsset}_${quoteAsset}`,
+                            star: renderFavAction(`${baseAssetId}_${quoteAssetId}`),
+                            pair: renderPair(baseAsset, quoteAsset, label, w),
+                            last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
+                            change_24h: render24hChange(item),
+                            market_cap: renderMarketCap(lastPrice, supply),
+                            volume_24h: <span className="whitespace-nowrap">{formatPrice(volume24h)}</span>,
+                            '24h_high': <span className="whitespace-nowrap">{formatPrice(high)}</span>,
+                            '24h_low': <span className="whitespace-nowrap">{formatPrice(low)}</span>,
+                            operation: renderTradeLink(baseAsset, quoteAsset, lang)
+                        })
+        }
     })
 
     return result
@@ -217,7 +257,10 @@ const renderPair = (b, q, lbl, w) => {
 }
 
 const renderMarketCap = (price, supply) => {
-    return '10,000,000'
+    if (price && supply) {
+       return <span className="whitespace-nowrap">{formatPrice(+price * +supply)}</span>
+    }
+    return EMPTY_VALUE
 }
 
 const renderFavAction = (pairKey) => {
@@ -230,7 +273,7 @@ const renderFavAction = (pairKey) => {
 
 const renderTradeLink = (b, q, lang) => {
     return (
-        <Link href={`/trade/${b}-${q}`}>
+        <Link href={`/trade/${b}-${q}`} prefetch={false}>
             <a className="text-dominant re_table__link">
                 {lang === LANGUAGE_TAG.VI ? 'Giao dịch' : 'Trade'}
             </a>

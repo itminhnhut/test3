@@ -4,6 +4,11 @@ export const LOCAL_STORAGE_KEY = {
     THEME: 'theme'
 }
 
+export const TRADING_MODE = {
+    EXCHANGE: 1,
+    FUTURES: 2
+}
+
 export const customModalStyles = {
     content: {
         top: '0%',
