@@ -345,7 +345,7 @@ const SpotComp = () => {
                         draggableHandle=".dragHandleArea"
                         draggableCancel=".dragCancelArea"
                     >
-                        <div key="symbolDetail">
+                        {/* <div key="symbolDetail">
                             <SymbolDetail
                                 symbol={symbol}
                                 layoutConfig={symbolDetailLayout}
@@ -363,14 +363,14 @@ const SpotComp = () => {
                                 symbol={symbol}
                                 parentState={setState}
                             />
-                        </div>
+                        </div> */}
 
-                        <div
+                        {/* <div
                             key="symbolList"
                             className={`${fullScreen && 'hidden'} z-[3]`}
                         >
                             {renderSymbolList}
-                        </div>
+                        </div> */}
                         <div
                             key="chart"
                             className={`${
@@ -394,7 +394,7 @@ const SpotComp = () => {
                             />
                         </div>
 
-                        <div key="trades">
+                        {/* <div key="trades">
                             <Trades
                                 layoutConfig={tradesLayout}
                                 symbol={symbol}
@@ -416,7 +416,7 @@ const SpotComp = () => {
                                     }
                                 />
                             </div>
-                        </div>
+                        </div> */}
                     </ReactGridLayout>
                 </div>
             </BrowserView>

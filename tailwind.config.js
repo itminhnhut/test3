@@ -97,24 +97,9 @@ module.exports = {
             dominant: commonColors.teal,
             transparent: 'transparent',
             current: 'currentColor',
-            bgTabInactive: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue3 },
-            bgTabActive: commonColors.teal,
-            bgPrimary: { DEFAULT: commonColors.white, dark: commonColors.darkBlue1 },
-            bgSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue5 },
-            bgContainer: { DEFAULT: '#fff', dark: commonColors.darkBlue1 },
-            headerBg: { DEFAULT: 'rgba(0, 0, 0, 0.3)', dark: 'rgba(0, 0, 0, 0.3)' },
-            homepageBg: { DEFAULT: '#f2f4f66e', dark: commonColors.darkBlue2 },
 
             listItemSelected: { DEFAULT: commonColors.lightTeal, dark: commonColors.darkBlue3 },
-            txtPrimary: { DEFAULT: commonColors.darkBlue, dark: commonColors.gray4 },
-            txtSemiPrimary: { DEFAULT: commonColors.gray2, dark: commonColors.darkBlue4 },
-            txtSecondary: { DEFAULT: commonColors.gray1, dark: commonColors.darkBlue5 },
-            bgBtnPrimary: { DEFAULT: commonColors.teal, dark: commonColors.teal },
-            bgBtnSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue },
-            txtBtnPrimary: { DEFAULT: commonColors.white, dark: commonColors.white },
-            txtBtnSecondary: { DEFAULT: commonColors.teal, dark: commonColors.teal },
-            txtTabInactive: { DEFAULT: commonColors.gray1, dark: commonColors.darkBlue5 },
-            txtTabActive: { DEFAULT: commonColors.white, dark: commonColors.white },
+
             divider: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue3 },
 
             //--------------------------------------------
@@ -182,6 +167,27 @@ module.exports = {
             //     '3xl': '1.25rem'
             // },
             borderColor: ['group-focus'],
+            textColor: {
+                txtPrimary: { DEFAULT: commonColors.darkBlue, dark: commonColors.gray4 },
+                txtSemiPrimary: { DEFAULT: commonColors.gray2, dark: commonColors.darkBlue4 },
+                txtSecondary: { DEFAULT: commonColors.gray1, dark: commonColors.darkBlue5 },
+
+                txtBtnPrimary: { DEFAULT: commonColors.white, dark: commonColors.white },
+                txtBtnSecondary: { DEFAULT: commonColors.teal, dark: commonColors.teal },
+                txtTabInactive: { DEFAULT: commonColors.gray1, dark: commonColors.darkBlue5 },
+                txtTabActive: { DEFAULT: commonColors.white, dark: commonColors.white },
+            },
+            backgroundColor: {
+                bgTabInactive: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue3 },
+                bgTabActive: commonColors.teal,
+                bgPrimary: { DEFAULT: commonColors.white, dark: commonColors.darkBlue1 },
+                bgSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue5 },
+                bgContainer: { DEFAULT: '#fff', dark: commonColors.darkBlue1 },
+                headerBg: { DEFAULT: 'rgba(0, 0, 0, 0.3)', dark: 'rgba(0, 0, 0, 0.3)' },
+                homepageBg: { DEFAULT: '#f2f4f66e', dark: commonColors.darkBlue2 },
+                bgBtnPrimary: { DEFAULT: commonColors.teal, dark: commonColors.teal },
+                bgBtnSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue },
+            },
             fontWeight: { bold: 600 },
         },
     },
