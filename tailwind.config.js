@@ -166,8 +166,8 @@ module.exports = {
                 700: '#00C8BC',
                 lightTeal: '#E2F6F5',
             },
-            green: { DEFAULT: '#22B02E'},
-            yellow: { DEFAULT: '#FFD965'},
+            green: { DEFAULT: '#22B02E' },
+            yellow: { DEFAULT: '#FFD965' },
             red: { DEFAULT: '#E5544B', lightRed: '#E5544B19' },
             pink: { DEFAULT: '#E95F67' },
             mint: { DEFAULT: '#09becf' },
@@ -175,22 +175,20 @@ module.exports = {
         extend: {
             spacing: {
                 '128': '32rem',
-                '144': '36rem'
+                '144': '36rem',
             },
             // borderRadius: {
             //     'xl': '0.625rem',
             //     '3xl': '1.25rem'
             // },
             borderColor: ['group-focus'],
-            fontWeight: {
-                bold: 600 },
+            fontWeight: { bold: 600 },
         },
     },
     variants: {
     },
     plugins: [
-        require('@tailwindcss/forms')({
-            strategy: 'class',
+        require('@tailwindcss/forms')({ strategy: 'class',
         }),
         require('@tailwindcss/line-clamp'),
     ],

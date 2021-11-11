@@ -210,6 +210,8 @@ export default class TimeFrame extends Component {
     render() {
         const { chartType, handleChartType, widget, isOnSidebar, customChartFullscreen, fullScreen } = this.props;
 
+        console.log('__ chekc widte', this.props.widget)
+
         const { selectedTime } = this.state;
         const studiesList = widget?.getStudiesList() || [];
         const language = widget?.getLanguage();

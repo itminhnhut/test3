@@ -2,12 +2,15 @@ import { getTradingViewTimezone } from 'actions/utils';
 import { IconLoading } from 'components/common/Icons';
 // import { widget } from 'public/library/trading_view/charting_library';
 import * as React from 'react';
+import { getS3Url } from 'redux/actions/utils';
+import NamiExchangeSvg from 'components/svg/NamiExchangeSvg';
+import ChevronDown from 'components/svg/ChevronDown';
+import Candles from 'components/svg/Candles';
 import { widget } from '../TradingView/charting_library/charting_library.min';
 import Datafeed from './api';
 import styles from './tradingview.module.scss';
-import colors from '../../styles/colors'
-import { getS3Url } from 'redux/actions/utils'
-import NamiExchangeSvg from 'components/svg/NamiExchangeSvg'
+import colors from '../../styles/colors';
+import TimeFrame from './timeFrame';
 
 function getLanguageFromURL() {
     // const regex = new RegExp('[\\?&]lang=([^&#]*)');
@@ -80,28 +83,45 @@ export class TVChartContainer extends React.PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.symbol !== prevProps.symbol || this.props.chartSize !== prevProps.chartSize) {
+        if (
+            this.props.symbol !== prevProps.symbol ||
+            this.props.chartSize !== prevProps.chartSize
+        ) {
             if (this.widget && this.state.chartStatus === ChartStatus.LOADED) {
-                this.widget.setSymbol(this.props.symbol, this.state.interval, () => {
-                    this.widget.applyOverrides({
-                        'mainSeriesProperties.priceAxisProperties.autoScale': true,
-                    });
-                });
+                this.widget.setSymbol(
+                    this.props.symbol,
+                    this.state.interval,
+                    () => {
+                        this.widget.applyOverrides({
+                            'mainSeriesProperties.priceAxisProperties.autoScale': true,
+                        });
+                    },
+                );
             } else {
                 this.initWidget(this.props.symbol, this.state.interval);
             }
         }
 
         if (prevProps.theme !== this.props.theme) {
-            const newTheme = this.props.theme === "dark" ? 'Dark' : 'Light';
-            if (this.state.chartStatus === ChartStatus.LOADED && newTheme !== this.theme && this.widget) {
+            const newTheme = this.props.theme === 'dark' ? 'Dark' : 'Light';
+            if (
+                this.state.chartStatus === ChartStatus.LOADED &&
+                newTheme !== this.theme &&
+                this.widget
+            ) {
                 this.widget.changeTheme(newTheme);
-                this.widget.applyOverrides(
-                    {
-                        'paneProperties.background': newTheme === 'Dark' ? colors.darkBlue2 : colors.white,
-                        'paneProperties.vertGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
-                        'paneProperties.horzGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
-                    })
+                this.widget.applyOverrides({
+                    'paneProperties.background':
+                        newTheme === 'Dark' ? colors.darkBlue2 : colors.white,
+                    'paneProperties.vertGridProperties.color':
+                        this.props.theme === 'dark'
+                            ? colors.darkBlue3
+                            : colors.grey4,
+                    'paneProperties.horzGridProperties.color':
+                        this.props.theme === 'dark'
+                            ? colors.darkBlue3
+                            : colors.grey4,
+                });
                 this.theme = newTheme;
             }
         }
@@ -124,21 +144,24 @@ export class TVChartContainer extends React.PureComponent {
                     .activeChart()
                     .setVisibleRange(
                         { from, to },
-                        { applyDefaultRightMargin: true })
+                        { applyDefaultRightMargin: true },
+                    )
                     .then(() => {});
             });
             this.setState({ interval: value });
         }
-    }
+    };
 
     handleCreateStudy = (studyId) => {
         if (this?.widget) {
-            this.widget.activeChart().createStudy(studyId, false, false)
-                .then(id => {
+            this.widget
+                .activeChart()
+                .createStudy(studyId, false, false)
+                .then((id) => {
                     this.timeFrame.current.syncStudies(studyId, id);
                 });
         }
-    }
+    };
 
     handleRemoveStudy = (id) => {
         if (this?.widget) {
@@ -146,14 +169,14 @@ export class TVChartContainer extends React.PureComponent {
                 disableUndo: true,
             });
         }
-    }
+    };
 
     handleRemoveAllStudies = () => {
         if (this?.widget) {
             this.widget.activeChart().removeAllShapes();
             this.widget.activeChart().removeAllStudies();
         }
-    }
+    };
 
     // eslint-disable-next-line class-methods-use-this
     get getChartKey() {
@@ -164,13 +187,15 @@ export class TVChartContainer extends React.PureComponent {
     saveChart = () => {
         try {
             if (this.widget) {
-                this.widget.save(data => {
+                this.widget.save((data) => {
                     // console.log('__ check save chart', data);
                     let currentData = localStorage.getItem(this.getChartKey);
                     if (currentData) {
                         try {
                             currentData = JSON.parse(currentData);
-                            if (typeof currentData !== 'object') currentData = null;
+                            if (typeof currentData !== 'object') {
+                                currentData = null;
+                            }
                         } catch (ignored) {
                             currentData = null;
                         }
@@ -184,15 +209,18 @@ export class TVChartContainer extends React.PureComponent {
                     const obj = {
                         updated_at: new Date(),
                         [`chart_${this.props.symbol.toLowerCase()}`]: data,
-                        'chart_all': data,
+                        chart_all: data,
                     };
-                    localStorage.setItem(this.getChartKey, JSON.stringify(Object.assign(currentData, obj)));
+                    localStorage.setItem(
+                        this.getChartKey,
+                        JSON.stringify(Object.assign(currentData, obj)),
+                    );
                 });
             }
         } catch (err) {
             console.error('Save chart error', err);
         }
-    }
+    };
 
     initWidget = (symbol, interval) => {
         if (!symbol) return;
@@ -205,7 +233,6 @@ export class TVChartContainer extends React.PureComponent {
             library_path: this.props.libraryPath,
             locale: getLanguageFromURL() || 'en',
             disabled_features: [
-
                 'compare_symbol',
                 'display_market_status',
                 'go_to_date',
@@ -264,14 +291,14 @@ export class TVChartContainer extends React.PureComponent {
                 'mainSeriesProperties.candleStyle.wickDownColor': colors.red2,
                 'mainSeriesProperties.candleStyle.upColor': colors.teal,
                 'mainSeriesProperties.candleStyle.downColor': colors.red2,
-                'mainSeriesProperties.hollowCandleStyle.borderColor': colors.teal,
-                'mainSeriesProperties.hollowCandleStyle.borderDownColor': colors.red2,
+                'mainSeriesProperties.hollowCandleStyle.borderColor':
+                    colors.teal,
+                'mainSeriesProperties.hollowCandleStyle.borderDownColor':
+                    colors.red2,
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
-                'volumePaneSize': 'small',
+                volumePaneSize: 'small',
             },
-            time_frames: [
-                { text: '1m', resolution: '1', description: '1m' },
-            ],
+            time_frames: [{ text: '1m', resolution: '1', description: '1m' }],
         };
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
@@ -279,9 +306,16 @@ export class TVChartContainer extends React.PureComponent {
         this.widget.onChartReady(() => {
             this.widget.applyOverrides({
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
-                'paneProperties.background': this.props.theme === "dark" ? colors.darkBlue2 : '#ffffff',
-                'paneProperties.vertGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
-                'paneProperties.horzGridProperties.color': this.props.theme === "dark" ? colors.darkBlue3 : colors.grey4,
+                'paneProperties.background':
+                    this.props.theme === 'dark' ? colors.darkBlue2 : '#ffffff',
+                'paneProperties.vertGridProperties.color':
+                    this.props.theme === 'dark'
+                        ? colors.darkBlue3
+                        : colors.grey4,
+                'paneProperties.horzGridProperties.color':
+                    this.props.theme === 'dark'
+                        ? colors.darkBlue3
+                        : colors.grey4,
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
@@ -295,6 +329,50 @@ export class TVChartContainer extends React.PureComponent {
             return this.setState({ chartType: 'depth' });
         }
         return this.setState({ chartType: 'price' });
+    };
+
+    _renderCommonTimeframes() {
+        const timeframes = ['15m', '1h', '4h', '1D', '1W'];
+        return (
+            <div>
+                {timeframes.map((item, index) => {
+                    return (
+                        <span className="cursor-pointer text-xs font-medium py-1 px-2 mr-1 text-txtSecondary bg-teal-50 rounded-md">
+                            {item}
+                        </span>
+                    );
+                })}
+                <ChevronDown
+                    className="inline mx-1 cursor-pointer"
+                    onClick={() => {
+                        console.log('__ check click ');
+                    }}
+                />
+                <Candles
+                    className="inline mx-1 cursor-pointer"
+                    onClick={() => {
+                        console.log('__ check click ');
+                    }}
+                />
+            </div>
+        );
+    }
+
+    _renderChartMode() {
+        const itemClass = 'cursor-pointer text-xs font-medium py-1 px-2 mr-1 text-txtSecondary bg-teal-50 rounded-md';
+        return (
+            <div>
+                <span className={itemClass}>
+                    Original
+                </span>
+                <span className={itemClass}>
+                    TradingView
+                </span>
+                <span className={itemClass}>
+                    Depth
+                </span>
+            </div>
+        );
     }
 
     render() {
@@ -302,24 +380,65 @@ export class TVChartContainer extends React.PureComponent {
 
         return (
             <>
-
-                <div className="relative flex flex-grow flex-col min-w-max chartWrapper h-full" id="chart-container">
-                    <div className={`absolute w-full h-full bg-bgContainer dark:bg-bgContainer-dark z-10 flex justify-center items-center ${this.state.chartStatus === ChartStatus.LOADED ? 'hidden' : ''}`}>
+                <div
+                    className="relative flex flex-grow flex-col min-w-max chartWrapper h-full"
+                    id="chart-container"
+                >
+                    <div
+                        className={`absolute w-full h-full bg-bgContainer dark:bg-bgContainer-dark z-10 flex justify-center items-center ${
+                            this.state.chartStatus === ChartStatus.LOADED
+                                ? 'hidden'
+                                : ''
+                        }`}
+                    >
                         <IconLoading color="#09becf" />
                     </div>
-                    <div>
-                        <span>15m</span>
-                        <span>1h</span>
-                        <span>4h</span>
-                        <span>1D</span>
-                        <span>1W</span>
+                    <div className="w-full">
+                        {
+                            this.state.chartStatus === ChartStatus.LOADED ? <TimeFrame
+                                symbol={this.props.symbol}
+                                handleActiveTime={this.handleActiveTime}
+                                chartType={chartType}
+                                widget={this.widget}
+                                handleChartType={this.handleChartType}
+                                ref={this.timeFrame}
+                                handleCreateStudy={this.handleCreateStudy}
+                                handleRemoveStudy={this.handleRemoveStudy}
+                                handleRemoveAllStudies={this.handleRemoveAllStudies}
+                                interval={this.state.interval}
+                                studies={this.state.studies}
+                                isOnSidebar={this.props.isOnSidebar}
+                                t={this.t}
+                                initTimeFrame={this.props.initTimeFrame}
+                                extendsIndicators={this.props.extendsIndicators}
+                                clearExtendsIndicators={this.props.clearExtendsIndicators}
+                                customChartFullscreen={this.props.customChartFullscreen}
+                                fullScreen={this.props.fullScreen}
+                            /> : (
+                                <div className="h-[46px]" />
+                            )
+                        }
+                    </div>
+                    <div className="flex justify-between px-2 py-1 border-b border-divider">
+                        {this._renderCommonTimeframes()}
+                        {this._renderChartMode()}
                     </div>
                     <div
                         id={this.containerId}
-                        className={`${styles.TVChartContainer} flex-grow h-full w-full  ${chartType === 'depth' && 'hidden'}`}
+                        className={`${
+                            styles.TVChartContainer
+                        } flex-grow h-full w-full  ${
+                            chartType === 'depth' && 'hidden'
+                        }`}
                     />
                     <div className="cheat-watermark">
-                        <NamiExchangeSvg color={this.props.theme === 'dark' ? colors.grey4 : colors.darkBlue4}/>
+                        <NamiExchangeSvg
+                            color={
+                                this.props.theme === 'dark'
+                                    ? colors.grey4
+                                    : colors.darkBlue4
+                            }
+                        />
                     </div>
                 </div>
             </>
@@ -340,9 +459,7 @@ TVChartContainer.defaultProps = {
     userId: 'public_user_id',
     fullscreen: false,
     autosize: true,
-    time_frames: [
-        { text: '1m', resolution: '1', description: '1m' },
-    ],
+    time_frames: [{ text: '1m', resolution: '1', description: '1m' }],
     studies_overrides: {
         'volume.volume.color.0': '#03BBCC',
         'volume.volume.color.1': '#ff0065',

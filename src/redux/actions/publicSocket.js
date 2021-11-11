@@ -31,13 +31,11 @@ function initPublicSocket() {
             });
 
             WS.on(PublicSocketEvent.SPOT_DEPTH_UPDATE, (data) => {
-                console.log('__ check data', data);
                 Emitter.emit(PublicSocketEvent.SPOT_DEPTH_UPDATE + 'order_book', data);
                 updateDepthChart(data);
             });
 
             WS.on(PublicSocketEvent.SPOT_TICKER_UPDATE, (data) => {
-                console.log('__ check data', data);
                 if (data?.p !== lastPrice) {
                     lastPrice = data?.p;
                     Emitter.emit(PublicSocketEvent.SPOT_TICKER_UPDATE, data);
