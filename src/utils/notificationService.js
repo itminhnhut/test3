@@ -7,9 +7,9 @@ const NotificationContent = (props) => {
     const { type, title, message } = props;
 
     // console.log('__ chek noti', props);
-    let bgColor = 'bg-teal';
+    let bgColor = 'bg-dominant';
     if (type !== 'success') {
-        bgColor = 'bg-pink';
+        bgColor = 'bg-red';
     }
     return (
         <div className={`flex items-center py-3 px-5 w-full ${bgColor}`}>
@@ -21,7 +21,7 @@ const NotificationContent = (props) => {
     );
 };
 
-const showNotification = (options = {}, position = 'top', container = 'top-right') => {
+const showNotification = (options = {}, dismiss = undefined, position = 'top', container = 'top-right') => {
     const { title, message, type } = defaults(options, {
         title: 'Place order',
         message: '',
@@ -37,10 +37,10 @@ const showNotification = (options = {}, position = 'top', container = 'top-right
         animationIn: ['animate__animated', 'animate__slideInRight', 'animate__faster'],
         animationOut: ['animate__animated', 'animate__slideOutRight', 'animate__faster'],
         dismiss: {
-            duration: 300000,
+            duration: dismiss || 300000,
             onScreen: false,
         },
-        content: <NotificationContent title={title} message={message} type={type} />,
+        content: <NotificationContent title={title} message={message} type={type} />
     });
 };
 

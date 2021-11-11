@@ -28,7 +28,7 @@ module.exports = {
     //     purgeLayersByDefault: true,
     // },
     mode: 'jit',
-    purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
+    purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}', './src/version/**/*.{js,ts,jsx,tsx}'],
     darkMode: 'class',
     theme: {
         container: {
@@ -99,9 +99,9 @@ module.exports = {
             current: 'currentColor',
             bgTabInactive: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue3 },
             bgTabActive: commonColors.teal,
-            bgPrimary: { DEFAULT: commonColors.white, dark: commonColors.darkBlue1 },
+            bgPrimary: { DEFAULT: commonColors.white, dark: commonColors.darkBlue2 },
             bgSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue5 },
-            bgContainer: { DEFAULT: '#fff', dark: commonColors.darkBlue1 },
+            bgContainer: { DEFAULT: '#fff', dark: commonColors.darkBlue2 },
             headerBg: { DEFAULT: 'rgba(0, 0, 0, 0.3)', dark: 'rgba(0, 0, 0, 0.3)' },
             homepageBg: { DEFAULT: '#f2f4f66e', dark: commonColors.darkBlue2 },
 

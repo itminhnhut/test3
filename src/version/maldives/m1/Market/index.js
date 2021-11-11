@@ -10,8 +10,9 @@ import { API_GET_TRENDING } from 'redux/actions/apis'
 import { getFuturesMarketWatch, getMarketWatch } from 'redux/actions/market'
 import { favoriteAction } from 'redux/actions/user'
 import { TRADING_MODE } from 'redux/actions/const'
-import { log, marketWatchToFavorite } from 'utils'
+import { marketWatchToFavorite } from 'utils'
 import { useSelector } from 'react-redux'
+import { countBy } from 'lodash'
 
 const MarketIndex = () => {
     // * Initial State
@@ -26,7 +27,8 @@ const MarketIndex = () => {
         watch: null,
         favoriteList: null,
         exchangeMarket: null,
-        futuresMarket: null
+        futuresMarket: null,
+        tabLabelCount: null
     })
     const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
@@ -58,8 +60,8 @@ const MarketIndex = () => {
         }
     }
 
-    const getMarket = async (tradingMode) => {
-        setState({ loading: true })
+    const getMarket = async (tradingMode, isInitial = true) => {
+        isInitial && setState({ loading: true })
         try {
             if (tradingMode) {
                 if (tradingMode === TRADING_MODE.EXCHANGE) {
@@ -82,7 +84,7 @@ const MarketIndex = () => {
     }
 
     const getFavorite = async () => {
-        setState({ loading: true })
+        !state.favoriteList && setState({ loading: true })
         try {
             const exchange = await favoriteAction('get', TRADING_MODE.EXCHANGE)
             const futures = await favoriteAction('get', TRADING_MODE.FUTURES)
@@ -102,12 +104,12 @@ const MarketIndex = () => {
 
         // Refresh Exchange pair price
         if (key === 'exchange' || (key === 'favorite' && subKey === 'exchange')) {
-            await getMarket(TRADING_MODE.EXCHANGE)
+            await getMarket(TRADING_MODE.EXCHANGE, false)
         }
 
         // Refresh Futures pair price
         if (key === 'futures' || (key === 'favorite' && subKey === 'futures')) {
-            await getMarket(TRADING_MODE.FUTURES)
+            await getMarket(TRADING_MODE.FUTURES, false)
         }
 
         // Refresh trending slide price
@@ -118,12 +120,15 @@ const MarketIndex = () => {
     const renderMarketTable = useCallback(() => {
         return (
             <MarketTable data={state.watch}
+                         favoriteList={state.favoriteList}
+                         favoriteRefresher={getFavorite}
                          loading={state.loading}
                          parentState={setState}
                          tabIndex={state.tabIndex}
                          subTabIndex={state.subTabIndex}
                          search={state.search}
                          currentPage={state.currentPage}
+                         tabLabelCount={state.tabLabelCount}
                          auth={auth}
             />
         )
@@ -134,6 +139,7 @@ const MarketIndex = () => {
         state.search,
         state.watch,
         state.currentPage,
+        state.tabLabelCount,
         auth
     ])
 
@@ -157,20 +163,23 @@ const MarketIndex = () => {
 
     useEffect(() => {
         let watch = []
+        let convert = []
 
-        // Favorite data handling
-        if (tab[state.tabIndex].key === 'favorite' && state.exchangeMarket && state.futuresMarket) {
-            const convert = {
+        if (state.exchangeMarket && state.futuresMarket) {
+            convert = {
                 exchange: marketWatchToFavorite(state.favoriteList?.exchange, TRADING_MODE.EXCHANGE, state.exchangeMarket),
                 futures: marketWatchToFavorite(state.favoriteList?.futures, TRADING_MODE.FUTURES, state.futuresMarket, true)
             }
+        }
 
+        // Favorite data handling
+        if (tab[state.tabIndex].key === 'favorite') {
             if (favSubTab[state.subTabIndex]?.key === 'exchange') {
-                log.d('Tab Favorite - Exchange')
+                // log.d('Tab Favorite - Exchange')
                 watch = convert?.exchange
             }
             if (favSubTab[state.subTabIndex]?.key === 'futures') {
-                log.d('Tab Favorite - Futures')
+                // log.d('Tab Favorite - Futures')
                 watch = convert?.futures
             }
         }
@@ -178,13 +187,13 @@ const MarketIndex = () => {
         // Exchange data handling
         if (tab[state.tabIndex].key === 'exchange') {
             if (subTab[state.subTabIndex].key === 'vndc' && state.exchangeMarket) {
-                log.d('Tab Exchange - VNDC')
+                // log.d('Tab Exchange - VNDC')
                 watch = state.exchangeMarket.filter(e => e.q === 'VNDC')
             } else if (subTab[state.subTabIndex].key === 'usdt' && state.exchangeMarket) {
-                log.d('Tab Exchange - USDT')
+                // log.d('Tab Exchange - USDT')
                 watch = state.exchangeMarket.filter(e => e.q === 'USDT')
             } else {
-                log.d('Tab Exchange - ALL')
+                // log.d('Tab Exchange - ALL')
                 watch = state?.exchangeMarket
             }
         }
@@ -192,29 +201,38 @@ const MarketIndex = () => {
         // Futures data handling
         if (tab[state.tabIndex].key === 'futures') {
             if (subTab[state.subTabIndex].key === 'vndc' && state.futuresMarket) {
-                log.d('Tab Futures - VNDC')
+                // log.d('Tab Futures - VNDC')
                 watch = state.futuresMarket.filter(e => e.q === 'VNDC')
             } else if (subTab[state.subTabIndex].key === 'usdt' && state.futuresMarket) {
-                log.d('Tab Futures - USDT')
+                // log.d('Tab Futures - USDT')
                 watch = state.futuresMarket.filter(e => e.q === 'USDT')
             } else {
-                log.d('Tab Futures - ALL')
+                // log.d('Tab Futures - ALL')
                 watch = state?.futuresMarket
             }
         }
 
         // Search data handling
         if (state.search) {
-            const keyWord = state.search.toLowerCase()
-            watch = [...watch].filter(w => {
-                const origin1 = `${w?.b}`.toLowerCase()
-                const origin2 = `${w?.b}${w?.q}`.toLowerCase()
-                return origin1.includes(keyWord) || origin2.includes(keyWord)
-            })
-            // console.log('namidev-DEBUG: FILTERED ___ ', filtered)
+            watch = filterer([...watch], state.search.toLowerCase())
         }
 
         // Count searched items
+        if (state.search && convert && state.exchangeMarket && state.futuresMarket) {
+            const favorite = filterer([...convert?.exchange, ...convert?.futures], state.search.toLowerCase())
+            const exchange = filterer(state.exchangeMarket, state.search.toLowerCase())
+            const futures = filterer(state.futuresMarket, state.search.toLowerCase())
+
+            setState({
+                tabLabelCount: {
+                    favorite: favorite?.length,
+                    exchange: exchange?.length,
+                    futures: futures?.length
+                }
+            })
+        } else {
+            setState({ tabLabelCount: null })
+        }
 
         // Set watching data
         setState({ watch })
@@ -224,7 +242,7 @@ const MarketIndex = () => {
         state.favoriteList,
         state.tabIndex,
         state.subTabIndex,
-        state.search
+        state.search,
     ])
 
     // useEffect(() => {
@@ -246,7 +264,7 @@ const MarketIndex = () => {
 
     return (
         <MaldivesLayout>
-            <div className="w-full h-full bg-get-grey4 dark:bg-darkBlue-1">
+            <div className="w-full h-full bg-gray-4 dark:bg-darkBlue-1">
                 <MarketWrapper>
                     <MarketTrend data={state.trending} loading={state.loadingTrend}/>
                     {renderMarketTable()}
@@ -254,6 +272,17 @@ const MarketIndex = () => {
             </div>
         </MaldivesLayout>
     )
+}
+
+const filterer = (data, keyWord) => {
+    if (!data) return []
+    return data.filter(w => {
+        const origin1 = `${w?.b}`.toLowerCase()
+        const origin2 = `${w?.b}${w?.q}`.toLowerCase()
+        const origin3 = `${w?.b}/${w?.q}`.toLowerCase()
+
+        return origin1.includes(keyWord) || origin2.includes(keyWord) || origin3.includes(keyWord)
+    })
 }
 
 const MarketWrapper = styled.div.attrs({ className: 'mal-container' })`

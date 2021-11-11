@@ -3,11 +3,9 @@ import MCard from 'components/common/MCard'
 import colors from 'styles/colors'
 import Link from 'next/link'
 
-import { initMarketWatchItem, log, subscribeExchangeSocket, unsubscribeExchangeSocket } from 'utils'
-import { memo, useEffect, useState } from 'react'
+import { initMarketWatchItem } from 'utils'
+import { memo, useState } from 'react'
 import { sparkLineBuilder } from 'utils/helpers'
-import { useSelector } from 'react-redux'
-import { debounce } from 'lodash/function'
 import { formatPrice, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
@@ -52,7 +50,7 @@ const MarketTrendItem = memo(({ pair, style = {} }) => {
     return (
         <Link href={`trade/${_.baseAsset}-${_.quoteAsset}`}>
             <a>
-                <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-get-teal">
+                <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-dominant">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <AssetLogo assetCode={_?.baseAssetId} size={36}/>
@@ -63,8 +61,8 @@ const MarketTrendItem = memo(({ pair, style = {} }) => {
                         </div>
                     </div>
                     <div className="mt-[12px] flex items-center justify-between">
-                        <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-get-teal'
-                            : 'text-[20px] 2xl:text-[24px] font-medium text-get-red2'}>
+                        <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-dominant'
+                            : 'text-[20px] 2xl:text-[24px] font-medium text-red'}>
                             {formatPrice(_.lastPrice)}
                         </div>
                         <div className="text-[16px] font-medium">
@@ -72,9 +70,10 @@ const MarketTrendItem = memo(({ pair, style = {} }) => {
                         </div>
                     </div>
                     <div className="mt-[12px] flex items-center justify-between">
-                        <div className="text-[14px]">
-                            $ --
-                        </div>
+                        {/*Reference Price*/}
+                        {/*<div className="text-[14px]">*/}
+                        {/*    $ --*/}
+                        {/*</div>*/}
                         <div className="text-[14px]">
                             {language === LANGUAGE_TAG.VI ? 'KL' : 'Vol'} {formatPrice(_.volume24h)} {_?.quoteAsset}
                         </div>
