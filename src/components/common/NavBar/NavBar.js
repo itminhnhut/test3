@@ -16,7 +16,7 @@ import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { getLoginUrl } from 'redux/actions/utils'
+import { getLoginUrl, getV1Url } from 'redux/actions/utils'
 import { buildLogoutUrl } from 'utils'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import SvgWallet from 'components/svg/Wallet'
@@ -32,6 +32,8 @@ import { useAsync } from 'react-use'
 import { getMarketWatch } from 'redux/actions/market'
 import { API_GET_VIP } from 'redux/actions/apis'
 import { PulseLoader } from 'react-spinners'
+import Wallet from 'components/svg/Wallet'
+import WalletActive from 'components/svg/WalletActive'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -234,7 +236,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                 </Link>
             )
         })
-    }, [width, state.pairsLength])
+    }, [width, state.pairsLength, navTheme.color])
 
     const renderThemeButton = useCallback(() => {
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null
@@ -319,13 +321,34 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         )
     }, [auth, currentTheme, useOnly, state.vipLevel, state.loadingVipLevel])
 
-    // const renderWallet = () => {
-    //     return (
-    //         <div className="">
-    //
-    //         </div>
-    //     )
-    // }
+    const renderWallet = () => {
+        return (
+            <div className="mal-navbar__dropdown">
+                <div className="mal-navbar__dropdown__wrapper">
+                    <Link href={getV1Url('/wallet/account?type=spot')}>
+                        <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
+                           <img src="/images/icon/ic_wallet.png" width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Exchange
+                        </a>
+                    </Link>
+                    <Link href={getV1Url('/wallet/account?type=futures')}>
+                        <a className="mal-navbar__dropdown___item">
+                            <img src="/images/icon/ic_wallet.png" width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Futures
+                        </a>
+                    </Link>
+                    <Link href={getV1Url('/wallet/account?type=staking')}>
+                        <a className="mal-navbar__dropdown___item">
+                            <img src="/images/icon/ic_wallet.png" width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Staking
+                        </a>
+                    </Link>
+                    <Link href={getV1Url('/wallet/account?type=farming')}>
+                        <a className="mal-navbar__dropdown___item">
+                            <img src="/images/icon/ic_wallet.png" width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Farming
+                        </a>
+                    </Link>
+                </div>
+            </div>
+        )
+    }
 
     useAsync(async () => {
         const pairs = await getMarketWatch()
@@ -392,15 +415,16 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
 
                     {auth &&
                         <>
-                            {/*<div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">*/}
-                            {/*    <SvgWallet color={navTheme.color}/>*/}
-                            {/*    <span className="ml-4" style={{color: navTheme.color}}>*/}
-                            {/*        {t('navbar:menu.wallet')}*/}
-                            {/*    </span>*/}
-                            {/*    <SvgIcon name="chevron_down" size={15} color={navTheme.color}*/}
-                            {/*             className="chevron__down" style={{ marginLeft: 4}}/>*/}
-                            {/*    {width >= 992 && renderWallet()}*/}
-                            {/*</div>*/}
+                            {width >= 992 &&
+                            <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
+                                <SvgWallet color={navTheme.color}/>
+                                <span className="ml-4" style={{color: navTheme.color}}>
+                                    {t('navbar:menu.wallet')}
+                                </span>
+                                <SvgIcon name="chevron_down" size={15} color={navTheme.color}
+                                         className="chevron__down" style={{ marginLeft: 4}}/>
+                                {renderWallet()}
+                            </div>}
                             <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
                                 <SvgUser type={2} size={30} className="cursor-pointer user__svg"
                                          style={{marginTop: -3}} color={navTheme.color}/>

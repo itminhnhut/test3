@@ -373,7 +373,8 @@
 
         .chevron__down {
           transform: rotate(180deg);
-          svg path {
+
+          path {
             stroke: #00C8BC !important;
           }
         }
@@ -530,8 +531,12 @@
     @apply relative;
 
     &:hover {
-      .chevron__down > svg {
+      .chevron__down {
         transform: rotate(180deg);
+
+        path {
+          stroke: #00C8BC;
+        }
       }
     }
 
@@ -566,6 +571,7 @@
           @apply flex items-center text-txtPrimary dark:text-txtPrimary-dark text-right;
 
           white-space: nowrap;
+          min-width: 160px;
           padding: 8px 16px;
           border-radius: 6px;
           font-size: 14px;

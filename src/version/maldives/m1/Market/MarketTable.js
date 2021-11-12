@@ -386,20 +386,21 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
                 'top',
                 'top-right'
             )
+            method === 'delete' ? setAlready(false) : setAlready(true)
         }
     }
 
-    useEffect(() => {
-        if (list) {
-            if (mode === TRADING_MODE.EXCHANGE && list?.exchange) {
-                list.exchange.includes(pairKey) && setAlready(true)
-            }
-
-            if (mode === TRADING_MODE.FUTURES && list?.futures) {
-                list.futures.includes(pairKey) && setAlready(true)
-            }
-        }
-    }, [list, pairKey])
+    // useEffect(() => {
+    //     if (list) {
+    //         if (mode === TRADING_MODE.EXCHANGE && list?.exchange) {
+    //             list.exchange.includes(pairKey) && setAlready(true)
+    //         }
+    //
+    //         if (mode === TRADING_MODE.FUTURES && list?.futures) {
+    //             list.futures.includes(pairKey) && setAlready(true)
+    //         }
+    //     }
+    // }, [list, pairKey])
 
     return (
         <div className="pr-2 py-2 flex items-center"
