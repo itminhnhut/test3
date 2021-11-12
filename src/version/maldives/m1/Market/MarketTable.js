@@ -261,7 +261,7 @@ export const tab = [
     { key: 'favorite', localized: null },
     { key: 'exchange', localized: null },
     { key: 'futures', localized: null },
-    { key: 'zones', localized: null }
+    // { key: 'zones', localized: null }
 ]
 
 export const subTab = [
@@ -288,7 +288,7 @@ const columns = [
 ]
 
 const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRefresher, isLoading = false) => {
-    if (!Array.isArray(arr) || !arr || !arr.length || isLoading) {
+    if (isLoading) {
         const loadingSkeleton = []
 
         for (let i = 0; i < 20; ++i) {
@@ -296,6 +296,9 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
         }
         return loadingSkeleton
     }
+
+    if (!Array.isArray(arr) || !arr || !arr.length) return []
+    
     const result = []
 
 
