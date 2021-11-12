@@ -28,7 +28,11 @@ module.exports = {
     //     purgeLayersByDefault: true,
     // },
     mode: 'jit',
-    purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}', './src/version/**/*.{js,ts,jsx,tsx}'],
+    purge: [
+        './src/pages/**/*.{js,ts,jsx,tsx}',
+        './src/components/**/*.{js,ts,jsx,tsx}',
+        './src/version/**/*.{js,ts,jsx,tsx}'
+    ],
     darkMode: 'class',
     theme: {
         container: {
@@ -183,6 +187,9 @@ module.exports = {
             // },
             borderColor: ['group-focus'],
             fontWeight: { bold: 600 },
+            dropShadow: {
+                common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
+            }
         },
     },
     variants: {

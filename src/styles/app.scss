@@ -31,6 +31,10 @@ body {
     outline: none !important;
   }
 
+  input {
+    @apply outline-none bg-transparent placeholder-txtSecondary dark:placeholder-txtSecondary-dark truncate;
+  }
+
   input[type='checkbox'] {
     outline: 0;
   }
