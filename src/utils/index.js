@@ -120,13 +120,13 @@ export const unsubscribeExchangeSocket = (socket, symbol) => {
     socket.emit('unsubscribe:all', symbol)
 }
 
-// export function subscribeFuturesSocket(socket, arr = [], lastSubscribe, lastSubscribeCb) {
-//     if (!Array.isArray(arr) || !arr.length || !socket) return
-//     arr.forEach(item => {
-//         const payload = get(item, 'payload', null)
-//         const socketString = get(item, 'socketString', null)
-//         if (!lastSubscribe || lastSubscribe !== payload) {
-//
-//         }
-//     })
-// }
+export const sparkLineBuilder = (symbol, color) => {
+    // log.d('check env____', process.env.NEXT_PUBLIC_PRICE_API_URL)
+    // if (___DEV___) {
+    //     return `https://data-test.bitbattle.io/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
+    // } else {
+    //     return `https://datav2.nami.exchange/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
+    // }
+
+    return `${process.env.NEXT_PUBLIC_PRICE_API_URL}/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
+}
