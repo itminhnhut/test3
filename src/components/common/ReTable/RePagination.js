@@ -4,9 +4,10 @@
 // Updated: 09/11/2021
 // **********************************
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import Pagination from 'rc-pagination'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import styled from 'styled-components'
 import colors from 'styles/colors'
 
@@ -14,12 +15,14 @@ import 'rc-pagination/assets/index.css'
 
 const RePagination = ({ name, total, current, pageSize, onChange, fromZero, ...restProps }) => {
 
+    const [currentTheme, ] = useDarkMode()
+
     useEffect(() => {
        name && scrollAfterPageChange(name)
     }, [current, name])
 
     return (
-        <PaginationWrapper>
+        <PaginationWrapper isDark={currentTheme === THEME_MODE.DARK}>
             <Pagination hideOnSinglePage
                         total={total}
                         current={current}
@@ -52,6 +55,12 @@ const PaginationWrapper = styled.div`
       }
     }
   }
+
+  .rc-pagination-item a, .rc-pagination-prev button, .rc-pagination-next button {
+    color: ${({ isDark }) => isDark ? colors.grey4 : colors.darkBlue};
+  }
+  
+  
   
   .rc-pagination-item-active a, .rc-pagination-item:focus a, .rc-pagination-item:hover a {
     color: ${colors.teal};
@@ -67,6 +76,16 @@ const PaginationWrapper = styled.div`
 
   .rc-pagination-prev .rc-pagination-item-link, .rc-pagination-next .rc-pagination-item-link {
     font-size: 28px;
+  }
+
+  .rc-pagination-disabled .rc-pagination-item-link, .rc-pagination-disabled:hover .rc-pagination-item-link, .rc-pagination-disabled:focus .rc-pagination-item-link {
+    color: ${({ isDark }) => isDark ? colors.grey1 : colors.darkBlue5};
+  }
+
+  .rc-pagination-prev:focus .rc-pagination-item-link, .rc-pagination-next:focus .rc-pagination-item-link,
+  .rc-pagination-prev:hover .rc-pagination-item-link, .rc-pagination-next:hover .rc-pagination-item-link {
+    color: ${colors.teal};
+    border-color: ${colors.teal};
   }
 `
 
