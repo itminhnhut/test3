@@ -8,12 +8,13 @@ import { useAsync } from 'react-use';
 import reverse from 'lodash/reverse';
 import sortBy from 'lodash/sortBy';
 import Emitter from 'src/redux/actions/emitter';
+import colors from 'styles/colors';
 
 if (typeof Highcharts === 'object' && typeof window.Highcharts === 'undefined') {
     window.Highcharts = Highcharts;
 }
 
-const DepthChart = ({ symbol, chartSize }) => {
+const DepthChart = ({ symbol, chartSize, darkMode }) => {
     const [orderBook, setOrderBook] = useState({
         bids: [[0, 0]],
         asks: [[0, 0]],
@@ -66,7 +67,8 @@ const DepthChart = ({ symbol, chartSize }) => {
             Emitter.off(event);
         };
     }, []);
-    const options = {
+
+    let options = {
         credits: {
             enabled: false,
         },
@@ -112,14 +114,21 @@ const DepthChart = ({ symbol, chartSize }) => {
                     fontFamily: 'Barlow',
                     color: '#8B8C9B',
                     cursor: 'default',
-                    fontSize: '12px',
-                    lineHeight: '18px',
+                    fontSize: '10px',
+                    lineHeight: '14px',
                 },
                 formatter() {
                     return Highcharts.numberFormat(this.value, -1, '.', ',');
                 },
             },
-            crosshair: true,
+            crosshair: {
+                className: 'undefined',
+                color: '#EEF2FA',
+                dashStyle: 'Solid',
+                snap: true,
+                width: 1,
+                zIndex: 2,
+            },
         },
         yAxis: [{
             lineWidth: 0,
@@ -133,7 +142,14 @@ const DepthChart = ({ symbol, chartSize }) => {
             title: {
                 text: null,
             },
-            crosshair: true,
+            crosshair: {
+                className: 'undefined',
+                color: '#EEF2FA',
+                dashStyle: 'Solid',
+                snap: true,
+                width: 1,
+                zIndex: 2,
+            },
         }, {
             opposite: true,
             linkedTo: 0,
@@ -191,7 +207,7 @@ const DepthChart = ({ symbol, chartSize }) => {
                     [1, 'rgba(233, 95, 103, 0)'],
                 ],
             },
-            color: '#E95F67',
+            color: colors.red,
             marker: {
                 enabled: false,
             },
@@ -206,13 +222,58 @@ const DepthChart = ({ symbol, chartSize }) => {
                     [1, 'rgba(5, 177, 105, 0)'],
                 ],
             },
-            color: '#09becf',
+            color: colors.teal,
             marker: {
                 enabled: false,
             },
             visible: true,
         }],
     };
+
+    if (darkMode) {
+        options = {
+            ...options,
+            chart: {
+                ...options.chart,
+                backgroundColor: {
+                    linearGradient: [0, 0, 500, 500],
+                    stops: [
+                        [0, colors.darkBlue1],
+                        [1, colors.darkBlue1],
+                    ],
+                },
+            },
+            xAxis: {
+                ...options.xAxis,
+                crosshair: {
+                    ...options.xAxis.crosshair,
+                    color: '#1A1D30',
+                },
+                lineColor: '#1A1D30',
+            },
+            yAxis: [{
+                ...options.yAxis.[0],
+                crosshair: {
+                    ...options.yAxis.[0].crosshair,
+                    color: '#1A1D30',
+                },
+            }],
+        };
+    } else {
+        options = {
+            ...options,
+            chart: {
+                ...options.chart,
+                backgroundColor: {
+                    linearGradient: [0, 0, 500, 500],
+                    stops: [
+                        [0, 'rgb(255, 255, 255)'],
+                        [1, 'rgb(255, 255, 255)'],
+                    ],
+                },
+            },
+        };
+    }
 
     return (
         <HighchartsReact

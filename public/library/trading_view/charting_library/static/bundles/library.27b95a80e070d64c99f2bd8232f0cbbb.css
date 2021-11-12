@@ -1390,7 +1390,7 @@ html.theme-dark .tv-close-panel{ border-color: #363c4e; }
 }
 html, body {
     color: #4a4a4a;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
     font-size: 14px;
     height: 100% !important;
 }
@@ -1440,7 +1440,7 @@ input, textarea, .selectable {
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .font-VI-lang-safe input, .font-VI-lang-safe textarea, .font-VI-lang-safe .selectable {
     font-family: Arial, sans-serif;
@@ -4596,7 +4596,7 @@ html.theme-dark .pane-legend .pane-legend-minbtn .expand, html.theme-dark .pane-
     text-overflow: ellipsis;
 }
 .pane-legend-line span {
-    font-size: 9pt;
+    font-size: 0.75rem!important;
     line-height: 20px;
     vertical-align: middle;
     pointer-events: auto;
@@ -5101,7 +5101,7 @@ html.theme-dark .properties-tabs a.properties-tabs-label{ color: #f7f8fa; }
     display: inline-block;
     height: 16px;
     line-height: 16px;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
     font-size: 12px;
     font-weight: normal;
     -webkit-user-select: none;
@@ -14075,49 +14075,49 @@ html.theme-dark .content-BtJ6qB4V- .row-3iYHykfo- .column-2FlX4ngi- .value-2xvVE
 }
 .tv-market-status--pre-market {
     color: #ff9247;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--pre-market .tv-market-status__dot {
     background-color: #ff9247;
 }
 .tv-market-status--post-market {
     color: #3bb3e4;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--post-market .tv-market-status__dot {
     background-color: #3bb3e4;
 }
 .tv-market-status--market {
     color: #318757;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--market .tv-market-status__dot {
     background-color: #318757;
 }
 .tv-market-status--out-of-session {
     color: #939393;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--out-of-session .tv-market-status__dot {
     background-color: #939393;
 }
 .tv-market-status--invalid {
     color: #bd3820;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--invalid .tv-market-status__dot {
     background-color: #bd3820;
 }
 .tv-market-status--replay {
     color: #ff4a68;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--replay .tv-market-status__dot {
     background-color: #ff4a68;
 }
 .tv-market-status--holiday {
     color: #939393;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--holiday .tv-market-status__dot {
     background-color: #939393;
@@ -14129,56 +14129,56 @@ html.theme-dark .content-BtJ6qB4V- .row-3iYHykfo- .column-2FlX4ngi- .value-2xvVE
 }
 .tv-market-status--for-chart--pre-market {
     color: #ff9247;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--for-chart--pre-market .tv-market-status__dot {
     background-color: #ff9247;
 }
 .tv-market-status--for-chart--post-market {
     color: #3bb3e4;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--for-chart--post-market .tv-market-status__dot {
     background-color: #3bb3e4;
 }
 .tv-market-status--for-chart--market {
     color: #318757;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--for-chart--market .tv-market-status__dot {
     background-color: #318757;
 }
 .tv-market-status--for-chart--out-of-session {
     color: #939393;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--for-chart--out-of-session .tv-market-status__dot {
     background-color: #939393;
 }
 .tv-market-status--for-chart--invalid {
     color: #bd3820;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--for-chart--invalid .tv-market-status__dot {
     background-color: #bd3820;
 }
 .tv-market-status--for-chart--replay {
     color: #ff4a68;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--for-chart--replay .tv-market-status__dot {
     background-color: #ff4a68;
 }
 .tv-market-status--for-chart--holiday {
     color: #939393;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--for-chart--holiday .tv-market-status__dot {
     background-color: #939393;
 }
 .tv-market-status--loading--for-chart {
     color: #3bb3e4;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--loading--for-chart .tv-market-status__dot {
     background-color: #3bb3e4;
@@ -14272,7 +14272,7 @@ html.theme-dark .content-BtJ6qB4V- .row-3iYHykfo- .column-2FlX4ngi- .value-2xvVE
 }
 .tv-market-status--market--for-symbol-widget {
     color: #3cbc98;
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
 }
 .tv-market-status--market--for-symbol-widget .tv-market-status__dot {
     background-color: #3cbc98;
@@ -14291,7 +14291,7 @@ html.theme-dark .content-BtJ6qB4V- .row-3iYHykfo- .column-2FlX4ngi- .value-2xvVE
 	Define colors per function and map palette colors.
 */
 .tv-data-mode {
-    font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
+    font-family: 'Barlow', Arial, sans-serif;
     vertical-align: top;
 }
 .tv-data-mode--realtime {

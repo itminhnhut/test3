@@ -1,55 +1,55 @@
-import { getTradingViewTimezone } from "actions/utils";
-import { IconLoading } from "components/common/Icons";
+import { getTradingViewTimezone } from 'actions/utils';
+import { IconLoading } from 'components/common/Icons';
 // import { widget } from 'public/library/trading_view/charting_library';
-import * as React from "react";
-import { getS3Url } from "redux/actions/utils";
-import NamiExchangeSvg from "components/svg/NamiExchangeSvg";
-import ChevronDown from "components/svg/ChevronDown";
-import Candles from "components/svg/Candles";
-import { widget } from "../TradingView/charting_library/charting_library.min";
-import Datafeed from "./api";
-import styles from "./tradingview.module.scss";
-import colors from "../../styles/colors";
-import TimeFrame from "./timeFrame";
-
+import * as React from 'react';
+import { getS3Url } from 'redux/actions/utils';
+import NamiExchangeSvg from 'components/svg/NamiExchangeSvg';
+import ChevronDown from 'components/svg/ChevronDown';
+import Candles from 'components/svg/Candles';
+import { widget } from '../TradingView/charting_library/charting_library.min';
+import Datafeed from './api';
+import styles from './tradingview.module.scss';
+import colors from '../../styles/colors';
+import TimeFrame from './timeFrame';
+import DepthChart from './depth';
 function getLanguageFromURL() {
     // const regex = new RegExp('[\\?&]lang=([^&#]*)');
     // const results = regex.exec(window.location.search);
     // return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
     const { pathname } = window.location;
-    if (pathname.includes("/en/")) {
-        return "en";
+    if (pathname.includes('/en/')) {
+        return 'en';
     }
-    return "vi";
+    return 'vi';
 }
 
 function getMultiValue(time) {
     switch (time) {
-        case "1":
+        case '1':
             return 0.2;
-        case "5":
+        case '5':
             return 0.625;
-        case "15":
+        case '15':
             return 0.875;
-        case "30":
+        case '30':
             return 0.875;
-        case "60":
+        case '60':
             return 3;
-        case "240":
+        case '240':
             return 7;
-        case "1D":
+        case '1D':
             return 60;
-        case "1W":
+        case '1W':
             return 180;
-        case "1M":
+        case '1M':
             return 365 * 3;
         default:
             return 3;
     }
 }
 
-const CONTAINER_ID = "nami-tv";
-const CHART_VERSION = "1.0.6";
+const CONTAINER_ID = 'nami-tv';
+const CHART_VERSION = '1.0.6';
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
@@ -64,9 +64,10 @@ export class TVChartContainer extends React.PureComponent {
     state = {
         // active: true,
         chartStatus: ChartStatus.NOT_LOADED,
-        chartType: "price",
-        interval: "60",
+        chartType: 'price',
+        interval: '60',
         studies: [],
+        priceChartType: 1,
         // chartCompareLoaded: true,
     };
 
@@ -93,9 +94,9 @@ export class TVChartContainer extends React.PureComponent {
                     this.state.interval,
                     () => {
                         this.widget.applyOverrides({
-                            "mainSeriesProperties.priceAxisProperties.autoScale": true,
+                            'mainSeriesProperties.priceAxisProperties.autoScale': true,
                         });
-                    }
+                    },
                 );
             } else {
                 this.initWidget(this.props.symbol, this.state.interval);
@@ -103,7 +104,7 @@ export class TVChartContainer extends React.PureComponent {
         }
 
         if (prevProps.theme !== this.props.theme) {
-            const newTheme = this.props.theme === "dark" ? "Dark" : "Light";
+            const newTheme = this.props.theme === 'dark' ? 'Dark' : 'Light';
             if (
                 this.state.chartStatus === ChartStatus.LOADED &&
                 newTheme !== this.theme &&
@@ -111,14 +112,14 @@ export class TVChartContainer extends React.PureComponent {
             ) {
                 this.widget.changeTheme(newTheme);
                 this.widget.applyOverrides({
-                    "paneProperties.background":
-                        newTheme === "Dark" ? colors.darkBlue2 : colors.white,
-                    "paneProperties.vertGridProperties.color":
-                        this.props.theme === "dark"
+                    'paneProperties.background':
+                        newTheme === 'Dark' ? colors.darkBlue2 : colors.white,
+                    'paneProperties.vertGridProperties.color':
+                        this.props.theme === 'dark'
                             ? colors.darkBlue3
                             : colors.grey4,
-                    "paneProperties.horzGridProperties.color":
-                        this.props.theme === "dark"
+                    'paneProperties.horzGridProperties.color':
+                        this.props.theme === 'dark'
                             ? colors.darkBlue3
                             : colors.grey4,
                 });
@@ -144,7 +145,7 @@ export class TVChartContainer extends React.PureComponent {
                     .activeChart()
                     .setVisibleRange(
                         { from, to },
-                        { applyDefaultRightMargin: true }
+                        { applyDefaultRightMargin: true },
                     )
                     .then(() => {});
             });
@@ -178,6 +179,20 @@ export class TVChartContainer extends React.PureComponent {
         }
     };
 
+    handleOpenStudty = () => {
+        if (this?.widget) {
+            this.widget.chart().executeActionById('insertIndicator');
+        }
+    };
+
+    handleChangeChartType = (type) => {
+        if (this?.widget) {
+            this.widget.chart().setChartType(type);
+            this.setState({priceChartType: type})
+
+        }
+    };
+
     // eslint-disable-next-line class-methods-use-this
     get getChartKey() {
         return `nami-tv__${CHART_VERSION}`;
@@ -193,7 +208,7 @@ export class TVChartContainer extends React.PureComponent {
                     if (currentData) {
                         try {
                             currentData = JSON.parse(currentData);
-                            if (typeof currentData !== "object") {
+                            if (typeof currentData !== 'object') {
                                 currentData = null;
                             }
                         } catch (ignored) {
@@ -213,12 +228,12 @@ export class TVChartContainer extends React.PureComponent {
                     };
                     localStorage.setItem(
                         this.getChartKey,
-                        JSON.stringify(Object.assign(currentData, obj))
+                        JSON.stringify(Object.assign(currentData, obj)),
                     );
                 });
             }
         } catch (err) {
-            console.error("Save chart error", err);
+            console.error('Save chart error', err);
         }
     };
 
@@ -226,29 +241,30 @@ export class TVChartContainer extends React.PureComponent {
         if (!symbol) return;
         const widgetOptions = {
             symbol,
-            theme: this.props.theme === "dark" ? "Dark" : "Light",
+            theme: this.props.theme === 'dark' ? 'Dark' : 'Light',
             datafeed: Datafeed,
             interval: this.props.interval,
             container_id: this.containerId,
             library_path: this.props.libraryPath,
-            locale: getLanguageFromURL() || "en",
+            locale: getLanguageFromURL() || 'en',
             disabled_features: [
-                "compare_symbol",
-                "display_market_status",
-                "go_to_date",
-                "volume_force_overlay",
-                "header_interval_dialog_button",
-                "header_settings",
+                'compare_symbol',
+                'display_market_status',
+                'go_to_date',
+                'volume_force_overlay',
+                'header_interval_dialog_button',
+                'header_settings',
                 // 'timeframes_toolbar',
-                "source_selection_markers",
-                "header_symbol_search",
-                "header_compare",
-                "header_undo_redo",
-                "symbol_info",
-                "source_selection_markers",
-                "popup_hints",
-                "header_widget",
-                "axis_pressed_mouse_move_scale",
+                'source_selection_markers',
+                'header_symbol_search',
+                'header_compare',
+                'header_undo_redo',
+                'symbol_info',
+                'source_selection_markers',
+                'popup_hints',
+                'header_widget',
+                'axis_pressed_mouse_move_scale',
+
 
                 // 'use_localstorage_for_settings',
                 // 'header_symbol_search',
@@ -264,8 +280,8 @@ export class TVChartContainer extends React.PureComponent {
                 // 'volume_force_overlay',
             ],
             enabled_features: [
-                "move_logo_to_main_pane",
-                "edit_buttons_in_legend",
+                'move_logo_to_main_pane',
+                'edit_buttons_in_legend',
                 // 'use_localstorage_for_settings',
                 // 'study_templates'
             ],
@@ -275,46 +291,48 @@ export class TVChartContainer extends React.PureComponent {
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            loading_screen: { backgroundColor: "#fff" },
+            loading_screen: { backgroundColor: '#fff' },
             studies_overrides: {
-                "volume.volume.color.0": colors.teal,
-                "volume.volume.color.1": colors.red2,
-                "volume.volume ma.color": colors.red2,
-                "volume.volume ma.linewidth": 5,
-                "volume.volume ma.visible": true,
+                'volume.volume.color.0': colors.teal,
+                'volume.volume.color.1': colors.red2,
+                'volume.volume ma.color': colors.red2,
+                'volume.volume ma.linewidth': 5,
+                'volume.volume ma.visible': true,
             },
             timezone: getTradingViewTimezone(),
             overrides: {
-                "scalesProperties.fontSize": 10,
-                "mainSeriesProperties.candleStyle.borderUpColor": colors.teal,
-                "mainSeriesProperties.candleStyle.borderDownColor": colors.red2,
-                "mainSeriesProperties.candleStyle.wickUpColor": colors.teal,
-                "mainSeriesProperties.candleStyle.wickDownColor": colors.red2,
-                "mainSeriesProperties.candleStyle.upColor": colors.teal,
-                "mainSeriesProperties.candleStyle.downColor": colors.red2,
-                "mainSeriesProperties.hollowCandleStyle.borderColor":
+                'scalesProperties.fontSize': 10,
+                editorFontsList: ['Barlow', 'Sans'],
+
+                'mainSeriesProperties.candleStyle.borderUpColor': colors.teal,
+                'mainSeriesProperties.candleStyle.borderDownColor': colors.red2,
+                'mainSeriesProperties.candleStyle.wickUpColor': colors.teal,
+                'mainSeriesProperties.candleStyle.wickDownColor': colors.red2,
+                'mainSeriesProperties.candleStyle.upColor': colors.teal,
+                'mainSeriesProperties.candleStyle.downColor': colors.red2,
+                'mainSeriesProperties.hollowCandleStyle.borderColor':
                     colors.teal,
-                "mainSeriesProperties.hollowCandleStyle.borderDownColor":
+                'mainSeriesProperties.hollowCandleStyle.borderDownColor':
                     colors.red2,
-                "mainSeriesProperties.priceAxisProperties.autoScale": true,
-                volumePaneSize: "small",
+                'mainSeriesProperties.priceAxisProperties.autoScale': true,
+                volumePaneSize: 'small',
             },
-            time_frames: [{ text: "1m", resolution: "1", description: "1m" }],
+            time_frames: [{ text: '1m', resolution: '1', description: '1m' }],
         };
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
 
         this.widget.onChartReady(() => {
             this.widget.applyOverrides({
-                "mainSeriesProperties.priceAxisProperties.autoScale": true,
-                "paneProperties.background":
-                    this.props.theme === "dark" ? colors.darkBlue2 : "#ffffff",
-                "paneProperties.vertGridProperties.color":
-                    this.props.theme === "dark"
+                'mainSeriesProperties.priceAxisProperties.autoScale': true,
+                'paneProperties.background':
+                    this.props.theme === 'dark' ? colors.darkBlue2 : '#ffffff',
+                'paneProperties.vertGridProperties.color':
+                    this.props.theme === 'dark'
                         ? colors.darkBlue3
                         : colors.grey4,
-                "paneProperties.horzGridProperties.color":
-                    this.props.theme === "dark"
+                'paneProperties.horzGridProperties.color':
+                    this.props.theme === 'dark'
                         ? colors.darkBlue3
                         : colors.grey4,
             });
@@ -326,10 +344,10 @@ export class TVChartContainer extends React.PureComponent {
 
     handleChartType = () => {
         const { chartType } = this.state;
-        if (chartType === "price") {
-            return this.setState({ chartType: "depth" });
+        if (chartType === 'price') {
+            return this.setState({ chartType: 'depth' });
         }
-        return this.setState({ chartType: "price" });
+        return this.setState({ chartType: 'price' });
     };
 
     render() {
@@ -344,13 +362,13 @@ export class TVChartContainer extends React.PureComponent {
                     <div
                         className={`absolute w-full h-full bg-bgContainer dark:bg-bgContainer-dark z-10 flex justify-center items-center ${
                             this.state.chartStatus === ChartStatus.LOADED
-                                ? "hidden"
-                                : ""
+                                ? 'hidden'
+                                : ''
                         }`}
                     >
                         <IconLoading color="#09becf" />
                     </div>
-                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1">
+                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1 px-1">
                         {this.state.chartStatus === ChartStatus.LOADED && (
                             <TimeFrame
                                 symbol={this.props.symbol}
@@ -361,15 +379,16 @@ export class TVChartContainer extends React.PureComponent {
                                 ref={this.timeFrame}
                                 handleCreateStudy={this.handleCreateStudy}
                                 handleRemoveStudy={this.handleRemoveStudy}
-                                handleRemoveAllStudies={
-                                    this.handleRemoveAllStudies
-                                }
+                                handleRemoveAllStudies={this.handleRemoveAllStudies}
+                                handleOpenStudty={this.handleOpenStudty}
+                                handleChangeChartType={this.handleChangeChartType}
                                 interval={this.state.interval}
                                 studies={this.state.studies}
                                 isOnSidebar={this.props.isOnSidebar}
                                 t={this.t}
                                 initTimeFrame={this.props.initTimeFrame}
                                 extendsIndicators={this.props.extendsIndicators}
+                                priceChartType={this.state.priceChartType}
                                 clearExtendsIndicators={
                                     this.props.clearExtendsIndicators
                                 }
@@ -380,19 +399,20 @@ export class TVChartContainer extends React.PureComponent {
                             />
                         )}
                     </div>
-                    
+
                     <div
                         id={this.containerId}
                         className={`${
                             styles.TVChartContainer
                         } flex-grow h-full w-full  ${
-                            chartType === "depth" && "hidden"
+                            chartType === 'depth' && 'hidden'
                         }`}
                     />
+                    {chartType === 'depth' && <DepthChart symbol={this.props.symbol} chartSize={this.props.chartSize} darkMode={this.props.theme === 'dark'}/>}
                     <div className="cheat-watermark">
                         <NamiExchangeSvg
                             color={
-                                this.props.theme === "dark"
+                                this.props.theme === 'dark'
                                     ? colors.grey4
                                     : colors.darkBlue4
                             }
@@ -405,26 +425,26 @@ export class TVChartContainer extends React.PureComponent {
 }
 
 TVChartContainer.defaultProps = {
-    symbol: "BTCUSDT",
-    interval: "1",
-    containerId: "tv_chart_container",
-    datafeedUrl: "https://demo_feed.tradingview.com",
+    symbol: 'BTCUSDT',
+    interval: '1',
+    containerId: 'tv_chart_container',
+    datafeedUrl: 'https://demo_feed.tradingview.com',
     // libraryPath: '/library/trading_view/charting_library/',
-    libraryPath: "/library/trading_view/charting_library/",
-    chartsStorageUrl: "https://saveload.tradingview.com",
-    chartsStorageApiVersion: "1.1",
-    clientId: "tradingview.com",
-    userId: "public_user_id",
+    libraryPath: '/library/trading_view/charting_library/',
+    chartsStorageUrl: 'https://saveload.tradingview.com',
+    chartsStorageApiVersion: '1.1',
+    clientId: 'tradingview.com',
+    userId: 'public_user_id',
     fullscreen: false,
     autosize: true,
-    time_frames: [{ text: "1m", resolution: "1", description: "1m" }],
+    time_frames: [{ text: '1m', resolution: '1', description: '1m' }],
     studies_overrides: {
-        "volume.volume.color.0": "#03BBCC",
-        "volume.volume.color.1": "#ff0065",
-        "volume.volume ma.color": "#ff0065",
-        "volume.volume ma.linewidth": 5,
-        "volume.volume ma.visible": true,
-        "bollinger bands.median.color": "#33FF88",
-        "bollinger bands.upper.linewidth": 7,
+        'volume.volume.color.0': '#03BBCC',
+        'volume.volume.color.1': '#ff0065',
+        'volume.volume ma.color': '#ff0065',
+        'volume.volume ma.linewidth': 5,
+        'volume.volume ma.visible': true,
+        'bollinger bands.median.color': '#33FF88',
+        'bollinger bands.upper.linewidth': 7,
     },
 };

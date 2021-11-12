@@ -24,6 +24,91 @@ const ListTimeFrame = [
     { value: '1M', text: '1M' },
 ];
 
+const BarsChart = (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 28 28"
+        width="24"
+        height="24"
+    >
+        <g fill="none" stroke="currentColor" strokeLinecap="square">
+            <path d="M10.5 7.5v15M7.5 20.5H10M13.5 11.5H11M19.5 6.5v15M16.5 9.5H19M22.5 16.5H20" />
+        </g>
+    </svg>
+);
+const CandleChart = (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 28 28"
+        width="24"
+        height="24"
+        fill="currentColor"
+    >
+        <path d="M17 11v6h3v-6h-3zm-.5-1h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5z" />
+        <path d="M18 7h1v3.5h-1zm0 10.5h1V21h-1z" />
+        <path d="M9 8v12h3V8H9zm-.5-1h4a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 .5-.5z" />
+        <path d="M10 4h1v3.5h-1zm0 16.5h1V24h-1z" />
+    </svg>
+);
+const AreaChart = (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 28 28"
+        width="24"
+        height="24"
+    >
+        <path
+            fill="currentColor"
+            d="M11.982 16.689L17.192 12h3.033l4.149-4.668-.748-.664L19.776 11h-2.968l-4.79 4.311L9 12.293l-4.354 4.353.708.708L9 13.707z"
+        />
+    </svg>
+);
+const LineChart = (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 28 28"
+        width="24"
+        height="24"
+    >
+        <path
+            fill="currentColor"
+            d="M11.982 16.689L17.192 12h3.033l4.149-4.668-.748-.664L19.776 11h-2.968l-4.79 4.311L9 12.293l-4.354 4.353.708.708L9 13.707z"
+        />
+    </svg>
+);
+const BaseLineChart = (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 28 28"
+        width="24"
+        height="24"
+    >
+        <g fill="none" stroke="currentColor">
+            <path strokeDasharray="1,1" d="M4 14.5h22" />
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7.5 12.5l2-4 1 2 2-4 3 6"
+            />
+            <path strokeLinecap="round" d="M5.5 16.5l-1 2" />
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.5 16.5l2 4 2-4m2-4l1-2-1 2z"
+            />
+        </g>
+    </svg>
+);
+
+const DefaultChartType = { type: 'Candle', value: 1, icon: CandleChart };
+const ListChartType = [
+    { type: 'Bar', value: 0, icon: BarsChart },
+    { type: 'Candle', value: 1, icon: CandleChart },
+    { type: 'Line', value: 2, icon: LineChart },
+    { type: 'Area', value: 3, icon: AreaChart },
+    { type: 'Base Line', value: 10, icon: BaseLineChart },
+];
+
 const fastIndicators = {
     primary: [
         {
@@ -263,6 +348,10 @@ export default class TimeFrame extends Component {
         ];
 
         const { selectedTime } = this.state;
+        const { priceChartType } = this.props;
+
+        const selectedPriceChartType = find(ListChartType, (e) => e.value === priceChartType) || DefaultChartType;
+
         const selectedTimeframeData = this.findTimeFrame(selectedTime);
         const isCommonTimeframe = find(
             CommonTimeframes,
@@ -352,16 +441,79 @@ export default class TimeFrame extends Component {
                         </>
                     )}
                 </Popover>
-                <Candles
-                    className="mx-2 cursor-pointer"
-                    color={colors.darkBlue5}
-                    fill={colors.darkBlue5}
-                    size={20}
-                />
+
+                <Popover className="relative">
+                    {({ open }) => (
+                        <>
+                            <Popover.Button
+                                className={`h-full flex items-center ${
+                                    open ? '' : 'text-opacity-90'
+                                } text-white group px-2`}
+                            >
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                                    {selectedPriceChartType.icon}
+                                </span>
+
+                                {/* <Candles
+                                    className="mx-2 cursor-pointer"
+                                    color={colors.darkBlue5}
+                                    fill={colors.darkBlue5}
+                                    size={20}
+                                /> */}
+                            </Popover.Button>
+                            <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-200"
+                                enterFrom="opacity-0 translate-y-1"
+                                enterTo="opacity-100 translate-y-0"
+                                leave="transition ease-in duration-150"
+                                leaveFrom="opacity-100 translate-y-0"
+                                leaveTo="opacity-0 translate-y-1"
+                            >
+                                <Popover.Panel className="absolute z-10">
+                                    <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3">
+                                        <div className="w-32 relative">
+                                            {ListChartType.map(
+                                                (item, index) => {
+                                                    const {
+                                                        type,
+                                                        value,
+                                                        icon,
+                                                    } = item;
+
+                                                    const isActive = selectedPriceChartType.value === value;
+                                                    return (
+                                                        <div
+                                                            onClick={() => this.props.handleChangeChartType(value)}
+                                                            key={index}
+                                                            className={
+                                                                `h-8 px-2 flex content-start items-center cursor-pointer w-full font-medium text-xs text-center rounded-sm 
+                                                                text-txtSecondary dark:text-txtSecondary-dark 
+                                                                hover:text-teal 
+                                                                dark:hover:text-teal
+                                                                ${isActive ? 'bg-opacity-10 dark:bg-opacity-10 bg-teal text-teal dark:bg-teal dark:text-teal' : ''}
+                                                                `
+                                                            }
+                                                        >
+                                                            {icon}
+                                                            <span className="ml-2">{type}</span>
+                                                        </div>
+                                                    );
+                                                },
+                                            )}
+                                        </div>
+                                    </div>
+                                </Popover.Panel>
+                            </Transition>
+                        </>
+                    )}
+                </Popover>
+
                 <Activity
                     className="mx-2 cursor-pointer"
                     color={colors.darkBlue5}
                     size={20}
+                    onClick={() => this.props.handleOpenStudty()}
                 />
             </div>
         );
@@ -377,12 +529,13 @@ export default class TimeFrame extends Component {
             fullScreen,
         } = this.props;
         const itemClass = 'cursor-pointer text-xs font-medium py-1 px-2 mr-1 text-teal  rounded-md';
+        const activeClass = 'bg-teal bg-opacity-10 text-teal';
         return (
             <div className="flex items-center">
-                <span className={`${itemClass} bg-teal bg-opacity-10 text-teal`}>Original</span>
-                <span className={`${itemClass}`}>TradingView</span>
-                <span className={`${itemClass}`}>Depth</span>
-                <button
+                {/* <span className={`${itemClass} ${activeClass}`}>Original</span> */}
+                <span onClick={chartType !== 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'price' ? activeClass : ''}`}>{this.t('common:price')}</span>
+                <span onClick={chartType === 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'depth' ? activeClass : ''}`}>{this.t('common:depth')}</span>
+                {/* <button
                     type="button"
                     onClick={customChartFullscreen}
                     className="px-1"
@@ -392,7 +545,7 @@ export default class TimeFrame extends Component {
                     ) : (
                         <IconFullScreenChart />
                     )}
-                </button>
+                </button> */}
             </div>
         );
     }
@@ -416,7 +569,7 @@ export default class TimeFrame extends Component {
         }));
 
         return (
-            <div className="flex items-center justify-between w-full">
+            <div className="flex items-center justify-between w-full bg-bgContainer dark:bg-bgContainer-dark">
                 {this._renderCommonTimeframes()}
                 {this._renderChartMode()}
             </div>
