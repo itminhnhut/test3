@@ -351,7 +351,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
     const pairKey = mode === TRADING_MODE.FUTURES ? `${b?.b}_${q?.q}` : `${b?.i}_${q?.i}`
 
     // Helper
-    const callback = async (method) => {
+    const callback = async (method, list) => {
         setLoading(true)
         let message = ''
         let title = ''
@@ -371,14 +371,25 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
             )
         } finally {
             setLoading(false)
+
+            // if (list) {
+            //     if (mode === TRADING_MODE.EXCHANGE && list?.exchange) {
+            //         list.exchange.includes(pairKey) ? setAlready(true) : setAlready(false)
+            //     }
+            //
+            //     if (mode === TRADING_MODE.FUTURES && list?.futures) {
+            //         list.futures.includes(pairKey) ? setAlready(true) : setAlready(false)
+            //     }
+            // }
+
             await favoriteRefresher()
             if (lang === LANGUAGE_TAG.VI) {
                 title = 'Thành công'
-                message = `Đã ${method === 'delete' ? 'xoá khỏi' : 'thêm vào'} danh sách yêu thích`
+                message = `Đã ${method === 'delete' ? `xoá ${b?.b}/${q?.q} khỏi` : `thêm ${b?.b}/${q?.q} vào`} danh sách yêu thích`
             }
             if (lang === LANGUAGE_TAG.EN) {
                 title = 'Success'
-                message = `${method === 'delete' ? 'Deleted from' : 'Added to'} favorites`
+                message = `${method === 'delete' ? `Deleted ${b?.b}/${q?.q} from` : `Added ${b?.b}/${q?.q} to`} favorites`
             }
             showNotification(
                 { message, title, type: 'success' },
@@ -386,26 +397,25 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
                 'top',
                 'top-right'
             )
-            method === 'delete' ? setAlready(false) : setAlready(true)
         }
     }
 
-    // useEffect(() => {
-    //     if (list) {
-    //         if (mode === TRADING_MODE.EXCHANGE && list?.exchange) {
-    //             list.exchange.includes(pairKey) && setAlready(true)
-    //         }
-    //
-    //         if (mode === TRADING_MODE.FUTURES && list?.futures) {
-    //             list.futures.includes(pairKey) && setAlready(true)
-    //         }
-    //     }
-    // }, [list, pairKey])
+    useEffect(() => {
+        if (list) {
+            if (mode === TRADING_MODE.EXCHANGE && list?.exchange) {
+                list.exchange.includes(pairKey) ? setAlready(true) : setAlready(false)
+            }
+
+            if (mode === TRADING_MODE.FUTURES && list?.futures) {
+                list.futures.includes(pairKey) ? setAlready(true) : setAlready(false)
+            }
+        }
+    }, [list, pairKey])
 
     return (
         <div className="pr-2 py-2 flex items-center"
              onClick={() => {
-                 !loading && callback(already ? 'delete' : 'put')
+                 !loading && callback(already ? 'delete' : 'put', list)
              }}>
             {already ? <IconStarFilled size={16} color={colors.yellow}/>
                 : <StarOutlined style={{ color: colors.grey3 }} size={24}/>}
