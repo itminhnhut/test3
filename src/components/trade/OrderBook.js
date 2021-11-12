@@ -1,23 +1,20 @@
+import { IconLoading } from 'components/common/Icons';
 import { reverse } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'next-i18next';
-import { formatPrice, getFilter, getSymbolString } from 'src/redux/actions/utils';
-import { getOrderBook } from 'src/redux/actions/market';
-
-import { ExchangeOrderEnum, PublicSocketEvent } from 'src/redux/actions/const';
-import { SET_SPOT_SELECTED_ORDER } from 'src/redux/actions/types';
-import { useAsync } from 'react-use';
-import Emitter from 'src/redux/actions/emitter';
-
-import sumBy from 'lodash/sumBy';
-import map from 'lodash/map';
 import groupBy from 'lodash/groupBy';
+import map from 'lodash/map';
 import maxBy from 'lodash/maxBy';
 import orderBy from 'lodash/orderBy';
-import { Listbox, Transition } from '@headlessui/react';
+import sumBy from 'lodash/sumBy';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { IconLoading } from 'components/common/Icons';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAsync } from 'react-use';
+import { ExchangeOrderEnum, PublicSocketEvent } from 'src/redux/actions/const';
+import Emitter from 'src/redux/actions/emitter';
+import { getOrderBook } from 'src/redux/actions/market';
+import { SET_SPOT_SELECTED_ORDER } from 'src/redux/actions/types';
+import { formatPrice, getFilter, getSymbolString } from 'src/redux/actions/utils';
 import LastPrice from '../markets/LastPrice';
 
 const OrderBook = (props) => {
@@ -55,7 +52,7 @@ const OrderBook = (props) => {
 
     useAsync(async () => {
         // Get symbol list
-        const _orderBook = await getOrderBook(getSymbolString(symbol))
+        const _orderBook = await getOrderBook(getSymbolString(symbol));
         await setOrderBook(_orderBook);
         setLoadingAsks(false);
         setLoadingBids(false);
@@ -68,9 +65,9 @@ const OrderBook = (props) => {
 
     useEffect(() => {
         if (orderBook) {
-            parentState({ orderBook })
+            parentState({ orderBook });
         }
-    }, [orderBook])
+    }, [orderBook]);
 
     useEffect(() => {
         const event = PublicSocketEvent.SPOT_DEPTH_UPDATE + 'order_book';
@@ -103,7 +100,7 @@ const OrderBook = (props) => {
     }, [exchangeConfig, symbol]);
 
     // const maxQuote = quote === 'USDT' ? 50000 : 200e6;
-    const MAX_LENGTH = Math.round((height - 186) / 2 / 22);
+    const MAX_LENGTH = Math.round((height - 186) / 2 / 20);
     let asks = [];
     let bids = [];
 
@@ -155,18 +152,18 @@ const OrderBook = (props) => {
         const percentage = (q / maxQuote) * 100;
         return (
             <div
-                className="progress-container px-3 py-0.5 cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3"
+                className="progress-container my-[1px] cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3"
                 key={index}
                 onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
             >
                 <div className="flex items-center flex-1">
-                    <div className={`flex-1  text-xs font-semibold leading-table ${side === 'buy' ? 'text-pink' : 'text-mint'}`}>
+                    <div className={`flex-1  text-xs font-medium leading-table ${side === 'buy' ? 'text-pink' : 'text-mint'}`}>
                         {p ? formatPrice(p, exchangeConfig, symbolString) : '-'}
                     </div>
-                    <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-semibold leading-table text-right">
+                    <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
                         {q ? formatPrice(+q, exchangeConfig, symbolString) : '-'}
                     </div>
-                    <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-semibold leading-table text-right">
+                    <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
                         {p > 0 ? formatPrice(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
                     </div>
                 </div>
@@ -179,26 +176,22 @@ const OrderBook = (props) => {
     };
     return (
         <>
-            <div className="relative h-full bg-bgContainer dark:bg-bgContainer-dark pb-[26px] flex flex-col box-border" ref={ref}>
-                <div className="flex items-center justify-between pt-[24px] pb-[16px] dragHandleArea">
-                    {/* <div className="font-semibold text-lg text-black-600">{t('orderbook')}</div> */}
+            <div className="px-2.5 relative h-full bg-bgContainer dark:bg-bgContainer-dark pb-[26px] flex flex-col box-border" ref={ref}>
+                <div className="flex items-center justify-between py-5 dragHandleArea">
+                    <div className="font-medium text-sm text-txtPrimary dark:text-txtPrimary-dark">{t('orderbook')}</div>
                 </div>
                 <div className="flex flex-col flex-1">
-                    <div className="ats-tbheader px-3">
+                    <div className="">
                         <div className="flex justify-between items-center mb-3">
-                            <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium">
-                                {t('price')}
+                            <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium">
+                                {t('price')} ({quote})
                             </div>
-                            <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium">
-                                {t('quantity')}
+                            <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium">
+                                {t('quantity')} ({base})
                             </div>
-                            {
-                                (shouldShowTotalCol) && (
-                                    <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium">
-                                        {t('total')}
-                                    </div>
-                                )
-                            }
+                            <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium">
+                                {t('total')} ({quote})
+                            </div>
                         </div>
                     </div>
                     <div className="flex flex-col flex-1">
@@ -214,20 +207,17 @@ const OrderBook = (props) => {
                             }
                         </div>
                         <div
-                            className="border-t-2 border-b-2 border-divider dark:border-divider-dark my-3 py-1 flex justify-between items-center px-1.5 min-h-[36px]"
+                            className=" dark:border-divider-dark py-3 flex justify-between items-center"
                         >
                             <div className="text-sm w-full">
-                                <span className="font-semibold">
+                                <span className="font-medium">
                                     <LastPrice
                                         symbol={symbol}
                                         colored
                                         exchangeConfig={exchangeConfig}
                                     />
                                 </span>
-                                {/* <span className="text-black-600-500"> ≈ </span> */}
-                                {/* <span className="text-black-600-500 ">1,412,232.23 VNDC</span> */}
                             </div>
-                            {/* <div className="text-teal-700 font-semibold">Xem thêm</div> */}
                         </div>
                         <div className="flex flex-col justify-start flex-1">
                             {

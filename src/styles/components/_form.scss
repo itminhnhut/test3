@@ -9,7 +9,7 @@
     @apply mb-5
   }
   .form-control {
-    @apply focus:ring-0 focus:border-teal block w-full text-sm border-gray-300 rounded text-black-700 placeholder-black-400 border px-4 py-3;
+    @apply focus:ring-0 focus:border-teal block w-full text-sm border-gray-300 rounded-md text-black-700 placeholder-black-400 border px-4 py-3;
     line-height: 1.315rem;
     letter-spacing: -0.01em;
     height: 44px;
@@ -28,7 +28,7 @@
   }
 
   .input-group {
-    @apply relative flex flex-wrap items-stretch w-full border border-divider dark:border-divider-dark rounded focus:ring-0 focus:outline-none;
+    @apply relative flex flex-wrap items-stretch w-full border border-divider dark:border-divider-dark rounded-md focus:ring-0 focus:outline-none;
     &.is-error {
       @apply border-red
     }

@@ -37,8 +37,8 @@ const layoutOnSidebar = [
         i: 'symbolDetail',
         x: 0,
         y: 0,
-        w: 23,
-        h: 2,
+        w: 13,
+        h: 3,
         isDraggable: false,
         isResizable: false,
     },
@@ -46,44 +46,44 @@ const layoutOnSidebar = [
         i: 'orderbook',
         x: 0,
         y: 3,
-        w: 7,
-        h: 22,
+        w: 3,
+        h: 33,
         isDraggable: false,
         isResizable: false,
     },
     {
         i: 'chart',
-        x: 7,
+        x: 3,
         y: 3,
-        w: 16,
-        h: 12,
+        w: 10,
+        h: 20,
         isDraggable: false,
         isResizable: false,
     },
     {
         i: 'placeOrderForm',
-        x: 7,
+        x: 3,
         y: 6,
-        w: 16,
-        h: 10,
-        isDraggable: false,
-        isResizable: false,
-    },
-    {
-        i: 'symbolList',
-        x: 23,
-        y: 3,
-        w: 7,
+        w: 10,
         h: 13,
         isDraggable: false,
         isResizable: false,
     },
     {
+        i: 'symbolList',
+        x: 13,
+        y: 3,
+        w: 3,
+        h: 16,
+        isDraggable: false,
+        isResizable: false,
+    },
+    {
         i: 'trades',
-        x: 23,
+        x: 13,
         y: 14,
-        w: 7,
-        h: 11,
+        w: 3,
+        h: 20,
         isDraggable: false,
         isResizable: false,
     },
@@ -92,7 +92,7 @@ const layoutOnSidebar = [
         x: 0,
         y: 26,
         w: 30,
-        h: 10,
+        h: 12,
         isDraggable: false,
         isResizable: false,
     },
@@ -337,11 +337,11 @@ const SpotComp = () => {
                     <ReactGridLayout
                         className="layout"
                         layout={gridLayout}
-                        breakpoints={{ xl: 1400, lg: 2200 }}
-                        cols={30}
-                        margin={[4, 4]}
-                        containerPadding={[4, 4]}
-                        rowHeight={30}
+                        breakpoints={{ xl: 1440, lg: 2200 }}
+                        cols={16}
+                        margin={[1, 1]}
+                        containerPadding={[8, 8]}
+                        rowHeight={24}
                         draggableHandle=".dragHandleArea"
                         draggableCancel=".dragCancelArea"
                     >
@@ -378,7 +378,7 @@ const SpotComp = () => {
                                 '!w-screen !h-screen transition !transform-none'
                             } z-[2]`}
                         >
-                            <Chart
+                            {/* <Chart
                                 parentCallback={handleCallbackChart}
                                 symbol={symbol}
                                 isOnSidebar={isOnSidebar}
@@ -391,7 +391,7 @@ const SpotComp = () => {
                                 clearExtendsIndicators={clearExtendsIndicators}
                                 customChartFullscreen={customChartFullscreen}
                                 fullScreen={fullScreen}
-                            />
+                            /> */}
                         </div>
 
                         <div key="trades">

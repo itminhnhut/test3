@@ -28,8 +28,8 @@ const BarsChart = (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 28 28"
-        width="24"
-        height="24"
+        width="20"
+        height="20"
     >
         <g fill="none" stroke="currentColor" strokeLinecap="square">
             <path d="M10.5 7.5v15M7.5 20.5H10M13.5 11.5H11M19.5 6.5v15M16.5 9.5H19M22.5 16.5H20" />
@@ -40,8 +40,8 @@ const CandleChart = (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 28 28"
-        width="24"
-        height="24"
+        width="20"
+        height="20"
         fill="currentColor"
     >
         <path d="M17 11v6h3v-6h-3zm-.5-1h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5z" />
@@ -51,24 +51,14 @@ const CandleChart = (
     </svg>
 );
 const AreaChart = (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 28 28"
-        width="24"
-        height="24"
-    >
-        <path
-            fill="currentColor"
-            d="M11.982 16.689L17.192 12h3.033l4.149-4.668-.748-.664L19.776 11h-2.968l-4.79 4.311L9 12.293l-4.354 4.353.708.708L9 13.707z"
-        />
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="20" height="20" fill="currentColor"><path d="M12.5 17.207L18.707 11h2l3.647-3.646-.708-.708L20.293 10h-2L12.5 15.793l-3-3-4.854 4.853.708.708L9.5 14.207z" /><path d="M9 16h1v1H9zm1 1h1v1h-1zm-1 1h1v1H9zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1H9zm2 0h1v1h-1zm-3-3h1v1H8zm-1 1h1v1H7zm-1 1h1v1H6zm2 0h1v1H8zm-1 1h1v1H7zm-2 0h1v1H5zm17-9h1v1h-1zm1-1h1v1h-1zm0 2h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-5-7h1v1h-1zm2 0h1v1h-1zm1-1h1v1h-1zm-2 2h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-2-6h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-3-3h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1z" /></svg>
 );
 const LineChart = (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 28 28"
-        width="24"
-        height="24"
+        width="20"
+        height="20"
     >
         <path
             fill="currentColor"
@@ -80,8 +70,8 @@ const BaseLineChart = (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 28 28"
-        width="24"
-        height="24"
+        width="20"
+        height="20"
     >
         <g fill="none" stroke="currentColor">
             <path strokeDasharray="1,1" d="M4 14.5h22" />
@@ -366,7 +356,7 @@ export default class TimeFrame extends Component {
                         <span
                             key={value}
                             onClick={() => this.setActiveTime(value)}
-                            className={`cursor-pointer text-xs font-medium py-1 px-2 mr-1 rounded-md hover:text-teal ${
+                            className={`cursor-pointer text-xs font-medium h-5 px-2 mr-1 rounded-md hover:text-teal ${
                                 isActive
                                     ? 'bg-teal bg-opacity-10 text-teal'
                                     : 'text-txtSecondary'
@@ -385,7 +375,7 @@ export default class TimeFrame extends Component {
                                 } text-white group px-2`}
                             >
                                 {!isCommonTimeframe && (
-                                    <span className="cursor-pointer text-xs font-medium py-1 mr-1 text-teal">
+                                    <span className="cursor-pointer text-xs font-medium h-5 mr-1 text-teal">
                                         {selectedTimeframeData.text}
                                     </span>
                                 )}
@@ -528,7 +518,7 @@ export default class TimeFrame extends Component {
             customChartFullscreen,
             fullScreen,
         } = this.props;
-        const itemClass = 'cursor-pointer text-xs font-medium py-1 px-2 mr-1 text-teal  rounded-md';
+        const itemClass = 'cursor-pointer text-xs font-medium h-5 px-2 mr-1 text-teal  rounded-md';
         const activeClass = 'bg-teal bg-opacity-10 text-teal';
         return (
             <div className="flex items-center">

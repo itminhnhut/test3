@@ -72,7 +72,7 @@ const Trades = (props) => {
     return (
         <div className="h-full bg-bgContainer dark:bg-bgContainer-dark pb-6 row-span-1 h-full" ref={ref}>
             <h3 className="font-semibold border-b border-divider dark:border-divider-dark text-txtPrimary dark:text-txtPrimary-dark pt-3 pb-2 mb-2 px-3 dragHandleArea">{t('trades')}</h3>
-            <div className="ats-tbheader px-3">
+            <div className=" px-3">
                 <div className="flex justify-between items-center mb-3">
                     <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium">{t('common:price')}</div>
                     <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium">{t('common:quantity')}</div>

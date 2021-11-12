@@ -133,10 +133,10 @@ const SymbolList = (props) => {
     const renderList = useCallback(() => {
         return (
             <>
-                <div className="ats-tbheader px-3">
-                    <div className="flex justify-between items-center mb-3">
+                <div className="bg-bgPrimary dark:bg-bgPrimary-dark px-3">
+                    <div className="flex justify-between items-center mb-2">
                         <div
-                            className="flex flex-1 items-center justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-start text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('b');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -153,7 +153,7 @@ const SymbolList = (props) => {
                             }
                         </div>
                         <div
-                            className="flex flex-1 items-center justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-end text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('p');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -167,7 +167,7 @@ const SymbolList = (props) => {
                             }
                         </div>
                         <div
-                            className="flex flex-1 items-center justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
+                            className="flex flex-1 items-center justify-end text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium cursor-pointer select-none"
                             onClick={() => {
                                 setSortField('change24h');
                                 setSortDirection(value => (value === 'asc' ? 'desc' : 'asc'));
@@ -214,7 +214,7 @@ const SymbolList = (props) => {
 
         return (
             <>
-                <div className="ats-tbheader px-3">
+                <div className=" px-3">
                     <div className="flex justify-between items-center mb-3">
                         <div
                             className="flex flex-1 items-center justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs font-semibold cursor-pointer select-none"
@@ -291,41 +291,40 @@ const SymbolList = (props) => {
     return (
         <>
             <div
-                className="spot-symbol-list__container- bg-bgContainer dark:bg-bgContainer-dark py-6 h-full"
+                className="spot-symbol-list__container bg-bgContainer dark:bg-bgContainer-dark py-4 h-full"
             >
-                <>
-                    <div className="mx-3 mb-3">
+                <div className="mx-3 mb-3">
                         <SearchInput
                             placeholder={t('spot:search')}
                             onChange={(e) => setSearch(e.target.value)}
                             parentState={setSearch}
                             customStyle={{ height: '30px' }}
+                            
                         />
                     </div>
 
-                    <div className="mx-3 mb-3 flex items-center">
+                    <div className="mx-2 mb-2 flex items-center">
 
                         {user && <div
-                            className={'w-12 h-[23px] flex justify-center items-center text-sm mr-2 border cursor-pointer ' + (activeTab === 'favorite' ? 'active text-mint border-mint' : 'border-divider dark:border-divider-dark')}
+                            className={'min-w-9 flex justify-center items-center text-sm mr-2 cursor-pointer ' + (activeTab === 'favorite' ? 'active text-mint border-mint' : 'border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('favorite')}
                         >
-                            <IconStarFilled size={12}
+                            <IconStarFilled size={14}
                                             color={activeTab === 'favorite' ? '#09becf' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}/>
                         </div>}
                         <a
-                            className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
+                            className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('USDT')}
                         > USDT
                         </a>
                         <a
-                            className={'w-12 text-sm text-center mr-2 font-medium border text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
+                            className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('VNDC')}
                         > VNDC
                         </a>
                     </div>
                     {activeTab !== 'favorite' && renderList()}
                     {activeTab === 'favorite' && renderFav()}
-                </>
 
             </div>
         </>

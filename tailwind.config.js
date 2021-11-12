@@ -16,6 +16,7 @@ const commonColors = {
     gray2: '#A0AEC0',
     gray3: '#CBD5E0',
     gray4: '#F2F4F6',
+    gray5: '#EDF1F6',
 
     white: 'white',
     teal: '#00C8BC',
@@ -33,6 +34,15 @@ module.exports = {
     theme: {
         container: {
             center: true,
+        },
+        fontWeight: {
+            light: 300,
+            normal: 400,
+            medium: 500,
+            semibold: 600,
+            bold: 700,
+            extrabold: 800,
+            black: 900,
         },
         fontFamily: {
             sans: ['Barlow', 'sans-serif'],
@@ -187,12 +197,11 @@ module.exports = {
                 homepageBg: { DEFAULT: '#f2f4f66e', dark: commonColors.darkBlue2 },
                 bgBtnPrimary: { DEFAULT: commonColors.teal, dark: commonColors.teal },
                 bgBtnSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue },
+                bgSearch: { DEFAULT: commonColors.gray5, dark: commonColors.darkBlue3 },
             },
-            fontWeight: { bold: 600 },
         },
     },
-    variants: {
-    },
+   
     plugins: [
         require('@tailwindcss/forms')({ strategy: 'class',
         }),
