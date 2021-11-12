@@ -9,11 +9,12 @@ import RePagination from 'components/common/ReTable/RePagination'
 import showNotification from 'utils/notificationService'
 import Empty from 'components/common/Empty'
 import NeedLogin from 'components/common/NeedLogin'
+import Skeleton from 'react-loading-skeleton'
 
 import { useCallback, useEffect, useState } from 'react'
+import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils'
 import { StarOutlined } from '@ant-design/icons'
 import { initMarketWatchItem } from 'utils'
-import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import { IconStarFilled } from 'components/common/Icons'
 import { Search, X } from 'react-feather'
@@ -23,7 +24,8 @@ import { EMPTY_VALUE } from 'constants/constants'
 import { remove } from 'lodash'
 import { TRADING_MODE } from 'redux/actions/const'
 import { favoriteAction } from 'redux/actions/user'
-import { ScaleLoader } from 'react-spinners'
+
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const MARKET_ROW_LIMIT = 20
 
@@ -136,13 +138,13 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         // PRE PROCESS DATA FOR TABLE
         let rowKey = `${tab[restProps.tabIndex]?.key}_${tradingMode}__`
         let tableStatus
-        const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher)
+        const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading)
 
         if (!restProps.auth && tab[restProps.tabIndex]?.key === 'favorite') {
             tableStatus = <NeedLogin/>
         } else {
             if (loading) {
-                tableStatus = <ScaleLoader color={colors.teal} size={12}/>
+                // tableStatus = <ScaleLoader color={colors.teal} size={12}/>
             } else if (!dataSource.length) {
                 tableStatus = <Empty/>
             }
@@ -285,9 +287,17 @@ const columns = [
     { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 128 }
 ]
 
-const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRefresher) => {
-    if (!Array.isArray(arr) || !arr || !arr.length) return []
+const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRefresher, isLoading = false) => {
+    if (!Array.isArray(arr) || !arr || !arr.length || isLoading) {
+        const loadingSkeleton = []
+
+        for (let i = 0; i < 20; ++i) {
+            loadingSkeleton.push({...ROW_LOADING_SKELETON, key: `market_loading__skeleton_${i}`})
+        }
+        return loadingSkeleton
+    }
     const result = []
+
 
     arr.forEach(item => {
         const {
@@ -322,6 +332,18 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
     })
 
     return result
+}
+
+const ROW_LOADING_SKELETON = {
+    star: <Skeleton width={65}/>,
+    pair: <Skeleton width={65}/>,
+    last_price: <Skeleton width={65}/>,
+    change_24h: <Skeleton width={65}/>,
+    market_cap: <Skeleton width={65}/>,
+    volume_24h: <Skeleton width={65}/>,
+    '24h_high': <Skeleton width={65}/>,
+    '24h_low': <Skeleton width={65}/>,
+    operation: <Skeleton width={65}/>
 }
 
 const renderPair = (b, q, lbl, w) => {

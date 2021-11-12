@@ -2,6 +2,7 @@ import AssetLogo from 'components/wallet/AssetLogo'
 import MCard from 'components/common/MCard'
 import colors from 'styles/colors'
 import Link from 'next/link'
+import Skeleton from 'react-loading-skeleton'
 
 import { initMarketWatchItem, sparkLineBuilder } from 'utils'
 import { memo, useState } from 'react'
@@ -9,13 +10,15 @@ import { formatPrice, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
-const MarketTrendItem = memo(({ pair, style = {} }) => {
+import 'react-loading-skeleton/dist/skeleton.css'
+
+const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
     // Init State
     const [state, set] = useState({
         ticker: null,
         sparkLineURL: null
     })
-    const setState = (state) => set(prevState => ({...prevState, ...state}))
+    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
     const { i18n: { language } } = useTranslation()
 
@@ -48,24 +51,43 @@ const MarketTrendItem = memo(({ pair, style = {} }) => {
 
     return (
         <Link href={`trade/${_.baseAsset}-${_.quoteAsset}`}>
-            <a>
+            <a style={{...style}}>
                 <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-dominant">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                            <AssetLogo assetCode={_?.baseAsset} size={36}/>
-                            <div className="ml-2"><span className="font-bold">{_?.baseAsset}</span>/{_?.quoteAsset}</div>
+                            {(!pair) ?
+                                <Skeleton
+                                    circle
+                                    width={36}
+                                    height={36}
+                                    containerClassName="avatar-skeleton"
+                                />
+                                : <AssetLogo assetCode={_?.baseAsset} size={36}/>
+                            }
+
+                            <div className="ml-2">
+                                {(!pair) ?
+                                    <Skeleton width={100}/>
+                                    : <>
+                                        <span className="font-bold">{_?.baseAsset}</span>/{_?.quoteAsset}
+                                    </>}
+                            </div>
                         </div>
                         <div className="w-[95px] xl:w-[65px]">
-                            <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)} alt="Nami Exchange"/>
+                            {(!pair) ?
+                                <Skeleton width={60} height={28}/>
+                                : <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)}
+                                       alt="Nami Exchange"/>
+                            }
                         </div>
                     </div>
                     <div className="mt-[12px] flex items-center justify-between">
                         <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-dominant'
                             : 'text-[20px] 2xl:text-[24px] font-medium text-red'}>
-                            {formatPrice(_.lastPrice)}
+                            {(!pair) ? <Skeleton width={65}/> : formatPrice(_.lastPrice)}
                         </div>
                         <div className="text-[16px] font-medium">
-                            {render24hChange(pair)}
+                            {(!pair) ? <Skeleton width={65}/> : render24hChange(pair)}
                         </div>
                     </div>
                     <div className="mt-[12px] flex items-center justify-between">
@@ -74,7 +96,11 @@ const MarketTrendItem = memo(({ pair, style = {} }) => {
                         {/*    $ --*/}
                         {/*</div>*/}
                         <div className="text-[14px]">
-                            {language === LANGUAGE_TAG.VI ? 'KL' : 'Vol'} {formatPrice(_.volume24h)} {_?.quoteAsset}
+                            {(!pair) ? <Skeleton width={88}/>
+                                : <>
+                                    {language === LANGUAGE_TAG.VI ? 'KL' : 'Vol'} {formatPrice(_.volume24h)} {_?.quoteAsset}
+                                </>
+                            }
                         </div>
                     </div>
 
