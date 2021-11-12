@@ -4,9 +4,12 @@ import {
     IconFullScreenChartDisable,
 } from 'components/common/Icons';
 import ChevronDown from 'components/svg/ChevronDown';
+import Candles from 'components/svg/Candles';
+import Activity from 'components/svg/Activity';
 import find from 'lodash/find';
 import * as React from 'react';
 import { Component, Fragment } from 'react';
+import colors from 'styles/colors';
 import locale_vi from './locale_vi';
 
 const ListTimeFrame = [
@@ -266,7 +269,7 @@ export default class TimeFrame extends Component {
             (e) => e.value === selectedTimeframeData?.value,
         );
         return (
-            <div className="flex">
+            <div className="flex items-center">
                 {CommonTimeframes.map((item) => {
                     const { value, text } = item;
                     const isActive = value == selectedTime;
@@ -314,8 +317,8 @@ export default class TimeFrame extends Component {
                                 leaveTo="opacity-0 translate-y-1"
                             >
                                 <Popover.Panel className="absolute z-10">
-                                    <div className="overflow-hidden rounded-lg shadow-lg bg-white p-5">
-                                        <div className="text-txtPrimary font-medium text-xs mb-4">
+                                    <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3 p-5">
+                                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-medium text-xs mb-4">
                                             Select intervals
                                         </div>
                                         <div className="w-64 relative grid grid-cols-4 gap-2">
@@ -333,8 +336,8 @@ export default class TimeFrame extends Component {
                                                             key={index}
                                                             className={`cursor-pointer w-full h-5 border font-medium text-xs text-center rounded-sm hover:text-teal hover:border-teal-50 ${
                                                                 isActive
-                                                                    ? 'border-teal text-teal'
-                                                                    : 'border-gray-5 text-txtSecondary'
+                                                                    ? 'border-teal text-teal dark:border-teal dark:text-teal'
+                                                                    : 'border-gray-5  text-txtSecondary dark:text-txtSecondary-dark dark:border-darkBlue-5'
                                                             }`}
                                                         >
                                                             {text}
@@ -349,6 +352,17 @@ export default class TimeFrame extends Component {
                         </>
                     )}
                 </Popover>
+                <Candles
+                    className="mx-2 cursor-pointer"
+                    color={colors.darkBlue5}
+                    fill={colors.darkBlue5}
+                    size={20}
+                />
+                <Activity
+                    className="mx-2 cursor-pointer"
+                    color={colors.darkBlue5}
+                    size={20}
+                />
             </div>
         );
     }
@@ -362,24 +376,23 @@ export default class TimeFrame extends Component {
             customChartFullscreen,
             fullScreen,
         } = this.props;
-        const itemClass =
-            'cursor-pointer text-xs font-medium py-1 px-2 mr-1 text-teal bg-teal bg-opacity-10 rounded-md';
+        const itemClass = 'cursor-pointer text-xs font-medium py-1 px-2 mr-1 text-teal  rounded-md';
         return (
             <div className="flex items-center">
-                <span className={itemClass}>Original</span>
-                <span className={itemClass}>TradingView</span>
-                <span className={itemClass}>Depth</span>
+                <span className={`${itemClass} bg-teal bg-opacity-10 text-teal`}>Original</span>
+                <span className={`${itemClass}`}>TradingView</span>
+                <span className={`${itemClass}`}>Depth</span>
                 <button
-                        type="button"
-                        onClick={customChartFullscreen}
-                        className="px-1"
-                    >
-                        {fullScreen ? (
-                            <IconFullScreenChartDisable />
-                        ) : (
-                            <IconFullScreenChart />
-                        )}
-                    </button>
+                    type="button"
+                    onClick={customChartFullscreen}
+                    className="px-1"
+                >
+                    {fullScreen ? (
+                        <IconFullScreenChartDisable />
+                    ) : (
+                        <IconFullScreenChart />
+                    )}
+                </button>
             </div>
         );
     }
@@ -403,12 +416,9 @@ export default class TimeFrame extends Component {
         }));
 
         return (
-            <div
-                className={`flex items-center justify-between w-full`}
-            >
+            <div className="flex items-center justify-between w-full">
                 {this._renderCommonTimeframes()}
                 {this._renderChartMode()}
-                
             </div>
         );
     }

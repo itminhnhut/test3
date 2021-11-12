@@ -350,7 +350,7 @@ export class TVChartContainer extends React.PureComponent {
                     >
                         <IconLoading color="#09becf" />
                     </div>
-                    <div className="w-full border border-b border-divider py-1">
+                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1">
                         {this.state.chartStatus === ChartStatus.LOADED && (
                             <TimeFrame
                                 symbol={this.props.symbol}
