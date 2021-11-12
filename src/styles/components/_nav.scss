@@ -577,6 +577,10 @@
           font-size: 14px;
           font-weight: 500;
 
+          a, span {
+            @apply text-txtPrimary dark:text-txtPrimary-dark #{!important};
+          }
+
           svg {
             margin-right: 12px;
           }
