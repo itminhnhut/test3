@@ -16,7 +16,7 @@ import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { getLoginUrl, getV1Url } from 'redux/actions/utils'
+import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils'
 import { buildLogoutUrl } from 'utils'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import SvgWallet from 'components/svg/Wallet'
@@ -327,22 +327,22 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                 <div className="mal-navbar__dropdown__wrapper">
                     <Link href={getV1Url('/wallet/account?type=spot')}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
-                           <img src="/images/icon/ic_wallet.png" width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Exchange
+                           <img src={getS3Url('/images/icon/ic_wallet.png')} width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Exchange
                         </a>
                     </Link>
                     <Link href={getV1Url('/wallet/account?type=futures')}>
                         <a className="mal-navbar__dropdown___item">
-                            <img src="/images/icon/ic_wallet.png" width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Futures
+                            <img src={getS3Url('/images/icon/ic_wallet.png')} width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Futures
                         </a>
                     </Link>
                     <Link href={getV1Url('/wallet/account?type=staking')}>
                         <a className="mal-navbar__dropdown___item">
-                            <img src="/images/icon/ic_wallet.png" width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Staking
+                            <img src={getS3Url('/images/icon/ic_wallet.png')} width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Staking
                         </a>
                     </Link>
                     <Link href={getV1Url('/wallet/account?type=farming')}>
                         <a className="mal-navbar__dropdown___item">
-                            <img src="/images/icon/ic_wallet.png" width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Farming
+                            <img src={getS3Url('/images/icon/ic_wallet.png')} width="32" height="32" alt="" className="mr-3"/>{t('navbar:menu.wallet')} Farming
                         </a>
                     </Link>
                 </div>

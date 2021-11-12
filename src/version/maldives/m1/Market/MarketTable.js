@@ -298,7 +298,7 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
     }
 
     if (!Array.isArray(arr) || !arr || !arr.length) return []
-    
+
     const result = []
 
 
