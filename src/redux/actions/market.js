@@ -119,6 +119,7 @@ export async function getSwapEstimatePrice(params) {
 
         const { data  } = await fetchAPI(opts)
         if (data && data?.status === ApiStatus.SUCCESS && data?.data) {
+            console.log('namidev-DEBUG: __ EST RATE ', data)
             return { status: ApiStatus.SUCCESS, data: data.data }
         }
     } catch (e) {

@@ -42,7 +42,7 @@ const SwapIntroduce = () => {
             const loader = []
             for (let i = 0; i < 3; ++i) {
                 loader.push(
-                    <div className="min-w-[131px] mt-3 mr-3 py-3 px-2 rounded-md bg-bgContainer dark:bg-bgContainer-dark drop-shadow-common">
+                    <div key={`swap_trend___${i}`} className="min-w-[131px] mt-3 mr-3 py-3 px-2 rounded-md bg-bgContainer dark:bg-bgContainer-dark drop-shadow-common dark:drop-shadow-none">
                         <div className="flex items-center">
                             <Skeletor circle width={24} height={24}
                                       containerClassName="avatar-skeleton"/>
@@ -72,9 +72,10 @@ const SwapIntroduce = () => {
         return state.swapTrend.map(sw => {
             const _ = initMarketWatchItem(sw)
             return (
-                <Link href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}>
+                <Link key={`swap_trend___${_?.baseAsset}${_?.quoteAsset}`}
+                      href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}>
                     <a>
-                        <div className="min-w-[131px] mt-3 mr-3 py-3 px-2 rounded-md bg-bgContainer dark:bg-bgContainer-dark drop-shadow-common cursor-pointer border border-transparent hover:border-dominant">
+                        <div className="min-w-[131px] mt-3 mr-3 py-3 px-2 rounded-md bg-bgContainer dark:bg-bgContainer-dark drop-shadow-common dark:drop-shadow-none cursor-pointer border border-transparent hover:border-dominant">
                             <div className="flex items-center">
                                 <AssetLogo assetCode={_?.baseAsset} size={24}/>
                                 <div className="ml-[8px] text-[14px] font-medium">

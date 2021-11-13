@@ -12,7 +12,7 @@ const SwapIndex = () => {
             <div className="bg-gray-4 dark:bg-darkBlue-1 w-full h-full py-[64px] lg:pb-[74px] xl:pb-[94px]">
                 <div className="mal-container flex justify-between pt-[64px] xl:pt-[72px]">
                     {width >= 1024 && <SwapIntroduce/>}
-                    <SwapModule width={width}/>
+                    <SwapModule width={width} pair={{ fromAsset: 'BNB', toAsset: 'USDT' }}/>
                 </div>
                 {width >= 1024 && <SwapHistory width={width}/>}
             </div>

@@ -16,6 +16,7 @@ const commonColors = {
     gray2: '#A0AEC0',
     gray3: '#CBD5E0',
     gray4: '#F2F4F6',
+    gray5: 'rgb(247, 247, 247)',
 
     white: 'white',
     teal: '#00C8BC',
@@ -157,6 +158,7 @@ module.exports = {
                 2: commonColors.gray2,
                 3: commonColors.gray3,
                 4: commonColors.gray4,
+                5: commonColors.gray5,
             },
             teal: { DEFAULT: '#00C8BC',
                 5: '#03bdce17',

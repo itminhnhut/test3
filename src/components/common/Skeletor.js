@@ -19,7 +19,7 @@ const Skeletor = (props) => {
         }
     }, [currentTheme])
 
-    return <Skeleton width={45} baseColor={_?.base} highlightColor={_?.highlight} {...props}/>
+    return <Skeleton width={45} height={20} baseColor={_?.base} highlightColor={_?.highlight} {...props}/>
 }
 
 export default Skeletor
