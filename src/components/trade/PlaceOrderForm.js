@@ -577,7 +577,7 @@ const PlaceOrderForm = ({ symbol }) => {
         });
 
         return (
-            <ul className="tabs justify-start mb-2">
+            <ul className="tabs justify-start mb-4">
                 {tabs.map((tab, index) => {
                     return (
                         <li className={`tab-item px-2 font-medium ${orderType === tab ? 'active' : ''}`} key={index}>
@@ -645,7 +645,7 @@ const PlaceOrderForm = ({ symbol }) => {
 
     const _renderQuantitySlider = useMemo(() => {
         return (
-            <div className="mt-6 mb-14 relative">
+            <div className="mt-6 mb-4 relative">
                 <InputSlider
                     axis="x"
                     x={percentage}
@@ -831,7 +831,7 @@ const PlaceOrderForm = ({ symbol }) => {
     const _renderPlaceOrderButton = () => {
         if (!user) {
             return (
-                <div className="mb-6">
+                <div className="mt-6">
                     <a
                         href={getLoginUrl('sso')}
                         className="btn w-full capitalize button-common block text-center"
@@ -843,7 +843,7 @@ const PlaceOrderForm = ({ symbol }) => {
         }
 
         return (
-            <div className="mb-6">
+            <div className="mt-6">
                 <button
                     // onClick={() => (orderType === ExchangeOrderEnum.Type.LIMIT ? openModal() : (needConfirm === 'true' ? openModal() : confirmModal()))}
                     onClick={confirmModal}
@@ -867,11 +867,8 @@ const PlaceOrderForm = ({ symbol }) => {
     const _renderUserBalance = () => {
         return (
             <>
-                <h3 className="font-semibold text-lg text-black mb-3">
-                    {t('spot:balance')}
-                </h3>
                 <div className="flex justify-between items-center">
-                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark ">
+                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark ">
                         {t('spot:available_balance')}
                     </div>
                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold text-right">
@@ -907,8 +904,8 @@ const PlaceOrderForm = ({ symbol }) => {
                 <div className="tab-content">
                     {_renderOrderPrice()}
                     {_renderOrderQuantity}
-                    {_renderOrderQuoteQty}
                     {_renderQuantitySlider}
+                    {_renderOrderQuoteQty}
                     {currentExchangeConfig?.status === 'MAINTAIN' && (
                         <p className="text-sm mb-3 flex">
                             <span className="mr-2">
@@ -922,9 +919,10 @@ const PlaceOrderForm = ({ symbol }) => {
                             </span>
                         </p>
                     )}
+                    {_renderUserBalance()}
                     {_renderPlaceOrderButton()}
                 </div>
-                {_renderUserBalance()}
+                
                 {/* {_renderAssetPortfolio()} */}
             </div>
         </>

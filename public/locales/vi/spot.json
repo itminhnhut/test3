@@ -28,5 +28,5 @@
   "close_order_success": "Lệnh #{{displayingId}} [{{side}} {{type}} {{token}}] đã được đóng thành công.",
   "close_order_failed": "Đóng lệnh #{{displayingId}} [{{side}} {{type}} {{token}}] thất bại.",
   "filter_by_current_pair": "Ẩn cặp khác",
-  "pair_under_maintenance": "Giao dịch {{base}}/{{quote}} đang bảo trì"
+  "pair_under_maintenance": "Cặp giao dịch {{base}}/{{quote}} đang bảo trì"
 }

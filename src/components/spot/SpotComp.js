@@ -164,9 +164,6 @@ const layoutPro = [
 
 ];
 
-// const initialLayout = layoutSimple;
-const initialLayout = layoutPro;
-
 const LayoutMode = {
     SIMPLE: 'simple',
     PRO: 'pro',
@@ -180,9 +177,7 @@ const SpotComp = () => {
     const [orderBookLayout, setOrderBookLayout] = useState({});
     const [tradesLayout, setTradesLayout] = useState({});
     const [symbolDetailLayout, setSymbolDetailLayout] = useState({});
-    console.log('check layout', layout)
     const [layoutMode, setLayoutMode] = useState(layout === LayoutMode.PRO ? LayoutMode.PRO : LayoutMode.SIMPLE);
-    console.log('check layout 1', layoutMode)
     // Check pattern
     let symbolFromUrl = null;
     if (typeof id === 'string' && id.length) {
@@ -200,7 +195,7 @@ const SpotComp = () => {
     const [favorite, setFavorite] = useState([]);
     const [watchList, setWatchList] = useState([]);
 
-    const [gridLayout, setGridLayout] = useState(initialLayout);
+    const [gridLayout, setGridLayout] = useState(layout === LayoutMode.PRO ? layoutPro : layoutSimple);
 
     const [isMaxChart, setIsMaxChart] = useState(false);
     const [isOnSidebar, setIsOnSidebar] = useState(true);
@@ -335,18 +330,6 @@ const SpotComp = () => {
         };
     }, [publicSocket, symbol]);
 
-    useEffect(() => {
-        const _layout = layoutPro;
-        const _orderbookLayout = find(_layout, { i: 'orderbook' });
-        const _chartLayout = find(_layout, { i: 'chart' });
-        const _tradesLayout = find(_layout, { i: 'trades' });
-        const _symbolDetailLayout = find(_layout, { i: 'symbolDetail' });
-        setChartSize(_chartLayout?.w);
-        setOrderBookLayout(_orderbookLayout);
-        setSymbolDetailLayout(_symbolDetailLayout);
-        setTradesLayout(_tradesLayout);
-        setGridLayout(_layout);
-    }, [isOnSidebar, isMaxChart, fullScreen]);
 
     const handleCallback = (childData) => {
         const isTrue = childData === 'true';
