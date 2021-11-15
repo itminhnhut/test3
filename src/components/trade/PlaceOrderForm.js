@@ -1,11 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Dialog, Listbox, Transition } from '@headlessui/react';
+import { Listbox, Transition } from '@headlessui/react';
 import axios from 'axios';
 import { IconLock } from 'components/common/Icons';
-import TextLoader from 'components/loader/TextLoader';
-import AssetPnL from 'components/trade/AssetPnL';
-import AssetLogo from 'components/wallet/AssetLogo';
-import { iconColor } from 'config/colors';
+import SvgOrderSide from 'components/svg/OrderSide';
 import ceil from 'lodash/ceil';
 import defaults from 'lodash/defaults';
 import find from 'lodash/find';
@@ -13,37 +10,30 @@ import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { X } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
-import { useAsync, useDebounce, useLocalStorage } from 'react-use';
+import { useAsync, useDebounce } from 'react-use';
 import { getMarketWatch } from 'redux/actions/market';
-import { getAssetName } from 'redux/actions/utils';
 import InputSlider from 'src/components/trade/InputSlider';
 import * as Error from 'src/redux/actions/apiError';
 import {
     ApiStatus,
     EPS,
     ExchangeOrderEnum,
-    PublicSocketEvent,
-    SpotFeePercentage,
-    SpotMarketPriceBias,
+    PublicSocketEvent, SpotMarketPriceBias
 } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import {
     formatBalance,
-    formatPrice,
-    formatSpotFee,
-    formatWallet,
+    formatPrice, formatWallet,
     getDecimalScale,
     getFilter,
     getLoginUrl,
-    getSymbolString,
-    isInvalidPrecision,
+    getSymbolString
 } from 'src/redux/actions/utils';
+import { colors } from 'tailwindcss/defaultTheme';
 import fetchAPI from 'utils/fetch-api';
 import showNotification from 'utils/notificationService';
-import SpotMarketValue from '../markets/SpotMarketValue';
 
 let initPrice = '';
 
@@ -84,7 +74,6 @@ const PlaceOrderForm = ({ symbol }) => {
     const user = useSelector(state => state.auth.user) || null;
     const balanceSpot = useSelector(state => state.wallet.SPOT);
     const selectedOrder = useSelector(state => state.spot?.selectedOrder);
-    const cancelButtonRef = useRef();
     const [open, setOpen] = useState(false);
     const [quantityMode, setQuantityMode] = useState(QuantityMode[0]);
     const [percentage, setPercentage] = useState(0);
@@ -95,17 +84,10 @@ const PlaceOrderForm = ({ symbol }) => {
     const [quoteQty, setQuoteQty] = useState(0);
     const [focus, setFocus] = useState();
     const [price, setPrice] = useState();
-    const [loadingInitialPrice, setLoadingInitialPrice] = useState(true);
-    const [initialPrice, setInitialPrice] = useState();
-    const [needConfirm, setNeedConfirm] = useLocalStorage('spot:need_confirm', 'true');
     const [symbolTicker, setSymbolTicker] = useState(null);
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
     const quoteAsset = useSelector(state => state.user.quoteAsset) || 'USDT';
-    const [isLoadingMultiValueList, setIsLoadingMultiValueList] = useState(true);
-    const [multiValueList, setMultiValueList] = useState({});
-    const [multiValue, setMultiValue] = useState(0);
     const router = useRouter();
-    const [discountTransactionFee, setDiscountTransactionFee] = useState(0);
     const [isUseQuoteQuantity, setIsUseQuoteQuantity] = useState(false);
 
     useAsync(async () => {
@@ -116,32 +98,6 @@ const PlaceOrderForm = ({ symbol }) => {
         }
     }, [symbol]);
 
-    useAsync(async () => {
-        const { data, status } = await fetchAPI({
-            url: '/api/v1/asset/value_by_name',
-            options: {
-                method: 'GET',
-            },
-        });
-        if (status === ApiStatus.SUCCESS) {
-            await setMultiValueList(data);
-            setIsLoadingMultiValueList(false);
-        }
-        const membership = await fetchAPI({
-            url: '/api/v1/membership/user_status',
-            options: {
-                method: 'GET',
-            },
-        });
-        if (membership?.data?.discountSpotFee !== 0) {
-            setDiscountTransactionFee(membership?.data?.discountSpotFee);
-        }
-    }, []);
-    useEffect(() => {
-        if (!isLoadingMultiValueList) {
-            if (multiValueList[quoteAsset] > 0) setMultiValue(quoteAsset === 'VNDC' ? 1 / multiValueList[quoteAsset] : multiValueList[quoteAsset]);
-        }
-    }, [multiValueList, isLoadingMultiValueList]);
 
     useEffect(() => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
@@ -268,41 +224,6 @@ const PlaceOrderForm = ({ symbol }) => {
         return success;
     };
 
-    const getInitialPrice = async (assetId, source) => {
-        if (!(assetId)) return;
-        setLoadingInitialPrice(true);
-        const { data, status } = await fetchAPI({
-            url: '/api/v1/asset/initial_price',
-            options: {
-                method: 'GET',
-            },
-            params: {
-                assetId,
-            },
-            cancelToken: source.token,
-        });
-        setLoadingInitialPrice(false);
-
-        if (status === ApiStatus.SUCCESS) {
-            setInitialPrice(data);
-        }
-    };
-
-    const handleRouteCancel = (source) => () => {
-        source.cancel();
-    };
-
-    useEffect(() => {
-        const source = axios.CancelToken.source();
-        getInitialPrice(baseAssetId, source);
-        router.events.on('routeChangeStart', handleRouteCancel(source));
-
-        // If the component is unmounted, unsubscribe
-        // from the event with the `off` method:
-        return () => {
-            router.events.off('routeChangeStart', handleRouteCancel(source));
-        };
-    }, [baseAssetId, symbol]);
 
     const createOrder = async () => {
         // Filter input
@@ -529,12 +450,13 @@ const PlaceOrderForm = ({ symbol }) => {
         return (
             <div className="spot-place-orders-tabs mb-4">
                 <div
-                    className={'spot-place-orders-tab block--left capitalize ' + (orderSide === ExchangeOrderEnum.Side.BUY ? 'active' : '')}
+                    className={'spot-place-orders-tab capitalize ' + (orderSide === ExchangeOrderEnum.Side.BUY ? 'active' : '')}
                     onClick={() => handleClickTab(ExchangeOrderEnum.Side.BUY)}
                 >{t('common:buy')}
                 </div>
+                <SvgOrderSide color={colors.teal} fill={colors.teal}/>
                 <div
-                    className={'spot-place-orders-tab block--right capitalize ' + (orderSide === ExchangeOrderEnum.Side.SELL ? 'active' : '')}
+                    className={'spot-place-orders-tab capitalize ' + (orderSide === ExchangeOrderEnum.Side.SELL ? 'active' : '')}
                     onClick={() => handleClickTab(ExchangeOrderEnum.Side.SELL)}
                 >{t('common:sell')}
                 </div>
@@ -567,20 +489,24 @@ const PlaceOrderForm = ({ symbol }) => {
         );
     }, [orderType, t, currentExchangeConfig]);
 
-    const _renderOrderPrice = useMemo(() => {
+    const _renderOrderPrice = () => {
         // if (orderType !== ExchangeOrderEnum.Type.LIMIT) return null;
         return (
             <div className="flex justify-between items-center mb-2">
-                <div className="text-sm text-black-600">{t('common:price')}</div>
-                <div className="form-group md:w-[100px] xl:w-4/6">
+
+                <div className="form-group w-full">
                     <div className="input-group">
+                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium">{t('common:price')}</div>
+                        </div>
+
                         {
                             orderType === ExchangeOrderEnum.Type.LIMIT
                             &&
                             (
                                 <NumberFormat
                                     getInputRef={priceRef}
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right outline-none"
+                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
                                     name="stop_buy_input"
                                     thousandSeparator
                                     onFocus={() => {
@@ -589,9 +515,7 @@ const PlaceOrderForm = ({ symbol }) => {
                                     decimalScale={getDecimalScale(+priceFilter?.tickSize)}
                                     allowNegative={false}
                                     value={price}
-                                    onValueChange={({ value }) => {
-                                        setPrice(value);
-                                    }}
+                                    onValueChange={({ value }) => { setPrice(value)}}
                                 />
                             )
                         }
@@ -600,7 +524,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             &&
                             (
                                 <input
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right bg-white"
+                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium"
                                     name="stop_buy_input"
                                     type="text"
                                     disabled
@@ -611,7 +535,7 @@ const PlaceOrderForm = ({ symbol }) => {
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-black-500 ">
+                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {quote}
                             </span>
                         </div>
@@ -619,7 +543,7 @@ const PlaceOrderForm = ({ symbol }) => {
                 </div>
             </div>
         );
-    }, [price, orderType, symbol, t]);
+    };
 
     const _renderQuantitySlider = useMemo(() => {
         return (
@@ -646,47 +570,6 @@ const PlaceOrderForm = ({ symbol }) => {
         );
     }, [percentage, orderSide]);
 
-    const _renderPendingFee = useMemo(() => {
-        const orderValue = +quantity * (+price);
-        const feeValue = orderValue * currentExchangeConfig?.normalTakerFee;
-        if (discountTransactionFee !== 0 && feeValue > 0.01) {
-            return (
-                <>
-                    <span className="line-through mr-1 ml-4 text-xs text-[#C5C6D2]">{formatSpotFee(feeValue * 2)}</span>
-                    <span>{formatSpotFee(feeValue)}</span>
-                </>
-            );
-        }
-        return formatSpotFee(feeValue);
-    }, [orderSide, orderType, symbol, quantity, price, t]);
-
-    const _renderOrderFee = () => {
-        return (
-            <div>
-                <span className="text-black-700 font-medium mr-1">
-                    {
-                        orderType === ExchangeOrderEnum.Type.MARKET
-                            ? (
-                                <SpotMarketValue
-                                    type="fee"
-                                    quantity={quantity}
-                                    price={price}
-                                    orderSide={orderSide}
-                                    orderType={orderType}
-                                    symbol={symbol}
-                                />
-                            )
-                            : _renderPendingFee
-                    }
-                </span>
-                <span
-                    className="text-black-500"
-                >
-                    {quote}
-                </span>
-            </div>
-        );
-    };
 
     const _renderQuantityMode = useMemo(() => {
         return (
@@ -707,7 +590,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             <Listbox.Button
                                 className="relative w-full text-left cursor-pointer focus:outline-none sm:text-sm"
                             >
-                                <div className="text-sm text-black-600">
+                                <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                     <span className="w-[100px]">
                                         {quantityMode.name}
                                     </span>
@@ -744,7 +627,7 @@ const PlaceOrderForm = ({ symbol }) => {
                                         <Listbox.Option
                                             key={mode.id}
                                             className={({ selected, active }) => classNames(
-                                                selected ? 'text-teal font-medium' : 'text-black-600',
+                                                selected ? 'text-teal font-medium' : 'text-txtSecondary dark:text-txtSecondary-dark',
                                                 'text-sm  cursor-pointer hover:text-teal py-1 text-center hover:bg-gray-100 px-4',
                                             )}
                                             value={mode}
@@ -766,18 +649,19 @@ const PlaceOrderForm = ({ symbol }) => {
             && quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) return null;
         return (
             <div className="flex justify-between items-center mb-3">
-
-                {
-                    orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
-                        ? _renderQuantityMode
-                        : <div className="text-sm text-black-600 ">{t('total')}</div>
-                }
-                <div className="form-group md:w-[100px] xl:w-4/6">
+                <div className="form-group w-full">
                     <div className="input-group">
-
+                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
+                            {/* {
+                                orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
+                                    ? _renderQuantityMode
+                                    : <div className="text-sm text-black-500 font-medium ">{t('total')}</div>
+                            } */}
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('total')}</div>
+                        </div>
                         <NumberFormat
                             getInputRef={quoteQtyRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right outline-none"
+                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
                             name="quoteQty"
                             onFocus={() => {
                                 setFocus('quoteQty');
@@ -787,15 +671,13 @@ const PlaceOrderForm = ({ symbol }) => {
                             allowNegative={false}
                             value={quoteQty}
                             onChange={() => setIsUseQuoteQuantity(true)}
-                            onValueChange={({ value }) => {
-                                setQuoteQty(value);
-                            }}
+                            onValueChange={({ value }) => setQuoteQty(value)}
                         />
 
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-black-500 ">
+                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {quote}
                             </span>
                         </div>
@@ -806,21 +688,17 @@ const PlaceOrderForm = ({ symbol }) => {
     }, [price, orderType, symbol, t, quoteQty, quantityMode]);
 
     const _renderOrderQuantity = useMemo(() => {
-        if (orderType === ExchangeOrderEnum.Type.MARKET
-                && quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUANTITY) return null;
         return (
             <div className="flex justify-between items-center mb-3">
-                {
-                    orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
-                        ? _renderQuantityMode
-                        : <div className="text-sm text-black-600 ">{t('common:amount')}</div>
-                }
 
-                <div className="form-group md:w-[100px] xl:w-4/6">
+                <div className="form-group w-full">
                     <div className="input-group">
+                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('common:amount')}</div>
+                        </div>
                         <NumberFormat
                             getInputRef={quantityRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right outline-none"
+                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
                             name="quantity"
                             onFocus={() => {
                                 setFocus('quantity');
@@ -830,15 +708,13 @@ const PlaceOrderForm = ({ symbol }) => {
                             allowNegative={false}
                             value={quantity}
                             onChange={() => setIsUseQuoteQuantity(false)}
-                            onValueChange={({ value }) => {
-                                setQuantity(value);
-                            }}
+                            onValueChange={({ value }) => setQuantity(value)}
                         />
 
                         <div
                             className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
                         >
-                            <span className="input-group-text text-black-500">
+                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {base}
                             </span>
                         </div>
@@ -887,8 +763,8 @@ const PlaceOrderForm = ({ symbol }) => {
             <>
                 <h3 className="font-semibold text-lg text-black mb-3">{t('spot:balance')}</h3>
                 <div className="flex justify-between items-center">
-                    <div className="text-sm text-black-600 ">{t('spot:available_balance')}</div>
-                    <div className="text-sm text-black-700 font-semibold text-right">
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark ">{t('spot:available_balance')}</div>
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
                             orderSide === ExchangeOrderEnum.Side.BUY
@@ -902,38 +778,17 @@ const PlaceOrderForm = ({ symbol }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     };
 
-    const _renderAssetPortfolio = () => {
-        if (orderSide === ExchangeOrderEnum.Side.BUY) return null;
-        // const multi = quote === 'VNDC' ? 24000 : 1;
-        const additionDigits = quote === 'VNDC' ? 0 : 2;
-        return (
-            <>
-                <div className="flex justify-between items-center mt-2">
-                    <div className="text-sm text-black-600 inline-block">{t('initial_price')}</div>
-                    <div className="text-sm text-black-700 font-semibold text-right">
-                        {loadingInitialPrice ? <span><TextLoader height={18} /></span> : `${formatWallet(multiValue * initialPrice, additionDigits)} ${quote}`}
-                    </div>
-                </div>
-                <div className="flex justify-between items-center mt-2">
-                    <div className="text-sm text-black-600 ">{t('pnl')}</div>
-                    <div className="text-sm text-black-700 font-semibold text-right">
-                        {loadingInitialPrice ? <span><TextLoader height={18} /></span> : <AssetPnL initialPrice={initialPrice} value={getBalance(baseAssetId)} multiValue={multiValue} symbolTicker={symbolTicker} /> }
-                    </div>
-                </div>
-            </>
-        );
-    };
 
     return (
         <>
-            <div className="bg-white px-3 pb-6 spot-place-orders-container rounded">
-                <h3 className="font-semibold text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('spot:place_order')}</h3>
+            <div className="px-2.5 spot-place-orders-container rounded">
+                <h3 className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark  my-4 dragHandleArea">{t('spot:place_order')}</h3>
                 {_renderOrderSide}
                 {_renderOrderType}
 
                 <div className="tab-content">
 
-                    {_renderOrderPrice}
+                    {_renderOrderPrice()}
                     {_renderOrderQuantity}
                     {_renderOrderQuoteQty}
                     {_renderQuantitySlider}
@@ -944,187 +799,7 @@ const PlaceOrderForm = ({ symbol }) => {
                 {/* {_renderAssetPortfolio()} */}
 
             </div>
-            <Transition show={open} as={Fragment}>
-                <Dialog
-                    as="div"
-                    className="fixed inset-0 z-10 overflow-y-auto"
-                    initialFocus={cancelButtonRef}
-                    static
-                    open={open}
-                    onClose={closeModal}
-                >
-                    <div className="min-h-screen px-4 text-center">
-                        <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                        >
-                            <Dialog.Overlay className="fixed inset-0 bg-black-800 bg-opacity-70" />
-                        </Transition.Child>
-
-                        {/* This element is to trick the browser into centering the modal contents. */}
-                        <span
-                            className="inline-block h-screen align-middle"
-                            aria-hidden="true"
-                        >
-                            &#8203;
-                        </span>
-                        <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0 scale-95"
-                            enterTo="opacity-100 scale-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100 scale-100"
-                            leaveTo="opacity-0 scale-95"
-                        >
-                            <div
-                                className="inline-block min-w-[400px] py-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
-                            >
-                                <Dialog.Title className="border-b px-5">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <p
-                                            className="text-xl text-black-800 font-bold"
-                                        >{t('spot:confirm_order')}
-                                        </p>
-                                        <button className="btn btn-icon !p-0" type="button" onClick={closeModal}>
-                                            <X color={iconColor} size={24} />
-                                        </button>
-                                    </div>
-                                    <div className="flex justify-between items-center text-sm font-semibold pb-4">
-                                        <div className="flex items-center justify-between">
-                                            <div className="mr-2">
-                                                <AssetLogo assetCode={base} />
-                                            </div>
-                                            <div>
-                                                <div>{`${base}/${quote}`}</div>
-                                                <p className="text-xs text-[#8B8C9B] font-normal">{getAssetName(currentExchangeConfig?.baseAssetId)}</p>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span>{t(`spot:${orderType}`)}</span>
-                                            <span className="px-1 text-black-500">/</span>
-                                            <span
-                                                className={orderSide === 'buy' ? 'text-mint' : 'text-pink'}
-                                            >{t(orderSide)}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </Dialog.Title>
-                                <div className="px-5 mt-4 text-sm">
-                                    {/* <div className="flex justify-between items-center mb-4"> */}
-                                    {/*    <div className="text-sm text-black-500">Stop:</div> */}
-                                    {/*    <div> */}
-                                    {/*        <span className="text-black-700 font-medium mr-1">{ }</span> */}
-                                    {/*        <span className="text-black-500">VNDC</span> */}
-                                    {/*    </div> */}
-                                    {/* </div> */}
-                                    {
-                                        orderType === ExchangeOrderEnum.Type.LIMIT
-                                        && (
-                                            <div className="flex justify-between items-center mb-4">
-                                                <div className="text-sm text-black-500">{t('price')}</div>
-                                                <div>
-                                                    <span
-                                                        className="text-black-700 font-medium mr-1"
-                                                    >{formatPrice(price, exchangeConfig, quote)}
-                                                    </span>
-                                                    <span className="text-black-500">{quote}</span>
-                                                </div>
-                                            </div>
-                                        )
-                                    }
-
-                                    <div className="flex justify-between items-center mb-4">
-                                        <div className="text-sm text-black-500">{t('amount')}</div>
-                                        <div>
-                                            <span
-                                                className="text-black-700 font-medium mr-1"
-                                            >{quantity}
-                                            </span>
-                                            <span className="text-black-500">{base}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex justify-between items-center mb-4">
-                                        <div className="text-sm text-black-500 inline-flex items-center">{t('transaction_fee')} {
-                                            discountTransactionFee !== 0 && (
-                                                <div className="ml-2">
-                                                    <span className="bg-[#F64953] rounded-[4px] px-1 py-[2px] text-white text-xxs mr-1">{discountTransactionFee}%</span>
-                                                    <span className="bg-[#2D9AFF] rounded-[4px] px-1 py-[2px] text-white text-xxs">Member</span>
-                                                </div>
-                                            )
-                                        }
-                                        </div>
-                                        {_renderOrderFee()}
-                                    </div>
-                                    <div className="flex justify-between items-center mb-4">
-                                        <div className="text-sm text-black-500">{t('total')}</div>
-                                        <div>
-                                            <span
-                                                className="text-black-700 font-medium mr-1"
-                                            >
-                                                {
-                                                    orderType === ExchangeOrderEnum.Type.MARKET
-                                                        ? (
-                                                            <SpotMarketValue
-                                                                type="order_value"
-                                                                quantity={quantity}
-                                                                price={price}
-                                                                orderSide={orderSide}
-                                                                orderType={orderType}
-                                                                symbol={symbol}
-                                                            />
-                                                        )
-                                                        : _renderOrderValue
-                                                }
-                                            </span>
-                                            <span className="text-black-500">{quote}</span>
-                                        </div>
-                                    </div>
-                                    {/* <div className="rounded border bg-black-100 px-3 py-4 text-xs text-black-500"> */}
-                                    {/*    <Trans i18nKey="alert_stop_limit" t={t}> */}
-                                    {/*        Nếu giá gần nhất lớn hơn hoặc bằng <span className="font-semibold text-black-700">{{ stop: '12,245,235,111 VNDC' }}</span>, một lệnh mua mua <span className="font-semibold text-black-700">{{ amount: '0,01 BTC' }}</span> ở mức giá <span className="font-semibold text-black-700">{{ price: '12,600,000,000 VNDC' }}</span> sẽ được đặt tự động. */}
-                                    {/*    </Trans> */}
-                                    {/* </div> */}
-
-                                    {
-                                        orderType !== ExchangeOrderEnum.Type.LIMIT && (
-                                            <div className="">
-                                                <label className="inline-flex items-center mt-3 cursor-pointer">
-                                                    <input
-                                                        defaultChecked={needConfirm !== 'true'}
-                                                        onChange={(event) => setNeedConfirm(event?.target?.checked ? 'false' : 'true')}
-                                                        type="checkbox"
-                                                        className="form-checkbox h-3 w-3 text-teal-700 ring-0 focus:ring-0 outline-none focus:outline-none border-black-400 rounded-sm"
-                                                    />
-                                                    <span className="ml-2 text-black-600 text-xs select-none">
-                                                        Đặt ngay không cần xem trước
-                                                    </span>
-                                                </label>
-                                            </div>
-                                        )
-                                    }
-                                    <div className="mt-4">
-                                        <button
-                                            type="button"
-                                            className="btn btn-primary w-full disabled:opacity-50"
-                                            onClick={confirmModal}
-                                            disabled={placing}
-                                        >
-                                            Xác nhận
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Transition.Child>
-                    </div>
-                </Dialog>
-            </Transition>
+            
         </>
     );
 };

@@ -76,7 +76,7 @@ const SpotMarket = ({
                 return a?.p - b?.p;
             },
             cell: (row) => (
-                <span className={!row?.u ? 'text-pink' : 'text-mint'}>
+                <span className={!row?.u ? 'text-red' : 'text-teal'}>
                     {renderPriceData(+row?.p)}
                 </span>
             ),

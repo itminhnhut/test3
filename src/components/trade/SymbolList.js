@@ -291,7 +291,7 @@ const SymbolList = (props) => {
     return (
         <>
             <div
-                className="spot-symbol-list__container bg-bgContainer dark:bg-bgContainer-dark py-4 h-full"
+                className="bg-bgContainer dark:bg-bgContainer-dark py-4 h-full"
             >
                 <div className="mx-3 mb-3">
                         <SearchInput
@@ -306,19 +306,19 @@ const SymbolList = (props) => {
                     <div className="mx-2 mb-2 flex items-center">
 
                         {user && <div
-                            className={'min-w-9 flex justify-center items-center text-sm mr-2 cursor-pointer ' + (activeTab === 'favorite' ? 'active text-mint border-mint' : 'border-divider dark:border-divider-dark')}
+                            className={'min-w-9 flex justify-center items-center text-sm mr-2 cursor-pointer ' + (activeTab === 'favorite' ? 'active text-teal border-mint' : 'border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('favorite')}
                         >
                             <IconStarFilled size={14}
                                             color={activeTab === 'favorite' ? '#09becf' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}/>
                         </div>}
                         <a
-                            className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-mint border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
+                            className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-teal border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('USDT')}
                         > USDT
                         </a>
                         <a
-                            className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-mint border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
+                            className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-teal border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('VNDC')}
                         > VNDC
                         </a>

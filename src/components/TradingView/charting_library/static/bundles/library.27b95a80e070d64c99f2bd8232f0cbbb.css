@@ -9080,9 +9080,9 @@ html.theme-dark .customButton--jqJTfH5-.hovered-1mGRUp3y-, html.feature-no-touch
 	position: absolute;
 	left: 0;
 	width: 100%;
-	opacity: 0.7;
-	height: 24px;
-	background-color: #262b3e;
+	height: 18px;
+	background-color: #758696;
+  opacity: 0.4;
 	color: #ffffff;
 	transition: background-color ease 350ms, transform cubic-bezier(0.55, 0.055, 0.675, 0.19) 116.66667ms;
 

@@ -69,7 +69,7 @@ const SymbolDetail = (props) => {
                 <div className="flex flex-row  items-center px-4 dragCancelArea">
                     <AssetLogo assetCode={symbolTicker?.b} size={32} />
                     <div className="flex flex-col pl-4">
-                        <span className="text-txtPrimary dark:text-txtPrimary-dark font-bold">
+                        <span className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-lg">
                             {symbolTicker?.b}/{symbolTicker?.q}
                         </span>
                         <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
@@ -80,42 +80,42 @@ const SymbolDetail = (props) => {
                 <div className={fullScreen ? 'hidden' : 'flex items-center w-full'}>
                     <div className="flex  flex-col content-end text-right mr-7.5 min-w-[100px] min-0 dragCancelArea">
                         <div
-                            className={`block font-semibold ${symbolTicker?.u ? 'text-teal' : 'text-red'}`}
+                            className={`block font-medium text-sm ${symbolTicker?.u ? 'text-teal' : 'text-red'}`}
                         >{formatPrice(symbolTicker?.p, exchangeConfig, symbol?.quote)}
                         </div>
                     </div>
                     <div className="flex  flex-col min-w-max mr-7.5">
-                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left font-normal">{t('change')} 24h</div>
+                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xxs text-left font-medium">{t('change')} 24h</div>
                         <div
-                            className="block text-xs font-semibold "
+                            className="block text-xs font-medium "
                         >{render24hChange(symbolTicker)}
                         </div>
                     </div>
                     <div className="flex  flex-col mr-7.5 min-w-max">
-                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left font-normal">{t('high')} 24h</div>
+                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xxs text-left font-medium">{t('high')} 24h</div>
                         <div
-                            className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold "
+                            className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-medium "
                         >{formatPrice(symbolTicker?.h, exchangeConfig, symbol?.quote)}
                         </div>
                     </div>
                     <div className="flex  flex-col mr-7.5 min-w-max">
-                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left font-normal">{t('low')} 24h</div>
+                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xxs text-left font-medium">{t('low')} 24h</div>
                         <div
-                            className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold "
+                            className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-medium "
                         >{formatPrice(symbolTicker?.l, exchangeConfig, symbol?.quote)}
                         </div>
                     </div>
                     <div className="flex  flex-col min-w-max">
-                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left font-normal">{t('volume')} 24h ({symbolTicker?.b})</div>
+                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xxs text-left font-medium">{t('volume')} 24h ({symbolTicker?.b})</div>
                         <div
-                            className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold "
+                            className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-medium "
                         >{formatPrice(symbolTicker?.vb, 2)}
                         </div>
                     </div>
                     <div className="2xl:flex ml-7.5 flex-col min-w-max">
-                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left font-normal">{t('vol')} 24h ({symbolTicker?.q})</div>
+                        <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xxs text-left font-medium">{t('vol')} 24h ({symbolTicker?.q})</div>
                         <div
-                            className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold "
+                            className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-medium "
                         >{formatPrice(symbolTicker?.vq, 2)}
                         </div>
                     </div>

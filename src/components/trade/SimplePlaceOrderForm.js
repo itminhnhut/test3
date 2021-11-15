@@ -634,10 +634,10 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             }
         });
         return (
-            <ul className="tabs justify-start mb-6">
+            <ul className="tabs justify-start mb-2">
                 {tabs.map((tab, index) => {
                     return (
-                        <li className="tab-item pr-3 font-semibold" key={index}>
+                        <li className={`tab-item px-2 font-medium ${orderType === tab ? 'active' : ''}`} key={index}>
                             <a
                                 className={'tab-link text-txtSecondary dark:text-txtSecondary-dark ' + (orderType === tab ? 'active' : '')}
                                 onClick={() => handleClickSubTab(tab)}
@@ -657,7 +657,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 <div className="form-group w-full">
                     <div className="input-group">
                         <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold">{t('common:price')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium">{t('common:price')}</div>
                         </div>
 
                         {
@@ -666,7 +666,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                             (
                                 <NumberFormat
                                     getInputRef={priceRef}
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold outline-none"
+                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
                                     name="stop_buy_input"
                                     thousandSeparator
                                     onFocus={() => {
@@ -690,7 +690,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                             &&
                             (
                                 <input
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold"
+                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium"
                                     name="stop_buy_input"
                                     type="text"
                                     disabled
@@ -754,7 +754,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                             <Listbox.Button
                                 className="relative w-full text-left cursor-pointer focus:outline-none sm:text-sm"
                             >
-                                <div className="text-sm text-black-500 font-semibold">
+                                <div className="text-sm text-black-500 font-medium">
                                     <span className="w-[100px]">
                                         {quantityMode.name}
                                     </span>
@@ -819,13 +819,13 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                             {/* {
                                 orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
                                     ? _renderQuantityMode
-                                    : <div className="text-sm text-black-500 font-semibold ">{t('total')}</div>
+                                    : <div className="text-sm text-black-500 font-medium ">{t('total')}</div>
                             } */}
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold ">{t('total')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('total')}</div>
                         </div>
                         <NumberFormat
                             getInputRef={quoteQtyRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold outline-none"
+                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
                             name="quoteQty"
                             onFocus={() => {
                                 setFocus('quoteQty');
@@ -864,11 +864,11 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 <div className="form-group w-full">
                     <div className="input-group">
                         <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold ">{t('common:amount')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('common:amount')}</div>
                         </div>
                         <NumberFormat
                             getInputRef={quantityRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-semibold outline-none"
+                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
                             name="quantity"
                             onFocus={() => {
                                 setFocus('quantity');
@@ -903,7 +903,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const _renderPlaceOrderButton = (_orderSide) => {
         if (!user) {
             return (
-                <div className="mb-6">
+                <div className="">
                     <a href={getLoginUrl('sso')} className="btn w-full capitalize button-common block text-center">
                         {t('sign_in_to_continue')}
                     </a>
@@ -912,7 +912,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         }
 
         return (
-            <div className="mb-6">
+            <div className="">
                 <button
                     onClick={() => confirmModal(_orderSide)}
                     type="button"
@@ -928,8 +928,8 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         return (
             <>
                 <div className="mb-2 flex justify-between items-center">
-                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark font-semibold ">{t('spot:available_balance')}</div>
-                    <div className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-semibold text-right">
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('spot:available_balance')}</div>
+                    <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-medium text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
                             _orderSide === ExchangeOrderEnum.Side.BUY
@@ -986,8 +986,8 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         return (
             <>
                 <div className="mb-2 flex justify-between items-center">
-                    <div className="text-xs text-black-500 font-semibold ">Fee</div>
-                    <div className="text-xs text-teal font-semibold text-right">
+                    <div className="text-xs text-black-500 font-medium ">Fee</div>
+                    <div className="text-xs text-teal font-medium text-right">
                         {feeValue > 0 ? `${feeValue}%` : feeValue < 0 ? `+${-feeValue}%` : '---'}
                         {/*{*/}
                         {/*    // eslint-disable-next-line no-nested-ternary*/}
@@ -1004,12 +1004,12 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     return (
         <>
-            <div className="bg-bgContainer dark:bg-bgContainer-dark h-full px-3 pb-6 spot-place-orders-container">
-                {/* <h3 className="font-semibold text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('spot:place_order')}</h3> */}
+            <div className="bg-bgContainer dark:bg-bgContainer-dark h-full px-2.5 spot-place-orders-container">
+                {/* <h3 className="font-medium text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('spot:place_order')}</h3> */}
                 {/* {_renderOrderSide} */}
                 {_renderOrderType}
 
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-5 mt-4">
                     <div className="">
                         {_renderUserBalance(ExchangeOrderEnum.Side.BUY)}
                         {_renderOrderPrice((ExchangeOrderEnum.Side.BUY))}

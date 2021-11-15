@@ -2,6 +2,7 @@ import Axios from 'axios';
 import DefaultMobileView from 'components/common/DefaultMobileView';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
+import PlaceOrderForm from 'components/trade/PlaceOrderForm';
 import SymbolDetail from 'components/trade/SymbolDetail';
 import find from 'lodash/find';
 import size from 'lodash/size';
@@ -25,14 +26,15 @@ import Emitter from 'src/redux/actions/emitter';
 import {
     getMarketWatch,
     getUserSymbolList,
-    postSymbolViews
+    postSymbolViews,
 } from 'src/redux/actions/market';
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
+import GridLayoutComponent from 'components/trade/GridLayoutComponent';
 
 const ReactGridLayout = WidthProvider(RGL);
 
-const layoutOnSidebar = [
+const layoutSimple = [
     {
         i: 'symbolDetail',
         x: 0,
@@ -47,7 +49,7 @@ const layoutOnSidebar = [
         x: 0,
         y: 3,
         w: 3,
-        h: 33,
+        h: 34,
         isDraggable: false,
         isResizable: false,
     },
@@ -56,7 +58,7 @@ const layoutOnSidebar = [
         x: 3,
         y: 3,
         w: 10,
-        h: 20,
+        h: 21,
         isDraggable: false,
         isResizable: false,
     },
@@ -74,14 +76,14 @@ const layoutOnSidebar = [
         x: 13,
         y: 3,
         w: 3,
-        h: 16,
+        h: 17,
         isDraggable: false,
         isResizable: false,
     },
     {
         i: 'trades',
         x: 13,
-        y: 14,
+        y: 17,
         w: 3,
         h: 20,
         isDraggable: false,
@@ -98,17 +100,89 @@ const layoutOnSidebar = [
     },
 ];
 
-const initialLayout = layoutOnSidebar;
+const layoutPro = [
+    {
+        i: 'symbolDetail',
+        x: 0,
+        y: 0,
+        w: 10,
+        h: 3,
+        isDraggable: true,
+        isResizable: true,
+        isDroppable: true,
+    },
+    {
+        i: 'chart',
+        x: 0,
+        y: 4,
+        w: 10,
+        h: 24,
+        isDraggable: true,
+        isResizable: true,
+        isDroppable: true,
+    },
+    {
+        i: 'orderList',
+        x: 0,
+        y: 25,
+        w: 10,
+        h: 15,
+        isDraggable: true,
+        isResizable: true,
+        isDroppable: true,
+    },
+    {
+        i: 'orderbook',
+        x: 10,
+        y: 0,
+        w: 3,
+        h: 27,
+        isDraggable: true,
+        isResizable: true,
+        isDroppable: true,
+    },
+    {
+        i: 'trades',
+        x: 10,
+        y: 17,
+        w: 3,
+        h: 15,
+        isDraggable: true,
+        isResizable: true,
+        isDroppable: true,
+    },
+    {
+        i: 'placeOrderForm',
+        x: 14,
+        y: 0,
+        w: 3,
+        h: 42,
+        isDraggable: true,
+        isResizable: true,
+        isDroppable: true,
+    },
+
+];
+
+// const initialLayout = layoutSimple;
+const initialLayout = layoutPro;
+
+const LayoutMode = {
+    SIMPLE: 'simple',
+    PRO: 'pro',
+};
 
 const SpotComp = () => {
     const router = useRouter();
     const { t } = useTranslation();
-    const { id, timeframe, indicator } = router.query;
+    const { id, timeframe, indicator, layout } = router.query;
     const [chartSize, setChartSize] = useState('');
     const [orderBookLayout, setOrderBookLayout] = useState({});
     const [tradesLayout, setTradesLayout] = useState({});
     const [symbolDetailLayout, setSymbolDetailLayout] = useState({});
-
+    console.log('check layout', layout)
+    const [layoutMode, setLayoutMode] = useState(layout === LayoutMode.PRO ? LayoutMode.PRO : LayoutMode.SIMPLE);
+    console.log('check layout 1', layoutMode)
     // Check pattern
     let symbolFromUrl = null;
     if (typeof id === 'string' && id.length) {
@@ -262,7 +336,7 @@ const SpotComp = () => {
     }, [publicSocket, symbol]);
 
     useEffect(() => {
-        const _layout = layoutOnSidebar;
+        const _layout = layoutPro;
         const _orderbookLayout = find(_layout, { i: 'orderbook' });
         const _chartLayout = find(_layout, { i: 'chart' });
         const _tradesLayout = find(_layout, { i: 'trades' });
@@ -304,6 +378,7 @@ const SpotComp = () => {
     };
 
     const renderSymbolList = useMemo(() => {
+        if (layoutMode !== LayoutMode.SIMPLE) return null;
         if (size(tradesLayout) > 0) {
             return (
                 <SymbolList
@@ -327,37 +402,40 @@ const SpotComp = () => {
     if (!symbol) return null;
 
     return (
-        <MaldivesLayout hideNavBar={fullScreen}>
+        <MaldivesLayout hideNavBar={fullScreen} hideFooter>
             <SpotHead symbol={symbol} />
-            <MobileView  className="bg-white">
+            <MobileView className="bg-white">
                 <DefaultMobileView />
             </MobileView>
-            <BrowserView className="bg-bgSecondary dark:bg-darkBlue-2">
-                <div className="2xl:container">
+            <BrowserView className="bg-bgContainer dark:bg-bgContainer-dark">
+                <div className={layoutMode === LayoutMode.PRO ? '' : '2xl:container'}>
                     <ReactGridLayout
                         className="layout"
                         layout={gridLayout}
                         breakpoints={{ xl: 1440, lg: 2200 }}
                         cols={16}
-                        margin={[1, 1]}
+                        margin={[-1, -1]}
                         containerPadding={[8, 8]}
                         rowHeight={24}
                         draggableHandle=".dragHandleArea"
                         draggableCancel=".dragCancelArea"
                     >
-                        <div key="symbolDetail">
-                            <SymbolDetail
-                                symbol={symbol}
-                                layoutConfig={symbolDetailLayout}
-                                changeSymbolList={changeSymbolList}
-                                watchList={watchList}
-                                favorite={favorite}
-                                parentCallback={handleCallbackChart}
-                                fullScreen={false}
-                            />
+                        <div key="symbolDetail" className="border border-divider dark:border-divider-dark ">
+                            <GridLayoutComponent>
+                                <SymbolDetail
+                                    symbol={symbol}
+                                    layoutConfig={symbolDetailLayout}
+                                    changeSymbolList={changeSymbolList}
+                                    watchList={watchList}
+                                    favorite={favorite}
+                                    parentCallback={handleCallbackChart}
+                                    fullScreen={false}
+                                />
+                            </GridLayoutComponent>
+
                         </div>
 
-                        <div key="orderbook">
+                        <div key="orderbook" className="border border-divider dark:border-divider-dark">
                             <OrderBook
                                 layoutConfig={orderBookLayout}
                                 symbol={symbol}
@@ -367,18 +445,15 @@ const SpotComp = () => {
 
                         <div
                             key="symbolList"
-                            className={`${fullScreen && 'hidden'} z-[3]`}
+                            className="border border-divider dark:border-divider-dark"
                         >
                             {renderSymbolList}
                         </div>
                         <div
                             key="chart"
-                            className={`${
-                                fullScreen &&
-                                '!w-screen !h-screen transition !transform-none'
-                            } z-[2]`}
+                            className="border border-divider dark:border-divider-dark"
                         >
-                            {/* <Chart
+                            <Chart
                                 parentCallback={handleCallbackChart}
                                 symbol={symbol}
                                 isOnSidebar={isOnSidebar}
@@ -391,23 +466,30 @@ const SpotComp = () => {
                                 clearExtendsIndicators={clearExtendsIndicators}
                                 customChartFullscreen={customChartFullscreen}
                                 fullScreen={fullScreen}
-                            /> */}
+                            />
                         </div>
 
-                        <div key="trades">
+                        <div key="trades" className="border border-divider dark:border-divider-dark">
                             <Trades
                                 layoutConfig={tradesLayout}
                                 symbol={symbol}
                                 publicSocket={publicSocket}
                             />
                         </div>
-                        <div key="placeOrderForm">
-                            <SimplePlaceOrderForm
+                        <div key="placeOrderForm" className="border border-divider dark:border-divider-dark">
+                            {layoutMode === LayoutMode.SIMPLE 
+                            
+                            ? <SimplePlaceOrderForm
                                 symbol={symbol}
                                 orderBook={state.orderBook}
                             />
+                            : <PlaceOrderForm
+                                symbol={symbol}
+                                orderBook={state.orderBook}
+                            />
+                            }
                         </div>
-                        <div key="orderList">
+                        <div key="orderList" className="border border-divider dark:border-divider-dark">
                             <div ref={orderListWrapperRef} className="h-full">
                                 <SpotOrderList
                                     isOnSidebar={isOnSidebar}

@@ -16,6 +16,9 @@ import { getOrderBook } from 'src/redux/actions/market';
 import { SET_SPOT_SELECTED_ORDER } from 'src/redux/actions/types';
 import { formatPrice, getFilter, getSymbolString } from 'src/redux/actions/utils';
 import LastPrice from '../markets/LastPrice';
+import OrderBookAll from 'src/components/svg/OrderBookAll'
+import OrderBookBids from 'src/components/svg/OrderBookBids'
+import OrderBookAsks from 'src/components/svg/OrderBookAsks'
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -157,7 +160,7 @@ const OrderBook = (props) => {
                 onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
             >
                 <div className="flex items-center flex-1">
-                    <div className={`flex-1  text-xs font-medium leading-table ${side === 'buy' ? 'text-pink' : 'text-mint'}`}>
+                    <div className={`flex-1  text-xs font-medium leading-table ${side === 'buy' ? 'text-red' : 'text-teal'}`}>
                         {p ? formatPrice(p, exchangeConfig, symbolString) : '-'}
                     </div>
                     <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
@@ -177,8 +180,13 @@ const OrderBook = (props) => {
     return (
         <>
             <div className="px-2.5 relative h-full bg-bgContainer dark:bg-bgContainer-dark pb-[26px] flex flex-col box-border" ref={ref}>
-                <div className="flex items-center justify-between py-5 dragHandleArea">
+                <div className="flex items-center justify-between py-4 dragHandleArea">
                     <div className="font-medium text-sm text-txtPrimary dark:text-txtPrimary-dark">{t('orderbook')}</div>
+                </div>
+                <div className="flex items-center justify-start mb-4">
+                    <OrderBookAll className="mr-3"/>
+                    <OrderBookBids className="mr-3"/>
+                    <OrderBookAsks className="mr-3"/>
                 </div>
                 <div className="flex flex-col flex-1">
                     <div className="">

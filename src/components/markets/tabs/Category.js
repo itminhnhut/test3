@@ -383,7 +383,7 @@ const Category = ({ symbolList, quoteAsset, renderPriceData, renderPercentageCha
                                     value={categoryName}
                                 />
                                 {errorCategoryName &&
-                                <p className="text-xxs text-pink mt-1">{t('category_name_warn')}</p>}
+                                <p className="text-xxs text-red mt-1">{t('category_name_warn')}</p>}
                             </div>
                             <div className="mt-5 w-full">
                                 <p className="text-xs mb-2 font-normal">{t('create_category_avatar')}</p>
@@ -391,7 +391,7 @@ const Category = ({ symbolList, quoteAsset, renderPriceData, renderPercentageCha
                                     {renderAvatarList()}
                                 </div>
                                 {errorAvatar &&
-                                <p className="text-xxs text-pink mt-1">{t('category_avatar_warn')}</p>}
+                                <p className="text-xxs text-red mt-1">{t('category_avatar_warn')}</p>}
                             </div>
                         </div>
 
@@ -446,7 +446,7 @@ const Category = ({ symbolList, quoteAsset, renderPriceData, renderPercentageCha
                                     value={categoryName.length > 0 ? categoryName : selectedName}
                                 />
                                 {errorCategoryName &&
-                                <p className="text-xxs text-pink mt-1">{t('category_name_warn')}</p>}
+                                <p className="text-xxs text-red mt-1">{t('category_name_warn')}</p>}
                             </div>
                             <div className="mt-5 w-full">
                                 <p className="text-xs mb-2 font-normal">{t('create_category_avatar')}</p>
@@ -454,7 +454,7 @@ const Category = ({ symbolList, quoteAsset, renderPriceData, renderPercentageCha
                                     {renderAvatarList()}
                                 </div>
                                 {errorAvatar &&
-                                <p className="text-xxs text-pink mt-1">{t('category_avatar_warn')}</p>}
+                                <p className="text-xxs text-red mt-1">{t('category_avatar_warn')}</p>}
                             </div>
                         </div>
                         <div className="flex flex-row items-center my-6">

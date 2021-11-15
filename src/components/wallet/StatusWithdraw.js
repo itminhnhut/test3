@@ -8,11 +8,11 @@ const StatusWithdraw = ({ status }) => {
     switch (status) {
         case StatusBankTransfer.Success:
             text = t('success');
-            className = 'text-mint';
+            className = 'text-teal';
             break;
         case StatusBankTransfer.Declined:
             text = t('expired');
-            className = 'text-pink';
+            className = 'text-red';
             break;
         case StatusBankTransfer.Pending:
             text = t('pending');

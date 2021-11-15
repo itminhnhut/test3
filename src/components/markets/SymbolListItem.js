@@ -77,15 +77,15 @@ const SymbolListItem = (props) => {
                     <div
                         className="text-txtPrimary dark:text-txtPrimary-dark flex-1 text-xs font-medium leading-table flex items-center truncate min-w-0 mr-1.5"
                     >
-                        {base} <span className="text-txtSecondary dark:text-txtSecondary-dark">/{quote}</span>
+                        {base}<span className="text-txtSecondary dark:text-txtSecondary-dark">/{quote}</span>
                     </div>
                     <div
-                        className={`flex-1 text-xs font-medium leading-table text-right mr-1.5 ${!up ? 'text-mint' : 'text-pink'}`}
+                        className={`flex-1 text-xs font-medium leading-table text-right mr-1.5 ${!up ? 'text-teal' : 'text-red'}`}
                     >
                         {formatPrice(+symbolTicker?.p, exchangeConfig, quote)}
                     </div>
                     <div
-                        className="flex-1 text-mint font-medium text-xs leading-table text-right"
+                        className="flex-1 text-teal font-medium text-xs leading-table text-right"
                     >{render24hChange(symbolTicker)}
                     </div>
                 </div>

@@ -110,7 +110,7 @@ module.exports = {
 
             listItemSelected: { DEFAULT: commonColors.lightTeal, dark: commonColors.darkBlue3 },
 
-            divider: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue3 },
+            divider: { DEFAULT: commonColors.gray4, dark: '#202C4C' },
 
             //--------------------------------------------
             black: { DEFAULT: '#02083D',
@@ -197,7 +197,7 @@ module.exports = {
                 homepageBg: { DEFAULT: '#f2f4f66e', dark: commonColors.darkBlue2 },
                 bgBtnPrimary: { DEFAULT: commonColors.teal, dark: commonColors.teal },
                 bgBtnSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue },
-                bgSearch: { DEFAULT: commonColors.gray5, dark: commonColors.darkBlue3 },
+                bgInput: { DEFAULT: commonColors.gray5, dark: commonColors.darkBlue3 },
             },
         },
     },

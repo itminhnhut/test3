@@ -39,7 +39,7 @@ const SearchInput = ({
 
     return (
         <div className="form-group" style={customWrapperStyle}>
-            <div className="input-group border-divider dark:border-divider-dark bg-bgSearch dark:bg-bgSearch-dark">
+            <div className="input-group border-divider dark:border-divider-dark bg-bgInput dark:bg-bgInput-dark">
                 <div className="input-group-append px-2 flex-shrink-0 flex justify-end items-center">
                     <span className="input-group-text text-txtSecondary">
                         <IconSearch />

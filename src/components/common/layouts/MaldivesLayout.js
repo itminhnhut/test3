@@ -8,6 +8,7 @@ import { useWindowSize } from 'utils/customHooks';
 const MadivesLayout = ({
     navOverComponent,
     navMode = false,
+    hideFooter = false,
     navStyle = {},
     navName,
     contentWrapperStyle = {},
@@ -36,8 +37,7 @@ const MadivesLayout = ({
             style={state.isDrawer ? { height, overflow: 'hidden' } : {}}
         >
             <ReactNotification />
-            {!hideNavBar &&
-            <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }} layoutStateHandler={setState} />}
+            {!hideNavBar && <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }} layoutStateHandler={setState} />}
             <div
                 style={{
                     paddingTop: !navOverComponent ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,
@@ -47,7 +47,7 @@ const MadivesLayout = ({
             >
                 {children}
             </div>
-            <Footer />
+            {!hideFooter && <Footer />}
         </div>
     );
 };
