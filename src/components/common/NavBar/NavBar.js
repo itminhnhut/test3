@@ -1,4 +1,4 @@
-import { useScrollPosition } from '@n8tb1t/use-scroll-position';
+import { Popover, Transition } from '@headlessui/react';
 import Axios from 'axios';
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants';
 import PocketNavDrawer from 'components/common/NavBar/PocketNavDrawer';
@@ -15,46 +15,24 @@ import SvgLock from 'components/svg/SvgLock';
 import SvgReward from 'components/svg/SvgReward';
 import SvgUser from 'components/svg/SvgUser';
 import SvgUserPlus from 'components/svg/SvgUserPlus';
+import SvgWallet from 'components/svg/Wallet';
+import SpotSetting from 'components/trade/SpotSetting';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useLanguage from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
 import { API_GET_VIP } from 'redux/actions/apis';
 import { getMarketWatch } from 'redux/actions/market';
-import { getLoginUrl } from 'redux/actions/utils';
+import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import { buildLogoutUrl } from 'utils';
 import { useWindowSize } from 'utils/customHooks';
-import { Popover, Transition } from '@headlessui/react';
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
-import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants'
-import { useTranslation } from 'next-i18next'
-import { useWindowSize } from 'utils/customHooks'
-import { useSelector } from 'react-redux'
-import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils'
-import { buildLogoutUrl } from 'utils'
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
-import SvgWallet from 'components/svg/Wallet'
-import SvgCheckSuccess from 'components/svg/CheckSuccess'
-import SvgIdentifyCard from 'components/svg/SvgIdentifyCard'
-import SvgUserPlus from 'components/svg/SvgUserPlus'
-import SvgReward from 'components/svg/SvgReward'
-import SvgDocument from 'components/svg/SvgDocument'
-import SvgExit from 'components/svg/SvgExit'
-import SvgLayout from 'components/svg/SvgLayout'
-import SvgLock from 'components/svg/SvgLock'
-import { useAsync } from 'react-use'
-import { getMarketWatch } from 'redux/actions/market'
-import { API_GET_VIP } from 'redux/actions/apis'
-import { PulseLoader } from 'react-spinners'
-import Wallet from 'components/svg/Wallet'
-import WalletActive from 'components/svg/WalletActive'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -274,43 +252,6 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     }, [name, currentTheme, navTheme.color])
 
 
-    const _renderSpotSetting = () => {
-        return (
-            <Popover className="relative">
-                    {({ open }) => (
-                        <>
-                            <Popover.Button
-                                className={`h-full flex items-center ${
-                                    open ? '' : 'text-opacity-90'
-                                } text-white group px-2`}
-                            >
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                                    SETTING
-                                </span>
-                            </Popover.Button>
-                            <Transition
-                                as={Fragment}
-                                enter="transition ease-out duration-200"
-                                enterFrom="opacity-0 translate-y-1"
-                                enterTo="opacity-100 translate-y-0"
-                                leave="transition ease-in duration-150"
-                                leaveFrom="opacity-100 translate-y-0"
-                                leaveTo="opacity-0 translate-y-1"
-                            >
-                                <Popover.Panel className="absolute z-10">
-                                    <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3">
-                                        <div className="w-32 h-32 relative">
-
-                                        </div>
-                                    </div>
-                                </Popover.Panel>
-                            </Transition>
-                        </>
-                    )}
-                </Popover>
-        )
-    }
-
     const renderUserControl = useCallback(() => {
         const { avatar, username, email } = auth
         const items = []
@@ -506,9 +447,9 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                              {/*  : <Image src="/images/icon/ic_vn_flag.png" width="20" height="20" />*/}
                         </a>
                         {renderThemeButton()}
-                        {_renderSpotSetting()}
+                       
                     </div>}
-
+                    <SpotSetting/>
                     {width < 1366 &&
                     <div className="relative" onClick={(e) => {
                         onDrawerAction(true)}

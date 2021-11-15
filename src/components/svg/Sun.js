@@ -12,7 +12,7 @@ const SvgSun = ({ color, size, fill, style, className, onClick }) => {
                 <path d="M12 21V23" stroke={color || '#718096'} strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M4.21997 4.21997L5.63997 5.63997" stroke={color || '#718096'} strokeLinecap="round"
                       strokeLinejoin="round"/>
-                <path d="M18.3601 18.3601L19.7801 19.7801" stroke="#718096" strokeLinecap="round"
+                <path d="M18.3601 18.3601L19.7801 19.7801" stroke={color || '#718096'} strokeLinecap="round"
                       strokeLinejoin="round"/>
                 <path d="M1 12H3" stroke={color || '#718096'} strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M21 12H23" stroke={color || '#718096'} strokeLinecap="round" strokeLinejoin="round"/>
