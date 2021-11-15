@@ -38,7 +38,7 @@ import { useState, memo, useEffect, useCallback } from 'react'
 import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons'
 import { useTranslation } from 'next-i18next'
 import { Resizable } from 'react-resizable'
-import { castArray } from 'lodash'
+import { castArray, orderBy } from 'lodash'
 import { ScaleLoader } from 'react-spinners'
 
 import 'rc-table/assets/index.css'
@@ -51,6 +51,8 @@ const DEFAULT_PAGINATION = {
     pageSize: 10,
 }
 
+export const RETABLE_SORTBY = 'sortByValue'
+
 const ReTable = memo(({
     data,
     columns,
@@ -60,6 +62,7 @@ const ReTable = memo(({
     pagination,
     paginationProps,
     tableStyle,
+    tableStatus,
     useRowHover,
     ...restProps }) => {
 
@@ -67,6 +70,7 @@ const ReTable = memo(({
     const [ownColumns, setOwnColumns] = useState(columns)
     const [current, setCurrent] = useState(DEFAULT_PAGINATION.current)
     const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.pageSize)
+    const [sorter, setSorter] = useState({})
 
     const [state, set] = useState({
 
@@ -106,39 +110,44 @@ const ReTable = memo(({
             })
     }))
 
-    // Render Handler
-    const renderEmpty = useCallback(() => {
-        if (loading) {
-            return <ReTableLoading/>
-        }
-
-        if (!data || !data.length) {
-            return <ReTableEmpty msg={t('common:no_data')}/>
-        }
-    }, [loading, data])
-
     const renderTable = useCallback(() => {
-        let _ = data
+        let defaultSort = sort && restProps?.defaultSort ?
+            orderBy(data, [`${RETABLE_SORTBY}.${restProps?.defaultSort?.key}`],
+                            [`${restProps?.defaultSort?.direction || 'asc'}`])
+            : data
+
+        let _ = defaultSort
+
+        if (Object.keys(sorter).length) {
+            const _s = Object.entries(sorter)[0]
+            // console.log('namidev-DEBUG: ___ ', _s[0], _s[1])
+            defaultSort = orderBy(data, [`${RETABLE_SORTBY}.${_s[0]}`], [`${_s[1] ? 'desc' : 'asc'}`])
+            // console.log(`namidev-DEBUG: After sort by ${_s[0]} `, defaultSort)
+        }
+
         if (paginationProps) {
             if (paginationProps?.current) {
-                _ = data?.slice((paginationProps?.current - 1) * pageSize, paginationProps?.current * pageSize)
+                _ = defaultSort?.slice((paginationProps?.current - 1) * pageSize, paginationProps?.current * pageSize)
             } else {
-                _ = data?.slice((current - 1) * pageSize, current * pageSize)
+                _ = defaultSort?.slice((current - 1) * pageSize, current * pageSize)
             }
         }
+
+        // console.log('namidev-DEBUG: Paged ', _)
+        // console.log('namidev-DEBUG: Origin ', data)
 
         return (
             <RcTable data={_}
                      columns={resizable ? _columns : ownColumns}
                      components={resizable && components}
-                     emptyText={renderEmpty()}
+                     emptyText={tableStatus}
                      {...restProps}
             />
         )
-    }, [data, resizable, restProps, paginationProps, current, pageSize])
+    }, [data, resizable, tableStatus, restProps, paginationProps, sort, sorter, current, pageSize])
 
     const renderPagination = useCallback(() => {
-        if (!paginationProps || data.length <= pageSize) return null
+        if (!paginationProps || paginationProps?.hide || data.length <= pageSize) return null
 
         return (
             <div className="py-8 flex items-center justify-center">
@@ -166,7 +175,11 @@ const ReTable = memo(({
                     if (c.align === 'right') className.push('justify-end')
                     if (c.align === 'center') className.push('justify-center')
 
-                    item = ({ ...c, title: <div className={className.join(' ')}>{c.title} <Sorter/></div> })
+                    item = ({ ...c, title: <div className={className.join(' ')}
+                                                onClick={() => setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })}
+                                           >
+                                                    {c.title} <Sorter isUp={sorter?.[`${c.key}`]}/>
+                                           </div> })
                 }
                 sortColumn.push(item)
             })
@@ -178,13 +191,17 @@ const ReTable = memo(({
                     if (c.align === 'left') className.push('justify-start')
                     if (c.align === 'right') className.push('justify-end')
                     if (c.align === 'center') className.push('justify-center')
-                    item = ({ ...c, title: <div className={className.join(' ')}>{c.title} <Sorter/></div> })
+                    item = ({ ...c, title: <div className={className.join(' ')}
+                                                onClick={() => setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })}
+                                                >
+                                                     {c.title} <Sorter isUp={sorter?.[`${c.key}`]}/>
+                                           </div> })
                 }
                 sortColumn.push(item)
             })
             sortColumn && sortColumn.length && setOwnColumns(sortColumn)
         }
-    }, [sort, columns])
+    }, [sort, columns, sorter])
 
     // Init Pagination
     useEffect(() => {
@@ -193,6 +210,7 @@ const ReTable = memo(({
             paginationProps?.current && setCurrent(paginationProps.current)
         }
     }, [paginationProps])
+
 
     return (
         <ReTableWrapper isDark={currentTheme === THEME_MODE.DARK}
@@ -220,11 +238,19 @@ export const ReTableLoading = () => {
     )
 }
 
-const Sorter = ({ active }) => {
+const Sorter = ({ isUp }) => {
+    let active
+    if (isUp === undefined) {
+        active = 1
+    } else if (isUp) {
+        active = 2
+    } else {
+        active = 3
+    }
     return (
         <SorterWrapper>
-            <CaretUpFilled/>
-            <CaretDownFilled/>
+            <CaretUpFilled style={active === 2 ? { color: colors.teal } : undefined}/>
+            <CaretDownFilled style={active === 3 ? { color: colors.teal } : undefined}/>
         </SorterWrapper>
     )
 }
@@ -315,6 +341,7 @@ const ReTableWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    ${({ noDataStyle }) => noDataStyle ? {...noDataStyle} : ''};
     
     ::after {
       display: none;

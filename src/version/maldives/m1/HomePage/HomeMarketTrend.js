@@ -6,11 +6,11 @@ import Axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { API_GET_TRENDING } from 'redux/actions/apis'
 import { useWindowSize } from 'utils/customHooks'
-import { sparkLineBuilder } from 'utils/helpers'
 import { useSelector } from 'react-redux'
 import { formatPercentage, formatPrice, getExchange24hPercentageChange, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import LastPrice from 'components/markets/LastPrice'
+import { sparkLineBuilder } from 'utils'
 
 const HomeMarketTrend = () => {
     // * Initial State

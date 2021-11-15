@@ -32,6 +32,29 @@ import { buildLogoutUrl } from 'utils';
 import { useWindowSize } from 'utils/customHooks';
 import { Popover, Transition } from '@headlessui/react';
 
+import { useState, useMemo, useCallback, useEffect } from 'react'
+import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants'
+import { useTranslation } from 'next-i18next'
+import { useWindowSize } from 'utils/customHooks'
+import { useSelector } from 'react-redux'
+import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils'
+import { buildLogoutUrl } from 'utils'
+import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import SvgWallet from 'components/svg/Wallet'
+import SvgCheckSuccess from 'components/svg/CheckSuccess'
+import SvgIdentifyCard from 'components/svg/SvgIdentifyCard'
+import SvgUserPlus from 'components/svg/SvgUserPlus'
+import SvgReward from 'components/svg/SvgReward'
+import SvgDocument from 'components/svg/SvgDocument'
+import SvgExit from 'components/svg/SvgExit'
+import SvgLayout from 'components/svg/SvgLayout'
+import SvgLock from 'components/svg/SvgLock'
+import { useAsync } from 'react-use'
+import { getMarketWatch } from 'redux/actions/market'
+import { API_GET_VIP } from 'redux/actions/apis'
+import { PulseLoader } from 'react-spinners'
+import Wallet from 'components/svg/Wallet'
+import WalletActive from 'components/svg/WalletActive'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -48,20 +71,20 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
     const [state, set] = useState({
        isDrawer: false,
        hideOnScroll: true,
-       pairsLength: '---',
+       pairsLength: '--',
        loadingVipLevel: false,
        vipLevel: null
     })
-    const setState = (_state) => set(prevState => ({...prevState, ..._state}));
+    const setState = (_state) => set(prevState => ({...prevState, ..._state}))
 
     // * Use hooks
     const [currentTheme, onThemeSwitch] = useDarkMode()
     const [currentLocale, onChangeLang] = useLanguage()
 
-    useScrollPosition(({prevPos, currPos}) => {
-        const shouldShow = currPos?.y > prevPos?.y
-        if (shouldShow !== state.hideOnScroll) setState({ hideOnScroll: shouldShow })
-    }, [state.hideOnScroll], false, false, 300)
+    // useScrollPosition(({prevPos, currPos}) => {
+    //     const shouldShow = currPos?.y > prevPos?.y
+    //     if (shouldShow !== state.hideOnScroll) setState({ hideOnScroll: shouldShow })
+    // }, [state.hideOnScroll], false, false, 300)
 
     const { user: auth } = useSelector(state => state.auth) || null
     const { width } = useWindowSize()
@@ -173,7 +196,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = []
                 const itemsLevel1withIcon = []
-                const useDropdownWithIcon = localized === 'nothing'
+                const useDropdownWithIcon = localized === 'product'
 
                 const shouldDot = child_lv1.findIndex(o => o.isNew)
 
@@ -187,7 +210,8 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                     )
                 })
 
-                // Dropdown with icon
+                // DROPDOWN WITH ICON
+                // console.log('namidev-DEBUG: ___ ', state.pairsLength)
                 child_lv1.map(child => {
                     itemsLevel1withIcon.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
@@ -236,7 +260,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                 </Link>
             )
         })
-    }, [width, state.pairsLength])
+    }, [width, state.pairsLength, navTheme.color])
 
     const renderThemeButton = useCallback(() => {
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null
@@ -276,7 +300,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                                 <Popover.Panel className="absolute z-10">
                                     <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3">
                                         <div className="w-32 h-32 relative">
-                                            
+
                                         </div>
                                     </div>
                                 </Popover.Panel>
@@ -359,18 +383,43 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         )
     }, [auth, currentTheme, useOnly, state.vipLevel, state.loadingVipLevel])
 
-    // const renderWallet = () => {
-    //     return (
-    //         <div className="">
-    //
-    //         </div>
-    //     )
-    // }
+    const renderWallet = () => {
+        return (
+            <div className="mal-navbar__dropdown">
+                <div className="mal-navbar__dropdown__wrapper">
+                    <Link href={getV1Url('/wallet/account?type=spot')}>
+                        <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
+                           <img src={getS3Url('/images/icon/ic_wallet.png')} width="32" height="32" alt="" className="mr-3"/>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Exchange</span>
+                        </a>
+                    </Link>
+                    <Link href={getV1Url('/wallet/account?type=futures')}>
+                        <a className="mal-navbar__dropdown___item">
+                            <img src={getS3Url('/images/icon/ic_wallet.png')} width="32" height="32" alt="" className="mr-3"/>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Futures</span>
+                        </a>
+                    </Link>
+                    <Link href={getV1Url('/wallet/account?type=staking')}>
+                        <a className="mal-navbar__dropdown___item">
+                            <img src={getS3Url('/images/icon/ic_wallet.png')} width="32" height="32" alt="" className="mr-3"/>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Staking</span>
+                        </a>
+                    </Link>
+                    <Link href={getV1Url('/wallet/account?type=farming')}>
+                        <a className="mal-navbar__dropdown___item">
+                            <img src={getS3Url('/images/icon/ic_wallet.png')} width="32" height="32" alt="" className="mr-3"/>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Farming</span>
+                        </a>
+                    </Link>
+                </div>
+            </div>
+        )
+    }
 
     useAsync(async () => {
         const pairs = await getMarketWatch()
         if (pairs && pairs.length) setState({ pairsLength: pairs.length })
-    })
+    }, [])
 
     useEffect(() => {
         getVip()
@@ -380,12 +429,11 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         <>
             <PocketNavDrawer isActive={state.isDrawer} onClose={() => onDrawerAction(false)}/>
             <div style={style || {}}
-                 className={`mal-navbar__wrapper 
-                            ${state.hideOnScroll ? 
-                            `mal-navbar__visible 
-                            ${useOnly === NAVBAR_USE_TYPE.FLUENT ? 
-                            'mal-navbar__visible__blur' : ''}` 
-                            : 'mal-navbar__hidden'} ${navTheme.wrapper}`}>
+                 className={`mal-navbar__wrapper
+                            // ${useOnly === NAVBAR_USE_TYPE.FLUENT ?  'mal-navbar__visible__blur' : ''}
+                            // ${state.hideOnScroll ?  `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT ?  'mal-navbar__visible__blur' : ''}` : 'mal-navbar__hidden'}
+                            ${navTheme.wrapper}
+                 `}>
                 <Link href="/">
                     <a className="block mal-navbar__logo">
                         <Image src="/images/logo/nami_maldives.png" width="28" height="25"
@@ -427,6 +475,16 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                     </div>}
                     {auth &&
                         <>
+                            {width >= 992 &&
+                            <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
+                                <SvgWallet color={navTheme.color}/>
+                                <span className="ml-4" style={{color: navTheme.color}}>
+                                    {t('navbar:menu.wallet')}
+                                </span>
+                                <SvgIcon name="chevron_down" size={15} color={navTheme.color}
+                                         className="chevron__down" style={{ marginLeft: 4}}/>
+                                {renderWallet()}
+                            </div>}
                             <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
                                 <SvgUser type={2} size={30} className="cursor-pointer user__svg"
                                          style={{marginTop: -3}} color={navTheme.color}/>

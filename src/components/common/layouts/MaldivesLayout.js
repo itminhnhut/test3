@@ -26,7 +26,7 @@ const MadivesLayout = ({
 
     // NOTE: Apply this style for NavBar on this layout.
     const navbarStyle = {
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
     };

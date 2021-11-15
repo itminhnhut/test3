@@ -51,6 +51,9 @@ const LandingPage = () => {
             navStyle={{
                 backgroundColor: colors.darkBlue2
             }}
+            contentWrapperStyle={{
+                backgroundColor: `${colors.white} !important`
+            }}
         >
             {renderQrCodeModal()}
             <div className="text-txtPrimary">
