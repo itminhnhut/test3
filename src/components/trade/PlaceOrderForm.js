@@ -20,16 +20,18 @@ import {
     ApiStatus,
     EPS,
     ExchangeOrderEnum,
-    PublicSocketEvent, SpotMarketPriceBias
+    PublicSocketEvent,
+    SpotMarketPriceBias,
 } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import {
     formatBalance,
-    formatPrice, formatWallet,
+    formatPrice,
+    formatWallet,
     getDecimalScale,
     getFilter,
     getLoginUrl,
-    getSymbolString
+    getSymbolString,
 } from 'src/redux/actions/utils';
 import { colors } from 'tailwindcss/defaultTheme';
 import fetchAPI from 'utils/fetch-api';
@@ -71,9 +73,9 @@ const PlaceOrderForm = ({ symbol }) => {
         },
     ];
 
-    const user = useSelector(state => state.auth.user) || null;
-    const balanceSpot = useSelector(state => state.wallet.SPOT);
-    const selectedOrder = useSelector(state => state.spot?.selectedOrder);
+    const user = useSelector((state) => state.auth.user) || null;
+    const balanceSpot = useSelector((state) => state.wallet.SPOT);
+    const selectedOrder = useSelector((state) => state.spot?.selectedOrder);
     const [open, setOpen] = useState(false);
     const [quantityMode, setQuantityMode] = useState(QuantityMode[0]);
     const [percentage, setPercentage] = useState(0);
@@ -85,19 +87,20 @@ const PlaceOrderForm = ({ symbol }) => {
     const [focus, setFocus] = useState();
     const [price, setPrice] = useState();
     const [symbolTicker, setSymbolTicker] = useState(null);
-    const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
-    const quoteAsset = useSelector(state => state.user.quoteAsset) || 'USDT';
+    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
+    const quoteAsset = useSelector((state) => state.user.quoteAsset) || 'USDT';
     const router = useRouter();
     const [isUseQuoteQuantity, setIsUseQuoteQuantity] = useState(false);
 
     useAsync(async () => {
         if (symbol) {
             setMultiValue(symbol?.quote === 'VNDC' ? 24000 : 1);
-            const newSymbolTicker = await getMarketWatch(getSymbolString(symbol));
+            const newSymbolTicker = await getMarketWatch(
+                getSymbolString(symbol),
+            );
             setSymbolTicker(newSymbolTicker?.[0]);
         }
     }, [symbol]);
-
 
     useEffect(() => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
@@ -121,13 +124,28 @@ const PlaceOrderForm = ({ symbol }) => {
     useEffect(() => {
         if (selectedOrder?.price) setPrice(selectedOrder?.price);
         if (selectedOrder?.quantity) setQuantity(selectedOrder?.quantity);
-        if (selectedOrder?.quantity && selectedOrder?.price) setQuoteQty(floor(selectedOrder?.quantity * selectedOrder?.price, 2));
+        if (selectedOrder?.quantity && selectedOrder?.price) {
+            setQuoteQty(
+                floor(selectedOrder?.quantity * selectedOrder?.price, 2),
+            );
+        }
     }, [selectedOrder]);
 
-    const currentExchangeConfig = exchangeConfig.find(e => e.symbol === getSymbolString(symbol));
-    const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, currentExchangeConfig || []);
-    const quantityFilter = getFilter(ExchangeOrderEnum.Filter.LOT_SIZE, currentExchangeConfig || []);
-    const minNotionalFilter = getFilter(ExchangeOrderEnum.Filter.MIN_NOTIONAL, currentExchangeConfig || []);
+    const currentExchangeConfig = exchangeConfig.find(
+        (e) => e.symbol === getSymbolString(symbol),
+    );
+    const priceFilter = getFilter(
+        ExchangeOrderEnum.Filter.PRICE_FILTER,
+        currentExchangeConfig || [],
+    );
+    const quantityFilter = getFilter(
+        ExchangeOrderEnum.Filter.LOT_SIZE,
+        currentExchangeConfig || [],
+    );
+    const minNotionalFilter = getFilter(
+        ExchangeOrderEnum.Filter.MIN_NOTIONAL,
+        currentExchangeConfig || [],
+    );
     // const quoteAssetPrecision = currentExchangeConfig?.quoteAssetPrecision || 6;
     // const baseAssetPrecision = currentExchangeConfig?.baseAssetPrecision || 6;
     const baseAssetId = currentExchangeConfig?.baseAssetId || 0;
@@ -161,11 +179,7 @@ const PlaceOrderForm = ({ symbol }) => {
 
     const filterOrderInputApi = (input = {}) => {
         const success = null;
-        const {
-            stopPrice,
-            type,
-            useQuoteQty,
-        } = defaults(input, {
+        const { stopPrice, type, useQuoteQty } = defaults(input, {
             symbol: null,
             price: null,
             stopPrice: null,
@@ -182,23 +196,15 @@ const PlaceOrderForm = ({ symbol }) => {
                 const filter = config.filters[i];
                 switch (filter.filterType) {
                     case ExchangeOrderEnum.Filter.PRICE_FILTER: {
-                        const {
-                            minPrice,
-                            maxPrice,
-                        } = filter;
-                        if ([
-                            ExchangeOrderEnum.Type.LIMIT,
-                        ].includes(type)) {
-                            if (
-                                price < +minPrice
-                                || price > +maxPrice
-                            ) {
+                        const { minPrice, maxPrice } = filter;
+                        if ([ExchangeOrderEnum.Type.LIMIT].includes(type)) {
+                            if (price < +minPrice || price > +maxPrice) {
                                 return Error.PRICE_FILTER;
                             }
                         }
-                        if ([
-                            ExchangeOrderEnum.Type.STOP_LIMIT,
-                        ].includes(type)) {
+                        if (
+                            [ExchangeOrderEnum.Type.STOP_LIMIT].includes(type)
+                        ) {
                             if (stopPrice < minPrice || stopPrice > maxPrice) {
                                 return Error.PRICE_FILTER;
                             }
@@ -207,10 +213,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     }
                     case ExchangeOrderEnum.Filter.LOT_SIZE: {
                         if (useQuoteQty && +quoteQty > 0) break;
-                        const {
-                            minQty,
-                            maxQty,
-                        } = filter;
+                        const { minQty, maxQty } = filter;
                         if (+quantity < +minQty || +quantity > +maxQty) {
                             return Error.LOT_SIZE;
                         }
@@ -223,7 +226,6 @@ const PlaceOrderForm = ({ symbol }) => {
         }
         return success;
     };
-
 
     const createOrder = async () => {
         // Filter input
@@ -245,7 +247,15 @@ const PlaceOrderForm = ({ symbol }) => {
             const filterResult = filterOrderInputApi(params);
             if (filterResult) {
                 const { code, message } = filterResult;
-                showNotification({ message: `(${code}) ${t(`error:${message}`)}`, title: 'Error', type: 'failure' }, 'bottom', 'bottom-right');
+                showNotification(
+                    {
+                        message: `(${code}) ${t(`error:${message}`)}`,
+                        title: 'Error',
+                        type: 'failure',
+                    },
+                    'bottom',
+                    'bottom-right',
+                );
                 return;
             }
 
@@ -272,24 +282,36 @@ const PlaceOrderForm = ({ symbol }) => {
                 let message = '';
                 if (type === ExchangeOrderEnum.Type.MARKET) {
                     message = t('spot:place_success_market', {
-                        displayingId, side, type, token: `${baseAsset}/${quoteAsset}`,
+                        displayingId,
+                        side,
+                        type,
+                        token: `${baseAsset}/${quoteAsset}`,
                     });
                 } else {
                     message = t('spot:place_success_limit', {
-                        displayingId, side, type, token: `${baseAsset}/${quoteAsset}`,
+                        displayingId,
+                        side,
+                        type,
+                        token: `${baseAsset}/${quoteAsset}`,
                     });
                 }
-                showNotification({ message, title: t('common:success'), type: 'success' }, 'bottom', 'bottom-right');
+                showNotification(
+                    { message, title: t('common:success'), type: 'success' },
+                    'bottom',
+                    'bottom-right',
+                );
             } else {
                 const error = find(Error, { code: res?.code });
                 const { requestId } = data;
                 let shortRequestId = null;
                 let content = null;
                 if (typeof requestId === 'string' && requestId?.length > 0) {
-                    shortRequestId = (requestId.split('-')[0]).toUpperCase();
+                    shortRequestId = requestId.split('-')[0].toUpperCase();
                     content = error
-                        ? t(`error:${error.message}`) + ` (Code: ${shortRequestId})`
-                        : t('error:ERROR_COMMON') + ` (Code: ${shortRequestId})`;
+                        ? t(`error:${error.message}`) +
+                          ` (Code: ${shortRequestId})`
+                        : t('error:ERROR_COMMON') +
+                          ` (Code: ${shortRequestId})`;
                 } else {
                     content = error
                         ? t(`error:${error.message}`)
@@ -297,13 +319,25 @@ const PlaceOrderForm = ({ symbol }) => {
                 }
                 switch (message) {
                     case ExchangeOrderEnum.Filter.MIN_NOTIONAL:
-                        content = t('error:MIN_NOTIONAL', { value: `${formatPrice(minNotionalFilter.minNotional)} ${quote}` });
+                        content = t('error:MIN_NOTIONAL', {
+                            value: `${formatPrice(
+                                minNotionalFilter.minNotional,
+                            )} ${quote}`,
+                        });
                         break;
                     default:
                         break;
                 }
 
-                showNotification({ message: content, title: t('common:failure'), type: 'warning' }, 'bottom', 'bottom-right');
+                showNotification(
+                    {
+                        message: content,
+                        title: t('common:failure'),
+                        type: 'warning',
+                    },
+                    'bottom',
+                    'bottom-right',
+                );
             }
         } catch (e) {
             // console.log('createOrder web: ', e);
@@ -324,11 +358,17 @@ const PlaceOrderForm = ({ symbol }) => {
     };
 
     const getAvailableText = (assetId) => {
-        return formatBalance(balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value, 6);
+        return formatBalance(
+            balanceSpot?.[assetId]?.value -
+                balanceSpot?.[assetId]?.locked_value,
+            6,
+        );
     };
 
     const getAvailable = (assetId) => {
-        return balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value;
+        return (
+            balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value
+        );
     };
 
     const getBalance = (assetId) => {
@@ -339,21 +379,32 @@ const PlaceOrderForm = ({ symbol }) => {
         () => {
             if (focus !== 'percentage') return;
             if (!(baseAssetId && quoteAssetId)) return;
-            const available = orderSide === ExchangeOrderEnum.Side.BUY ? getAvailable(quoteAssetId) : getAvailable(baseAssetId);
+            const available =
+                orderSide === ExchangeOrderEnum.Side.BUY
+                    ? getAvailable(quoteAssetId)
+                    : getAvailable(baseAssetId);
             if (!(available > EPS)) return;
             const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
             let _price = +price;
 
             if (orderSide === ExchangeOrderEnum.Side.BUY) {
                 if (orderType === ExchangeOrderEnum.Type.MARKET) {
-                    _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
+                    _price =
+                        +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
                 }
-                const nextQuoteQty = floor(available * percentage / 100 * (1 - currentExchangeConfig?.normalTakerFee), 2);
+                const nextQuoteQty = floor(
+                    ((available * percentage) / 100) *
+                        (1 - currentExchangeConfig?.normalTakerFee),
+                    2,
+                );
                 const nextQuantity = floor(nextQuoteQty / _price, qtyDecimal);
                 setQuantity(nextQuantity);
                 setQuoteQty(nextQuoteQty);
             } else {
-                const nextQuantity = floor(available * percentage / 100, qtyDecimal);
+                const nextQuantity = floor(
+                    (available * percentage) / 100,
+                    qtyDecimal,
+                );
                 const nextQuoteQty = floor(nextQuantity * _price, 2);
                 setQuantity(nextQuantity);
                 setQuoteQty(nextQuoteQty);
@@ -366,14 +417,22 @@ const PlaceOrderForm = ({ symbol }) => {
         () => {
             if (focus !== 'price') return; // Mac dinh la limit
             if (!(baseAssetId && quoteAssetId)) return;
-            const available = orderSide === ExchangeOrderEnum.Side.BUY ? getAvailable(quoteAssetId) : getAvailable(baseAssetId);
+            const available =
+                orderSide === ExchangeOrderEnum.Side.BUY
+                    ? getAvailable(quoteAssetId)
+                    : getAvailable(baseAssetId);
             if (!(available > EPS)) return;
             const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
             const _price = +price;
             const _quantity = +quantity;
             const _quoteQty = +quoteQty;
 
-            const nextQuoteQty = floor(_quantity * _price * (1 + currentExchangeConfig?.normalTakerFee), 2);
+            const nextQuoteQty = floor(
+                _quantity *
+                    _price *
+                    (1 + currentExchangeConfig?.normalTakerFee),
+                2,
+            );
             setQuoteQty(nextQuoteQty);
             if (orderSide === ExchangeOrderEnum.Side.BUY) {
                 const nextPercentage = ceil(nextQuoteQty / available, 0);
@@ -398,16 +457,24 @@ const PlaceOrderForm = ({ symbol }) => {
             const _quantity = +quantity;
             const _quoteQty = +quoteQty;
 
-            const nextQuoteQty = floor(_quantity * _price * (1 + currentExchangeConfig?.normalTakerFee), 2);
+            const nextQuoteQty = floor(
+                _quantity *
+                    _price *
+                    (1 + currentExchangeConfig?.normalTakerFee),
+                2,
+            );
             setQuoteQty(nextQuoteQty);
-            const available = orderSide === ExchangeOrderEnum.Side.BUY ? getAvailable(quoteAssetId) : getAvailable(baseAssetId);
+            const available =
+                orderSide === ExchangeOrderEnum.Side.BUY
+                    ? getAvailable(quoteAssetId)
+                    : getAvailable(baseAssetId);
 
             if (!(available > EPS)) return;
             let nextPercentage = 0;
             if (orderSide === ExchangeOrderEnum.Side.SELL) {
-                nextPercentage = ceil(_quantity / available * 100, 0);
+                nextPercentage = ceil((_quantity / available) * 100, 0);
             } else {
-                nextPercentage = ceil(nextQuoteQty / available * 100, 0);
+                nextPercentage = ceil((nextQuoteQty / available) * 100, 0);
             }
             setPercentage(Math.min(nextPercentage, 100));
         },
@@ -427,16 +494,23 @@ const PlaceOrderForm = ({ symbol }) => {
             if (orderType === ExchangeOrderEnum.Type.MARKET) {
                 _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
             }
-            const nextQuantity = floor(_quoteQty / _price * (1 - currentExchangeConfig?.normalTakerFee), qtyDecimal);
+            const nextQuantity = floor(
+                (_quoteQty / _price) *
+                    (1 - currentExchangeConfig?.normalTakerFee),
+                qtyDecimal,
+            );
             setQuantity(nextQuantity);
             let nextPercentage = 0;
 
-            const available = orderSide === ExchangeOrderEnum.Side.BUY ? getAvailable(quoteAssetId) : getAvailable(baseAssetId);
+            const available =
+                orderSide === ExchangeOrderEnum.Side.BUY
+                    ? getAvailable(quoteAssetId)
+                    : getAvailable(baseAssetId);
             if (!(available > EPS)) return;
             if (orderSide === ExchangeOrderEnum.Side.SELL) {
-                nextPercentage = ceil(nextQuantity / available * 100, 0);
+                nextPercentage = ceil((nextQuantity / available) * 100, 0);
             } else {
-                nextPercentage = ceil(_quoteQty / available * 100, 0);
+                nextPercentage = ceil((_quoteQty / available) * 100, 0);
             }
             setPercentage(Math.min(nextPercentage, 100));
 
@@ -450,15 +524,39 @@ const PlaceOrderForm = ({ symbol }) => {
         return (
             <div className="spot-place-orders-tabs mb-4">
                 <div
-                    className={'spot-place-orders-tab capitalize ' + (orderSide === ExchangeOrderEnum.Side.BUY ? 'active' : '')}
+                    className={
+                        'spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--left' +
+                        (orderSide === ExchangeOrderEnum.Side.BUY
+                            ? ' active'
+                            : '')
+                    }
                     onClick={() => handleClickTab(ExchangeOrderEnum.Side.BUY)}
-                >{t('common:buy')}
+                >
+                    {t('common:buy')}
                 </div>
-                <SvgOrderSide color={colors.teal} fill={colors.teal}/>
+                <svg
+                    className={`spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark arrow  ${
+                        orderSide === ExchangeOrderEnum.Side.SELL
+                            ? 'sell'
+                            : 'buy'
+                    }`}
+                    preserveAspectRatio="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                >
+                    <path fill={orderSide === ExchangeOrderEnum.Side.SELL ? '#E5544B' : '#00C8BC'} d="M32 0L18.1569 0C17.096 0 16.0786 0.421427 15.3284 1.17157L3.32842 13.1716C1.76633 14.7337 1.76633 17.2663 3.32843 18.8284L15.3284 30.8284C16.0786 31.5786 17.096 32 18.1569 32H32V0Z" />
+                </svg>
                 <div
-                    className={'spot-place-orders-tab capitalize ' + (orderSide === ExchangeOrderEnum.Side.SELL ? 'active' : '')}
+                    className={
+                        'spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--right' +
+                        (orderSide === ExchangeOrderEnum.Side.SELL
+                            ? ' active'
+                            : '')
+                    }
                     onClick={() => handleClickTab(ExchangeOrderEnum.Side.SELL)}
-                >{t('common:sell')}
+                >
+                    {t('common:sell')}
                 </div>
             </div>
         );
@@ -466,9 +564,10 @@ const PlaceOrderForm = ({ symbol }) => {
 
     const _renderOrderType = useMemo(() => {
         const tabs = [];
-        subTabs.forEach(tab => {
-            if (currentExchangeConfig?.orderTypes
-            && currentExchangeConfig?.orderTypes.includes(tab)
+        subTabs.forEach((tab) => {
+            if (
+                currentExchangeConfig?.orderTypes &&
+                currentExchangeConfig?.orderTypes.includes(tab)
             ) {
                 tabs.push(tab);
             }
@@ -479,11 +578,17 @@ const PlaceOrderForm = ({ symbol }) => {
                     return (
                         <li className="tab-item pr-3 font-semibold" key={index}>
                             <a
-                                className={'tab-link ' + (orderType === tab ? 'active' : '')}
+                                className={
+                                    'tab-link ' +
+                                    (orderType === tab ? 'active' : '')
+                                }
                                 onClick={() => handleClickSubTab(tab)}
-                            > {orderTypeLabels[tab]}
+                            >
+                                {' '}
+                                {orderTypeLabels[tab]}
                             </a>
-                        </li>);
+                        </li>
+                    );
                 })}
             </ul>
         );
@@ -493,48 +598,43 @@ const PlaceOrderForm = ({ symbol }) => {
         // if (orderType !== ExchangeOrderEnum.Type.LIMIT) return null;
         return (
             <div className="flex justify-between items-center mb-2">
-
                 <div className="form-group w-full">
                     <div className="input-group">
                         <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium">{t('common:price')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium">
+                                {t('common:price')}
+                            </div>
                         </div>
 
-                        {
-                            orderType === ExchangeOrderEnum.Type.LIMIT
-                            &&
-                            (
-                                <NumberFormat
-                                    getInputRef={priceRef}
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
-                                    name="stop_buy_input"
-                                    thousandSeparator
-                                    onFocus={() => {
-                                        setFocus('price');
-                                    }}
-                                    decimalScale={getDecimalScale(+priceFilter?.tickSize)}
-                                    allowNegative={false}
-                                    value={price}
-                                    onValueChange={({ value }) => { setPrice(value)}}
-                                />
-                            )
-                        }
-                        {
-                            orderType === ExchangeOrderEnum.Type.MARKET
-                            &&
-                            (
-                                <input
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium"
-                                    name="stop_buy_input"
-                                    type="text"
-                                    disabled
-                                    value={t('spot:market')}
-                                />
-                            )
-                        }
-                        <div
-                            className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
-                        >
+                        {orderType === ExchangeOrderEnum.Type.LIMIT && (
+                            <NumberFormat
+                                getInputRef={priceRef}
+                                className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
+                                name="stop_buy_input"
+                                thousandSeparator
+                                onFocus={() => {
+                                    setFocus('price');
+                                }}
+                                decimalScale={getDecimalScale(
+                                    +priceFilter?.tickSize,
+                                )}
+                                allowNegative={false}
+                                value={price}
+                                onValueChange={({ value }) => {
+                                    setPrice(value);
+                                }}
+                            />
+                        )}
+                        {orderType === ExchangeOrderEnum.Type.MARKET && (
+                            <input
+                                className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium"
+                                name="stop_buy_input"
+                                type="text"
+                                disabled
+                                value={t('spot:market')}
+                            />
+                        )}
+                        <div className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center">
                             <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {quote}
                             </span>
@@ -570,7 +670,6 @@ const PlaceOrderForm = ({ symbol }) => {
         );
     }, [percentage, orderSide]);
 
-
     const _renderQuantityMode = useMemo(() => {
         return (
             <Listbox
@@ -587,9 +686,7 @@ const PlaceOrderForm = ({ symbol }) => {
                 {({ open }) => (
                     <>
                         <div className="relative z-50">
-                            <Listbox.Button
-                                className="relative w-full text-left cursor-pointer focus:outline-none sm:text-sm"
-                            >
+                            <Listbox.Button className="relative w-full text-left cursor-pointer focus:outline-none sm:text-sm">
                                 <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                     <span className="w-[100px]">
                                         {quantityMode.name}
@@ -627,7 +724,9 @@ const PlaceOrderForm = ({ symbol }) => {
                                         <Listbox.Option
                                             key={mode.id}
                                             className={({ selected, active }) => classNames(
-                                                selected ? 'text-teal font-medium' : 'text-txtSecondary dark:text-txtSecondary-dark',
+                                                selected
+                                                    ? 'text-teal font-medium'
+                                                    : 'text-txtSecondary dark:text-txtSecondary-dark',
                                                 'text-sm  cursor-pointer hover:text-teal py-1 text-center hover:bg-gray-100 px-4',
                                             )}
                                             value={mode}
@@ -645,8 +744,10 @@ const PlaceOrderForm = ({ symbol }) => {
     }, [quantityMode]);
 
     const _renderOrderQuoteQty = useMemo(() => {
-        if (orderType === ExchangeOrderEnum.Type.MARKET
-            && quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) return null;
+        if (
+            orderType === ExchangeOrderEnum.Type.MARKET &&
+            quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY
+        ) { return null; }
         return (
             <div className="flex justify-between items-center mb-3">
                 <div className="form-group w-full">
@@ -657,7 +758,9 @@ const PlaceOrderForm = ({ symbol }) => {
                                     ? _renderQuantityMode
                                     : <div className="text-sm text-black-500 font-medium ">{t('total')}</div>
                             } */}
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('total')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">
+                                {t('total')}
+                            </div>
                         </div>
                         <NumberFormat
                             getInputRef={quoteQtyRef}
@@ -674,9 +777,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             onValueChange={({ value }) => setQuoteQty(value)}
                         />
 
-                        <div
-                            className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
-                        >
+                        <div className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center">
                             <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {quote}
                             </span>
@@ -690,11 +791,12 @@ const PlaceOrderForm = ({ symbol }) => {
     const _renderOrderQuantity = useMemo(() => {
         return (
             <div className="flex justify-between items-center mb-3">
-
                 <div className="form-group w-full">
                     <div className="input-group">
                         <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('common:amount')}</div>
+                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">
+                                {t('common:amount')}
+                            </div>
                         </div>
                         <NumberFormat
                             getInputRef={quantityRef}
@@ -704,16 +806,16 @@ const PlaceOrderForm = ({ symbol }) => {
                                 setFocus('quantity');
                             }}
                             thousandSeparator
-                            decimalScale={getDecimalScale(+quantityFilter?.stepSize)}
+                            decimalScale={getDecimalScale(
+                                +quantityFilter?.stepSize,
+                            )}
                             allowNegative={false}
                             value={quantity}
                             onChange={() => setIsUseQuoteQuantity(false)}
                             onValueChange={({ value }) => setQuantity(value)}
                         />
 
-                        <div
-                            className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
-                        >
+                        <div className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center">
                             <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {base}
                             </span>
@@ -722,22 +824,20 @@ const PlaceOrderForm = ({ symbol }) => {
                 </div>
             </div>
         );
-    },
-    [quantity, symbol, quantityMode, orderSide, orderType]);
+    }, [quantity, symbol, quantityMode, orderSide, orderType]);
 
     const _renderOrderValue = useMemo(() => {
-        return (
-            <>
-                {formatWallet(price * quantity)}
-            </>
-        );
+        return <>{formatWallet(price * quantity)}</>;
     }, [price, quantity, symbol]);
 
     const _renderPlaceOrderButton = () => {
         if (!user) {
             return (
                 <div className="mb-6">
-                    <a href={getLoginUrl('sso')} className="btn w-full capitalize button-common block text-center">
+                    <a
+                        href={getLoginUrl('sso')}
+                        className="btn w-full capitalize button-common block text-center"
+                    >
                         {t('sign_in_to_continue')}
                     </a>
                 </div>
@@ -750,9 +850,17 @@ const PlaceOrderForm = ({ symbol }) => {
                     // onClick={() => (orderType === ExchangeOrderEnum.Type.LIMIT ? openModal() : (needConfirm === 'true' ? openModal() : confirmModal()))}
                     onClick={confirmModal}
                     type="button"
-                    disabled={placing || currentExchangeConfig?.status === 'MAINTAIN'}
-                    className={'btn w-full capitalize disabled:bg-black-400 ' + (orderSide === ExchangeOrderEnum.Side.BUY ? 'btn-green' : 'btn-red')}
-                >{t(orderSide)} {base}
+                    disabled={
+                        placing || currentExchangeConfig?.status === 'MAINTAIN'
+                    }
+                    className={
+                        'btn w-full capitalize disabled:bg-black-400 ' +
+                        (orderSide === ExchangeOrderEnum.Side.BUY
+                            ? 'btn-green'
+                            : 'btn-red')
+                    }
+                >
+                    {t(orderSide)} {base}
                 </button>
             </div>
         );
@@ -761,16 +869,27 @@ const PlaceOrderForm = ({ symbol }) => {
     const _renderUserBalance = () => {
         return (
             <>
-                <h3 className="font-semibold text-lg text-black mb-3">{t('spot:balance')}</h3>
+                <h3 className="font-semibold text-lg text-black mb-3">
+                    {t('spot:balance')}
+                </h3>
                 <div className="flex justify-between items-center">
-                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark ">{t('spot:available_balance')}</div>
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark ">
+                        {t('spot:available_balance')}
+                    </div>
                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
                             orderSide === ExchangeOrderEnum.Side.BUY
-                                ? quoteAssetId ? getAvailableText(quoteAssetId) : 0
-                                : baseAssetId ? getAvailableText(baseAssetId) : 0
-                        } {orderSide === ExchangeOrderEnum.Side.BUY ? quote : base}
+                                ? quoteAssetId
+                                    ? getAvailableText(quoteAssetId)
+                                    : 0
+                                : baseAssetId
+                                    ? getAvailableText(baseAssetId)
+                                    : 0
+                        }{' '}
+                        {orderSide === ExchangeOrderEnum.Side.BUY
+                            ? quote
+                            : base}
                     </div>
                 </div>
             </>
@@ -778,28 +897,38 @@ const PlaceOrderForm = ({ symbol }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     };
 
-
     return (
         <>
             <div className="px-2.5 spot-place-orders-container rounded">
-                <h3 className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark  my-4 dragHandleArea">{t('spot:place_order')}</h3>
+                <h3 className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark  my-4 dragHandleArea">
+                    {t('spot:place_order')}
+                </h3>
                 {_renderOrderSide}
                 {_renderOrderType}
 
                 <div className="tab-content">
-
                     {_renderOrderPrice()}
                     {_renderOrderQuantity}
                     {_renderOrderQuoteQty}
                     {_renderQuantitySlider}
-                    {currentExchangeConfig?.status === 'MAINTAIN' && <p className="text-sm mb-3 flex"><span className="mr-2"><IconLock width={12} height={16} /></span> <span>{t('spot:pair_under_maintenance', { base: symbol?.base, quote: symbol?.quote })}</span></p>}
+                    {currentExchangeConfig?.status === 'MAINTAIN' && (
+                        <p className="text-sm mb-3 flex">
+                            <span className="mr-2">
+                                <IconLock width={12} height={16} />
+                            </span>{' '}
+                            <span>
+                                {t('spot:pair_under_maintenance', {
+                                    base: symbol?.base,
+                                    quote: symbol?.quote,
+                                })}
+                            </span>
+                        </p>
+                    )}
                     {_renderPlaceOrderButton()}
                 </div>
                 {_renderUserBalance()}
                 {/* {_renderAssetPortfolio()} */}
-
             </div>
-            
         </>
     );
 };
