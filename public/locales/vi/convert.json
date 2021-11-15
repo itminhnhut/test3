@@ -11,7 +11,8 @@
     "amount_too_small": "Số lượng gửi đi quá thấp",
     "amount_exceeded": "Số lượng gửi đi quá cao",
     "not_enough_balance": "Không đủ số dư",
-    "unknown_error": "Lỗi không xác định"
+    "unknown_error": "Lỗi không xác định",
+    "est_rate_not_found": "Không thể ước lượng tỉ giá"
   },
   "you_pay": "Từ",
   "you_get": "Đến",

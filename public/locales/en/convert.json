@@ -11,7 +11,8 @@
     "amount_too_small": "The amount is too small",
     "amount_exceeded": "The amount is exceeded",
     "not_enough_balance": "Insufficient balance",
-    "unknown_error": "Unknown error"
+    "unknown_error": "Unknown error",
+    "est_rate_not_found": "Cannot estimate rate"
   },
   "you_pay": "From",
   "you_get": "To",

@@ -110,7 +110,7 @@ const SwapModule = ({ width, pair }) => {
         if (!(requestQty && requestAsset)) return
         setState({ loadingEstRate: true, estRate: null })
 
-        const { data, status } = await fetchAPI({
+        const result = await fetchAPI({
             url: '/api/v3/swap/estimate_price',
             options: {
                 method: 'GET',
@@ -122,7 +122,9 @@ const SwapModule = ({ width, pair }) => {
                 requestAsset,
             },
         })
+        console.log('namidev-DEBUG: fetchEstimateRate ', result)
 
+        const { status, data } = result
         data && setState({ estRate: data })
         if (status === ApiStatus.SUCCESS && updateQty) {
             if (requestAsset === state.fromAsset) {
@@ -131,6 +133,13 @@ const SwapModule = ({ width, pair }) => {
             }
             if (requestAsset === state.toAsset) {
                 setState({ fromAmount: requestQty / data?.price })
+            }
+        } else {
+            switch (status) {
+                case 'SWAP_CANNOT_ESTIMATE_PRICE':
+                    setState({ fromErrors: { not_found: t('convert:est_rate_not_found') } })
+                    break
+                default:
             }
         }
 
@@ -463,6 +472,10 @@ const SwapModule = ({ width, pair }) => {
         const leftUnit = state.changeEstRatePosition ? state.toAsset : state.fromAsset
         const rightUnit = state.changeEstRatePosition ? state.fromAsset : state.toAsset
 
+        if (state.fromErrors && Object.keys(state.fromErrors).length) {
+            return <span className="font-bold">---</span>
+        }
+
         if (
             state.estRate?.price &&
             state.estRate?.fromAsset === state.fromAsset &&
@@ -487,7 +500,7 @@ const SwapModule = ({ width, pair }) => {
                 <span>{rightUnit}</span>
             </span>
         )
-    }, [config, state.fromAsset, state.fromAmount, state.toAsset, state.estRate, state.changeEstRatePosition, state.loadingEstRate])
+    }, [config, state.fromAsset, state.fromAmount, state.toAsset, state.estRate, state.changeEstRatePosition, state.loadingEstRate], state.fromErrors)
 
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
@@ -510,6 +523,9 @@ const SwapModule = ({ width, pair }) => {
         }
         if (state.fromErrors.hasOwnProperty('insufficient')) {
             error = t('convert:errors.insufficient').toUpperCase()
+        }
+        if (state.fromErrors.hasOwnProperty('not_found')) {
+            error = t('convert:errors.est_rate_not_found').toUpperCase()
         }
 
         const shouldDisable = error || !state.fromAmount || !state.estRate
