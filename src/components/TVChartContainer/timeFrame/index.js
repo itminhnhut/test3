@@ -1,11 +1,6 @@
-import { Listbox, Popover, Transition } from '@headlessui/react';
-import {
-    IconFullScreenChart,
-    IconFullScreenChartDisable,
-} from 'components/common/Icons';
-import ChevronDown from 'components/svg/ChevronDown';
-import Candles from 'components/svg/Candles';
+import { Popover, Transition } from '@headlessui/react';
 import Activity from 'components/svg/Activity';
+import ChevronDown from 'components/svg/ChevronDown';
 import find from 'lodash/find';
 import * as React from 'react';
 import { Component, Fragment } from 'react';
@@ -99,73 +94,6 @@ const ListChartType = [
     { type: 'Base Line', value: 10, icon: BaseLineChart },
 ];
 
-const fastIndicators = {
-    primary: [
-        {
-            id: 'Moving Average Nami',
-            alias: 'MA',
-        },
-        {
-            id: 'Moving Average Exponential Nami',
-            alias: 'EMA',
-        },
-        {
-            id: 'Moving Average Weighted Nami',
-            alias: 'WMA',
-        },
-        {
-            id: 'Bollinger Bands Nami',
-            alias: 'BOLL',
-        },
-        {
-            id: 'VWAP Nami',
-            alias: 'VWAP',
-        },
-    ],
-    secondary: [
-        {
-            id: 'Volume',
-            alias: 'VOL',
-        },
-        {
-            id: 'MACD Nami',
-            alias: 'MACD',
-        },
-        {
-            id: 'Relative Strength Index',
-            alias: 'RSI',
-        },
-        {
-            id: 'On Balance Volume',
-            alias: 'OBV',
-        },
-        {
-            id: 'Commodity Channel Index',
-            alias: 'CCI',
-        },
-        {
-            id: 'Stochastic RSI',
-            alias: 'StochRSI',
-        },
-        {
-            id: 'Williams %R',
-            alias: 'WR',
-        },
-        {
-            id: 'Directional Movement',
-            alias: 'DMI',
-        },
-        {
-            id: 'Momentum',
-            alias: 'MTM',
-        },
-        {
-            id: 'Ease Of Movement',
-            alias: 'EMV',
-        },
-    ],
-};
-
 export default class TimeFrame extends Component {
     state = {
         selectedTime: '60',
@@ -190,31 +118,10 @@ export default class TimeFrame extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         const {
             initTimeFrame,
-            extendsIndicators,
-            clearExtendsIndicators,
-            handleRemoveAllStudies,
         } = this.props;
         if (initTimeFrame && initTimeFrame !== prevProps.initTimeFrame) {
             this.updateTimeFrame(this.props.initTimeFrame);
         }
-
-        const extend =
-            fastIndicators.primary.filter(
-                (fastIndicator) => fastIndicator.alias === extendsIndicators,
-            )?.[0] ||
-            fastIndicators.secondary.filter(
-                (fastIndicator) => fastIndicator.alias === extendsIndicators,
-            )?.[0];
-
-        if (extendsIndicators && extend) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({ activeStudiesMap: new Map() }, () => {
-                handleRemoveAllStudies();
-                this.toggleFastStudy(extend.id);
-            });
-        }
-
-        clearExtendsIndicators();
     }
 
     updateTimeFrame = (initTimeFrame) => {
@@ -443,13 +350,6 @@ export default class TimeFrame extends Component {
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">
                                     {selectedPriceChartType.icon}
                                 </span>
-
-                                {/* <Candles
-                                    className="mx-2 cursor-pointer"
-                                    color={colors.darkBlue5}
-                                    fill={colors.darkBlue5}
-                                    size={20}
-                                /> */}
                             </Popover.Button>
                             <Transition
                                 as={Fragment}
@@ -518,13 +418,14 @@ export default class TimeFrame extends Component {
             customChartFullscreen,
             fullScreen,
         } = this.props;
-        const itemClass = 'cursor-pointer text-xs font-medium h-5 px-2 mr-1 text-teal  rounded-md';
+        const itemClass = 'cursor-pointer text-xs font-medium h-5 px-2 mr-1   rounded-md';
         const activeClass = 'bg-teal bg-opacity-10 text-teal';
+        const inactiveClass = 'text-txtSecondary dark:text-txtSecondary-dark';
         return (
             <div className="flex items-center">
                 {/* <span className={`${itemClass} ${activeClass}`}>Original</span> */}
-                <span onClick={chartType !== 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'price' ? activeClass : ''}`}>{this.t('common:price')}</span>
-                <span onClick={chartType === 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'depth' ? activeClass : ''}`}>{this.t('common:depth')}</span>
+                <span onClick={chartType !== 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'price' ? activeClass : inactiveClass}`}>{this.t('common:price')}</span>
+                <span onClick={chartType === 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'depth' ? activeClass : inactiveClass}`}>{this.t('common:depth')}</span>
                 {/* <button
                     type="button"
                     onClick={customChartFullscreen}

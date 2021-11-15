@@ -386,7 +386,7 @@ const SpotComp = () => {
 
     return (
         <MaldivesLayout hideNavBar={fullScreen} hideFooter>
-            <SpotHead symbol={symbol} />
+            <SpotHead symbol={symbol} page="spot"/>
             <MobileView className="bg-white">
                 <DefaultMobileView />
             </MobileView>
