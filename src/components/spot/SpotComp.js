@@ -1,11 +1,10 @@
 import Axios from 'axios';
 import DefaultMobileView from 'components/common/DefaultMobileView';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
+import GridLayoutComponent from 'components/trade/GridLayoutComponent';
 import PlaceOrderForm from 'components/trade/PlaceOrderForm';
+import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
 import SymbolDetail from 'components/trade/SymbolDetail';
-import find from 'lodash/find';
-import size from 'lodash/size';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -15,6 +14,7 @@ import 'react-grid-layout/css/styles.css';
 import { useSelector } from 'react-redux';
 import { useAsync } from 'react-use';
 import { API_GET_FAVORITE } from 'redux/actions/apis';
+import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import Chart from 'src/components/trade/Chart';
 import OrderBook from 'src/components/trade/OrderBook';
 import SpotHead from 'src/components/trade/SpotHead';
@@ -26,12 +26,10 @@ import Emitter from 'src/redux/actions/emitter';
 import {
     getMarketWatch,
     getUserSymbolList,
-    postSymbolViews,
+    postSymbolViews
 } from 'src/redux/actions/market';
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
-import GridLayoutComponent from 'components/trade/GridLayoutComponent';
-import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -172,8 +170,6 @@ const SpotComp = () => {
     const router = useRouter();
     const { t } = useTranslation();
     const { id, timeframe, indicator, layout } = router.query;
-    const [chartSize, setChartSize] = useState('');
-    const [orderBookLayout, setOrderBookLayout] = useState({});
     const [tradesLayout, setTradesLayout] = useState({});
     const [symbolDetailLayout, setSymbolDetailLayout] = useState({});
     const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
@@ -194,15 +190,9 @@ const SpotComp = () => {
     const [favorite, setFavorite] = useState([]);
     const [watchList, setWatchList] = useState([]);
 
-    const [gridLayout, setGridLayout] = useState();
-
-    const [isMaxChart, setIsMaxChart] = useState(false);
-    const [isOnSidebar, setIsOnSidebar] = useState(true);
     const [initTimeFrame, setInitTimeFrame] = useState('');
-    const [extendsIndicators, setExtendsIndicators] = useState('');
     const [isResizingOrderList, setIsResizingOrderList] = useState(false);
     const [orderListWrapperHeight, setOrderListWrapperHeight] = useState(0);
-    const [fullScreen, setFullScreen] = useState(false);
 
     // compact state
     const [state, set] = useState({ orderBook: null });
@@ -218,22 +208,16 @@ const SpotComp = () => {
         setOrderListWrapperHeight(orderListWrapperRef?.current?.clientHeight);
     };
 
-    useEffect(()=>{
-        setGridLayout(layoutMode === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple)
-    }, [layoutMode])
 
     useEffect(() => {
         setTimeout(() => {
             updateOrderListHeight();
         }, 200);
         return () => clearTimeout(updateOrderListHeight());
-    }, [orderListWrapperRef, isResizingOrderList, isOnSidebar]);
+    }, [orderListWrapperRef, isResizingOrderList]);
     const { width } = useWindowSize();
 
     useEffect(() => {
-        if (indicator) {
-            setExtendsIndicators(indicator);
-        }
         if (timeframe) {
             setInitTimeFrame(timeframe);
         }
@@ -334,15 +318,6 @@ const SpotComp = () => {
     }, [publicSocket, symbol]);
 
 
-    const handleCallback = (childData) => {
-        const isTrue = childData === 'true';
-        setIsOnSidebar(isTrue);
-    };
-    const handleCallbackChart = (childData) => {
-        const isTrue = childData === 'true';
-        setIsMaxChart(isTrue);
-    };
-
     const handleChangeSymbol = async (
         sym,
         time_frame,
@@ -350,54 +325,41 @@ const SpotComp = () => {
         symId,
         extIndicator,
     ) => {
-        if (extIndicator) {
-            setExtendsIndicators(extIndicator);
-        }
         router.push(`/trade/${sym.base}-${sym.quote}`, undefined, {
             shallow: true,
         });
         setInitTimeFrame(time_frame);
     };
 
-    const clearExtendsIndicators = () => {
-        setExtendsIndicators('');
-    };
-
     const renderSymbolList = useMemo(() => {
         if (layoutMode !== SPOT_LAYOUT_MODE.SIMPLE) return null;
-        if (size(tradesLayout) > 0) {
-            return (
-                <SymbolList
-                    parentCallback={handleCallback}
-                    publicSocket={publicSocket}
-                    symbol={symbol}
-                    changeSymbolList={changeSymbolList}
-                    watchList={watchList}
-                    favorite={favorite}
-                    handleChangeSymbol={handleChangeSymbol}
-                />
-            );
-        }
-        return null;
-    }, [watchList, favorite, tradesLayout]);
+        return (
+            <SymbolList
+                publicSocket={publicSocket}
+                symbol={symbol}
+                changeSymbolList={changeSymbolList}
+                watchList={watchList}
+                favorite={favorite}
+                handleChangeSymbol={handleChangeSymbol}
+            />
+        )
+    }, [watchList, favorite]);
 
-    const customChartFullscreen = () => {
-        setFullScreen(!fullScreen);
-    };
 
     if (!symbol) return null;
 
     return (
-        <MaldivesLayout hideNavBar={fullScreen} hideFooter  page="spot" changeLayoutCb={setLayoutMode}>
-            <SpotHead symbol={symbol}/>
+        <MaldivesLayout hideFooter page="spot" changeLayoutCb={setLayoutMode}>
+            <SpotHead symbol={symbol} />
             <MobileView className="bg-white">
                 <DefaultMobileView />
             </MobileView>
             <BrowserView className="bg-bgContainer dark:bg-bgContainer-dark">
-                <div className={layoutMode === SPOT_LAYOUT_MODE.PRO ? '' : '2xl:container'}>
+                <div className={layoutMode === SPOT_LAYOUT_MODE.PRO ? 'w-full' : '2xl:container'}>
                     <ReactGridLayout
                         className="layout"
-                        layout={gridLayout}
+                        
+                        layout={layoutMode === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple}
                         breakpoints={{ xl: 1440, lg: 2200 }}
                         cols={16}
                         margin={[-1, -1]}
@@ -410,12 +372,9 @@ const SpotComp = () => {
                             <GridLayoutComponent>
                                 <SymbolDetail
                                     symbol={symbol}
-                                    layoutConfig={symbolDetailLayout}
                                     changeSymbolList={changeSymbolList}
                                     watchList={watchList}
                                     favorite={favorite}
-                                    parentCallback={handleCallbackChart}
-                                    fullScreen={false}
                                 />
                             </GridLayoutComponent>
 
@@ -423,7 +382,6 @@ const SpotComp = () => {
 
                         <div key="orderbook" className="border border-divider dark:border-divider-dark">
                             <OrderBook
-                                layoutConfig={orderBookLayout}
                                 symbol={symbol}
                                 parentState={setState}
                             />
@@ -440,18 +398,11 @@ const SpotComp = () => {
                             className="border border-divider dark:border-divider-dark"
                         >
                             <Chart
-                                parentCallback={handleCallbackChart}
                                 symbol={symbol}
-                                isOnSidebar={isOnSidebar}
                                 changeSymbolList={changeSymbolList}
                                 watchList={watchList}
                                 favorite={favorite}
-                                chartSize={chartSize}
                                 initTimeFrame={initTimeFrame}
-                                extendsIndicators={extendsIndicators}
-                                clearExtendsIndicators={clearExtendsIndicators}
-                                customChartFullscreen={customChartFullscreen}
-                                fullScreen={fullScreen}
                             />
                         </div>
 
@@ -463,22 +414,21 @@ const SpotComp = () => {
                             />
                         </div>
                         <div key="placeOrderForm" className="border border-divider dark:border-divider-dark">
-                            {layoutMode === SPOT_LAYOUT_MODE.SIMPLE 
-                            
-                            ? <SimplePlaceOrderForm
-                                symbol={symbol}
-                                orderBook={state.orderBook}
-                            />
-                            : <PlaceOrderForm
-                                symbol={symbol}
-                                orderBook={state.orderBook}
-                            />
+                            {layoutMode === SPOT_LAYOUT_MODE.SIMPLE
+
+                                ? <SimplePlaceOrderForm
+                                    symbol={symbol}
+                                    orderBook={state.orderBook}
+                                />
+                                : <PlaceOrderForm
+                                    symbol={symbol}
+                                    orderBook={state.orderBook}
+                                />
                             }
                         </div>
                         <div key="orderList" className="border border-divider dark:border-divider-dark">
                             <div ref={orderListWrapperRef} className="h-full">
                                 <SpotOrderList
-                                    isOnSidebar={isOnSidebar}
                                     orderListWrapperHeight={
                                         orderListWrapperHeight
                                     }

@@ -19,12 +19,8 @@ const SpotSetting = (props) => {
     const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
 
     const onChangeLayout = (_layout) => {
-        setLayoutMode(_layout);
-        router.push({
-            pathname: route,
-            query: { ...query, layout: _layout },
-        });
-        if(changeLayoutCb) changeLayoutCb(_layout);
+        const nextUrl = route.replace('[id]', id)
+        window.location = `${nextUrl}?layout=${_layout}`
     };
     const inActiveLabel =
         currentTheme === 'dark' ? colors.gray4 : colors.darkBlue;
