@@ -14,11 +14,7 @@ const useLanguage = () => {
             currentLocale === LANGUAGE_TAG.VI
                 ? LANGUAGE_TAG.EN
                 : LANGUAGE_TAG.VI;
-        if (route === "/trade/[id]") {
-            push(`/trade/${query?.id}`, undefined, { locale: nextLang });
-        } else {
-            push(route, query, { locale: nextLang });
-        }
+        push(route, query, { locale: nextLang });
     };
 
     return [currentLocale, onChangeLang];

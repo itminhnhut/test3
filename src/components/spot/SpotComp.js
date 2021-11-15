@@ -194,7 +194,7 @@ const SpotComp = () => {
     const [favorite, setFavorite] = useState([]);
     const [watchList, setWatchList] = useState([]);
 
-    const [gridLayout, setGridLayout] = useState(layout === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple);
+    const [gridLayout, setGridLayout] = useState();
 
     const [isMaxChart, setIsMaxChart] = useState(false);
     const [isOnSidebar, setIsOnSidebar] = useState(true);
@@ -217,6 +217,10 @@ const SpotComp = () => {
     const updateOrderListHeight = () => {
         setOrderListWrapperHeight(orderListWrapperRef?.current?.clientHeight);
     };
+
+    useEffect(()=>{
+        setGridLayout(layoutMode === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple)
+    }, [layoutMode])
 
     useEffect(() => {
         setTimeout(() => {
@@ -384,7 +388,7 @@ const SpotComp = () => {
     if (!symbol) return null;
 
     return (
-        <MaldivesLayout hideNavBar={fullScreen} hideFooter  page="spot">
+        <MaldivesLayout hideNavBar={fullScreen} hideFooter  page="spot" changeLayoutCb={setLayoutMode}>
             <SpotHead symbol={symbol}/>
             <MobileView className="bg-white">
                 <DefaultMobileView />

@@ -10,17 +10,22 @@ import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
 
 const SpotSetting = (props) => {
+    const {changeLayoutCb} = props
     const [currentTheme, onThemeSwitch] = useDarkMode();
     const router = useRouter();
     const { t } = useTranslation();
-    const { route } = router;
-    const { layout, id } = router.query;
+    const { route, query } = router;
+    const { layout, id } = query;
     const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
 
-    const onChangeLayout = (_layout)=>{
-        console.log('__ check change layout', _layout, id);
-        router.push(`/trade/${id}`, {layout: _layout});
-    }
+    const onChangeLayout = (_layout) => {
+        setLayoutMode(_layout);
+        router.push({
+            pathname: route,
+            query: { ...query, layout: _layout },
+        });
+        if(changeLayoutCb) changeLayoutCb(_layout);
+    };
     const inActiveLabel =
         currentTheme === 'dark' ? colors.gray4 : colors.darkBlue;
     return (
@@ -36,7 +41,7 @@ const SpotSetting = (props) => {
                             size={20}
                             color={
                                 currentTheme === 'dark'
-                                    ? colors.gray4
+                                    ? colors.white
                                     : colors.darkBlue
                             }
                         />
@@ -97,7 +102,7 @@ const SpotSetting = (props) => {
                                     <div className="flex justify-around">
                                         <div className="text-center">
                                             <img
-                                                className={'cursor-pointer ' + (layout === SPOT_LAYOUT_MODE.SIMPLE ? 'border-2 border-teal' : '')}
+                                                className={'cursor-pointer ' + (layoutMode === SPOT_LAYOUT_MODE.SIMPLE ? 'border-2 border-teal' : '')}
                                                 onClick={() => onChangeLayout(SPOT_LAYOUT_MODE.SIMPLE)}
                                                 src={`/images/icon/mode-classic${
                                                     currentTheme === 'dark'
@@ -114,7 +119,7 @@ const SpotSetting = (props) => {
                                         </div>
                                         <div className="text-center">
                                             <img
-                                                className={'cursor-pointer ' + (layout === SPOT_LAYOUT_MODE.PRO ? 'border-2 border-teal' : '')}
+                                                className={'cursor-pointer ' + (layoutMode === SPOT_LAYOUT_MODE.PRO ? 'border-2 border-teal' : '')}
                                                 onClick={() => onChangeLayout(SPOT_LAYOUT_MODE.PRO)}
                                                 src={`/images/icon/mode-advance${
                                                     currentTheme === 'dark'

@@ -44,8 +44,7 @@ const NAV_HIDE_THEME_BUTTON = [
     'maldives_landingpage'
 ]
 
-const NavBar = ({ style, layoutStateHandler, useOnly, name, page }) => {
-    console.log('__ check init enav bar', page);
+const NavBar = ({ style, layoutStateHandler, useOnly, name, page, changeLayoutCb }) => {
     // * Initial State
     const [state, set] = useState({
        isDrawer: false,
@@ -449,7 +448,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name, page }) => {
                         </a>
                         {
                             page === 'spot'
-                            ? <SpotSetting/>
+                            ? <SpotSetting changeLayoutCb={changeLayoutCb}/>
                             : renderThemeButton()}
                        
                     </div>}
