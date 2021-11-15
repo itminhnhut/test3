@@ -31,6 +31,7 @@ import {
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
 import GridLayoutComponent from 'components/trade/GridLayoutComponent';
+import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -164,10 +165,8 @@ const layoutPro = [
 
 ];
 
-const LayoutMode = {
-    SIMPLE: 'simple',
-    PRO: 'pro',
-};
+
+
 
 const SpotComp = () => {
     const router = useRouter();
@@ -177,7 +176,7 @@ const SpotComp = () => {
     const [orderBookLayout, setOrderBookLayout] = useState({});
     const [tradesLayout, setTradesLayout] = useState({});
     const [symbolDetailLayout, setSymbolDetailLayout] = useState({});
-    const [layoutMode, setLayoutMode] = useState(layout === LayoutMode.PRO ? LayoutMode.PRO : LayoutMode.SIMPLE);
+    const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
     // Check pattern
     let symbolFromUrl = null;
     if (typeof id === 'string' && id.length) {
@@ -195,7 +194,7 @@ const SpotComp = () => {
     const [favorite, setFavorite] = useState([]);
     const [watchList, setWatchList] = useState([]);
 
-    const [gridLayout, setGridLayout] = useState(layout === LayoutMode.PRO ? layoutPro : layoutSimple);
+    const [gridLayout, setGridLayout] = useState(layout === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple);
 
     const [isMaxChart, setIsMaxChart] = useState(false);
     const [isOnSidebar, setIsOnSidebar] = useState(true);
@@ -361,7 +360,7 @@ const SpotComp = () => {
     };
 
     const renderSymbolList = useMemo(() => {
-        if (layoutMode !== LayoutMode.SIMPLE) return null;
+        if (layoutMode !== SPOT_LAYOUT_MODE.SIMPLE) return null;
         if (size(tradesLayout) > 0) {
             return (
                 <SymbolList
@@ -385,13 +384,13 @@ const SpotComp = () => {
     if (!symbol) return null;
 
     return (
-        <MaldivesLayout hideNavBar={fullScreen} hideFooter>
-            <SpotHead symbol={symbol} page="spot"/>
+        <MaldivesLayout hideNavBar={fullScreen} hideFooter  page="spot">
+            <SpotHead symbol={symbol}/>
             <MobileView className="bg-white">
                 <DefaultMobileView />
             </MobileView>
             <BrowserView className="bg-bgContainer dark:bg-bgContainer-dark">
-                <div className={layoutMode === LayoutMode.PRO ? '' : '2xl:container'}>
+                <div className={layoutMode === SPOT_LAYOUT_MODE.PRO ? '' : '2xl:container'}>
                     <ReactGridLayout
                         className="layout"
                         layout={gridLayout}
@@ -460,7 +459,7 @@ const SpotComp = () => {
                             />
                         </div>
                         <div key="placeOrderForm" className="border border-divider dark:border-divider-dark">
-                            {layoutMode === LayoutMode.SIMPLE 
+                            {layoutMode === SPOT_LAYOUT_MODE.SIMPLE 
                             
                             ? <SimplePlaceOrderForm
                                 symbol={symbol}

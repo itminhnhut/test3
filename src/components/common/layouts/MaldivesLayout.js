@@ -16,6 +16,7 @@ const MadivesLayout = ({
     dark,
     children,
     hideNavBar,
+    page,
 }) => {
     // * Initial State
     const [state, set] = useState({ isDrawer: false });
@@ -37,7 +38,7 @@ const MadivesLayout = ({
             style={state.isDrawer ? { height, overflow: 'hidden' } : {}}
         >
             <ReactNotification />
-            {!hideNavBar && <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }} layoutStateHandler={setState} />}
+            {!hideNavBar && <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }} layoutStateHandler={setState} page={page}/>}
             <div
                 style={{
                     paddingTop: !navOverComponent ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,

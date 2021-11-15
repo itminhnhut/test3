@@ -44,7 +44,8 @@ const NAV_HIDE_THEME_BUTTON = [
     'maldives_landingpage'
 ]
 
-const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
+const NavBar = ({ style, layoutStateHandler, useOnly, name, page }) => {
+    console.log('__ check init enav bar', page);
     // * Initial State
     const [state, set] = useState({
        isDrawer: false,
@@ -446,10 +447,13 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                              {/*   <Image src="/images/icon/ic_us_flag.png" width="20" height="20" />*/}
                              {/*  : <Image src="/images/icon/ic_vn_flag.png" width="20" height="20" />*/}
                         </a>
-                        {renderThemeButton()}
+                        {
+                            page === 'spot'
+                            ? <SpotSetting/>
+                            : renderThemeButton()}
                        
                     </div>}
-                    <SpotSetting/>
+                    
                     {width < 1366 &&
                     <div className="relative" onClick={(e) => {
                         onDrawerAction(true)}

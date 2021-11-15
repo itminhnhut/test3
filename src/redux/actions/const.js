@@ -634,3 +634,9 @@ export const CATEGORY_SPOT_SIGNAL = {
     ALL: 'nami_cat_all',
     SIGNAL: 'nami_cat_signal',
 };
+
+export const SPOT_LAYOUT_MODE = {
+    SIMPLE: 'simple',
+    PRO: 'pro',
+    FULLSCREEN: 'fullscreen',
+};
