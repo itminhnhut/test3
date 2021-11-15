@@ -10,19 +10,21 @@ import Link from 'next/link'
 import * as Error from '../../../../redux/actions/apiError'
 import Skeletor from 'components/common/Skeletor'
 import useOutsideClick from 'hooks/useOutsideClick'
+import Modal from 'components/common/Modal'
 
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAsync, useDebounce } from 'react-use'
-import { getSwapEstimatePrice } from 'redux/actions/market'
-import { useTranslation } from 'next-i18next'
-import { find, orderBy } from 'lodash'
-import { formatSwapValue, formatWallet, getDecimalScale, getV1Url, safeToFixed } from 'redux/actions/utils'
+import { Trans, useTranslation } from 'next-i18next'
+import { find, orderBy, uniqBy } from 'lodash'
+import { eToNumber, formatPrice, formatSwapRate, formatSwapValue, formatWallet, getDecimalScale, getV1Url, safeToFixed } from 'redux/actions/utils'
 import { useSelector } from 'react-redux'
-import { RefreshCw } from 'react-feather'
+import { RefreshCw, Search, X, XCircle } from 'react-feather'
 import { ApiStatus } from 'redux/actions/const'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
+import { TERM_OF_SERVICE } from 'constants/constants'
 
 
-const FEE_RATE = 0.1 / 100
+const FEE_RATE = 0 / 100
 const DEBOUNCE_TIMEOUT = 500
 
 const DEFAULT_PAIR = {
@@ -49,8 +51,9 @@ const SwapModule = ({ width, pair }) => {
         loadingEstRate: false,
         shouldRefreshRate: false,
         preOrder: null,
+        loadingPreOrder: false,
         processingOrder: false,
-        invoice: null,
+        invoiceId: null,
         fromAsset: DEFAULT_PAIR.fromAsset,
         fromAmount: null,
         fromAssetList: null,
@@ -59,16 +62,19 @@ const SwapModule = ({ width, pair }) => {
         toAssetList: null,
         fromErrors: {},
         focus: 'from',
+        search: '',
         inputHighlighted: null,
         changeEstRatePosition: false,
         openAssetList: {},
         openModal: false,
         //... Add new state here
     })
+    const [swapTimer, setSwapTimer] = useState(null)
     const setState = state => set(prevState => ({...prevState, ...state}))
 
     // Get state from Rdx
     const wallets = useSelector(state => state.wallet.SPOT)
+    const auth = useSelector(state => state.auth?.user)
 
     // Refs
     const fromAssetListRef = useRef()
@@ -93,7 +99,7 @@ const SwapModule = ({ width, pair }) => {
     }, [config, wallets])
 
     // Use Hooks
-    const { t } = useTranslation(['navbar', 'common', 'error', 'convert'])
+    const { t, i18n: { language } } = useTranslation(['navbar', 'common', 'error', 'convert'])
     const [currentTheme, ] = useDarkMode()
 
     useOutsideClick(fromAssetListRef, () => state.openAssetList?.from && setState({ openAssetList: { from: false } }))
@@ -112,7 +118,7 @@ const SwapModule = ({ width, pair }) => {
             params: {
                 fromAsset: state.fromAsset,
                 toAsset: state.toAsset,
-                requestQty,
+                requestQty: +requestQty,
                 requestAsset,
             },
         })
@@ -121,6 +127,7 @@ const SwapModule = ({ width, pair }) => {
         if (status === ApiStatus.SUCCESS && updateQty) {
             if (requestAsset === state.fromAsset) {
                 setState({ toAmount: requestQty * data?.price })
+
             }
             if (requestAsset === state.toAsset) {
                 setState({ fromAmount: requestQty / data?.price })
@@ -130,8 +137,8 @@ const SwapModule = ({ width, pair }) => {
         setState({ loadingEstRate: false, shouldRefreshRate: false })
     }
 
-    const fetchPreSwapOrder = async () => {
-        setState({ loadingEstRate: true })
+    const fetchPreSwapOrder = async (fromAsset, toAsset, fromQty) => {
+        setState({ loadingEstRate: true, loadingPreOrder: true, preOrder: null })
 
             const { status, data, code } = await fetchAPI({
                 url: '/api/v3/swap/pre_order',
@@ -139,14 +146,15 @@ const SwapModule = ({ width, pair }) => {
                     method: 'POST',
                 },
                 params: {
-                    fromAsset: state.fromAsset,
-                    toAsset: state.toAsset,
-                    fromQty: state.fromAmount,
+                    fromAsset,
+                    toAsset,
+                    fromQty,
                 },
             })
 
             if (status === ApiStatus.SUCCESS && data) {
                 setState({ preOrder: data, shouldRefreshRate: false })
+                setSwapTimer(data?.swapTimeout)
                 setTimeout(() => setState({ openModal: true }), 200)
             } else {
                 const e = find(Error, { code })
@@ -158,19 +166,17 @@ const SwapModule = ({ width, pair }) => {
                 })
             }
 
-            setState({ loadingEstRate: false })
+            setState({ loadingEstRate: false, loadingPreOrder: false })
     }
 
-    const onConfirmOrder = async () => {
+    const onConfirmOrder = async (preOrderId) => {
         setState({ processingOrder: true })
         const result = await fetchAPI({
             url: '/api/v3/swap/confirm_order',
             options: {
                 method: 'POST',
             },
-            params: {
-                preOrderId: preOrderData?.preOrderId,
-            },
+            params: { preOrderId },
         })
         setState({ processingOrder: false })
 
@@ -178,8 +184,8 @@ const SwapModule = ({ width, pair }) => {
             const { displayingId, fromAsset, toAsset, fromQty, toQty, displayingPrice } = result?.data
             let msg = t('convert:swap_success', { fromQty, fromAsset, toQty, toAsset, displayingPrice })
 
-            setState({ invoiceId: displayingId })
-            showNotification({ msg, title: t('common:success'), type: 'success' })
+            setState({ openModal: false, preOrder: null, invoiceId: displayingId })
+            showNotification({ message: msg, title: t('common:success'), type: 'success' }, 3200)
         } else {
             const error = find(Error, { code: result?.code })
             if (REJECT_PREORDER.includes(error.message)) {
@@ -190,31 +196,37 @@ const SwapModule = ({ width, pair }) => {
             showNotification({
                 message: `(${result?.code}) ${description}`,
                 title: 'Failure', type: 'failure'
-            })
-
+            }, 5000)
+            setSwapTimer(null)
         }
 
     }
 
     const onClickFromAsset = (fromAsset) => {
-        if (!state.swapConfigs?.length) return
+        if (!state.swapConfigs?.length || fromAsset === state.fromAsset) {
+            setState({ openAssetList: {} })
+            return
+        }
 
-        setState({ fromAsset, search: '', fromErrors: {} })
+        setState({ fromAsset, search: '', fromErrors: {}, openAssetList: {} })
         fromAssetBtnRef?.current?.click()
 
         let result = state.swapConfigs.filter(sw => sw?.fromAsset === fromAsset)
         if (result) {
             result = result.map(r => ({
-                ...sw,
-                availabel: wallets?.[r.toAssetId]?.value - wallets?.[r?.toAssetId]?.locked_value
+                ...r,
+                available: wallets?.[r.toAssetId]?.value - wallets?.[r?.toAssetId]?.locked_value
             }))
+
             result = orderBy(result, ['available', 'toAsset'], ['desc', 'asc'])
-            if (result?.length) setState({ toAsset: result[0]?.toAsset })
+            if (result?.length) {
+                setState({ toAsset: result[0]?.toAsset })
+            }
         }
     }
 
     const onClickToAsset = (toAsset) => {
-        setState({ toAsset, search: '' })
+        setState({ toAsset, search: '', openAssetList: {} })
         toAssetBtnRef?.current?.click()
     }
 
@@ -234,9 +246,10 @@ const SwapModule = ({ width, pair }) => {
         })
     }
 
-    const onMaxiumQty = (mode = 'from', availabelAsset) => {
-        if (!availabelAsset) return
-        const _qty = availabelAsset
+    const onMaxiumQty = (mode = 'from', availableAsset) => {
+        if (!availableAsset) return
+        const _qty = availableAsset
+        const limitMaxQty = config.filters?.[0].maxQty
 
         if (mode === 'from') {
             if ((!_qty > 0)) return
@@ -255,6 +268,11 @@ const SwapModule = ({ width, pair }) => {
             }
             setState({ toAmount: safeToFixed(max, getDecimalScale(+config.filters?.[0].stepSize)) })
         }
+    }
+
+    const onCloseSwapModal = () => {
+        setState({ openModal: false, preOrder: null, invoiceId: null })
+        setSwapTimer(null)
     }
 
     // Render Handler
@@ -299,19 +317,60 @@ const SwapModule = ({ width, pair }) => {
                 </div>
             </div>
         )
-    }, [state.fromAsset, state.fromAmount, state.openAssetList, availabelAsset])
+    }, [state.fromAsset, state.fromAmount, state.openAssetList, availabelAsset, config])
 
     const renderFromAssetList = useCallback(() => {
-        if (!state.openAssetList?.from) return null
+        if (!state.openAssetList?.from || !state.fromAssetList) return null
+
+        const assetItems = []
+        const data = state.fromAssetList
+
+        for (let i = 0; i < data?.length; ++i) {
+            const { fromAsset, available } = data?.[i]
+
+            assetItems.push(
+                <div key={`asset_item___${i}`} className={state.fromAsset === fromAsset ?
+                    'px-2.5 py-1.5 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
+                : 'px-2.5 py-1.5 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'}
+                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
+                     onClick={() => onClickFromAsset(fromAsset)}
+                >
+                   <div className="flex items-center">
+                       <AssetLogo assetCode={fromAsset} size={20}/>
+                       <span className="ml-2">{fromAsset}</span>
+                   </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                        {available ? formatWallet(available) : '0.0000'}
+                    </div>
+                </div>
+            )
+        }
+
         return (
-            <div className="from_asset__list absolute left-4 top-full p-4 mt-2 w-full px-[20px] z-20 rounded-xl border
-                            border-divider dark:border-divider-dark bg-gray-5 dark:bg-darkBlue-3 drop-shadow-common
+            <div className="from_asset__list absolute left-4 top-full py-4 mt-2 w-full z-20 rounded-xl border
+                            border-divider dark:border-divider-dark bg-gray-5 dark:bg-darkBlue-3 drop-shadow-onlyLight
                             dark:drop-shadow-none"
                  ref={fromAssetListRef}>
-                Dropdown Here
+                <div className="px-2.5">
+                    <div className="flex items-center bg-bgContainer dark:bg-bgContainer-dark w-full py-2 px-3 rounded-xl text-sm">
+                        <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark"/>
+                        <input className="px-2 w-full" value={state.search}
+                               placeholder={language === LANGUAGE_TAG.EN ? 'Search Assets...' : 'Tìm tài sản...'}
+                               onChange={(e) => setState({ search: e.target?.value })}/>
+                        <XCircle size={16}
+                                 onClick={() => setState({ search: '' })}
+                                 className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant"/>
+                    </div>
+                </div>
+                <div className="mt-2 px-2.5 max-h-[200px] overflow-y-auto">
+                    {assetItems?.length ? assetItems
+                        : <div className="h-[50px] flex items-center justify-center text-center text-sm italic text-txtSecondary dark:text-txtSecondary-dark">
+                             {language === LANGUAGE_TAG.EN ? 'Not found asset' : 'Không tìm thấy tài sản'}
+                          </div>}
+                </div>
             </div>
         )
-    }, [state.fromAssetList, state.openAssetList])
+    }, [state.fromAsset, state.fromAssetList, state.openAssetList, state.search, language])
 
     const renderToInput = useCallback(() => {
         return (
@@ -346,29 +405,57 @@ const SwapModule = ({ width, pair }) => {
     }, [state.toAsset, state.toAmount, state.openAssetList, availabelAsset])
 
     const renderToAssetList = useCallback(() => {
-        if (!state.openAssetList?.to) return null
+        if (!state.openAssetList?.to || !state.toAssetList) return null
+
+        const assetItems = []
+        const data = state.toAssetList
+
+        for (let i = 0; i < data?.length; ++i) {
+            const { toAsset, available } = data?.[i]
+
+            assetItems.push(
+                <div key={`asset_item___${i}`} className={state.toAsset === toAsset ?
+                    'px-2.5 py-1.5 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
+                    : 'px-2.5 py-1.5 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'}
+                     // onClick={() => setState({ toAsset, search: '', openAssetList: {} })}
+                     onClick={() => onClickToAsset(toAsset)}
+                >
+                    <div className="flex items-center">
+                        <AssetLogo assetCode={toAsset} size={20}/>
+                        <span className="ml-2">{toAsset}</span>
+                    </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                        {available ? formatWallet(available) : '0.0000'}
+                    </div>
+                </div>
+            )
+        }
+
         return (
-            <div className="to_asset__list absolute left-4 top-full p-4 mt-2 w-full px-[20px] z-20 rounded-xl border
-                            border-divider dark:border-divider-dark bg-gray-5 dark:bg-darkBlue-3 drop-shadow-common
+            <div className="from_asset__list absolute left-4 top-full py-4 mt-2 w-full z-20 rounded-xl border
+                            border-divider dark:border-divider-dark bg-gray-5 dark:bg-darkBlue-3 drop-shadow-onlyLight
                             dark:drop-shadow-none"
                  ref={toAssetListRef}>
-                Dropdown Here
+                <div className="px-2.5">
+                    <div className="flex items-center bg-bgContainer dark:bg-bgContainer-dark w-full py-2 px-3 rounded-xl text-sm">
+                        <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark"/>
+                        <input className="px-2 w-full" value={state.search}
+                               placeholder={language === LANGUAGE_TAG.EN ? 'Search Assets...' : 'Tìm tài sản...'}
+                               onChange={e => setState({ search: e.target?.value })}/>
+                        <XCircle size={16}
+                                 onClick={() => setState({ search: '' })}
+                                 className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant"/>
+                    </div>
+                </div>
+                <div className="mt-2 px-2.5 max-h-[200px] overflow-y-auto">
+                    {assetItems?.length ? assetItems
+                        : <div className="h-[50px] flex items-center justify-center text-center text-sm italic text-txtSecondary dark:text-txtSecondary-dark">
+                            {language === LANGUAGE_TAG.EN ? 'Not found asset' : 'Không tìm thấy tài sản'}
+                          </div>}
+                </div>
             </div>
         )
-    }, [state.toAssetList, state.openAssetList])
-
-    const renderReverseBtn = useCallback(() => {
-        return (
-            <div className={state.openAssetList?.from ?
-                'absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer invisible'
-                : 'absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer'}
-                 onClick={onReverse}>
-                <SwapReverse color={currentTheme === THEME_MODE.DARK ? colors.darkBlue3 : undefined}
-                             size={width < 1280 && 26}
-                />
-            </div>
-        )
-    }, [state.openAssetList, currentTheme])
+    }, [state.toAsset, state.toAssetList, state.openAssetList, state.search, language])
 
     const renderRate = useCallback(() => {
         let price = 0
@@ -381,16 +468,14 @@ const SwapModule = ({ width, pair }) => {
             state.estRate?.fromAsset === state.fromAsset &&
             state.estRate?.toAsset === state.toAsset
         ) {
-            price = state.changeEstRatePosition ?
-                    formatSwapValue(1 / state.estRate?.price)
-                    : formatSwapValue(state.estRate?.price)
+            price = state.changeEstRatePosition ? formatSwapRate(1 / +state.estRate?.price) : formatSwapRate(+state.estRate?.price)
         }
 
         if ((!state.fromAmount > 0)) {
-            return <span className="font-bold">{t('convert:please_input')}</span>
+            return <span className="font-bold">---</span>
         }
 
-        if (price === 0) {
+        if (price === 0 || state.loadingEstRate) {
             return <Skeletor width={100}/>
         }
 
@@ -402,7 +487,75 @@ const SwapModule = ({ width, pair }) => {
                 <span>{rightUnit}</span>
             </span>
         )
-    }, [config, state.fromAsset, state.fromAmount, state.toAsset, state.estRate, state.changeEstRatePosition])
+    }, [config, state.fromAsset, state.fromAmount, state.toAsset, state.estRate, state.changeEstRatePosition, state.loadingEstRate])
+
+    const renderSwapBtn = useCallback(() => {
+        if (!auth) {
+            return (
+                <div className="mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold bg-dominant
+                                select-none cursor-pointer hover:opacity-80">
+                    {t('common:sign_in')}
+                </div>
+            )
+        }
+
+        let error
+        if (!Object.keys(state.fromErrors).length) error = null
+
+        if (state.fromErrors.hasOwnProperty('min')) {
+            error = t('convert:errors.min', { amount: formatPrice(state.fromErrors.min) }).toUpperCase() + ` ${state.fromAsset}`
+        }
+        if (state.fromErrors.hasOwnProperty('max')) {
+            error = t('convert:errors.max', { amount: formatPrice(state.fromErrors.max) }).toUpperCase() + ` ${state.fromAsset}`
+        }
+        if (state.fromErrors.hasOwnProperty('insufficient')) {
+            error = t('convert:errors.insufficient').toUpperCase()
+        }
+
+        const shouldDisable = error || !state.fromAmount || !state.estRate
+
+        return (
+            <div className={shouldDisable ?
+                'mt-6 py-3 w-full rounded-xl text-center text-gray-1 dark:text-darkBlue-5 text-sm font-bold bg-gray-3 dark:bg-darkBlue-4 select-none cursor-not-allowed'
+                : 'mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold select-none bg-dominant cursor-pointer hover:opacity-80'}
+                 onClick={() => !shouldDisable && !state.loadingPreOrder && fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)}>
+                {error ? error : t('navbar:submenu.swap')}
+            </div>
+        )
+    }, [auth, state.fromAsset, state.toAsset, state.fromAmount, state.loadingPreOrder, state.estRate, state.fromErrors])
+
+    const renderPreOrderModal = useCallback(() => {
+        const positiveLabel = swapTimer <= 1 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`
+
+        return (
+            <Modal isVisible={state.openModal}
+                   type="confirm-one-choice"
+                   title={t('convert:confirm')}
+                   positiveLabel={positiveLabel}
+                   onConfirmCb={() => swapTimer ? onConfirmOrder(state.preOrder?.preOrderId)
+                                      : !state.loadingPreOrder &&
+                                      fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)}
+                   className="px-6 py-5">
+                <div className="absolute top-5 right-6 cursor-pointer" onClick={onCloseSwapModal}>
+                    <X size={18} className="text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant"/>
+                </div>
+                <div className="flex items-end justify-between mt-4 text-sm">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:from_amount')}:</span>
+                    <span className="font-medium">{formatPrice(state.preOrder?.fromQty)} {state.preOrder?.fromAsset}</span>
+                </div>
+                <div className="flex items-end justify-between mt-4 text-sm">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:to_amount')}:</span>
+                    <span className="font-medium">{formatPrice(state.preOrder?.toQty)} {state.preOrder?.toAsset}</span>
+                </div>
+                <div className="flex items-end justify-between mt-4 text-sm">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:rate')}:</span>
+                    <span className="font-medium">
+                        1 {state.preOrder?.fromAsset === config?.displayPriceAsset ? state.preOrder?.toAsset : state.preOrder?.fromAsset} = {formatPrice(state.preOrder?.displayingPrice)} {config?.displayPriceAsset}
+                    </span>
+                </div>
+            </Modal>
+        )
+    }, [state.openModal, state.preOrder, state.fromAmount, state.toAsset, state.fromAmount, swapTimer, config])
 
     // Side Effect
     useAsync(async () => {
@@ -440,6 +593,22 @@ const SwapModule = ({ width, pair }) => {
     }, [pair])
 
     useEffect(() => {
+        let interval
+        if (swapTimer) {
+            interval = setInterval(() => {
+                setSwapTimer(lastTimerCount => {
+                    if (lastTimerCount <= 1) {
+                        clearInterval(interval)
+                        setState({ shouldRefreshRate: true })
+                    }
+                    return lastTimerCount - 1
+                })
+            }, 1000)
+        }
+        return () => clearInterval(interval)
+    }, [swapTimer])
+
+    useEffect(() => {
         if (!state.swapConfigs || state.init) return
         const sizeFilter = find(config?.filters, { filterType: 'LOT_SIZE' })
         if (sizeFilter?.minQty > 0) {
@@ -447,6 +616,28 @@ const SwapModule = ({ width, pair }) => {
             setState({ init: true })
         }
     }, [config, state.swapConfigs, state.fromAsset])
+
+    useEffect(() => {
+        let result = uniqBy(state.swapConfigs, 'fromAsset').filter(e => (e?.fromAsset?.toLowerCase()?.includes(state.search?.toLowerCase()))) || []
+        result = result.map(r => ({
+            ...r,
+            available: wallets?.[r.fromAssetId]?.value - wallets?.[r?.fromAssetId]?.locked_value
+        }))
+        result = orderBy(result, ['available', 'fromAsset'], ['desc', 'asc'])
+        setState({ fromAssetList: result })
+    }, [state.swapConfigs, state.search, wallets])
+
+    useEffect(() => {
+        if (!state.swapConfigs?.length) return
+        let result = state.swapConfigs.filter(e => e?.toAsset?.toLowerCase()
+            ?.includes(state.search?.toLowerCase()) && e.fromAsset === state.fromAsset)
+        result = result.map(e => ({
+            ...e,
+            available: wallets?.[e.toAssetId]?.value - wallets?.[e?.toAssetId]?.locked_value
+        }))
+        result = orderBy(result, ['available', 'toAsset'], ['desc', 'asc'])
+        setState({ toAssetList: result })
+    }, [state.swapConfigs, state.search, state.fromAsset, wallets])
 
     useDebounce(() => {
         setState({ fromErrors: {} })
@@ -486,79 +677,88 @@ const SwapModule = ({ width, pair }) => {
     }, DEBOUNCE_TIMEOUT, [state.toAmount, state.toAsset])
 
     return (
-        <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-            <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[305px] md:w-[380px] xl:w-[454px] bg-bgContainer dark:bg-bgContainer-dark rounded-xl">
-                <div className="flex mb-3 items-center justify-between font-bold">
-                    {t('navbar:submenu.swap')}
-                    {renderDepositLink()}
-                </div>
+        <>
+            <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
+                <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[305px] md:w-[380px] xl:w-[454px] bg-bgContainer dark:bg-bgContainer-dark rounded-xl">
+                    <div className="flex mb-3 items-center justify-between font-bold">
+                        {t('navbar:submenu.swap')}
+                        {renderDepositLink()}
+                    </div>
 
-                {/*INPUT WRAPPER*/}
-                <div className="relative">
-                    <div className={state.inputHighlighted === 'from' ?
-                        'pt-[14px] pb-[18px] px-[20px] rounded-xl relative border border-dominant'
-                        : 'pt-[14px] pb-[18px] px-[20px] rounded-xl relative border border-divider dark:border-divider-dark'}>
-                        <div className="flex items-center justify-between text-[14px]">
+                    {/*INPUT WRAPPER*/}
+                    <div className="relative">
+                        <div className={state.inputHighlighted === 'from' ?
+                            'pt-[14px] pb-[18px] px-[20px] rounded-xl relative border border-dominant'
+                            : 'pt-[14px] pb-[18px] px-[20px] rounded-xl relative border border-divider dark:border-divider-dark'}>
+                            <div className="flex items-center justify-between text-[14px]">
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">
                             {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
                         </span>
-                            <span className="font-bold">
+                                <span className="font-bold">
                                 {t('common:from')}
                         </span>
+                            </div>
+                            {renderFromInput()}
+                            {renderFromAssetList()}
                         </div>
-                        {renderFromInput()}
-                        {renderFromAssetList()}
-                    </div>
-                    <div className={state.inputHighlighted === 'to' ?
-                        'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative mt-2 border-dominant'
-                        : 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative mt-2 border-divider dark:border-divider-dark'}>
-                        <div className="flex items-center justify-between text-[14px]">
+                        <div className={state.inputHighlighted === 'to' ?
+                            'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative mt-2 border-dominant'
+                            : 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative mt-2 border-divider dark:border-divider-dark'}>
+                            <div className="flex items-center justify-between text-[14px]">
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">
                             {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)}
                         </span>
-                            <span className="font-bold">
+                                <span className="font-bold">
                                {t('common:to')}
                         </span>
+                            </div>
+                            {renderToInput()}
+                            {renderToAssetList()}
                         </div>
-                        {renderToInput()}
-                        {renderToAssetList()}
+                        <div className={state.openAssetList?.from ?
+                            'absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer invisible'
+                            : 'absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer'}
+                             onClick={onReverse}>
+                            <SwapReverse color={currentTheme === THEME_MODE.DARK ? colors.darkBlue3 : undefined}
+                                         size={width < 1280 && 26}
+                            />
+                        </div>
                     </div>
-                    {renderReverseBtn()}
-                </div>
-                {/*END:INPUT WRAPPER*/}
+                    {/*END:INPUT WRAPPER*/}
 
-                {/*SWAP RATE*/}
-                <div className="flex items-center justify-center mt-5">
-                    <div className="text-sm flex items-center">
-                        <span className="mr-1 text-txtSecondary dark:text-txtSecondary-dark">{t('common:rate')}:</span> {renderRate()}
+                    {/*SWAP RATE*/}
+                    <div className="flex items-center justify-center mt-5">
+                        <div className="text-sm flex items-center">
+                            <span className="mr-1 text-txtSecondary dark:text-txtSecondary-dark">{t('common:rate')}:</span> {renderRate()}
+                        </div>
+                        <div className={(state.estRate && state.fromAmount) ?
+                            'ml-2 p-1 rounded-md cursor-pointer ease-in duration-100 hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark'
+                            : 'ml-2 p-1 rounded-md cursor-not-allowed ease-in duration-100 hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark'}
+                             onClick={() => setState({ changeEstRatePosition: !state.changeEstRatePosition })}
+                             onMouseOver={() => setState({ onHoverEstRateBtn: true })}
+                             onMouseOut={() => setState({ onHoverEstRateBtn: false })}>
+                            <RefreshCw
+                                className={state?.onHoverEstRateBtn ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'}
+                                size={16}/>
+                        </div>
                     </div>
-                    <div className={(state.estRate && state.fromAmount) ?
-                        'ml-2 p-1 rounded-md cursor-pointer ease-in duration-100 hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark'
-                        : 'ml-2 p-1 rounded-md cursor-not-allowed ease-in duration-100 hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark'}
-                         onClick={() => setState({ changeEstRatePosition: !state.changeEstRatePosition })}
-                         onMouseOver={() => setState({ onHoverEstRateBtn: true })}
-                         onMouseOut={() => setState({ onHoverEstRateBtn: false })}>
-                        <RefreshCw
-                            className={state?.onHoverEstRateBtn ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'}
-                            size={16}/>
+                    {/*END:SWAP RATE*/}
+
+                    {/*{renderErrors()}*/}
+
+                    {/*SWAP BUTTON*/}
+                    {renderSwapBtn()}
+                    {/*END:SWAP BUTTON*/}
+
+                    <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
+                        <Trans i18nKey="common:term">
+                            <a href={TERM_OF_SERVICE.SWAP} className="block cursor-pointer text-dominant hover:!underline"/>
+                        </Trans>
                     </div>
-                </div>
-                {/*END:SWAP RATE*/}
-
-                {/*SWAP BUTTON*/}
-                <div className="mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold bg-dominant select-none cursor-pointer hover:opacity-80">
-                    {t('navbar:submenu.swap')}
-                </div>
-                {/*END:SWAP BUTTON*/}
-
-                <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
-                    By using Nami Swap, you’re agree to the<br/>
-                    <Link href="/">
-                        <a className="text-dominant hover:!underline">Terms and Conditions</a>
-                    </Link>
                 </div>
             </div>
-        </div>
+            {renderPreOrderModal()}
+        </>
     )
 }
 

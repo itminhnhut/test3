@@ -191,6 +191,7 @@ module.exports = {
             fontWeight: { bold: 600 },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
+                onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)'
             }
         },
     },

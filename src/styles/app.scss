@@ -156,6 +156,16 @@ body {
   }
 }
 
+html.dark body {
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(1, 21, 69, 1);
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: rgba(13, 28, 61, 0.4);
+  }
+}
+
 //body::-webkit-scrollbar {
 //  width: 0.5rem;
 //}

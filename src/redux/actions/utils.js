@@ -27,6 +27,41 @@ export const getDecimalScale = memoize((value = 0.00000001) => {
     return decimalScale;
 });
 
+export const formatSwapRate = (value, scaleMore = 2) => {
+    if (!value) return
+    let x
+    if (value.toString().includes('e')) {
+        const last = getDecimalScale(eToNumber(value)) + scaleMore
+        x = eToNumber(value).substring(0, last)
+    } else {
+        x = formatSwapValue(value)
+    }
+
+    return x
+}
+
+export function eToNumber(value) {
+    let sign = '';
+
+    (value += '').charAt(0) === '-' && ((value = value?.toString().substring(1)), (sign = '-'));
+    let arr = value?.toString().split(/[e]/gi);
+    if (arr.length < 2) return sign + value;
+    let dot = (0.1).toLocaleString().substr(1, 1),
+        n = arr[0],
+        exp = +arr[1],
+        w = (n = n.replace(/^0+/, '')).replace(dot, ''),
+        pos = n.split(dot)[1] ? n.indexOf(dot) + exp : w.length + exp,
+        L = pos - w.length,
+        s = '' + BigInt(w);
+    w = exp >= 0 ? (L >= 0 ? s + '0'.repeat(L) : r()) : pos <= 0 ? '0' + dot + '0'.repeat(Math.abs(pos)) + s : r();
+    L = w.split(dot);
+    if ((L[0] === 0 && L[1] === 0) || (+w === 0 && +s === 0)) w = 0; //** added 9/10/2021
+    return sign + w;
+    function r() {
+        return w.replace(new RegExp(`^(.{${pos}})(.)`), `$1${dot}$2`);
+    }
+}
+
 export const getDecimalSpotPrice = memoize((symbol = '') => {
     const configs = store().getState()?.utils?.exchangeConfig || null;
     if (isArray(configs)) {
@@ -155,7 +190,7 @@ export function randomString(length = 15) {
 
 // Format cho ca gia va so luong
 export function formatSwapValue(price = 0) {
-    return numeral(+price).format('0,0.[000000]');
+    return numeral(+price).format('0,0.[00000000]');
 }
 
 export function isInvalidPrecision(value, precision) {

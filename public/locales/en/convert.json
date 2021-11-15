@@ -2,7 +2,7 @@
   "errors": {
     "min": "Minimum amount {{amount}}",
     "max": "Max amount {{amount}}",
-    "insufficient": "Insufficient fund: please add more funds to your account.",
+    "insufficient": "Insufficient fund",
     "invalid_address": "The address is invalid",
     "invalid_memo": "The memo is invalid",
     "invalid_asset": "The asset is invalid",
@@ -21,15 +21,17 @@
   "available_balance": "Available balance",
   "rate": "Exchange rate",
   "please_enter": "Please enter",
-  "please_input": "Please input the amount you want to swap",
+  "please_input": "Please input the swap amount",
   "btn_swap": "Swap",
   "btn_preview": "Preview",
   "max": "Max",
   "fee": "Fee",
   "from": "From",
   "refresh": "Refresh",
-  "confirm": "Confirm",
+  "confirm": "Swap Confirmation",
   "swap_success": "Swap from {{fromQty}} {{fromAsset}} to {{toQty}} {{toAsset}} with avg rate {{displayingPrice}}",
   "history": "History",
-  "view_all": "View"
+  "view_all": "View",
+  "from_amount": "Amount of token converted",
+  "to_amount": "Amount of token received"
 }
