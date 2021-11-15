@@ -564,31 +564,29 @@ const PlaceOrderForm = ({ symbol }) => {
 
     const _renderOrderType = useMemo(() => {
         const tabs = [];
-        subTabs.forEach((tab) => {
-            if (
-                currentExchangeConfig?.orderTypes &&
-                currentExchangeConfig?.orderTypes.includes(tab)
-            ) {
-                tabs.push(tab);
-            }
+        // subTabs.forEach(tab => {
+        //     if (currentExchangeConfig?.orderTypes
+        //     && currentExchangeConfig?.orderTypes.includes(tab)
+        //     ) {
+        //         tabs.push(tab);
+        //     }
+        // });
+
+        subTabs.forEach(tab => {
+            tabs.push(tab);
         });
+
         return (
-            <ul className="tabs justify-start mb-6">
+            <ul className="tabs justify-start mb-2">
                 {tabs.map((tab, index) => {
                     return (
-                        <li className="tab-item pr-3 font-semibold" key={index}>
+                        <li className={`tab-item px-2 font-medium ${orderType === tab ? 'active' : ''}`} key={index}>
                             <a
-                                className={
-                                    'tab-link ' +
-                                    (orderType === tab ? 'active' : '')
-                                }
+                                className={'tab-link text-txtSecondary dark:text-txtSecondary-dark ' + (orderType === tab ? 'active' : '')}
                                 onClick={() => handleClickSubTab(tab)}
-                            >
-                                {' '}
-                                {orderTypeLabels[tab]}
+                            > {orderTypeLabels[tab]}
                             </a>
-                        </li>
-                    );
+                        </li>);
                 })}
             </ul>
         );
