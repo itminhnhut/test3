@@ -199,6 +199,12 @@ module.exports = {
             //     '3xl': '1.25rem'
             // },
             borderColor: ['group-focus'],
+            placeholderColor: {
+                txtSecondary: {
+                    DEFAULT: commonColors.gray1,
+                    dark: commonColors.darkBlue5
+                },
+            },
             textColor: {
                 txtPrimary: {
                     DEFAULT: commonColors.darkBlue,
