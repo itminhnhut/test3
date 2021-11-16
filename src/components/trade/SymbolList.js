@@ -17,7 +17,7 @@ import colors from '../../styles/colors'
 const SymbolList = (props) => {
     const { query } = useRouter();
     const { t } = useTranslation();
-    const { parentCallback, publicSocket, changeSymbolList, favorite, watchList, symbol, handleChangeSymbol } = props;
+    const { parentCallback, publicSocket, changeSymbolList, favorite, watchList, } = props;
     const [symbolList, setSymbolList] = useState([]);
     const [sortField, setSortField] = useState();
     const [sortDirection, setSortDirection] = useState('asc');

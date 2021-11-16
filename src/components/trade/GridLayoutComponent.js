@@ -1,5 +1,3 @@
-import Cross from 'src/components/svg/Cross';
-import Resize from 'src/components/svg/Resize';
 
 const GridLayoutComponent = ({
     key,

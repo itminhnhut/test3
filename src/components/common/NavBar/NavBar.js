@@ -453,7 +453,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name, page, changeLayoutCb
                        
                     </div>}
                     
-                    {width < 1366 &&
+                          {width < 1366 &&
                     <div className="relative" onClick={(e) => {
                         onDrawerAction(true)}
                     }>
