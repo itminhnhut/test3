@@ -16,7 +16,7 @@ import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { useAsync, useDebounce } from 'react-use'
 import { Trans, useTranslation } from 'next-i18next'
 import { find, orderBy, uniqBy } from 'lodash'
-import { eToNumber, formatPrice, formatSwapRate, formatSwapValue, formatWallet, getDecimalScale, getV1Url, safeToFixed } from 'redux/actions/utils'
+import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getV1Url, safeToFixed } from 'redux/actions/utils'
 import { useSelector } from 'react-redux'
 import { RefreshCw, Search, X, XCircle } from 'react-feather'
 import { ApiStatus } from 'redux/actions/const'
@@ -122,7 +122,6 @@ const SwapModule = ({ width, pair }) => {
                 requestAsset,
             },
         })
-        console.log('namidev-DEBUG: fetchEstimateRate ', result)
 
         const { status, data } = result
         data && setState({ estRate: data })
@@ -297,7 +296,7 @@ const SwapModule = ({ width, pair }) => {
 
     const renderFromInput = useCallback(() => {
         return (
-            <div className="flex items-center">
+            <div className="flex items-center justify-between">
                 <div className="mt-1 flex items-center cursor-pointer select-none"
                      onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}>
                     <AssetLogo assetCode={null} size={20}/>
@@ -339,8 +338,8 @@ const SwapModule = ({ width, pair }) => {
 
             assetItems.push(
                 <div key={`asset_item___${i}`} className={state.fromAsset === fromAsset ?
-                    'px-2.5 py-1.5 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
-                : 'px-2.5 py-1.5 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'}
+                    'px-2.5 py-2 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
+                : 'px-2.5 py-2 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'}
                      // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
                      onClick={() => onClickFromAsset(fromAsset)}
                 >
@@ -357,11 +356,11 @@ const SwapModule = ({ width, pair }) => {
 
         return (
             <div className="from_asset__list absolute left-4 top-full py-4 mt-2 w-full z-20 rounded-xl border
-                            border-divider dark:border-divider-dark bg-gray-5 dark:bg-darkBlue-3 drop-shadow-onlyLight
+                            border-divider dark:border-divider-dark bg-bgContainer dark:bg-darkBlue-3 drop-shadow-onlyLight
                             dark:drop-shadow-none"
                  ref={fromAssetListRef}>
                 <div className="px-2.5">
-                    <div className="flex items-center bg-bgContainer dark:bg-bgContainer-dark w-full py-2 px-3 rounded-xl text-sm">
+                    <div className="flex items-center bg-gray-4 dark:bg-bgContainer-dark w-full py-2 px-3 rounded-xl text-sm">
                         <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark"/>
                         <input className="px-2 w-full" value={state.search}
                                placeholder={language === LANGUAGE_TAG.EN ? 'Search Assets...' : 'Tìm tài sản...'}
@@ -383,7 +382,7 @@ const SwapModule = ({ width, pair }) => {
 
     const renderToInput = useCallback(() => {
         return (
-            <div className="flex items-center">
+            <div className="flex items-center justify-between">
                 <div className="mt-1 flex items-center cursor-pointer select-none"
                      onClick={() => setState({ openAssetList: { to: !state.openAssetList?.to } })}>
                     <AssetLogo assetCode={null} size={20}/>
@@ -424,8 +423,8 @@ const SwapModule = ({ width, pair }) => {
 
             assetItems.push(
                 <div key={`asset_item___${i}`} className={state.toAsset === toAsset ?
-                    'px-2.5 py-1.5 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
-                    : 'px-2.5 py-1.5 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'}
+                    'px-2.5 py-2 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
+                    : 'px-2.5 py-2 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'}
                      // onClick={() => setState({ toAsset, search: '', openAssetList: {} })}
                      onClick={() => onClickToAsset(toAsset)}
                 >
@@ -442,11 +441,11 @@ const SwapModule = ({ width, pair }) => {
 
         return (
             <div className="from_asset__list absolute left-4 top-full py-4 mt-2 w-full z-20 rounded-xl border
-                            border-divider dark:border-divider-dark bg-gray-5 dark:bg-darkBlue-3 drop-shadow-onlyLight
+                            border-divider dark:border-divider-dark bg-bgContainer dark:bg-darkBlue-3 drop-shadow-onlyLight
                             dark:drop-shadow-none"
                  ref={toAssetListRef}>
                 <div className="px-2.5">
-                    <div className="flex items-center bg-bgContainer dark:bg-bgContainer-dark w-full py-2 px-3 rounded-xl text-sm">
+                    <div className="flex items-center bg-gray-4 dark:bg-bgContainer-dark w-full py-2 px-3 rounded-xl text-sm">
                         <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark"/>
                         <input className="px-2 w-full" value={state.search}
                                placeholder={language === LANGUAGE_TAG.EN ? 'Search Assets...' : 'Tìm tài sản...'}
@@ -695,7 +694,7 @@ const SwapModule = ({ width, pair }) => {
     return (
         <>
             <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-                <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[305px] md:w-[380px] xl:w-[454px] bg-bgContainer dark:bg-bgContainer-dark rounded-xl">
+                <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[280px] w-[320px] md:w-[380px] xl:w-[454px] bg-bgContainer dark:bg-bgContainer-dark rounded-xl">
                     <div className="flex mb-3 items-center justify-between font-bold">
                         {t('navbar:submenu.swap')}
                         {renderDepositLink()}

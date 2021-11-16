@@ -31,7 +31,7 @@
   "refresh": "Refresh",
   "confirm": "Swap Confirmation",
   "swap_success": "Swap from {{fromQty}} {{fromAsset}} to {{toQty}} {{toAsset}} with avg rate {{displayingPrice}}",
-  "history": "History",
+  "history": "Swap History",
   "view_all": "View",
   "from_amount": "Amount of token converted",
   "to_amount": "Amount of token received"

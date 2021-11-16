@@ -35,7 +35,7 @@ export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'
 
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'
-export const API_GET_SWAP_HISTORY = API_PREFIX + 'swap/history';
+export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history';
 
 // Coinbase
 export const API_GET_NOTIFICATIONS = API_PREFIX + 'notifications/all';

@@ -31,7 +31,7 @@
   "refresh": "Làm mới",
   "confirm": "Xác nhận quy đổi",
   "swap_success": "Quy đổi từ {{fromQty}} {{fromAsset}} sang {{toQty}} {{toAsset}} với giá trung bình {{displayingPrice}}",
-  "history": "Lịch sử",
+  "history": "Lịch sử quy đổi",
   "view_all": "Xem tất cả",
   "from_amount": "Số lượng token quy đổi",
   "to_amount": "Số lượng token nhận về"
