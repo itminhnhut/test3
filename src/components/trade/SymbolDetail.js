@@ -74,9 +74,6 @@ const SymbolDetail = (props) => {
                     <span className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-lg">
                         {symbolTicker?.b}/{symbolTicker?.q}
                     </span>
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
-                        <AssetName assetCode={symbolTicker?.b} />
-                    </span>
                 </>
             )
         } else if (layoutMode === SPOT_LAYOUT_MODE.PRO) {

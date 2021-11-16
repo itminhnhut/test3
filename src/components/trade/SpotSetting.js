@@ -8,6 +8,7 @@ import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
+import Image from 'next/image'
 
 const SpotSetting = (props) => {
     const {changeLayoutCb} = props
@@ -96,8 +97,8 @@ const SpotSetting = (props) => {
                                     </div>
 
                                     <div className="flex justify-around">
-                                        <div className="text-center">
-                                            <img
+                                        <div className="flex flex-col justify-center">
+                                            <Image
                                                 className={'cursor-pointer ' + (layoutMode === SPOT_LAYOUT_MODE.SIMPLE ? 'border-2 border-teal' : '')}
                                                 onClick={() => onChangeLayout(SPOT_LAYOUT_MODE.SIMPLE)}
                                                 src={`/images/icon/mode-classic${
@@ -109,12 +110,12 @@ const SpotSetting = (props) => {
                                                 width={82}
                                                 height={55}
                                             />
-                                            <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium">
+                                            <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium text-center">
                                                 Classic
                                             </span>
                                         </div>
-                                        <div className="text-center">
-                                            <img
+                                        <div className="flex flex-col justify-center">
+                                            <Image
                                                 className={'cursor-pointer ' + (layoutMode === SPOT_LAYOUT_MODE.PRO ? 'border-2 border-teal' : '')}
                                                 onClick={() => onChangeLayout(SPOT_LAYOUT_MODE.PRO)}
                                                 src={`/images/icon/mode-advance${
@@ -126,7 +127,7 @@ const SpotSetting = (props) => {
                                                 width={82}
                                                 height={55}
                                             />
-                                            <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium">
+                                            <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium text-center">
                                                 Pro
                                             </span>
                                         </div>
