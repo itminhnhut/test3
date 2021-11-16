@@ -1,6 +1,6 @@
 import { getTradingViewTimezone } from 'actions/utils';
 import { IconLoading } from 'components/common/Icons';
-// import { widget } from 'public/library/trading_view/charting_library';
+// import { widget } from 'public/library_maldives/trading_view/charting_library';
 import * as React from 'react';
 import { getS3Url } from 'redux/actions/utils';
 import NamiExchangeSvg from 'components/svg/NamiExchangeSvg';
@@ -429,8 +429,8 @@ TVChartContainer.defaultProps = {
     interval: '1',
     containerId: 'tv_chart_container',
     datafeedUrl: 'https://demo_feed.tradingview.com',
-    // libraryPath: '/library/trading_view/charting_library/',
-    libraryPath: '/library/trading_view/charting_library/',
+    // libraryPath: '/library_maldives/trading_view/charting_library/',
+    libraryPath: '/library_maldives/trading_view/charting_library/',
     chartsStorageUrl: 'https://saveload.tradingview.com',
     chartsStorageApiVersion: '1.1',
     clientId: 'tradingview.com',
