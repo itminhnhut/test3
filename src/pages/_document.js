@@ -12,9 +12,9 @@ class MyDocument extends Document {
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
                     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
 
-                    <script src="/library/trading_view/tv.js" />
-                    <script type="text/javascript" src="/library/trading_view/datafeeds/udf/dist/polyfills.js" />
-                    <script type="text/javascript" src="/library/trading_view/datafeeds/udf/dist/bundle.js" />
+                    <script src="/library_maldives/trading_view/tv.js" />
+                    <script type="text/javascript" src="/library_maldives/trading_view/datafeeds/udf/dist/polyfills.js" />
+                    <script type="text/javascript" src="/library_maldives/trading_view/datafeeds/udf/dist/bundle.js" />
 
                     <script dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
