@@ -218,7 +218,7 @@ function encodeData(data) {
     }).join('&');
 }
 
-export function getSparkLine(symbol, color = '#09becf', resolution) {
+export function getSparkLine(symbol, color = '#00C8BC', resolution) {
     const query = {
         symbol,
         broker: 'NAMI_SPOT',

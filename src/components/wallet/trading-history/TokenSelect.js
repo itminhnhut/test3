@@ -48,7 +48,7 @@ const TokenSelect = ({ baseAssetList, data, onChange, initValue }) => {
                 <React.Fragment key={index}>
                     <Listbox.Option
                         value={asset}
-                        className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#09becf] hover:text-white rounded flex flex-row items-center"
+                        className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#00C8BC] hover:text-white rounded flex flex-row items-center"
                     >
                         <AssetLogo assetCode={asset?.assetCode} assetId={asset?.id} /> <span className="ml-2">{asset.assetCode}</span>
                     </Listbox.Option>
@@ -60,7 +60,7 @@ const TokenSelect = ({ baseAssetList, data, onChange, initValue }) => {
                 <React.Fragment key={index}>
                     <Listbox.Option
                         value={asset}
-                        className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#09becf] hover:text-white rounded flex flex-row items-center"
+                        className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#00C8BC] hover:text-white rounded flex flex-row items-center"
                     >
                         <AssetLogo assetCode={asset?.assetCode} assetId={asset?.id} /> <span className="ml-2">{asset.assetCode}</span>
                     </Listbox.Option>
@@ -110,7 +110,7 @@ const TokenSelect = ({ baseAssetList, data, onChange, initValue }) => {
                         <Listbox.Option
                             key="all"
                             value={null}
-                            className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#09becf] hover:text-white rounded"
+                            className="focus:outline-none text-[#02083D] text-sm px-4 py-[10px] hover:bg-[#00C8BC] hover:text-white rounded"
                         >
                             <p className="h-8 pl-10 flex flex-row items-center">- {t('filter_all')} -</p>
                         </Listbox.Option>

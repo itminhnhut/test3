@@ -366,7 +366,7 @@ export class TVChartContainer extends React.PureComponent {
                                 : ''
                         }`}
                     >
-                        <IconLoading color="#09becf" />
+                        <IconLoading color="#00C8BC" />
                     </div>
                     <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1 px-1 dragHandleArea">
                         {this.state.chartStatus === ChartStatus.LOADED && (

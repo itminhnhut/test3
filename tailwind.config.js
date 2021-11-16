@@ -164,8 +164,8 @@ module.exports = {
             green: { DEFAULT: '#22B02E' },
             yellow: { DEFAULT: '#FFD965' },
             red: { DEFAULT: '#E5544B', lightRed: '#E5544B19' },
-            pink: { DEFAULT: '#E95F67' },
-            mint: { DEFAULT: '#09becf' },
+            pink: { DEFAULT: '#E5544B' },
+            mint: { DEFAULT: '#00C8BC' },
         },
         extend: {
             spacing: {

@@ -57,7 +57,7 @@ const SliderItem = (props) => {
                     </div>
                     {/* <Image src="/images/chart.svg" height={30.75} width={90} /> */}
                     <Image
-                        src={getSparkLine(`${data?.b}${data?.q}`, change24h >= 0 ? '#09becf' : '#E95F67')}
+                        src={getSparkLine(`${data?.b}${data?.q}`, change24h >= 0 ? '#00C8BC' : '#E5544B')}
                         height={30.75}
                         width={90}
                         unoptimized

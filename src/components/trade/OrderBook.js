@@ -1,5 +1,6 @@
 import { IconLoading } from 'components/common/Icons';
 import { reverse } from 'lodash';
+import { Popover, Transition } from '@headlessui/react';
 import groupBy from 'lodash/groupBy';
 import map from 'lodash/map';
 import maxBy from 'lodash/maxBy';
@@ -7,7 +8,7 @@ import orderBy from 'lodash/orderBy';
 import sumBy from 'lodash/sumBy';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAsync } from 'react-use';
 import { ExchangeOrderEnum, PublicSocketEvent } from 'src/redux/actions/const';
@@ -19,10 +20,12 @@ import LastPrice from '../markets/LastPrice';
 import OrderBookAll from 'src/components/svg/OrderBookAll'
 import OrderBookBids from 'src/components/svg/OrderBookBids'
 import OrderBookAsks from 'src/components/svg/OrderBookAsks'
+import { ORDER_BOOK_MODE } from 'redux/actions/const';
+import SvgChevronDown from 'components/svg/ChevronDown';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
-    const { symbol, layoutConfig, isOnSidebar, parentState } = props;
+    const { symbol, layoutConfig, parentState } = props;
     const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
     const { base, quote } = props.symbol;
     const dispatch = useDispatch();
@@ -43,6 +46,7 @@ const OrderBook = (props) => {
     const [tickSizeOptions, setTickSizeOptions] = useState([]);
     const [loadingAsks, setLoadingAsks] = useState(true);
     const [loadingBids, setLoadingBids] = useState(true);
+    const [orderBookMode, setOrderBookMode] = useState(ORDER_BOOK_MODE.ALL);
 
     const [height, setHeight] = useState(0);
     const ref = useRef(null);
@@ -102,8 +106,9 @@ const OrderBook = (props) => {
         setTickSize(+priceFilter?.tickSize);
     }, [exchangeConfig, symbol]);
 
-    // const maxQuote = quote === 'USDT' ? 50000 : 200e6;
-    const MAX_LENGTH = Math.round((height - 186) / 2 / 20);
+    const divide = orderBookMode === ORDER_BOOK_MODE.ALL ? 2 : 1
+
+    const MAX_LENGTH = Math.floor((height - 145) / divide / 20);
     let asks = [];
     let bids = [];
 
@@ -141,15 +146,14 @@ const OrderBook = (props) => {
     };
 
     asks = reverse(asks);
-    // asks = handleTickSize(asks, 'ask');
-    // bids = handleTickSize(bids, 'bids');
+    asks = handleTickSize(asks, 'ask');
+    bids = handleTickSize(bids, 'bids');
     asks = orderBy(asks, [e => +e[0]], ['desc']);
     bids = orderBy(bids, [e => -e[0]]);
     const maxAsk = maxBy(asks, (o) => { return o[1]; });
     const maxBid = maxBy(bids, (o) => { return o[1]; });
 
-    const shouldShowTotalCol = !isOnSidebar && quote === 'USDT';
-    const renderOrderRow = (order, index, side, showTotal) => {
+    const renderOrderRow = (order, index, side) => {
         const [p, q] = order;
         const maxQuote = side === 'buy' ? maxAsk?.[1] : maxBid?.[1];
         const percentage = (q / maxQuote) * 100;
@@ -177,16 +181,111 @@ const OrderBook = (props) => {
             </div>
         );
     };
+
+    const renderOrderBook = (side) => {
+        // side: buy|sell
+
+        let inner
+        if(side === 'buy' && [ORDER_BOOK_MODE.ASKS, ORDER_BOOK_MODE.ALL].includes(orderBookMode)){
+
+            inner =  loadingAsks ? <div className="flex items-center justify-center h-full"><IconLoading color="#00C8BC" /></div> : (
+                <div className="">
+                    {asks.map((order, index) => {
+                        return renderOrderRow(order, index, 'buy');
+                    })}
+                </div>
+            )
+        }else if(side === 'sell' && [ORDER_BOOK_MODE.BIDS, ORDER_BOOK_MODE.ALL].includes(orderBookMode)){
+            inner =  loadingBids ? <div className="flex items-center justify-center h-full"><IconLoading color="#00C8BC" /></div> : (
+                    <div className="">
+                        {bids.map((order, index) => {
+                            return renderOrderRow(order, index, 'sell');
+                        })}
+                    </div>
+                )
+            
+        }
+       
+        if(inner){
+            return <div className="flex flex-col justify-start flex-1">
+                  {inner}          
+            </div>
+        }
+        return null
+    
+
+    }
+
+    const renderTickSizeOptions = ()=>{
+        return (
+            <Popover className="relative">
+                    {({ open }) => (
+                        <>
+                            <Popover.Button
+                                className={`flex items-center h-5 rounded bg-bgInput dark:bg-bgInput-dark pl-2 pr-1 ${ open ? '' : 'text-opacity-90' } `}
+                            >
+                                <span className="text-xxs font-medium text-txtSecondary dark:text-txtSecondary-dark mr-1">
+                                    {tickSize}
+                                </span>
+                                <SvgChevronDown size={14}/>
+                            </Popover.Button>
+                            <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-200"
+                                enterFrom="opacity-0 translate-y-1"
+                                enterTo="opacity-100 translate-y-0"
+                                leave="transition ease-in duration-150"
+                                leaveFrom="opacity-100 translate-y-0"
+                                leaveTo="opacity-0 translate-y-1"
+                            >
+                                <Popover.Panel className="absolute right-0 z-10">
+                                    <div className="overflow-hidden rounded-md shadow-lg bg-white dark:bg-darkBlue-3">
+                                        <div className="w-32 relative">
+                                            {tickSizeOptions.map(
+                                                (item, index) => {
+                                                    const isActive = tickSize === item;
+                                                    return (
+                                                        <div
+                                                            onClick={() => setTickSize(item)}
+                                                            key={index}
+                                                            className={
+                                                                `h-8 leading-8 px-2 cursor-pointer w-full font-medium text-xs text-center rounded-sm 
+                                                                 dark:text-txtSecondary-dark 
+                                                                hover:text-teal 
+                                                                dark:hover:text-teal
+                                                                ${isActive ? 'bg-opacity-10 dark:bg-opacity-10 bg-teal text-teal dark:bg-teal dark:text-teal' : ''}
+                                                                `
+                                                            }
+                                                        >
+                                                            {item}
+                                                        </div>
+                                                    );
+                                                },
+                                            )}
+                                        </div>
+                                    </div>
+                                </Popover.Panel>
+                            </Transition>
+                        </>
+                    )}
+                </Popover>
+        )
+    }
+
     return (
         <>
-            <div className="px-2.5 relative h-full bg-bgContainer dark:bg-bgContainer-dark pb-[26px] flex flex-col box-border" ref={ref}>
+            <div className="px-2.5 relative h-full bg-bgContainer dark:bg-bgContainer-dark flex flex-col box-border" ref={ref}>
                 <div className="flex items-center justify-between py-4 dragHandleArea">
                     <div className="font-medium text-sm text-txtPrimary dark:text-txtPrimary-dark">{t('orderbook')}</div>
                 </div>
-                <div className="flex items-center justify-start mb-4">
-                    <OrderBookAll className="mr-3"/>
-                    <OrderBookBids className="mr-3"/>
-                    <OrderBookAsks className="mr-3"/>
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex justify-start">
+                        <OrderBookAll className={`mr-3 cursor-pointer ${orderBookMode === ORDER_BOOK_MODE.ALL ? '' : 'opacity-50'}`} onClick={() => setOrderBookMode(ORDER_BOOK_MODE.ALL)} />
+                        <OrderBookBids className={`mr-3 cursor-pointer ${orderBookMode === ORDER_BOOK_MODE.BIDS ? '' : 'opacity-50'}`} onClick={() => setOrderBookMode(ORDER_BOOK_MODE.BIDS)} />
+                        <OrderBookAsks className={`mr-3 cursor-pointer ${orderBookMode === ORDER_BOOK_MODE.ASKS ? '' : 'opacity-50'}`} onClick={() => setOrderBookMode(ORDER_BOOK_MODE.ASKS)} />
+                    </div>
+                    {renderTickSizeOptions()}
+
                 </div>
                 <div className="flex flex-col flex-1">
                     <div className="">
@@ -203,22 +302,12 @@ const OrderBook = (props) => {
                         </div>
                     </div>
                     <div className="flex flex-col flex-1">
-                        <div className="flex flex-col justify-end flex-1">
-                            {
-                                loadingAsks ? <div className="flex items-center justify-center h-full"><IconLoading color="#09becf" /></div> : (
-                                    <div className="">
-                                        {asks.map((order, index) => {
-                                            return renderOrderRow(order, index, 'buy', shouldShowTotalCol);
-                                        })}
-                                    </div>
-                                )
-                            }
-                        </div>
+                        {renderOrderBook('buy')}
                         <div
-                            className=" dark:border-divider-dark py-3 flex justify-between items-center"
+                            className=" dark:border-divider-dark py-3 flex justify-center items-center"
                         >
                             <div className="text-sm w-full">
-                                <span className="font-medium">
+                                <span className="font-medium text-base text-center">
                                     <LastPrice
                                         symbol={symbol}
                                         colored
@@ -227,17 +316,8 @@ const OrderBook = (props) => {
                                 </span>
                             </div>
                         </div>
-                        <div className="flex flex-col justify-start flex-1">
-                            {
-                                loadingBids ? <div className="flex items-center justify-center h-full"><IconLoading color="#09becf" /></div> : (
-                                    <div className="">
-                                        {bids.map((order, index) => {
-                                            return renderOrderRow(order, index, 'sell', shouldShowTotalCol);
-                                        })}
-                                    </div>
-                                )
-                            }
-                        </div>
+                        {renderOrderBook('sell')}
+                        
                     </div>
                 </div>
             </div>

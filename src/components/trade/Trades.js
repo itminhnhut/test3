@@ -27,7 +27,7 @@ const Trades = (props) => {
         }
     }, [ref.current, layoutConfig?.h]);
 
-    const MAX_LENGTH = Math.round((height - 122) / 26);
+    const MAX_LENGTH = Math.round((height - 80) / 20);
 
     const fetchRecentTrade = async () => {
         const newRecentTrade = await getRecentTrade(getSymbolString(symbol));
@@ -80,7 +80,7 @@ const Trades = (props) => {
                 </div>
             </div>
             <div className="overflow-y-auto max-h-[calc(100%-12px)]">
-                {loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#09becf" /></div> : (recentTrade && recentTrade.map((trade, index) => {
+                {loading ? <div className="flex items-center justify-center w-full h-full"><IconLoading color="#00C8BC" /></div> : (recentTrade && recentTrade.map((trade, index) => {
                     const {
                         S: side,
                         // s,

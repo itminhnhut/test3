@@ -83,7 +83,7 @@ const HomeSymbolList = (props) => {
             cell: (row) => {
                 const change24h = getExchange24hPercentageChange(row);
                 return <Image
-                    src={getSparkLine(row?.s, change24h >= 0 ? '#09becf' : '#E95F67')}
+                    src={getSparkLine(row?.s, change24h >= 0 ? '#00C8BC' : '#E5544B')}
                     height={30.75}
                     width={90}
                     className="h-18"

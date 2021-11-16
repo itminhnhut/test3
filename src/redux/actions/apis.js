@@ -24,7 +24,8 @@ export const GET_SPOT_FEE_CONFIG = API_V3_PREFIX + 'spot/fee_config';
 export const API_GET_MARKET_WATCH = API_V3_PREFIX + 'spot/market_watch';
 export const API_GET_ORDER_BOOK = API_V3_PREFIX + 'spot/depth';
 export const API_GET_RECENT_TRADE = API_V3_PREFIX + 'spot/recent_trade';
-export const API_GET_HISTORY_TRADE = API_V3_PREFIX + 'spot/history';
+export const API_GET_HISTORY_ORDER = API_V3_PREFIX + 'spot/history';
+export const API_GET_HISTORY_TRADE = API_V3_PREFIX + 'spot/trade';
 export const API_GET_OPEN_ORDER = API_V3_PREFIX + 'spot/open';
 export const API_GET_TRENDING = API_V3_PREFIX + 'spot/trend'
 

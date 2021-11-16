@@ -24,6 +24,7 @@ import Emitter from "src/redux/actions/emitter";
 import { getMarketWatch, postSymbolViews } from "src/redux/actions/market";
 import { getSymbolString } from "src/redux/actions/utils";
 import { useWindowSize } from "utils/customHooks";
+import find from "lodash/find";
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -79,6 +80,7 @@ const layoutSimple = [
         y: 17,
         w: 3,
         h: 20,
+        minW: 10,
         isDraggable: false,
         isResizable: false,
     },
@@ -94,7 +96,6 @@ const layoutSimple = [
 ];
 
 const layoutPro = [
-    
     {
         i: "chart",
         x: 0,
@@ -141,6 +142,7 @@ const layoutPro = [
         y: 17,
         w: 3,
         h: 15,
+        minW: 10,
         isDraggable: true,
         isResizable: true,
         isDroppable: true,
@@ -181,9 +183,14 @@ const SpotComp = () => {
     const [lastSymbol, setLastSymbol] = useState(null);
     const [publicSocketStatus, setPublicSocketStatus] = useState(false);
 
+    const [orderBookLayout, setOrderBookLayout] = useState({});
+    const [tradesLayout, setTradesLayout] = useState({});
+
     const [initTimeFrame, setInitTimeFrame] = useState("");
     const [isResizingOrderList, setIsResizingOrderList] = useState(false);
     const [orderListWrapperHeight, setOrderListWrapperHeight] = useState(0);
+
+    console.log('__ chekc orderListWrapperHeight', orderListWrapperHeight);
 
     // compact state
     const [state, set] = useState({ orderBook: null });
@@ -212,6 +219,15 @@ const SpotComp = () => {
             setInitTimeFrame(timeframe);
         }
     }, [indicator, timeframe]);
+
+    useEffect(() => {
+        const initLayout =
+            layoutMode === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple;
+        const _orderbookLayout = find(initLayout, { i: "orderbook" });
+        const _tradesLayout = find(initLayout, { i: "trades" });
+        setOrderBookLayout(_orderbookLayout);
+        setTradesLayout(_tradesLayout);
+    }, []);
 
     // Spot Socket
 
@@ -275,10 +291,21 @@ const SpotComp = () => {
         };
     }, [publicSocket, symbol]);
 
-    const renderSymbolList = useMemo(() => {
-        if (layoutMode !== SPOT_LAYOUT_MODE.SIMPLE) return null;
-        return <SymbolList publicSocket={publicSocket} symbol={symbol} />;
-    }, []);
+    const handleResize = (
+        _layout,
+        _oldItem,
+        _newItem,
+        _placeholder,
+        _e,
+        _element
+    ) => {
+        if (_newItem?.i === "orderbook") {
+            setOrderBookLayout(_newItem);
+        }
+        if (_newItem?.i === "trades") {
+            setTradesLayout(_newItem);
+        }
+    };
 
     if (!symbol) return null;
 
@@ -308,38 +335,24 @@ const SpotComp = () => {
                         margin={[-1, -1]}
                         containerPadding={[8, 8]}
                         rowHeight={24}
+                        onResize={handleResize}
                         draggableHandle=".dragHandleArea"
                         draggableCancel=".dragCancelArea"
                     >
-                        <div
-                            key="symbolDetail"
-                            className="border border-divider dark:border-divider-dark "
-                        >
-                            <SymbolDetail
-                                    layoutMode={layoutMode}
-                                    symbol={symbol}
-                                    publicSocket={publicSocket}
-                                />
-                        </div>
-
-                        <div
-                            key="orderbook"
-                            className="border border-divider dark:border-divider-dark"
-                        >
-                            <OrderBook symbol={symbol} parentState={setState} />
-                        </div>
-
+                    {layoutMode !== SPOT_LAYOUT_MODE.PRO && (
                         <div
                             key="symbolList"
                             className="border border-divider dark:border-divider-dark"
                         >
-                            {layoutMode !== SPOT_LAYOUT_MODE.PRO && (
-                                <SymbolList
+                            <SymbolList
                                     publicSocket={publicSocket}
                                     symbol={symbol}
                                 />
-                            )}
                         </div>
+                    )
+                    }
+                        
+
                         <div
                             key="chart"
                             className="border border-divider dark:border-divider-dark"
@@ -347,6 +360,16 @@ const SpotComp = () => {
                             <Chart
                                 symbol={symbol}
                                 initTimeFrame={initTimeFrame}
+                            />
+                        </div>
+                        <div
+                            key="symbolDetail"
+                            className="border border-divider dark:border-divider-dark "
+                        >
+                            <SymbolDetail
+                                layoutMode={layoutMode}
+                                symbol={symbol}
+                                publicSocket={publicSocket}
                             />
                         </div>
 
@@ -357,6 +380,7 @@ const SpotComp = () => {
                             <Trades
                                 symbol={symbol}
                                 publicSocket={publicSocket}
+                                layoutConfig={tradesLayout}
                             />
                         </div>
                         <div
@@ -387,6 +411,13 @@ const SpotComp = () => {
                                 />
                             </div>
                         </div>
+                        <div
+                            key="orderbook"
+                            className="border border-divider dark:border-divider-dark"
+                        >
+                            <OrderBook symbol={symbol} parentState={setState} layoutConfig={orderBookLayout}/>
+                        </div>
+                        
                     </ReactGridLayout>
                 </div>
             </BrowserView>
