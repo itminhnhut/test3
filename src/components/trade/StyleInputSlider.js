@@ -21,20 +21,20 @@ export const Active = styled.div`
   border-radius: 4px;
   user-select: none;
   box-sizing: border-box;
-  height: 4px;
-  top: 6px;
+  height: 1px;
+  top: 7px;
   z-index: 11;
 `
 
 export const SliderBackground = styled.div`
   position: absolute;
-  background-color: ${({ isDark }) => isDark ? colors.darkBlue4 : colors.grey4};
+  background-color: ${({ isDark }) => isDark ? colors.darkBlue4 : colors.grey5};
   border-radius: 4px;
   user-select: none;
   box-sizing: border-box;
   width: 100%;
-  top: 6px;
-  height: 4px;
+  top: 7px;
+  height: 1px;
   z-index: 10;
 `
 
@@ -48,12 +48,12 @@ export const Dot = styled.span`
   position: absolute;
   top: -4px;
   //top: 10px;
-  left: ${({ percentage }) => `calc(${percentage}% - 6px)`};
-  border-radius: 50%;
+  left: ${({ percentage }) => `calc(${percentage}% - 4px)`};
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   width: 8px;
-  height: 8px;
+  height: 7px;
   box-sizing: content-box;
-  background-color: ${({ active, isDark }) => (active ? colors.teal : (isDark ? colors.darkBlue4 : colors.grey4))};
+  background-color: ${({ active, isDark }) => (active ? colors.teal : (isDark ? colors.darkBlue4 : colors.grey5))};
   z-index: 30;
   transition: transform .2s; /* Animation */
 
@@ -67,10 +67,11 @@ export const Thumb = styled.div`
   position: relative;
   display: block;
   content: "";
-  width: 12px;
+  width: 14px;
   height: 12px;
-  background-color: ${({ isZero, isDark }) => isZero ? (isDark ? colors.darkBlue4 : colors.grey4) : colors.teal};
-  border-radius: 50%;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background-color: ${({ isZero, isDark }) => isZero ? (isDark ? colors.darkBlue4 : colors.grey5) : colors.teal};
+
   user-select: none;
   cursor: pointer;
 `
@@ -80,7 +81,7 @@ export const ThumbLabel = styled.div`
   top: -1.25rem;
   right: -10px;
   text-align: center;
-  color: ${({ isZero, isDark }) => isZero ? (isDark ? colors.darkBlue4 : colors.grey4) : colors.teal};
+  color: ${({ isZero, isDark }) => isZero ? (isDark ? colors.darkBlue4 : colors.grey5) : colors.teal};
   font-size: 12px;
   font-style: normal;
   font-weight: 600;

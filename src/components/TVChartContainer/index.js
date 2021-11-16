@@ -11,7 +11,7 @@ import Datafeed from './api';
 import styles from './tradingview.module.scss';
 import colors from '../../styles/colors';
 import TimeFrame from './timeFrame';
-
+import DepthChart from './depth';
 function getLanguageFromURL() {
     // const regex = new RegExp('[\\?&]lang=([^&#]*)');
     // const results = regex.exec(window.location.search);
@@ -67,6 +67,7 @@ export class TVChartContainer extends React.PureComponent {
         chartType: 'price',
         interval: '60',
         studies: [],
+        priceChartType: 1,
         // chartCompareLoaded: true,
     };
 
@@ -112,14 +113,14 @@ export class TVChartContainer extends React.PureComponent {
                 this.widget.changeTheme(newTheme);
                 this.widget.applyOverrides({
                     'paneProperties.background':
-                        newTheme === 'Dark' ? colors.darkBlue2 : colors.white,
+                        newTheme === 'Dark' ? colors.darkBlue1 : colors.white,
                     'paneProperties.vertGridProperties.color':
                         this.props.theme === 'dark'
-                            ? colors.darkBlue3
+                            ? colors.darkBlue2
                             : colors.grey4,
                     'paneProperties.horzGridProperties.color':
                         this.props.theme === 'dark'
-                            ? colors.darkBlue3
+                            ? colors.darkBlue2
                             : colors.grey4,
                 });
                 this.theme = newTheme;
@@ -175,6 +176,20 @@ export class TVChartContainer extends React.PureComponent {
         if (this?.widget) {
             this.widget.activeChart().removeAllShapes();
             this.widget.activeChart().removeAllStudies();
+        }
+    };
+
+    handleOpenStudty = () => {
+        if (this?.widget) {
+            this.widget.chart().executeActionById('insertIndicator');
+        }
+    };
+
+    handleChangeChartType = (type) => {
+        if (this?.widget) {
+            this.widget.chart().setChartType(type);
+            this.setState({priceChartType: type})
+
         }
     };
 
@@ -249,6 +264,8 @@ export class TVChartContainer extends React.PureComponent {
                 'popup_hints',
                 'header_widget',
                 'axis_pressed_mouse_move_scale',
+
+
                 // 'use_localstorage_for_settings',
                 // 'header_symbol_search',
                 // 'symbol_search_hot_key',
@@ -285,6 +302,8 @@ export class TVChartContainer extends React.PureComponent {
             timezone: getTradingViewTimezone(),
             overrides: {
                 'scalesProperties.fontSize': 10,
+                editorFontsList: ['Barlow', 'Sans'],
+
                 'mainSeriesProperties.candleStyle.borderUpColor': colors.teal,
                 'mainSeriesProperties.candleStyle.borderDownColor': colors.red2,
                 'mainSeriesProperties.candleStyle.wickUpColor': colors.teal,
@@ -307,14 +326,14 @@ export class TVChartContainer extends React.PureComponent {
             this.widget.applyOverrides({
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
                 'paneProperties.background':
-                    this.props.theme === 'dark' ? colors.darkBlue2 : '#ffffff',
+                    this.props.theme === 'dark' ? colors.darkBlue1 : '#ffffff',
                 'paneProperties.vertGridProperties.color':
                     this.props.theme === 'dark'
-                        ? colors.darkBlue3
+                        ? colors.darkBlue2
                         : colors.grey4,
                 'paneProperties.horzGridProperties.color':
                     this.props.theme === 'dark'
-                        ? colors.darkBlue3
+                        ? colors.darkBlue2
                         : colors.grey4,
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
@@ -331,50 +350,6 @@ export class TVChartContainer extends React.PureComponent {
         return this.setState({ chartType: 'price' });
     };
 
-    _renderCommonTimeframes() {
-        const timeframes = ['15m', '1h', '4h', '1D', '1W'];
-        return (
-            <div>
-                {timeframes.map((item, index) => {
-                    return (
-                        <span className="cursor-pointer text-xs font-medium py-1 px-2 mr-1 text-txtSecondary bg-teal-50 rounded-md">
-                            {item}
-                        </span>
-                    );
-                })}
-                <ChevronDown
-                    className="inline mx-1 cursor-pointer"
-                    onClick={() => {
-                        console.log('__ check click ');
-                    }}
-                />
-                <Candles
-                    className="inline mx-1 cursor-pointer"
-                    onClick={() => {
-                        console.log('__ check click ');
-                    }}
-                />
-            </div>
-        );
-    }
-
-    _renderChartMode() {
-        const itemClass = 'cursor-pointer text-xs font-medium py-1 px-2 mr-1 text-txtSecondary bg-teal-50 rounded-md';
-        return (
-            <div>
-                <span className={itemClass}>
-                    Original
-                </span>
-                <span className={itemClass}>
-                    TradingView
-                </span>
-                <span className={itemClass}>
-                    Depth
-                </span>
-            </div>
-        );
-    }
-
     render() {
         const { chartType } = this.state;
 
@@ -385,17 +360,17 @@ export class TVChartContainer extends React.PureComponent {
                     id="chart-container"
                 >
                     <div
-                        className={`absolute w-full h-full bg-bgContainer dark:bg-bgContainer-dark z-10 flex justify-center items-center ${
+                        className={`absolute w-full h-full bg-bgContainer dark:bg-bgContainer-dark flex justify-center items-center ${
                             this.state.chartStatus === ChartStatus.LOADED
                                 ? 'hidden'
                                 : ''
                         }`}
                     >
-                        <IconLoading color="#09becf" />
+                        <IconLoading color="#00C8BC" />
                     </div>
-                    <div className="w-full">
-                        {
-                            this.state.chartStatus === ChartStatus.LOADED ? <TimeFrame
+                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1 px-1 dragHandleArea">
+                        {this.state.chartStatus === ChartStatus.LOADED && (
+                            <TimeFrame
                                 symbol={this.props.symbol}
                                 handleActiveTime={this.handleActiveTime}
                                 chartType={chartType}
@@ -405,24 +380,26 @@ export class TVChartContainer extends React.PureComponent {
                                 handleCreateStudy={this.handleCreateStudy}
                                 handleRemoveStudy={this.handleRemoveStudy}
                                 handleRemoveAllStudies={this.handleRemoveAllStudies}
+                                handleOpenStudty={this.handleOpenStudty}
+                                handleChangeChartType={this.handleChangeChartType}
                                 interval={this.state.interval}
                                 studies={this.state.studies}
                                 isOnSidebar={this.props.isOnSidebar}
                                 t={this.t}
                                 initTimeFrame={this.props.initTimeFrame}
                                 extendsIndicators={this.props.extendsIndicators}
-                                clearExtendsIndicators={this.props.clearExtendsIndicators}
-                                customChartFullscreen={this.props.customChartFullscreen}
+                                priceChartType={this.state.priceChartType}
+                                clearExtendsIndicators={
+                                    this.props.clearExtendsIndicators
+                                }
+                                customChartFullscreen={
+                                    this.props.customChartFullscreen
+                                }
                                 fullScreen={this.props.fullScreen}
-                            /> : (
-                                <div className="h-[46px]" />
-                            )
-                        }
+                            />
+                        )}
                     </div>
-                    <div className="flex justify-between px-2 py-1 border-b border-divider">
-                        {this._renderCommonTimeframes()}
-                        {this._renderChartMode()}
-                    </div>
+
                     <div
                         id={this.containerId}
                         className={`${
@@ -431,6 +408,7 @@ export class TVChartContainer extends React.PureComponent {
                             chartType === 'depth' && 'hidden'
                         }`}
                     />
+                    {chartType === 'depth' && <DepthChart symbol={this.props.symbol} chartSize={this.props.chartSize} darkMode={this.props.theme === 'dark'}/>}
                     <div className="cheat-watermark">
                         <NamiExchangeSvg
                             color={

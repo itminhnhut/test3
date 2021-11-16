@@ -253,7 +253,7 @@ function encodeData(data) {
     }).join('&');
 }
 
-export function getSparkLine(symbol, color = '#09becf', resolution) {
+export function getSparkLine(symbol, color = '#00C8BC', resolution) {
     const query = {
         symbol,
         broker: 'NAMI_SPOT',
@@ -329,12 +329,12 @@ export function getPercentageOf(a, b) {
         percentage = (a) / b * 100;
     }
     let sign = '';
-    let className = 'text-mint';
+    let className = 'text-teal';
     if (percentage > 0) {
         sign = '+';
     } else if (percentage < 0) {
         sign = '';
-        className = 'text-pink';
+        className = 'text-red';
     }
     return <span className={className}>{`${sign}${formatPercentage(percentage, 2, true)}%`}</span>;
 }
@@ -350,12 +350,12 @@ export function getChangePercentage(from, to) {
         percentage = (to - from) / from * 100;
     }
     let sign = '';
-    let className = 'text-mint';
+    let className = 'text-teal';
     if (percentage > 0) {
         sign = '+';
     } else if (percentage < 0) {
         sign = '';
-        className = 'text-pink';
+        className = 'text-red';
     }
     return <span className={className}>{`${sign}${formatPercentage(percentage, 2, true)}%`}</span>;
 }

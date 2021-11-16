@@ -634,3 +634,30 @@ export const CATEGORY_SPOT_SIGNAL = {
     ALL: 'nami_cat_all',
     SIGNAL: 'nami_cat_signal',
 };
+
+export const SPOT_LAYOUT_MODE = {
+    SIMPLE: 'simple',
+    PRO: 'pro',
+    FULLSCREEN: 'fullscreen',
+};
+
+export const ORDER_BOOK_MODE = {
+    BIDS: 'bids',
+    ASKS: 'asks',
+    ALL: 'all',
+};
+
+export const UserSocketEvent = {
+    UPDATE_DEPOSIT_HISTORY: 'user:update_deposit_history',
+    UPDATE_WITHDRAW_HISTORY: 'user:update_withdraw_history',
+    EXCHANGE_UPDATE_RATE: 'exchange:update_rate',
+    EXCHANGE_UPDATE_RATE_PAIR: 'exchange:update_rate_pair',
+    EXCHANGE_UPDATE_INFOR: 'exchange:update_infor',
+
+    EXCHANGE_UPDATE_OPENING_ORDER: 'exchange:update_opening_order',
+    EXCHANGE_UPDATE_HISTORY_ORDER: 'exchange:update_history_order',
+    EXCHANGE_UPDATE_ORDER: 'exchange:update_order',
+
+    EXCHANGE_PLACE_MARKET_ORDER_RESULT: 'exchange:place_market_order_result',
+    UPDATE_BALANCE: 'user:update_balance',
+};

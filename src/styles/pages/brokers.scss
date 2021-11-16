@@ -10,10 +10,10 @@
       .panel-header-number {
         @apply flex items-center text-sm leading-none;
         &.up {
-          @apply text-mint
+          @apply text-teal
         }
         &.down {
-          @apply text-pink
+          @apply text-red
         }
         .panel-header-icon {
           @apply mr-1

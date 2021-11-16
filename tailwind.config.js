@@ -16,7 +16,7 @@ const commonColors = {
     gray2: '#A0AEC0',
     gray3: '#CBD5E0',
     gray4: '#F2F4F6',
-    gray5: 'rgb(247, 247, 247)',
+    gray5: '#EDF1F6',
 
     white: 'white',
     teal: '#00C8BC',
@@ -38,6 +38,15 @@ module.exports = {
     theme: {
         container: {
             center: true,
+        },
+        fontWeight: {
+            light: 300,
+            normal: 400,
+            medium: 500,
+            semibold: 600,
+            bold: 700,
+            extrabold: 800,
+            black: 900,
         },
         fontFamily: {
             sans: ['Barlow', 'sans-serif'],
@@ -102,28 +111,20 @@ module.exports = {
             dominant: commonColors.teal,
             transparent: 'transparent',
             current: 'currentColor',
-            bgTabInactive: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue3 },
-            bgTabActive: commonColors.teal,
-            bgPrimary: { DEFAULT: commonColors.white, dark: commonColors.darkBlue2 },
-            bgSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue5 },
-            bgContainer: { DEFAULT: '#fff', dark: commonColors.darkBlue2 },
-            headerBg: { DEFAULT: 'rgba(0, 0, 0, 0.3)', dark: 'rgba(0, 0, 0, 0.3)' },
-            homepageBg: { DEFAULT: '#f2f4f66e', dark: commonColors.darkBlue2 },
 
-            listItemSelected: { DEFAULT: commonColors.lightTeal, dark: commonColors.darkBlue3 },
-            txtPrimary: { DEFAULT: commonColors.darkBlue, dark: commonColors.gray4 },
-            txtSemiPrimary: { DEFAULT: commonColors.gray2, dark: commonColors.darkBlue4 },
-            txtSecondary: { DEFAULT: commonColors.gray1, dark: commonColors.darkBlue5 },
-            bgBtnPrimary: { DEFAULT: commonColors.teal, dark: commonColors.teal },
-            bgBtnSecondary: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue },
-            txtBtnPrimary: { DEFAULT: commonColors.white, dark: commonColors.white },
-            txtBtnSecondary: { DEFAULT: commonColors.teal, dark: commonColors.teal },
-            txtTabInactive: { DEFAULT: commonColors.gray1, dark: commonColors.darkBlue5 },
-            txtTabActive: { DEFAULT: commonColors.white, dark: commonColors.white },
-            divider: { DEFAULT: commonColors.gray4, dark: commonColors.darkBlue3 },
+            listItemSelected: {
+                DEFAULT: commonColors.lightTeal,
+                dark: commonColors.darkBlue3
+            },
+
+            divider: {
+                DEFAULT: commonColors.gray4,
+                dark: '#202C4C'
+            },
 
             //--------------------------------------------
-            black: { DEFAULT: '#02083D',
+            black: {
+                DEFAULT: '#02083D',
                 5: '#F7F6FD', // 9
                 50: '#F8F7FA', // 8
                 100: '#F6F9FC', // 7
@@ -133,9 +134,11 @@ module.exports = {
                 500: '#8B8C9B', // 3
                 600: '#3e3b3b', // 2
                 700: '#02083D', // 1,
-                800: '#000000' },
+                800: '#000000'
+            },
             white: colors.white,
-            blue: { DEFAULT: '#384562',
+            blue: {
+                DEFAULT: '#384562',
                 50: '#eff6ff',
                 100: '#dbeafe',
                 200: '#bfdbfe',
@@ -145,14 +148,18 @@ module.exports = {
                 600: '#646e85',
                 700: '#4e5973',
                 800: '#384562',
-                900: '#223050' },
-            darkBlue: { DEFAULT: '#223050',
+                900: '#223050'
+            },
+            darkBlue: {
+                DEFAULT: '#223050',
                 1: commonColors.darkBlue1,
                 2: commonColors.darkBlue2,
                 3: commonColors.darkBlue3,
                 4: commonColors.darkBlue4,
-                5: commonColors.darkBlue5 },
-            gray: { DEFAULT: '#8D9091',
+                5: commonColors.darkBlue5
+            },
+            gray: {
+                DEFAULT: '#8D9091',
                 ...colors.gray,
                 1: commonColors.gray1,
                 2: commonColors.gray2,
@@ -160,7 +167,8 @@ module.exports = {
                 4: commonColors.gray4,
                 5: commonColors.gray5,
             },
-            teal: { DEFAULT: '#00C8BC',
+            teal: {
+                DEFAULT: '#00C8BC',
                 5: '#03bdce17',
                 50: '#b3efeb',
                 100: '#99e9e4',
@@ -174,9 +182,12 @@ module.exports = {
             },
             green: { DEFAULT: '#22B02E' },
             yellow: { DEFAULT: '#FFD965' },
-            red: { DEFAULT: '#E5544B', lightRed: '#E5544B19' },
-            pink: { DEFAULT: '#E95F67' },
-            mint: { DEFAULT: '#09becf' },
+            red: {
+                DEFAULT: '#E5544B',
+                lightRed: '#E5544B19'
+            },
+            pink: { DEFAULT: '#E5544B' },
+            mint: { DEFAULT: '#00C8BC' },
         },
         extend: {
             spacing: {
@@ -188,15 +199,90 @@ module.exports = {
             //     '3xl': '1.25rem'
             // },
             borderColor: ['group-focus'],
+            placeholderColor: {
+                txtSecondary: {
+                    DEFAULT: commonColors.gray1,
+                    dark: commonColors.darkBlue5
+                },
+            },
+            textColor: {
+                txtPrimary: {
+                    DEFAULT: commonColors.darkBlue,
+                    dark: commonColors.gray4
+                },
+                txtSemiPrimary: {
+                    DEFAULT: commonColors.gray2,
+                    dark: commonColors.darkBlue4
+                },
+                txtSecondary: {
+                    DEFAULT: commonColors.gray1,
+                    dark: commonColors.darkBlue5
+                },
+
+                txtBtnPrimary: {
+                    DEFAULT: commonColors.white,
+                    dark: commonColors.white
+                },
+                txtBtnSecondary: {
+                    DEFAULT: commonColors.teal,
+                    dark: commonColors.teal
+                },
+                txtTabInactive: {
+                    DEFAULT: commonColors.gray1,
+                    dark: commonColors.darkBlue5
+                },
+                txtTabActive: {
+                    DEFAULT: commonColors.white,
+                    dark: commonColors.white
+                },
+            },
+            backgroundColor: {
+                bgTabInactive: {
+                    DEFAULT: commonColors.gray4,
+                    dark: commonColors.darkBlue3
+                },
+                bgTabActive: commonColors.teal,
+                bgPrimary: {
+                    DEFAULT: commonColors.white,
+                    dark: commonColors.darkBlue1
+                },
+                bgSecondary: {
+                    DEFAULT: commonColors.gray4,
+                    dark: commonColors.darkBlue5
+                },
+                bgContainer: {
+                    DEFAULT: '#fff',
+                    dark: commonColors.darkBlue1
+                },
+                headerBg: {
+                    DEFAULT: 'rgba(0, 0, 0, 0.3)',
+                    dark: 'rgba(0, 0, 0, 0.3)'
+                },
+                homepageBg: {
+                    DEFAULT: '#f2f4f66e',
+                    dark: commonColors.darkBlue2
+                },
+                bgBtnPrimary: {
+                    DEFAULT: commonColors.teal,
+                    dark: commonColors.teal
+                },
+                bgBtnSecondary: {
+                    DEFAULT: commonColors.gray4,
+                    dark: commonColors.darkBlue
+                },
+                bgInput: {
+                    DEFAULT: commonColors.gray5,
+                    dark: commonColors.darkBlue3
+                },
+            },
             fontWeight: { bold: 600 },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)'
-            }
+            },
         },
     },
-    variants: {
-    },
+
     plugins: [
         require('@tailwindcss/forms')({ strategy: 'class',
         }),

@@ -6,6 +6,7 @@
   "open_orders": "Open Orders",
   "order_history": "Order History",
   "trade_history": "Trade History",
+  "funds": "Funds",
   "order_book": "Order Book",
   "trades": "Trades",
   "place_order": "Place Order",
@@ -27,5 +28,5 @@
   "close_order_success": "Order #{{displayingId}} [{{side}} {{type}} {{token}}] was closed successfully.",
   "close_order_failed": "Order #{{displayingId}} [{{side}} {{type}} {{token}}] was failed to close.",
   "filter_by_current_pair": "Hide Other Pair",
-  "pair_under_maintenance": "{{base}}/{{quote}} is under maintenance at the moment"
+  "pair_under_maintenance": "{{base}}/{{quote}} is under maintenance"
 }

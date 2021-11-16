@@ -1,56 +1,56 @@
-const Candles = ({ color, size, fill, style, className, onClick }) => {
+const Candles = ({
+    color = "#718096",
+    size,
+    fill= '#FBFBFB',
+    style,
+    className,
+    onClick,
+}) => {
     return (
         <svg
-            style={style || {}}
-            className={className || {}}
+            style={style || undefined}
+            className={className || undefined}
             onClick={() => onClick && onClick()}
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
+            width={size}
+            height={size}
+            viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
         >
-            <g clip-path="url(#clip0_5097_39963)">
-                <path
-                    d="M11.273 15.7148L11.273 2.21484"
-                    stroke="#718096"
-                    strokeWidth="0.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <path
-                    d="M4.72754 15.7148L4.72754 0.286271"
-                    stroke="#718096"
-                    strokeWidth="0.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <rect
-                    x="3.25742"
-                    y="3.00059"
-                    width="2.94026"
-                    height="10"
-                    rx="0.6"
-                    fill="#FBFBFB"
-                    stroke="#718096"
-                    strokeWidth="0.8"
-                />
-                <rect
-                    x="9.80286"
-                    y="6.08652"
-                    width="2.94026"
-                    height="6.91429"
-                    rx="0.6"
-                    fill="#FBFBFB"
-                    stroke="#718096"
-                    strokeWidth="0.8"
-                />
-            </g>
-            <defs>
-                <clipPath id="clip0_5097_39963">
-                    <rect width="16" height="16" fill="white" />
-                </clipPath>
-            </defs>
+            <path
+                d="M15.8182 21L15.8182 5.25"
+                stroke={color}
+                strokeWidth="0.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M8.18182 21L8.18182 3"
+                stroke={color}
+                strokeWidth="0.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <rect
+                x="6.4"
+                y="6.1002"
+                width="3.56364"
+                height="11.8"
+                rx="0.6"
+                fill={fill}
+                stroke={color}
+                strokeWidth="0.8"
+            />
+            <rect
+                x="14.0364"
+                y="9.6998"
+                width="3.56364"
+                height="8.2"
+                rx="0.6"
+                fill={fill}
+                stroke={color}
+                strokeWidth="0.8"
+            />
         </svg>
     );
 };

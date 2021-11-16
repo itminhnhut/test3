@@ -1,39 +1,38 @@
+import { Popover, Transition } from '@headlessui/react';
+import Axios from 'axios';
+import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants';
 import PocketNavDrawer from 'components/common/NavBar/PocketNavDrawer';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage'
-import SvgIcon from 'components/svg'
-import SvgMoon from 'components/svg/Moon'
-import SvgUser from 'components/svg/SvgUser'
-import SvgMenu from 'components/svg/Menu'
-import SvgSun from 'components/svg/Sun'
-import colors from 'styles/colors'
-import Image from 'next/image'
-import Link from 'next/link'
-import Axios from 'axios'
+import SvgIcon from 'components/svg';
+import SvgCheckSuccess from 'components/svg/CheckSuccess';
+import SvgMenu from 'components/svg/Menu';
+import SvgMoon from 'components/svg/Moon';
+import SvgSun from 'components/svg/Sun';
+import SvgDocument from 'components/svg/SvgDocument';
+import SvgExit from 'components/svg/SvgExit';
+import SvgIdentifyCard from 'components/svg/SvgIdentifyCard';
+import SvgLayout from 'components/svg/SvgLayout';
+import SvgLock from 'components/svg/SvgLock';
+import SvgReward from 'components/svg/SvgReward';
+import SvgUser from 'components/svg/SvgUser';
+import SvgUserPlus from 'components/svg/SvgUserPlus';
+import SvgWallet from 'components/svg/Wallet';
+import SpotSetting from 'components/trade/SpotSetting';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useLanguage from 'hooks/useLanguage';
+import { useTranslation } from 'next-i18next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
+import { useAsync } from 'react-use';
+import { API_GET_VIP } from 'redux/actions/apis';
+import { getMarketWatch } from 'redux/actions/market';
+import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
+import colors from 'styles/colors';
+import { buildLogoutUrl } from 'utils';
+import { useWindowSize } from 'utils/customHooks';
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
-import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants'
-import { useTranslation } from 'next-i18next'
-import { useWindowSize } from 'utils/customHooks'
-import { useSelector } from 'react-redux'
-import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils'
-import { buildLogoutUrl } from 'utils'
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
-import SvgWallet from 'components/svg/Wallet'
-import SvgCheckSuccess from 'components/svg/CheckSuccess'
-import SvgIdentifyCard from 'components/svg/SvgIdentifyCard'
-import SvgUserPlus from 'components/svg/SvgUserPlus'
-import SvgReward from 'components/svg/SvgReward'
-import SvgDocument from 'components/svg/SvgDocument'
-import SvgExit from 'components/svg/SvgExit'
-import SvgLayout from 'components/svg/SvgLayout'
-import SvgLock from 'components/svg/SvgLock'
-import { useAsync } from 'react-use'
-import { getMarketWatch } from 'redux/actions/market'
-import { API_GET_VIP } from 'redux/actions/apis'
-import { PulseLoader } from 'react-spinners'
-import Wallet from 'components/svg/Wallet'
-import WalletActive from 'components/svg/WalletActive'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -45,7 +44,7 @@ const NAV_HIDE_THEME_BUTTON = [
     'maldives_landingpage'
 ]
 
-const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
+const NavBar = ({ style, layoutStateHandler, useOnly, name, page, changeLayoutCb }) => {
     // * Initial State
     const [state, set] = useState({
        isDrawer: false,
@@ -71,32 +70,35 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
 
     // * Memmoized Variable
     const navTheme = useMemo(() => {
-        const result = { wrapper: '', text: '', color: '' }
+        const result = { wrapper: "", text: "", color: "" };
         switch (useOnly) {
             case NAVBAR_USE_TYPE.FLUENT:
-                result.wrapper = ''
-                result.text = 'text-txtPrimary-dark'
-                result.color = colors.grey4
-                break
+                result.wrapper = "";
+                result.text = "text-txtPrimary-dark";
+                result.color = colors.grey4;
+                break;
             case NAVBAR_USE_TYPE.DARK:
-                result.wrapper = 'mal-navbar__wrapper__use__dark'
-                result.text = 'text-txtPrimary-dark'
-                result.color = colors.grey4
-                break
+                result.wrapper = "mal-navbar__wrapper__use__dark";
+                result.text = "text-txtPrimary-dark";
+                result.color = colors.grey4;
+                break;
             case NAVBAR_USE_TYPE.LIGHT:
-                result.wrapper = 'mal-navbar__wrapper__use__light'
-                result.text = 'text-txtPrimary'
-                result.color = colors.darkBlue
-                break
+                result.wrapper = "mal-navbar__wrapper__use__light";
+                result.text = "text-txtPrimary";
+                result.color = colors.darkBlue;
+                break;
             default:
-                result.wrapper = 'mal-navbar__wrapper__no__blur'
-                result.text = 'text-txtPrimary dark:text-txtPrimary-dark'
-                result.color = currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4
-                break
+                result.wrapper = "mal-navbar__wrapper__no__blur";
+                result.text = "text-txtPrimary dark:text-txtPrimary-dark";
+                result.color =
+                    currentTheme === THEME_MODE.LIGHT
+                        ? colors.darkBlue
+                        : colors.grey4;
+                break;
         }
 
-        return result
-    }, [useOnly, currentTheme])
+        return result;
+    }, [useOnly, currentTheme]);
 
 
     // * Helper
@@ -249,6 +251,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         )
     }, [name, currentTheme, navTheme.color])
 
+
     const renderUserControl = useCallback(() => {
         const { avatar, username, email } = auth
         const items = []
@@ -367,9 +370,9 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
         <>
             <PocketNavDrawer isActive={state.isDrawer} onClose={() => onDrawerAction(false)}/>
             <div style={style || {}}
-                 className={`mal-navbar__wrapper 
+                 className={`mal-navbar__wrapper
                             // ${useOnly === NAVBAR_USE_TYPE.FLUENT ?  'mal-navbar__visible__blur' : ''}
-                            // ${state.hideOnScroll ?  `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT ?  'mal-navbar__visible__blur' : ''}` : 'mal-navbar__hidden'} 
+                            // ${state.hideOnScroll ?  `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT ?  'mal-navbar__visible__blur' : ''}` : 'mal-navbar__hidden'}
                             ${navTheme.wrapper}
                  `}>
                 <Link href="/">
@@ -411,12 +414,6 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                             </a>
                         </Link>}
                     </div>}
-
-                    {/*<Button title={t('navbar:menu.download_app')} type="primary"*/}
-                    {/*        style={width >= 992 ? {fontSize: 14, padding: '4px 16px', maxWidth: 120} : {fontSize: 12, padding: '1px 12px'}}*/}
-                    {/*        href={`${process.env.NEXT_PUBLIC_APP_URL}#nami_exchange_download_app`}/>*/}
-
-
                     {auth &&
                         <>
                             {width >= 992 &&
@@ -449,12 +446,15 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name }) => {
                              {/*   <Image src="/images/icon/ic_us_flag.png" width="20" height="20" />*/}
                              {/*  : <Image src="/images/icon/ic_vn_flag.png" width="20" height="20" />*/}
                         </a>
-                        {renderThemeButton()}
+                        {
+                            page === 'spot'
+                            ? <SpotSetting changeLayoutCb={changeLayoutCb}/>
+                            : renderThemeButton()}
+                       
                     </div>}
-
-                    {width < 1366 &&
+                    
+                          {width < 1366 &&
                     <div className="relative" onClick={(e) => {
-                        // e.stopPropagation()
                         onDrawerAction(true)}
                     }>
                         <SvgMenu size={25} className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`}

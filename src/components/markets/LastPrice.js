@@ -54,7 +54,7 @@ const LastPrice = (props) => {
                           </div> :
                     colored
                         ? (
-                            <div style={props.styles ? {...props.styles} : undefined} className={`${symbolTicker && symbolTicker?.u ? 'text-mint' : 'text-pink'}`}>
+                            <div style={props.styles ? {...props.styles} : undefined} className={`${symbolTicker && symbolTicker?.u ? 'text-teal' : 'text-red'}`}>
                                 {symbolTicker ? formatPrice(symbolTicker?.p, exchangeConfig, symbol?.base) : '---'}
                             </div>
                         )

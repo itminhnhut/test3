@@ -29,6 +29,7 @@
 
   .input-group {
     @apply relative flex flex-wrap items-stretch w-full border border-divider dark:border-divider-dark rounded focus:ring-0 focus:outline-none;
+    @apply bg-bgInput dark:bg-bgInput-dark;
     &.is-error {
       @apply border-red
     }
@@ -59,8 +60,8 @@
         @apply px-0 py-0;
       }
       .input-group-text {
-        line-height: 1.315rem!important;
-        @apply flex items-center text-center whitespace-nowrap text-xs;
+        // line-height: 1.315rem!important;
+        @apply flex items-center text-center whitespace-nowrap text-sm;
       }
     }
     .input-group-separator {

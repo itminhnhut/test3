@@ -11,9 +11,7 @@ import { iconColor } from 'src/config/colors';
 import { DOWNLOAD_APP_LINK, LS_KEYS } from 'src/redux/actions/const';
 import { actionLogout } from 'src/redux/actions/user';
 import NotificationList from '../notification/NotificationList';
-import {
-    IconLogout, IconProfile,
-} from './Icons';
+import { IconLogout, IconProfile, } from './Icons';
 
 const { NEXT_PUBLIC_API_URL } = process.env;
 
@@ -66,10 +64,22 @@ const NavBar = () => {
         {
             name: 'wallet',
             submenu: [
-                { name: 'spot', route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming` },
-                { name: 'futures', route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming` },
-                { name: 'farming', route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming` },
-                { name: 'stake', route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=stake` },
+                {
+                    name: 'spot',
+                    route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming`
+                },
+                {
+                    name: 'futures',
+                    route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming`
+                },
+                {
+                    name: 'farming',
+                    route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming`
+                },
+                {
+                    name: 'stake',
+                    route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=stake`
+                },
             ],
         },
         {
@@ -110,7 +120,7 @@ const NavBar = () => {
                     >
                         <span className={`navbar-item ${open ? 'active' : ''}`}>{t(`menu.${item.name}`)}</span>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 6L8 10L12 6" stroke="#223050" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M4 6L8 10L12 6" stroke="#223050" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
 
                     </Popover.Button>
@@ -277,7 +287,7 @@ const NavBar = () => {
                             (user && !loadingUser)
                             &&
                             <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-                                <NotificationList />
+                                <NotificationList/>
                                 <Popover className="relative">
                                     <Popover.Button
                                         type="button"
@@ -285,7 +295,8 @@ const NavBar = () => {
                                         aria-expanded="false"
                                     >
                                         <span className="mr-3">
-                                            <img src={urlAvatar()} width={28} height={28} className="rounded-full w-7 h-7 min-w-[28px]" />
+                                            <img src={urlAvatar()} width={28} height={28}
+                                                 className="rounded-full w-7 h-7 min-w-[28px]"/>
                                         </span>
                                         <span
                                             className="text-sm font-semibold"
@@ -304,7 +315,7 @@ const NavBar = () => {
                                                         className="px-2 py-2 flex items-center hover:bg-teal-5 font-medium cursor-pointer group"
                                                     >
                                                         <span className="text-black group-hover:text-teal">
-                                                            <IconProfile size={16} />
+                                                            <IconProfile size={16}/>
                                                         </span>
                                                         <span
                                                             className="ml-3 flex-grow text-black-700 group-hover:text-teal"
@@ -319,7 +330,7 @@ const NavBar = () => {
                                                         className="px-2 py-2 flex items-center hover:bg-teal-5 font-medium cursor-pointer group"
                                                     >
                                                         <span className="text-black group-hover:text-teal">
-                                                            <IconProfile size={16} />
+                                                            <IconProfile size={16}/>
                                                         </span>
                                                         <span
                                                             className="ml-3 flex-grow text-black-700 group-hover:text-teal"
@@ -334,7 +345,7 @@ const NavBar = () => {
                                                         className="px-2 py-2 flex items-center hover:bg-teal-5 font-medium cursor-pointer group"
                                                     >
                                                         <span className="text-black group-hover:text-teal">
-                                                            <IconProfile size={16} />
+                                                            <IconProfile size={16}/>
                                                         </span>
                                                         <span
                                                             className="ml-3 flex-grow text-black-700 group-hover:text-teal"
@@ -352,7 +363,7 @@ const NavBar = () => {
                                                     }}
                                                 >
                                                     <span className="text-black-500 group-hover:text-teal">
-                                                        <IconLogout size={16} />
+                                                        <IconLogout size={16}/>
                                                     </span>
                                                     <span
                                                         className="ml-3 text-black-700 group-hover:text-teal"
@@ -386,7 +397,7 @@ const NavBar = () => {
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
                             >
-                                <Dialog.Overlay className="fixed inset-0 bg-black-800 bg-opacity-70" />
+                                <Dialog.Overlay className="fixed inset-0 bg-black-800 bg-opacity-70"/>
                             </Transition.Child>
 
                             {/* This element is to trick the browser into centering the modal contents. */}
@@ -408,30 +419,31 @@ const NavBar = () => {
                                                 className="text-xl font-medium leading-8 text-black-800"
                                             />
                                             <button className="btn btn-icon" type="button" onClick={closeModal}>
-                                                <ChevronRight color={iconColor} size={24} />
+                                                <ChevronRight color={iconColor} size={24}/>
                                             </button>
                                         </div>
                                     </Dialog.Title>
                                     <div className="px-5">
 
                                         {menuMobile.map((m, index) => (m.disabled ? (
-                                            <div className="border-0 border-b border-black-200 py-4 font-bold" key={index}>
-                                                <div className="flex items-center">
-                                                    <span>{t(`menu.${m.name}`)}</span>
-                                                    <span className="label label-red ml-3">
-                                                        {t('coming_soon')}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <Link href={m.route} locale={locale} key={index} prefetch={false}>
-                                                <div className="border-0 border-b border-black-200 py-4 font-bold">
+                                                <div className="border-0 border-b border-black-200 py-4 font-bold"
+                                                     key={index}>
                                                     <div className="flex items-center">
                                                         <span>{t(`menu.${m.name}`)}</span>
+                                                        <span className="label label-red ml-3">
+                                                        {t('coming_soon')}
+                                                    </span>
                                                     </div>
                                                 </div>
-                                            </Link>
-                                        )),
+                                            ) : (
+                                                <Link href={m.route} locale={locale} key={index} prefetch={false}>
+                                                    <div className="border-0 border-b border-black-200 py-4 font-bold">
+                                                        <div className="flex items-center">
+                                                            <span>{t(`menu.${m.name}`)}</span>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            )),
                                         )}
                                         {
                                             (!user && !loadingUser) && (
@@ -484,7 +496,7 @@ const NavBar = () => {
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
                             >
-                                <Dialog.Overlay className="fixed inset-0 bg-black-800 bg-opacity-70" />
+                                <Dialog.Overlay className="fixed inset-0 bg-black-800 bg-opacity-70"/>
                             </Transition.Child>
 
                             {/* This element is to trick the browser into centering the modal contents. */}
@@ -516,13 +528,14 @@ const NavBar = () => {
                                                 type="button"
                                                 onClick={closeModalRegister}
                                             >
-                                                <XCircle color={iconColor} size={24} />
+                                                <XCircle color={iconColor} size={24}/>
                                             </button>
                                         </div>
                                     </Dialog.Title>
                                     <div className="text-sm rounded-2xl bg-white">
                                         <div className="bg-black-5 rounded-t-2xl py-4">
-                                            <img src={getS3Url("/images/bg/dialog-register-header.svg")} alt="" className="mx-auto" />
+                                            <img src={getS3Url('/images/bg/dialog-register-header.svg')} alt=""
+                                                 className="mx-auto"/>
                                         </div>
                                         <div className="px-6 py-8 text-center !font-bold">
                                             <div className="text-xl">{t('landing:download_app_hint')}</div>

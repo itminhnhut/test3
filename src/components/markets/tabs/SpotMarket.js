@@ -76,7 +76,7 @@ const SpotMarket = ({
                 return a?.p - b?.p;
             },
             cell: (row) => (
-                <span className={!row?.u ? 'text-pink' : 'text-mint'}>
+                <span className={!row?.u ? 'text-red' : 'text-teal'}>
                     {renderPriceData(+row?.p)}
                 </span>
             ),
@@ -92,7 +92,7 @@ const SpotMarket = ({
                 return (
                     <span>
                         <Image
-                            src={getSparkLine(`${row?.b}${row?.q}`, change24h >= 0 ? '#09becf' : '#E95F67')}
+                            src={getSparkLine(`${row?.b}${row?.q}`, change24h >= 0 ? '#00C8BC' : '#E5544B')}
                             height={30.75}
                             width={90}
                             unoptimized

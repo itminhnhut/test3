@@ -133,7 +133,7 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                 return a?.p - b?.p;
             },
             cell: (row) => (
-                <span className={!row?.u ? 'text-pink' : 'text-mint'}>
+                <span className={!row?.u ? 'text-red' : 'text-teal'}>
                     {renderPriceData(+row?.p)}
                 </span>
             ),
@@ -149,7 +149,7 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                 return (
                     <span>
                         <Image
-                            src={getSparkLine(`${row?.b}${row?.q}`, change24h >= 0 ? '#09becf' : '#E95F67')}
+                            src={getSparkLine(`${row?.b}${row?.q}`, change24h >= 0 ? '#00C8BC' : '#E5544B')}
                             height={30.75}
                             width={90}
                             unoptimized
@@ -496,9 +496,9 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
         }
         change = formatPercentage(change, 2, true);
         if (change > 0) {
-            return <p className="text-mint flex flex-row items-center w-max"><span className="mr-1"><IconValueIncrease /></span> +{change}%</p>;
+            return <p className="text-teal flex flex-row items-center w-max"><span className="mr-1"><IconValueIncrease /></span> +{change}%</p>;
         }
-        return <p className="text-pink flex flex-row items-center w-max"><span className="mr-1"><IconValueDecrease /></span> {change}%</p>;
+        return <p className="text-red flex flex-row items-center w-max"><span className="mr-1"><IconValueDecrease /></span> {change}%</p>;
     };
 
     const handleSetDefault = (action) => async () => {
@@ -586,7 +586,7 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                             {({ active }) => (
                                 <button
                                     onClick={handleSetDefault('delete')}
-                                    className={`${active ? 'bg-violet-500 text-white' : 'text-pink'} group flex rounded-md items-center w-full px-4 py-3 text-sm font-semibold`}
+                                    className={`${active ? 'bg-violet-500 text-white' : 'text-red'} group flex rounded-md items-center w-full px-4 py-3 text-sm font-semibold`}
                                 >
                                     <i className="mr-2"><IconDeleteAction /></i> {t('category_disc_table_action_delete_assets')}
                                 </button>
@@ -659,7 +659,7 @@ const Disclosure = ({ id, itemName, itemAvatar, badge, data, isDefault, actions,
                             <button
                                 type="button"
                                 onClick={handleToggleModal({ type: 'add_assets', itemName, id })}
-                                className="text-sm text-[#09becf] font-bold inline-flex items-center"
+                                className="text-sm text-[#00C8BC] font-bold inline-flex items-center"
                             ><i className="mr-2"><IconAddAction isActive /></i> {t('category_disc_table_action_add_assets')}
                             </button>
                         )
