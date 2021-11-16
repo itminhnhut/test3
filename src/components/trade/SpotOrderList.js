@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import OpeningOrder from './OpeningOrder';
 import OrderHistory from './OrderHistory';
+import TradeHistory from './TradeHistory';
 
 const SpotOrderList = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -75,7 +76,7 @@ const SpotOrderList = (props) => {
                         orderListWrapperHeight={props.orderListWrapperHeight}
                         currentPair={query?.id}
                     />}
-                    {activeTab === 'trade_history' && <OrderHistory
+                    {activeTab === 'trade_history' && <TradeHistory
                         height={height}
                         orderListWrapperHeight={props.orderListWrapperHeight}
                         currentPair={query?.id}

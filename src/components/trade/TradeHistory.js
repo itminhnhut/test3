@@ -12,7 +12,7 @@ import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
 
 
-const OrderHistory = (props) => {
+const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
     const [histories, setHistories] = useState([]);
@@ -241,4 +241,4 @@ const OrderHistory = (props) => {
     return renderTable()
 };
 
-export default OrderHistory;
+export default TradeHistory;
