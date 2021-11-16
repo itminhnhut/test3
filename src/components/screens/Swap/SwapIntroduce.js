@@ -5,7 +5,7 @@ import colors from 'styles/colors'
 
 import { useCallback, useEffect, useState } from 'react'
 import { initMarketWatchItem, sparkLineBuilder } from 'utils'
-import { render24hChange } from 'redux/actions/utils'
+import { formatPrice, render24hChange } from 'redux/actions/utils'
 import { getMarketWatch } from 'redux/actions/market'
 import { orderBy } from 'lodash'
 
@@ -91,12 +91,11 @@ const SwapIntroduce = () => {
                                         {render24hChange(sw)}
                                     </div>
                                     <div className="text-[12px] font-normal text-txtSecondary dark:text-txtSecondary-dark">
-                                        --
+                                        {_?.lastPrice ? formatPrice(_?.lastPrice) : '--'}
                                     </div>
                                 </div>
-                                <div className="mb-2 ml-[12px] w-[45px] h-[16px]">
-                                    <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)}
-                                         alt="Nami Exchange"/>
+                                <div className="mb-2 ml-[12px] w-[45px] h-[16px] ">
+                                    <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)}  alt="Nami Exchange"/>
                                 </div>
                             </div>
                         </div>

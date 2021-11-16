@@ -299,7 +299,7 @@ const SwapModule = ({ width, pair }) => {
             <div className="flex items-center justify-between">
                 <div className="mt-1 flex items-center cursor-pointer select-none"
                      onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}>
-                    <AssetLogo assetCode={null} size={20}/>
+                    <AssetLogo assetCode={state.fromAsset} size={20}/>
                     <span className="mx-2 font-bold uppercase">{state.fromAsset}</span>
                     <span className={state.openAssetList?.from ? 'rotate-180' : ''}>
                         <SvgIcon name="chevron_down" size={15}/>
@@ -385,7 +385,7 @@ const SwapModule = ({ width, pair }) => {
             <div className="flex items-center justify-between">
                 <div className="mt-1 flex items-center cursor-pointer select-none"
                      onClick={() => setState({ openAssetList: { to: !state.openAssetList?.to } })}>
-                    <AssetLogo assetCode={null} size={20}/>
+                    <AssetLogo assetCode={state.toAsset} size={20}/>
                     <span className="mx-2 font-bold uppercase">{state.toAsset}</span>
                     <span className={state.openAssetList?.to ? 'rotate-180' : ''}>
                         <SvgIcon name="chevron_down" size={15}/>
