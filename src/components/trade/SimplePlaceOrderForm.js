@@ -634,7 +634,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             }
         });
         return (
-            <ul className="tabs justify-start mb-2">
+            <ul className="tabs justify-start mb-2 dragHandleArea">
                 {tabs.map((tab, index) => {
                     return (
                         <li className={`tab-item px-2 font-medium ${orderType === tab ? 'active' : ''}`} key={index}>

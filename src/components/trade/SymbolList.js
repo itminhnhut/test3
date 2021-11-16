@@ -293,7 +293,7 @@ const SymbolList = (props) => {
             <div
                 className="bg-bgContainer dark:bg-bgContainer-dark py-4 h-full"
             >
-                <div className="mx-3 mb-3">
+                <div className="mx-3 mb-3 dragHandleArea">
                         <SearchInput
                             placeholder={t('spot:search')}
                             onChange={(e) => setSearch(e.target.value)}
