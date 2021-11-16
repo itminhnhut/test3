@@ -98,6 +98,8 @@ const PlaceOrderForm = ({ symbol }) => {
             const newSymbolTicker = await getMarketWatch(
                 getSymbolString(symbol),
             );
+
+            console.log("__ check symbol ticker", newSymbolTicker);
             setSymbolTicker(newSymbolTicker?.[0]);
         }
     }, [symbol]);
@@ -156,13 +158,13 @@ const PlaceOrderForm = ({ symbol }) => {
         if (side === ExchangeOrderEnum.Side.SELL) {
             setQuantityMode(QuantityMode[1]);
         }
-        setIsUseQuoteQuantity(false);
+        // setIsUseQuoteQuantity(false);
         // setOrderType(ExchangeOrderEnum.Type.LIMIT);
     };
     const handleClickSubTab = (tab) => {
         setOrderType(tab);
         setQuantityMode(QuantityMode[1]);
-        setIsUseQuoteQuantity(false);
+        // setIsUseQuoteQuantity(false);
     };
 
     const subTabs = [
@@ -379,22 +381,21 @@ const PlaceOrderForm = ({ symbol }) => {
         () => {
             if (focus !== 'percentage') return;
             if (!(baseAssetId && quoteAssetId)) return;
-            const available =
-                orderSide === ExchangeOrderEnum.Side.BUY
+            const available = orderSide === ExchangeOrderEnum.Side.BUY
                     ? getAvailable(quoteAssetId)
                     : getAvailable(baseAssetId);
             if (!(available > EPS)) return;
             const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
             let _price = +price;
 
+            
             if (orderSide === ExchangeOrderEnum.Side.BUY) {
                 if (orderType === ExchangeOrderEnum.Type.MARKET) {
-                    _price =
-                        +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
+                    _price = +symbolTicker?.p ;
                 }
+                
                 const nextQuoteQty = floor(
-                    ((available * percentage) / 100) *
-                        (1 - currentExchangeConfig?.normalTakerFee),
+                    ((available * percentage) / 100),
                     2,
                 );
                 const nextQuantity = floor(nextQuoteQty / _price, qtyDecimal);
@@ -429,8 +430,7 @@ const PlaceOrderForm = ({ symbol }) => {
 
             const nextQuoteQty = floor(
                 _quantity *
-                    _price *
-                    (1 + currentExchangeConfig?.normalTakerFee),
+                    _price,
                 2,
             );
             setQuoteQty(nextQuoteQty);
@@ -452,15 +452,14 @@ const PlaceOrderForm = ({ symbol }) => {
             const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
             let _price = +price;
             if (orderType === ExchangeOrderEnum.Type.MARKET) {
-                _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
+                _price = +symbolTicker?.p ;
             }
             const _quantity = +quantity;
             const _quoteQty = +quoteQty;
 
             const nextQuoteQty = floor(
                 _quantity *
-                    _price *
-                    (1 + currentExchangeConfig?.normalTakerFee),
+                    _price,
                 2,
             );
             setQuoteQty(nextQuoteQty);
@@ -483,6 +482,7 @@ const PlaceOrderForm = ({ symbol }) => {
     );
     useDebounce(
         () => {
+            
             if (focus !== 'quoteQty') return;
             if (!(baseAssetId && quoteAssetId)) return;
 
@@ -490,15 +490,17 @@ const PlaceOrderForm = ({ symbol }) => {
             let _price = +price;
             const _quantity = +quantity;
             const _quoteQty = +quoteQty;
+            
 
             if (orderType === ExchangeOrderEnum.Type.MARKET) {
-                _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
+                _price = +symbolTicker?.p;
             }
+
             const nextQuantity = floor(
-                (_quoteQty / _price) *
-                    (1 - currentExchangeConfig?.normalTakerFee),
+                (_quoteQty / _price),
                 qtyDecimal,
             );
+
             setQuantity(nextQuantity);
             let nextPercentage = 0;
 
@@ -656,90 +658,17 @@ const PlaceOrderForm = ({ symbol }) => {
                         quoteQtyRef?.current?.blur();
                     }}
                     onChange={({ x }) => {
-                        if (orderSide === ExchangeOrderEnum.Side.BUY) {
-                            setIsUseQuoteQuantity(true);
-                        } else {
-                            setIsUseQuoteQuantity(false);
-                        }
+                        // if (orderSide === ExchangeOrderEnum.Side.BUY) {
+                        //     setIsUseQuoteQuantity(true);
+                        // } else {
+                        //     setIsUseQuoteQuantity(false);
+                        // }
                         setPercentage(x);
                     }}
                 />
             </div>
         );
     }, [percentage, orderSide]);
-
-    const _renderQuantityMode = useMemo(() => {
-        return (
-            <Listbox
-                value={quantityMode}
-                onChange={(value) => {
-                    if (value === QuantityMode[0]) {
-                        setIsUseQuoteQuantity(true);
-                    } else {
-                        setIsUseQuoteQuantity(false);
-                    }
-                    setQuantityMode(value);
-                }}
-            >
-                {({ open }) => (
-                    <>
-                        <div className="relative z-50">
-                            <Listbox.Button className="relative w-full text-left cursor-pointer focus:outline-none sm:text-sm">
-                                <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                                    <span className="w-[100px]">
-                                        {quantityMode.name}
-                                    </span>
-                                    <svg
-                                        className="ml-1.5 inline"
-                                        width="8"
-                                        height="5"
-                                        viewBox="0 0 8 5"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            clipRule="evenodd"
-                                            d="M1.31208 0C0.43606 0 -0.0165491 1.04647 0.583372 1.68483L3.22245 4.49301C3.6201 4.91614 4.29333 4.91276 4.68671 4.48565L7.27316 1.67747C7.8634 1.03664 7.40884 0 6.53761 0H1.31208Z"
-                                            fill="#8B8C9B"
-                                        />
-                                    </svg>
-                                </div>
-                            </Listbox.Button>
-
-                            <Transition
-                                show={open}
-                                as={Fragment}
-                                leave="transition ease-in duration-100"
-                                leaveFrom="opacity-100"
-                                leaveTo="opacity-0"
-                            >
-                                <Listbox.Options
-                                    static
-                                    className="absolute z-10 mt-1 w-32 bg-white border border-black-200 rounded transform  shadow-xl outline-none"
-                                >
-                                    {QuantityMode.map((mode) => (
-                                        <Listbox.Option
-                                            key={mode.id}
-                                            className={({ selected, active }) => classNames(
-                                                selected
-                                                    ? 'text-teal font-medium'
-                                                    : 'text-txtSecondary dark:text-txtSecondary-dark',
-                                                'text-sm  cursor-pointer hover:text-teal py-1 text-center hover:bg-gray-100 px-4',
-                                            )}
-                                            value={mode}
-                                        >
-                                            {({ selected, active }) => mode.name}
-                                        </Listbox.Option>
-                                    ))}
-                                </Listbox.Options>
-                            </Transition>
-                        </div>
-                    </>
-                )}
-            </Listbox>
-        );
-    }, [quantityMode]);
 
     const _renderOrderQuoteQty = useMemo(() => {
         if (
@@ -771,7 +700,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             decimalScale={2}
                             allowNegative={false}
                             value={quoteQty}
-                            onChange={() => setIsUseQuoteQuantity(true)}
+                            // onChange={() => setIsUseQuoteQuantity(true)}
                             onValueChange={({ value }) => setQuoteQty(value)}
                         />
 
@@ -809,7 +738,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             )}
                             allowNegative={false}
                             value={quantity}
-                            onChange={() => setIsUseQuoteQuantity(false)}
+                            // onChange={() => setIsUseQuoteQuantity(false)}
                             onValueChange={({ value }) => setQuantity(value)}
                         />
 
