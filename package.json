@@ -94,7 +94,7 @@
     "react-redux": "^7.1.0",
     "react-resizable": "^3.0.4",
     "react-share": "^4.4.0",
-    "react-slick": "lastest",
+    "react-slick": "^0.28.1",
     "react-spinners": "^0.11.0",
     "react-use": "^15.3.4",
     "react-virtualized": "^9.22.3",
