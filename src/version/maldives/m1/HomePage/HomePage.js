@@ -4,12 +4,9 @@ import HomeAdditional from 'version/maldives/m1/HomePage/HomeAdditional'
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import HomeNews from 'version/maldives/m1/HomePage/HomeNews'
 import Modal from 'components/common/Modal'
-import Image from 'next/image'
-import Link from 'next/link'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'next-i18next'
-import { useWindowSize } from 'utils/customHooks'
 import { QRCode } from 'react-qrcode-logo'
 import { NAVBAR_USE_TYPE } from 'components/common/NavBar/NavBar'
 

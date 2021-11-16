@@ -83,6 +83,7 @@
   "from": "From",
   "to": "To",
   "rate": "Rate",
+  "refresh": "Refresh",
   "timeframe": "Timeframe",
   "depth": "Depth",
   "indicators": "Indicators",
@@ -134,5 +135,6 @@
   "cancel": "Cancel",
   "view_all": "View all",
   "already_have_account": "Already have an account?",
-  "create_account": "Create Account"
+  "create_account": "Create Account",
+  "term": "By using {{product}}, you’re agree to the</br><0>Terms and Conditions</0>"
 }

@@ -8,7 +8,7 @@ import {
     API_GET_MARKET_WATCH,
     API_GET_ORDER_BOOK,
     API_GET_RECENT_TRADE, API_METRIC_VIEW,
-    API_WATCH_LIST
+    API_WATCH_LIST, SWAP_ESTIMATE_PRICE
 } from './apis'
 
 export const setUser = (user) => (dispatch) => dispatch({ type: types.SET_USER, payload: user });
@@ -104,6 +104,27 @@ export async function getMarketWatch(symbol = null) {
         }
     } catch (e) {
         return [];
+    }
+}
+
+export async function getSwapEstimatePrice(params) {
+    try {
+        const opts = {
+            url: SWAP_ESTIMATE_PRICE,
+            options: {
+                method: 'GET'
+            },
+            params
+        }
+
+        const { data  } = await fetchAPI(opts)
+        if (data && data?.status === ApiStatus.SUCCESS && data?.data) {
+            console.log('namidev-DEBUG: __ EST RATE ', data)
+            return { status: ApiStatus.SUCCESS, data: data.data }
+        }
+    } catch (e) {
+        console.log(`Cant estimate price `, e)
+        return { status: ApiStatus.ERROR }
     }
 }
 
