@@ -1,8 +1,8 @@
-import HomeCurrentActivity from 'version/maldives/m1/HomePage/HomeCurrentActivity'
+import HomeCurrentActivity from 'components/screens/Home/HomeCurrentActivity'
 import Button from 'components/common/Button'
 import Image from 'next/image'
 import Link from 'next/link'
-import colors from '../../../../styles/colors'
+import colors from '../../../styles/colors'
 
 import { Eye, Lock, Mail } from 'react-feather'
 import { useWindowSize } from 'utils/customHooks'

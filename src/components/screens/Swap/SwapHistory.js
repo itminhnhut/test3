@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useAsync } from 'react-use'
 
-import fetchApi from '../../../../utils/fetch-api'
+import fetchApi from '../../../utils/fetch-api'
 import MCard from 'components/common/MCard'
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
 import { API_GET_SWAP_HISTORY } from 'redux/actions/apis'
