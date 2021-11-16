@@ -21,12 +21,12 @@
   "assets_list": "Assets List",
   "search": "Search",
   "orderbook": "Orderbook",
-  "place_success_market": "You have just successfully created an order [{{side}} {{type}} {{token}}]. Order ID is #{{displayingId}}.",
-  "place_success_limit": "You have just successfully created an order [{{side}} {{type}} {{token}}]. Order ID is #{{displayingId}}.",
+  "place_success_market": "You have just successfully created an order #{{displayingId}} {{side}} {{type}} {{token}}.",
+  "place_success_limit": "You have just successfully created an order #{{displayingId}} {{side}} {{type}} {{token}}.",
   "balance": "Balance",
   "available_balance": "Available balance",
-  "close_order_success": "Order #{{displayingId}} [{{side}} {{type}} {{token}}] was closed successfully.",
-  "close_order_failed": "Order #{{displayingId}} [{{side}} {{type}} {{token}}] was failed to close.",
+  "close_order_success": "Order #{{displayingId}} was closed successfully.",
+  "close_order_failed": "Order #{{displayingId}} was failed to close.",
   "filter_by_current_pair": "Hide Other Pair",
   "pair_under_maintenance": "{{base}}/{{quote}} is under maintenance"
 }

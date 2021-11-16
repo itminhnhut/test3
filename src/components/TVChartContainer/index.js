@@ -139,15 +139,15 @@ export class TVChartContainer extends React.PureComponent {
     handleActiveTime = (value) => {
         if (this?.widget) {
             this.widget.setSymbol(this.props.symbol, value, () => {
-                const to = new Date().getTime() / 1000;
-                const from = to - 24 * 60 * 60 * getMultiValue(value);
-                this.widget
-                    .activeChart()
-                    .setVisibleRange(
-                        { from, to },
-                        { applyDefaultRightMargin: true },
-                    )
-                    .then(() => {});
+                // const to = new Date().getTime() / 1000;
+                // const from = to - 24 * 60 * 60 * getMultiValue(value);
+                // this.widget
+                //     .activeChart()
+                //     .setVisibleRange(
+                //         { from, to },
+                //         { applyDefaultRightMargin: true },
+                //     )
+                //     .then(() => {});
             });
             this.setState({ interval: value });
         }

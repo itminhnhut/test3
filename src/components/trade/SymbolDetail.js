@@ -92,9 +92,7 @@ const SymbolDetail = (props) => {
                                 <span className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-lg">
                                     {symbolTicker?.b}/{symbolTicker?.q}
                                 </span>
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
-                                    <AssetName assetCode={symbolTicker?.b} />
-                                </span>
+                                
                                 <ChevronDown size={16} className="ml-1" />
                             </Popover.Button>
                             <Transition
@@ -107,7 +105,7 @@ const SymbolDetail = (props) => {
                                 leaveTo="opacity-0 translate-y-1"
                             >
                                 <Popover.Panel className="absolute left-0 z-50">
-                                    <div className="w-80 rounded-lg shadow-md bg-bgPrimary dark:bg-darkBlue-2 divide-solid divide-divider dark:divide-divider-dark divide-y">
+                                    <div className="w-80 h-72 rounded-lg shadow-md bg-bgPrimary dark:bg-darkBlue-2 divide-solid divide-divider dark:divide-divider-dark overflow-y-scroll">
                                         <SymbolList
                                             publicSocket={publicSocket}
                                             symbol={symbol}

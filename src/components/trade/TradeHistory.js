@@ -22,7 +22,7 @@ const TradeHistory = (props) => {
     const isAuth = useSelector(AuthSelector.isAuthSelector);
 
     const { currentPair, filterByCurrentPair, darkMode } = props;
-   
+
     const customStyles = {
         ...tableStyle,
         table: {
@@ -169,7 +169,7 @@ const TradeHistory = (props) => {
             ignoreRowClick: true,
             right: true,
             selector: 'price',
-           
+
             minWidth: '100px',
         },
         {
@@ -182,9 +182,9 @@ const TradeHistory = (props) => {
         {
             name: t('common:total'),
             selector: 'quoteQty',
-            minWidth: '100px',
+            minWidth: '120px',
             right: true,
-            cell: (row) => formatWallet(row.quoteQty, 2),
+            cell: (row) => <span className="px-2">{formatWallet(row.quoteQty, 2)}</span>,
         },
     ], [exchangeConfig]);
 

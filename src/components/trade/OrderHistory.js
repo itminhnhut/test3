@@ -262,7 +262,7 @@ const OrderHistory = (props) => {
                     case ExchangeOrderEnum.Status.CANCELED:
                         return (
                             <span
-                                className="text-xs font-semibold inline-block py-1 px-2 rounded text-black last:mr-0 mr-1"
+                                className="text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark inline-block py-1 px-2 rounded last:mr-0 mr-1"
                             >
                                 {t('common:canceled')}
                             </span>
@@ -270,7 +270,7 @@ const OrderHistory = (props) => {
                     case ExchangeOrderEnum.Status.FILLED:
                         return (
                             <span
-                                className="text-xs font-semibold inline-block py-1 px-2 rounded text-teal last:mr-0 mr-1"
+                                className="text-xs font-medium text-teal inline-block py-1 px-2 rounded last:mr-0 mr-1"
                             >
                                 {t('common:filled')}
                             </span>
@@ -298,7 +298,6 @@ const OrderHistory = (props) => {
     };
 
     useEffect(() => {
-        console.log('__ check order list', 1111)
         getOrderList();
     }, []);
 
@@ -333,7 +332,7 @@ const OrderHistory = (props) => {
         )
     }, [filteredHistories, isAuth, columns, customStyles, loading, filterByCurrentPair, currentPair, props.orderListWrapperHeight])
 
-  
+
 
     // useEffect(() => {
     //     if (filterByCurrentPair) {

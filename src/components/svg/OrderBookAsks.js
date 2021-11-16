@@ -10,7 +10,7 @@ const Svg = ({ color, size, fill, style, className, onClick }) => {
             viewBox="0 0 14 14"
             fill={fill || "none"}
         >
-            <rect x="0.6" y="0.6" width="4.8" height="12.8" stroke="#E5544B" stroke-width="1.2"/>
+            <rect x="0.6" y="0.6" width="4.8" height="12.8" stroke="#E5544B" strokeWidth="1.2"/>
             <rect x="7" width="7" height="1.07692" fill="#718096"/>
             <rect x="7" y="3.23047" width="7" height="1.07692" fill="#718096"/>
             <rect x="7" y="6.46191" width="7" height="1.07692" fill="#718096"/>

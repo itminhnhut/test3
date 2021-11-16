@@ -37,7 +37,7 @@ const showNotification = (options = {}, dismiss = undefined, position = 'top', c
         animationIn: ['animate__animated', 'animate__slideInRight', 'animate__faster'],
         animationOut: ['animate__animated', 'animate__slideOutRight', 'animate__faster'],
         dismiss: {
-            duration: dismiss || 300000,
+            duration: dismiss || 5000,
             onScreen: false,
         },
         content: <NotificationContent title={title} message={message} type={type} />

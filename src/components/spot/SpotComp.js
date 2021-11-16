@@ -190,8 +190,6 @@ const SpotComp = () => {
     const [isResizingOrderList, setIsResizingOrderList] = useState(false);
     const [orderListWrapperHeight, setOrderListWrapperHeight] = useState(0);
 
-    console.log('__ chekc orderListWrapperHeight', orderListWrapperHeight);
-
     // compact state
     const [state, set] = useState({ orderBook: null });
     const setState = (state) =>
@@ -351,7 +349,7 @@ const SpotComp = () => {
                         </div>
                     )
                     }
-                        
+
 
                         <div
                             key="chart"
@@ -417,7 +415,7 @@ const SpotComp = () => {
                         >
                             <OrderBook symbol={symbol} parentState={setState} layoutConfig={orderBookLayout}/>
                         </div>
-                        
+
                     </ReactGridLayout>
                 </div>
             </BrowserView>

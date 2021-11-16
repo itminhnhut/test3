@@ -17,11 +17,11 @@ import colors from '../../styles/colors'
 const SymbolList = (props) => {
     const { query } = useRouter();
     const { t } = useTranslation();
-    const { parentCallback, publicSocket, changeSymbolList, favorite, watchList, } = props;
+    const { parentCallback, publicSocket, changeSymbolList, watchList, } = props;
     const [symbolList, setSymbolList] = useState([]);
     const [sortField, setSortField] = useState();
     const [sortDirection, setSortDirection] = useState('asc');
-    // const [favorite, setFavorite] = useState([]);
+    const [favorite, setFavorite] = useState([]);
     const [activeTab, setActiveTab] = useState('VNDC');
     const [search, setSearch] = useState('');
     const [filteredSymbolList, setFilteredSymbolList] = useState([]);
@@ -209,6 +209,7 @@ const SymbolList = (props) => {
 
     const renderFav = useCallback(() => {
         if (!symbolList) return null
+
         const data = symbolList.filter(o => favorite.includes(`${o.bi}_${o.qi}`))
         // console.log('namidev-DEBUG: __ ', data)
 
@@ -299,7 +300,7 @@ const SymbolList = (props) => {
                             onChange={(e) => setSearch(e.target.value)}
                             parentState={setSearch}
                             customStyle={{ height: '30px' }}
-                            
+
                         />
                     </div>
 

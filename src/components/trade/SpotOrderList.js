@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import OpeningOrder from './OpeningOrder';
 import OrderHistory from './OrderHistory';
+import SpotFund from './SpotFund';
 import TradeHistory from './TradeHistory';
 
 const SpotOrderList = (props) => {
@@ -18,7 +19,6 @@ const SpotOrderList = (props) => {
 
     useEffect(() => {
         setHeight(elementRef.current.clientHeight - 90);
-        console.log('__ check height', elementRef.current.clientHeight)
     }, [elementRef]);
 
     const _renderTab = useMemo(() => {
@@ -35,10 +35,10 @@ const SpotOrderList = (props) => {
                 label: t('spot:trade_history'),
                 value: 'trade_history',
             },
-            // {
-            //     label: t('spot:funds'),
-            //     value: 'fund',
-            // },
+            {
+                label: t('spot:funds'),
+                value: 'fund',
+            },
         ];
         return (
             <ul className="tabs justify-start mb-2 w-full">
@@ -81,11 +81,11 @@ const SpotOrderList = (props) => {
                         orderListWrapperHeight={props.orderListWrapperHeight}
                         currentPair={query?.id}
                     />}
-                    {/* {activeTab === 'fund' && <OrderHistory
+                    {activeTab === 'fund' && <SpotFund
                         height={height}
                         orderListWrapperHeight={props.orderListWrapperHeight}
                         currentPair={query?.id}
-                    />} */}
+                    />}
                 </div>
             </div>
 

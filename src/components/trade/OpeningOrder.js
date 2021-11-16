@@ -36,7 +36,8 @@ const SpotOrderList = (props) => {
         }
     }, [orders, currentPair, filterByCurrentPair]);
 
-    const closeOrder = async (displayingId, symbol) => {
+    const closeOrder = async (order) => {
+        const {displayingId, symbol} = order
         const res = await fetchAPI({
             url: '/api/v3/spot/order',
             options: {
@@ -53,9 +54,12 @@ const SpotOrderList = (props) => {
             message = t('spot:close_order_success', {
                 displayingId, side: data?.side, type: data?.type, token: `${data?.baseAsset}/${data?.quoteAsset}`,
             });
-            showNotification({ message, title: 'Success', type: 'success' }, 'bottom', 'bottom-right');
+            showNotification({ message, title: 'Success', type: 'success' }, null, 'bottom', 'bottom-right');
         } else {
-            showNotification({ message: t('spot:close_order_failed'), title: 'Failure', type: 'failure' }, 'bottom', 'bottom-right');
+            showNotification({ message: t('spot:close_order_failed', {
+                    displayingId, side: order?.side, type: order?.type, token: `${order?.baseAsset}/${order?.quoteAsset}`,
+
+                }), title: 'Failure', type: 'failure' }, null, 'bottom', 'bottom-right');
         }
     };
 
@@ -288,11 +292,10 @@ const SpotOrderList = (props) => {
             minWidth: '40px',
             // omit: !toggle,
             cell: (row) => (
-                <span
-                    className="p-2 cursor-pointer"
-                    onClick={() => closeOrder(row.displayingId, row.symbol)}
-                >
-                    <SvgCross/>
+                <span className="p-2 cursor-pointer" onClick={() => {
+                    closeOrder(row)
+                }}>
+                    <SvgCross  />
                 </span>
             ),
         },

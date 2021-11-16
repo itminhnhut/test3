@@ -1,78 +1,43 @@
+import AssetLogo from 'components/wallet/AssetLogo';
 import { tableStyle } from 'config/tables';
-import findIndex from 'lodash/findIndex';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useSelector } from 'react-redux';
-import Emitter from 'redux/actions/emitter';
 import AuthSelector from 'redux/selectors/authSelectors';
-import { API_GET_HISTORY_ORDER } from 'src/redux/actions/apis';
-import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
-import { formatSpotPrice, formatTime, formatWallet } from 'src/redux/actions/utils';
-import fetchAPI from 'utils/fetch-api';
+import { formatTime, formatWallet } from 'src/redux/actions/utils';
 import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
 
 
-const OrderHistory = (props) => {
+const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
-    const [histories, setHistories] = useState([]);
-    const [filteredHistories, setFilteredHistories] = useState([]);
+
+    const assetConfig = useSelector(state => state.utils.assetConfig);
+    const spotWallet = useSelector(state => state?.wallet?.SPOT) || null;
+    const [wallet, setWallet] = useState([]);
     const [loading, setLoading] = useState(false);
-    const userSocket = useSelector(state => state.socket.userSocket);
     const isAuth = useSelector(AuthSelector.isAuthSelector);
 
     const { currentPair, filterByCurrentPair, darkMode } = props;
 
-    // Handle update order
     useEffect(() => {
-        const event = UserSocketEvent.EXCHANGE_UPDATE_ORDER;
-        Emitter.on(event, async (data) => {
-            if (!data?.displayingId) return;
-            if ([
-                ExchangeOrderEnum.Status.CANCELED,
-                ExchangeOrderEnum.Status.FILLED,
-            ].includes(data?.status)) {
-                const _orders = histories || [];
-                const index = findIndex(_orders, { displayingId: data?.displayingId });
-                if (index < 0) {
-                    setHistories([data, ..._orders]);
-                } else {
-                    _orders[index] = data;
-                    setHistories(_orders);
-                }
-            }
-        });
-
-        return function cleanup() {
-            Emitter.off(event);
-        };
-    }, [isAuth, userSocket, histories]);
-
-    useEffect(() => {
-        if (filterByCurrentPair) {
-            const filter = histories.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
-            setFilteredHistories(filter);
-        } else {
-            setFilteredHistories(histories);
+        if (assetConfig && assetConfig.length && spotWallet) {
+            const test = assetConfig.map(e => ({ ...e, ...spotWallet && spotWallet[e.id] ? spotWallet[e.id] : {} }));
+            const filterUserBalance = [];
+            const _newWallet = test.map(asset => {
+                const {
+                    assetCode, assetName, value, walletType: _walletType,
+                } = asset;
+                if (value < 0.0000001) return null;
+                return asset
+            });
+            setWallet(_newWallet)
         }
-    }, [histories, currentPair, filterByCurrentPair]);
+      
+    }, [spotWallet, assetConfig])
 
-    useEffect(() => {
-        if (userSocket) {
-            const event = 'exchange:update_history_order';
-            userSocket.removeListener(event, setHistories);
-            userSocket.on(event, setHistories);
-        }
-
-        return function cleanup() {
-            if (userSocket) {
-                const event = 'exchange:update_history_order';
-                userSocket.removeListener(event, setHistories);
-            }
-        };
-    }, [userSocket]);
     const customStyles = {
         ...tableStyle,
         table: {
@@ -141,7 +106,6 @@ const OrderHistory = (props) => {
             style: {
                 ...tableStyle.cells?.style,
                 color: darkMode ? '#DBE3E6' : '#02083D',
-                padding: 0,
                 '&:hover': {
                     color: darkMode ? '#DBE3E6' : '#02083D',
                 },
@@ -171,143 +135,55 @@ const OrderHistory = (props) => {
             },
         },
     };
+
     const columns = useMemo(() => [
         {
-            name: t('common:order_id'),
-            selector: 'displayingId',
+            name: t('common:asset'),
+            selector: 'assetCode',
+            sortable: true,
             ignoreRowClick: true,
-            omit: false,
-            width: '80px',
+            cell: (row) => (
+                <div className="flex items-center">
+                    <div className="mr-4">
+                        <AssetLogo assetCode={row?.assetCode} size={16} />
+                    </div>
+                    <span className="font-semibold">{row?.assetCode}</span>
+                </div>
+            ),
+            width: '190px',
         },
         {
-            name: t('common:time'),
-            selector: 'createdAt',
-            ignoreRowClick: true,
-            omit: false,
-            minWidth: '140px',
-            cell: (row) => formatTime(row.createdAt),
-        },
-        {
-            name: t('common:pair'),
-            selector: 'symbol',
-            ignoreRowClick: true,
-            minWidth: '120px',
-        },
-        {
-            name: t('common:order_type'),
-            selector: 'type',
-            ignoreRowClick: true,
-            minWidth: '100px',
-        },
-        {
-            name: `${t('common:buy')}/${t('common:sell')}`,
-            selector: 'side',
-            ignoreRowClick: true,
-            minWidth: '80px',
-            conditionalCellStyles: [
-                {
-                    when: row => row.side === 'SELL',
-                    style: {
-                        color: '#E5544B !important',
-                    },
-                },
-                {
-                    when: row => row.side === 'BUY',
-                    style: {
-                        color: '#00C8BC !important',
-                    },
-                }],
-        },
-        {
-            name: t('common:avg_price'),
+            name: t('common:total_balance'),
+            selector: 'value',
+            sortable: true,
             ignoreRowClick: true,
             right: true,
-
-            cell: (row) => {
-                if (row?.executedQuoteQty && row?.executedQty) {
-                    return formatSpotPrice(row?.executedQuoteQty / row?.executedQty, row?.symbol);
-                }
-                return 0;
-            },
-            minWidth: '120px',
+            minWidth: '150px',
+            cell: (row) => (formatWallet(row.value)),
         },
         {
-            name: t('common:quantity'),
+            name: t('common:available_balance'),
             ignoreRowClick: true,
             right: true,
-            minWidth: '120px',
-            cell: (row) => formatWallet(row.quantity, 4),
+            sortable: true,
+            minWidth: '150px',
+            cell: (row) => (formatWallet(row.value - row.lockedValue)),
         },
         {
-            name: t('common:filled'),
+            name: t('common:in_order'),
+            selector: 'lockedValue',
             ignoreRowClick: true,
-            minWidth: '100px',
             right: true,
-            cell: (row) => <div>{formatWallet((row?.executedQty / row?.quantity) * 100, 0)}%</div>,
+            sortable: true,
+            minWidth: '150px',
+            cell: (row) => (formatWallet(row.lockedValue)),
         },
-        {
-            name: t('common:total'),
-            selector: 'total',
-            minWidth: '120px',
-            right: true,
-            cell: (row) => formatWallet(row.executedQuoteQty, 2),
-        },
-        {
-            name: t('common:status'),
-            selector: 'status',
-            minWidth: '120px',
-            right: true,
-            cell: (row) => {
-                switch (row.status) {
-                    case ExchangeOrderEnum.Status.CANCELED:
-                        return (
-                            <span
-                                className="text-xs font-semibold inline-block py-1 px-2 rounded text-black last:mr-0 mr-1"
-                            >
-                                {t('common:canceled')}
-                            </span>
-                        );
-                    case ExchangeOrderEnum.Status.FILLED:
-                        return (
-                            <span
-                                className="text-xs font-semibold inline-block py-1 px-2 rounded text-teal last:mr-0 mr-1"
-                            >
-                                {t('common:filled')}
-                            </span>
-                        );
-                    default:
-                        return null;
-                }
-            },
-        },
-
     ], [exchangeConfig]);
 
-    const getOrderList = async () => {
-        setLoading(true);
-        const { status, data } = await fetchAPI({
-            url: API_GET_HISTORY_ORDER,
-            options: {
-                method: 'GET',
-            },
-        });
-        if (status === ApiStatus.SUCCESS) {
-            setHistories(data);
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        console.log('__ check order list', 1111)
-        getOrderList();
-    }, []);
 
     const renderTable = useCallback(() => {
-        if (!isAuth || !histories.length) return <TableNoData />
-        let data = histories
-        if (filterByCurrentPair) {
-            data = histories.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair)
-        }
+        if (!isAuth || !wallet.length) return <TableNoData />
+        let data = wallet
 
         return (
             <DataTable
@@ -331,40 +207,10 @@ const OrderHistory = (props) => {
                 paginationIconLastPage={null}
             />
         )
-    }, [filteredHistories, isAuth, columns, customStyles, loading, filterByCurrentPair, currentPair, props.orderListWrapperHeight])
-
-  
-
-    // useEffect(() => {
-    //     if (filterByCurrentPair) {
-    //         const filter = histories.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
-    //         setFilteredHistories(filter);
-    //     } else {
-    //         setFilteredHistories(histories);
-    //     }
-    // }, [histories, currentPair, filterByCurrentPair]);
-
-    useEffect(() => {
-        if (userSocket) {
-            const event = 'exchange:update_history_order';
-            userSocket.removeListener(event, setHistories);
-            userSocket.on(event, setHistories);
-        }
-
-        return function cleanup() {
-            if (userSocket) {
-                const event = 'exchange:update_history_order';
-                userSocket.removeListener(event, setHistories);
-            }
-        };
-    }, [userSocket]);
-
-    useEffect(() => {
-        console.log('namidev-DEBUG: ____ ', filteredHistories)
-    }, [filteredHistories])
+    }, [ isAuth, columns, customStyles, loading, filterByCurrentPair, currentPair, props.orderListWrapperHeight])
 
 
     return renderTable()
 };
 
-export default OrderHistory;
+export default TradeHistory;

@@ -310,10 +310,8 @@ export default class TimeFrame extends Component {
                                         <div className="w-64 relative grid grid-cols-4 gap-2">
                                             {ListTimeFrame.map(
                                                 (item, index) => {
-                                                    const { value, text } =
-                                                        item;
-                                                    const isActive =
-                                                        value === item;
+                                                    const { value, text } = item;
+                                                    const isActive = value === selectedTime;
                                                     return (
                                                         <div
                                                             onClick={() => this.setActiveTime(
