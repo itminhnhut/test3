@@ -38,12 +38,12 @@ const VerificationModal = ({ type }) => {
                             value={code}
                         />
                         <div className="absolute top-2 right-4 cursor-pointer mt-[0.5px]" onClick={handleClipboard}>
-                            <span className="text-[12px] text-[#09becf] font-bold">{t('active_account_paste')}</span>
+                            <span className="text-[12px] text-[#00C8BC] font-bold">{t('active_account_paste')}</span>
                         </div>
                     </div>
                 </>
                 <div className="w-full flex flex-row items-center justify-center">
-                    <p className="mt-3 text-[12px] text-[#8B8C9B]">{t('active_account_resend')} <span className="text-[12px] text-[#09becf] font-bold cursor-pointer" onClick={handleResend}>{t('active_account_resend_action')}</span></p>
+                    <p className="mt-3 text-[12px] text-[#8B8C9B]">{t('active_account_resend')} <span className="text-[12px] text-[#00C8BC] font-bold cursor-pointer" onClick={handleResend}>{t('active_account_resend_action')}</span></p>
                 </div>
             </div>
         </div>

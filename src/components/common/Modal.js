@@ -11,6 +11,7 @@ const Modal = ({
     onConfirmCb,
     onCloseCb,
     onBackdropCb,
+    className = '',
     type = 'alert'
 }) => {
 
@@ -48,10 +49,10 @@ const Modal = ({
         <>
             <div className={`mal-overlay ${isVisible ? 'mal-overlay__active' : ''}`}
                  onClick={() => onBackdropCb && onBackdropCb()}/>
-            <div className="mal-modal">
+            <div className="mal-modal min-w-[320px]">
                 {isVisible &&
-                <div className="mal-modal__wrapper">
-                    {title && <div className="mal-modal__title">{title}</div>}
+                <div className={'p-4 ' + className}>
+                    {title && <div className="mt-3 text-center font-bold">{title}</div>}
                     {children}
                     <div className="flex flex-row items-center justify-between mt-5">
                         {renderButtonGroup()}

@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { IconCustomCheckbox } from 'components/common/Icons';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import OpeningOrder from './OpeningOrder';
 import OrderHistory from './OrderHistory';
 
@@ -18,6 +17,7 @@ const SpotOrderList = (props) => {
 
     useEffect(() => {
         setHeight(elementRef.current.clientHeight - 90);
+        console.log('__ check height', elementRef.current.clientHeight)
     }, [elementRef]);
 
     const _renderTab = useMemo(() => {
@@ -28,15 +28,15 @@ const SpotOrderList = (props) => {
             },
             {
                 label: t('spot:order_history'),
-                value: 'order_histories',
+                value: 'order_history',
             },
             {
                 label: t('spot:trade_history'),
-                value: 'trade_histories',
+                value: 'trade_history',
             },
             {
                 label: t('spot:funds'),
-                value: 'funds',
+                value: 'fund',
             },
         ];
         return (
@@ -64,18 +64,21 @@ const SpotOrderList = (props) => {
                 <div className="flex items-center justify-between relative dragHandleArea">
                     {_renderTab}
                 </div>
-                <div className={`px-3 ${currentTheme === THEME_MODE.LIGHT ? 'rdt_light' : 'rdt_dark'}`}>
+                <div className={`px-3 ${currentTheme === THEME_MODE.LIGHT ? 'rdt_light' : 'rdt_dark'}`} style={{ height: 'calc(100% - 80px)' }}>
                     {activeTab === 'open' && <OpeningOrder
                         height={height}
                         orderListWrapperHeight={props.orderListWrapperHeight}
                         currentPair={query?.id}
-                        filterByCurrentPair={filterByCurrentPair}
                     />}
-                    {activeTab === 'history' && <OrderHistory
+                    {activeTab === 'order_history' && <OrderHistory
                         height={height}
                         orderListWrapperHeight={props.orderListWrapperHeight}
                         currentPair={query?.id}
-                        filterByCurrentPair={filterByCurrentPair}
+                    />}
+                    {activeTab === 'trade_history' && <OrderHistory
+                        height={height}
+                        orderListWrapperHeight={props.orderListWrapperHeight}
+                        currentPair={query?.id}
                     />}
                 </div>
             </div>

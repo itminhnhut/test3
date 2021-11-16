@@ -17,7 +17,7 @@ import colors from '../../styles/colors'
 const SymbolList = (props) => {
     const { query } = useRouter();
     const { t } = useTranslation();
-    const { parentCallback, publicSocket, changeSymbolList, favorite, watchList, symbol, handleChangeSymbol } = props;
+    const { parentCallback, publicSocket, changeSymbolList, favorite, watchList, } = props;
     const [symbolList, setSymbolList] = useState([]);
     const [sortField, setSortField] = useState();
     const [sortDirection, setSortDirection] = useState('asc');
@@ -310,7 +310,7 @@ const SymbolList = (props) => {
                             onClick={() => setActiveTab('favorite')}
                         >
                             <IconStarFilled size={14}
-                                            color={activeTab === 'favorite' ? '#09becf' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}/>
+                                            color={activeTab === 'favorite' ? '#00C8BC' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}/>
                         </div>}
                         <a
                             className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-teal border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}

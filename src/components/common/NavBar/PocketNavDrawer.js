@@ -178,7 +178,7 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                         </div>
                         {auth && <div className="mal-pocket-navbar__drawer__navlink__group___item"
                               onClick={() => actionLogout()}>
-                            <div className="w-full text-center mt-4 bg-get-red2 py-3 rounded-xl">
+                            <div className="w-full text-center mt-4 bg-red py-3 rounded-xl">
                                 {t('navbar:menu.user.logout')}
                             </div>
                         </div>}

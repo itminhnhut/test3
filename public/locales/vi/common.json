@@ -57,7 +57,7 @@
   "trades": "Khớp lệnh",
   "orderbook": "Bảng giá",
   "transaction_fee": "Phí giao dịch",
-  "fee": "Chi phí",
+  "fee": "Phí",
   "pair": "Cặp giao dịch",
   "type": "Loại",
   "side": "Bên",
@@ -83,6 +83,7 @@
   "from": "Từ",
   "to": "Đến",
   "rate": "Tỉ giá",
+  "refresh": "Làm mới",
   "timeframe": "Khung thời gian",
   "depth": "Độ sâu",
   "indicators": "Chỉ báo",
@@ -134,5 +135,6 @@
   "cancel": "Đóng",
   "view_all": "Xem tất cả",
   "already_have_account": "Đã có tài khoản?",
-  "create_account": "Tạo tài khoản"
+  "create_account": "Tạo tài khoản",
+  "term": "Bằng việc sử dụng {{product}}, bạn đã đồng ý với các </br><0>Điều khoản và Quy định</0>"
 }
