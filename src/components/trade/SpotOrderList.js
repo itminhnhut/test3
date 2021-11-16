@@ -34,10 +34,10 @@ const SpotOrderList = (props) => {
                 label: t('spot:trade_history'),
                 value: 'trade_history',
             },
-            {
-                label: t('spot:funds'),
-                value: 'fund',
-            },
+            // {
+            //     label: t('spot:funds'),
+            //     value: 'fund',
+            // },
         ];
         return (
             <ul className="tabs justify-start mb-2 w-full">
@@ -80,6 +80,11 @@ const SpotOrderList = (props) => {
                         orderListWrapperHeight={props.orderListWrapperHeight}
                         currentPair={query?.id}
                     />}
+                    {/* {activeTab === 'fund' && <OrderHistory
+                        height={height}
+                        orderListWrapperHeight={props.orderListWrapperHeight}
+                        currentPair={query?.id}
+                    />} */}
                 </div>
             </div>
 
