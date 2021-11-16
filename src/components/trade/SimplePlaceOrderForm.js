@@ -378,7 +378,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                         displayingId, side, type, token: `${baseAsset}/${quoteAsset}`,
                     });
                 }
-                showNotification({ message, title: t('common:success'), type: 'success' }, 'bottom', 'bottom-right');
+                showNotification({ message, title: t('common:success'), type: 'success' },2500, 'bottom', 'bottom-right');
             } else {
                 const error = find(Error, { code: res?.code });
                 const { requestId } = data;
@@ -402,7 +402,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                         break;
                 }
 
-                showNotification({ message: content, title: t('common:failure'), type: 'warning' }, 'bottom', 'bottom-right');
+                showNotification({ message: content, title: t('common:failure'), type: 'warning' },2500, 'bottom', 'bottom-right');
             }
         } catch (e) {
             console.log('createOrder web: ', e);

@@ -98,8 +98,6 @@ const PlaceOrderForm = ({ symbol }) => {
             const newSymbolTicker = await getMarketWatch(
                 getSymbolString(symbol),
             );
-
-            console.log("__ check symbol ticker", newSymbolTicker);
             setSymbolTicker(newSymbolTicker?.[0]);
         }
     }, [symbol]);
@@ -255,6 +253,7 @@ const PlaceOrderForm = ({ symbol }) => {
                         title: 'Error',
                         type: 'failure',
                     },
+                    2500,
                     'bottom',
                     'bottom-right',
                 );
@@ -299,6 +298,7 @@ const PlaceOrderForm = ({ symbol }) => {
                 }
                 showNotification(
                     { message, title: t('common:success'), type: 'success' },
+                    2500,
                     'bottom',
                     'bottom-right',
                 );
@@ -337,6 +337,7 @@ const PlaceOrderForm = ({ symbol }) => {
                         title: t('common:failure'),
                         type: 'warning',
                     },
+                    2500,
                     'bottom',
                     'bottom-right',
                 );

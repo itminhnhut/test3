@@ -245,7 +245,7 @@ const Swap = () => {
             const description = error
                 ? t(`error:${error.message}`)
                 : t('error:COMMON_ERROR');
-            showNotification({ message: `(${res?.code}) ${description}`, title: t('common:failure'), type: 'failure' });
+            showNotification({ message: `(${res?.code}) ${description}`, title: t('common:failure'),2500, type: 'failure' });
         }
         setLoadingPrice(false);
     };
