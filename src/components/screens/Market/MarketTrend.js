@@ -3,8 +3,9 @@ import { memo, useCallback } from 'react'
 import MarketTrendItem from 'components/markets/MarketTrendItem'
 
 import SwiperCore, { Autoplay } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import "swiper/css"
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import "swiper/swiper.min.css"
 
 SwiperCore.use([Autoplay])
 
