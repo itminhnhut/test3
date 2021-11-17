@@ -55,7 +55,7 @@ const OverviewWallet = () => {
                        className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs lg:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                         {t('common:deposit')}
                     </a>
-                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAWL}`}
+                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
                        className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs lg:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                         {t('common:withdraw')}
                     </a>
@@ -131,7 +131,7 @@ const OverviewWallet = () => {
                                 className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:deposit')}
                             </a>
-                            <a  href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAWL}`}
+                            <a  href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
                                 className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:withdraw')}
                             </a>
@@ -203,7 +203,7 @@ const OverviewWallet = () => {
                             </a>
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAWL}`}
+                            <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:withdraw')}
                             </a>
@@ -239,7 +239,7 @@ const OverviewWallet = () => {
                             </a>
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAWL}`}
+                            <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:withdraw')}
                             </a>

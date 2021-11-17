@@ -38,7 +38,7 @@ const Tab = memo(({
         return null
     }
 
-    const { t } = useTranslation(['tab'])
+    const { t } = useTranslation(['tab', ...tArr])
 
     const render = useCallback(() => {
         if (type === TAB_TYPE.TYPE1) {

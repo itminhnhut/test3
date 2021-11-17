@@ -21,7 +21,7 @@ export const WALLET_SCREENS = {
 
 export const EXCHANGE_ACTION = {
     DEPOSIT: 'deposit',
-    WITHDRAWL: 'withdraw',
+    WITHDRAW: 'withdraw',
     TRANSFER: 'transfer',
     PORTFOLIO: 'portfolio'
 }
