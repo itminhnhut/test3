@@ -244,7 +244,7 @@ module.exports = {
                 bgTabActive: commonColors.teal,
                 bgPrimary: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.darkBlue1
+                    dark: commonColors.darkBlue2
                 },
                 bgSecondary: {
                     DEFAULT: commonColors.gray4,
@@ -252,7 +252,7 @@ module.exports = {
                 },
                 bgContainer: {
                     DEFAULT: '#fff',
-                    dark: commonColors.darkBlue1
+                    dark: commonColors.darkBlue2
                 },
                 headerBg: {
                     DEFAULT: 'rgba(0, 0, 0, 0.3)',

@@ -82,5 +82,8 @@
   "special_tip": "Gợi ý",
   "errors": {
       "selected_bank": "Không có ngân hàng được chọn"
-  }
+  },
+  "est_balance": "Tài sản ước lượng",
+  "hide_asset": "Ẩn số dư",
+  "asset_balance": "Số dư tài sản"
 }

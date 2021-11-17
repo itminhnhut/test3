@@ -1,5 +1,4 @@
 import DOMPurify from 'dompurify';
-import { log } from 'utils/index'
 
 export const truncate = (fullStr, strLen, separator) => {
     if (fullStr.length <= strLen) return fullStr;

@@ -82,5 +82,8 @@
   "special_tip": "Special tips",
   "errors": {
       "selected_bank": "No bank selected"
-  }
+  },
+  "est_balance": "Estimated Balance",
+  "hide_asset": "Hide Asset",
+  "asset_balance": "Asset Balance"
 }

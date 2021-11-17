@@ -73,6 +73,12 @@ body {
     }
   }
 
+  .t-common {
+    @apply font-bold text-[20px] leading-[34px]
+           md:text-[26px] md:leading-[40px]
+           text-txtPrimary dark:text-txtPrimary-dark;
+  }
+
   .value-up {
     @apply text-teal;
   }

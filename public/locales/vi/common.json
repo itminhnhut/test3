@@ -136,5 +136,7 @@
   "view_all": "Xem tất cả",
   "already_have_account": "Đã có tài khoản?",
   "create_account": "Tạo tài khoản",
-  "term": "Bằng việc sử dụng {{product}}, bạn đã đồng ý với các </br><0>Điều khoản và Quy định</0>"
+  "term": "Bằng việc sử dụng {{product}}, bạn đã đồng ý với các </br><0>Điều khoản và Quy định</0>",
+  "overview": "Tổng quan",
+  "transfer": "Chuyển"
 }
