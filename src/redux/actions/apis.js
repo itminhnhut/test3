@@ -39,8 +39,8 @@ export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'
 export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history';
 
 // Coinbase
-export const API_GET_NOTIFICATIONS = API_PREFIX + 'notifications/all';
-export const API_MARK_NOTIFICATIONS_READ = API_PREFIX + 'notifications/read';
+export const API_GET_NOTIFICATIONS = API_PREFIX + 'notifications/all_mix';
+export const API_MARK_NOTIFICATIONS_READ = API_PREFIX + 'notifications/all_read';
 export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';

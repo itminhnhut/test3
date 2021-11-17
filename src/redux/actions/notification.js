@@ -27,18 +27,20 @@ export function getNotifications(prevId, cb) {
                 },
                 params,
             });
+
+            console.log('__ chekc noti ', data, status)
             if (status === ApiStatus.SUCCESS) {
                 if (!prevId) {
                     dispatch({
                         type: SET_NOTIFICATION,
-                        mix: data,
-                        hasNext: data?.length > 0,
+                        mix: data?.result,
+                        hasNext: data?.hasNext,
                     });
                 } else {
                     dispatch({
                         type: ADD_NOTIFICATION,
-                        mix: data,
-                        hasNext: data?.length > 0,
+                        mix: data?.result,
+                        hasNext: data?.hasNext > 0,
                     });
                 }
             } else {
@@ -89,10 +91,6 @@ export function postProcessNotifications(notifications, needSound = false) {
                 return {
                     ...notification,
                     content: '',
-                    // content: translateText('deposit_token.noti_deposit_success', {
-                    //     amount: _.get(notification, 'metadata.amount'),
-                    //     currency: _.get(notification, 'metadata.currency'),
-                    // }),
                 };
             }
             return null;

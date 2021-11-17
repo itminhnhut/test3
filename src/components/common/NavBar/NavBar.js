@@ -2,6 +2,7 @@ import { Popover, Transition } from '@headlessui/react';
 import Axios from 'axios';
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'components/common/NavBar/constants';
 import PocketNavDrawer from 'components/common/NavBar/PocketNavDrawer';
+import NotificationList from 'components/notification/NotificationList';
 import SvgIcon from 'components/svg';
 import SvgCheckSuccess from 'components/svg/CheckSuccess';
 import SvgMenu from 'components/svg/Menu';
@@ -433,9 +434,7 @@ const NavBar = ({ style, layoutStateHandler, useOnly, name, page, changeLayoutCb
                             </div>
                         </>
                     }
-
-                    {/*<NotificationList btnClass="!mr-0 ml-8" navTheme={navTheme}/>*/}
-
+                    <NotificationList btnClass="!mr-0 ml-8" navTheme={navTheme}/>
                     {width >= 1366 &&
                     <div className="flex flex-row items-center mal-navbar__hamburger__spacing">
                         <a className={`text-sm font-medium uppercase cursor-pointer flex items-center

@@ -9,6 +9,7 @@ import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo } from 'src/redux/actions/utils';
 import { IconBell, Notification, NotificationDown, NotificationUp } from '../common/Icons';
 import colors from 'styles/colors'
+import { getS3Url } from 'redux/actions/utils';
 
 const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const { t } = useTranslation(['navbar']);
@@ -97,32 +98,18 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                     {/* { mix.map(notification => this._renderNotificationItem(notification)) } */}
                     {mix.map(notification => (
                         <div
-                            className={`px-6 py-2.5 flex group hover:bg-black-200 cursor-pointer ${notification?.status === NotificationStatus.READ ? '' : 'bg-black-5'}`}
-                            key={notification?._id || notification?.createdAt}
+                            className={`py-2.5 flex justify-between group hover:bg-teal-5 cursor-pointer ${notification?.status === NotificationStatus.READ ? '' : 'bg-black-5'}`}
+                            key={notification?.id || notification?.created_at}
                         >
                             <div className="mr-3">
-                                { notification?.category === 'DEPOSIT' ?
-                                    <NotificationUp /> :
-                                    notification?.category === 'WITHDRAW' ?
-                                        <NotificationDown /> :
-                                        <Notification />}
+                                <Notification />
                             </div>
                             <div className="flex-grow">
-                                <div className="flex text-sm font-medium mb-1 items-center justify-between">
-                                    <div className="line-clamp-1">{notification.title}</div>
-                                    {
-                                        notification?.status !== NotificationStatus.READ && (
-                                            <div className="ml-3 w-1.5 h-1.5 bg-black rounded-full">
-                                                <div />
-                                            </div>
-                                        )
-                                    }
-                                </div>
-                                <div className="text-sm text-black-600 mb-1.5 line-clamp-2">
+                                <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-1.5 line-clamp-2">
                                     {notification.content}
                                 </div>
-                                <div className="text-black-500">
-                                    {getTimeAgo(notification.createdAt)}
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                    {getTimeAgo(notification.created_at)}
                                 </div>
                             </div>
                         </div>
@@ -134,13 +121,12 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
             content = <div className="w-full h-full text-center py-4">{t('navbar:no_noti')}</div>;
         }
     }
-
     return (
         <>
             <div className="relative">
                 <button
                     type="button"
-                    className={`btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-7 ${btnClass}`}
+                    className={`btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-6 ${btnClass}`}
                     aria-expanded="false"
                     ref={btnDropdownRef}
                     onClick={() => {
@@ -150,11 +136,11 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                             : openDropdownPopover();
                     }}
                 >
-                    <IconBell color={navTheme ? navTheme.color : colors.grey4} />
+                    <IconBell color={navTheme ? navTheme.color : colors.grey4}/>
                     {unreadCount > 0
                     && (
                         <div
-                            className="absolute w-4 h-4 rounded-full flex items-center justify-center bg-pink text-white text-xxs top-1 right-2	"
+                            className="absolute w-2.5 h-2.5 rounded-full flex items-center justify-center bg-red text-white text-[8px] top-2 right-2	"
                         >{unreadCount}
                         </div>
                     )}
@@ -165,20 +151,21 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                     ref={popoverDropdownRef}
                     className={
                         (dropdownPopoverShow ? 'block ' : 'hidden ')
-                        + 'absolute z-10 transform w-screen max-w-[385px] rounded border border-black-200 right-0 bg-white shadow-xl text-sm'
+                        + 'absolute z-10 transform w-screen max-w-[415px] rounded  right-0 bg-bgPrimary dark:bg-bgPrimary-dark shadow-lg text-sm'
                     }
                 >
-                    <div className="">
-                        <div className="px-6 pt-6 pb-2 flex items-center">
-                            <div className="text-lg font-bold">{t('navbar:noti')}</div>
+                    <div className="p-8">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="text-sm font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
+                            {unreadCount > 0 && <div className="text-sm font-medium text-teal dark:text-teal">{unreadCount} {t('navbar:unread_noti')}</div>}
                         </div>
-                        <div className="lg:max-h-[400px] lg:min-h-[350px] max-h-[300px] min-h-[250px] overflow-y-auto">
+                        <div className="max-h-[488px]  min-h-[400px] overflow-y-auto">
                             {content}
                         </div>
 
-                        <div className="border-0 border-t border-black-200 font-medium">
+                        <div className="font-medium">
 
-                            <div className="p-2.5 flex items-center justify-center">
+                            <div className="flex items-center justify-center">
                                 {
                                     hasNextNotification
                                         ?
@@ -186,13 +173,13 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                                             <>
                                                 {
                                                     notificationLoading ?
-                                                        <span className="text-black-700 hover:text-teal-700 cursor-pointer">
+                                                        <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
                                                             {t('loading')}
                                                         </span>
                                                         : (
                                                             <span
                                                                 onClick={loadMoreNotification}
-                                                                className="text-black-700 hover:text-teal-700 cursor-pointer"
+                                                                className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer"
                                                             >
                                                                 {t('load_more')}
                                                             </span>
@@ -202,7 +189,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                                         )
                                         :
                                         (
-                                            <span className="text-black-700 hover:text-teal-700 cursor-pointer">
+                                            <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
                                                 {t('navbar:read_all_noti')}
                                             </span>
                                         )

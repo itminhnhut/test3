@@ -27,15 +27,10 @@ export const IconBroker = () => (
 );
 
 export const IconBell = ({ color, size }) => (
-    <svg width={size || '24'} height={size || '24'} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M20.4167 17.0417C19.6573 17.0417 19.0417 16.4261 19.0417 15.6667V11.2098C19.151 7.61317 16.6211 4.47414 13.0833 3.81692V1.91667C13.0833 1.41041 12.6729 1 12.1667 1C11.6604 1 11.25 1.41041 11.25 1.91667V3.81692C7.7122 4.47414 5.1823 7.61317 5.29167 11.2098V15.6667C5.29167 16.4261 4.67606 17.0417 3.91667 17.0417C3.41041 17.0417 3 17.4521 3 17.9583C3 18.4646 3.41041 18.875 3.91667 18.875H20.4167C20.9229 18.875 21.3333 18.4646 21.3333 17.9583C21.3333 17.4521 20.9229 17.0417 20.4167 17.0417Z"
-            fill={color || 'currentColor'}/>
-        <path
-            d="M14.2163 20.25H10.117C10.0005 20.2502 9.90272 20.3378 9.88967 20.4535C9.87968 20.5381 9.87479 20.6232 9.87501 20.7083C9.87501 21.974 10.901 23 12.1667 23C13.4323 23 14.4583 21.974 14.4583 20.7083C14.4586 20.6232 14.4537 20.5381 14.4437 20.4535C14.4314 20.3373 14.3331 20.2494 14.2163 20.25Z"
-            fill={color || 'currentColor'}/>
+    <svg width={size || '20'} height={size || '20'} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13.2671 3.81825C14.1111 4.66232 14.5853 5.80711 14.5853 7.0008C14.5853 12.2517 16.8357 13.752 16.8357 13.752H3.33334C3.33334 13.752 5.58373 12.2517 5.58373 7.0008C5.58373 5.80711 6.05792 4.66232 6.90199 3.81825C7.74605 2.97419 8.89085 2.5 10.0845 2.5C11.2782 2.5 12.423 2.97419 13.2671 3.81825Z" stroke={color || 'currentColor'} strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M11.6667 16.6667C11.4973 16.9202 11.2542 17.1305 10.9617 17.2768C10.6692 17.423 10.3376 17.5 10 17.5C9.66245 17.5 9.33082 17.423 9.03832 17.2768C8.74582 17.1305 8.50271 16.9202 8.33334 16.6667" stroke={color || 'currentColor'} strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
-
 )
 
 export const IconPnL = () => (
@@ -288,14 +283,12 @@ export const IconNoSort = ({ fill }) => (
 );
 
 export const Notification = () => (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="16" r="16" fill="currentColor" />
-        <path d="M7.78418 15.5908L8.15095 19.0804" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M22.6807 9.08496L24.0744 22.3453" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M7.85722 16.2887L22.7536 9.78368" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M8.07715 18.3818L24.0005 21.6476" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M11.5391 19.0918L11.7282 20.8917C11.876 22.2401 13.0451 23.2179 14.3395 23.0756C15.6339 22.9333 16.5636 21.7249 16.4158 20.3764L16.3856 20.0882" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path opacity="0.1" d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#E5FAF8"/>
+<path d="M14.2869 7.67278C14.8778 8.26362 15.2097 9.06498 15.2097 9.90056C15.2097 13.5762 16.785 14.6264 16.785 14.6264H7.33333C7.33333 14.6264 8.90861 13.5762 8.90861 9.90056C8.90861 9.06498 9.24054 8.26362 9.83138 7.67278C10.4222 7.08193 11.2236 6.75 12.0592 6.75C12.8947 6.75 13.6961 7.08193 14.2869 7.67278Z" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M13.1667 16.6667C13.0481 16.8441 12.8779 16.9914 12.6732 17.0938C12.4684 17.1961 12.2363 17.25 12 17.25C11.7637 17.25 11.5316 17.1961 11.3268 17.0938C11.1221 16.9914 10.9519 16.8441 10.8333 16.6667" stroke="#00C8BC" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+
 );
 export const NotificationUp = () => (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -91,6 +91,7 @@
   "language": "Language",
   "no_noti": "You have no new notifications",
   "noti": "Notification",
+  "unread_noti": "new notifications",
   "read_all_noti": "You have scrolled through all the notifications",
   "not_verified": "Not verified",
   "pending_approval": "Pending approval",
