@@ -34,7 +34,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
             const ids = notificationsMix.reduce((prev, curr) => {
                 if (curr.status === NotificationStatus.READ) return prev;
 
-                prev.push(curr._id);
+                prev.push(curr.id);
                 return prev;
             }, []);
 
@@ -49,7 +49,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const loadMoreNotification = () => {
         let prevId;
         if (notificationsMix && notificationsMix.length) {
-            prevId = notificationsMix[notificationsMix.length - 1]._id;
+            prevId = notificationsMix[notificationsMix.length - 1].id;
         }
         setNotificationLoading(true);
         dispatch(getNotifications(prevId, () => setNotificationLoading(false)));

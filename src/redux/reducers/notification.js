@@ -44,7 +44,7 @@ export default (state = INITIAL_STATE, action) => {
             let mix = state.notificationsMix;
             if (mix && Array.isArray(mix)) {
                 mix.forEach(e => {
-                    if (ids.includes(e._id)) e.status = NotificationStatus.READ;
+                    if (ids.includes(e.id)) e.status = NotificationStatus.READ;
                 });
                 mix = [...mix];
             }
