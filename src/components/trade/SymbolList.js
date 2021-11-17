@@ -8,16 +8,17 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useAsync, useInterval } from 'react-use'
 import SymbolListItem from 'src/components/markets/SymbolListItem'
-import { CATEGORY_SPOT_SIGNAL } from 'src/redux/actions/const'
+import { CATEGORY_SPOT_SIGNAL, TRADING_MODE } from 'src/redux/actions/const'
 import { getMarketWatch } from 'src/redux/actions/market'
 import { getExchange24hPercentageChange } from 'src/redux/actions/utils'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import colors from '../../styles/colors'
+import { favoriteAction } from 'redux/actions/user'
 
 const SymbolList = (props) => {
     const { query } = useRouter();
     const { t } = useTranslation();
-    const { parentCallback, publicSocket, changeSymbolList, watchList, } = props;
+    const { parentCallback, publicSocket, changeSymbolList, watchList } = props;
     const [symbolList, setSymbolList] = useState([]);
     const [sortField, setSortField] = useState();
     const [sortDirection, setSortDirection] = useState('asc');
@@ -33,6 +34,16 @@ const SymbolList = (props) => {
     const user = useSelector(state => state.auth.user) || null;
 
     const [currentTheme, ] = useDarkMode()
+
+    const fetchFavorite = async () => {
+        const _favorite = await favoriteAction('get', TRADING_MODE.EXCHANGE)
+        _favorite && setFavorite(_favorite)
+
+    }
+
+    useEffect(() => {
+        fetchFavorite()
+    }, [])
 
     useAsync(async () => {
         const result = await getMarketWatch();
@@ -68,13 +79,10 @@ const SymbolList = (props) => {
                 });
             } else if (selectedCategory.value === CATEGORY_SPOT_SIGNAL.SIGNAL) {
                 if (typeof search === 'string' && search.length) {
-                    // console.log('namidev-DEBUG: ____ ', search, signals);
                     const filteredSignal = signals.filter(signal => signal?.metadata?.baseAsset.toLowerCase().includes(search.toLowerCase()));
                     setFilteredSignals(filteredSignal);
-                    // setHasMoreSignalPage(filteredSignal.length > 0);
                 } else {
                     setFilteredSignals(signals);
-                    // setHasMoreSignalPage(true);
                 }
             } else if (selectedCategory?.assets && selectedCategory?.assets.length > 0) {
                 selectedCategory?.assets.forEach(asset => {
@@ -198,6 +206,8 @@ const SymbolList = (props) => {
                                     currentId={query?.id}
                                     originTicker={ticker}
                                     watchList={watchList}
+                                    pairKey={`${ticker?.bi}_${ticker?.qi}`}
+                                    reFetchFavorite={fetchFavorite}
                                 />
                             </Fragment>
                         );
@@ -205,13 +215,23 @@ const SymbolList = (props) => {
                 </div>
             </>
         );
-    }, [filteredSymbolList, selectedCategory, filteredSignals, query, currentTheme]);
+    }, [filteredSymbolList, selectedCategory, filteredSignals, query, currentTheme, changeSymbolList]);
 
     const renderFav = useCallback(() => {
         if (!symbolList) return null
+        const origin = symbolList.filter(o => favorite.includes(`${o.bi}_${o.qi}`))
+        let data = origin
 
-        const data = symbolList.filter(o => favorite.includes(`${o.bi}_${o.qi}`))
-        // console.log('namidev-DEBUG: __ ', data)
+        if (search) {
+            // console.log('namidev-DEBUG: __ ', origin)
+            data = origin.filter(d => {
+                const _ = (`${d?.b}`).toLowerCase().includes(search.toLowerCase())
+                const __ = (`${d?.b}${d?.q}`).toLowerCase().includes(search.toLowerCase())
+                const ___ = (`${d?.b}/${d?.q}`).toLowerCase().includes(search.toLowerCase())
+                // console.log('namidev-DEBUG: ___ ', _, __, ___)
+                return _ || __ || ___
+            })
+        }
 
         return (
             <>
@@ -272,6 +292,7 @@ const SymbolList = (props) => {
                                 key={`favorite_tab_${ticker.b}}`}
                             >
                                 <SymbolListItem
+                                    isFavoriteTab
                                     changeSymbolList={changeSymbolList}
                                     exchangeConfig={exchangeConfig}
                                     favorite={favorite}
@@ -280,13 +301,15 @@ const SymbolList = (props) => {
                                     currentId={query?.id}
                                     originTicker={ticker}
                                     watchList={watchList}
+                                    pairKey={`${ticker?.bi}_${ticker?.qi}`}
+                                    reFetchFavorite={fetchFavorite}
                                 />
                             </Fragment>
                         );
                     })}
                 </div>
             </>)
-        }, [favorite, selectedCategory, query, currentTheme, symbolList, changeSymbolList, exchangeConfig, publicSocket, watchList]);
+        }, [favorite, selectedCategory, query, currentTheme, symbolList, changeSymbolList, exchangeConfig, publicSocket, watchList, search]);
 
 
     return (
@@ -307,19 +330,19 @@ const SymbolList = (props) => {
                     <div className="mx-2 mb-2 flex items-center">
 
                         {user && <div
-                            className={'min-w-9 flex justify-center items-center text-sm mr-2 cursor-pointer ' + (activeTab === 'favorite' ? 'active text-teal border-mint' : 'border-divider dark:border-divider-dark')}
+                            className={'min-w-9 flex justify-center items-center text-sm mr-2.5 cursor-pointer ' + (activeTab === 'favorite' ? 'active text-teal border-mint' : 'border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('favorite')}
                         >
-                            <IconStarFilled size={14}
+                            <IconStarFilled size={12}
                                             color={activeTab === 'favorite' ? '#00C8BC' : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}/>
                         </div>}
                         <a
-                            className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-teal border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
+                            className={'min-w-9 text-sm text-center mr-2.5 font-bold text-xs cursor-pointer ' + (activeTab === 'USDT' ? 'active text-teal border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('USDT')}
                         > USDT
                         </a>
                         <a
-                            className={'min-w-9 text-sm text-center mr-2 font-medium text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-teal border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
+                            className={'min-w-9 text-sm text-center mr-2.5 font-bold text-xs cursor-pointer ' + (activeTab === 'VNDC' ? 'active text-teal border-mint' : 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark')}
                             onClick={() => setActiveTab('VNDC')}
                         > VNDC
                         </a>

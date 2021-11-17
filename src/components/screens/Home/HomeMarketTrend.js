@@ -1,16 +1,15 @@
 import AssetLogo from 'components/wallet/AssetLogo'
 import colors from 'styles/colors'
-import Image from 'next/image'
 import Axios from 'axios'
+import LastPrice from 'components/markets/LastPrice'
 
 import { useCallback, useEffect, useState } from 'react'
 import { API_GET_TRENDING } from 'redux/actions/apis'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { formatPercentage, formatPrice, getExchange24hPercentageChange, render24hChange } from 'redux/actions/utils'
+import { formatPrice, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
-import LastPrice from 'components/markets/LastPrice'
-import { sparkLineBuilder } from 'utils'
+import { initMarketWatchItem, sparkLineBuilder } from 'utils'
 
 const HomeMarketTrend = () => {
     // * Initial State
@@ -27,7 +26,6 @@ const HomeMarketTrend = () => {
     const { t } = useTranslation()
 
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig)
-    const publicSocket = useSelector(state => state.socket.publicSocket)
 
     // * Helper
     const getTrending = async () => {
@@ -113,32 +111,30 @@ const HomeMarketTrend = () => {
         const { pairs } = data
 
         return pairs.map(pair => {
-            const { b, q, s, u, p} = pair
-            const sparkLine = sparkLineBuilder(s, u ? colors.teal : colors.red2)
+            const _ = initMarketWatchItem(pair)
+            const sparkLine = sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)
             // console.log('namidev-DEBUG: ___ ', s)
 
             return (
-                <a href={`/trade/${b}-${q}`} className="homepage-markettrend__market_table__row" key={`markettrend_${s}__${state.marketTabIndex}`}>
+                <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="homepage-markettrend__market_table__row" key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}>
                     <div className="homepage-markettrend__market_table__row__col1">
                         <div className="homepage-markettrend__market_table__coin">
                             <div className="homepage-markettrend__market_table__coin__icon">
-                                <AssetLogo size={width >= 350 ? 30 : 26} assetCode={b}/>
+                                <AssetLogo size={width >= 350 ? 30 : 26} assetCode={_?.baseAsset}/>
                             </div>
                             <div className="homepage-markettrend__market_table__coin__pair">
-                                <span>{b}</span>
-                                <span>/{q}</span>
+                                <span>{_?.baseAsset}</span>
+                                <span>/{_?.quoteAsset}</span>
                             </div>
                         </div>
                     </div>
                     <div className="homepage-markettrend__market_table__row__col2">
                         <div className="homepage-markettrend__market_table__price">
-                            <LastPrice symbol={{base: b, quote: q}}
-                                       styles={{justifyContent: 'flex-start'}}
-                                       exchangeConfig={exchangeConfig}/>
+                            {formatPrice(_?.lastPrice)}
                         </div>
                     </div>
                     <div className="homepage-markettrend__market_table__row__col3">
-                        <div className={`homepage-markettrend__market_table__percent ${u ? 'value-up' : 'value-down'}`}>
+                        <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
                             {render24hChange(pair)}
                         </div>
                     </div>
@@ -154,6 +150,8 @@ const HomeMarketTrend = () => {
 
     useEffect(() => {
         getTrending()
+        const inverval = setInterval(() => getTrending(), 2800)
+        return () => inverval && clearInterval(inverval)
     }, [])
 
     return (

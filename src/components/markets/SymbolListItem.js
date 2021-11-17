@@ -2,15 +2,17 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import debounce from 'lodash/debounce';
 import { formatPrice, render24hChange } from 'src/redux/actions/utils';
-import { setUserSymbolList } from 'actions/market';
 import { IconStar, IconStarFilled } from '../common/Icons';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import colors from '../../styles/colors'
+import { TRADING_MODE } from 'redux/actions/const'
+import { favoriteAction } from 'redux/actions/user'
 
 const SymbolListItem = (props) => {
-    const { symbolString, publicSocket, exchangeConfig, originTicker, currentId, favorite, changeSymbolList, watchList } = props;
+    const { symbolString, publicSocket, exchangeConfig, originTicker, currentId, favorite, watchList, pairKey, isFavoriteTab = false, reFetchFavorite } = props;
     const [symbolTicker, setSymbolTicker] = useState(null);
     const [favoriteId, setFavoriteId] = useState('');
+    const [alreadyInFav, setAlreadyInFav] = useState(false)
 
     const [currentTheme, ] = useDarkMode()
 
@@ -23,22 +25,10 @@ const SymbolListItem = (props) => {
         }
     }, []);
 
-    const handleSetFavorite = async (symbol) => {
-        let newFavoriteList = [];
-
-        if (favorite && favorite.length) {
-            const isFav = favorite.includes(symbol);
-            if (!isFav) {
-                newFavoriteList = await [...favorite, symbol];
-            } else {
-                newFavoriteList = await favorite.filter(item => item !== symbol);
-            }
-        } else {
-            newFavoriteList.push(symbol);
-        }
-        changeSymbolList(newFavoriteList);
-        return setUserSymbolList(favoriteId, newFavoriteList);
-    };
+    const handleSetFavorite = async (pairKey) => {
+        await favoriteAction(isFavoriteTab ? 'delete' : 'put', TRADING_MODE.EXCHANGE, pairKey)
+        await reFetchFavorite()
+    }
 
     const listenerHandler = debounce((data) => {
         setSymbolTicker(data);
@@ -58,18 +48,25 @@ const SymbolListItem = (props) => {
         };
     }, [publicSocket, symbolString]);
 
+    useEffect(() => {
+        if (favorite && favorite.includes(pairKey)) {
+            setAlreadyInFav(true)
+        } else {
+            setAlreadyInFav(false)
+        }
+    }, [favorite, pairKey])
+
     const base = symbolTicker?.b;
     const quote = symbolTicker?.q;
     const up = symbolTicker?.u;
 
-    const isFavorite = favorite && favorite.length && favorite.includes(base);
-
     return (
         <div
-            className={`px-2.5 h-5 flex items-center cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3 ${currentId === `${base}-${quote}` ? 'bg-teal-50 dark:bg-darkBlue-3' : ''}`}
+            className={`px-2.5 h-5 flex items-center cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 ${currentId === `${base}-${quote}` ? 'bg-teal-lightTeal dark:bg-darkBlue-3' : ''}`}
         >
-            <div onClick={() => handleSetFavorite(base)} className="mr-1.5 cursor-pointer">
-                {isFavorite ? <IconStarFilled color={colors.yellow} />
+            <div className="mr-1.5 cursor-pointer"
+                 onClick={() => handleSetFavorite(pairKey)}>
+                {alreadyInFav ? <IconStarFilled color={colors.yellow} />
                     : <IconStar color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />}
             </div>
             <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>
