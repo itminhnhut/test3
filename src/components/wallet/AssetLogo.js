@@ -23,7 +23,7 @@ const AssetLogo = (props) => {
             }
             return <img
                 src={logoUrl}
-                alt="/images/icon/ic_exchange_unknown.png"
+                alt=""
                 style={{ minWidth: logoSize }}
                 width={logoSize}
                 height={logoSize}
