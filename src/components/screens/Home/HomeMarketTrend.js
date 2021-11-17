@@ -150,7 +150,7 @@ const HomeMarketTrend = () => {
 
     useEffect(() => {
         getTrending()
-        const inverval = setInterval(() => getTrending(), 2800)
+        const inverval = setInterval(() => getTrending(), 60000)
         return () => inverval && clearInterval(inverval)
     }, [])
 
