@@ -358,9 +358,9 @@ const OrderHistory = (props) => {
         };
     }, [userSocket]);
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: ____ ', filteredHistories)
-    }, [filteredHistories])
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: ____ ', filteredHistories)
+    // }, [filteredHistories])
 
 
     return renderTable()
