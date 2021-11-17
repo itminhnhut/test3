@@ -5,7 +5,7 @@ import { DOWNLOAD_APP_LINK } from "src/redux/actions/const";
 const DefaultMobileView = (props, ref) => {
     const { t } = useTranslation();
     return (
-        <div className="inline-block py-8 w-full max-w-400 overflow-hidden text-left align-middle transition-all transform bg-white">
+        <div className="inline-block py-8 w-full overflow-hidden text-left align-middle transition-all transform bg-white">
             <div className="text-sm">
                 <div className="bg-blue-50">
                     <img

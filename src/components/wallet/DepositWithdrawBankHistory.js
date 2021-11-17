@@ -164,7 +164,7 @@ const DepositWithdrawBankHistory = ({ id }) => {
                             leaveTo="opacity-0 scale-95"
                         >
                             <div
-                                className="inline-block w-full max-w-400 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                                className="inline-block w-full my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                             >
                                 <DetailDepositBank order={order} onClose={closeModal} />
                             </div>

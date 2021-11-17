@@ -516,7 +516,7 @@ const NavBar = () => {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <div
-                                    className="inline-block w-full max-w-400 mb-8 overflow-hidden text-left align-middle transition-all transform  shadow-xl "
+                                    className="inline-block w-full mb-8 overflow-hidden text-left align-middle transition-all transform  shadow-xl "
                                 >
                                     <Dialog.Title className="">
                                         <div className="flex justify-between items-center">
