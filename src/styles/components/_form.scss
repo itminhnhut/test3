@@ -95,3 +95,11 @@
     @apply text-xs mb-4
   }
 }
+
+.toggle-checkbox:checked {
+  @apply right-0 border-teal bg-teal h-4 w-4;
+  right: 0;
+  .toggle-label{
+    @apply bg-teal;
+  }
+}

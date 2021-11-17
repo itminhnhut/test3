@@ -27,8 +27,6 @@ export function getNotifications(prevId, cb) {
                 },
                 params,
             });
-
-            console.log('__ chekc noti ', data, status)
             if (status === ApiStatus.SUCCESS) {
                 if (!prevId) {
                     dispatch({

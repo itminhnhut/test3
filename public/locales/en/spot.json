@@ -28,5 +28,19 @@
   "close_order_success": "Order #{{displayingId}} was closed successfully.",
   "close_order_failed": "Order #{{displayingId}} was failed to close.",
   "filter_by_current_pair": "Hide Other Pair",
-  "pair_under_maintenance": "{{base}}/{{quote}} is under maintenance"
+  "pair_under_maintenance": "{{base}}/{{quote}} is under maintenance",
+  "setting": {
+    "theme": "Theme",
+    "layout": "Layout",
+    "classic": "Classic",
+    "pro": "Pro",
+    "symbol_detail": "Symbol Detail",
+    "chart": "Charty",
+    "order_book": "Order Book",
+    "trades": "Trades",
+    "symbol_list": "Symbol List",
+    "order_list": "Order List",
+    "place_order_form": "Place Order",
+    "reset_default_layout": "Back to default layout"
+  }
 }
