@@ -1,8 +1,8 @@
 /* eslint-disable no-alert, no-console */
 
-import * as types from 'actions/types';
-import { getMe } from 'actions/user';
-import initUserSocket from 'actions/userSocket';
+import * as types from 'src/redux/actions/types';
+import { getMe } from 'src/redux/actions/user';
+import initUserSocket from 'src/redux/actions/userSocket';
 import Head from 'components/common/Head';
 import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';

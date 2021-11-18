@@ -9,7 +9,7 @@ import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
 import { formatPrice, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
-import { initMarketWatchItem, sparkLineBuilder } from 'utils'
+import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
 
 const HomeMarketTrend = () => {
     // * Initial State

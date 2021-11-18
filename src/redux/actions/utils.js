@@ -12,7 +12,7 @@ import Big from 'big.js';
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
-import { ___DEV___, log } from 'utils'
+import { ___DEV___, log } from 'src/utils'
 
 export function getFilter(filterType, config) {
     const filter = find(config.filters, { filterType });

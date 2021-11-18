@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { createPopper } from '@popperjs/core';
 import debounce from 'lodash/debounce';
-import { getNotifications, markAllAsRead, truncateNotifications } from 'actions/notification';
+import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo } from 'src/redux/actions/utils';
 import { IconBell, Notification, NotificationDown, NotificationUp } from '../common/Icons';

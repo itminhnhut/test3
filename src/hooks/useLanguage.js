@@ -6,15 +6,15 @@ export const LANGUAGE_TAG = {
 };
 
 const useLanguage = () => {
-    const { locale: currentLocale, route, query, push } = useRouter();
-
+    const router = useRouter();
+    const { locale: currentLocale, route, query, push } = router
     // Language toggle
     const onChangeLang = () => {
         const nextLang =
             currentLocale === LANGUAGE_TAG.VI
                 ? LANGUAGE_TAG.EN
                 : LANGUAGE_TAG.VI;
-        push(route, query, { locale: nextLang });
+        router.push(router.asPath, router.asPath, { locale: nextLang });
     };
 
     return [currentLocale, onChangeLang];

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { tableStyle } from 'config/tables';
 
-import { formatBalance, getChangePercentage, getExchange24hPercentageChange, render24hChange } from 'actions/utils';
+import { formatBalance, getChangePercentage, getExchange24hPercentageChange, render24hChange } from 'src/redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { Info } from 'react-feather';
 import Image from 'next/image';
