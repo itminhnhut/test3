@@ -1,5 +1,5 @@
 import { formatBalance, formatSpotFee } from 'src/redux/actions/utils';
-import { PublicSocketEvent, SpotFeePercentage } from 'actions/const';
+import { PublicSocketEvent, SpotFeePercentage } from 'src/redux/actions/const';
 import { useEffect, useState } from 'react';
 import Emitter from 'src/redux/actions/emitter';
 

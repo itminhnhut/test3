@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useWindowSize } from 'utils/customHooks'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { log } from 'utils'
+import { log } from 'src/utils'
 import { getS3Url } from 'redux/actions/utils'
 
 const ScreenPresent = ({ parentState }) => {

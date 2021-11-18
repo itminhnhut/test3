@@ -10,7 +10,7 @@ import { API_GET_TRENDING } from 'redux/actions/apis'
 import { getFuturesMarketWatch, getMarketWatch } from 'redux/actions/market'
 import { favoriteAction } from 'redux/actions/user'
 import { TRADING_MODE } from 'redux/actions/const'
-import { marketWatchToFavorite } from 'utils'
+import { marketWatchToFavorite } from 'src/utils'
 import { useSelector } from 'react-redux'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 

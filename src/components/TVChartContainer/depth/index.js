@@ -252,9 +252,9 @@ const DepthChart = ({ symbol, chartSize, darkMode }) => {
                 lineColor: '#1A1D30',
             },
             yAxis: [{
-                ...options.yAxis.[0],
+                ...options.yAxis?.[0],
                 crosshair: {
-                    ...options.yAxis.[0].crosshair,
+                    ...options.yAxis?.[0].crosshair,
                     color: '#1A1D30',
                 },
             }],

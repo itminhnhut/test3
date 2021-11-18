@@ -1,4 +1,4 @@
-import { getTradingViewTimezone } from 'actions/utils';
+import { getTradingViewTimezone } from 'src/redux/actions/utils';
 import { IconLoading } from 'components/common/Icons';
 // import { widget } from 'public/library_maldives/trading_view/charting_library';
 import * as React from 'react';

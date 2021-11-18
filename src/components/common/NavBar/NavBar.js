@@ -30,7 +30,7 @@ import { API_GET_VIP } from 'redux/actions/apis';
 import { getMarketWatch } from 'redux/actions/market';
 import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
-import { buildLogoutUrl } from 'utils';
+import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';
 
 export const NAVBAR_USE_TYPE = {

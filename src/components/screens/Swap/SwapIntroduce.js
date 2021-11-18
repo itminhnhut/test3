@@ -4,7 +4,7 @@ import Link from 'next/link'
 import colors from 'styles/colors'
 
 import { useCallback, useEffect, useState } from 'react'
-import { initMarketWatchItem, sparkLineBuilder } from 'utils'
+import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
 import { formatPrice, render24hChange } from 'redux/actions/utils'
 import { getMarketWatch } from 'redux/actions/market'
 import { orderBy } from 'lodash'

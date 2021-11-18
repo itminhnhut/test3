@@ -6,7 +6,7 @@ import { isMobile } from 'react-device-detect';
 import AssetName from 'components/wallet/AssetName';
 import Image from 'next/image';
 import Link from 'next/link';
-import { formatPrice, getExchange24hPercentageChange, getSparkLine, render24hChange } from 'actions/utils';
+import { formatPrice, getExchange24hPercentageChange, getSparkLine, render24hChange } from 'src/redux/actions/utils';
 import { tableStyle } from 'src/config/tables';
 import { useTranslation } from 'next-i18next';
 import { useAsync, useInterval } from 'react-use';
