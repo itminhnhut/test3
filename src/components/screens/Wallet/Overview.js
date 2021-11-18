@@ -5,7 +5,6 @@ import { EXCHANGE_ACTION} from 'pages/wallet'
 import { SECRET_STRING } from 'utils'
 
 import MCard from 'components/common/MCard'
-import Image from 'next/image'
 import useWindowSize from 'hooks/useWindowSize'
 import AssetLogo from 'components/wallet/AssetLogo'
 import wallet from 'redux/reducers/wallet'
@@ -109,7 +108,7 @@ const OverviewWallet = (props) => {
                         </div>
                         <div className="mt-5 flex items-center">
                             <div className="rounded-md bg-teal-lightTeal dark:bg-teal-5 min-w-[55px] min-h-[55px] md:min-w-[85px] md:min-h-[85px] flex items-center justify-center">
-                                <Image className="-ml-0.5" src="/images/icon/ic_wallet_2.png" height={width >= 768 ? '48' : '28'} width={width >= 768 ? '48' : '28'}/>
+                                <img className="-ml-0.5" src="/images/icon/ic_wallet_2.png" height={width >= 768 ? '48' : '28'} width={width >= 768 ? '48' : '28'} alt=""/>
                             </div>
                             <div className="ml-3 md:ml-6">
                                 <div className="font-bold text-[24px] md:text-[28px] lg:text-[36px] text-dominant flex flex-wrap">
@@ -121,7 +120,7 @@ const OverviewWallet = (props) => {
                         </div>
                     </div>
                     <div className="hidden md:block">
-                        <Image src="/images/screen/wallet/wallet_overview_grp.png" width="140" height="140"/>
+                        <img src="/images/screen/wallet/wallet_overview_grp.png" width="140" height="140" alt=""/>
                     </div>
                 </div>
             </MCard>
@@ -133,13 +132,13 @@ const OverviewWallet = (props) => {
                 <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <Image src="/images/icon/ic_exchange.png" width="32" height="32"/>
+                            <img src="/images/icon/ic_exchange.png" width="32" height="32" alt=""/>
                         </div>
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
                                 <span className="mr-4">Exchange</span>
                                 <span className="inline-flex items-center">
-                                    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>
+                                    <img src="/images/icon/ic_piechart.png" width="16" height="16" alt=""/>
                                     <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>
                                 </span>
                             </div>
@@ -177,7 +176,7 @@ const OverviewWallet = (props) => {
                 <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <Image src="/images/icon/ic_futures.png" width="32" height="32"/>
+                            <img src="/images/icon/ic_futures.png" width="32" height="32" alt=""/>
                         </div>
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
@@ -209,7 +208,7 @@ const OverviewWallet = (props) => {
                 <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <Image src="/images/icon/ic_staking.png" width="32" height="32"/>
+                            <img src="/images/icon/ic_staking.png" width="32" height="32" alt=""/>
                         </div>
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
@@ -240,7 +239,7 @@ const OverviewWallet = (props) => {
                 <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row">
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <Image src="/images/icon/ic_farming.png" width="32" height="32"/>
+                            <img src="/images/icon/ic_farming.png" width="32" height="32" alt=""/>
                         </div>
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
