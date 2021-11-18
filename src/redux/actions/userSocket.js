@@ -4,7 +4,8 @@ import { ADD_NOTIFICATION_UNREAD_COUNT, SET_NOTIFICATION_UNREAD_COUNT } from 'sr
 import debounce from 'lodash/debounce';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_SOCKETIO_AUTH_KEY } from './apis';
-import { ApiStatus, WalletType } from './const';
+import { ApiStatus, UserSocketEvent, WalletType } from './const';
+import Emitter from 'redux/actions/emitter';
 
 let WS;
 
@@ -100,6 +101,9 @@ function initUserSocket() {
             onChangeWallet(WS, dispatch);
             initNotification(WS, dispatch);
             initNotificationRepatch(WS, dispatch);
+            WS.on(UserSocketEvent.EXCHANGE_UPDATE_ORDER, (data) => {
+                Emitter.emit(UserSocketEvent.EXCHANGE_UPDATE_ORDER, data);
+            });
         });
         WS.on('disconnect', () => {
             // console.log('>> User socket disconnected');

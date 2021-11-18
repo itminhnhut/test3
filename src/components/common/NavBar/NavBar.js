@@ -220,8 +220,8 @@ const NavBar = ({
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
                             <a className="mal-navbar__link__group___item___childen__lv1___item2">
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                    <Image
-                                        src={getIcon(child.localized)}
+                                    <img
+                                        src={getS3Url(getIcon(child.localized))}
                                         width={width >= 2560 ? '38' : '32'}
                                         height={width >= 2560 ? '38' : '32'}
                                     />
@@ -458,8 +458,8 @@ const NavBar = ({
             >
                 <Link href="/">
                     <a className="block mal-navbar__logo">
-                        <Image
-                            src="/images/logo/nami_maldives.png"
+                        <img
+                            src={getS3Url("/images/logo/nami_maldives.png")}
                             width="28"
                             height="25"
                             className="navbar__logo"

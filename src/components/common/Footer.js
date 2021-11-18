@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import { getS3Url } from 'redux/actions/utils';
 
 const Footer = () => {
     const { t } = useTranslation('footer');
@@ -60,7 +61,7 @@ const Footer = () => {
                     <div className="grid lg:grid-cols-3">
                         <div className="">
                             <div className="mb-5">
-                                <Image src="/images/logo/nami-logo.png" height="40" width="160" />
+                                <image src={getS3Url("/images/logo/nami-logo.png")} height="40" width="160" />
                             </div>
                             <div className="mb-9">
                                 <div className="font-semibold mt-3 text-white">

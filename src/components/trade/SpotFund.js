@@ -23,19 +23,21 @@ const TradeHistory = (props) => {
     const { currentPair, filterByCurrentPair, darkMode } = props;
 
     useEffect(() => {
-        if (assetConfig && assetConfig.length && spotWallet) {
-            const test = assetConfig.map(e => ({ ...e, ...spotWallet && spotWallet[e.id] ? spotWallet[e.id] : {} }));
-            const filterUserBalance = [];
-            const _newWallet = test.map(asset => {
-                const {
-                    assetCode, assetName, value, walletType: _walletType,
-                } = asset;
-                if (value < 0.0000001) return null;
-                return asset
+        if (assetConfig && assetConfig.length && Object.keys(spotWallet).length) {
+            let _newWallet = []
+
+            assetConfig.map(config => {
+                if(config?.id && spotWallet && spotWallet?.[config?.id]?.value > 0.000001){
+                    _newWallet.push({
+                        ...config,
+                        ...spotWallet?.[config?.id]
+                    })
+                }
             });
+
             setWallet(_newWallet)
         }
-      
+
     }, [spotWallet, assetConfig])
 
     const customStyles = {
@@ -167,7 +169,7 @@ const TradeHistory = (props) => {
             right: true,
             sortable: true,
             minWidth: '150px',
-            cell: (row) => (formatWallet(row.value - row.lockedValue)),
+            cell: (row) => (formatWallet(row.value - Math.max(row.locked_value, 0))),
         },
         {
             name: t('common:in_order'),
@@ -176,7 +178,7 @@ const TradeHistory = (props) => {
             right: true,
             sortable: true,
             minWidth: '150px',
-            cell: (row) => (formatWallet(row.lockedValue)),
+            cell: (row) => (formatWallet(Math.max(row.locked_value, 0))),
         },
     ], [exchangeConfig]);
 
