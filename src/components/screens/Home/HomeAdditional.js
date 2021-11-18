@@ -220,8 +220,7 @@ const HomeAdditional = ({ parentState }) => {
                         <div className="homepage-journey__group_content___left">
                             <div className="homepage-journey__group_content___left__item">
                                 <div className="homepage-journey__group_content___left__item___icon">
-                                    <ing src={getS3Url("/images/screen/homepage/maxium_performance.png")}
-                                           width={width >= 1366 ? '52' : '44'} height={width >= 1366 ? '52' : '44'}/>
+                                    <img src={getS3Url("/images/screen/homepage/maxium_performance.png")} width={width >= 1366 ? '52' : '44'} height={width >= 1366 ? '52' : '44'}/>
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
                                     <div className="homepage-journey__group_content___left__item___content__title">
