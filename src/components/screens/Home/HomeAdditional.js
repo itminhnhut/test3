@@ -1,5 +1,5 @@
-import HomeCurrentActivity from 'components/screens/Home/HomeCurrentActivity'
-import Button from 'components/common/Button'
+import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity'
+import Button from 'src/components/common/Button'
 import Image from 'next/image'
 import Link from 'next/link'
 import colors from '../../../styles/colors'

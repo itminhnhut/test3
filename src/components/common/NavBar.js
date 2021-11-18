@@ -1,5 +1,5 @@
 import { Dialog, Popover, Transition } from '@headlessui/react';
-import { getLoginUrl, getS3Url } from 'actions/utils';
+import { getLoginUrl, getS3Url } from 'src/redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import Link from 'next/link';

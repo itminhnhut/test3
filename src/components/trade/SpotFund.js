@@ -1,4 +1,4 @@
-import AssetLogo from 'components/wallet/AssetLogo';
+import AssetLogo from 'src/components/wallet/AssetLogo';
 import { tableStyle } from 'config/tables';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';

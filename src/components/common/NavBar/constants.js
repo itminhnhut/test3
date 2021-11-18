@@ -1,5 +1,5 @@
 import { getV1Url } from "redux/actions/utils"
-import { buildLogoutUrl } from 'utils'
+import { buildLogoutUrl } from 'src/utils'
 
 export const DESKTOP_NAV_HEIGHT = 74
 

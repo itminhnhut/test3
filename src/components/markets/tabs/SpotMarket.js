@@ -1,18 +1,18 @@
 import { useCallback, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
-import { IconSearch, IconSort, IconStar, IconStarFilled, IconTooltip } from 'components/common/Icons';
-import TableNoData from 'components/common/table.old/TableNoData';
-import TableLoader from 'components/loader/TableLoader';
+import { IconSearch, IconSort, IconStar, IconStarFilled, IconTooltip } from 'src/components/common/Icons';
+import TableNoData from 'src/components/common/table.old/TableNoData';
+import TableLoader from 'src/components/loader/TableLoader';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { tableStyle } from 'config/tables';
 
-import { formatBalance, getChangePercentage, getExchange24hPercentageChange, render24hChange } from 'actions/utils';
+import { formatBalance, getChangePercentage, getExchange24hPercentageChange, render24hChange } from 'src/redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { Info } from 'react-feather';
 import Image from 'next/image';
 import { formatAbbreviateNumber, getAssetName, getSparkLine } from 'redux/actions/utils';
-import AssetLogo from 'components/wallet/AssetLogo';
+import AssetLogo from 'src/components/wallet/AssetLogo';
 
 const SpotMarket = ({
     loading,

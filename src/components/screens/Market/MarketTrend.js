@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react'
 
-import MarketTrendItem from 'components/markets/MarketTrendItem'
+import MarketTrendItem from 'src/components/markets/MarketTrendItem'
 
 import SwiperCore, { Autoplay } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react';

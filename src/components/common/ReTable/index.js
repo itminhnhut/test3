@@ -32,7 +32,7 @@ import RcTable from 'rc-table'
 import styled from 'styled-components'
 import colors from 'styles/colors'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import RePagination from 'components/common/ReTable/RePagination'
+import RePagination from 'src/components/common/ReTable/RePagination'
 
 import { useState, memo, useEffect, useCallback } from 'react'
 import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons'
@@ -268,10 +268,10 @@ const ResizableTitle = ({ onResize, width, ...restProps }) => {
 }
 
 const ReTableWrapper = styled.div`
-  
+
   .rc-table {
     color: ${({ isDark }) => isDark ? colors.grey4 : colors.darkBlue};
-    
+
     .re_table__link {
       font-size: 14px;
 
@@ -280,19 +280,19 @@ const ReTableWrapper = styled.div`
       }
     }
   }
-  
+
   .rc-table-content, .rc-table th, .rc-table td {
     border-color: ${({ isDark }) => isDark ? colors.darkBlue3 : colors.grey4} !important;
     border-right: none;
     border-left: none;
     border-top-width: 0;
   }
-  
+
   .rc-table th {
     color: ${({ isDark }) => isDark ? colors.darkBlue5 : colors.grey1};
     font-weight: 500;
     padding-bottom: 14px;
-    
+
     @media (min-width: 1280px) {
       font-size: 14px;
     }
@@ -301,17 +301,17 @@ const ReTableWrapper = styled.div`
   .rc-table td {
     font-weight: 500;
     font-size: 14px;
-    
+
     @media (min-width: 1280px) {
       font-size: 16px;
     }
   }
-  
+
   .rc-table thead td, .rc-table thead th,
   .rc-table tbody tr td, .rc-table tbody tr th {
     background: ${({ isDark }) => isDark ? colors.darkBlue2 : colors.white};
   }
-  
+
   .rc-table-content {
     overflow: auto;
   }
@@ -319,7 +319,7 @@ const ReTableWrapper = styled.div`
   .rc-table-cell-fix-right {
     ::after {
       display: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'block' : 'none'};
-      box-shadow: ${({ isDark }) => isDark ? 'inset -10px 0 8px -8px #263459' 
+      box-shadow: ${({ isDark }) => isDark ? 'inset -10px 0 8px -8px #263459'
                                            : 'inset -10px 0 8px -8px #f2f4f6'} !important;
     }
   }
@@ -328,7 +328,7 @@ const ReTableWrapper = styled.div`
     box-shadow: ${({ isDark }) => isDark ? '-1px 0 0 #263459'
             : '-1px 0 0 #f2f4f6'} !important;
   }
-  
+
   .rc-table-cell-fix-left {
     ::after {
       display: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'block' : 'none'};
@@ -342,7 +342,7 @@ const ReTableWrapper = styled.div`
     align-items: center;
     justify-content: center;
     ${({ noDataStyle }) => noDataStyle ? {...noDataStyle} : ''};
-    
+
     ::after {
       display: none;
     }
@@ -351,18 +351,18 @@ const ReTableWrapper = styled.div`
   table {
     width: 100% !important;
     ${({ tableStyle }) => tableStyle ? {...tableStyle} : ''};
-    
+
     thead tr, tbody tr {
       position: relative;
       cursor: pointer;
     }
-    
+
     tbody tr:last-child {
       td {
         border-bottom-width: 0;
       }
     }
-    
+
     tbody tr:hover td {
       background: ${({ useRowHover, isDark }) => useRowHover ? isDark ? 'rgba(38, 52, 89, 0.5)' : colors.lightTeal : undefined};
     }
@@ -374,7 +374,7 @@ const ReTableWrapper = styled.div`
     thead tr th:last-child, tbody tr td:last-child {
       padding-right: ${({ paddingHorizontal }) => paddingHorizontal ? paddingHorizontal : 0};
     }
-    
+
     tbody tr td:first-child {
       border-top-left-radius: ${({ rowRadius }) => rowRadius ? rowRadius : 0};
       border-bottom-left-radius: ${({ rowRadius }) => rowRadius ? rowRadius : 0};
@@ -384,16 +384,16 @@ const ReTableWrapper = styled.div`
       border-top-right-radius: ${({ rowRadius }) => rowRadius ? rowRadius : 0};
       border-bottom-right-radius: ${({ rowRadius }) => rowRadius ? rowRadius : 0};
     }
-    
+
     thead tr {
       ${({ headerStyle }) => headerStyle ? {...headerStyle} : ''};
       user-select: none;
     }
-    
+
     tbody tr {
       ${({ rowStyle }) => rowStyle ? {...rowStyle} : ''}
       transition: all .2s ease;
-      
+
       :hover {
         box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
       }
@@ -407,15 +407,15 @@ const SorterWrapper = styled.span`
   align-items: center;
   padding-left: 10px;
   margin-top: -2px;
-  
+
   span:first-child {
     transform: translateY(2px);
   }
-  
+
   span {
     width: 7px;
     height: 7px;
-    
+
     svg {
       width: 100%;
       height: auto;

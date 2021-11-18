@@ -34,5 +34,9 @@
   "history": "Swap History",
   "view_all": "View",
   "from_amount": "Amount of token converted",
-  "to_amount": "Amount of token received"
+  "to_amount": "Amount of token received",
+  "title_1": "Buy/Sell Crypto With",
+  "title_2": "Just One Click",
+  "description": "Nami Swap makes owning tokens easier than ever.<br/>Buy/sell tokens in 5 minutes",
+  "current_price": "Current Index Price"
 }

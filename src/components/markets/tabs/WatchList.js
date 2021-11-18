@@ -1,7 +1,7 @@
-import { IconSort, IconStar, IconStarFilled, IconTooltip } from 'components/common/Icons';
-import TableNoData from 'components/common/table.old/TableNoData';
-import TableLoader from 'components/loader/TableLoader';
-import AssetLogo from 'components/wallet/AssetLogo';
+import { IconSort, IconStar, IconStarFilled, IconTooltip } from 'src/components/common/Icons';
+import TableNoData from 'src/components/common/table.old/TableNoData';
+import TableLoader from 'src/components/loader/TableLoader';
+import AssetLogo from 'src/components/wallet/AssetLogo';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import Link from 'next/link';

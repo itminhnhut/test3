@@ -1,16 +1,16 @@
 import showNotification from 'utils/notificationService'
-import SwapReverse from 'components/svg/SwapReverse'
+import SwapReverse from 'src/components/svg/SwapReverse'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import NumberFormat from 'react-number-format'
-import AssetLogo from 'components/wallet/AssetLogo'
+import AssetLogo from 'src/components/wallet/AssetLogo'
 import fetchAPI from 'utils/fetch-api'
-import SvgIcon from 'components/svg'
+import SvgIcon from 'src/components/svg'
 import colors from 'styles/colors'
 import Link from 'next/link'
 import * as Error from '../../../redux/actions/apiError'
-import Skeletor from 'components/common/Skeletor'
+import Skeletor from 'src/components/common/Skeletor'
 import useOutsideClick from 'hooks/useOutsideClick'
-import Modal from 'components/common/Modal'
+import Modal from 'src/components/common/Modal'
 
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAsync, useDebounce } from 'react-use'
@@ -766,7 +766,7 @@ const SwapModule = ({ width, pair }) => {
                     {/*END:SWAP BUTTON*/}
 
                     <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
-                        <Trans i18nKey="common:term">
+                        <Trans i18nKey="common:term_swap">
                             <a href={TERM_OF_SERVICE.SWAP} className="block cursor-pointer text-dominant hover:!underline"/>
                         </Trans>
                     </div>

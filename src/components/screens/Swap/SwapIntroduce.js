@@ -1,13 +1,14 @@
-import AssetLogo from 'components/wallet/AssetLogo'
-import Skeletor from 'components/common/Skeletor'
+import AssetLogo from 'src/components/wallet/AssetLogo'
+import Skeletor from 'src/components/common/Skeletor'
 import Link from 'next/link'
 import colors from 'styles/colors'
 
 import { useCallback, useEffect, useState } from 'react'
-import { initMarketWatchItem, sparkLineBuilder } from 'utils'
+import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
 import { formatPrice, render24hChange } from 'redux/actions/utils'
 import { getMarketWatch } from 'redux/actions/market'
 import { orderBy } from 'lodash'
+import { Trans, useTranslation } from 'next-i18next'
 
 
 const SwapIntroduce = () => {
@@ -16,6 +17,8 @@ const SwapIntroduce = () => {
         swapTrend: null
     })
     const setState = state => set(prevState => ({...prevState, ...state}))
+
+    const { t } = useTranslation()
 
     // * Helper
     const getSwapTrending = async () => {
@@ -120,19 +123,20 @@ const SwapIntroduce = () => {
         <div className="hidden lg:block pt-[38px] xl:pt-[72px]">
             <div className="text-[32px] xl:text-[46px] leading-[42px] xl:leading-[52px] text-txtPrimary dark:text-txtPrimary-dark dark font-bold">
                 <div>
-                    Buy Digital Assets with
+                    {t('convert:title_1')}
                 </div>
                 <div className="text-dominant">
-                    Just One Click
+                    {t('convert:title_2')}
                 </div>
             </div>
             <div className="mt-[20px] text-[14px] xl:text-[16px] text-txtSecondary dark:text-txtSecondary-dark font-medium">
-                Nami App and Website offer you an easy and quick way to start trading.<br/>
-                Buy & sell Crypto in 15 minutes.
+                <Trans>
+                    {t('convert:description')}
+                </Trans>
             </div>
             <div className="mt-[52px]">
                 <div className="text-[14px] xl:text-[16px] font-medium text-txtPrimary dark:text-txtPrimary-dark">
-                    Current Index Price
+                    {t('convert:current_price')}
                 </div>
             </div>
             <div className="flex items-center">

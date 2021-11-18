@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Slider from 'react-slick';
 import { useInterval } from 'react-use';
 import { defaultSlider } from 'config/sliders';
-import { getMarketWatch } from 'actions/market';
+import { getMarketWatch } from 'src/redux/actions/market';
 import SliderItem from './SliderItem';
 
 const MarketSlider = (props) => {

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Listbox, Transition } from '@headlessui/react';
 import axios from 'axios';
-import { IconLock } from 'components/common/Icons';
+import { IconLock } from 'src/components/common/Icons';
 import ceil from 'lodash/ceil';
 import defaults from 'lodash/defaults';
 import find from 'lodash/find';

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { getS3Url } from 'redux/actions/utils';
 import { useComponentVisible } from 'utils/customHooks';
 
-const { IconClose, IconCustomCheckbox } = require('components/common/Icons');
+const { IconClose, IconCustomCheckbox } = require('src/components/common/Icons');
 
 const SignalFilterWrapper = ({ templates, filteredTemplates, toggleFilter, selectFilter, setCurrentSignalPage }) => {
     const { isComponentVisible, setIsComponentVisible } = useComponentVisible(true);

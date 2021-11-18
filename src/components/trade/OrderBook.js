@@ -1,4 +1,4 @@
-import { IconLoading } from 'components/common/Icons';
+import { IconLoading } from 'src/components/common/Icons';
 import { reverse } from 'lodash';
 import { Popover, Transition } from '@headlessui/react';
 import groupBy from 'lodash/groupBy';
@@ -21,7 +21,7 @@ import OrderBookAll from 'src/components/svg/OrderBookAll'
 import OrderBookBids from 'src/components/svg/OrderBookBids'
 import OrderBookAsks from 'src/components/svg/OrderBookAsks'
 import { ORDER_BOOK_MODE } from 'redux/actions/const';
-import SvgChevronDown from 'components/svg/ChevronDown';
+import SvgChevronDown from 'src/components/svg/ChevronDown';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -203,16 +203,16 @@ const OrderBook = (props) => {
                         })}
                     </div>
                 )
-            
+
         }
-       
+
         if(inner){
             return <div className="flex flex-col justify-start flex-1">
-                  {inner}          
+                  {inner}
             </div>
         }
         return null
-    
+
 
     }
 
@@ -249,9 +249,9 @@ const OrderBook = (props) => {
                                                             onClick={() => setTickSize(item)}
                                                             key={index}
                                                             className={
-                                                                `h-8 leading-8 px-2 cursor-pointer w-full font-medium text-xs text-center rounded-sm 
-                                                                 dark:text-txtSecondary-dark 
-                                                                hover:text-teal 
+                                                                `h-8 leading-8 px-2 cursor-pointer w-full font-medium text-xs text-center rounded-sm
+                                                                 dark:text-txtSecondary-dark
+                                                                hover:text-teal
                                                                 dark:hover:text-teal
                                                                 ${isActive ? 'bg-opacity-10 dark:bg-opacity-10 bg-teal text-teal dark:bg-teal dark:text-teal' : ''}
                                                                 `
@@ -317,7 +317,7 @@ const OrderBook = (props) => {
                             </div>
                         </div>
                         {renderOrderBook('sell')}
-                        
+
                     </div>
                 </div>
             </div>

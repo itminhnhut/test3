@@ -1,5 +1,5 @@
-import { IconNoSort, IconSort, IconStarFilled } from 'components/common/Icons'
-import SearchInput from 'components/markets/SearchInput'
+import { IconNoSort, IconSort, IconStarFilled } from 'src/components/common/Icons'
+import SearchInput from 'src/components/markets/SearchInput'
 import compact from 'lodash/compact'
 import orderBy from 'lodash/orderBy'
 import { useTranslation } from 'next-i18next'

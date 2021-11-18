@@ -1,7 +1,7 @@
 // import { memo, useEffect, useState } from 'react'
 // import { useSelector } from 'react-redux'
 // import { debounce } from 'lodash/function'
-// import { log, subscribeExchangeSocket, unsubscribeExchangeSocket } from 'utils'
+// import { log, subscribeExchangeSocket, unsubscribeExchangeSocket } from 'src/utils'
 //
 // const BASE_RATE_PAIR = 'USDTVNDC'
 //
