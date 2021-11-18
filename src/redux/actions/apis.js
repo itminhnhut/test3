@@ -38,6 +38,12 @@ export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'
 export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history';
 
+// Staking
+export const GET_STAKING_CONFIG = API_PREFIX + "earn/list?type=1"
+
+// Farming
+export const GET_FARMING_CONFIG = API_PREFIX + "earn/list?type=3"
+
 // Coinbase
 export const API_GET_NOTIFICATIONS = API_PREFIX + 'notifications/all_mix';
 export const API_MARK_NOTIFICATIONS_READ = API_PREFIX + 'notifications/all_read';

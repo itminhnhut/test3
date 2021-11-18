@@ -16,7 +16,9 @@ const INITIAL_STATE = {
     // ...
 }
 
-const OverviewWallet = ({ allWallet }) => {
+const OverviewWallet = (props) => {
+    const { allAssets, loadingStaking, stakingConfig, loadingFarming, farmingConfig } = props
+
     // Init State
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
@@ -34,19 +36,44 @@ const OverviewWallet = ({ allWallet }) => {
 
     // Render Handler
     const renderExchangeAsset = useCallback(() => {
-        if (!allWallet) return
+        if (!allAssets) return
         const items = []
         for (let i = 0; i < limitExchangeAsset; ++i) {
-            console.log('namidev-DEBUG: ____ ', allWallet[i])
+            const key = `overview__spot_${i}`
             items.push(
-                <a href="/" className="mr-3">
+                <a key={key}
+                   href={`/wallet/exchange/${allAssets[i]?.assetName}`} className="mr-3">
                     <AssetLogo assetId={null} size={30}/>
                 </a>
             )
         }
 
         return items
-    }, [limitExchangeAsset, allWallet])
+    }, [limitExchangeAsset, allAssets])
+
+    const renderStakingList = useCallback(() => {
+        if (!stakingConfig) return
+        return stakingConfig.map(stk => {
+            return (
+                <a key={`overview_staking__${stk?.asset_name}`}
+                   href={`/staking?asset=${stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name}`} className="mr-3">
+                    <AssetLogo assetId={null} size={30}/>
+                </a>
+            )
+        })
+    }, [stakingConfig])
+
+    const renderFarmingList = useCallback(() => {
+        if (!farmingConfig) return
+        return farmingConfig.map(frm => {
+            return (
+                <a key={`overview_farming__${frm?.asset_name}`}
+                   href={`/farming?asset=${frm?.asset_name === 'NAC' ? 'NAMI' : frm?.asset_name}`} className="mr-3">
+                    <AssetLogo assetId={null} size={30}/>
+                </a>
+            )
+        })
+    }, [farmingConfig])
 
     return (
         <div className="pb-32">
@@ -199,12 +226,7 @@ const OverviewWallet = ({ allWallet }) => {
                     </div>
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
                         <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">
-                            <a href="/" className="mr-3">
-                                <AssetLogo assetCode={null} size={30}/>
-                            </a>
-                            <a href="/" className="mr-3">
-                                <AssetLogo assetCode={null} size={30}/>
-                            </a>
+                            {renderStakingList()}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
@@ -235,8 +257,7 @@ const OverviewWallet = ({ allWallet }) => {
                     </div>
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
                         <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">
-                            Trade assets using funds provied by third party with a Futures Account.<br/>
-                            Transfer funds to your Futures Account to start trading.
+                            {renderFarmingList()}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
