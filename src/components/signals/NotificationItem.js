@@ -1,4 +1,4 @@
-import AssetLogo from 'components/wallet/AssetLogo';
+import AssetLogo from 'src/components/wallet/AssetLogo';
 import { enUS, vi } from 'date-fns/locale';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';

@@ -1,7 +1,7 @@
 import { Popover, Transition } from '@headlessui/react';
-import ChevronDown from 'components/svg/ChevronDown';
-import AssetLogo from 'components/wallet/AssetLogo';
-import AssetName from 'components/wallet/AssetName';
+import ChevronDown from 'src/components/svg/ChevronDown';
+import AssetLogo from 'src/components/wallet/AssetLogo';
+import AssetName from 'src/components/wallet/AssetName';
 import useDarkMode from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
@@ -89,7 +89,7 @@ const SymbolDetail = (props) => {
                                 <span className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-lg">
                                     {symbolTicker?.b}/{symbolTicker?.q}
                                 </span>
-                                
+
                                 <ChevronDown size={16} className="ml-1" />
                             </Popover.Button>
                             <Transition

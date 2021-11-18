@@ -1,4 +1,4 @@
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
+import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout'
 import Link from 'next/link';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';

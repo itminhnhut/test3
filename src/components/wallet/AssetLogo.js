@@ -2,7 +2,6 @@ import { useSelector } from 'react-redux';
 import find from 'lodash/find';
 import { getS3Url } from 'redux/actions/utils';
 import { useMemo } from 'react';
-import Image from 'next/image';
 
 const AssetLogo = (props) => {
     const { size, assetCode, assetId, useNextImg } = props;
@@ -19,11 +18,11 @@ const AssetLogo = (props) => {
         if (config) {
             const logoUrl = getS3Url(`/images/coins/64/${config?.id}.png`);
             if (useNextImg) {
-                return <Image src={logoUrl} width={`${logoSize}`} height={`${logoSize}`} />;
+                return <img src={logoUrl} width={`${logoSize}`} height={`${logoSize}`} />;
             }
             return <img
                 src={logoUrl}
-                alt="/images/icon/ic_exchange_unknown.png"
+                alt=""
                 style={{ minWidth: logoSize }}
                 width={logoSize}
                 height={logoSize}

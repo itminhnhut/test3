@@ -1,8 +1,8 @@
-import DefaultMobileView from 'components/common/DefaultMobileView';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import PlaceOrderForm from 'components/trade/PlaceOrderForm';
-import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
-import SymbolDetail from 'components/trade/SymbolDetail';
+import DefaultMobileView from 'src/components/common/DefaultMobileView';
+import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
+import PlaceOrderForm from 'src/components/trade/PlaceOrderForm';
+import SimplePlaceOrderForm from 'src/components/trade/SimplePlaceOrderForm';
+import SymbolDetail from 'src/components/trade/SymbolDetail';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -190,7 +190,7 @@ const SpotComp = () => {
     } = router.query;
     const [layoutConfig, setLayoutConfig] = useState(layout === SPOT_LAYOUT_MODE.PRO
         ? layoutPro
-        : layoutSimple)
+        : layoutSimple);
     const [layoutMode, setLayoutMode] = useState(
         layout === SPOT_LAYOUT_MODE.PRO
             ? SPOT_LAYOUT_MODE.PRO
@@ -232,7 +232,7 @@ const SpotComp = () => {
     const resetDefault = () => {
         setLayoutConfig(layout === SPOT_LAYOUT_MODE.PRO
             ? layoutPro
-            : layoutSimple)
+            : layoutSimple);
         setState({
             ...state,
             ...initSpotComponent,
@@ -263,7 +263,7 @@ const SpotComp = () => {
     }, [indicator, timeframe]);
 
     useEffect(() => {
-        const initLayout = layoutConfig
+        const initLayout = layoutConfig;
         const _orderbookLayout = find(initLayout, { i: 'orderbook' });
         const _tradesLayout = find(initLayout, { i: 'trades' });
         setOrderBookLayout(_orderbookLayout);
@@ -359,9 +359,9 @@ const SpotComp = () => {
             onChangeSpotState={setState}
             resetDefault={resetDefault}
         >
-            <SpotHead symbol={symbol} />
+            <SpotHead symbol={symbol}/>
             <MobileView className="bg-white">
-                <DefaultMobileView />
+                <DefaultMobileView/>
             </MobileView>
             <BrowserView className="bg-bgContainer dark:bg-bgContainer-dark">
                 <div
@@ -373,8 +373,13 @@ const SpotComp = () => {
                 >
                     <ReactGridLayout
                         className="layout"
-                        layout={layoutConfig}
-                        onLayoutChange={(_layout) => setLayoutConfig(_layout)}
+                        layout={
+                            layoutMode === SPOT_LAYOUT_MODE.PRO
+                                ? layoutPro
+                                : layoutSimple
+                        }
+                        // layout={layoutConfig}
+                        // onLayoutChange={(_layout) => setLayoutConfig(_layout)}
                         breakpoints={{
                             xl: 1440,
                             lg: 2200,
@@ -387,15 +392,19 @@ const SpotComp = () => {
                         draggableHandle=".dragHandleArea"
                         draggableCancel=".dragCancelArea"
                     >
-                        <div
-                            key="symbolList"
-                            className={`border border-divider dark:border-divider-dark ${!state.isShowSymbolList || layoutMode === SPOT_LAYOUT_MODE.PRO || fullScreen ? 'hidden' : ''}`}
-                        >
-                            <SymbolList
-                                publicSocket={publicSocket}
-                                symbol={symbol}
-                            />
-                        </div>
+                        {!(!state.isShowSymbolList || layoutMode === SPOT_LAYOUT_MODE.PRO || fullScreen) && (
+                            <div
+                                key="symbolList"
+                                className="border border-divider dark:border-divider-dark"
+                            >
+                                <SymbolList
+                                    publicSocket={publicSocket}
+                                    symbol={symbol}
+                                />
+                            </div>
+                        )
+                        }
+
 
                         <div
                             key="chart"
@@ -459,7 +468,7 @@ const SpotComp = () => {
                             key="orderbook"
                             className={`border border-divider dark:border-divider-dark ${!state.isShowOrderBook || fullScreen ? 'hidden' : ''}`}
                         >
-                            <OrderBook symbol={symbol} parentState={setState} layoutConfig={orderBookLayout} />
+                            <OrderBook symbol={symbol} parentState={setState} layoutConfig={orderBookLayout}/>
                         </div>
 
                     </ReactGridLayout>

@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import LayoutWithHeader from 'components/common/layouts/layoutWithHeader';
-import Footer from 'components/common/Footer';
+import LayoutWithHeader from 'src/components/common/layouts/layoutWithHeader';
+import Footer from 'src/components/common/Footer';
 
 const Terms = () => {
     const router = useRouter();

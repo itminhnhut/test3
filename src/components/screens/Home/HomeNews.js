@@ -5,8 +5,8 @@ import { ChevronLeft, ChevronRight } from 'react-feather'
 
 import { useTranslation } from 'next-i18next'
 
-import LastedNews from 'components/screens/Home/News/LastedNews'
-import News from 'components/screens/Home/News/News'
+import LastedNews from 'src/components/screens/Home/News/LastedNews'
+import News from 'src/components/screens/Home/News/News'
 
 const HomeNews = () => {
     // Initial State

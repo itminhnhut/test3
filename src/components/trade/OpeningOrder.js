@@ -1,4 +1,4 @@
-import SvgCross from 'components/svg/Cross';
+import SvgCross from 'src/components/svg/Cross';
 import filter from 'lodash/filter';
 import findIndex from 'lodash/findIndex';
 import { useTranslation } from 'next-i18next';

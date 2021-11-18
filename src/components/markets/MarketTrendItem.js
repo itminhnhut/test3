@@ -1,10 +1,10 @@
-import AssetLogo from 'components/wallet/AssetLogo'
-import MCard from 'components/common/MCard'
+import AssetLogo from 'src/components/wallet/AssetLogo'
+import MCard from 'src/components/common/MCard'
 import colors from 'styles/colors'
 import Link from 'next/link'
 import Skeleton from 'react-loading-skeleton'
 
-import { initMarketWatchItem, sparkLineBuilder } from 'utils'
+import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
 import { memo, useState } from 'react'
 import { formatPrice, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'

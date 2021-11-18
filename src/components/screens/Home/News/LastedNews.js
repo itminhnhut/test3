@@ -1,4 +1,4 @@
-import SvgSpeaker from 'components/svg/SvgSpeaker'
+import SvgSpeaker from 'src/components/svg/SvgSpeaker'
 
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { useCallback, useEffect, useRef, useState } from 'react'

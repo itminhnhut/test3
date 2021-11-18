@@ -28,7 +28,7 @@ const PocketFooter = ({ active, parentState }) => {
                         className="mal-footer___pocket__links___group__item__expander"
                         onClick={() => parentState({ active: { about: !active.about } })}
                     >
-                        {language === LANGUAGE_TAG.VI ? 'Về Nami Corporation' : 'About Nami Corp.,'}
+                        {language === LANGUAGE_TAG.VI ? 'Về Nami Corporation' : 'About Nami Corp'}
                         {active?.about ? <ChevronUp size={16} /> : <ChevronDown size={16} /> }
                     </div>
                     <div className={`mal-footer___pocket__links___group__item__links

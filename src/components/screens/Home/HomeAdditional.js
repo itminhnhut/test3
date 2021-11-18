@@ -1,5 +1,5 @@
-import HomeCurrentActivity from 'components/screens/Home/HomeCurrentActivity'
-import Button from 'components/common/Button'
+import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity'
+import Button from 'src/components/common/Button'
 import Image from 'next/image'
 import Link from 'next/link'
 import colors from '../../../styles/colors'
@@ -86,25 +86,29 @@ const HomeAdditional = ({ parentState }) => {
                                 <div className="flex flex-row items-center">
                                     <Link href="https://www.facebook.com/namifutures">
                                         <a target="_blank">
-                                            <Image src="/images/icon/ic_facebook.png" width={width >= 768 ? '52' : '32'}
+                                            <img src={getS3Url("/images/icon/ic_facebook.png")}
+                                             width={width >= 768 ? '52' : '32'}
                                                    height={width >= 768 ? '52' : '32'}/>
                                         </a>
                                     </Link>
                                     <Link href="https://twitter.com/NamiTrade">
                                         <a target="_blank">
-                                            <Image src="/images/icon/ic_twitter.png" width={width >= 768 ? '52' : '32'}
+                                            <img src={getS3Url("/images/icon/ic_twitter.png")}
+                                             width={width >= 768 ? '52' : '32'}
                                                    height={width >= 768 ? '52' : '32'}/>
                                         </a>
                                     </Link>
                                     <Link href="https://t.me/namitradevn">
                                         <a target="_blank" title="Telegram VN">
-                                            <Image src="/images/icon/ic_telegram.png" width={width >= 768 ? '52' : '32'}
+                                            <img src={getS3Url("/images/icon/ic_telegram.png")}
+                                             width={width >= 768 ? '52' : '32'}
                                                    height={width >= 768 ? '52' : '32'}/>
                                         </a>
                                     </Link>
                                     <Link href="https://t.me/namitrade">
                                         <a target="_blank" title="Telegram Global">
-                                            <Image src="/images/icon/ic_telegram.png" width={width >= 768 ? '52' : '32'}
+                                            <img src={getS3Url("/images/icon/ic_telegram.png")}
+                                             width={width >= 768 ? '52' : '32'}
                                                    height={width >= 768 ? '52' : '32'}/>
                                         </a>
                                     </Link>
@@ -216,8 +220,7 @@ const HomeAdditional = ({ parentState }) => {
                         <div className="homepage-journey__group_content___left">
                             <div className="homepage-journey__group_content___left__item">
                                 <div className="homepage-journey__group_content___left__item___icon">
-                                    <Image src="/images/screen/homepage/maxium_performance.png"
-                                           width={width >= 1366 ? '52' : '44'} height={width >= 1366 ? '52' : '44'}/>
+                                    <img src={getS3Url("/images/screen/homepage/maxium_performance.png")} width={width >= 1366 ? '52' : '44'} height={width >= 1366 ? '52' : '44'}/>
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
                                     <div className="homepage-journey__group_content___left__item___content__title">
@@ -234,7 +237,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-journey__group_content___left__item" style={{marginBottom: 26}}>
                                 <div className="homepage-journey__group_content___left__item___icon">
-                                    <Image src="/images/screen/homepage/master_revenue.png"
+                                    <img src={getS3Url("/images/screen/homepage/master_revenue.png")}
                                            width={width >= 1366 ? '52' : '44'} height={width >= 1366 ? '52' : '44'}/>
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
@@ -252,7 +255,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-journey__group_content___left__item">
                                 <div className="homepage-journey__group_content___left__item___icon">
-                                    <Image src="/images/screen/homepage/token_saving_cost.png"
+                                    <img src={getS3Url("/images/screen/homepage/token_saving_cost.png")}
                                            width={width >= 1366 ? '52' : '44'} height={width >= 1366 ? '52' : '44'}/>
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
@@ -270,7 +273,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-journey__group_content___left__item">
                                 <div className="homepage-journey__group_content___left__item___icon">
-                                    <Image src="/images/screen/homepage/crypto_knowledge.png"
+                                    <img src={getS3Url("/images/screen/homepage/crypto_knowledge.png")}
                                            width={width >= 1366 ? '52' : '44'} height={width >= 1366 ? '52' : '44'}/>
                                 </div>
                                 <div className="homepage-journey__group_content___left__item___content">
@@ -388,7 +391,8 @@ const HomeAdditional = ({ parentState }) => {
 
                     <div className="homepage-whynami___reason__group">
                         <div className="homepage-whynami___reason__item">
-                            <Image src="/images/screen/homepage/registered_people.png" width="52" height="52"/>
+                            <img src={getS3Url("/images/screen/homepage/registered_people.png")}
+                             width="52" height="52"/>
                             <div className="homepage-whynami___reason__item___title">
                                 {t('home:why_nami.reason_1')}
                             </div>
@@ -398,7 +402,8 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
 
                         <div className="homepage-whynami___reason__item">
-                            <Image src="/images/screen/homepage/investment_diversity.png" width="52" height="52"/>
+                            <img src={getS3Url("/images/screen/homepage/investment_diversity.png")}
+                             width="52" height="52"/>
                             <div className="homepage-whynami___reason__item___title">
                                 {t('home:why_nami.reason_2')}
                             </div>
@@ -408,7 +413,8 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
 
                         <div className="homepage-whynami___reason__item">
-                            <Image src="/images/screen/homepage/fee_saving.png" width="52" height="52"/>
+                            <img src={getS3Url("/images/screen/homepage/fee_saving.png")}
+                             width="52" height="52"/>
                             <div className="homepage-whynami___reason__item___title">
                                 {t('home:why_nami.reason_3')}
                             </div>
@@ -418,7 +424,8 @@ const HomeAdditional = ({ parentState }) => {
                         </div>
 
                         <div className="homepage-whynami___reason__item">
-                            <Image src="/images/screen/homepage/effective_support.png" width="52" height="52"/>
+                            <img src={getS3Url("/images/screen/homepage/effective_support.png")}
+                             width="52" height="52"/>
                             <div className="homepage-whynami___reason__item___title">
                                 {t('home:why_nami.reason_4')}
                             </div>
@@ -455,7 +462,8 @@ const HomeAdditional = ({ parentState }) => {
                         <Link href="https://www.facebook.com/namifutures">
                             <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_facebook.png" width="44" height="44"/>
+                                    <img src={getS3Url("/images/icon/ic_facebook.png")}
+                                     width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
                                     Facebook
@@ -465,7 +473,8 @@ const HomeAdditional = ({ parentState }) => {
                         <Link href="https://www.facebook.com/groups/nami.exchange">
                             <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_facebook.png" width="44" height="44"/>
+                                    <img src={getS3Url("/images/icon/ic_facebook.png")}
+                                     width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
                                     Facebook Group
@@ -475,7 +484,7 @@ const HomeAdditional = ({ parentState }) => {
                         <Link href="https://t.me/namitrade">
                             <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_telegram.png" width="44" height="44"/>
+                                    <img src={getS3Url("/images/icon/ic_telegram.png")} width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
                                     Telegram Global
@@ -485,7 +494,8 @@ const HomeAdditional = ({ parentState }) => {
                         <Link href="https://t.me/namitradevn">
                             <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_telegram.png" width="44" height="44"/>
+                                    <img src={getS3Url("/images/icon/ic_telegram.png")}
+                                     width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
                                     Telegram
@@ -495,7 +505,8 @@ const HomeAdditional = ({ parentState }) => {
                         <Link href="https://twitter.com/NamiTrade">
                             <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_twitter.png" width="44" height="44"/>
+                                    <img src={getS3Url("/images/icon/ic_twitter.png")}
+                                     width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
                                     Twitter
@@ -505,7 +516,8 @@ const HomeAdditional = ({ parentState }) => {
                         <Link href="https://www.reddit.com/r/NAMIcoin">
                             <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_reddit.png" width="44" height="44"/>
+                                    <img src={getS3Url("/images/icon/ic_reddit.png")}
+                                     width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
                                     Reddit
@@ -515,7 +527,8 @@ const HomeAdditional = ({ parentState }) => {
                         <Link href="https://nami.io">
                             <a className="homepage-community___channel__group___item" target="_blank">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_globe.png" width="44" height="44"/>
+                                    <img src={getS3Url("/images/icon/ic_globe.png")}
+                                     width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
                                     Blog
@@ -525,7 +538,8 @@ const HomeAdditional = ({ parentState }) => {
                         <Link href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
                             <a className="homepage-community___channel__group___item">
                                 <div className="homepage-community___channel__group___item__icon">
-                                    <Image src="/images/icon/ic_coingecko.png" width="44" height="44"/>
+                                    <img src={getS3Url("/images/icon/ic_coingecko.png")}
+                                     width="44" height="44"/>
                                 </div>
                                 <div className="homepage-community___channel__group___item__label">
                                     CoinGecko

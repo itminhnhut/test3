@@ -1,4 +1,4 @@
-import TextLoader from 'components/loader/TextLoader';
+import TextLoader from 'src/components/loader/TextLoader';
 import { useState } from 'react';
 import { useAsync } from 'react-use';
 import { formatPercentage } from 'src/redux/actions/utils';

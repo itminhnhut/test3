@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Listbox, Transition } from '@headlessui/react';
 import axios from 'axios';
-import { IconLock } from 'components/common/Icons';
-import SvgOrderSide from 'components/svg/OrderSide';
+import { IconLock } from 'src/components/common/Icons';
+import SvgOrderSide from 'src/components/svg/OrderSide';
 import ceil from 'lodash/ceil';
 import defaults from 'lodash/defaults';
 import find from 'lodash/find';
@@ -389,12 +389,12 @@ const PlaceOrderForm = ({ symbol }) => {
             const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
             let _price = +price;
 
-            
+
             if (orderSide === ExchangeOrderEnum.Side.BUY) {
                 if (orderType === ExchangeOrderEnum.Type.MARKET) {
                     _price = +symbolTicker?.p ;
                 }
-                
+
                 const nextQuoteQty = floor(
                     ((available * percentage) / 100),
                     2,
@@ -483,7 +483,7 @@ const PlaceOrderForm = ({ symbol }) => {
     );
     useDebounce(
         () => {
-            
+
             if (focus !== 'quoteQty') return;
             if (!(baseAssetId && quoteAssetId)) return;
 
@@ -491,7 +491,7 @@ const PlaceOrderForm = ({ symbol }) => {
             let _price = +price;
             const _quantity = +quantity;
             const _quoteQty = +quoteQty;
-            
+
 
             if (orderType === ExchangeOrderEnum.Type.MARKET) {
                 _price = +symbolTicker?.p;
@@ -852,7 +852,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     {_renderUserBalance()}
                     {_renderPlaceOrderButton()}
                 </div>
-                
+
                 {/* {_renderAssetPortfolio()} */}
             </div>
         </>

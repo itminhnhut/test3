@@ -1,11 +1,11 @@
-import { getTradingViewTimezone } from 'actions/utils';
-import { IconLoading } from 'components/common/Icons';
+import { getTradingViewTimezone } from 'src/redux/actions/utils';
+import { IconLoading } from 'src/components/common/Icons';
 // import { widget } from 'public/library_maldives/trading_view/charting_library';
 import * as React from 'react';
 import { getS3Url } from 'redux/actions/utils';
-import NamiExchangeSvg from 'components/svg/NamiExchangeSvg';
-import ChevronDown from 'components/svg/ChevronDown';
-import Candles from 'components/svg/Candles';
+import NamiExchangeSvg from 'src/components/svg/NamiExchangeSvg';
+import ChevronDown from 'src/components/svg/ChevronDown';
+import Candles from 'src/components/svg/Candles';
 import { widget } from '../TradingView/charting_library/charting_library.min';
 import Datafeed from './api';
 import styles from './tradingview.module.scss';

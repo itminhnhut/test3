@@ -18,7 +18,7 @@ import {
     IconTooltip,
     IconValueDecrease,
     IconValueIncrease,
-} from 'components/common/Icons';
+} from 'src/components/common/Icons';
 import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useComponentVisible, useWindowSize } from 'src/utils/customHooks';
@@ -29,7 +29,7 @@ import Link from 'next/link';
 import { formatAbbreviateNumber, formatBalance, getAssetName, getChangePercentage, getSparkLine } from 'redux/actions/utils';
 import { Info } from 'react-feather';
 import Image from 'next/image';
-import AssetLogo from 'components/wallet/AssetLogo';
+import AssetLogo from 'src/components/wallet/AssetLogo';
 import TableLoader from '../loader/TableLoader';
 import TableNoData from '../common/table.old/TableNoData';
 
