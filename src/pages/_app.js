@@ -103,8 +103,9 @@ const App = ({ Component, pageProps }) => {
             // console.log('__ chekc new user', newUserId);
             if (!!newUserId && newUserId !== lastUserId) {
                 lastUserId = newUserId;
-                store.dispatch(getWallet());
                 store.dispatch(initUserSocket());
+                store.dispatch(getWallet());
+
             }
         }
     });

@@ -8,23 +8,73 @@ import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
-import Image from 'next/image'
+import useLanguage from 'hooks/useLanguage';
+import Image from 'next/image';
+import Toggle from 'components/common/input/Toggle';
+import { getS3Url } from 'redux/actions/utils';
+
 
 const SpotSetting = (props) => {
-    const {changeLayoutCb} = props
+    const {
+        spotState,
+        onChangeSpotState,
+        resetDefault,
+    } = props;
     const [currentTheme, onThemeSwitch] = useDarkMode();
+    const [currentLocale, onChangeLang] = useLanguage();
     const router = useRouter();
     const { t } = useTranslation();
-    const { route, query } = router;
-    const { layout, id } = query;
+
+    const SpotComponents = [
+        {
+            value: t('spot:setting.symbol_detail'),
+            key: 'isShowSymbolDetail',
+        },
+        {
+            value: t('spot:setting.chart'), key: 'isShowChart',
+        },
+        {
+            value: t('spot:setting.order_book'), key: 'isShowOrderBook',
+        },
+        {
+            value: t('spot:setting.trades'), key: 'isShowTrades',
+        },
+        {
+            value: t('spot:setting.symbol_list'), key: 'isShowSymbolList',
+        },
+        {
+            value: t('spot:setting.order_list'), key: 'isShowOrderList',
+        },
+        {
+            value: t('spot:setting.place_order_form'), key: 'isShowPlaceOrderForm',
+        },
+    ];
+    const {
+        route,
+        query,
+    } = router;
+    const {
+        layout,
+        id,
+    } = query;
     const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
 
     const onChangeLayout = (_layout) => {
-        const nextUrl = route.replace('[id]', id)
-        window.location = `${nextUrl}?layout=${_layout}`
+        const nextUrl = `/${currentLocale}${route.replace('[id]', id)}`;
+        window.location = `${nextUrl}?layout=${_layout}`;
     };
     const inActiveLabel =
         currentTheme === 'dark' ? colors.gray4 : colors.darkBlue;
+
+    const onChangeSpotComponent = (key, value) => {
+        const _newSpotState = spotState;
+        spotState[key] = value;
+        onChangeSpotState({
+            ...spotState,
+            ..._newSpotState,
+        });
+    };
+
     return (
         <Popover className="relative">
             {({ open }) => (
@@ -53,10 +103,12 @@ const SpotSetting = (props) => {
                         leaveTo="opacity-0 translate-y-1"
                     >
                         <Popover.Panel className="absolute right-0 z-10">
-                            <div className="w-80  rounded-lg shadow-md bg-bgPrimary dark:bg-darkBlue-2 divide-solid divide-divider dark:divide-divider-dark divide-y">
+                            <div
+                                className="w-80  rounded-lg shadow-md bg-bgPrimary dark:bg-darkBlue-2 divide-solid divide-divider dark:divide-divider-dark divide-y"
+                            >
                                 <div className="px-5 py-3 flex justify-between">
                                     <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold">
-                                        Theme
+                                        {t('spot:setting.theme')}
                                     </span>
                                     <span className="flex">
                                         <SvgMoon
@@ -76,7 +128,6 @@ const SpotSetting = (props) => {
                                         <SvgSun
                                             className="cursor-pointer"
                                             size={20}
-                                            color={colors.teal}
                                             onClick={
                                                 currentTheme === 'dark'
                                                     ? onThemeSwitch
@@ -92,43 +143,49 @@ const SpotSetting = (props) => {
                                 </div>
 
                                 <div className="px-5 py-3">
-                                    <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold mb-4">
-                                        Layout
+                                    <div
+                                        className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold mb-4"
+                                    >
+                                        {t('spot:setting.layout')}
                                     </div>
 
                                     <div className="flex justify-around">
                                         <div className="flex flex-col justify-center">
-                                            <Image
+                                            <img
                                                 className={'cursor-pointer ' + (layoutMode === SPOT_LAYOUT_MODE.SIMPLE ? 'border-2 border-teal' : '')}
                                                 onClick={() => onChangeLayout(SPOT_LAYOUT_MODE.SIMPLE)}
-                                                src={`/images/icon/mode-classic${
+                                                src={getS3Url(`/images/icon/mode-classic${
                                                     currentTheme === 'dark'
                                                         ? '-dark'
                                                         : ''
-                                                }.jpg`}
+                                                }.jpg`)}
                                                 alt="Spot Classic"
                                                 width={82}
                                                 height={55}
                                             />
-                                            <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium text-center">
-                                                Classic
+                                            <span
+                                                className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium text-center"
+                                            >
+                                                {t('spot:setting.classic')}
                                             </span>
                                         </div>
                                         <div className="flex flex-col justify-center">
-                                            <Image
+                                            <img
                                                 className={'cursor-pointer ' + (layoutMode === SPOT_LAYOUT_MODE.PRO ? 'border-2 border-teal' : '')}
                                                 onClick={() => onChangeLayout(SPOT_LAYOUT_MODE.PRO)}
-                                                src={`/images/icon/mode-advance${
+                                                src={getS3Url(`/images/icon/mode-advance${
                                                     currentTheme === 'dark'
                                                         ? '-dark'
                                                         : ''
-                                                }.jpg`}
+                                                }.jpg`)}
                                                 alt="Spot Advance"
                                                 width={82}
                                                 height={55}
                                             />
-                                            <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium text-center">
-                                                Pro
+                                            <span
+                                                className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium text-center"
+                                            >
+                                                {t('spot:setting.pro')}
                                             </span>
                                         </div>
                                         {/* <div className="text-center">
@@ -147,12 +204,34 @@ const SpotSetting = (props) => {
                                             </span>
                                         </div> */}
                                     </div>
+
                                 </div>
-                                {/* <div className="px-5 py-3 text-center">
-                                    <span className="text-sm text-teal font-medium">
-                                        Back to default layout
+
+                                <div className="px-5 py-3 text-center">
+                                    {SpotComponents.map((item, index) => {
+                                        const {
+                                            value,
+                                            key,
+                                        } = item;
+                                        return (
+                                            <div className="h-6 my-1 flex justify-between" key={key+index}>
+                                                <span
+                                                    className="font-medium text-sm text-txtPrimary dark:text-txtPrimary-dark"
+                                                >{value}
+                                                </span>
+                                                <Toggle
+                                                    checked={spotState?.[key]}
+                                                    onChange={(value) => onChangeSpotComponent(key, value)}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <div className="px-5 py-3 text-center">
+                                    <span className="text-sm text-teal font-medium cursor-pointer" onClick={()=> resetDefault()}>
+                                        {t('spot:setting.reset_default_layout')}
                                     </span>
-                                </div> */}
+                                </div>
                             </div>
                         </Popover.Panel>
                     </Transition>

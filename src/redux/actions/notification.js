@@ -19,7 +19,7 @@ export function getNotifications(prevId, cb) {
     return async (dispatch) => {
         try {
             const params = {};
-            if (prevId !== undefined) params.lastId = prevId;
+            if (prevId !== undefined) params.prevId = prevId;
             const { status, data } = await fetchAPI({
                 url: API_GET_NOTIFICATIONS,
                 options: {
@@ -27,8 +27,6 @@ export function getNotifications(prevId, cb) {
                 },
                 params,
             });
-
-            console.log('__ chekc noti ', data, status)
             if (status === ApiStatus.SUCCESS) {
                 if (!prevId) {
                     dispatch({

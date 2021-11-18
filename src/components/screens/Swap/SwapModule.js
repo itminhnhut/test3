@@ -766,7 +766,7 @@ const SwapModule = ({ width, pair }) => {
                     {/*END:SWAP BUTTON*/}
 
                     <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
-                        <Trans i18nKey="common:term">
+                        <Trans i18nKey="common:term_swap">
                             <a href={TERM_OF_SERVICE.SWAP} className="block cursor-pointer text-dominant hover:!underline"/>
                         </Trans>
                     </div>

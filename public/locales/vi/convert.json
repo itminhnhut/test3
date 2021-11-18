@@ -34,5 +34,9 @@
   "history": "Lịch sử quy đổi",
   "view_all": "Xem tất cả",
   "from_amount": "Số lượng token quy đổi",
-  "to_amount": "Số lượng token nhận về"
+  "to_amount": "Số lượng token nhận về",
+  "title_1": "Sở hữu ngay tài sản số",
+  "title_2": "chỉ với 1 chạm",
+  "description": "Giao dịch nhanh token bằng VNDC hoặc USDT<br/>trong 5 phút",
+  "current_price": "Giá hiện tại"
 }
