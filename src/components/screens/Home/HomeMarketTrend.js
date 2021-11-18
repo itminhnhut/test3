@@ -1,7 +1,7 @@
-import AssetLogo from 'components/wallet/AssetLogo'
+import AssetLogo from 'src/components/wallet/AssetLogo'
 import colors from 'styles/colors'
 import Axios from 'axios'
-import LastPrice from 'components/markets/LastPrice'
+import LastPrice from 'src/components/markets/LastPrice'
 
 import { useCallback, useEffect, useState } from 'react'
 import { API_GET_TRENDING } from 'redux/actions/apis'

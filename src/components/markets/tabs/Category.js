@@ -1,8 +1,8 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import SearchInput from 'components/markets/SearchInput';
+import SearchInput from 'src/components/markets/SearchInput';
 
-import { IconClose, IconLoading } from 'components/common/Icons';
+import { IconClose, IconLoading } from 'src/components/common/Icons';
 import { Dialog, Transition } from '@headlessui/react';
 import { useAsync } from 'react-use';
 import {
@@ -13,11 +13,11 @@ import {
     updateCategory,
 } from 'src/redux/actions/market';
 import { getLoginUrl, getS3Url } from 'src/redux/actions/utils';
-import Disclosure from 'components/markets/Disclosure';
+import Disclosure from 'src/components/markets/Disclosure';
 import { useSelector } from 'react-redux';
-import TableNoData from 'components/common/table.old/TableNoData';
-import TableLoader from 'components/loader/TableLoader';
-import AssetLogo from 'components/wallet/AssetLogo';
+import TableNoData from 'src/components/common/table.old/TableNoData';
+import TableLoader from 'src/components/loader/TableLoader';
+import AssetLogo from 'src/components/wallet/AssetLogo';
 import { debounce } from 'lodash';
 import ToggleAsset from '../ToggleAsset';
 

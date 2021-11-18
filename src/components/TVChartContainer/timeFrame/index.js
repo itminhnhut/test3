@@ -1,6 +1,6 @@
 import { Popover, Transition } from '@headlessui/react';
-import Activity from 'components/svg/Activity';
-import ChevronDown from 'components/svg/ChevronDown';
+import Activity from 'src/components/svg/Activity';
+import ChevronDown from 'src/components/svg/ChevronDown';
 import find from 'lodash/find';
 import * as React from 'react';
 import { Component, Fragment } from 'react';
@@ -375,9 +375,9 @@ export default class TimeFrame extends Component {
                                                             onClick={() => this.props.handleChangeChartType(value)}
                                                             key={index}
                                                             className={
-                                                                `h-8 px-2 flex content-start items-center cursor-pointer w-full font-medium text-xs text-center rounded-sm 
-                                                                text-txtSecondary dark:text-txtSecondary-dark 
-                                                                hover:text-teal 
+                                                                `h-8 px-2 flex content-start items-center cursor-pointer w-full font-medium text-xs text-center rounded-sm
+                                                                text-txtSecondary dark:text-txtSecondary-dark
+                                                                hover:text-teal
                                                                 dark:hover:text-teal
                                                                 ${isActive ? 'bg-opacity-10 dark:bg-opacity-10 bg-teal text-teal dark:bg-teal dark:text-teal' : ''}
                                                                 `

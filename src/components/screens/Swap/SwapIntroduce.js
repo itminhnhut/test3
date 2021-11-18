@@ -1,5 +1,5 @@
-import AssetLogo from 'components/wallet/AssetLogo'
-import Skeletor from 'components/common/Skeletor'
+import AssetLogo from 'src/components/wallet/AssetLogo'
+import Skeletor from 'src/components/common/Skeletor'
 import Link from 'next/link'
 import colors from 'styles/colors'
 

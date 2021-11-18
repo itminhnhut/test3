@@ -3,7 +3,7 @@
 import * as types from 'src/redux/actions/types';
 import { getMe } from 'src/redux/actions/user';
 import initUserSocket from 'src/redux/actions/userSocket';
-import Head from 'components/common/Head';
+import Head from 'src/components/common/Head';
 import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';

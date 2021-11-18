@@ -1,8 +1,8 @@
-import DefaultMobileView from 'components/common/DefaultMobileView';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import PlaceOrderForm from 'components/trade/PlaceOrderForm';
-import SimplePlaceOrderForm from 'components/trade/SimplePlaceOrderForm';
-import SymbolDetail from 'components/trade/SymbolDetail';
+import DefaultMobileView from 'src/components/common/DefaultMobileView';
+import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
+import PlaceOrderForm from 'src/components/trade/PlaceOrderForm';
+import SimplePlaceOrderForm from 'src/components/trade/SimplePlaceOrderForm';
+import SymbolDetail from 'src/components/trade/SymbolDetail';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';

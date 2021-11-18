@@ -1,5 +1,5 @@
-import AssetLogo from 'components/wallet/AssetLogo'
-import MCard from 'components/common/MCard'
+import AssetLogo from 'src/components/wallet/AssetLogo'
+import MCard from 'src/components/common/MCard'
 import colors from 'styles/colors'
 import Link from 'next/link'
 import Skeleton from 'react-loading-skeleton'

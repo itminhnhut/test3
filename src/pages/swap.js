@@ -1,8 +1,8 @@
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import SwapIntroduce from 'components/screens/Swap/SwapIntroduce'
-import SwapModule from 'components/screens/Swap/SwapModule'
+import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout'
+import SwapIntroduce from 'src/components/screens/Swap/SwapIntroduce'
+import SwapModule from 'src/components/screens/Swap/SwapModule'
 import useWindowSize from 'hooks/useWindowSize'
-import SwapHistory from 'components/screens/Swap/SwapHistory'
+import SwapHistory from 'src/components/screens/Swap/SwapHistory'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const Swap = () => {

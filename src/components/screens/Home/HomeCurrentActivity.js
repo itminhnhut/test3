@@ -4,7 +4,7 @@ import { useWindowSize } from 'utils/customHooks'
 import { useTranslation } from 'next-i18next'
 
 import "keen-slider/keen-slider.min.css"
-import { dep, wdl } from 'components/common/NavBar/constants'
+import { dep, wdl } from 'src/components/common/NavBar/constants'
 import { formatPrice, formatTime, formatWallet } from 'redux/actions/utils'
 import { log } from 'src/utils'
 

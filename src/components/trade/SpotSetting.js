@@ -1,7 +1,7 @@
 import { Popover, Transition } from '@headlessui/react';
-import SvgMoon from 'components/svg/Moon';
-import Setting from 'components/svg/Setting';
-import SvgSun from 'components/svg/Sun';
+import SvgMoon from 'src/components/svg/Moon';
+import Setting from 'src/components/svg/Setting';
+import SvgSun from 'src/components/svg/Sun';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
@@ -10,7 +10,7 @@ import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
 import useLanguage from 'hooks/useLanguage';
 import Image from 'next/image';
-import Toggle from 'components/common/input/Toggle';
+import Toggle from 'src/components/common/input/Toggle';
 import { getS3Url } from 'redux/actions/utils';
 
 

@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
-import TableNoData from 'components/common/table.old/TableNoData';
+import TableNoData from 'src/components/common/table.old/TableNoData';
 import DataTable from 'react-data-table-component';
-import AssetLogo from 'components/wallet/AssetLogo';
+import AssetLogo from 'src/components/wallet/AssetLogo';
 import { isMobile } from 'react-device-detect';
-import AssetName from 'components/wallet/AssetName';
+import AssetName from 'src/components/wallet/AssetName';
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatPrice, getExchange24hPercentageChange, getSparkLine, render24hChange } from 'src/redux/actions/utils';

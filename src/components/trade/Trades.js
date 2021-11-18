@@ -1,4 +1,4 @@
-import { IconLoading } from 'components/common/Icons';
+import { IconLoading } from 'src/components/common/Icons';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
