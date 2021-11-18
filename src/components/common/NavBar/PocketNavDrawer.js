@@ -153,8 +153,8 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                             </div>
                             <div>
                                 {language === LANGUAGE_TAG.EN ?
-                                    <img src="/images/icon/ic_us_flag.png" width="20" height="20" />
-                                    : <img src="/images/icon/ic_vn_flag.png" width="20" height="20" />}
+                                    <img src={getS3Url("/images/icon/ic_us_flag.png")} width="20" height="20" />
+                                    : <img src={getS3Url("/images/icon/ic_vn_flag.png")} width="20" height="20" />}
                             </div>
                         </a>
                         <a className="mal-pocket-navbar__drawer__navlink__group___item">
