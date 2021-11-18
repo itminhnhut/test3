@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { Eye, EyeOff } from 'react-feather'
 import { EXCHANGE_ACTION} from 'pages/wallet'
@@ -8,13 +8,15 @@ import MCard from 'components/common/MCard'
 import Image from 'next/image'
 import useWindowSize from 'hooks/useWindowSize'
 import AssetLogo from 'components/wallet/AssetLogo'
+import wallet from 'redux/reducers/wallet'
 
 const INITIAL_STATE = {
     hideAsset: false,
 
+    // ...
 }
 
-const OverviewWallet = () => {
+const OverviewWallet = ({ allWallet }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
@@ -32,17 +34,19 @@ const OverviewWallet = () => {
 
     // Render Handler
     const renderExchangeAsset = useCallback(() => {
+        if (!allWallet) return
         const items = []
         for (let i = 0; i < limitExchangeAsset; ++i) {
+            console.log('namidev-DEBUG: ____ ', allWallet[i])
             items.push(
                 <a href="/" className="mr-3">
-                    <AssetLogo assetCode={null} size={30}/>
+                    <AssetLogo assetId={null} size={30}/>
                 </a>
             )
         }
 
         return items
-    }, [limitExchangeAsset])
+    }, [limitExchangeAsset, allWallet])
 
     return (
         <div className="pb-32">
@@ -77,7 +81,7 @@ const OverviewWallet = () => {
                             </div>
                         </div>
                         <div className="mt-5 flex items-center">
-                            <div className="rounded-md bg-teal-lightTeal min-w-[55px] min-h-[55px] md:min-w-[85px] md:min-h-[85px] flex items-center justify-center">
+                            <div className="rounded-md bg-teal-lightTeal dark:bg-teal-5 min-w-[55px] min-h-[55px] md:min-w-[85px] md:min-h-[85px] flex items-center justify-center">
                                 <Image className="-ml-0.5" src="/images/icon/ic_wallet_2.png" height={width >= 768 ? '48' : '28'} width={width >= 768 ? '48' : '28'}/>
                             </div>
                             <div className="ml-3 md:ml-6">
@@ -231,12 +235,8 @@ const OverviewWallet = () => {
                     </div>
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
                         <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">
-                            <a href="/" className="mr-3">
-                                <AssetLogo assetCode={null} size={30}/>
-                            </a>
-                            <a href="/" className="mr-3">
-                                <AssetLogo assetCode={null} size={30}/>
-                            </a>
+                            Trade assets using funds provied by third party with a Futures Account.<br/>
+                            Transfer funds to your Futures Account to start trading.
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}

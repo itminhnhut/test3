@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
+import { sortBy } from 'lodash'
 import { WALLET_SCREENS } from 'pages/wallet'
 
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import OverviewWallet from 'components/screens/Wallet/Overview'
 import ExchangeWallet from 'components/screens/Wallet/Exchange'
@@ -12,12 +15,10 @@ import TransactionHistory from 'components/screens/Wallet/Transaction'
 import Tab from 'components/common/Tab'
 import colors from 'styles/colors'
 import styled from 'styled-components'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 
 const INITIAL_STATE = {
     screen: null,
     screenIndex: null,
-
     // ... Add new state
 }
 
@@ -26,20 +27,19 @@ const Wallet = () => {
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
 
+    // Rdx
+    const allWallet = useSelector(state => state.wallet?.SPOT)
+
     // Use Hooks
     const r = useRouter()
     const [currentTheme, ] = useDarkMode()
-
-    // Helper
 
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
             <Tab series={SCREEN_TAB_SERIES}
                  currentIndex={state.screenIndex}
-                 onChangeTab={(screenIndex) => {
-                     r.push(`/wallet/${SCREEN_TAB_SERIES.find(o => o?.key === screenIndex)?.code}`)
-                 }}
+                 onChangeTab={(screenIndex) => r.push(`/wallet/${SCREEN_TAB_SERIES.find(o => o?.key === screenIndex)?.code}`)}
                  tArr={['common']}
             />
         )
@@ -52,13 +52,17 @@ const Wallet = () => {
         }
     }, [r])
 
+    useEffect(() => {
+
+    }, [])
+
     return (
         <MaldivesLayout>
             <Background isDark={currentTheme === THEME_MODE.DARK}>
                 <div className="mal-container px-4">
                     {renderScreenTab()}
                     <div className="mt-7">
-                        {state.screen === WALLET_SCREENS.OVERVIEW && <OverviewWallet/>}
+                        {state.screen === WALLET_SCREENS.OVERVIEW && <OverviewWallet allWallet={allWallet}/>}
                         {state.screen === WALLET_SCREENS.EXCHANGE && <ExchangeWallet/>}
                         {state.screen === WALLET_SCREENS.FUTURES && <FuturesWallet/>}
                         {state.screen === WALLET_SCREENS.STAKING && <StakingWallet/>}
