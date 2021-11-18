@@ -1,21 +1,19 @@
+import Button from 'components/common/Button'
+import { MOBILE_NAV_DATA } from 'components/common/NavBar/constants'
+import SvgIcon from 'components/svg'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage'
-import Div100vh from 'react-div-100vh'
-import dynamic from 'next/dynamic'
-import SvgIcon from 'components/svg'
-import Button from 'components/common/Button'
-import colors from 'styles/colors'
-import Image from 'next/image'
-import Link from 'next/link'
-
-import { memo, useCallback, useEffect, useState } from 'react'
-import { MoreHorizontal, ChevronDown } from 'react-feather'
-import { MOBILE_NAV_DATA } from 'components/common/NavBar/constants'
 import { useTranslation } from 'next-i18next'
-import { useWindowSize } from 'utils/customHooks'
+import Link from 'next/link'
+import { memo, useCallback, useState } from 'react'
+import Div100vh from 'react-div-100vh'
+import { ChevronDown } from 'react-feather'
 import { useSelector } from 'react-redux'
-import { getLoginUrl, getS3Url } from 'redux/actions/utils'
 import { actionLogout } from 'redux/actions/user'
+import { getLoginUrl, getS3Url } from 'redux/actions/utils'
+import colors from 'styles/colors'
+import { useWindowSize } from 'utils/customHooks'
+
 
 const PocketNavDrawer = memo(({ isActive, onClose }) => {
     const [state, set] = useState({
@@ -155,8 +153,8 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                             </div>
                             <div>
                                 {language === LANGUAGE_TAG.EN ?
-                                    <Image src="/images/icon/ic_us_flag.png" width="20" height="20" />
-                                    : <Image src="/images/icon/ic_vn_flag.png" width="20" height="20" />}
+                                    <img src="/imgs/icon/ic_us_flag.png" width="20" height="20" />
+                                    : <img src="/imgs/icon/ic_vn_flag.png" width="20" height="20" />}
                             </div>
                         </a>
                         <a className="mal-pocket-navbar__drawer__navlink__group___item">
@@ -167,12 +165,12 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                         <div style={{padding: '16px 16px 0'}} className="flex flex-row items-center">
                             <Link href="https://apps.apple.com/app/id1480302334">
                                 <a className="block">
-                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/images/download_app_store.png')} alt="Nami Exchange"/>
+                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/imgs/download_app_store.png')} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                                 <a className="block ml-4">
-                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/images/download_play_store.png')} alt="Nami Exchange"/>
+                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/imgs/download_play_store.png')} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                         </div>
@@ -194,21 +192,21 @@ const getIcon = (code) => {
         case 'market':
             return <SvgIcon name="activity" size={20} style={{marginRight: 8}}/>
         case 'spot':
-            return <Image src="/images/icon/ic_exchange.png" width="32" height="32"/>
+            return <img src={getS3Url("/imgs/icon/ic_exchange.png")} width="32" height="32"/>
         case 'swap':
-            return <Image src="/images/icon/ic_swap.png" width="32" height="32"/>
+            return <img src={getS3Url("/imgs/icon/ic_swap.png")} width="32" height="32"/>
         case 'futures':
-            return <Image src="/images/icon/ic_futures.png" width="32" height="32"/>
+            return <img src={getS3Url("/imgs/icon/ic_futures.png")} width="32" height="32"/>
         case 'launchpad':
-            return <Image src="/images/icon/ic_rocket.png" width="32" height="32"/>
+            return <img src={getS3Url("/imgs/icon/ic_rocket.png")} width="32" height="32"/>
         case 'copytrade':
-            return <Image src="/images/icon/ic_copytrade.png" width="32" height="32"/>
+            return <img src={getS3Url("/imgs/icon/ic_copytrade.png")} width="32" height="32"/>
         case 'staking':
-            return <Image src="/images/icon/ic_staking.png" width="32" height="32"/>
+            return <img src={getS3Url("/imgs/icon/ic_staking.png")} width="32" height="32"/>
         case 'farming':
-            return <Image src="/images/icon/ic_farming.png" width="32" height="32"/>
+            return <img src={getS3Url("/imgs/icon/ic_farming.png")} width="32" height="32"/>
         case 'referral':
-            return <Image src="/images/icon/ic_referral.png" width="32" height="32"/>
+            return <img src={getS3Url("/imgs/icon/ic_referral.png")} width="32" height="32"/>
         case 'language':
             return <SvgIcon name="globe" size={18} style={{marginRight: 8, marginLeft: 2}}/>
         case 'moon':
