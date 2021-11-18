@@ -153,8 +153,8 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                             </div>
                             <div>
                                 {language === LANGUAGE_TAG.EN ?
-                                    <img src="/imgs/icon/ic_us_flag.png" width="20" height="20" />
-                                    : <img src="/imgs/icon/ic_vn_flag.png" width="20" height="20" />}
+                                    <img src="/images/icon/ic_us_flag.png" width="20" height="20" />
+                                    : <img src="/images/icon/ic_vn_flag.png" width="20" height="20" />}
                             </div>
                         </a>
                         <a className="mal-pocket-navbar__drawer__navlink__group___item">
@@ -165,12 +165,12 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                         <div style={{padding: '16px 16px 0'}} className="flex flex-row items-center">
                             <Link href="https://apps.apple.com/app/id1480302334">
                                 <a className="block">
-                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/imgs/download_app_store.png')} alt="Nami Exchange"/>
+                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/images/download_app_store.png')} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                                 <a className="block ml-4">
-                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/imgs/download_play_store.png')} alt="Nami Exchange"/>
+                                    <img style={{height: 37, width: 'auto'}} src={getS3Url('/images/download_play_store.png')} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                         </div>
@@ -192,21 +192,21 @@ const getIcon = (code) => {
         case 'market':
             return <SvgIcon name="activity" size={20} style={{marginRight: 8}}/>
         case 'spot':
-            return <img src={getS3Url("/imgs/icon/ic_exchange.png")} width="32" height="32"/>
+            return <img src={getS3Url("/images/icon/ic_exchange.png")} width="32" height="32"/>
         case 'swap':
-            return <img src={getS3Url("/imgs/icon/ic_swap.png")} width="32" height="32"/>
+            return <img src={getS3Url("/images/icon/ic_swap.png")} width="32" height="32"/>
         case 'futures':
-            return <img src={getS3Url("/imgs/icon/ic_futures.png")} width="32" height="32"/>
+            return <img src={getS3Url("/images/icon/ic_futures.png")} width="32" height="32"/>
         case 'launchpad':
-            return <img src={getS3Url("/imgs/icon/ic_rocket.png")} width="32" height="32"/>
+            return <img src={getS3Url("/images/icon/ic_rocket.png")} width="32" height="32"/>
         case 'copytrade':
-            return <img src={getS3Url("/imgs/icon/ic_copytrade.png")} width="32" height="32"/>
+            return <img src={getS3Url("/images/icon/ic_copytrade.png")} width="32" height="32"/>
         case 'staking':
-            return <img src={getS3Url("/imgs/icon/ic_staking.png")} width="32" height="32"/>
+            return <img src={getS3Url("/images/icon/ic_staking.png")} width="32" height="32"/>
         case 'farming':
-            return <img src={getS3Url("/imgs/icon/ic_farming.png")} width="32" height="32"/>
+            return <img src={getS3Url("/images/icon/ic_farming.png")} width="32" height="32"/>
         case 'referral':
-            return <img src={getS3Url("/imgs/icon/ic_referral.png")} width="32" height="32"/>
+            return <img src={getS3Url("/images/icon/ic_referral.png")} width="32" height="32"/>
         case 'language':
             return <SvgIcon name="globe" size={18} style={{marginRight: 8, marginLeft: 2}}/>
         case 'moon':
