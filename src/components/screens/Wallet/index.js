@@ -40,7 +40,6 @@ const Wallet = () => {
 
     // Rdx
     const allWallet = useSelector(state => state.wallet?.SPOT) || null
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig) || null
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null
 
     // Use Hooks

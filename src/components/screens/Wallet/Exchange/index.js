@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import { EXCHANGE_ACTION } from 'pages/wallet'
 import { useRouter } from 'next/router'
+import { PulseLoader } from 'react-spinners'
 
 import ExchangeDeposit from 'components/screens/Wallet/Exchange/ExchangeDeposit'
 import ExchangeWithdraw from 'components/screens/Wallet/Exchange/ExchangeWithdraw'
 import ExchangeTransfer from 'components/screens/Wallet/Exchange/ExchangeTransfer'
 import ExchangePortfolio from 'components/screens/Wallet/Exchange/ExchangePortfolio'
-import { PulseLoader } from 'react-spinners'
 import colors from 'styles/colors'
 
 const INITIAL_STATE = {
+    hideAsset: false,
     reInitializing: false,
     action: null, // action = null is wallet overview
 }

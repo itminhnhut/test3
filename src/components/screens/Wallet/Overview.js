@@ -82,15 +82,15 @@ const OverviewWallet = (props) => {
                 </div>
                 <div className="flex items-center w-full mt-3 sm:mt-0 sm:w-auto">
                     <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.DEPOSIT}`}
-                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs lg:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                         {t('common:deposit')}
                     </a>
                     <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs lg:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                         {t('common:withdraw')}
                     </a>
                     <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}`}
-                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs lg:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                         {t('common:transfer')}
                     </a>
                 </div>
@@ -111,11 +111,11 @@ const OverviewWallet = (props) => {
                                 <img className="-ml-0.5" src="/images/icon/ic_wallet_2.png" height={width >= 768 ? '48' : '28'} width={width >= 768 ? '48' : '28'} alt=""/>
                             </div>
                             <div className="ml-3 md:ml-6">
-                                <div className="font-bold text-[24px] md:text-[28px] lg:text-[36px] text-dominant flex flex-wrap">
+                                <div className="font-bold text-[24px] lg:text-[28px] xl:text-[36px] text-dominant flex flex-wrap">
                                     <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : '0,085334734'}</span>
                                     <span>BTC</span>
                                 </div>
-                                <div className="font-medium text-sm md:text-[18px] mt-1 md:mt-3 lg:mt-5">{state.hideAsset ? SECRET_STRING : '($59,983.45867)'}</div>
+                                <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">{state.hideAsset ? SECRET_STRING : '($59,983.45867)'}</div>
                             </div>
                         </div>
                     </div>
@@ -142,7 +142,7 @@ const OverviewWallet = (props) => {
                                     <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>
                                 </span>
                             </div>
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[18px] mt-0.5 whitespace-nowrap">
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
                                 <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>
                             </div>
                         </div>
@@ -158,15 +158,15 @@ const OverviewWallet = (props) => {
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <a  href={`/wallet/exchange?action=${EXCHANGE_ACTION.DEPOSIT}`}
-                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:deposit')}
                             </a>
                             <a  href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:withdraw')}
                             </a>
                             <a  href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}`}
-                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:transfer')}
                             </a>
                         </div>
@@ -186,19 +186,19 @@ const OverviewWallet = (props) => {
                                 {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
                                 {/*</span>*/}
                             </div>
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[18px] mt-0.5 whitespace-nowrap">
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
                                 <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>
                             </div>
                         </div>
                     </div>
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
-                        <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">
+                        <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">
                             Trade assets using funds provied by third party with a Futures Account.<br/>
                             Transfer funds to your Futures Account to start trading.
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}`}
-                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:transfer')}
                             </a>
                         </div>
@@ -218,7 +218,7 @@ const OverviewWallet = (props) => {
                                 {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
                                 {/*</span>*/}
                             </div>
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[18px] mt-0.5 whitespace-nowrap">
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
                                 <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>
                             </div>
                         </div>
@@ -229,7 +229,7 @@ const OverviewWallet = (props) => {
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:withdraw')}
                             </a>
                         </div>
@@ -249,7 +249,7 @@ const OverviewWallet = (props) => {
                                 {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
                                 {/*</span>*/}
                             </div>
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[18px] mt-0.5 whitespace-nowrap">
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
                                 <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>
                             </div>
                         </div>
@@ -260,7 +260,7 @@ const OverviewWallet = (props) => {
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs lg:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:withdraw')}
                             </a>
                         </div>
