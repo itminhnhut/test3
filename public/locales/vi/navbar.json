@@ -56,7 +56,11 @@
     "spot_wallet": "Ví Exchange",
     "futures_wallet": "Ví Futures",
     "staking_wallet": "Ví Staking",
-    "farming_wallet": "Ví Farming"
+    "farming_wallet": "Ví Farming",
+    "classic": "Đơn giản",
+    "classic_description": "Giao diện đơn giản và dễ sử dụng",
+    "advance": "Nâng cao",
+    "advance_description": "Toàn quyền truy cập, tuỳ biến vào tất cả các công cụ giao dịch"
   },
   "menu_grid": {
     "deposit": "Nạp",

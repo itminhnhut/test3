@@ -97,6 +97,39 @@ export const NAV_DATA = [
             },
         ]
     },
+    {
+        key: 8,
+        title: 'Trade',
+        localized: 'trade',
+        isNew: false,
+        url: '/',
+        child_lv1: [
+            {
+                key: 0,
+                title: 'Swap',
+                localized: 'swap',
+                isNew: false,
+                url: '/swap',
+                child_lv2: []
+            },
+            {
+                key: 7,
+                title: 'Classic',
+                localized: 'classic',
+                isNew: false,
+                url: '/trade',
+                child_lv2: []
+            },
+            {
+                key: 1,
+                title: 'Advance',
+                localized: 'advance',
+                isNew: false,
+                url: '/trade/BTC-USDT?layout=pro',
+                child_lv1: []
+            },
+        ]
+    },
     // {
     //     key: 2,
     //     title: 'Wallet',

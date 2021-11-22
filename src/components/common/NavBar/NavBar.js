@@ -196,9 +196,10 @@ const NavBar = ({
             }
 
             if (child_lv1 && child_lv1.length) {
-                const itemsLevel1 = [];
-                const itemsLevel1withIcon = [];
-                const useDropdownWithIcon = localized === 'product';
+                const itemsLevel1 = []
+                const itemsLevel1withIcon = []
+                const useDropdownWithIcon = localized === 'product' || localized === 'trade'
+                const useOneCol = localized === 'trade'
 
                 const shouldDot = child_lv1.findIndex(o => o.isNew);
 
@@ -214,16 +215,16 @@ const NavBar = ({
                 });
 
                 // DROPDOWN WITH ICON
-                // console.log('namidev-DEBUG: ___ ', state.pairsLength)
                 child_lv1.map(child => {
                     itemsLevel1withIcon.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
-                            <a className="mal-navbar__link__group___item___childen__lv1___item2">
+                            <a className={useOneCol ? 'mal-navbar__link__group___item___childen__lv1___item2 min-w-[350px]' : 'mal-navbar__link__group___item___childen__lv1___item2'}>
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
                                     <img
                                         src={getS3Url(getIcon(child.localized))}
                                         width={width >= 2560 ? '38' : '32'}
                                         height={width >= 2560 ? '38' : '32'}
+                                        alt=""
                                     />
                                 </div>
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
@@ -258,7 +259,8 @@ const NavBar = ({
                                 style={{ marginLeft: 4 }}
                             />
                             <div className={`mal-navbar__link__group___item___childen__lv1
-                                           ${useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon' : ''}`}
+                                           ${useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon' : ''}
+                                           ${useOneCol && useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0' : ''}`}
                             >
                                 {useDropdownWithIcon ? itemsLevel1withIcon : itemsLevel1}
                             </div>
@@ -589,6 +591,10 @@ const getIcon = (localized) => {
             return '/images/icon/ic_referral.png';
         case 'launchpad':
             return '/images/icon/ic_rocket.png';
+        case 'classic':
+            return '/images/icon/ic_trade_classic.png';
+        case 'advance':
+            return '/images/icon/ic_trade_advance.png';
         default:
             return '';
     }

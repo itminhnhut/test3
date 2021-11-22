@@ -56,7 +56,11 @@
     "spot_wallet": "Exchange Wallet",
     "futures_wallet": "Futures Wallet",
     "staking_wallet": "Staking Wallet",
-    "farming_wallet": "Farming Wallet"
+    "farming_wallet": "Farming Wallet",
+    "classic": "Classic",
+    "classic_description": "Simple and easy-to-use interface",
+    "advance": "Advance",
+    "advance_description": "Full access to all trading tools"
   },
   "menu_grid": {
     "deposit": "Deposit",
