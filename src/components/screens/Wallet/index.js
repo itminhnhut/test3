@@ -52,7 +52,7 @@ const Wallet = () => {
         const mapper = []
         if (Array.isArray(assetConfig) && assetConfig?.length) {
             const spot = assetConfig.filter(o => o.walletTypes?.SPOT)
-            spot && spot.forEach(item => allWallet?.[item.id] && mapper.push({...item, [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value}))
+            spot && spot.forEach(item => allWallet?.[item.id] && mapper.push({...item, [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value, wallet: allWallet?.[item?.id]}))
             // console.log('namidev-DEBUG: ___ ', orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']))
         }
         setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) })
@@ -128,7 +128,10 @@ const Wallet = () => {
                             loadingFarming={state.loadingFarming}
                             farmingConfig={state.farmingConfig}
                         />}
-                        {state.screen === WALLET_SCREENS.EXCHANGE && <ExchangeWallet/>}
+                        {state.screen === WALLET_SCREENS.EXCHANGE &&
+                        <ExchangeWallet
+                            allAssets={state.allAssets}
+                        />}
                         {state.screen === WALLET_SCREENS.FUTURES && <FuturesWallet/>}
                         {state.screen === WALLET_SCREENS.STAKING && <StakingWallet/>}
                         {state.screen === WALLET_SCREENS.FARMING && <FarmingWallet/>}

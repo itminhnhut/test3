@@ -1,26 +1,36 @@
-import { useEffect, useState } from 'react'
-import { EXCHANGE_ACTION } from 'pages/wallet'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { PulseLoader } from 'react-spinners'
+import { useTranslation } from 'next-i18next'
+import { getS3Url } from 'redux/actions/utils'
+import { Check, Eye, EyeOff, Search, X } from 'react-feather'
+import { EXCHANGE_ACTION } from 'pages/wallet'
+import { SECRET_STRING } from 'utils'
 
+import useWindowSize from 'hooks/useWindowSize'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import ExchangeDeposit from 'components/screens/Wallet/Exchange/ExchangeDeposit'
 import ExchangeWithdraw from 'components/screens/Wallet/Exchange/ExchangeWithdraw'
 import ExchangeTransfer from 'components/screens/Wallet/Exchange/ExchangeTransfer'
 import ExchangePortfolio from 'components/screens/Wallet/Exchange/ExchangePortfolio'
-import colors from 'styles/colors'
-import { useTranslation } from 'next-i18next'
-import { Eye, EyeOff } from 'react-feather'
-import { SECRET_STRING } from 'utils'
 import MCard from 'components/common/MCard'
-import useWindowSize from 'hooks/useWindowSize'
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
+import colors from 'styles/colors'
+import Empty from 'components/common/Empty'
+import Skeletor from 'components/common/Skeletor'
+import RePagination from 'components/common/ReTable/RePagination'
 
 const INITIAL_STATE = {
     hideAsset: false,
+    hideSmallAsset: false,
     reInitializing: false,
+    tableData: null,
+    search: '',
+    currentPage: 1,
     action: null, // action = null is wallet overview
 }
 
-const ExchangeWallet = () => {
+const ExchangeWallet = ({ allAssets }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
@@ -29,6 +39,60 @@ const ExchangeWallet = () => {
     const r = useRouter()
     const { t } = useTranslation()
     const { width } = useWindowSize()
+    const [currentTheme, ] = useDarkMode()
+
+    // Render Handler
+    const renderAssetTable = useCallback(() => {
+        let tableStatus
+
+        if (!allAssets || !allAssets.length) {
+            tableStatus = <Empty/>
+        }
+
+        return (
+            <ReTable
+                sort
+                defaultSort={{ key: 'total', direction: 'asc' }}
+                useRowHover
+                data={state.tableData || []}
+                columns={columns}
+                rowKey={item => item?.key}
+                loading={!allAssets?.length}
+                scroll={{ x: true }}
+                tableStatus={tableStatus}
+                tableStyle={{
+                    paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                    tableStyle: { minWidth: '888px !important' },
+                    headerStyle: {},
+                    rowStyle: {},
+                    shadowWithFixedCol: width < 1366,
+                    noDataStyle: {
+                        minHeight: '480px'
+                    }
+                }}
+                paginationProps={{
+                    hide: true,
+                    current: state.currentPage,
+                    pageSize: ASSET_ROW_LIMIT,
+                    onChange: (currentPage) => setState({ currentPage })
+                }}
+            />
+        )
+    }, [state.tableData, state.currentPage, width])
+
+    const renderPagination = useCallback(() => {
+
+        return (
+            <div className="mt-10 mb-20 flex items-center justify-center">
+                <RePagination total={state.tableData?.length}
+                              current={state.currentPage}
+                              pageSize={ASSET_ROW_LIMIT}
+                              onChange={(currentPage) => setState({ currentPage })}
+                              name="market_table___list"
+                />
+            </div>
+        )
+    }, [state.tableData, state.currentPage])
 
     useEffect(() => {
         if (r?.query?.action) {
@@ -45,8 +109,11 @@ const ExchangeWallet = () => {
     }, [state.action])
 
     useEffect(() => {
-        console.log('namidev-DEBUG: Watching State => ', state)
-    }, [state])
+        if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
+            const tableData = dataHandler(allAssets)
+            tableData && setState({ tableData })
+        }
+    }, [allAssets])
 
 
     return (
@@ -97,7 +164,15 @@ const ExchangeWallet = () => {
                                 <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 sm:mt-0 sm:ml-4">{state.hideAsset ? SECRET_STRING : '($59,983.45867)'}</div>
                             </div>
                         </div>
-
+                        <div style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' } : undefined}
+                             className="px-3 py-2 flex items-center rounded-lg lg:px-5 lg:py-4 lg:rounded-xl mt-4 max-w-[368px] lg:max-w-max">
+                            <div className="font-medium text-xs lg:text-sm pr-3 lg:pr-5 border-r border-divider dark:border-divider-dark">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">Available: </span> <span>1.0011223344 BTC</span>
+                            </div>
+                            <div className="font-medium text-xs lg:text-sm pl-3 lg:pl-5">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">In Order: </span> <span>1.0011223344 BTC</span>
+                            </div>
+                        </div>
                     </div>
                     <div className="hidden md:block">
                         <img src="/images/screen/wallet/wallet_overview_grp.png" width="140" height="140" alt=""/>
@@ -105,6 +180,51 @@ const ExchangeWallet = () => {
                 </div>
             </MCard>
 
+            <div className="mt-16 lg:flex lg:items-center lg:justify-between">
+                <div className="t-common">
+                    Exchange
+                </div>
+                <div className="mt-2 lg:flex">
+                    <div className="flex items-center justify-between lg:mr-5">
+                        <div className="flex items-center select-none cursor-pointer lg:mr-5"
+                             onClick={() => setState({ hideSmallAsset: !state.hideSmallAsset })}>
+                        <span className={state.hideSmallAsset ?
+                            'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-dominant bg-dominant'
+                            : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-gray-3 dark:border-darkBlue-4'}>
+                            {state.hideSmallAsset ? <Check size={10} color="#FFFFFF"/> : null}
+                        </span>
+                            <span className="ml-3 text-xs">
+                                Hide small balances
+                            </span>
+                        </div>
+                        <div className="flex items-center rounded-[4px] lg:px-4 py-3 lg:bg-teal-lightTeal lg:dark:bg-darkBlue-4 select-none cursor-pointer hover:opacity-80">
+                            <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="16" height="16"/>
+                            <a href="/" className="text-xs ml-3 text-dominant cursor-pointer">
+                                {width >= 640 ? 'Convert small balance to NAMI' : 'Convert to NAMI'}
+                            </a>
+                        </div>
+                    </div>
+                    <div
+                        className="py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 flex items-center rounded-md bg-gray-5 dark:bg-darkBlue-4">
+                        <Search size={width >= 768 ? 20 : 16}
+                                className="text-txtSecondary dark:text-txtSecondary-dark"/>
+                        <input className="text-sm w-full px-2.5"
+                               value={state.search}
+                               onChange={(e) => setState({ search: e?.target?.value })}
+                               placeholder="Search asset..."/>
+                        {state.search && <X size={width >= 768 ? 20 : 16} className="cursor-pointer"
+                                            onClick={() => setState({ search: '' })}/>}
+                    </div>
+                </div>
+            </div>
+
+            <MCard
+                style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' } : {}}
+                addClass="mt-5 pt-0 pb-0 px-0 overflow-hidden">
+                {renderAssetTable()}
+            </MCard>
+
+            {renderPagination()}
 
             {/*<a href="/wallet/exchange?action=deposit" className={state.action === EXCHANGE_ACTION.DEPOSIT.toLowerCase() ? 'cursor-pointer mb-4 text-dominant' : 'cursor-pointer mb-4 hover:text-dominant'}>*/}
             {/*    {EXCHANGE_ACTION.DEPOSIT}*/}
@@ -135,5 +255,59 @@ const ExchangeWallet = () => {
         </div>
     )
 }
+
+const ASSET_ROW_LIMIT = 8
+
+const columns = [
+    { key: 'asset', dataIndex: 'asset', title: 'Asset', fixed: 'left', align: 'left', width: 120 },
+    { key: 'total', dataIndex: 'total', title: 'Total', align: 'right', width: 100 },
+    { key: 'available', dataIndex: 'available', title: 'Available', align: 'right', width: 100 },
+    { key: 'in_order', dataIndex: 'in_order', title: 'In Order', align: 'right', width: 100 },
+    { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 168 },
+]
+
+const dataHandler = (data) => {
+    if (!data || !data?.length) {
+        const skeleton = []
+        for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
+            skeleton.push({ ...ROW_LOADING_SKELETON, key: `asset_loading__skeleton_${i}`})
+        }
+        return skeleton
+    }
+
+    const result = []
+
+    data.forEach(item => {
+        result.push({
+            key: `exchange_asset___${item?.assetName}`,
+            asset: <span>{item?.assetName}</span>,
+            total: <span>{item?.wallet?.value}</span>,
+            available: <span>{item?.wallet?.value - item?.wallet?.locked_value}</span>,
+            in_order: <span>{item?.wallet?.locked_value}</span>,
+            operation: <div className="flex">
+                <a>deposit</a>
+                <a>withdraw</a>
+                <a>transfer</a>
+            </div>,
+            [RETABLE_SORTBY]: {
+                asset: item?.assetName,
+                total: +item?.value,
+                available: +item?.wallet?.value - +item?.wallet?.locked_value,
+                in_order: item?.wallet?.locked_value
+            }
+        })
+    })
+
+    return result
+}
+
+const ROW_LOADING_SKELETON = {
+    asset: <Skeletor width={65}/>,
+    total: <Skeletor width={65}/>,
+    available: <Skeletor width={65}/>,
+    in_order: <Skeletor width={65}/>,
+    operation: <Skeletor width={125}/>
+}
+
 
 export default ExchangeWallet
