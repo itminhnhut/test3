@@ -127,7 +127,7 @@
   "receive": "Receive",
   "result_for": "result for",
   "read_more": "Read more",
-  "not_found": "Not found",
+  "not_found": "Result not found",
   "BUY": "Buy",
   "SELL": "Sell",
   "confirm": "Confirm",
@@ -139,5 +139,7 @@
   "term_swap": "By using Nami Swap, you’re agree to the</br><0>Terms and Conditions</0>",
   "overview": "Overview",
   "transfer": "Transfer",
-  "portfolio": "Portfolio"
+  "portfolio": "Portfolio",
+  "crypto": "Crypto",
+  "optional": "Optional"
 }

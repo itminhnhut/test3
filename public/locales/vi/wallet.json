@@ -85,5 +85,9 @@
   },
   "est_balance": "Tài sản ước lượng",
   "hide_asset": "Ẩn số dư",
-  "asset_balance": "Số dư tài sản"
+  "asset_balance": "Số dư tài sản",
+  "receive_address": "Địa chỉ ví nhận",
+  "withdraw_history": "Lịch sử rút",
+  "withdraw_fee": "Phí rút",
+  "min_withdraw": "Rút tối thiểu"
 }

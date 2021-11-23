@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { PulseLoader } from 'react-spinners'
 import { useTranslation } from 'next-i18next'
-import { getS3Url } from 'redux/actions/utils'
+import { formatWallet, getS3Url } from 'redux/actions/utils'
 import { Check, Eye, EyeOff, Search, X } from 'react-feather'
 import { EXCHANGE_ACTION } from 'pages/wallet'
 import { SECRET_STRING } from 'utils'
@@ -19,6 +19,8 @@ import colors from 'styles/colors'
 import Empty from 'components/common/Empty'
 import Skeletor from 'components/common/Skeletor'
 import RePagination from 'components/common/ReTable/RePagination'
+import Link from 'next/link'
+import AssetLogo from 'components/wallet/AssetLogo'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -45,19 +47,19 @@ const ExchangeWallet = ({ allAssets }) => {
     const renderAssetTable = useCallback(() => {
         let tableStatus
 
-        if (!allAssets || !allAssets.length) {
+        if (!state.tableData || !state.tableData?.length) {
             tableStatus = <Empty/>
         }
 
         return (
             <ReTable
                 sort
-                defaultSort={{ key: 'total', direction: 'asc' }}
+                defaultSort={{ key: 'total', direction: 'desc' }}
                 useRowHover
                 data={state.tableData || []}
                 columns={columns}
                 rowKey={item => item?.key}
-                loading={!allAssets?.length}
+                loading={!state.tableData?.length}
                 scroll={{ x: true }}
                 tableStatus={tableStatus}
                 tableStyle={{
@@ -110,10 +112,17 @@ const ExchangeWallet = ({ allAssets }) => {
 
     useEffect(() => {
         if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
-            const tableData = dataHandler(allAssets)
+            const origin = dataHandler(allAssets, t)
+            let tableData = origin
+            if (state.hideSmallAsset) {
+                tableData = origin.filter(item => item?.sortByValue?.total > 1)
+            }
+            if (state.search) {
+                tableData = tableData.filter(item => item?.sortByValue?.asset.includes(state.search?.toUpperCase()))
+            }
             tableData && setState({ tableData })
         }
-    }, [allAssets])
+    }, [allAssets, state.hideSmallAsset, state.search])
 
 
     return (
@@ -123,23 +132,29 @@ const ExchangeWallet = ({ allAssets }) => {
                     {t('common:overview')}
                 </div>
                 <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto">
-                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`}
-                       className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[120px] md:w-[120px] lg:w-[150px]  mr-3.5 sm:mr-0 sm:ml-2 border border-dominant bg-dominant rounded-md font-medium text-xs xl:text-sm text-white hover:opacity-80 cursor-pointer whitespace-nowrap">
-                        {t('common:portfolio')}
-                    </a>
-                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.DEPOSIT}`}
-                       className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
-                        {t('common:deposit')}
-                    </a>
+
+                    <Link href="/wallet/exchange/portfolio">
+                        <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[120px] md:w-[120px] lg:w-[150px]  mr-3.5 sm:mr-0 sm:ml-2 border border-dominant bg-dominant rounded-md font-medium text-xs xl:text-sm text-white hover:opacity-80 cursor-pointer whitespace-nowrap">
+                            {t('common:portfolio')}
+                        </a>
+                    </Link>
+                    <Link href="/wallet/exchange/deposit?type=crypto">
+                        <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                            {t('common:deposit')}
+                        </a>
+                    </Link>
+
                     <div className="w-full h-[8px] sm:hidden"/>
-                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                       className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px]  mr-3.5 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
-                        {t('common:withdraw')}
-                    </a>
-                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}`}
-                       className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
-                        {t('common:transfer')}
-                    </a>
+                    <Link href="/wallet/exchange/withdraw?type=crypto">
+                        <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px]  mr-3.5 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                            {t('common:withdraw')}
+                        </a>
+                    </Link>
+                    <Link href="/wallet/exchange/transfer">
+                        <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                            {t('common:transfer')}
+                        </a>
+                    </Link>
                 </div>
             </div>
             <MCard addClass="mt-5 !p-6 xl:!p-10">
@@ -165,7 +180,7 @@ const ExchangeWallet = ({ allAssets }) => {
                             </div>
                         </div>
                         <div style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' } : undefined}
-                             className="px-3 py-2 flex items-center rounded-lg lg:px-5 lg:py-4 lg:rounded-xl mt-4 max-w-[368px] lg:max-w-max">
+                             className="px-3 py-2 flex items-center rounded-lg dark:bg-darkBlue-4 lg:px-5 lg:py-4 lg:rounded-xl mt-4 max-w-[368px] lg:max-w-max">
                             <div className="font-medium text-xs lg:text-sm pr-3 lg:pr-5 border-r border-divider dark:border-divider-dark">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">Available: </span> <span>1.0011223344 BTC</span>
                             </div>
@@ -197,7 +212,7 @@ const ExchangeWallet = ({ allAssets }) => {
                                 Hide small balances
                             </span>
                         </div>
-                        <div className="flex items-center rounded-[4px] lg:px-4 py-3 lg:bg-teal-lightTeal lg:dark:bg-darkBlue-4 select-none cursor-pointer hover:opacity-80">
+                        <div className="flex items-center rounded-[4px] lg:px-4 py-3 lg:bg-teal-lightTeal lg:dark:bg-teal-opacity select-none cursor-pointer hover:opacity-80">
                             <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="16" height="16"/>
                             <a href="/" className="text-xs ml-3 text-dominant cursor-pointer">
                                 {width >= 640 ? 'Convert small balance to NAMI' : 'Convert to NAMI'}
@@ -238,20 +253,6 @@ const ExchangeWallet = ({ allAssets }) => {
             {/*<a href="/wallet/exchange?action=portfolio" className={state.action === EXCHANGE_ACTION.PORTFOLIO.toLowerCase() ? 'cursor-pointer mb-4 text-dominant' : 'cursor-pointer mb-4 hover:text-dominant'}>*/}
             {/*    {EXCHANGE_ACTION.PORTFOLIO}*/}
             {/*</a>*/}
-
-            <div className="mt-12">
-                {state.reInitializing && state.action ?
-                    <div className="w-full h-full flex items-center justify-center">
-                        <PulseLoader color={colors.teal}/>
-                    </div>
-                    : <>
-                        {state.action === EXCHANGE_ACTION.DEPOSIT.toLowerCase() && <ExchangeDeposit/>}
-                        {state.action === EXCHANGE_ACTION.WITHDRAW.toLowerCase() && <ExchangeWithdraw/>}
-                        {state.action === EXCHANGE_ACTION.TRANSFER.toLowerCase() && <ExchangeTransfer/>}
-                        {state.action === EXCHANGE_ACTION.PORTFOLIO.toLowerCase() && <ExchangePortfolio/>}
-                      </>
-                }
-            </div>
         </div>
     )
 }
@@ -259,14 +260,14 @@ const ExchangeWallet = ({ allAssets }) => {
 const ASSET_ROW_LIMIT = 8
 
 const columns = [
-    { key: 'asset', dataIndex: 'asset', title: 'Asset', fixed: 'left', align: 'left', width: 120 },
-    { key: 'total', dataIndex: 'total', title: 'Total', align: 'right', width: 100 },
-    { key: 'available', dataIndex: 'available', title: 'Available', align: 'right', width: 100 },
-    { key: 'in_order', dataIndex: 'in_order', title: 'In Order', align: 'right', width: 100 },
-    { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 168 },
+    { key: 'asset', dataIndex: 'asset', title: 'Asset', fixed: 'left', align: 'left', width: 80 },
+    { key: 'total', dataIndex: 'total', title: 'Total', align: 'right', width: 95 },
+    { key: 'available', dataIndex: 'available', title: 'Available', align: 'right', width: 95 },
+    { key: 'in_order', dataIndex: 'in_order', title: 'In Order', align: 'right', width: 95 },
+    { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 220 },
 ]
 
-const dataHandler = (data) => {
+const dataHandler = (data, translator) => {
     if (!data || !data?.length) {
         const skeleton = []
         for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
@@ -280,18 +281,19 @@ const dataHandler = (data) => {
     data.forEach(item => {
         result.push({
             key: `exchange_asset___${item?.assetName}`,
-            asset: <span>{item?.assetName}</span>,
-            total: <span>{item?.wallet?.value}</span>,
-            available: <span>{item?.wallet?.value - item?.wallet?.locked_value}</span>,
-            in_order: <span>{item?.wallet?.locked_value}</span>,
-            operation: <div className="flex">
-                <a>deposit</a>
-                <a>withdraw</a>
-                <a>transfer</a>
+            asset: <div className="flex items-center">
+                <AssetLogo assetCode={item?.assetName} size={32}/>
+                <div className="ml-2">
+                    <span>{item?.assetName}</span>
+                </div>
             </div>,
+            total: <span>{formatWallet(item?.wallet?.value)}</span>,
+            available: <span>{formatWallet(item?.wallet?.value - item?.wallet?.locked_value)}</span>,
+            in_order: <span>{item?.wallet?.locked_value ? formatWallet(item?.wallet?.locked_value) : '0.0000'}</span>,
+            operation: renderOperationLink(item?.assetName, translator),
             [RETABLE_SORTBY]: {
                 asset: item?.assetName,
-                total: +item?.value,
+                total: +item?.wallet?.value,
                 available: +item?.wallet?.value - +item?.wallet?.locked_value,
                 in_order: item?.wallet?.locked_value
             }
@@ -300,6 +302,29 @@ const dataHandler = (data) => {
 
     return result
 }
+
+const renderOperationLink = (assetName, translator) => {
+    return (
+        <div className="flex pl-12">
+            <a className="py-1.5 mr-3 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+               href={`/wallet/exchange?action=${EXCHANGE_ACTION.DEPOSIT}&asset=${assetName}`}>
+                {translator('common:deposit')}
+            </a>
+            <a className="py-1.5 mr-3 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+               href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}&asset=${assetName}`}>
+                {translator('common:withdraw')}
+            </a>
+            {ALLOWED_FUTURES_TRANSFER.includes(assetName) &&
+            <a className="py-1.5 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+               href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}&asset=${assetName}`}>
+                {translator('common:transfer')}
+            </a>}
+        </div>
+    )
+}
+
+const ALLOWED_FUTURES_TRANSFER = ['VNDC', 'USDT', 'NAMI', 'NAC']
+
 
 const ROW_LOADING_SKELETON = {
     asset: <Skeletor width={65}/>,

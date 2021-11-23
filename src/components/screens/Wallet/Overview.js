@@ -8,6 +8,7 @@ import MCard from 'components/common/MCard'
 import useWindowSize from 'hooks/useWindowSize'
 import AssetLogo from 'components/wallet/AssetLogo'
 import wallet from 'redux/reducers/wallet'
+import Link from 'next/link'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -81,18 +82,21 @@ const OverviewWallet = (props) => {
                     {t('common:overview')}
                 </div>
                 <div className="flex items-center w-full mt-3 sm:mt-0 sm:w-auto">
-                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.DEPOSIT}`}
-                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
-                        {t('common:deposit')}
-                    </a>
-                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
-                        {t('common:withdraw')}
-                    </a>
-                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}`}
-                       className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
-                        {t('common:transfer')}
-                    </a>
+                    <Link href="/wallet/exchange/deposit?type=crypto" prefetch={false}>
+                        <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                            {t('common:deposit')}
+                        </a>
+                    </Link>
+                    <Link href="/wallet/exchange/withdraw?type=crypto" prefetch={false}>
+                        <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                            {t('common:withdraw')}
+                        </a>
+                    </Link>
+                    <Link href="/wallet/exchange/transfer" prefetch={false}>
+                        <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                            {t('common:transfer')}
+                        </a>
+                    </Link>
                 </div>
             </div>
 

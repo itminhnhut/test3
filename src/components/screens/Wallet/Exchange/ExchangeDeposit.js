@@ -1,11 +1,12 @@
-
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 
 const ExchangeDeposit = () => {
-
     return (
-        <div>
-            ExchangeDeposit
-        </div>
+        <MaldivesLayout>
+            <div>
+                ExchangeDeposit
+            </div>
+        </MaldivesLayout>
     )
 }
 

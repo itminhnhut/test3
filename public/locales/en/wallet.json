@@ -8,7 +8,7 @@
   "pnl_analytic": "PNL",
   "pnl_24h": "PNL 24h",
   "total_balance": "Total Balance",
-  "search_asset": "Search token...",
+  "search_asset": "Search asset...",
   "wallet_balance": "Total",
   "hide_small_balance": "Hide small balance",
   "calculating": "calculating",
@@ -85,5 +85,9 @@
   },
   "est_balance": "Estimated Balance",
   "hide_asset": "Hide Asset",
-  "asset_balance": "Asset Balance"
+  "asset_balance": "Asset Balance",
+  "receive_address": "Withdraw Address",
+  "withdraw_history": "Withdraw History",
+  "withdraw_fee": "Withdraw Fee",
+  "min_withdraw": "Minimum Withdraw"
 }

@@ -31,6 +31,9 @@ export const API_GET_TRENDING = API_V3_PREFIX + 'spot/trend'
 
 export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list';
 
+// Wallet
+export const API_GET_WALLET_CONFIG = API_PREFIX + 'wallet/token_config'
+
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'
 

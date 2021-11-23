@@ -432,6 +432,7 @@ export const PublicSocketEvent = {
     SPOT_TICKER_UPDATE: 'spot:ticker:update',
     IEO_PERCENTAGE_UPDATE: 'ieo:project_update',
     IEO_TICKET_STATUS_UPDATE: 'ieo:buy_response',
+    CALCULATE_WITHDRAW_FEE: 'calculate_withdrawal_fee'
 };
 
 export const ExchangeOrderEnum = {

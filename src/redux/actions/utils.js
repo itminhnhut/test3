@@ -396,3 +396,7 @@ export function formatAbbreviateNumber(num, fixed) {
     // }
     return e;
 }
+
+export function withdrawValidator(asset, amount, address, memo = undefined, network) {
+
+}

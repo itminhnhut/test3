@@ -179,6 +179,7 @@ module.exports = {
                 600: '#00C8BC',
                 700: '#00C8BC',
                 lightTeal: '#E2F6F5',
+                opacity: 'rgba(0, 200, 188, 0.5)'
             },
             green: { DEFAULT: '#22B02E' },
             yellow: { DEFAULT: '#FFD965' },
