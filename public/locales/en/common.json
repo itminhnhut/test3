@@ -141,5 +141,6 @@
   "transfer": "Transfer",
   "portfolio": "Portfolio",
   "crypto": "Crypto",
-  "optional": "Optional"
+  "optional": "Optional",
+  "clear": "Clear"
 }

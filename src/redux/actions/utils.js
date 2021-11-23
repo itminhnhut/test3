@@ -9,6 +9,7 @@ import defaults from 'lodash/defaults';
 import find from 'lodash/find';
 import { useStore as store } from 'src/redux/store';
 import Big from 'big.js';
+import { TokenConfigV1 as TokenConfig } from './const'
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
@@ -397,6 +398,54 @@ export function formatAbbreviateNumber(num, fixed) {
     return e;
 }
 
-export function withdrawValidator(asset, amount, address, memo = undefined, network) {
+export function hashValidator(hash, type) {
+    let regex
+    switch (type) {
+        case TokenConfig.Type.BEP2:
+            regex = new RegExp(TokenConfig.HashRegex.BEP2)
+            break
+        case TokenConfig.Type.BEP20:
+            regex = new RegExp(TokenConfig.HashRegex.BEP20)
+            break
+        case TokenConfig.Type.ERC20:
+            regex = new RegExp(TokenConfig.HashRegex.ERC20)
+            break
+        case TokenConfig.Type.TRC20:
+            regex = new RegExp(TokenConfig.HashRegex.TRC20)
+            break
+        case TokenConfig.Type.TRON_NATIVE:
+            regex = new RegExp(TokenConfig.HashRegex.TRC20)
+            break
+        case TokenConfig.Type.BITCOIN:
+            regex = new RegExp(TokenConfig.HashRegex.BITCOIN)
+            break
+        case TokenConfig.Type.BITCOIN_FUTURE:
+            return null
+        case TokenConfig.Type.TomoChain:
+            regex = new RegExp(TokenConfig.HashRegex.TomoChain)
+            break
+        case TokenConfig.Type.THETA_TOKEN:
+            regex = new RegExp(TokenConfig.HashRegex.THETA_TOKEN)
+            break
+        case TokenConfig.Type.VITE_CHAIN_TOKEN:
+            regex = new RegExp(TokenConfig.HashRegex.VITE_CHAIN_TOKEN)
+            break
+        case 'BEP2MEMO':
+            regex = new RegExp(TokenConfig.HashRegex.BEP2MEMO)
+            break
+        case 'VITEMEMO':
+            regex = new RegExp(TokenConfig.HashRegex.BEP2MEMO)
+            break
+        default:
+            regex = 'NOT_FOUND'
+            break
+    }
+    if (regex !== 'NOT_FOUND') return regex.test(hash)
+    return regex
+}
 
+export const shortHashAddress = (address, first, last) => {
+    return `${address.substring(0, first)}...${address.substring(
+        address.length - last
+    )}`
 }

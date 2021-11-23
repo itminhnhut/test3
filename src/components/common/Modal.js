@@ -26,14 +26,14 @@ const Modal = ({
         if (type === 'confirmation') {
             return (
                 <>
-                    <Button title={positiveLabel || 'Xác nhận'} type="primary"
-                            componentType="button"
-                            style={{ width: '48%' }}
-                            onClick={() => onConfirmCb && onConfirmCb()}/>
                     <Button title={negativeLabel || 'Đóng'} type="secondary"
                             componentType="button"
                             style={{ width: '48%' }}
                             onClick={() => onCloseCb && onCloseCb()}/>
+                    <Button title={positiveLabel || 'Xác nhận'} type="primary"
+                            componentType="button"
+                            style={{ width: '48%' }}
+                            onClick={() => onConfirmCb && onConfirmCb()}/>
                 </>
             )
         }

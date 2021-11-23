@@ -81,7 +81,12 @@
   "crypto_list": "Cryptocurrencies list",
   "special_tip": "Special tips",
   "errors": {
-      "selected_bank": "No bank selected"
+    "selected_bank": "No bank selected",
+    "invalid_withdraw_address": "Invalid withdrawal wallet address",
+    "invalid_memo": "Invalid MEMO",
+    "invalid_min_amount": "Minimum withdrawal amount is {{ value }}",
+    "invalid_max_amount": "Maximum withdrawal amount is {{ value }}",
+    "invalid_insufficient_balance": "Insufficient balance"
   },
   "est_balance": "Estimated Balance",
   "hide_asset": "Hide Asset",
@@ -89,5 +94,8 @@
   "receive_address": "Withdraw Address",
   "withdraw_history": "Withdraw History",
   "withdraw_fee": "Withdraw Fee",
-  "min_withdraw": "Minimum Withdraw"
+  "min_withdraw": "Minimum Withdraw",
+  "will_receive": "Actually Receive",
+  "withdraw_confirmation": "Withdraw Confirmation",
+  "network": "Network"
 }

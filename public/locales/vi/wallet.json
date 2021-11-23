@@ -81,7 +81,12 @@
   "crypto_list": "Danh sách crypto",
   "special_tip": "Gợi ý",
   "errors": {
-      "selected_bank": "Không có ngân hàng được chọn"
+    "selected_bank": "Không có ngân hàng được chọn",
+    "invalid_withdraw_address": "Địa chỉ ví rút không hợp lệ",
+    "invalid_memo": "MEMO không hợp lệ",
+    "invalid_min_amount": "Minimum withdrawal amount is {{ value }}",
+    "invalid_max_amount": "Maximum withdrawal amount is {{ value }}",
+    "invalid_insufficient_balance": "Insufficient balance"
   },
   "est_balance": "Tài sản ước lượng",
   "hide_asset": "Ẩn số dư",
@@ -89,5 +94,8 @@
   "receive_address": "Địa chỉ ví nhận",
   "withdraw_history": "Lịch sử rút",
   "withdraw_fee": "Phí rút",
-  "min_withdraw": "Rút tối thiểu"
+  "min_withdraw": "Rút tối thiểu",
+  "will_receive": "Thực nhận",
+  "withdraw_confirmation": "Xác nhận rút",
+  "network": "Mạng lưới"
 }

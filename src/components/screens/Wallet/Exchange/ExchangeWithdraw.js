@@ -3,12 +3,13 @@ import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { useDebounce } from 'react-use'
 import { useRouter } from 'next/router'
-import { ApiStatus, PublicSocketEvent } from 'redux/actions/const'
+import { ApiStatus, PublicSocketEvent, TokenConfigV1 as TokenConfig } from 'redux/actions/const'
 import { API_GET_WALLET_CONFIG } from 'redux/actions/apis'
 import { WALLET_SCREENS } from 'pages/wallet'
 import { Check, Search, X } from 'react-feather'
-import { find, get } from 'lodash'
-import { formatWallet } from 'redux/actions/utils'
+import { find, get, isNumber } from 'lodash'
+import { formatWallet, getAssetName, hashValidator, shortHashAddress } from 'redux/actions/utils'
+import { log } from 'utils'
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useOutsideClick from 'hooks/useOutsideClick'
@@ -24,7 +25,7 @@ import Axios from 'axios'
 import styled from 'styled-components'
 import colors from 'styles/colors'
 import Emitter from 'redux/actions/emitter'
-import { log } from 'utils'
+import Modal from 'components/common/Modal'
 
 const INITIAL_STATE = {
     type: 1, // 0. fiat, 1. crypto
@@ -43,7 +44,8 @@ const INITIAL_STATE = {
     address: '',
     amount: '',
     memo: '',
-
+    validator: null,
+    openWithdrawConfirm: false,
     // ... Add new state
 }
 
@@ -52,6 +54,8 @@ const TYPE = {
     crypto: 1
 }
 
+const DEFAULT_ASSET = 'VNDC'
+
 const ExchangeWithdraw = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
@@ -59,11 +63,13 @@ const ExchangeWithdraw = () => {
 
     const cryptoListRef = useRef()
     const networkListRef = useRef()
+    const cryptoListSearchRef = useRef()
+    const amountInputRef = useRef()
+    const addressInputRef = useRef()
 
     // Rdx
     const allAssets = useSelector(state => state.wallet.SPOT) || null
     const userSocket = useSelector(state => state.socket.userSocket) || null
-    const assetConfig = useSelector(state => state.utils.assetConfig) || null
 
     // Use Hooks
     const [currentTheme, ] = useDarkMode()
@@ -85,7 +91,8 @@ const ExchangeWithdraw = () => {
         try {
             const { data } = await Axios.get(API_GET_WALLET_CONFIG)
             if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                setState({ configs: Object.values(data.data) })
+                const configs = Object.values(data.data).filter(e => e.allowWithdraw.includes(true))
+                setState({ configs })
             }
         } catch (e) {
             console.log(`Can't get withdraw config `, e)
@@ -102,7 +109,7 @@ const ExchangeWithdraw = () => {
             log.i('fetching withdraw fee...')
             userSocket && await userSocket.emit('calculate_withdrawal_fee',
                 assetId, amount, network,
-                withdrawFee => setState({ withdrawFee }))
+                withdrawFee => setState({ withdrawFee: withdrawFee?.[0] }))
         } catch (e) {
             console.log(`Can't estimate withdraw fee `, e)
         } finally {
@@ -122,7 +129,34 @@ const ExchangeWithdraw = () => {
     }
 
     const onChangeAsset = () => {
-        setState({ address: '', search: '', openList: {}, selectedNetwork: null, withdrawFee: null })
+        setState({
+            address: '',
+            memo: '',
+            search: '',
+            openList: {},
+            selectedNetwork: null,
+            withdrawFee: null,
+            feeCurrency: null
+        })
+    }
+
+    const onClearInput = (type) => {
+        switch (type) {
+            case 'crypto_search':
+                setState({ search: '' })
+                cryptoListSearchRef?.current?.focus()
+                break
+            case 'amount_input':
+                setState({ amount: '' })
+                amountInputRef?.current?.focus()
+                break
+            case 'address_input':
+                setState({ address: '' })
+                addressInputRef?.current?.focus()
+                break
+            default:
+                return
+        }
     }
 
     const getTokenType = (tokenType) => {
@@ -154,7 +188,7 @@ const ExchangeWithdraw = () => {
                 <Link href={{
                     pathname: '/wallet/exchange/withdraw',
                     query: { type: 'crypto' }
-                }}>
+                }} prefetch={false}>
                     <a className={state.type === TYPE.crypto ?
                         'flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark'
                         : 'flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark'}>
@@ -198,13 +232,14 @@ const ExchangeWithdraw = () => {
             if (!IGNORE_TOKEN.includes(cfg?.assetCode)) {
                 items.push(
                     <Link key={`wdl_cryptoList__${cfg?.assetCode}`}
-                          href={withdrawLinkBuilder(state.type, cfg?.assetCode)}>
+                          href={withdrawLinkBuilder(state.type, cfg?.assetCode)}
+                          prefetch={false}>
                         <a className={state.selectedAsset?.assetCode === cfg?.assetCode ?
                             'flex items-center justfify-between w-full px-3.5 py-2.5 md:px-5 bg-teal-opacity cursor-pointer'
                             : 'flex items-center justfify-between w-full px-3.5 py-2.5 md:px-5 hover:bg-teal-opacity cursor-pointer'}
                            onClick={onChangeAsset}>
                             <div className="flex items-center w-full">
-                                <AssetLogo assetCode={null} size={24}/>
+                                <AssetLogo assetCode={cfg?.assetCode} size={24}/>
                                 <span className="font-bold text-sm ml-2">{cfg?.assetCode}</span>
                                 <span className="font-medium text-sm ml-2 text-txtSecondary dark:text-txtSecondary-dark">
                                     {cfg?.fullName || cfg?.assetCode}
@@ -229,9 +264,10 @@ const ExchangeWithdraw = () => {
                         <Search size={16}/>
                         <input className="w-full px-2.5 text-sm font-medium"
                                value={state.search}
+                               ref={cryptoListSearchRef}
                                onChange={e => setState({ search: e.target?.value })}
                                placeholder={t('wallet:search_asset')}/>
-                        <X size={16} onClick={() => setState({ search: '' })} className="cursor-pointer"/>
+                        <X size={16} onClick={() => onClearInput('crypto_search')} className="cursor-pointer"/>
                     </div>
                 </div>
                 <div className="max-h-[200px] overflow-y-auto">
@@ -265,16 +301,19 @@ const ExchangeWithdraw = () => {
             <div className={state.focus === 'address' ?
                 'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-dominant cursor-pointer select-none'
                 :'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
-            >
+                onClick={() => addressInputRef?.current?.focus()}>
                 <input className="w-full font-medium text-sm pr-3"
                        placeholder={t('wallet:receiver_address')}
                        value={state.address}
+                       ref={addressInputRef}
                        onChange={e => setState({ address: e?.target.value })}
                        onFocus={() => setState({ focus: 'address' })}
                        onBlur={() => setState({ focus: null })}
                 />
-                <X size={16} className={state.address ? '' : 'invisible'}
-                   onClick={() => setState({ address: '' })}/>
+                <span className={state.address ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
+                      onClick={() => onClearInput('address_input')}>
+                      {t('common:clear')}
+                </span>
             </div>
         )
     }, [state.address, state.focus])
@@ -284,10 +323,11 @@ const ExchangeWithdraw = () => {
             <div className={state.focus === 'amount' ?
                 'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-dominant cursor-pointer select-none'
                 :'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
-            >
+                onClick={() => amountInputRef?.current?.focus()}>
                 <NumberFormat
                     thousandSeparator
                     allowNegative={false}
+                    getInputRef={ref => amountInputRef.current = ref}
                     className="w-full text-sm pr-3 font-medium"
                     placeholder={t('wallet:input_amount')}
                     value={state.amount}
@@ -295,41 +335,13 @@ const ExchangeWithdraw = () => {
                     onFocus={() => setState({ focus: 'amount' })}
                     onBlur={() => setState({ focus: null })}
                 />
-                <X size={16} className={state.amount ? '' : 'invisible'}
-                   onClick={() => setState({ amount: '' })}/>
+                <span className={state.amount ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
+                      onClick={() => onClearInput('amount_input')}>
+                      {t('common:clear')}
+                </span>
             </div>
         )
     }, [state.amount, state.focus])
-
-    const renderMemoInput = useCallback(() => {
-        if (!state.selectedNetwork) return null
-
-        if (!MEMO_INPUT.includes(state.selectedNetwork?.network)) {
-            return null
-        }
-
-        return (
-            <div className="relative mt-5">
-                <div className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
-                    <span className="mr-1.5">Memo</span>({t('common:optional')})
-                </div>
-                <div className={state.focus === 'memo' ?
-                    'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-dominant cursor-pointer select-none'
-                    :'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
-                >
-                    <input className="w-full font-medium text-sm pr-3"
-                           placeholder={t('wallet:receiver_memo')}
-                           value={state.memo}
-                           onChange={e => setState({ memo: e?.target.value })}
-                           onFocus={() => setState({ focus: 'memo' })}
-                           onBlur={() => setState({ focus: null })}
-                    />
-                    <X size={16} className={state.memo ? '' : 'invisible'}
-                       onClick={() => setState({ memo: '' })}/>
-                </div>
-            </div>
-        )
-    }, [state.selectedNetwork, state.memo, state.focus])
 
     const renderNetworkList = useCallback(() => {
         if (!state.networkList) return null
@@ -386,24 +398,17 @@ const ExchangeWithdraw = () => {
     }, [assetBalance, state.selectedAsset])
 
     const renderWdlFee = useCallback(() => {
-        let inner = '--'
-
-        if (state.withdrawFee && state.configs) {
-            const cfg = state.configs.filter(e => e.id === state.withdrawFee?.[0]?.currency)
-            inner = `${state.withdrawFee?.[0]?.amount ? formatWallet(state.withdrawFee?.[0].amount, cfg?.[0]?.assetDigit) : '--'} ${cfg?.[0]?.assetCode || '--'}`
-        }
-
         return (
             <div className="flex items-center text-sm mt-2.5">
                 <span className="text-txtSecondary dark:text-txtSecondary-dark">
                     {t('wallet:withdraw_fee')}
                 </span>
                 <span className="font-bold ml-2">
-                    {inner}
+                    {`${state.withdrawFee?.amount ? formatWallet(state.withdrawFee?.amount, state.feeCurrency?.assetDigit) : '--'} ${state.feeCurrency?.assetCode || '--'}`}
                 </span>
             </div>
         )
-    }, [state.configs, state.withdrawFee])
+    }, [state.configs, state.withdrawFee, state.feeCurrency])
 
     const renderMinWdl = useCallback(() => {
         return (
@@ -413,7 +418,27 @@ const ExchangeWithdraw = () => {
                 </span>
                 <span className="font-bold ml-2">
                     {state.selectedNetwork?.minWithdraw ?
-                        formatWallet(state.selectedNetwork.minWithdraw, state.selectedNetwork?.assetDigit)
+                        (state.selectedNetwork.minWithdraw >= 1 ?
+                                formatWallet(state.selectedNetwork.minWithdraw, state.selectedNetwork?.assetDigit)
+                                : state.selectedNetwork.minWithdraw
+                        )
+                        : '--'}
+                </span>
+            </div>
+        )
+    }, [state.selectedNetwork])
+
+    const renderMaxWdl = useCallback(() => {
+        if (!state.selectedNetwork?.maxWithdraw) return null
+
+        return (
+            <div className="flex items-center text-sm mt-2.5">
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                    {t('wallet:min_withdraw')}
+                </span>
+                <span className="font-bold ml-2">
+                    {state.selectedNetwork?.maxWithdraw ?
+                        formatWallet(state.selectedNetwork.maxWithdraw, state.selectedNetwork?.assetDigit)
                         : '--'}
                 </span>
             </div>
@@ -421,12 +446,159 @@ const ExchangeWithdraw = () => {
     }, [state.selectedNetwork])
 
     const renderWdlButton = useCallback(() => {
+        const passedStl = 'mt-8 w-full bg-dominant rounded-xl py-3 text-sm text-center text-white font-bold hover:opacity-80 cursor-pointer'
+        const preventStl = 'mt-8 w-full bg-gray-4 dark:bg-darkBlue-4 rounded-xl py-3 text-sm text-center text-gray-1 dark:text-darkBlue-2 font-bold cursor-not-allowed'
+
         return (
-            <div className="mt-5 w-full bg-dominant rounded-xl py-3 text-sm text-center text-white font-bold hover:opacity-80 cursor-pointer">
+            <div className={state.validator?.allPass ? passedStl : preventStl}
+            onClick={() => state.validator?.allPass && setState({ openWithdrawConfirm: true })}>
                 {t('common:withdraw')}
             </div>
         )
-    }, [])
+    }, [state.validator?.allPass])
+
+    const renderInputIssues = useCallback((type) => {
+        let inner
+
+        if (type === 'address') {
+            if (state?.validator?.hasOwnProperty('address')) {
+                if (state?.validator.address) {
+                    // inner = <Check className="text-dominant" size={16}/>
+                } else {
+                    inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
+                        {t('wallet:errors.invalid_withdraw_address')}
+                    </span>
+                }
+            } else {
+                inner = null
+            }
+        }
+
+        if (type === 'amount') {
+            if (state?.validator?.hasOwnProperty('amount')) {
+                if (state?.validator.amount === AMOUNT.LESS_THAN_MIN) {
+                    inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
+                        {t('wallet:errors.invalid_min_amount', { value: state.selectedNetwork?.minWithdraw })}
+                    </span>
+                } else if (state?.validator.amount === AMOUNT.OVER_THAN_MAX) {
+                    inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
+                        {t('wallet:errors.invalid_max_amount', { value: state.selectedNetwork?.maxWithdraw })}
+                    </span>
+                } else if (state?.validator.amount === AMOUNT.OVER_BALANCE) {
+                    inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
+                        {t('wallet:errors.invalid_insufficient_balance')}
+                    </span>
+                } else if (state?.validator.amount === AMOUNT.OK) {
+                    // inner = <Check className="text-dominant" size={16}/>
+                }
+            } else {
+                inner = null
+            }
+        }
+
+        if (type === 'memo') {
+            if (state?.validator?.hasOwnProperty('memo')) {
+                if (state?.validator.memo) {
+                    // inner = <Check className="text-dominant" size={16}/>
+                } else {
+                    inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
+                        {t('wallet:errors.invalid_memo')}
+                    </span>
+                }
+            } else {
+                inner = null
+            }
+        }
+
+        return <>{inner}</>
+    }, [state.validator, state.selectedNetwork])
+
+    const renderMemoInput = useCallback(() => {
+        if (!state.selectedNetwork) return null
+
+        if (!MEMO_INPUT.includes(state.selectedNetwork?.network)) {
+            return null
+        }
+
+        return (
+            <div className="relative mt-5">
+                <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                    <span className="mr-1.5">Memo ({t('common:optional')})</span>
+                    <span>{state.validator?.memo === true && <Check size={16} className="text-dominant"/>}</span>
+                </div>
+                <div className={state.focus === 'memo' ?
+                    'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-dominant cursor-pointer select-none'
+                    :'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
+                >
+                    <input className="w-full font-medium text-sm pr-3"
+                           placeholder={t('wallet:receiver_memo')}
+                           value={state.memo}
+                           onChange={e => setState({ memo: e?.target.value })}
+                           onFocus={() => setState({ focus: 'memo' })}
+                           onBlur={() => setState({ focus: null })}
+                    />
+                    <span className={state.memo ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
+                          onClick={() => setState({ memo: '' })}>
+                      {t('common:clear')}
+                </span>
+                </div>
+                {renderInputIssues('memo')}
+            </div>
+        )
+    }, [state.selectedNetwork, state.memo, state.focus, state.validator?.memo, renderInputIssues])
+
+    const renderWdlConfirm = useCallback(() => {
+        if (state.type !== TYPE.crypto) return null
+
+        return (
+            <Modal type="confirmation"
+                   isVisible={state.openWithdrawConfirm}
+                   title={t('wallet:withdraw_confirmation')}
+                   onCloseCb={() => setState({ openWithdrawConfirm: false })}
+                   className="md:px-6 md:pb-6"
+            >
+                <div className="mt-4 w-[300px] md:min-w-[410px]">
+                    <div className="text-sm mb-2 flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:withdraw')}</span>
+                        <span className="font-medium">{state.selectedAsset?.assetCode} {state.selectedAsset?.fullName && <span className="ml-1">({state.selectedAsset?.fullName})</span>}</span>
+                    </div>
+                    <div className="text-sm mb-2 flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:receive_address')}</span>
+                        <span className="font-medium cursor-pointer"
+                              title={`${t('wallet:receive_address')}: ${state.address}`}>
+                            {shortHashAddress(state.address, 8, 8)}
+                        </span>
+                    </div>
+                    {state.memo && <div className="text-sm mb-2 flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">MEMO</span>
+                        <span className="font-medium">{state.memo}</span>
+                    </div>}
+                    <div className="text-sm mb-2 flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:amount')}</span>
+                        <span className="font-medium">{formatWallet(state.amount, state.selectedNetwork?.assetDigit)} {state.selectedAsset?.assetCode}</span>
+                    </div>
+                    <div className="text-sm mb-2 flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:fee')}</span>
+                        <span className="font-medium">{state.withdrawFee?.amount} {state.feeCurrency?.assetCode}</span>
+                    </div>
+                    <div className="text-sm mb-2 flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:network')}</span>
+                        <span className="font-medium">{state.selectedNetwork?.tokenType} <span className="ml-1.5">({state.selectedNetwork?.displayNetwork})</span></span>
+                    </div>
+                </div>
+            </Modal>
+        )
+    }, [
+        state.openWithdrawConfirm,
+        state.type,
+        state.amount,
+        state.address,
+        state.memo,
+        state.selectedAsset,
+        state.selectedNetwork,
+        state.withdrawFee,
+        state.feeCurrency
+    ])
 
     useDebounce( () => {
         if (userSocket && state.selectedAsset?.currency && state.amount && state.selectedNetwork?.network) {
@@ -446,6 +618,8 @@ const ExchangeWithdraw = () => {
 
         if (asset && typeof asset === 'string' && asset.length) {
             setState({ asset })
+        } else {
+            setState({ asset: DEFAULT_ASSET })
         }
 
         if (type && type === 'crypto') {
@@ -466,21 +640,61 @@ const ExchangeWithdraw = () => {
     useEffect(() => {
         if (state.selectedAsset) {
             const networkList = []
-            const { tokenType, allowWithdraw, network, displayNetwork, minWithdraw, assetDigit } = state.selectedAsset
+            const { tokenType, allowWithdraw, network, displayNetwork, minWithdraw, maxWithdraw, assetDigit } = state.selectedAsset
             if (allowWithdraw && allowWithdraw.length) {
                 allowWithdraw.forEach((isAllow, index) => isAllow
                     && networkList.push({
                         allowWithdraw: isAllow,
                         assetDigit,
                         minWithdraw: minWithdraw[index],
+                        maxWithdraw: maxWithdraw[index],
                         tokenType: tokenType[index],
                         network: network[index],
                         displayNetwork: displayNetwork[index],
                     }))
             }
             setState({ networkList })
+            if (networkList.length) {
+                setState({ selectedNetwork: networkList?.[0] })
+            }
         }
     }, [state.selectedAsset])
+
+    useEffect(() => {
+        if (state.openList?.cryptoList) {
+            cryptoListSearchRef?.current?.focus()
+        }
+    }, [state.openList])
+
+    useEffect(() => {
+        if (state.withdrawFee && state.configs) {
+            const cfg = state.configs.filter(e => e.id === state.withdrawFee?.currency)?.[0]
+            cfg && setState({ feeCurrency: { assetCode: cfg?.assetCode, assetDigit: cfg?.assetDigit } })
+        }
+    }, [state.withdrawFee, state.configs])
+
+    useEffect(() => {
+        setState({
+            validator: withdrawValidator(
+                state.selectedAsset?.assetCode,
+                +state.amount,
+                state.address,
+                state.memo,
+                state.selectedNetwork?.network,
+                state.selectedNetwork?.tokenType,
+                state.selectedNetwork?.minWithdraw,
+                state.selectedNetwork?.maxWithdraw,
+                assetBalance?.value - assetBalance?.locked_value
+            )
+        })
+    }, [
+        state.selectedAsset,
+        state.amount,
+        state.address,
+        state.memo,
+        state.selectedNetwork,
+        assetBalance
+    ])
 
     return (
         <MaldivesLayout>
@@ -497,8 +711,7 @@ const ExchangeWithdraw = () => {
                                 {state.type === TYPE.crypto &&
                                 <>
                                     <div className="relative">
-                                        <div
-                                            className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                        <div className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                             {t('wallet:crypto_select')}
                                         </div>
                                         <div className="min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between
@@ -509,21 +722,25 @@ const ExchangeWithdraw = () => {
                                         {state.openList?.cryptoList && renderCryptoList()}
                                     </div>
                                     <div className="relative mt-5">
-                                        <div className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                        <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                             {t('wallet:receive_address')}
+                                            <span>{state.validator?.address === true && <Check size={16} className="text-dominant"/>}</span>
                                         </div>
                                         {renderAddressInput()}
+                                        {renderInputIssues('address')}
                                     </div>
                                     {renderMemoInput()}
                                     <div className="relative mt-5">
-                                        <div className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                        <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                             {t('common:amount')}
+                                            <span>{state.validator?.amount === AMOUNT.OK && <Check size={16} className="text-dominant"/>}</span>
                                         </div>
                                         {renderAmountInput()}
+                                        {renderInputIssues('amount')}
                                     </div>
                                     <div className="relative mt-5">
                                         <div className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
-                                            {t('wallet:blockchain_network')}
+                                            {t('wallet:network')}
                                         </div>
                                         <div className="min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between
                                                     rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant"
@@ -536,6 +753,7 @@ const ExchangeWithdraw = () => {
                                         {renderAssetAvailable()}
                                         {renderWdlFee()}
                                         {renderMinWdl()}
+                                        {renderMaxWdl()}
                                     </div>
                                     {renderWdlButton()}
                                 </>
@@ -547,6 +765,7 @@ const ExchangeWithdraw = () => {
                         {t('wallet:withdraw_history')}
                     </div>
                 </div>
+                {renderWdlConfirm()}
             </Background>
         </MaldivesLayout>
     )
@@ -560,5 +779,63 @@ const IGNORE_TOKEN = ['XBT_PENDING', 'TURN_CHRISTMAS_2017_FREE', 'USDT_BINANCE_F
     'SPIN_CONQUEST', 'TURN_CHRISTMAS_2017', 'SPIN_CLONE']
 
 const MEMO_INPUT = ['BinanceChain', 'VITE_CHAIN']
+
+const AMOUNT = {
+    LESS_THAN_MIN: 0,
+    OVER_THAN_MAX: 1,
+    OVER_BALANCE: 2,
+    OK: 'ok'
+}
+
+function withdrawValidator(asset, amount, address, memo = undefined, network, networkType, min, max, available) {
+    const result = {}
+    let memoType
+
+    if (network === TokenConfig.Network.BINANCE_CHAIN) memoType = 'BEP2MEMO'
+    if (network === TokenConfig.Network.VITE_CHAIN) memoType = 'VITEMEMO'
+
+    if (asset) {
+        result.asset = (!!(typeof asset === 'string' && asset.length))
+    }
+
+    if (amount && isNumber(+amount)) {
+        if (min && amount < min) {
+            result.amount = AMOUNT.LESS_THAN_MIN
+        } else if (max && amount > max) {
+            result.amount = AMOUNT.OVER_THAN_MAX
+        } else if (available && amount > available) {
+            result.amount = AMOUNT.OVER_BALANCE
+        } else {
+            result.amount = AMOUNT.OK
+        }
+    }
+
+    if (address && networkType) {
+        result.address = hashValidator(address, networkType)
+    }
+
+    if ((network === TokenConfig.Network.BINANCE_CHAIN || network === TokenConfig.Network.VITE_CHAIN)
+        && memo && memoType) {
+        result.memo = hashValidator(memo, memoType)
+    }
+
+    if (result.address && result.asset && (result?.amount === AMOUNT.OK)) {
+        result.allPass = true
+    }
+
+    // if ((network === TokenConfig.Network.BINANCE_CHAIN || network === TokenConfig.Network.VITE_CHAIN) &&
+    //     result?.memo && result.address && result.asset && (result?.amount === AMOUNT.OK)) {
+    //     result.allPass = true
+    // }
+
+    // console.log('namidev-DEBUG: withdrawValidator ', result)
+    return result
+    // return {
+    //     asset: asset ? (!!(typeof asset === 'string' && asset.length)) : 'NOT_AVAILABLE',
+    //     amount: amount ? isNumber(+amount) : 'NOT_AVAILABLE',
+    //     address: address && networkType ? hashValidator(address, networkType) : 'NOT_AVAILABLE',
+    //     memo: memo && memoType ? hashValidator(memo, memoType) : 'NOT_AVAILABLE',
+    // }
+}
 
 export default ExchangeWithdraw
