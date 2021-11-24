@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { useTranslation } from 'next-i18next'
+import { Trans, useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { useDebounce } from 'react-use'
 import { useRouter } from 'next/router'
 import { ApiStatus, PublicSocketEvent, TokenConfigV1 as TokenConfig } from 'redux/actions/const'
-import { API_GET_WALLET_CONFIG } from 'redux/actions/apis'
+import { API_GET_WALLET_CONFIG, API_GET_WITHDRAW_HISTORY } from 'redux/actions/apis'
 import { WALLET_SCREENS } from 'pages/wallet'
-import { Check, Search, X } from 'react-feather'
+import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather'
 import { find, get, isNumber } from 'lodash'
-import { formatWallet, getAssetName, hashValidator, shortHashAddress } from 'redux/actions/utils'
-import { withdrawHelper } from 'redux/actions/helper'
+import { buildExplorerUrl, formatTime, formatWallet, getS3Url, hashValidator, shortHashAddress } from 'redux/actions/utils'
+import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper'
 import { log } from 'utils'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useOutsideClick from 'hooks/useOutsideClick'
@@ -30,6 +31,8 @@ import Emitter from 'redux/actions/emitter'
 import styled from 'styled-components'
 import colors from 'styles/colors'
 import Axios from 'axios'
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
+import useWindowSize from 'hooks/useWindowSize'
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {
@@ -46,7 +49,7 @@ const INITIAL_STATE = {
     openList: {},
     focus: '',
     search: '',
-    address: '',
+    address: '0xeE96703614Ea707b0b99ecb55dA74c04Ff70f2Ed',
     amount: '',
     memo: '',
     validator: null,
@@ -56,6 +59,12 @@ const INITIAL_STATE = {
     withdrawResult: null,
     emailOtp: null,
     googleOtp: null,
+    otp: {},
+    errors: null,
+    histories: null,
+    loadingHistories: false,
+    historyPage: 0,
+
     // ... Add new state
 }
 
@@ -66,8 +75,11 @@ const TYPE = {
 
 const DEFAULT_ASSET = 'VNDC'
 
+const HISTORY_SIZE = 6
+
 const ExchangeWithdraw = () => {
     // Init State
+    const [resendTimeOut, setResendTimeOut] = useState(null)
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
 
@@ -84,7 +96,8 @@ const ExchangeWithdraw = () => {
 
     // Use Hooks
     const [currentTheme, ] = useDarkMode()
-    const { t } = useTranslation()
+    const { width } = useWindowSize()
+    const { t, i18n: { language } } = useTranslation()
     const router = useRouter()
 
     useOutsideClick(cryptoListRef, () => state.openList?.cryptoList && setState({ openList: {} }))
@@ -129,83 +142,92 @@ const ExchangeWithdraw = () => {
         }
     }
 
+    const getWithdrawHistory = async (page) => {
+        setState({ loadingHistories: true })
+        try {
+            const { data: { status, data: histories } } = await Axios.get(API_GET_WITHDRAW_HISTORY, {
+                params: {
+                    page,
+                    pageSize: HISTORY_SIZE
+                }
+            })
+
+            if (status === ApiStatus.SUCCESS && histories) {
+                setState({ histories })
+            }
+        } catch (e) {
+            console.log(`Can't get withdraw history `, e)
+        } finally {
+            setState({ loadingHistories: false })
+        }
+    }
+
     const withdraw = async (params = {}, cleverProps = {}, isFromOtpModal) => {
         if (!Object.keys(params).length) return
 
-        let otpResult = true
+        setState({ processingWithdraw: true, errors: {} })
 
-        console.log('namidev-DEBUG: pre-check ', params, cleverProps, isFromOtpModal)
         try {
-            setState({ processingWithdraw: true })
             const { address, amount, currency, otp, memo, tokenTypeIndex, networkType } = params
-            // _address, _amount, currency, otp, memo, tokenTypeIndex, networkType
             const result = await withdrawHelper(address, amount, currency, otp, memo, tokenTypeIndex, networkType)
-            log.i('Withdraw Result => ', result)
-            setState({ withdrawResult: result })
+            setState({ withdrawResult: result?.data })
 
-            if (result) {
-                if (result.status === 'ok') {
-                    // clevertap.event.push('Withdraw Success',
-                    //     {
-                    //         'Service Name': 'Exchange',
-                    //         'Crypto Name': cleverProps?.cryptoName,
-                    //         'Token Network': cleverProps?.network,
-                    //         'Quantity': parseFloat(cleverProps?.amount),
-                    //         'Platform': 'Web'
-                    //     })
-                    // this.setMessage(<Translate id="withdraw.tab_withdraw.noti_wait_transaction"/>)
-                } else {
-                    // clevertap.event.push('Withdraw Initialized',
-                    //     {
-                    //         'Service Name': 'Exchange',
-                    //         'Crypto Name': cleverProps?.cryptoName,
-                    //         'Token Network': cleverProps?.network,
-                    //         'Quantity': parseFloat(cleverProps?.amount),
-                    //         'Platform': 'Web'
-                    //     })
-                    if (isFromOtpModal && result.status === TfaResult.INVALID_OTP) {
-                        return false
-                    } else if (isFromOtpModal && result.status === TfaResult.INVALID_OTP) {
-                        return false
+            if (result.status === 'ok') {
+                log.i('Withdraw Result => ', result?.data)
+
+                if (isFromOtpModal) {
+                    // Phake data
+                    // const phakePhake = { status: 'ok', data: 'eKgJxs0necloShq7IAPGen0iALhQdS' }
+                    // result.data = phakePhake
+
+                    if (result?.data?.status === ApiStatus.SUCCESS) {
+                        setState({  withdrawResult: result?.data })
                     } else {
-                        // this.handleWithdrawResult(result, tokenValue);
+                        switch (result?.data?.status) {
+                            case WITHDRAW_RESULT.MISSING_OTP:
+                                setState({ errors: { message: t('wallet:withdraw_prompt.input_otp_suggest') } })
+                                break
+                            case WITHDRAW_RESULT.INVALID_OTP:
+                                setState({ errors: { message: <Trans>{t('wallet:errors.wrong_otp')}</Trans> } })
+                                break
+                            case WITHDRAW_RESULT.INSUFFICIENT:
+                                setState({ errors: { status: WITHDRAW_RESULT.INSUFFICIENT , message: t('error:BALANCE_NOT_ENOUGH') } })
+                                break
+                            case WITHDRAW_RESULT.INVALID_ADDRESS:
+                                setState({ errors: { status: WITHDRAW_RESULT.INVALID_ADDRESS , message: t('error:INVALID_ADDRESS') } })
+                                break
+                            case WITHDRAW_RESULT.MEMO_TOO_LONG:
+                                setState({ errors: { status: WITHDRAW_RESULT.MEMO_TOO_LONG , message: t('error:INVALID_MEMO') } })
+                                break
+                            case WITHDRAW_RESULT.INVALID_AMOUNT:
+                                setState({ errors: { status: WITHDRAW_RESULT.INVALID_AMOUNT , message: t('error:INVALID_ADDRESS') } })
+                                break
+                            case WITHDRAW_RESULT.INVALID_CURRENCY:
+                                setState({ errors: { status: WITHDRAW_RESULT.INVALID_CURRENCY , message: t('error:INVALID_CURRENCY') } })
+                                break
+                            case WITHDRAW_RESULT.NOT_ENOUGH_FEE:
+                                setState({ errors: { status: WITHDRAW_RESULT.NOT_ENOUGH_FEE , message: t('error:NOT_ENOUGH_FEE') } })
+                                break
+                            case WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD:
+                                setState({ errors: { status: WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD , message: t('error:WITHDRAW_AMOUNT_NOT_REACH_MIN') } })
+                                break
+                            case WITHDRAW_RESULT.AMOUNT_EXCEEDED:
+                                setState({ errors: { status: WITHDRAW_RESULT.AMOUNT_EXCEEDED , message: t('error:WITHDRAW_AMOUNT_NOT_REACH_MAX') } })
+                                break
+                            case WITHDRAW_RESULT.UNKNOWN_ERROR:
+                                setState({ errors: { status: WITHDRAW_RESULT.UNKNOWN_ERROR , message: t('error:UNKNOWN_ERROR') } })
+                                break
+                            default:
+                                return false
+                        }
                     }
                 }
-            } else {
-                // this.setMessage(<Translate id="withdraw.tab_withdraw.noti_error_process"/>, true)
             }
         } catch (err) {
             console.error(err)
         } finally {
             setState({ processingWithdraw: false })
-        }
-
-        // setTimeout(() => {
-        //     try {
-        //         this.props.reFetchHistoryFirstPage()
-        //     } catch (ignored) {}
-        // }, 1000);
-
-        return otpResult
-    }
-
-    const withdrawLinkBuilder = (type, asset) => {
-        switch (type) {
-            case TYPE.crypto:
-                return `/wallet/exchange/withdraw?type=crypto&asset=${asset}`
-            case TYPE.fiat:
-                return `/wallet/exchange/withdraw?type=fiat&asset=${asset}`
-            default:
-                return `/wallet/exchange/withdraw?type=crypto`
-        }
-    }
-
-    const getTokenType = (tokenType) => {
-        switch (tokenType) {
-            case 'KARDIA_CHAIN_NATIVE':
-                return 'KRC20'
-            default:
-                return tokenType
+            setTimeout(() => getWithdrawHistory(), 500)
         }
     }
 
@@ -243,16 +265,15 @@ const ExchangeWithdraw = () => {
     }
 
     const onCancelWdlOrder = () => {
-        setState({ openWithdrawConfirm: false, withdrawResult: null })
+        setState({
+            openWithdrawConfirm: false,
+            withdrawResult: null,
+            errors: null,
+            otp: {},
+        })
     }
 
-    const handleEmailOtp = (emailOtp) => {
-        setState({ emailOtp })
-    }
-
-    const handleGoogleOtp = (googleOtp) => {
-        setState({ googleOtp })
-    }
+    const handleOtp = (origin, mode, code) => setState({ otp: { ...origin, [mode]: code } })
 
     // Render hander
     const renderTab = useCallback(() => {
@@ -502,22 +523,25 @@ const ExchangeWithdraw = () => {
     }, [state.configs, state.withdrawFee, state.feeCurrency])
 
     const renderMinWdl = useCallback(() => {
+        let min
+        if (state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw
+            && state.selectedAsset?.assetCode === state.feeCurrency?.assetCode) {
+            min = `${formatWallet(state.withdrawFee?.amount, state.selectedAsset?.assetDigit)} ${state.selectedAsset?.assetCode}`
+        } else {
+            min = `${formatWallet(state.selectedNetwork?.minWithdraw, state.selectedAsset?.assetDigit)} ${state.selectedAsset?.assetCode} `
+        }
+
         return (
             <div className="flex items-center text-sm mt-2.5">
                 <span className="text-txtSecondary dark:text-txtSecondary-dark">
                     {t('wallet:min_withdraw')}
                 </span>
                 <span className="font-bold ml-2">
-                    {state.selectedNetwork?.minWithdraw ?
-                        (state.selectedNetwork.minWithdraw >= 1 ?
-                                formatWallet(state.selectedNetwork.minWithdraw, state.selectedNetwork?.assetDigit)
-                                : state.selectedNetwork.minWithdraw
-                        )
-                        : '--'}
+                    {min || '--'}
                 </span>
             </div>
         )
-    }, [state.selectedNetwork])
+    }, [state.selectedNetwork, state.selectedAsset, state.withdrawFee, state.feeCurrency])
 
     const renderMaxWdl = useCallback(() => {
         if (!state.selectedNetwork?.maxWithdraw) return null
@@ -535,6 +559,28 @@ const ExchangeWithdraw = () => {
             </div>
         )
     }, [state.selectedNetwork])
+
+    const renderActualReceive = useCallback(() => {
+        const actualRcv = +state.amount - state.withdrawFee?.amount
+        let _ = '--'
+
+        if (state.amount && state.withdrawFee) {
+            if (!actualRcv) {
+                _ = '0.0000'
+            } else {
+                _ = formatWallet(actualRcv, state.selectedAsset?.assetDigit)
+            }
+        }
+
+        return (
+            <div className="flex items-center text-sm mt-2.5">
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                    {t('wallet:will_receive')}
+                </span>
+                <span className="font-bold ml-2">{_}</span>
+            </div>
+        )
+    }, [state.withdrawFee, state.amount, state.selectedAsset])
 
     const renderWdlButton = useCallback(() => {
         const passedStl = 'mt-8 w-full bg-dominant rounded-xl py-3 text-sm text-center text-white font-bold hover:opacity-80 cursor-pointer'
@@ -583,7 +629,12 @@ const ExchangeWithdraw = () => {
             if (state?.validator?.hasOwnProperty('amount')) {
                 if (state?.validator.amount === AMOUNT.LESS_THAN_MIN) {
                     inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
-                        {t('wallet:errors.invalid_min_amount', { value: state.selectedNetwork?.minWithdraw })}
+                        {t('wallet:errors.invalid_min_amount',
+                            {
+                                value: state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw ?
+                                    state.withdrawFee?.amount
+                                    : state.selectedNetwork?.minWithdraw
+                            })}
                     </span>
                 } else if (state?.validator.amount === AMOUNT.OVER_THAN_MAX) {
                     inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
@@ -616,7 +667,7 @@ const ExchangeWithdraw = () => {
         }
 
         return <>{inner}</>
-    }, [state.validator, state.selectedNetwork, state.selectedAsset])
+    }, [state.validator, state.selectedNetwork, state.selectedAsset, state.withdrawFee])
 
     const renderMemoInput = useCallback(() => {
         if (!state.selectedNetwork) return null
@@ -652,6 +703,69 @@ const ExchangeWithdraw = () => {
         )
     }, [state.selectedNetwork, state.memo, state.focus, state.validator?.memo, renderInputIssues])
 
+    const renderWithdrawHistory = useCallback(() => {
+        const data = dataHandler(
+            state.histories,
+            state.loadingHistories,
+            state.configs,
+            { getAssetName }
+        )
+        let tableStatus
+
+        const columns = [
+            { key: 'id', dataIndex: 'id', title: 'Order#ID', width: 100, fixed: 'left', align: 'left' },
+            { key: 'asset', dataIndex: 'asset', title: 'Asset', width: 100, align: 'left' },
+            { key: 'amount', dataIndex: 'amount', title: 'Amount', width: 100, align: 'right' },
+            { key: 'network', dataIndex: 'network', title: 'Network', width: 100, align: 'right' },
+            { key: 'withdraw_to', dataIndex: 'withdraw_to', title: 'Withdraw To', width: 100, align: 'right' },
+            { key: 'txhash', dataIndex: 'txhash', title: 'TxHash', width: 100, align: 'right' },
+            { key: 'time', dataIndex: 'time', title: 'Time', width: 100, align: 'right' },
+            { key: 'status', dataIndex: 'status', title: 'Status', width: 100, align: 'right' },
+        ]
+
+        if (!state.histories?.length) {
+            tableStatus = <Empty/>
+        }
+
+        return (
+            <ReTable
+                useRowHover
+                data={data}
+                columns={columns}
+                rowKey={item => item?.key}
+                scroll={{ x: true }}
+                tableStatus={tableStatus}
+                tableStyle={{
+                    paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                    tableStyle: { minWidth: '888px !important' },
+                    headerStyle: {},
+                    rowStyle: {},
+                    shadowWithFixedCol: width < 1366,
+                    noDataStyle: {
+                        minHeight: '280px'
+                    }
+                }}
+            />
+        )
+    }, [state.histories, state.loadingHistories, state.configs, width])
+
+    const renderPagination = useCallback(() => {
+        return (
+            <div className="w-full mt-6 mb-10 flex items-center justify-center select-none">
+                <div className={state.historyPage !== 0 ? 'flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
+                    : 'flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'}
+                     onClick={() => state.historyPage !== 0 && setState({ historyPage: state.historyPage - 1 })}>
+                    <ChevronLeft size={18} className="mr-2"/> {language === LANGUAGE_TAG.VI ? 'Trước' : 'Previous'}
+                </div>
+                <div className={state.histories?.length ? 'ml-10 flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
+                    : 'ml-10 flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'}
+                     onClick={() => state.histories?.length && setState({ historyPage: state.historyPage + 1 })}>
+                    {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'} <ChevronRight size={18} className="ml-2"/>
+                </div>
+            </div>
+        )
+    }, [state.historyPage, state.histories, language])
+
     const renderWdlConfirm = useCallback(() => {
         if (state.type !== TYPE.crypto) return null
 
@@ -659,25 +773,45 @@ const ExchangeWithdraw = () => {
             address: state.address.trim(),
             amount: +state.amount,
             currency: state.selectedAsset?.id,
-            otp: null,
+            otp: otpHandler(state.otpModes, state.otp),
             memo: state.memo,
             tokenTypeIndex: state.selectedNetwork?.tokenTypeIndex,
             networkType: state.selectedNetwork?.network
         }
+
         const cleverProps = {
             cryptoName: `${state.selectedAsset?.assetCode} ${state.selectedAsset?.fullName ? `(${state.selectedAsset?.fullName})` : ''}`,
             network: `${state.selectedNetwork?.tokenType} (${state.selectedNetwork?.displayNetwork})`,
             amount: +state.amount
         }
 
+        let title = t('wallet:withdraw_confirmation')
+
+        const isSuccess = state.withdrawResult?.status === ApiStatus.SUCCESS && !!state.withdrawResult?.data?.length
+        const isErrors = !!state.errors?.status
+
+        if (isSuccess && !isErrors) {
+            title = t('wallet:withdraw_success_title')
+        }
+
+        if (isErrors && !isSuccess) {
+            title = t('common:failure')
+        }
+
+        console.log('namidev-DEBUG: is Success? ', isSuccess)
+
+        console.log('namidev-DEBUG: is Errors? ', isErrors)
+
         return (
             <Modal type="confirmation"
                    isVisible={state.openWithdrawConfirm}
-                   title={t('wallet:withdraw_confirmation')}
+                   title={title}
+                   titleStyle="uppercase"
                    className="md:px-6 md:pb-6 relative"
                    noButton
             >
-                <div className="mt-6 w-[300px] md:min-w-[410px]">
+                <div className="mt-6 w-[280px] md:min-w-[410px]">
+                    {/*Pre-withdraw*/}
                     {!state.withdrawResult &&
                     <>
                         <div className="text-sm mb-2 flex items-center justify-between">
@@ -705,6 +839,12 @@ const ExchangeWithdraw = () => {
                             <span className="font-medium">{formatWallet(state.withdrawFee?.amount, state.feeCurrency?.assetDigit)} {state.feeCurrency?.assetCode}</span>
                         </div>
                         <div className="text-sm mb-2 flex items-center justify-between">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:will_receive')}</span>
+                            <span className="font-medium">
+                                {formatWallet(+state.amount - state.withdrawFee?.amount, state.selectedAsset?.assetDigit)} {state.selectedAsset?.assetCode}
+                            </span>
+                        </div>
+                        <div className="text-sm mb-2 flex items-center justify-between">
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:network')}</span>
                             <span className="font-medium">
                                 {state.selectedNetwork?.tokenType}
@@ -712,30 +852,40 @@ const ExchangeWithdraw = () => {
                             </span>
                         </div>
                     </>}
-                    {state.withdrawResult &&
+
+                    {/*OTP Phase*/}
+                    {state.withdrawResult && !isErrors && !isSuccess &&
                       <div className="">
                           {state.otpModes.includes('email') &&
                           <div>
                               <div className="font-medium text-sm ">
                                   {t('common:email_authentication')}
                               </div>
-                              <div className="mt-0.5 text-xs lg:text-sm text-txtSecondary dark:text-txtSecondary">
+                              <div className="mt-0.5 flex items-center justify-between text-xs lg:text-sm text-txtSecondary dark:text-txtSecondary">
                                   {t('wallet:withdraw_prompt.email_description')}
+                                  <span className={resendTimeOut ?
+                                      'font-medium text-txt-gray-1 dark:text-txt-darkBlue5 cursor-not-allowed'
+                                      : 'font-medium text-dominant cursor-pointer hover:opacity-80'}
+                                        onClick={() => {
+                                            if (!resendTimeOut) {
+                                                withdraw({ ...params, otp: undefined })
+                                                setResendTimeOut(60)
+                                            }
+                                        }}>
+                                      {t('common:resend')}<span className="ml-1">{!!resendTimeOut && `(${resendTimeOut})`}</span>
+                                  </span>
                               </div>
                               <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
                                   <OtpInput
-                                      value={state.emailOtp}
-                                      onChange={handleEmailOtp}
+                                      value={state.otp?.email}
+                                      onChange={otp => handleOtp(state.otp, 'email', otp)}
                                       numInputs={6}
                                       placeholder="------"
                                       isInputNum
                                   />
                               </OtpWrapper>
-                              {/*<div className="mt-2 text-red text-xs lg:text-sm font-medium text-right">*/}
-                              {/*    {t('wallet:withdraw_prompt.email_otp_wrong')}*/}
-                              {/*</div>*/}
                           </div>}
-                          {state.otpModes.includes('email') &&
+                          {state.otpModes.includes('tfa') &&
                           <div className="mt-6">
                               <div className="font-medium text-sm ">
                                   {t('common:tfa_authentication')}
@@ -745,29 +895,59 @@ const ExchangeWithdraw = () => {
                               </div>
                               <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
                                   <OtpInput
-                                      value={state.googleOtp}
-                                      onChange={handleGoogleOtp}
+                                      value={state.otp?.tfa}
+                                      onChange={otp => handleOtp(state.otp, 'tfa', otp)}
                                       numInputs={6}
                                       placeholder="------"
                                       isInputNum
                                   />
                               </OtpWrapper>
-                              {/*<div className="mt-2 text-red text-xs lg:text-sm font-medium text-right">*/}
-                              {/*    {t('wallet:withdraw_prompt.google_otp_wrong')}*/}
-                              {/*</div>*/}
                           </div>}
-                      </div>
-                    }
+                          {state.errors && <div className="mt-4 text-red text-xs lg:text-sm font-medium text-center">
+                              {state.errors?.message}
+                          </div>}
+                      </div>}
+
+                    {/*Catch Err*/}
+                    {!isSuccess && state.errors?.status &&
+                    <div className="w-full flex flex-col items-center justify-center">
+                        <img src="/images/icon/errors.png"
+                             className="w-[65px] h-[65px]"
+                             alt={`ERROR: ${state.errors?.status}`}/>
+                        <div className="mt-5">
+                            <div className="text-center uppercase font-medium">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                                    {t('common:error_code')}:
+                                </span>
+                                <span className="uppercase">
+                                    {state.errors?.status}
+                                </span>
+                            </div>
+                            <div className="mt-1">{state.errors?.message}</div>
+                        </div>
+                    </div>}
+
+                    {/*Withdraw Success*/}
+                    {isSuccess && !isErrors &&
+                    <div className="w-full flex flex-col items-center justify-center">
+                        <img src="/images/icon/success.png"
+                             className="w-[65px] h-[65px]"
+                             alt="SUCCESS"/>
+                        <div className="mt-5 text-sm text-center">
+                            <Trans>{t('wallet:withdraw_success_msg')}</Trans>
+                        </div>
+                    </div>}
                 </div>
-                <div className="mt-6 w-[300px] md:min-w-[410px] flex items-center justify-between">
+                <div className={(!isErrors && !isSuccess) ? 'mt-8 w-[300px] md:min-w-[410px] flex items-center justify-between' : 'mt-8 w-[300px] md:min-w-[410px] flex items-center justify-center'}>
                     <div className="w-[48%] py-2 bg-gray-1 text-center rounded-lg text-sm text-dominant font-medium cursor-pointer hover:opacity-80"
                          onClick={onCancelWdlOrder}>
-                         {t('common:cancel')}
+                         {(!isErrors && !isSuccess) ? t('common:cancel') : t('common:close')}
                     </div>
-                    <div className="w-[48%] py-2 bg-dominant text-center rounded-lg text-sm text-white font-medium cursor-pointer hover:opacity-80"
-                         onClick={() => withdraw(params, cleverProps, !!state.withdrawResult)}>
+                    {(!isErrors && !isSuccess) && <div
+                        className="w-[48%] py-2 bg-dominant text-center rounded-lg text-sm text-white font-medium cursor-pointer hover:opacity-80"
+                        onClick={() => withdraw(params, cleverProps, !!state.withdrawResult)}>
                         {state.withdrawResult ? t('common:confirm') : t('common:continue')}
-                    </div>
+                    </div>}
                 </div>
                 {state.processingWithdraw && <div style={{ backgroundColor: colors.overlayLight }}
                       className="absolute z-10 w-full h-full left-0 top-0 rounded-xl flex items-center justify-center select-none pointer-event-none">
@@ -789,7 +969,9 @@ const ExchangeWithdraw = () => {
         state.processingWithdraw,
         state.withdrawResult,
         state.otpModes,
-        state.emailOtp
+        state.otp,
+        state.errors,
+        resendTimeOut
     ])
 
     useDebounce( () => {
@@ -803,6 +985,10 @@ const ExchangeWithdraw = () => {
     useEffect(() => {
         getWithdrawConfig()
     }, [])
+
+    useEffect(() => {
+        getWithdrawHistory(state.historyPage)
+    }, [state.historyPage])
 
     useEffect(() => {
         if (auth) {
@@ -860,7 +1046,7 @@ const ExchangeWithdraw = () => {
             setState({ networkList })
             if (networkList.length) {
                 const index = networkList.findIndex(item => item?.allowWithdraw)
-                console.log('namidev-DEBUG: Index ', index)
+                // console.log('namidev-DEBUG: Index ', index)
                 index !== -1 && index !== undefined && setState({ selectedNetwork: networkList?.[index] })
             }
         }
@@ -888,7 +1074,9 @@ const ExchangeWithdraw = () => {
                 state.memo,
                 state.selectedNetwork?.network,
                 state.selectedNetwork?.tokenType,
-                state.selectedNetwork?.minWithdraw,
+                state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw ?
+                    state.withdrawFee?.amount
+                    : state.selectedNetwork?.minWithdraw,
                 state.selectedNetwork?.maxWithdraw,
                 assetBalance?.value - assetBalance?.locked_value,
                 state.selectedNetwork?.allowWithdraw
@@ -900,12 +1088,28 @@ const ExchangeWithdraw = () => {
         state.address,
         state.memo,
         state.selectedNetwork,
+        state.withdrawFee,
         assetBalance
     ])
 
     useEffect(() => {
-        log.d(state.validator)
-    }, [state.validator])
+        let interval
+        if (resendTimeOut) {
+            interval = setInterval(() => {
+                setResendTimeOut(lastTimerCount => {
+                    if (lastTimerCount <= 1) {
+                        clearInterval(interval)
+                    }
+                    return lastTimerCount - 1
+                })
+            }, 1000)
+        }
+        return () => clearInterval(interval)
+    }, [resendTimeOut])
+
+    // useEffect(() => {
+    //     log.d(state.validator)
+    // }, [state.validator])
 
     return (
         <MaldivesLayout>
@@ -967,6 +1171,7 @@ const ExchangeWithdraw = () => {
                                         {renderWdlFee()}
                                         {renderMinWdl()}
                                         {renderMaxWdl()}
+                                        {renderActualReceive()}
                                     </div>
                                     {renderWdlButton()}
                                 </>
@@ -977,6 +1182,10 @@ const ExchangeWithdraw = () => {
                     <div className="t-common mt-11">
                         {t('wallet:withdraw_history')}
                     </div>
+                    <MCard addClass="mt-8 py-0 px-0 overflow-hidden">
+                        {renderWithdrawHistory()}
+                    </MCard>
+                    {renderPagination()}
                 </div>
                 {renderWdlConfirm()}
             </Background>
@@ -1028,6 +1237,70 @@ const AMOUNT = {
     OK: 'ok'
 }
 
+function dataHandler(data, loading, configList, utils) {
+    if (loading) {
+        const skeleton = []
+        for (let i = 0; i < HISTORY_SIZE; ++i) {
+            skeleton.push({...ROW_LOADING_SKELETON, key: `wdl__skeletor___${i}`})
+        }
+        return skeleton
+    }
+
+    if (!Array.isArray(data) || !data || !data.length) return []
+
+    const result = []
+
+    data.forEach(h => {
+        const { id, time, amount, currency, status, withdraw_to, network, txhash } = h
+        const assetName = utils?.getAssetName(configList, currency)
+
+        let txhashInner = <span className="!text-sm whitespace-nowrap">{txhash ? shortHashAddress(txhash, 5, 5) : '--'}</span>
+        const value = txhash || withdraw_to
+        const url = buildExplorerUrl(value, network)
+
+        if (url) {
+            txhashInner = <a href={url} className="!text-sm whitespace-nowrap cursor-pointer hover:opacity-80">
+                {txhash ? shortHashAddress(txhash, 5, 5) : '--'}
+            </a>
+        }
+
+        result.push({
+            key: `wdl_${id}_${txhash}`,
+            id: <span className="!text-sm whitespace-nowrap">{id}</span>,
+            asset: <span className="!text-sm whitespace-nowrap">{assetName}</span>,
+            amount: <span className="!text-sm whitespace-nowrap">{amount}</span>,
+            network: <span className="!text-sm whitespace-nowrap">{network}</span>,
+            withdraw_to: <span className="!text-sm whitespace-nowrap">{shortHashAddress(withdraw_to, 5, 5)}</span>,
+            txhash: txhashInner,
+            time: <span className="!text-sm whitespace-nowrap">{formatTime(time, 'HH:mm dd-MM-yyyy')}</span>,
+            status: <span className="!text-sm whitespace-nowrap">{status}</span>,
+            [RETABLE_SORTBY]: {
+                id, asset: assetName, amount: +amount, network, withdraw_to, txhash, time, status
+            }
+        })
+    })
+
+    return result
+}
+
+const getAssetName = (assetList, assetId) => {
+    if (!Array.isArray(assetList) || !assetId) return
+    const _ = assetList.filter(e => e.id === assetId)?.[0]
+    return _?.assetCode
+}
+
+const ROW_LOADING_SKELETON = {
+    id: <Skeletor width={65} />,
+    asset: <Skeletor width={65} />,
+    amount: <Skeletor width={65} />,
+    network: <Skeletor width={65} />,
+    withdraw_to: <Skeletor width={65} />,
+    txhash: <Skeletor width={65} />,
+    time: <Skeletor width={65} />,
+    status: <Skeletor width={65} />,
+}
+
+
 function withdrawValidator(asset, amount, address, memo = undefined, network, networkType, min, max, available, isAllow) {
     const result = {}
     let memoType
@@ -1069,6 +1342,36 @@ function withdrawValidator(asset, amount, address, memo = undefined, network, ne
     }
 
     return result
+}
+
+function otpHandler(otpArr, otp) {
+    if (!otpArr?.length || otp && !Object.keys(otp)?.length) return undefined
+
+    if (otpArr.length === Object.keys(otp)?.length) {
+        return otp
+    } else {
+        return undefined
+    }
+}
+
+const withdrawLinkBuilder = (type, asset) => {
+    switch (type) {
+        case TYPE.crypto:
+            return `/wallet/exchange/withdraw?type=crypto&asset=${asset}`
+        case TYPE.fiat:
+            return `/wallet/exchange/withdraw?type=fiat&asset=${asset}`
+        default:
+            return `/wallet/exchange/withdraw?type=crypto`
+    }
+}
+
+const getTokenType = (tokenType) => {
+    switch (tokenType) {
+        case 'KARDIA_CHAIN_NATIVE':
+            return 'KRC20'
+        default:
+            return tokenType
+    }
 }
 
 export default ExchangeWithdraw

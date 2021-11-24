@@ -36,3 +36,17 @@ export const withdrawHelper = async (_address, _amount, currency, otp, memo, tok
         }
     }
 }
+
+export const WITHDRAW_RESULT = {
+    INVALID_ADDRESS: 'invalid_address',
+    INVALID_AMOUNT: 'invalid_amount',
+    INVALID_CURRENCY: 'invalid_currency',
+    INSUFFICIENT: 'insufficient',
+    NOT_REACHED_MIN_WITHDRAW_IN_USD: 'not_reached_min_withdraw_in_usd',
+    NOT_ENOUGH_FEE: 'not_enough_fee',
+    MEMO_TOO_LONG: 'memo_too_long',
+    INVALID_OTP: 'invalid_otp',
+    MISSING_OTP: 'missing_otp',
+    AMOUNT_EXCEEDED: 'invalid_max_amount',
+    UNKNOWN_ERROR: 'unknown_error'
+}

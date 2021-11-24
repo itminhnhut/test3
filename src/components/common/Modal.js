@@ -13,7 +13,8 @@ const Modal = ({
     onBackdropCb,
     className = '',
     type = 'alert',
-    noButton = false
+    noButton = false,
+    titleStyle
 }) => {
 
     const renderButtonGroup = useCallback(() => {
@@ -53,7 +54,7 @@ const Modal = ({
             <div className="mal-modal min-w-[320px]">
                 {isVisible &&
                 <div className={'p-4 ' + className}>
-                    {title && <div className="mt-3 text-center font-bold">{title}</div>}
+                    {title && <div className={titleStyle ? 'mt-3 text-center font-bold ' + titleStyle : 'mt-3 text-center font-bold'}>{title}</div>}
                     {children}
                     {!noButton && <div className="flex flex-row items-center justify-between mt-5">
                         {renderButtonGroup()}

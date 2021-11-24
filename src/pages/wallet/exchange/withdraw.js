@@ -6,7 +6,7 @@ const Withdraw = () => <ExchangeWithdraw/>
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet'])
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'error'])
     }
 })
 

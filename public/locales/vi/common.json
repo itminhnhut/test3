@@ -144,5 +144,8 @@
   "optional": "Tuỳ chọn",
   "clear": "Xoá",
   "email_authentication": "Xác thực Email",
-  "tfa_authentication": "Xác thực GoogleAuth"
+  "tfa_authentication": "Xác thực GoogleAuth",
+  "resend": "Gửi lại",
+  "close": "Đóng",
+  "error_code": "Mã lỗi"
 }

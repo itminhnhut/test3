@@ -144,5 +144,8 @@
   "optional": "Optional",
   "clear": "Clear",
   "email_authentication": "Email Authentication",
-  "tfa_authentication": "Google Authentication"
+  "tfa_authentication": "Google Authentication",
+  "resend": "Resend",
+  "close": "Close",
+  "error_code": "Code"
 }

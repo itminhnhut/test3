@@ -87,7 +87,8 @@
     "invalid_min_amount": "Minimum withdrawal amount is {{ value }}",
     "invalid_max_amount": "Maximum withdrawal amount is {{ value }}",
     "invalid_insufficient_balance": "Insufficient balance",
-    "network_not_support": "Withdrawal of {{ asset }} on {{ chain }} network is currently not supported"
+    "network_not_support": "Withdrawal of {{ asset }} on {{ chain }} network is currently not supported",
+    "wrong_otp": "Email or GoogleAuth authentication code is incorrect,<br/>please try again"
   },
   "est_balance": "Estimated Balance",
   "hide_asset": "Hide Asset",
@@ -104,6 +105,9 @@
     "google_description": "Enter the 6-digit code from Google Authenticator",
     "email_otp_wrong": "Wrong email verification code",
     "google_otp_wrong": "Wrong Google Authentication code",
-    "verifying": "Verifying"
-  }
+    "verifying": "Verifying",
+    "input_otp_suggest": "Please input OTP",
+    "both_input_otp_suggest": "Please input 2 OTP"
+  },
+  "withdraw_success_msg": "Your order has been recorded,<br/>please wait for a moment"
 }
