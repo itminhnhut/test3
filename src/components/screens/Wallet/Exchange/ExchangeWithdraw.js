@@ -911,7 +911,7 @@ const ExchangeWithdraw = () => {
                     {/*Catch Err*/}
                     {!isSuccess && state.errors?.status &&
                     <div className="w-full flex flex-col items-center justify-center">
-                        <img src="/images/icon/errors.png"
+                        <img src={getS3Url('/images/icon/errors.png')}
                              className="w-[65px] h-[65px]"
                              alt={`ERROR: ${state.errors?.status}`}/>
                         <div className="mt-5">
@@ -930,7 +930,7 @@ const ExchangeWithdraw = () => {
                     {/*Withdraw Success*/}
                     {isSuccess && !isErrors &&
                     <div className="w-full flex flex-col items-center justify-center">
-                        <img src="/images/icon/success.png"
+                        <img src={getS3Url('/images/icon/success.png')}
                              className="w-[65px] h-[65px]"
                              alt="SUCCESS"/>
                         <div className="mt-5 text-sm text-center">
