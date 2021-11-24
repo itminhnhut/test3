@@ -1493,6 +1493,11 @@ classnames@2.3.1, classnames@^2.2.1, classnames@^2.2.5, classnames@^2.2.6:
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
 
+clevertap-web-sdk@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/clevertap-web-sdk/-/clevertap-web-sdk-1.0.0.tgz#119f3e87710d601c7a2c2470ed7d6b6e70a2b8b4"
+  integrity sha512-Lsz8MoNoCdHkY4AnQXXWTxjuiNbgeKmiHwn5Cac7J9r++F2auBPIY0VkgqpZcp8jkdy/po9qUkvFH8XXyRWOwQ==
+
 cliui@^7.0.2:
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/cliui/-/cliui-7.0.4.tgz#a0265ee655476fc807aea9df3df8df7783808b4f"

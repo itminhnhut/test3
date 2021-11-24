@@ -84,9 +84,10 @@
     "selected_bank": "Không có ngân hàng được chọn",
     "invalid_withdraw_address": "Địa chỉ ví rút không hợp lệ",
     "invalid_memo": "MEMO không hợp lệ",
-    "invalid_min_amount": "Minimum withdrawal amount is {{ value }}",
-    "invalid_max_amount": "Maximum withdrawal amount is {{ value }}",
-    "invalid_insufficient_balance": "Insufficient balance"
+    "invalid_min_amount": "Giá trị rút tối thiểu là {{ value }}",
+    "invalid_max_amount": "Giá trị rút tối đa là {{ value }}",
+    "invalid_insufficient_balance": "Số dư của bạn không đủ",
+    "network_not_support": "Chưa hỗ trợ rút {{ asset }} trên mạng {{ chain }}"
   },
   "est_balance": "Tài sản ước lượng",
   "hide_asset": "Ẩn số dư",
@@ -97,5 +98,12 @@
   "min_withdraw": "Rút tối thiểu",
   "will_receive": "Thực nhận",
   "withdraw_confirmation": "Xác nhận rút",
-  "network": "Mạng lưới"
+  "network": "Mạng lưới",
+  "withdraw_prompt": {
+    "email_description": "Kiểm tra email để lấy mã xác thực {{ email }}",
+    "google_description": "Nhập mã 6 chữ số từ Google Authenticator",
+    "email_otp_wrong": "Sai mã xác thực Email",
+    "google_otp_wrong": "Sai mã xác thực Google Authenticator",
+    "verifying": "Đang xác thực"
+  }
 }

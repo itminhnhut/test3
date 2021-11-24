@@ -86,7 +86,8 @@
     "invalid_memo": "Invalid MEMO",
     "invalid_min_amount": "Minimum withdrawal amount is {{ value }}",
     "invalid_max_amount": "Maximum withdrawal amount is {{ value }}",
-    "invalid_insufficient_balance": "Insufficient balance"
+    "invalid_insufficient_balance": "Insufficient balance",
+    "network_not_support": "Withdrawal of {{ asset }} on {{ chain }} network is currently not supported"
   },
   "est_balance": "Estimated Balance",
   "hide_asset": "Hide Asset",
@@ -97,5 +98,12 @@
   "min_withdraw": "Minimum Withdraw",
   "will_receive": "Actually Receive",
   "withdraw_confirmation": "Withdraw Confirmation",
-  "network": "Network"
+  "network": "Network",
+  "withdraw_prompt": {
+    "email_description": "Check your email for the verification code {{ email }}",
+    "google_description": "Enter the 6-digit code from Google Authenticator",
+    "email_otp_wrong": "Wrong email verification code",
+    "google_otp_wrong": "Wrong Google Authentication code",
+    "verifying": "Verifying"
+  }
 }

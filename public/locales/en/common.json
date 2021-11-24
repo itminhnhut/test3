@@ -142,5 +142,7 @@
   "portfolio": "Portfolio",
   "crypto": "Crypto",
   "optional": "Optional",
-  "clear": "Clear"
+  "clear": "Clear",
+  "email_authentication": "Email Authentication",
+  "tfa_authentication": "Google Authentication"
 }

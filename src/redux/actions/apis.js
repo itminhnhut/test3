@@ -1,4 +1,5 @@
 const API_PREFIX = '/api/v1/';
+const API_V2_PREFIX = '/api/v2/';
 const API_V3_PREFIX = '/api/v3/';
 
 export const API_REGISTER = API_PREFIX + 'user/register';
@@ -33,6 +34,7 @@ export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list';
 
 // Wallet
 export const API_GET_WALLET_CONFIG = API_PREFIX + 'wallet/token_config'
+export const API_WITHDRAW = API_V2_PREFIX + "token/withdraw_asset";
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'
