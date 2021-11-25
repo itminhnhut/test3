@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { PulseLoader } from 'react-spinners'
 import { useTranslation } from 'next-i18next'
-import { formatWallet, getS3Url } from 'redux/actions/utils'
+import { formatWallet, getS3Url, getV1Url } from 'redux/actions/utils'
 import { Check, Eye, EyeOff, Search, X } from 'react-feather'
 import { EXCHANGE_ACTION } from 'pages/wallet'
 import { SECRET_STRING } from 'utils'
@@ -307,16 +307,16 @@ const renderOperationLink = (assetName, translator) => {
     return (
         <div className="flex pl-12">
             <a className="py-1.5 mr-3 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-               href={`/wallet/exchange?action=${EXCHANGE_ACTION.DEPOSIT}&asset=${assetName}`}>
+               href={`/wallet/exchange/deposit?type=crypto&asset=${assetName}`}>
                 {translator('common:deposit')}
             </a>
             <a className="py-1.5 mr-3 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-               href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}&asset=${assetName}`}>
+               href={`/wallet/exchange/withdraw?type=crypto&&asset=${assetName}`}>
                 {translator('common:withdraw')}
             </a>
             {ALLOWED_FUTURES_TRANSFER.includes(assetName) &&
             <a className="py-1.5 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-               href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}&asset=${assetName}`}>
+               href={getV1Url('/wallet/account?type=spot')}>
                 {translator('common:transfer')}
             </a>}
         </div>

@@ -12,6 +12,7 @@ import { buildExplorerUrl, formatTime, formatWallet, getS3Url, hashValidator, sh
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper'
 import { log } from 'utils'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
+import { WithdrawalStatus } from 'redux/actions/const'
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useOutsideClick from 'hooks/useOutsideClick'
@@ -49,7 +50,8 @@ const INITIAL_STATE = {
     openList: {},
     focus: '',
     search: '',
-    address: '0xeE96703614Ea707b0b99ecb55dA74c04Ff70f2Ed',
+    // address: '0xeE96703614Ea707b0b99ecb55dA74c04Ff70f2Ed',
+    address: '',
     amount: '',
     memo: '',
     validator: null,
@@ -708,7 +710,7 @@ const ExchangeWithdraw = () => {
             state.histories,
             state.loadingHistories,
             state.configs,
-            { getAssetName }
+            { getAssetName, t }
         )
         let tableStatus
 
@@ -1264,6 +1266,24 @@ function dataHandler(data, loading, configList, utils) {
             </a>
         }
 
+        let statusInner
+        switch (status) {
+            case WithdrawalStatus.COMPLETED:
+                statusInner = <span className="text-green">{utils?.t('common:success')}</span>
+                break
+            case WithdrawalStatus.WAITING_FOR_CONFIRMATIONS:
+            case WithdrawalStatus.WAITING_FOR_BALANCE:
+            case WithdrawalStatus.PENDING:
+                statusInner = <span className="text-yellow">{utils?.t('common:pending')}</span>
+                break
+            case WithdrawalStatus.REJECTED:
+                statusInner = <span className="text-red">{utils?.t('common:declined')}</span>
+                break
+            default:
+                statusInner = '--'
+                break
+        }
+
         result.push({
             key: `wdl_${id}_${txhash}`,
             id: <span className="!text-sm whitespace-nowrap">{id}</span>,
@@ -1273,7 +1293,7 @@ function dataHandler(data, loading, configList, utils) {
             withdraw_to: <span className="!text-sm whitespace-nowrap">{shortHashAddress(withdraw_to, 5, 5)}</span>,
             txhash: txhashInner,
             time: <span className="!text-sm whitespace-nowrap">{formatTime(time, 'HH:mm dd-MM-yyyy')}</span>,
-            status: <span className="!text-sm whitespace-nowrap">{status}</span>,
+            status: <span className="!text-sm whitespace-nowrap">{statusInner}</span>,
             [RETABLE_SORTBY]: {
                 id, asset: assetName, amount: +amount, network, withdraw_to, txhash, time, status
             }

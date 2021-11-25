@@ -373,7 +373,7 @@ const NavBar = ({
         return (
             <div className="mal-navbar__dropdown">
                 <div className="mal-navbar__dropdown__wrapper">
-                    <Link href={getV1Url('/wallet/account?type=spot')}>
+                    <Link href="/wallet/exchange">
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
                             <img
                                 src={getS3Url('/images/icon/ic_wallet.png')}
