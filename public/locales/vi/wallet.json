@@ -34,14 +34,14 @@
   "blockchain_network": "Mạng lưới BlockChain",
   "available_balance": "Khả dụng",
   "withdraw_enable_warn": {
-      "first": "Tính năng gửi onchain cho",
-      "second": "qua mạng",
-      "last": "hiện chưa được kích hoạt. Chúng tôi sẽ cố gắng hoàn thiện trong thời gian sớm nhất."
+    "first": "Tính năng gửi onchain cho",
+    "second": "qua mạng",
+    "last": "hiện chưa được kích hoạt. Chúng tôi sẽ cố gắng hoàn thiện trong thời gian sớm nhất."
   },
   "sending_history": "Lịch sử gửi",
   "withdraw_via_vndc_warn": "Để đảm bảo an toàn, tính năng rút tài sản chỉ sẵn sàng dành cho các tài khoản đã hoàn thành xác minh danh tính (KYC).",
   "receive": "Nhận",
-  "deposit_address": "Địa chỉ nhận",
+  "deposit_address": "Địa chỉ nạp",
   "deposit_memo": "Memo",
   "deposit_history": "Lịch sử Nhận",
   "note": "Lưu ý",
@@ -51,8 +51,8 @@
   "trade": "Giao dịch",
   "no_wallets": "Không có ví hỗ trợ",
   "withdraw_success_title": "Giao dịch thành công",
-  "withdraw_success_desc_1":"Bạn rút thành công",
-  "withdraw_success_desc_2":"từ Nami Exchange.",
+  "withdraw_success_desc_1": "Bạn rút thành công",
+  "withdraw_success_desc_2": "từ Nami Exchange.",
   "withdraw_to_vndc": "Chuyển tài sản từ ví Nami Spot đến ví VNDC",
   "equity_value": "Giá trị tài sản",
   "transfer_success": "Chuyển thành công {{amount}} {{assetCode}} từ Ví {{selectedSource}} sang Ví {{selectedDestination}}",
@@ -61,8 +61,8 @@
   "expired_token": "Phiên rút tiền đã hết hạn, vui lòng thử lại",
   "no_request_id": "Tài khoản của bạn không thể liên kết được với Nami, vui lòng liên hệ với CSKH của Nami để được hỗ trợ",
   "withdraw_failed_title": "Giao dịch thất bại",
-  "withdraw_failed_desc_1":"Hiện tại không thể rút",
-  "withdraw_failed_desc_2":"từ Nami Exchange, vui lòng thử lại sau",
+  "withdraw_failed_desc_1": "Hiện tại không thể rút",
+  "withdraw_failed_desc_2": "từ Nami Exchange, vui lòng thử lại sau",
   "withdraw_btn": "Chuyển",
   "transfer_history": "Lịch sử Chuyển ví",
   "transfer_detail": "Quý khách vui lòng chuyển khoản theo nội dung",
@@ -88,13 +88,15 @@
     "invalid_max_amount": "Giá trị rút tối đa là {{ value }}",
     "invalid_insufficient_balance": "Số dư của bạn không đủ",
     "network_not_support": "Chưa hỗ trợ rút {{ asset }} trên mạng {{ chain }}",
-    "wrong_otp": "Mã xác thực Email hoặc GoogleAuth không đúng,<br/>vui lòng thử lại"
+    "wrong_otp": "Mã xác thực Email hoặc GoogleAuth không đúng,<br/>vui lòng thử lại",
+    "address_not_found": "Không tìm thấy địa chỉ ví, vui lòng liên hệ với hỗ trợ."
   },
   "est_balance": "Tài sản ước lượng",
   "hide_asset": "Ẩn số dư",
   "asset_balance": "Số dư tài sản",
   "receive_address": "Địa chỉ ví nhận",
   "withdraw_history": "Lịch sử rút",
+  "dep_history": "Lịch sử nạp",
   "withdraw_fee": "Phí rút",
   "min_withdraw": "Rút tối thiểu",
   "will_receive": "Thực nhận",
@@ -109,5 +111,12 @@
     "input_otp_suggest": "Vui lòng nhập OTP",
     "both_input_otp_suggest": "Vui lòng nhập đủ 2 OTP"
   },
-  "withdraw_success_msg": "Lệnh rút đã được ghi nhận,<br/>vui lòng chờ trong giây lát"
+  "withdraw_success_msg": "Lệnh rút đã được ghi nhận,<br/>vui lòng chờ trong giây lát",
+  "expected_arrival": "Thời gian mong đợi",
+  "expected_unlock": "Thời gian dự kiến",
+  "confirmation_block": "Sau khi có <0>block</0> xác nhận",
+  "minimum_deposit": "Giá trị nạp tối thiểu",
+  "reveal_address": "Khởi tạo",
+  "address_not_available": "Bạn chưa có địa chỉ ví này",
+  "scan_address_qr": "Quét địa chỉ ví"
 }

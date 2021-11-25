@@ -36,6 +36,8 @@ export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list';
 export const API_GET_WALLET_CONFIG = API_PREFIX + 'wallet/token_config'
 export const API_WITHDRAW = API_V2_PREFIX + "token/withdraw_asset";
 export const API_GET_WITHDRAW_HISTORY = API_PREFIX + "token/withdraw_history";
+export const API_GET_DEPOSIT_HISTORY = API_PREFIX + "wallet/deposit_history";
+export const API_REVEAL_DEPOSIT_TOKEN_ADDRESS = API_PREFIX + "deposit/reveal_address";
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'

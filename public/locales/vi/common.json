@@ -147,5 +147,7 @@
   "tfa_authentication": "Xác thực GoogleAuth",
   "resend": "Gửi lại",
   "close": "Đóng",
-  "error_code": "Mã lỗi"
+  "error_code": "Mã lỗi",
+  "scan": "Quét",
+  "important_notes": "Lưu ý quan trọng"
 }

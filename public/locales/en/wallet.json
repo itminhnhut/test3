@@ -88,13 +88,15 @@
     "invalid_max_amount": "Maximum withdrawal amount is {{ value }}",
     "invalid_insufficient_balance": "Insufficient balance",
     "network_not_support": "Withdrawal of {{ asset }} on {{ chain }} network is currently not supported",
-    "wrong_otp": "Email or GoogleAuth authentication code is incorrect,<br/>please try again"
+    "wrong_otp": "Email or GoogleAuth authentication code is incorrect,<br/>please try again",
+    "address_not_found": "Address not found, please contact to supporter for information."
   },
   "est_balance": "Estimated Balance",
   "hide_asset": "Hide Asset",
   "asset_balance": "Asset Balance",
   "receive_address": "Withdraw Address",
   "withdraw_history": "Withdraw History",
+  "dep_history": "Deposit History",
   "withdraw_fee": "Withdraw Fee",
   "min_withdraw": "Minimum Withdraw",
   "will_receive": "Actually Receive",
@@ -109,5 +111,12 @@
     "input_otp_suggest": "Please input OTP",
     "both_input_otp_suggest": "Please input 2 OTP"
   },
-  "withdraw_success_msg": "Your order has been recorded,<br/>please wait for a moment"
+  "withdraw_success_msg": "Your order has been recorded,<br/>please wait for a moment",
+  "expected_arrival": "Expected arrival",
+  "expected_unlock": "Expected unlock",
+  "confirmation_block": "After having <0>block</0> confirmation block",
+  "minimum_deposit": "Minimum deposit",
+  "reveal_address": "Reveal Address",
+  "address_not_available": "No wallet address yet",
+  "scan_address_qr": "Scan wallet address"
 }

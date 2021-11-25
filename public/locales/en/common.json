@@ -147,5 +147,7 @@
   "tfa_authentication": "Google Authentication",
   "resend": "Resend",
   "close": "Close",
-  "error_code": "Code"
+  "error_code": "Code",
+  "scan": "Scan",
+  "important_notes": "Important notes"
 }
