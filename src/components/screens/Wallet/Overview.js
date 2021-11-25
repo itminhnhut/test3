@@ -196,7 +196,7 @@ const OverviewWallet = (props) => {
                 <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <img src="/images/icon/ic_futures.png" width="32" height="32" alt=""/>
+                            <img src={getS3Url('/images/icon/ic_futures.png')} width="32" height="32" alt=""/>
                         </div>
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
@@ -228,7 +228,7 @@ const OverviewWallet = (props) => {
                 <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <img src="/images/icon/ic_staking.png" width="32" height="32" alt=""/>
+                            <img src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" alt=""/>
                         </div>
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
@@ -260,7 +260,7 @@ const OverviewWallet = (props) => {
                 <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row">
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <img src="/images/icon/ic_farming.png" width="32" height="32" alt=""/>
+                            <img src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" alt=""/>
                         </div>
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
