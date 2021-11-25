@@ -133,24 +133,24 @@ const ExchangeWallet = ({ allAssets }) => {
                 </div>
                 <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto">
 
-                    <Link href="/wallet/exchange/portfolio">
+                    <Link href="/wallet/exchange/portfolio" prefetch={false}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[120px] md:w-[120px] lg:w-[150px]  mr-3.5 sm:mr-0 sm:ml-2 border border-dominant bg-dominant rounded-md font-medium text-xs xl:text-sm text-white hover:opacity-80 cursor-pointer whitespace-nowrap">
                             {t('common:portfolio')}
                         </a>
                     </Link>
-                    <Link href="/wallet/exchange/deposit?type=crypto">
+                    <Link href="/wallet/exchange/deposit?type=crypto" prefetch={false}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:deposit')}
                         </a>
                     </Link>
 
                     <div className="w-full h-[8px] sm:hidden"/>
-                    <Link href="/wallet/exchange/withdraw?type=crypto">
+                    <Link href="/wallet/exchange/withdraw?type=crypto" prefetch={false}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px]  mr-3.5 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:withdraw')}
                         </a>
                     </Link>
-                    <Link href="/wallet/exchange/transfer">
+                    <Link href={getV1Url('wallet/account?type=spot')} prefetch={false}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:transfer')}
                         </a>
@@ -169,7 +169,7 @@ const ExchangeWallet = ({ allAssets }) => {
                         </div>
                         <div className="mt-5 flex items-center">
                             <div className="rounded-md bg-teal-lightTeal dark:bg-teal-5 min-w-[35px] min-h-[35px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center">
-                                <img className="-ml-0.5" src="/images/icon/ic_wallet_2.png" height={width >= 768 ? '25' : '14'} width={width >= 768 ? '25' : '14'} alt=""/>
+                                <img className="-ml-0.5" src={getS3Url('/images/icon/ic_wallet_2.png')} height={width >= 768 ? '25' : '14'} width={width >= 768 ? '25' : '14'} alt=""/>
                             </div>
                             <div className="ml-3 md:ml-6 sm:flex items-center">
                                 <div className="font-bold text-[24px] lg:text-[28px] xl:text-[36px] text-dominant flex flex-wrap">
@@ -190,7 +190,7 @@ const ExchangeWallet = ({ allAssets }) => {
                         </div>
                     </div>
                     <div className="hidden md:block">
-                        <img src="/images/screen/wallet/wallet_overview_grp.png" width="140" height="140" alt=""/>
+                        <img src={getS3Url('/images/screen/wallet/wallet_overview_grp.png')} width="140" height="140" alt=""/>
                     </div>
                 </div>
             </MCard>

@@ -9,6 +9,7 @@ import useWindowSize from 'hooks/useWindowSize'
 import AssetLogo from 'components/wallet/AssetLogo'
 import wallet from 'redux/reducers/wallet'
 import Link from 'next/link'
+import { getS3Url, getV1Url } from 'redux/actions/utils'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -41,10 +42,13 @@ const OverviewWallet = (props) => {
         for (let i = 0; i < limitExchangeAsset; ++i) {
             const key = `overview__spot_${i}`
             items.push(
-                <a key={key}
-                   href={`/wallet/exchange/${allAssets[i]?.assetName}`} className="mr-3">
-                    <AssetLogo assetId={null} size={30}/>
-                </a>
+                <Link key={key}
+                      href={`/wallet/exchange/deposit?type=crypto&asset=${allAssets[i]?.assetName}`}
+                      prefetch={false}>
+                    <a className="mr-3">
+                        <AssetLogo assetCode={allAssets[i]?.assetName} size={30}/>
+                    </a>
+                </Link>
             )
         }
 
@@ -55,10 +59,15 @@ const OverviewWallet = (props) => {
         if (!stakingConfig) return
         return stakingConfig.map(stk => {
             return (
-                <a key={`overview_staking__${stk?.asset_name}`}
-                   href={`/staking?asset=${stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name}`} className="mr-3">
-                    <AssetLogo assetId={null} size={30}/>
-                </a>
+                <Link key={`overview_staking__${stk?.asset_name}`}
+                      href={`/wallet/staking?asset=${stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name}`}
+                      prefetch={false}
+                >
+                    <a
+                        className="mr-3">
+                        <AssetLogo assetCode={stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name} size={30}/>
+                    </a>
+                </Link>
             )
         })
     }, [stakingConfig])
@@ -67,10 +76,13 @@ const OverviewWallet = (props) => {
         if (!farmingConfig) return
         return farmingConfig.map(frm => {
             return (
-                <a key={`overview_farming__${frm?.asset_name}`}
-                   href={`/farming?asset=${frm?.asset_name === 'NAC' ? 'NAMI' : frm?.asset_name}`} className="mr-3">
-                    <AssetLogo assetId={null} size={30}/>
-                </a>
+                <Link key={`overview_farming__${frm?.asset_name}`}
+                      href={`/wallet/farming?asset=${frm?.asset_name === 'NAC' ? 'NAMI' : frm?.asset_name}`}
+                      prefetch={false}>
+                    <a  className="mr-3">
+                        <AssetLogo assetCode={frm?.asset_name} size={30}/>
+                    </a>
+                </Link>
             )
         })
     }, [farmingConfig])
@@ -112,7 +124,7 @@ const OverviewWallet = (props) => {
                         </div>
                         <div className="mt-5 flex items-center">
                             <div className="rounded-md bg-teal-lightTeal dark:bg-teal-5 min-w-[55px] min-h-[55px] md:min-w-[85px] md:min-h-[85px] flex items-center justify-center">
-                                <img className="-ml-0.5" src="/images/icon/ic_wallet_2.png" height={width >= 768 ? '48' : '28'} width={width >= 768 ? '48' : '28'} alt=""/>
+                                <img className="-ml-0.5" src={getS3Url('/images/icon/ic_wallet_2.png')} height={width >= 768 ? '48' : '28'} width={width >= 768 ? '48' : '28'} alt=""/>
                             </div>
                             <div className="ml-3 md:ml-6">
                                 <div className="font-bold text-[24px] lg:text-[28px] xl:text-[36px] text-dominant flex flex-wrap">
@@ -124,7 +136,7 @@ const OverviewWallet = (props) => {
                         </div>
                     </div>
                     <div className="hidden md:block">
-                        <img src="/images/screen/wallet/wallet_overview_grp.png" width="140" height="140" alt=""/>
+                        <img src={getS3Url('/images/screen/wallet/wallet_overview_grp.png')} width="140" height="140" alt=""/>
                     </div>
                 </div>
             </MCard>
@@ -136,13 +148,13 @@ const OverviewWallet = (props) => {
                 <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <img src="/images/icon/ic_exchange.png" width="32" height="32" alt=""/>
+                            <img src={getS3Url('/images/icon/ic_exchange.png')} width="32" height="32" alt=""/>
                         </div>
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
                                 <span className="mr-4">Exchange</span>
                                 <span className="inline-flex items-center">
-                                    <img src="/images/icon/ic_piechart.png" width="16" height="16" alt=""/>
+                                    <img src={getS3Url('/images/icon/ic_piechart.png')} width="16" height="16" alt=""/>
                                     <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>
                                 </span>
                             </div>
@@ -154,22 +166,26 @@ const OverviewWallet = (props) => {
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
                         <div className="flex items-center mt-4 lg:mt-0">
                             {renderExchangeAsset()}
-                            <a href="/" className="mr-3">
-                                <div className="min-w-[31px] min-h-[31px] w-[31px] h-[31px] flex items-center justify-center text-medium text-xs rounded-full border border-gray-5 dark:border-divider-dark bg-white dark:bg-darkBlue-3">
-                                    +6
-                                </div>
-                            </a>
+                            <Link href="/wallet/exchange/deposit?type=crypto" prefetch={false}>
+                                <a className="mr-3">
+                                    <div className="min-w-[31px] min-h-[31px] w-[31px] h-[31px] flex items-center justify-center text-medium text-xs rounded-full border border-gray-5 dark:border-divider-dark bg-white dark:bg-darkBlue-3">
+                                        +6
+                                    </div>
+                                </a>
+                            </Link>
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <a  href={`/wallet/exchange?action=${EXCHANGE_ACTION.DEPOSIT}`}
-                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
-                                {t('common:deposit')}
-                            </a>
-                            <a  href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
-                                {t('common:withdraw')}
-                            </a>
-                            <a  href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}`}
+                            <Link href={`/wallet/exchange/deposit?type=crypto`} prefetch={false}>
+                                <a  className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                    {t('common:deposit')}
+                                </a>
+                            </Link>
+                            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>
+                                <a  className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                    {t('common:withdraw')}
+                                </a>
+                            </Link>
+                            <a  href={getV1Url('/wallet/account?type=spot')}
                                 className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:transfer')}
                             </a>
@@ -201,7 +217,7 @@ const OverviewWallet = (props) => {
                             Transfer funds to your Futures Account to start trading.
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.TRANSFER}`}
+                            <a href={getV1Url('/wallet/account?type=spot')}
                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                 {t('common:transfer')}
                             </a>
@@ -232,10 +248,11 @@ const OverviewWallet = (props) => {
                             {renderStakingList()}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
-                                {t('common:withdraw')}
-                            </a>
+                            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>
+                                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                    {t('common:withdraw')}
+                                </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -263,10 +280,11 @@ const OverviewWallet = (props) => {
                             {renderFarmingList()}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.WITHDRAW}`}
-                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
-                                {t('common:withdraw')}
-                            </a>
+                            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>
+                                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                    {t('common:withdraw')}
+                                </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
