@@ -461,6 +461,11 @@ export const WalletType = {
     EARN: 'EARN',
 };
 
+export const EarnWalletType = {
+    STAKING: 'stake',
+    FARMING: 'farm'
+}
+
 export const WalletTypeReducerKey = {
     [WalletType.SPOT]: 'SPOT',
     [WalletType.MARGIN]: 'MARGIN',

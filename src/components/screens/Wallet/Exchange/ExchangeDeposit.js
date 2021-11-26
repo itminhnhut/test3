@@ -1,15 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { buildDepositExplorerUrl, buildExplorerUrl, formatTime, formatWallet, shortHashAddress, updateOrInsertDepositHistory } from 'redux/actions/utils'
 import { Trans, useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { Check, ChevronLeft, ChevronRight, Copy, Search, Slash, X } from 'react-feather'
 import { API_GET_DEPOSIT_HISTORY, API_GET_WALLET_CONFIG, API_REVEAL_DEPOSIT_TOKEN_ADDRESS } from 'redux/actions/apis'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { DepositStatus } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { ApiStatus } from 'redux/actions/const'
-import { find, get } from 'lodash'
+import { find, get, pick } from 'lodash'
+import { useSelector } from 'react-redux'
+import { log } from 'utils'
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useOutsideClick from 'hooks/useOutsideClick'
+import useWindowFocus from 'hooks/useWindowFocus'
 import useWindowSize from 'hooks/useWindowSize'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import ChevronDown from 'components/svg/ChevronDown'
@@ -24,7 +29,7 @@ import styled from 'styled-components'
 import colors from 'styles/colors'
 import Axios from 'axios'
 import ReTable from 'components/common/ReTable'
-import { formatTime, formatWallet, shortHashAddress } from 'redux/actions/utils'
+
 
 const INITIAL_STATE = {
     type: 1, // 0. fiat, 1. crypto
@@ -43,6 +48,7 @@ const INITIAL_STATE = {
     histories: null,
     loadingHistory: false,
     historyPage: 0,
+    blockConfirm: {},
 
     // Add new state here
 }
@@ -61,9 +67,12 @@ const ExchangeDeposit = () => {
     const cryptoListSearchRef = useRef()
     const networkListRef = useRef()
 
+    // Rdx
+    const socket = useSelector(state => state.socket.userSocket)
 
     // Use Hooks
     const router = useRouter()
+    const focused = useWindowFocus()
     const [currentTheme, ] = useDarkMode()
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
@@ -104,7 +113,6 @@ const ExchangeDeposit = () => {
 
     const getDepositTokenAddress = async (createIfNotExist, currency, tokenTypeIndex) => {
         if (!currency || typeof tokenTypeIndex !== 'number') {
-            setState({ errors: { ...state.errors, notSupport: true } })
             return
         }
 
@@ -126,8 +134,8 @@ const ExchangeDeposit = () => {
         }
     }
 
-    const getDepositHistory = async (pageIndex) => {
-        setState({ loadingHistory: true })
+    const getDepositHistory = async (pageIndex, isReNew = false) => {
+        !isReNew && setState({ loadingHistory: true })
 
         try {
             const { data } = await Axios.get(API_GET_DEPOSIT_HISTORY, { params: { pageIndex, pageSize: HISTORY_SIZE } })
@@ -139,6 +147,20 @@ const ExchangeDeposit = () => {
             console.log(`Can't get deposit history `, e)
         } finally {
             setState({ loadingHistory: false })
+        }
+    }
+
+    const updateBlockConfirmationEvent = (data, blockConfirmOrigin) => {
+        log.i('Deposit socket => ', data)
+        const { command, ...rest } = data
+        switch (command) {
+            case 'update':
+                updateOrInsertDepositHistory(pick(rest.data, ['_history_type', 'id']), rest.data)
+                break
+            case 'update_block_confirmation':
+                const { _history_type, _history_id, blockConfirmations } = rest.data
+                setState({ blockConfirm: {...blockConfirmOrigin, [`history:${_history_type}:${_history_id}`]: blockConfirmations } })
+                break
         }
     }
 
@@ -539,7 +561,7 @@ const ExchangeDeposit = () => {
             state.histories,
             state.loadingHistory,
             state.configs,
-            { getAssetName, t }
+            { getAssetName, t, blockConfirm: state.blockConfirm }
         )
         let tableStatus
 
@@ -578,7 +600,7 @@ const ExchangeDeposit = () => {
                 }}
             />
         )
-    }, [state.configs, state.loadingHistory, state.histories, width])
+    }, [state.configs, state.loadingHistory, state.histories, state.blockConfirm, width])
 
     const renderPagination = useCallback(() => {
         return (
@@ -599,7 +621,17 @@ const ExchangeDeposit = () => {
 
     useEffect(() => {
         getDepositConfig()
+        if (!socket?._callbacks['$deposit::update_history_row']) {
+            socket?.on('deposit::update_history_row', (data) => updateBlockConfirmationEvent(data, state.blockConfirm))
+        }
     }, [])
+
+    useEffect(() => {
+        if (!socket?._callbacks['$deposit::update_history_row']) {
+            socket?.on('deposit::update_history_row', (data) => updateBlockConfirmationEvent(data, state.blockConfirm))
+        }
+        return socket?.removeListener('deposit::update_history_row', data => updateBlockConfirmationEvent(data, state.blockConfirm))
+    }, [socket, state.blockConfirm])
 
     useEffect(() => {
         getDepositHistory(state.historyPage)
@@ -666,18 +698,30 @@ const ExchangeDeposit = () => {
     }, [state.selectedAsset])
 
     useEffect(() => {
-        console.log('namidev-DEBUG: state => ', state)
-    }, [state])
+        let interval
+        if (focused) {
+            interval = setInterval(() => getDepositHistory(state.historyPage, true), 2800)
+        }
+        return () => interval && clearInterval(interval)
+    }, [focused, state.historyPage])
+
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: state => ', state)
+    // }, [state])
 
     return (
         <MaldivesLayout>
             <Background isDark={currentTheme === THEME_MODE.DARK}>
                 <div className="mal-container px-4">
-                    <div className="t-common">
-                        {t('common:deposit')}
+                    <div className="t-common mb-4">
+                       <span className="max-w-[150px] flex items-center cursor-pointer rounded-lg hover:text-dominant"
+                             onClick={() => router?.back()}>
+                           <span className="inline-flex items-center justify-center h-full mr-3 mt-0.5"><ChevronLeft size={24}/></span>
+                           {t('common:deposit')}
+                       </span>
                     </div>
                     {renderTab()}
-                    <MCard addClass="pt-8 pb-10 px-6 lg:px-16 xl:px-8">
+                    <MCard addClass="pt-12 pb-10 px-6 lg:px-16 xl:px-8">
                         <div className="flex flex-col xl:flex-row items-center xl:items-start justify-center">
                             <div className="w-full xl:w-1/2 max-w-[453px] xl:ml-16 xl:mr-16 xl:mr-32">
                                 {renderDepositFiat()}
@@ -770,32 +814,70 @@ function dataHandler(data, loading, configList, utils) {
     if (!Array.isArray(data) || !data || !data.length) return []
 
     const result = []
-    // address: "0xab894be24e1b16ac0770edd37a4ba68fa764921c"
-    // amount: 120
-    // currency: 3
-    // data: null
-    // hash: "0xd114351d3996d1db62d8ec7dff4abf2c7625f38705bb7fbd6f77a300eb1feb38"
-    // id: 22
-    // network: "Ethereum"
-    // status: 1
-    // time: "2019-05-03T06:39:02Z"
-    // type: "1"
-    // _history_type: "Nami"
 
     data.forEach(h => {
-        const { id, currency, amount, network, address, hash, time, status } = h
+        const { id, currency, amount, network, address, hash, time, status, _history_type } = h
         const assetName = utils?.getAssetName(configList, currency)
+
+        let statusInner
+        switch (status) {
+            case DepositStatus.COMPLETED:
+                if (!hash) {
+                    statusInner = <span className='text-green'>Complete</span>
+                } else {
+                    statusInner = (
+                        <Link href={buildExplorerUrl(hash, network)}
+                              prefetch={false}>
+                            <a className="text-green" target='_blank'>
+                                Completed
+                            </a>
+                        </Link>
+                    )
+                }
+                break
+            case DepositStatus.PENDING:
+                statusInner = <span className='text-yellow'>Pending</span>
+                break
+            case DepositStatus.WAITING_FOR_BLOCK_CONFIRMATION:
+                const confirmedNumber = get(utils?.blockConfirm, `history:${_history_type}:${id}`,
+                                                    h?.blockConfirmations?.confirmed || 0)
+                return <a
+                    href={buildExplorerUrl(hash, network)}
+                    className="text_yellow" target="_blank">
+                    {confirmedNumber}/{h?.blockConfirmations?.minimum}
+                </a>
+
+            case DepositStatus.CONFIRMED_WAIT_TO_DEPOSIT: {
+                statusInner = (
+                    <Link href={buildExplorerUrl(hash, network)}>
+                        <a className='text-yellow' target='_blank'>
+                            Đang xác thực
+                        </a>
+                    </Link>
+                )
+                break
+            }
+            case DepositStatus.BLOCK_DENIED: {
+                statusInner = <span className='text-red'>Rejected</span>
+                break
+            }
+            default:
+                statusInner = '--'
+        }
 
         result.push({
             key: `dep_${id}_${hash}`,
             id: <span className="!text-sm whitespace-nowrap">{id}</span>,
-            asset: <span className="!text-sm whitespace-nowrap">{assetName}</span>,
+            asset: <div className="flex items-center">
+                <AssetLogo assetCode={assetName} size={24}/>
+                <span className="!text-sm whitespace-nowrap ml-2.5">{assetName}</span>
+            </div>,
             amount: <span className="!text-sm whitespace-nowrap">{formatWallet(amount)}</span>,
             address: <span className="!text-sm whitespace-nowrap">{shortHashAddress(address, 5, 5)}</span>,
             network: <span className="!text-sm whitespace-nowrap">{network}</span>,
             txhash: <span className="!text-sm whitespace-nowrap">{shortHashAddress(hash, 5, 5)}</span>,
             time: <span className="!text-sm whitespace-nowrap">{formatTime(time, 'HH:mm dd-MM-yyyy')}</span>,
-            status: <span className="!text-sm whitespace-nowrap">{status}</span>,
+            status: <span className="!text-sm whitespace-nowrap">{statusInner}</span>,
         })
     })
 

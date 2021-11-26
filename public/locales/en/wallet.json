@@ -1,5 +1,5 @@
 {
-  "spot": "Spot Wallet",
+  "spot": "Exchange Wallet",
   "master": "Master Wallet",
   "margin": "Margin Wallet",
   "futures": "Futures Wallet",
@@ -99,6 +99,7 @@
   "dep_history": "Deposit History",
   "withdraw_fee": "Withdraw Fee",
   "min_withdraw": "Minimum Withdraw",
+  "max_withdraw": "Maximum Withdraw",
   "will_receive": "Actually Receive",
   "withdraw_confirmation": "Withdraw Confirmation",
   "network": "Network",
@@ -118,5 +119,12 @@
   "minimum_deposit": "Minimum deposit",
   "reveal_address": "Reveal Address",
   "address_not_available": "No wallet address yet",
-  "scan_address_qr": "Scan wallet address"
+  "scan_address_qr": "Scan wallet address",
+  "earned": {
+    "total_balance": "Tổng số dư đang Stake",
+    "total_interest_earn": "Tổng lãi đã chốt",
+    "today_interest_earned": "Lãi dự kiến hôm nay",
+    "est_value": "Tổng lãi dự kiến",
+    "locked_staking": "Đang stake"
+  }
 }

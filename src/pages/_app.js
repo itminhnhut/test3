@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 import * as types from 'src/redux/actions/types';
-import { getMe } from 'src/redux/actions/user';
+import { getMe, getUserEarnedBalance, getUserFuturesBalance } from 'src/redux/actions/user'
 import initUserSocket from 'src/redux/actions/userSocket';
 import Head from 'src/components/common/Head';
 import { appWithTranslation } from 'next-i18next';
@@ -19,6 +19,7 @@ import { useStore } from 'src/redux/store';
 // import * as fpixel from 'src/utils/fpixel';
 import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
+import { EarnWalletType } from 'redux/actions/const'
 
 export function reportWebVitals(metric) {
     switch (metric.name) {
@@ -105,7 +106,9 @@ const App = ({ Component, pageProps }) => {
                 lastUserId = newUserId;
                 store.dispatch(initUserSocket());
                 store.dispatch(getWallet());
-
+                store.dispatch(getUserFuturesBalance())
+                // store.dispatch(getUserEarnedBalance(EarnWalletType.STAKING))
+                // store.dispatch(getUserEarnedBalance(EarnWalletType.FARMING))
             }
         }
     });

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { formatWallet, getS3Url, getV1Url } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import { Eye, EyeOff } from 'react-feather'
 import { EXCHANGE_ACTION} from 'pages/wallet'
@@ -7,9 +8,9 @@ import { SECRET_STRING } from 'utils'
 import MCard from 'components/common/MCard'
 import useWindowSize from 'hooks/useWindowSize'
 import AssetLogo from 'components/wallet/AssetLogo'
+import EstimateAsset from 'components/common/EstimateAsset'
 import wallet from 'redux/reducers/wallet'
 import Link from 'next/link'
-import { getS3Url, getV1Url } from 'redux/actions/utils'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -18,7 +19,7 @@ const INITIAL_STATE = {
 }
 
 const OverviewWallet = (props) => {
-    const { allAssets, loadingStaking, stakingConfig, loadingFarming, farmingConfig } = props
+    const { allAssets, stakingConfig, farmingConfig, exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice } = props
 
     // Init State
     const [state, set] = useState(INITIAL_STATE)
@@ -94,17 +95,17 @@ const OverviewWallet = (props) => {
                     {t('common:overview')}
                 </div>
                 <div className="flex items-center w-full mt-3 sm:mt-0 sm:w-auto">
-                    <Link href="/wallet/exchange/deposit?type=crypto" prefetch={false}>
+                    <Link href="/wallet/exchange/deposit?type=crypto" prefetch>
                         <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:deposit')}
                         </a>
                     </Link>
-                    <Link href="/wallet/exchange/withdraw?type=crypto" prefetch={false}>
+                    <Link href="/wallet/exchange/withdraw?type=crypto" prefetch>
                         <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:withdraw')}
                         </a>
                     </Link>
-                    <Link href="/wallet/exchange/transfer" prefetch={false}>
+                    <Link href="/wallet/exchange/transfer" prefetch>
                         <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:transfer')}
                         </a>
@@ -128,10 +129,14 @@ const OverviewWallet = (props) => {
                             </div>
                             <div className="ml-3 md:ml-6">
                                 <div className="font-bold text-[24px] lg:text-[28px] xl:text-[36px] text-dominant flex flex-wrap">
-                                    <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : '0,085334734'}</span>
+                                    <span className="mr-1.5">{state.hideAsset ? SECRET_STRING
+                                        : formatWallet(exchangeEstBtc?.value + exchangeEstBtc?.value, exchangeEstBtc?.assetDigit) }</span>
                                     <span>BTC</span>
                                 </div>
-                                <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">{state.hideAsset ? SECRET_STRING : '($59,983.45867)'}</div>
+                                <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">
+                                    {state.hideAsset ? SECRET_STRING
+                                        : `$ ${formatWallet(exchangeRefPrice?.value + futuresRefPrice?.value, exchangeRefPrice?.assetDigit)}`}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,7 +164,7 @@ const OverviewWallet = (props) => {
                                 </span>
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>
+                                <span className="font-bold">{formatWallet(exchangeEstBtc?.value, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.value, exchangeRefPrice?.assetDigit)}</span></span>
                             </div>
                         </div>
                     </div>
@@ -193,7 +198,8 @@ const OverviewWallet = (props) => {
                     </div>
                 </div>
 
-                <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
+                <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-divider dark:border-divider-dark">
+                    {/*border-b*/}
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
                             <img src={getS3Url('/images/icon/ic_futures.png')} width="32" height="32" alt=""/>
@@ -207,7 +213,7 @@ const OverviewWallet = (props) => {
                                 {/*</span>*/}
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>
+                                <span className="font-bold">{formatWallet(futuresEstBtc?.value, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.value, futuresRefPrice?.assetDigit)}</span></span>
                             </div>
                         </div>
                     </div>
@@ -218,76 +224,76 @@ const OverviewWallet = (props) => {
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <a href={getV1Url('/wallet/account?type=spot')}
-                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                               className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant hover:text-white hover:!bg-dominant">
                                 {t('common:transfer')}
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
-                    <div className="md:w-1/3 flex items-center">
-                        <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <img src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" alt=""/>
-                        </div>
-                        <div className="ml-4 xl:ml-6">
-                            <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
-                                <span className="mr-4">Staking</span>
-                                {/*<span className="inline-flex items-center">*/}
-                                {/*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*/}
-                                {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
-                                {/*</span>*/}
-                            </div>
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
-                        <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">
-                            {renderStakingList()}
-                        </div>
-                        <div className="flex items-center mt-4 lg:mt-0">
-                            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>
-                                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
-                                    {t('common:withdraw')}
-                                </a>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+                {/*<div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">*/}
+                {/*    <div className="md:w-1/3 flex items-center">*/}
+                {/*        <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">*/}
+                {/*            <img src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" alt=""/>*/}
+                {/*        </div>*/}
+                {/*        <div className="ml-4 xl:ml-6">*/}
+                {/*            <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">*/}
+                {/*                <span className="mr-4">Staking</span>*/}
+                {/*                /!*<span className="inline-flex items-center">*!/*/}
+                {/*                /!*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*!/*/}
+                {/*                /!*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*!/*/}
+                {/*                /!*</span>*!/*/}
+                {/*            </div>*/}
+                {/*            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">*/}
+                {/*                <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">*/}
+                {/*        <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">*/}
+                {/*            {renderStakingList()}*/}
+                {/*        </div>*/}
+                {/*        <div className="flex items-center mt-4 lg:mt-0">*/}
+                {/*            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>*/}
+                {/*                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">*/}
+                {/*                    {t('common:withdraw')}*/}
+                {/*                </a>*/}
+                {/*            </Link>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
-                <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row">
-                    <div className="md:w-1/3 flex items-center">
-                        <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                            <img src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" alt=""/>
-                        </div>
-                        <div className="ml-4 xl:ml-6">
-                            <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
-                                <span className="mr-4">Farming</span>
-                                {/*<span className="inline-flex items-center">*/}
-                                {/*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*/}
-                                {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
-                                {/*</span>*/}
-                            </div>
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
-                        <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">
-                            {renderFarmingList()}
-                        </div>
-                        <div className="flex items-center mt-4 lg:mt-0">
-                            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>
-                                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
-                                    {t('common:withdraw')}
-                                </a>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+                {/*<div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row">*/}
+                {/*    <div className="md:w-1/3 flex items-center">*/}
+                {/*        <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">*/}
+                {/*            <img src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" alt=""/>*/}
+                {/*        </div>*/}
+                {/*        <div className="ml-4 xl:ml-6">*/}
+                {/*            <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">*/}
+                {/*                <span className="mr-4">Farming</span>*/}
+                {/*                /!*<span className="inline-flex items-center">*!/*/}
+                {/*                /!*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*!/*/}
+                {/*                /!*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*!/*/}
+                {/*                /!*</span>*!/*/}
+                {/*            </div>*/}
+                {/*            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">*/}
+                {/*                <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">*/}
+                {/*        <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">*/}
+                {/*            {renderFarmingList()}*/}
+                {/*        </div>*/}
+                {/*        <div className="flex items-center mt-4 lg:mt-0">*/}
+                {/*            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>*/}
+                {/*                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">*/}
+                {/*                    {t('common:withdraw')}*/}
+                {/*                </a>*/}
+                {/*            </Link>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </MCard>
 
         </div>

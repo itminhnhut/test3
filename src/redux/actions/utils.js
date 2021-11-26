@@ -9,11 +9,13 @@ import defaults from 'lodash/defaults';
 import find from 'lodash/find';
 import { useStore as store } from 'src/redux/store';
 import Big from 'big.js';
-import { TokenConfigV1 as TokenConfig } from './const'
+import { TokenConfigV1 as TokenConfig, WalletType } from './const'
+import { UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types'
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
 import { ___DEV___, log } from 'src/utils'
+import { EXCHANGE_ACTION } from 'pages/wallet'
 
 const WAValidator = require('multicoin-address-validator')
 const EthereumAddress = require('ethereum-address')
@@ -669,3 +671,35 @@ export function buildThetaExplorerUrl(txhash) {
     }
 }
 
+export function updateOrInsertDepositHistory(searchCriteria, history) {
+    return {
+        type: UPDATE_DEPOSIT_HISTORY,
+        criteria: searchCriteria,
+        payload: history,
+    }
+}
+
+export function walletLinkBuilder(walletType, action, payload) {
+
+    if (walletType === WalletType.SPOT) {
+        switch (action) {
+            case EXCHANGE_ACTION.DEPOSIT:
+                return `/wallet/exchange/deposit?type=${payload?.type}&asset=${payload?.asset}`
+            case EXCHANGE_ACTION.WITHDRAW:
+                return `/wallet/exchange/withdraw?type=${payload?.type}&asset=${payload?.asset}`
+            case EXCHANGE_ACTION.TRANSFER:
+                return `/wallet/exchange/transfer?from=${payload?.from}&to=${payload?.to}&asset=${payload?.asset}`
+            default:
+                return ''
+        }
+    }
+
+    if (walletType === WalletType.FUTURES) {
+
+    }
+}
+
+export function estimateWallet() {
+    // const wallets = store().getState().wallet?.SPOT
+    // log.d('Estimate wallets => SpotWallets: ', wallets)
+}

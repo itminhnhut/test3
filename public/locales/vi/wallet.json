@@ -1,5 +1,5 @@
 {
-  "spot": "Ví Spot",
+  "spot": "Ví Exchange",
   "master": "Ví Master",
   "margin": "Ví Margin",
   "futures": "Ví Futures",
@@ -99,6 +99,7 @@
   "dep_history": "Lịch sử nạp",
   "withdraw_fee": "Phí rút",
   "min_withdraw": "Rút tối thiểu",
+  "max_withdraw": "Rút tối đa",
   "will_receive": "Thực nhận",
   "withdraw_confirmation": "Xác nhận rút",
   "network": "Mạng lưới",
@@ -118,5 +119,12 @@
   "minimum_deposit": "Giá trị nạp tối thiểu",
   "reveal_address": "Khởi tạo",
   "address_not_available": "Bạn chưa có địa chỉ ví này",
-  "scan_address_qr": "Quét địa chỉ ví"
+  "scan_address_qr": "Quét địa chỉ ví",
+  "earned": {
+    "total_balance": "Tổng số dư đang Stake",
+    "total_interest_earn": "Tổng lãi đã chốt",
+    "today_interest_earned": "Lãi dự kiến hôm nay",
+    "est_value": "Tổng lãi dự kiến",
+    "locked_staking": "Đang stake"
+  }
 }

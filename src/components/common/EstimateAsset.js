@@ -5,7 +5,13 @@ const INITIAL_STATE = {
 
 }
 
-const ReferencePrice = ({ assetCode }) => {
+export const ESTIMATE_ASSET_STATUS = {
+    NOT_AVAILABLE: 'not_availble',
+    LOADING: 'loading',
+    DONE: 'done'
+}
+
+const EstimateAsset = ({ assetCode }) => {
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
 
@@ -24,4 +30,4 @@ const ReferencePrice = ({ assetCode }) => {
     return '--'
 }
 
-export default ReferencePrice
+export default EstimateAsset

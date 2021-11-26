@@ -16,12 +16,13 @@ export const API_GET_FAVORITE = API_PREFIX + 'symbols/favorite';
 export const API_GET_ASSET_CONFIG = API_V3_PREFIX + 'asset/config';
 export const API_GET_USER_WALLET = API_PREFIX + 'user/wallet';
 export const API_GET_USER_BALANCE = API_PREFIX + 'user/balance';
+export const API_GET_USER_BALANCE_V2 = API_PREFIX + "user/balance_v2";
 export const API_GET_ALL_USER_WALLET = API_PREFIX + 'user/all_wallet';
 export const API_GET_SOCKETIO_AUTH_KEY = API_PREFIX + 'user/auth-key';
 export const API_GET_EXCHANGE_CONFIG = API_V3_PREFIX + 'spot/config';
 export const GET_SPOT_FEE_CONFIG = API_V3_PREFIX + 'spot/fee_config';
 
-
+// Market
 export const API_GET_MARKET_WATCH = API_V3_PREFIX + 'spot/market_watch';
 export const API_GET_ORDER_BOOK = API_V3_PREFIX + 'spot/depth';
 export const API_GET_RECENT_TRADE = API_V3_PREFIX + 'spot/recent_trade';
@@ -29,6 +30,7 @@ export const API_GET_HISTORY_ORDER = API_V3_PREFIX + 'spot/history';
 export const API_GET_HISTORY_TRADE = API_V3_PREFIX + 'spot/trade';
 export const API_GET_OPEN_ORDER = API_V3_PREFIX + 'spot/open';
 export const API_GET_TRENDING = API_V3_PREFIX + 'spot/trend'
+export const API_GET_USD_RATE = API_V3_PREFIX + 'spot/asset_value'
 
 export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list';
 

@@ -34,6 +34,7 @@ import colors from 'styles/colors'
 import Axios from 'axios'
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
 import useWindowSize from 'hooks/useWindowSize'
+import AssetName from 'components/wallet/AssetName'
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {
@@ -551,12 +552,12 @@ const ExchangeWithdraw = () => {
         return (
             <div className="flex items-center text-sm mt-2.5">
                 <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                    {t('wallet:min_withdraw')}
+                    {t('wallet:max_withdraw')}
                 </span>
                 <span className="font-bold ml-2">
                     {state.selectedNetwork?.maxWithdraw ?
-                        formatWallet(state.selectedNetwork.maxWithdraw, state.selectedNetwork?.assetDigit)
-                        : '--'}
+                        formatWallet(state.selectedNetwork.maxWithdraw?.value, state.selectedNetwork?.assetDigit)
+                        : '--'} <AssetName assetId={state.selectedNetwork?.maxWithdraw?.equivalentCurrency}/>
                 </span>
             </div>
         )
@@ -634,13 +635,13 @@ const ExchangeWithdraw = () => {
                         {t('wallet:errors.invalid_min_amount',
                             {
                                 value: state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw ?
-                                    state.withdrawFee?.amount
-                                    : state.selectedNetwork?.minWithdraw
+                                    formatWallet(state.withdrawFee?.amount, state.selectedNetwork?.assetDigit)
+                                    : formatWallet(state.selectedNetwork?.minWithdraw, state.selectedNetwork?.assetDigit)
                             })}
                     </span>
                 } else if (state?.validator.amount === AMOUNT.OVER_THAN_MAX) {
                     inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
-                        {t('wallet:errors.invalid_max_amount', { value: state.selectedNetwork?.maxWithdraw })}
+                        {t('wallet:errors.invalid_max_amount', { value: formatWallet(state.selectedNetwork?.maxWithdraw?.value, state.selectedNetwork?.assetDigit) })}
                     </span>
                 } else if (state?.validator.amount === AMOUNT.OVER_BALANCE) {
                     inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
@@ -799,10 +800,6 @@ const ExchangeWithdraw = () => {
         if (isErrors && !isSuccess) {
             title = t('common:failure')
         }
-
-        console.log('namidev-DEBUG: is Success? ', isSuccess)
-
-        console.log('namidev-DEBUG: is Errors? ', isErrors)
 
         return (
             <Modal type="confirmation"
@@ -1079,7 +1076,7 @@ const ExchangeWithdraw = () => {
                 state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw ?
                     state.withdrawFee?.amount
                     : state.selectedNetwork?.minWithdraw,
-                state.selectedNetwork?.maxWithdraw,
+                state.selectedNetwork?.maxWithdraw?.value,
                 assetBalance?.value - assetBalance?.locked_value,
                 state.selectedNetwork?.allowWithdraw
             )
@@ -1117,8 +1114,12 @@ const ExchangeWithdraw = () => {
         <MaldivesLayout>
             <Background isDark={currentTheme === THEME_MODE.DARK}>
                 <div className="mal-container px-4">
-                    <div className="t-common">
-                        {t('common:withdraw')}
+                    <div className="t-common mb-4">
+                       <span className="max-w-[150px] flex items-center cursor-pointer rounded-lg hover:text-dominant"
+                             onClick={() => router?.back()}>
+                           <span className="inline-flex items-center justify-center h-full mr-3 mt-0.5"><ChevronLeft size={24}/></span>
+                           {t('common:withdraw')}
+                       </span>
                     </div>
                     {renderTab()}
                     <MCard addClass="pt-8 pb-10">
@@ -1140,6 +1141,19 @@ const ExchangeWithdraw = () => {
                                     </div>
                                     <div className="relative mt-5">
                                         <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                            {t('wallet:network')}
+                                            <span>{state.validator?.allowWithdraw && <Check size={16} className="text-dominant"/>}</span>
+                                        </div>
+                                        <div className="min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between
+                                                    rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant"
+                                             onClick={() => state.configs && setState({ openList: { networkList: !state.openList?.networkList } })}>
+                                            {renderNetworkInput()}
+                                        </div>
+                                        {renderInputIssues('allowWithdraw')}
+                                        {state.openList?.networkList && renderNetworkList()}
+                                    </div>
+                                    <div className="relative mt-5">
+                                        <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                             {t('wallet:receive_address')}
                                             <span>{state.validator?.address === true && <Check size={16} className="text-dominant"/>}</span>
                                         </div>
@@ -1154,19 +1168,6 @@ const ExchangeWithdraw = () => {
                                         </div>
                                         {renderAmountInput()}
                                         {renderInputIssues('amount')}
-                                    </div>
-                                    <div className="relative mt-5">
-                                        <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
-                                            {t('wallet:network')}
-                                            <span>{state.validator?.allowWithdraw && <Check size={16} className="text-dominant"/>}</span>
-                                        </div>
-                                        <div className="min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between
-                                                    rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant"
-                                             onClick={() => state.configs && setState({ openList: { networkList: !state.openList?.networkList } })}>
-                                            {renderNetworkInput()}
-                                        </div>
-                                        {renderInputIssues('allowWithdraw')}
-                                        {state.openList?.networkList && renderNetworkList()}
                                     </div>
                                     <div className="mt-4">
                                         {renderAssetAvailable()}
@@ -1287,7 +1288,10 @@ function dataHandler(data, loading, configList, utils) {
         result.push({
             key: `wdl_${id}_${txhash}`,
             id: <span className="!text-sm whitespace-nowrap">{id}</span>,
-            asset: <span className="!text-sm whitespace-nowrap">{assetName}</span>,
+            asset: <div className="flex items-center">
+                <AssetLogo assetCode={assetName} size={24}/>
+                <span className="!text-sm whitespace-nowrap ml-2">{assetName}</span>
+            </div>,
             amount: <span className="!text-sm whitespace-nowrap">{amount}</span>,
             network: <span className="!text-sm whitespace-nowrap">{network}</span>,
             withdraw_to: <span className="!text-sm whitespace-nowrap">{shortHashAddress(withdraw_to, 5, 5)}</span>,
