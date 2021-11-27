@@ -55,7 +55,7 @@
   "withdraw_success_desc_2": "từ Nami Exchange.",
   "withdraw_to_vndc": "Chuyển tài sản từ ví Nami Spot đến ví VNDC",
   "equity_value": "Giá trị tài sản",
-  "transfer_success": "Chuyển thành công {{amount}} {{assetCode}} từ Ví {{selectedSource}} sang Ví {{selectedDestination}}",
+  "transfer_success": "Chuyển thành công {{amount}} {{assetCode}} từ {{selectedSource}} sang {{selectedDestination}}",
   "transfer_no_support": "Không hỗ trợ chuyển giữa 2 ví",
   "transfer_min": "Bạn cần chuyển tối thiểu {{data}}",
   "expired_token": "Phiên rút tiền đã hết hạn, vui lòng thử lại",
@@ -89,7 +89,10 @@
     "invalid_insufficient_balance": "Số dư của bạn không đủ",
     "network_not_support": "Chưa hỗ trợ rút {{ asset }} trên mạng {{ chain }}",
     "wrong_otp": "Mã xác thực Email hoặc GoogleAuth không đúng,<br/>vui lòng thử lại",
-    "address_not_found": "Không tìm thấy địa chỉ ví, vui lòng liên hệ với hỗ trợ."
+    "address_not_found": "Không tìm thấy địa chỉ ví, vui lòng liên hệ với hỗ trợ.",
+    "transfer_source_wallet_issues": "Vui lòng chọn ví nguồn",
+    "transfer_destination_wallet_issues": "Vui lòng chọn ví đích",
+    "invalid_amount": "Giá trị không hợp lệ"
   },
   "est_balance": "Tài sản ước lượng",
   "hide_asset": "Ẩn số dư",

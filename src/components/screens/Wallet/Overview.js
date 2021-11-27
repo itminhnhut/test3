@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { formatWallet, getS3Url, getV1Url } from 'redux/actions/utils'
+import { formatWallet, getS3Url, getV1Url, setTransferModal } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import { Eye, EyeOff } from 'react-feather'
 import { EXCHANGE_ACTION} from 'pages/wallet'
 import { SECRET_STRING } from 'utils'
+import { useDispatch } from 'react-redux'
 
 import MCard from 'components/common/MCard'
 import useWindowSize from 'hooks/useWindowSize'
 import AssetLogo from 'components/wallet/AssetLogo'
-import EstimateAsset from 'components/common/EstimateAsset'
 import wallet from 'redux/reducers/wallet'
 import Link from 'next/link'
 
@@ -28,6 +28,7 @@ const OverviewWallet = (props) => {
     // Use Hooks
     const { t } = useTranslation()
     const { width } = useWindowSize()
+    const dispatch = useDispatch()
 
     // Memmoized
     const limitExchangeAsset = useMemo(() => {
@@ -105,11 +106,12 @@ const OverviewWallet = (props) => {
                             {t('common:withdraw')}
                         </a>
                     </Link>
-                    <Link href="/wallet/exchange/transfer" prefetch>
-                        <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                    {/*<Link href="/wallet/exchange/transfer" prefetch>*/}
+                        <div className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer"
+                             onClick={() => dispatch(setTransferModal({ isVisible: true }))}>
                             {t('common:transfer')}
-                        </a>
-                    </Link>
+                        </div>
+                    {/*</Link>*/}
                 </div>
             </div>
 

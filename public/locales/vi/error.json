@@ -92,5 +92,6 @@
   "NOT_ENOUGH_FEE": "Số dư để làm phí không đủ",
   "WITHDRAW_AMOUNT_NOT_REACH_MAX": "Giá trị rút vượt hạn mức",
   "WITHDRAW_AMOUNT_NOT_REACH_MIN": "Giá trị rút nhỏ hơn mức tối thiểu",
-  "UNKNOWN_ERROR": "Lỗi không rõ, vui lòng liên hệ với hỗ trợ"
+  "UNKNOWN_ERROR": "Lỗi không rõ, vui lòng liên hệ với hỗ trợ",
+  "ASSET_NOT_SUPPORT": "Tài sản này chưa được hỗ trợ {{ function }}"
 }

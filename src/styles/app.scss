@@ -33,6 +33,10 @@ body {
 
   input {
     @apply outline-none bg-transparent placeholder-txtSecondary dark:placeholder-txtSecondary-dark truncate;
+
+    ::placeholder {
+      font-weight: 400 !important;
+    }
   }
 
   input[type='checkbox'] {

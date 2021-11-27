@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import 'public/css/font.css';
 import { useEffect } from 'react';
-import { Provider } from 'react-redux';
+import { Provider } from 'react-redux'
 import { useAsync } from 'react-use';
 import { getAssetConfig, getExchangeConfig } from 'redux/actions/market';
 import { getWallet, setTheme } from 'redux/actions/user';
@@ -20,6 +20,7 @@ import { useStore } from 'src/redux/store';
 import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
 import { EarnWalletType } from 'redux/actions/const'
+import TransferModal from 'components/wallet/TransferModal'
 
 export function reportWebVitals(metric) {
     switch (metric.name) {
@@ -119,6 +120,7 @@ const App = ({ Component, pageProps }) => {
             <Provider store={store}>
                 <Tracking>
                     <Component {...pageProps} />
+                    <TransferModal />
                 </Tracking>
             </Provider>
         </>

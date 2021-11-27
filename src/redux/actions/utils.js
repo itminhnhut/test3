@@ -10,7 +10,7 @@ import find from 'lodash/find';
 import { useStore as store } from 'src/redux/store';
 import Big from 'big.js';
 import { TokenConfigV1 as TokenConfig, WalletType } from './const'
-import { UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types'
+import { UPDATE_DEPOSIT_HISTORY, SET_TRANSFER_MODAL } from 'redux/actions/types'
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
@@ -699,7 +699,17 @@ export function walletLinkBuilder(walletType, action, payload) {
     }
 }
 
-export function estimateWallet() {
-    // const wallets = store().getState().wallet?.SPOT
-    // log.d('Estimate wallets => SpotWallets: ', wallets)
+export function setTransferModal(payload) {
+    // source look like
+    // payload = {
+    //     isVisible: <boolean>,
+    //     fromAsset: <WalletType>,
+    //     toAsset: <WalletType>,
+    //     asset: <WalletType>
+    // }
+
+    return {
+        type: SET_TRANSFER_MODAL,
+        payload,
+    }
 }

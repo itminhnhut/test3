@@ -55,7 +55,7 @@
   "withdraw_success_desc_2":"from Nami Exchange.",
   "withdraw_to_vndc": "Transfer asset from Nami Spot to VNDC",
   "equity_value": "Equity value",
-  "transfer_success": "Transfer successfully {{amount}} {{assetCode}} from {{selectedSource}} Wallet to {{selectedDestination}} Wallet",
+  "transfer_success": "Transfer successfully {{amount}} {{assetCode}} from {{selectedSource}} to {{selectedDestination}}",
   "transfer_no_support": "No supported transfer between 2 wallets",
   "transfer_min": "You need to transfer minimum {{data}}",
   "expired_token": "Your session has been expired. Please try again.",
@@ -89,7 +89,10 @@
     "invalid_insufficient_balance": "Insufficient balance",
     "network_not_support": "Withdrawal of {{ asset }} on {{ chain }} network is currently not supported",
     "wrong_otp": "Email or GoogleAuth authentication code is incorrect,<br/>please try again",
-    "address_not_found": "Address not found, please contact to supporter for information."
+    "address_not_found": "Address not found, please contact to supporter for information.",
+    "transfer_source_wallet_issues": "Please select source wallet",
+    "transfer_destination_wallet_issues": "Please select destination wallet",
+    "invalid_amount": "Invalid amount"
   },
   "est_balance": "Estimated Balance",
   "hide_asset": "Hide Asset",
