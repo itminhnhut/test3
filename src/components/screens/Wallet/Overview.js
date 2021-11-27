@@ -11,6 +11,7 @@ import useWindowSize from 'hooks/useWindowSize'
 import AssetLogo from 'components/wallet/AssetLogo'
 import wallet from 'redux/reducers/wallet'
 import Link from 'next/link'
+import { WalletType } from 'redux/actions/const'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -192,10 +193,10 @@ const OverviewWallet = (props) => {
                                     {t('common:withdraw')}
                                 </a>
                             </Link>
-                            <a  href={getV1Url('/wallet/account?type=spot')}
-                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                            <div className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant"
+                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}>
                                 {t('common:transfer')}
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -225,10 +226,10 @@ const OverviewWallet = (props) => {
                             Transfer funds to your Futures Account to start trading.
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <a href={getV1Url('/wallet/account?type=spot')}
+                            <div onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                                className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant hover:text-white hover:!bg-dominant">
                                 {t('common:transfer')}
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>

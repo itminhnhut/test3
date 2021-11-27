@@ -119,8 +119,7 @@ const App = ({ Component, pageProps }) => {
             <Head />
             <Provider store={store}>
                 <Tracking>
-                    <Component {...pageProps} />
-                    <TransferModal />
+                    <Component {...pageProps}/>
                 </Tracking>
             </Provider>
         </>

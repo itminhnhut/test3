@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
-import { formatWallet, getS3Url, getV1Url, walletLinkBuilder } from 'redux/actions/utils'
+import { formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import { getAllWallet } from 'redux/actions/user'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Check, Eye, EyeOff, Search, X } from 'react-feather'
 import { log, SECRET_STRING } from 'utils'
 
@@ -44,6 +44,7 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
     const [currentTheme, ] = useDarkMode()
     const { width } = useWindowSize()
     const { t } = useTranslation()
+    const dispatch = useDispatch()
 
     // Helper
     const walletMapper = (allWallet, assetConfig) => {
@@ -139,7 +140,7 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
 
     useEffect(() => {
         if (state.allAssets && Array.isArray(state.allAssets)) {
-            const origin = dataHandler(state.allAssets, t)
+            const origin = dataHandler(state.allAssets, t, dispatch)
             let tableData = origin
             if (state.hideSmallAsset) {
                 tableData = origin.filter(item => item?.sortByValue?.total > 1)
@@ -155,11 +156,12 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
                     {t('common:overview')}
                 </div>
                 <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto">
-                    <Link href="/wallet/exchange/transfer?from=futures" prefetch>
-                        <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
+                    {/*<Link href="/wallet/exchange/transfer?from=futures" prefetch>*/}
+                        <div onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
+                             className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:transfer')}
-                        </a>
-                    </Link>
+                        </div>
+                    {/*</Link>*/}
                 </div>
             </div>
             <MCard addClass="mt-5 !p-6 xl:!p-10">
@@ -208,7 +210,7 @@ const columns = [
 ]
 const ASSET_ROW_LIMIT = 8
 
-const dataHandler = (data, translator) => {
+const dataHandler = (data, translator, dispatch) => {
     if (!data || !data?.length) {
         const skeleton = []
         for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
@@ -231,7 +233,7 @@ const dataHandler = (data, translator) => {
             total: <span>{item?.wallet?.value ? formatWallet(item?.wallet?.value) : '0.0000'}</span>,
             available: <span>{item?.wallet?.value ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, 5, true) : '0.0000'}</span>,
             in_order: <span>{item?.wallet?.locked_value ? formatWallet(item?.wallet?.locked_value, 5, true) : '0.0000'}</span>,
-            operation: renderOperationLink(item?.assetName, translator),
+            operation: renderOperationLink(item?.assetName, translator, dispatch),
             [RETABLE_SORTBY]: {
                 asset: item?.assetName,
                 total: +item?.wallet?.value,
@@ -253,13 +255,14 @@ const ROW_LOADING_SKELETON = {
 }
 
 
-const renderOperationLink = (assetName, translator) => {
+const renderOperationLink = (assetName, translator, dispatch) => {
     return (
-        <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.TRANSFER, { from: 'futures', to: '', asset: assetName })} prefetch={false}>
-            <a className="ml-10 py-1.5 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white">
+        // <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.TRANSFER, { from: 'futures', to: '', asset: assetName })} prefetch={false}>
+            <div onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}
+                 className="ml-10 py-1.5 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white">
                 {translator('common:transfer')}
-            </a>
-        </Link>
+            </div>
+        // </Link>
     )
 }
 

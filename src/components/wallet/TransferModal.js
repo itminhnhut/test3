@@ -449,51 +449,49 @@ const TransferModal = () => {
         }
     }, [state.amount, currentWallet])
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: Transfer Modal => ', state)
-    }, [state])
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: Transfer Modal => ', state)
+    // }, [state])
 
     return (
-        <div>
-            <Modal isVisible={!!isVisible}
-                   onBackdropCb={() => setState({ openList: {} })}
-                   className="w-[300px] px-4 py-5 sm:w-[453px] sm:px-8 sm:py-9"
-                   noButton
-            >
+        <Modal isVisible={!!isVisible}
+               onBackdropCb={onClose}
+               className="w-[300px] px-4 py-5 sm:w-[453px] sm:px-8 sm:py-9"
+               noButton
+        >
+            <div className="flex items-center justify-between">
+                <span className="capitalize font-bold">{t('common:transfer')}</span>
+                <X size={16} className="cursor-pointer hover:text-dominant" onClick={onClose}/>
+            </div>
+            {renderWalletSelect()}
+            <div className={state.focus?.amount ?
+                'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-dominant'
+                : 'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-divider dark:border-divider-dark hover:!border-dominant'}>
                 <div className="flex items-center justify-between">
-                    <span className="capitalize font-bold">{t('common:transfer')}</span>
-                    <X size={16} className="cursor-pointer hover:text-dominant" onClick={onClose}/>
-                </div>
-                {renderWalletSelect()}
-                <div className={state.focus?.amount ?
-                    'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-dominant'
-                    : 'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-divider dark:border-divider-dark hover:!border-dominant'}>
-                    <div className="flex items-center justify-between">
-                        <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:amount')}</div>
-                        <div className="font-bold text-dominant text-sm cursor-pointer"
-                             onClick={onSetMax}>
-                            {t('common:max')}
-                        </div>
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:amount')}</div>
+                    <div className="font-bold text-dominant text-sm cursor-pointer"
+                         onClick={onSetMax}>
+                        {t('common:max')}
                     </div>
-                    <div className="mt-2 flex items-center">
-                        {renderAssetSelect()}
-                        {renderAmountInput()}
-                    </div>
-                    {renderAssetList()}
                 </div>
-                <div className="mt-5 text-sm">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}:</span>
-                    {renderAvailableWallet()}
+                <div className="mt-2 flex items-center">
+                    {renderAssetSelect()}
+                    {renderAmountInput()}
                 </div>
-                {renderIssues()}
-                {renderTransferButton()}
-                <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
-                    <Trans i18nKey="common:term_transfer">
-                        <a href={TERM_OF_SERVICE.SWAP} className="block cursor-pointer text-dominant hover:!underline"/>
-                    </Trans>
-                </div>
-            </Modal>
-        </div>
+                {renderAssetList()}
+            </div>
+            <div className="mt-5 text-sm">
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}:</span>
+                {renderAvailableWallet()}
+            </div>
+            {renderIssues()}
+            {renderTransferButton()}
+            <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
+                <Trans i18nKey="common:term_transfer">
+                    <a href={TERM_OF_SERVICE.SWAP} className="block cursor-pointer text-dominant hover:!underline"/>
+                </Trans>
+            </div>
+        </Modal>
     )
 }
 

@@ -4,6 +4,7 @@ import NavBar from 'src/components/common/NavBar/NavBar';
 import { useState } from 'react';
 import ReactNotification from 'react-notifications-component';
 import { useWindowSize } from 'utils/customHooks';
+import TransferModal from 'components/wallet/TransferModal'
 
 const MadivesLayout = ({
     navOverComponent,
@@ -64,6 +65,7 @@ const MadivesLayout = ({
                 {children}
             </div>
             {!hideFooter && <Footer/>}
+            <TransferModal/>
         </div>
     );
 };

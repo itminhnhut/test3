@@ -22,6 +22,7 @@ import { useAsync } from 'react-use'
 import { getUsdRate } from 'redux/actions/market'
 import { formatWallet } from 'redux/actions/utils'
 import useWindowFocus from 'hooks/useWindowFocus'
+import TransferModal from 'components/wallet/TransferModal'
 
 const INITIAL_STATE = {
     screen: null,
@@ -241,43 +242,44 @@ const Wallet = () => {
     }, [state.allAssets, state.allFuturesAsset, state.usdRate])
 
     return (
-        <MaldivesLayout>
-            <Background isDark={currentTheme === THEME_MODE.DARK}>
-                <div className="mal-container px-4">
-                    {renderScreenTab()}
-                    <div className="mt-7">
-                        {state.screen === WALLET_SCREENS.OVERVIEW &&
-                        <OverviewWallet
-                            allAssets={state.allAssets}
-                            loadingStaking={state.loadingStaking}
-                            stakingConfig={state.stakingConfig}
-                            loadingFarming={state.loadingFarming}
-                            farmingConfig={state.farmingConfig}
-                            exchangeEstBtc={state.exchangeEstBtc}
-                            futuresEstBtc={state.futuresEstBtc}
-                            exchangeRefPrice={state.exchangeRefPrice}
-                            futuresRefPrice={state.futuresRefPrice}
-                        />}
-                        {state.screen === WALLET_SCREENS.EXCHANGE &&
-                        <ExchangeWallet
-                            allAssets={state.allAssets}
-                            estBtc={state.exchangeEstBtc}
-                            estUsd={state.exchangeRefPrice}
-                        />}
-                        {state.screen === WALLET_SCREENS.FUTURES &&
-                        <FuturesWallet
-                            estBtc={state.futuresEstBtc}
-                            estUsd={state.futuresRefPrice}
-                        />}
-                        {/*{state.screen === WALLET_SCREENS.STAKING && <StakingWallet/>}*/}
-                        {/*{state.screen === WALLET_SCREENS.FARMING && <FarmingWallet/>}*/}
-                        {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
+        <>
+            <MaldivesLayout>
+                <Background isDark={currentTheme === THEME_MODE.DARK}>
+                    <div className="mal-container px-4">
+                        {renderScreenTab()}
+                        <div className="mt-7">
+                            {state.screen === WALLET_SCREENS.OVERVIEW &&
+                            <OverviewWallet
+                                allAssets={state.allAssets}
+                                loadingStaking={state.loadingStaking}
+                                stakingConfig={state.stakingConfig}
+                                loadingFarming={state.loadingFarming}
+                                farmingConfig={state.farmingConfig}
+                                exchangeEstBtc={state.exchangeEstBtc}
+                                futuresEstBtc={state.futuresEstBtc}
+                                exchangeRefPrice={state.exchangeRefPrice}
+                                futuresRefPrice={state.futuresRefPrice}
+                            />}
+                            {state.screen === WALLET_SCREENS.EXCHANGE &&
+                            <ExchangeWallet
+                                allAssets={state.allAssets}
+                                estBtc={state.exchangeEstBtc}
+                                estUsd={state.exchangeRefPrice}
+                            />}
+                            {state.screen === WALLET_SCREENS.FUTURES &&
+                            <FuturesWallet
+                                estBtc={state.futuresEstBtc}
+                                estUsd={state.futuresRefPrice}
+                            />}
+                            {/*{state.screen === WALLET_SCREENS.STAKING && <StakingWallet/>}*/}
+                            {/*{state.screen === WALLET_SCREENS.FARMING && <FarmingWallet/>}*/}
+                            {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
+                        </div>
                     </div>
-                </div>
-            </Background>
-        </MaldivesLayout>
-    )
-}
+                </Background>
+            </MaldivesLayout>
+        </>
+)}
 
 const SCREEN_TAB_SERIES = [
     { key: 0, code: WALLET_SCREENS.OVERVIEW, title: 'Overview', localized: 'common:overview' },
