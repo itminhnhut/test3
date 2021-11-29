@@ -118,11 +118,11 @@ const Wallet = () => {
                  currentIndex={state.screenIndex}
                  onChangeTab={(screenIndex) => {
                      const current = SCREEN_TAB_SERIES.find(o => o?.key === screenIndex)
-                     if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
-                         r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
-                     } else {
+                     // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
+                     //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
+                     // } else {
                          r.push(`/wallet/${current?.code}`)
-                     }
+                     // }
                  }}
                  tArr={['common']}
             />
@@ -271,8 +271,8 @@ const Wallet = () => {
                                 estBtc={state.futuresEstBtc}
                                 estUsd={state.futuresRefPrice}
                             />}
-                            {/*{state.screen === WALLET_SCREENS.STAKING && <StakingWallet/>}*/}
-                            {/*{state.screen === WALLET_SCREENS.FARMING && <FarmingWallet/>}*/}
+                            {state.screen === WALLET_SCREENS.STAKING && <StakingWallet/>}
+                            {state.screen === WALLET_SCREENS.FARMING && <FarmingWallet/>}
                             {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
                         </div>
                     </div>

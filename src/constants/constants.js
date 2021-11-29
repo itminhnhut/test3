@@ -7,7 +7,7 @@ export const TERM_OF_SERVICE = {
 export const BREAK_POINTS = {
     sm: 640,
     md: 768,
-    lg: 102,
-    xl: 128,
+    lg: 1024,
+    xl: 1280,
     '2xl': 1536
 }
