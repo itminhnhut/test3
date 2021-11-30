@@ -13,6 +13,7 @@ const AssetName = (props) => {
         if (assetId !== undefined) filter.id = assetId;
         const config = find(assetConfig, filter);
         if (config) {
+            console.log('namidev-DEBUG: AssetName => ', config)
             return config.assetName;
         }
         return '';

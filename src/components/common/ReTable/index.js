@@ -281,6 +281,10 @@ const ReTableWrapper = styled.div`
     }
   }
 
+  .rc-table thead th {
+    white-space: nowrap;
+  }
+
   .rc-table-content, .rc-table th, .rc-table td {
     border-color: ${({ isDark }) => isDark ? colors.darkBlue3 : colors.grey4} !important;
     border-right: none;

@@ -168,11 +168,15 @@ body {
 
 html.dark body {
   ::-webkit-scrollbar-thumb {
-    background-color: rgba(1, 21, 69, 1);
+    background-color: #7B8CB2;
+
+    &:hover {
+      background-color: #00C8BC !important;
+    }
   }
 
   ::-webkit-scrollbar-track {
-    background-color: rgba(13, 28, 61, 0.4);
+    background-color: #445271;
   }
 }
 
