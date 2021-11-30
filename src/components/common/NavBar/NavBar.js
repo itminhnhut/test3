@@ -359,7 +359,7 @@ const NavBar = ({
                             </div>
                             <div className="mal-navbar__dropdown__user__info__level">
                                 {state.loadingVipLevel ?
-                                    <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel}`}
+                                    <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel || '0'}`}
                             </div>
                         </div>
                     </div>

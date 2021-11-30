@@ -181,7 +181,10 @@ module.exports = {
                 lightTeal: '#E2F6F5',
                 opacity: 'rgba(0, 200, 188, 0.5)'
             },
-            green: { DEFAULT: '#22B02E' },
+            green: {
+                DEFAULT: '#22B02E',
+                opacity: 'rgba(34, 176, 46, 0.18)'
+            },
             yellow: { DEFAULT: '#FFD965' },
             red: {
                 DEFAULT: '#E5544B',

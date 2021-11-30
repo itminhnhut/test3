@@ -147,7 +147,7 @@ const ReTable = memo(({
     }, [data, resizable, tableStatus, restProps, paginationProps, sort, sorter, current, pageSize])
 
     const renderPagination = useCallback(() => {
-        if (!paginationProps || paginationProps?.hide || data.length <= pageSize) return null
+        if (!paginationProps || paginationProps?.hide) return null
 
         return (
             <div className="py-8 flex items-center justify-center">
@@ -211,6 +211,9 @@ const ReTable = memo(({
         }
     }, [paginationProps])
 
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: reTable => ', current, data)
+    // }, [data, current])
 
     return (
         <ReTableWrapper isDark={currentTheme === THEME_MODE.DARK}
@@ -392,6 +395,10 @@ const ReTableWrapper = styled.div`
     thead tr {
       ${({ headerStyle }) => headerStyle ? {...headerStyle} : ''};
       user-select: none;
+
+        th {
+            ${({ headerFontStyle }) => headerFontStyle ? {...headerFontStyle} : ''};
+        }
     }
 
     tbody tr {

@@ -725,3 +725,9 @@ export const UserSocketEvent = {
     EXCHANGE_PLACE_MARKET_ORDER_RESULT: 'exchange:place_market_order_result',
     UPDATE_BALANCE: 'user:update_balance',
 };
+
+export const EarnOrder_Status = {
+    SAVING: 1,
+    FINISHED: 2,
+    CANCELLED: 0
+}

@@ -123,11 +123,22 @@
   "reveal_address": "Khởi tạo",
   "address_not_available": "Bạn chưa có địa chỉ ví này",
   "scan_address_qr": "Quét địa chỉ ví",
-  "earned": {
-    "total_balance": "Tổng số dư đang Stake",
+  "earn_dashboard": {
+    "total_balance": "Tổng số dư đang {{ action }}",
     "total_interest_earn": "Tổng lãi đã chốt",
     "today_interest_earned": "Lãi dự kiến hôm nay",
-    "est_value": "Tổng lãi dự kiến",
-    "locked_staking": "Đang stake"
+    "est_value": "Tổng lãi dự kiến"
+  },
+  "earn_prompt": {
+    "cancel_confirmation": "Huỷ {{ action }}",
+    "cancel_message": "Bạn muốn huỷ lệnh {{ action }} #{{ id }}",
+    "cancelled_notice": "Đã huỷ lệnh {{ action }} #{{ id }}",
+    "cancel_failure": "Không thể huỷ lệnh {{ action }} #{{ id }}, vui lòng liên hệ hỗ trợ."
+  },
+  "earn_table": {
+    "redeem_history": "Lịch sử nhận thưởng",
+    "earning": "Các khoản {{ action }}",
+    "accruing_interest": "Tiền thưởng {{ action }}",
+    "apy": "Lãi suất năm (APY)"
   }
 }

@@ -294,6 +294,11 @@ const dataHandler = (data, translator, dispatch) => {
     const result = []
 
     data.forEach(item => {
+        let lockedValue = formatWallet(item?.wallet?.locked_value)
+        if (lockedValue === 'NaN') {
+            lockedValue = '0.0000'
+        }
+
         result.push({
             key: `exchange_asset___${item?.assetName}`,
             asset: <div className="flex items-center">
@@ -304,7 +309,7 @@ const dataHandler = (data, translator, dispatch) => {
             </div>,
             total: <span>{formatWallet(item?.wallet?.value)}</span>,
             available: <span>{formatWallet(item?.wallet?.value - item?.wallet?.locked_value)}</span>,
-            in_order: <span>{item?.wallet?.locked_value ? formatWallet(item?.wallet?.locked_value) : '0.0000'}</span>,
+            in_order: <span>{item?.wallet?.locked_value ? lockedValue : '0.0000'}</span>,
             operation: renderOperationLink(item?.assetName, translator, dispatch),
             [RETABLE_SORTBY]: {
                 asset: item?.assetName,

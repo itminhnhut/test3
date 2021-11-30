@@ -715,7 +715,7 @@ const ExchangeDeposit = () => {
                 <div className="mal-container px-4">
                     <div className="t-common mb-4">
                        <span className="max-w-[150px] flex items-center cursor-pointer rounded-lg hover:text-dominant"
-                             onClick={() => router?.back()}>
+                             onClick={() => router?.push(`/wallet/exchange`)}>
                            <span className="inline-flex items-center justify-center h-full mr-3 mt-0.5"><ChevronLeft size={24}/></span>
                            {t('common:deposit')}
                        </span>

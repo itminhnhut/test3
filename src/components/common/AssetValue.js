@@ -14,7 +14,7 @@ const AssetValue = (props) => {
         if (assetId !== undefined) filter.id = assetId
         const config = find(assetConfig, filter)
         if (config?.assetDigit) {
-            return value !== 0 ? formatWallet(value, config.assetDigit) : '0.0000'
+            return value === 0 || !value ? '0.0000' : formatWallet(value, config.assetDigit)
         }
         return ''
     }, [assetCode, assetId])

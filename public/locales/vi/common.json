@@ -150,5 +150,18 @@
   "close": "Đóng",
   "error_code": "Mã lỗi",
   "scan": "Quét",
-  "important_notes": "Lưu ý quan trọng"
+  "important_notes": "Lưu ý quan trọng",
+  "common_status": {
+    "finished": "Hoàn thành",
+    "cancelled": "Đã huỷ"
+  },
+  "start_at": "Ngày bắt đầu",
+  "end_at": "Ngày kết thúc",
+  "redeem_at": "Ngày nhận thưởng",
+  "interest": "Lợi nhuận",
+  "unit": {
+    "time": {
+      "day": "Ngày"
+    }
+  }
 }

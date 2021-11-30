@@ -450,7 +450,8 @@ export function hashValidator(hash, type) {
 }
 
 export const shortHashAddress = (address, first, last) => {
-    return `${address.substring(0, first)}...${address.substring(
+    if (!address) return
+    return `${address?.substring(0, first)}...${address.substring(
         address.length - last
     )}`
 }

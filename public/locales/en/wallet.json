@@ -123,11 +123,22 @@
   "reveal_address": "Reveal Address",
   "address_not_available": "No wallet address yet",
   "scan_address_qr": "Scan wallet address",
-  "earned": {
-    "total_balance": "Tổng số dư đang Stake",
-    "total_interest_earn": "Tổng lãi đã chốt",
-    "today_interest_earned": "Lãi dự kiến hôm nay",
-    "est_value": "Tổng lãi dự kiến",
-    "locked_staking": "Đang stake"
+  "earn_dashboard": {
+    "total_balance": "{{ action }} Total Balance",
+    "total_interest_earn": "Total Interest Earned",
+    "today_interest_earned": "Today's Interest Earned",
+    "est_value": "Estimate Interest"
+  },
+  "earn_prompt": {
+    "cancel_confirmation": "Cancel {{ action }}",
+    "cancel_message": "Do you wanna cancel {{ action }} Order#{{ id }}",
+    "cancelled_notice": "Cancelled {{ action }} Order#{{ id }}",
+    "cancel_failure": "Can not cancel {{ action }} Order#{{ id }}, Please contact to support for information."
+  },
+  "earn_table": {
+    "redeem_history": "Redeem History",
+    "earning": "{{ action }}",
+    "accruing_interest": "Accruing Interest",
+    "apy": "Annual Interest Rate (APY)"
   }
 }

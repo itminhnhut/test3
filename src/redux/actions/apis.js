@@ -50,12 +50,16 @@ export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'
 export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history';
 
 // Staking
+export const API_STAKING_SUMMARY = API_PREFIX + "earn/stake/summary"
 export const GET_STAKING_CONFIG = API_PREFIX + "earn/list?type=1"
 export const API_GET_STAKING_ORDER = API_PREFIX + "earn/order_history?type=1"
+export const API_STAKING_CANCEL_EARNING = API_PREFIX + "earn/stake/cancel"
 
 // Farming
+export const API_FARMING_SUMMARY = API_PREFIX + "earn/farm/summary"
 export const GET_FARMING_CONFIG = API_PREFIX + "earn/list?type=3"
 export const API_GET_FARMING_ORDER = API_PREFIX + "earn/order_history?type=3"
+export const API_FARMING_CANCEL_EARNING = API_PREFIX + "earn/farm/cancel"
 
 // Coinbase
 export const API_GET_NOTIFICATIONS = API_PREFIX + 'notifications/all_mix';

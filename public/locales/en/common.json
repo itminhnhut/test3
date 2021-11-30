@@ -150,5 +150,18 @@
   "close": "Close",
   "error_code": "Code",
   "scan": "Scan",
-  "important_notes": "Important notes"
+  "important_notes": "Important notes",
+  "common_status": {
+    "finished": "Finished",
+    "cancelled": "Cancelled"
+  },
+  "start_at": "Start at",
+  "end_at": "End at",
+  "redeem_at": "Redeem at",
+  "interest": "Interest",
+  "unit": {
+    "time": {
+      "day": "Days"
+    }
+  }
 }
