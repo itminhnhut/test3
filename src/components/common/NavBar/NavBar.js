@@ -507,10 +507,10 @@ const NavBar = ({
                     {auth &&
                     <>
                         {width >= 992 &&
-                        <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant"
-                             onClick={() => router.push(PATHS.WALLET.DEFAULT)}>
+                        <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
                             <SvgWallet color={navTheme.color} />
-                            <span className="ml-4" style={{ color: navTheme.color }}>
+                            <span className="ml-4" style={{ color: navTheme.color }}
+                                  onClick={() => router.push(PATHS.WALLET.DEFAULT)}>
                                 {t('navbar:menu.wallet')}
                             </span>
                             <SvgIcon
