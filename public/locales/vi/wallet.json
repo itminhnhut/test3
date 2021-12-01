@@ -127,7 +127,7 @@
   "scan_address_qr": "Quét địa chỉ ví",
   "earn_dashboard": {
     "total_balance": "Tổng số dư đang {{ action }}",
-    "total_interest_earn": "Tổng lãi đã chốt",
+    "total_interest_earn": "Tổng lãi đã nhận",
     "today_interest_earned": "Lãi dự kiến hôm nay",
     "est_value": "Tổng lãi dự kiến"
   },
