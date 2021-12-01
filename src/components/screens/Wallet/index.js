@@ -20,9 +20,7 @@ import { API_FARMING_SUMMARY, API_STAKING_SUMMARY, GET_FARMING_CONFIG, GET_STAKI
 import { ApiStatus, WalletType } from 'redux/actions/const'
 import { useAsync } from 'react-use'
 import { getUsdRate } from 'redux/actions/market'
-import { formatWallet } from 'redux/actions/utils'
 import useWindowFocus from 'hooks/useWindowFocus'
-import TransferModal from 'components/wallet/TransferModal'
 
 const INITIAL_STATE = {
     screen: null,
@@ -235,7 +233,7 @@ const Wallet = () => {
             // earn
             const namiUsdRate = _?.['1'] || 1
             const totalStaking = state.stakingSummary?.[0]?.summary?.total_interest_earned * namiUsdRate
-            const totalFarming = state.farmingSummary?.[0]?.summary?.total_interest_earned * namiUsdRate
+            const totalFarming = state.farmingSummary?.[1]?.summary?.total_interest_earned * namiUsdRate
             // console.log('namidev-DEBUG: => ', state.farmingSummary?.[0]?.summary?.total_interest_earned)
 
             const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit
@@ -314,7 +312,7 @@ const Wallet = () => {
         <>
             <MaldivesLayout>
                 <Background isDark={currentTheme === THEME_MODE.DARK}>
-                    <div className="mal-container px-4">
+                    <CustomContainer>
                         {renderScreenTab()}
                         <div className="mt-7">
                             {state.screen === WALLET_SCREENS.OVERVIEW &&
@@ -352,7 +350,7 @@ const Wallet = () => {
                             <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary}/>}
                             {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
                         </div>
-                    </div>
+                    </CustomContainer>
                 </Background>
             </MaldivesLayout>
         </>
@@ -371,6 +369,24 @@ const SCREEN_IGNORE_REFRESH_USD_RATE = [WALLET_SCREENS.FARMING, WALLET_SCREENS.S
 
 const Background = styled.div.attrs({ className: 'w-full h-full pt-5' })`
   background-color: ${({ isDark }) => isDark ? colors.darkBlue1 : '#F8F9FA'};
+`
+
+const CustomContainer = styled.div.attrs({ className: 'mal-container px-4' })`
+  @media (min-width: 1024px) {
+    max-width: 1000px !important;
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1260px !important;
+  }
+
+  @media (min-width: 1440px) {
+    max-width: 1300px !important;
+  }
+
+  @media (min-width: 1920px) {
+    max-width: 1440px !important;
+  }
 `
 
 export default Wallet

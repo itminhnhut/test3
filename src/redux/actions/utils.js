@@ -208,6 +208,28 @@ export function formatNumberToText(value = 0) {
     return numeral(+value).format('0,00a');
 }
 
+
+export function formatNumber(
+    value,
+    digits = 2,
+    forceDigits = 0,
+    acceptNegative = false
+) {
+    const defaultValue = `0${
+        forceDigits > 0 ? `.${"0".repeat(forceDigits)}` : ""
+    }`;
+    if (_.isNil(value)) return defaultValue;
+    if (Math.abs(+value) < 1e-9) return defaultValue;
+    if (!acceptNegative && +value < 0) return defaultValue;
+    return numeral(+value).format(
+        `0,0.${"0".repeat(forceDigits)}${
+            digits > 0 ? `[${"0".repeat(digits)}]` : ""
+        }`,
+        Math.floor
+    );
+}
+
+
 export function getExchange24hPercentageChange(price) {
     let change24h;
     if (price) {

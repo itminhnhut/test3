@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { ApiStatus, EarnOrder_Status } from 'redux/actions/const'
 import { Eye, EyeOff } from 'react-feather'
-import { API_GET_STAKING_ORDER, API_STAKING_CANCEL_EARNING, API_STAKING_SUMMARY } from 'redux/actions/apis'
+import { API_GET_STAKING_ORDER, API_STAKING_CANCEL_EARNING } from 'redux/actions/apis'
 
 import Axios from 'axios'
 import useWindowSize from 'hooks/useWindowSize'
@@ -10,10 +10,9 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import MCard from 'components/common/MCard'
 import ReTable from 'components/common/ReTable'
 import Empty from 'components/common/Empty'
-import Skeleton from 'react-loading-skeleton'
 import AssetName from 'components/wallet/AssetName'
 import AssetLogo from 'components/wallet/AssetLogo'
-import { formatTime, formatWallet, getS3Url } from 'redux/actions/utils'
+import { formatTime, formatNumber as formatWallet, getS3Url } from 'redux/actions/utils'
 import AssetValue from 'components/common/AssetValue'
 import Skeletor from 'components/common/Skeletor'
 import { BREAK_POINTS } from 'constants/constants'
@@ -272,7 +271,7 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
             { key: 'pool', dataIndex: 'pool', title: `Pool (${t('common:unit.time.day').toLowerCase()})`, align: 'left', width: 80 },
             { key: 'amount', dataIndex: 'amount', title: t('common:amount'), align: 'right', width: 128 },
             { key: 'accruing_interest', dataIndex: 'accruing_interest', title: t('wallet:earn_table.accruing_interest', { action: 'Stake' }), align: 'right', width: 128 },
-            { key: 'annual_interest_rate', dataIndex: 'annual_interest_rate', title: t('wallet:earn_table.apy'), align: 'right', width: 168 },
+            { key: 'annual_interest_rate', dataIndex: 'annual_interest_rate', title: t('wallet:earn_table.apy'), align: 'right', width: 90 },
             { key: 'operation', dataIndex: 'operation', title: '', align: 'right', width: 100 }
         ]
 

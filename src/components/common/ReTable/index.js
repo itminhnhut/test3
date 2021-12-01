@@ -285,7 +285,7 @@ const ReTableWrapper = styled.div`
   }
 
   .rc-table thead th {
-    white-space: nowrap;
+    //white-space: nowrap;
   }
 
   .rc-table-content, .rc-table th, .rc-table td {

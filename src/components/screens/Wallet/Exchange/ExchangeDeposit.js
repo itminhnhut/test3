@@ -608,7 +608,10 @@ const ExchangeDeposit = () => {
                         </div>
                     </ReactTooltip>
                     <span>{t('common:important_notes')}:</span>
-                    <span data-tip="" data-for="wrongthings" className="inline-block mr-8 cursor-pointer text-dominant">{noteObj?.runItBackTitle}</span>
+                    <span data-tip="" data-for="wrongthings" className="inline-block mr-8 cursor-pointer text-dominant"
+                          onClick={() => window?.fcWidget?.open()}>
+                        {noteObj?.runItBackTitle}
+                    </span>
                 </div>
                 <div className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2.5 pr-3 xl:pr-10">
                     {!WITH_MEMO.includes(networkType) && <div className="flex">
