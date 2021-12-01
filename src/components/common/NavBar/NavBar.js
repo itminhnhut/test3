@@ -388,7 +388,7 @@ const NavBar = ({
                             </span>
                         </a>
                     </Link>
-                    <Link href={getV1Url('/wallet/account?type=futures')}>
+                    <Link href="/wallet/futures">
                         <a className="mal-navbar__dropdown___item">
                             <img
                                 src={getS3Url('/images/icon/ic_wallet.png')}
@@ -403,7 +403,7 @@ const NavBar = ({
                             </span>
                         </a>
                     </Link>
-                    <Link href={getV1Url('/wallet/account?type=staking')}>
+                    <Link href="/wallet/staking">
                         <a className="mal-navbar__dropdown___item">
                             <img
                                 src={getS3Url('/images/icon/ic_wallet.png')}
@@ -418,7 +418,7 @@ const NavBar = ({
                             </span>
                         </a>
                     </Link>
-                    <Link href={getV1Url('/wallet/account?type=farming')}>
+                    <Link href="/wallet/farming">
                         <a className="mal-navbar__dropdown___item">
                             <img
                                 src={getS3Url('/images/icon/ic_wallet.png')}
