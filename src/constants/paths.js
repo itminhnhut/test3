@@ -1,8 +1,7 @@
 export const PATHS = {
     WALLET: {
-        OVERVIEW: {
-            'default': '/account/wallet/overview'
-        },
+        DEFAULT: '/wallet',
+        OVERVIEW: '/wallet/overview',
         EXCHANGE: {
 
         },

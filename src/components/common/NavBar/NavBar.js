@@ -32,6 +32,8 @@ import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';
+import { PATHS } from 'constants/paths'
+import { useRouter } from 'next/router'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -66,8 +68,9 @@ const NavBar = ({
     const setState = (_state) => set(prevState => ({ ...prevState, ..._state }));
 
     // * Use hooks
-    const [currentTheme, onThemeSwitch] = useDarkMode();
-    const [currentLocale, onChangeLang] = useLanguage();
+    const [currentTheme, onThemeSwitch] = useDarkMode()
+    const [currentLocale, onChangeLang] = useLanguage()
+    const router = useRouter()
 
     const { user: auth } = useSelector(state => state.auth) || null;
     const { width } = useWindowSize();
@@ -504,7 +507,8 @@ const NavBar = ({
                     {auth &&
                     <>
                         {width >= 992 &&
-                        <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
+                        <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant"
+                             onClick={() => router.push(PATHS.WALLET.DEFAULT)}>
                             <SvgWallet color={navTheme.color} />
                             <span className="ml-4" style={{ color: navTheme.color }}>
                                 {t('navbar:menu.wallet')}
