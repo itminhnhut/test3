@@ -54,6 +54,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
             tableStatus = <Empty/>
         }
 
+        const columns = [
+            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), fixed: 'left', align: 'left', width: 80 },
+            { key: 'total', dataIndex: 'total', title: t('common:total'), align: 'right', width: 95 },
+            { key: 'available', dataIndex: 'available', title: t('common:available_balance'), align: 'right', width: 95 },
+            { key: 'in_order', dataIndex: 'in_order', title: t('common:in_order'), align: 'right', width: 95 },
+            { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 220 },
+        ]
+
         return (
             <ReTable
                 sort
@@ -118,11 +126,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
                 <div style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' } : undefined}
                      className="px-3 py-2 flex items-center rounded-lg dark:bg-darkBlue-4 lg:px-5 lg:py-4 lg:rounded-xl mt-4 max-w-[368px] lg:max-w-max">
                     <div className="font-medium text-xs lg:text-sm pr-3 lg:pr-5 border-r border-divider dark:border-divider-dark">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">Available: </span> <span>{state.hideAsset ? `${SECRET_STRING}`
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span> <span>{state.hideAsset ? `${SECRET_STRING}`
                         : formatWallet(estBtc?.value, estBtc?.assetDigit)} BTC</span>
                     </div>
                     <div className="font-medium text-xs lg:text-sm pl-3 lg:pl-5">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">In Order: </span> <span>{state.hideAsset ? `${SECRET_STRING}`
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:in_order')}: </span> <span>{state.hideAsset ? `${SECRET_STRING}`
                         : formatWallet(estBtc?.locked, estBtc?.assetDigit)} BTC</span>
                     </div>
                 </div>
@@ -167,7 +175,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
                 </div>
                 <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto">
 
-                    <Link href="/wallet/exchange/portfolio" prefetch>
+                    <Link href={getV1Url('/wallet/account?type=portfolio')} prefetch>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[120px] md:w-[120px] lg:w-[150px]  mr-3.5 sm:mr-0 sm:ml-2 border border-dominant bg-dominant rounded-md font-medium text-xs xl:text-sm text-white hover:opacity-80 cursor-pointer whitespace-nowrap">
                             {t('common:portfolio')}
                         </a>
@@ -224,13 +232,13 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
                             {state.hideSmallAsset ? <Check size={10} color="#FFFFFF"/> : null}
                         </span>
                             <span className="ml-3 text-xs">
-                                Hide small balances
+                                {t('wallet:hide_small_balance')}
                             </span>
                         </div>
                         <div className="flex items-center rounded-[4px] lg:px-4 py-3 lg:bg-teal-lightTeal lg:dark:bg-teal-opacity select-none cursor-pointer hover:opacity-80">
                             <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="16" height="16"/>
                             <a href="/" className="text-xs ml-3 text-dominant cursor-pointer">
-                                {width >= 640 ? 'Convert small balance to NAMI' : 'Convert to NAMI'}
+                                {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
                             </a>
                         </div>
                     </div>
@@ -241,7 +249,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
                         <input className="text-sm w-full px-2.5"
                                value={state.search}
                                onChange={(e) => setState({ search: e?.target?.value })}
-                               placeholder="Search asset..."/>
+                               placeholder={t('common:search')}/>
                         {state.search && <X size={width >= 768 ? 20 : 16} className="cursor-pointer"
                                             onClick={() => setState({ search: '' })}/>}
                     </div>
@@ -273,14 +281,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
 }
 
 const ASSET_ROW_LIMIT = 8
-
-const columns = [
-    { key: 'asset', dataIndex: 'asset', title: 'Asset', fixed: 'left', align: 'left', width: 80 },
-    { key: 'total', dataIndex: 'total', title: 'Total', align: 'right', width: 95 },
-    { key: 'available', dataIndex: 'available', title: 'Available', align: 'right', width: 95 },
-    { key: 'in_order', dataIndex: 'in_order', title: 'In Order', align: 'right', width: 95 },
-    { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 220 },
-]
 
 const dataHandler = (data, translator, dispatch) => {
     if (!data || !data?.length) {

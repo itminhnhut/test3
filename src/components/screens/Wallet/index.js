@@ -16,7 +16,7 @@ import Axios from 'axios'
 import Tab from 'components/common/Tab'
 import colors from 'styles/colors'
 import styled from 'styled-components'
-import { GET_FARMING_CONFIG, GET_STAKING_CONFIG } from 'redux/actions/apis'
+import { API_FARMING_SUMMARY, API_STAKING_SUMMARY, GET_FARMING_CONFIG, GET_STAKING_CONFIG } from 'redux/actions/apis'
 import { ApiStatus, WalletType } from 'redux/actions/const'
 import { useAsync } from 'react-use'
 import { getUsdRate } from 'redux/actions/market'
@@ -39,6 +39,9 @@ const INITIAL_STATE = {
     futuresEstBtc: null,
     exchangeRefPrice: null,
     futuresRefPrice: null,
+    stakingSummary: null,
+    farmingSummary: null,
+    loadingSummary: false,
 
     // ... Add new state
 }
@@ -75,6 +78,36 @@ const Wallet = () => {
         }
         if (walletType === WalletType.FUTURES) {
             setState({ allFuturesAsset: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) })
+        }
+    }
+
+    const getStakingSummary = async () => {
+        setState({ loadingSummary: true })
+
+        try {
+            const { data } = await Axios.get(API_STAKING_SUMMARY)
+            if (data?.status === ApiStatus.SUCCESS) {
+                setState({ stakingSummary: data?.data })
+            }
+        } catch (e) {
+            console.log(`Can't get stake info => `, e)
+        } finally {
+            setState({ loadingSummary: false })
+        }
+    }
+
+    const getFarmingSummary = async () => {
+        setState({ loadingSummary: true })
+
+        try {
+            const { data } = await Axios.get(API_FARMING_SUMMARY)
+            if (data?.status === ApiStatus.SUCCESS) {
+                setState({ farmingSummary: data?.data })
+            }
+        } catch (e) {
+            console.log(`Can't get stake info => `, e)
+        } finally {
+            setState({ loadingSummary: false })
         }
     }
 
@@ -131,15 +164,17 @@ const Wallet = () => {
 
     useEffect(() => {
         reNewUsdRate()
+        getStakingSummary()
+        getFarmingSummary()
     }, [])
 
     useEffect(() => {
         let interval
-        if (focused) {
+        if (focused && !SCREEN_IGNORE_REFRESH_USD_RATE.includes(state.screen)) {
             interval = setInterval(() => reNewUsdRate(), 5000)
         }
         return () => interval && clearInterval(interval)
-    }, [focused])
+    }, [focused, state.screen])
 
     useEffect(() => {
         state.screen === WALLET_SCREENS.OVERVIEW && getStakingConfig()
@@ -187,6 +222,7 @@ const Wallet = () => {
                 totalLockedUsd: asset?.wallet?.locked_value * _?.[asset?.id],
             }))
 
+            // traditional
             const totalExchange = sumBy(exchangeList, 'totalUsd')
             const totalFutures = sumBy(futuresList, 'totalUsd')
 
@@ -196,9 +232,37 @@ const Wallet = () => {
             const lockedExchange = sumBy(exchangeList, 'totalLockedUsd')
             const lockedFutures = sumBy(futuresList, 'totalLockedUsd')
 
+            // earn
+            const namiUsdRate = _?.['1'] || 1
+            const totalStaking = state.stakingSummary?.[0]?.summary?.total_interest_earned * namiUsdRate
+            const totalFarming = state.farmingSummary?.[0]?.summary?.total_interest_earned * namiUsdRate
+            // console.log('namidev-DEBUG: => ', state.farmingSummary?.[0]?.summary?.total_interest_earned)
+
             const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit
             const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit
             const btcUsdRate = _?.['9']
+
+            if (totalStaking) {
+                setState({
+                    stakingEstBtc: {
+                        totalValue: totalStaking / btcUsdRate,
+                    },
+                    stakingRefPrice: {
+                        totalValue: totalStaking
+                    }
+                })
+            }
+
+            if (totalFarming) {
+                setState({
+                    farmingEstBtc: {
+                        totalValue: totalFarming / btcUsdRate
+                    },
+                    farmingRefPrice: {
+                        totalValue: totalFarming
+                    }
+                })
+            }
 
             if (totalExchange && totalValueExchange && lockedExchange) {
                 setState({
@@ -239,7 +303,12 @@ const Wallet = () => {
         } finally {
             setState({ loadingUsdRate: false })
         }
-    }, [state.allAssets, state.allFuturesAsset, state.usdRate])
+    }, [state.allAssets, state.allFuturesAsset, state.stakingSummary, state.farmingSummary, state.usdRate])
+
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: => ', state)
+    // }, [state])
+
 
     return (
         <>
@@ -259,6 +328,12 @@ const Wallet = () => {
                                 futuresEstBtc={state.futuresEstBtc}
                                 exchangeRefPrice={state.exchangeRefPrice}
                                 futuresRefPrice={state.futuresRefPrice}
+                                stakingSummary={state.stakingSummary}
+                                farmingSummary={state.farmingSummary}
+                                stakingEstBtc={state?.stakingEstBtc}
+                                stakingRefPrice={state?.stakingRefPrice}
+                                farmingEstBtc={state?.farmingEstBtc}
+                                farmingRefPrice={state?.farmingRefPrice}
                             />}
                             {state.screen === WALLET_SCREENS.EXCHANGE &&
                             <ExchangeWallet
@@ -271,8 +346,10 @@ const Wallet = () => {
                                 estBtc={state.futuresEstBtc}
                                 estUsd={state.futuresRefPrice}
                             />}
-                            {state.screen === WALLET_SCREENS.STAKING && <StakingWallet/>}
-                            {state.screen === WALLET_SCREENS.FARMING && <FarmingWallet/>}
+                            {state.screen === WALLET_SCREENS.STAKING &&
+                            <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary}/>}
+                            {state.screen === WALLET_SCREENS.FARMING &&
+                            <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary}/>}
                             {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
                         </div>
                     </div>
@@ -289,6 +366,8 @@ const SCREEN_TAB_SERIES = [
     { key: 4, code: WALLET_SCREENS.FARMING, title: 'Farming', localized: null },
     // { key: 5, code: WALLET_SCREENS.TRANSACTION_HISTORY, title: 'Transaction History', localized: 'common:transaction_history' },
 ]
+
+const SCREEN_IGNORE_REFRESH_USD_RATE = [WALLET_SCREENS.FARMING, WALLET_SCREENS.STAKING]
 
 const Background = styled.div.attrs({ className: 'w-full h-full pt-5' })`
   background-color: ${({ isDark }) => isDark ? colors.darkBlue1 : '#F8F9FA'};

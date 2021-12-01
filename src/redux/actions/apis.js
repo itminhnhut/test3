@@ -41,6 +41,7 @@ export const API_GET_WITHDRAW_HISTORY = API_PREFIX + "token/withdraw_history";
 export const API_GET_DEPOSIT_HISTORY = API_PREFIX + "wallet/deposit_history";
 export const API_REVEAL_DEPOSIT_TOKEN_ADDRESS = API_PREFIX + "deposit/reveal_address";
 export const POST_WALLET_TRANSFER = API_PREFIX + "wallet/transfer"
+export const API_PUSH_ORDER_BINANCE = API_PREFIX + "request_check_deposit_binance" // post => data: { currency }
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'

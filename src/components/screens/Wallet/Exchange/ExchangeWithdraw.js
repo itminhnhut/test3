@@ -3,9 +3,8 @@ import { Trans, useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { useDebounce } from 'react-use'
 import { useRouter } from 'next/router'
-import { ApiStatus, PublicSocketEvent, TokenConfigV1 as TokenConfig } from 'redux/actions/const'
+import { ApiStatus, TokenConfigV1 as TokenConfig } from 'redux/actions/const'
 import { API_GET_WALLET_CONFIG, API_GET_WITHDRAW_HISTORY } from 'redux/actions/apis'
-import { WALLET_SCREENS } from 'pages/wallet'
 import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather'
 import { find, get, isNumber } from 'lodash'
 import { buildExplorerUrl, formatTime, formatWallet, getS3Url, hashValidator, shortHashAddress } from 'redux/actions/utils'
@@ -291,7 +290,7 @@ const ExchangeWithdraw = () => {
                         : 'mr-6 flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark cursor-not-allowed'}
                        title={'Coming soon'}
                     >
-                        <div className="pb-2.5">{t('common:sell')} VNDC</div>
+                        <div className="pb-2.5">VNDC</div>
                         <div className={state.type === TYPE.fiat ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
                     </a>
                 {/*</Link>*/}
@@ -302,7 +301,7 @@ const ExchangeWithdraw = () => {
                     <a className={state.type === TYPE.crypto ?
                         'flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark'
                         : 'flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark'}>
-                        <div className="pb-2.5">{t('common:crypto')}</div>
+                        <div className="pb-2.5">TOKEN</div>
                         <div className={state.type === TYPE.crypto ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
                     </a>
                 </Link>
@@ -413,7 +412,7 @@ const ExchangeWithdraw = () => {
                 :'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
                 onClick={() => addressInputRef?.current?.focus()}>
                 <input className="w-full font-medium text-sm pr-3"
-                       placeholder={t('wallet:receiver_address')}
+                       placeholder={t('wallet:receive_address_placeholder')}
                        value={state.address}
                        ref={addressInputRef}
                        onChange={e => setState({ address: e?.target.value })}

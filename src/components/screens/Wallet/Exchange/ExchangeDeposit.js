@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { buildDepositExplorerUrl, buildExplorerUrl, formatTime, formatWallet, shortHashAddress, updateOrInsertDepositHistory } from 'redux/actions/utils'
-import { Trans, useTranslation } from 'next-i18next'
+import { buildExplorerUrl, formatTime, formatWallet, shortHashAddress, updateOrInsertDepositHistory } from 'redux/actions/utils'
+import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { Check, ChevronLeft, ChevronRight, Copy, Search, Slash, X } from 'react-feather'
 import { API_GET_DEPOSIT_HISTORY, API_GET_WALLET_CONFIG, API_REVEAL_DEPOSIT_TOKEN_ADDRESS } from 'redux/actions/apis'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { DepositStatus } from 'redux/actions/const'
+import { DepositStatus, TokenConfig } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { ApiStatus } from 'redux/actions/const'
 import { find, get, pick } from 'lodash'
@@ -29,6 +29,8 @@ import styled from 'styled-components'
 import colors from 'styles/colors'
 import Axios from 'axios'
 import ReTable from 'components/common/ReTable'
+import ReactTooltip from 'react-tooltip'
+import Modal from 'components/common/Modal'
 
 
 const INITIAL_STATE = {
@@ -49,6 +51,7 @@ const INITIAL_STATE = {
     loadingHistory: false,
     historyPage: 0,
     blockConfirm: {},
+    openModal: {},
 
     // Add new state here
 }
@@ -61,7 +64,7 @@ const TYPE = {
 const ExchangeDeposit = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
-    const setState = state => set(prevState => ({...prevState, ...state}))
+    const setState = state => set(prevState => ({ ...prevState, ...state }))
 
     const cryptoListRef = useRef()
     const cryptoListSearchRef = useRef()
@@ -187,6 +190,8 @@ const ExchangeDeposit = () => {
         }
     }
 
+    const closeModal = () => setState({ openModal: {} })
+
     // Render Handler
     const renderTab = useCallback(() => {
         return (
@@ -200,7 +205,7 @@ const ExchangeDeposit = () => {
                     : 'mr-6 flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark cursor-not-allowed'}
                    title={'Coming soon'}
                 >
-                    <div className="pb-2.5">{t('common:buy')} VNDC</div>
+                    <div className="pb-2.5">VNDC</div>
                     <div className={state.type === TYPE.fiat ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
                 </a>
                 {/*</Link>*/}
@@ -211,7 +216,7 @@ const ExchangeDeposit = () => {
                     <a className={state.type === TYPE.crypto ?
                         'flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark'
                         : 'flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark'}>
-                        <div className="pb-2.5">{t('common:crypto')}</div>
+                        <div className="pb-2.5">TOKEN</div>
                         <div className={state.type === TYPE.crypto ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
                     </a>
                 </Link>
@@ -397,7 +402,7 @@ const ExchangeDeposit = () => {
                         : 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer invisible'}
                     // onClick={() => null}
                 >
-                     Push order
+                    {t('wallet:push_order')}
                 </span>}
                 <CopyToClipboard text={state.address?.address} onCopy={() => !state.isCopying?.address && onCopy('address')}>
                     <span className={state.address.address ? 'font-bold text-sm hover:opacity-80 cursor-pointer'
@@ -437,11 +442,11 @@ const ExchangeDeposit = () => {
         let inner
 
         if (language === LANGUAGE_TAG.EN) {
-            inner =  <>After having <span className="text-dominant font-bold">
-                            {state.selectedNetwork?.depositConfirmationBlocks}</span> confirmation block</>
+            inner =  <><span className="text-dominant font-bold">
+                            {state.selectedNetwork?.depositConfirmationBlocks}</span> network confirmation</>
         } else {
-            inner = <>Sau khi có <span className="text-dominant font-bold">
-                            {state.selectedNetwork?.depositConfirmationBlocks}</span> xác nhận</>
+            inner = <><span className="text-dominant font-bold">
+                            {state.selectedNetwork?.depositConfirmationBlocks}</span> lần xác nhận từ mạng lưới</>
         }
 
         return (
@@ -525,36 +530,148 @@ const ExchangeDeposit = () => {
     }
 
     const renderNotes = useCallback(() => {
-        let note_1
+        const tokenName = state.selectedAsset?.assetCode
+        const networkType = state.selectedNetwork?.tokenType
+        const isPushOrder = state.selectedNetwork?.shouldShowPushDeposit
+
+        const noteObj = {}
 
         if (language === LANGUAGE_TAG.EN) {
-            note_1 = <>
-                Depending on the case, Nami Exchange can support to recover tokens when users
-                send wrong token, wrong wallet address or wrong network, the minimum fee for
-                recovery support is 100 USDT, please <Link href="/"><a className="text-dominant hover:!underline">contact support</a></Link> for specific advice.
+            noteObj.common = <>
+                Please carefully check the information about the token, the token network before transferring the token.
+                Only send <span className="font-medium text-dominant">{tokenName}</span> to this address,
+                sending any other tokens may result in the loss of tokens.
+            </>
+            noteObj.kai = <>
+                For <span className="font-medium text-dominant">KAI</span> tokens, NamiExchange only supports <span className="font-medium text-dominant">Kardiachain Mainnet</span>, please make sure your entered information is correct.
+            </>
+            noteObj.pushOrder = <>
+                If your Deposit Order has not been updated on Nami, use the <span className="font-medium text-dominant">Push Order</span> button to have Nami update the balance automatically.
+            </>
+            noteObj.memoTips = <>
+                Both a <span className="text-dominant font-medium">MEMO</span> and an <span className="text-dominant font-medium">Address</span> are required to successfully deposit your {tokenName}.
+                NamiExchange will not handle any deposit which lacks information.
+            </>
+            noteObj.memo_1 = <>
+                Send <span className="font-medium text-dominant">{tokenName}</span> with MEMO to this address, the deposit will be completed after <span className="text-dominant font-medium">30 block</span> confirmations.
+            </>
+            noteObj.memo_2 = <>
+                Multi-send transaction is not supported, send only <span className="font-medium text-dominant">{tokenName}</span> to this address. Send other tokens may result in loss of your deposit.
+            </>
+            noteObj.runItBackTitle = <>
+                Having a mistake?
+            </>
+            noteObj.runItBackNotes = <>
+                Depending on the case, Nami Exchange can support to recover tokens when users send wrong token,
+                wrong wallet address or wrong network, the minimum fee for recovery support is 100 USDT,
+                please <span onClick={() => window?.fcWidget.open()} className="text-dominant cursor-pointer hover:!underline">contact support</span> for specific advice.
             </>
         } else {
-            note_1 = <>
-                Depending on the case, Nami Exchange can support to recover tokens when users
-                send wrong token, wrong wallet address or wrong network, the minimum fee for
-                recovery support is 100 USDT, please <Link href="/"><a className="text-dominant hover:!underline">contact support</a></Link> for specific advice.
+            noteObj.common = <>
+                Người dùng vui lòng kiểm tra kỹ các thông tin về token, mạng lưới token trước khi chuyển token.
+                Chỉ gửi <span className="font-medium text-dominant">{tokenName}</span> đến địa chỉ này,
+                gửi bất cứ token nào khác có thể dẫn đến việc mất mát token.
+            </>
+            noteObj.kai = <>
+                Đối với token <span className="font-medium text-dominant">KAI</span>, NamiExchange chỉ hỗ trợ <span className="font-medium text-dominant">Kardiachain Mainnet</span>, hãy chắc chắn các thông tin đã nhập của bạn là chính xác.
+            </>
+            noteObj.pushOrder = <>
+                Nếu lệnh nạp của bạn chưa được cập nhật trên Nami, vui lòng click vào nút <span className="font-medium text-dominant">Đẩy lệnh</span> để Nami cập nhật số dư tự động.
+            </>
+            noteObj.memoTips = <>
+                Cần cả 2 trường <span className="text-dominant font-medium">MEMO</span> và <span className="text-dominant font-medium">Địa chỉ</span> để nạp
+                thành công {tokenName}. Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
+            </>
+            noteObj.memo_1 = <>
+                Gửi <span className="font-medium text-dominant">{tokenName}</span> kèm MEMO tới địa chỉ ví này, token sẽ được cộng vào tài khoản của bạn sau khi có <span className="text-dominant font-medium">30 block</span> xác thực.
+            </>
+            noteObj.memo_2 = <>
+                Giao dịch dạng multi-send không được hỗ trợ, chỉ gửi <span className="font-medium text-dominant">{tokenName}</span> đến địa chỉ này. Gửi các token khác có thể dẫn đến mất mát.
+            </>
+            noteObj.runItBackTitle = <>
+                Gặp sự cố nhầm lẫn?
+            </>
+            noteObj.runItBackNotes = <>
+                Tùy từng trường hợp, NamiExchange có thể hỗ trợ
+                khôi phục token khi người dùng gửi nhầm token,
+                sai địa chỉ ví hoặc nhầm mạng, phí hỗ trợ khôi phục tối thiểu là 100 USDT,
+                vui lòng liên hệ <span onClick={() => window?.fcWidget.open()} className="text-dominant cursor-pointer hover:!underline"> bộ phận hỗ trợ</span> để được tư vấn cụ thể.
             </>
         }
 
         return (
             <>
-                <div className="font-medium text-sm">{t('common:important_notes')}:</div>
+                <div className="relative font-medium text-sm flex items-center justify-between">
+                    <ReactTooltip id="wrongthings" place="left" effect="solid">
+                        <div className="w-[320px]">
+                            {noteObj.runItBackNotes}
+                        </div>
+                    </ReactTooltip>
+                    <span>{t('common:important_notes')}:</span>
+                    <span data-tip="" data-for="wrongthings" className="inline-block mr-8 cursor-pointer text-dominant">{noteObj?.runItBackTitle}</span>
+                </div>
                 <div className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2.5 pr-3 xl:pr-10">
-                   <div className="flex">
-                       <span className="mx-2 xl:mx-3.5">&bull;</span>
-                       <div>
-                           {note_1}
-                       </div>
-                   </div>
+                    {!WITH_MEMO.includes(networkType) && <div className="flex">
+                        <span className="mx-2 xl:mx-3.5">&bull;</span>
+                        <div>{noteObj?.common}</div>
+                    </div>}
+                    {WITH_MEMO.includes(networkType) && <>
+                        <div className="flex">
+                            <span className="mx-2 xl:mx-3.5">&bull;</span>
+                            <div>{noteObj?.memoTips}</div>
+                        </div>
+                        <div className="flex mt-1.5">
+                            <span className="mx-2 xl:mx-3.5">&bull;</span>
+                            <div>{noteObj?.memo_1}</div>
+                        </div>
+                        <div className="flex mt-1.5">
+                            <span className="mx-2 xl:mx-3.5">&bull;</span>
+                            <div>{noteObj?.memo_2}</div>
+                        </div>
+                    </>}
+                    {tokenName === 'KAI' && <div className="flex mt-1.5">
+                        <span className="mx-2 xl:mx-3.5">&bull;</span>
+                        <div>{noteObj?.kai}</div>
+                    </div>}
+                    {isPushOrder && <div className="flex mt-1.5">
+                        <span className="mx-2 xl:mx-3.5">&bull;</span>
+                        <div>{noteObj?.pushOrder}</div>
+                    </div>}
                 </div>
             </>
         )
-    }, [language])
+    }, [language, state.selectedAsset, state.selectedNetwork])
+
+    const renderMemoNotice = useCallback(() => {
+        const isMemoNotice = WITH_MEMO.includes(state.selectedNetwork?.tokenType)
+        if (!isMemoNotice) return null
+
+        let msg
+        if (language === LANGUAGE_TAG.VI) {
+            msg = <>
+                Cần cả 2 trường <span className="text-dominant font-medium">MEMO</span> và <span className="text-dominant font-medium">Địa chỉ</span> để nạp
+                thành công {state.selectedAsset?.assetCode}.<br/> Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
+            </>
+        } else {
+            msg = <>
+                Both a <span className="text-dominant font-medium">MEMO</span> and an <span className="text-dominant font-medium">Address</span> are required to successfully deposit your {state.selectedAsset?.assetCode}.
+                <br/>NamiExchange will not handle any deposit which lacks information.
+            </>
+        }
+
+        console.log('namidev-DEBUG: +> ', state.selectedNetwork)
+
+        return (
+            <Modal isVisible={state.openModal?.memoNotice}
+                   type="confirm-one-choice"
+                   title={t('common:important_notes')}
+                   onConfirmCb={closeModal}>
+                <div className="text-center text-sm font-medium mt-4 w-[320px]">
+                    {msg}
+                </div>
+            </Modal>
+        )
+    }, [state.selectedNetwork, state.selectedAsset?.assetCode, state.openModal?.memoNotice, language])
 
     const renderDepHistory = useCallback(() => {
         const data = dataHandler(
@@ -566,14 +683,14 @@ const ExchangeDeposit = () => {
         let tableStatus
 
         const columns = [
-            { key: 'id', dataIndex: 'id', title: 'Order#ID', width: 100, fixed: 'left', align: 'left' },
-            { key: 'asset', dataIndex: 'asset', title: 'Asset', width: 100, align: 'left' },
-            { key: 'amount', dataIndex: 'amount', title: 'Amount', width: 100, align: 'right' },
-            { key: 'address', dataIndex: 'address', title: 'Address', width: 100, align: 'right' },
-            { key: 'network', dataIndex: 'network', title: 'Network', width: 100, align: 'right' },
+            { key: 'id', dataIndex: 'id', title: 'ID', width: 100, fixed: 'left', align: 'left' },
+            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), width: 100, align: 'left' },
+            { key: 'amount', dataIndex: 'amount', title: t('common:amount'), width: 100, align: 'right' },
+            { key: 'address', dataIndex: 'address', title: t('common:address_wallet'), width: 100, align: 'right' },
+            { key: 'network', dataIndex: 'network', title: t('wallet:network'), width: 100, align: 'right' },
             { key: 'txhash', dataIndex: 'txhash', title: 'TxHash', width: 100, align: 'right' },
-            { key: 'time', dataIndex: 'time', title: 'Time', width: 100, align: 'right' },
-            { key: 'status', dataIndex: 'status', title: 'Status', width: 100, align: 'right' },
+            { key: 'time', dataIndex: 'time', title: t('common:time'), width: 100, align: 'right' },
+            { key: 'status', dataIndex: 'status', title: t('common:status'), width: 100, align: 'right' },
         ]
 
         if (!state.histories?.length) {
@@ -639,6 +756,14 @@ const ExchangeDeposit = () => {
 
     useEffect(() => {
         getDepositTokenAddress(false, state.selectedNetwork?.assetCode, state.selectedNetwork?.tokenTypeIndex)
+    }, [state.selectedNetwork])
+
+    useEffect(() => {
+        if (WITH_MEMO.includes(state.selectedNetwork?.tokenType)) {
+            setState({ openModal: { memoNotice: true } })
+        } else {
+            setState({ openModal: { memoNotice: false } })
+        }
     }, [state.selectedNetwork])
 
     useEffect(() => {
@@ -765,7 +890,7 @@ const ExchangeDeposit = () => {
                                     </div>
                                     <div className="mt-4">
                                         {renderDepositConfirmBlocks()}
-                                        {renderMinDep()}
+                                        {/*{renderMinDep()}*/}
                                     </div>
                                 </>}
                             </div>
@@ -789,6 +914,7 @@ const ExchangeDeposit = () => {
                     {renderPagination()}
                 </div>
             </Background>
+            {renderMemoNotice()}
         </MaldivesLayout>
     )
 }
@@ -818,6 +944,7 @@ function dataHandler(data, loading, configList, utils) {
     data.forEach(h => {
         const { id, currency, amount, network, address, hash, time, status, _history_type } = h
         const assetName = utils?.getAssetName(configList, currency)
+        const explorerLink = buildExplorerUrl(hash, network)
 
         let statusInner
         switch (status) {
@@ -825,18 +952,15 @@ function dataHandler(data, loading, configList, utils) {
                 if (!hash) {
                     statusInner = <span className='text-green'>Complete</span>
                 } else {
-                    statusInner = (
-                        <Link href={buildExplorerUrl(hash, network)}
-                              prefetch={false}>
-                            <a className="text-green" target='_blank'>
-                                Completed
-                            </a>
-                        </Link>
-                    )
+                    statusInner = explorerLink ? (
+                        <a className="text-green" target='_blank' href={explorerLink}>
+                            {utils?.t('common:success')}
+                        </a>
+                    ) : '--'
                 }
                 break
             case DepositStatus.PENDING:
-                statusInner = <span className='text-yellow'>Pending</span>
+                statusInner = <span className='text-yellow'>{utils?.t('common:pending')}</span>
                 break
             case DepositStatus.WAITING_FOR_BLOCK_CONFIRMATION:
                 const confirmedNumber = get(utils?.blockConfirm, `history:${_history_type}:${id}`,
@@ -848,17 +972,15 @@ function dataHandler(data, loading, configList, utils) {
                 </a>
 
             case DepositStatus.CONFIRMED_WAIT_TO_DEPOSIT: {
-                statusInner = (
-                    <Link href={buildExplorerUrl(hash, network)}>
-                        <a className='text-yellow' target='_blank'>
-                            Đang xác thực
-                        </a>
-                    </Link>
-                )
+                statusInner = explorerLink ? (
+                    <a className='text-yellow' target='_blank' href={explorerLink}>
+                        {utils?.t('common:pending')}
+                    </a>
+                ) : '--'
                 break
             }
             case DepositStatus.BLOCK_DENIED: {
-                statusInner = <span className='text-red'>Rejected</span>
+                statusInner = <span className='text-red'>{utils?.t('common:declined')}</span>
                 break
             }
             default:
@@ -883,6 +1005,8 @@ function dataHandler(data, loading, configList, utils) {
 
     return result
 }
+
+const WITH_MEMO = [TokenConfig.Type.BEP2, TokenConfig.Type.VITE_CHAIN_TOKEN]
 
 const getAssetName = (assetList, assetId) => {
     if (!Array.isArray(assetList) || !assetId) return

@@ -403,11 +403,19 @@ export const TokenConfig = {
         KARDIA_CHAIN: 'KARDIA_CHAIN',
     },
     Type: {
-        BITCOIN: 'BITCOIN',
-        BITCOIN_FUTURE: 'BITCOIN_FUTURE',
-        ERC20: 'ERC20',
-        TomoChain: 'TomoChain',
-        BEP2: 'BEP2',
+        BITCOIN: "BITCOIN",
+        BITCOIN_FUTURE: "BITCOIN_FUTURE",
+        ERC20: "ERC20",
+        TomoChain: "TomoChain",
+        TRC20: "TRC20",
+        TRC21: "TRC21",
+        BEP2: "BEP2",
+        TRON_NATIVE: "TRON_NATIVE",
+        ETHEREUM_CLASSIC: "ETHEREUM_CLASSIC",
+        KARDIA_CHAIN_NATIVE: "KARDIA_CHAIN_NATIVE",
+        VITE_CHAIN_TOKEN: "VITE_CHAIN_TOKEN",
+        BEP20: "BEP20",
+        THETA_TOKEN: "THETA_TOKEN"
     },
 };
 

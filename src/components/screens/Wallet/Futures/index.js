@@ -71,6 +71,14 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
             tableStatus = <Empty/>
         }
 
+        const columns = [
+            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), fixed: 'left', align: 'left', width: 80 },
+            { key: 'total', dataIndex: 'total', title: t('common:total'), align: 'right', width: 95 },
+            { key: 'available', dataIndex: 'available', title: t('common:available_balance'), align: 'right', width: 95 },
+            { key: 'in_order', dataIndex: 'in_order', title: t('common:in_order'), align: 'right', width: 95 },
+            { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 220 },
+        ]
+
         return (
             <ReTable
                 sort
@@ -124,10 +132,10 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
                 <div style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' } : undefined}
                      className="px-3 py-2 flex items-center rounded-lg dark:bg-darkBlue-4 lg:px-5 lg:py-4 lg:rounded-xl mt-4 max-w-[368px] lg:max-w-max">
                     <div className="font-medium text-xs lg:text-sm pr-3 lg:pr-5 border-r border-divider dark:border-divider-dark">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">Available: </span> <span>{state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit)} BTC</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span> <span>{state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit)} BTC</span>
                     </div>
                     <div className="font-medium text-xs lg:text-sm pl-3 lg:pl-5">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">In Order: </span> <span>{state.hideAsset ? `${SECRET_STRING}` :formatWallet(estBtc?.locked, estBtc?.assetDigit)} BTC</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span> <span>{state.hideAsset ? `${SECRET_STRING}` :formatWallet(estBtc?.locked, estBtc?.assetDigit)} BTC</span>
                     </div>
                 </div>
             </div>
@@ -186,7 +194,7 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
                             {state.hideSmallAsset ? <Check size={10} color="#FFFFFF"/> : null}
                         </span>
                         <span className="ml-3 text-xs">
-                                Hide small balances
+                                {t('wallet:hide_small_balance')}
                             </span>
                     </div>
                 </div>

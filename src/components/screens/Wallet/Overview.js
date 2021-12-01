@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { formatWallet, getS3Url, getV1Url, setTransferModal } from 'redux/actions/utils'
-import { useTranslation } from 'next-i18next'
+import { Trans, useTranslation } from 'next-i18next'
 import { Eye, EyeOff } from 'react-feather'
 import { EXCHANGE_ACTION} from 'pages/wallet'
 import { SECRET_STRING } from 'utils'
@@ -12,6 +12,8 @@ import AssetLogo from 'components/wallet/AssetLogo'
 import wallet from 'redux/reducers/wallet'
 import Link from 'next/link'
 import { WalletType } from 'redux/actions/const'
+import AssetValue from 'components/common/AssetValue'
+import AssetName from 'components/wallet/AssetName'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -20,7 +22,18 @@ const INITIAL_STATE = {
 }
 
 const OverviewWallet = (props) => {
-    const { allAssets, stakingConfig, farmingConfig, exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice } = props
+    const { allAssets,
+        stakingConfig,
+        farmingConfig,
+        exchangeEstBtc,
+        exchangeRefPrice,
+        futuresEstBtc,
+        futuresRefPrice,
+        stakingEstBtc,
+        stakingRefPrice,
+        farmingEstBtc,
+        farmingRefPrice
+    } = props
 
     // Init State
     const [state, set] = useState(INITIAL_STATE)
@@ -163,7 +176,9 @@ const OverviewWallet = (props) => {
                                 <span className="mr-4">Exchange</span>
                                 <span className="inline-flex items-center">
                                     <img src={getS3Url('/images/icon/ic_piechart.png')} width="16" height="16" alt=""/>
-                                    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>
+                                    <a href={getV1Url('/wallet/account?type=portfolio')} className="ml-1 text-dominant hover:!underline">
+                                         {t('common:portfolio')}
+                                    </a>
                                 </span>
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
@@ -201,7 +216,7 @@ const OverviewWallet = (props) => {
                     </div>
                 </div>
 
-                <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-divider dark:border-divider-dark">
+                <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
                     {/*border-b*/}
                     <div className="md:w-1/3 flex items-center">
                         <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
@@ -222,8 +237,9 @@ const OverviewWallet = (props) => {
                     </div>
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
                         <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">
-                            Trade assets using funds provied by third party with a Futures Account.<br/>
-                            Transfer funds to your Futures Account to start trading.
+                            <Trans>
+                                {t('wallet:futures_overview')}
+                            </Trans>
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <div onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
@@ -234,69 +250,85 @@ const OverviewWallet = (props) => {
                     </div>
                 </div>
 
-                {/*<div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">*/}
-                {/*    <div className="md:w-1/3 flex items-center">*/}
-                {/*        <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">*/}
-                {/*            <img src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" alt=""/>*/}
-                {/*        </div>*/}
-                {/*        <div className="ml-4 xl:ml-6">*/}
-                {/*            <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">*/}
-                {/*                <span className="mr-4">Staking</span>*/}
-                {/*                /!*<span className="inline-flex items-center">*!/*/}
-                {/*                /!*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*!/*/}
-                {/*                /!*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*!/*/}
-                {/*                /!*</span>*!/*/}
-                {/*            </div>*/}
-                {/*            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">*/}
-                {/*                <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">*/}
-                {/*        <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">*/}
-                {/*            {renderStakingList()}*/}
-                {/*        </div>*/}
-                {/*        <div className="flex items-center mt-4 lg:mt-0">*/}
-                {/*            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>*/}
-                {/*                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">*/}
-                {/*                    {t('common:withdraw')}*/}
-                {/*                </a>*/}
-                {/*            </Link>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+                <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark">
+                    <div className="md:w-1/3 flex items-center">
+                        <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
+                            <img src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" alt=""/>
+                        </div>
+                        <div className="ml-4 xl:ml-6">
+                            <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
+                                <span className="mr-4">Staking</span>
+                                {/*<span className="inline-flex items-center">*/}
+                                {/*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*/}
+                                {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
+                                {/*</span>*/}
+                            </div>
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
+                                <span className="font-bold">
+                                    <AssetValue assetCode="BTC"
+                                                value={stakingEstBtc?.totalValue}/>
+                                </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
+                                ~ $<AssetValue assetCode="USDT" value={stakingRefPrice?.totalValue}/>
+                                </span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
+                        {/*<div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">*/}
+                        {/*    {renderStakingList()}*/}
+                        {/*</div>*/}
+                        <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">
+                            {t('wallet:staking_overview')}
+                        </div>
+                        <div className="flex items-center mt-4 lg:mt-0">
+                            <Link href={`/wallet/staking`} prefetch={false}>
+                                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                    {t('common:read_more')}
+                                </a>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
 
-                {/*<div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row">*/}
-                {/*    <div className="md:w-1/3 flex items-center">*/}
-                {/*        <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">*/}
-                {/*            <img src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" alt=""/>*/}
-                {/*        </div>*/}
-                {/*        <div className="ml-4 xl:ml-6">*/}
-                {/*            <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">*/}
-                {/*                <span className="mr-4">Farming</span>*/}
-                {/*                /!*<span className="inline-flex items-center">*!/*/}
-                {/*                /!*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*!/*/}
-                {/*                /!*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*!/*/}
-                {/*                /!*</span>*!/*/}
-                {/*            </div>*/}
-                {/*            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">*/}
-                {/*                <span className="font-bold">0.270810996</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $16,181.000</span></span>*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">*/}
-                {/*        <div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">*/}
-                {/*            {renderFarmingList()}*/}
-                {/*        </div>*/}
-                {/*        <div className="flex items-center mt-4 lg:mt-0">*/}
-                {/*            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>*/}
-                {/*                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">*/}
-                {/*                    {t('common:withdraw')}*/}
-                {/*                </a>*/}
-                {/*            </Link>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+                <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row">
+                    <div className="md:w-1/3 flex items-center">
+                        <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
+                            <img src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" alt=""/>
+                        </div>
+                        <div className="ml-4 xl:ml-6">
+                            <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
+                                <span className="mr-4">Farming</span>
+                                {/*<span className="inline-flex items-center">*/}
+                                {/*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*/}
+                                {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
+                                {/*</span>*/}
+                            </div>
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
+                                <span className="font-bold">
+                                    <AssetValue assetCode="BTC"
+                                                value={farmingEstBtc?.totalValue}/>
+                                </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
+                                ~ $<AssetValue assetCode="USDT" value={farmingRefPrice?.totalValue}/>
+                                </span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
+                        {/*<div className="flex items-center mt-4 font-medium lg:mt-0 text-xs lg:text-sm">*/}
+                        {/*    {renderFarmingList()}*/}
+                        {/*</div>*/}
+                        <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">
+                            {t('wallet:farming_overview')}
+                        </div>
+                        <div className="flex items-center mt-4 lg:mt-0">
+                            <Link href={`/wallet/farming`} prefetch={false}>
+                                <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                    {t('common:read_more')}
+                                </a>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             </MCard>
 
         </div>

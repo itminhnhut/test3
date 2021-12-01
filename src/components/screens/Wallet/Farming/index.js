@@ -10,7 +10,6 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import MCard from 'components/common/MCard'
 import ReTable from 'components/common/ReTable'
 import Empty from 'components/common/Empty'
-import Skeleton from 'react-loading-skeleton'
 import AssetName from 'components/wallet/AssetName'
 import AssetLogo from 'components/wallet/AssetLogo'
 import { formatTime, formatWallet, getS3Url } from 'redux/actions/utils'
@@ -36,15 +35,13 @@ const INITIAL_STATE = {
     apiResponse: {},
     openModal: {},
     cancelObj: {},
-    summary: null,
-    loadingSummary: false,
 
     // ...
 }
 
 const PAGE_SIZE = 10
 
-const FarmingWallet = memo(() => {
+const FarmingWallet = memo(({ summary, loadingSummary }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
@@ -58,21 +55,6 @@ const FarmingWallet = memo(() => {
     const { t } = useTranslation()
 
     // Helper
-    const getSummary = async () => {
-        setState({ loadingSummary: true })
-
-        try {
-            const { data } = await Axios.get(API_FARMING_SUMMARY)
-            if (data?.status === ApiStatus.SUCCESS) {
-                setState({ summary: data?.data })
-            }
-        } catch (e) {
-            console.log(`Can't get stake info => `, e)
-        } finally {
-            setState({ loadingSummary: false })
-        }
-    }
-
     const getOrder = async (page, tab) => {
         setState({ loadingTableData: true })
 
@@ -146,11 +128,11 @@ const FarmingWallet = memo(() => {
 
     // Render Handler
     const renderDashboard = useCallback(() => {
-        const sourceSummary = state.summary?.[0]?.summary
-        const sourceAssetId = state.summary?.[0]?.currency
+        const sourceSummary = summary?.[0]?.summary
+        const sourceAssetId = summary?.[0]?.currency
 
-        const baseSummary = state.summary?.[1]?.summary
-        const baseAssetId = state.summary?.[1]?.currency
+        const baseSummary = summary?.[1]?.summary
+        const baseAssetId = summary?.[1]?.currency
 
 
         return (
@@ -161,7 +143,7 @@ const FarmingWallet = memo(() => {
                         {t('wallet:earn_dashboard.total_balance', { action: 'Farming' })}
                     </div>
                     <div className="mt-2 font-bold text-[24px] 2xl:mt-4 2xl:text-[32px]">
-                        {state.loadingSummary ?
+                        {loadingSummary ?
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING : <>
                                 <AssetValue value={sourceSummary?.total_balance} assetId={sourceAssetId}/> <AssetName
@@ -170,7 +152,7 @@ const FarmingWallet = memo(() => {
                     </div>
                     <div
                         className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark">
-                        {state.loadingSummary ?
+                        {loadingSummary ?
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING : <>
                                 <AssetValue value={baseSummary?.total_balance} assetId={baseAssetId}/> <AssetName
@@ -184,7 +166,7 @@ const FarmingWallet = memo(() => {
                         {t('wallet:earn_dashboard.est_value')}
                     </div>
                     <div className="mt-2 font-bold text-[24px] 2xl:mt-4 2xl:text-[32px]">
-                        {state.loadingSummary ?
+                        {loadingSummary ?
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING : <>
                                 <AssetValue value={sourceSummary?.estimate_value} assetId={sourceAssetId}/> <AssetName
@@ -193,7 +175,7 @@ const FarmingWallet = memo(() => {
                     </div>
                     <div
                         className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark invisible">
-                        {state.loadingSummary ?
+                        {loadingSummary ?
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING : <>
                                 <AssetValue value={baseSummary?.estimate_value} assetId={baseAssetId}/> <AssetName
@@ -207,13 +189,13 @@ const FarmingWallet = memo(() => {
                         {t('wallet:earn_dashboard.total_interest_earn')}
                     </div>
                     <div className="mt-2 font-bold text-[24px] 2xl:mt-4 2xl:text-[32px]">
-                        {state.loadingSummary ?
+                        {loadingSummary ?
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING : <><AssetValue value={sourceSummary?.total_interest_earned} assetId={sourceAssetId}/> <AssetName assetId={sourceAssetId}/></>}
                     </div>
                     <div
                         className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark invisible">
-                        {state.loadingSummary ?
+                        {loadingSummary ?
                             <Skeletor width={65}/> :
                             state.hideAsset ? SECRET_STRING :
                                 <><AssetValue value={baseSummary?.total_interest_earned} assetId={baseAssetId}/> <AssetName assetId={baseAssetId}/></>}
@@ -225,7 +207,7 @@ const FarmingWallet = memo(() => {
                         {t('wallet:earn_dashboard.today_interest_earned')}
                     </div>
                     <div className="mt-2 font-bold text-dominant text-[24px] 2xl:mt-4 2xl:text-[32px]">
-                        {state.loadingSummary ?
+                        {loadingSummary ?
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING :
                                 <>
@@ -234,7 +216,7 @@ const FarmingWallet = memo(() => {
                     </div>
                     <div
                         className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark invisible">
-                        {state.loadingSummary ?
+                        {loadingSummary ?
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING : <>
                                 <AssetValue value={baseSummary?.today_interest_earned} assetId={baseAssetId}/> <AssetName assetId={baseAssetId}/>
@@ -243,7 +225,7 @@ const FarmingWallet = memo(() => {
                 </div>
             </div>
         )
-    }, [state.summary, state.loadingSummary, state.hideAsset])
+    }, [state.hideAsset, summary, loadingSummary])
 
     const renderTableTab = useCallback(() => {
         return (
@@ -409,16 +391,8 @@ const FarmingWallet = memo(() => {
     }, [state.openModal?.cancel, state.cancelObj, state.apiResponse?.cancel])
 
     useEffect(() => {
-        getSummary()
-    }, [])
-
-    useEffect(() => {
         getOrder(state.page, state.tableTab)
     }, [state.page, state.tableTab])
-
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Staking State => ', state)
-    // }, [state])
 
     return (
         <div>

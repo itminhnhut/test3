@@ -163,5 +163,6 @@
     "time": {
       "day": "Days"
     }
-  }
+  },
+  "address_wallet": "Address"
 }

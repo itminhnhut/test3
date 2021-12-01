@@ -41,7 +41,7 @@
   "sending_history": "Lịch sử gửi",
   "withdraw_via_vndc_warn": "Để đảm bảo an toàn, tính năng rút tài sản chỉ sẵn sàng dành cho các tài khoản đã hoàn thành xác minh danh tính (KYC).",
   "receive": "Nhận",
-  "deposit_address": "Địa chỉ nạp",
+  "deposit_address": "Địa chỉ ví",
   "deposit_memo": "Memo",
   "deposit_history": "Lịch sử Nhận",
   "note": "Lưu ý",
@@ -77,8 +77,8 @@
   "if_not": "Nếu bạn đã chuyển khoản mà chưa nhận được thông báo số dư VNDC ở Nami Wallet. Vui lòng liên hệ với chúng tôi qua số hotline: 1900888666",
   "withdraw_onchain": "Rút tiền On-chain",
   "bank_offline": "Cổng rút tiền đang bảo trì, vui lòng thử lại sau ít phút",
-  "crypto_select": "Lựa chọn crypto",
-  "crypto_list": "Danh sách crypto",
+  "crypto_select": "Chọn token",
+  "crypto_list": "Danh sách token",
   "special_tip": "Gợi ý",
   "errors": {
     "selected_bank": "Không có ngân hàng được chọn",
@@ -96,8 +96,10 @@
   },
   "est_balance": "Tài sản ước lượng",
   "hide_asset": "Ẩn số dư",
+  "hide_small_asset": "Ẩn số dư nhỏ",
   "asset_balance": "Số dư tài sản",
-  "receive_address": "Địa chỉ ví nhận",
+  "receive_address": "Rút đến địa chỉ",
+  "receive_address_placeholder": "Nhập địa chỉ ví nhận",
   "withdraw_history": "Lịch sử rút",
   "dep_history": "Lịch sử nạp",
   "withdraw_fee": "Phí rút",
@@ -116,9 +118,9 @@
     "both_input_otp_suggest": "Vui lòng nhập đủ 2 OTP"
   },
   "withdraw_success_msg": "Lệnh rút đã được ghi nhận,<br/>vui lòng chờ trong giây lát",
-  "expected_arrival": "Thời gian mong đợi",
-  "expected_unlock": "Thời gian dự kiến",
-  "confirmation_block": "Sau khi có <0>block</0> xác nhận",
+  "expected_arrival": "Lượng xác nhận đến",
+  "expected_unlock": "Lượng xác nhận mở khóa",
+  "confirmation_block": "<0>block</0> lần xác nhận từ mạng lưới",
   "minimum_deposit": "Giá trị nạp tối thiểu",
   "reveal_address": "Khởi tạo",
   "address_not_available": "Bạn chưa có địa chỉ ví này",
@@ -140,5 +142,18 @@
     "earning": "Các khoản {{ action }}",
     "accruing_interest": "Tiền thưởng {{ action }}",
     "apy": "Lãi suất năm (APY)"
-  }
+  },
+  "futures_overview": "Giao dịch hợp đồng tương lai với đòn bẩy lên đến X125.<br/>Chuyển VNDC hoặc USDT vào ví Futures để bắt đầu giao dịch.",
+  "staking_overview": "Stake NAMI để nhận lãi thưởng lên đến 50%/năm.",
+  "farming_overview": "Farm NAMI và nhận nhiều token tiềm năng.",
+  "push_order": "Đẩy lệnh",
+  "notes": {
+    "common": "Người dùng vui lòng kiểm tra kỹ các thông tin về token, mạng lưới token trước khi chuyển token. Chỉ gửi {{tokenName}} đến địa chỉ này, gửi bất cứ token nào khác có thể dẫn đến việc mất mát token.",
+    "kai": "Đối với token KAI, NamiExchange chỉ hỗ trợ Kardiachain Mainnet, hãy chắc chắn các thông tin đã nhập của bạn là chính xác.",
+    "memo_1": "Gửi {{ tokenName }} kèm MEMO tới địa chỉ ví này, token sẽ được cộng vào tài khoản của bạn sau khi có {{ block }} block xác thực.",
+    "memo_2": "Giao dịch dạng multi-send không được hỗ trợ, chỉ gửi {{ tokenName }} đến địa chỉ này. Gửi các token khác có thể dẫn đến mất mát.",
+    "memo_tips": "Cần cả 2 trường MEMO và Địa chỉ để nạp thành công {{ tokenName }}. Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu."
+  },
+  "convert_small": "Chuyển số dư nhỏ sang {{ asset }}",
+  "convert_small_mobile": "Chuyển đổi sang {{ asset }}"
 }

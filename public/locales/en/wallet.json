@@ -77,8 +77,8 @@
   "if_not": "If you have completed the transaction but your VNDC balance at Nami Exchange still have not changed, please contact our hotline: 1900888666",
   "withdraw_onchain": "On-chain withdraw",
   "bank_offline": "Withdraw gateway is under maintenance, please comeback after few minutes.",
-  "crypto_select": "Select cryptocurrency",
-  "crypto_list": "Cryptocurrencies list",
+  "crypto_select": "Select token",
+  "crypto_list": "Token list",
   "special_tip": "Special tips",
   "errors": {
     "selected_bank": "No bank selected",
@@ -98,6 +98,7 @@
   "hide_asset": "Hide Asset",
   "asset_balance": "Asset Balance",
   "receive_address": "Withdraw Address",
+  "receive_address_placeholder": "Enter address here",
   "withdraw_history": "Withdraw History",
   "dep_history": "Deposit History",
   "withdraw_fee": "Withdraw Fee",
@@ -140,5 +141,18 @@
     "earning": "{{ action }}",
     "accruing_interest": "Accruing Interest",
     "apy": "Annual Interest Rate (APY)"
-  }
+  },
+  "futures_overview": "Trading Futures with leverage up to X125. <br/>Transfer funds to your Futures Wallet to start trading.",
+  "staking_overview": "Staking NAMI to receive bonus interest up to 50%/year.",
+  "farming_overview": "Farming NAMI and get many potential tokens.",
+  "push_order": "Push Order",
+  "notes": {
+    "common": "Please carefully check the information about the token, the token network before transferring the token. Only send {{ tokenName }} to this address, sending any other tokens may result in the loss of tokens.",
+    "kai": "For KAI tokens, NamiExchange only supports Kardiachain Mainnet, please make sure your entered information is correct.",
+    "memo_1": "Send {{ tokenName }} with MEMO to this address, the deposit will be completed after {{ block }} block confirmations.",
+    "memo_2": "Multi-send transaction is not supported, send only {{ tokenName }} to this address. Send other tokens may result in loss of your deposit.",
+    "memo_tips": "Both a MEMO and an Address are required to successfully deposit your {{ tokenName }}. Nami will not handle any deposit which lacks information."
+  },
+  "convert_small": "Convert small balance to {{ asset }}",
+  "convert_small_mobile": "Convert to {{ asset }}"
 }
