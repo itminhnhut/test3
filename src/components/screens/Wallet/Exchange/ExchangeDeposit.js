@@ -659,8 +659,6 @@ const ExchangeDeposit = () => {
             </>
         }
 
-        console.log('namidev-DEBUG: +> ', state.selectedNetwork)
-
         return (
             <Modal isVisible={state.openModal?.memoNotice}
                    type="confirm-one-choice"

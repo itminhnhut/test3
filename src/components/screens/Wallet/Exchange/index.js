@@ -235,12 +235,12 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
                                 {t('wallet:hide_small_balance')}
                             </span>
                         </div>
-                        <div className="flex items-center rounded-[4px] lg:px-4 py-3 lg:bg-teal-lightTeal lg:dark:bg-teal-opacity select-none cursor-pointer hover:opacity-80">
-                            <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="16" height="16"/>
-                            <a href="/" className="text-xs ml-3 text-dominant cursor-pointer">
-                                {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
-                            </a>
-                        </div>
+                        {/*<div className="flex items-center rounded-[4px] lg:px-4 py-3 lg:bg-teal-lightTeal lg:dark:bg-teal-opacity select-none cursor-pointer hover:opacity-80">*/}
+                        {/*    <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="16" height="16"/>*/}
+                        {/*    <a href="/" className="text-xs ml-3 text-dominant cursor-pointer">*/}
+                        {/*        {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}*/}
+                        {/*    </a>*/}
+                        {/*</div>*/}
                     </div>
                     <div
                         className="py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 flex items-center rounded-md bg-gray-5 dark:bg-darkBlue-4">

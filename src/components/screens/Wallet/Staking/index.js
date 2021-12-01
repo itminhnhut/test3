@@ -260,7 +260,7 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
         })
 
         if (!dataSource?.length) {
-            console.log('namidev-DEBUG: dataSource => ', dataSource)
+            // console.log('namidev-DEBUG: dataSource => ', dataSource)
             tableStatus = <Empty/>
         }
 
