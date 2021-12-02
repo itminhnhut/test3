@@ -136,5 +136,33 @@
   "view_all": "Xem tất cả",
   "already_have_account": "Đã có tài khoản?",
   "create_account": "Tạo tài khoản",
-  "term_swap": "Bằng việc sử dụng Nami Swap, bạn đã đồng ý với các </br><0>Điều khoản và Chính sách</0>"
+  "term_swap": "Bằng việc sử dụng Nami Swap, bạn đã đồng ý với các </br><0>Điều khoản và Chính sách</0>",
+  "term_transfer": "Bằng việc sử dụng Nami Transfer, bạn đã đồng ý với các </br><0>Điều khoản và Chính sách</0>",
+  "overview": "Tổng quan",
+  "transfer": "Chuyển đổi",
+  "portfolio": "Danh mục đầu tư",
+  "crypto": "Tiền mã hoá",
+  "optional": "Tuỳ chọn",
+  "clear": "Xoá",
+  "email_authentication": "Xác thực Email",
+  "tfa_authentication": "Xác thực GoogleAuth",
+  "resend": "Gửi lại",
+  "close": "Đóng",
+  "error_code": "Mã lỗi",
+  "scan": "Quét",
+  "important_notes": "Lưu ý quan trọng",
+  "common_status": {
+    "finished": "Hoàn thành",
+    "cancelled": "Đã huỷ"
+  },
+  "start_at": "Ngày bắt đầu",
+  "end_at": "Ngày kết thúc",
+  "redeem_at": "Ngày nhận thưởng",
+  "interest": "Lợi nhuận",
+  "unit": {
+    "time": {
+      "day": "Ngày"
+    }
+  },
+  "address_wallet": "Địa chỉ ví"
 }

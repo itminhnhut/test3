@@ -52,6 +52,10 @@ const colors = {
     navy: '#191489',
     marina: '#A6D4FF',
     blue: '#2D9CDB',
+
+    overlayLight: 'rgba(0, 0, 0, 0.45)',
+    overlayDark: 'rgba(0, 0, 0, 0.45)',
+
 }
 
 export default colors

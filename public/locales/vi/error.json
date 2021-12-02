@@ -84,5 +84,14 @@
   "POOL_ENDED": "Pool đã kết thúc",
   "POOL_NOT_START": "Chưa tới giờ mở pool",
   "MASTER_NOT_ENOUGH_BASE_ASSET": "Tài khoản trả thưởng tạm thời không đủ, vui lòng quay lại sau",
-  "WITHDRAW_LIMIT_PER_BANK_ACCOUNT": "Lượng rút vượt quá hạn mức tài khoản trong một ngày, hạn mức còn lại là {{remaining}} {{asset}}"
+  "WITHDRAW_LIMIT_PER_BANK_ACCOUNT": "Lượng rút vượt quá hạn mức tài khoản trong một ngày, hạn mức còn lại là {{remaining}} {{asset}}",
+  "INVALID_ADDRESS": "Địa chỉ ví không hợp lệ",
+  "INVALID_MEMO": "Memo quá dài hoặc không hợp lệ",
+  "INVALID_AMOUNT": "Số lượng không hợp lệ",
+  "INVALID_CURRENCY": "Mã token không hợp lệ",
+  "NOT_ENOUGH_FEE": "Số dư để làm phí không đủ",
+  "WITHDRAW_AMOUNT_NOT_REACH_MAX": "Giá trị rút vượt hạn mức",
+  "WITHDRAW_AMOUNT_NOT_REACH_MIN": "Giá trị rút nhỏ hơn mức tối thiểu",
+  "UNKNOWN_ERROR": "Lỗi không rõ, vui lòng liên hệ với hỗ trợ",
+  "ASSET_NOT_SUPPORT": "Tài sản này chưa được hỗ trợ {{ function }}"
 }

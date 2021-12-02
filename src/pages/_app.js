@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 import * as types from 'src/redux/actions/types';
-import { getMe } from 'src/redux/actions/user';
+import { getMe, getUserEarnedBalance, getUserFuturesBalance } from 'src/redux/actions/user'
 import initUserSocket from 'src/redux/actions/userSocket';
 import Head from 'src/components/common/Head';
 import { appWithTranslation } from 'next-i18next';
@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import 'public/css/font.css';
 import { useEffect } from 'react';
-import { Provider } from 'react-redux';
+import { Provider } from 'react-redux'
 import { useAsync } from 'react-use';
 import { getAssetConfig, getExchangeConfig } from 'redux/actions/market';
 import { getWallet, setTheme } from 'redux/actions/user';
@@ -19,6 +19,8 @@ import { useStore } from 'src/redux/store';
 // import * as fpixel from 'src/utils/fpixel';
 import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
+import { EarnWalletType } from 'redux/actions/const'
+import TransferModal from 'components/wallet/TransferModal'
 
 export function reportWebVitals(metric) {
     switch (metric.name) {
@@ -105,7 +107,9 @@ const App = ({ Component, pageProps }) => {
                 lastUserId = newUserId;
                 store.dispatch(initUserSocket());
                 store.dispatch(getWallet());
-
+                store.dispatch(getUserFuturesBalance())
+                // store.dispatch(getUserEarnedBalance(EarnWalletType.STAKING))
+                // store.dispatch(getUserEarnedBalance(EarnWalletType.FARMING))
             }
         }
     });
@@ -115,7 +119,7 @@ const App = ({ Component, pageProps }) => {
             <Head />
             <Provider store={store}>
                 <Tracking>
-                    <Component {...pageProps} />
+                    <Component {...pageProps}/>
                 </Tracking>
             </Provider>
         </>

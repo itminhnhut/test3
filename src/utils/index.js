@@ -4,6 +4,8 @@ import { TRADING_MODE } from 'redux/actions/const'
 
 export const ___DEV___ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev'
 
+export const SECRET_STRING = '******'
+
 export const log =  {
     d: (...arg) => {
        ___DEV___ && console.log('%cnamidev-DEBUG: ', 'color: purple;font-weight: bold', ...arg)

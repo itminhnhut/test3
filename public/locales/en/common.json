@@ -127,7 +127,7 @@
   "receive": "Receive",
   "result_for": "result for",
   "read_more": "Read more",
-  "not_found": "Not found",
+  "not_found": "Result not found",
   "BUY": "Buy",
   "SELL": "Sell",
   "confirm": "Confirm",
@@ -136,5 +136,33 @@
   "view_all": "View all",
   "already_have_account": "Already have an account?",
   "create_account": "Create Account",
-  "term_swap": "By using Nami Swap, you’re agree to the</br><0>Terms and Conditions</0>"
+  "term_swap": "By using Nami Swap, you’re agree to the</br><0>Terms and Conditions</0>",
+  "term_transfer": "By using Nami Transfer, you’re agree to the</br><0>Terms and Conditions</0>",
+  "overview": "Overview",
+  "transfer": "Transfer",
+  "portfolio": "Portfolio",
+  "crypto": "Crypto",
+  "optional": "Optional",
+  "clear": "Clear",
+  "email_authentication": "Email Authentication",
+  "tfa_authentication": "Google Authentication",
+  "resend": "Resend",
+  "close": "Close",
+  "error_code": "Code",
+  "scan": "Scan",
+  "important_notes": "Important notes",
+  "common_status": {
+    "finished": "Finished",
+    "cancelled": "Cancelled"
+  },
+  "start_at": "Start at",
+  "end_at": "End at",
+  "redeem_at": "Redeem at",
+  "interest": "Interest",
+  "unit": {
+    "time": {
+      "day": "Days"
+    }
+  },
+  "address_wallet": "Address"
 }

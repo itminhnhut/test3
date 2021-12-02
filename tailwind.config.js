@@ -179,8 +179,12 @@ module.exports = {
                 600: '#00C8BC',
                 700: '#00C8BC',
                 lightTeal: '#E2F6F5',
+                opacity: 'rgba(0, 200, 188, 0.5)'
             },
-            green: { DEFAULT: '#22B02E' },
+            green: {
+                DEFAULT: '#22B02E',
+                opacity: 'rgba(34, 176, 46, 0.18)'
+            },
             yellow: { DEFAULT: '#FFD965' },
             red: {
                 DEFAULT: '#E5544B',
@@ -244,7 +248,7 @@ module.exports = {
                 bgTabActive: commonColors.teal,
                 bgPrimary: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.darkBlue1
+                    dark: commonColors.darkBlue2
                 },
                 bgSecondary: {
                     DEFAULT: commonColors.gray4,
@@ -252,7 +256,7 @@ module.exports = {
                 },
                 bgContainer: {
                     DEFAULT: '#fff',
-                    dark: commonColors.darkBlue1
+                    dark: commonColors.darkBlue2
                 },
                 headerBg: {
                     DEFAULT: 'rgba(0, 0, 0, 0.3)',
@@ -282,7 +286,12 @@ module.exports = {
             },
         },
     },
-
+    variants: {
+        extend: {
+            backgroundColor: ['checked'],
+            borderColor: ['checked'],
+        }
+    },
     plugins: [
         require('@tailwindcss/forms')({ strategy: 'class',
         }),

@@ -1,4 +1,5 @@
 const API_PREFIX = '/api/v1/';
+const API_V2_PREFIX = '/api/v2/';
 const API_V3_PREFIX = '/api/v3/';
 
 export const API_REGISTER = API_PREFIX + 'user/register';
@@ -15,12 +16,13 @@ export const API_GET_FAVORITE = API_PREFIX + 'symbols/favorite';
 export const API_GET_ASSET_CONFIG = API_V3_PREFIX + 'asset/config';
 export const API_GET_USER_WALLET = API_PREFIX + 'user/wallet';
 export const API_GET_USER_BALANCE = API_PREFIX + 'user/balance';
+export const API_GET_USER_BALANCE_V2 = API_PREFIX + "user/balance_v2";
 export const API_GET_ALL_USER_WALLET = API_PREFIX + 'user/all_wallet';
 export const API_GET_SOCKETIO_AUTH_KEY = API_PREFIX + 'user/auth-key';
 export const API_GET_EXCHANGE_CONFIG = API_V3_PREFIX + 'spot/config';
 export const GET_SPOT_FEE_CONFIG = API_V3_PREFIX + 'spot/fee_config';
 
-
+// Market
 export const API_GET_MARKET_WATCH = API_V3_PREFIX + 'spot/market_watch';
 export const API_GET_ORDER_BOOK = API_V3_PREFIX + 'spot/depth';
 export const API_GET_RECENT_TRADE = API_V3_PREFIX + 'spot/recent_trade';
@@ -28,8 +30,18 @@ export const API_GET_HISTORY_ORDER = API_V3_PREFIX + 'spot/history';
 export const API_GET_HISTORY_TRADE = API_V3_PREFIX + 'spot/trade';
 export const API_GET_OPEN_ORDER = API_V3_PREFIX + 'spot/open';
 export const API_GET_TRENDING = API_V3_PREFIX + 'spot/trend'
+export const API_GET_USD_RATE = API_V3_PREFIX + 'spot/asset_value'
 
 export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list';
+
+// Wallet
+export const API_GET_WALLET_CONFIG = API_PREFIX + 'wallet/token_config'
+export const API_WITHDRAW = API_V2_PREFIX + "token/withdraw_asset";
+export const API_GET_WITHDRAW_HISTORY = API_PREFIX + "token/withdraw_history";
+export const API_GET_DEPOSIT_HISTORY = API_PREFIX + "wallet/deposit_history";
+export const API_REVEAL_DEPOSIT_TOKEN_ADDRESS = API_PREFIX + "deposit/reveal_address";
+export const POST_WALLET_TRANSFER = API_PREFIX + "wallet/transfer"
+export const API_PUSH_ORDER_BINANCE = API_PREFIX + "request_check_deposit_binance" // post => data: { currency }
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'
@@ -37,6 +49,18 @@ export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'
 export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history';
+
+// Staking
+export const API_STAKING_SUMMARY = API_PREFIX + "earn/stake/summary"
+export const GET_STAKING_CONFIG = API_PREFIX + "earn/list?type=1"
+export const API_GET_STAKING_ORDER = API_PREFIX + "earn/order_history?type=1"
+export const API_STAKING_CANCEL_EARNING = API_PREFIX + "earn/stake/cancel"
+
+// Farming
+export const API_FARMING_SUMMARY = API_PREFIX + "earn/farm/summary"
+export const GET_FARMING_CONFIG = API_PREFIX + "earn/list?type=3"
+export const API_GET_FARMING_ORDER = API_PREFIX + "earn/order_history?type=3"
+export const API_FARMING_CANCEL_EARNING = API_PREFIX + "earn/farm/cancel"
 
 // Coinbase
 export const API_GET_NOTIFICATIONS = API_PREFIX + 'notifications/all_mix';

@@ -4,6 +4,64 @@ export const LOCAL_STORAGE_KEY = {
     THEME: 'theme'
 }
 
+const TokenConfigNetwork = {
+    BITCOIN: "Bitcoin",
+    BITCOIN_FUTURE: "BitcoinFuture",
+    BINANCE_CHAIN: "BinanceChain",
+    TOMO_CHAIN: "TomoChain",
+    ETHEREUM: "Ethereum",
+    TRON_NETWORK: "TRON_NETWORK",
+    KARDIA_CHAIN: "KARDIA_CHAIN",
+    ETHEREUM_CLASSIC: "ETHEREUM_CLASSIC",
+    VITE_CHAIN: "VITE_CHAIN",
+    BINANCE_SMART_CHAIN: "BINANCE_SMART_CHAIN",
+    THETA: "THETA"
+};
+
+export const TokenConfigV1 = {
+    Network: TokenConfigNetwork,
+    NetworkInt: {
+        [TokenConfigNetwork.ETHEREUM]: 1,
+        [TokenConfigNetwork.BINANCE_CHAIN]: 2,
+        [TokenConfigNetwork.TRON_NETWORK]: 3,
+        [TokenConfigNetwork.TOMO_CHAIN]: 4,
+        [TokenConfigNetwork.ETHEREUM_CLASSIC]: 5,
+        [TokenConfigNetwork.KARDIA_CHAIN]: 6,
+        [TokenConfigNetwork.BITCOIN]: 7,
+        [TokenConfigNetwork.VITE_CHAIN]: 8,
+        [TokenConfigNetwork.BINANCE_SMART_CHAIN]: 9,
+        [TokenConfigNetwork.THETA]: 10
+    },
+    Type: {
+        BITCOIN: "BITCOIN",
+        BITCOIN_FUTURE: "BITCOIN_FUTURE",
+        ERC20: "ERC20",
+        TomoChain: "TomoChain",
+        TRC20: "TRC20",
+        TRC21: "TRC21",
+        BEP2: "BEP2",
+        TRON_NATIVE: "TRON_NATIVE",
+        ETHEREUM_CLASSIC: "ETHEREUM_CLASSIC",
+        KARDIA_CHAIN_NATIVE: "KARDIA_CHAIN_NATIVE",
+        VITE_CHAIN_TOKEN: "VITE_CHAIN_TOKEN",
+        BEP20: "BEP20",
+        THETA_TOKEN: "THETA_TOKEN"
+    },
+    HashRegex: {
+        FIAT: "",
+        ERC20: "^(0x)[0-9A-Fa-f]{40}$",
+        BEP2: "^(bnb1)[0-9a-z]{38}$",
+        BEP2MEMO: "^[0-9A-Za-z\\-_]{1,120}$",
+        BEP20: "^(0x)[0-9A-Fa-f]{40}$",
+        TRC20: "^T[1-9A-HJ-NP-Za-km-z]{33}$",
+        BITCOIN: "^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^(bc1)[0-9A-Za-z]{39,59}$",
+        TomoChain: "^(0x)[0-9A-Fa-f]{40}$",
+        THETA_TOKEN: "^(0x)[0-9A-Fa-f]{40}$",
+        VITE_CHAIN_TOKEN: "^(vite_)[a-z0-9]{50}$",
+        VITEMEMO: "\\w{0,120}"
+    }
+};
+
 export const TRADING_MODE = {
     EXCHANGE: 1,
     FUTURES: 2
@@ -345,11 +403,19 @@ export const TokenConfig = {
         KARDIA_CHAIN: 'KARDIA_CHAIN',
     },
     Type: {
-        BITCOIN: 'BITCOIN',
-        BITCOIN_FUTURE: 'BITCOIN_FUTURE',
-        ERC20: 'ERC20',
-        TomoChain: 'TomoChain',
-        BEP2: 'BEP2',
+        BITCOIN: "BITCOIN",
+        BITCOIN_FUTURE: "BITCOIN_FUTURE",
+        ERC20: "ERC20",
+        TomoChain: "TomoChain",
+        TRC20: "TRC20",
+        TRC21: "TRC21",
+        BEP2: "BEP2",
+        TRON_NATIVE: "TRON_NATIVE",
+        ETHEREUM_CLASSIC: "ETHEREUM_CLASSIC",
+        KARDIA_CHAIN_NATIVE: "KARDIA_CHAIN_NATIVE",
+        VITE_CHAIN_TOKEN: "VITE_CHAIN_TOKEN",
+        BEP20: "BEP20",
+        THETA_TOKEN: "THETA_TOKEN"
     },
 };
 
@@ -403,6 +469,11 @@ export const WalletType = {
     EARN: 'EARN',
 };
 
+export const EarnWalletType = {
+    STAKING: 'stake',
+    FARMING: 'farm'
+}
+
 export const WalletTypeReducerKey = {
     [WalletType.SPOT]: 'SPOT',
     [WalletType.MARGIN]: 'MARGIN',
@@ -432,6 +503,7 @@ export const PublicSocketEvent = {
     SPOT_TICKER_UPDATE: 'spot:ticker:update',
     IEO_PERCENTAGE_UPDATE: 'ieo:project_update',
     IEO_TICKET_STATUS_UPDATE: 'ieo:buy_response',
+    CALCULATE_WITHDRAW_FEE: 'calculate_withdrawal_fee'
 };
 
 export const ExchangeOrderEnum = {
@@ -661,3 +733,9 @@ export const UserSocketEvent = {
     EXCHANGE_PLACE_MARKET_ORDER_RESULT: 'exchange:place_market_order_result',
     UPDATE_BALANCE: 'user:update_balance',
 };
+
+export const EarnOrder_Status = {
+    SAVING: 1,
+    FINISHED: 2,
+    CANCELLED: 0
+}

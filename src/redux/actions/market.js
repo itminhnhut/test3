@@ -7,7 +7,7 @@ import {
     API_GET_EXCHANGE_CONFIG, API_GET_FUTURES_MARKET_WATCH,
     API_GET_MARKET_WATCH,
     API_GET_ORDER_BOOK,
-    API_GET_RECENT_TRADE, API_METRIC_VIEW,
+    API_GET_RECENT_TRADE, API_GET_USD_RATE, API_METRIC_VIEW,
     API_WATCH_LIST, SWAP_ESTIMATE_PRICE
 } from './apis'
 
@@ -357,5 +357,21 @@ export async function deleteCategory({ id = '' }) {
         }
     } catch (error) {
         return null;
+    }
+}
+
+export async function getUsdRate() {
+    try {
+        const otps = {
+            url: API_GET_USD_RATE,
+            options: { method: 'GET' }
+        }
+
+        const { status, data } = await fetchAPI(otps)
+        if (status === ApiStatus.SUCCESS) {
+            return data
+        }
+    } catch (e) {
+        return null
     }
 }

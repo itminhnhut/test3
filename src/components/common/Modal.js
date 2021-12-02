@@ -12,7 +12,9 @@ const Modal = ({
     onCloseCb,
     onBackdropCb,
     className = '',
-    type = 'alert'
+    type = 'alert',
+    noButton = false,
+    titleStyle
 }) => {
 
     const renderButtonGroup = useCallback(() => {
@@ -26,14 +28,14 @@ const Modal = ({
         if (type === 'confirmation') {
             return (
                 <>
-                    <Button title={positiveLabel || 'Xác nhận'} type="primary"
-                            componentType="button"
-                            style={{ width: '48%' }}
-                            onClick={() => onConfirmCb && onConfirmCb()}/>
                     <Button title={negativeLabel || 'Đóng'} type="secondary"
                             componentType="button"
                             style={{ width: '48%' }}
                             onClick={() => onCloseCb && onCloseCb()}/>
+                    <Button title={positiveLabel || 'Xác nhận'} type="primary"
+                            componentType="button"
+                            style={{ width: '48%' }}
+                            onClick={() => onConfirmCb && onConfirmCb()}/>
                 </>
             )
         }
@@ -49,14 +51,14 @@ const Modal = ({
         <>
             <div className={`mal-overlay ${isVisible ? 'mal-overlay__active' : ''}`}
                  onClick={() => onBackdropCb && onBackdropCb()}/>
-            <div className="mal-modal min-w-[320px]">
+            <div className="mal-modal min-w-[280px]">
                 {isVisible &&
                 <div className={'p-4 ' + className}>
-                    {title && <div className="mt-3 text-center font-bold">{title}</div>}
+                    {title && <div className={titleStyle ? 'mt-3 text-center font-bold ' + titleStyle : 'mt-3 text-center font-bold'}>{title}</div>}
                     {children}
-                    <div className="flex flex-row items-center justify-between mt-5">
+                    {!noButton && <div className="flex flex-row items-center justify-between mt-5">
                         {renderButtonGroup()}
-                    </div>
+                    </div>}
                 </div>}
             </div>
         </>

@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useAsync } from 'react-use'
-
-import fetchApi from '../../../utils/fetch-api'
-import MCard from 'src/components/common/MCard'
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable'
 import { API_GET_SWAP_HISTORY } from 'redux/actions/apis'
 import { useTranslation } from 'next-i18next'
 import { ApiStatus } from 'redux/actions/const'
 import { formatPrice, formatTime } from 'redux/actions/utils'
-import Skeletor from 'src/components/common/Skeletor'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import RePagination from 'src/components/common/ReTable/RePagination'
 import { ChevronLeft, ChevronRight } from 'react-feather'
+
+import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable'
+import fetchApi from '../../../utils/fetch-api'
+import MCard from 'src/components/common/MCard'
+import Skeletor from 'src/components/common/Skeletor'
+import RePagination from 'src/components/common/ReTable/RePagination'
 import Empty from 'src/components/common/Empty'
 
 const SwapHistory = ({ width }) => {

@@ -33,6 +33,10 @@ body {
 
   input {
     @apply outline-none bg-transparent placeholder-txtSecondary dark:placeholder-txtSecondary-dark truncate;
+
+    ::placeholder {
+      font-weight: 400 !important;
+    }
   }
 
   input[type='checkbox'] {
@@ -71,6 +75,12 @@ body {
     @media (min-width: 2560px) {
       max-width: 1366px;
     }
+  }
+
+  .t-common {
+    @apply font-bold text-[20px] leading-[34px]
+           md:text-[26px] md:leading-[40px]
+           text-txtPrimary dark:text-txtPrimary-dark;
   }
 
   .value-up {
@@ -158,11 +168,15 @@ body {
 
 html.dark body {
   ::-webkit-scrollbar-thumb {
-    background-color: rgba(1, 21, 69, 1);
+    background-color: #7B8CB2;
+
+    &:hover {
+      background-color: #00C8BC !important;
+    }
   }
 
   ::-webkit-scrollbar-track {
-    background-color: rgba(13, 28, 61, 0.4);
+    background-color: #445271;
   }
 }
 

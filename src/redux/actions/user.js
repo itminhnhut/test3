@@ -28,12 +28,14 @@ import {
     API_PROFILE_USERNAME,
     API_USER_REFERRAL,
     API_WITHDRAW_ONCHAIN,
-    API_GET_USER_BALANCE, API_GET_FAVORITE
+    API_GET_USER_BALANCE, API_GET_FAVORITE,
+    API_GET_USER_BALANCE_V2
 } from './apis'
 import ApiError from './apiError';
 import Axios from 'axios'
 import { SET_USER, SET_THEME } from './types';
 import { THEME_MODE } from 'hooks/useDarkMode'
+import { find } from 'lodash'
 
 export const setTheme = () => {
     let theme = THEME_MODE.LIGHT
@@ -164,7 +166,7 @@ export function getWallet() {
                 url: API_GET_USER_BALANCE,
                 options: {
                     method: 'GET',
-                },
+                }
             });
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
@@ -181,6 +183,49 @@ export function getWallet() {
             });
         }
     };
+}
+
+export function getUserFuturesBalance() {
+    return async dispatch => {
+        try {
+            const { data } = await Axios.get(API_GET_USER_BALANCE_V2,
+                { params: { type: 2 } }) // old wallet type
+
+            if (data && data.status === ApiStatus.SUCCESS) {
+                dispatch({
+                    type: types.UPDATE_WALLET,
+                    walletType: WalletType.FUTURES,
+                    payload: data.data,
+                })
+            }
+        } catch (e) {
+        }
+    }
+}
+
+export function getUserEarnedBalance(walletType) {
+    return async dispatch => {
+        try {
+            const { data } = await Axios.get(`/api/v1/earn/${walletType}/summary`)
+            let result
+
+            if (data && data.status === ApiStatus.SUCCESS) {
+                const balanceData = find(data?.data , { currency: 1 })
+                const estimateData = find(data?.data , { currency: 72 })
+
+                if (balanceData) {
+                    result = { value: balanceData?.summary?.total_balance, locked_value: 0, estimate: estimateData }
+                }
+
+                dispatch({
+                    type: types.UPDATE_WALLET,
+                    walletType: walletType,
+                    payload: result,
+                })
+            }
+        } catch (e) {
+        }
+    }
 }
 
 export function getAllWallet() {

@@ -9,10 +9,16 @@ import defaults from 'lodash/defaults';
 import find from 'lodash/find';
 import { useStore as store } from 'src/redux/store';
 import Big from 'big.js';
+import { TokenConfigV1 as TokenConfig, WalletType } from './const'
+import { UPDATE_DEPOSIT_HISTORY, SET_TRANSFER_MODAL } from 'redux/actions/types'
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
 import { ___DEV___, log } from 'src/utils'
+import { EXCHANGE_ACTION } from 'pages/wallet'
+
+const WAValidator = require('multicoin-address-validator')
+const EthereumAddress = require('ethereum-address')
 
 export function getFilter(filterType, config) {
     const filter = find(config.filters, { filterType });
@@ -201,6 +207,28 @@ export function isInvalidPrecision(value, precision) {
 export function formatNumberToText(value = 0) {
     return numeral(+value).format('0,00a');
 }
+
+
+export function formatNumber(
+    value,
+    digits = 2,
+    forceDigits = 0,
+    acceptNegative = false
+) {
+    const defaultValue = `0${
+        forceDigits > 0 ? `.${"0".repeat(forceDigits)}` : ""
+    }`;
+    if (_.isNil(value)) return defaultValue;
+    if (Math.abs(+value) < 1e-9) return defaultValue;
+    if (!acceptNegative && +value < 0) return defaultValue;
+    return numeral(+value).format(
+        `0,0.${"0".repeat(forceDigits)}${
+            digits > 0 ? `[${"0".repeat(digits)}]` : ""
+        }`,
+        Math.floor
+    );
+}
+
 
 export function getExchange24hPercentageChange(price) {
     let change24h;
@@ -395,4 +423,316 @@ export function formatAbbreviateNumber(num, fixed) {
     //     return '-';
     // }
     return e;
+}
+
+export function hashValidator(hash, type) {
+    let regex
+    switch (type) {
+        case TokenConfig.Type.BEP2:
+            regex = new RegExp(TokenConfig.HashRegex.BEP2)
+            break
+        case TokenConfig.Type.BEP20:
+            regex = new RegExp(TokenConfig.HashRegex.BEP20)
+            break
+        case TokenConfig.Type.ERC20:
+            regex = new RegExp(TokenConfig.HashRegex.ERC20)
+            break
+        case TokenConfig.Type.TRC20:
+            regex = new RegExp(TokenConfig.HashRegex.TRC20)
+            break
+        case TokenConfig.Type.TRON_NATIVE:
+            regex = new RegExp(TokenConfig.HashRegex.TRC20)
+            break
+        case TokenConfig.Type.BITCOIN:
+            regex = new RegExp(TokenConfig.HashRegex.BITCOIN)
+            break
+        case TokenConfig.Type.BITCOIN_FUTURE:
+            return null
+        case TokenConfig.Type.TomoChain:
+            regex = new RegExp(TokenConfig.HashRegex.TomoChain)
+            break
+        case TokenConfig.Type.THETA_TOKEN:
+            regex = new RegExp(TokenConfig.HashRegex.THETA_TOKEN)
+            break
+        case TokenConfig.Type.VITE_CHAIN_TOKEN:
+            regex = new RegExp(TokenConfig.HashRegex.VITE_CHAIN_TOKEN)
+            break
+        case 'BEP2MEMO':
+            regex = new RegExp(TokenConfig.HashRegex.BEP2MEMO)
+            break
+        case 'VITEMEMO':
+            regex = new RegExp(TokenConfig.HashRegex.BEP2MEMO)
+            break
+        default:
+            regex = 'NOT_FOUND'
+            break
+    }
+    if (regex !== 'NOT_FOUND') return regex.test(hash)
+    return regex
+}
+
+export const shortHashAddress = (address, first, last) => {
+    if (!address) return
+    return `${address?.substring(0, first)}...${address.substring(
+        address.length - last
+    )}`
+}
+
+export function buildExplorerUrl(value, tokenNetwork) {
+
+    switch (tokenNetwork) {
+        case TokenConfig.Network.BITCOIN:
+        case TokenConfig.Network.BITCOIN_FUTURE:
+            return buildBlockchainComUrl(value)
+        case TokenConfig.Network.BINANCE_CHAIN:
+            return buildBinanceExplorerUrl(value)
+        case TokenConfig.Network.ETHEREUM:
+            return buildEtherscanUrl(value)
+        case TokenConfig.Network.TRON_NETWORK:
+            return buildTronExplorerUrl(value)
+        case TokenConfig.Network.TOMO_CHAIN:
+            return buildTomoscanExplorerUrl(value)
+        case TokenConfig.Network.ETHEREUM_CLASSIC:
+            return buildEtcExplorerUrl(value)
+        case TokenConfig.Network.KARDIA_CHAIN:
+            return buildKardiaChainExplorerUrl(value)
+        case TokenConfig.Network.VITE_CHAIN:
+            return buildViteChainExplorerUrl(value)
+        case TokenConfig.Network.BINANCE_SMART_CHAIN:
+            return buildBSCExplorerUrl(value)
+        case TokenConfig.Network.THETA:
+            return buildThetaExplorerUrl(value)
+    }
+    return null
+}
+
+export function buildBlockchainComUrl(txhash) {
+    const isAddress = WAValidator.validate(txhash, "BTC");
+    if (isAddress) {
+        return `https://www.blockchain.com/btc/address/${txhash}`;
+    } else {
+        return `https://www.blockchain.com/btc/tx/${txhash}`;
+    }
+}
+
+export function buildBinanceExplorerUrl(addressOrTxhash) {
+    const networkConfig = process.env.NEXT_PUBLIC_BINANCE_NETWORK
+    let network
+    switch (networkConfig.toLowerCase()) {
+        case 'main':
+        case 'mainnet':
+            network = null
+            break
+        default:
+            network = networkConfig
+            break
+    }
+    if (addressOrTxhash.length === 64) {
+        // Txhash
+        if (network) {
+            return `https://${network}-explorer.binance.org/tx/${addressOrTxhash}`
+        } else {
+            return `https://explorer.binance.org/tx/${addressOrTxhash}`
+        }
+    } else if (
+        addressOrTxhash.startsWith('tbnb') ||
+        addressOrTxhash.startsWith('bnb')
+    ) {
+        // Address
+        if (network) {
+            return `https://${network}-explorer.binance.org/address/${addressOrTxhash}`
+        } else {
+            return `https://explorer.binance.org/address/${addressOrTxhash}`
+        }
+    } else {
+        return null
+    }
+}
+
+export function buildEtherscanUrl(txhash) {
+    const networkIndex = process.env.NEXT_PUBLIC_ETH_NETWORK
+    let network
+    switch (networkIndex) {
+        case '1':
+            network = null
+            break
+        case '3':
+            network = 'ropsten'
+            break
+        default:
+            return null
+    }
+    const isAddress = EthereumAddress.isAddress(txhash)
+    if (isAddress) {
+        if (network) {
+            return `https://${network}.etherscan.io/address/${txhash}`
+        } else {
+            return `https://etherscan.io/address/${txhash}`
+        }
+    } else {
+        if (network) {
+            return `https://${network}.etherscan.io/tx/${txhash}`
+        } else {
+            return `https://etherscan.io/tx/${txhash}`
+        }
+    }
+}
+
+export function buildTronExplorerUrl(addressOrTxhash) {
+    const networkConfig = process.env.NEXT_PUBLIC_TRON_NETWORK
+    let network
+    switch (networkConfig.toLowerCase()) {
+        case 'main':
+        case 'mainnet':
+            network = null
+            break
+        default:
+            network = networkConfig
+            break
+    }
+    let isAddress = WAValidator.validate(addressOrTxhash, 'TRX')
+    if (isAddress) {
+        if (network) {
+            return `https://shasta.tronscan.org/#/address/${addressOrTxhash}`
+        } else {
+            return `https://tronscan.org/#/address/${addressOrTxhash}`
+        }
+    } else {
+        if (network) {
+            return `https://shasta.tronscan.org/#/transaction/${addressOrTxhash}`
+        } else {
+            return `https://tronscan.org/#/transaction/${addressOrTxhash}`
+        }
+    }
+}
+
+export function buildTomoscanExplorerUrl(addressOrTxhash) {
+    const isAddress = EthereumAddress.isAddress(addressOrTxhash)
+    if (isAddress) {
+        return `https://scan.tomochain.com/address/${addressOrTxhash}`
+    } else {
+        return `https://scan.tomochain.com/txs/${addressOrTxhash}`
+    }
+}
+
+export function buildEtcExplorerUrl(addressOrTxhash) {
+    const isAddress = EthereumAddress.isAddress(addressOrTxhash)
+    if (isAddress) {
+        if (process.env.NODE_ENV === 'production') {
+            return `https://etc.tokenview.com/en/address/${addressOrTxhash}`
+        } else {
+            return `https://blockscout.com/etc/kotti/address/${addressOrTxhash}`
+        }
+    } else {
+        if (process.env.NODE_ENV === 'production') {
+            return `https://etc.tokenview.com/en/tx/${addressOrTxhash}`
+        } else {
+            return `https://blockscout.com/etc/kotti/tx/${addressOrTxhash}`
+        }
+    }
+}
+
+export function buildKardiaChainExplorerUrl(addrOrHash) {
+    if (!addrOrHash) return
+    const isAddress = addrOrHash.length === 42
+
+    if (isAddress) {
+        if (process.env.NODE_ENV === 'production') {
+            return `https://explorer.kardiachain.io/address/${addrOrHash}`
+        } else {
+            return `https://testnet.kardiachain.io/address/${addrOrHash}`
+        }
+    } else {
+        if (process.env.NODE_ENV === 'production') {
+            return `https://explorer.kardiachain.io/tx/${addrOrHash}`
+        } else {
+            return `https://testnet.kardiachain.io/tx/${addrOrHash}`
+        }
+    }
+}
+
+export function buildViteChainExplorerUrl(txhash) {
+    if (txhash == null) {
+        return null
+    }
+    const isAddress = txhash.length === 55
+
+    if (isAddress) {
+        return `https://vitescan.io/address/${txhash}`
+    } else {
+        return `https://vitescan.io/tx/${txhash}`
+    }
+}
+
+export function buildBSCExplorerUrl(txhash) {
+    switch (txhash.length) {
+        case 42: {
+            // Address
+            return `https://bscscan.com/address/${txhash}`
+        }
+        case 66: {
+            // Txhash
+            return `https://bscscan.com/tx/${txhash}`
+        }
+        default: {
+            // Search for it
+            return `https://bscscan.com/search?f=0&q=${txhash}`
+        }
+    }
+}
+
+export function buildThetaExplorerUrl(txhash) {
+    switch (txhash.length) {
+        case 42: {
+            // Address
+            return `https://explorer.thetatoken.org/account/${txhash}`
+        }
+        default: {
+            // Txhash
+            return `https://explorer.thetatoken.org/txs/${txhash}`
+        }
+    }
+}
+
+export function updateOrInsertDepositHistory(searchCriteria, history) {
+    return {
+        type: UPDATE_DEPOSIT_HISTORY,
+        criteria: searchCriteria,
+        payload: history,
+    }
+}
+
+export function walletLinkBuilder(walletType, action, payload) {
+
+    if (walletType === WalletType.SPOT) {
+        switch (action) {
+            case EXCHANGE_ACTION.DEPOSIT:
+                return `/wallet/exchange/deposit?type=${payload?.type}&asset=${payload?.asset}`
+            case EXCHANGE_ACTION.WITHDRAW:
+                return `/wallet/exchange/withdraw?type=${payload?.type}&asset=${payload?.asset}`
+            case EXCHANGE_ACTION.TRANSFER:
+                return `/wallet/exchange/transfer?from=${payload?.from}&to=${payload?.to}&asset=${payload?.asset}`
+            default:
+                return ''
+        }
+    }
+
+    if (walletType === WalletType.FUTURES) {
+
+    }
+}
+
+export function setTransferModal(payload) {
+    // source look like
+    // payload = {
+    //     isVisible: <boolean>,
+    //     fromAsset: <WalletType>,
+    //     toAsset: <WalletType>,
+    //     asset: <WalletType>
+    // }
+
+    return {
+        type: SET_TRANSFER_MODAL,
+        payload,
+    }
 }
