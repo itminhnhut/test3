@@ -260,14 +260,14 @@ const Wallet = () => {
             const lockedFutures = sumBy(futuresList, 'totalLockedUsd');
 
             // earn
-            const namiUsdRate = _?.['1'] || 1;
+            const namiUsdRate = allAssetValue?.['1'] || 1;
             const totalStaking = state.stakingSummary?.[0]?.summary?.total_interest_earned * namiUsdRate;
             const totalFarming = state.farmingSummary?.[1]?.summary?.total_interest_earned * namiUsdRate;
             // console.log('namidev-DEBUG: => ', state.farmingSummary?.[0]?.summary?.total_interest_earned)
 
             const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit
             const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit
-            const btcUsdRate = _?.['9']
+            const btcUsdRate = allAssetValue?.['9']
             console.log('BTC/USD Rate => ', btcUsdRate)
 
             if (totalStaking) {
