@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { formatWallet, getS3Url, getV1Url, setTransferModal } from 'redux/actions/utils'
+import { useCallback, useMemo, useState } from 'react'
+import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal } from 'redux/actions/utils'
 import { Trans, useTranslation } from 'next-i18next'
 import { Eye, EyeOff } from 'react-feather'
-import { EXCHANGE_ACTION} from 'pages/wallet'
 import { SECRET_STRING } from 'utils'
 import { useDispatch } from 'react-redux'
 
@@ -151,7 +150,7 @@ const OverviewWallet = (props) => {
                                 </div>
                                 <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">
                                     {state.hideAsset ? SECRET_STRING
-                                        : `$ ${formatWallet(exchangeRefPrice?.value + futuresRefPrice?.value, exchangeRefPrice?.assetDigit)}`}
+                                        : `$ ${formatWallet(exchangeRefPrice?.value + futuresRefPrice?.value, 2)}`}
                                 </div>
                             </div>
                         </div>
@@ -182,7 +181,7 @@ const OverviewWallet = (props) => {
                                 </span>
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">{formatWallet(exchangeEstBtc?.value, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.value, exchangeRefPrice?.assetDigit)}</span></span>
+                                <span className="font-bold">{formatWallet(exchangeEstBtc?.value, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.value, 2)}</span></span>
                             </div>
                         </div>
                     </div>
@@ -225,13 +224,15 @@ const OverviewWallet = (props) => {
                         <div className="ml-4 xl:ml-6">
                             <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
                                 <span className="mr-4">Futures</span>
-                                {/*<span className="inline-flex items-center">*/}
-                                {/*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*/}
-                                {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
-                                {/*</span>*/}
+                                <span className="inline-flex items-center">
+                                    <img src={getS3Url('/images/icon/ic_piechart.png')} width="16" height="16" alt=""/>
+                                    <a href={getV1Url('/wallet/account?type=futures')} className="ml-1 text-dominant hover:!underline">
+                                         {t('common:portfolio')}
+                                    </a>
+                                </span>
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">{formatWallet(futuresEstBtc?.value, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.value, futuresRefPrice?.assetDigit)}</span></span>
+                                <span className="font-bold">{formatWallet(futuresEstBtc?.value, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.value, 2)}</span></span>
                             </div>
                         </div>
                     </div>
@@ -268,7 +269,7 @@ const OverviewWallet = (props) => {
                                     <AssetValue assetCode="BTC"
                                                 value={stakingEstBtc?.totalValue}/>
                                 </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                                ~ $<AssetValue assetCode="USDT" value={stakingRefPrice?.totalValue}/>
+                                ~ $<AssetValue assetCode="USDT" assetDigit={2} value={stakingRefPrice?.totalValue}/>
                                 </span></span>
                             </div>
                         </div>
@@ -308,7 +309,7 @@ const OverviewWallet = (props) => {
                                     <AssetValue assetCode="BTC"
                                                 value={farmingEstBtc?.totalValue}/>
                                 </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                                ~ $<AssetValue assetCode="USDT" value={farmingRefPrice?.totalValue}/>
+                                ~ $<AssetValue assetCode="USDT" assetDigit={2} value={farmingRefPrice?.totalValue}/>
                                 </span></span>
                             </div>
                         </div>

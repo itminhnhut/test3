@@ -1,22 +1,19 @@
 import { useCallback, useEffect, useState } from 'react'
-import { formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils'
+import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
-import { getAllWallet } from 'redux/actions/user'
 import { useDispatch, useSelector } from 'react-redux'
-import { Check, Eye, EyeOff, Search, X } from 'react-feather'
-import { log, SECRET_STRING } from 'utils'
+import { Check, Eye, EyeOff } from 'react-feather'
+import { SECRET_STRING } from 'utils'
 
 import useWindowSize from 'hooks/useWindowSize'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import MCard from 'components/common/MCard'
-import Link from 'next/link'
 import AssetLogo from 'components/wallet/AssetLogo'
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
 import { orderBy } from 'lodash'
 import Skeletor from 'components/common/Skeletor'
 import Empty from 'components/common/Empty'
 import { WalletType } from 'redux/actions/const'
-import { EXCHANGE_ACTION } from 'pages/wallet'
 
 const INITIAL_STATE = {
     hideAsset: false,

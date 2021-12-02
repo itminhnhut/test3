@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { ApiStatus, EarnOrder_Status } from 'redux/actions/const'
 import { Eye, EyeOff } from 'react-feather'
-import { API_FARMING_CANCEL_EARNING, API_FARMING_SUMMARY, API_GET_FARMING_ORDER, API_GET_STAKING_ORDER, API_STAKING_CANCEL_EARNING, API_STAKING_SUMMARY } from 'redux/actions/apis'
+import { API_FARMING_CANCEL_EARNING, API_GET_FARMING_ORDER } from 'redux/actions/apis'
 
 import Axios from 'axios'
 import useWindowSize from 'hooks/useWindowSize'
@@ -12,7 +12,7 @@ import ReTable from 'components/common/ReTable'
 import Empty from 'components/common/Empty'
 import AssetName from 'components/wallet/AssetName'
 import AssetLogo from 'components/wallet/AssetLogo'
-import { formatTime, formatWallet, getS3Url } from 'redux/actions/utils'
+import { formatTime, formatNumber as formatWallet, getS3Url } from 'redux/actions/utils'
 import AssetValue from 'components/common/AssetValue'
 import Skeletor from 'components/common/Skeletor'
 import { BREAK_POINTS } from 'constants/constants'
@@ -169,8 +169,8 @@ const FarmingWallet = memo(({ summary, loadingSummary }) => {
                         {loadingSummary ?
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING : <>
-                                <AssetValue value={sourceSummary?.estimate_value} assetId={sourceAssetId}/> <AssetName
-                                assetId={sourceAssetId}/>
+                                <AssetValue value={baseSummary?.estimate_value} assetId={baseAssetId}/> <AssetName
+                                assetId={baseAssetId}/>
                             </>}
                     </div>
                     <div
@@ -191,7 +191,7 @@ const FarmingWallet = memo(({ summary, loadingSummary }) => {
                     <div className="mt-2 font-bold text-[24px] 2xl:mt-4 2xl:text-[32px]">
                         {loadingSummary ?
                             <Skeletor width={65}/>
-                            : state.hideAsset ? SECRET_STRING : <><AssetValue value={sourceSummary?.total_interest_earned} assetId={sourceAssetId}/> <AssetName assetId={sourceAssetId}/></>}
+                            : state.hideAsset ? SECRET_STRING : <><AssetValue value={baseSummary?.total_interest_earned} assetId={baseAssetId}/> <AssetName assetId={baseAssetId}/></>}
                     </div>
                     <div
                         className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark invisible">
@@ -211,7 +211,7 @@ const FarmingWallet = memo(({ summary, loadingSummary }) => {
                             <Skeletor width={65}/>
                             : state.hideAsset ? SECRET_STRING :
                                 <>
-                                    <AssetValue value={sourceSummary?.today_interest_earned} assetId={sourceAssetId}/> <AssetName assetId={sourceAssetId}/>
+                                    <AssetValue value={baseSummary?.today_interest_earned} assetId={baseAssetId}/> <AssetName assetId={baseAssetId}/>
                                 </>}
                     </div>
                     <div
@@ -270,7 +270,7 @@ const FarmingWallet = memo(({ summary, loadingSummary }) => {
             { key: 'pool', dataIndex: 'pool', title: `Pool (${t('common:unit.time.day').toLowerCase()})`, align: 'left', width: 80 },
             { key: 'amount', dataIndex: 'amount', title: t('common:amount'), align: 'right', width: 128 },
             { key: 'accruing_interest', dataIndex: 'accruing_interest', title: t('wallet:earn_table.accruing_interest', { action: 'Farm' }), align: 'right', width: 128 },
-            { key: 'annual_interest_rate', dataIndex: 'annual_interest_rate', title: t('wallet:earn_table.apy'), align: 'right', width: 168 },
+            { key: 'annual_interest_rate', dataIndex: 'annual_interest_rate', title: t('wallet:earn_table.apy'), align: 'right', width: 90 },
             { key: 'operation', dataIndex: 'operation', title: '', align: 'right', width: 100 }
         ]
 
