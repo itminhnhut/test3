@@ -275,7 +275,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
     )
 }
 
-const ASSET_ROW_LIMIT = 8
+const ASSET_ROW_LIMIT = 10
 
 const dataHandler = (data, translator, dispatch) => {
     if (!data || !data?.length) {

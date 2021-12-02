@@ -409,24 +409,23 @@ const NavBar = ({
         return (
             <div className="mal-navbar__dropdown">
                 <div className="mal-navbar__dropdown__wrapper">
-                    {/*<Link href="/wallet">*/}
-                    {/*    <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">*/}
-                    {/*        <img*/}
-                    {/*            src={getS3Url('/images/icon/ic_overview.png')}*/}
-                    {/*            width="28"*/}
-                    {/*            height="28"*/}
-                    {/*            alt=""*/}
-                    {/*            className="mr-3"*/}
-                    {/*        />*/}
-                    {/*        <span*/}
-                    {/*            className="text-txtPrimary dark:text-txtPrimary-dark"*/}
-                    {/*        >{t('common:overview')}*/}
-                    {/*        </span>*/}
-                    {/*    </a>*/}
-                    {/*</Link>*/}
-                    {/*<Link href="/wallet/exchange">*/}
-                        <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item"
-                           href={getV1Url('/wallet/account?type=spot')}>
+                    <Link href={PATHS.WALLET.DEFAULT}>
+                        <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
+                            <img
+                                src={getS3Url('/images/icon/ic_overview.png')}
+                                width="28"
+                                height="28"
+                                alt=""
+                                className="mr-3"
+                            />
+                            <span
+                                className="text-txtPrimary dark:text-txtPrimary-dark"
+                            >{t('common:overview')}
+                            </span>
+                        </a>
+                    </Link>
+                    <Link href={PATHS.WALLET.EXCHANGE.DEFAULT}>
+                        <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
                             <img
                                 src={getS3Url('/images/icon/ic_exchange.png')}
                                 width="28"
@@ -439,10 +438,9 @@ const NavBar = ({
                             >{t('navbar:menu.wallet')} Exchange
                             </span>
                         </a>
-                    {/*</Link>*/}
-                    {/*<Link href="/wallet/futures">*/}
-                        <a className="mal-navbar__dropdown___item"
-                           href={getV1Url('/wallet/account?type=futures')}>
+                    </Link>
+                    <Link href={PATHS.WALLET.FUTURES}>
+                        <a className="mal-navbar__dropdown___item">
                             <img
                                 src={getS3Url('/images/icon/ic_futures.png')}
                                 width="28"
@@ -455,10 +453,9 @@ const NavBar = ({
                             >{t('navbar:menu.wallet')} Futures
                             </span>
                         </a>
-                    {/*</Link>*/}
-                    {/*<Link href="/wallet/staking">*/}
-                        <a className="mal-navbar__dropdown___item"
-                           href={getV1Url('/wallet/account?type=staking')}>
+                    </Link>
+                    <Link href={PATHS.WALLET.STAKING}>
+                        <a className="mal-navbar__dropdown___item">
                             <img
                                 src={getS3Url('/images/icon/ic_staking.png')}
                                 width="28"
@@ -471,10 +468,9 @@ const NavBar = ({
                             >{t('navbar:menu.wallet')} Staking
                             </span>
                         </a>
-                    {/*</Link>*/}
-                    {/*<Link href="/wallet/farming">*/}
-                        <a className="mal-navbar__dropdown___item"
-                           href={getV1Url('/wallet/account?type=farming')}>
+                    </Link>
+                    <Link href={PATHS.WALLET.FARMING}>
+                        <a className="mal-navbar__dropdown___item">
                             <img
                                 src={getS3Url('/images/icon/ic_farming.png')}
                                 width="28"
@@ -487,7 +483,7 @@ const NavBar = ({
                             >{t('navbar:menu.wallet')} Farming
                             </span>
                         </a>
-                    {/*</Link>*/}
+                    </Link>
                 </div>
             </div>
         );
