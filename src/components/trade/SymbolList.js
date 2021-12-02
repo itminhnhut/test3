@@ -8,7 +8,7 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useAsync, useInterval } from 'react-use'
 import SymbolListItem from 'src/components/markets/SymbolListItem'
-import { CATEGORY_SPOT_SIGNAL, TRADING_MODE } from 'src/redux/actions/const'
+import { CATEGORY_SPOT_SIGNAL, SPOT_LAYOUT_MODE, TRADING_MODE } from 'src/redux/actions/const'
 import { getMarketWatch } from 'src/redux/actions/market'
 import { getExchange24hPercentageChange } from 'src/redux/actions/utils'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
@@ -18,7 +18,7 @@ import { favoriteAction } from 'redux/actions/user'
 const SymbolList = (props) => {
     const { query } = useRouter();
     const { t } = useTranslation();
-    const { parentCallback, publicSocket, changeSymbolList, watchList } = props;
+    const { parentCallback, publicSocket, changeSymbolList, watchList, layoutMode } = props;
     const [symbolList, setSymbolList] = useState([]);
     const [sortField, setSortField] = useState();
     const [sortDirection, setSortDirection] = useState('asc');
@@ -315,7 +315,8 @@ const SymbolList = (props) => {
     return (
         <>
             <div
-                className="bg-bgContainer dark:bg-bgContainer-dark py-4 h-full"
+                className={layoutMode === SPOT_LAYOUT_MODE.PRO ? 'bg-bgContainer dark:bg-bgContainer-dark py-4 h-full'
+                : 'bg-bgContainer dark:bg-darkBlue-1 py-4 h-full'}
             >
                 <div className="mx-3 mb-3 dragHandleArea">
                         <SearchInput

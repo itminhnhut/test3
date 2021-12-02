@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { buildExplorerUrl, formatTime, formatWallet, shortHashAddress, updateOrInsertDepositHistory } from 'redux/actions/utils'
+import { buildExplorerUrl, formatTime, formatWallet, getV1Url, shortHashAddress, updateOrInsertDepositHistory } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { Check, ChevronLeft, ChevronRight, Copy, Search, Slash, X } from 'react-feather'
@@ -10,7 +10,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { ApiStatus } from 'redux/actions/const'
 import { find, get, pick } from 'lodash'
 import { useSelector } from 'react-redux'
-import { log } from 'utils'
+import { ___DEV___, log } from 'utils'
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useOutsideClick from 'hooks/useOutsideClick'
@@ -200,14 +200,14 @@ const ExchangeDeposit = () => {
                 {/*    pathname: '/wallet/exchange/deposit',*/}
                 {/*    query: { type: 'fiat' }*/}
                 {/*}}>*/}
-                <a className={state.type === TYPE.fiat ?
-                    'mr-6 flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark cursor-not-allowed'
-                    : 'mr-6 flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark cursor-not-allowed'}
-                   title={'Coming soon'}
-                >
-                    <div className="pb-2.5">VNDC</div>
-                    <div className={state.type === TYPE.fiat ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
-                </a>
+                {/*<a className={state.type === TYPE.fiat ?*/}
+                {/*    'mr-6 flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark cursor-not-allowed'*/}
+                {/*    : 'mr-6 flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark cursor-not-allowed'}*/}
+                {/*   title={'Coming soon'}*/}
+                {/*>*/}
+                {/*    <div className="pb-2.5">VNDC</div>*/}
+                {/*    <div className={state.type === TYPE.fiat ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>*/}
+                {/*</a>*/}
                 {/*</Link>*/}
                 <Link href={{
                     pathname: '/wallet/exchange/deposit',
@@ -483,7 +483,7 @@ const ExchangeDeposit = () => {
                 </div>}
                 <div style={currentTheme === THEME_MODE.LIGHT ?
                     { boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)' }
-                    : undefined} className="p-2 bg-white">
+                    : undefined} className="p-2 bg-white rounded-lg">
                     <QRCode value={state.address?.address}
                             size={qrSize}
                             bgColor={colors.white}/>
@@ -507,7 +507,7 @@ const ExchangeDeposit = () => {
                 </div>
                 <div style={currentTheme === THEME_MODE.LIGHT ?
                     { boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)' }
-                    : undefined} className="p-2 bg-white">
+                    : undefined} className="p-2 bg-white rounded-lg">
                     <QRCode value={state.address?.memo}
                             size={qrSize}
                             bgColor={colors.white}/>
@@ -948,16 +948,23 @@ function dataHandler(data, loading, configList, utils) {
         const explorerLink = buildExplorerUrl(hash, network)
 
         let statusInner
+        let txLink
+
         switch (status) {
             case DepositStatus.COMPLETED:
                 if (!hash) {
-                    statusInner = <span className='text-green'>Complete</span>
+                    statusInner = <span className='text-green'>
+                            {utils?.t('common:success')}
+                    </span>
                 } else {
                     statusInner = explorerLink ? (
                         <a className="text-green" target='_blank' href={explorerLink}>
                             {utils?.t('common:success')}
                         </a>
                     ) : '--'
+                    txLink = explorerLink ? <a className="text-sm hover:text-dominant hover:!underline" target='_blank' href={explorerLink}>
+                        {shortHashAddress(hash, 6, 6)}
+                    </a> : '--'
                 }
                 break
             case DepositStatus.PENDING:
@@ -997,8 +1004,8 @@ function dataHandler(data, loading, configList, utils) {
             </div>,
             amount: <span className="!text-sm whitespace-nowrap">{formatWallet(amount)}</span>,
             address: <span className="!text-sm whitespace-nowrap">{shortHashAddress(address, 5, 5)}</span>,
-            network: <span className="!text-sm whitespace-nowrap">{network}</span>,
-            txhash: <span className="!text-sm whitespace-nowrap">{shortHashAddress(hash, 5, 5)}</span>,
+            network: <span className="!text-sm whitespace-nowrap">{network === '0' ? 'Internal' : network}</span>,
+            txhash: <span>{txLink || '--'}</span>,
             time: <span className="!text-sm whitespace-nowrap">{formatTime(time, 'HH:mm dd-MM-yyyy')}</span>,
             status: <span className="!text-sm whitespace-nowrap">{statusInner}</span>,
         })
@@ -1027,6 +1034,7 @@ const ROW_LOADING_SKELETON = {
 }
 
 const depositLinkBuilder = (type, asset) => {
+    return
     switch (type) {
         case TYPE.crypto:
             return `/wallet/exchange/deposit?type=crypto&asset=${asset}`

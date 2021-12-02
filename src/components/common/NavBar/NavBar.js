@@ -204,24 +204,30 @@ const NavBar = ({
                 const useDropdownWithIcon = localized === 'product' || localized === 'trade'
                 const useOneCol = localized === 'trade'
 
-                const shouldDot = child_lv1.findIndex(o => o.isNew);
+                const shouldDot = child_lv1.findIndex(o => o.isNew)
 
                 child_lv1.map(child => {
                     itemsLevel1.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
                             <a className="mal-navbar__link__group___item___childen__lv1___item">
                                 {t(`navbar:submenu.${child.localized}`)} {child.isNew &&
-                                <div className="mal-dot__newest" />}
+                            <div className="mal-dot__newest" />}
                             </a>
                         </Link>,
-                    );
-                });
+                    )
+                })
 
                 // DROPDOWN WITH ICON
                 child_lv1.map(child => {
-                    itemsLevel1withIcon.push(
-                        <Link href={child.url} key={`${child.title}_${child.key}`}>
-                            <a className={useOneCol ? 'mal-navbar__link__group___item___childen__lv1___item2 min-w-[350px]' : 'mal-navbar__link__group___item___childen__lv1___item2'}>
+                    const shouldReload = child?.localized === 'advance'
+
+                    if (shouldReload) {
+                        itemsLevel1withIcon.push(
+                            <div key={`${child.title}_${child.key}`}
+                               className={useOneCol ? 'mal-navbar__link__group___item___childen__lv1___item2 min-w-[350px]'
+                                : 'mal-navbar__link__group___item___childen__lv1___item2'}
+                                 onClick={() => window?.open(child.url, '_self')}
+                            >
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
                                     <img
                                         src={getS3Url(getIcon(child.localized))}
@@ -239,12 +245,39 @@ const NavBar = ({
                                         className="mal-navbar__link__group___item___childen__lv1___item2___c__description"
                                     >
                                         {t(`navbar:submenu.${child.localized}_description`,
-                                            child.localized === 'spot' ? { pairsLength: state.pairsLength } : undefined)}
+                                           child.localized === 'spot' ? { pairsLength: state.pairsLength } : undefined)}
                                     </div>
                                 </div>
-                            </a>
-                        </Link>,
-                    );
+                            </div>
+                        )
+                    } else {
+                        itemsLevel1withIcon.push(
+                            <Link href={child.url} key={`${child.title}_${child.key}`}>
+                                <a className={useOneCol ? 'mal-navbar__link__group___item___childen__lv1___item2 min-w-[350px]' : 'mal-navbar__link__group___item___childen__lv1___item2'}>
+                                    <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
+                                        <img
+                                            src={getS3Url(getIcon(child.localized))}
+                                            width={width >= 2560 ? '38' : '32'}
+                                            height={width >= 2560 ? '38' : '32'}
+                                            alt=""
+                                        />
+                                    </div>
+                                    <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
+                                        <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
+                                            {t(`navbar:submenu.${child.localized}`)}
+                                            {/* {child.isNew && <div className="mal-dot__newest"/> */}
+                                        </div>
+                                        <div
+                                            className="mal-navbar__link__group___item___childen__lv1___item2___c__description"
+                                        >
+                                            {t(`navbar:submenu.${child.localized}_description`,
+                                               child.localized === 'spot' ? { pairsLength: state.pairsLength } : undefined)}
+                                        </div>
+                                    </div>
+                                </a>
+                            </Link>,
+                        );
+                    }
                 });
 
                 return (
@@ -280,7 +313,7 @@ const NavBar = ({
                 </Link>
             );
         });
-    }, [width, state.pairsLength, navTheme.color]);
+    }, [width, router, state.pairsLength, navTheme.color]);
 
     const renderThemeButton = useCallback(() => {
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null;

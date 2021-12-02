@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal } from 'redux/actions/utils'
+import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils'
 import { Trans, useTranslation } from 'next-i18next'
 import { Eye, EyeOff } from 'react-feather'
 import { SECRET_STRING } from 'utils'
@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { WalletType } from 'redux/actions/const'
 import AssetValue from 'components/common/AssetValue'
 import AssetName from 'components/wallet/AssetName'
+import { EXCHANGE_ACTION } from 'pages/wallet'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -58,7 +59,7 @@ const OverviewWallet = (props) => {
             const key = `overview__spot_${i}`
             items.push(
                 <Link key={key}
-                      href={`/wallet/exchange/deposit?type=crypto&asset=${allAssets[i]?.assetName}`}
+                      href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT , { type: 'crypto', asset: allAssets[i]?.assetName })}
                       prefetch={false}>
                     <a className="mr-3">
                         <AssetLogo assetCode={allAssets[i]?.assetName} size={30}/>
@@ -109,12 +110,12 @@ const OverviewWallet = (props) => {
                     {t('common:overview')}
                 </div>
                 <div className="flex items-center w-full mt-3 sm:mt-0 sm:w-auto">
-                    <Link href="/wallet/exchange/deposit?type=crypto" prefetch>
+                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} >
                         <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:deposit')}
                         </a>
                     </Link>
-                    <Link href="/wallet/exchange/withdraw?type=crypto" prefetch>
+                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                         <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:withdraw')}
                         </a>
@@ -188,7 +189,7 @@ const OverviewWallet = (props) => {
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
                         <div className="flex items-center mt-4 lg:mt-0">
                             {renderExchangeAsset()}
-                            <Link href="/wallet/exchange/deposit?type=crypto" prefetch={false}>
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
                                 <a className="mr-3">
                                     <div className="min-w-[31px] min-h-[31px] w-[31px] h-[31px] flex items-center justify-center text-medium text-xs rounded-full border border-gray-5 dark:border-divider-dark bg-white dark:bg-darkBlue-3">
                                         +6
@@ -197,12 +198,12 @@ const OverviewWallet = (props) => {
                             </Link>
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <Link href={`/wallet/exchange/deposit?type=crypto`} prefetch={false}>
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
                                 <a  className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                     {t('common:deposit')}
                                 </a>
                             </Link>
-                            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })} prefetch={false}>
                                 <a  className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                     {t('common:withdraw')}
                                 </a>

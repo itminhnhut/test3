@@ -123,12 +123,5 @@ export const unsubscribeExchangeSocket = (socket, symbol) => {
 }
 
 export const sparkLineBuilder = (symbol, color) => {
-    // log.d('check env____', process.env.NEXT_PUBLIC_PRICE_API_URL)
-    // if (___DEV___) {
-    //     return `https://data-test.bitbattle.io/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
-    // } else {
-    //     return `https://datav2.nami.exchange/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
-    // }
-
     return `${process.env.NEXT_PUBLIC_PRICE_API_URL}/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
 }

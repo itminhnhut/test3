@@ -363,7 +363,7 @@ const SpotComp = () => {
             <MobileView className="bg-white">
                 <DefaultMobileView/>
             </MobileView>
-            <BrowserView className="bg-bgContainer dark:bg-bgContainer-dark">
+            <BrowserView className="bg-bgContainer dark:bg-darkBlue-1">
                 <div
                     className={
                         layoutMode === SPOT_LAYOUT_MODE.PRO
@@ -399,6 +399,7 @@ const SpotComp = () => {
                             >
                                 <SymbolList
                                     publicSocket={publicSocket}
+                                    layoutMode={layout}
                                     symbol={symbol}
                                 />
                             </div>

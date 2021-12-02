@@ -274,7 +274,7 @@ const OrderBook = (props) => {
 
     return (
         <>
-            <div className="px-2.5 relative h-full bg-bgContainer dark:bg-bgContainer-dark flex flex-col box-border" ref={ref}>
+            <div className="px-2.5 relative h-full bg-bgContainer dark:bg-darkBlue-1 flex flex-col box-border" ref={ref}>
                 <div className="flex items-center justify-between py-4 dragHandleArea">
                     <div className="font-medium text-sm text-txtPrimary dark:text-txtPrimary-dark">{t('orderbook')}</div>
                 </div>

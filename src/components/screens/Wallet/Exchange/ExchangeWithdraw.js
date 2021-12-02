@@ -9,7 +9,7 @@ import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather'
 import { find, get, isNumber } from 'lodash'
 import { buildExplorerUrl, formatTime, formatWallet, getS3Url, hashValidator, shortHashAddress } from 'redux/actions/utils'
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper'
-import { log } from 'utils'
+import { ___DEV___, log } from 'utils'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { WithdrawalStatus } from 'redux/actions/const'
 
@@ -285,14 +285,14 @@ const ExchangeWithdraw = () => {
                 {/*    pathname: '/wallet/exchange/withdraw',*/}
                 {/*    query: { type: 'fiat' }*/}
                 {/*}}>*/}
-                    <a className={state.type === TYPE.fiat ?
-                        'mr-6 flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark cursor-not-allowed'
-                        : 'mr-6 flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark cursor-not-allowed'}
-                       title={'Coming soon'}
-                    >
-                        <div className="pb-2.5">VNDC</div>
-                        <div className={state.type === TYPE.fiat ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
-                    </a>
+                {/*    <a className={state.type === TYPE.fiat ?*/}
+                {/*        'mr-6 flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark cursor-not-allowed'*/}
+                {/*        : 'mr-6 flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark cursor-not-allowed'}*/}
+                {/*       title={'Coming soon'}*/}
+                {/*    >*/}
+                {/*        <div className="pb-2.5">VNDC</div>*/}
+                {/*        <div className={state.type === TYPE.fiat ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>*/}
+                {/*    </a>*/}
                 {/*</Link>*/}
                 <Link href={{
                     pathname: '/wallet/exchange/withdraw',
@@ -1105,9 +1105,10 @@ const ExchangeWithdraw = () => {
         return () => clearInterval(interval)
     }, [resendTimeOut])
 
-    // useEffect(() => {
-    //     log.d(state.validator)
-    // }, [state.validator])
+    useEffect(() => {
+        console.log('namidev-DEBUG: => ', router)
+    }, [router])
+
 
     return (
         <MaldivesLayout>
@@ -1256,13 +1257,13 @@ function dataHandler(data, loading, configList, utils) {
         const { id, time, amount, currency, status, withdraw_to, network, txhash } = h
         const assetName = utils?.getAssetName(configList, currency)
 
-        let txhashInner = <span className="!text-sm whitespace-nowrap">{txhash ? shortHashAddress(txhash, 5, 5) : '--'}</span>
+        let txhashInner = <span className="!text-sm whitespace-nowrap">{txhash ? shortHashAddress(txhash, 6, 6) : '--'}</span>
         const value = txhash || withdraw_to
         const url = buildExplorerUrl(value, network)
 
         if (url) {
-            txhashInner = <a href={url} className="!text-sm whitespace-nowrap cursor-pointer hover:opacity-80">
-                {txhash ? shortHashAddress(txhash, 5, 5) : '--'}
+            txhashInner = <a href={url} target="_blank" className="!text-sm whitespace-nowrap cursor-pointer hover:text-dominant hover:!underline">
+                {txhash ? shortHashAddress(txhash, 6, 6) : '--'}
             </a>
         }
 
