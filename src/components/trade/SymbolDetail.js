@@ -62,7 +62,7 @@ const SymbolDetail = (props) => {
         return setUserSymbolList(favoriteId, newFavoriteList);
     };
     if (!symbolTicker) {
-        return <div className="absolute w-full h-full bg-white z-10 flex justify-center items-center bg-bgContainer dark:bg-darkBlue-1">
+        return <div className="absolute w-full h-full bg-white z-10 flex justify-center items-center bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
             <IconLoading color="#00C8BC" />
         </div>;
     }
@@ -102,8 +102,7 @@ const SymbolDetail = (props) => {
                                 leaveTo="opacity-0 translate-y-1"
                             >
                                 <Popover.Panel className="absolute left-0 z-50">
-                                    <div className="w-80 h-72 rounded-lg shadow-md bg-bgPrimary dark:bg-darkBlue-2
-                                    divide-solid divide-divider dark:divide-divider-dark overflow-y-auto">
+                                    <div className="w-80 h-72 rounded-lg shadow-md bg-bgPrimary dark:bg-darkBlue-2 divide-solid divide-divider dark:divide-divider-dark overflow-y-scroll">
                                         <SymbolList
                                             publicSocket={publicSocket}
                                             symbol={symbol}
@@ -123,7 +122,7 @@ const SymbolDetail = (props) => {
     return (
         <>
             <div
-                className="h-full w-full flex flex-row items-center justify-start  bg-bgContainer dark:bg-darkBlue-1"
+                className="h-full w-full flex flex-row items-center justify-start  bg-bgSpotContainer dark:bg-bgSpotContainer-dark"
             >
                 <div className="flex flex-row  items-center px-4 ">
                     <AssetLogo assetCode={symbolTicker?.b} size={32} />

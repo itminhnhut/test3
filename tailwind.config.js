@@ -258,6 +258,10 @@ module.exports = {
                     DEFAULT: '#fff',
                     dark: commonColors.darkBlue2
                 },
+                bgSpotContainer: {
+                    DEFAULT: '#fff',
+                    dark: commonColors.darkBlue1
+                },
                 headerBg: {
                     DEFAULT: 'rgba(0, 0, 0, 0.3)',
                     dark: 'rgba(0, 0, 0, 0.3)'

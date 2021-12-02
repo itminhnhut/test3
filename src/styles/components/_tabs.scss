@@ -1,13 +1,13 @@
 .tabs {
-  @apply border-b border-divider dark:border-divider-dark;
+  @apply border-b-2 border-divider dark:border-divider-dark;
 
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   .tab-item {
-    margin: 0 0 -1px 0;
+    margin: 0 0 -2px 0;
     &.active {
-      @apply border-teal border-b-2 
+      @apply border-b-2 border-teal;
     }
     .tab-link {
       transition: color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease,-webkit-box-shadow .15s ease;
