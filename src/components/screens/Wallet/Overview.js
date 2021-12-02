@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal } from 'redux/actions/utils'
+import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils'
 import { Trans, useTranslation } from 'next-i18next'
 import { Eye, EyeOff } from 'react-feather'
 import { SECRET_STRING } from 'utils'
@@ -13,6 +13,8 @@ import Link from 'next/link'
 import { WalletType } from 'redux/actions/const'
 import AssetValue from 'components/common/AssetValue'
 import AssetName from 'components/wallet/AssetName'
+import { EXCHANGE_ACTION } from 'pages/wallet'
+import { PATHS } from 'constants/paths'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -22,8 +24,8 @@ const INITIAL_STATE = {
 
 const OverviewWallet = (props) => {
     const { allAssets,
-        stakingConfig,
-        farmingConfig,
+        // stakingConfig,
+        // farmingConfig,
         exchangeEstBtc,
         exchangeRefPrice,
         futuresEstBtc,
@@ -58,7 +60,7 @@ const OverviewWallet = (props) => {
             const key = `overview__spot_${i}`
             items.push(
                 <Link key={key}
-                      href={`/wallet/exchange/deposit?type=crypto&asset=${allAssets[i]?.assetName}`}
+                      href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT , { type: 'crypto', asset: allAssets[i]?.assetName })}
                       prefetch={false}>
                     <a className="mr-3">
                         <AssetLogo assetCode={allAssets[i]?.assetName} size={30}/>
@@ -70,37 +72,37 @@ const OverviewWallet = (props) => {
         return items
     }, [limitExchangeAsset, allAssets])
 
-    const renderStakingList = useCallback(() => {
-        if (!stakingConfig) return
-        return stakingConfig.map(stk => {
-            return (
-                <Link key={`overview_staking__${stk?.asset_name}`}
-                      href={`/wallet/staking?asset=${stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name}`}
-                      prefetch={false}
-                >
-                    <a
-                        className="mr-3">
-                        <AssetLogo assetCode={stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name} size={30}/>
-                    </a>
-                </Link>
-            )
-        })
-    }, [stakingConfig])
-
-    const renderFarmingList = useCallback(() => {
-        if (!farmingConfig) return
-        return farmingConfig.map(frm => {
-            return (
-                <Link key={`overview_farming__${frm?.asset_name}`}
-                      href={`/wallet/farming?asset=${frm?.asset_name === 'NAC' ? 'NAMI' : frm?.asset_name}`}
-                      prefetch={false}>
-                    <a  className="mr-3">
-                        <AssetLogo assetCode={frm?.asset_name} size={30}/>
-                    </a>
-                </Link>
-            )
-        })
-    }, [farmingConfig])
+    // const renderStakingList = useCallback(() => {
+    //     if (!stakingConfig) return
+    //     return stakingConfig.map(stk => {
+    //         return (
+    //             <Link key={`overview_staking__${stk?.asset_name}`}
+    //                   href={`/wallet/staking?asset=${stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name}`}
+    //                   prefetch={false}
+    //             >
+    //                 <a
+    //                     className="mr-3">
+    //                     <AssetLogo assetCode={stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name} size={30}/>
+    //                 </a>
+    //             </Link>
+    //         )
+    //     })
+    // }, [stakingConfig])
+    //
+    // const renderFarmingList = useCallback(() => {
+    //     if (!farmingConfig) return
+    //     return farmingConfig.map(frm => {
+    //         return (
+    //             <Link key={`overview_farming__${frm?.asset_name}`}
+    //                   href={`/wallet/farming?asset=${frm?.asset_name === 'NAC' ? 'NAMI' : frm?.asset_name}`}
+    //                   prefetch={false}>
+    //                 <a  className="mr-3">
+    //                     <AssetLogo assetCode={frm?.asset_name} size={30}/>
+    //                 </a>
+    //             </Link>
+    //         )
+    //     })
+    // }, [farmingConfig])
 
     return (
         <div className="pb-32">
@@ -109,12 +111,12 @@ const OverviewWallet = (props) => {
                     {t('common:overview')}
                 </div>
                 <div className="flex items-center w-full mt-3 sm:mt-0 sm:w-auto">
-                    <Link href="/wallet/exchange/deposit?type=crypto" prefetch>
+                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} >
                         <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:deposit')}
                         </a>
                     </Link>
-                    <Link href="/wallet/exchange/withdraw?type=crypto" prefetch>
+                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                         <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:withdraw')}
                         </a>
@@ -150,7 +152,7 @@ const OverviewWallet = (props) => {
                                 </div>
                                 <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">
                                     {state.hideAsset ? SECRET_STRING
-                                        : `$ ${formatWallet(exchangeRefPrice?.value + futuresRefPrice?.value, exchangeRefPrice?.assetDigit)}`}
+                                        : `$ ${formatWallet(exchangeRefPrice?.value + futuresRefPrice?.value, 2)}`}
                                 </div>
                             </div>
                         </div>
@@ -181,14 +183,14 @@ const OverviewWallet = (props) => {
                                 </span>
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">{formatWallet(exchangeEstBtc?.value, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.value, exchangeRefPrice?.assetDigit)}</span></span>
+                                <span className="font-bold">{formatWallet(exchangeEstBtc?.value, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.value, 2)}</span></span>
                             </div>
                         </div>
                     </div>
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
                         <div className="flex items-center mt-4 lg:mt-0">
                             {renderExchangeAsset()}
-                            <Link href="/wallet/exchange/deposit?type=crypto" prefetch={false}>
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
                                 <a className="mr-3">
                                     <div className="min-w-[31px] min-h-[31px] w-[31px] h-[31px] flex items-center justify-center text-medium text-xs rounded-full border border-gray-5 dark:border-divider-dark bg-white dark:bg-darkBlue-3">
                                         +6
@@ -197,12 +199,12 @@ const OverviewWallet = (props) => {
                             </Link>
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <Link href={`/wallet/exchange/deposit?type=crypto`} prefetch={false}>
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
                                 <a  className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                     {t('common:deposit')}
                                 </a>
                             </Link>
-                            <Link href={`/wallet/exchange/withdraw?type=crypto`} prefetch={false}>
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })} prefetch={false}>
                                 <a  className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                     {t('common:withdraw')}
                                 </a>
@@ -232,7 +234,7 @@ const OverviewWallet = (props) => {
                                 </span>
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">{formatWallet(futuresEstBtc?.value, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.value, futuresRefPrice?.assetDigit)}</span></span>
+                                <span className="font-bold">{formatWallet(futuresEstBtc?.value, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.value, 2)}</span></span>
                             </div>
                         </div>
                     </div>
@@ -269,7 +271,7 @@ const OverviewWallet = (props) => {
                                     <AssetValue assetCode="BTC"
                                                 value={stakingEstBtc?.totalValue}/>
                                 </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                                ~ $<AssetValue assetCode="USDT" value={stakingRefPrice?.totalValue}/>
+                                ~ $<AssetValue assetCode="USDT" assetDigit={2} value={stakingRefPrice?.totalValue}/>
                                 </span></span>
                             </div>
                         </div>
@@ -282,7 +284,7 @@ const OverviewWallet = (props) => {
                             {t('wallet:staking_overview')}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <Link href={`/wallet/staking`} prefetch={false}>
+                            <Link href={PATHS.WALLET.STAKING} prefetch={false}>
                                 <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                     {t('common:read_more')}
                                 </a>
@@ -309,7 +311,7 @@ const OverviewWallet = (props) => {
                                     <AssetValue assetCode="BTC"
                                                 value={farmingEstBtc?.totalValue}/>
                                 </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                                ~ $<AssetValue assetCode="USDT" value={farmingRefPrice?.totalValue}/>
+                                ~ $<AssetValue assetCode="USDT" assetDigit={2} value={farmingRefPrice?.totalValue}/>
                                 </span></span>
                             </div>
                         </div>
@@ -322,7 +324,7 @@ const OverviewWallet = (props) => {
                             {t('wallet:farming_overview')}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <Link href={`/wallet/farming`} prefetch={false}>
+                            <Link href={PATHS.WALLET.FARMING} prefetch={false}>
                                 <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                     {t('common:read_more')}
                                 </a>

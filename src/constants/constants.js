@@ -11,3 +11,5 @@ export const BREAK_POINTS = {
     xl: 1280,
     '2xl': 1536
 }
+
+export const TEST_ID = ['Nami852TPE2694', 'Nami527EBA4688']

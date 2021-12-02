@@ -9,7 +9,7 @@ import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather'
 import { find, get, isNumber } from 'lodash'
 import { buildExplorerUrl, formatTime, formatWallet, getS3Url, hashValidator, shortHashAddress } from 'redux/actions/utils'
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper'
-import { log } from 'utils'
+import { ___DEV___, log } from 'utils'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { WithdrawalStatus } from 'redux/actions/const'
 
@@ -34,6 +34,8 @@ import Axios from 'axios'
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
 import useWindowSize from 'hooks/useWindowSize'
 import AssetName from 'components/wallet/AssetName'
+import { PATHS } from 'constants/paths'
+import useWindowFocus from 'hooks/useWindowFocus'
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {
@@ -101,6 +103,7 @@ const ExchangeWithdraw = () => {
     const { width } = useWindowSize()
     const { t, i18n: { language } } = useTranslation()
     const router = useRouter()
+    const focused = useWindowFocus()
 
     useOutsideClick(cryptoListRef, () => state.openList?.cryptoList && setState({ openList: {} }))
     useOutsideClick(networkListRef, () => state.openList?.networkList && setState({ openList: {} }))
@@ -229,7 +232,7 @@ const ExchangeWithdraw = () => {
             console.error(err)
         } finally {
             setState({ processingWithdraw: false })
-            setTimeout(() => getWithdrawHistory(), 500)
+            await getWithdrawHistory()
         }
     }
 
@@ -280,29 +283,29 @@ const ExchangeWithdraw = () => {
     // Render hander
     const renderTab = useCallback(() => {
         return (
-            <div className="mt-5 flex items-end">
+            <div className="mt-5 ml-4 flex items-end">
                 {/*<Link href={{*/}
                 {/*    pathname: '/wallet/exchange/withdraw',*/}
                 {/*    query: { type: 'fiat' }*/}
                 {/*}}>*/}
-                    <a className={state.type === TYPE.fiat ?
-                        'mr-6 flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark cursor-not-allowed'
-                        : 'mr-6 flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark cursor-not-allowed'}
-                       title={'Coming soon'}
-                    >
-                        <div className="pb-2.5">VNDC</div>
-                        <div className={state.type === TYPE.fiat ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
-                    </a>
+                {/*    <a className={state.type === TYPE.fiat ?*/}
+                {/*        'mr-6 flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark cursor-not-allowed'*/}
+                {/*        : 'mr-6 flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark cursor-not-allowed'}*/}
+                {/*       title={'Coming soon'}*/}
+                {/*    >*/}
+                {/*        <div className="pb-2.5">VNDC</div>*/}
+                {/*        <div className={state.type === TYPE.fiat ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>*/}
+                {/*    </a>*/}
                 {/*</Link>*/}
                 <Link href={{
-                    pathname: '/wallet/exchange/withdraw',
+                    pathname: PATHS.WALLET.EXCHANGE.WITHDRAW,
                     query: { type: 'crypto' }
                 }} prefetch={false}>
                     <a className={state.type === TYPE.crypto ?
                         'flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark'
                         : 'flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark'}>
                         <div className="pb-2.5">TOKEN</div>
-                        <div className={state.type === TYPE.crypto ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
+                        <div className={state.type === TYPE.crypto ? 'w-[32px] h-[3px] md:h-[2px] bg-dominant' : 'w-[32px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
                     </a>
                 </Link>
             </div>
@@ -989,6 +992,14 @@ const ExchangeWithdraw = () => {
     }, [state.historyPage])
 
     useEffect(() => {
+        let interval
+        if (focused) {
+            interval = setInterval(() => getWithdrawHistory(state.historyPage, true), 30000)
+        }
+        return () => interval && clearInterval(interval)
+    }, [focused, state.historyPage])
+
+    useEffect(() => {
         if (auth) {
             const otpModes = []
             auth?.email && otpModes.push('email')
@@ -1105,9 +1116,10 @@ const ExchangeWithdraw = () => {
         return () => clearInterval(interval)
     }, [resendTimeOut])
 
-    // useEffect(() => {
-    //     log.d(state.validator)
-    // }, [state.validator])
+    useEffect(() => {
+        console.log('namidev-DEBUG: => ', router)
+    }, [router])
+
 
     return (
         <MaldivesLayout>
@@ -1115,7 +1127,7 @@ const ExchangeWithdraw = () => {
                 <div className="mal-container px-4">
                     <div className="t-common mb-4">
                        <span className="max-w-[150px] flex items-center cursor-pointer rounded-lg hover:text-dominant"
-                             onClick={() => router?.push(`/wallet/exchange`)}>
+                             onClick={() => router?.push(PATHS.WALLET.EXCHANGE.DEFAULT)}>
                            <span className="inline-flex items-center justify-center h-full mr-3 mt-0.5"><ChevronLeft size={24}/></span>
                            {t('common:withdraw')}
                        </span>
@@ -1256,13 +1268,13 @@ function dataHandler(data, loading, configList, utils) {
         const { id, time, amount, currency, status, withdraw_to, network, txhash } = h
         const assetName = utils?.getAssetName(configList, currency)
 
-        let txhashInner = <span className="!text-sm whitespace-nowrap">{txhash ? shortHashAddress(txhash, 5, 5) : '--'}</span>
+        let txhashInner = <span className="!text-sm whitespace-nowrap">{txhash ? shortHashAddress(txhash, 6, 6) : '--'}</span>
         const value = txhash || withdraw_to
         const url = buildExplorerUrl(value, network)
 
         if (url) {
-            txhashInner = <a href={url} className="!text-sm whitespace-nowrap cursor-pointer hover:opacity-80">
-                {txhash ? shortHashAddress(txhash, 5, 5) : '--'}
+            txhashInner = <a href={url} target="_blank" className="!text-sm whitespace-nowrap cursor-pointer hover:text-dominant hover:!underline">
+                {txhash ? shortHashAddress(txhash, 6, 6) : '--'}
             </a>
         }
 
@@ -1380,11 +1392,11 @@ function otpHandler(otpArr, otp) {
 const withdrawLinkBuilder = (type, asset) => {
     switch (type) {
         case TYPE.crypto:
-            return `/wallet/exchange/withdraw?type=crypto&asset=${asset}`
+            return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=crypto&asset=${asset}`
         case TYPE.fiat:
-            return `/wallet/exchange/withdraw?type=fiat&asset=${asset}`
+            return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=fiat&asset=${asset}`
         default:
-            return `/wallet/exchange/withdraw?type=crypto`
+            return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=crypto`
     }
 }
 

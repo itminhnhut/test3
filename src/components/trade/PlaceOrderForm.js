@@ -801,7 +801,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark ">
                         {t('spot:available_balance')}
                     </div>
-                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-semibold text-right">
+                    <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
                             orderSide === ExchangeOrderEnum.Side.BUY

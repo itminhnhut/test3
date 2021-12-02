@@ -32,6 +32,8 @@ import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';
+import { PATHS } from 'constants/paths'
+import { useRouter } from 'next/router'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -66,8 +68,9 @@ const NavBar = ({
     const setState = (_state) => set(prevState => ({ ...prevState, ..._state }));
 
     // * Use hooks
-    const [currentTheme, onThemeSwitch] = useDarkMode();
-    const [currentLocale, onChangeLang] = useLanguage();
+    const [currentTheme, onThemeSwitch] = useDarkMode()
+    const [currentLocale, onChangeLang] = useLanguage()
+    const router = useRouter()
 
     const { user: auth } = useSelector(state => state.auth) || null;
     const { width } = useWindowSize();
@@ -201,24 +204,30 @@ const NavBar = ({
                 const useDropdownWithIcon = localized === 'product' || localized === 'trade'
                 const useOneCol = localized === 'trade'
 
-                const shouldDot = child_lv1.findIndex(o => o.isNew);
+                const shouldDot = child_lv1.findIndex(o => o.isNew)
 
                 child_lv1.map(child => {
                     itemsLevel1.push(
                         <Link href={child.url} key={`${child.title}_${child.key}`}>
                             <a className="mal-navbar__link__group___item___childen__lv1___item">
                                 {t(`navbar:submenu.${child.localized}`)} {child.isNew &&
-                                <div className="mal-dot__newest" />}
+                            <div className="mal-dot__newest" />}
                             </a>
                         </Link>,
-                    );
-                });
+                    )
+                })
 
                 // DROPDOWN WITH ICON
                 child_lv1.map(child => {
-                    itemsLevel1withIcon.push(
-                        <Link href={child.url} key={`${child.title}_${child.key}`}>
-                            <a className={useOneCol ? 'mal-navbar__link__group___item___childen__lv1___item2 min-w-[350px]' : 'mal-navbar__link__group___item___childen__lv1___item2'}>
+                    const shouldReload = child?.localized === 'advance'
+
+                    if (shouldReload) {
+                        itemsLevel1withIcon.push(
+                            <div key={`${child.title}_${child.key}`}
+                               className={useOneCol ? 'mal-navbar__link__group___item___childen__lv1___item2 min-w-[350px]'
+                                : 'mal-navbar__link__group___item___childen__lv1___item2'}
+                                 onClick={() => window?.open(child.url, '_self')}
+                            >
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
                                     <img
                                         src={getS3Url(getIcon(child.localized))}
@@ -236,12 +245,39 @@ const NavBar = ({
                                         className="mal-navbar__link__group___item___childen__lv1___item2___c__description"
                                     >
                                         {t(`navbar:submenu.${child.localized}_description`,
-                                            child.localized === 'spot' ? { pairsLength: state.pairsLength } : undefined)}
+                                           child.localized === 'spot' ? { pairsLength: state.pairsLength } : undefined)}
                                     </div>
                                 </div>
-                            </a>
-                        </Link>,
-                    );
+                            </div>
+                        )
+                    } else {
+                        itemsLevel1withIcon.push(
+                            <Link href={child.url} key={`${child.title}_${child.key}`}>
+                                <a className={useOneCol ? 'mal-navbar__link__group___item___childen__lv1___item2 min-w-[350px]' : 'mal-navbar__link__group___item___childen__lv1___item2'}>
+                                    <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
+                                        <img
+                                            src={getS3Url(getIcon(child.localized))}
+                                            width={width >= 2560 ? '38' : '32'}
+                                            height={width >= 2560 ? '38' : '32'}
+                                            alt=""
+                                        />
+                                    </div>
+                                    <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
+                                        <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
+                                            {t(`navbar:submenu.${child.localized}`)}
+                                            {/* {child.isNew && <div className="mal-dot__newest"/> */}
+                                        </div>
+                                        <div
+                                            className="mal-navbar__link__group___item___childen__lv1___item2___c__description"
+                                        >
+                                            {t(`navbar:submenu.${child.localized}_description`,
+                                               child.localized === 'spot' ? { pairsLength: state.pairsLength } : undefined)}
+                                        </div>
+                                    </div>
+                                </a>
+                            </Link>,
+                        );
+                    }
                 });
 
                 return (
@@ -277,7 +313,7 @@ const NavBar = ({
                 </Link>
             );
         });
-    }, [width, state.pairsLength, navTheme.color]);
+    }, [width, router, state.pairsLength, navTheme.color]);
 
     const renderThemeButton = useCallback(() => {
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null;
@@ -373,12 +409,27 @@ const NavBar = ({
         return (
             <div className="mal-navbar__dropdown">
                 <div className="mal-navbar__dropdown__wrapper">
-                    <Link href="/wallet/exchange">
+                    <Link href={PATHS.WALLET.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
                             <img
-                                src={getS3Url('/images/icon/ic_wallet.png')}
-                                width="32"
-                                height="32"
+                                src={getS3Url('/images/icon/ic_overview.png')}
+                                width="28"
+                                height="28"
+                                alt=""
+                                className="mr-3"
+                            />
+                            <span
+                                className="text-txtPrimary dark:text-txtPrimary-dark"
+                            >{t('common:overview')}
+                            </span>
+                        </a>
+                    </Link>
+                    <Link href={PATHS.WALLET.EXCHANGE.DEFAULT}>
+                        <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
+                            <img
+                                src={getS3Url('/images/icon/ic_exchange.png')}
+                                width="28"
+                                height="28"
                                 alt=""
                                 className="mr-3"
                             />
@@ -388,12 +439,12 @@ const NavBar = ({
                             </span>
                         </a>
                     </Link>
-                    <Link href="/wallet/futures">
+                    <Link href={PATHS.WALLET.FUTURES}>
                         <a className="mal-navbar__dropdown___item">
                             <img
-                                src={getS3Url('/images/icon/ic_wallet.png')}
-                                width="32"
-                                height="32"
+                                src={getS3Url('/images/icon/ic_futures.png')}
+                                width="28"
+                                height="28"
                                 alt=""
                                 className="mr-3"
                             />
@@ -403,12 +454,12 @@ const NavBar = ({
                             </span>
                         </a>
                     </Link>
-                    <Link href="/wallet/staking">
+                    <Link href={PATHS.WALLET.STAKING}>
                         <a className="mal-navbar__dropdown___item">
                             <img
-                                src={getS3Url('/images/icon/ic_wallet.png')}
-                                width="32"
-                                height="32"
+                                src={getS3Url('/images/icon/ic_staking.png')}
+                                width="28"
+                                height="28"
                                 alt=""
                                 className="mr-3"
                             />
@@ -418,12 +469,12 @@ const NavBar = ({
                             </span>
                         </a>
                     </Link>
-                    <Link href="/wallet/farming">
+                    <Link href={PATHS.WALLET.FARMING}>
                         <a className="mal-navbar__dropdown___item">
                             <img
-                                src={getS3Url('/images/icon/ic_wallet.png')}
-                                width="32"
-                                height="32"
+                                src={getS3Url('/images/icon/ic_farming.png')}
+                                width="28"
+                                height="28"
                                 alt=""
                                 className="mr-3"
                             />
@@ -506,7 +557,8 @@ const NavBar = ({
                         {width >= 992 &&
                         <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
                             <SvgWallet color={navTheme.color} />
-                            <span className="ml-4" style={{ color: navTheme.color }}>
+                            <span className="ml-4" style={{ color: navTheme.color }}
+                                  onClick={() => router.push(PATHS.WALLET.DEFAULT)}>
                                 {t('navbar:menu.wallet')}
                             </span>
                             <SvgIcon

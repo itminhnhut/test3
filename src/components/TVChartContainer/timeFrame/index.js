@@ -458,7 +458,7 @@ export default class TimeFrame extends Component {
         }));
 
         return (
-            <div className="flex items-center justify-between w-full bg-bgContainer dark:bg-bgContainer-dark">
+            <div className="flex items-center justify-between w-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
                 {this._renderCommonTimeframes()}
                 {this._renderChartMode()}
             </div>

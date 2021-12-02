@@ -141,7 +141,7 @@ const SymbolList = (props) => {
     const renderList = useCallback(() => {
         return (
             <>
-                <div className="bg-bgPrimary dark:bg-bgPrimary-dark px-3">
+                <div className="bg-bgContainer dark:bg-darkBlue-1 px-3">
                     <div className="flex justify-between items-center mb-2">
                         <div
                             className="flex flex-1 items-center justify-start text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium cursor-pointer select-none"
@@ -315,7 +315,7 @@ const SymbolList = (props) => {
     return (
         <>
             <div
-                className="bg-bgContainer dark:bg-bgContainer-dark py-4 h-full"
+                className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark py-4 h-full"
             >
                 <div className="mx-3 mb-3 dragHandleArea">
                         <SearchInput

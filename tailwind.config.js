@@ -31,7 +31,7 @@ module.exports = {
     mode: 'jit',
     purge: [
         './src/pages/**/*.{js,ts,jsx,tsx}',
-        './src/components/**/*.{js,ts,jsx,tsx}',
+        './src/components/**/**/*.{js,ts,jsx,tsx}',
         './src/version/**/*.{js,ts,jsx,tsx}'
     ],
     darkMode: 'class',
@@ -257,6 +257,10 @@ module.exports = {
                 bgContainer: {
                     DEFAULT: '#fff',
                     dark: commonColors.darkBlue2
+                },
+                bgSpotContainer: {
+                    DEFAULT: '#fff',
+                    dark: commonColors.darkBlue1
                 },
                 headerBg: {
                     DEFAULT: 'rgba(0, 0, 0, 0.3)',

@@ -159,7 +159,7 @@ const layoutPro = [
     },
     {
         i: 'placeOrderForm',
-        x: 14,
+        x: 13,
         y: 0,
         w: 3,
         h: 42,
@@ -363,7 +363,7 @@ const SpotComp = () => {
             <MobileView className="bg-white">
                 <DefaultMobileView/>
             </MobileView>
-            <BrowserView className="bg-bgContainer dark:bg-bgContainer-dark">
+            <BrowserView className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
                 <div
                     className={
                         layoutMode === SPOT_LAYOUT_MODE.PRO

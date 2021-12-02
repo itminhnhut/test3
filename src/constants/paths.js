@@ -1,22 +1,15 @@
 export const PATHS = {
     WALLET: {
-        OVERVIEW: {
-            'default': '/account/wallet/overview'
-        },
+        DEFAULT: '/wallet',
+        OVERVIEW: '/wallet/overview',
         EXCHANGE: {
-
+            DEFAULT: '/wallet/exchange',
+            DEPOSIT: '/wallet/exchange/deposit',
+            WITHDRAW: '/wallet/exchange/withdraw'
         },
-        FUTURES: {
-
-        },
-        STAKING: {
-
-        },
-        FARMING: {
-
-        },
-        TRANSTION_HISTORY: {
-
-        }
+        FUTURES: '/wallet/futures',
+        STAKING: '/wallet/staking',
+        FARMING: '/wallet/farming',
+        TRANSTION_HISTORY: '/wallet/transaction-history'
     }
 }
