@@ -13,7 +13,8 @@ import Link from 'next/link'
 import { WalletType } from 'redux/actions/const'
 import AssetValue from 'components/common/AssetValue'
 import AssetName from 'components/wallet/AssetName'
-import { EXCHANGE_ACTION } from 'pages/wallet'
+import { EXCHANGE_ACTION } from 'pages/wallet_v2'
+import { PATHS } from 'constants/paths'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -23,8 +24,8 @@ const INITIAL_STATE = {
 
 const OverviewWallet = (props) => {
     const { allAssets,
-        stakingConfig,
-        farmingConfig,
+        // stakingConfig,
+        // farmingConfig,
         exchangeEstBtc,
         exchangeRefPrice,
         futuresEstBtc,
@@ -71,37 +72,37 @@ const OverviewWallet = (props) => {
         return items
     }, [limitExchangeAsset, allAssets])
 
-    const renderStakingList = useCallback(() => {
-        if (!stakingConfig) return
-        return stakingConfig.map(stk => {
-            return (
-                <Link key={`overview_staking__${stk?.asset_name}`}
-                      href={`/wallet/staking?asset=${stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name}`}
-                      prefetch={false}
-                >
-                    <a
-                        className="mr-3">
-                        <AssetLogo assetCode={stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name} size={30}/>
-                    </a>
-                </Link>
-            )
-        })
-    }, [stakingConfig])
-
-    const renderFarmingList = useCallback(() => {
-        if (!farmingConfig) return
-        return farmingConfig.map(frm => {
-            return (
-                <Link key={`overview_farming__${frm?.asset_name}`}
-                      href={`/wallet/farming?asset=${frm?.asset_name === 'NAC' ? 'NAMI' : frm?.asset_name}`}
-                      prefetch={false}>
-                    <a  className="mr-3">
-                        <AssetLogo assetCode={frm?.asset_name} size={30}/>
-                    </a>
-                </Link>
-            )
-        })
-    }, [farmingConfig])
+    // const renderStakingList = useCallback(() => {
+    //     if (!stakingConfig) return
+    //     return stakingConfig.map(stk => {
+    //         return (
+    //             <Link key={`overview_staking__${stk?.asset_name}`}
+    //                   href={`/wallet/staking?asset=${stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name}`}
+    //                   prefetch={false}
+    //             >
+    //                 <a
+    //                     className="mr-3">
+    //                     <AssetLogo assetCode={stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name} size={30}/>
+    //                 </a>
+    //             </Link>
+    //         )
+    //     })
+    // }, [stakingConfig])
+    //
+    // const renderFarmingList = useCallback(() => {
+    //     if (!farmingConfig) return
+    //     return farmingConfig.map(frm => {
+    //         return (
+    //             <Link key={`overview_farming__${frm?.asset_name}`}
+    //                   href={`/wallet/farming?asset=${frm?.asset_name === 'NAC' ? 'NAMI' : frm?.asset_name}`}
+    //                   prefetch={false}>
+    //                 <a  className="mr-3">
+    //                     <AssetLogo assetCode={frm?.asset_name} size={30}/>
+    //                 </a>
+    //             </Link>
+    //         )
+    //     })
+    // }, [farmingConfig])
 
     return (
         <div className="pb-32">
@@ -283,7 +284,7 @@ const OverviewWallet = (props) => {
                             {t('wallet:staking_overview')}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <Link href={`/wallet/staking`} prefetch={false}>
+                            <Link href={PATHS.WALLET.STAKING} prefetch={false}>
                                 <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                     {t('common:read_more')}
                                 </a>
@@ -323,7 +324,7 @@ const OverviewWallet = (props) => {
                             {t('wallet:farming_overview')}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <Link href={`/wallet/farming`} prefetch={false}>
+                            <Link href={PATHS.WALLET.FARMING} prefetch={false}>
                                 <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
                                     {t('common:read_more')}
                                 </a>

@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { WALLET_SCREENS } from 'pages/wallet/index'
+import { WALLET_SCREENS } from 'pages/wallet_v2/index'
 
 const WalletComponent = dynamic(() => import('src/components/screens/Wallet'),
                        { ssr: false })
