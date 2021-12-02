@@ -35,6 +35,7 @@ import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
 import useWindowSize from 'hooks/useWindowSize'
 import AssetName from 'components/wallet/AssetName'
 import { PATHS } from 'constants/paths'
+import useWindowFocus from 'hooks/useWindowFocus'
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {
@@ -102,6 +103,7 @@ const ExchangeWithdraw = () => {
     const { width } = useWindowSize()
     const { t, i18n: { language } } = useTranslation()
     const router = useRouter()
+    const focused = useWindowFocus()
 
     useOutsideClick(cryptoListRef, () => state.openList?.cryptoList && setState({ openList: {} }))
     useOutsideClick(networkListRef, () => state.openList?.networkList && setState({ openList: {} }))
@@ -230,7 +232,7 @@ const ExchangeWithdraw = () => {
             console.error(err)
         } finally {
             setState({ processingWithdraw: false })
-            setTimeout(() => getWithdrawHistory(), 500)
+            await getWithdrawHistory()
         }
     }
 
@@ -988,6 +990,14 @@ const ExchangeWithdraw = () => {
     useEffect(() => {
         getWithdrawHistory(state.historyPage)
     }, [state.historyPage])
+
+    useEffect(() => {
+        let interval
+        if (focused) {
+            interval = setInterval(() => getWithdrawHistory(state.historyPage, true), 30000)
+        }
+        return () => interval && clearInterval(interval)
+    }, [focused, state.historyPage])
 
     useEffect(() => {
         if (auth) {

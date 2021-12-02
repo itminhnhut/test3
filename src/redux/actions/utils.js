@@ -15,7 +15,7 @@ import { UPDATE_DEPOSIT_HISTORY, SET_TRANSFER_MODAL } from 'redux/actions/types'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
 import { ___DEV___, log } from 'src/utils'
-import { EXCHANGE_ACTION } from 'pages/wallet_v2'
+import { EXCHANGE_ACTION } from 'pages/wallet'
 import { PATHS } from 'constants/paths'
 
 const WAValidator = require('multicoin-address-validator')

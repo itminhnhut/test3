@@ -26,7 +26,7 @@ export function buildLogoutUrl() {
     const params = {
         redirect: currentUrl
     };
-    return `/logout?${qs.stringify(params)}`;
+    return `/logout?${qs.stringify(params)}`.replace('/vi', '/');
 }
 
 export function isNumeric(val) {
