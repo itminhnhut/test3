@@ -4,26 +4,26 @@ import { useRouter } from 'next/router';
 import { find, orderBy, sumBy } from 'lodash';
 import { WALLET_SCREENS } from 'pages/wallet';
 
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import OverviewWallet from 'components/screens/Wallet/Overview'
-import ExchangeWallet from 'components/screens/Wallet/Exchange'
-import FuturesWallet from 'components/screens/Wallet/Futures'
-import StakingWallet from 'components/screens/Wallet/Staking'
-import FarmingWallet from 'components/screens/Wallet/Farming'
-import TransactionHistory from 'components/screens/Wallet/Transaction'
-import Axios from 'axios'
-import Tab from 'components/common/Tab'
-import colors from 'styles/colors'
-import styled from 'styled-components'
-import { API_FARMING_SUMMARY, API_STAKING_SUMMARY, GET_FARMING_CONFIG, GET_STAKING_CONFIG } from 'redux/actions/apis'
-import { ApiStatus, WalletType } from 'redux/actions/const'
-import { useAsync } from 'react-use'
-import { getUsdRate } from 'redux/actions/market'
-import useWindowFocus from 'hooks/useWindowFocus'
-import { PATHS } from 'constants/paths'
-import NeedLogin from 'components/common/NeedLogin'
-import { MIN_WALLET } from 'constants/constants'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import OverviewWallet from 'components/screens/Wallet/Overview';
+import ExchangeWallet from 'components/screens/Wallet/Exchange';
+import FuturesWallet from 'components/screens/Wallet/Futures';
+import StakingWallet from 'components/screens/Wallet/Staking';
+import FarmingWallet from 'components/screens/Wallet/Farming';
+import TransactionHistory from 'components/screens/Wallet/Transaction';
+import Axios from 'axios';
+import Tab from 'components/common/Tab';
+import colors from 'styles/colors';
+import styled from 'styled-components';
+import { API_FARMING_SUMMARY, API_STAKING_SUMMARY, GET_FARMING_CONFIG, GET_STAKING_CONFIG } from 'redux/actions/apis';
+import { ApiStatus, WalletType } from 'redux/actions/const';
+import { useAsync } from 'react-use';
+import { getUsdRate } from 'redux/actions/market';
+import useWindowFocus from 'hooks/useWindowFocus';
+import { PATHS } from 'constants/paths';
+import NeedLogin from 'components/common/NeedLogin';
+import { MIN_WALLET } from 'constants/constants';
 
 const INITIAL_STATE = {
     screen: null,
@@ -71,22 +71,22 @@ const Wallet = () => {
         const mapper = [];
         if (Array.isArray(assetConfig) && assetConfig?.length) {
             const _wallet = walletType === WalletType.SPOT ? assetConfig.filter(o => o.walletTypes?.[walletType])
-                : assetConfig.filter(o => ['VNDC', 'NAMI', 'NAC', 'USDT'].includes(o?.assetCode))
+                : assetConfig.filter(o => ['VNDC', 'NAMI', 'NAC', 'USDT'].includes(o?.assetCode));
             _wallet && _wallet.forEach(item => {
-                const originWallet = allWallet?.[item.id]
+                const originWallet = allWallet?.[item.id];
 
                 if (originWallet) {
-                    const value = originWallet?.value < MIN_WALLET ? 0 : originWallet?.value
-                    const lockedValue = originWallet?.value < MIN_WALLET ? 0 : originWallet?.locked_value
-                    const available = value - lockedValue
+                    const value = originWallet?.value < MIN_WALLET ? 0 : originWallet?.value;
+                    const lockedValue = originWallet?.value < MIN_WALLET ? 0 : originWallet?.locked_value;
+                    const available = value - lockedValue;
 
                     mapper.push({
-                       ...item,
-                       [AVAILBLE_KEY]: (isNaN(available) || available < MIN_WALLET) ? 0 : available,
-                       wallet: originWallet
-                   })
+                        ...item,
+                        [AVAILBLE_KEY]: (isNaN(available) || available < MIN_WALLET) ? 0 : available,
+                        wallet: originWallet
+                    });
                 }
-            })
+            });
             // console.log('namidev-DEBUG: ___ ', orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']))
         }
         if (walletType === WalletType.SPOT) {
@@ -219,117 +219,109 @@ const Wallet = () => {
     }, [r]);
 
     useAsync(async () => {
-        setState({ loadingUsdRate: true });
-        try {
-            const allAssetValue = state.usdRate;
-            const exchangeList = [];
-            const futuresList = [];
+        const allAssetValue = state.usdRate;
+        const exchangeList = [];
+        const futuresList = [];
 
-            state.allAssets?.map((asset) => {
-                const assetValue = +allAssetValue?.[asset?.id] || 0;
-                exchangeList.push({
-                    assetCode: asset?.assetCode,
-                    usdRate: +assetValue,
-                    available: +asset?.[AVAILBLE_KEY],
-                    totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
-                    totalValueUsd: +asset?.wallet?.value * assetValue,
-                    totalLockedUsd: +asset?.wallet?.locked_value * assetValue,
-                });
+        state.allAssets?.map((asset) => {
+            const assetValue = +allAssetValue?.[asset?.id] || 0;
+            exchangeList.push({
+                assetCode: asset?.assetCode,
+                usdRate: +assetValue,
+                available: +asset?.[AVAILBLE_KEY],
+                totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
+                totalValueUsd: +asset?.wallet?.value * assetValue,
+                totalLockedUsd: +asset?.wallet?.locked_value * assetValue,
             });
+        });
 
-            state.allFuturesAsset?.map((asset) => {
-                const assetValue = +allAssetValue?.[asset?.id] || 0;
-                futuresList.push({
-                    assetCode: asset?.assetCode,
-                    usdRate: +assetValue,
-                    available: +asset?.[AVAILBLE_KEY],
-                    totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
-                    totalValueUsd: +asset?.wallet?.value * assetValue,
-                    totalLockedUsd: +asset?.wallet?.locked_value * assetValue,
-                });
-            })
+        state.allFuturesAsset?.map((asset) => {
+            const assetValue = +allAssetValue?.[asset?.id] || 0;
+            futuresList.push({
+                assetCode: asset?.assetCode,
+                usdRate: +assetValue,
+                available: +asset?.[AVAILBLE_KEY],
+                totalUsd: +asset?.[AVAILBLE_KEY] * assetValue,
+                totalValueUsd: +asset?.wallet?.value * assetValue,
+                totalLockedUsd: +asset?.wallet?.locked_value * assetValue,
+            });
+        });
 
-            // traditional
-            const totalExchange = sumBy(exchangeList, 'totalUsd');
-            const totalFutures = sumBy(futuresList, 'totalUsd');
+        // traditional
+        const totalExchange = sumBy(exchangeList, 'totalUsd');
+        const totalFutures = sumBy(futuresList, 'totalUsd');
 
-            const totalValueExchange = sumBy(exchangeList, 'totalValueUsd');
-            const totalValueFutures = sumBy(futuresList, 'totalValueUsd');
+        const totalValueExchange = sumBy(exchangeList, 'totalValueUsd');
+        const totalValueFutures = sumBy(futuresList, 'totalValueUsd');
 
-            const lockedExchange = sumBy(exchangeList, 'totalLockedUsd');
-            const lockedFutures = sumBy(futuresList, 'totalLockedUsd');
+        const lockedExchange = sumBy(exchangeList, 'totalLockedUsd');
+        const lockedFutures = sumBy(futuresList, 'totalLockedUsd');
 
-            // earn
-            const namiUsdRate = allAssetValue?.['1'] || 1;
-            const totalStaking = state.stakingSummary?.[0]?.summary?.total_interest_earned * namiUsdRate;
-            const totalFarming = state.farmingSummary?.[1]?.summary?.total_interest_earned * namiUsdRate;
-            // console.log('namidev-DEBUG: => ', state.farmingSummary?.[0]?.summary?.total_interest_earned)
+        // earn
+        const namiUsdRate = allAssetValue?.['1'] || 1;
+        const totalStaking = state.stakingSummary?.[0]?.summary?.total_interest_earned * namiUsdRate;
+        const totalFarming = state.farmingSummary?.[1]?.summary?.total_interest_earned * namiUsdRate;
+        // console.log('namidev-DEBUG: => ', state.farmingSummary?.[0]?.summary?.total_interest_earned)
 
-            const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit
-            const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit
-            const btcUsdRate = allAssetValue?.['9']
-            console.log('BTC/USD Rate => ', btcUsdRate)
+        const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit;
+        const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit;
+        const btcUsdRate = allAssetValue?.['9'];
+        console.log('BTC/USD Rate => ', btcUsdRate);
 
-            if (totalStaking) {
-                setState({
-                    stakingEstBtc: {
-                        totalValue: totalStaking / btcUsdRate,
-                    },
-                    stakingRefPrice: {
-                        totalValue: totalStaking
-                    }
-                });
-            }
+        if (totalStaking) {
+            setState({
+                stakingEstBtc: {
+                    totalValue: totalStaking / btcUsdRate,
+                },
+                stakingRefPrice: {
+                    totalValue: totalStaking
+                }
+            });
+        }
 
-            if (totalFarming) {
-                setState({
-                    farmingEstBtc: {
-                        totalValue: totalFarming / btcUsdRate
-                    },
-                    farmingRefPrice: {
-                        totalValue: totalFarming
-                    }
-                });
-            }
+        if (totalFarming) {
+            setState({
+                farmingEstBtc: {
+                    totalValue: totalFarming / btcUsdRate
+                },
+                farmingRefPrice: {
+                    totalValue: totalFarming
+                }
+            });
+        }
 
-            if (totalExchange && totalValueExchange && lockedExchange) {
-                setState({
-                    exchangeEstBtc: {
-                        totalValue: totalValueExchange / btcUsdRate,
-                        value: totalExchange / btcUsdRate,
-                        locked: lockedExchange / btcUsdRate,
-                        assetDigit: btcDigit,
-                    },
-                    exchangeRefPrice: {
-                        totalValue: totalValueExchange,
-                        value: totalExchange,
-                        locked: lockedExchange,
-                        assetDigit: 2,
-                    }
-                });
-            }
+        if (btcUsdRate > 0) {
+            setState({
+                exchangeEstBtc: {
+                    totalValue: totalValueExchange / btcUsdRate,
+                    value: totalExchange / btcUsdRate,
+                    locked: lockedExchange / btcUsdRate,
+                    assetDigit: btcDigit,
+                },
+                exchangeRefPrice: {
+                    totalValue: totalValueExchange,
+                    value: totalExchange,
+                    locked: lockedExchange,
+                    assetDigit: 2,
+                }
+            });
+        }
 
-            if (totalFutures && totalValueFutures && lockedFutures) {
-                setState({
-                    futuresEstBtc: {
-                        totalValue: totalValueFutures / btcUsdRate,
-                        value: totalFutures / btcUsdRate,
-                        locked: lockedFutures / btcUsdRate,
-                        assetDigit: btcDigit,
-                    },
-                    futuresRefPrice: {
-                        totalValue: totalValueFutures,
-                        value: totalFutures,
-                        locked: lockedFutures,
-                        assetDigit: 2,
-                    }
-                });
-            }
-
-        } catch (e) {
-            console.log(`Can't get usd rate `, e);
-        } finally {
-            setState({ loadingUsdRate: false });
+        if (btcUsdRate > 0) {
+            setState({
+                futuresEstBtc: {
+                    totalValue: totalValueFutures / btcUsdRate,
+                    value: totalFutures / btcUsdRate,
+                    locked: lockedFutures / btcUsdRate,
+                    assetDigit: btcDigit,
+                },
+                futuresRefPrice: {
+                    totalValue: totalValueFutures,
+                    value: totalFutures,
+                    locked: lockedFutures,
+                    assetDigit: 2,
+                }
+            });
         }
     }, [state.allAssets, state.allFuturesAsset, state.stakingSummary, state.farmingSummary, state.usdRate]);
 
