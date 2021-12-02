@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils'
 import { Check, Eye, EyeOff, Search, X } from 'react-feather'
-import { EXCHANGE_ACTION } from 'pages/wallet'
+import { EXCHANGE_ACTION } from 'pages/wallet_v2'
 import { SECRET_STRING } from 'utils'
 import { WalletType } from 'redux/actions/const'
 import { useDispatch } from 'react-redux'
@@ -169,19 +169,20 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
                 </div>
                 <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto">
 
-                    <Link href={getV1Url('/wallet/account?type=portfolio')} prefetch>
-                        <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[120px] md:w-[120px] lg:w-[150px]  mr-3.5 sm:mr-0 sm:ml-2 border border-dominant bg-dominant rounded-md font-medium text-xs xl:text-sm text-white hover:opacity-80 cursor-pointer whitespace-nowrap">
+                    {/*<Link href={getV1Url('/wallet/account?type=portfolio')} prefetch>*/}
+                        <a  href={getV1Url('/wallet/account?type=portfolio')}
+                            className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[120px] md:w-[120px] lg:w-[150px]  mr-3.5 sm:mr-0 sm:ml-2 border border-dominant bg-dominant rounded-md font-medium text-xs xl:text-sm text-white hover:opacity-80 cursor-pointer whitespace-nowrap">
                             {t('common:portfolio')}
                         </a>
-                    </Link>
-                    <Link href="/wallet/exchange/deposit?type=crypto" prefetch>
+                    {/*</Link>*/}
+                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT)}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:deposit')}
                         </a>
                     </Link>
 
                     <div className="w-full h-[8px] sm:hidden"/>
-                    <Link href="/wallet/exchange/withdraw?type=crypto" prefetch>
+                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW)}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px]  mr-3.5 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:withdraw')}
                         </a>

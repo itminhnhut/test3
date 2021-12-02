@@ -370,7 +370,7 @@ input[type=number] {
 }
 
 .rdt_Pagination {
-  @apply bg-bgContainer dark:bg-bgContainer-dark text-txtPrimary dark:text-txtPrimary-dark;
+  @apply bg-bgContainer dark:bg-darkBlue-1 text-txtPrimary dark:text-txtPrimary-dark;
 }
 
 .rdt_dark {
@@ -411,7 +411,7 @@ input[type=number] {
   }
 
   .rdt_TableHeadRow {
-    @apply bg-bgContainer dark:bg-bgContainer-dark;
+    @apply bg-bgContainer dark:bg-darkBlue-1;
 
     .rdt_TableCol_Sortable {
       @apply text-txtSecondary dark:text-txtSecondary-dark cursor-pointer;
@@ -423,7 +423,7 @@ input[type=number] {
   }
 
   .rdt_TableRow {
-    @apply bg-bgContainer dark:bg-bgContainer-dark;
+    @apply bg-bgContainer dark:bg-darkBlue-1;
 
     .rdt_TableCell {
       @apply text-txtPrimary dark:text-txtPrimary-dark;

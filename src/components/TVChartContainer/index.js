@@ -360,7 +360,7 @@ export class TVChartContainer extends React.PureComponent {
                     id="chart-container"
                 >
                     <div
-                        className={`absolute w-full h-full bg-bgContainer dark:bg-bgContainer-dark flex justify-center items-center ${
+                        className={`absolute w-full h-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark flex justify-center items-center ${
                             this.state.chartStatus === ChartStatus.LOADED
                                 ? 'hidden'
                                 : ''

@@ -62,7 +62,7 @@ const SymbolDetail = (props) => {
         return setUserSymbolList(favoriteId, newFavoriteList);
     };
     if (!symbolTicker) {
-        return <div className="absolute w-full h-full bg-white z-10 flex justify-center items-center bg-bgContainer dark:bg-bgContainer-dark">
+        return <div className="absolute w-full h-full bg-white z-10 flex justify-center items-center bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
             <IconLoading color="#00C8BC" />
         </div>;
     }
@@ -122,7 +122,7 @@ const SymbolDetail = (props) => {
     return (
         <>
             <div
-                className="h-full w-full flex flex-row items-center justify-start  bg-bgContainer dark:bg-bgContainer-dark"
+                className="h-full w-full flex flex-row items-center justify-start  bg-bgSpotContainer dark:bg-bgSpotContainer-dark"
             >
                 <div className="flex flex-row  items-center px-4 ">
                     <AssetLogo assetCode={symbolTicker?.b} size={32} />

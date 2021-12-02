@@ -15,7 +15,8 @@ import { UPDATE_DEPOSIT_HISTORY, SET_TRANSFER_MODAL } from 'redux/actions/types'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { ExchangeFilterDefault, LoginButtonPosition, TradingViewSupportTimezone } from './const';
 import { ___DEV___, log } from 'src/utils'
-import { EXCHANGE_ACTION } from 'pages/wallet'
+import { EXCHANGE_ACTION } from 'pages/wallet_v2'
+import { PATHS } from 'constants/paths'
 
 const WAValidator = require('multicoin-address-validator')
 const EthereumAddress = require('ethereum-address')
@@ -707,11 +708,9 @@ export function walletLinkBuilder(walletType, action, payload) {
     if (walletType === WalletType.SPOT) {
         switch (action) {
             case EXCHANGE_ACTION.DEPOSIT:
-                return `/wallet/exchange/deposit?type=${payload?.type}&asset=${payload?.asset}`
+                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`
             case EXCHANGE_ACTION.WITHDRAW:
-                return `/wallet/exchange/withdraw?type=${payload?.type}&asset=${payload?.asset}`
-            case EXCHANGE_ACTION.TRANSFER:
-                return `/wallet/exchange/transfer?from=${payload?.from}&to=${payload?.to}&asset=${payload?.asset}`
+                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`
             default:
                 return ''
         }

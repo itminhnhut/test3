@@ -14,7 +14,7 @@ import Skeleton from 'react-loading-skeleton'
 import { useCallback, useEffect, useState } from 'react'
 import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils'
 import { StarOutlined } from '@ant-design/icons'
-import { initMarketWatchItem } from 'src/utils'
+import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
 import { useTranslation } from 'next-i18next'
 import { IconStarFilled } from 'src/components/common/Icons'
 import { Search, X } from 'react-feather'
@@ -24,6 +24,7 @@ import { EMPTY_VALUE } from 'constants/constants'
 import { remove } from 'lodash'
 import { TRADING_MODE } from 'redux/actions/const'
 import { favoriteAction } from 'redux/actions/user'
+import { useSelector } from 'react-redux'
 
 import 'react-loading-skeleton/dist/skeleton.css'
 
@@ -31,6 +32,9 @@ const MARKET_ROW_LIMIT = 20
 
 const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     // Init State
+
+    // Rdx
+    const auth = useSelector(state => state.auth?.user) || null
 
     // Use Hooks
     const { t, i18n: { language } } = useTranslation(['common', 'table'])
@@ -50,7 +54,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
 
             return (
                 <div key={item.key}
-                     onClick={() => parentState({ tabIndex: index, subTabIndex: 0, currentPage: 1 })}
+                     onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1 })}
                      style={{ ...style }}
                      className="relative mr-12 pb-4 capitalize select-none font-medium cursor-pointer flex items-center">
                     {item.key === 'favorite' && <IconStarFilled size={16} color={colors.yellow}/>}
@@ -106,6 +110,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     return language === 'vi' ? 'Cao nhất 24h' : '24h High'
                 case '24h_low':
                     return language === 'vi' ? 'Thấp nhất 24h' : '24h Low'
+                case 'mini_chart':
+                    return language === 'vi' ? 'Biểu đồ' : 'Chart'
                 default:
                     return null
             }
@@ -138,7 +144,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         // PRE PROCESS DATA FOR TABLE
         let rowKey = `${tab[restProps.tabIndex]?.key}_${tradingMode}__`
         let tableStatus
-        const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading)
+        const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth)
 
         if (!restProps.auth && tab[restProps.tabIndex]?.key === 'favorite') {
             tableStatus = <NeedLogin/>
@@ -182,6 +188,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         data,
         width,
         language,
+        auth,
         loading,
         restProps.favoriteRefresher,
         restProps.favoriteList,
@@ -217,6 +224,21 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             </div>
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex])
+
+    useEffect(() => {
+        if (restProps.favoriteList?.exchange?.length && restProps.favoriteList?.futures?.length) {
+            parentState({ tabIndex: 0, subTabIndex: 0 })
+        }
+
+        if (restProps.favoriteList?.exchange?.length && !restProps.favoriteList?.futures?.length) {
+            parentState({ tabIndex: 0, subTabIndex: 0 })
+        }
+
+        if (restProps.favoriteList?.futures?.length && !restProps.favoriteList?.exchange?.length) {
+            parentState({ tabIndex: 0, subTabIndex: 1 })
+        }
+
+    }, [restProps.favoriteList])
 
     return (
         <div className="market_table px-4 lg:px-0">
@@ -280,14 +302,15 @@ const columns = [
     { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: 168 },
     { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', align: 'left', width: 168 },
     { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', align: 'right', width: 128 },
-    { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
+    // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
+    { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'center', width: 168 },
     { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 168 },
     { key: '24h_high', dataIndex: '24h_high', title: '24h High', align: 'right', width: 128 },
     { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 128 },
     { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 128 }
 ]
 
-const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRefresher, isLoading = false) => {
+const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRefresher, isLoading = false, isAuth) => {
     if (isLoading) {
         const loadingSkeleton = []
 
@@ -308,19 +331,25 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
             lastPrice, volume24h, high, low, supply, label
         } = initMarketWatchItem(item)
 
+        const change24h = getExchange24hPercentageChange(item)
+        const sparkLine = sparkLineBuilder(`${baseAsset}${quoteAsset}`, change24h >= 0 ? colors.teal : colors.red2)
+
         if (baseAsset && quoteAsset) {
             result.push({
                 key: `market_row___${baseAsset}_${quoteAsset}`,
-                star: <FavActionButton b={{ b: baseAsset, i: baseAssetId }}
-                                       q={{ q: quoteAsset, i: quoteAssetId }}
-                                       list={favoriteList}
-                                       lang={lang}
-                                       mode={mode} favoriteRefresher={favoriteRefresher}
-                                       />,
+                star: isAuth ? <FavActionButton b={{ b: baseAsset, i: baseAssetId }}
+                                                q={{ q: quoteAsset, i: quoteAssetId }}
+                                                list={favoriteList}
+                                                lang={lang}
+                                                mode={mode} favoriteRefresher={favoriteRefresher}
+                /> : null,
                 pair: renderPair(baseAsset, quoteAsset, label, screenWidth),
                 last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
                 change_24h: render24hChange(item),
                 market_cap: renderMarketCap(lastPrice, supply),
+                mini_chart: <div className="w-full flex justify-center items-center">
+                    <img src={sparkLine} alt="--" className="w-[85px]"/>
+                </div>,
                 volume_24h: <span className="whitespace-nowrap">{formatPrice(volume24h)}</span>,
                 '24h_high': <span className="whitespace-nowrap">{formatPrice(high)}</span>,
                 '24h_low': <span className="whitespace-nowrap">{formatPrice(low)}</span>,
@@ -396,16 +425,6 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
             )
         } finally {
             setLoading(false)
-
-            // if (list) {
-            //     if (mode === TRADING_MODE.EXCHANGE && list?.exchange) {
-            //         list.exchange.includes(pairKey) ? setAlready(true) : setAlready(false)
-            //     }
-            //
-            //     if (mode === TRADING_MODE.FUTURES && list?.futures) {
-            //         list.futures.includes(pairKey) ? setAlready(true) : setAlready(false)
-            //     }
-            // }
 
             await favoriteRefresher()
             if (lang === LANGUAGE_TAG.VI) {

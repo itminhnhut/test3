@@ -18,8 +18,8 @@ const Market = () => {
     // * Initial State
     const [state, set] = useState({
          currentPage: 1,
-         tabIndex: 0,
-         subTabIndex: 0,
+         tabIndex: 1,
+         subTabIndex: 1,
          search: '',
          loadingTrend: false,
          trending: null,

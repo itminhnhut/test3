@@ -61,7 +61,7 @@ const SpotOrderList = (props) => {
 
     return (
         <>
-            <div className="bg-bgContainer dark:bg-bgContainer-dark pb-6 h-full" ref={elementRef}>
+            <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark pb-6 h-full" ref={elementRef}>
                 <div className="flex items-center justify-between relative dragHandleArea">
                     {_renderTab}
                 </div>
