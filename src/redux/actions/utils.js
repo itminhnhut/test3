@@ -707,10 +707,8 @@ export function walletLinkBuilder(walletType, action, payload) {
     if (walletType === WalletType.SPOT) {
         switch (action) {
             case EXCHANGE_ACTION.DEPOSIT:
-                return getV1Url(`/wallet?action=deposit&symbol=${payload?.asset || 'USDT'}`)
                 return `/wallet/exchange/deposit?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`
             case EXCHANGE_ACTION.WITHDRAW:
-                return getV1Url(`/wallet?action=withdraw&symbol=${payload?.asset || 'USDT'}`)
                 return `/wallet/exchange/withdraw?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`
             case EXCHANGE_ACTION.TRANSFER:
                 return `/wallet/exchange/transfer?from=${payload?.from}&to=${payload?.to}&asset=${payload?.asset || 'USDT'}`
