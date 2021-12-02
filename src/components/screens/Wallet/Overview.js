@@ -150,7 +150,7 @@ const OverviewWallet = (props) => {
                                 </div>
                                 <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">
                                     {state.hideAsset ? SECRET_STRING
-                                        : `$ ${formatWallet(exchangeRefPrice?.value + futuresRefPrice?.value, exchangeRefPrice?.assetDigit)}`}
+                                        : `$ ${formatWallet(exchangeRefPrice?.value + futuresRefPrice?.value, 2)}`}
                                 </div>
                             </div>
                         </div>
@@ -181,7 +181,7 @@ const OverviewWallet = (props) => {
                                 </span>
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">{formatWallet(exchangeEstBtc?.value, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.value, exchangeRefPrice?.assetDigit)}</span></span>
+                                <span className="font-bold">{formatWallet(exchangeEstBtc?.value, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.value, 2)}</span></span>
                             </div>
                         </div>
                     </div>
@@ -232,7 +232,7 @@ const OverviewWallet = (props) => {
                                 </span>
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">{formatWallet(futuresEstBtc?.value, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.value, futuresRefPrice?.assetDigit)}</span></span>
+                                <span className="font-bold">{formatWallet(futuresEstBtc?.value, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.value, 2)}</span></span>
                             </div>
                         </div>
                     </div>
@@ -269,7 +269,7 @@ const OverviewWallet = (props) => {
                                     <AssetValue assetCode="BTC"
                                                 value={stakingEstBtc?.totalValue}/>
                                 </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                                ~ $<AssetValue assetCode="USDT" value={stakingRefPrice?.totalValue}/>
+                                ~ $<AssetValue assetCode="USDT" assetDigit={2} value={stakingRefPrice?.totalValue}/>
                                 </span></span>
                             </div>
                         </div>
@@ -309,7 +309,7 @@ const OverviewWallet = (props) => {
                                     <AssetValue assetCode="BTC"
                                                 value={farmingEstBtc?.totalValue}/>
                                 </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                                ~ $<AssetValue assetCode="USDT" value={farmingRefPrice?.totalValue}/>
+                                ~ $<AssetValue assetCode="USDT" assetDigit={2} value={farmingRefPrice?.totalValue}/>
                                 </span></span>
                             </div>
                         </div>

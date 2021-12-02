@@ -274,7 +274,7 @@ const Wallet = () => {
                         totalValue: totalValueExchange,
                         value: totalExchange,
                         locked: lockedExchange,
-                        assetDigit: usdDigit,
+                        assetDigit: 2,
                     }
                 })
             }
@@ -291,7 +291,7 @@ const Wallet = () => {
                         totalValue: totalValueFutures,
                         value: totalFutures,
                         locked: lockedFutures,
-                        assetDigit: usdDigit,
+                        assetDigit: 2,
                     }
                 })
             }
