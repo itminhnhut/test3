@@ -236,7 +236,7 @@ const Wallet = () => {
                     totalValueUsd: +asset?.wallet?.value * assetValue,
                     totalLockedUsd: +asset?.wallet?.locked_value * assetValue,
                 });
-            }
+            })
 
             // traditional
             const totalExchange = sumBy(exchangeList, 'totalUsd');
