@@ -315,7 +315,7 @@ const SymbolList = (props) => {
     return (
         <>
             <div
-                className="bg-bgContainer dark:bg-bgContainer-dark py-4 h-full"
+                className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark py-4 h-full"
             >
                 <div className="mx-3 mb-3 dragHandleArea">
                         <SearchInput

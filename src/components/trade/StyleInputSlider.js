@@ -4,7 +4,7 @@ import colors from 'styles/colors'
 export const Track = styled.div`
   position: relative;
   margin-left: 4px;
-  width: calc(100% - 8px);
+  width: calc(100% - 6.5px);
   cursor: pointer;
   display: flex;
   padding-bottom: 8px;
@@ -21,8 +21,8 @@ export const Active = styled.div`
   border-radius: 4px;
   user-select: none;
   box-sizing: border-box;
-  height: 1px;
-  top: 7px;
+  height: 2.5px;
+  top: 6.5px;
   z-index: 11;
 `
 
@@ -33,8 +33,8 @@ export const SliderBackground = styled.div`
   user-select: none;
   box-sizing: border-box;
   width: 100%;
-  top: 7px;
-  height: 1px;
+  top: 6.5px;
+  height: 2.5px;
   z-index: 10;
 `
 
@@ -48,10 +48,10 @@ export const Dot = styled.span`
   position: absolute;
   top: -4px;
   //top: 10px;
-  left: ${({ percentage }) => `calc(${percentage}% - 4px)`};
+  left: ${({ percentage }) => `calc(${percentage}% - 4.5px)`};
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-  width: 8px;
-  height: 7px;
+  width: 9px;
+  height: 8px;
   box-sizing: content-box;
   background-color: ${({ active, isDark }) => (active ? colors.teal : (isDark ? colors.darkBlue4 : colors.grey5))};
   z-index: 30;
