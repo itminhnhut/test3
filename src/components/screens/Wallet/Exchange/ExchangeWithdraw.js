@@ -283,7 +283,7 @@ const ExchangeWithdraw = () => {
     // Render hander
     const renderTab = useCallback(() => {
         return (
-            <div className="mt-5 flex items-end">
+            <div className="mt-5 ml-4 flex items-end">
                 {/*<Link href={{*/}
                 {/*    pathname: '/wallet/exchange/withdraw',*/}
                 {/*    query: { type: 'fiat' }*/}
@@ -305,7 +305,7 @@ const ExchangeWithdraw = () => {
                         'flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark'
                         : 'flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark'}>
                         <div className="pb-2.5">TOKEN</div>
-                        <div className={state.type === TYPE.crypto ? 'w-[50px] h-[3px] md:h-[2px] bg-dominant' : 'w-[50px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
+                        <div className={state.type === TYPE.crypto ? 'w-[32px] h-[3px] md:h-[2px] bg-dominant' : 'w-[32px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
                     </a>
                 </Link>
             </div>
