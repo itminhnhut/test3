@@ -827,7 +827,7 @@ const ExchangeDeposit = () => {
     useEffect(() => {
         let interval
         if (focused) {
-            interval = setInterval(() => getDepositHistory(state.historyPage, true), 2800)
+            interval = setInterval(() => getDepositHistory(state.historyPage, true), 30000)
         }
         return () => interval && clearInterval(interval)
     }, [focused, state.historyPage])
@@ -1035,7 +1035,6 @@ const ROW_LOADING_SKELETON = {
 }
 
 const depositLinkBuilder = (type, asset) => {
-    return
     switch (type) {
         case TYPE.crypto:
             return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=crypto&asset=${asset}`

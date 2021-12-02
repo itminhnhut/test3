@@ -1,15 +1,15 @@
 export const PATHS = {
     WALLET: {
-        DEFAULT: '/wallet_v2',
-        OVERVIEW: '/wallet_v2/overview',
+        DEFAULT: '/wallet',
+        OVERVIEW: '/wallet/overview',
         EXCHANGE: {
-            DEFAULT: '/wallet_v2/exchange',
-            DEPOSIT: '/wallet_v2/exchange/deposit',
-            WITHDRAW: '/wallet_v2/exchange/withdraw'
+            DEFAULT: '/wallet/exchange',
+            DEPOSIT: '/wallet/exchange/deposit',
+            WITHDRAW: '/wallet/exchange/withdraw'
         },
-        FUTURES: '/wallet_v2/futures',
-        STAKING: '/wallet_v2/staking',
-        FARMING: '/wallet_v2/farming',
-        TRANSTION_HISTORY: '/wallet_v2/transaction-history'
+        FUTURES: '/wallet/futures',
+        STAKING: '/wallet/staking',
+        FARMING: '/wallet/farming',
+        TRANSTION_HISTORY: '/wallet/transaction-history'
     }
 }

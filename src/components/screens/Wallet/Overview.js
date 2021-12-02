@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { WalletType } from 'redux/actions/const'
 import AssetValue from 'components/common/AssetValue'
 import AssetName from 'components/wallet/AssetName'
-import { EXCHANGE_ACTION } from 'pages/wallet_v2'
+import { EXCHANGE_ACTION } from 'pages/wallet'
 import { PATHS } from 'constants/paths'
 
 const INITIAL_STATE = {

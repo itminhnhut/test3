@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { find, orderBy, sumBy } from 'lodash'
-import { WALLET_SCREENS } from 'pages/wallet_v2'
+import { WALLET_SCREENS } from 'pages/wallet'
 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
@@ -22,6 +22,7 @@ import { useAsync } from 'react-use'
 import { getUsdRate } from 'redux/actions/market'
 import useWindowFocus from 'hooks/useWindowFocus'
 import { PATHS } from 'constants/paths'
+import NeedLogin from 'components/common/NeedLogin'
 
 const INITIAL_STATE = {
     screen: null,
@@ -53,6 +54,7 @@ const Wallet = () => {
     const setState = state => set(prevState => ({...prevState, ...state}))
 
     // Rdx
+    const auth = useSelector(state => state.auth?.user) || null
     const allWallet = useSelector(state => state.wallet?.SPOT) || null
     const allFuturesWallet = useSelector(state => state.wallet?.FUTURES) || null
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null
@@ -162,10 +164,14 @@ const Wallet = () => {
     }, [state.screenIndex])
 
     useEffect(() => {
-        reNewUsdRate()
         getStakingSummary()
         getFarmingSummary()
     }, [])
+
+    useEffect(() => {
+         auth && reNewUsdRate()
+    }, [auth])
+
 
     useEffect(() => {
         let interval
@@ -175,10 +181,10 @@ const Wallet = () => {
         return () => interval && clearInterval(interval)
     }, [focused, state.screen])
 
-    useEffect(() => {
-        // state.screen === WALLET_SCREENS.OVERVIEW && getStakingConfig()
-        // state.screen === WALLET_SCREENS.OVERVIEW && getFarmingkingConfig()
-    }, [state.screen])
+    // useEffect(() => {
+    //     // state.screen === WALLET_SCREENS.OVERVIEW && getStakingConfig()
+    //     // state.screen === WALLET_SCREENS.OVERVIEW && getFarmingkingConfig()
+    // }, [state.screen])
 
     useEffect(() => {
         walletMapper(WalletType.SPOT, allWallet, assetConfig)
@@ -313,45 +319,50 @@ const Wallet = () => {
         <>
             <MaldivesLayout>
                 <Background isDark={currentTheme === THEME_MODE.DARK}>
-                    <CustomContainer>
-                        {renderScreenTab()}
-                        <div className="mt-7">
-                            {state.screen === WALLET_SCREENS.OVERVIEW &&
-                            <OverviewWallet
-                                allAssets={state.allAssets}
-                                // loadingStaking={state.loadingStaking}
-                                // stakingConfig={state.stakingConfig}
-                                // loadingFarming={state.loadingFarming}
-                                // farmingConfig={state.farmingConfig}
-                                exchangeEstBtc={state.exchangeEstBtc}
-                                futuresEstBtc={state.futuresEstBtc}
-                                exchangeRefPrice={state.exchangeRefPrice}
-                                futuresRefPrice={state.futuresRefPrice}
-                                stakingSummary={state.stakingSummary}
-                                farmingSummary={state.farmingSummary}
-                                stakingEstBtc={state?.stakingEstBtc}
-                                stakingRefPrice={state?.stakingRefPrice}
-                                farmingEstBtc={state?.farmingEstBtc}
-                                farmingRefPrice={state?.farmingRefPrice}
-                            />}
-                            {state.screen === WALLET_SCREENS.EXCHANGE &&
-                            <ExchangeWallet
-                                allAssets={state.allAssets}
-                                estBtc={state.exchangeEstBtc}
-                                estUsd={state.exchangeRefPrice}
-                            />}
-                            {state.screen === WALLET_SCREENS.FUTURES &&
-                            <FuturesWallet
-                                estBtc={state.futuresEstBtc}
-                                estUsd={state.futuresRefPrice}
-                            />}
-                            {state.screen === WALLET_SCREENS.STAKING &&
-                            <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary}/>}
-                            {state.screen === WALLET_SCREENS.FARMING &&
-                            <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary}/>}
-                            {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
+                    {auth ?
+                        <CustomContainer>
+                            {renderScreenTab()}
+                            <div className="mt-7">
+                                {state.screen === WALLET_SCREENS.OVERVIEW &&
+                                <OverviewWallet
+                                    allAssets={state.allAssets}
+                                    // loadingStaking={state.loadingStaking}
+                                    // stakingConfig={state.stakingConfig}
+                                    // loadingFarming={state.loadingFarming}
+                                    // farmingConfig={state.farmingConfig}
+                                    exchangeEstBtc={state.exchangeEstBtc}
+                                    futuresEstBtc={state.futuresEstBtc}
+                                    exchangeRefPrice={state.exchangeRefPrice}
+                                    futuresRefPrice={state.futuresRefPrice}
+                                    stakingSummary={state.stakingSummary}
+                                    farmingSummary={state.farmingSummary}
+                                    stakingEstBtc={state?.stakingEstBtc}
+                                    stakingRefPrice={state?.stakingRefPrice}
+                                    farmingEstBtc={state?.farmingEstBtc}
+                                    farmingRefPrice={state?.farmingRefPrice}
+                                />}
+                                {state.screen === WALLET_SCREENS.EXCHANGE &&
+                                <ExchangeWallet
+                                    allAssets={state.allAssets}
+                                    estBtc={state.exchangeEstBtc}
+                                    estUsd={state.exchangeRefPrice}
+                                />}
+                                {state.screen === WALLET_SCREENS.FUTURES &&
+                                <FuturesWallet
+                                    estBtc={state.futuresEstBtc}
+                                    estUsd={state.futuresRefPrice}
+                                />}
+                                {state.screen === WALLET_SCREENS.STAKING &&
+                                <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary}/>}
+                                {state.screen === WALLET_SCREENS.FARMING &&
+                                <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary}/>}
+                                {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
+                            </div>
+                        </CustomContainer>
+                        : <div className="h-[480px] flex items-center justify-center">
+                            <NeedLogin addClass="flex items-center justify-center"/>
                         </div>
-                    </CustomContainer>
+                    }
                 </Background>
             </MaldivesLayout>
         </>
