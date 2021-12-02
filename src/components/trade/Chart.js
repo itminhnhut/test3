@@ -6,7 +6,7 @@ const Chart = (props) => {
     const { t } = useTranslation();
     if (!symbol) return null;
     return (
-        <div className="bg-bgContainer dark:bg-bgContainer-dark h-full">
+        <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark h-full">
             <div className="spot-chart h-full flex flex-col">
                 <SpotChart
                     isOnSidebar={isOnSidebar}

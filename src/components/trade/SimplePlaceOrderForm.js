@@ -1004,7 +1004,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     return (
         <>
-            <div className="bg-bgContainer dark:bg-darkBlue-1 h-full px-2.5 spot-place-orders-container">
+            <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark h-full px-2.5 spot-place-orders-container">
                 {/* <h3 className="font-medium text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('spot:place_order')}</h3> */}
                 {/* {_renderOrderSide} */}
                 {_renderOrderType}

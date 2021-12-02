@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router'
+import { PATHS } from 'constants/paths'
 
 const WalletDefault = ({ token }) => {
     const router = useRouter()
     if (typeof window !== 'undefined') {
-        router.push(`/wallet/${WALLET_SCREENS.OVERVIEW}`,
+        router.push(PATHS.WALLET.OVERVIEW,
                     undefined,
                     { shallow: true })
     }

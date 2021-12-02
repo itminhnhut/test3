@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { find, orderBy, sumBy } from 'lodash'
-import { WALLET_SCREENS } from 'pages/wallet'
+import { WALLET_SCREENS } from 'pages/wallet_v2'
 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
@@ -21,6 +21,7 @@ import { ApiStatus, WalletType } from 'redux/actions/const'
 import { useAsync } from 'react-use'
 import { getUsdRate } from 'redux/actions/market'
 import useWindowFocus from 'hooks/useWindowFocus'
+import { PATHS } from 'constants/paths'
 
 const INITIAL_STATE = {
     screen: null,
@@ -152,7 +153,7 @@ const Wallet = () => {
                      // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
                      //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
                      // } else {
-                         r.push(`/wallet/${current?.code}`)
+                         r.push(`${PATHS.WALLET.DEFAULT}/${current?.code}`)
                      // }
                  }}
                  tArr={['common']}
@@ -175,8 +176,8 @@ const Wallet = () => {
     }, [focused, state.screen])
 
     useEffect(() => {
-        state.screen === WALLET_SCREENS.OVERVIEW && getStakingConfig()
-        state.screen === WALLET_SCREENS.OVERVIEW && getFarmingkingConfig()
+        // state.screen === WALLET_SCREENS.OVERVIEW && getStakingConfig()
+        // state.screen === WALLET_SCREENS.OVERVIEW && getFarmingkingConfig()
     }, [state.screen])
 
     useEffect(() => {
@@ -318,10 +319,10 @@ const Wallet = () => {
                             {state.screen === WALLET_SCREENS.OVERVIEW &&
                             <OverviewWallet
                                 allAssets={state.allAssets}
-                                loadingStaking={state.loadingStaking}
-                                stakingConfig={state.stakingConfig}
-                                loadingFarming={state.loadingFarming}
-                                farmingConfig={state.farmingConfig}
+                                // loadingStaking={state.loadingStaking}
+                                // stakingConfig={state.stakingConfig}
+                                // loadingFarming={state.loadingFarming}
+                                // farmingConfig={state.farmingConfig}
                                 exchangeEstBtc={state.exchangeEstBtc}
                                 futuresEstBtc={state.futuresEstBtc}
                                 exchangeRefPrice={state.exchangeRefPrice}
