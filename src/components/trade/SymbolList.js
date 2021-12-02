@@ -141,7 +141,7 @@ const SymbolList = (props) => {
     const renderList = useCallback(() => {
         return (
             <>
-                <div className="bg-bgPrimary dark:bg-bgPrimary-dark px-3">
+                <div className="bg-bgContainer dark:bg-darkBlue-1 px-3">
                     <div className="flex justify-between items-center mb-2">
                         <div
                             className="flex flex-1 items-center justify-start text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium cursor-pointer select-none"
