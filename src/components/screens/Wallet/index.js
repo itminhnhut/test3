@@ -78,9 +78,11 @@ const Wallet = () => {
                 if (originWallet) {
                     const value = originWallet?.value < MIN_WALLET ? 0 : originWallet?.value
                     const lockedValue = originWallet?.value < MIN_WALLET ? 0 : originWallet?.locked_value
+                    const available = value - lockedValue
+
                     mapper.push({
                        ...item,
-                       [AVAILBLE_KEY]: value - lockedValue,
+                       [AVAILBLE_KEY]: (isNaN(available) || available < MIN_WALLET) ? 0 : available,
                        wallet: originWallet
                    })
                 }
@@ -263,9 +265,10 @@ const Wallet = () => {
             const totalFarming = state.farmingSummary?.[1]?.summary?.total_interest_earned * namiUsdRate;
             // console.log('namidev-DEBUG: => ', state.farmingSummary?.[0]?.summary?.total_interest_earned)
 
-            const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit;
-            const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit;
-            const btcUsdRate = _?.['9'];
+            const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit
+            const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit
+            const btcUsdRate = _?.['9']
+            console.log('BTC/USD Rate => ', btcUsdRate)
 
             if (totalStaking) {
                 setState({
