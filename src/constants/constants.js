@@ -13,3 +13,5 @@ export const BREAK_POINTS = {
 }
 
 export const TEST_ID = ['Nami852TPE2694', 'Nami527EBA4688']
+
+export const MIN_WALLET = 1e-10

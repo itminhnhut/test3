@@ -4,25 +4,26 @@ import { useRouter } from 'next/router';
 import { find, orderBy, sumBy } from 'lodash';
 import { WALLET_SCREENS } from 'pages/wallet';
 
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import OverviewWallet from 'components/screens/Wallet/Overview';
-import ExchangeWallet from 'components/screens/Wallet/Exchange';
-import FuturesWallet from 'components/screens/Wallet/Futures';
-import StakingWallet from 'components/screens/Wallet/Staking';
-import FarmingWallet from 'components/screens/Wallet/Farming';
-import TransactionHistory from 'components/screens/Wallet/Transaction';
-import Axios from 'axios';
-import Tab from 'components/common/Tab';
-import colors from 'styles/colors';
-import styled from 'styled-components';
-import { API_FARMING_SUMMARY, API_STAKING_SUMMARY, GET_FARMING_CONFIG, GET_STAKING_CONFIG } from 'redux/actions/apis';
-import { ApiStatus, WalletType } from 'redux/actions/const';
-import { useAsync } from 'react-use';
-import { getUsdRate } from 'redux/actions/market';
-import useWindowFocus from 'hooks/useWindowFocus';
-import { PATHS } from 'constants/paths';
-import NeedLogin from 'components/common/NeedLogin';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
+import OverviewWallet from 'components/screens/Wallet/Overview'
+import ExchangeWallet from 'components/screens/Wallet/Exchange'
+import FuturesWallet from 'components/screens/Wallet/Futures'
+import StakingWallet from 'components/screens/Wallet/Staking'
+import FarmingWallet from 'components/screens/Wallet/Farming'
+import TransactionHistory from 'components/screens/Wallet/Transaction'
+import Axios from 'axios'
+import Tab from 'components/common/Tab'
+import colors from 'styles/colors'
+import styled from 'styled-components'
+import { API_FARMING_SUMMARY, API_STAKING_SUMMARY, GET_FARMING_CONFIG, GET_STAKING_CONFIG } from 'redux/actions/apis'
+import { ApiStatus, WalletType } from 'redux/actions/const'
+import { useAsync } from 'react-use'
+import { getUsdRate } from 'redux/actions/market'
+import useWindowFocus from 'hooks/useWindowFocus'
+import { PATHS } from 'constants/paths'
+import NeedLogin from 'components/common/NeedLogin'
+import { MIN_WALLET } from 'constants/constants'
 
 const INITIAL_STATE = {
     screen: null,
@@ -70,12 +71,20 @@ const Wallet = () => {
         const mapper = [];
         if (Array.isArray(assetConfig) && assetConfig?.length) {
             const _wallet = walletType === WalletType.SPOT ? assetConfig.filter(o => o.walletTypes?.[walletType])
-                : assetConfig.filter(o => ['VNDC', 'NAMI', 'NAC', 'USDT'].includes(o?.assetCode));
-            _wallet && _wallet.forEach(item => allWallet?.[item.id] && mapper.push({
-                ...item,
-                [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
-                wallet: allWallet?.[item?.id]
-            }));
+                : assetConfig.filter(o => ['VNDC', 'NAMI', 'NAC', 'USDT'].includes(o?.assetCode))
+            _wallet && _wallet.forEach(item => {
+                const originWallet = allWallet?.[item.id]
+
+                if (originWallet) {
+                    const value = originWallet?.value < MIN_WALLET ? 0 : originWallet?.value
+                    const lockedValue = originWallet?.value < MIN_WALLET ? 0 : originWallet?.locked_value
+                    mapper.push({
+                       ...item,
+                       [AVAILBLE_KEY]: value - lockedValue,
+                       wallet: originWallet
+                   })
+                }
+            })
             // console.log('namidev-DEBUG: ___ ', orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']))
         }
         if (walletType === WalletType.SPOT) {
