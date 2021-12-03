@@ -23,7 +23,7 @@ const AssetLogo = (props) => {
             return <img
                 src={logoUrl}
                 alt=""
-                style={{ minWidth: logoSize }}
+                style={{ minWidth: logoSize, borderRadius: '50%' }}
                 width={logoSize}
                 height={logoSize}
             />;

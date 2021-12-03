@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils'
 import { Check, Eye, EyeOff, Search, X } from 'react-feather'
 import { EXCHANGE_ACTION } from 'pages/wallet'
-import { SECRET_STRING } from 'utils'
+import { getMarketAvailable, SECRET_STRING } from 'utils'
 import { WalletType } from 'redux/actions/const'
 import { useDispatch } from 'react-redux'
+import { PATHS } from 'constants/paths'
+import { Menu, Item, useContextMenu } from "react-contexify"
 
 import useWindowSize from 'hooks/useWindowSize'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
@@ -18,6 +20,8 @@ import RePagination from 'components/common/ReTable/RePagination'
 import Link from 'next/link'
 import AssetLogo from 'components/wallet/AssetLogo'
 
+import "react-contexify/dist/ReactContexify.css";
+
 const INITIAL_STATE = {
     hideAsset: false,
     hideSmallAsset: false,
@@ -26,12 +30,19 @@ const INITIAL_STATE = {
     search: '',
     currentPage: 1,
     action: null, // action = null is wallet overview
+    tableExpander: {},
+    currentMarketList: null,
+
 }
 
-const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
+const MENU_CONTEXT = 'market-available'
+
+const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
+
+    const tableRef = useRef(null)
 
     // Use Hooks
     const r = useRouter()
@@ -39,6 +50,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
     const { width } = useWindowSize()
     const [currentTheme, ] = useDarkMode()
     const dispatch = useDispatch()
+    const { show } = useContextMenu({ id: MENU_CONTEXT })
+
+    // Helper
+    const openAssetExpander = (assetKey) => setState({ tableExpander: { [assetKey]: !state.tableExpander?.[assetKey] } })
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
@@ -49,17 +64,18 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
         }
 
         const columns = [
-            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), fixed: 'left', align: 'left', width: 80 },
+            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), align: 'left', width: 120, fixed: width >= 992 ? 'none' : 'left' },
             { key: 'total', dataIndex: 'total', title: t('common:total'), align: 'right', width: 95 },
             { key: 'available', dataIndex: 'available', title: t('common:available_balance'), align: 'right', width: 95 },
             { key: 'in_order', dataIndex: 'in_order', title: t('common:in_order'), align: 'right', width: 95 },
-            { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 220 },
+            { key: 'btc_value', dataIndex: 'btc_value', title: t('common:btc_value'), align: 'right', width: 80 },
+            { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 380, fixed: width >= 992 ? 'right' : 'none' },
         ]
 
         return (
             <ReTable
                 sort
-                defaultSort={{ key: 'total', direction: 'desc' }}
+                defaultSort={{ key: 'btc_value', direction: 'desc' }}
                 useRowHover
                 data={state.tableData || []}
                 columns={columns}
@@ -69,7 +85,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
                 tableStatus={tableStatus}
                 tableStyle={{
                     paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                    tableStyle: { minWidth: '888px !important' },
+                    tableStyle: { minWidth: '1300px !important' },
                     headerStyle: {},
                     rowStyle: {},
                     shadowWithFixedCol: width < 1366,
@@ -132,6 +148,21 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
         )
     }, [estBtc, estUsd, state.hideAsset, currentTheme])
 
+    const renderMarketListContext = useCallback(() => {
+        if (!state.currentMarketList) return null
+        function handleItemClick({ event, props, triggerEvent, data }){
+            console.log('namidev-DEBUG: => ', event, props, triggerEvent, data)
+        }
+
+        return (
+            <Menu id={MENU_CONTEXT} animation={false}>
+                <Item onClick={handleItemClick}>
+                    Item 1
+                </Item>
+            </Menu>
+        )
+    }, [state.currentMarketList])
+
     useEffect(() => {
         if (r?.query?.action) {
            setState({ action: r.query.action })
@@ -148,7 +179,16 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
 
     useEffect(() => {
         if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
-            const origin = dataHandler(allAssets, t, dispatch, { usdRate })
+            const origin = dataHandler(allAssets, {
+                usdRate,
+                marketWatch,
+                expander: state.tableExpander,
+                openAssetExpander,
+                translator: t,
+                dispatch,
+                setState,
+                show
+            })
             let tableData = origin
             if (state.hideSmallAsset) {
                 tableData = origin.filter(item => item?.sortByValue?.total > 1)
@@ -158,7 +198,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
             }
             tableData && setState({ tableData })
         }
-    }, [allAssets, usdRate, state.hideSmallAsset, state.search])
+    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search, state.tableExpander])
+
+    useEffect(() => {
+        console.log('namidev-DEBUG: => ', state)
+    }, [state])
 
 
     return (
@@ -252,32 +296,22 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
             </div>
 
             <MCard
+                getRef={ref => tableRef.current = ref}
                 style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' } : {}}
-                addClass="mt-5 pt-0 pb-0 px-0 overflow-hidden">
+                addClass="relative mt-5 pt-0 pb-0 px-0 overflow-hidden">
                 {renderAssetTable()}
             </MCard>
 
             {renderPagination()}
 
-            {/*<a href="/wallet/exchange?action=deposit" className={state.action === EXCHANGE_ACTION.DEPOSIT.toLowerCase() ? 'cursor-pointer mb-4 text-dominant' : 'cursor-pointer mb-4 hover:text-dominant'}>*/}
-            {/*    {EXCHANGE_ACTION.DEPOSIT}*/}
-            {/*</a><br/>*/}
-            {/*<a href="/wallet/exchange?action=withdraw" className={state.action === EXCHANGE_ACTION.WITHDRAW.toLowerCase() ? 'cursor-pointer mb-4 text-dominant' : 'cursor-pointer mb-4 hover:text-dominant'}>*/}
-            {/*    {EXCHANGE_ACTION.WITHDRAW}*/}
-            {/*</a><br/>*/}
-            {/*<a href="/wallet/exchange?action=transfer" className={state.action === EXCHANGE_ACTION.TRANSFER.toLowerCase() ? 'cursor-pointer mb-4 text-dominant' : 'cursor-pointer mb-4 hover:text-dominant'}>*/}
-            {/*    {EXCHANGE_ACTION.TRANSFER}*/}
-            {/*</a><br/>*/}
-            {/*<a href="/wallet/exchange?action=portfolio" className={state.action === EXCHANGE_ACTION.PORTFOLIO.toLowerCase() ? 'cursor-pointer mb-4 text-dominant' : 'cursor-pointer mb-4 hover:text-dominant'}>*/}
-            {/*    {EXCHANGE_ACTION.PORTFOLIO}*/}
-            {/*</a>*/}
+            {renderMarketListContext()}
         </>
     )
 }
 
 const ASSET_ROW_LIMIT = 10
 
-const dataHandler = (data, translator, dispatch, utils) => {
+const dataHandler = (data, utils) => {
     if (!data || !data?.length) {
         const skeleton = []
         for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
@@ -294,27 +328,55 @@ const dataHandler = (data, translator, dispatch, utils) => {
             lockedValue = '0.0000'
         }
 
-        // console.log('namidev-DEBUG: => ')
-        // const assetUsdRate = utils?.usdRate?.[item?.]
+        const marketAvailable = getMarketAvailable(item?.assetCode, utils?.marketWatch)
+
+        const assetUsdRate = utils?.usdRate?.[item?.id] || 0
+        const btcUsdRate = utils?.usdRate?.['9'] || 0
+
+        const totalUsd = item?.wallet?.value * assetUsdRate
+        const totalBtc = totalUsd / btcUsdRate
 
         result.push({
             key: `exchange_asset___${item?.assetName}`,
             asset: <div className="flex items-center">
                 <AssetLogo assetCode={item?.assetName} size={32}/>
-                <div className="ml-2">
-                    <span>{item?.assetName}</span>
+                <div className="ml-2 text-sm">
+                    <div>{item?.assetName}</div>
+                    <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                        {item?.assetFullName || item?.assetName || item?.assetCode}
+                    </div>
                 </div>
             </div>,
-            total: <span>{formatWallet(item?.wallet?.value)}</span>,
-            available: <span>{formatWallet(item?.wallet?.value - item?.wallet?.locked_value)}</span>,
-            in_order: <span>{item?.wallet?.locked_value ? lockedValue : '0.0000'}</span>,
-            btc_value: <span></span>,
-            operation: renderOperationLink(item?.assetName, translator, dispatch),
+            total: <span className="text-sm whitespace-nowrap">
+                {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+            </span>,
+            available: <span className="text-sm whitespace-nowrap">
+                {(item?.wallet?.value - item?.wallet?.locked_value) ?
+                    formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
+                : '0.0000'}
+            </span>,
+            in_order: <span className="text-sm whitespace-nowrap">
+                {item?.wallet?.locked_value ?
+                    <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
+                        <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
+                    </Link>
+                    : '0.0000'}
+            </span>,
+            btc_value: <div className="text-sm">
+                <div className="whitespace-nowrap">
+                    {totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}
+                </div>
+                <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
+                    ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                </div>
+            </div>,
+            operation: renderOperationLink(item?.assetName, marketAvailable, { ...utils, expander: utils?.expander?.[item?.assetName] } ),
             [RETABLE_SORTBY]: {
                 asset: item?.assetName,
                 total: +item?.wallet?.value,
                 available: +item?.wallet?.value - +item?.wallet?.locked_value,
-                in_order: item?.wallet?.locked_value
+                in_order: item?.wallet?.locked_value,
+                btc_value: +totalUsd
             }
         })
     })
@@ -322,22 +384,39 @@ const dataHandler = (data, translator, dispatch, utils) => {
     return result
 }
 
-const renderOperationLink = (assetName, translator, dispatch) => {
+const renderOperationLink = (assetName, markets, utils) => {
+    const noMarket = !markets?.length
+    const isOpen = utils?.expander
+    const onOpen = utils?.openAssetExpander
+
     return (
-        <div className="flex pl-12">
-            <a className="py-1.5 mr-3 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-               href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
+        <div className="relative flex pl-12">
+            <a className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+               href={PATHS.EXCHANGE?.SWAP?.getSwapPair({ fromAsset: 'USDT', toAsset: assetName })}>
                 {/*`/wallet/exchange/deposit?type=crypto&asset=${assetName}`*/}
-                {translator('common:deposit')}
+                {utils?.translator('common:buy')}
             </a>
-            <a className="py-1.5 mr-3 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+            {!noMarket &&
+                <div className="relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+                     onClick={(e) => {
+                         utils?.show(e)
+                         utils?.setState({ currentMarketList: markets })
+                     }}>
+                    {utils?.translator('common:trade')}
+                </div>
+            }
+            <a className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+               href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
+                {utils?.translator('common:deposit')}
+            </a>
+            <a className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}>
-                {translator('common:withdraw')}
+                {utils?.translator('common:withdraw')}
             </a>
             {ALLOWED_FUTURES_TRANSFER.includes(assetName) &&
-            <div className="py-1.5 w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                 onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES, asset: assetName }))}>
-                {translator('common:transfer')}
+            <div className="py-1.5 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+                 onClick={() => utils?.dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES, asset: assetName }))}>
+                {utils?.translator('common:transfer')}
             </div>}
         </div>
     )

@@ -19,7 +19,7 @@ import styled from 'styled-components';
 import { API_FARMING_SUMMARY, API_STAKING_SUMMARY, GET_FARMING_CONFIG, GET_STAKING_CONFIG } from 'redux/actions/apis';
 import { ApiStatus, WalletType } from 'redux/actions/const';
 import { useAsync } from 'react-use';
-import { getUsdRate } from 'redux/actions/market';
+import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market'
 import useWindowFocus from 'hooks/useWindowFocus';
 import { PATHS } from 'constants/paths';
 import NeedLogin from 'components/common/NeedLogin';
@@ -43,6 +43,8 @@ const INITIAL_STATE = {
     stakingSummary: null,
     farmingSummary: null,
     loadingSummary: false,
+    exchangeMarketWatch: null,
+    futuresMarketWatch: null,
 
     // ... Add new state
 };
@@ -259,9 +261,8 @@ const Wallet = () => {
 
         // earn
         const namiUsdRate = allAssetValue?.['1'] || 1;
-        const totalStaking = state.stakingSummary?.[0]?.summary?.total_interest_earned * namiUsdRate;
-        const totalFarming = state.farmingSummary?.[1]?.summary?.total_interest_earned * namiUsdRate;
-        // console.log('namidev-DEBUG: => ', state.farmingSummary?.[0]?.summary?.total_interest_earned)
+        const totalStaking = state.stakingSummary?.[0]?.summary?.total_balance * namiUsdRate;
+        const totalFarming = state.farmingSummary?.[0]?.summary?.total_balance * namiUsdRate;
 
         const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit;
         const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit;
@@ -324,58 +325,68 @@ const Wallet = () => {
         }
     }, [state.allAssets, state.allFuturesAsset, state.stakingSummary, state.farmingSummary, state.usdRate]);
 
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: => ', state)
-    // }, [state])
+    useAsync(async () => {
+        if (state.screen === WALLET_SCREENS.EXCHANGE) {
+            const exchangeMarketWatch = await getMarketWatch()
+            exchangeMarketWatch && setState({ exchangeMarketWatch })
+        }
+
+        if (state.screen === WALLET_SCREENS.FUTURES) {
+            const futuresMarketWatch = await getFuturesMarketWatch()
+            futuresMarketWatch && setState({ futuresMarketWatch })
+        }
+
+    }, [state.screen])
 
     return (
-        <>
-            <MaldivesLayout>
-                <Background isDark={currentTheme === THEME_MODE.DARK}>
-                    {auth ?
-                        <CustomContainer>
-                            {renderScreenTab()}
-                            <div className="mt-7">
-                                {state.screen === WALLET_SCREENS.OVERVIEW &&
-                                <OverviewWallet
-                                    allAssets={state.allAssets}
-                                    exchangeEstBtc={state.exchangeEstBtc}
-                                    futuresEstBtc={state.futuresEstBtc}
-                                    exchangeRefPrice={state.exchangeRefPrice}
-                                    futuresRefPrice={state.futuresRefPrice}
-                                    stakingSummary={state.stakingSummary}
-                                    farmingSummary={state.farmingSummary}
-                                    stakingEstBtc={state?.stakingEstBtc}
-                                    stakingRefPrice={state?.stakingRefPrice}
-                                    farmingEstBtc={state?.farmingEstBtc}
-                                    farmingRefPrice={state?.farmingRefPrice}
-                                />}
-                                {state.screen === WALLET_SCREENS.EXCHANGE &&
-                                <ExchangeWallet
-                                    allAssets={state.allAssets}
-                                    estBtc={state.exchangeEstBtc}
-                                    estUsd={state.exchangeRefPrice}
-                                    usdRate={state.usdRate}
-                                />}
-                                {state.screen === WALLET_SCREENS.FUTURES &&
-                                <FuturesWallet
-                                    estBtc={state.futuresEstBtc}
-                                    estUsd={state.futuresRefPrice}
-                                />}
-                                {state.screen === WALLET_SCREENS.STAKING &&
-                                <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary}/>}
-                                {state.screen === WALLET_SCREENS.FARMING &&
-                                <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary}/>}
-                                {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
-                            </div>
-                        </CustomContainer>
-                        : <div className="h-[480px] flex items-center justify-center">
-                            <NeedLogin addClass="flex items-center justify-center"/>
+        <MaldivesLayout>
+            <Background isDark={currentTheme === THEME_MODE.DARK}>
+                {auth ?
+                    <CustomContainer>
+                        {renderScreenTab()}
+                        <div className="mt-7">
+                            {state.screen === WALLET_SCREENS.OVERVIEW &&
+                            <OverviewWallet
+                                allAssets={state.allAssets}
+                                exchangeEstBtc={state.exchangeEstBtc}
+                                futuresEstBtc={state.futuresEstBtc}
+                                exchangeRefPrice={state.exchangeRefPrice}
+                                futuresRefPrice={state.futuresRefPrice}
+                                stakingSummary={state.stakingSummary}
+                                farmingSummary={state.farmingSummary}
+                                stakingEstBtc={state?.stakingEstBtc}
+                                stakingRefPrice={state?.stakingRefPrice}
+                                farmingEstBtc={state?.farmingEstBtc}
+                                farmingRefPrice={state?.farmingRefPrice}
+                            />}
+                            {state.screen === WALLET_SCREENS.EXCHANGE &&
+                            <ExchangeWallet
+                                allAssets={state.allAssets}
+                                estBtc={state.exchangeEstBtc}
+                                estUsd={state.exchangeRefPrice}
+                                usdRate={state.usdRate}
+                                marketWatch={state.exchangeMarketWatch}
+                            />}
+                            {state.screen === WALLET_SCREENS.FUTURES &&
+                            <FuturesWallet
+                                estBtc={state.futuresEstBtc}
+                                estUsd={state.futuresRefPrice}
+                                usdRate={state.usdRate}
+                                marketWatch={state.futuresMarketWatch}
+                            />}
+                            {state.screen === WALLET_SCREENS.STAKING &&
+                            <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary}/>}
+                            {state.screen === WALLET_SCREENS.FARMING &&
+                            <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary}/>}
+                            {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
                         </div>
-                    }
-                </Background>
-            </MaldivesLayout>
-        </>
+                    </CustomContainer>
+                    : <div className="h-[480px] flex items-center justify-center">
+                        <NeedLogin addClass="flex items-center justify-center"/>
+                    </div>
+                }
+            </Background>
+        </MaldivesLayout>
     );
 };
 
@@ -429,7 +440,7 @@ const CustomContainer = styled.div.attrs({ className: 'mal-container px-4' })`
   }
 
   @media (min-width: 1440px) {
-    max-width: 1300px !important;
+    max-width: 1400px !important;
   }
 
   @media (min-width: 1920px) {

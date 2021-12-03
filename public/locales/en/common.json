@@ -7,6 +7,7 @@
     "tr": "🇹🇷 Türkçe",
     "en": "🇺🇸 English"
   },
+  "trade": "Trade",
   "buy": "Buy",
   "sell": "Sell",
   "success": "Success",
@@ -20,6 +21,7 @@
   "total_balance": "Total",
   "available_balance": "Available",
   "in_order": "In order",
+  "btc_value": "BTC Value",
   "initial_price": "Initial price",
   "current_price": "Current price",
   "price_in_btc": "Price in BTC",
