@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils'
 import { Trans, useTranslation } from 'next-i18next'
 import { Eye, EyeOff } from 'react-feather'
@@ -24,8 +24,6 @@ const INITIAL_STATE = {
 
 const OverviewWallet = (props) => {
     const { allAssets,
-        // stakingConfig,
-        // farmingConfig,
         exchangeEstBtc,
         exchangeRefPrice,
         futuresEstBtc,
@@ -72,37 +70,57 @@ const OverviewWallet = (props) => {
         return items
     }, [limitExchangeAsset, allAssets])
 
-    // const renderStakingList = useCallback(() => {
-    //     if (!stakingConfig) return
-    //     return stakingConfig.map(stk => {
-    //         return (
-    //             <Link key={`overview_staking__${stk?.asset_name}`}
-    //                   href={`/wallet/staking?asset=${stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name}`}
-    //                   prefetch={false}
-    //             >
-    //                 <a
-    //                     className="mr-3">
-    //                     <AssetLogo assetCode={stk?.asset_name === 'NAC' ? 'NAMI' : stk?.asset_name} size={30}/>
-    //                 </a>
-    //             </Link>
-    //         )
-    //     })
-    // }, [stakingConfig])
-    //
-    // const renderFarmingList = useCallback(() => {
-    //     if (!farmingConfig) return
-    //     return farmingConfig.map(frm => {
-    //         return (
-    //             <Link key={`overview_farming__${frm?.asset_name}`}
-    //                   href={`/wallet/farming?asset=${frm?.asset_name === 'NAC' ? 'NAMI' : frm?.asset_name}`}
-    //                   prefetch={false}>
-    //                 <a  className="mr-3">
-    //                     <AssetLogo assetCode={frm?.asset_name} size={30}/>
-    //                 </a>
-    //             </Link>
-    //         )
-    //     })
-    // }, [farmingConfig])
+    const renderOverviewEstBalance = useCallback(() => {
+        return (
+            <>
+                <div className="font-bold text-[24px] lg:text-[28px] xl:text-[36px] text-dominant flex flex-wrap">
+                                    <span className="mr-1.5">{state.hideAsset ? SECRET_STRING
+                                        : formatWallet(exchangeEstBtc?.totalValue + exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) }</span>
+                    <span>BTC</span>
+                </div>
+                <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">
+                    {state.hideAsset ? SECRET_STRING
+                        : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue, 2)}`}
+                </div>
+            </>
+        )
+    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, state.hideAsset])
+
+    const renderExchangeEstBalance = useCallback(() => {
+        return (
+            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-1 whitespace-nowrap">
+                <span className="font-bold">{formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.totalValue, 2)}</span></span>
+            </div>
+        )
+    }, [exchangeEstBtc, exchangeRefPrice])
+
+    const renderFuturesEstBalance = useCallback(() => {
+        return (
+            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-1 whitespace-nowrap">
+                <span className="font-bold">{formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.totalValue, 2)}</span></span>
+            </div>
+        )
+    }, [futuresEstBtc, futuresRefPrice])
+
+    const renderFarmingEstBalance = useCallback(() => {
+        return (
+            <>
+                <span className="font-bold"> {formatWallet(farmingEstBtc?.totalValue, farmingEstBtc?.assetDigit, farmingEstBtc?.totalValue ? 0 : 8)} </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
+                  ~ ${formatWallet(farmingRefPrice?.totalValue, farmingRefPrice?.assetDigit, farmingRefPrice?.assetDigit ? 0 : 2)}
+                </span></span>
+            </>
+        )
+    }, [farmingEstBtc, farmingRefPrice])
+
+    const renderStakingEstBalance = useCallback(() => {
+        return (
+            <>
+                <span className="font-bold"> {formatWallet(stakingEstBtc?.totalValue, stakingEstBtc?.assetDigit, stakingEstBtc?.totalValue ? 0 : 8)} </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
+                  ~ ${formatWallet(stakingRefPrice?.totalValue, stakingRefPrice?.assetDigit, stakingRefPrice?.assetDigit ? 0 : 2)}
+                </span></span>
+            </>
+        )
+    }, [stakingEstBtc, stakingRefPrice])
 
     return (
         <div className="pb-32">
@@ -145,15 +163,7 @@ const OverviewWallet = (props) => {
                                 <img className="-ml-0.5" src={getS3Url('/images/icon/ic_wallet_2.png')} height={width >= 768 ? '48' : '28'} width={width >= 768 ? '48' : '28'} alt=""/>
                             </div>
                             <div className="ml-3 md:ml-6">
-                                <div className="font-bold text-[24px] lg:text-[28px] xl:text-[36px] text-dominant flex flex-wrap">
-                                    <span className="mr-1.5">{state.hideAsset ? SECRET_STRING
-                                        : formatWallet(exchangeEstBtc?.totalValue + exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) }</span>
-                                    <span>BTC</span>
-                                </div>
-                                <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">
-                                    {state.hideAsset ? SECRET_STRING
-                                        : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue, 2)}`}
-                                </div>
+                                {renderOverviewEstBalance()}
                             </div>
                         </div>
                     </div>
@@ -182,9 +192,7 @@ const OverviewWallet = (props) => {
                                     </a>
                                 </span>
                             </div>
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">{formatWallet(exchangeEstBtc?.value, exchangeEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.value, 2)}</span></span>
-                            </div>
+                            {renderExchangeEstBalance()}
                         </div>
                     </div>
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
@@ -233,9 +241,7 @@ const OverviewWallet = (props) => {
                                     </a>
                                 </span>
                             </div>
-                            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">{formatWallet(futuresEstBtc?.value, futuresEstBtc?.assetDigit)}</span> <span className="text-xs font-medium">BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.value, 2)}</span></span>
-                            </div>
+                            {renderFuturesEstBalance()}
                         </div>
                     </div>
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
@@ -267,12 +273,7 @@ const OverviewWallet = (props) => {
                                 {/*</span>*/}
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">
-                                    <AssetValue assetCode="BTC"
-                                                value={stakingEstBtc?.totalValue}/>
-                                </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                                ~ $<AssetValue assetCode="USDT" assetDigit={2} value={stakingRefPrice?.totalValue}/>
-                                </span></span>
+                                {renderStakingEstBalance()}
                             </div>
                         </div>
                     </div>
@@ -307,12 +308,7 @@ const OverviewWallet = (props) => {
                                 {/*</span>*/}
                             </div>
                             <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                <span className="font-bold">
-                                    <AssetValue assetCode="BTC"
-                                                value={farmingEstBtc?.totalValue}/>
-                                </span> <span className="text-xs font-medium"> <AssetName assetCode="BTC"/> <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                                ~ $<AssetValue assetCode="USDT" assetDigit={2} value={farmingRefPrice?.totalValue}/>
-                                </span></span>
+                                {renderFarmingEstBalance()}
                             </div>
                         </div>
                     </div>

@@ -45,7 +45,10 @@ const INITIAL_STATE = {
     loadingSummary: false,
     exchangeMarketWatch: null,
     futuresMarketWatch: null,
-
+    stakingEstBtc: null,
+    stakingRefPrice: null,
+    farmingEstBtc: null,
+    farmingRefPrice: null,
     // ... Add new state
 };
 
@@ -129,33 +132,33 @@ const Wallet = () => {
         }
     };
 
-    const getStakingConfig = async () => {
-        setState({ loadingStaking: true });
-        try {
-            const { data: { status, data: stakingConfig } } = await Axios.get(GET_STAKING_CONFIG);
-            if (status === ApiStatus.SUCCESS && stakingConfig) {
-                setState({ stakingConfig });
-            }
-        } catch (e) {
-            console.log(`Can't get staking config `, e);
-        } finally {
-            setState({ loadingStaking: false });
-        }
-    };
-
-    const getFarmingkingConfig = async () => {
-        setState({ loadingFarming: true });
-        try {
-            const { data: { status, data: farmingConfig } } = await Axios.get(GET_FARMING_CONFIG);
-            if (status === ApiStatus.SUCCESS && farmingConfig) {
-                setState({ farmingConfig });
-            }
-        } catch (e) {
-            console.log(`Can't get staking config `, e);
-        } finally {
-            setState({ loadingFarming: false });
-        }
-    };
+    // const getStakingConfig = async () => {
+    //     setState({ loadingStaking: true });
+    //     try {
+    //         const { data: { status, data: stakingConfig } } = await Axios.get(GET_STAKING_CONFIG);
+    //         if (status === ApiStatus.SUCCESS && stakingConfig) {
+    //             setState({ stakingConfig });
+    //         }
+    //     } catch (e) {
+    //         console.log(`Can't get staking config `, e);
+    //     } finally {
+    //         setState({ loadingStaking: false });
+    //     }
+    // };
+    //
+    // const getFarmingkingConfig = async () => {
+    //     setState({ loadingFarming: true });
+    //     try {
+    //         const { data: { status, data: farmingConfig } } = await Axios.get(GET_FARMING_CONFIG);
+    //         if (status === ApiStatus.SUCCESS && farmingConfig) {
+    //             setState({ farmingConfig });
+    //         }
+    //     } catch (e) {
+    //         console.log(`Can't get staking config `, e);
+    //     } finally {
+    //         setState({ loadingFarming: false });
+    //     }
+    // };
 
     const reNewUsdRate = async () => {
         const usdRate = await getUsdRate();
@@ -220,7 +223,7 @@ const Wallet = () => {
         }
     }, [r]);
 
-    useAsync(async () => {
+    useEffect(() => {
         const allAssetValue = state.usdRate;
         const exchangeList = [];
         const futuresList = [];
@@ -265,16 +268,18 @@ const Wallet = () => {
         const totalFarming = state.farmingSummary?.[0]?.summary?.total_balance * namiUsdRate;
 
         const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit;
-        const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit;
+        // const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit;
         const btcUsdRate = allAssetValue?.['9'];
 
         if (totalStaking) {
             setState({
                 stakingEstBtc: {
                     totalValue: totalStaking / btcUsdRate,
+                    assetDigit: 8,
                 },
                 stakingRefPrice: {
-                    totalValue: totalStaking
+                    totalValue: totalStaking,
+                    assetDigit: 2,
                 }
             });
         }
@@ -282,10 +287,12 @@ const Wallet = () => {
         if (totalFarming) {
             setState({
                 farmingEstBtc: {
-                    totalValue: totalFarming / btcUsdRate
+                    totalValue: totalFarming / btcUsdRate,
+                    assetDigit: 8,
                 },
                 farmingRefPrice: {
-                    totalValue: totalFarming
+                    totalValue: totalFarming,
+                    assetDigit: 2,
                 }
             });
         }
@@ -354,10 +361,10 @@ const Wallet = () => {
                                 futuresRefPrice={state.futuresRefPrice}
                                 stakingSummary={state.stakingSummary}
                                 farmingSummary={state.farmingSummary}
-                                stakingEstBtc={state?.stakingEstBtc}
-                                stakingRefPrice={state?.stakingRefPrice}
-                                farmingEstBtc={state?.farmingEstBtc}
-                                farmingRefPrice={state?.farmingRefPrice}
+                                stakingEstBtc={state.stakingEstBtc}
+                                stakingRefPrice={state.stakingRefPrice}
+                                farmingEstBtc={state.farmingEstBtc}
+                                farmingRefPrice={state.farmingRefPrice}
                             />}
                             {state.screen === WALLET_SCREENS.EXCHANGE &&
                             <ExchangeWallet

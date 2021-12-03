@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next'
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils'
 import { Check, Eye, EyeOff, Search, X } from 'react-feather'
 import { EXCHANGE_ACTION } from 'pages/wallet'
-import { getMarketAvailable, SECRET_STRING } from 'utils'
+import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils'
 import { WalletType } from 'redux/actions/const'
 import { useDispatch } from 'react-redux'
 import { PATHS } from 'constants/paths'
@@ -21,6 +21,7 @@ import Link from 'next/link'
 import AssetLogo from 'components/wallet/AssetLogo'
 
 import "react-contexify/dist/ReactContexify.css";
+import { router } from 'next/client'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -30,7 +31,6 @@ const INITIAL_STATE = {
     search: '',
     currentPage: 1,
     action: null, // action = null is wallet overview
-    tableExpander: {},
     currentMarketList: null,
 
 }
@@ -51,9 +51,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     const [currentTheme, ] = useDarkMode()
     const dispatch = useDispatch()
     const { show } = useContextMenu({ id: MENU_CONTEXT })
-
-    // Helper
-    const openAssetExpander = (assetKey) => setState({ tableExpander: { [assetKey]: !state.tableExpander?.[assetKey] } })
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
@@ -150,15 +147,33 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
     const renderMarketListContext = useCallback(() => {
         if (!state.currentMarketList) return null
-        function handleItemClick({ event, props, triggerEvent, data }){
-            console.log('namidev-DEBUG: => ', event, props, triggerEvent, data)
-        }
+
+        const markets = []
+        state.currentMarketList.forEach((item, index) => {
+            const pair = initMarketWatchItem(item)
+            markets.push(
+                <div className="px-2">
+                    <Link href={PATHS.EXCHANGE.TRADE.getPair(undefined,
+                        { pair: `${pair?.baseAsset}-${pair?.quoteAsset}` })}>
+                        <a className={index % 2 === 0 ?
+                            'block text-center text-sm font-medium py-2.5 border-b border-divider dark:border-divider-dark cursor-pointer hover:text-dominant'
+                            : 'block text-center text-sm font-medium py-2.5 cursor-pointer hover:text-dominant'
+                        }>
+                            {pair?.baseAsset}/{pair?.quoteAsset}
+                        </a>
+                    </Link>
+                </div>
+            )
+        })
 
         return (
-            <Menu id={MENU_CONTEXT} animation={false}>
-                <Item onClick={handleItemClick}>
-                    Item 1
-                </Item>
+            <Menu id={MENU_CONTEXT}
+                  animation={false}
+                  style={{ boxShadow: 'none' }}
+                  className="!min-w-[100px] !w-auto !p-0 !rounded-lg !overflow-hidden
+                             !drop-shadow-onlyLight dark:!drop-shadow-none !bg-bgContainer dark:!bg-darkBlue-3"
+            >
+                {markets}
             </Menu>
         )
     }, [state.currentMarketList])
@@ -182,8 +197,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             const origin = dataHandler(allAssets, {
                 usdRate,
                 marketWatch,
-                expander: state.tableExpander,
-                openAssetExpander,
                 translator: t,
                 dispatch,
                 setState,
@@ -198,12 +211,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             }
             tableData && setState({ tableData })
         }
-    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search, state.tableExpander])
+    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search])
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: => ', state)
-    }, [state])
-
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: => ', state)
+    // }, [state])
 
     return (
         <>
@@ -288,6 +300,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         <input className="text-sm w-full px-2.5"
                                value={state.search}
                                onChange={(e) => setState({ search: e?.target?.value })}
+                               onFocus={() => setState({ currentPage: 1 })}
                                placeholder={t('common:search')}/>
                         {state.search && <X size={width >= 768 ? 20 : 16} className="cursor-pointer"
                                             onClick={() => setState({ search: '' })}/>}
@@ -363,14 +376,18 @@ const dataHandler = (data, utils) => {
                     : '0.0000'}
             </span>,
             btc_value: <div className="text-sm">
-                <div className="whitespace-nowrap">
-                    {totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}
-                </div>
-                <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                    ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
-                </div>
+                {assetUsdRate ?
+                    <>
+                        <div className="whitespace-nowrap">
+                            {totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}
+                        </div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
+                            ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                        </div>
+                    </>
+                    : '--'}
             </div>,
-            operation: renderOperationLink(item?.assetName, marketAvailable, { ...utils, expander: utils?.expander?.[item?.assetName] } ),
+            operation: renderOperationLink(item?.assetName, { ...utils, marketAvailable }),
             [RETABLE_SORTBY]: {
                 asset: item?.assetName,
                 total: +item?.wallet?.value,
@@ -384,10 +401,38 @@ const dataHandler = (data, utils) => {
     return result
 }
 
-const renderOperationLink = (assetName, markets, utils) => {
+const renderOperationLink = (assetName, utils) => {
+    const markets = utils?.marketAvailable
     const noMarket = !markets?.length
-    const isOpen = utils?.expander
-    const onOpen = utils?.openAssetExpander
+
+    let tradeButton = null
+    if (Array.isArray(markets) && markets?.length) {
+
+        if (markets?.length === 1) {
+            const pair = initMarketWatchItem(markets?.[0])
+            // console.log('namidev-DEBUG: => ', pair)
+            tradeButton = (
+                <Link href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, { pair: `${assetName}-${pair?.quoteAsset}` })}
+                      prefetch={false}>
+                    <a className="relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center
+                                text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white">
+                        {utils?.translator('common:trade')}
+                    </a>
+                </Link>
+            )
+        } else {
+            tradeButton = (
+                <div className="relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center
+                                text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
+                     onClick={e => {
+                         utils?.setState({ currentMarketList: utils?.marketAvailable })
+                         setTimeout(() => utils?.show(e), 200)
+                     }}>
+                    {utils?.translator('common:trade')}
+                </div>
+            )
+        }
+    }
 
     return (
         <div className="relative flex pl-12">
@@ -396,15 +441,7 @@ const renderOperationLink = (assetName, markets, utils) => {
                 {/*`/wallet/exchange/deposit?type=crypto&asset=${assetName}`*/}
                 {utils?.translator('common:buy')}
             </a>
-            {!noMarket &&
-                <div className="relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                     onClick={(e) => {
-                         utils?.show(e)
-                         utils?.setState({ currentMarketList: markets })
-                     }}>
-                    {utils?.translator('common:trade')}
-                </div>
-            }
+            {!noMarket && tradeButton}
             <a className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
                 {utils?.translator('common:deposit')}

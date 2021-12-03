@@ -3,7 +3,7 @@ import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { Check, Eye, EyeOff } from 'react-feather'
-import { SECRET_STRING } from 'utils'
+import { getMarketAvailable, SECRET_STRING } from 'utils'
 
 import useWindowSize from 'hooks/useWindowSize'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
@@ -14,6 +14,8 @@ import { orderBy } from 'lodash'
 import Skeletor from 'components/common/Skeletor'
 import Empty from 'components/common/Empty'
 import { WalletType } from 'redux/actions/const'
+import Link from 'next/link'
+import { PATHS } from 'constants/paths'
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -28,7 +30,7 @@ const INITIAL_STATE = {
 const AVAILBLE_KEY = 'futures_available'
 const FUTURES_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT']
 
-const FuturesWallet = ({ estBtc, estUsd }) => {
+const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
@@ -69,11 +71,12 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
         }
 
         const columns = [
-            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), fixed: 'left', align: 'left', width: 80 },
+            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), align: 'left', width: 120, fixed: width >= 992 ? 'none' : 'left' },
             { key: 'total', dataIndex: 'total', title: t('common:total'), align: 'right', width: 95 },
             { key: 'available', dataIndex: 'available', title: t('common:available_balance'), align: 'right', width: 95 },
             { key: 'in_order', dataIndex: 'in_order', title: t('common:in_order'), align: 'right', width: 95 },
-            { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 220 },
+            { key: 'btc_value', dataIndex: 'btc_value', title: t('common:btc_value'), align: 'right', width: 80 },
+            { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 220, fixed: width >= 992 ? 'right' : 'none'  },
         ]
 
         return (
@@ -105,6 +108,7 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
     }, [state.tableData, width])
 
     const renderEstWallet = useCallback(() => {
+
         return (
             <div>
                 <div className="flex items-center font-medium text-sm">
@@ -129,10 +133,14 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
                 <div style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' } : undefined}
                      className="px-3 py-2 flex items-center rounded-lg dark:bg-darkBlue-4 lg:px-5 lg:py-4 lg:rounded-xl mt-4 max-w-[368px] lg:max-w-max">
                     <div className="font-medium text-xs lg:text-sm pr-3 lg:pr-5 border-r border-divider dark:border-divider-dark">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span> <span>{state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit)} BTC</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                            {t('common:available_balance')}: </span> <span>{state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
+                    </span>
                     </div>
                     <div className="font-medium text-xs lg:text-sm pl-3 lg:pl-5">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span> <span>{state.hideAsset ? `${SECRET_STRING}` :formatWallet(estBtc?.locked, estBtc?.assetDigit)} BTC</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                            {t('common:in_order')}: </span> <span>{state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
+                        </span>
                     </div>
                 </div>
             </div>
@@ -145,14 +153,18 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
 
     useEffect(() => {
         if (state.allAssets && Array.isArray(state.allAssets)) {
-            const origin = dataHandler(state.allAssets, t, dispatch)
+            const origin = dataHandler(state.allAssets, t, dispatch,
+                {
+                    usdRate,
+                    marketWatch
+                })
             let tableData = origin
             if (state.hideSmallAsset) {
                 tableData = origin.filter(item => item?.sortByValue?.total > 1)
             }
             tableData && setState({ tableData })
         }
-    }, [state.allAssets, state.hideSmallAsset])
+    }, [usdRate, marketWatch, state.allAssets, state.hideSmallAsset])
 
     return (
         <div>
@@ -206,16 +218,9 @@ const FuturesWallet = ({ estBtc, estUsd }) => {
     )
 }
 
-const columns = [
-    { key: 'asset', dataIndex: 'asset', title: 'Asset', fixed: 'left', align: 'left', width: 80 },
-    { key: 'total', dataIndex: 'total', title: 'Total', align: 'right', width: 95 },
-    { key: 'available', dataIndex: 'available', title: 'Available', align: 'right', width: 95 },
-    { key: 'in_order', dataIndex: 'in_order', title: 'In Order', align: 'right', width: 95 },
-    { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 220 },
-]
 const ASSET_ROW_LIMIT = 8
 
-const dataHandler = (data, translator, dispatch) => {
+const dataHandler = (data, translator, dispatch, utils) => {
     if (!data || !data?.length) {
         const skeleton = []
         for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
@@ -227,17 +232,55 @@ const dataHandler = (data, translator, dispatch) => {
     const result = []
 
     data.forEach(item => {
+        let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit, 0, true)
+        if (lockedValue === 'NaN') {
+            lockedValue = '0.0000'
+        }
+
+        const assetUsdRate = utils?.usdRate?.[item?.id] || 0
+        const btcUsdRate = utils?.usdRate?.['9'] || 0
+
+        const totalUsd = item?.wallet?.value * assetUsdRate
+        const totalBtc = totalUsd / btcUsdRate
+
         result.push({
             key: `exchange_asset___${item?.assetName}`,
             asset: <div className="flex items-center">
                 <AssetLogo assetCode={item?.assetName} size={32}/>
-                <div className="ml-2">
-                    <span>{item?.assetName}</span>
+                <div className="ml-2 text-sm">
+                    <div>{item?.assetName}</div>
+                    <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                        {item?.assetFullName || item?.assetName || item?.assetCode}
+                    </div>
                 </div>
             </div>,
-            total: <span>{item?.wallet?.value ? formatWallet(item?.wallet?.value) : '0.0000'}</span>,
-            available: <span>{item?.wallet?.value ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, 5, true) : '0.0000'}</span>,
-            in_order: <span>{item?.wallet?.locked_value ? formatWallet(item?.wallet?.locked_value, 5, true) : '0.0000'}</span>,
+            total: <span className="text-sm whitespace-nowrap">
+                {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+            </span>,
+            available: <span className="text-sm whitespace-nowrap">
+                {(item?.wallet?.value - item?.wallet?.locked_value) ?
+                    formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
+                    : '0.0000'}
+            </span>,
+            in_order: <span className="text-sm whitespace-nowrap">
+                {item?.wallet?.locked_value ?
+                    <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
+                        <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
+                    </Link>
+                    : '0.0000'}
+            </span>,
+            btc_value: <div className="text-sm">
+                {assetUsdRate ?
+                    <>
+                        <div className="whitespace-nowrap">
+                            {totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}
+                        </div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
+                            ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                        </div>
+                    </>
+                    : '--'}
+            </div>,
             operation: renderOperationLink(item?.assetName, translator, dispatch),
             [RETABLE_SORTBY]: {
                 asset: item?.assetName,
