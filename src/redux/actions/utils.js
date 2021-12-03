@@ -735,3 +735,13 @@ export function setTransferModal(payload) {
         payload,
     }
 }
+
+export function getLastestSourcePath(paths) {
+    if (!paths) return undefined
+    const caskPath = paths.split('/')
+    if (Array.isArray(caskPath)) {
+        // console.log('namidev-DEBUG: caskPath => ', caskPath)
+        return caskPath[caskPath.length - 1]
+    }
+    return undefined
+}

@@ -11,5 +11,10 @@ export const PATHS = {
         STAKING: '/wallet/staking',
         FARMING: '/wallet/farming',
         TRANSTION_HISTORY: '/wallet/transaction-history'
+    },
+    FEE_STRUCTURES: {
+        DEFAULT: '/fee-schedule',
+        TRADING: '/fee-schedule/trading',
+        DEPWDL: '/fee-schedule/depositwithdraw'
     }
 }

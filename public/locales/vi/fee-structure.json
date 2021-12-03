@@ -19,5 +19,8 @@
     "depositFee": "Phí nạp tiền",
     "withdrawFee": "Phí rút",
     "search": "Tìm coin...",
-    "selling_vndc_hint": "Vượt quá 3 giao dịch trong một tháng, phí rút: 10,000 VNDC + 0.01% giá trị giao dịch"
+    "selling_vndc_hint": "Vượt quá 3 giao dịch trong một tháng, phí rút: 10,000 VNDC + 0.01% giá trị giao dịch",
+    "trading_fee_t": "Phí giao dịch",
+    "depwdl_fee": "Phí nạp rút",
+    "exchange_trading_fee": "Phí giao dịch Exchange"
 }
