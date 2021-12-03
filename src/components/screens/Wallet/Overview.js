@@ -147,12 +147,12 @@ const OverviewWallet = (props) => {
                             <div className="ml-3 md:ml-6">
                                 <div className="font-bold text-[24px] lg:text-[28px] xl:text-[36px] text-dominant flex flex-wrap">
                                     <span className="mr-1.5">{state.hideAsset ? SECRET_STRING
-                                        : formatWallet(exchangeEstBtc?.value + exchangeEstBtc?.value, exchangeEstBtc?.assetDigit) }</span>
+                                        : formatWallet(exchangeEstBtc?.totalValue + exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) }</span>
                                     <span>BTC</span>
                                 </div>
                                 <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">
                                     {state.hideAsset ? SECRET_STRING
-                                        : `$ ${formatWallet(exchangeRefPrice?.value + futuresRefPrice?.value, 2)}`}
+                                        : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue, 2)}`}
                                 </div>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ const OverviewWallet = (props) => {
                                 <span className="mr-4">Exchange</span>
                                 <span className="inline-flex items-center">
                                     <img src={getS3Url('/images/icon/ic_piechart.png')} width="16" height="16" alt=""/>
-                                    <a href={getV1Url('/wallet/account?type=portfolio')} className="ml-1 text-dominant hover:!underline">
+                                    <a href={getV1Url('/account?type=portfolio')} className="ml-1 text-dominant hover:!underline">
                                          {t('common:portfolio')}
                                     </a>
                                 </span>
@@ -228,7 +228,7 @@ const OverviewWallet = (props) => {
                                 <span className="mr-4">Futures</span>
                                 <span className="inline-flex items-center">
                                     <img src={getS3Url('/images/icon/ic_piechart.png')} width="16" height="16" alt=""/>
-                                    <a href={getV1Url('/wallet/account?type=futures')} className="ml-1 text-dominant hover:!underline">
+                                    <a href={getV1Url('/account?type=futures')} className="ml-1 text-dominant hover:!underline">
                                          {t('common:portfolio')}
                                     </a>
                                 </span>

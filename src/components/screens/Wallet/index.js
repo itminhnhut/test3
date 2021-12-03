@@ -266,7 +266,6 @@ const Wallet = () => {
         const btcDigit = find(state.allAssets, o => o?.assetCode === 'BTC')?.assetDigit;
         const usdDigit = find(state.allAssets, o => o?.assetCode === 'USDT')?.assetDigit;
         const btcUsdRate = allAssetValue?.['9'];
-        console.log('BTC/USD Rate => ', btcUsdRate);
 
         if (totalStaking) {
             setState({
@@ -340,10 +339,6 @@ const Wallet = () => {
                                 {state.screen === WALLET_SCREENS.OVERVIEW &&
                                 <OverviewWallet
                                     allAssets={state.allAssets}
-                                    // loadingStaking={state.loadingStaking}
-                                    // stakingConfig={state.stakingConfig}
-                                    // loadingFarming={state.loadingFarming}
-                                    // farmingConfig={state.farmingConfig}
                                     exchangeEstBtc={state.exchangeEstBtc}
                                     futuresEstBtc={state.futuresEstBtc}
                                     exchangeRefPrice={state.exchangeRefPrice}
@@ -360,6 +355,7 @@ const Wallet = () => {
                                     allAssets={state.allAssets}
                                     estBtc={state.exchangeEstBtc}
                                     estUsd={state.exchangeRefPrice}
+                                    usdRate={state.usdRate}
                                 />}
                                 {state.screen === WALLET_SCREENS.FUTURES &&
                                 <FuturesWallet

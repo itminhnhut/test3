@@ -28,7 +28,7 @@ const INITIAL_STATE = {
     action: null, // action = null is wallet overview
 }
 
-const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
+const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
@@ -148,7 +148,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
 
     useEffect(() => {
         if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
-            const origin = dataHandler(allAssets, t, dispatch)
+            const origin = dataHandler(allAssets, t, dispatch, { usdRate })
             let tableData = origin
             if (state.hideSmallAsset) {
                 tableData = origin.filter(item => item?.sortByValue?.total > 1)
@@ -158,7 +158,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
             }
             tableData && setState({ tableData })
         }
-    }, [allAssets, state.hideSmallAsset, state.search])
+    }, [allAssets, usdRate, state.hideSmallAsset, state.search])
 
 
     return (
@@ -170,7 +170,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
                 <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto">
 
                     {/*<Link href={getV1Url('/wallet/account?type=portfolio')} prefetch>*/}
-                        <a  href={getV1Url('/wallet/account?type=portfolio')}
+                        <a  href={getV1Url('/account?type=portfolio')}
                             className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[120px] md:w-[120px] lg:w-[150px]  mr-3.5 sm:mr-0 sm:ml-2 border border-dominant bg-dominant rounded-md font-medium text-xs xl:text-sm text-white hover:opacity-80 cursor-pointer whitespace-nowrap">
                             {t('common:portfolio')}
                         </a>
@@ -277,7 +277,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd }) => {
 
 const ASSET_ROW_LIMIT = 10
 
-const dataHandler = (data, translator, dispatch) => {
+const dataHandler = (data, translator, dispatch, utils) => {
     if (!data || !data?.length) {
         const skeleton = []
         for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
@@ -294,6 +294,9 @@ const dataHandler = (data, translator, dispatch) => {
             lockedValue = '0.0000'
         }
 
+        // console.log('namidev-DEBUG: => ')
+        // const assetUsdRate = utils?.usdRate?.[item?.]
+
         result.push({
             key: `exchange_asset___${item?.assetName}`,
             asset: <div className="flex items-center">
@@ -305,6 +308,7 @@ const dataHandler = (data, translator, dispatch) => {
             total: <span>{formatWallet(item?.wallet?.value)}</span>,
             available: <span>{formatWallet(item?.wallet?.value - item?.wallet?.locked_value)}</span>,
             in_order: <span>{item?.wallet?.locked_value ? lockedValue : '0.0000'}</span>,
+            btc_value: <span></span>,
             operation: renderOperationLink(item?.assetName, translator, dispatch),
             [RETABLE_SORTBY]: {
                 asset: item?.assetName,
