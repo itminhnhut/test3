@@ -19,6 +19,7 @@ import AssetLogo from 'components/wallet/AssetLogo'
 import AssetName from 'components/wallet/AssetName'
 import showNotification from 'utils/notificationService'
 import colors from '../../styles/colors'
+import { PATHS } from 'constants/paths'
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -488,7 +489,7 @@ const TransferModal = () => {
             {renderTransferButton()}
             <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
                 <Trans i18nKey="common:term_transfer">
-                    <a href={TERM_OF_SERVICE.SWAP} className="block cursor-pointer text-dominant hover:!underline"/>
+                    <a href={PATHS.TERM_OF_SERVICES.TRANSFER} className="block cursor-pointer text-dominant hover:!underline"/>
                 </Trans>
             </div>
         </Modal>

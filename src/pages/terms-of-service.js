@@ -1,15 +1,12 @@
 /* eslint-disable */
-import { useRouter } from 'next/router';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import LayoutWithHeader from 'src/components/common/layouts/layoutWithHeader';
-import Footer from 'src/components/common/Footer';
+import { useRouter } from 'next/router'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Footer from 'src/components/common/Footer'
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 
 const Terms = () => {
-    const router = useRouter();
-    const { locale } = router;
-
     return (
-        <LayoutWithHeader>
+        <MaldivesLayout>
             <div className="nami-container my-20 policies-page">
                 <>
                     <div className="text-center">
@@ -17,7 +14,7 @@ const Terms = () => {
                             Terms of Service
                         </h1>
                     </div>
-                    <div className="bg-white text-tiny">
+                    <div className="bg-Container dark:bg-Container-dark text-sm">
                         <p className="text-right pb-5">
                             <strong>Last revised: Jan 10th 2021</strong>
                         </p>
@@ -33,6 +30,7 @@ const Terms = () => {
                             when using some features of the Services, you may be subject to specific additional terms
                             and conditions applicable to those features.
                         </p>
+                        <br/>
                         <p>Please read the terms carefully as they govern your use of Nami.Exchange Services. <strong>THESE
                             TERMS CONTAIN IMPORTANT PROVISIONS INCLUDING AN ARBITRATION PROVISION THAT REQUIRES ALL
                             CLAIMS TO BE RESOLVED BY WAY OF LEGALLY BINDING ARBITRATION</strong>. The terms of the
@@ -50,11 +48,15 @@ const Terms = () => {
                                 NOT BE
                                 LIABLE FOR ANY SUCH RISKS OR ADVERSE OUTCOMES</strong>.
                         </p>
+                        <br/>
                         <p>By accessing, using or attempting to use Nami.Exchange Services in any capacity, you
                             acknowledge that you accept and agree to be bound by these Terms. If you do not agree, do
                             not access Nami.Exchange or utilize Nami.Exchange services.
                         </p>
+                        <br/>
+                        <br/>
                         <p className="text-base font-bold mt-4">I. Definitions</p>
+                        <br/>
                         <p><strong>1. Nami.Exchange</strong> refers to an ecosystem comprising Nami.Exchange websites
                             (whose domain names
                             include but are not limited to <a href="https://nami.exchange">https://nami.exchange</a> ),
@@ -65,6 +67,7 @@ const Terms = () => {
                             the above platforms and the contents of these Terms, the respective applicable terms of such
                             platforms shall prevail.
                         </p>
+                        <br/>
                         <p><strong>2. Nami.Exchange Operators</strong> refer to all parties that run Nami.Exchange,
                             including but not
                             limited to legal persons, unincorporated organizations and teams that provide Nami.Exchange
@@ -88,6 +91,7 @@ const Terms = () => {
                                 THE
                                 PARTICULAR ACTIONS THAT AFFECT YOUR RIGHTS OR INTERESTS</strong>.
                         </p>
+                        <br/>
                         <p><strong>3. Nami.Exchange Services</strong> refer to various services provided to you by
                             Nami.Exchange that are
                             based on Internet and/or blockchain technologies and offered via Nami.Exchange websites,
@@ -97,6 +101,8 @@ const Terms = () => {
                             Nami Labs, Nami Academy, Nami Today, Nami Launchpad, Nami Mining, Nami Newsroom&nbsp; and
                             novel services to be provided by Nami Corporation.
                         </p>
+                        <br/>
+
                         <p><strong>4. Nami.Exchange Platform Rules</strong> refer to all rules, interpretations,
                             announcements,
                             statements, letters of consent and other contents that have been and will be subsequently
@@ -104,6 +110,8 @@ const Terms = () => {
                             descriptions, and announcements published in the Help Center or within products or service
                             processes.
                         </p>
+                        <br/>
+
                         <p><strong>5. Users</strong> refer to all individuals, institutions or organizations that
                             access, download or use
                             Nami.Exchange or Nami.Exchange Services and who meet the criteria and conditions stipulated
@@ -111,14 +119,20 @@ const Terms = () => {
                             distributors, market makers, and Digital Currencies exchanges, such agreements shall be
                             followed.
                         </p>
+                        <br/>
+
                         <p><strong>6. Digital Currencies</strong> refer to encrypted or digital tokens or
                             cryptocurrencies with a certain
                             value that are based on blockchain and cryptography technologies and are issued and managed
                             in a decentralized form.
                         </p>
+                        <br/>
+
                         <p>7. Digital Assets refer to Digital Currencies, their derivatives or other types of
                             digitalized assets with a certain value.
                         </p>
+                        <br/>
+
                         <p><strong>8. Nami.Exchange Accounts</strong> refer to the foundational virtual accounts,
                             including main accounts
                             and subaccounts, which are opened by Nami.Exchange for Users to record on Nami.Exchange
@@ -126,22 +140,31 @@ const Terms = () => {
                             Nami.Exchange Accounts serve as the basis for Users to enjoy and exercise their rights on
                             Nami.Exchange.
                         </p>
+                        <br/>
+
                         <p><strong>9. Crypto-to-crypto Trading</strong> refers to spot transactions in which one digital
                             currency is
                             exchanged for another digital currency.
                         </p>
+                        <br/>
+
                         <p><strong>10. Collateral Accounts</strong> refer to special accounts opened by Users on
                             Nami.Exchange to deposit
                             and withdraw collateral (such as margins) in accordance with these Terms (including the
                             Nami.Exchange Contract Services Agreement and Nami.Exchange Platform Rules), as required for
                             contract transactions, leveraged trading and/or currency borrowing services.
                         </p>
+                        <br/>
+
                         <p><strong>11. Loan/Lending</strong> refers to Nami.Exchange&rsquo;s lending of Digital
                             Currencies to Users at an
                             interest collected in certain ways (in the form of Digital Currencies), including but not
                             limited to the leveraged trading and currency lending services currently offered, and other
                             forms of loan/lending services to be launched by Nami.Exchange.
                         </p>
+                        <br/>
+                        <br/>
+
                         <p className="text-base font-bold mt-4">II. General Provisions
                         </p>
                         <p className="font-bold mt-4">1. About These Terms
@@ -1290,17 +1313,17 @@ const Terms = () => {
                 </>
             </div>
             <Footer/>
-        </LayoutWithHeader>
-    );
-};
+        </MaldivesLayout>
+    )
+}
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
         ...(await serverSideTranslations(locale, [
             'footer',
             'navbar',
-            'common',
-        ])),
-    },
-});
-export default Terms;
+            'common'
+        ]))
+    }
+})
+export default Terms

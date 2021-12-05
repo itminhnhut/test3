@@ -45,6 +45,7 @@ export const API_PUSH_ORDER_BINANCE = API_PREFIX + "request_check_deposit_binanc
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'
+export const API_GET_FUTURE_FEE_CONFIGS = API_PREFIX + "futures/fee-config"
 
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'

@@ -7,19 +7,19 @@ import { log } from 'utils'
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import TabItem, { TabItemComponent } from 'components/common/TabItem'
 
 import styled from 'styled-components'
 import colors from 'styles/colors'
-import TabItem, { TabItemComponent } from 'components/common/TabItem'
 
 const INITIAL_STATE = {
-    currentPath: null,
+    currentLastestPath: null,
 }
 
 export default (props) => (WrappedComponent) => {
     return wrappedProps => {
         // Own props
-        const { routes, tabStyle, containerDimension } = props
+        const { routes, tabStyle, containerDimension, debug } = props
 
         // Init state
         const [state, set] = useState(INITIAL_STATE)
@@ -31,7 +31,7 @@ export default (props) => (WrappedComponent) => {
         const { t } = useTranslation()
 
         // Helper
-        const setCurrentPath = (currentPath) => setState({ currentPath })
+        const setCurrentLastestPath = (currentLastestPath) => setState({ currentLastestPath })
 
         // Render Handler
         const renderTabLink = useCallback(() => {
@@ -39,7 +39,7 @@ export default (props) => (WrappedComponent) => {
 
             return Object.values(routes).map(route => {
                 const path = getLastestSourcePath(route?.pathname)
-                const isActive = state.currentPath === path
+                const isActive = state.currentLastestPath === path
 
                 return (
                     <TabItem key={`tab_link__${path}`} href={route?.pathname}
@@ -47,19 +47,19 @@ export default (props) => (WrappedComponent) => {
                              active={isActive} component={TabItemComponent.Link}/>
                 )
             })
-        }, [routes, tabStyle, state.currentPath])
+        }, [routes, tabStyle, state.currentLastestPath])
 
         useEffect(() => {
-            setCurrentPath(getLastestSourcePath(router?.pathname))
+            setCurrentLastestPath(getLastestSourcePath(router?.pathname))
         }, [router])
 
         useEffect(() => {
-            log.d('withTabLayout props => ', props)
-        }, [props])
+            debug && log.d('withTabLayout props => ', props)
+        }, [props, debug])
 
         useEffect(() => {
-            log.d('withTabLayout state => ', state)
-        }, [state])
+            debug && log.d('withTabLayout state => ', state)
+        }, [state, debug])
 
         return (
             <MaldivesLayout>
@@ -76,7 +76,7 @@ export default (props) => (WrappedComponent) => {
     }
 }
 
-const Background = styled.div.attrs({ className: 'w-full h-full pt-5' })`
+const Background = styled.div.attrs({ className: 'w-full h-full pt-5 pb-24 lg:pb-32 2xl:pb-44' })`
   background-color: ${({ isDark }) => isDark ? colors.darkBlue1 : '#F8F9FA'};
 `
 
