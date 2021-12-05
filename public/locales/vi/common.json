@@ -170,5 +170,8 @@
   "trade_action": "Giao dịch {{ action }}",
   "max_leverage": "Đòn bẩy tối đa",
   "min_leverage": "Đòn bẩy tối thiểu",
-  "open": "Mở"
+  "open": "Mở",
+  "search_asset": "Tìm tài sản",
+  "full_name": "Tên đầy đủ",
+  "free": "Không tính phí"
 }

@@ -102,6 +102,7 @@
   "withdraw_history": "Withdraw History",
   "dep_history": "Deposit History",
   "withdraw_fee": "Withdraw Fee",
+  "deposit_fee": "Deposit Fee",
   "min_withdraw": "Minimum Withdraw",
   "max_withdraw": "Maximum Withdraw",
   "will_receive": "Actually Receive",

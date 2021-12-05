@@ -5,49 +5,65 @@ const DEFAULT_BASE_ASSET = 'BTC'
 const DEFAULT_QUOTE_ASSET = 'USDT'
 const DEFAULT_PAIR = `${DEFAULT_BASE_ASSET}-${DEFAULT_QUOTE_ASSET}`
 
-export const PATHS = {
-    WALLET: {
-        DEFAULT: '/wallet',
-        OVERVIEW: '/wallet/overview',
-        EXCHANGE: {
-            DEFAULT: '/wallet/exchange',
-            DEPOSIT: '/wallet/exchange/deposit',
-            WITHDRAW: '/wallet/exchange/withdraw'
-        },
-        FUTURES: '/wallet/futures',
-        STAKING: '/wallet/staking',
-        FARMING: '/wallet/farming',
-        TRANSTION_HISTORY: '/wallet/transaction-history'
+const EXCHANGE = {
+    TRADE: {
+        DEFAULT: '/trade',
+        getPair: (tradingMode, pair) => getPair(tradingMode, pair)
     },
-    EXCHANGE: {
-        TRADE: {
-            DEFAULT: '/trade',
-            getPair: (tradingMode, pair) => getPair(tradingMode, pair)
-        },
-        SWAP: {
-            DEFAULT: '/swap',
-            getSwapPair: (pair) => getSwapPair(pair)
-        },
-        PORTFOLIO: getV1Url('/account?type=portfolio')
+    SWAP: {
+        DEFAULT: '/swap',
+        getSwapPair: (pair) => getSwapPair(pair)
     },
-    FUTURES: {
-        TRADE: {
-            DEFAULT: getV1Url('/futures'),
-            getPair: (tradingMode, pair) => getPair(tradingMode, pair)
-        },
-        PORTFOLIO: getV1Url('/account?type=futures')
-    },
-    FEE_STRUCTURES: {
-        DEFAULT: '/fee-schedule',
-        TRADING: '/fee-schedule/trading',
-        DEPWDL: '/fee-schedule/depositwithdraw'
-    },
-    TERM_OF_SERVICES: {
-        DEFAULT: '/terms-of-service',
-        SWAP: '/terms-of-service',
-        TRANSFER: '/terms-of-service',
+    PORTFOLIO: getV1Url('/account?type=portfolio')
+}
 
-    }
+const FUTURES = {
+    TRADE: {
+        DEFAULT: getV1Url('/futures'),
+        getPair: (tradingMode, pair) => getPair(tradingMode, pair)
+    },
+    PORTFOLIO: getV1Url('/account?type=futures')
+}
+
+const WALLET = {
+    DEFAULT: '/wallet',
+    OVERVIEW: '/wallet/overview',
+    EXCHANGE: {
+        DEFAULT: '/wallet/exchange',
+        DEPOSIT: '/wallet/exchange/deposit',
+        WITHDRAW: '/wallet/exchange/withdraw'
+    },
+    FUTURES: '/wallet/futures',
+    STAKING: '/wallet/staking',
+    FARMING: '/wallet/farming',
+    TRANSTION_HISTORY: '/wallet/transaction-history'
+}
+
+const FEE_STRUCTURES = {
+    DEFAULT: '/fee-schedule',
+    TRADING: '/fee-schedule/trading',
+    DEPWDL: '/fee-schedule/depositwithdraw'
+}
+
+const TERM_OF_SERVICES = {
+    DEFAULT: '/terms-of-service',
+    SWAP: '/terms-of-service',
+    TRANSFER: '/terms-of-service',
+}
+
+const ACCOUNT = {
+    REFERRAL: getV1Url('/reference')
+}
+
+export const PATHS = {
+    ACCOUNT,
+    WALLET,
+    EXCHANGE,
+    FUTURES,
+    FEE_STRUCTURES,
+    TERM_OF_SERVICES,
+
+    // Add news path here
 }
 
 const getPair = (tradingMode = TRADING_MODE.EXCHANGE, pair) => {

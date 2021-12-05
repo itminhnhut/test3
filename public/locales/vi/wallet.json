@@ -103,6 +103,7 @@
   "withdraw_history": "Lịch sử rút",
   "dep_history": "Lịch sử nạp",
   "withdraw_fee": "Phí rút",
+  "deposit_fee": "Phí nạp",
   "min_withdraw": "Rút tối thiểu",
   "max_withdraw": "Rút tối đa",
   "will_receive": "Thực nhận",

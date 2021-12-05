@@ -170,5 +170,8 @@
   "trade_action": "{{ action }} trading",
   "max_leverage": "Max Leverage",
   "min_leverage": "Min Leverage",
-  "open": "Open"
+  "open": "Open",
+  "search_asset": "Search Asset",
+  "full_name": "Full Name",
+  "free": "Free"
 }

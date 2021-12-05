@@ -1,5 +1,15 @@
 export const EMPTY_VALUE = '--'
 
+export const ASSET_IGNORE = [
+    'TURN_CHRISTMAS_2017',
+    'TURN_CHRISTMAS_2017_FREE',
+    'USDT_BINANCE_FUTURES',
+    'SPIN_CONQUEST',
+    'SPIN_BONUS',
+    'SPIN_SPONSOR',
+    'XBT_PENDING'
+]
+
 export const TERM_OF_SERVICE = {
     SWAP: "/"
 }
