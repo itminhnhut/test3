@@ -410,7 +410,7 @@ const dataHandler = (props) => {
     }
 
     if (!Array.isArray(data) || !data || !data.length) return []
-    
+
     switch (tabIndex) {
         case 0:
             data.forEach(d => {
