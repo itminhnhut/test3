@@ -324,6 +324,8 @@ const ReTableWrapper = styled.div`
   }
 
   .rc-table-cell-fix-right {
+    z-index: 15;
+    
     ::after {
       display: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'block' : 'none'};
       box-shadow: ${({ isDark }) => isDark ? 'inset -10px 0 8px -8px #263459'
@@ -332,11 +334,13 @@ const ReTableWrapper = styled.div`
   }
 
   .rc-table-cell-fix-right-first, .rc-table-cell-fix-right-last {
+    z-index: 15;
     box-shadow: ${({ isDark }) => isDark ? '-1px 0 0 #263459'
             : '-1px 0 0 #f2f4f6'} !important;
   }
 
   .rc-table-cell-fix-left {
+    z-index: 15;
     ::after {
       display: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'block' : 'none'};
       box-shadow: ${({ isDark }) => isDark ? 'inset 10px 0 8px -8px #263459' : 'inset 10px 0 8px -8px #f2f4f6'} !important;

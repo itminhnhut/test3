@@ -1,5 +1,6 @@
 import { getV1Url } from "redux/actions/utils"
 import { buildLogoutUrl } from 'src/utils'
+import { PATHS } from 'constants/paths'
 
 export const DESKTOP_NAV_HEIGHT = 74
 
@@ -317,7 +318,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Spot Wallet',
                 localized: 'spot_wallet',
                 isNew: false,
-                url: getV1Url('/wallet/account?type=spot'),
+                url: PATHS.WALLET.EXCHANGE.DEFAULT,
                 child_lv2: []
             },
             {
@@ -325,7 +326,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Futures Wallet',
                 localized: 'futures_wallet',
                 isNew: false,
-                url: getV1Url('/wallet/account?type=futures'),
+                url: PATHS.WALLET.FUTURES,
                 child_lv2: []
             },
             {
@@ -333,7 +334,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Staking Wallet',
                 localized: 'staking_wallet',
                 isNew: false,
-                url: getV1Url('/wallet/account?type=staking'),
+                url: PATHS.WALLET.STAKING,
                 child_lv2: []
             },
             {
@@ -341,7 +342,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Farming Wallet',
                 localized: 'farming_wallet',
                 isNew: false,
-                url: getV1Url('/wallet/account?type=farming'),
+                url: PATHS.WALLET.FARMING,
                 child_lv2: []
             },
         ]

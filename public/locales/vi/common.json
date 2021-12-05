@@ -7,6 +7,7 @@
     "tr": "🇹🇷 Türkçe",
     "en": "🇺🇸 English"
   },
+  "trade": "Giao dịch",
   "buy": "Mua",
   "sell": "Bán",
   "success": "Thành công",
@@ -20,6 +21,7 @@
   "total_balance": "Tổng",
   "available_balance": "Khả dụng",
   "in_order": "Đang đặt lệnh",
+  "btc_value": "Ước lượng BTC",
   "current_price": "Giá hiện tại",
   "price_in_btc": "Price in BTC",
   "no_data": "Không có dữ liệu để hiện thị",

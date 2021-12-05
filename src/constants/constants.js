@@ -63,3 +63,5 @@ export const FEE_TABLE = [
 
 
 export const TEST_ID = ['Nami852TPE2694', 'Nami527EBA4688']
+
+export const MIN_WALLET = 1e-10

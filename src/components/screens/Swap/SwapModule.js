@@ -286,6 +286,8 @@ const SwapModule = ({ width, pair }) => {
 
     // Render Handler
     const renderDepositLink = useCallback(() => {
+        if (!state.fromAsset) return null
+
         return (
             <Link href={getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`)}>
                 <a className="font-medium text-dominant text-[14px] hover:!underline">
@@ -600,11 +602,11 @@ const SwapModule = ({ width, pair }) => {
     }, [])
 
     useEffect(() => {
-        if (pair && pair?.fromAsset && pair?.toAsset) {
-            setState({
-                fromAsset: pair?.fromAsset,
-                toAsset: pair?.toAsset
-            })
+        if (pair && pair?.fromAsset && pair?.fromAsset !== 'undefined') {
+            setState({ fromAsset: pair?.fromAsset })
+        }
+        if (pair && pair?.toAsset && pair?.toAsset !== 'undefined') {
+            setState({ toAsset: pair?.toAsset })
         }
     }, [pair])
 

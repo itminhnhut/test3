@@ -12,6 +12,7 @@ import { DOWNLOAD_APP_LINK, LS_KEYS } from 'src/redux/actions/const';
 import { actionLogout } from 'src/redux/actions/user';
 import NotificationList from '../notification/NotificationList';
 import { IconLogout, IconProfile, } from './Icons';
+import { PATHS } from 'constants/paths'
 
 const { NEXT_PUBLIC_API_URL } = process.env;
 
@@ -66,25 +67,25 @@ const NavBar = () => {
             submenu: [
                 {
                     name: 'spot',
-                    route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming`
+                    route: PATHS.WALLET.EXCHANGE.DEFAULT
                 },
                 {
                     name: 'futures',
-                    route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming`
+                    route: PATHS.WALLET.FUTURES
                 },
                 {
                     name: 'farming',
-                    route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=farming`
+                    route: PATHS.WALLET.FARMING
                 },
                 {
                     name: 'stake',
-                    route: `${NEXT_PUBLIC_API_URL}/wallet/account?type=stake`
+                    route: PATHS.WALLET.STAKING
                 },
             ],
         },
         {
             name: 'futures',
-            route: `${NEXT_PUBLIC_API_URL}/futures`,
+            route: PATHS.WALLET.FUTURES,
             icon: '',
         },
     ];

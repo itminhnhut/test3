@@ -79,6 +79,14 @@ export function initMarketWatchItem (pair, debug = false) {
     return _
 }
 
+export function getMarketAvailable(assetCode, marketWatch) {
+    if (!(assetCode || !marketWatch)) return
+
+    const markets = []
+    marketWatch?.forEach(pair => pair?.b === assetCode && markets.push(pair))
+    return markets
+}
+
 export function initFuturesMarketWatchItem (pair, debug = false) {
     const lcp = get(pair, 'lcp', null)
 
