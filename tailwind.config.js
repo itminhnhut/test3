@@ -30,9 +30,8 @@ module.exports = {
     // },
     mode: 'jit',
     purge: [
-        './src/pages/**/*.{js,ts,jsx,tsx}',
-        './src/components/**/**/*.{js,ts,jsx,tsx}',
-        './src/version/**/*.{js,ts,jsx,tsx}'
+        './src/pages/**/**/*.{js,ts,jsx,tsx}',
+        './src/components/**/**/*.{js,ts,jsx,tsx}'
     ],
     darkMode: 'class',
     theme: {
@@ -156,7 +155,8 @@ module.exports = {
                 2: commonColors.darkBlue2,
                 3: commonColors.darkBlue3,
                 4: commonColors.darkBlue4,
-                5: commonColors.darkBlue5
+                5: commonColors.darkBlue5,
+                '5a': 'rgba(123, 140, 178, 0.8)'
             },
             gray: {
                 DEFAULT: '#8D9091',

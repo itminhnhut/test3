@@ -13,12 +13,14 @@ const Switcher = memo(({ active, onChange, addClass }) => {
     }, [addClass])
 
     return (
-        <div className="relative w-[32px] h-[16px] rounded-[100px] cursor-pointer bg-teal-lightTeal dark:bg-teal-opacity"
+        <div className="relative min-w-[32px] w-[32px] h-[16px] rounded-full cursor-pointer bg-teal-lightTeal"
              style={!active ? {
                  backgroundColor: currentTheme === THEME_MODE.DARK ? 'rgba(123, 140, 178, 0.5)' : 'rgba(204, 204, 204, 0.2)'
-             } : undefined}
+             } : {
+                 backgroundColor: currentTheme === THEME_MODE.DARK ? 'rgba(0, 200, 188, 0.5)' : colors.lightTeal
+             }}
              onClick={() => onChange && onChange()}>
-            <div className={active ? `${className} translate-x-full` : `${className} translate-x-0 bg-gray-2 dark:bg-darkBlue-5`}/>
+            <div className={active ? `${className} translate-x-full` : `${className} translate-x-0 !bg-gray-2 dark:!bg-darkBlue-5`}/>
         </div>
     )
 })

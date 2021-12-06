@@ -13,7 +13,7 @@ const MCard = ({ children, getRef, addClass, style }) => {
     }, [ref, getRef])
 
     return (
-        <div style={{ ...style } || {}}
+        <div style={style ? { ...style } : {}}
              ref={ref}
              className={addClass ? 'px-4 py-5 rounded-xl bg-bgContainer dark:bg-bgContainer-dark text-textTabLabelInactive ' + addClass
                  : 'px-4 py-5 rounded-xl bg-bgContainer dark:bg-bgContainer-dark '}>

@@ -13,7 +13,7 @@ import { PATHS } from 'constants/paths'
 
 import Axios from 'axios'
 import EstimateAsset from 'components/common/EstimateAsset'
-import withTabLayout, { ROUTES } from 'components/common/layouts/withTabLayout'
+import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
 import useWindowSize from 'hooks/useWindowSize'
 import MCard from 'components/common/MCard'
 import Link from 'next/link'
@@ -478,4 +478,4 @@ export const getStaticProps = async ({ locale }) => ({
     }
 })
 
-export default withTabLayout({ routes: ROUTES.FEE_STRUCTURE })(TradingFee)
+export default withTabLayout({ routes: TAB_ROUTES.FEE_STRUCTURE })(TradingFee)

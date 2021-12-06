@@ -7,7 +7,7 @@ import { formatNumber, walletLinkBuilder } from 'redux/actions/utils'
 import { ASSET_IGNORE, BREAK_POINTS } from 'constants/constants'
 import { ApiStatus, WalletType } from 'redux/actions/const'
 
-import withTabLayout, { ROUTES } from 'components/common/layouts/withTabLayout'
+import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
 import useWindowSize from 'hooks/useWindowSize'
 import SearchBox from 'components/common/SearchBox'
 import Skeletor from 'components/common/Skeletor'
@@ -205,4 +205,4 @@ export const getStaticProps = async ({ locale }) => ({
     }
 })
 
-export default withTabLayout({ routes: ROUTES.FEE_STRUCTURE })(DepositWithdrawFee)
+export default withTabLayout({ routes: TAB_ROUTES.FEE_STRUCTURE })(DepositWithdrawFee)
