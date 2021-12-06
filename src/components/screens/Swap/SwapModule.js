@@ -22,6 +22,7 @@ import { RefreshCw, Search, X, XCircle } from 'react-feather'
 import { ApiStatus } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { TERM_OF_SERVICE } from 'constants/constants'
+import { PATHS } from 'constants/paths'
 
 
 const FEE_RATE = 0 / 100
@@ -769,7 +770,7 @@ const SwapModule = ({ width, pair }) => {
 
                     <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
                         <Trans i18nKey="common:term_swap">
-                            <a href={TERM_OF_SERVICE.SWAP} className="block cursor-pointer text-dominant hover:!underline"/>
+                            <a href={PATHS.TERM_OF_SERVICES.SWAP} className="block cursor-pointer text-dominant hover:!underline"/>
                         </Trans>
                     </div>
                 </div>

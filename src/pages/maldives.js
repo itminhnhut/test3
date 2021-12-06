@@ -50,12 +50,9 @@ const LandingPage = () => {
             navStyle={{
                 backgroundColor: colors.darkBlue2
             }}
-            contentWrapperStyle={{
-                backgroundColor: `${colors.white} !important`
-            }}
         >
             {renderQrCodeModal()}
-            <div className="text-txtPrimary">
+            <div className="text-txtPrimary !bg-bgContainer dark:!bg-bgContainer">
                 {/* Screen Presentation */}
                 {width < 992 ? <MobileScreenPresent parentState={setState}/>
                     : <ScreenPresentation parentState={setState}/>}

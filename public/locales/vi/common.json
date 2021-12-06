@@ -166,5 +166,14 @@
       "day": "Ngày"
     }
   },
-  "address_wallet": "Địa chỉ ví"
+  "address_wallet": "Địa chỉ ví",
+  "fee_level": "Cấp độ",
+  "vol_trade_in": "KL giao dịch {{ duration }}",
+  "trade_action": "Giao dịch {{ action }}",
+  "max_leverage": "Đòn bẩy tối đa",
+  "min_leverage": "Đòn bẩy tối thiểu",
+  "open": "Mở",
+  "search_asset": "Tìm tài sản",
+  "full_name": "Tên đầy đủ",
+  "free": "Không tính phí"
 }
