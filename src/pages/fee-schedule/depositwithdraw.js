@@ -69,10 +69,10 @@ const DepositWithdrawFee = () =>  {
         const columns = [
             { key: 'asset', dataIndex: 'asset', title: 'Coin / Token', width: 80, fixed: 'left', align: 'left' },
             { key: 'fullName', dataIndex: 'fullName', title: t('common:full_name'), width: 80, align: 'left' },
-            { key: 'network', dataIndex: 'network', title: t('wallet:network'), width: 80, align: 'left' },
-            { key: 'min_withdraw', dataIndex: 'min_withdraw', title: t('wallet:min_withdraw'), width: 80, align: 'left' },
-            { key: 'deposit_fee', dataIndex: 'deposit_fee', title: t('wallet:deposit_fee'), width: 80, align: 'left' },
-            { key: 'withdraw_fee', dataIndex: 'withdraw_fee', title: t('wallet:withdraw_fee'), width: 80, align: 'left' },
+            { key: 'network', dataIndex: 'network', title: t('wallet:network'), width: 80, align: 'left', preventSort: true },
+            { key: 'min_withdraw', dataIndex: 'min_withdraw', title: t('wallet:min_withdraw'), width: 80, align: 'left', preventSort: true },
+            { key: 'deposit_fee', dataIndex: 'deposit_fee', title: t('wallet:deposit_fee'), width: 80, align: 'left', preventSort: true },
+            { key: 'withdraw_fee', dataIndex: 'withdraw_fee', title: t('wallet:withdraw_fee'), width: 80, align: 'left', preventSort: true },
         ]
 
         if (state.loadingConfigs) {
@@ -102,6 +102,10 @@ const DepositWithdrawFee = () =>  {
                     withdraw_fee: <div>
                         {raw?.withdrawFee?.map((fee, index) => <div key={`withdrawFee__${index}`} className="mt-1 text-sm">{formatNumber(fee, raw?.assetDigit, fee === 0 ? 6 : 0)}</div>)}
                     </div>,
+                    [RETABLE_SORTBY]: {
+                        asset: raw?.assetCode,
+                        fullName: raw?.assetFullName || raw?.assetCode
+                    }
                 })
             })
 
@@ -114,8 +118,8 @@ const DepositWithdrawFee = () =>  {
 
         return (
             <ReTable
-                // sort
-                // defaultSort={{ key: 'asset', direction: 'asc' }}
+                sort
+                defaultSort={{ key: 'asset', direction: 'asc' }}
                 useRowHover
                 data={data}
                 columns={columns}

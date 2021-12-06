@@ -232,7 +232,7 @@ const TradingFee = () => {
 
         return (
             <ReTable
-                useRowHover
+                // useRowHover
                 data={data}
                 columns={columns}
                 rowKey={item => item?.key}

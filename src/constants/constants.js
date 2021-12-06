@@ -60,7 +60,7 @@ export const FEE_TABLE = [
     { level: 6, vol_30d: '< 50 BTC', andor: 'or', nami_holding: '≥ 1,000,000', maker_taker: '0.06000% / 0.06500%', maker_taker_deducted: '0.04500% / 0.04874%' },
     { level: 7, vol_30d: '< 50 BTC', andor: 'or', nami_holding: '≥ 2,000,000', maker_taker: '0.05500% / 0.06000%', maker_taker_deducted: '0.04125% / 0.04500%' },
     { level: 8, vol_30d: '< 50 BTC', andor: 'or', nami_holding: '≥ 3,000,000', maker_taker: '0.05000% / 0.05500%', maker_taker_deducted: '0.03750% / 0.04125%' },
-    { level: 9, vol_30d: '< 50 BTC', andor: 'or', nami_holding: '≥ 4,000,000', maker_taker: '0.04000% / 0.04500%', maker_taker_deducted: '0.03000% / 0.03375%' },
+    { level: 9, vol_30d: '< 50 BTC', andor: 'or', nami_holding: '≥ 5,000,000', maker_taker: '0.04000% / 0.04500%', maker_taker_deducted: '0.03000% / 0.03375%' },
 ]
 
 
