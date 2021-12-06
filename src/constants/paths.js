@@ -61,6 +61,11 @@ const ACCOUNT = {
     SETTINGS: '/account/settings'
 }
 
+const REFERENCE = {
+    HOW_TO_UPGRADE_VIP: 'https://nami.io/thong-cao/nami-corporation-thong-bao-cap-nhat-chinh-sach-tai-khoan-vip/',
+    MAKER_TAKER: 'https://nami.today/maker-taker-la-gi/'
+}
+
 export const PATHS = {
     ACCOUNT,
     WALLET,
@@ -68,6 +73,7 @@ export const PATHS = {
     FUTURES,
     FEE_STRUCTURES,
     TERM_OF_SERVICES,
+    REFERENCE,
 
     // Add news path here
 }

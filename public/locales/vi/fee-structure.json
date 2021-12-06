@@ -20,9 +20,16 @@
     "withdrawFee": "Phí rút",
     "search": "Tìm coin...",
     "selling_vndc_hint": "Vượt quá 3 giao dịch trong một tháng, phí rút: 10,000 VNDC + 0.01% giá trị giao dịch",
-    "trading_fee_t": "Phí giao dịch",
-    "depwdl_fee": "Phí nạp rút",
-    "exchange_trading_fee": "Phí giao dịch Exchange",
-    "andor": "Điều kiện",
-    "use_asset_deduction": "{{ asset }} 25% Khuyến mãi"
+    "trading_fee_t": "Biểu phí giao dịch",
+    "depwdl_fee": "Biểu phí nạp rút",
+    "exchange_trading_fee": "Phí giao dịch Spot",
+    "andor": "và/hoặc",
+    "use_asset_deduction": "Giảm {{ value }} với {{ asset }}",
+    "your_fee_level": "Cấp độ tài khoản:",
+    "upgrade_level_suggest": "Bạn muốn nâng cấp VIP?",
+    "fee_rate": "Tỉ lệ phí",
+    "maker_taker_description": "\"Taker\" là lệnh giao dịch ở giá thị trường (market price).",
+    "maker_taker_description_2": "\"Maker\" là lệnh giao dịch ở giá giới hạn (limited price).",
+    "referral_description_value": "Giới thiệu bạn bè cùng giao dịch để nhận hoa hồng {{ value }}.",
+    "used_fee_deduction": "Bạn đang được hưởng ưu đãi phí giao dịch từ {{ token }}."
 }
