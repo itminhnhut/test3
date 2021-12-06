@@ -3,14 +3,15 @@ import { buildExplorerUrl, formatTime, formatWallet, getV1Url, shortHashAddress,
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { Check, ChevronLeft, ChevronRight, Copy, Search, Slash, X } from 'react-feather'
-import { API_GET_DEPOSIT_HISTORY, API_GET_WALLET_CONFIG, API_REVEAL_DEPOSIT_TOKEN_ADDRESS } from 'redux/actions/apis'
+import { API_GET_DEPOSIT_HISTORY, API_GET_WALLET_CONFIG, API_PUSH_ORDER_BINANCE, API_REVEAL_DEPOSIT_TOKEN_ADDRESS } from 'redux/actions/apis'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { DepositStatus, TokenConfig } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { ApiStatus } from 'redux/actions/const'
 import { find, get, pick } from 'lodash'
 import { useSelector } from 'react-redux'
-import { ___DEV___, log } from 'utils'
+import { PATHS } from 'constants/paths'
+import { log } from 'utils'
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useOutsideClick from 'hooks/useOutsideClick'
@@ -31,7 +32,6 @@ import Axios from 'axios'
 import ReTable from 'components/common/ReTable'
 import ReactTooltip from 'react-tooltip'
 import Modal from 'components/common/Modal'
-import { PATHS } from 'constants/paths'
 
 
 const INITIAL_STATE = {
@@ -53,6 +53,8 @@ const INITIAL_STATE = {
     historyPage: 0,
     blockConfirm: {},
     openModal: {},
+    pushingOrder: false,
+    pushedOrder: null,
 
     // Add new state here
 }
@@ -78,7 +80,7 @@ const ExchangeDeposit = () => {
     const router = useRouter()
     const focused = useWindowFocus()
     const [currentTheme, ] = useDarkMode()
-    const { t, i18n: { language } } = useTranslation()
+    const { t, i18n: { language } } = useTranslation(['modal'])
     const { width } = useWindowSize()
 
     useOutsideClick(cryptoListRef, () => state.openList?.cryptoList && setState({ openList: {} }))
@@ -188,6 +190,23 @@ const ExchangeDeposit = () => {
         try {
             setTimeout(() =>  setState({ isCopying : { [key]: false }}), 1000)
         } catch (err) {
+        }
+    }
+
+    const onPushOrder = async (currency) => {
+        if (!currency) return
+        setState({ pushingOrder: true })
+
+        try {
+            const { data } = await Axios.post(API_PUSH_ORDER_BINANCE, { currency })
+            if (data?.status === 'ok') {
+                setState({ pushedOrder: 'ok', pushingOrder: 1 })
+            } else {
+                setState({ pushedOrder: 'failure', pushingOrder: false })
+            }
+            // console.log('namidev-DEBUG: => ', data)
+        } catch (e) {
+            console.log(`Can't push order yet `, e)
         }
     }
 
@@ -401,10 +420,19 @@ const ExchangeDeposit = () => {
                 {state.selectedNetwork?.shouldShowPushDeposit && <span
                     className={state.address.address ? 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer'
                         : 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer invisible'}
-                    // onClick={() => null}
+                    onClick={() => onPushOrder(state.selectedAsset?.id)}
                 >
                     {t('wallet:push_order')}
                 </span>}
+                <span
+                    className={state.address.address ?
+                        (state.pushingOrder || state.pushingOrder === 1) ? 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-gray-2 dark:text-darkBlue-4 select-none whitespace-nowrap cursor-not-allowed'
+                            : 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer'
+                        : 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer invisible'}
+                    onClick={() => (!state.pushingOrder || state.pushingOrder !== 1) && onPushOrder(state.selectedAsset?.id)}
+                >
+                    {t('wallet:push_order')}
+                </span>
                 <CopyToClipboard text={state.address?.address} onCopy={() => !state.isCopying?.address && onCopy('address')}>
                     <span className={state.address.address ? 'font-bold text-sm hover:opacity-80 cursor-pointer'
                         : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'}
@@ -414,7 +442,7 @@ const ExchangeDeposit = () => {
                 </CopyToClipboard>
             </div>
         )
-    }, [state.address, state.selectedNetwork, state.errors, state.isCopying?.address])
+    }, [state.address, state.selectedNetwork, state.errors, state.isCopying?.address, state.pushingOrder])
 
     const renderMemoInput = useCallback(() => {
         if (state.address?.memo) {
@@ -738,6 +766,27 @@ const ExchangeDeposit = () => {
         )
     }, [state.historyPage, state.histories, language])
 
+    const renderPushedOrderNotice = useCallback(() => {
+        if (!state.pushedOrder) return null
+        let msg
+        if (language === LANGUAGE_TAG.VI) {
+            msg = <>Yêu cầu đẩy lệnh đã được ghi nhận, <br/> vui lòng chờ trong giây lát.</>
+        } else {
+            msg = <>Your push request has been record, <br/> please wait a moment.</>
+        }
+
+        return (
+            <Modal isVisible={!!state.pushedOrder}
+                   type="alert"
+                   onCloseCb={() => setState({ pushedOrder: null })}
+                   title={t('modal:notice')}
+                   onBackdropCb={() => setState({ pushedOrder: null })}
+            >
+                <div className="text-sm text-center mt-5">{msg}</div>
+            </Modal>
+        )
+    }, [state.pushedOrder, language])
+
     useEffect(() => {
         getDepositConfig()
         if (!socket?._callbacks['$deposit::update_history_row']) {
@@ -917,6 +966,7 @@ const ExchangeDeposit = () => {
                 </div>
             </Background>
             {renderMemoNotice()}
+            {renderPushedOrderNotice()}
         </MaldivesLayout>
     )
 }

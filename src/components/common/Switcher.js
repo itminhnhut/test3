@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import colors from 'styles/colors'
 
-const Switcher = memo(({ active, onChange, addClass }) => {
+const Switcher = memo(({ active, onChange, wrapperClass = '', addClass }) => {
 
     const [currentTheme, ] = useDarkMode()
 
@@ -13,7 +13,7 @@ const Switcher = memo(({ active, onChange, addClass }) => {
     }, [addClass])
 
     return (
-        <div className="relative w-[32px] h-[16px] rounded-[100px] cursor-pointer bg-teal-lightTeal dark:bg-teal-opacity"
+        <div className={'relative w-[32px] h-[16px] rounded-[100px] cursor-pointer bg-teal-lightTeal dark:bg-teal-opacity ' + wrapperClass}
              style={!active ? {
                  backgroundColor: currentTheme === THEME_MODE.DARK ? 'rgba(123, 140, 178, 0.5)' : 'rgba(204, 204, 204, 0.2)'
              } : undefined}

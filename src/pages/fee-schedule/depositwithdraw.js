@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'next-i18next'
-import { useSelector } from 'react-redux'
 import { API_GET_WALLET_CONFIG } from 'redux/actions/apis'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { formatNumber, walletLinkBuilder } from 'redux/actions/utils'
 import { ASSET_IGNORE, BREAK_POINTS } from 'constants/constants'
 import { ApiStatus, WalletType } from 'redux/actions/const'
+import { useRouter } from 'next/router'
+import { EXCHANGE_ACTION } from 'pages/wallet'
 
 import withTabLayout, { ROUTES } from 'components/common/layouts/withTabLayout'
 import useWindowSize from 'hooks/useWindowSize'
@@ -16,9 +17,7 @@ import MCard from 'components/common/MCard'
 import Empty from 'components/common/Empty'
 import Axios from 'axios'
 import AssetLogo from 'components/wallet/AssetLogo'
-import { useRouter } from 'next/router'
-import { PATHS } from 'constants/paths'
-import { EXCHANGE_ACTION } from 'pages/wallet'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 const INITIAL_STATE = {
     search: '',
@@ -38,7 +37,7 @@ const DepositWithdrawFee = () =>  {
 
     // Use hooks
     const router = useRouter()
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
 
     // Helper
@@ -68,7 +67,7 @@ const DepositWithdrawFee = () =>  {
                                              && e.assetCode?.toLowerCase().includes(state.search?.toLowerCase()))
 
         const columns = [
-            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), width: 80, fixed: 'left', align: 'left' },
+            { key: 'asset', dataIndex: 'asset', title: 'Coin / Token', width: 80, fixed: 'left', align: 'left' },
             { key: 'fullName', dataIndex: 'fullName', title: t('common:full_name'), width: 80, align: 'left' },
             { key: 'network', dataIndex: 'network', title: t('wallet:network'), width: 80, align: 'left' },
             { key: 'min_withdraw', dataIndex: 'min_withdraw', title: t('wallet:min_withdraw'), width: 80, align: 'left' },
@@ -99,7 +98,7 @@ const DepositWithdrawFee = () =>  {
                     min_withdraw: <div>
                         {raw?.minWithdraw?.map((min, index) => <div key={`minWithdraw__${index}`} className="mt-1 text-sm">{formatNumber(min, raw?.assetDigit, min === 0 ? 6 : 0)}</div>)}
                     </div>,
-                    deposit_fee: <span className="text-sm">{t('common:free')}</span>,
+                    deposit_fee: <span className="text-sm text-dominant">{t('common:free')}</span>,
                     withdraw_fee: <div>
                         {raw?.withdrawFee?.map((fee, index) => <div key={`withdrawFee__${index}`} className="mt-1 text-sm">{formatNumber(fee, raw?.assetDigit, fee === 0 ? 6 : 0)}</div>)}
                     </div>,
@@ -152,14 +151,33 @@ const DepositWithdrawFee = () =>  {
                        inputProps={{
                            value: state.search,
                            onChange: (e) => setState({ search: e.target?.value }),
-                           placeholder: `${t('common:search_asset')}...`,
+                           placeholder: `${t('common:search_coin')}...`,
                        }}/>
         )
     }, [state.search])
 
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: state => ', state)
-    // }, [state])
+    const renderNotes = useCallback(() => {
+        if (language === LANGUAGE_TAG.VI) {
+            return (
+                <>
+                    Với mỗi lần rút token, người dùng sẽ trả một khoản phí cố định để trang trải chi phí giao dịch khi
+                    chuyển token ra khỏi tài khoản Nami.{width >= BREAK_POINTS.sm && <br/>}
+                    Tỷ lệ phí rút được xác định bởi blockchain và có thể dao động mà không cần báo trước do các yếu tố như
+                    sự tắc nghẽn mạng.{width >= BREAK_POINTS.sm && <br/>}
+                    Vui lòng kiểm tra thông tin phí cập nhật gần nhất được liệt kê cho mỗi token dưới đây.
+                </>
+            )
+        } else {
+            return (
+                <>
+                    For each withdrawal, a flat fee is paid by users to cover the transaction costs of moving the
+                    cryptocurrency out of their Nami account.{width >= BREAK_POINTS.sm && <br/>}
+                    Withdrawals rates are determined by the blockchain network and can fluctuate without notice due to
+                    factors such as network congestion.{width >= BREAK_POINTS.sm && <br/>}Please check the most recent data listed on each withdrawal page.
+                </>
+            )
+        }
+    }, [width, language])
 
     useEffect(() => {
         getConfig()
@@ -168,14 +186,11 @@ const DepositWithdrawFee = () =>  {
     return (
         <>
             <div className="flex items-center justify-between">
-                <div className="t-common">Deposit and withdrawal fee</div>
+                <div className="t-common">{t('fee-structure:depwdl_fee')}</div>
                 {width >= BREAK_POINTS.sm && renderSearchBox()}
             </div>
             <div className="mt-4 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                For each withdrawal, a flat fee is paid by users to cover the transaction costs of moving the
-                cryptocurrency out of their Nami account.{width >= BREAK_POINTS.sm && <br/>}
-                Withdrawals rates are determined by the blockchain network and can fluctuate without notice due to
-                factors such as network congestion.{width >= BREAK_POINTS.sm && <br/>}Please check the most recent data listed on each withdrawal page.
+                {renderNotes()}
             </div>
             {width < BREAK_POINTS.sm &&
             <div className="mt-8">

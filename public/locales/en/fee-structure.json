@@ -15,15 +15,20 @@
     "deposit_withdraw_fee_2": "All on-chain deposit to Nami Exchange will be free, Nami only collects a small gas fee on behalf of the blockchain network when user withdraw their token on-chain. This gas fee is designated according to each blockchain's smart contract and subject to volatility from time to time.",
     "coin": "Coin",
     "network": "Network",
-    "minWithdraw": "Minimum withdraw",
+    "minWithdraw": "Minimum withdrawal",
     "depositFee": "Deposit fee",
     "withdrawFee": "Withdraw fee",
     "search": "Search a coin...",
     "selling_vndc_hint": "If you exceed 3 transactions per month, the selling fee will be: 10,000 VNDC + 0.01% per transaction",
     "trading_fee_t": "Trading Fee",
     "depwdl_fee": "Deposit and Withdraw Fee",
-    "exchange_trading_fee": "Exchange Trading Fee",
+    "exchange_trading_fee": "Spot Trading Fee",
     "andor": "and/or",
-    "use_asset_deduction": "{{ asset }} 25% off"
-
+    "use_asset_deduction": "{{ asset }} {{ value }} off",
+    "your_fee_level": "Your fee level",
+    "upgrade_level_suggest": "How to upgrade level?",
+    "fee_rate": "Fee Rate",
+    "maker_taker_description": "\"Taker\" is an order that trades at a market price.",
+    "maker_taker_description_2": "\"Maker\" is an order that trades at a limited price.",
+    "referral_description_value": "Refer friends to earn trading fees {{ value }} kickback."
 }
