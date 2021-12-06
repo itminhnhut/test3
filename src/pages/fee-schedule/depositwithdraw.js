@@ -93,14 +93,14 @@ const DepositWithdrawFee = () =>  {
                     </div>,
                     fullName: <span className="text-sm">{raw?.assetFullName || raw?.assetCode}</span>,
                     network: <div>
-                        {raw?.displayNetwork?.map((network, index) => <div key={`network__${index}`} className="mt-1 text-sm">{network}</div>)}
+                        {raw?.displayNetwork?.map((network, index) => <div key={`network__${index}`} className={index === raw?.displayNetwork?.length - 1 ? 'text-sm' : 'mb-1 text-sm'}>{network}</div>)}
                     </div>,
                     min_withdraw: <div>
-                        {raw?.minWithdraw?.map((min, index) => <div key={`minWithdraw__${index}`} className="mt-1 text-sm">{formatNumber(min, raw?.assetDigit, min === 0 ? 6 : 0)}</div>)}
+                        {raw?.minWithdraw?.map((min, index) => <div key={`minWithdraw__${index}`} className={index === raw?.minWithdraw?.length - 1 ? 'text-sm' : 'mb-1 text-sm'}>{formatNumber(min, raw?.assetDigit, min === 0 ? 6 : 0)}</div>)}
                     </div>,
                     deposit_fee: <span className="text-sm text-dominant">{t('common:free')}</span>,
                     withdraw_fee: <div>
-                        {raw?.withdrawFee?.map((fee, index) => <div key={`withdrawFee__${index}`} className="mt-1 text-sm">{formatNumber(fee, raw?.assetDigit, fee === 0 ? 6 : 0)}</div>)}
+                        {raw?.withdrawFee?.map((fee, index) => <div key={`withdrawFee__${index}`} className={index === raw?.withdrawFee?.length - 1 ? 'text-sm' : 'mb-1 text-sm'}>{formatNumber(fee, raw?.assetDigit, fee === 0 ? 6 : 0)}</div>)}
                     </div>,
                     [RETABLE_SORTBY]: {
                         asset: raw?.assetCode,
