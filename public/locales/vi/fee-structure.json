@@ -30,6 +30,6 @@
     "fee_rate": "Tỉ lệ phí",
     "maker_taker_description": "\"Taker\" là lệnh giao dịch ở giá thị trường (market price).",
     "maker_taker_description_2": "\"Maker\" là lệnh giao dịch ở giá giới hạn (limited price).",
-    "referral_description_value": "Giới thiệu bạn bè cùng giao dịch để nhận hoa hồng {{ value }}."
-
+    "referral_description_value": "Giới thiệu bạn bè cùng giao dịch để nhận hoa hồng {{ value }}.",
+    "used_fee_deduction": "Bạn đang được hưởng ưu đãi phí giao dịch từ {{ token }}."
 }

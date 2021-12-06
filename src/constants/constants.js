@@ -1,5 +1,7 @@
 export const EMPTY_VALUE = '--'
 
+export const ROOT_TOKEN = 'NAMI'
+
 export const ASSET_IGNORE = [
     'TURN_CHRISTMAS_2017',
     'TURN_CHRISTMAS_2017_FREE',

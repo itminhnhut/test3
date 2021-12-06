@@ -30,5 +30,6 @@
     "fee_rate": "Fee Rate",
     "maker_taker_description": "\"Taker\" is an order that trades at a market price.",
     "maker_taker_description_2": "\"Maker\" is an order that trades at a limited price.",
-    "referral_description_value": "Refer friends to earn trading fees {{ value }} kickback."
+    "referral_description_value": "Refer friends to earn trading fees {{ value }} kickback.",
+    "used_fee_deduction": "You are enjoying preferential fees from {{ token }}."
 }

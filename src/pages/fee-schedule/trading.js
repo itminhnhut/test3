@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { formatNumber, getS3Url } from 'redux/actions/utils'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { API_GET_FUTURE_FEE_CONFIGS, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis'
-import { FEE_STRUCTURES, FEE_TABLE } from 'constants/constants'
+import { BREAK_POINTS, FEE_STRUCTURES, FEE_TABLE, ROOT_TOKEN } from 'constants/constants'
 import { TRADING_MODE } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { TrendingUp } from 'react-feather'
@@ -216,7 +216,7 @@ const TradingFee = () => {
 
     const renderExchangeTableFee = useCallback(() => {
         const columns = [
-            { key: 'level', dataIndex: 'level', title: t('common:fee_level'), width: 80, fixed: 'left', align: 'left' },
+            { key: 'level', dataIndex: 'level', title: t('common:fee_level'), width: 60, fixed: 'left', align: 'left' },
             // { key: 'vol_30d', dataIndex: 'vol_30d', title: t('common:vol_trade_in', { duration: '30d' }), width: 100, align: 'left' },
             // { key: 'andor', dataIndex: 'andor', title: t('fee-structure:andor'), width: 100, align: 'left' },
             { key: 'nami_holding', dataIndex: 'nami_holding', title: 'NAMI', width: 100, align: 'left' },
@@ -239,17 +239,17 @@ const TradingFee = () => {
                 scroll={{ x: true }}
                 tableStyle={{
                     paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                    tableStyle: { minWidth: '992px !important' },
+                    tableStyle: { minWidth: '768px !important' },
                     headerStyle: {},
                     rowStyle: {},
-                    shadowWithFixedCol: width <= 992,
+                    shadowWithFixedCol: width < BREAK_POINTS.lg,
                     noDataStyle: {
                         minHeight: '280px'
                     }
                 }}
             />
         )
-    }, [state.tabIndex, state.vipLevel])
+    }, [state.tabIndex, state.vipLevel, width])
 
     const renderExchangeDeduction = useCallback(() => {
         if (!state.assetFee && state.loadingAssetFee) {
@@ -299,6 +299,11 @@ const TradingFee = () => {
         )
     }, [state.promoteFee?.futures, state.loadingAssetFee, state.assetFee, language])
 
+    const renderUsedNamiMsg = useCallback(() => {
+        if (state.assetFee?.feeCurrency !== 1) return null
+        return <div className="mt-3 text-dominant text-sm text-xs md:text-sm">* {t('fee-structure:used_fee_deduction', { token: `${ROOT_TOKEN} tokens` })}</div>
+    }, [state.assetFee?.feeCurrency])
+
     useEffect(() => {
         getVip()
         onUseAssetAsFee('get')
@@ -318,7 +323,8 @@ const TradingFee = () => {
                 </div>
                 {width <= 475 && <div className="w-full"/>}
                 <Link href={PATHS.REFERENCE.HOW_TO_UPGRADE_VIP}>
-                    <a className="flex items-center text-dominant text-sm hover:!underline" target="_blank">
+                    <a className="mt-3 flex items-center text-dominant text-sm hover:!underline" target="_blank"
+                       style={width > 475 ? { marginTop: '0' } : undefined}>
                         <TrendingUp size={16} className="mr-2.5" /> {t('fee-structure:upgrade_level_suggest')}
                     </a>
                 </Link>
@@ -326,7 +332,11 @@ const TradingFee = () => {
 
             <MCard addClass="relative mt-5 px-4 py-6 lg:px-7 px-4 py-6 lg:py-8 text-sm">
                 <div className="relative z-10 w-full flex flex-wrap">
-                    <div className="w-full sm:w-1/2 xl:w-1/4">
+                    <div className="w-full sm:w-1/2"
+                         style={width >= BREAK_POINTS.xl ? {
+                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
+                         } : undefined}
+                    >
                         <div className="font-medium mb-5">
                             <div>{t('fee-structure:exchange_trading_fee')}</div>
                         </div>
@@ -357,18 +367,23 @@ const TradingFee = () => {
                             </div>
                         </div>
 
-                        <div className="mt-5 font-medium flex items-center">
+                        <div className="mt-5 font-medium flex flex-wrap items-center">
                             <span className="flex items-center">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('common:available_balance')}: </span>
                                 {renderNamiAvailable()}
                             </span>
-                            <Link href={PATHS.EXCHANGE.SWAP.getSwapPair({ fromAsset: 'VNDC', toAsset: 'NAMI' })}>
-                                <a className="text-dominant ml-5 whitespace-nowrap hover:!underline">{t('common:buy')} NAMI</a>
-                            </Link>
+                            {width < BREAK_POINTS.md && <div className="w-full"/>}
+                            {namiWallets && <Link href={PATHS.EXCHANGE.SWAP.getSwapPair({ fromAsset: 'VNDC', toAsset: 'NAMI' })}>
+                                <a className={'mt-3 text-dominant whitespace-nowrap hover:!underline ' + (width >= BREAK_POINTS.md ? 'ml-5 mt-0' : '')}>{t('common:buy')} NAMI</a>
+                            </Link>}
                         </div>
                     </div>
 
-                    <div className="w-full mt-8 sm:mt-0 sm:w-1/2 xl:w-1/4">
+                    <div className="w-full mt-8 sm:mt-0 sm:w-1/2 xl:pl-6"
+                         style={width >= BREAK_POINTS.xl ? {
+                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
+                         } : undefined}
+                    >
                         <div className="font-medium mb-5">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
                         </div>
@@ -400,7 +415,11 @@ const TradingFee = () => {
                         </div>
                     </div>
 
-                    <div className="w-full mt-8 sm:w-1/2 xl:mt-0 xl:w-1/4">
+                    <div className="w-full mt-8 sm:w-1/2 xl:mt-0 xl:pl-6"
+                         style={width >= BREAK_POINTS.xl ? {
+                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
+                         } : undefined}
+                    >
                         <div className="font-medium mb-5">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
                         </div>
@@ -432,12 +451,17 @@ const TradingFee = () => {
                         </div>
                     </div>
 
-                    <div className="hidden sm:flex items-center justify-center w-full mt-8 sm:mt-0 sm:w-1/2 xl:w-1/4">
+                    <div className="hidden sm:flex items-center justify-center w-full mt-8 sm:mt-0 sm:w-1/2"
+                         style={width >= BREAK_POINTS.xl ? {
+                             width: '200px'
+                         } : undefined}
+                    >
                         <img className="-mt-4 max-w-[200px] h-auto"
                              src={getS3Url('/images/screen/fee-structure/pyramid.png')}
                              alt="FEE STRUCTURE"/>
                     </div>
                 </div>
+                {renderUsedNamiMsg()}
             </MCard>
 
             <div className="t-common mt-10 mb-5">
@@ -558,6 +582,7 @@ const TRADING_FEE_ROW_LOADING = {
     maker_taker_deducted: <Skeletor width={65} />,
 }
 
+const GRAPHICS_WIDTH = '200px'
 
 export const getStaticProps = async ({ locale }) => ({
     props: {

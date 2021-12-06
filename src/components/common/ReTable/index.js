@@ -327,7 +327,7 @@ const ReTableWrapper = styled.div`
     z-index: 15;
     
     ::after {
-      display: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'block' : 'none'};
+      visibility: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'visible' : 'hidden'};
       box-shadow: ${({ isDark }) => isDark ? 'inset -10px 0 8px -8px #263459'
                                            : 'inset -10px 0 8px -8px #f2f4f6'} !important;
     }
@@ -342,7 +342,7 @@ const ReTableWrapper = styled.div`
   .rc-table-cell-fix-left {
     z-index: 15;
     ::after {
-      display: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'block' : 'none'};
+      visibility: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'visible' : 'hidden'};
       box-shadow: ${({ isDark }) => isDark ? 'inset 10px 0 8px -8px #263459' : 'inset 10px 0 8px -8px #f2f4f6'} !important;
     }
   }

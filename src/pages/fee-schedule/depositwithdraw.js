@@ -130,7 +130,7 @@ const DepositWithdrawFee = () =>  {
                     tableStyle: { minWidth: '992px !important' },
                     headerStyle: {},
                     rowStyle: {},
-                    shadowWithFixedCol: width <= 992,
+                    shadowWithFixedCol: width <= BREAK_POINTS.lg,
                     noDataStyle: {
                         minHeight: '280px'
                     }
