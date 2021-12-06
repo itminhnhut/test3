@@ -52,7 +52,13 @@ const TERM_OF_SERVICES = {
 }
 
 const ACCOUNT = {
-    REFERRAL: getV1Url('/reference')
+    DEFAULT: '/account',
+    PROFILE: '/account/profile',
+    SECURITY: '/account/security',
+    IDENTIFICATION: '/account/identification',
+    REWARD_CENTER: '/account/reward-center',
+    REFERRAL: getV1Url('/reference'),
+    SETTINGS: '/account/settings'
 }
 
 export const PATHS = {
