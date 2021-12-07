@@ -189,6 +189,11 @@ const Wallet = () => {
     }, []);
 
     useEffect(() => {
+         auth && reNewUsdRate()
+    }, [auth])
+
+
+    useEffect(() => {
         auth && reNewUsdRate();
     }, [auth]);
 

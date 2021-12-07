@@ -6,7 +6,7 @@ const Deposit = () => <ExchangeDeposit/>
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet'])
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'modal'])
     }
 })
 

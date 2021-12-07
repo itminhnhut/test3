@@ -7,12 +7,12 @@
 
 // >>> Columns Defs should look like
 // [
-//     { key: 'coin', dataIndex: 'coin', title: 'Coin', width: 100, fixed: 'left' },
-//     { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', width: 100 },
-//     { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', width: 100 },
-//     { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', width: 100 },
-//     { key: '24h_high', dataIndex: '24h_high', title: '24h High', width: 100 },
-//     { key: '24h_low', dataIndex: '24h_low', title: '24h Low', width: 100 }
+//     { key: 'coin', dataIndex: 'coin', title: 'Coin', width: 100, fixed: 'left', preventSort: <boolean> },
+//     { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', width: 100, preventSort: <boolean> },
+//     { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', width: 100, preventSort: <boolean> },
+//     { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', width: 100, preventSort: <boolean> },
+//     { key: '24h_high', dataIndex: '24h_high', title: '24h High', width: 100, preventSort: <boolean> },
+//     { key: '24h_low', dataIndex: '24h_low', title: '24h Low', width: 100, preventSort: <boolean> }
 // ]
 
 // >>> Data Source should look like
@@ -72,16 +72,16 @@ const ReTable = memo(({
     const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.pageSize)
     const [sorter, setSorter] = useState({})
 
-    const [state, set] = useState({
-
-    })
+    // const [state, set] = useState({
+    //
+    // })
 
     // * Use Hooks
     const { t } = useTranslation(['common'])
     const [currentTheme, ] = useDarkMode()
 
     // * Helper
-    const setState = state => set(prevState => ({...prevState, ...state}))
+    // const setState = state => set(prevState => ({...prevState, ...state}))
 
     const handleResize = index => (e, { size }) => {
         setOwnColumns(prevState => {
@@ -165,7 +165,8 @@ const ReTable = memo(({
     // Add Sorter
     useEffect(() => {
         const sortColumn = []
-        const className = ['flex', 'items-center']
+        const origin = ['flex', 'items-center']
+        let className = [...origin]
 
         if (typeof sort === 'string' || Array.isArray(sort)) {
             columns.forEach(c => {
@@ -175,10 +176,16 @@ const ReTable = memo(({
                     if (c.align === 'right') className.push('justify-end')
                     if (c.align === 'center') className.push('justify-center')
 
+                    if (!c?.preventSort) {
+                        className.push('cursor-pointer')
+                    } else {
+                        className.push('cursor-text')
+                    }
+
                     item = ({ ...c, title: <div className={className.join(' ')}
-                                                onClick={() => setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })}
+                                                onClick={() => !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })}
                                            >
-                                                    {c.title} <Sorter isUp={sorter?.[`${c.key}`]}/>
+                                                    {c.title} {!c?.preventSort && <Sorter isUp={sorter?.[`${c.key}`]}/>}
                                            </div> })
                 }
                 sortColumn.push(item)
@@ -191,10 +198,18 @@ const ReTable = memo(({
                     if (c.align === 'left') className.push('justify-start')
                     if (c.align === 'right') className.push('justify-end')
                     if (c.align === 'center') className.push('justify-center')
+
+                    if (!c?.preventSort) {
+                        className.push('cursor-pointer')
+                    } else {
+                        className.push('cursor-text')
+                    }
+
+
                     item = ({ ...c, title: <div className={className.join(' ')}
-                                                onClick={() => setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })}
+                                                onClick={() => !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })}
                                                 >
-                                                     {c.title} <Sorter isUp={sorter?.[`${c.key}`]}/>
+                                                     {c.title} {!c?.preventSort && <Sorter isUp={sorter?.[`${c.key}`]}/>}
                                            </div> })
                 }
                 sortColumn.push(item)
@@ -229,14 +244,6 @@ export const ReTableEmpty = ({ msg }) => {
     return (
         <div className="flex items-center justify-center">
             {msg}
-        </div>
-    )
-}
-
-export const ReTableLoading = () => {
-    return (
-        <div className="flex items-center justify-center">
-            <ScaleLoader color={colors.teal} size={12}/>
         </div>
     )
 }
@@ -327,7 +334,7 @@ const ReTableWrapper = styled.div`
     z-index: 15;
     
     ::after {
-      display: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'block' : 'none'};
+      visibility: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'visible' : 'hidden'};
       box-shadow: ${({ isDark }) => isDark ? 'inset -10px 0 8px -8px #263459'
                                            : 'inset -10px 0 8px -8px #f2f4f6'} !important;
     }
@@ -342,7 +349,7 @@ const ReTableWrapper = styled.div`
   .rc-table-cell-fix-left {
     z-index: 15;
     ::after {
-      display: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'block' : 'none'};
+      visibility: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'visible' : 'hidden'};
       box-shadow: ${({ isDark }) => isDark ? 'inset 10px 0 8px -8px #263459' : 'inset 10px 0 8px -8px #f2f4f6'} !important;
     }
   }
@@ -365,7 +372,7 @@ const ReTableWrapper = styled.div`
 
     thead tr, tbody tr {
       position: relative;
-      cursor: pointer;
+      cursor: ${({ useRowHover }) => useRowHover ? 'pointer' : 'normal'} !important;
     }
 
     tbody tr:last-child {
@@ -376,6 +383,7 @@ const ReTableWrapper = styled.div`
 
     tbody tr:hover td {
       background: ${({ useRowHover, isDark }) => useRowHover ? isDark ? 'rgba(38, 52, 89, 0.5)' : colors.lightTeal : undefined};
+      cursor: ${({ useRowHover }) => useRowHover ? 'pointer' : 'normal'} !important;
     }
 
     thead tr th:first-child, tbody tr td:first-child {

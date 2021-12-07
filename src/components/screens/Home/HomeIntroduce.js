@@ -1,18 +1,21 @@
-import colors from 'styles/colors'
-import Link from 'next/link'
-
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { formatNumber, getS3Url } from 'redux/actions/utils'
 import { useTranslation, Trans } from 'next-i18next'
 import { getMarketWatch } from 'redux/actions/market'
 import { useWindowSize } from 'utils/customHooks'
 import { PulseLoader } from 'react-spinners'
 import { useAsync } from 'react-use'
-import { getS3Url } from 'redux/actions/utils'
+
+
+import colors from 'styles/colors'
+import CountUp from 'react-countup'
+import Link from 'next/link'
 
 const HomeIntroduce = ({ parentState }) => {
     const [state, set] = useState({
         pairsLength: null,
         loading: false,
+        makedData: null,
     })
     const setState = (state) => set(prevState => ({...prevState, ...state}))
 
@@ -67,7 +70,20 @@ const HomeIntroduce = ({ parentState }) => {
                     <div className="homepage-introduce___statitics">
                         <div className="homepage-introduce___statitics____item">
                             <div className="homepage-introduce___statitics____item___value">
-                                $7,166,943
+                                {state.loading && !state.makedData ?
+                                    <PulseLoader size={5} color={colors.teal}/>
+                                    : <>
+                                        $<CountUp start={0}
+                                                  end={COUNT.VOLUME_24H + state.makedData?.volume24h}
+                                                  duration={2.75}
+                                                  prefix="$"
+                                                  formattingFn={(value) => formatNumber(value, 0)}
+                                                  delay={0}
+                                                  useEasing
+                                    >
+                                        {({ countUpRef }) => <span ref={countUpRef}/>}
+                                    </CountUp>
+                                    </>}
                                 <div className="bott-line"/>
                             </div>
                             <div className="homepage-introduce___statitics____item___description">
@@ -76,7 +92,17 @@ const HomeIntroduce = ({ parentState }) => {
                         </div>
                         <div className="homepage-introduce___statitics____item">
                             <div className="homepage-introduce___statitics____item___value">
-                                200,000 +
+                                {state.loading && !state.makedData ?
+                                    <PulseLoader size={5} color={colors.teal}/>
+                                    : <CountUp start={0}
+                                         end={COUNT.MEMBER}
+                                         duration={2.75}
+                                         formattingFn={(value) => formatNumber(value, 0)}
+                                         delay={0}
+                                         useEasing
+                                >
+                                    {({ countUpRef }) => <span ref={countUpRef}/>}
+                                </CountUp>} +
                                 <div className="bott-line"/>
                             </div>
                             <div className="homepage-introduce___statitics____item___description">
@@ -85,8 +111,17 @@ const HomeIntroduce = ({ parentState }) => {
                         </div>
                         <div className="homepage-introduce___statitics____item">
                             <div className="homepage-introduce___statitics____item___value">
-                                {state.loading ? <PulseLoader size={5} color={colors.teal}/>
-                                    : state.pairsLength}
+                                {state.loading ?
+                                    <PulseLoader size={5} color={colors.teal}/>
+                                    : <CountUp start={0}
+                                               end={state.pairsLength}
+                                               duration={2.75}
+                                               formattingFn={(value) => formatNumber(value, 0)}
+                                               delay={0}
+                                               useEasing
+                                    >
+                                        {({ countUpRef }) => <span ref={countUpRef}/>}
+                                    </CountUp>}
                                 <div className="bott-line"/>
                             </div>
                             <div className="homepage-introduce___statitics____item___description">
@@ -97,7 +132,7 @@ const HomeIntroduce = ({ parentState }) => {
                 </div>
             </section>
         )
-    }, [width, state.loading, state.pairsLength])
+    }, [width, state.loading, state.pairsLength, state.makedData])
 
     useAsync(async () => {
         setState({ loading: true })
@@ -108,9 +143,32 @@ const HomeIntroduce = ({ parentState }) => {
         setState({ loading: false })
     })
 
-    // useEffect(() => console.log('namidev-DEBUG: MarketWatch____' , state), [state])
+    useEffect(() => {
+        const makedData = makeData()
+        if (Object.keys(makedData).length) {
+            setState({ makedData })
+        }
+    }, [])
 
     return renderIntroduce()
 }
+
+const COUNT = {
+    VOLUME_24H: 7e6,
+    MEMBER: 200000,
+}
+
+// const TIME_FLAG = 1638856917 // 200,000 Member at this time
+// const current = Date.now()
+
+const makeData = () => {
+    const volume24h = Math.floor(Math.random() * (VOLUME_24H_RANGE[1] - VOLUME_24H_RANGE[0] + 1) + VOLUME_24H_RANGE[0])
+    return {
+        volume24h
+    }
+}
+
+// const MEMBER_RANGE = [5, 20]
+const VOLUME_24H_RANGE = [1e5, 9e5]
 
 export default HomeIntroduce
