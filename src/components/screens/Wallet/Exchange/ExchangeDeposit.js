@@ -417,13 +417,7 @@ const ExchangeDeposit = () => {
                 <div className="w-full font-medium text-xs sm:text-sm pr-3 cursor-text break-all">
                     {state.address?.address}
                 </div>
-                {state.selectedNetwork?.shouldShowPushDeposit && <span
-                    className={state.address.address ? 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer'
-                        : 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer invisible'}
-                    onClick={() => onPushOrder(state.selectedAsset?.id)}
-                >
-                    {t('wallet:push_order')}
-                </span>}
+                {state.selectedNetwork?.shouldShowPushDeposit &&
                 <span
                     className={state.address.address ?
                         (state.pushingOrder || state.pushingOrder === 1) ? 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-gray-2 dark:text-darkBlue-4 select-none whitespace-nowrap cursor-not-allowed'
@@ -432,7 +426,7 @@ const ExchangeDeposit = () => {
                     onClick={() => (!state.pushingOrder || state.pushingOrder !== 1) && onPushOrder(state.selectedAsset?.id)}
                 >
                     {t('wallet:push_order')}
-                </span>
+                </span>}
                 <CopyToClipboard text={state.address?.address} onCopy={() => !state.isCopying?.address && onCopy('address')}>
                     <span className={state.address.address ? 'font-bold text-sm hover:opacity-80 cursor-pointer'
                         : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'}
