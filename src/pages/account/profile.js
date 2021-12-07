@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { formatNumber, formatTime } from 'redux/actions/utils'
-import { API_GET_LOGIN_LOG, API_GET_VIP } from 'redux/actions/apis'
-import { BREAK_POINTS, EMPTY_VALUE, ROOT_TOKEN } from 'constants/constants'
+import { API_GET_LOGIN_LOG, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis'
+import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN } from 'constants/constants'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { ChevronRight } from 'react-feather'
 import { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
@@ -46,6 +46,9 @@ const INITIAL_STATE = {
     activitiesLog: null,
     loadingAnnouncements: false,
     announcements: null,
+    assetFee: null,
+    promoteFee: null,
+    loadingAssetFee: false,
 
     // ... Add new state
 }
@@ -58,7 +61,6 @@ const AccountProfile = () => {
 
     // Rdx
     const user = useSelector(state => state.auth?.user)
-    const allWallet = useSelector(state => state.wallet?.SPOT) || null
     const namiWallets = useSelector(state => state.wallet?.SPOT)?.['1']
 
     // Use Hooks
@@ -67,6 +69,46 @@ const AccountProfile = () => {
     const { width } = useWindowSize()
 
     // Helper
+    const onUseAssetAsFee = async (action = 'get', currency = undefined, assetCode = 'NAMI') => {
+        const throttle = 800
+        setState({ loadingAssetFee: true })
+
+        try {
+            if (action === 'get') {
+                const { data } = await Axios.get(API_SET_ASSET_AS_FEE)
+                if (data?.status === ApiStatus.SUCCESS && data?.data) {
+                    setTimeout(() => {
+                        setState({ assetFee: data.data, promoteFee: { exchange: data?.data?.promoteSpot, futures: data?.data?.promoteFutures } })
+                    }, throttle)
+                }
+            }
+            if (action === 'set' && currency !== undefined) {
+                const { data } = await Axios.post(API_SET_ASSET_AS_FEE, { currency })
+                if (data?.status === ApiStatus.SUCCESS && data?.data) {
+                    setTimeout(() => setState({ assetFee: data.data }), throttle)
+                }
+            }
+        } catch (e) {
+            console.log(`Can't ${action} ${assetCode} as asset fee `, e)
+        } finally {
+            setTimeout(() => setState({ loadingAssetFee: false }), throttle)
+        }
+    }
+
+    const getAnnouncements = async (lang = 'vi') => {
+        setState({ loadingAnnouncements: false })
+        try {
+            const { status, data: announcements } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`)
+            if (status === 200 && announcements) {
+                setState({ announcements })
+            }
+        } catch (e) {
+            console.log(`Can't get announcements `, e)
+        } finally {
+            setState({ loadingAnnouncements: false })
+        }
+    }
+
     const getLevel = async () => {
         setState({ loadingLevel: true })
         try {
@@ -96,32 +138,18 @@ const AccountProfile = () => {
         }
     }
 
-    const getAnnouncements = async (lang = 'vi') => {
-        setState({ loadingAnnouncements: false })
-        try {
-            const { status, data: announcements } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`)
-            if (status === 200 && announcements) {
-                setState({ announcements })
-            }
-        } catch (e) {
-            console.log(`Can't get announcements `, e)
-        } finally {
-            setState({ loadingAnnouncements: false })
-        }
-    }
-
-    const onEdit = () => {
-        setState({ isEditable: true })
-        firstInputRef.current?.focus()
-    }
-
-    const onSave = (payload) => {
-        setState({ savingInfo: true })
-        setState({ user: { ...state.user, ...payload } })
-        setTimeout(() => {
-            setState({ savingInfo: false, isEditable: false })
-        }, 1500)
-    }
+    // const onEdit = () => {
+    //     setState({ isEditable: true })
+    //     firstInputRef.current?.focus()
+    // }
+    //
+    // const onSave = (payload) => {
+    //     setState({ savingInfo: true })
+    //     setState({ user: { ...state.user, ...payload } })
+    //     setTimeout(() => {
+    //         setState({ savingInfo: false, isEditable: false })
+    //     }, 1500)
+    // }
 
     // Render Handler
     const renderUserPersona = useCallback(() => {
@@ -225,6 +253,7 @@ const AccountProfile = () => {
 
     const renderFee = useCallback(() => {
         let seeFeeStructure, useNamiForBonus
+        const nextAssetFee = state.assetFee?.feeCurrency === 1 ? 0 : 1
 
         if (language === LANGUAGE_TAG.VI) {
             seeFeeStructure = 'Xem biểu phí'
@@ -265,7 +294,9 @@ const AccountProfile = () => {
                             </span>
                         </div>
                         <div className="flex items-center mt-4">
-                            <Switcher active={state.useNami} onChange={() => setState({ useNami: !state.useNami })}/>
+                            <Switcher active={!!state.assetFee?.feeCurrency}
+                                      loading={state.loadingAssetFee}
+                                      onChange={() => !state.loadingAssetFee && onUseAssetAsFee('set', nextAssetFee)}/>
                             <span className="text-sm ml-3 sm:flex sm:whitespace-nowrap">
                                 {useNamiForBonus}
                             </span>
@@ -279,7 +310,7 @@ const AccountProfile = () => {
                 </Link>
             </div>
         )
-    }, [state.useNami, state.level, state.loadingLevel, width])
+    }, [state.useNami, state.level, state.loadingLevel, state.assetFee, state.loadingAssetFee, width])
 
     const renderJourney = useCallback(() => {
         const _level = state.level || 0
@@ -292,7 +323,8 @@ const AccountProfile = () => {
             namiBalanceLabel = 'Your NAMI balance'
         }
 
-        console.log('namidev-DEBUG => ', allWallet, namiWallets)
+        const nextLevel = FEE_TABLE.find(e => e?.level === _level + 1)
+        const currentPercent = namiWallets?.value ? namiWallets.value * 100 / nextLevel?.nami_holding : '--'
 
         return (
             <div
@@ -328,18 +360,20 @@ const AccountProfile = () => {
                             <a className="text-dominant hover:!underline">{t('common:buy')} NAMI</a>
                         </Link>
                     </div>
-                    <div className="my-2.5 relative w-full h-[10px] rounded-xl bg-teal-lightTeal dark:bg-teal-opacity overflow-hidden">
-                        <div style={{ width: '20%' }}
+                    <div className="my-2.5 relative w-full h-[6px] xl:h-[6px] rounded-xl bg-teal-lightTeal dark:bg-teal-opacity overflow-hidden">
+                        <div style={{ width: `${currentPercent}%` }}
                              className="absolute left-0 top-0 bg-dominant h-full rounded-xl transition-all duration-700 ease-in"/>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-xs font-medium">
                             <span className="text-txtSecondary dark:text-txtSecondary-dark mr-2">VIP {_level}</span>
-                            <span>{formatNumber(0)} NAMI / 0.00%</span>
+                            <span>
+                                {formatNumber(namiWallets?.value) || '--'} {ROOT_TOKEN} / {formatNumber(currentPercent)}%
+                            </span>
                         </span>
                         <span className="text-xs font-medium">
                             <span className="">
-                                50.00 NAMI
+                                {formatNumber(nextLevel?.nami_holding, 0)} {ROOT_TOKEN}
                             </span>
                             <span className="ml-2 text-txtSecondary dark:text-txtSecondary-dark">VIP {_level + 1}</span>
                         </span>
@@ -347,7 +381,7 @@ const AccountProfile = () => {
                 </div>
             </div>
         )
-    }, [state.level, state.loadingLevel, width, language], namiWallets, allWallet)
+    }, [state.level, state.loadingLevel, width, language, namiWallets])
 
     const renderActivities = useCallback(() => {
         if (state.loadingActivity) {
@@ -448,6 +482,7 @@ const AccountProfile = () => {
     useEffect(() => {
         getLoginLogs()
         getLevel()
+        onUseAssetAsFee('get')
     }, [])
 
     useEffect(() => {

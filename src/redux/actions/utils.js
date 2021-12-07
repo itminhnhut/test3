@@ -8,7 +8,6 @@ import memoize from 'lodash/memoize';
 import defaults from 'lodash/defaults';
 import find from 'lodash/find';
 import { useStore as store } from 'src/redux/store';
-import Big from 'big.js';
 import { TokenConfigV1 as TokenConfig, WalletType } from './const'
 import { UPDATE_DEPOSIT_HISTORY, SET_TRANSFER_MODAL } from 'redux/actions/types'
 
@@ -219,7 +218,7 @@ export function formatNumber(
     const defaultValue = `0${
         forceDigits > 0 ? `.${"0".repeat(forceDigits)}` : ""
     }`;
-    if (_.isNil(value)) return defaultValue;
+    if (isNil(value)) return defaultValue;
     if (Math.abs(+value) < 1e-9) return defaultValue;
     if (!acceptNegative && +value < 0) return defaultValue;
     return numeral(+value).format(

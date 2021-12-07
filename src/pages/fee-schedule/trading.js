@@ -128,7 +128,8 @@ const TradingFee = () => {
         const nextAssetFee = state.assetFee?.feeCurrency === 1 ? 0 : 1
 
         return <Switcher active={!!state.assetFee?.feeCurrency}
-                         wrapperClass={state.loadingAssetFee ? 'mt-1 opacity-50 cursor-not-allowed' : 'mt-1 '}
+                         loading={state.loadingAssetFee}
+                         wrapperClass="mt-1"
                          onChange={() => !state.loadingAssetFee && onUseAssetAsFee('set', nextAssetFee)}
 
         />
@@ -532,7 +533,7 @@ const dataHandler = (props) => {
                     </span>,
                     // vol_30d: <span className="text-sm">{d.vol_30d}</span>,
                     // andor: <span className="text-sm">{d.andor}</span>,
-                    nami_holding: <span className="text-sm">{d.nami_holding}</span>,
+                    nami_holding: <span className="text-sm">≥ {formatNumber(d.nami_holding, 0)}</span>,
                     maker_taker: <span className="text-sm">{d.maker_taker}</span>,
                     maker_taker_deducted: <span className="text-sm">{d.maker_taker_deducted}</span>,
                 })

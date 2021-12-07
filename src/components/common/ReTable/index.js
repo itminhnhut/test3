@@ -374,6 +374,12 @@ const ReTableWrapper = styled.div`
       position: relative;
       cursor: ${({ useRowHover }) => useRowHover ? 'pointer' : 'normal'} !important;
     }
+    
+    tbody tr {
+      .rc-table-cell-fix-right:last-child:not(.rc-table-cell-fix-sticky) {
+        background: ${({ isDark }) => isDark ? colors.darkBlue2 : colors.white} !important;
+      }
+    }
 
     tbody tr:last-child {
       td {
