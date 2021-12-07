@@ -60,5 +60,8 @@
     "google_auth_enable": "Bật xác thực Google Authentication thành công",
     "change_ref_success": "Mã giới thiệu đã được cập nhật thành công",
     "change": "Thay đổi",
-    "change_ref_placeholder": "Nhập ID"
+    "change_ref_placeholder": "Nhập ID",
+    "activity": "Hoạt động",
+    "announcements": "Thông báo",
+    "disable_account": "Khoá tài khoản"
 }

@@ -60,5 +60,8 @@
     "google_auth_enable": "Enable Google Authentication successfully",
     "change_ref_success": "Referral code is updated successfully",
     "change": "Change",
-    "change_ref_placeholder": "Enter ID"
+    "change_ref_placeholder": "Enter ID",
+    "activity": "Activity",
+    "announcements": "Announcements",
+    "disable_account": "Disable Account"
 }
