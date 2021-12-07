@@ -177,7 +177,7 @@ const TradeHistory = (props) => {
             ignoreRowClick: true,
             right: true,
             minWidth: '100px',
-            cell: (row) => formatWallet(row.quantity, 4),
+            cell: (row) => formatWallet(row.baseQty, 4),
         },
         {
             name: t('common:total'),
