@@ -57,7 +57,8 @@ const ACCOUNT = {
 
 const REFERENCE = {
     HOW_TO_UPGRADE_VIP: 'https://nami.io/thong-cao/nami-corporation-thong-bao-cap-nhat-chinh-sach-tai-khoan-vip/',
-    MAKER_TAKER: 'https://nami.today/maker-taker-la-gi/'
+    HOW_TO_UPGRADE_VIP_EN: 'https://nami.io/en/press/announcement-nami-corporation-updates-vip-account-policy/',
+    MAKER_TAKER: 'https://nami.today/maker-taker-la-gi/',
 }
 
 export const PATHS = {
