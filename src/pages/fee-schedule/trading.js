@@ -322,7 +322,7 @@ const TradingFee = () => {
                     {t('fee-structure:your_fee_level')} <span className="text-dominant">VIP {state.vipLevel || 0}</span>
                 </div>
                 {width <= 475 && <div className="w-full"/>}
-                <Link href={PATHS.REFERENCE.HOW_TO_UPGRADE_VIP}>
+                <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
                     <a className="mt-3 flex items-center text-dominant text-sm hover:!underline" target="_blank"
                        style={width > 475 ? { marginTop: '0' } : undefined}>
                         <TrendingUp size={16} className="mr-2.5" /> {t('fee-structure:upgrade_level_suggest')}
