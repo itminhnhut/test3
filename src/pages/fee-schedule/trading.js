@@ -549,8 +549,8 @@ const dataHandler = (props) => {
                         </Link>
                     </span>,
                     max_leverage: <span className="text-sm">x{d?.max_leverage}</span>,
-                    fee: <span className="text-sm">{d?.place_order_fee}% / {d?.close_order_fee}%</span>,
-                    fee_promote: <span className="text-sm">{d?.place_order_fee_promote}% / {d?.close_order_fee_promote}%</span>,
+                    fee: <span className="text-sm">{d?.place_order_fee * 100}% / {d?.close_order_fee * 100}%</span>,
+                    fee_promote: <span className="text-sm">{d?.place_order_fee_promote * 100}% / {d?.close_order_fee_promote * 100}%</span>,
                     [RETABLE_SORTBY]: {
                         symbol: d?.name,
                         max_leverage: d?.max_leverage,
