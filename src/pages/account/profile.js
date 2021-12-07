@@ -3,9 +3,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { PulseLoader } from 'react-spinners'
-import { BREAK_POINTS } from 'constants/constants'
+import { BREAK_POINTS, EMPTY_VALUE } from 'constants/constants'
 import { ChevronRight } from 'react-feather'
-import { API_GET_VIP } from 'redux/actions/apis'
+import { API_GET_LOGIN_LOG, API_GET_VIP } from 'redux/actions/apis'
 import { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
 import { ApiStatus } from 'redux/actions/const'
 import { PATHS } from 'constants/paths'
@@ -24,11 +24,13 @@ import MCard from 'components/common/MCard'
 import Link from 'next/link'
 import Switcher from 'components/common/Switcher'
 import Axios from 'axios'
+import NeedLogin from 'components/common/NeedLogin'
+import { formatTime } from 'redux/actions/utils'
 
 const DEFAULT_USER = {
-    name: '--',
-    username: '--',
-    phone: '--',
+    name: '',
+    username: '',
+    phone: '',
 }
 
 const INITIAL_STATE = {
@@ -38,6 +40,10 @@ const INITIAL_STATE = {
     isEditable: false,
     savingInfo: false,
     user: DEFAULT_USER,
+    loadingActivity: false,
+    activitiesLog: null,
+    loadingAnnouncements: false,
+    announcements: null,
 
     // ... Add new state
 }
@@ -49,12 +55,12 @@ const AccountProfile = () => {
     const firstInputRef = useRef()
 
     // Rdx
-    const user = useSelector(state => state.auth?.user) || null
+    const user = useSelector(state => state.auth?.user)
 
     // Use Hooks
-    const { t } = useTranslation(['navbar', 'common'])
-    const { width } = useWindowSize()
+    const { t, i18n: { language } } = useTranslation(['navbar', 'common'])
     const [currentTheme, ] = useDarkMode()
+    const { width } = useWindowSize()
 
     // Helper
     const getLevel = async () => {
@@ -68,6 +74,36 @@ const AccountProfile = () => {
             console.log(`Cant get user vip level: ${error}`)
         } finally {
             setState({ loadingLevel: false })
+        }
+    }
+
+    const getLoginLogs = async () => {
+        !state.activitiesLog &&
+        setState({ loadingActivity: true })
+        try {
+            const { data } = await Axios.get(API_GET_LOGIN_LOG)
+            if (data?.status === ApiStatus.SUCCESS && data?.data) {
+                setState({ activitiesLog: data.data })
+            }
+        } catch (e) {
+            console.log(`Can't get activities log `, e)
+        } finally {
+            setState({ loadingActivity: false })
+        }
+    }
+
+    const getAnnouncements = async (lang = 'vi') => {
+        !state.announcements &&
+        setState({ loadingAnnouncements: false })
+        try {
+            const { status, data: announcements } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`)
+            if (status === 200 && announcements) {
+                setState({ announcements })
+            }
+        } catch (e) {
+            console.log(`Can't get announcements `, e)
+        } finally {
+            setState({ loadingAnnouncements: false })
         }
     }
 
@@ -280,9 +316,69 @@ const AccountProfile = () => {
         )
     }, [state.level, state.loadingLevel, width])
 
+    const renderActivities = useCallback(() => {
+        if (state.loadingActivity) {
+            const skeleton = []
+            for (let i = 0; i < 5; ++i) {
+                skeleton.push(
+                    <div className="flex justify-between text-sm font-medium mb-5">
+                        <div>
+                            <div className="device font-bold"><Skeletor width={100}/></div>
+                            <div className="location mt-2"><Skeletor width={65}/></div>
+                        </div>
+                        <div className="">
+                            <div className="ip-address text-right"><Skeletor width={75}/></div>
+                            <div className="date-time mt-2 flex justify-end">
+                                <Skeletor width={65}/>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+            return skeleton
+        }
+
+        if (!state.activitiesLog) return null
+
+        return state.activitiesLog?.map(log => {
+            let _os
+            if (log?.os?.name && !log?.os?.version) {
+                _os = `(${log?.os?.name})`
+            } else if (!log?.os?.name && log?.os?.version) {
+                _os = `(${log?.os?.version})`
+            } else if (log?.os?.name && log?.os?.version) {
+                _os = `(${log?.os?.name} ${log?.os?.version})`
+            }
+
+            return (
+                <div key={log?._id} className="flex justify-between text-sm font-medium mb-5">
+                    <div>
+                        <div className="device font-bold">{log?.browser?.name || EMPTY_VALUE} {log?.browser?.version && `(${log?.browser?.version})`}</div>
+                        <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">
+                            {_os}
+                        </div>
+                    </div>
+                    <div className="">
+                        <div className="ip-address max-w-[130px] truncate text-right whitespace-nowrap">{log?.ip || EMPTY_VALUE}</div>
+                        <div className="date-time mt-2 text-right text-txtSecondary dark:text-txtSecondary-dark">
+                            {formatTime(log?.created_at, 'dd-MM-yyyy')}
+                            <span className="ml-4">{formatTime(log?.created_at, 'HH:mm')}</span>
+                        </div>
+                    </div>
+                </div>
+            )
+        })
+
+    }, [state.loadingActivity, state.activitiesLog])
+
     useEffect(() => {
+        getLoginLogs()
         getLevel()
     }, [])
+
+    useEffect(() => {
+        getAnnouncements(language)
+    }, [language])
 
     useEffect(() => {
         user && setState({ user: {
@@ -297,6 +393,10 @@ const AccountProfile = () => {
     useEffect(() => {
         log.d('State => ', state)
     }, [state])
+
+    if (!user) {
+        return <NeedLogin addClass="h-[380px] flex justify-center items-center"/>
+    }
 
     return (
         <div className="pb-20 lg:pb-24 2xl:pb-32">
@@ -316,83 +416,14 @@ const AccountProfile = () => {
                         <div className="t-common">
                             Activity
                         </div>
-                        <span className="flex items-center font-medium text-dominant">
+                        <span className="flex items-center font-medium text-dominant hover:!underline cursor-pointer">
                             Disable account <ChevronRight className="ml-2" size={20}/>
                         </span>
                     </div>
                     <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
-                           addClass="mt-5 p-4 sm:p-6 lg:p-7 dark:border dark:border-divider-dark !overflow-hidden">
+                           addClass="mt-5 p-4 sm:p-6 lg:p-7 min-h-[356px] dark:border dark:border-divider-dark !overflow-hidden">
                            <div className="max-h-[300px] pr-4 overflow-y-auto">
-                               <div className="flex justify-between text-sm font-medium mb-5">
-                                   <div>
-                                       <div className="device font-bold">Chrome 91 (Mas OS 10.15.7)</div>
-                                       <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">Ho Chi Minh, Vietnam</div>
-                                   </div>
-                                   <div className="">
-                                       <div className="ip-address text-right">27.56.455.698</div>
-                                       <div className="date-time mt-2 text-txtSecondary dark:text-txtSecondary-dark">2021-07-15<span className="ml-4">13:05:20</span></div>
-                                   </div>
-                               </div>
-                               <div className="flex justify-between text-sm font-medium mb-5">
-                                   <div>
-                                       <div className="device font-bold">Chrome 91 (Mas OS 10.15.7)</div>
-                                       <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">Ho Chi Minh, Vietnam</div>
-                                   </div>
-                                   <div className="">
-                                       <div className="ip-address text-right">27.56.455.698</div>
-                                       <div className="date-time mt-2 text-txtSecondary dark:text-txtSecondary-dark">2021-07-15<span className="ml-4">13:05:20</span></div>
-                                   </div>
-                               </div>
-                               <div className="flex justify-between text-sm font-medium mb-5">
-                                   <div>
-                                       <div className="device font-bold">Chrome 91 (Mas OS 10.15.7)</div>
-                                       <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">Ho Chi Minh, Vietnam</div>
-                                   </div>
-                                   <div className="">
-                                       <div className="ip-address text-right">27.56.455.698</div>
-                                       <div className="date-time mt-2 text-txtSecondary dark:text-txtSecondary-dark">2021-07-15<span className="ml-4">13:05:20</span></div>
-                                   </div>
-                               </div>
-                               <div className="flex justify-between text-sm font-medium mb-5">
-                                   <div>
-                                       <div className="device font-bold">Chrome 91 (Mas OS 10.15.7)</div>
-                                       <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">Ho Chi Minh, Vietnam</div>
-                                   </div>
-                                   <div className="">
-                                       <div className="ip-address text-right">27.56.455.698</div>
-                                       <div className="date-time mt-2 text-txtSecondary dark:text-txtSecondary-dark">2021-07-15<span className="ml-4">13:05:20</span></div>
-                                   </div>
-                               </div>
-                               <div className="flex justify-between text-sm font-medium mb-5">
-                                   <div>
-                                       <div className="device font-bold">Chrome 91 (Mas OS 10.15.7)</div>
-                                       <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">Ho Chi Minh, Vietnam</div>
-                                   </div>
-                                   <div className="">
-                                       <div className="ip-address text-right">27.56.455.698</div>
-                                       <div className="date-time mt-2 text-txtSecondary dark:text-txtSecondary-dark">2021-07-15<span className="ml-4">13:05:20</span></div>
-                                   </div>
-                               </div>
-                               <div className="flex justify-between text-sm font-medium mb-5">
-                                   <div>
-                                       <div className="device font-bold">Chrome 91 (Mas OS 10.15.7)</div>
-                                       <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">Ho Chi Minh, Vietnam</div>
-                                   </div>
-                                   <div className="">
-                                       <div className="ip-address text-right">27.56.455.698</div>
-                                       <div className="date-time mt-2 text-txtSecondary dark:text-txtSecondary-dark">2021-07-15<span className="ml-4">13:05:20</span></div>
-                                   </div>
-                               </div>
-                               <div className="flex justify-between text-sm font-medium mb-5">
-                                   <div>
-                                       <div className="device font-bold">Chrome 91 (Mas OS 10.15.7)</div>
-                                       <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">Ho Chi Minh, Vietnam</div>
-                                   </div>
-                                   <div className="">
-                                       <div className="ip-address text-right">27.56.455.698</div>
-                                       <div className="date-time mt-2 text-txtSecondary dark:text-txtSecondary-dark">2021-07-15<span className="ml-4">13:05:20</span></div>
-                                   </div>
-                               </div>
+                               {renderActivities()}
                            </div>
                     </MCard>
                 </div>
@@ -401,7 +432,7 @@ const AccountProfile = () => {
                         Announcements
                     </div>
                     <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
-                           addClass="max-h-[400px] overflow-y-auto mt-5 p-4 sm:p-6 lg:p-7 dark:border dark:border-divider-dark !overflow-hidden">
+                           addClass="max-h-[400px] min-h-[356px] overflow-y-auto mt-5 p-4 sm:p-6 lg:p-7 dark:border dark:border-divider-dark !overflow-hidden">
                         <div className="max-h-[300px] overflow-y-auto">
                             <div className="text-sm font-medium mb-5">
                                 <div className="device font-bold">

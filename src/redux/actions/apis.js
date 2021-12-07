@@ -8,6 +8,7 @@ export const API_LOGIN_SSO = '/login/nami';
 export const API_LOG_OUT = '/logout';
 export const API_GET_ME = API_PREFIX + 'user/me';
 export const API_GET_VIP =  API_PREFIX + 'user/vip';
+export const API_GET_LOGIN_LOG = API_PREFIX + "user/login_log";
 
 export const API_REFRESH_TOKEN = API_PREFIX + 'web/refresh_token';
 
