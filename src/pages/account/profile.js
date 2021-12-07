@@ -26,6 +26,8 @@ import Switcher from 'components/common/Switcher'
 import Axios from 'axios'
 import NeedLogin from 'components/common/NeedLogin'
 import { formatTime } from 'redux/actions/utils'
+import ReactTooltip from 'react-tooltip'
+import Tooltip from 'components/common/Tooltip'
 
 const DEFAULT_USER = {
     name: '',
@@ -353,13 +355,19 @@ const AccountProfile = () => {
             return (
                 <div key={log?._id} className="flex justify-between text-sm font-medium mb-5">
                     <div>
-                        <div className="device font-bold">{log?.browser?.name || EMPTY_VALUE} {log?.browser?.version && `(${log?.browser?.version})`}</div>
+                        <div className="device font-bold">{log?.browser?.name ||t('common:unknown')} {log?.browser?.version && `(${log?.browser?.version})`}</div>
                         <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">
                             {_os}
                         </div>
                     </div>
                     <div className="">
-                        <div className="ip-address max-w-[130px] truncate text-right whitespace-nowrap">{log?.ip || EMPTY_VALUE}</div>
+                        {log?.ip && <Tooltip id={`ip_address_${log?._id}`}>
+                            {log?.ip}
+                        </Tooltip>}
+                        <div data-tip="" data-for={`ip_address_${log?._id}`}
+                             className="ip-address max-w-[130px] truncate text-right whitespace-nowrap cursor-pointer">
+                            {log?.ip || EMPTY_VALUE}
+                        </div>
                         <div className="date-time mt-2 text-right text-txtSecondary dark:text-txtSecondary-dark">
                             {formatTime(log?.created_at, 'dd-MM-yyyy')}
                             <span className="ml-4">{formatTime(log?.created_at, 'HH:mm')}</span>

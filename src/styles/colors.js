@@ -40,9 +40,9 @@ const colors = {
     darkBlue4: '#445271',
     darkBlue5: '#7B8CB2',
 
-    grey1: '#8D9091',
-    grey2: '#CCCCCC',
-    grey3: '#B7B7B7',
+    grey1: '#718096',
+    grey2: '#A0AEC0',
+    grey3: '#CBD5E0',
     grey4: '#F2F4F6',
     grey5: '#EDF1F6',
 

@@ -30,8 +30,8 @@ import styled from 'styled-components'
 import colors from 'styles/colors'
 import Axios from 'axios'
 import ReTable from 'components/common/ReTable'
-import ReactTooltip from 'react-tooltip'
 import Modal from 'components/common/Modal'
+import Tooltip from 'components/common/Tooltip'
 
 
 const INITIAL_STATE = {
@@ -631,11 +631,11 @@ const ExchangeDeposit = () => {
         return (
             <>
                 <div className="relative font-medium text-sm flex items-center justify-between">
-                    <ReactTooltip id="wrongthings" place="left" effect="solid">
+                    <Tooltip id="wrongthings" place="left" effect="solid">
                         <div className="w-[320px]">
                             {noteObj.runItBackNotes}
                         </div>
-                    </ReactTooltip>
+                    </Tooltip>
                     <span>{t('common:important_notes')}:</span>
                     <span data-tip="" data-for="wrongthings" className="inline-block mr-8 cursor-pointer text-dominant"
                           onClick={() => window?.fcWidget?.open()}>
