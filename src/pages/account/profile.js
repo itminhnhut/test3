@@ -480,9 +480,9 @@ const AccountProfile = () => {
     }, [state.announcements, state.loadingAnnouncements])
 
     useEffect(() => {
+        onUseAssetAsFee('get')
         getLoginLogs()
         getLevel()
-        onUseAssetAsFee('get')
     }, [])
 
     useEffect(() => {
