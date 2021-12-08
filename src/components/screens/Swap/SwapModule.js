@@ -473,9 +473,9 @@ const SwapModule = ({ width, pair }) => {
         const leftUnit = state.changeEstRatePosition ? state.toAsset : state.fromAsset
         const rightUnit = state.changeEstRatePosition ? state.fromAsset : state.toAsset
 
-        if (state.fromErrors && Object.keys(state.fromErrors).length) {
-            return <span className="font-bold">---</span>
-        }
+        // if (state.fromErrors && Object.keys(state.fromErrors).length) {
+        //     return <span className="font-bold">---</span>
+        // }
 
         if (
             state.estRate?.price &&
@@ -716,9 +716,9 @@ const SwapModule = ({ width, pair }) => {
                             'pt-[14px] pb-[18px] px-[20px] rounded-xl relative border border-dominant'
                             : 'pt-[14px] pb-[18px] px-[20px] rounded-xl relative border border-divider dark:border-divider-dark'}>
                             <div className="flex items-center justify-between text-[14px]">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                            {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
-                        </span>
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                                    {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
+                                </span>
                                 <span className="font-bold">
                                 {t('common:from')}
                         </span>
