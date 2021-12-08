@@ -81,7 +81,7 @@ const SwapModule = ({ width, pair }) => {
     const toAssetListRef = useRef()
     const fromAssetBtnRef = useRef()
     const toAssetBtnRef = useRef()
-    const cancelBtnRef = useRef()
+    // const cancelBtnRef = useRef()
 
     // Memmoized Variable
     // CURRENT SWAP PAIRS CONFIG
@@ -397,17 +397,17 @@ const SwapModule = ({ width, pair }) => {
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={toAssetRef}
-                        className="w-full px-[6px] text-[18px] md:text-[20px] text-right font-medium"
+                        className="w-full pl-[6px] text-[18px] md:text-[20px] text-right font-medium"
                         value={state.toAmount}
                         onFocus={() => setState({ focus: 'to', inputHighlighted: 'to' })}
                         onBlur={() => setState({ inputHighlighted: null })}
                         onValueChange={({ value }) => setState({ toAmount: value })}
                         placeholder="0.0000"
                     />
-                    <div className="uppercase text-dominant cursor-pointer font-bold hover:opacity-50"
-                         onClick={() => onMaxiumQty('to', availabelAsset?.toAsset)}>
-                        max
-                    </div>
+                    {/*<div className="uppercase text-dominant cursor-pointer font-bold hover:opacity-50"*/}
+                    {/*     onClick={() => onMaxiumQty('to', availabelAsset?.toAsset)}>*/}
+                    {/*    max*/}
+                    {/*</div>*/}
                 </div>
             </div>
         )
