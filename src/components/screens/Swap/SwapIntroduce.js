@@ -110,7 +110,7 @@ const SwapIntroduce = () => {
 
     useEffect(() => {
         getSwapTrending()
-        const interval = setInterval(() => getSwapTrending(), 3200)
+        const interval = setInterval(() => getSwapTrending(), 5000)
         return () => clearInterval(interval)
     }, [])
 
