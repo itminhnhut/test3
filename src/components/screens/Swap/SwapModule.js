@@ -129,7 +129,6 @@ const SwapModule = ({ width, pair }) => {
         if (status === ApiStatus.SUCCESS && updateQty) {
             if (requestAsset === state.fromAsset) {
                 setState({ toAmount: requestQty * data?.price })
-
             }
             if (requestAsset === state.toAsset) {
                 setState({ fromAmount: requestQty / data?.price })
@@ -596,6 +595,14 @@ const SwapModule = ({ width, pair }) => {
             setState({ loading: false })
         }
     }, [])
+
+    useEffect(() => {
+        if (config?.filters) {
+            const fromAmount = +config.filters?.[0]?.minQty
+            fromAmount && setState({ fromAmount })
+        }
+    }, [config])
+
 
     useEffect(() => {
         fromAssetRef?.current?.focus()
