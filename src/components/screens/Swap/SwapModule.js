@@ -21,9 +21,8 @@ import { useSelector } from 'react-redux'
 import { RefreshCw, Search, X, XCircle } from 'react-feather'
 import { ApiStatus } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { TERM_OF_SERVICE } from 'constants/constants'
 import { PATHS } from 'constants/paths'
-
+import { roundToDown } from 'round-to'
 
 const FEE_RATE = 0 / 100
 const DEBOUNCE_TIMEOUT = 500
@@ -128,7 +127,7 @@ const SwapModule = ({ width, pair }) => {
         data && setState({ estRate: data })
         if (status === ApiStatus.SUCCESS && updateQty) {
             if (requestAsset === state.fromAsset) {
-                setState({ toAmount: requestQty * data?.price })
+                setState({ toAmount: +roundToDown(requestQty * data?.price, 10) })
             }
             if (requestAsset === state.toAsset) {
                 setState({ fromAmount: requestQty / data?.price })
@@ -257,7 +256,7 @@ const SwapModule = ({ width, pair }) => {
     const onMaxiumQty = (mode = 'from', availableAsset) => {
         if (!availableAsset) return
         const _qty = availableAsset
-        const limitMaxQty = config.filters?.[0].maxQty
+        // const limitMaxQty = config.filters?.[0].maxQty
 
         if (mode === 'from') {
             if ((!_qty > 0)) return
@@ -473,9 +472,9 @@ const SwapModule = ({ width, pair }) => {
         const leftUnit = state.changeEstRatePosition ? state.toAsset : state.fromAsset
         const rightUnit = state.changeEstRatePosition ? state.fromAsset : state.toAsset
 
-        // if (state.fromErrors && Object.keys(state.fromErrors).length) {
-        //     return <span className="font-bold">---</span>
-        // }
+        if (state.loadingEstRate) {
+            return <Skeletor width={100}/>
+        }
 
         if (
             state.estRate?.price &&
@@ -489,8 +488,8 @@ const SwapModule = ({ width, pair }) => {
             return <span className="font-bold">---</span>
         }
 
-        if (price === 0 || state.loadingEstRate) {
-            return <Skeletor width={100}/>
+        if (!state.estRate || price === 0) {
+            return <span className="font-bold">---</span>
         }
 
         return (
@@ -595,6 +594,10 @@ const SwapModule = ({ width, pair }) => {
             setState({ loading: false })
         }
     }, [])
+
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG => ', state)
+    // }, [state])
 
     useEffect(() => {
         if (config?.filters) {
