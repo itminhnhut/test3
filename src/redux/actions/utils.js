@@ -110,7 +110,7 @@ export function getLoginUrl(mode, action = 'login', options = {}) {
             if (action === 'register') {
                 return `${___DEV___ ? 'https://auth-test.nami.trade' : 'https://auth.nami.io'}/register?${qs.stringify(params)}`;
             }
-            return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '/')}/login/nami?${qs.stringify(params)}`;
+            return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/login/nami?${qs.stringify(params)}`;
 
         default:
             break;
