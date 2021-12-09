@@ -2,6 +2,14 @@ export const EMPTY_VALUE = '--'
 
 export const ROOT_TOKEN = 'NAMI'
 
+export const USER_DEVICE_STATUS = {
+    NORMAL: 0, //
+    REVOKED: 1, // Force logged out
+    BANNED: 2, // Banned
+    LOGGED_OUT: 3, // User logged out normally
+    WAITING_FOR_AUTHORIZATION: 4 // Wait to be authorized
+}
+
 export const ASSET_IGNORE = [
     'TURN_CHRISTMAS_2017',
     'TURN_CHRISTMAS_2017_FREE',

@@ -63,5 +63,17 @@
     "change_ref_placeholder": "Enter ID",
     "activity": "Activity",
     "announcements": "Announcements",
-    "disable_account": "Disable Account"
+    "disable_account": "Disable Account",
+    "this_device": "This device",
+    "revoke_title": "Revoke Devices",
+    "revoke_this_device": "Revoke this device",
+    "revoke_all_devices": "Revoke all",
+    "revoke_question": "Do you want to revoke \"{{ device }}\" ? This device will be logged out from your Nami Account.",
+    "revoke_question_all": "All the devices will be logged out from your account, including this device. Continue?",
+    "account_status": {
+        "revoked": "Revoked",
+        "banned": "Banned",
+        "logged_out": "Logged out",
+        "wait_for_authorize": "Authorizing"
+    }
 }

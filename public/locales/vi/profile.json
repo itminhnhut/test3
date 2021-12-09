@@ -63,5 +63,17 @@
     "change_ref_placeholder": "Nhập ID",
     "activity": "Hoạt động",
     "announcements": "Thông báo",
-    "disable_account": "Khoá tài khoản"
+    "disable_account": "Khoá tài khoản",
+    "this_device": "Thiết bị này",
+    "revoke_title": "Thu hồi thiết bị",
+    "revoke_this_device": "Thu hồi thiết bị này",
+    "revoke_all_devices": "Thu hồi tất cả",
+    "revoke_question": "Bạn có muốn thu hồi quyền của thiết bị \"{{ device }}\" ? Thiết bị này sẽ được đăng xuất khỏi tài khoản Nami của bạn.",
+    "revoke_question_all": "Tài khoản của bạn sẽ được đăng xuất khỏi tất cả thiết bị, kể cả thiết bị này. Bạn có muốn tiếp tục?",
+    "account_status": {
+        "revoked": "Đã thu hồi",
+        "banned": "Đã khoá",
+        "logged_out": "Đã đăng xuất",
+        "wait_for_authorize": "Đang xác minh"
+    }
 }

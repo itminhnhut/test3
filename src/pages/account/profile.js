@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
+import { useRouter } from 'next/router'
 import { formatNumber, formatTime } from 'redux/actions/utils'
-import { API_GET_LOGIN_LOG, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis'
-import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN } from 'constants/constants'
+import { API_GET_VIP, API_SET_ASSET_AS_FEE, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis'
+import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN, USER_DEVICE_STATUS } from 'constants/constants'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ChevronRight, Edit } from 'react-feather'
+import { ChevronRight, Edit, MoreVertical } from 'react-feather'
+import { Menu, useContextMenu } from "react-contexify"
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
 import { ApiStatus } from 'redux/actions/const'
@@ -18,23 +20,27 @@ import useWindowSize from 'hooks/useWindowSize'
 import useDarkMode, { THEME_MODE }  from 'hooks/useDarkMode'
 import SvgCheckSuccess from 'components/svg/CheckSuccess'
 import SvgGooglePlus from 'components/svg/SvgGooglePlus'
+import CheckSuccess from 'components/svg/CheckSuccess'
 import SvgFacebook from 'components/svg/SvgFacebook'
 import SvgTwitter from 'components/svg/SvgTwitter'
 import NeedLogin from 'components/common/NeedLogin'
 import SvgApple from 'components/svg/SvgApple'
 import Skeletor from 'components/common/Skeletor'
-import Tooltip from 'components/common/Tooltip'
 import ReModal from 'components/common/ReModal'
 import MCard from 'components/common/MCard'
 import Link from 'next/link'
 import Axios from 'axios'
 import Switcher from 'components/common/Switcher'
 
+import "react-contexify/dist/ReactContexify.css"
+
 const DEFAULT_USER = {
     name: '',
     username: '',
     phone: '',
 }
+
+const MENU_CONTEXT = 'revoke_devices'
 
 const INITIAL_STATE = {
     useNami: false,
@@ -52,6 +58,9 @@ const INITIAL_STATE = {
     loadingAssetFee: false,
     namiBalance: null,
     openModal: {},
+    revokeRef: {},
+    revokingDevices: false,
+    revokeObj: {},
 
     // ... Add new state
 }
@@ -66,6 +75,8 @@ const AccountProfile = () => {
     const user = useSelector(state => state.auth?.user)
 
     // Use Hooks
+    const router = useRouter()
+    const { show } = useContextMenu({ id: MENU_CONTEXT })
     const { t, i18n: { language } } = useTranslation()
     const [currentTheme, ] = useDarkMode()
     const { width } = useWindowSize()
@@ -98,7 +109,7 @@ const AccountProfile = () => {
     }
 
     const getAnnouncements = async (lang = 'vi') => {
-        setState({ loadingAnnouncements: false })
+        setState({ loadingAnnouncements: true })
         try {
             const { status, data: announcements } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`)
             if (status === 200 && announcements) {
@@ -129,7 +140,7 @@ const AccountProfile = () => {
         !state.activitiesLog &&
         setState({ loadingActivity: true })
         try {
-            const { data } = await Axios.get(API_GET_LOGIN_LOG)
+            const { data } = await Axios.get(USER_DEVICES)
             if (data?.status === ApiStatus.SUCCESS && data?.data) {
                 setState({ activitiesLog: data.data })
             }
@@ -140,11 +151,36 @@ const AccountProfile = () => {
         }
     }
 
+    const onRevoke = async (revokeId, isThisDevice = false) => {
+        if (!revokeId) return
+        setState({ revokingDevices: true })
+
+        try {
+            const id = revokeId === 'all' ? 'all' : revokeId
+            const { data } = await Axios.post(USER_REVOKE_DEVICE, { id })
+            if (data?.status === ApiStatus.SUCCESS && (id === 'all' || isThisDevice)) {
+                router.reload()
+            }
+        } catch (e) {
+            console.log(`Can't revoke device ${revokeId} `, e)
+        } finally {
+            await getLoginLogs()
+            setState({ revokingDevices: false })
+        }
+    }
+
     const openAvatarModal = () => {
         setState({ openModal: { avatar: !state.openModal?.avatar } })
     }
 
-    const onCloseModal = () => setState({ openModal: {} })
+    const openRevokeModal = () => setState({ openModal: { revokeAll: !state.openModal?.revokeAll } })
+
+    const onCloseModal = () => setState({ openModal: {}, revokeObj: {} })
+
+    const onOpenRevokeContext = (event, revokeId, device, isThisDevice) => {
+        setState({ revokeObj: { revokeId, device, isThisDevice } })
+        show(event)
+    }
 
     // const onEdit = () => {
     //     setState({ isEditable: true })
@@ -168,10 +204,10 @@ const AccountProfile = () => {
                 <div className="relative w-[132px] h-[132px] rounded-full bg-gray-4 dark:bg-darkBlue-5">
                     <img src={user?.avatar} alt="Nami.Exchange"
                          className="relative z-10 w-full h-full rounded-full"/>
-                    <div className="absolute w-auto h-auto z-20 right-2 bottom-2 p-1.5 rounded-full bg-dominant cursor-pointer"
-                         onClick={openAvatarModal}>
-                        <Edit className="text-white" size={12} strokeWidth={1.75}/>
-                    </div>
+                    {/*<div className="absolute w-auto h-auto z-20 right-2 bottom-2 p-1.5 rounded-full bg-dominant cursor-pointer"*/}
+                    {/*     onClick={openAvatarModal}>*/}
+                    {/*    <Edit className="text-white" size={12} strokeWidth={1.75}/>*/}
+                    {/*</div>*/}
                 </div>
                 <div className="mt-5 mb-2.5 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                     Social Binding
@@ -420,35 +456,50 @@ const AccountProfile = () => {
 
         if (!state.activitiesLog) return null
 
+        const thisDevice = state.activitiesLog?.[state.activitiesLog?.findIndex(e => e?.this_device)]?.id
+
         return state.activitiesLog?.map(log => {
-            let _os
-            if (log?.os?.name && !log?.os?.version) {
-                _os = `(${log?.os?.name})`
-            } else if (!log?.os?.name && log?.os?.version) {
-                _os = `(${log?.os?.version})`
-            } else if (log?.os?.name && log?.os?.version) {
-                _os = `(${log?.os?.name} ${log?.os?.version})`
+            let statusInner
+            const isThisDevice = thisDevice === log?.id
+
+            if (log?.status === USER_DEVICE_STATUS.LOGGED_OUT) {
+                statusInner = <><span className="text-red">{t('profile:account_status.logged_out')}</span></>
+            } else if (log?.status === USER_DEVICE_STATUS.REVOKED) {
+                statusInner = <><span className="text-yellow">{t('profile:account_status.revoked')}</span></>
+            } else if (log?.status === USER_DEVICE_STATUS.BANNED) {
+                statusInner = <><span className="text-red">{t('profile:account_status.banned')}</span></>
+            } else if (isThisDevice) {
+                statusInner = <><span className="text-dominant">{t('profile:this_device')}</span> <CheckSuccess size={14} className="ml-1"/></>
             }
 
             return (
-                <div key={log?._id} className="flex justify-between text-sm font-medium mb-5">
+                <div key={log?.id} className="flex justify-between text-sm font-medium mb-5">
                     <div>
-                        <div className="device font-bold">{log?.browser?.name ||t('common:unknown')} {log?.browser?.version && `(${log?.browser?.version})`}</div>
+                        <div className="device font-bold flex items-center">
+                            {log?.device_title}
+                            <span className="ml-4 text-xs xl:text-sm font-normal inline-flex items-center">
+                               {statusInner}
+                            </span>
+                        </div>
                         <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">
-                            {_os}
+                            {log?.last_location}
                         </div>
                     </div>
-                    <div className="">
-                        {log?.ip && <Tooltip id={`ip_address_${log?._id}`}>
-                            {log?.ip}
-                        </Tooltip>}
-                        <div data-tip="" data-for={`ip_address_${log?._id}`}
-                             className="ip-address max-w-[130px] truncate text-right whitespace-nowrap cursor-pointer">
-                            {log?.ip || EMPTY_VALUE}
+                    <div className="flex">
+                        <div className="pr-2">
+                            <div data-tip="" data-for={`ip_address_${log?.last_ip_address}`}
+                                 className="ip-address truncate text-right whitespace-nowrap">
+                                {log?.last_ip_address || EMPTY_VALUE}
+                            </div>
+                            <div className="date-time mt-2 text-right text-txtSecondary dark:text-txtSecondary-dark">
+                                {formatTime(log?.last_logged_in, 'dd-MM-yyyy')}
+                                <span className="ml-3">{formatTime(log?.last_logged_in, 'HH:mm')}</span>
+                            </div>
                         </div>
-                        <div className="date-time mt-2 text-right text-txtSecondary dark:text-txtSecondary-dark">
-                            {formatTime(log?.created_at, 'dd-MM-yyyy')}
-                            <span className="ml-4">{formatTime(log?.created_at, 'HH:mm')}</span>
+                        <div onClick={(e) => log?.status === 0 && onOpenRevokeContext(e, log?.id, log?.device_title, isThisDevice)} className={log?.status === 0 ? '' : ' invisible pointer-event-none'}>
+                            <MoreVertical size={16} strokeWidth={1}
+                                          className="mt-1 text-txtSecondary dark:text-txtSecondary-dark cursor-pointer hover:!text-dominant"
+                            />
                         </div>
                     </div>
                 </div>
@@ -456,6 +507,22 @@ const AccountProfile = () => {
         })
 
     }, [state.loadingActivity, state.activitiesLog])
+
+    const renderRevokeContext = useCallback(() => {
+        return (
+            <Menu id={MENU_CONTEXT}
+                  animation={false}
+                  style={{ boxShadow: 'none' }}
+                  className="!min-w-[100px] !w-auto !p-0 !rounded-lg !overflow-hidden
+                             !drop-shadow-onlyLight dark:!drop-shadow-none !bg-gray-3 dark:!bg-darkBlue-3"
+            >
+                <div className="block text-center text-sm font-medium px-2 py-2.5 border-b border-divider dark:border-divider-dark cursor-pointer hover:text-dominant"
+                     onClick={openRevokeModal}>
+                    {t('profile:revoke_this_device')}
+                </div>
+            </Menu>
+        )
+    }, [state.revokeObj?.revokeId, state.revokeObj?.isThisDevice])
 
     const renderAnnoucements = useCallback(() => {
         if (state.loadingAnnouncements) {
@@ -493,6 +560,8 @@ const AccountProfile = () => {
     }, [state.announcements, state.loadingAnnouncements])
 
     const renderAvatarModal = useCallback(() => {
+        if (!Object.keys(state.openModal)?.length) return null
+
         return (
             <ReModal useOverlay
                      position={{ mode: "full-screen", from: 'right' }}
@@ -505,6 +574,33 @@ const AccountProfile = () => {
             </ReModal>
         )
     }, [state.openModal?.avatar, width])
+
+    const renderRevokeAll = useCallback(() => {
+        if (!Object.keys(state.openModal)?.length) return null
+
+        const id = state.revokeObj?.revokeId
+        const device = state.revokeObj?.device
+        const isThisDevice = state.revokeObj?.isThisDevice
+
+        return (
+            <ReModal useOverlay
+                     position="center"
+                     isVisible={!!state.openModal?.revokeAll}
+                     onBackdropCb={onCloseModal}
+                     onNegativeCb={onCloseModal}
+                     onPositiveCb={() => onRevoke(id, isThisDevice)}
+                     onPositiveLoading={state.revokingDevices}
+                     className="px-6"
+            >
+                <div className="text-center font-medium">
+                    <div className="font-bold text-center uppercase">{t('profile:revoke_title')}</div>
+                    <div className="mt-4 font-normal">
+                        {id ? t('profile:revoke_question', { device }) : t('profile:revoke_question_all')}
+                    </div>
+                </div>
+            </ReModal>
+        )
+    }, [state.openModal?.revokeAll, state.revokingDevices, state.revokeObj])
 
     useEffect(() => {
         onUseAssetAsFee('get')
@@ -551,9 +647,10 @@ const AccountProfile = () => {
                     <div className="w-full lg:w-1/2 lg:pr-2.5">
                         <div className="flex justify-between items-center">
                             <div className="t-common">{t('profile:activity')}</div>
-                            <span className="flex items-center font-medium text-red hover:!underline cursor-pointer">
-                            {t('profile:disable_account')} <ChevronRight className="ml-2" size={20}/>
-                        </span>
+                            <span className="flex items-center font-medium text-red hover:!underline cursor-pointer"
+                                  onClick={openRevokeModal}>
+                                {t('profile:revoke_all_devices')} <ChevronRight className="ml-2" size={20}/>
+                            </span>
                         </div>
                         <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
                                addClass="mt-5 p-4 sm:p-6 lg:p-7 min-h-[356px] dark:border dark:border-divider-dark !overflow-hidden">
@@ -570,12 +667,14 @@ const AccountProfile = () => {
                                addClass="max-h-[400px] min-h-[356px] overflow-y-auto mt-5 p-4 sm:p-6 lg:p-7 dark:border dark:border-divider-dark !overflow-hidden">
                             <div className="max-h-[300px] overflow-y-auto">
                                 {renderAnnoucements()}
+                                {renderRevokeContext()}
                             </div>
                         </MCard>
                     </div>
                 </div>
             </div>
             {renderAvatarModal()}
+            {renderRevokeAll()}
         </>
     )
 }
@@ -585,7 +684,6 @@ export const getStaticProps = async ({ locale }) => ({
         ...await serverSideTranslations(locale, ['common', 'navbar', 'profile', 'fee-structure'])
     }
 })
-
 
 export default withTabLayout(
     {

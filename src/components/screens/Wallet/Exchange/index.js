@@ -8,7 +8,7 @@ import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils'
 import { WalletType } from 'redux/actions/const'
 import { useDispatch } from 'react-redux'
 import { PATHS } from 'constants/paths'
-import { Menu, Item, useContextMenu } from "react-contexify"
+import { Menu, useContextMenu } from "react-contexify"
 
 import useWindowSize from 'hooks/useWindowSize'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
