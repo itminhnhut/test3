@@ -165,7 +165,7 @@ const AccountProfile = () => {
             console.log(`Can't revoke device ${revokeId} `, e)
         } finally {
             await getLoginLogs()
-            setState({ revokingDevices: false })
+            setState({ revokingDevices: false, openModal: {} })
         }
     }
 
