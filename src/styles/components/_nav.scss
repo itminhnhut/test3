@@ -597,7 +597,7 @@
 
 
 .mal-pocket-navbar__drawer {
-  @apply absolute top-0 right-0 z-50 bg-bgPrimary dark:bg-bgPrimary-dark;
+  @apply absolute top-0 right-0 bg-bgPrimary dark:bg-bgPrimary-dark;
 
   width: 100%;
   max-width: 375px;
@@ -608,6 +608,7 @@
   padding-bottom: 76px;
   overflow-y: scroll;
   user-select: none;
+  z-index: 9999999999;
 
   .mal-pocket-navbar__drawer__content___wrapper {
     .user__button {

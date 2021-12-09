@@ -11,6 +11,7 @@ import TabItem, { TabItemComponent } from 'components/common/TabItem'
 
 import styled from 'styled-components'
 import colors from 'styles/colors'
+import ReModal from 'components/common/ReModal'
 
 const INITIAL_STATE = {
     currentLastestPath: null,
@@ -19,7 +20,7 @@ const INITIAL_STATE = {
 export default (props) => (WrappedComponent) => {
     return wrappedProps => {
         // Own props
-        const { routes, tabStyle, containerDimension, debug } = props
+        const { routes, wrapperStyle = {}, tabStyle, containerDimension, useModal = false, debug } = props
 
         // Init state
         const [state, set] = useState(INITIAL_STATE)
@@ -62,16 +63,18 @@ export default (props) => (WrappedComponent) => {
         }, [state, debug])
 
         return (
-            <MaldivesLayout>
-                <Background isDark={currentTheme === THEME_MODE.DARK}>
-                    <CustomContainer containerDimension={containerDimension}>
-                        <div className="flex items-center mb-8 lg:mb-10 border-b border-divider dark:border-divider-dark">
-                            {renderTabLink()}
-                        </div>
-                        <WrappedComponent {...wrappedProps}/>
-                    </CustomContainer>
-                </Background>
-            </MaldivesLayout>
+            <>
+                <MaldivesLayout contentWrapperStyle={{...wrapperStyle, position: useModal ? 'unset !important' : 'relative'}}>
+                    <Background isDark={currentTheme === THEME_MODE.DARK}>
+                        <CustomContainer containerDimension={containerDimension}>
+                            <div className="flex items-center mb-8 lg:mb-10 border-b border-divider dark:border-divider-dark">
+                                {renderTabLink()}
+                            </div>
+                            <WrappedComponent {...wrappedProps}/>
+                        </CustomContainer>
+                    </Background>
+                </MaldivesLayout>
+            </>
         )
     }
 }

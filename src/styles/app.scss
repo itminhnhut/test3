@@ -449,7 +449,7 @@ input[type=number] {
 }
 
 .mal-overlay {
-  @apply absolute top-0 left-0 z-40;
+  @apply absolute top-0 left-0;
 
   width: 100vw;
   height: 100%;
@@ -457,6 +457,7 @@ input[type=number] {
   visibility: hidden;
   opacity: 0;
   transition: all .2s ease;
+  z-index: 9999999998;
 }
 
 .mal-overlay__active {

@@ -1,6 +1,7 @@
 import Button from 'src/components/common/Button'
 
 import { useCallback } from 'react'
+import { useTranslation } from 'next-i18next'
 
 const Modal = ({
     isVisible,
@@ -17,10 +18,12 @@ const Modal = ({
     titleStyle
 }) => {
 
+    const { t } = useTranslation(['common'])
+
     const renderButtonGroup = useCallback(() => {
 
         if (type === 'confirm-one-choice') {
-            return <Button title={positiveLabel || 'Xác nhận'} type="primary"
+            return <Button title={positiveLabel || t('common:confirm')} type="primary"
                            componentType="button"
                            onClick={() => onConfirmCb && onConfirmCb()}/>
         }
@@ -28,11 +31,11 @@ const Modal = ({
         if (type === 'confirmation') {
             return (
                 <>
-                    <Button title={negativeLabel || 'Đóng'} type="secondary"
+                    <Button title={negativeLabel || t('common:close')} type="secondary"
                             componentType="button"
                             style={{ width: '48%' }}
                             onClick={() => onCloseCb && onCloseCb()}/>
-                    <Button title={positiveLabel || 'Xác nhận'} type="primary"
+                    <Button title={positiveLabel || t('common:confirm')} type="primary"
                             componentType="button"
                             style={{ width: '48%' }}
                             onClick={() => onConfirmCb && onConfirmCb()}/>
@@ -41,7 +44,7 @@ const Modal = ({
         }
 
         if (type === 'alert') {
-          return <Button title={negativeLabel || 'Đóng'} type="secondary"
+          return <Button title={negativeLabel || t('common:close')} type="secondary"
                          componentType="button"
                          onClick={() => onCloseCb && onCloseCb()}/>
         }

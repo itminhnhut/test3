@@ -9,6 +9,7 @@ const Tooltip = ({ children, ...restProps }) => {
     return (
         <TooltipWrapper isDark={currentTheme === THEME_MODE.DARK}>
             <ReactTooltip className="!text-txtPrimary dark:!text-txtPrimary-dark !bg-gray-3 dark:!bg-darkBlue-4 !rounded-lg !opacity-100"
+                          arrowColor={currentTheme === THEME_MODE.DARK ? colors.darkBlue4 : colors.grey3}
                           {...restProps}>
                 {children}
             </ReactTooltip>
@@ -17,12 +18,19 @@ const Tooltip = ({ children, ...restProps }) => {
 }
 
 const TooltipWrapper = styled.div`
-  
-  .__react_component_tooltip {
-    ::after {
-      border-top-color: ${({ isDark }) => isDark ? colors.darkBlue4 : colors.grey3} !important;
-    }  
-  }
+
+  // .place-left {
+  //   ::after {
+  //     border-left-color: ${({ isDark }) => isDark ? colors.darkBlue4 : colors.grey3} !important;
+  //     border-top-color: transparent !important;
+  //   }
+  // }
+  //
+  // .__react_component_tooltip {
+  //   ::after {
+  //     border-top-color: ${({ isDark }) => isDark ? colors.darkBlue4 : colors.grey3} !important;
+  //   }  
+  // }
 `
 
 export default Tooltip

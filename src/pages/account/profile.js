@@ -5,29 +5,30 @@ import { formatNumber, formatTime } from 'redux/actions/utils'
 import { API_GET_LOGIN_LOG, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis'
 import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN } from 'constants/constants'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ChevronRight } from 'react-feather'
+import { ChevronRight, Edit } from 'react-feather'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
 import { ApiStatus } from 'redux/actions/const'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { orderBy } from 'lodash'
 import { PATHS } from 'constants/paths'
 import { log } from 'utils'
 
 import withTabLayout from 'components/common/layouts/withTabLayout'
+import useWindowSize from 'hooks/useWindowSize'
 import useDarkMode, { THEME_MODE }  from 'hooks/useDarkMode'
 import SvgCheckSuccess from 'components/svg/CheckSuccess'
 import SvgGooglePlus from 'components/svg/SvgGooglePlus'
 import SvgFacebook from 'components/svg/SvgFacebook'
 import SvgTwitter from 'components/svg/SvgTwitter'
+import NeedLogin from 'components/common/NeedLogin'
 import SvgApple from 'components/svg/SvgApple'
 import Skeletor from 'components/common/Skeletor'
-import useWindowSize from 'hooks/useWindowSize'
+import Tooltip from 'components/common/Tooltip'
+import ReModal from 'components/common/ReModal'
 import MCard from 'components/common/MCard'
 import Link from 'next/link'
-import NeedLogin from 'components/common/NeedLogin'
-import Tooltip from 'components/common/Tooltip'
-import Switcher from 'components/common/Switcher'
 import Axios from 'axios'
+import Switcher from 'components/common/Switcher'
 
 const DEFAULT_USER = {
     name: '',
@@ -49,6 +50,8 @@ const INITIAL_STATE = {
     assetFee: null,
     promoteFee: null,
     loadingAssetFee: false,
+    namiBalance: null,
+    openModal: {},
 
     // ... Add new state
 }
@@ -61,7 +64,6 @@ const AccountProfile = () => {
 
     // Rdx
     const user = useSelector(state => state.auth?.user)
-    const namiWallets = useSelector(state => state.wallet?.SPOT)?.['1']
 
     // Use Hooks
     const { t, i18n: { language } } = useTranslation()
@@ -114,7 +116,7 @@ const AccountProfile = () => {
         try {
             const { data } = await Axios.get(API_GET_VIP)
             if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                setState({ level: data?.data?.level })
+                setState({ level: data?.data?.level, namiBalance: data?.data?.metadata?.namiBalance })
             }
         } catch (error) {
             console.log(`Cant get user vip level: ${error}`)
@@ -138,6 +140,12 @@ const AccountProfile = () => {
         }
     }
 
+    const openAvatarModal = () => {
+        setState({ openModal: { avatar: !state.openModal?.avatar } })
+    }
+
+    const onCloseModal = () => setState({ openModal: {} })
+
     // const onEdit = () => {
     //     setState({ isEditable: true })
     //     firstInputRef.current?.focus()
@@ -157,9 +165,13 @@ const AccountProfile = () => {
 
         return (
             <div className="flex flex-col items-center w-full lg:w-2/5 xl:w-[15%]">
-                <div className="w-[132px] h-[132px] rounded-full overflow-hidden bg-gray-4 dark:bg-darkBlue-5">
+                <div className="relative w-[132px] h-[132px] rounded-full bg-gray-4 dark:bg-darkBlue-5">
                     <img src={user?.avatar} alt="Nami.Exchange"
-                         className="w-full h-full"/>
+                         className="relative z-10 w-full h-full rounded-full"/>
+                    <div className="absolute w-auto h-auto z-20 right-2 bottom-2 p-1.5 rounded-full bg-dominant cursor-pointer"
+                         onClick={openAvatarModal}>
+                        <Edit className="text-white" size={12} strokeWidth={1.75}/>
+                    </div>
                 </div>
                 <div className="mt-5 mb-2.5 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                     Social Binding
@@ -194,7 +206,7 @@ const AccountProfile = () => {
             <div
                 style={width >= BREAK_POINTS.xl ?
                 { width: `calc(80% / 3)` } : undefined}
-                 className="w-full lg:w-3/5">
+                 className="w-full lg:w-3/5 mt-6 lg:mt-0">
                 <div className="flex items-center justify-between xl:justify-start text-sm mb-2">
                     <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">
                         {t('profile:username')}
@@ -324,7 +336,7 @@ const AccountProfile = () => {
         }
 
         const nextLevel = FEE_TABLE.find(e => e?.level === _level + 1)
-        const currentPercent = namiWallets?.value ? namiWallets.value * 100 / nextLevel?.nami_holding : '--'
+        const currentPercent = state.namiBalance ? state.namiBalance * 100 / nextLevel?.nami_holding : '--'
 
         return (
             <div
@@ -367,8 +379,9 @@ const AccountProfile = () => {
                     <div className="flex justify-between">
                         <span className="text-xs font-medium">
                             <span className="text-txtSecondary dark:text-txtSecondary-dark mr-2">VIP {_level}</span>
-                            <span>
-                                {formatNumber(namiWallets?.value) || '--'} {ROOT_TOKEN} / {formatNumber(currentPercent)}%
+                            <span className="inline-flex items-center">
+                                {(state.loadingLevel && !state.namiBalance) ? <Skeletor width={45} height={16}/> : formatNumber(state.namiBalance) + ` ${ROOT_TOKEN}`}
+                                {' '}/ {(state.loadingLevel && !state.namiBalance) ? <Skeletor width={45} height={16}/> : formatNumber(currentPercent) + '%'}
                             </span>
                         </span>
                         <span className="text-xs font-medium">
@@ -381,7 +394,7 @@ const AccountProfile = () => {
                 </div>
             </div>
         )
-    }, [state.level, state.loadingLevel, width, language, namiWallets])
+    }, [state.level, state.loadingLevel, state.namiBalance, width, language])
 
     const renderActivities = useCallback(() => {
         if (state.loadingActivity) {
@@ -479,6 +492,20 @@ const AccountProfile = () => {
         ))
     }, [state.announcements, state.loadingAnnouncements])
 
+    const renderAvatarModal = useCallback(() => {
+        return (
+            <ReModal useOverlay
+                     position={{ mode: "full-screen", from: 'right' }}
+                     isVisible={!!state.openModal?.avatar}
+                     onBackdropCb={onCloseModal}
+            >
+                <div className="text-center font-medium">
+                    ReModal
+                </div>
+            </ReModal>
+        )
+    }, [state.openModal?.avatar, width])
+
     useEffect(() => {
         onUseAssetAsFee('get')
         getLoginLogs()
@@ -508,48 +535,50 @@ const AccountProfile = () => {
     }
 
     return (
-        <div className="pb-20 lg:pb-24 2xl:pb-32">
-            <div className="font-bold leading-[40px] text-[26px] mb-6">
-                {t('navbar:menu.user.profile')}
-            </div>
-            <MCard addClass="lg:flex lg:flex-wrap lg:justify-between px-7 py-8 lg:p-10 xl:px-7 xl:py-8 w-full drop-shadow-onlyLight border border-transparent dark:drop-shadow-none dark:border-divider-dark">
-                {renderUserPersona()}
-                {renderUserInfo()}
-                {renderFee()}
-                {renderJourney()}
-            </MCard>
+        <>
+            <div className="pb-20 lg:pb-24 2xl:pb-32">
+                <div className="font-bold leading-[40px] text-[26px] mb-6">
+                    {t('navbar:menu.user.profile')}
+                </div>
+                <MCard addClass="lg:flex lg:flex-wrap lg:justify-between px-7 py-8 lg:p-10 xl:px-7 xl:py-8 w-full drop-shadow-onlyLight border border-transparent dark:drop-shadow-none dark:border-divider-dark">
+                    {renderUserPersona()}
+                    {renderUserInfo()}
+                    {renderFee()}
+                    {renderJourney()}
+                </MCard>
 
-            <div className="mt-10 flex flex-col lg:flex-row">
-                <div className="w-full lg:w-1/2 lg:pr-2.5">
-                    <div className="flex justify-between items-center">
-                        <div className="t-common">{t('profile:activity')}</div>
-                        <span className="flex items-center font-medium text-red hover:!underline cursor-pointer">
+                <div className="mt-10 flex flex-col lg:flex-row">
+                    <div className="w-full lg:w-1/2 lg:pr-2.5">
+                        <div className="flex justify-between items-center">
+                            <div className="t-common">{t('profile:activity')}</div>
+                            <span className="flex items-center font-medium text-red hover:!underline cursor-pointer">
                             {t('profile:disable_account')} <ChevronRight className="ml-2" size={20}/>
                         </span>
-                    </div>
-                    <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
-                           addClass="mt-5 p-4 sm:p-6 lg:p-7 min-h-[356px] dark:border dark:border-divider-dark !overflow-hidden">
-                           <div className="max-h-[300px] pr-4 overflow-y-auto">
-                               {renderActivities()}
-                           </div>
-                    </MCard>
-                </div>
-                <div className="w-full mt-8 lg:mt-0 lg:w-1/2 lg:pl-2.5">
-                    <div className="t-common">
-                        {t('profile:announcements')}
-                    </div>
-                    <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
-                           addClass="max-h-[400px] min-h-[356px] overflow-y-auto mt-5 p-4 sm:p-6 lg:p-7 dark:border dark:border-divider-dark !overflow-hidden">
-                        <div className="max-h-[300px] overflow-y-auto">
-                            {renderAnnoucements()}
                         </div>
-                    </MCard>
+                        <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
+                               addClass="mt-5 p-4 sm:p-6 lg:p-7 min-h-[356px] dark:border dark:border-divider-dark !overflow-hidden">
+                            <div className="max-h-[300px] pr-4 overflow-y-auto">
+                                {renderActivities()}
+                            </div>
+                        </MCard>
+                    </div>
+                    <div className="w-full mt-8 lg:mt-0 lg:w-1/2 lg:pl-2.5">
+                        <div className="t-common">
+                            {t('profile:announcements')}
+                        </div>
+                        <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
+                               addClass="max-h-[400px] min-h-[356px] overflow-y-auto mt-5 p-4 sm:p-6 lg:p-7 dark:border dark:border-divider-dark !overflow-hidden">
+                            <div className="max-h-[300px] overflow-y-auto">
+                                {renderAnnoucements()}
+                            </div>
+                        </MCard>
+                    </div>
                 </div>
             </div>
-        </div>
+            {renderAvatarModal()}
+        </>
     )
 }
-
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
@@ -558,4 +587,9 @@ export const getStaticProps = async ({ locale }) => ({
 })
 
 
-export default withTabLayout({ routes: TAB_ROUTES.ACCOUNT })(AccountProfile)
+export default withTabLayout(
+    {
+        routes: TAB_ROUTES.ACCOUNT,
+        useModal: true,
+    }
+)(AccountProfile)
