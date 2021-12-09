@@ -102,19 +102,22 @@ export function getLoginUrl(mode, action = 'login', options = {}) {
             ..._options,
             referral,
         };
-    }
-    params = defaults(params, { redirect: process.env.APP_URL });
+        params = defaults(params, { redirect: process.env.APP_URL });
 
-    switch (mode) {
-        case 'sso':
-            if (action === 'register') {
-                return `${___DEV___ ? 'https://auth-test.nami.trade' : 'https://auth.nami.io'}/register?${qs.stringify(params)}`;
-            }
-            return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/login/nami?${qs.stringify(params)}`;
+        switch (mode) {
+            case 'sso':
+                if (action === 'register') {
+                    return `${___DEV___ ? 'https://auth-test.nami.trade' : 'https://auth.nami.io'}/register?${qs.stringify(params)}`;
+                }
+                return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/login/nami?${qs.stringify(params)}`;
 
-        default:
-            break;
+            default:
+                break;
+        }
     }
+
+    return ''
+    
 }
 
 export function getSymbolString(symbol = {}) {

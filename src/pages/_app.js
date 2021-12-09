@@ -1,26 +1,24 @@
 /* eslint-disable no-alert, no-console */
 
-import * as types from 'src/redux/actions/types';
-import { getMe, getUserEarnedBalance, getUserFuturesBalance } from 'src/redux/actions/user'
-import initUserSocket from 'src/redux/actions/userSocket';
-import Head from 'src/components/common/Head';
 import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import 'public/css/font.css';
 import { useEffect } from 'react';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 import { useAsync } from 'react-use';
 import { getAssetConfig, getExchangeConfig } from 'redux/actions/market';
 import { getWallet, setTheme } from 'redux/actions/user';
+import Head from 'src/components/common/Head';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
+import * as types from 'src/redux/actions/types';
+import { getMe, getUserFuturesBalance } from 'src/redux/actions/user';
+import initUserSocket from 'src/redux/actions/userSocket';
 import { useStore } from 'src/redux/store';
 // import * as fpixel from 'src/utils/fpixel';
 import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
-import { EarnWalletType } from 'redux/actions/const'
-import TransferModal from 'components/wallet/TransferModal'
 
 export function reportWebVitals(metric) {
     switch (metric.name) {
