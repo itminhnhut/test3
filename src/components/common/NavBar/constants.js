@@ -431,7 +431,7 @@ export const USER_CP = [
         localized: 'profile',
         // hide: true,
         isNew: true,
-        url: getV1Url('/profile'),
+        url: PATHS.ACCOUNT.PROFILE,
         child_lv1: []
     },
     {

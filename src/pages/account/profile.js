@@ -588,7 +588,7 @@ const AccountProfile = () => {
                      isVisible={!!state.openModal?.revokeAll}
                      onBackdropCb={onCloseModal}
                      onNegativeCb={onCloseModal}
-                     onPositiveCb={() => onRevoke(id, isThisDevice)}
+                     onPositiveCb={() => onRevoke(id || 'all', isThisDevice)}
                      onPositiveLoading={state.revokingDevices}
                      className="px-6"
             >
@@ -622,9 +622,9 @@ const AccountProfile = () => {
             }})
     }, [user])
 
-    useEffect(() => {
-        log.d('State => ', state)
-    }, [state])
+    // useEffect(() => {
+    //     log.d('State => ', state)
+    // }, [state])
 
     if (!user) {
         return <NeedLogin addClass="h-[380px] flex justify-center items-center"/>
