@@ -22,6 +22,7 @@
     "today": "Nami.Today",
     "more": "Thêm",
     "user": {
+      "user": "Quản lí người dùng",
       "profile": "Thông tin cá nhân",
       "security": "Bảo mật",
       "identify": "Nhận diện",
@@ -60,7 +61,14 @@
     "classic": "Đơn giản",
     "classic_description": "Giao diện đơn giản và dễ sử dụng",
     "advance": "Nâng cao",
-    "advance_description": "Toàn quyền truy cập, tuỳ biến vào tất cả các công cụ giao dịch"
+    "advance_description": "Toàn quyền truy cập, tuỳ biến vào tất cả các công cụ giao dịch",
+    "security": "Bảo mật",
+    "identify": "Nhận diện",
+    "reward_center": "Trung tâm quà tặng",
+    "task_center": "Trung tâm nhiệm vụ",
+    "api_mng": "Quản lý API",
+    "logout": "Đăng xuất",
+    "user": "Quản lý người dùng"
   },
   "menu_grid": {
     "deposit": "Nạp",

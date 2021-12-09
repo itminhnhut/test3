@@ -217,14 +217,24 @@ export const NAV_DATA = [
 ]
 
 export const MOBILE_NAV_DATA = [
-    // {
-    //     key: 10,
-    //     title: 'Profile',
-    //     localized: 'user.profile',
-    //     isNew: false,
-    //     url: '/profile',
-    //     child_lv1: []
-    // },
+    {
+        key: 10,
+        title: 'Profile',
+        localized: 'user.user',
+        isNew: false,
+        url: PATHS.ACCOUNT,
+        child_lv1: [
+            {
+                key: 0,
+                title: 'APIManagement',
+                localized: 'api_mng',
+                // hide: true,
+                isNew: true,
+                url: getV1Url('/settings/api-management'),
+                child_lv1: []
+            },
+        ]
+    },
     {
         key: 1,
         title: 'Market',

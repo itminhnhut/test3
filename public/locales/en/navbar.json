@@ -22,6 +22,7 @@
     "today": "Nami.Today",
     "more": "More",
     "user": {
+      "user": "User Control",
       "profile": "Personal Profile",
       "security": "Security",
       "identify": "Identify",
@@ -60,7 +61,14 @@
     "classic": "Classic",
     "classic_description": "Simple and easy-to-use interface",
     "advance": "Advance",
-    "advance_description": "Full access to all trading tools"
+    "advance_description": "Full access to all trading tools",
+    "security": "Security",
+    "identify": "Identify",
+    "reward_center": "Reward Center",
+    "task_center": "Task Center",
+    "api_mng": "API Management",
+    "logout": "Log Out",
+    "user": "User Control"
   },
   "menu_grid": {
     "deposit": "Deposit",

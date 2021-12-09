@@ -13,9 +13,12 @@ import { actionLogout } from 'redux/actions/user'
 import { getLoginUrl, getS3Url } from 'redux/actions/utils'
 import colors from 'styles/colors'
 import { useWindowSize } from 'utils/customHooks'
+import SvgCheckSuccess from 'components/svg/CheckSuccess'
+import { PulseLoader } from 'react-spinners'
+import { PATHS } from 'constants/paths'
 
 
-const PocketNavDrawer = memo(({ isActive, onClose }) => {
+const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel }) => {
     const [state, set] = useState({
         navActiveLv1: {},
     })
@@ -36,7 +39,7 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
        return MOBILE_NAV_DATA.map(nav => {
            const { key, title, localized, isNew, url, child_lv1 } = nav
 
-           // if (title === 'Profile' && !auth) return null
+           if ((title === 'Wallet' || title === 'Profile') && !auth) return null
 
            if (child_lv1 && child_lv1.length) {
 
@@ -118,7 +121,7 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                     <SvgIcon name="cross" size={20} style={{ cursor: 'pointer', marginRight: 16 }} onClick={onClose}/>
                 </div>
                 <div className="mal-pocket-navbar__drawer__content___wrapper">
-                    {!auth &&
+                    {!auth ?
                         <>
                             <div className="flex flex-row justify-between user__button">
                                 <div>
@@ -130,7 +133,23 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                             </div>
                             <div className="border-b border-divider dark:border-divider-dark"
                                  style={{paddingLeft: 16, paddingRight: 16, marginTop: 16, marginBottom: 16}}/>
-                        </> }
+                        </>
+                    : <Link href={PATHS.ACCOUNT.PROFILE}>
+                            <a className="flex items-center px-4 mb-6">
+                                <div className="w-[58px] h-[58px] rounded-full overflow-hidden">
+                                    <img src={auth?.avatar} alt="" />
+                                </div>
+                                <div className="ml-3">
+                                    <div className="flex items-center font-bold">
+                                        {auth?.username || auth?.email} <SvgCheckSuccess className="ml-2" />
+                                    </div>
+                                    <div className="text-sm font-medium text-dominant">
+                                        {loadingVipLevel ?
+                                            <PulseLoader size={3} color={colors.teal} /> : `VIP ${vipLevel || '0'}`}
+                                    </div>
+                                </div>
+                            </a>
+                        </Link>}
 
                     {width < 992 && <div className="mal-pocket-navbar__drawer__navlink__group">
                         {renderNavItem()}

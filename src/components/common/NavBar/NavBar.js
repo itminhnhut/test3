@@ -499,7 +499,9 @@ const NavBar = ({
 
     return (
         <>
-            <PocketNavDrawer isActive={state.isDrawer} onClose={() => onDrawerAction(false)} />
+            <PocketNavDrawer isActive={state.isDrawer} onClose={() => onDrawerAction(false)}
+                             loadingVipLevel={state.loadingVipLevel} vipLevel={state.vipLevel}/>
+
             <div
                 style={style || {}}
                 className={`mal-navbar__wrapper
@@ -572,13 +574,13 @@ const NavBar = ({
                         <div
                             className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing"
                         >
-                            <SvgUser
+                            {width >= 992 && <SvgUser
                                 type={2}
                                 size={30}
                                 className="cursor-pointer user__svg"
                                 style={{ marginTop: -3 }}
                                 color={navTheme.color}
-                            />
+                            />}
                             {width >= 992 && renderUserControl()}
                         </div>
                     </>}
