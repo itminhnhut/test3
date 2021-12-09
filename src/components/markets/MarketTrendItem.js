@@ -2,7 +2,6 @@ import AssetLogo from 'src/components/wallet/AssetLogo'
 import MCard from 'src/components/common/MCard'
 import colors from 'styles/colors'
 import Link from 'next/link'
-import Skeleton from 'react-loading-skeleton'
 
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
 import { memo, useState } from 'react'
@@ -11,6 +10,7 @@ import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 import 'react-loading-skeleton/dist/skeleton.css'
+import Skeletor from 'components/common/Skeletor'
 
 const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
     // Init State
@@ -56,7 +56,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             {(!pair) ?
-                                <Skeleton
+                                <Skeletor
                                     circle
                                     width={36}
                                     height={36}
@@ -67,7 +67,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
 
                             <div className="ml-2">
                                 {(!pair) ?
-                                    <Skeleton width={100}/>
+                                    <Skeletor width={100}/>
                                     : <>
                                         <span className="font-bold">{_?.baseAsset}</span>/{_?.quoteAsset}
                                     </>}
@@ -75,7 +75,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                         </div>
                         <div className="w-[95px] xl:w-[65px]">
                             {(!pair) ?
-                                <Skeleton width={60} height={28}/>
+                                <Skeletor width={60} height={28}/>
                                 : <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)}
                                        alt="Nami Exchange"/>
                             }
@@ -84,10 +84,10 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                     <div className="mt-[12px] flex items-center justify-between">
                         <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-dominant'
                             : 'text-[20px] 2xl:text-[24px] font-medium text-red'}>
-                            {(!pair) ? <Skeleton width={65}/> : formatPrice(_.lastPrice)}
+                            {(!pair) ? <Skeletor width={65}/> : formatPrice(_.lastPrice)}
                         </div>
                         <div className="text-[16px] font-medium">
-                            {(!pair) ? <Skeleton width={65}/> : render24hChange(pair)}
+                            {(!pair) ? <Skeletor width={65}/> : render24hChange(pair)}
                         </div>
                     </div>
                     <div className="mt-[12px] flex items-center justify-between">
@@ -96,7 +96,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                         {/*    $ --*/}
                         {/*</div>*/}
                         <div className="text-[14px]">
-                            {(!pair) ? <Skeleton width={88}/>
+                            {(!pair) ? <Skeletor width={88}/>
                                 : <>
                                     {language === LANGUAGE_TAG.VI ? 'KL' : 'Vol'} {formatPrice(_.volume24h)} {_?.quoteAsset}
                                 </>

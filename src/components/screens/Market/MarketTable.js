@@ -9,7 +9,7 @@ import RePagination from 'src/components/common/ReTable/RePagination'
 import showNotification from 'utils/notificationService'
 import Empty from 'src/components/common/Empty'
 import NeedLogin from 'src/components/common/NeedLogin'
-import Skeleton from 'react-loading-skeleton'
+import Skeletor from 'components/common/Skeletor'
 
 import { useCallback, useEffect, useState } from 'react'
 import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils'
@@ -93,7 +93,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [restProps.subTabIndex, restProps.tabIndex])
 
     const renderTable = useCallback(() => {
-        const modifyColumns = []
+        let modifyColumns = []
         const translater = (key) => {
             switch (key) {
                 case 'pair':
@@ -116,6 +116,36 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     return null
             }
         }
+
+
+        let pairColumnsWidth = 100
+        let starColumnWidth = 45
+
+        if (width >= 768) {
+            pairColumnsWidth = 138
+            starColumnWidth = 65
+        }
+
+        if (width >= 1024) {
+            pairColumnsWidth = 158
+            starColumnWidth = 80
+        }
+
+        const starColumn = { key: 'star', dataIndex: 'star', title: '', fixed: 'left', align: 'left', width: starColumnWidth }
+
+        const columns = [
+            { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: pairColumnsWidth },
+            { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', align: 'left', width: 168 },
+            { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', align: 'right', width: 128 },
+            // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
+            { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'center', width: 168 },
+            { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 168 },
+            { key: '24h_high', dataIndex: '24h_high', title: '24h High', align: 'right', width: 128 },
+            { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 128 },
+            { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 128 }
+        ]
+
+        // Translate
         columns.forEach(c => {
             let item = c
             if (c.key !== 'star' && c.key !== 'operation') {
@@ -124,6 +154,14 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             modifyColumns.push(item)
         })
 
+        // Hide star button if user not found
+        if (auth) {
+            modifyColumns.unshift(starColumn)
+        } else {
+            modifyColumns = modifyColumns.filter(col => col?.key !== 'star')
+        }
+
+        //
         let tradingMode = TRADING_MODE.EXCHANGE
 
         if (tab[restProps.tabIndex]?.key === 'favorite') {
@@ -134,6 +172,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             }
         }
 
+        // only show market cap col for exchange tab
         if (tab[restProps.tabIndex]?.key === 'futures'
         || (tab[restProps.tabIndex]?.key === 'favorite' && favSubTab[restProps.subTabIndex]?.key === 'futures')) {
             remove(modifyColumns, o => o.key === 'market_cap')
@@ -245,11 +284,10 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             <div id="market_table___list" style={{ backgroundColor: currentTheme === THEME_MODE.DARK ? '#071026' : '#FCFCFC' }}
                  className="py-[40px] px-[20px] h-full rounded-tr-[20px] rounded-tl-[20px]">
                 <div className="flex flex-col justify-start md:justify-between md:flex-row md:items-center">
-                    <div className="text-[26px] font-bold mb-4 md:mb-0">
+                    <div className="text-[20px] lg:text-[26px] font-bold mb-4 md:mb-0">
                         {t('common:market')}
                     </div>
-                    <div
-                        className="flex items-center py-[10px] px-[18px] rounded-[6px] bg-gray-4 dark:bg-darkBlue-3 cursor-pointer">
+                    <div className="flex items-center px-3 py-1.5 lg:py-[10px] lg:px-[18px] rounded-[6px] bg-gray-4 dark:bg-darkBlue-3 cursor-pointer">
                         <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={20}/>
                         <input className="bg-transparent outline-none px-2"
                                value={restProps.search}
@@ -295,19 +333,6 @@ export const subTab = [
 export const favSubTab = [
     { key: 'exchange', localized: null },
     { key: 'futures', localized: null }
-]
-
-const columns = [
-    { key: 'star', dataIndex: 'star', title: '', fixed: 'left', align: 'left', width: 80 },
-    { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: 168 },
-    { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', align: 'left', width: 168 },
-    { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', align: 'right', width: 128 },
-    // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
-    { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'center', width: 168 },
-    { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 168 },
-    { key: '24h_high', dataIndex: '24h_high', title: '24h High', align: 'right', width: 128 },
-    { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 128 },
-    { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 128 }
 ]
 
 const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRefresher, isLoading = false, isAuth) => {
@@ -367,22 +392,22 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
 }
 
 const ROW_LOADING_SKELETON = {
-    star: <Skeleton width={65}/>,
-    pair: <Skeleton width={65}/>,
-    last_price: <Skeleton width={65}/>,
-    change_24h: <Skeleton width={65}/>,
-    market_cap: <Skeleton width={65}/>,
-    volume_24h: <Skeleton width={65}/>,
-    '24h_high': <Skeleton width={65}/>,
-    '24h_low': <Skeleton width={65}/>,
-    operation: <Skeleton width={65}/>
+    star: <Skeletor width={65}/>,
+    pair: <Skeletor width={65}/>,
+    last_price: <Skeletor width={65}/>,
+    change_24h: <Skeletor width={65}/>,
+    market_cap: <Skeletor width={65}/>,
+    volume_24h: <Skeletor width={65}/>,
+    '24h_high': <Skeletor width={65}/>,
+    '24h_low': <Skeletor width={65}/>,
+    operation: <Skeletor width={65}/>
 }
 
 const renderPair = (b, q, lbl, w) => {
     return (
         <div className="flex items-center">
-            <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28}/>
-            <div className="ml-3 whitespace-nowrap">
+            {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28}/>}
+            <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap'}>
                 <span className="font-bold">{b}</span>
                 <span className="font-normal text-textSecondary dark:text-textSecondary-dark">/{q}</span>
             </div>
