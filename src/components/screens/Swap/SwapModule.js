@@ -21,9 +21,8 @@ import { useSelector } from 'react-redux'
 import { RefreshCw, Search, X, XCircle } from 'react-feather'
 import { ApiStatus } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { TERM_OF_SERVICE } from 'constants/constants'
 import { PATHS } from 'constants/paths'
-
+import { roundToDown } from 'round-to'
 
 const FEE_RATE = 0 / 100
 const DEBOUNCE_TIMEOUT = 500
@@ -82,7 +81,7 @@ const SwapModule = ({ width, pair }) => {
     const toAssetListRef = useRef()
     const fromAssetBtnRef = useRef()
     const toAssetBtnRef = useRef()
-    const cancelBtnRef = useRef()
+    // const cancelBtnRef = useRef()
 
     // Memmoized Variable
     // CURRENT SWAP PAIRS CONFIG
@@ -128,7 +127,7 @@ const SwapModule = ({ width, pair }) => {
         data && setState({ estRate: data })
         if (status === ApiStatus.SUCCESS && updateQty) {
             if (requestAsset === state.fromAsset) {
-                setState({ toAmount: requestQty * data?.price })
+                setState({ toAmount: +roundToDown(requestQty * data?.price, 10) })
             }
             if (requestAsset === state.toAsset) {
                 setState({ fromAmount: requestQty / data?.price })
@@ -257,7 +256,7 @@ const SwapModule = ({ width, pair }) => {
     const onMaxiumQty = (mode = 'from', availableAsset) => {
         if (!availableAsset) return
         const _qty = availableAsset
-        const limitMaxQty = config.filters?.[0].maxQty
+        // const limitMaxQty = config.filters?.[0].maxQty
 
         if (mode === 'from') {
             if ((!_qty > 0)) return
@@ -398,17 +397,17 @@ const SwapModule = ({ width, pair }) => {
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={toAssetRef}
-                        className="w-full px-[6px] text-[18px] md:text-[20px] text-right font-medium"
+                        className="w-full pl-[6px] text-[18px] md:text-[20px] text-right font-medium"
                         value={state.toAmount}
                         onFocus={() => setState({ focus: 'to', inputHighlighted: 'to' })}
                         onBlur={() => setState({ inputHighlighted: null })}
                         onValueChange={({ value }) => setState({ toAmount: value })}
                         placeholder="0.0000"
                     />
-                    <div className="uppercase text-dominant cursor-pointer font-bold hover:opacity-50"
-                         onClick={() => onMaxiumQty('to', availabelAsset?.toAsset)}>
-                        max
-                    </div>
+                    {/*<div className="uppercase text-dominant cursor-pointer font-bold hover:opacity-50"*/}
+                    {/*     onClick={() => onMaxiumQty('to', availabelAsset?.toAsset)}>*/}
+                    {/*    max*/}
+                    {/*</div>*/}
                 </div>
             </div>
         )
@@ -473,9 +472,9 @@ const SwapModule = ({ width, pair }) => {
         const leftUnit = state.changeEstRatePosition ? state.toAsset : state.fromAsset
         const rightUnit = state.changeEstRatePosition ? state.fromAsset : state.toAsset
 
-        // if (state.fromErrors && Object.keys(state.fromErrors).length) {
-        //     return <span className="font-bold">---</span>
-        // }
+        if (state.loadingEstRate) {
+            return <Skeletor width={100}/>
+        }
 
         if (
             state.estRate?.price &&
@@ -489,8 +488,8 @@ const SwapModule = ({ width, pair }) => {
             return <span className="font-bold">---</span>
         }
 
-        if (price === 0 || state.loadingEstRate) {
-            return <Skeletor width={100}/>
+        if (!state.estRate || price === 0) {
+            return <span className="font-bold">---</span>
         }
 
         return (
@@ -595,6 +594,10 @@ const SwapModule = ({ width, pair }) => {
             setState({ loading: false })
         }
     }, [])
+
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG => ', state)
+    // }, [state])
 
     useEffect(() => {
         if (config?.filters) {

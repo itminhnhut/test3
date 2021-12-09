@@ -1,4 +1,17 @@
 import Axios from 'axios';
+import { PATHS } from 'constants/paths';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useLanguage from 'hooks/useLanguage';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
+import { useAsync } from 'react-use';
+import { API_GET_VIP } from 'redux/actions/apis';
+import { getMarketWatch } from 'redux/actions/market';
+import { getLoginUrl, getS3Url } from 'redux/actions/utils';
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
 import PocketNavDrawer from 'src/components/common/NavBar/PocketNavDrawer';
 import NotificationList from 'src/components/notification/NotificationList';
@@ -17,23 +30,9 @@ import SvgUser from 'src/components/svg/SvgUser';
 import SvgUserPlus from 'src/components/svg/SvgUserPlus';
 import SvgWallet from 'src/components/svg/Wallet';
 import SpotSetting from 'src/components/trade/SpotSetting';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import useLanguage from 'hooks/useLanguage';
-import { useTranslation } from 'next-i18next';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { PulseLoader } from 'react-spinners';
-import { useAsync } from 'react-use';
-import { API_GET_VIP } from 'redux/actions/apis';
-import { getMarketWatch } from 'redux/actions/market';
-import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
-import colors from 'styles/colors';
 import { buildLogoutUrl } from 'src/utils';
+import colors from 'styles/colors';
 import { useWindowSize } from 'utils/customHooks';
-import { PATHS } from 'constants/paths'
-import { useRouter } from 'next/router'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -540,17 +539,17 @@ const NavBar = ({
 
                     {!auth && <div className="flex flex-row items-center mr-8">
                         {width >= 1366 &&
-                        <Link href={getLoginUrl('sso', 'login')}>
+                        <a href={getLoginUrl('sso', 'login')}>
                             <a className={`text-sm font-medium ${navTheme.text} whitespace-nowrap hover:!text-dominant`}>
                                 {t('common:sign_in')}
                             </a>
-                        </Link>}
+                        </a>}
                         {width >= 1090 &&
-                        <Link href={getLoginUrl('sso', 'register')}>
+                        <a href={getLoginUrl('sso', 'register')}>
                             <a className="text-sm font-medium text-dominant whitespace-nowrap ml-8 hover:underline">
                                 {t('common:sign_up')}
                             </a>
-                        </Link>}
+                        </a>}
                     </div>}
                     {auth &&
                     <>

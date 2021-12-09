@@ -121,7 +121,7 @@ const HomeAdditional = ({ parentState }) => {
                             {t('home:first_award.join_nami_by')}
                         </div>
                         <div className="homepage-first_award___form___platform">
-                            <Link href={getLoginUrl('sso', 'register')}>
+                            <a href={getLoginUrl('sso', 'register')}>
                                 <a>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 75 75"
                                          fill="none">
@@ -131,8 +131,8 @@ const HomeAdditional = ({ parentState }) => {
                                             fill={theme === THEME_MODE.LIGHT ? '#223050' : colors.grey4}/>
                                     </svg>
                                 </a>
-                            </Link>
-                            <Link href={getLoginUrl('sso', 'register')}>
+                            </a>
+                            <a href={getLoginUrl('sso', 'register')}>
                                 <a>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 75 75"
                                          fill="none">
@@ -146,8 +146,8 @@ const HomeAdditional = ({ parentState }) => {
                                             fill={theme === THEME_MODE.LIGHT ? '#223050' : colors.grey4}/>
                                     </svg>
                                 </a>
-                            </Link>
-                            <Link href={getLoginUrl('sso', 'register')}>
+                            </a>
+                            <a href={getLoginUrl('sso', 'register')}>
                                 <a>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 75 75"
                                          fill="none">
@@ -158,7 +158,7 @@ const HomeAdditional = ({ parentState }) => {
                                             fill={theme === THEME_MODE.LIGHT ? '#223050' : colors.grey4}/>
                                     </svg>
                                 </a>
-                            </Link>
+                            </a>
                         </div>
                         <div className="homepage-first_award___form___or">
                             {language === LANGUAGE_TAG.VI ? 'hoặc' : 'or'}
