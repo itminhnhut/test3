@@ -79,7 +79,7 @@ const SelectTimeButton = ({ onTimeChange, timeOptions, selectedTime }) => {
 
 const MarketMaker = ({ token }) => {
     const router = useRouter();
-    const timeOptions = ["Today", "Yesterday", "This week", "This month"];
+    const timeOptions = ["Today", "Yesterday", "This week", "This month", "Previous month"];
     const { id } = router.query;
     // Check pattern
     let symbolFromUrl = null;
@@ -148,6 +148,20 @@ const MarketMaker = ({ token }) => {
                     key: "selection",
                 });
             }
+            case timeOptions[4]: {
+                // set date
+
+                const m = new Date();
+                m.setDate(1);
+
+                return setTimeRange({
+                    startDate: startOfMonth(m),
+                    endDate: startOfMonth(
+                        new Date(m.getTime() - 24 * 60 * 60 * 1000)
+                    ),
+                    key: "selection",
+                });
+            }
             default:
                 break;
         }
@@ -205,7 +219,7 @@ const MarketMaker = ({ token }) => {
                 },
                 params: {
                     displayingId,
-                    symbol
+                    symbol,
                 },
             };
 
@@ -376,7 +390,10 @@ const MarketMaker = ({ token }) => {
                                         {o.isMM ? (
                                             <FontAwesomeIcon
                                                 onClick={() =>
-                                                    closeOrder(o.displayingId, o.symbol)
+                                                    closeOrder(
+                                                        o.displayingId,
+                                                        o.symbol
+                                                    )
                                                 }
                                                 className="cursor-pointer ml-2"
                                                 icon={faTrashAlt}
