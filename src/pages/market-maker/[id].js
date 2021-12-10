@@ -155,10 +155,10 @@ const MarketMaker = ({ token }) => {
                 m.setDate(1);
 
                 return setTimeRange({
-                    startDate: startOfMonth(m),
-                    endDate: startOfMonth(
+                    startDate: startOfMonth(
                         new Date(m.getTime() - 24 * 60 * 60 * 1000)
                     ),
+                    endDate: startOfMonth(m),
                     key: "selection",
                 });
             }
