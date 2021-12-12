@@ -196,7 +196,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div
                                 className="text-sm text-center text-txtSecondary dark:text-txtSecondary-dark font-medium mt-3">
-                                {t('common:already_have_account')} <Link href={getLoginUrl('sso', 'login')}><a className="text-dominant">{t('common:sign_in')}</a></Link>
+                                {t('common:already_have_account')}<a href={getLoginUrl('sso', 'login')} className="text-dominant">{t('common:sign_in')}</a>
                             </div>
                         </div>
                     </div>
