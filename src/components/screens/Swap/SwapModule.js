@@ -16,7 +16,7 @@ import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { useAsync, useDebounce } from 'react-use'
 import { Trans, useTranslation } from 'next-i18next'
 import { find, orderBy, uniqBy } from 'lodash'
-import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getV1Url, safeToFixed } from 'redux/actions/utils'
+import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, getV1Url, safeToFixed } from 'redux/actions/utils'
 import { useSelector } from 'react-redux'
 import { RefreshCw, Search, X, XCircle } from 'react-feather'
 import { ApiStatus } from 'redux/actions/const'
@@ -505,10 +505,10 @@ const SwapModule = ({ width, pair }) => {
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <div className="mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold bg-dominant
+                <a href={getLoginUrl('sso', 'login')} className="mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold bg-dominant
                                 select-none cursor-pointer hover:opacity-80">
                     {t('common:sign_in')}
-                </div>
+                </a>
             )
         }
 
