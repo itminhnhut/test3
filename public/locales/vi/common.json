@@ -177,5 +177,8 @@
   "search_coin": "Tìm coin",
   "full_name": "Tên",
   "free": "Miễn phí",
-  "unknown": "Unknown"
+  "unknown": "Unknown",
+  "uploader": {
+    "not_over": "Kích thước không vượt quá {{ limit }}"
+  }
 }

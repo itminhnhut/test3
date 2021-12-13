@@ -75,5 +75,8 @@
         "banned": "Banned",
         "logged_out": "Logged out",
         "wait_for_authorize": "Authorizing"
-    }
+    },
+    "set_avatar_title": "Make your own style",
+    "your_avatar": "Your avatar",
+    "nami_default_avatar": "Our pretty collection"
 }

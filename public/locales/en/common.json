@@ -177,5 +177,8 @@
   "search_coin": "Search Coin",
   "full_name": "Full Name",
   "free": "Free",
-  "unknown": "Unknown"
+  "unknown": "Unknown",
+  "uploader": {
+    "not_over": "Maxium size not over {{ limit }}"
+  }
 }

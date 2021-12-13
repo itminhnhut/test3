@@ -6,14 +6,13 @@ import { formatNumber, formatTime } from 'redux/actions/utils'
 import { API_GET_VIP, API_SET_ASSET_AS_FEE, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis'
 import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN, USER_DEVICE_STATUS } from 'constants/constants'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ChevronRight, Edit, MoreVertical } from 'react-feather'
+import { ChevronRight, Edit, MoreVertical, Share } from 'react-feather'
 import { Menu, useContextMenu } from "react-contexify"
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
 import { ApiStatus } from 'redux/actions/const'
 import { orderBy } from 'lodash'
 import { PATHS } from 'constants/paths'
-import { log } from 'utils'
 
 import withTabLayout from 'components/common/layouts/withTabLayout'
 import useWindowSize from 'hooks/useWindowSize'
@@ -23,16 +22,20 @@ import SvgGooglePlus from 'components/svg/SvgGooglePlus'
 import CheckSuccess from 'components/svg/CheckSuccess'
 import SvgFacebook from 'components/svg/SvgFacebook'
 import SvgTwitter from 'components/svg/SvgTwitter'
+import ReactCrop from 'react-image-crop'
 import NeedLogin from 'components/common/NeedLogin'
 import SvgApple from 'components/svg/SvgApple'
+import Dropzone from 'react-dropzone'
 import Skeletor from 'components/common/Skeletor'
-import ReModal from 'components/common/ReModal'
+import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModal'
 import MCard from 'components/common/MCard'
 import Link from 'next/link'
 import Axios from 'axios'
 import Switcher from 'components/common/Switcher'
+import styled from 'styled-components'
 
 import "react-contexify/dist/ReactContexify.css"
+import "react-image-crop/dist/ReactCrop.css"
 
 const DEFAULT_USER = {
     name: '',
@@ -41,6 +44,10 @@ const DEFAULT_USER = {
 }
 
 const MENU_CONTEXT = 'revoke_devices'
+
+const AVATAR_KEY = 'avatar_index_'
+
+const AVATAR_SIZE_LIMIT = 10000
 
 const INITIAL_STATE = {
     useNami: false,
@@ -57,10 +64,14 @@ const INITIAL_STATE = {
     promoteFee: null,
     loadingAssetFee: false,
     namiBalance: null,
-    openModal: {},
+    openModal: { avatar: true },
     revokeRef: {},
     revokingDevices: false,
     revokeObj: {},
+    selectedAvatar: {},
+    avatarIssues: null,
+    uploadedSrc: null,
+    crop: { unit: '%', width: 55, height: 55, aspect: 1 },
 
     // ... Add new state
 }
@@ -182,6 +193,26 @@ const AccountProfile = () => {
         show(event)
     }
 
+    const handleDrop = (files) => {
+        let file = files[0]
+        const reader = new FileReader()
+        reader.onload = (event) => setState({ uploadedSrc: event.target.result })
+        reader.readAsDataURL(file)
+    }
+
+    const onValidatingAvatarSize = ({ size }) => {
+        if (!size) return
+        if (size > AVATAR_SIZE_LIMIT) {
+            setState({ avatarIssues: t('common:uploader.not_over', { limit: '1 MB' }) })
+        } else {
+            setState({ avatarIssues: null })
+        }
+    }
+
+    const onUpload = (data) => {
+
+    }
+
     // const onEdit = () => {
     //     setState({ isEditable: true })
     //     firstInputRef.current?.focus()
@@ -204,10 +235,10 @@ const AccountProfile = () => {
                 <div className="relative w-[132px] h-[132px] rounded-full bg-gray-4 dark:bg-darkBlue-5">
                     <img src={user?.avatar} alt="Nami.Exchange"
                          className="relative z-10 w-full h-full rounded-full"/>
-                    {/*<div className="absolute w-auto h-auto z-20 right-2 bottom-2 p-1.5 rounded-full bg-dominant cursor-pointer"*/}
-                    {/*     onClick={openAvatarModal}>*/}
-                    {/*    <Edit className="text-white" size={12} strokeWidth={1.75}/>*/}
-                    {/*</div>*/}
+                    <div className="absolute w-auto h-auto z-20 right-2 bottom-2 p-1.5 rounded-full bg-dominant cursor-pointer"
+                         onClick={openAvatarModal}>
+                        <Edit className="text-white" size={12} strokeWidth={1.75}/>
+                    </div>
                 </div>
                 <div className="mt-5 mb-2.5 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                     Social Binding
@@ -239,8 +270,7 @@ const AccountProfile = () => {
         const { name, username, phone } = state.user
 
         return (
-            <div
-                style={width >= BREAK_POINTS.xl ?
+            <div style={width >= BREAK_POINTS.xl ?
                 { width: `calc(80% / 3)` } : undefined}
                  className="w-full lg:w-3/5 mt-6 lg:mt-0">
                 <div className="flex items-center justify-between xl:justify-start text-sm mb-2">
@@ -437,7 +467,7 @@ const AccountProfile = () => {
             const skeleton = []
             for (let i = 0; i < 5; ++i) {
                 skeleton.push(
-                    <div className="flex justify-between text-sm font-medium mb-5">
+                    <div key={`act_skeleton__${i}`} className="flex justify-between text-sm font-medium mb-5">
                         <div>
                             <div className="device font-bold"><Skeletor width={100}/></div>
                             <div className="location mt-2"><Skeletor width={65}/></div>
@@ -476,12 +506,12 @@ const AccountProfile = () => {
                 <div key={log?.id} className="flex justify-between text-sm font-medium mb-5">
                     <div>
                         <div className="device font-bold flex items-center">
-                            {log?.device_title}
+                            <span className="inline-block max-w-[100px] sm:max-w-none truncate">{log?.device_title}</span>
                             <span className="ml-4 text-xs xl:text-sm font-normal inline-flex items-center">
                                {statusInner}
                             </span>
                         </div>
-                        <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">
+                        <div className="location mt-2 text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                             {log?.last_location}
                         </div>
                     </div>
@@ -491,7 +521,7 @@ const AccountProfile = () => {
                                  className="ip-address truncate text-right whitespace-nowrap">
                                 {log?.last_ip_address || EMPTY_VALUE}
                             </div>
-                            <div className="date-time mt-2 text-right text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="date-time mt-2 text-xs sm:text-sm text-right whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark">
                                 {formatTime(log?.last_logged_in, 'dd-MM-yyyy')}
                                 <span className="ml-3">{formatTime(log?.last_logged_in, 'HH:mm')}</span>
                             </div>
@@ -529,7 +559,7 @@ const AccountProfile = () => {
             const skeleton = []
             for (let i = 0; i < 5; ++i) {
                 skeleton.push(
-                    <div className="text-sm font-medium mb-5">
+                    <div key={`announcement_skeleton__${i}`} className="text-sm font-medium mb-5">
                         <div className="device font-bold">
                             <Skeletor width={150}/>
                         </div>
@@ -562,18 +592,110 @@ const AccountProfile = () => {
     const renderAvatarModal = useCallback(() => {
         if (!Object.keys(state.openModal)?.length) return null
 
+        let modalMode
+        let text
+        let support
+
+        if (language === LANGUAGE_TAG.VI) {
+            text = <>
+                Kéo thả hình ảnh vào đây hoặc <span className="text-dominant">duyệt</span>
+            </>
+            support = <>
+                Hỗ trợ JPG, JPEG, PNG
+            </>
+        } else {
+            text = <>
+                Drag your image here, or <span className="text-dominant">browse</span>
+            </>
+            support = <>
+                Support JPG, JPEG, PNG
+            </>
+        }
+
+
+        if (width >= BREAK_POINTS.lg) {
+            modalMode = REMODAL_POSITION.CENTER
+        } else {
+            modalMode = { mode: "full-screen", from: 'right' }
+        }
+
+        const avatarList = [
+            // <div className="w-1/4">
+            //     <img src="/images/screen/persona/mal_avt_nami.png" alt={null}/>
+            // </div>
+        ]
+        for (let i = 0; i < 12; ++i) {
+            avatarList.push(
+                <div key={`avatar_list__${i}`} className="relative w-1/4 p-2 cursor-pointer hover:opacity-80">
+                    <img className={state.selectedAvatar?.[`${AVATAR_KEY}${i}`] ? 'rounded-full border border-dominant' : 'rounded-full border border-transparent'}
+                         onClick={() => setState({ selectedAvatar: { [`${AVATAR_KEY}${i}`]: !state.selectedAvatar?.[`${AVATAR_KEY}${i}`], id: i } })}
+                         src={`/images/screen/persona/mal_avt_${i}.png`}
+                         alt={null}/>
+                    {state.selectedAvatar?.[`${AVATAR_KEY}${i}`] && <CheckSuccess className="absolute bottom-2.5 right-2.5" size={14}/>}
+                </div>
+            )
+        }
+
         return (
             <ReModal useOverlay
-                     position={{ mode: "full-screen", from: 'right' }}
+                     useCrossButton
+                     useButtonGroup={REMODAL_BUTTON_GROUP.SINGLE_CONFIRM}
+                     buttonGroupWrapper={width >= BREAK_POINTS.lg ? 'w-[350px] m-auto' : ''}
+                     position={modalMode}
                      isVisible={!!state.openModal?.avatar}
+                     className={width >= BREAK_POINTS.lg ? 'min-w-[979px]' : ''}
+                     onNegativeCb={onCloseModal}
                      onBackdropCb={onCloseModal}
+                     title={t('profile:set_avatar_title')}
+                     positiveLabel={t('common:save')}
             >
-                <div className="text-center font-medium">
-                    ReModal
+                <div className="mt-5 flex flex-col lg:flex-row">
+                    <div className="w-full lg:w-1/2 h-1/2">
+                        <div className="font-medium text-center text-dominant text-sm lg:text-[16px] xl:text-[18px]">
+                            {t('profile:your_avatar')}
+                        </div>
+                            {state.uploadedSrc ?
+                                <div className="pt-3 flex flex-col justify-center items-center rounded-xl cursor-pointer">
+                                    <Cropper
+                                        circularCrop
+                                        src={state.uploadedSrc}
+                                        crop={state.crop}
+                                        onChange={crop => setState({ crop })}
+                                    />
+                                </div>
+                                : <Dropzone onDrop={handleDrop} maxFiles={1}
+                                            // maxSize={10000}
+                                            multiple={false}
+                                            validator={onValidatingAvatarSize}
+                                            accept="image/jpeg, image/png"
+                                            onDropAccepted={onUpload}
+                                >
+                                    {({ getRootProps, getInputProps }) => (
+                                        <div {...getRootProps({ className: 'dropzone' })}>
+                                            <input {...getInputProps()} />
+                                            <div className="mt-3 py-8 flex flex-col justify-center items-center rounded-xl border border-dashed border-dominant cursor-pointer">
+                                                <Share className="text-dominant"/>
+                                                <div className="mt-3.5 font-medium text-sm lg:text-[16px] xl:text-[18px]">
+                                                    {text}
+                                                </div>
+                                                <div className="mt-2 text-xs lg:text-sm text-txtSecondary dark:text-txtSecondary-dark">{support}</div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </Dropzone>}
+                    </div>
+                    <div className="mt-5 w-full lg:w-1/2 h-1/2">
+                        <div className="pb-3 font-medium text-center text-dominant text-sm lg:text-[16px] xl:text-[18px]">
+                            {t('profile:nami_default_avatar')}
+                        </div>
+                        <div className="flex flex-wrap">
+                            {avatarList}
+                        </div>
+                    </div>
                 </div>
             </ReModal>
         )
-    }, [state.openModal?.avatar, width])
+    }, [state.openModal?.avatar, state.selectedAvatar, state.uploadedSrc, state.crop, width, language])
 
     const renderRevokeAll = useCallback(() => {
         if (!Object.keys(state.openModal)?.length) return null
@@ -622,62 +744,72 @@ const AccountProfile = () => {
             }})
     }, [user])
 
-    // useEffect(() => {
-    //     log.d('State => ', state)
-    // }, [state])
-
-    if (!user) {
-        return <NeedLogin addClass="h-[380px] flex justify-center items-center"/>
-    }
+    useEffect(() => {
+        console.log('namidev-DEBUG: State => ', state)
+    }, [state])
 
     return (
         <>
-            <div className="pb-20 lg:pb-24 2xl:pb-32">
-                <div className="font-bold leading-[40px] text-[26px] mb-6">
-                    {t('navbar:menu.user.profile')}
-                </div>
-                <MCard addClass="lg:flex lg:flex-wrap lg:justify-between px-7 py-8 lg:p-10 xl:px-7 xl:py-8 w-full drop-shadow-onlyLight border border-transparent dark:drop-shadow-none dark:border-divider-dark">
-                    {renderUserPersona()}
-                    {renderUserInfo()}
-                    {renderFee()}
-                    {renderJourney()}
-                </MCard>
+            {!user ? <NeedLogin addClass="h-[380px] flex justify-center items-center"/>
+            : <>
+                    <div className="pb-20 lg:pb-24 2xl:pb-32">
+                        <div className="font-bold leading-[40px] text-[26px] mb-6">
+                            {t('navbar:menu.user.profile')}
+                        </div>
+                        <MCard addClass="lg:flex lg:flex-wrap lg:justify-between px-7 py-8 lg:p-10 xl:px-7 xl:py-8 w-full drop-shadow-onlyLight border border-transparent dark:drop-shadow-none dark:border-divider-dark">
+                            {renderUserPersona()}
+                            {renderUserInfo()}
+                            {renderFee()}
+                            {renderJourney()}
+                        </MCard>
 
-                <div className="mt-10 flex flex-col lg:flex-row">
-                    <div className="w-full lg:w-1/2 lg:pr-2.5">
-                        <div className="flex justify-between items-center">
-                            <div className="t-common">{t('profile:activity')}</div>
-                            <span className="flex items-center font-medium text-red hover:!underline cursor-pointer"
-                                  onClick={openRevokeModal}>
+                        <div className="mt-10 flex flex-col lg:flex-row">
+                            <div className="w-full lg:w-1/2 lg:pr-2.5">
+                                <div className="flex justify-between items-center">
+                                    <div className="t-common">{t('profile:activity')}</div>
+                                    <span className="flex items-center font-medium text-red hover:!underline cursor-pointer"
+                                          onClick={openRevokeModal}>
                                 {t('profile:revoke_all_devices')} <ChevronRight className="ml-2" size={20}/>
                             </span>
-                        </div>
-                        <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
-                               addClass="mt-5 p-4 sm:p-6 lg:p-7 min-h-[356px] dark:border dark:border-divider-dark !overflow-hidden">
-                            <div className="max-h-[300px] pr-4 overflow-y-auto">
-                                {renderActivities()}
+                                </div>
+                                <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
+                                       addClass="mt-5 p-4 sm:p-6 lg:p-7 min-h-[356px] dark:border dark:border-divider-dark !overflow-hidden">
+                                    <div className="max-h-[300px] pr-4 overflow-y-auto">
+                                        {renderActivities()}
+                                    </div>
+                                </MCard>
                             </div>
-                        </MCard>
-                    </div>
-                    <div className="w-full mt-8 lg:mt-0 lg:w-1/2 lg:pl-2.5">
-                        <div className="t-common">
-                            {t('profile:announcements')}
-                        </div>
-                        <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
-                               addClass="max-h-[400px] min-h-[356px] overflow-y-auto mt-5 p-4 sm:p-6 lg:p-7 dark:border dark:border-divider-dark !overflow-hidden">
-                            <div className="max-h-[300px] overflow-y-auto">
-                                {renderAnnoucements()}
-                                {renderRevokeContext()}
+                            <div className="w-full mt-8 lg:mt-0 lg:w-1/2 lg:pl-2.5">
+                                <div className="t-common">
+                                    {t('profile:announcements')}
+                                </div>
+                                <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
+                                       addClass="max-h-[400px] min-h-[356px] overflow-y-auto mt-5 p-4 sm:p-6 lg:p-7 dark:border dark:border-divider-dark !overflow-hidden">
+                                    <div className="max-h-[300px] overflow-y-auto">
+                                        {renderAnnoucements()}
+                                        {renderRevokeContext()}
+                                    </div>
+                                </MCard>
                             </div>
-                        </MCard>
+                        </div>
                     </div>
-                </div>
-            </div>
-            {renderAvatarModal()}
-            {renderRevokeAll()}
+                    {renderAvatarModal()}
+                    {renderRevokeAll()}
+              </>
+            }
         </>
     )
 }
+
+const Cropper = styled(ReactCrop)`
+  max-width: 350px;
+  max-height: 350px;
+  
+  .ReactCrop__image {
+    max-height: 100%;
+    width: auto;
+  }
+`
 
 export const getStaticProps = async ({ locale }) => ({
     props: {

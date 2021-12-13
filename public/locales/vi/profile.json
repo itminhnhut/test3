@@ -75,5 +75,8 @@
         "banned": "Đã khoá",
         "logged_out": "Đã đăng xuất",
         "wait_for_authorize": "Đang xác minh"
-    }
+    },
+    "set_avatar_title": "Tạo phong cách riêng của bạn",
+    "your_avatar": "Ảnh đại diện của bạn",
+    "nami_default_avatar": "Ẩn danh nhưng vẫn phong cách"
 }
