@@ -78,5 +78,8 @@
     },
     "set_avatar_title": "Make your own style",
     "your_avatar": "Your avatar",
-    "nami_default_avatar": "Our pretty collection"
+    "nami_default_avatar": "Or our pretty collection",
+    "set_custom_avatar": "Set new",
+    "using_avatar_preset": "Using our preset",
+    "custom_avatar_uploaded": "Uploaded avatar"
 }

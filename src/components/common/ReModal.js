@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'next-i18next'
 import { PulseLoader } from 'react-spinners'
 import { log } from 'utils'
+import { X } from 'react-feather'
 
+import useLockedBody from 'hooks/useLockScroll'
 import Button from 'components/common/Button'
 import colors from 'styles/colors'
-import { X } from 'react-feather'
 
 const ReModal = (
     {
@@ -31,10 +32,12 @@ const ReModal = (
 
     // Re-MODAL
     const { t } = useTranslation(['common'])
+    const [, setLocked] = useLockedBody()
 
     const memmoizedStyles = useMemo(() => {
         let _className = DEFAULT_CLASS
         let _active
+        let _privateStyles = {}
 
         switch (position) {
             case REMODAL_POSITION.TOP:
@@ -61,19 +64,46 @@ const ReModal = (
 
         if (position?.mode === REMODAL_POSITION.FULLSCREEN.MODE) {
             if (position?.from === REMODAL_POSITION.FULLSCREEN.FROM.LEFT) {
-                _className += 'p-0 left-0 top-0 w-screen h-screen -translate-x-full'
+                _className += 'p-0 left-0 top-0 w-full h-full -translate-x-full'
                 _active = '!translate-x-0'
             }
 
             if (position?.from === REMODAL_POSITION.FULLSCREEN.FROM.RIGHT) {
-                _className += 'p-0 right-0 top-0 w-screen h-screen translate-x-full'
+                _className += 'p-0 right-0 top-0 w-full h-full translate-x-full'
                 _active = '!translate-x-0'
+            }
+
+            _privateStyles = {
+                top: {
+                    width: '100%',
+                    height: position?.dimension?.top || REMODAL_POSITION.FULLSCREEN.DIMENSION.TOP,
+                    display: 'flex',
+                    alignItems: 'center', justifyItems: 'center',
+                    paddingLeft: '16px', paddingRight: '16px',
+                    ...position?.dimension?.top?.styles
+                },
+                body: {
+                    height: `calc(100% - ${position?.dimension?.body || REMODAL_POSITION.FULLSCREEN.DIMENSION.TOP}px - ${position?.dimension?.body || REMODAL_POSITION.FULLSCREEN.DIMENSION.BOTTOM}px - ${position?.dimension?.body || REMODAL_POSITION.FULLSCREEN.DIMENSION.OFFSET}px)`,
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                    paddingLeft: '16px', paddingRight: '16px',
+                    ...position?.dimension?.body?.styles
+                },
+                bottom: {
+                    width: '100%',
+                    height: position?.dimension?.bottom || REMODAL_POSITION.FULLSCREEN.DIMENSION.BOTTOM,
+                    display: 'flex',
+                    alignItems: 'center', justifyItems: 'center',
+                    paddingLeft: '16px', paddingRight: '16px',
+                    ...position?.dimension?.bottom?.styles
+                }
             }
         }
 
         return {
             className: _className + ` ${className}`,
-            active: _active
+            active: _active,
+            privateStyles: _privateStyles
         }
     }, [className, position])
 
@@ -126,50 +156,54 @@ const ReModal = (
         debug && log.d('[ReModal] isVisible => ', isVisible)
     }, [isVisible, debug])
 
+    useEffect(() => {
+        if (position?.mode === REMODAL_POSITION.FULLSCREEN.MODE && isVisible) {
+            setLocked(true)
+        } else {
+            setLocked(false)
+        }
+    }, [position?.mode, isVisible])
+
+
     return (
         <>
-            {useOverlay && position !== REMODAL_POSITION.FULLSCREEN.MODE &&
+            {/*BEGIN OVERLAY*/}
+            {useOverlay && position?.mode !== REMODAL_POSITION.FULLSCREEN.MODE &&
             <div className={`mal-overlay ${isVisible ? 'mal-overlay__active' : ''}`}
                  onClick={() => {
                      debug && log.d('[ReModal] onBackdropCb triggered!')
                      onBackdropCb && onBackdropCb()
                  }}/>}
+            {/*END OVERLAY*/}
 
-            <div style={style || {}} className={isVisible ? `${memmoizedStyles.className} ${memmoizedStyles.active}` :  memmoizedStyles?.className}>
-                <div style={position?.mode === REMODAL_POSITION.FULLSCREEN.MODE ?
-                    { width: '100%', height: 50, display: 'flex',
-                        alignItems: 'center', justifyItems: 'center',
-                        paddingLeft: '16px', paddingRight: '16px'} : undefined}
-                               className="relative text-center font-bold lg:mt-6 text-[18px] lg:text-[26px]">
+            {/*BEGIN RE-MODAL*/}
+            <div style={style || {}} className={`${memmoizedStyles?.className} ${isVisible ? memmoizedStyles?.active : ''}`}>
+
+                {/*RE-MODAL TITLE*/}
+                <div style={memmoizedStyles?.privateStyles?.top || {}} className="relative text-center font-bold mt-2 lg:mt-6 text-[18px] lg:text-[26px]">
                     <div className="m-auto">
                         {title ? title : ''}
                     </div>
-                    {useCrossButton &&  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[35px] h-[35px] flex items-center justify-center cursor-pointer rounded-lg hover:bg-gray-4 dark:hover:bg-darkBlue-4"
+                    {useCrossButton &&
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-[35px] h-[35px] flex items-center justify-center cursor-pointer rounded-lg hover:bg-gray-4 dark:hover:bg-darkBlue-4"
                                              onClick={() => onNegativeCb && onNegativeCb()}>
                         <X strokeWidth={1.5} className="w-[20px] h-[20px] text-txtSecondary dark:text-txtSecondary-dark"/>
                     </div>}
                 </div>
 
-                <div style={position?.mode === REMODAL_POSITION.FULLSCREEN.MODE ?
-                    {
-                        height: `calc(100% - 65px - 50px - 20px)`,
-                        overflowY: 'auto',
-                        overflowX: 'hidden',
-                        paddingLeft: '16px', paddingRight: '16px'
-                    }
-                    : undefined
-                }>
+                {/*RE-MODAL BODY*/}
+                <div style={memmoizedStyles?.privateStyles?.body || {}}>
                     {isVisible && children}
                 </div>
 
-                <div style={position?.mode === REMODAL_POSITION.FULLSCREEN.MODE ?
-                    { width: '100%', height: 65, display: 'flex',
-                        alignItems: 'center', justifyItems: 'center',
-                        paddingLeft: '16px', paddingRight: '16px' } : undefined}
+                {/*RE-MODAL BUTTON GROUP*/}
+                <div style={memmoizedStyles?.privateStyles?.bottom || {}}
                      className={buttonGroupWrapper}>
                     {renderButtonGroup()}
                 </div>
+
             </div>
+            {/*END RE-MODAL*/}
         </>
     )
 }
@@ -187,6 +221,11 @@ export const REMODAL_POSITION = {
         FROM: {
             LEFT: 'left',
             RIGHT: 'right'
+        },
+        DIMENSION: {
+            TOP: 50,
+            BOTTOM: 80,
+            OFFSET: 20,
         }
     }
 }

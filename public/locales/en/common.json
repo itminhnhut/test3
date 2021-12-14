@@ -179,6 +179,10 @@
   "free": "Free",
   "unknown": "Unknown",
   "uploader": {
-    "not_over": "Maxium size not over {{ limit }}"
-  }
+    "uploading": "Uploading",
+    "not_over": "Maxium size not over {{ limit }}",
+    "time_remain": "{{ time }} second left"
+  },
+  "reset": "Reset",
+  "support_type": "Support {{ types }}"
 }

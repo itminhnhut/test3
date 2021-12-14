@@ -1,16 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { formatNumber, formatTime } from 'redux/actions/utils'
-import { API_GET_VIP, API_SET_ASSET_AS_FEE, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis'
+import { API_GET_VIP, API_SET_ASSET_AS_FEE, SET_USER_AVATAR, USER_AVATAR_PRESET, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis'
 import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN, USER_DEVICE_STATUS } from 'constants/constants'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ChevronRight, Edit, MoreVertical, Share } from 'react-feather'
+import { ChevronRight, Edit, MoreVertical } from 'react-feather'
 import { Menu, useContextMenu } from "react-contexify"
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
 import { ApiStatus } from 'redux/actions/const'
+import { isMobile } from 'react-device-detect'
 import { orderBy } from 'lodash'
 import { PATHS } from 'constants/paths'
 
@@ -22,20 +23,17 @@ import SvgGooglePlus from 'components/svg/SvgGooglePlus'
 import CheckSuccess from 'components/svg/CheckSuccess'
 import SvgFacebook from 'components/svg/SvgFacebook'
 import SvgTwitter from 'components/svg/SvgTwitter'
-import ReactCrop from 'react-image-crop'
 import NeedLogin from 'components/common/NeedLogin'
 import SvgApple from 'components/svg/SvgApple'
-import Dropzone from 'react-dropzone'
 import Skeletor from 'components/common/Skeletor'
-import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModal'
+import ReModal from 'components/common/ReModal'
 import MCard from 'components/common/MCard'
 import Link from 'next/link'
 import Axios from 'axios'
 import Switcher from 'components/common/Switcher'
-import styled from 'styled-components'
 
 import "react-contexify/dist/ReactContexify.css"
-import "react-image-crop/dist/ReactCrop.css"
+import AvatarModal from 'components/screens/Account/AvatarModal'
 
 const DEFAULT_USER = {
     name: '',
@@ -46,8 +44,11 @@ const DEFAULT_USER = {
 const MENU_CONTEXT = 'revoke_devices'
 
 const AVATAR_KEY = 'avatar_index_'
-
-const AVATAR_SIZE_LIMIT = 10000
+const AVATAR_SIZE_LIMIT = 20000
+const AVATAR_TYPE = {
+    CUSTOM: 'custom',
+    PRESET: 'preset'
+}
 
 const INITIAL_STATE = {
     useNami: false,
@@ -64,14 +65,10 @@ const INITIAL_STATE = {
     promoteFee: null,
     loadingAssetFee: false,
     namiBalance: null,
-    openModal: { avatar: true },
+    openModal: {},
     revokeRef: {},
     revokingDevices: false,
     revokeObj: {},
-    selectedAvatar: {},
-    avatarIssues: null,
-    uploadedSrc: null,
-    crop: { unit: '%', width: 55, height: 55, aspect: 1 },
 
     // ... Add new state
 }
@@ -92,8 +89,23 @@ const AccountProfile = () => {
     const [currentTheme, ] = useDarkMode()
     const { width } = useWindowSize()
 
-    // Helper
-    const onUseAssetAsFee = async (action = 'get', currency = undefined, assetCode = 'NAMI') => {
+    const customAvatarTips = useMemo(() => {
+        let text
+        if (language === LANGUAGE_TAG.VI) {
+            text = <>
+                Kéo thả hình ảnh vào đây hoặc <span className="text-dominant">{isMobile ? 'chạm' : 'click'} để duyệt</span>
+            </>
+        } else {
+            text = <>
+                Drag your image here, or <span className="text-dominant">{isMobile ? 'touch' : 'click'} to browse</span>
+            </>
+        }
+
+        return text
+    }, [language])
+
+    // Api helper
+    const assetFeeHandler = async (action = 'get', currency = undefined, assetCode = 'NAMI') => {
         const throttle = 800
         setState({ loadingAssetFee: true })
 
@@ -180,8 +192,10 @@ const AccountProfile = () => {
         }
     }
 
+    // Utilities
+
     const openAvatarModal = () => {
-        setState({ openModal: { avatar: !state.openModal?.avatar } })
+        setState({ openModal: { avatar: true } })
     }
 
     const openRevokeModal = () => setState({ openModal: { revokeAll: !state.openModal?.revokeAll } })
@@ -191,26 +205,6 @@ const AccountProfile = () => {
     const onOpenRevokeContext = (event, revokeId, device, isThisDevice) => {
         setState({ revokeObj: { revokeId, device, isThisDevice } })
         show(event)
-    }
-
-    const handleDrop = (files) => {
-        let file = files[0]
-        const reader = new FileReader()
-        reader.onload = (event) => setState({ uploadedSrc: event.target.result })
-        reader.readAsDataURL(file)
-    }
-
-    const onValidatingAvatarSize = ({ size }) => {
-        if (!size) return
-        if (size > AVATAR_SIZE_LIMIT) {
-            setState({ avatarIssues: t('common:uploader.not_over', { limit: '1 MB' }) })
-        } else {
-            setState({ avatarIssues: null })
-        }
-    }
-
-    const onUpload = (data) => {
-
     }
 
     // const onEdit = () => {
@@ -232,11 +226,11 @@ const AccountProfile = () => {
 
         return (
             <div className="flex flex-col items-center w-full lg:w-2/5 xl:w-[15%]">
-                <div className="relative w-[132px] h-[132px] rounded-full bg-gray-4 dark:bg-darkBlue-5">
+                <div className="relative w-[132px] h-[132px] rounded-full bg-gray-4 dark:bg-darkBlue-5 cursor-pointer"
+                     onClick={openAvatarModal}>
                     <img src={user?.avatar} alt="Nami.Exchange"
                          className="relative z-10 w-full h-full rounded-full"/>
-                    <div className="absolute w-auto h-auto z-20 right-2 bottom-2 p-1.5 rounded-full bg-dominant cursor-pointer"
-                         onClick={openAvatarModal}>
+                    <div className="absolute w-auto h-auto z-20 right-2 bottom-2 p-1.5 rounded-full bg-dominant">
                         <Edit className="text-white" size={12} strokeWidth={1.75}/>
                     </div>
                 </div>
@@ -374,7 +368,7 @@ const AccountProfile = () => {
                         <div className="flex items-center mt-4">
                             <Switcher active={!!state.assetFee?.feeCurrency}
                                       loading={state.loadingAssetFee}
-                                      onChange={() => !state.loadingAssetFee && onUseAssetAsFee('set', nextAssetFee)}/>
+                                      onChange={() => !state.loadingAssetFee && assetFeeHandler('set', nextAssetFee)}/>
                             <span className="text-sm ml-3 sm:flex sm:whitespace-nowrap">
                                 {useNamiForBonus}
                             </span>
@@ -554,6 +548,31 @@ const AccountProfile = () => {
         )
     }, [state.revokeObj?.revokeId, state.revokeObj?.isThisDevice])
 
+    const renderRevokeAll = useCallback(() => {
+        const id = state.revokeObj?.revokeId
+        const device = state.revokeObj?.device
+        const isThisDevice = state.revokeObj?.isThisDevice
+
+        return (
+            <ReModal useOverlay
+                     position="center"
+                     isVisible={!!state.openModal?.revokeAll}
+                     onBackdropCb={onCloseModal}
+                     onNegativeCb={onCloseModal}
+                     onPositiveCb={() => onRevoke(id || 'all', isThisDevice)}
+                     onPositiveLoading={state.revokingDevices}
+                     className="px-6"
+            >
+                <div className="text-center font-medium">
+                    <div className="font-bold text-center uppercase">{t('profile:revoke_title')}</div>
+                    <div className="mt-4 font-normal">
+                        {id ? t('profile:revoke_question', { device }) : t('profile:revoke_question_all')}
+                    </div>
+                </div>
+            </ReModal>
+        )
+    }, [state.openModal?.revokeAll, state.revokingDevices, state.revokeObj])
+
     const renderAnnoucements = useCallback(() => {
         if (state.loadingAnnouncements) {
             const skeleton = []
@@ -589,143 +608,8 @@ const AccountProfile = () => {
         ))
     }, [state.announcements, state.loadingAnnouncements])
 
-    const renderAvatarModal = useCallback(() => {
-        if (!Object.keys(state.openModal)?.length) return null
-
-        let modalMode
-        let text
-        let support
-
-        if (language === LANGUAGE_TAG.VI) {
-            text = <>
-                Kéo thả hình ảnh vào đây hoặc <span className="text-dominant">duyệt</span>
-            </>
-            support = <>
-                Hỗ trợ JPG, JPEG, PNG
-            </>
-        } else {
-            text = <>
-                Drag your image here, or <span className="text-dominant">browse</span>
-            </>
-            support = <>
-                Support JPG, JPEG, PNG
-            </>
-        }
-
-
-        if (width >= BREAK_POINTS.lg) {
-            modalMode = REMODAL_POSITION.CENTER
-        } else {
-            modalMode = { mode: "full-screen", from: 'right' }
-        }
-
-        const avatarList = [
-            // <div className="w-1/4">
-            //     <img src="/images/screen/persona/mal_avt_nami.png" alt={null}/>
-            // </div>
-        ]
-        for (let i = 0; i < 12; ++i) {
-            avatarList.push(
-                <div key={`avatar_list__${i}`} className="relative w-1/4 p-2 cursor-pointer hover:opacity-80">
-                    <img className={state.selectedAvatar?.[`${AVATAR_KEY}${i}`] ? 'rounded-full border border-dominant' : 'rounded-full border border-transparent'}
-                         onClick={() => setState({ selectedAvatar: { [`${AVATAR_KEY}${i}`]: !state.selectedAvatar?.[`${AVATAR_KEY}${i}`], id: i } })}
-                         src={`/images/screen/persona/mal_avt_${i}.png`}
-                         alt={null}/>
-                    {state.selectedAvatar?.[`${AVATAR_KEY}${i}`] && <CheckSuccess className="absolute bottom-2.5 right-2.5" size={14}/>}
-                </div>
-            )
-        }
-
-        return (
-            <ReModal useOverlay
-                     useCrossButton
-                     useButtonGroup={REMODAL_BUTTON_GROUP.SINGLE_CONFIRM}
-                     buttonGroupWrapper={width >= BREAK_POINTS.lg ? 'w-[350px] m-auto' : ''}
-                     position={modalMode}
-                     isVisible={!!state.openModal?.avatar}
-                     className={width >= BREAK_POINTS.lg ? 'min-w-[979px]' : ''}
-                     onNegativeCb={onCloseModal}
-                     onBackdropCb={onCloseModal}
-                     title={t('profile:set_avatar_title')}
-                     positiveLabel={t('common:save')}
-            >
-                <div className="mt-5 flex flex-col lg:flex-row">
-                    <div className="w-full lg:w-1/2 h-1/2">
-                        <div className="font-medium text-center text-dominant text-sm lg:text-[16px] xl:text-[18px]">
-                            {t('profile:your_avatar')}
-                        </div>
-                            {state.uploadedSrc ?
-                                <div className="pt-3 flex flex-col justify-center items-center rounded-xl cursor-pointer">
-                                    <Cropper
-                                        circularCrop
-                                        src={state.uploadedSrc}
-                                        crop={state.crop}
-                                        onChange={crop => setState({ crop })}
-                                    />
-                                </div>
-                                : <Dropzone onDrop={handleDrop} maxFiles={1}
-                                            // maxSize={10000}
-                                            multiple={false}
-                                            validator={onValidatingAvatarSize}
-                                            accept="image/jpeg, image/png"
-                                            onDropAccepted={onUpload}
-                                >
-                                    {({ getRootProps, getInputProps }) => (
-                                        <div {...getRootProps({ className: 'dropzone' })}>
-                                            <input {...getInputProps()} />
-                                            <div className="mt-3 py-8 flex flex-col justify-center items-center rounded-xl border border-dashed border-dominant cursor-pointer">
-                                                <Share className="text-dominant"/>
-                                                <div className="mt-3.5 font-medium text-sm lg:text-[16px] xl:text-[18px]">
-                                                    {text}
-                                                </div>
-                                                <div className="mt-2 text-xs lg:text-sm text-txtSecondary dark:text-txtSecondary-dark">{support}</div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </Dropzone>}
-                    </div>
-                    <div className="mt-5 w-full lg:w-1/2 h-1/2">
-                        <div className="pb-3 font-medium text-center text-dominant text-sm lg:text-[16px] xl:text-[18px]">
-                            {t('profile:nami_default_avatar')}
-                        </div>
-                        <div className="flex flex-wrap">
-                            {avatarList}
-                        </div>
-                    </div>
-                </div>
-            </ReModal>
-        )
-    }, [state.openModal?.avatar, state.selectedAvatar, state.uploadedSrc, state.crop, width, language])
-
-    const renderRevokeAll = useCallback(() => {
-        if (!Object.keys(state.openModal)?.length) return null
-
-        const id = state.revokeObj?.revokeId
-        const device = state.revokeObj?.device
-        const isThisDevice = state.revokeObj?.isThisDevice
-
-        return (
-            <ReModal useOverlay
-                     position="center"
-                     isVisible={!!state.openModal?.revokeAll}
-                     onBackdropCb={onCloseModal}
-                     onNegativeCb={onCloseModal}
-                     onPositiveCb={() => onRevoke(id || 'all', isThisDevice)}
-                     onPositiveLoading={state.revokingDevices}
-                     className="px-6"
-            >
-                <div className="text-center font-medium">
-                    <div className="font-bold text-center uppercase">{t('profile:revoke_title')}</div>
-                    <div className="mt-4 font-normal">
-                        {id ? t('profile:revoke_question', { device }) : t('profile:revoke_question_all')}
-                    </div>
-                </div>
-            </ReModal>
-        )
-    }, [state.openModal?.revokeAll, state.revokingDevices, state.revokeObj])
-
     useEffect(() => {
-        onUseAssetAsFee('get')
+        assetFeeHandler('get')
         getLoginLogs()
         getLevel()
     }, [])
@@ -769,14 +653,14 @@ const AccountProfile = () => {
                                     <div className="t-common">{t('profile:activity')}</div>
                                     <span className="flex items-center font-medium text-red hover:!underline cursor-pointer"
                                           onClick={openRevokeModal}>
-                                {t('profile:revoke_all_devices')} <ChevronRight className="ml-2" size={20}/>
-                            </span>
+                                        {t('profile:revoke_all_devices')} <ChevronRight className="ml-2" size={20}/>
+                                    </span>
                                 </div>
                                 <MCard style={currentTheme === THEME_MODE.DARK ? undefined : { boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.04)' }}
                                        addClass="mt-5 p-4 sm:p-6 lg:p-7 min-h-[356px] dark:border dark:border-divider-dark !overflow-hidden">
-                                    <div className="max-h-[300px] pr-4 overflow-y-auto">
-                                        {renderActivities()}
-                                    </div>
+                                        <div className="max-h-[300px] pr-4 overflow-y-auto">
+                                            {renderActivities()}
+                                        </div>
                                 </MCard>
                             </div>
                             <div className="w-full mt-8 lg:mt-0 lg:w-1/2 lg:pl-2.5">
@@ -793,23 +677,13 @@ const AccountProfile = () => {
                             </div>
                         </div>
                     </div>
-                    {renderAvatarModal()}
+                    <AvatarModal isVisible={!!state.openModal?.avatar} onCloseModal={onCloseModal}/>
                     {renderRevokeAll()}
               </>
             }
         </>
     )
 }
-
-const Cropper = styled(ReactCrop)`
-  max-width: 350px;
-  max-height: 350px;
-  
-  .ReactCrop__image {
-    max-height: 100%;
-    width: auto;
-  }
-`
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
