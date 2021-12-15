@@ -374,7 +374,7 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
     }, [state.avatar, state.avatarPreset, state.loadingAvatarPreset, user?.avatar, width])
 
     const renderUploadControl = useCallback(() => {
-        const DEFAULT = 'absolute z-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-5 max-w-[88%] sm:max-w-[400px] w-full font-medium rounded-xl bg-teal-lightTeal dark:bg-teal-opacity max-h-[0px] invisible opacity-0 transition-all duration-200 '
+        const DEFAULT = 'absolute z-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-5 max-w-[88%] sm:max-w-[400px] w-full font-medium rounded-xl bg-teal-lightTeal dark:bg-darkBlue-3 max-h-[0px] invisible opacity-0 transition-all duration-200 '
         let className
         let uploadingStatus
         let statusStyles = ''
@@ -459,7 +459,7 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
                  message={state.notice?.message}
                  messageWrapper={state.notice?.style}
         >
-            <div className={`absolute z-20 top-0 left-0 w-full h-full bg-darkBlue opacity-0 invisible transition-200 ease-in ${state.uploading !== UPLOADING_STATUS.IDLE ? '!visible !opacity-80' : ''}`}/>
+            <div className={`absolute z-20 top-0 left-0 w-full h-full bg-darkBlue dark:bg-gray-1 opacity-0 invisible transition-200 ease-in ${state.uploading !== UPLOADING_STATUS.IDLE ? '!visible !opacity-80' : ''}`}/>
             {renderUploadControl()}
             <div className="relative z-10 pt-5 h-full min-h-[540px] lg:min-h-[0px] lg:mt-10 lg:pb-4 lg:px-10 xl:px-16 flex flex-col lg:flex-row">
                 <div className="w-full lg:w-1/2 lg:pr-8 lg:min-h-[287px] xl:min-h-[336px]">
