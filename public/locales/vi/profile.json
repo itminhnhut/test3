@@ -75,5 +75,12 @@
         "banned": "Đã khoá",
         "logged_out": "Đã đăng xuất",
         "wait_for_authorize": "Đang xác minh"
-    }
+    },
+    "set_avatar_title": "Tạo phong cách riêng của bạn",
+    "your_avatar": "Ảnh đại diện của bạn",
+    "nami_default_avatar": "Ẩn danh nhưng vẫn phong cách",
+    "set_custom_avatar": "Tải ảnh mới",
+    "using_avatar_preset": "Phong cách ẩn danh",
+    "initializing_avatar": "Thiết lập ảnh đại diện",
+    "updated_avatar": "Đã cập nhật ảnh đại diện, bạn có thể đóng cửa sổ này."
 }

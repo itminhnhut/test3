@@ -177,5 +177,13 @@
   "search_coin": "Tìm coin",
   "full_name": "Tên",
   "free": "Miễn phí",
-  "unknown": "Unknown"
+  "unknown": "Unknown",
+  "uploader": {
+    "uploading": "Đang tải lên",
+    "not_over": "Kích thước không vượt quá {{ limit }}",
+    "time_remain": "còn {{ time }} giây",
+    "failure": "Có lỗi xảy ra trong quá trình truyền tải, vui lòng thử lại sau."
+  },
+  "reset": "Đặt lại",
+  "support_type": "Hỗ trợ {{ types }}"
 }

@@ -2,7 +2,9 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'next-i18next'
 import { PulseLoader } from 'react-spinners'
 import { log } from 'utils'
+import { X } from 'react-feather'
 
+import useLockedBody from 'hooks/useLockScroll'
 import Button from 'components/common/Button'
 import colors from 'styles/colors'
 
@@ -11,26 +13,33 @@ const ReModal = (
         children,
         isVisible,
         useOverlay = false,
+        useCrossButton = false,
         onBackdropCb,
         useButtonGroup = REMODAL_BUTTON_GROUP.CONFIRM,
         style = {},
+        title = null,
         className = '',
+        buttonGroupWrapper = '',
         position = REMODAL_POSITION.BOTTOM,
         positiveLabel,
         negativeLabel,
         onPositiveCb,
         onPositiveLoading,
         onNegativeCb,
+        message,
+        messageWrapper,
         debug = false,
     }
 ) => {
 
     // Re-MODAL
     const { t } = useTranslation(['common'])
+    const [, setLocked] = useLockedBody()
 
     const memmoizedStyles = useMemo(() => {
         let _className = DEFAULT_CLASS
         let _active
+        let _privateStyles = {}
 
         switch (position) {
             case REMODAL_POSITION.TOP:
@@ -57,19 +66,48 @@ const ReModal = (
 
         if (position?.mode === REMODAL_POSITION.FULLSCREEN.MODE) {
             if (position?.from === REMODAL_POSITION.FULLSCREEN.FROM.LEFT) {
-                _className += 'left-0 top-0 w-screen h-screen -translate-x-full'
+                _className += 'p-0 left-0 top-0 w-full h-full -translate-x-full'
                 _active = '!translate-x-0'
             }
 
             if (position?.from === REMODAL_POSITION.FULLSCREEN.FROM.RIGHT) {
-                _className += 'right-0 top-0 w-screen h-screen translate-x-full'
+                _className += 'p-0 right-0 top-0 w-full h-full translate-x-full'
                 _active = '!translate-x-0'
+            }
+
+            _privateStyles = {
+                top: {
+                    width: '100%',
+                    height: position?.dimension?.top || REMODAL_POSITION.FULLSCREEN.DIMENSION.TOP,
+                    display: 'flex',
+                    alignItems: 'center', justifyItems: 'center',
+                    paddingLeft: '16px', paddingRight: '16px',
+                    ...position?.dimension?.top?.styles
+                },
+                body: {
+                    height: `calc(100% - ${position?.dimension?.body || REMODAL_POSITION.FULLSCREEN.DIMENSION.TOP}px - ${position?.dimension?.body || REMODAL_POSITION.FULLSCREEN.DIMENSION.BOTTOM}px - ${position?.dimension?.body || REMODAL_POSITION.FULLSCREEN.DIMENSION.OFFSET}px)`,
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                    paddingLeft: '16px', paddingRight: '16px',
+                    ...position?.dimension?.body?.styles
+                },
+                bottom: {
+                    width: '100%',
+                    height: position?.dimension?.bottom || REMODAL_POSITION.FULLSCREEN.DIMENSION.BOTTOM,
+                    display: 'flex',
+                    alignItems: 'center', justifyItems: 'center',
+                    flexDirection: 'column',
+                    paddingLeft: '16px', paddingRight: '16px',
+                    marginTop: '5px',
+                    ...position?.dimension?.bottom?.styles
+                }
             }
         }
 
         return {
             className: _className + ` ${className}`,
-            active: _active
+            active: _active,
+            privateStyles: _privateStyles
         }
     }, [className, position])
 
@@ -79,7 +117,7 @@ const ReModal = (
 
         if (useButtonGroup === REMODAL_BUTTON_GROUP.SINGLE_CONFIRM) {
             return (
-                <div className="flex flex-row items-center justify-between mt-5">
+                <div className="w-full flex flex-row items-center justify-between">
                     <Button title={onPositiveLoading ? <PulseLoader color={colors.white} size={3}/> : (positiveLabel || t('common:confirm'))} type="primary"
                             componentType="button"
                             onClick={() => onPositiveCb && onPositiveCb()}/>
@@ -89,7 +127,7 @@ const ReModal = (
 
         if (useButtonGroup === REMODAL_BUTTON_GROUP.CONFIRM) {
             return (
-                <div className="flex flex-row items-center justify-between mt-5">
+                <div className="w-full flex flex-row items-center justify-between">
                     <Button title={negativeLabel || t('common:close')} type="secondary"
                             componentType="button"
                             style={{ width: '48%' }}
@@ -104,7 +142,7 @@ const ReModal = (
 
         if (useButtonGroup === REMODAL_BUTTON_GROUP.ALERT) {
             return (
-                <div className="flex flex-row items-center justify-between mt-5">
+                <div className="w-full flex flex-row items-center justify-between">
                     <Button title={onPositiveLoading ? <PulseLoader color={colors.white} size={3}/> : (negativeLabel || t('common:close'))} type="secondary"
                             componentType="button"
                             onClick={() => {
@@ -122,19 +160,58 @@ const ReModal = (
         debug && log.d('[ReModal] isVisible => ', isVisible)
     }, [isVisible, debug])
 
+    useEffect(() => {
+        if (position?.mode === REMODAL_POSITION.FULLSCREEN.MODE && isVisible) {
+            setLocked(true)
+        } else {
+            setLocked(false)
+        }
+    }, [position?.mode, isVisible])
+
+
     return (
         <>
-            {useOverlay && position !== REMODAL_POSITION.FULLSCREEN.MODE &&
+            {/*BEGIN OVERLAY*/}
+            {useOverlay && position?.mode !== REMODAL_POSITION.FULLSCREEN.MODE &&
             <div className={`mal-overlay ${isVisible ? 'mal-overlay__active' : ''}`}
                  onClick={() => {
                      debug && log.d('[ReModal] onBackdropCb triggered!')
                      onBackdropCb && onBackdropCb()
                  }}/>}
+            {/*END OVERLAY*/}
 
-            <div style={style || {}} className={isVisible ? `${memmoizedStyles.className} ${memmoizedStyles.active}` :  memmoizedStyles?.className}>
-                {isVisible && children}
-                {renderButtonGroup()}
+            {/*BEGIN RE-MODAL*/}
+            <div style={style || {}} className={`${memmoizedStyles?.className} ${isVisible ? memmoizedStyles?.active : ''}`}>
+
+                {/*RE-MODAL TITLE*/}
+                <div style={memmoizedStyles?.privateStyles?.top || {}} className="relative text-center font-bold mt-2 lg:mt-6 text-[18px] md:text-[24px] lg:text-[26px]">
+                    <div className="m-auto">
+                        {title ? title : ''}
+                    </div>
+                    {useCrossButton &&
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-[35px] h-[35px] flex items-center justify-center cursor-pointer rounded-lg hover:bg-gray-4 dark:hover:bg-darkBlue-4"
+                                             onClick={() => onNegativeCb && onNegativeCb()}>
+                        <X strokeWidth={1.5} className="w-[20px] h-[20px] text-txtSecondary dark:text-txtSecondary-dark"/>
+                    </div>}
+                </div>
+
+                {/*RE-MODAL BODY*/}
+                <div style={memmoizedStyles?.privateStyles?.body || {}}>
+                    {isVisible && children}
+                </div>
+
+                {/*RE-MODAL BUTTON GROUP*/}
+                <div style={memmoizedStyles?.privateStyles?.bottom || {}}
+                     className={buttonGroupWrapper}>
+                    <div className={messageWrapper ? 'min-h-[40px] pt-2 pb-3.5 text-xs sm:text-sm text-center text-dominant transition-all duration-200 invisible ' + messageWrapper
+                        : 'min-h-[40px] pt-2 pb-3.5 text-xs sm:text-sm text-center text-dominant transition-all duration-200 invisible '}>
+                        {message || ''}
+                    </div>
+                    {renderButtonGroup()}
+                </div>
+
             </div>
+            {/*END RE-MODAL*/}
         </>
     )
 }
@@ -152,6 +229,11 @@ export const REMODAL_POSITION = {
         FROM: {
             LEFT: 'left',
             RIGHT: 'right'
+        },
+        DIMENSION: {
+            TOP: 50,
+            BOTTOM: 95,
+            OFFSET: 20,
         }
     }
 }

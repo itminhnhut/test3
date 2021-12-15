@@ -11,6 +11,8 @@ export const API_GET_VIP =  API_PREFIX + 'user/vip';
 export const API_GET_LOGIN_LOG = API_PREFIX + "user/login_log";
 export const USER_DEVICES = API_PREFIX + 'user/devices';
 export const USER_REVOKE_DEVICE = API_PREFIX + 'user/devices/revoke';
+export const SET_USER_AVATAR = API_PREFIX + 'user/set_avatar'
+export const USER_AVATAR_PRESET = API_PREFIX + 'user/avatar_preset'
 
 export const API_REFRESH_TOKEN = API_PREFIX + 'web/refresh_token';
 

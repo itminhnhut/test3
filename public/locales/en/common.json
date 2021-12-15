@@ -177,5 +177,13 @@
   "search_coin": "Search Coin",
   "full_name": "Full Name",
   "free": "Free",
-  "unknown": "Unknown"
+  "unknown": "Unknown",
+  "uploader": {
+    "uploading": "Uploading",
+    "not_over": "Maxium size not over {{ limit }}",
+    "time_remain": "{{ time }} second left",
+    "failure": "An error occurred while uploading files, please try again later."
+  },
+  "reset": "Reset",
+  "support_type": "Support {{ types }}"
 }
