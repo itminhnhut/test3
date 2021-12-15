@@ -281,7 +281,6 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
             avatarPreset: null,
             notice: {},
             avatarIssues: null,
-
         })
         onCloseModal()
     }
@@ -297,7 +296,7 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
                 <div className="w-[132px] h-[132px] md:w-[180px] md:h-[180px] lg:w-[138px] lg:h-[138px] xl:w-[180px] xl:h-[180px] xl:mt-3 drop-shadow-common dark:drop-shadow-none dark:border-[2px] dark:border-dominant rounded-full overflow-hidden">
                     {state.uploading === UPLOADING_STATUS.UPLOADING ?
                     <Skeletor circle width={132} height={132} />
-                    : <img src={!isCurrent ? state.avatar?.source : user?.avatar} className="m-auto" alt={null}/>}
+                    : <img src={!isCurrent ? state.avatar?.source : user?.avatar} className="m-auto w-full h-full" alt={null}/>}
                 </div>
                 <div className={!isCustom ? 'm-2 px-5 lg:mt-3.5 lg:mb-0 text-center text-xs sm:text-sm font-medium invisible hidden' : 'mt-2 px-5 lg:mt-3.5 lg:mb-0 text-center text-xs sm:text-sm font-medium block '}>
                     {customAvatarTips?.text2}
@@ -453,7 +452,7 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
                  isVisible={!!isVisible}
                  className={reModalClassName + ' overflow-hidden'}
                  onNegativeCb={onLeaveModal}
-                 onBackdropCb={onLeaveModal}
+                 onBackdropCb={() => state.uploading !== UPLOADING_STATUS.UPLOADING && state.uploading !== UPLOADING_STATUS.RE_INITIALIZING && onLeaveModal()}
                  onPositiveCb={() => setAvatar(state.avatar)}
                  title={t('profile:set_avatar_title')}
                  positiveLabel={t('common:save')}
