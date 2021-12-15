@@ -6,6 +6,8 @@ import map from 'lodash/map';
 import maxBy from 'lodash/maxBy';
 import orderBy from 'lodash/orderBy';
 import sumBy from 'lodash/sumBy';
+import ceil from 'lodash/ceil';
+import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState, Fragment } from 'react';
@@ -22,6 +24,7 @@ import OrderBookBids from 'src/components/svg/OrderBookBids'
 import OrderBookAsks from 'src/components/svg/OrderBookAsks'
 import { ORDER_BOOK_MODE } from 'redux/actions/const';
 import SvgChevronDown from 'src/components/svg/ChevronDown';
+import { getDecimalScale } from 'redux/actions/utils';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -43,6 +46,7 @@ const OrderBook = (props) => {
     }, [base, quote]);
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
     const [tickSize, setTickSize] = useState(0.01);
+    const [decimal, setDecimal] = useState(2);
     const [tickSizeOptions, setTickSizeOptions] = useState([]);
     const [loadingAsks, setLoadingAsks] = useState(true);
     const [loadingBids, setLoadingBids] = useState(true);
@@ -106,6 +110,11 @@ const OrderBook = (props) => {
         setTickSize(+priceFilter?.tickSize);
     }, [exchangeConfig, symbol]);
 
+    useEffect(() => {
+        setDecimal(getDecimalScale(tickSize));
+    }, [tickSize]);
+
+
     const divide = orderBookMode === ORDER_BOOK_MODE.ALL ? 2 : 1
 
     const MAX_LENGTH = Math.floor((height - 145) / divide / 20);
@@ -132,10 +141,10 @@ const OrderBook = (props) => {
 
     const handleTickSize = (data, type) => {
         const _data = data.map((e) => {
-            const rate = type === 'ask' ? Math.ceil((+e[0]) / tickSize) * tickSize : Math.floor((+e[0]) / tickSize) * tickSize;
-
+            const rate = type === 'ask' ? ceil((+e[0]), decimal)  : floor((+e[0]) , decimal);
             return { rate, amount: +e[1] };
         });
+
         const groupedData = groupBy(_data, 'rate');
         const output = [];
         map(groupedData, (objs, key) => {
