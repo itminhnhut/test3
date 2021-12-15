@@ -628,9 +628,9 @@ const AccountProfile = () => {
             }})
     }, [user])
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: State => ', state)
-    }, [state])
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: State => ', state)
+    // }, [state])
 
     return (
         <>

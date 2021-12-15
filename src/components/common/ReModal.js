@@ -26,6 +26,8 @@ const ReModal = (
         onPositiveCb,
         onPositiveLoading,
         onNegativeCb,
+        message,
+        messageWrapper,
         debug = false,
     }
 ) => {
@@ -94,7 +96,9 @@ const ReModal = (
                     height: position?.dimension?.bottom || REMODAL_POSITION.FULLSCREEN.DIMENSION.BOTTOM,
                     display: 'flex',
                     alignItems: 'center', justifyItems: 'center',
+                    flexDirection: 'column',
                     paddingLeft: '16px', paddingRight: '16px',
+                    marginTop: '5px',
                     ...position?.dimension?.bottom?.styles
                 }
             }
@@ -113,7 +117,7 @@ const ReModal = (
 
         if (useButtonGroup === REMODAL_BUTTON_GROUP.SINGLE_CONFIRM) {
             return (
-                <div className="w-full flex flex-row items-center justify-between mt-5">
+                <div className="w-full flex flex-row items-center justify-between">
                     <Button title={onPositiveLoading ? <PulseLoader color={colors.white} size={3}/> : (positiveLabel || t('common:confirm'))} type="primary"
                             componentType="button"
                             onClick={() => onPositiveCb && onPositiveCb()}/>
@@ -123,7 +127,7 @@ const ReModal = (
 
         if (useButtonGroup === REMODAL_BUTTON_GROUP.CONFIRM) {
             return (
-                <div className="w-full flex flex-row items-center justify-between mt-5">
+                <div className="w-full flex flex-row items-center justify-between">
                     <Button title={negativeLabel || t('common:close')} type="secondary"
                             componentType="button"
                             style={{ width: '48%' }}
@@ -138,7 +142,7 @@ const ReModal = (
 
         if (useButtonGroup === REMODAL_BUTTON_GROUP.ALERT) {
             return (
-                <div className="w-full flex flex-row items-center justify-between mt-5">
+                <div className="w-full flex flex-row items-center justify-between">
                     <Button title={onPositiveLoading ? <PulseLoader color={colors.white} size={3}/> : (negativeLabel || t('common:close'))} type="secondary"
                             componentType="button"
                             onClick={() => {
@@ -180,7 +184,7 @@ const ReModal = (
             <div style={style || {}} className={`${memmoizedStyles?.className} ${isVisible ? memmoizedStyles?.active : ''}`}>
 
                 {/*RE-MODAL TITLE*/}
-                <div style={memmoizedStyles?.privateStyles?.top || {}} className="relative text-center font-bold mt-2 lg:mt-6 text-[18px] lg:text-[26px]">
+                <div style={memmoizedStyles?.privateStyles?.top || {}} className="relative text-center font-bold mt-2 lg:mt-6 text-[18px] md:text-[24px] lg:text-[26px]">
                     <div className="m-auto">
                         {title ? title : ''}
                     </div>
@@ -199,6 +203,10 @@ const ReModal = (
                 {/*RE-MODAL BUTTON GROUP*/}
                 <div style={memmoizedStyles?.privateStyles?.bottom || {}}
                      className={buttonGroupWrapper}>
+                    <div className={messageWrapper ? 'min-h-[40px] pt-2 pb-3.5 text-xs sm:text-sm text-center text-dominant transition-all duration-200 invisible ' + messageWrapper
+                        : 'min-h-[40px] pt-2 pb-3.5 text-xs sm:text-sm text-center text-dominant transition-all duration-200 invisible '}>
+                        {message || ''}
+                    </div>
                     {renderButtonGroup()}
                 </div>
 
@@ -224,7 +232,7 @@ export const REMODAL_POSITION = {
         },
         DIMENSION: {
             TOP: 50,
-            BOTTOM: 80,
+            BOTTOM: 95,
             OFFSET: 20,
         }
     }

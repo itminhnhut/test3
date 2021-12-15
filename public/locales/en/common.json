@@ -181,7 +181,8 @@
   "uploader": {
     "uploading": "Uploading",
     "not_over": "Maxium size not over {{ limit }}",
-    "time_remain": "{{ time }} second left"
+    "time_remain": "{{ time }} second left",
+    "failure": "An error occurred while uploading files, please try again later."
   },
   "reset": "Reset",
   "support_type": "Support {{ types }}"
