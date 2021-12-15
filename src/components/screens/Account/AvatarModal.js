@@ -23,7 +23,7 @@ const UPLOAD_TIMEOUT = 4000
 
 const AVATAR_KEY = 'avatar_index_'
 
-const AVATAR_SIZE_LIMIT = 20000
+const AVATAR_SIZE_LIMIT = 2e6
 
 const AVATAR_TYPE = {
     CURRENT: 'current',
@@ -265,7 +265,7 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
     const onValidatingAvatarSize = ({ size }) => {
         if (!size) return
         if (size > AVATAR_SIZE_LIMIT) {
-            setState({ avatarIssues: t('common:uploader.not_over', { limit: `${AVATAR_SIZE_LIMIT / 10000} MB` }) })
+            setState({ avatarIssues: t('common:uploader.not_over', { limit: `${AVATAR_SIZE_LIMIT / 1e6} MB` }) })
         } else {
             setState({ avatarIssues: null })
         }
