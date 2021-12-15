@@ -10,9 +10,12 @@ import Div100vh from 'react-div-100vh'
 import { ChevronDown } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { actionLogout } from 'redux/actions/user'
-import { getLoginUrl, getS3Url } from 'redux/actions/utils'
+import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils'
 import colors from 'styles/colors'
 import { useWindowSize } from 'utils/customHooks'
+import Skeletor from 'components/common/Skeletor'
+import CheckSuccess from 'components/svg/CheckSuccess'
+import { PATHS } from 'constants/paths'
 
 
 const PocketNavDrawer = memo(({ isActive, onClose }) => {
@@ -110,6 +113,48 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
        })
     }, [auth, state.navActiveLv1])
 
+    const renderUserControl = useCallback(() => {
+        if (!auth) return null
+        return (
+            <div className="w-full border-b border-divider dark:border-divider-dark pt-4">
+                <a className="px-4 flex items-center w-full" href={PATHS.ACCOUNT.PROFILE}>
+                    <div className="min-w-[75px] min-w-[75px]">
+                        {!auth?.avatar ?
+                            <Skeletor circle width={75} height={75}/>
+                            : <img src={auth?.avatar} alt={null} className="w-[75px] h-[75px] rounded-full"/>
+                        }
+                    </div>
+                    <div className="w-full flex">
+                        <div className="pl-2.5">
+                            <div className="font-bold max-w-[150px] truncate">
+                                {!auth ? <Skeletor width={45} /> : (auth?.name || auth?.username || auth?.email || auth?.phone)}
+                            </div>
+                            <div className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                                {!auth ? <Skeletor width={45} /> : '@'+(auth?.code)}
+                            </div>
+                        </div>
+
+                        <div className="text-xs text-dominant flex items-center hidden">
+                             <CheckSuccess size={14}/> <span className="ml-2">Verified</span>
+                        </div>
+                    </div>
+                </a>
+                <a className="mt-3 block p-4 font-medium text-sm hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 cursor-pointer"
+                   href={getV1Url('/reference')}>
+                    <div className="flex flex-row items-center">
+                        {t('navbar:submenu.referral')}
+                    </div>
+                </a>
+                <a className="block p-4 font-medium text-sm hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 cursor-pointer"
+                   href={getV1Url('/settings/api-management')}>
+                    <div className="flex flex-row items-center">
+                        {t('navbar:menu.user.api_mng')}
+                    </div>
+                </a>
+            </div>
+        )
+    }, [auth])
+
     return (
         <>
             <div className={`mal-overlay ${isActive ? 'mal-overlay__active' : ''}`} onClick={onClose}/>
@@ -117,6 +162,7 @@ const PocketNavDrawer = memo(({ isActive, onClose }) => {
                 <div className="flex justify-end">
                     <SvgIcon name="cross" size={20} style={{ cursor: 'pointer', marginRight: 16 }} onClick={onClose}/>
                 </div>
+                {renderUserControl()}
                 <div className="mal-pocket-navbar__drawer__content___wrapper">
                     {!auth &&
                         <>

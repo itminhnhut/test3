@@ -570,7 +570,7 @@ const NavBar = ({
                             />
                             {renderWallet()}
                         </div>}
-                        <div
+                        {width >= 992 && <div
                             className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing"
                         >
                             <SvgUser
@@ -580,8 +580,8 @@ const NavBar = ({
                                 style={{ marginTop: -3 }}
                                 color={navTheme.color}
                             />
-                            {width >= 992 && renderUserControl()}
-                        </div>
+                            {renderUserControl()}
+                        </div>}
                     </>}
                     {auth && <NotificationList btnClass="!mr-0 ml-8" navTheme={navTheme} />}
                     {width >= 1366 &&
