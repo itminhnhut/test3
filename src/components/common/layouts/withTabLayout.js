@@ -11,7 +11,6 @@ import TabItem, { TabItemComponent } from 'components/common/TabItem'
 
 import styled from 'styled-components'
 import colors from 'styles/colors'
-import ReModal from 'components/common/ReModal'
 
 const INITIAL_STATE = {
     currentLastestPath: null,
@@ -103,12 +102,12 @@ const CustomContainer = styled.div.attrs({ className: 'mal-container px-4' })`
 
 export const TAB_ROUTES = {
     ACCOUNT: [
-        { pathname: PATHS.ACCOUNT.PROFILE, alias: 'Profile', localized: null },
-        // { pathname: PATHS.ACCOUNT.SECURITY, alias: 'Security', localized: null },
-        // { pathname: PATHS.ACCOUNT.IDENTIFICATION, alias: 'Identification', localized: null },
-        // { pathname: PATHS.ACCOUNT.REWARD_CENTER, alias: 'Reward Center', localized: null },
-        // { pathname: PATHS.ACCOUNT.REFERRAL, alias: 'Referral', localized: null },
-        // { pathname: PATHS.ACCOUNT.SETTINGS, alias: 'Settings', localized: null },
+        { pathname: PATHS.ACCOUNT.PROFILE, alias: 'Profile', localized: null, auth: true },
+        // { pathname: PATHS.ACCOUNT.SECURITY, alias: 'Security', localized: null, auth: true },
+        // { pathname: PATHS.ACCOUNT.IDENTIFICATION, alias: 'Identification', localized: null, auth: true },
+        { pathname: PATHS.ACCOUNT.REWARD_CENTER, alias: 'Reward Center', localized: null, auth: false },
+        // { pathname: PATHS.ACCOUNT.REFERRAL, alias: 'Referral', localized: null, auth: true },
+        // { pathname: PATHS.ACCOUNT.SETTINGS, alias: 'Settings', localized: null, auth: true },
     ],
     FEE_STRUCTURE: [
         { pathname: PATHS.FEE_STRUCTURES.TRADING, alias: 'Trading Fee', localized: 'fee-structure:trading_fee_t' },
