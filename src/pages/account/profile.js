@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { formatNumber, formatTime } from 'redux/actions/utils'
-import { API_GET_VIP, API_SET_ASSET_AS_FEE, SET_USER_AVATAR, USER_AVATAR_PRESET, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis'
+import { API_GET_VIP, API_SET_ASSET_AS_FEE, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis'
 import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN, USER_DEVICE_STATUS } from 'constants/constants'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { ChevronRight, Edit, MoreVertical } from 'react-feather'
@@ -238,16 +238,16 @@ const AccountProfile = () => {
                     Social Binding
                 </div>
                 <div className="flex items-center">
-                    <div className="mr-2 cursor-pointer hover:opacity-90">
+                    <div className="mr-2.5 cursor-pointer hover:opacity-90">
                         <SvgApple/>
                     </div>
-                    <div className="mr-2 cursor-pointer hover:opacity-90">
+                    <div className="mr-2.5 cursor-pointer hover:opacity-90">
                         <SvgGooglePlus/>
                     </div>
-                    <div className="mr-2 cursor-pointer hover:opacity-90">
+                    <div className="mr-2.5 cursor-pointer hover:opacity-90">
                         <SvgFacebook/>
                     </div>
-                    <div className="mr-2 cursor-pointer hover:opacity-90">
+                    <div className="cursor-pointer hover:opacity-90">
                         <SvgTwitter/>
                     </div>
                 </div>
@@ -693,7 +693,6 @@ export const getStaticProps = async ({ locale }) => ({
 
 export default withTabLayout(
     {
-        routes: TAB_ROUTES.ACCOUNT,
-        useModal: true,
+        routes: TAB_ROUTES.ACCOUNT
     }
 )(AccountProfile)

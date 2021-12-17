@@ -11,6 +11,7 @@ import TabItem, { TabItemComponent } from 'components/common/TabItem'
 
 import styled from 'styled-components'
 import colors from 'styles/colors'
+import useApp from 'hooks/useApp'
 
 const INITIAL_STATE = {
     currentLastestPath: null,
@@ -19,7 +20,7 @@ const INITIAL_STATE = {
 export default (props) => (WrappedComponent) => {
     return wrappedProps => {
         // Own props
-        const { routes, wrapperStyle = {}, tabStyle, containerDimension, useModal = false, debug } = props
+        const { routes, wrapperStyle = {}, tabStyle, contentContainerStyles = '', useModal = false, hideInApp = false, debug } = props
 
         // Init state
         const [state, set] = useState(INITIAL_STATE)
@@ -29,13 +30,14 @@ export default (props) => (WrappedComponent) => {
         const [currentTheme, ] = useDarkMode()
         const router = useRouter()
         const { t } = useTranslation()
+        const isApp = useApp()
 
         // Helper
         const setCurrentLastestPath = (currentLastestPath) => setState({ currentLastestPath })
 
         // Render Handler
         const renderTabLink = useCallback(() => {
-            if (!(routes || Object.keys(routes).length)) return null
+            if (!(routes || Object.keys(routes).length) || (hideInApp && isApp)) return null
 
             return Object.values(routes).map(route => {
                 const path = getLastestSourcePath(route?.pathname)
@@ -47,7 +49,7 @@ export default (props) => (WrappedComponent) => {
                              active={isActive} component={TabItemComponent.Link}/>
                 )
             })
-        }, [routes, tabStyle, state.currentLastestPath])
+        }, [routes, tabStyle, hideInApp, isApp, state.currentLastestPath])
 
         useEffect(() => {
             setCurrentLastestPath(getLastestSourcePath(router?.pathname))
@@ -63,10 +65,14 @@ export default (props) => (WrappedComponent) => {
 
         return (
             <>
-                <MaldivesLayout contentWrapperStyle={{...wrapperStyle, position: useModal ? 'unset !important' : 'relative'}}>
+                <MaldivesLayout
+                    contentWrapperStyle={{ ...wrapperStyle, position: useModal ? 'unset !important' : 'relative' }}
+                    hideInApp={hideInApp && isApp}>
                     <Background isDark={currentTheme === THEME_MODE.DARK}>
-                        <CustomContainer containerDimension={containerDimension}>
-                            <div className="flex items-center mb-8 lg:mb-10 border-b border-divider dark:border-divider-dark">
+                        <CustomContainer contentContainerStyles={contentContainerStyles}>
+                            <div className={hideInApp && isApp ?
+                                'flex items-center mb-8 lg:mb-10'
+                                : 'flex items-center mb-8 lg:mb-10 border-b border-divider dark:border-divider-dark'}>
                                 {renderTabLink()}
                             </div>
                             <WrappedComponent {...wrappedProps}/>
@@ -82,7 +88,9 @@ const Background = styled.div.attrs({ className: 'w-full h-full pt-5 pb-24 lg:pb
   background-color: ${({ isDark }) => isDark ? colors.darkBlue1 : '#F8F9FA'};
 `
 
-const CustomContainer = styled.div.attrs({ className: 'mal-container px-4' })`
+const CustomContainer = styled.div.attrs({ className: `mal-container px-4 h-full` })`
+  ${({ contentContainerStyle }) => contentContainerStyle ? { ...contentContainerStyle } : ''};
+  
   @media (min-width: 1024px) {
     max-width: 1000px !important;
   }

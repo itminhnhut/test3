@@ -5,6 +5,7 @@ import { useState } from 'react';
 import ReactNotification from 'react-notifications-component';
 import { useWindowSize } from 'utils/customHooks';
 import TransferModal from 'components/wallet/TransferModal'
+import useApp from 'hooks/useApp'
 
 const MadivesLayout = ({
     navOverComponent,
@@ -19,7 +20,7 @@ const MadivesLayout = ({
     hideNavBar,
     page,
     changeLayoutCb,
-
+    hideInApp,
     spotState,
     resetDefault,
     onChangeSpotState
@@ -50,21 +51,21 @@ const MadivesLayout = ({
             } : {}}
         >
             <ReactNotification/>
-            {!hideNavBar && <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }}
+            {(!hideNavBar && !hideInApp) && <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }}
                                     spotState={spotState}
                                     onChangeSpotState={onChangeSpotState}
                                     resetDefault={resetDefault}
                                     layoutStateHandler={setState} page={page} changeLayoutCb={changeLayoutCb}/>}
             <div
                 style={{
-                    paddingTop: !navOverComponent ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,
+                    paddingTop: !navOverComponent && !hideInApp ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,
                     ...contentWrapperStyle,
                 }}
                 className="relative flex-1 bg-white dark:bg-darkBlue-1"
             >
                 {children}
             </div>
-            {!hideFooter && <Footer/>}
+            {(!hideFooter && !hideInApp) && <Footer/>}
             <TransferModal/>
         </div>
     );

@@ -63,7 +63,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  //overflow: hidden auto;
+  overflow-x: hidden;
 
   .mal-container {
     @apply container;
