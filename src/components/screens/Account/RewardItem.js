@@ -9,7 +9,7 @@ import { REWARD_ID_KEY } from 'pages/account/reward-center'
 
 import useWindowSize from 'hooks/useWindowSize'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import RewardList from 'components/screens/Account/RewardList'
+import RewardListItem from 'components/screens/Account/RewardListItem'
 import AssetName from 'components/wallet/AssetName'
 import Skeletor from 'components/common/Skeletor'
 
@@ -25,14 +25,14 @@ const RewardItem = memo(({ data, loading, active, onToggleReward }) => {
     // Utilities
     const rewardRowStyles = useMemo(() => {
 
-        const originClass = 'pl-4 py-3 pr-6 flex items-center justify-between cursor-pointer select-none hover:bg-teal-lightTeal '
+        const originClass = 'pl-4 py-3 pr-6 flex items-center justify-between cursor-pointer select-none hover:bg-teal-lightTeal dark:hover:bg-teal-opacity'
         let className = ''
 
         if (data?.status === REWARD_STATUS.NOT_AVAILABLE) {
             className = originClass + 'cursor-not-allowed opacity-50 hover:bg-transparent'
         } else {
             if (active) {
-                className = originClass + ' bg-teal-lightTeal'
+                className = originClass + ' bg-teal-lightTeal dark:bg-teal-opacity'
             } else {
                 className = originClass
             }
@@ -43,13 +43,13 @@ const RewardItem = memo(({ data, loading, active, onToggleReward }) => {
 
     // Render Handler
     const renderRewardList = useCallback(() => {
-        const isActive = active && data?.status !== REWARD_STATUS.NOT_AVAILABLE
+        if (data?.status === REWARD_STATUS.NOT_AVAILABLE) return null
 
         const originClass = 'w-full invisible max-h-[0px] transition-all duration-200 ease-in-out pl-4 sm:pl-8 xl:pl-12 '
         let className = ''
 
-        if (isActive) {
-            className = originClass + '!visible !max-h-[800px] pb-6'
+        if (active) {
+            className = originClass + '!visible !max-h-[2000px] pb-6'
         } else {
             className = originClass
         }
@@ -59,29 +59,33 @@ const RewardItem = memo(({ data, loading, active, onToggleReward }) => {
                 <div style={
                     theme === THEME_MODE.LIGHT ?
                         { boxShadow: '0px 4.09659px 13.4602px rgba(0, 0, 0, 0.05)' }
-                        : { boxShadow: '0px 4.09659px 13.4602px rgba(245, 245, 245, 0.05)' }
+                        : null
+                        // { boxShadow: '0px 4.09659px 13.4602px rgba(245, 245, 245, 0.05)' }
                 }
-                     className="rounded-lg">
-                    <div className="px-6 py-4 border-b border-divider dark:border-divider-dark">
-                        <div className="font-bold text-sm">Description:</div>
-                        <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
-                            {data?.description?.[language]}
+                     className="rounded-b-lg bg-bgContainer dark:bg-bgContainer-dark">
+                    {active &&
+                    <>
+                        <div className="px-6 py-4 border-b border-divider dark:border-divider-dark">
+                            <div className="font-bold text-sm">Description:</div>
+                            <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                                {data?.description?.[language]}
 
-                            <div className="mt-1 font-normal italic text-xs sm:text-sm">
-                                {data?.status === REWARD_STATUS.COMING_SOON &&
-                                <div className="mt-1">
-                                   Start at {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
+                                <div className="mt-1 font-normal italic text-xs sm:text-sm">
+                                    {data?.status === REWARD_STATUS.COMING_SOON &&
+                                    <div className="mt-1">
+                                        Start at {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
+                                    </div>
+                                    }
+                                    {data?.status === REWARD_STATUS.AVAILABLE &&
+                                    <div className="mt-1">
+                                        Expired at {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
+                                    </div>
+                                    }
                                 </div>
-                                }
-                                {data?.status === REWARD_STATUS.AVAILABLE &&
-                                <div className="mt-1">
-                                   Expired at {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
-                                </div>
-                                }
                             </div>
                         </div>
-                    </div>
-                    <RewardList data={data} loading={loading}/>
+                        <RewardListItem name={data?.id} data={data?.tasks} loading={loading}/>
+                    </>}
                 </div>
             </div>
         )
@@ -90,11 +94,11 @@ const RewardItem = memo(({ data, loading, active, onToggleReward }) => {
     // useEffect(() => console.log('namidev-DEBUG: ', assetConfig), [assetConfig])
 
     return (
-        <div id={`${REWARD_ID_KEY}_${data?.id}`} className="relative">
+        <div id={`${REWARD_ID_KEY}_${data?.id}`} className="relative bg-bgContainer dark:bg-darkBlue">
             <div className={rewardRowStyles}
                  onClick={() => !loading && data?.status === REWARD_STATUS.AVAILABLE && onToggleReward(data?.id, !active)}>
                 <div className="flex items-center">
-                    <div className="-mt-2.5">
+                    <div className={loading ? '-mt-2.5' : ''}>
                         {loading ?
                             <Skeletor
                                 width={width < BREAK_POINTS.sm ? 24 : 32}

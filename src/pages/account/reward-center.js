@@ -35,7 +35,7 @@ const RewardCenter = () => {
     const isApp = useApp()
 
     useScrollPosition(({ currPos }) => {
-        console.log('namidev-DEBUG: Current Y ', currPos.y)
+        // console.log('namidev-DEBUG: Current Y ', currPos.y)
     })
 
     // Api Helper
@@ -43,7 +43,7 @@ const RewardCenter = () => {
         setState({ loadingReward: true })
         const rewards = _reward_data
         setState({ rewards })
-        setTimeout(() => setState({ loadingReward: false }), 3000)
+        setTimeout(() => setState({ loadingReward: false }), 1000)
     }
 
     // Memmoized
@@ -61,7 +61,7 @@ const RewardCenter = () => {
                 }
             } else {
                 _styles = {
-                    boxShadow: '0px -4px 30px rgba(245, 245, 245, 0.18)'
+                    // boxShadow: '0px -4px 30px rgba(245, 245, 245, 0.18)'
                 }
             }
         } else {
@@ -81,7 +81,7 @@ const RewardCenter = () => {
         if (currentTheme === THEME_MODE.LIGHT) {
             style = { boxShadow: '0px 4.09659px 13.4602px rgba(0, 0, 0, 0.05)' }
         } else {
-            style = { boxShadow: '0px 4.09659px 13.4602px rgba(245, 245, 245, 0.05)' }
+            // style = { boxShadow: '0px 4.09659px 13.4602px rgba(245, 245, 245, 0.05)' }
         }
 
         return style
@@ -170,7 +170,7 @@ const RewardCenter = () => {
             <div style={rewardAppStyles?.styles} className={rewardAppStyles?.className}>
                 {isApp && renderSegmentTabs()}
                 <div id="reward-center"
-                     className="mt-6 overflow-hidden rounded-lg"
+                     className="mt-6 overflow-hidden rounded-lg dark:border dark:border-divider-dark"
                      style={rewardListWrapperStyles}>
                     {renderReward()}
                 </div>

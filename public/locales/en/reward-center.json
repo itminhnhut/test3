@@ -1,4 +1,11 @@
 {
   "title": "Reward Center",
-  "promotion": "Promotion"
+  "promotion": "Promotion",
+  "guide": "Guide",
+  "claim": "Claim",
+  "claim_all": "Claim all",
+  "button_status": {
+    "claimed": "Claimed",
+    "completed": "Completed"
+  }
 }

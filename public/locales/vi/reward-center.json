@@ -1,4 +1,12 @@
 {
   "title": "Trung tâm quà tặng",
-  "promotion": "Promotion"
+  "promotion": "Promotion",
+  "guide": "Hướng dẫn",
+  "claim": "Nhận",
+  "claimed": "Đã nhận",
+  "claim_all": "Nhận tất cả",
+  "button_status": {
+    "claimed": "Đã nhận",
+    "completed": "Đã hoàn tất"
+  }
 }
