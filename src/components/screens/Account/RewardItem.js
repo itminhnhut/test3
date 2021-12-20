@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { ChevronRight } from 'react-feather'
 import { REWARD_STATUS } from 'components/screens/Account/_reward_data'
 import { BREAK_POINTS } from 'constants/constants'
-import { REWARD_ID_KEY } from 'pages/account/reward-center'
+import { REWARD_ROW_ID_KEY } from 'pages/account/reward-center'
 import { REWARD_BUTTON_STATUS } from 'components/screens/Account/RewardButton'
 
 import useWindowSize from 'hooks/useWindowSize'
@@ -18,6 +18,7 @@ import RewardButton from 'components/screens/Account/RewardButton'
 const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) => {
     // Rdx
     const assetConfig = useSelector(state => state.utils.assetConfig?.find(o => o?.id === data?.total_reward?.assetId))
+    const auth = useSelector(state => state.auth?.user) || null
 
     // Use Hooks
     const { t, i18n: { language } } = useTranslation()
@@ -96,7 +97,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
     // useEffect(() => console.log('namidev-DEBUG: ', assetConfig), [assetConfig])
 
     return (
-        <div id={`${REWARD_ID_KEY}_${data?.id}`} className="relative bg-bgContainer dark:bg-darkBlue">
+        <div id={`${REWARD_ROW_ID_KEY}${data?.id}`} className="relative bg-bgContainer dark:bg-darkBlue">
             <div className={rewardRowStyles}
                  onClick={() => !loading && data?.status === REWARD_STATUS.AVAILABLE && onToggleReward(data?.id, !active)}>
                 <div className="flex items-center lg:w-2/5">
@@ -134,33 +135,39 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
                 </div>
 
                 {width >= BREAK_POINTS.lg &&
-                <div className="w-3/5 pl-10 flex items-center justify-between border-l border-divider dark:border-divider-dark">
+                <div className="w-3/5 pl-10 flex items-center justify-between border-l border-divider dark:border-darkBlue-4">
                     <div style={{ width: `calc(100% - 250px)` }}>
                         {data?.notes?.[language]?.map(note => <div className="font-medium text-sm">{data?.notes?.[language]?.length > 1 ? '• ': null}{note}</div>)}
                     </div>
                     <div className="flex items-center">
-                        {loading ?
-                            <Skeletor
-                                width={65}
-                                height={25}
-                                className="rounded-lg mr-3"
-                            />
-                            : <RewardButton href={data?.url_reference} target="_blank"
-                                            title={t('common:view_rules')}
-                                            status={REWARD_BUTTON_STATUS.AVAILABLE}
-                                            buttonStyles="mr-3 min-w-[90px]"
-                                            componentType="a"/>
-                        }
-                        {loading ?
-                            <Skeletor
-                                width={65}
-                                height={25}
-                                className="rounded-lg"
-                            />
-                            : <RewardButton title={t('reward-center:claim_all')}
-                                            status={data?.tasks?.claimable_all ? REWARD_BUTTON_STATUS.AVAILABLE : REWARD_BUTTON_STATUS.NOT_AVAILABLE}
-                                            buttonStyles="min-w-[90px]"
-                                            onClick={() => alert(`Should claim all reward of ${data?.id}`)} />
+                        {!auth ?
+                            <RewardButton title="Login" buttonStyles="min-w-[90px]" status={REWARD_BUTTON_STATUS.AVAILABLE}
+                                          onClick={() => alert('Go to login')}/>
+                            : <>
+                                {loading ?
+                                    <Skeletor
+                                        width={65}
+                                        height={25}
+                                        className="rounded-lg mr-3"
+                                    />
+                                    : <RewardButton href={data?.url_reference} target="_blank"
+                                                    title={t('common:view_rules')}
+                                                    status={REWARD_BUTTON_STATUS.AVAILABLE}
+                                                    buttonStyles="mr-3 min-w-[90px]"
+                                                    componentType="a"/>
+                                }
+                                {loading ?
+                                    <Skeletor
+                                        width={65}
+                                        height={25}
+                                        className="rounded-lg"
+                                    />
+                                    : <RewardButton title={t('reward-center:claim_all')}
+                                                    status={data?.tasks?.claimable_all ? REWARD_BUTTON_STATUS.AVAILABLE : REWARD_BUTTON_STATUS.NOT_AVAILABLE}
+                                                    buttonStyles="min-w-[90px]"
+                                                    onClick={() => alert(`Should claim all reward of ${data?.id}`)} />
+                                }
+                            </>
                         }
                     </div>
                 </div>}

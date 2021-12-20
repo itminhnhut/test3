@@ -4,12 +4,12 @@ import { ChevronRight } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { formatNumber } from 'redux/actions/utils'
 import { TASK_PROPS_TYPE } from 'components/screens/Account/_reward_data'
+import { BREAK_POINTS } from 'constants/constants'
 import AssetName from 'components/wallet/AssetName'
 import RewardButton, { REWARD_BUTTON_STATUS } from 'components/screens/Account/RewardButton'
 import RewardType from 'components/screens/Account/RewardType'
 import DashedProgressLine from 'components/screens/Account/DashedProgressLine'
 import useWindowSize from 'hooks/useWindowSize'
-import { BREAK_POINTS } from 'constants/constants'
 
 const INITIAL_STATE = {
     rewardItemExpand: {},
@@ -24,6 +24,7 @@ const RewardListItem = ({ name, data, loading, showGuide }) => {
 
     // Rdx
     const configs = useSelector(state => state.utils?.assetConfig)
+    const auth = useSelector(state => state.auth?.user) || null
 
     // Use Hooks
     const { t, i18n: { language } } = useTranslation()
@@ -152,23 +153,23 @@ const RewardListItem = ({ name, data, loading, showGuide }) => {
 
         return (
             <div className="mt-3.5 flex justify-center">
-                <RewardButton title={t('reward-center:claim_all')}
-                              status={isClaimableAll ? REWARD_BUTTON_STATUS.AVAILABLE : REWARD_BUTTON_STATUS.NOT_AVAILABLE}
-                              onClick={() => alert(`should Claim all Reward: ${name} !`)}
-                              buttonStyles="mt-2 mb-7 md:min-w-[150px]"
-                />
+                {auth && <RewardButton title={t('reward-center:claim_all')}
+                                       status={isClaimableAll ? REWARD_BUTTON_STATUS.AVAILABLE : REWARD_BUTTON_STATUS.NOT_AVAILABLE}
+                                       onClick={() => alert(`should Claim all Reward: ${name} !`)}
+                                       buttonStyles="mt-2 mb-7 md:min-w-[150px]"
+                />}
             </div>
         )
-    }, [data, width])
+    }, [data, width, auth])
 
 
     useEffect(() => {
         setTimeout(() => setTestCompleteTaskAnimation(true), 2000)
     }, [])
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: RewardList Item => ', state)
-    }, [state])
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: RewardList Item => ', state)
+    // }, [state])
 
     return (
         <div>

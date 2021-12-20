@@ -82,6 +82,7 @@
     "react-content-loader": "^6.0.3",
     "react-contexify": "^5.0.0",
     "react-cookies": "^0.1.1",
+    "react-cool-inview": "^2.0.8",
     "react-copy-to-clipboard": "^5.0.4",
     "react-countdown": "^2.3.2",
     "react-countup": "^6.1.0",

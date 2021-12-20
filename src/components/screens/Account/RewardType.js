@@ -8,10 +8,13 @@ import useIsFirstRender from 'hooks/useIsFirstRender'
 import CountUp from 'react-countup'
 import { BREAK_POINTS } from 'constants/constants'
 import useWindowSize from 'hooks/useWindowSize'
+import { useSelector } from 'react-redux'
 
 const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is the whole things of task item in tasks?.task_list
     // Init state
     const [reachedProgress, setReachedProgress] = useState(0)
+
+    const auth = useSelector(state => state.auth?.user) || null
 
     // Use hooks
     const { t, i18n: { language } } = useTranslation()
@@ -101,10 +104,13 @@ const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is
 
         return (
             <div className="flex items-center lg:justify-end lg:min-w-[200px] xl:min-w-[350px] xl:w-[400px]">
-                {buttonGroup}
+                {!auth ?
+                    <RewardButton title="Login" buttonStyles="w-full min-w-[90px] sm:max-w-[120px]" status={REWARD_BUTTON_STATUS.AVAILABLE}
+                                  onClick={() => alert('Go to login')}/>
+                    : buttonGroup}
             </div>
         )
-    }, [data])
+    }, [data, auth])
 
     useEffect(() => {
         const target = data?.task_props?.metadata?.target
@@ -126,8 +132,6 @@ const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is
 })
 
 const handleRewardButtonProps = (action, payload) => {
-    console.log('namidev-DEBUG: handleRewardButtonProps ', payload)
-
     let isCompleted
     const taskType = payload?.task_props?.type
 

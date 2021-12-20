@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
 import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
@@ -13,19 +12,34 @@ import SegmentTabs from 'components/common/SegmentTabs'
 import _reward_data, { REWARD_STATUS, REWARD_TYPE } from 'components/screens/Account/_reward_data'
 import Empty from 'components/common/Empty'
 import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModal'
+import useInView from 'react-cool-inview'
+import { PATHS } from 'constants/paths'
+
+export const REWARD_ROW_ID_KEY = 'reward_item_id_' // for identify reward will scrollTo after init
+const REWARD_ID_QUERY_KEY = 'reward_id' // for query url
+const REWARD_TYPE_QUERY_KEY = 'reward' // for query url
+
+const REWARD_TYPE_QUERY_VALUE = {
+    ALL: 'all',
+    PROMOTION: 'promotion',
+    TRADING: 'trading'
+}
+
+const REWARD_TAB = {
+    ALL: 0,
+    PROMOTION: 1,
+    TRADING: 2
+}
 
 const INITIAL_STATE = {
-    tabIndex: 0,
+    tabIndex: REWARD_TAB.ALL,
     rewards: [],
     loadingReward: false,
     rewardExpand: {},
-    popupMsg: null
-
+    popupMsg: null,
+    showFixedAppSegment: false,
+    isQueryDone: false,
 }
-
-const REWARD_INITIAL_QUERY_KEY = 'reward_id'
-
-export const REWARD_ID_KEY = 'reward_item_id_'
 
 const RewardCenter = () => {
     // Init State
@@ -38,9 +52,16 @@ const RewardCenter = () => {
     const router = useRouter()
     const isApp = useApp()
 
-    useScrollPosition(({ currPos }) => {
-        // console.log('namidev-DEBUG: Current Y ', currPos.y)
-    })
+    const { observe } = useInView(
+        {
+            threshold: 0.25,
+            onChange: ({ observe, unobserve }) => {
+                unobserve() // To stop observing the current target element
+                observe() // To re-start observing the current target element
+            },
+            onEnter: () => setState({ showFixedAppSegment: true }),
+            onLeave: () => setState({ showFixedAppSegment: false })
+        })
 
     // Helper
     const getRewardData = () => {
@@ -55,6 +76,11 @@ const RewardCenter = () => {
     const showGuide = (event, guide) => {
         event?.stopPropagation()
         setState({ popupMsg: { title: t('reward-center:notice_title'), msg: guide } })
+    }
+
+    const scrollToReward = (elementId) => {
+        const rewardElement = document.getElementById(elementId)
+        rewardElement && rewardElement.scrollIntoView({ block: 'center', behavior: 'smooth' })
     }
 
     // Memmoized
@@ -116,7 +142,20 @@ const RewardCenter = () => {
         ]
     }, [state.rewards])
 
-    const onToggleReward = (rewardId, status) => setState({ rewardExpand: { [rewardId]: status } })
+    const onToggleReward = (rewardId, status) => {
+        setState({ rewardExpand: { [rewardId]: status } })
+        if (!state.isQueryDone) {
+            router?.push(
+                {
+                    pathname: PATHS.ACCOUNT.REWARD_CENTER,
+                    query: isApp ? { source: 'app' } : undefined
+                },
+                undefined,
+                {shallow: true}
+            )
+            setState({ isQueryDone: true })
+        }
+    }
 
     // Render Handler
     const renderSegmentTabs = () => {
@@ -150,8 +189,8 @@ const RewardCenter = () => {
 
         if (!data?.length) {
             return (
-                <div className="min-h-[400px] h-full flex items-center justify-center">
-                    <Empty message="Không có ưu đãi cho danh mục này"
+                <div className="min-h-[400px] h-full flex items-center justify-center dark:bg-darkBlue-2">
+                    <Empty message={t('reward-center:no_promo')}
                            messageStyle="text-xs sm:text-sm"
                     />
                 </div>
@@ -195,31 +234,76 @@ const RewardCenter = () => {
         )
     }, [state.popupMsg])
 
+    const renderFixedSegmentTabs = useCallback(() => {
+        if (!isApp) return null
+
+        return (
+            <div className={state.showFixedAppSegment ?
+                'p-4 w-full bg-bgContainer dark:bg-bgContainer-dark rounded-xl drop-shadow-onlyLight fixed z-50 top-0 left-0 !whitespace-nowrap opacity-0 transition-all ease-in-out duration-200 invisible'
+                : 'p-4 w-full bg-bgContainer dark:bg-bgContainer-dark rounded-xl drop-shadow-onlyLight fixed z-50 top-0 left-0 !whitespace-nowrap transition-all ease-in-out duration-200 !visible !opacity-100'}>
+                {renderSegmentTabs()}
+            </div>
+        )
+    }, [state.showFixedAppSegment, isApp, renderSegmentTabs])
+
     useEffect(() => {
         getRewardData()
     }, [])
 
     useEffect(() => {
-        const rewardQueryId = router?.query?.[REWARD_INITIAL_QUERY_KEY]
-        if (!state.loadingReward && rewardQueryId) {
-            setState({ rewardExpand: { [rewardQueryId]: true } })
+        const rewardQueryId = router?.query?.[REWARD_ID_QUERY_KEY]
+        const rewardType = router?.query?.[REWARD_TYPE_QUERY_KEY]
+
+        if (!state.loadingReward) {
+            rewardQueryId && setState({ rewardExpand: { [rewardQueryId]: true } })
+            if (rewardType) {
+                switch (rewardType) {
+                    case REWARD_TYPE_QUERY_VALUE.PROMOTION:
+                        setState({ tabIndex: REWARD_TAB.PROMOTION })
+                        break
+                    case REWARD_TYPE_QUERY_VALUE.TRADING:
+                        setState({ tabIndex: REWARD_TAB.PROMOTION })
+                        break
+                    case REWARD_TYPE_QUERY_VALUE.ALL:
+                    default:
+                        setState({ tabIndex: REWARD_TAB.ALL })
+                        break
+                }
+            }
         }
     }, [router, state.loadingReward])
 
     useEffect(() => {
-        console.log('namidev-DEBUG: Watching State => ', state)
-    }, [state])
+        const rewardQueryId = router?.query?.[REWARD_ID_QUERY_KEY]
+        if (rewardQueryId && !state.isQueryDone && Object.keys(state.rewardExpand)?.length) {
+            setTimeout(() => scrollToReward(REWARD_ROW_ID_KEY + rewardQueryId), 250)
+        }
+    }, [router, state.rewardExpand, state.isQueryDone])
 
+    // useEffect(() => {
+    //     const rewardQueryId = router?.query?.[REWARD_ID_QUERY_KEY]
+    //     if (!rewardQueryId) {
+    //         console.log('namidev-DEBUG: queryId ', rewardQueryId)
+    //         setState({ isQueryDone: true })
+    //     }
+    // }, [router])
+
+    // useEffect(() => console.log('namidev-DEBUG: => isQueryDone ', state.isQueryDone), [state.isQueryDone])
+
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: Watching State => ', state)
+    // }, [state])
 
     return (
         <>
+            {renderFixedSegmentTabs()}
             <div className="h-full">
                 {!isApp && renderSegmentTabs()}
                 <div className="mt-8 t-common select-none">
                     {isApp ? t('reward-center:title') : t('reward-center:promotion')}
                 </div>
                 <div style={rewardAppStyles?.styles} className={rewardAppStyles?.className}>
-                    {isApp && renderSegmentTabs()}
+                    {isApp && <div ref={observe}>{renderSegmentTabs()}</div>}
                     <div id="reward-center"
                          className="mt-6 overflow-hidden rounded-lg dark:border dark:border-divider-dark"
                          style={rewardListWrapperStyles}>

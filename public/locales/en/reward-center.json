@@ -6,6 +6,7 @@
   "guide": "Guide",
   "claim": "Claim",
   "claim_all": "Claim all",
+  "no_promo": "Currently, there are no offers for this category.",
   "button_status": {
     "claimed": "Claimed",
     "completed": "Completed"
