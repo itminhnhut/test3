@@ -80,7 +80,7 @@ export const getDecimalSpotPrice = memoize((symbol = '') => {
     return 6;
 }, (symbol) => symbol);
 
-export function getLoginUrl(mode, action = 'login', options = {}) {
+export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
     let params = {};
     if (typeof window !== 'undefined') {
         const _options = defaults(options, {
@@ -116,7 +116,7 @@ export function getLoginUrl(mode, action = 'login', options = {}) {
     }
 
     return ''
-    
+
 }
 
 export function getSymbolString(symbol = {}) {

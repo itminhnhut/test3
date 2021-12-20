@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useMemo } from 'react'
 
 const Button = memo((props) => {
     // Own Props
@@ -6,61 +6,58 @@ const Button = memo((props) => {
         title,
         style,
         color,
-        href,
-        componentType = "link",
+        href = '/',
+        componentType = 'link',
         type,
         onClick,
         disabled,
-        target = "",
-    } = props;
-
-    // Initial State
-    const [state, set] = useState({
-        style: {},
-    });
-    const setState = (_state) =>
-        set((prevState) => ({ ...prevState, ..._state }));
+        target = ''
+    } = props
 
     const disabledStyle = useMemo(() => {
-        if (type === "disabled")
-            return "!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3";
-        return "";
-    }, [type]);
+        if (type === 'disabled')
+            return '!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3'
+        return ''
+    }, [type])
 
-    if (componentType === "link") {
-        return (
-            <a
-                href={href || "#"}
-                style={{ ...style, display: "block", background: color }}
-                target={target}
-                className={`mal-button ${
-                    type === "primary"
-                        ? "bg-bgBtnPrimary text-txtBtnPrimary"
-                        : "bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark"
-                } ${disabledStyle}`}
-            >
-                {title || "TITLE_NOT_FOUND"}
-            </a>
-        );
-    }
+    const render = useCallback(() => {
+        if (componentType === 'link') {
+            return (
+                <a
+                    href={href}
+                    style={{ ...style, display: 'block', background: color }}
+                    target={target}
+                    className={`mal-button ${
+                        type === 'primary'
+                            ? 'bg-bgBtnPrimary text-txtBtnPrimary'
+                            : 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'
+                    } ${disabledStyle}`}
+                >
+                    {title || 'TITLE_NOT_FOUND'}
+                </a>
+            )
+        }
 
-    if (componentType === "button") {
-        return (
-            <button
-                style={{ ...style, background: color }}
-                className={`mal-button ${
-                    type === "primary"
-                        ? "bg-bgBtnPrimary text-txtBtnPrimary"
-                        : "bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark"
-                } ${disabledStyle}`}
-                onClick={() => onClick && !disabled && onClick()}
-            >
-                {title || "TITLE_NOT_FOUND"}
-            </button>
-        );
-    }
+        if (componentType === 'button') {
+            return (
+                <button
+                    style={{ ...style, background: color }}
+                    className={`mal-button ${
+                        type === 'primary'
+                            ? 'bg-bgBtnPrimary text-txtBtnPrimary'
+                            : 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'
+                    } ${disabledStyle}`}
+                    onClick={() => onClick && !disabled && onClick()}
+                >
+                    {title || 'TITLE_NOT_FOUND'}
+                </button>
+            )
+        }
 
-    return null;
-});
+        return null
+    }, [href, title, componentType, type, onClick, disabled, color, style, target])
 
-export default Button;
+    return render()
+})
+
+export default Button

@@ -1,6 +1,6 @@
-import { memo, useCallback, useEffect, useMemo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'next-i18next'
-import { formatNumber, formatTime } from 'redux/actions/utils'
+import { formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils'
 import { useSelector } from 'react-redux'
 import { ChevronRight } from 'react-feather'
 import { REWARD_STATUS } from 'components/screens/Account/_reward_data'
@@ -72,19 +72,34 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
                             <div className="font-bold text-sm md:text-[16px]">{t('common:description')}:</div>
                             <div className="mt-2 font-medium text-xs md:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                 {data?.description?.[language]}
-
-                                <div className="mt-1 font-normal italic text-xs lg:text-sm">
-                                    {data?.status === REWARD_STATUS.COMING_SOON &&
-                                    <div className="mt-1">
-                                        {t('common:start_at')} {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
-                                    </div>
-                                    }
-                                    {data?.status === REWARD_STATUS.AVAILABLE &&
-                                    <div className="mt-1">
-                                        {t('common:expired_at')} {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
-                                    </div>
-                                    }
+                                <div className="lg:hidden mt-1.5">
+                                    <a href={data?.url_reference} target="_blank"
+                                       className="font-normal text-xs md:text-sm text-dominant hover:!underline">
+                                        {t('common:view_rules')}
+                                    </a>
                                 </div>
+
+                                {data?.notes?.[language]?.length &&
+                                <div className="lg:hidden mt-3.5">
+                                    <div className="font-bold text-sm">{t('common:notes')}:</div>
+                                    {data?.notes?.[language]?.map((note, index) => (
+                                        <div key={`reward_note__${index}`} className="mt-1 font-normal text-xs md:text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                                            {data?.notes?.[language]?.length > 1 ? '• ': null}{note}
+                                        </div>
+                                    ))}
+                                </div>}
+                            </div>
+                            <div className="mt-4 font-normal italic text-xs lg:text-sm">
+                                {data?.status === REWARD_STATUS.COMING_SOON &&
+                                <div className="mt-1">
+                                    {t('common:start_at')} {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
+                                </div>
+                                }
+                                {data?.status === REWARD_STATUS.AVAILABLE &&
+                                <div className="mt-1">
+                                    {t('common:expired_at')} {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
+                                </div>
+                                }
                             </div>
                         </div>
                         <RewardListItem name={data?.id} data={data?.tasks} loading={loading} showGuide={showGuide}/>
@@ -137,12 +152,27 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
                 {width >= BREAK_POINTS.lg &&
                 <div className="w-3/5 pl-10 flex items-center justify-between border-l border-divider dark:border-darkBlue-4">
                     <div style={{ width: `calc(100% - 250px)` }}>
-                        {data?.notes?.[language]?.map(note => <div className="font-medium text-sm">{data?.notes?.[language]?.length > 1 ? '• ': null}{note}</div>)}
+                        {data?.notes?.[language]?.map((note, index) => (
+                            <div key={`reward_note_item__${index}`} className="font-medium text-sm">
+                                {data?.notes?.[language]?.length > 1 ? '• ' : null}{note}
+                            </div>))}
                     </div>
                     <div className="flex items-center">
                         {!auth ?
-                            <RewardButton title="Login" buttonStyles="min-w-[90px]" status={REWARD_BUTTON_STATUS.AVAILABLE}
-                                          onClick={() => alert('Go to login')}/>
+                            <>
+                                {loading ?
+                                    <Skeletor
+                                        width={65}
+                                        height={25}
+                                        className="rounded-lg mr-3"
+                                    />
+                                    : <RewardButton href={getLoginUrl('sso', 'login')}
+                                                    title="Login" buttonStyles="min-w-[90px]"
+                                                    status={REWARD_BUTTON_STATUS.AVAILABLE}
+                                                    componentType="a"
+                                    />
+                                }
+                            </>
                             : <>
                                 {loading ?
                                     <Skeletor

@@ -9,13 +9,13 @@ import { memo, useCallback, useState } from 'react'
 import Div100vh from 'react-div-100vh'
 import { ChevronDown } from 'react-feather'
 import { useSelector } from 'react-redux'
-import { actionLogout } from 'redux/actions/user'
 import { getLoginUrl, getS3Url } from 'redux/actions/utils'
 import colors from 'styles/colors'
 import { useWindowSize } from 'utils/customHooks'
 import SvgCheckSuccess from 'components/svg/CheckSuccess'
 import { PulseLoader } from 'react-spinners'
 import { PATHS } from 'constants/paths'
+import { buildLogoutUrl } from 'utils'
 
 
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel }) => {
@@ -125,10 +125,16 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel }) 
                         <>
                             <div className="flex flex-row justify-between user__button">
                                 <div>
-                                    <Button href={getLoginUrl('sso', 'login')} title={t('common:sign_in')} type="secondary"/>
+                                    <Button title={t('common:sign_in')}
+                                            componentType="button"
+                                            onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')}
+                                            type="secondary"/>
                                 </div>
                                 <div>
-                                    <Button href={getLoginUrl('sso', 'register')} title={t('common:sign_up')} type="primary"/>
+                                    <Button title={t('common:sign_up')}
+                                            componentType="button"
+                                            onClick={() => window.open(getLoginUrl('sso', 'register'), '_self')}
+                                            type="primary"/>
                                 </div>
                             </div>
                             <div className="border-b border-divider dark:border-divider-dark"
@@ -193,11 +199,10 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel }) 
                                 </a>
                             </Link>
                         </div>
-                        {auth && <div className="mal-pocket-navbar__drawer__navlink__group___item"
-                              onClick={() => actionLogout()}>
-                            <div className="w-full text-center mt-4 bg-red py-3 rounded-xl">
+                        {auth && <div className="mal-pocket-navbar__drawer__navlink__group___item">
+                            <a href={buildLogoutUrl()} className="w-full text-center mt-4 bg-red py-3 rounded-xl">
                                 {t('navbar:menu.user.logout')}
-                            </div>
+                            </a>
                         </div>}
                     </div>
                 </div>

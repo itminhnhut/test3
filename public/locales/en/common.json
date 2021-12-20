@@ -189,5 +189,6 @@
   "support_type": "Support {{ types }}",
   "description": "Description",
   "details": "Details",
-  "view_rules": "View Rules"
+  "view_rules": "View Rules",
+  "notes": "Notes"
 }

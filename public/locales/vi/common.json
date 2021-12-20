@@ -189,5 +189,6 @@
   "support_type": "Hỗ trợ {{ types }}",
   "description": "Mô tả",
   "details": "Chi tiết",
-  "view_rules": "Thể lệ"
+  "view_rules": "Xem thể lệ",
+  "notes": "Ghi chú"
 }

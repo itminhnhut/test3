@@ -189,7 +189,7 @@ const RewardCenter = () => {
 
         if (!data?.length) {
             return (
-                <div className="min-h-[400px] h-full flex items-center justify-center dark:bg-darkBlue-2">
+                <div className="min-h-[400px] xl:min-h-[520px] 2xl:min-h-[550px] h-full flex items-center justify-center dark:bg-darkBlue-2">
                     <Empty message={t('reward-center:no_promo')}
                            messageStyle="text-xs sm:text-sm"
                     />
@@ -280,19 +280,11 @@ const RewardCenter = () => {
         }
     }, [router, state.rewardExpand, state.isQueryDone])
 
-    // useEffect(() => {
-    //     const rewardQueryId = router?.query?.[REWARD_ID_QUERY_KEY]
-    //     if (!rewardQueryId) {
-    //         console.log('namidev-DEBUG: queryId ', rewardQueryId)
-    //         setState({ isQueryDone: true })
-    //     }
-    // }, [router])
-
-    // useEffect(() => console.log('namidev-DEBUG: => isQueryDone ', state.isQueryDone), [state.isQueryDone])
-
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watching State => ', state)
-    // }, [state])
+    useEffect(() => {
+        if (state.rewards?.length < 3) {
+            setState({ rewardExpand: { [state.rewards?.[0]?.id]: true } })
+        }
+    }, [state.rewards])
 
     return (
         <>
