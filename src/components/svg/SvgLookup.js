@@ -1,11 +1,11 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 
-const SvgLookup = ({ size }) => {
+const SvgLookup = ({ size, className = '' }) => {
     const [currentTheme, ] = useDarkMode()
 
     if (currentTheme === THEME_MODE.DARK) {
         return (
-            <svg width={size || '130'} height={size || '130'} viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width={size || '130'} height={size || '130'} viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
                 <g clipPath="url(#clip0_1194_6932)">
                     <path d="M62.7793 28.6492L45.8018 112.381L108.004 125.07L124.982 41.3388L62.7793 28.6492Z" fill="#1A2440"/>
                     <path d="M123.457 37.8361L61.2539 25.1465L44.2763 108.878L106.479 121.568L123.457 37.8361Z" fill="#263459"/>

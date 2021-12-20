@@ -11,12 +11,16 @@ import useApp from 'hooks/useApp'
 import SegmentTabs from 'components/common/SegmentTabs'
 
 import _reward_data, { REWARD_STATUS, REWARD_TYPE } from 'components/screens/Account/_reward_data'
+import Empty from 'components/common/Empty'
+import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModal'
 
 const INITIAL_STATE = {
     tabIndex: 0,
     rewards: [],
     loadingReward: false,
     rewardExpand: {},
+    popupMsg: null
+
 }
 
 const REWARD_INITIAL_QUERY_KEY = 'reward_id'
@@ -29,7 +33,7 @@ const RewardCenter = () => {
     const setState = state => set(prevState => ({ ...prevState, ...state }))
 
     // Use Hooks
-    const [currentTheme, ] = useDarkMode()
+    const [currentTheme] = useDarkMode()
     const { t } = useTranslation()
     const router = useRouter()
     const isApp = useApp()
@@ -38,12 +42,19 @@ const RewardCenter = () => {
         // console.log('namidev-DEBUG: Current Y ', currPos.y)
     })
 
-    // Api Helper
+    // Helper
     const getRewardData = () => {
         setState({ loadingReward: true })
         const rewards = _reward_data
         setState({ rewards })
         setTimeout(() => setState({ loadingReward: false }), 1000)
+    }
+
+    const closePopup = () => setState({ popupMsg: null })
+
+    const showGuide = (event, guide) => {
+        event?.stopPropagation()
+        setState({ popupMsg: { title: t('reward-center:notice_title'), msg: guide } })
     }
 
     // Memmoized
@@ -57,7 +68,7 @@ const RewardCenter = () => {
             if (currentTheme === THEME_MODE.LIGHT) {
                 _styles = {
                     boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)',
-                    backgroundColor: '#FCFCFC',
+                    backgroundColor: '#FCFCFC'
                 }
             } else {
                 _styles = {
@@ -125,6 +136,8 @@ const RewardCenter = () => {
                     <RewardItem data={null} loading={state.loadingReward}/>
                     <RewardItem data={null} loading={state.loadingReward}/>
                     <RewardItem data={null} loading={state.loadingReward}/>
+                    <RewardItem data={null} loading={state.loadingReward}/>
+                    <RewardItem data={null} loading={state.loadingReward}/>
                 </>
             )
         }
@@ -133,16 +146,54 @@ const RewardCenter = () => {
         if (state.tabIndex === 1) rewardType = REWARD_TYPE.PROMOTION
         if (state.tabIndex === 2) rewardType = REWARD_TYPE.TRADING
 
-        return state.rewards?.filter(o => o?.type?.includes(rewardType))?.map(reward => (
+        const data = state.rewards?.filter(o => o?.type?.includes(rewardType))
+
+        if (!data?.length) {
+            return (
+                <div className="min-h-[400px] h-full flex items-center justify-center">
+                    <Empty message="Không có ưu đãi cho danh mục này"
+                           messageStyle="text-xs sm:text-sm"
+                    />
+                </div>
+            )
+        }
+
+        return data?.map(reward => (
             <RewardItem
                 key={reward?.id}
                 data={reward}
                 loading={state.loadingReward}
                 active={state?.rewardExpand?.[reward?.id]}
                 onToggleReward={(rewardId, status) => onToggleReward(rewardId, status)}
+                showGuide={showGuide}
             />
         ))
     }, [state.tabIndex, state.rewards, state.loadingReward, state.rewardExpand])
+
+    const renderPopup = useCallback(() => {
+        if (!state.popupMsg?.msg) return null
+
+        return (
+            <ReModal
+                useOverlay
+                useButtonGroup={REMODAL_BUTTON_GROUP.SINGLE_CONFIRM}
+                position={REMODAL_POSITION.CENTER}
+                isVisible={!!state.popupMsg?.msg}
+                // title={state.popupMsg?.title}
+                onBackdropCb={closePopup}
+                onPositiveCb={closePopup}
+                className="py-5"
+                buttonGroupWrapper="max-w-[150px] mx-auto"
+            >
+                <div className="font-bold mb-3.5 text-center lg:text-[18px]">
+                    {state.popupMsg?.title}
+                </div>
+                <div className="mt-3 mb-4 lg:mb-5 font-medium text-sm text-center">
+                    {state.popupMsg?.msg}
+                </div>
+            </ReModal>
+        )
+    }, [state.popupMsg])
 
     useEffect(() => {
         getRewardData()
@@ -160,22 +211,24 @@ const RewardCenter = () => {
     }, [state])
 
 
-
     return (
-        <div className="h-full">
-            {!isApp && renderSegmentTabs()}
-            <div className="mt-8 t-common select-none">
-                {isApp ? t('reward-center:title') : t('reward-center:promotion')}
-            </div>
-            <div style={rewardAppStyles?.styles} className={rewardAppStyles?.className}>
-                {isApp && renderSegmentTabs()}
-                <div id="reward-center"
-                     className="mt-6 overflow-hidden rounded-lg dark:border dark:border-divider-dark"
-                     style={rewardListWrapperStyles}>
-                    {renderReward()}
+        <>
+            <div className="h-full">
+                {!isApp && renderSegmentTabs()}
+                <div className="mt-8 t-common select-none">
+                    {isApp ? t('reward-center:title') : t('reward-center:promotion')}
+                </div>
+                <div style={rewardAppStyles?.styles} className={rewardAppStyles?.className}>
+                    {isApp && renderSegmentTabs()}
+                    <div id="reward-center"
+                         className="mt-6 overflow-hidden rounded-lg dark:border dark:border-divider-dark"
+                         style={rewardListWrapperStyles}>
+                        {renderReward()}
+                    </div>
                 </div>
             </div>
-        </div>
+            {renderPopup()}
+        </>
     )
 }
 
@@ -188,6 +241,6 @@ export const getStaticProps = async ({ locale }) => ({
 export default withTabLayout(
     {
         routes: TAB_ROUTES.ACCOUNT,
-        hideInApp: true,
+        hideInApp: true
     })
 (RewardCenter)

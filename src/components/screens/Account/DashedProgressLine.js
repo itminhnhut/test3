@@ -31,7 +31,7 @@ const DashedProgressLine = memo(({
             }
 
             dashes.push(
-                <span style={{
+                <span key={`dashes__${i}`} style={{
                     width: dashedWidth || 2,
                     height: offset,
                     marginBottom: dashedSize

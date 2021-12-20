@@ -159,6 +159,7 @@
   },
   "start_at": "Start at",
   "end_at": "End at",
+  "expired_at": "Expired at",
   "redeem_at": "Redeem at",
   "interest": "Interest",
   "unit": {
@@ -185,5 +186,8 @@
     "failure": "An error occurred while uploading files, please try again later."
   },
   "reset": "Reset",
-  "support_type": "Support {{ types }}"
+  "support_type": "Support {{ types }}",
+  "description": "Description",
+  "details": "Details",
+  "view_rules": "View Rules"
 }

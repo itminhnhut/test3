@@ -500,7 +500,7 @@ const AccountProfile = () => {
                 <div key={log?.id} className="flex justify-between text-sm font-medium mb-5">
                     <div>
                         <div className="device font-bold flex items-center">
-                            <span className="inline-block max-w-[100px] sm:max-w-none truncate">{log?.device_title}</span>
+                            <span className="inline-block sm:max-w-[110px] sm:max-w-none truncate">{log?.device_title}</span>
                             <span className="ml-4 text-xs xl:text-sm font-normal inline-flex items-center">
                                {statusInner}
                             </span>
@@ -509,13 +509,13 @@ const AccountProfile = () => {
                             {log?.last_location}
                         </div>
                     </div>
-                    <div className="flex">
+                    <div className="hidden sm:flex">
                         <div className="pr-2">
                             <div data-tip="" data-for={`ip_address_${log?.last_ip_address}`}
-                                 className="ip-address truncate text-right whitespace-nowrap">
+                                 className="ip-address text-right">
                                 {log?.last_ip_address || EMPTY_VALUE}
                             </div>
-                            <div className="date-time mt-2 text-xs sm:text-sm text-right whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="date-time mt-2 text-xs sm:text-sm text-right text-txtSecondary dark:text-txtSecondary-dark">
                                 {formatTime(log?.last_logged_in, 'dd-MM-yyyy')}
                                 <span className="ml-3">{formatTime(log?.last_logged_in, 'HH:mm')}</span>
                             </div>
@@ -563,7 +563,7 @@ const AccountProfile = () => {
                      onPositiveLoading={state.revokingDevices}
                      className="px-6"
             >
-                <div className="text-center font-medium">
+                <div className="mb-4 text-center font-medium">
                     <div className="font-bold text-center uppercase">{t('profile:revoke_title')}</div>
                     <div className="mt-4 font-normal">
                         {id ? t('profile:revoke_question', { device }) : t('profile:revoke_question_all')}

@@ -6,6 +6,8 @@ import { CLAIM_STATUS, REWARD_STATUS, STEP_TYPE, TASK_ACTIONS, TASK_PROPS_TYPE, 
 import RewardButton, { REWARD_BUTTON_STATUS } from 'components/screens/Account/RewardButton'
 import useIsFirstRender from 'hooks/useIsFirstRender'
 import CountUp from 'react-countup'
+import { BREAK_POINTS } from 'constants/constants'
+import useWindowSize from 'hooks/useWindowSize'
 
 const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is the whole things of task item in tasks?.task_list
     // Init state
@@ -14,6 +16,7 @@ const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is
     // Use hooks
     const { t, i18n: { language } } = useTranslation()
     const isFirst = useIsFirstRender()
+    const { width } = useWindowSize()
 
     // Render Handler
     const renderContent = useCallback(() => {
@@ -36,7 +39,8 @@ const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is
                 }
 
                 return (
-                    <div className={'mt-3 mb-4 text-xs sm:text-sm flex items-center ' + textClass}>
+                    <div style={width >= BREAK_POINTS.lg ? { width: 'calc(100% - 250px)' } : undefined}
+                         className={'mt-3 mb-4 text-xs sm:text-sm flex items-center w-full ' + textClass}>
                         {stepIcon &&
                         <img src={stepIcon}
                              className="w-[16px] h-[16px] sm:w-[24px] sm:h-[24px] mr-1.5"
@@ -49,12 +53,12 @@ const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is
                 const reached = data?.task_props?.metadata?.reached
 
                 return (
-                    <div className="my-4 flex items-center font-medium">
-                        <div className="w-1/2 relative rounded-lg overflow-hidden h-[3.65px] bg-teal-lightTeal dark:bg-teal-opacity">
+                    <div className="my-4 w-full flex items-center font-medium">
+                        <div className="w-1/2 sm:w-2/3 md:w-3/4 lg:w-1/2 relative rounded-lg overflow-hidden h-[3.65px] lg:h-[5px] bg-teal-lightTeal dark:bg-teal-opacity">
                             <div style={{ width: reachedProgress + '%' }}
                                  className="absolute h-full top-0 left-0 bg-dominant rounded-lg transition-all duration-200 ease-in"/>
                         </div>
-                        <div className="w-1/2 text-right text-xs">
+                        <div className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/2 text-right text-xs md:text-sm lg:pr-4 xl:ml-8">
                             <span className="text-dominant">
                                 {/*{isFirst && !reachedProgress ?*/}
                                 {/*    <CountUp end={reached}*/}
@@ -75,18 +79,20 @@ const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is
             default:
                 return null
         }
-    }, [data?.task_props?.type, data?.task_props?.metadata, reachedProgress, language, isFirst, assetConfig])
+    }, [data?.task_props?.type, data?.task_props?.metadata, reachedProgress, language, isFirst, width, assetConfig])
 
     const renderButtonGroup = useCallback(() => {
         const buttonGroup = []
 
-        data?.task_props?.metadata?.actions?.forEach(action => {
+        data?.task_props?.metadata?.actions?.forEach((action, index) => {
             // !TODO: Handle submit Task Action
             const rewardProps = handleRewardButtonProps(action?.type, { ...data, t })
 
             buttonGroup.push(
-                <RewardButton title={rewardProps?.title || action?.[language]}
-                              buttonStyles="w-[47%]"
+                <RewardButton key={`reward_button_${index}`} title={rewardProps?.title || action?.[language]}
+                              buttonStyles={index + 1 === data?.task_props?.metadata?.actions?.length ?
+                                  'w-[47%] max-w-[47%] xl:min-w-[90px] xl:w-[120px]'
+                                  : 'w-[47%] max-w-[47%] xl:min-w-[90px] xl:w-[120px] mr-3'}
                               status={rewardProps?.status}
                               onClick={rewardProps?.onClick}
                 />
@@ -94,7 +100,7 @@ const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is
         })
 
         return (
-            <div className="flex items-center justify-between">
+            <div className="flex items-center lg:justify-end lg:min-w-[200px] xl:min-w-[350px] xl:w-[400px]">
                 {buttonGroup}
             </div>
         )
@@ -119,7 +125,7 @@ const RewardType = memo(({ data, active, assetConfig }) => { // !NOTE: data?. is
     )
 })
 
-export const handleRewardButtonProps = (action, payload) => {
+const handleRewardButtonProps = (action, payload) => {
     console.log('namidev-DEBUG: handleRewardButtonProps ', payload)
 
     let isCompleted

@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'next-i18next'
 
-const RewardButton = memo(({ title, status, buttonStyles = '', onClick }) => {
+const RewardButton = memo(({ title, status, buttonStyles = '', href, target = "_self", onClick, componentType = 'div' }) => {
 
     const { t } = useTranslation()
 
@@ -26,12 +26,24 @@ const RewardButton = memo(({ title, status, buttonStyles = '', onClick }) => {
         }
     }, [status])
 
-    return (
-        <div className={passive?.className + ' ' + buttonStyles}
-             onClick={() => status === REWARD_BUTTON_STATUS.AVAILABLE && onClick()}>
-            {title}
-        </div>
-    )
+    if (componentType === 'a' || componentType === 'link') {
+        return (
+            <a href={href || '/'} target={target}
+               className={passive?.className + ' ' + buttonStyles}
+               onClick={e => e?.stopPropagation()}>
+                {title}
+            </a>
+        )
+    }
+
+    if (componentType === 'div') {
+        return (
+            <div className={passive?.className + ' ' + buttonStyles}
+                 onClick={() => status === REWARD_BUTTON_STATUS.AVAILABLE && onClick()}>
+                {title}
+            </div>
+        )
+    }
 })
 
 export const REWARD_BUTTON_STATUS = {

@@ -59,7 +59,7 @@ const ReModal = (
                 _active = '!translate-y-0'
                 break
             case REMODAL_POSITION.CENTER:
-                _className += '!transition-none min-w-[282px] max-w-[380px] left-1/2 top-1/2 w-[85%] rounded-xl -translate-x-1/2 -translate-y-1/2 invisible'
+                _className += '!transition-none min-w-[282px] max-w-[380px] left-1/2 top-[35%] w-[85%] rounded-xl -translate-x-1/2 -translate-y-1/2 invisible'
                 _active = '!visible'
                 break
         }
@@ -95,10 +95,11 @@ const ReModal = (
                     width: '100%',
                     height: position?.dimension?.bottom || REMODAL_POSITION.FULLSCREEN.DIMENSION.BOTTOM,
                     display: 'flex',
-                    alignItems: 'center', justifyItems: 'center',
+                    alignItems: message ? 'center' : 'end', justifyContent: message ? 'center' : 'end',
                     flexDirection: 'column',
                     paddingLeft: '16px', paddingRight: '16px',
                     marginTop: '5px',
+                    paddingBottom: message ? 0 : '16px',
                     ...position?.dimension?.bottom?.styles
                 }
             }
@@ -109,24 +110,24 @@ const ReModal = (
             active: _active,
             privateStyles: _privateStyles
         }
-    }, [className, position])
+    }, [className, position, message])
 
     const renderButtonGroup = useCallback(() => {
 
         if (useButtonGroup === REMODAL_BUTTON_GROUP.NOT_USE) return null
 
+        let inner
+
         if (useButtonGroup === REMODAL_BUTTON_GROUP.SINGLE_CONFIRM) {
-            return (
+            inner = (
                 <div className="w-full flex flex-row items-center justify-between">
                     <Button title={onPositiveLoading ? <PulseLoader color={colors.white} size={3}/> : (positiveLabel || t('common:confirm'))} type="primary"
                             componentType="button"
                             onClick={() => onPositiveCb && onPositiveCb()}/>
                 </div>
             )
-        }
-
-        if (useButtonGroup === REMODAL_BUTTON_GROUP.CONFIRM) {
-            return (
+        } else if (useButtonGroup === REMODAL_BUTTON_GROUP.CONFIRM) {
+            inner = (
                 <div className="w-full flex flex-row items-center justify-between">
                     <Button title={negativeLabel || t('common:close')} type="secondary"
                             componentType="button"
@@ -138,10 +139,8 @@ const ReModal = (
                             onClick={() => onPositiveCb && onPositiveCb()}/>
                 </div>
             )
-        }
-
-        if (useButtonGroup === REMODAL_BUTTON_GROUP.ALERT) {
-            return (
+        } else if (useButtonGroup === REMODAL_BUTTON_GROUP.ALERT) {
+            inner = (
                 <div className="w-full flex flex-row items-center justify-between">
                     <Button title={onPositiveLoading ? <PulseLoader color={colors.white} size={3}/> : (negativeLabel || t('common:close'))} type="secondary"
                             componentType="button"
@@ -154,6 +153,12 @@ const ReModal = (
                             }}/>
                 </div>)
         }
+
+        return (
+            <div className="w-full flex flex-row items-center justify-between">
+                {inner}
+            </div>
+        )
     }, [useButtonGroup, positiveLabel, negativeLabel, onPositiveCb, onPositiveLoading, onNegativeCb])
 
     useEffect(() => {
@@ -184,16 +189,19 @@ const ReModal = (
             <div style={style || {}} className={`${memmoizedStyles?.className} ${isVisible ? memmoizedStyles?.active : ''}`}>
 
                 {/*RE-MODAL TITLE*/}
-                <div style={memmoizedStyles?.privateStyles?.top || {}} className="relative text-center font-bold mt-2 lg:mt-6 text-[18px] md:text-[24px] lg:text-[26px]">
+                {title && <div style={memmoizedStyles?.privateStyles?.top || {}}
+                      className="relative text-center font-bold pt-2 lg:pt-6 text-[18px] md:text-[24px] lg:text-[26px]">
                     <div className="m-auto">
                         {title ? title : ''}
                     </div>
                     {useCrossButton &&
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-[35px] h-[35px] flex items-center justify-center cursor-pointer rounded-lg hover:bg-gray-4 dark:hover:bg-darkBlue-4"
-                                             onClick={() => onNegativeCb && onNegativeCb()}>
-                        <X strokeWidth={1.5} className="w-[20px] h-[20px] text-txtSecondary dark:text-txtSecondary-dark"/>
+                    <div
+                        className="absolute right-3 top-1/2 -translate-y-1/2 w-[35px] h-[35px] flex items-center justify-center cursor-pointer rounded-lg hover:bg-gray-4 dark:hover:bg-darkBlue-4"
+                        onClick={() => onNegativeCb && onNegativeCb()}>
+                        <X strokeWidth={1.5}
+                           className="w-[20px] h-[20px] text-txtSecondary dark:text-txtSecondary-dark"/>
                     </div>}
-                </div>
+                </div>}
 
                 {/*RE-MODAL BODY*/}
                 <div style={memmoizedStyles?.privateStyles?.body || {}}>
@@ -203,10 +211,11 @@ const ReModal = (
                 {/*RE-MODAL BUTTON GROUP*/}
                 <div style={memmoizedStyles?.privateStyles?.bottom || {}}
                      className={buttonGroupWrapper}>
+                    {message &&
                     <div className={messageWrapper ? 'min-h-[40px] pt-2 pb-3.5 text-xs sm:text-sm text-center text-dominant transition-all duration-200 invisible ' + messageWrapper
                         : 'min-h-[40px] pt-2 pb-3.5 text-xs sm:text-sm text-center text-dominant transition-all duration-200 invisible '}>
                         {message || ''}
-                    </div>
+                    </div>}
                     {renderButtonGroup()}
                 </div>
 

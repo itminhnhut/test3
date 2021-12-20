@@ -159,6 +159,7 @@
   },
   "start_at": "Ngày bắt đầu",
   "end_at": "Ngày kết thúc",
+  "expired_at": "Hết hạn vào",
   "redeem_at": "Ngày nhận thưởng",
   "interest": "Lợi nhuận",
   "unit": {
@@ -185,5 +186,8 @@
     "failure": "Có lỗi xảy ra trong quá trình truyền tải, vui lòng thử lại sau."
   },
   "reset": "Đặt lại",
-  "support_type": "Hỗ trợ {{ types }}"
+  "support_type": "Hỗ trợ {{ types }}",
+  "description": "Mô tả",
+  "details": "Chi tiết",
+  "view_rules": "Thể lệ"
 }
