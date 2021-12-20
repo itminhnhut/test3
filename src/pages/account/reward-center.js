@@ -138,7 +138,7 @@ const RewardCenter = () => {
         return [
             { key: 0, title: `${t('common:all')}${counter?.all ? ` (${counter.all})` : ''}` },
             { key: 1, title: `Promotion${counter?.promotion ? ` (${counter.promotion})` : ''}` },
-            { key: 2, title: `Trading${counter?.trading ? ` (${counter.trading})` : ''}` }
+            // { key: 2, title: `Trading${counter?.trading ? ` (${counter.trading})` : ''}` }
         ]
     }, [state.rewards])
 

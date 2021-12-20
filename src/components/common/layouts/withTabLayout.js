@@ -20,7 +20,7 @@ const INITIAL_STATE = {
 export default (props) => (WrappedComponent) => {
     return wrappedProps => {
         // Own props
-        const { routes, wrapperStyle = {}, tabStyle, contentContainerStyles = '', useModal = false, hideInApp = false, debug } = props
+        const { routes, wrapperStyle = {}, tabStyle, useModal = false, hideInApp = false, debug } = props
 
         // Init state
         const [state, set] = useState(INITIAL_STATE)
@@ -69,7 +69,7 @@ export default (props) => (WrappedComponent) => {
                     contentWrapperStyle={{ ...wrapperStyle, position: useModal ? 'unset !important' : 'relative' }}
                     hideInApp={hideInApp && isApp}>
                     <Background isDark={currentTheme === THEME_MODE.DARK}>
-                        <CustomContainer contentContainerStyles={contentContainerStyles}>
+                        <CustomContainer className="mal-container px-4 h-full">
                             <div className={hideInApp && isApp ?
                                 'flex items-center mb-8 lg:mb-10'
                                 : 'flex items-center mb-8 lg:mb-10 border-b border-divider dark:border-divider-dark'}>
@@ -88,9 +88,7 @@ const Background = styled.div.attrs({ className: 'w-full h-full pt-5 pb-24 lg:pb
   background-color: ${({ isDark }) => isDark ? colors.darkBlue1 : '#F8F9FA'};
 `
 
-const CustomContainer = styled.div.attrs({ className: `mal-container px-4 h-full` })`
-  ${({ contentContainerStyle }) => contentContainerStyle ? { ...contentContainerStyle } : ''};
-  
+const CustomContainer = styled.div`
   @media (min-width: 1024px) {
     max-width: 1000px !important;
   }
