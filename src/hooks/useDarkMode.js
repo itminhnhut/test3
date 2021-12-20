@@ -13,21 +13,24 @@ const useDarkMode = () => {
     const currentTheme = useSelector(state => state.user.theme)
     const dispatch = useDispatch()
 
-    const onThemeSwitch = () => {
-        const nextTheme = currentTheme === THEME_MODE.LIGHT ? THEME_MODE.DARK : THEME_MODE.LIGHT
-
+    const setTheme = (nextTheme) => {
         const root = window.document.documentElement
         root.classList.remove(nextTheme === THEME_MODE.LIGHT ? THEME_MODE.DARK : THEME_MODE.LIGHT)
         root.classList.add(nextTheme)
 
         localStorage.setItem(LOCAL_STORAGE_KEY.THEME, nextTheme)
         dispatch({
-            type: SET_THEME,
-            payload: nextTheme
-        })
+                     type: SET_THEME,
+                     payload: nextTheme
+                 })
     }
 
-    return [currentTheme, onThemeSwitch]
+    const onThemeSwitch = () => {
+        const nextTheme = currentTheme === THEME_MODE.LIGHT ? THEME_MODE.DARK : THEME_MODE.LIGHT
+        setTheme(nextTheme)
+    }
+
+    return [currentTheme, onThemeSwitch, setTheme]
 }
 
 export default useDarkMode
