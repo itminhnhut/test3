@@ -30,17 +30,17 @@ const RewardType = memo(({ data, active, assetConfig, claim, claiming, onClaim }
 
         switch (condition) {
             case Types.TASK_CONDITION.SINGLE_MISSION:
-                const currentStep = data?.user_metadata?.status || Types.SINGLE_MISSION_STATUS.PENDING
+                const currentStep = data?.user_metadata?.status || Types.TASK_HISTORY_STATUS.PENDING
 
                 let text = ''
                 let textClass = ''
                 let stepIcon = null
 
-                if (currentStep === Types.SINGLE_MISSION_STATUS.PENDING) {
+                if (currentStep === Types.TASK_HISTORY_STATUS.PENDING) {
                     text = t('common:incomplete')
                     textClass = 'text-yellow'
                     stepIcon = '/images/icon/warning.png'
-                } else if (currentStep === Types.SINGLE_MISSION_STATUS.FINISHED) {
+                } else if (currentStep === Types.TASK_HISTORY_STATUS.FINISHED) {
                     text = t('common:completed')
                     textClass = 'text-dominant'
                     stepIcon = '/images/icon/success.png'
@@ -95,8 +95,9 @@ const RewardType = memo(({ data, active, assetConfig, claim, claiming, onClaim }
         const buttonGroup = []
         const current = Date.now()
         const isExpired = current > Date.parse(data?.ended_at)
+        const isClaimed = data?.user_metadata?.claim_status === Types.TASK_HISTORY_CLAIM_STATUS.CLAIMED
 
-        !isExpired && data?.cta_button_url?.forEach((action, index) => {
+        !isExpired && !isClaimed && data?.cta_button_url?.forEach((action, index) => {
             // !TODO: Handle submit Task Action
             const rewardProps = handleRewardButtonProps(action, { ...data, t, language })
 
@@ -112,21 +113,18 @@ const RewardType = memo(({ data, active, assetConfig, claim, claiming, onClaim }
             }
         })
 
-        const claimProps = {}
+        const claimProps = {
+            title: t('reward-center:claim'),
+            status: REWARD_BUTTON_STATUS.NOT_AVAILABLE
+        }
 
-        switch (data?.user_metadata?.status) {
-            case Types.TASK_HISTORY_STATUS.CLAIMABLE:
-                claimProps.title = t('reward-center:claim')
-                claimProps.status = REWARD_BUTTON_STATUS.AVAILABLE
-                break
-            case Types.TASK_HISTORY_STATUS.CLAIMED:
-                claimProps.title = t('reward-center:button_status.claimed')
-                claimProps.status = REWARD_BUTTON_STATUS.NOT_AVAILABLE
-                break
-            default:
-                claimProps.title = t('reward-center:claim')
-                claimProps.status = REWARD_BUTTON_STATUS.NOT_AVAILABLE
-                break
+        if (data?.user_metadata?.claim_status === Types.TASK_HISTORY_CLAIM_STATUS.PENDING &&
+            data?.user_metadata?.status === Types.TASK_HISTORY_STATUS.FINISHED)   {
+            claimProps.title = t('reward-center:claim')
+            claimProps.status = REWARD_BUTTON_STATUS.AVAILABLE
+        } else if (isClaimed) {
+            claimProps.title = t('reward-center:button_status.claimed')
+            claimProps.status = REWARD_BUTTON_STATUS.NOT_AVAILABLE
         }
 
         if (isExpired) {
@@ -136,7 +134,8 @@ const RewardType = memo(({ data, active, assetConfig, claim, claiming, onClaim }
 
         buttonGroup.push(
             <RewardButton key="reward_button_claim"
-                          onClick={() => claimProps?.status === REWARD_BUTTON_STATUS.AVAILABLE && onClaim(data?._id, { reward: data?.reward, assetConfig })}
+                          onClick={() => claimProps?.status === REWARD_BUTTON_STATUS.AVAILABLE
+                              && onClaim(data?.user_metadata?._id, { reward: data?.reward, assetConfig })}
                           title={claiming ? <PulseLoader size={3} color={colors.teal}/> : claimProps?.title}
                           status={claimProps?.status}
                           buttonStyles="w-[47%] max-w-[47%] sm:max-w-[120px] xl:min-w-[90px] xl:w-[120px]"

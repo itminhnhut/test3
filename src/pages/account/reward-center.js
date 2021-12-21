@@ -56,7 +56,7 @@ const RewardCenter = () => {
 
     // Use Hooks
     const [currentTheme] = useDarkMode()
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const router = useRouter()
     const isApp = useApp()
 
@@ -74,27 +74,26 @@ const RewardCenter = () => {
         try {
             const { data } = await Axios.post(API_CLAIM_MISSION_REWARD, { id })
             if (data?.status === ApiStatus.SUCCESS) {
-                let msg = '--'
+                let msg
                 const { reward, assetConfig } = payload
-
+                console.log('namidev-DEBUG: Asset Config => ', assetConfig)
                 if (language === LANGUAGE_TAG.VI) {
                     msg = <>
-                        Chúc mừng, bạn đã nhận thưởng thành công
-                        <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetName}</span>
+                        Chúc mừng, bạn đã nhận thưởng thành công <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
                     </>
                 } else {
                     msg = <>
-                        Congratulation, you have successfully received
-                        <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetName}</span>
+                        Congratulation, you have successfully received <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
                     </>
                 }
                 const popupMsg = {
                     type: 'success',
                     msg
                 }
+                console.log('namidev-DEBUG: => ', popupMsg, data?.data)
                 // re-fetch reward data
-                await getRewardData()
                 setState({ claim: data?.data, popupMsg })
+                // await getRewardData()
             } else {
                 switch (data?.status) {
                     case Types.CLAIM_RESULT.INVALID_MISSION:
@@ -105,7 +104,7 @@ const RewardCenter = () => {
                     case Types.CLAIM_RESULT.INVALID_CLAIM_STATUS:
                     case Types.CLAIM_RESULT.INVALID_STATUS:
                     default:
-                        setState({popupMsg: { type: 'error', msg: t(`reward-center:reward_error.${data?.status}`) }})
+                        setState({popupMsg: { type: 'error', msg: t(`reward-center:reward_error.unknown`) }})
                         break
                 }
             }
@@ -113,11 +112,12 @@ const RewardCenter = () => {
             console.log(`Can't claim reward `, e)
         } finally {
             setState({ claiming: false })
+            await getRewardData(true)
         }
     }
 
-    const getRewardData = async () => {
-        !state.loadingReward && setState({ loadingReward: true })
+    const getRewardData = async (reFetch = false) => {
+        (!state.loadingReward || reFetch) && setState({ loadingReward: true })
         try {
             const { data } = await Axios.get(API_GET_MISSION)
             if (data?.status === ApiStatus.SUCCESS && data?.data) {
@@ -292,7 +292,8 @@ const RewardCenter = () => {
                 {state.popupMsg?.type === 'success' && <div className="w-full">
                     <img className="m-auto w-[45px] h-[45px]" src={getS3Url('/images/icon/success.png')} alt="ERRORS" />
                 </div>}
-                <div className="mt-4 mb-4 lg:mb-5 font-medium text-sm text-center">
+                <div className={state.popupMsg?.type ? 'mt-4 mb-4 lg:mb-5 leading-6 font-medium text-sm xl:text-[16px] text-center'
+                    : 'mt-4 mb-4 lg:mb-5 font-medium text-sm text-center'}>
                     {state.popupMsg?.msg}
                 </div>
             </ReModal>

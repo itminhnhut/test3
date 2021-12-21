@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { ChevronRight } from 'react-feather'
 import { useSelector } from 'react-redux'
@@ -159,39 +159,51 @@ const RewardListItem = ({ data, loading, showGuide, claim, claiming, onClaim }) 
         })
     }, [state.rewardItemExpand, data?.task_list, loading, claiming, claim, onClaim, configs, language, width])
 
-    const renderClaimAllBtn = useCallback(() => {
-        if (width >= BREAK_POINTS.lg) return  null
+    // const renderClaimAllBtn = useCallback(() => {
+    //     if (width >= BREAK_POINTS.lg) return  null
+    //
+    //     let status
+    //     const isClaimableAll = data?.filter(o => o?.user_metadata?.status !== Types.TASK_HISTORY_STATUS.PENDING)?.length > 0
+    //     const isClaimedAll = data?.filter(o => o?.user_metadata?.status === Types.TASK_HISTORY_STATUS.CLAIMED)?.length === data?.length
+    //
+    //     if (isClaimableAll) {
+    //         status = REWARD_BUTTON_STATUS.AVAILABLE
+    //     }
+    //
+    //     if (isClaimedAll) {
+    //         status = REWARD_BUTTON_STATUS.NOT_AVAILABLE
+    //     }
+    //
+    //     return (
+    //         <div className="mt-3.5 flex justify-center">
+    //             {auth && <RewardButton title={t('reward-center:claim_all')}
+    //                                    status={status}
+    //                                    onClick={() => alert(`should Claim all Reward !`)}
+    //                                    buttonStyles="mt-2 mb-7 md:min-w-[150px]"
+    //             />}
+    //         </div>
+    //     )
+    // }, [data, width, auth])
 
-        let status
-        const isClaimableAll = data?.filter(o => o?.user_metadata?.status !== Types.TASK_HISTORY_STATUS.PENDING)?.length > 0
-        const isClaimedAll = data?.filter(o => o?.user_metadata?.status === Types.TASK_HISTORY_STATUS.CLAIMED)?.length === data?.length
-
-        if (isClaimableAll) {
-            status = REWARD_BUTTON_STATUS.AVAILABLE
+    useEffect(() => {
+        let rewardItemExpand = {}
+        if (data?.length) {
+            data?.forEach(o => {
+                if (o?.user_metadata?.claim_status === Types.TASK_HISTORY_CLAIM_STATUS.PENDING &&
+                    o?.user_metadata?.status === Types.TASK_HISTORY_STATUS.FINISHED) {
+                    rewardItemExpand = {...rewardItemExpand, [o?._id]: true}
+                }
+            })
         }
-
-        if (isClaimedAll) {
-            status = REWARD_BUTTON_STATUS.NOT_AVAILABLE
-        }
-
-        return (
-            <div className="mt-3.5 flex justify-center">
-                {auth && <RewardButton title={t('reward-center:claim_all')}
-                                       status={status}
-                                       onClick={() => alert(`should Claim all Reward !`)}
-                                       buttonStyles="mt-2 mb-7 md:min-w-[150px]"
-                />}
-            </div>
-        )
-    }, [data, width, auth])
-
+        if (Object.keys(rewardItemExpand)?.length) setState({ rewardItemExpand })
+    }, [data])
 
     return (
         <div>
             <div className="pl-8 sm:pl-10 sm:pb-5">
                 {renderList()}
             </div>
-            {renderClaimAllBtn()}
+            {/*{renderClaimAllBtn()}*/}
         </div>
     )
 }

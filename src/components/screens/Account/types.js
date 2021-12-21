@@ -24,12 +24,11 @@ export default {
     },
     TASK_HISTORY_STATUS: {
         PENDING: 0,
-        CLAIMABLE: 1,
-        CLAIMED: 2
+        FINISHED: 1,
     },
-    SINGLE_MISSION_STATUS: {
-      PENDING: 0,
-      FINISHED: 1
+    TASK_HISTORY_CLAIM_STATUS: {
+        PENDING: 0,
+        CLAIMED: 1,
     },
     TASK_CATEGORY: {
         USER_KYC: 'USER_KYC',
