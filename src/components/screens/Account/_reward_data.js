@@ -5,8 +5,7 @@ export const REWARD_TYPE = {
 
 export const REWARD_STATUS = {
     NOT_AVAILABLE: 'NOT_AVAILBLE',
-    AVAILABLE: 'AVAILABLE',
-    COMING_SOON: 'COMING_SOON'
+    AVAILABLE: 'AVAILABLE'
 }
 
 export const TASK_STATUS = {

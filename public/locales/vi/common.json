@@ -190,5 +190,7 @@
   "description": "Mô tả",
   "details": "Chi tiết",
   "view_rules": "Xem thể lệ",
-  "notes": "Ghi chú"
+  "notes": "Ghi chú",
+  "completed": "Đã hoàn thành",
+  "incomplete": "Chưa hoàn thành"
 }

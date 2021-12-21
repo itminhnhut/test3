@@ -14,10 +14,11 @@ import RewardListItem from 'components/screens/Account/RewardListItem'
 import AssetName from 'components/wallet/AssetName'
 import Skeletor from 'components/common/Skeletor'
 import RewardButton from 'components/screens/Account/RewardButton'
+import Types from 'components/screens/Account/types'
 
-const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) => {
+const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, claim, claiming, onClaim }) => {
     // Rdx
-    const assetConfig = useSelector(state => state.utils.assetConfig?.find(o => o?.id === data?.total_reward?.assetId))
+    const assetConfig = useSelector(state => state.utils.assetConfig?.find(o => o?.id === data?.reward?.assetId))
     const auth = useSelector(state => state.auth?.user) || null
 
     // Use Hooks
@@ -57,6 +58,19 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
             className = originClass
         }
 
+        let time
+        const current = Date.now()
+        const startAt = Date.parse(data?.started_at)
+        const endAt = Date.parse(data?.ended_at)
+
+        if (current < startAt) {
+            time = `${t('common:start_at')} ${formatTime(data?.started_at, 'HH:mm dd-MM-yyyy')}`
+        } else if (current >= startAt && current < endAt) {
+            time = `${t('common:expired_at')} ${formatTime(data?.ended_at, 'HH:mm dd-MM-yyyy')}`
+        } else if (current > endAt) {
+            time = <span className="text-red">{t('reward-center:expired_promo')}</span>
+        }
+
         return (
             <div className={className}>
                 <div style={
@@ -73,7 +87,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
                             <div className="mt-2 font-medium text-xs md:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                 {data?.description?.[language]}
                                 <div className="lg:hidden mt-1.5">
-                                    <a href={data?.url_reference} target="_blank"
+                                    <a href={data?.cta_button_url || '/'} target="_blank"
                                        className="font-normal text-xs md:text-sm text-dominant hover:!underline">
                                         {t('common:view_rules')}
                                     </a>
@@ -90,31 +104,71 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
                                 </div>}
                             </div>
                             <div className="mt-4 font-normal italic text-xs lg:text-sm">
-                                {data?.status === REWARD_STATUS.COMING_SOON &&
                                 <div className="mt-1">
-                                    {t('common:start_at')} {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
+                                    {time}
                                 </div>
-                                }
-                                {data?.status === REWARD_STATUS.AVAILABLE &&
-                                <div className="mt-1">
-                                    {t('common:expired_at')} {formatTime(data?.expired_at, 'HH:mm dd-MM-yyyy')}
-                                </div>
-                                }
                             </div>
                         </div>
-                        <RewardListItem name={data?.id} data={data?.tasks} loading={loading} showGuide={showGuide}/>
+                        <RewardListItem
+                            name={data?._id}
+                            data={data?.tasks}
+                            loading={loading}
+                            showGuide={showGuide}
+                            claim={claim}
+                            claiming={claiming}
+                            onClaim={onClaim}
+                        />
                     </>}
                 </div>
             </div>
         )
-    }, [active, data, loading, language, theme])
+    }, [active, data, loading, claiming, claiming, onClaim, language, theme])
 
-    // useEffect(() => console.log('namidev-DEBUG: ', assetConfig), [assetConfig])
+    const renderClaimAll = useCallback(() => {
+        if (loading) {
+            return <Skeletor width={65} height={25} className="rounded-lg" />
+        }
+
+        let status
+        let title = t('reward-center:claim_all')
+
+        const isClaimableAll = data?.tasks?.filter(o => o?.user_metadata?.status !== Types.TASK_HISTORY_STATUS.PENDING)?.length > 0
+        const isClaimedAll = data?.tasks?.filter(o => o?.user_metadata?.status === Types.TASK_HISTORY_STATUS.CLAIMED)?.length === data?.length
+        const isExpired = Date.now() > Date.parse(data?.ended_at)
+
+        if (isClaimableAll) {
+            status = REWARD_BUTTON_STATUS.AVAILABLE
+        }
+
+        if (isClaimedAll) {
+            status = REWARD_BUTTON_STATUS.NOT_AVAILABLE
+        }
+
+        if (isExpired) {
+            title = t('reward-center:button_status.expired')
+            status = REWARD_BUTTON_STATUS.NOT_AVAILABLE
+
+            return (
+                <RewardButton title={title}
+                              status={status}
+                              buttonStyles="min-w-[90px]"
+                              onClick={() => alert(`Should claim all reward of ${data?._id}`)}/>
+            )
+        }
+
+        return null
+        // return (
+        //     <RewardButton title={title}
+        //                   status={status}
+        //                   buttonStyles="min-w-[90px]"
+        //                   onClick={() => alert(`Should claim all reward of ${data?._id}`)}/>
+        // )
+    }, [loading, data?.tasks])
 
     return (
-        <div id={`${REWARD_ROW_ID_KEY}${data?.id}`} className="relative bg-bgContainer dark:bg-darkBlue">
+        <div id={`${REWARD_ROW_ID_KEY}${data?._id}`} className="relative bg-bgContainer dark:bg-darkBlue">
             <div className={rewardRowStyles}
-                 onClick={() => !loading && data?.status === REWARD_STATUS.AVAILABLE && onToggleReward(data?.id, !active)}>
+                 onClick={() => !loading && data?.status === REWARD_STATUS.AVAILABLE && onToggleReward(data?._id, !active)}>
                 <div className="flex items-center lg:w-2/5">
                     <div className={loading ? '-mt-2.5' : ''}>
                         {loading ?
@@ -139,10 +193,10 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
                             : <div className="font-medium text-xs sm:text-sm lg:mt-1.5">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reward-center:reward')}:</span>{' '}
                                 <span className="text-dominant">
-                                {formatNumber(data?.total_reward?.value, assetConfig?.assetDigit)}
+                                {formatNumber(data?.reward?.value, assetConfig?.assetDigit)}
                             </span>{' '}
                                 <span>
-                                <AssetName assetId={data?.total_reward?.assetId}/>
+                                <AssetName assetId={data?.reward?.assetId}/>
                             </span>
                             </div>
                         }
@@ -186,17 +240,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide }) =
                                                     buttonStyles="mr-3 min-w-[90px]"
                                                     componentType="a"/>
                                 }
-                                {loading ?
-                                    <Skeletor
-                                        width={65}
-                                        height={25}
-                                        className="rounded-lg"
-                                    />
-                                    : <RewardButton title={t('reward-center:claim_all')}
-                                                    status={data?.tasks?.claimable_all ? REWARD_BUTTON_STATUS.AVAILABLE : REWARD_BUTTON_STATUS.NOT_AVAILABLE}
-                                                    buttonStyles="min-w-[90px]"
-                                                    onClick={() => alert(`Should claim all reward of ${data?.id}`)} />
-                                }
+                                {renderClaimAll()}
                             </>
                         }
                     </div>

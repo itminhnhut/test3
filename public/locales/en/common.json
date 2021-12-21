@@ -190,5 +190,7 @@
   "description": "Description",
   "details": "Details",
   "view_rules": "View Rules",
-  "notes": "Notes"
+  "notes": "Notes",
+  "completed": "Completed",
+  "incomplete": "Incomplete"
 }

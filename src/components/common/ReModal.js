@@ -4,7 +4,6 @@ import { PulseLoader } from 'react-spinners'
 import { log } from 'utils'
 import { X } from 'react-feather'
 
-import useLockedBody from 'hooks/useLockScroll'
 import Button from 'components/common/Button'
 import colors from 'styles/colors'
 
@@ -34,7 +33,6 @@ const ReModal = (
 
     // Re-MODAL
     const { t } = useTranslation(['common'])
-    const [, setLocked] = useLockedBody()
 
     const memmoizedStyles = useMemo(() => {
         let _className = DEFAULT_CLASS
@@ -165,13 +163,13 @@ const ReModal = (
         debug && log.d('[ReModal] isVisible => ', isVisible)
     }, [isVisible, debug])
 
-    useEffect(() => {
-        if (position?.mode === REMODAL_POSITION.FULLSCREEN.MODE && isVisible) {
-            setLocked(true)
-        } else {
-            setLocked(false)
-        }
-    }, [position?.mode, isVisible])
+    // useEffect(() => {
+    //     if (position?.mode === REMODAL_POSITION.FULLSCREEN.MODE && isVisible) {
+    //         setLocked(true)
+    //     } else {
+    //         setLocked(false)
+    //     }
+    // }, [position?.mode, isVisible])
 
 
     return (
@@ -189,8 +187,8 @@ const ReModal = (
             <div style={style || {}} className={`${memmoizedStyles?.className} ${isVisible ? memmoizedStyles?.active : ''}`}>
 
                 {/*RE-MODAL TITLE*/}
-                {title && <div style={memmoizedStyles?.privateStyles?.top || {}}
-                      className="relative text-center font-bold pt-2 lg:pt-6 text-[18px] md:text-[24px] lg:text-[26px]">
+                <div style={memmoizedStyles?.privateStyles?.top || {}}
+                     className="relative text-center font-bold pt-2 lg:pt-6 text-[18px] md:text-[24px] lg:text-[26px]">
                     <div className="m-auto">
                         {title ? title : ''}
                     </div>
@@ -201,7 +199,7 @@ const ReModal = (
                         <X strokeWidth={1.5}
                            className="w-[20px] h-[20px] text-txtSecondary dark:text-txtSecondary-dark"/>
                     </div>}
-                </div>}
+                </div>
 
                 {/*RE-MODAL BODY*/}
                 <div style={memmoizedStyles?.privateStyles?.body || {}}>
@@ -209,6 +207,7 @@ const ReModal = (
                 </div>
 
                 {/*RE-MODAL BUTTON GROUP*/}
+                {useButtonGroup !== REMODAL_BUTTON_GROUP.NOT_USE &&
                 <div style={memmoizedStyles?.privateStyles?.bottom || {}}
                      className={buttonGroupWrapper}>
                     {message &&
@@ -217,7 +216,7 @@ const ReModal = (
                         {message || ''}
                     </div>}
                     {renderButtonGroup()}
-                </div>
+                </div>}
 
             </div>
             {/*END RE-MODAL*/}
@@ -241,7 +240,7 @@ export const REMODAL_POSITION = {
         },
         DIMENSION: {
             TOP: 50,
-            BOTTOM: 95,
+            BOTTOM: 75,
             OFFSET: 20,
         }
     }
