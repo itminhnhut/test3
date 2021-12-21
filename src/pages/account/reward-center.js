@@ -112,7 +112,7 @@ const RewardCenter = () => {
             console.log(`Can't claim reward `, e)
         } finally {
             setState({ claiming: false })
-            await getRewardData(true)
+            await getRewardData()
         }
     }
 
