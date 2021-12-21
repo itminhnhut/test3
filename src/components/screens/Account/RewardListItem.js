@@ -58,7 +58,7 @@ const RewardListItem = ({ data, loading, showGuide, claim, claiming, onClaim }) 
                 <div key={_id} className="relative pb-4 md:pb-5 lg:flex lg:items-center">
                     <div className="pt-4 md:pt-5 flex items-stretch lg:w-2/5">
                         <div className="relative flex items-center justify-center">
-                            <div className="relative z-30 w-[40px] h-[40px] bg-bgContainer dark:bg-bgContainer-dark flex items-center justify-center">
+                            <div className="relative z-30 w-[40px] h-[40px] bg-bgContainer dark:bg-bgContainer-dark flex items-center justify-center overflow-hidden">
                                 <img src={icon_url} className="w-[24px] h-[24px] md:w-[32px] md:h-[32px]" alt="" />
                                 {isLastedItem &&
                                 <div className="w-[40px] h-[250%] absolute z-20 bg-bgContainer dark:bg-bgContainer-dark top-full left-0"/>}
