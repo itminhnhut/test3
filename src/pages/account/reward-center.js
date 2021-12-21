@@ -275,7 +275,7 @@ const RewardCenter = () => {
     const renderPopup = useCallback(() => {
         return (
             <ReModal
-                useOverlay={!isApp}
+                useOverlay
                 useButtonGroup={state.popupMsg?.type === 'error' ? REMODAL_BUTTON_GROUP.ALERT : REMODAL_BUTTON_GROUP.SINGLE_CONFIRM}
                 position={REMODAL_POSITION.CENTER}
                 isVisible={!!state.popupMsg?.msg}
