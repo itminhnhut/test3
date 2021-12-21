@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'next-i18next'
-import { formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils'
+import { formatNumber, formatTime, getLoginUrl, getS3Url } from 'redux/actions/utils'
 import { CLAIM_STATUS, REWARD_STATUS, STEP_TYPE, TASK_ACTIONS, TASK_PROPS_TYPE, TASK_STATUS } from 'components/screens/Account/_reward_data'
 
 import RewardButton, { REWARD_BUTTON_STATUS } from 'components/screens/Account/RewardButton'
@@ -51,7 +51,7 @@ const RewardType = memo(({ data, active, assetConfig, claim, claiming, onClaim }
                          className="mt-3 mb-4 text-xs sm:text-sm">
                         <div className={'flex items-center ' + textClass}>
                             {stepIcon &&
-                            <img src={stepIcon}
+                            <img src={getS3Url(stepIcon)}
                                  className="w-[16px] h-[16px] sm:w-[20px] sm:h-[20px] mr-1.5"
                                  alt={null}/>}
                             <span>{text}</span>
