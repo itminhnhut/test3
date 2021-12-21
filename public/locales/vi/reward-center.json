@@ -8,8 +8,15 @@
   "claimed": "Đã nhận",
   "claim_all": "Nhận tất cả",
   "no_promo": "Hiện chưa có ưu đãi cho hạng mục này.",
+  "expired_promo": "Thời hạn nhận ưu đãi đã kết thúc.",
   "button_status": {
     "claimed": "Đã nhận",
-    "completed": "Đã hoàn tất"
+    "completed": "Đã hoàn tất",
+    "expired": "Đã kết thúc"
+  },
+  "reward_error": {
+    "INVALID_USER": "Vui lòng đăng nhập.",
+    "INVALID_MISSION": "Không tìm thấy nhiệm vụ.",
+    "INVALID_TIME": "Thời gian để nhận thưởng không hợp lệ hoặc đã quá hạn."
   }
 }

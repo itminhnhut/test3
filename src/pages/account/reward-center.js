@@ -9,11 +9,17 @@ import RewardItem from 'components/screens/Account/RewardItem'
 import useApp from 'hooks/useApp'
 import SegmentTabs from 'components/common/SegmentTabs'
 
-import _reward_data, { REWARD_STATUS, REWARD_TYPE } from 'components/screens/Account/_reward_data'
+import { REWARD_STATUS, REWARD_TYPE } from 'components/screens/Account/_reward_data'
 import Empty from 'components/common/Empty'
 import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModal'
 import useInView from 'react-cool-inview'
 import { PATHS } from 'constants/paths'
+import Axios from 'axios'
+import { API_CLAIM_MISSION_REWARD, API_GET_MISSION } from 'redux/actions/apis'
+import { ApiStatus } from 'redux/actions/const'
+import Types from 'components/screens/Account/types'
+import { formatNumber, getS3Url } from 'redux/actions/utils'
+import { LANGUAGE_TAG } from 'hooks/useLanguage'
 
 export const REWARD_ROW_ID_KEY = 'reward_item_id_' // for identify reward will scrollTo after init
 const REWARD_ID_QUERY_KEY = 'reward_id' // for query url
@@ -39,6 +45,8 @@ const INITIAL_STATE = {
     popupMsg: null,
     showFixedAppSegment: false,
     isQueryDone: false,
+    claim: null,
+    claiming: false,
 }
 
 const RewardCenter = () => {
@@ -55,20 +63,71 @@ const RewardCenter = () => {
     const { observe } = useInView(
         {
             threshold: 0.25,
-            onChange: ({ observe, unobserve }) => {
-                unobserve() // To stop observing the current target element
-                observe() // To re-start observing the current target element
-            },
             onEnter: () => setState({ showFixedAppSegment: true }),
             onLeave: () => setState({ showFixedAppSegment: false })
         })
 
     // Helper
-    const getRewardData = () => {
-        setState({ loadingReward: true })
-        const rewards = _reward_data
-        setState({ rewards })
-        setTimeout(() => setState({ loadingReward: false }), 1000)
+    const onClaim = async (id, payload) => {
+        setState({ claiming: true })
+
+        try {
+            const { data } = await Axios.post(API_CLAIM_MISSION_REWARD, { id })
+            if (data?.status === ApiStatus.SUCCESS) {
+                let msg = '--'
+                const { reward, assetConfig } = payload
+
+                if (language === LANGUAGE_TAG.VI) {
+                    msg = <>
+                        Chúc mừng, bạn đã nhận thưởng thành công
+                        <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetName}</span>
+                    </>
+                } else {
+                    msg = <>
+                        Congratulation, you have successfully received
+                        <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetName}</span>
+                    </>
+                }
+                const popupMsg = {
+                    type: 'success',
+                    msg
+                }
+                // re-fetch reward data
+                await getRewardData()
+                setState({ claim: data?.data, popupMsg })
+            } else {
+                switch (data?.status) {
+                    case Types.CLAIM_RESULT.INVALID_MISSION:
+                    case Types.CLAIM_RESULT.INVALID_USER:
+                    case Types.CLAIM_RESULT.INVALID_TIME:
+                        setState({popupMsg: { type: 'error', msg: t(`reward-center:reward_error.${data?.status}`) }})
+                        break
+                    case Types.CLAIM_RESULT.INVALID_CLAIM_STATUS:
+                    case Types.CLAIM_RESULT.INVALID_STATUS:
+                    default:
+                        setState({popupMsg: { type: 'error', msg: t(`reward-center:reward_error.${data?.status}`) }})
+                        break
+                }
+            }
+        } catch (e) {
+            console.log(`Can't claim reward `, e)
+        } finally {
+            setState({ claiming: false })
+        }
+    }
+
+    const getRewardData = async () => {
+        !state.loadingReward && setState({ loadingReward: true })
+        try {
+            const { data } = await Axios.get(API_GET_MISSION)
+            if (data?.status === ApiStatus.SUCCESS && data?.data) {
+                setState({ rewards: data.data })
+            }
+        } catch (e) {
+            console.log(`Can't get mission data `, e)
+        } finally {
+            setState({ loadingReward: false })
+        }
     }
 
     const closePopup = () => setState({ popupMsg: null })
@@ -158,14 +217,14 @@ const RewardCenter = () => {
     }
 
     // Render Handler
-    const renderSegmentTabs = () => {
+    const renderSegmentTabs = useCallback(() => {
         return (
             <SegmentTabs active={state.tabIndex}
                          onChange={(tabIndex) => setState({ tabIndex })}
                          tabSeries={tabSeries}
             />
         )
-    }
+    }, [state.tabIndex, tabSeries, observe])
 
     const renderReward = useCallback(() => {
         if (state.loadingReward) {
@@ -199,35 +258,41 @@ const RewardCenter = () => {
 
         return data?.map(reward => (
             <RewardItem
-                key={reward?.id}
+                key={reward?._id}
                 data={reward}
                 loading={state.loadingReward}
-                active={state?.rewardExpand?.[reward?.id]}
+                active={state?.rewardExpand?.[reward?._id]}
                 onToggleReward={(rewardId, status) => onToggleReward(rewardId, status)}
                 showGuide={showGuide}
+
+                claim={state.claim}
+                claiming={state.claiming}
+                onClaim={onClaim}
             />
         ))
-    }, [state.tabIndex, state.rewards, state.loadingReward, state.rewardExpand])
+    }, [state.tabIndex, state.rewards, state.loadingReward, state.rewardExpand, state.claim, state.claiming])
 
     const renderPopup = useCallback(() => {
-        if (!state.popupMsg?.msg) return null
-
         return (
             <ReModal
-                useOverlay
-                useButtonGroup={REMODAL_BUTTON_GROUP.SINGLE_CONFIRM}
+                useOverlay={!isApp}
+                useButtonGroup={state.popupMsg?.type === 'error' ? REMODAL_BUTTON_GROUP.ALERT : REMODAL_BUTTON_GROUP.SINGLE_CONFIRM}
                 position={REMODAL_POSITION.CENTER}
                 isVisible={!!state.popupMsg?.msg}
-                // title={state.popupMsg?.title}
+                title={state.popupMsg?.title}
                 onBackdropCb={closePopup}
+                onNegativeCb={closePopup}
                 onPositiveCb={closePopup}
                 className="py-5"
                 buttonGroupWrapper="max-w-[150px] mx-auto"
             >
-                <div className="font-bold mb-3.5 text-center lg:text-[18px]">
-                    {state.popupMsg?.title}
-                </div>
-                <div className="mt-3 mb-4 lg:mb-5 font-medium text-sm text-center">
+                {state.popupMsg?.type === 'error' && <div className="w-full">
+                    <img className="m-auto w-[45px] h-[45px]" src={getS3Url('/images/icon/errors.png')} alt="ERRORS" />
+                </div>}
+                {state.popupMsg?.type === 'success' && <div className="w-full">
+                    <img className="m-auto w-[45px] h-[45px]" src={getS3Url('/images/icon/success.png')} alt="ERRORS" />
+                </div>}
+                <div className="mt-4 mb-4 lg:mb-5 font-medium text-sm text-center">
                     {state.popupMsg?.msg}
                 </div>
             </ReModal>
@@ -282,9 +347,13 @@ const RewardCenter = () => {
 
     useEffect(() => {
         if (state.rewards?.length < 3) {
-            setState({ rewardExpand: { [state.rewards?.[0]?.id]: true } })
+            setState({ rewardExpand: { [state.rewards?.[0]?._id]: true } })
         }
     }, [state.rewards])
+
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: State => ', state)
+    // }, [state])
 
     return (
         <>

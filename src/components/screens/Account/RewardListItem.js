@@ -1,26 +1,25 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import { ChevronRight } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { formatNumber } from 'redux/actions/utils'
-import { TASK_PROPS_TYPE } from 'components/screens/Account/_reward_data'
 import { BREAK_POINTS } from 'constants/constants'
 import AssetName from 'components/wallet/AssetName'
 import RewardButton, { REWARD_BUTTON_STATUS } from 'components/screens/Account/RewardButton'
 import RewardType from 'components/screens/Account/RewardType'
 import DashedProgressLine from 'components/screens/Account/DashedProgressLine'
 import useWindowSize from 'hooks/useWindowSize'
+import Types from './types'
 
 const INITIAL_STATE = {
     rewardItemExpand: {},
     // ...
 }
 
-const RewardListItem = ({ name, data, loading, showGuide }) => {
+const RewardListItem = ({ data, loading, showGuide, claim, claiming, onClaim }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
-    const [testCompleteTaskAnimation, setTestCompleteTaskAnimation] = useState(false)
 
     // Rdx
     const configs = useSelector(state => state.utils?.assetConfig)
@@ -32,19 +31,19 @@ const RewardListItem = ({ name, data, loading, showGuide }) => {
 
     // Render Handler
     const renderList = useCallback(() => {
-        return data?.task_list?.map((task, index) => {
-            const { task_id, task_title, task_props, task_reward: { assetId, value }, icon_url, description } = task
+        return data?.map((task, index) => {
+            const { _id, title, condition, reward: { assetId, value }, icon_url, description } = task
 
             let assetConfig
 
-            if (task_props?.type === TASK_PROPS_TYPE.MULTISTEP) {
+            if (condition === Types.TASK_CONDITION.SINGLE_MISSION) {
                 assetConfig = configs?.find(o => o?.id === assetId)
-            } else if (task_props?.type === TASK_PROPS_TYPE.REACH_TARGET) {
-                assetConfig = configs?.find(o => o?.id === task_props?.metadata?.assetId)
+            } else if (condition === Types.TASK_CONDITION.PROGRESS) {
+                assetConfig = configs?.find(o => o?.id === task?.metadata?.assetId)
             }
 
-            const isActive = state.rewardItemExpand?.[`${task_id}`]
-            const isLastedItem = data?.task_list?.length === index + 1
+            const isActive = state.rewardItemExpand?.[`${_id}`]
+            const isLastedItem = data?.length === index + 1
 
             const originClass = 'relative flex items-stretch transition-all duration-200 ease-in-out max-h-[0px] invisible opacity-0 '
             let activeRewardList
@@ -56,19 +55,19 @@ const RewardListItem = ({ name, data, loading, showGuide }) => {
             }
 
             return (
-                <div key={task_id} className="relative pb-4 md:pb-5 lg:flex lg:items-center">
+                <div key={_id} className="relative pb-4 md:pb-5 lg:flex lg:items-center">
                     <div className="pt-4 md:pt-5 flex items-stretch lg:w-2/5">
                         <div className="relative flex items-center justify-center">
-                            <div className="relative z-30 w-[40px] h-[40px] bg-bgContainer dark:bg-bgContainer-dark flex items-center justify-center overflow-hidden">
+                            <div className="relative z-30 w-[40px] h-[40px] bg-bgContainer dark:bg-bgContainer-dark flex items-center justify-center">
                                 <img src={icon_url} className="w-[24px] h-[24px] md:w-[32px] md:h-[32px]" alt="" />
                                 {isLastedItem &&
                                 <div className="w-[40px] h-[250%] absolute z-20 bg-bgContainer dark:bg-bgContainer-dark top-full left-0"/>}
                             </div>
                             {!isLastedItem &&
-                            <div style={{ height: `calc(100% + ${isActive ? 90 : 40}px)`, top: '50%' }}
+                            <div style={{ height: `calc(100% + ${isActive ? 90 : 42}px)`, top: '50%' }}
                                  className="absolute z-10 left-1/2 -translate-x-1/2">
-                                <DashedProgressLine dashedSize={width >= BREAK_POINTS.md ? 5 : 3} offset={width >= BREAK_POINTS.md ? 3 : 1.5}
-                                                    completed={testCompleteTaskAnimation} // !TODO: Set to True if this task is claim success
+                                <DashedProgressLine dashedSize={width >= BREAK_POINTS.md ? 5 : 3} offset={3}
+                                                    completed={true} // !TODO: Set to True if this task is claim success
                                                     progressLineClass="!duration-500"
                                                     isMore={isActive} />
                             </div>}
@@ -77,11 +76,11 @@ const RewardListItem = ({ name, data, loading, showGuide }) => {
                         {/*Reward list item info*/}
                         <div style={{ width: 'calc(100% - 40px)' }}
                              className="ml-3.5 lg:ml-6 pr-4 lg:border-r lg:border-divider lg:dark:border-divider-dark">
-                            <div className="relative w-full cursor-pointer"
+                            <div className="relative w-full cursor-pointer lg:cursor-auto"
                                  onClick={() => width < BREAK_POINTS.lg &&
-                                     setState({ rewardItemExpand: { ...state.rewardItemExpand, [task_id]: !state.rewardItemExpand?.[`${task_id}`] } })}>
+                                     setState({ rewardItemExpand: { ...state.rewardItemExpand, [_id]: !state.rewardItemExpand?.[`${_id}`] } })}>
                                 <div className="font-bold text-sm md:text-[16px] lg:text-[18px] max-w-[80%] lg:max-w-none">
-                                    {index + 1}. {task_title?.[language]} {/*{index === 1 ? 'ipsum nonstop lorem ipsum nonstop lorem i' : 'ipsum nonstop lorem ipsum nonstop lorem ipsum nonstop'}*/}
+                                    {title?.[language]} {/*{index === 1 ? 'ipsum nonstop lorem ipsum nonstop lorem i' : 'ipsum nonstop lorem ipsum nonstop lorem ipsum nonstop'}*/}
                                 </div>
                                 {width < BREAK_POINTS.lg &&
                                 <ChevronRight size={16} strokeWidth={1.5}
@@ -97,16 +96,15 @@ const RewardListItem = ({ name, data, loading, showGuide }) => {
                                 </div>
                                 {(isActive || width >= BREAK_POINTS.lg) &&
                                 <div className="lg:ml-4">
-                                    {description?.toString()
-                                        ?.startsWith('http') ?
-                                        <a href={description} target="_blank"
+                                    {description?.type === 'url' ?
+                                        <a href={description?.url} target="_blank"
                                            className="text-dominant text-xs md:text-sm !underline hover:!underline hover:opacity-80"
                                            onClick={e => e?.stopPropagation()}
                                         >
                                             {t('reward-center:guide')}
                                         </a>
                                         : <div className="text-dominant text-xs md:text-sm !underline hover:opacity-80 cursor-pointer"
-                                               onClick={(e) => showGuide(e, description?.[language])}>
+                                               onClick={(e) => showGuide(e, description?.data?.[language])}>
                                             {t('reward-center:guide')}
                                         </div>
                                     }
@@ -127,14 +125,28 @@ const RewardListItem = ({ name, data, loading, showGuide }) => {
 
                         {/*Reward content base on Task type*/}
                         <div style={{ width: 'calc(100% - 40px)' }} className="ml-3.5 pr-4">
-                            <RewardType data={task} active={isActive} assetConfig={assetConfig}/>
+                            <RewardType
+                                data={task}
+                                active={isActive}
+                                assetConfig={assetConfig}
+                                claim={claim}
+                                claiming={claiming}
+                                onClaim={onClaim}
+                            />
                         </div>
                     </div>}
 
                     {/*Reward list item dropdown WideScreen*/}
                     {width >= BREAK_POINTS.lg &&
                         <div className="flex items-center justify-between w-3/5 px-8 xl:pr-10 pt-5">
-                            <RewardType data={task} active={width >= BREAK_POINTS.lg ? true : isActive} assetConfig={assetConfig}/>
+                            <RewardType
+                                data={task}
+                                active={width >= BREAK_POINTS.lg ? true : isActive}
+                                assetConfig={assetConfig}
+                                claim={claim}
+                                claiming={claiming}
+                                onClaim={onClaim}
+                            />
                         </div>
                     }
 
@@ -145,31 +157,34 @@ const RewardListItem = ({ name, data, loading, showGuide }) => {
                 </div>
             )
         })
-    }, [state.rewardItemExpand, data?.task_list, loading, configs, language, width, testCompleteTaskAnimation])
+    }, [state.rewardItemExpand, data?.task_list, loading, claiming, claim, onClaim, configs, language, width])
 
     const renderClaimAllBtn = useCallback(() => {
         if (width >= BREAK_POINTS.lg) return  null
-        let isClaimableAll = data?.claimable_all
+
+        let status
+        const isClaimableAll = data?.filter(o => o?.user_metadata?.status !== Types.TASK_HISTORY_STATUS.PENDING)?.length > 0
+        const isClaimedAll = data?.filter(o => o?.user_metadata?.status === Types.TASK_HISTORY_STATUS.CLAIMED)?.length === data?.length
+
+        if (isClaimableAll) {
+            status = REWARD_BUTTON_STATUS.AVAILABLE
+        }
+
+        if (isClaimedAll) {
+            status = REWARD_BUTTON_STATUS.NOT_AVAILABLE
+        }
 
         return (
             <div className="mt-3.5 flex justify-center">
                 {auth && <RewardButton title={t('reward-center:claim_all')}
-                                       status={isClaimableAll ? REWARD_BUTTON_STATUS.AVAILABLE : REWARD_BUTTON_STATUS.NOT_AVAILABLE}
-                                       onClick={() => alert(`should Claim all Reward: ${name} !`)}
+                                       status={status}
+                                       onClick={() => alert(`should Claim all Reward !`)}
                                        buttonStyles="mt-2 mb-7 md:min-w-[150px]"
                 />}
             </div>
         )
     }, [data, width, auth])
 
-
-    useEffect(() => {
-        setTimeout(() => setTestCompleteTaskAnimation(true), 2000)
-    }, [])
-
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: RewardList Item => ', state)
-    // }, [state])
 
     return (
         <div>
