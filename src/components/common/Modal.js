@@ -54,7 +54,7 @@ const Modal = ({
         <>
             <div className={`mal-overlay ${isVisible ? 'mal-overlay__active' : ''}`}
                  onClick={() => onBackdropCb && onBackdropCb()}/>
-            <div className="mal-modal min-w-[280px]">
+            <div className="mal-modal z-[9999999999] min-w-[280px]">
                 {isVisible &&
                 <div className={'p-4 ' + className}>
                     {title && <div className={titleStyle ? 'mt-3 text-center font-bold ' + titleStyle : 'mt-3 text-center font-bold'}>{title}</div>}
