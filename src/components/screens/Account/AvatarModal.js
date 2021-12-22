@@ -440,7 +440,7 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
         <ReModal useOverlay
                  useCrossButton
                  useButtonGroup={buttonGroupStatus}
-                 buttonGroupWrapper="max-w-[350px] m-auto"
+                 buttonGroupWrapper="max-w-[350px] m-auto lg:mt-8"
                  position={
                      width >= BREAK_POINTS.lg ?
                          REMODAL_POSITION.CENTER
