@@ -505,7 +505,8 @@ const SwapModule = ({ width, pair }) => {
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <a href={getLoginUrl('sso', 'login')} className="mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold bg-dominant
+                <a href={getLoginUrl('sso', 'login')}
+                   className="block mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold bg-dominant
                                 select-none cursor-pointer hover:opacity-80">
                     {t('common:sign_in')}
                 </a>
