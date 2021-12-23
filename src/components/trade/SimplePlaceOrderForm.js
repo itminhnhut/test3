@@ -124,28 +124,9 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         }
     }, [symbol]);
 
-    useAsync(async () => {
-        const { data, status } = await fetchAPI({
-            url: '/api/v1/asset/value_by_name',
-            options: {
-                method: 'GET',
-            },
-        });
-        if (status === ApiStatus.SUCCESS) {
-            await setMultiValueList(data);
-            setIsLoadingMultiValueList(false);
-        }
-    }, []);
-
     useEffect(() => {
         getFeeConfig()
     }, [])
-
-    useEffect(() => {
-        if (!isLoadingMultiValueList) {
-            if (multiValueList[quoteAsset] > 0) setMultiValue(quoteAsset === 'VNDC' ? 1 / multiValueList[quoteAsset] : multiValueList[quoteAsset]);
-        }
-    }, [multiValueList, isLoadingMultiValueList]);
 
     useEffect(() => {
         Emitter.on(PublicSocketEvent.SPOT_TICKER_UPDATE, async (data) => {
