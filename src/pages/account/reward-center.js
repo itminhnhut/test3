@@ -220,7 +220,7 @@ const RewardCenter = () => {
 
     // Render Handler
     const renderSegmentTabs = useCallback(() => {
-        if (state.rewards?.length === 1) return null
+        return null
         return (
             <SegmentTabs active={state.tabIndex}
                          onChange={(tabIndex) => setState({ tabIndex })}
@@ -378,14 +378,14 @@ const RewardCenter = () => {
 
     return (
         <>
-            {renderFixedSegmentTabs()}
+            {/*{renderFixedSegmentTabs()}*/}
             <div className="h-full">
-                {!isApp && renderSegmentTabs()}
+                {/*{!isApp && renderSegmentTabs()}*/}
                 <div className="mt-8 t-common select-none">
                     {isApp ? t('reward-center:title') : t('reward-center:promotion')}
                 </div>
                 <div style={rewardAppStyles?.styles} className={rewardAppStyles?.className}>
-                    {isApp && <div ref={observe}>{renderSegmentTabs()}</div>}
+                    {/*{isApp && <div ref={observe}>{renderSegmentTabs()}</div>}*/}
                     <div id="reward-center"
                          className="mt-6 overflow-hidden rounded-lg dark:border dark:border-divider-dark"
                          style={rewardListWrapperStyles}>
