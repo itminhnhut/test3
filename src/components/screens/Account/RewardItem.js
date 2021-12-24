@@ -88,7 +88,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                             <div className="mt-2 font-medium text-xs md:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                 {parse(data?.description?.[language])}
                                 <div className="lg:hidden mt-1.5">
-                                    <a href={data?.cta_button_url || '/'} target="_blank"
+                                    <a href={data?.cta_button_url} target="_blank"
                                        className="font-normal text-xs md:text-sm text-dominant hover:!underline">
                                         {t('common:view_rules')}
                                     </a>
@@ -194,7 +194,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                             : <div className="font-medium text-xs sm:text-sm lg:mt-1.5">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reward-center:reward')}:</span>{' '}
                                 <span className="text-dominant">
-                                {formatNumber(data?.reward?.value, assetConfig?.assetDigit)}
+                                {data?.reward?.value}
                             </span>{' '}
                                 <span>
                                 <AssetName assetId={data?.reward?.assetId}/>
