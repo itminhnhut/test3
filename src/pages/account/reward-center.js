@@ -220,7 +220,7 @@ const RewardCenter = () => {
 
     // Render Handler
     const renderSegmentTabs = useCallback(() => {
-        if (state.rewards?.length === 1) return null
+        return null
         return (
             <SegmentTabs active={state.tabIndex}
                          onChange={(tabIndex) => setState({ tabIndex })}
