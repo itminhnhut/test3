@@ -235,7 +235,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                                         height={25}
                                         className="rounded-lg mr-3"
                                     />
-                                    : <RewardButton href={data?.url_reference} target="_blank"
+                                    : <RewardButton href={data?.cta_button_url} target="_blank"
                                                     title={t('common:view_rules')}
                                                     status={REWARD_BUTTON_STATUS.AVAILABLE}
                                                     buttonStyles="mr-3 min-w-[90px]"
