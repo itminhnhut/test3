@@ -194,7 +194,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                             : <div className="font-medium text-xs sm:text-sm lg:mt-1.5">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reward-center:reward')}:</span>{' '}
                                 <span className="text-dominant">
-                                {formatNumber(data?.reward?.value, assetConfig?.assetDigit)}
+                                {data?.reward?.value}
                             </span>{' '}
                                 <span>
                                 <AssetName assetId={data?.reward?.assetId}/>
