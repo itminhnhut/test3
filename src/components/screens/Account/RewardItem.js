@@ -15,6 +15,7 @@ import AssetName from 'components/wallet/AssetName'
 import Skeletor from 'components/common/Skeletor'
 import RewardButton from 'components/screens/Account/RewardButton'
 import Types from 'components/screens/Account/types'
+import parse from 'html-react-parser'
 
 const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, claim, claiming, onClaim }) => {
     // Rdx
@@ -85,7 +86,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                         <div className="pl-8 pr-6 py-4 lg:py-6 sm:pl-12 border-b border-divider dark:border-divider-dark">
                             <div className="font-bold text-sm md:text-[16px]">{t('common:description')}:</div>
                             <div className="mt-2 font-medium text-xs md:text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                                {data?.description?.[language]}
+                                {parse(data?.description?.[language])}
                                 <div className="lg:hidden mt-1.5">
                                     <a href={data?.cta_button_url || '/'} target="_blank"
                                        className="font-normal text-xs md:text-sm text-dominant hover:!underline">

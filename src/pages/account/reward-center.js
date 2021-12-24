@@ -76,7 +76,7 @@ const RewardCenter = () => {
             if (data?.status === ApiStatus.SUCCESS) {
                 let msg
                 const { reward, assetConfig } = payload
-                console.log('namidev-DEBUG: Asset Config => ', assetConfig)
+                // console.log('namidev-DEBUG: Asset Config => ', assetConfig)
                 if (language === LANGUAGE_TAG.VI) {
                     msg = <>
                         Chúc mừng, bạn đã nhận thưởng thành công <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
@@ -90,7 +90,7 @@ const RewardCenter = () => {
                     type: 'success',
                     msg
                 }
-                console.log('namidev-DEBUG: => ', popupMsg, data?.data)
+                // console.log('namidev-DEBUG: => ', popupMsg, data?.data)
                 // re-fetch reward data
                 setState({ claim: data?.data, popupMsg })
                 // await getRewardData()
@@ -216,15 +216,18 @@ const RewardCenter = () => {
         }
     }
 
+    const goToWallet = () => router.push('/wallet/exchange')
+
     // Render Handler
     const renderSegmentTabs = useCallback(() => {
+        if (state.rewards?.length === 1) return null
         return (
             <SegmentTabs active={state.tabIndex}
                          onChange={(tabIndex) => setState({ tabIndex })}
                          tabSeries={tabSeries}
             />
         )
-    }, [state.tabIndex, tabSeries, observe])
+    }, [state.tabIndex, state.rewards, tabSeries, observe])
 
     const renderReward = useCallback(() => {
         if (state.loadingReward) {
@@ -273,18 +276,35 @@ const RewardCenter = () => {
     }, [state.tabIndex, state.rewards, state.loadingReward, state.rewardExpand, state.claim, state.claiming])
 
     const renderPopup = useCallback(() => {
+        let useButtonGroup, positiveLabel
+
+        switch (state.popupMsg?.type) {
+            case 'error':
+                useButtonGroup = REMODAL_BUTTON_GROUP.ALERT
+                break
+            case 'success':
+                useButtonGroup = REMODAL_BUTTON_GROUP.CONFIRM
+                positiveLabel = t('reward-center:go_to_wallet')
+                break
+            default:
+                useButtonGroup = REMODAL_BUTTON_GROUP.SINGLE_CONFIRM
+                positiveLabel = t('common:confirm')
+                break
+        }
+
         return (
             <ReModal
                 useOverlay
-                useButtonGroup={state.popupMsg?.type === 'error' ? REMODAL_BUTTON_GROUP.ALERT : REMODAL_BUTTON_GROUP.SINGLE_CONFIRM}
+                useButtonGroup={useButtonGroup}
                 position={REMODAL_POSITION.CENTER}
                 isVisible={!!state.popupMsg?.msg}
                 title={state.popupMsg?.title}
                 onBackdropCb={closePopup}
                 onNegativeCb={closePopup}
-                onPositiveCb={closePopup}
+                onPositiveCb={() => state.popupMsg?.type === 'success' ? goToWallet() : closePopup()}
+                positiveLabel={positiveLabel}
                 className="py-5"
-                buttonGroupWrapper="max-w-[150px] mx-auto"
+                // buttonGroupWrapper="mx-auto"
             >
                 {state.popupMsg?.type === 'error' && <div className="w-full">
                     <img className="m-auto w-[45px] h-[45px]" src={getS3Url('/images/icon/errors.png')} alt="ERRORS" />
@@ -301,7 +321,7 @@ const RewardCenter = () => {
     }, [state.popupMsg])
 
     const renderFixedSegmentTabs = useCallback(() => {
-        if (!isApp) return null
+        if (!isApp || state.rewards?.length === 1) return null
 
         return (
             <div className={state.showFixedAppSegment ?
@@ -310,7 +330,7 @@ const RewardCenter = () => {
                 {renderSegmentTabs()}
             </div>
         )
-    }, [state.showFixedAppSegment, isApp, renderSegmentTabs])
+    }, [state.showFixedAppSegment, state.rewards, isApp, renderSegmentTabs])
 
     useEffect(() => {
         getRewardData()
