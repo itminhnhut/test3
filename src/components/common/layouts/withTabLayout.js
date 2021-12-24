@@ -111,7 +111,7 @@ export const TAB_ROUTES = {
         { pathname: PATHS.ACCOUNT.PROFILE, alias: 'Profile', localized: null, auth: true },
         // { pathname: PATHS.ACCOUNT.SECURITY, alias: 'Security', localized: null, auth: true },
         // { pathname: PATHS.ACCOUNT.IDENTIFICATION, alias: 'Identification', localized: null, auth: true },
-        // { pathname: PATHS.ACCOUNT.REWARD_CENTER, alias: 'Reward Center', localized: null, auth: false },
+        { pathname: PATHS.ACCOUNT.REWARD_CENTER, alias: 'Reward Center', localized: null, auth: false },
         // { pathname: PATHS.ACCOUNT.REFERRAL, alias: 'Referral', localized: null, auth: true },
         // { pathname: PATHS.ACCOUNT.SETTINGS, alias: 'Settings', localized: null, auth: true },
     ],
