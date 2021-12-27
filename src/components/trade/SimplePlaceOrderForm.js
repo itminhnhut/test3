@@ -536,7 +536,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             const _quoteQty = +sellQuoteQty;
 
             const nextQuoteQty = floor(_quantity * _price * (1), 2);
-            setBuyQuoteQty(nextQuoteQty);
+            setSellQuoteQty(nextQuoteQty);
             const available = getAvailable(baseAssetId);
 
             if (!(available > EPS)) return;
