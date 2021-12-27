@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { API_GET_TRENDING } from 'redux/actions/apis'
 import { useWindowSize } from 'utils/customHooks'
 import { useSelector } from 'react-redux'
-import { formatPrice, render24hChange } from 'redux/actions/utils'
+import { formatPrice, getExchange24hPercentageChange, render24hChange } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
 
@@ -111,9 +111,17 @@ const HomeMarketTrend = () => {
         const { pairs } = data
 
         return pairs.map(pair => {
+            let sparkLineColor
             const _ = initMarketWatchItem(pair)
-            const sparkLine = sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)
-            // console.log('namidev-DEBUG: ___ ', s)
+            const _24hChange = getExchange24hPercentageChange(pair)
+
+            if (_24hChange) {
+                if (_24hChange > 0) sparkLineColor = colors.teal
+                if (_24hChange <= 0) sparkLineColor = colors.red2
+            }
+
+            const sparkLine = sparkLineBuilder(_?.symbol, sparkLineColor)
+            // console.log('namidev-DEBUG: ___ ', _24hChange)
 
             return (
                 <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="homepage-markettrend__market_table__row" key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}>
