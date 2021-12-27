@@ -43,18 +43,15 @@ export const authUserSocket = debounce(async (dispatch) => {
 }, 1000);
 
 function onChangeWallet(socket, dispatch) {
-    Object.values(WalletType).forEach(walletType => {
-        const event = `user:update_balance:${walletType}`;
-        if (socket && !socket?._callbacks?.[`$${event}`]) {
-            socket.on(event, data => {
-                dispatch({
-                    type: types.UPDATE_WALLET,
-                    payload: data,
-                    walletType,
-                });
+    const event = `user:update_balance`;
+        socket.on(event, data => {
+            const {type: walletType} = data
+            dispatch({
+                type: types.UPDATE_WALLET,
+                payload: data,
+                walletType,
             });
-        }
-    });
+        });
 }
 
 function initNotification(socket, dispatch) {
