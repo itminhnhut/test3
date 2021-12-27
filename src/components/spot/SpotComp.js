@@ -24,6 +24,7 @@ import { getMarketWatch, postSymbolViews } from 'src/redux/actions/market';
 import { getSymbolString } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
 import find from 'lodash/find';
+import useDarkMode from 'hooks/useDarkMode';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -196,6 +197,7 @@ const SpotComp = () => {
             ? SPOT_LAYOUT_MODE.PRO
             : SPOT_LAYOUT_MODE.SIMPLE,
     );
+    const [currentTheme] = useDarkMode()
     // Check pattern
     let symbolFromUrl = null;
     if (typeof id === 'string' && id.length) {
@@ -386,11 +388,13 @@ const SpotComp = () => {
                         }}
                         cols={16}
                         margin={[-1, -1]}
-                        containerPadding={[8, 8]}
+                        containerPadding={[0, 0]}
                         rowHeight={24}
                         onResize={handleResize}
                         draggableHandle=".dragHandleArea"
                         draggableCancel=".dragCancelArea"
+                        // resizeHandle={()=> <span>Hello</span>}
+                        resizeHandle={()=> <span className={`react-resizable-handle react-resizable-handle-se  ${currentTheme === 'dark' ? 'nami-react-resizable-handle--dark' : 'nami-react-resizable-handle' }`}></span>}
                     >
                         {!(!state.isShowSymbolList || layoutMode === SPOT_LAYOUT_MODE.PRO || fullScreen) && (
                             <div

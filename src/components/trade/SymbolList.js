@@ -23,7 +23,7 @@ const SymbolList = (props) => {
     const [sortField, setSortField] = useState();
     const [sortDirection, setSortDirection] = useState('asc');
     const [favorite, setFavorite] = useState([]);
-    const [activeTab, setActiveTab] = useState('VNDC');
+    const [activeTab, setActiveTab] = useState('USDT');
     const [search, setSearch] = useState('');
     const [filteredSymbolList, setFilteredSymbolList] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState({ name: t('common:all'), value: CATEGORY_SPOT_SIGNAL.ALL });

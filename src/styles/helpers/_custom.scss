@@ -1,4 +1,27 @@
 
+.react-resizable-handle{
+    &::after {
+        content: "";
+        position: absolute;
+        right: 3px;
+        bottom: 3px;
+        width: 7px !important;
+        height: 7px !important;
+      }
+}
+.nami-react-resizable-handle {
+  &::after {
+    border-right: 2px solid #7B8CB2 !important;
+    border-bottom: 2px solid #7B8CB2 !important;
+  }
+}
+.nami-react-resizable-handle--dark {
+  &::after {
+    border-right: 2px solid #718096 !important;
+    border-bottom: 2px solid #718096 !important;
+  }
+}
+
 //Custom Scrollbar
 //@mixin customScrollbar() {
 //  &:not(.emoji-mart)::-webkit-scrollbar {
