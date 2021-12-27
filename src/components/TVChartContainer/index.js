@@ -246,7 +246,7 @@ export class TVChartContainer extends React.PureComponent {
             interval: this.props.interval,
             container_id: this.containerId,
             library_path: this.props.libraryPath,
-            locale: getLanguageFromURL() || 'en',
+            locale: 'en',
             disabled_features: [
                 'compare_symbol',
                 'display_market_status',
