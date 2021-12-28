@@ -415,7 +415,7 @@ const NavBar = ({
                                 width="28"
                                 height="28"
                                 alt=""
-                                className="mr-3"
+                                className="mr-3 my-0.5"
                             />
                             <span
                                 className="text-txtPrimary dark:text-txtPrimary-dark"
@@ -430,7 +430,7 @@ const NavBar = ({
                                 width="28"
                                 height="28"
                                 alt=""
-                                className="mr-3"
+                                className="mr-3 my-0.5"
                             />
                             <span
                                 className="text-txtPrimary dark:text-txtPrimary-dark"
@@ -445,7 +445,7 @@ const NavBar = ({
                                 width="28"
                                 height="28"
                                 alt=""
-                                className="mr-3"
+                                className="mr-3 my-0.5"
                             />
                             <span
                                 className="text-txtPrimary dark:text-txtPrimary-dark"
@@ -460,7 +460,7 @@ const NavBar = ({
                                 width="28"
                                 height="28"
                                 alt=""
-                                className="mr-3"
+                                className="mr-3 my-0.5"
                             />
                             <span
                                 className="text-txtPrimary dark:text-txtPrimary-dark"
@@ -475,7 +475,7 @@ const NavBar = ({
                                 width="28"
                                 height="28"
                                 alt=""
-                                className="mr-3"
+                                className="mr-3 my-0.5"
                             />
                             <span
                                 className="text-txtPrimary dark:text-txtPrimary-dark"

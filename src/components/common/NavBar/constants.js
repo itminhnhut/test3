@@ -463,21 +463,21 @@ export const USER_CP = [
         child_lv1: []
     },
     {
-        key: 3,
-        title: 'RewardCenter',
-        localized: 'reward_center',
-        hide: true,
-        isNew: true,
-        url: '/',
-        child_lv1: []
-    },
-    {
         key: 4,
         title: 'Referral',
         localized: 'referral',
         // hide: true,
         isNew: true,
         url: getV1Url('/reference'),
+        child_lv1: []
+    },
+    {
+        key: 3,
+        title: 'RewardCenter',
+        localized: 'reward_center',
+        // hide: true,
+        isNew: true,
+        url: '/account/reward-center',
         child_lv1: []
     },
     {
