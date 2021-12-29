@@ -20,6 +20,7 @@ import { ApiStatus } from 'redux/actions/const'
 import Types from 'components/screens/Account/types'
 import { formatNumber, getS3Url } from 'redux/actions/utils'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
+import Button from 'components/common/Button'
 
 export const REWARD_ROW_ID_KEY = 'reward_item_id_' // for identify reward will scrollTo after init
 const REWARD_ID_QUERY_KEY = 'reward_id' // for query url
@@ -79,11 +80,11 @@ const RewardCenter = () => {
                 // console.log('namidev-DEBUG: Asset Config => ', assetConfig)
                 if (language === LANGUAGE_TAG.VI) {
                     msg = <>
-                        Chúc mừng, bạn đã nhận thưởng thành công <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
+                        Chúc mừng!<br/>Bạn đã nhận được <span className="ml-0.5 text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
                     </>
                 } else {
                     msg = <>
-                        Congratulation, you have successfully received <span className="text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
+                        Congratulation!<br/>You have successfully received <span className="ml-0.5 text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
                     </>
                 }
                 const popupMsg = {
@@ -283,7 +284,7 @@ const RewardCenter = () => {
                 useButtonGroup = REMODAL_BUTTON_GROUP.ALERT
                 break
             case 'success':
-                useButtonGroup = REMODAL_BUTTON_GROUP.CONFIRM
+                useButtonGroup = REMODAL_BUTTON_GROUP.NOT_USE
                 positiveLabel = t('reward-center:go_to_wallet')
                 break
             default:
@@ -309,13 +310,22 @@ const RewardCenter = () => {
                 {state.popupMsg?.type === 'error' && <div className="w-full">
                     <img className="m-auto w-[45px] h-[45px]" src={getS3Url('/images/icon/errors.png')} alt="ERRORS" />
                 </div>}
-                {state.popupMsg?.type === 'success' && <div className="w-full">
-                    <img className="m-auto w-[45px] h-[45px]" src={getS3Url('/images/icon/success.png')} alt="ERRORS" />
-                </div>}
-                <div className={state.popupMsg?.type ? 'mt-4 mb-4 lg:mb-5 leading-6 font-medium text-sm xl:text-[16px] text-center'
+                {state.popupMsg?.type === 'success' &&
+                <>
+                    <img className="w-[28px] sm:w-[32px] h-auto" src={getS3Url('/images/logo/nami_maldives.png')} alt=""/>
+                    <div className="w-full">
+                        <img className="m-auto w-[220px] h-[220px] md:w-[265px] md:h-[265px]" src={'/images/screen/reward/treasure.png'} alt="SUCCESS" />
+                    </div>
+                </>}
+                <div className={state.popupMsg?.type ? 'mb-4 px-2 sm:px-4 md:px-8 lg:mb-5 leading-6 font-medium text-sm xl:text-[16px] text-center'
                     : 'mt-4 mb-4 lg:mb-5 font-medium text-sm text-center'}>
                     {state.popupMsg?.msg}
                 </div>
+                {state.popupMsg?.type === 'success' &&
+                <div>
+                    <Button title={t('reward-center:go_to_wallet')} href={PATHS.WALLET.EXCHANGE.DEFAULT} type="primary"/>
+                    <Button title={t('common:continue')} type="secondary"  componentType="button" onClick={closePopup} style={{marginTop: 10}}/>
+                </div>}
             </ReModal>
         )
     }, [state.popupMsg])

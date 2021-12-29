@@ -25,8 +25,10 @@ import { remove } from 'lodash'
 import { TRADING_MODE } from 'redux/actions/const'
 import { favoriteAction } from 'redux/actions/user'
 import { useSelector } from 'react-redux'
+import { PATHS } from 'constants/paths'
 
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useRouter } from 'next/router'
 
 const MARKET_ROW_LIMIT = 20
 
@@ -37,6 +39,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     const auth = useSelector(state => state.auth?.user) || null
 
     // Use Hooks
+    const router = useRouter()
     const { t, i18n: { language } } = useTranslation(['common', 'table'])
     const [currentTheme] = useDarkMode()
     const { width } = useWindowSize()
@@ -135,7 +138,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
 
         const columns = [
             { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: pairColumnsWidth },
-            { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', align: 'left', width: 168 },
+            { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', align: 'right', width: 168 },
             { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', align: 'right', width: 128 },
             // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
             { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'center', width: 168 },
@@ -205,6 +208,14 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                      loading={loading}
                      scroll={{ x: true }}
                      tableStatus={tableStatus}
+                     onRow={(record) => ({
+                         onClick: () => router.push(PATHS.EXCHANGE.TRADE.getPair(
+                             record?.sortByValue?.tradingMode,
+                             {
+                                 baseAsset: record?.sortByValue?.baseAsset,
+                                 quoteAsset: record?.sortByValue?.quoteAsset
+                             }))
+                     })}
                      tableStyle={{
                          paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
                          tableStyle: { minWidth: '888px !important' },
@@ -382,7 +393,8 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
                 [RETABLE_SORTBY]: {
                     pair: `${baseAsset}`, last_price: lastPrice,
                     change_24h: getExchange24hPercentageChange(item), market_cap: +lastPrice * +supply,
-                    volume_24h: volume24h, '24h_high': high, '24h_low': low
+                    volume_24h: volume24h, '24h_high': high, '24h_low': low,
+                    baseAsset, quoteAsset, tradingMode: mode
                 }
             })
         }
