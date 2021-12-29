@@ -23,7 +23,7 @@ export const log =  {
 
 export function buildLogoutUrl() {
     let currentUrl = window.location.href;
-    currentUrl.replace('/vi', '/')
+    currentUrl = currentUrl.replace('/vi', '/')
     const params = {
         redirect: currentUrl
     };
