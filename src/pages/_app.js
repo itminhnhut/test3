@@ -20,27 +20,27 @@ import { useStore } from 'src/redux/store';
 import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
 
-export function reportWebVitals(metric) {
-    switch (metric.name) {
-        case 'FCP':
-            console.log('First Contentful Paint (FCP)', metric);
-            break;
-        case 'LCP':
-            console.log('Largest Contentful Paint (LCP)', metric);
-            break;
-        case 'CLS':
-            console.log('Cumulative Layout Shift (CLS)', metric);
-            break;
-        case 'FID':
-            console.log('First Input Delay (FID)', metric);
-            break;
-        case 'TTFB':
-            console.log('Time to First Byte (TTFB)', metric);
-            break;
-        default:
-            break;
-    }
-}
+// export function reportWebVitals(metric) {
+//     switch (metric.name) {
+//         case 'FCP':
+//             console.log('First Contentful Paint (FCP)', metric);
+//             break;
+//         case 'LCP':
+//             console.log('Largest Contentful Paint (LCP)', metric);
+//             break;
+//         case 'CLS':
+//             console.log('Cumulative Layout Shift (CLS)', metric);
+//             break;
+//         case 'FID':
+//             console.log('First Input Delay (FID)', metric);
+//             break;
+//         case 'TTFB':
+//             console.log('Time to First Byte (TTFB)', metric);
+//             break;
+//         default:
+//             break;
+//     }
+// }
 
 const ignoreAuthUrls = [
     '/authenticated',
