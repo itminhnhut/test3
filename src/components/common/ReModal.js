@@ -57,7 +57,7 @@ const ReModal = (
                 _active = '!translate-y-0'
                 break
             case REMODAL_POSITION.CENTER:
-                _className += '!transition-none min-w-[282px] max-w-[380px] left-1/2 top-[35%] w-[85%] rounded-xl -translate-x-1/2 -translate-y-1/2 invisible'
+                _className += '!transition-none min-w-[282px] max-w-[380px] left-1/2 top-[45%] w-[85%] rounded-xl -translate-x-1/2 -translate-y-1/2 invisible'
                 _active = '!visible'
                 break
         }
