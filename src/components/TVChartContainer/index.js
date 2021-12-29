@@ -163,6 +163,7 @@ export class TVChartContainer extends React.PureComponent {
          let savedChart = localStorage.getItem(this.getChartKey);
          if (savedChart) {
              try {
+                 const symbol = this.props.symbol
                  const data = JSON.parse(savedChart);
                  if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
                      this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
@@ -284,7 +285,7 @@ export class TVChartContainer extends React.PureComponent {
         this.widget.onChartReady(() => {
 
             // Load saved chart
-           this.loadSavedChart()
+            this.loadSavedChart()
             const isDark = this.props.theme === 'dark'
             this.widget.applyOverrides({
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
