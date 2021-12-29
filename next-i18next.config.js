@@ -3,6 +3,6 @@ module.exports = {
         locales: ['vi', 'en'],
         defaultLocale: 'en',
         keySeparator: '.',
-        localeDetection: true,
+        localeDetection: false,
     },
 };
