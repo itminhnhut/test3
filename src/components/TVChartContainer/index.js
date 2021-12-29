@@ -9,41 +9,8 @@ import Datafeed from "./api";
 import DepthChart from "./depth";
 import TimeFrame from "./timeFrame";
 import styles from "./tradingview.module.scss";
-function getLanguageFromURL() {
-    // const regex = new RegExp('[\\?&]lang=([^&#]*)');
-    // const results = regex.exec(window.location.search);
-    // return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    const { pathname } = window.location;
-    if (pathname.includes("/en/")) {
-        return "en";
-    }
-    return "vi";
-}
 
-function getMultiValue(time) {
-    switch (time) {
-        case "1":
-            return 0.2;
-        case "5":
-            return 0.625;
-        case "15":
-            return 0.875;
-        case "30":
-            return 0.875;
-        case "60":
-            return 3;
-        case "240":
-            return 7;
-        case "1D":
-            return 60;
-        case "1W":
-            return 180;
-        case "1M":
-            return 365 * 3;
-        default:
-            return 3;
-    }
-}
+
 
 const CONTAINER_ID = "nami-tv";
 const CHART_VERSION = "1.0.6";
@@ -85,19 +52,21 @@ export class TVChartContainer extends React.PureComponent {
             this.props.symbol !== prevProps.symbol ||
             this.props.chartSize !== prevProps.chartSize
         ) {
-            if (this.widget && this.state.chartStatus === ChartStatus.LOADED) {
-                this.widget.setSymbol(
-                    this.props.symbol,
-                    this.state.interval,
-                    () => {
-                        this.widget.applyOverrides({
-                            "mainSeriesProperties.priceAxisProperties.autoScale": true,
-                        });
-                    }
-                );
-            } else {
-                this.initWidget(this.props.symbol, this.state.interval);
-            }
+            // if (this.widget && this.state.chartStatus === ChartStatus.LOADED) {
+                
+            //     this.widget.setSymbol(
+            //         this.props.symbol,
+            //         this.state.interval,
+            //         () => {
+            //             this.widget.applyOverrides({
+            //                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
+            //             });
+            //         }
+            //     );
+            // } else {
+            //     this.initWidget(this.props.symbol, this.state.interval);
+            // }
+            this.initWidget(this.props.symbol, this.state.interval);
         }
 
         if (prevProps.theme !== this.props.theme) {
@@ -189,6 +158,21 @@ export class TVChartContainer extends React.PureComponent {
         return `nami-tv__${CHART_VERSION}`;
     }
 
+    loadSavedChart = () => {
+         // Load saved chart
+         let savedChart = localStorage.getItem(this.getChartKey);
+         if (savedChart) {
+             try {
+                 const data = JSON.parse(savedChart);
+                 if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
+                     this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
+                 }
+             } catch (err) {
+                 console.error('Load chart error', err);
+             }
+         }
+    }
+
     // eslint-disable-next-line class-methods-use-this
     saveChart = () => {
         try {
@@ -265,7 +249,7 @@ export class TVChartContainer extends React.PureComponent {
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            loading_screen: { backgroundColor: "#fff" },
+            loading_screen: { backgroundColor: this.props.theme === "dark" ? "#00091F" : "#fff",},
             studies_overrides: {
                 "volume.volume.color.0": colors.teal,
                 "volume.volume.color.1": colors.red2,
@@ -298,6 +282,9 @@ export class TVChartContainer extends React.PureComponent {
         this.widget = new widget(widgetOptions);
 
         this.widget.onChartReady(() => {
+
+            // Load saved chart
+           this.loadSavedChart()
             const isDark = this.props.theme === 'dark'
             this.widget.applyOverrides({
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
@@ -307,6 +294,7 @@ export class TVChartContainer extends React.PureComponent {
                 "paneProperties.horzGridProperties.color": isDark ? colors.darkBlue2 : colors.grey4,
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
+
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(() => this.saveChart(), 5000);
         });

@@ -336,7 +336,7 @@ const dataHandler = (data, utils) => {
     const result = []
 
     data.forEach(item => {
-        let lockedValue = formatWallet(item?.wallet?.locked_value)
+        let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit)
         if (lockedValue === 'NaN') {
             lockedValue = '0.0000'
         }
