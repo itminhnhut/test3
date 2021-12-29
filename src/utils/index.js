@@ -26,7 +26,7 @@ export function buildLogoutUrl() {
     const params = {
         redirect: currentUrl
     };
-    return `/logout?${qs.stringify(params)}`.replace('/vi', '/');
+    return `${process.env.NEXT_PUBLIC_APP_URL}/logout?${qs.stringify(params)}`;
 }
 
 export function isNumeric(val) {
