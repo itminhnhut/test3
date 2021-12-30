@@ -473,7 +473,7 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
                     <div className="pb-3 font-medium text-center text-dominant text-sm md:text-[16px] xl:text-[18px]">
                         {t('profile:nami_default_avatar')}
                     </div>
-                    <div className="flex flex-wrap select-none md:mt-2">
+                    <div className="flex flex-wrap select-none md:mt-2 overflow-x-hidden lg:max-h-[220px] lg:max-h-[250px] xl:max-h-[270px]">
                         {renderAvatarPreset()}
                     </div>
                 </div>
