@@ -314,7 +314,7 @@ const RewardCenter = () => {
                 <>
                     <img className="w-[28px] sm:w-[32px] h-auto" src={getS3Url('/images/logo/nami_maldives.png')} alt=""/>
                     <div className="w-full">
-                        <img className="m-auto w-[220px] h-[220px] md:w-[265px] md:h-[265px]" src={'/images/screen/reward/treasure.png'} alt="SUCCESS" />
+                        <img className="m-auto w-[220px] h-[220px] md:w-[265px] md:h-[265px]" src={getS3Url('/images/screen/reward/treasure.png')} alt="SUCCESS" />
                     </div>
                 </>}
                 <div className={state.popupMsg?.type ? 'mb-4 px-2 sm:px-4 md:px-8 lg:mb-5 leading-6 font-medium text-sm xl:text-[16px] text-center'
