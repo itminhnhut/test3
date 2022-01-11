@@ -9,9 +9,10 @@ import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather'
 import { find, get, isNumber } from 'lodash'
 import { buildExplorerUrl, formatTime, formatWallet, getS3Url, hashValidator, shortHashAddress } from 'redux/actions/utils'
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper'
-import { ___DEV___, log } from 'utils'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { WithdrawalStatus } from 'redux/actions/const'
+import { PATHS } from 'constants/paths'
+import { log } from 'utils'
 
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useOutsideClick from 'hooks/useOutsideClick'
@@ -25,17 +26,17 @@ import OtpInput from 'react-otp-input'
 import MCard from 'components/common/MCard'
 import Empty from 'components/common/Empty'
 import Modal from 'components/common/Modal'
+import ReModal from 'components/common/ReModal'
 import Link from 'next/link'
 
-import Emitter from 'redux/actions/emitter'
 import styled from 'styled-components'
 import colors from 'styles/colors'
 import Axios from 'axios'
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
 import useWindowSize from 'hooks/useWindowSize'
 import AssetName from 'components/wallet/AssetName'
-import { PATHS } from 'constants/paths'
 import useWindowFocus from 'hooks/useWindowFocus'
+import Button from 'components/common/Button'
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {
@@ -67,7 +68,7 @@ const INITIAL_STATE = {
     errors: null,
     histories: null,
     loadingHistories: false,
-    historyPage: 0,
+    historyPage: 0
 
     // ... Add new state
 }
@@ -85,7 +86,7 @@ const ExchangeWithdraw = () => {
     // Init State
     const [resendTimeOut, setResendTimeOut] = useState(null)
     const [state, set] = useState(INITIAL_STATE)
-    const setState = state => set(prevState => ({...prevState, ...state}))
+    const setState = state => set(prevState => ({ ...prevState, ...state }))
 
     const cryptoListRef = useRef()
     const networkListRef = useRef()
@@ -99,7 +100,7 @@ const ExchangeWithdraw = () => {
     const userSocket = useSelector(state => state.socket.userSocket) || null
 
     // Use Hooks
-    const [currentTheme, ] = useDarkMode()
+    const [currentTheme] = useDarkMode()
     const { width } = useWindowSize()
     const { t, i18n: { language } } = useTranslation()
     const router = useRouter()
@@ -121,7 +122,7 @@ const ExchangeWithdraw = () => {
             const { data } = await Axios.get(API_GET_WALLET_CONFIG)
             if (data?.status === ApiStatus.SUCCESS && data?.data) {
                 const configs = Object.values(data.data)
-                    // .filter(e => e.allowWithdraw.includes(true))
+                // .filter(e => e.allowWithdraw.includes(true))
                 setState({ configs })
             }
         } catch (e) {
@@ -138,8 +139,8 @@ const ExchangeWithdraw = () => {
         try {
             log.i('fetching withdraw fee...')
             userSocket && await userSocket.emit('calculate_withdrawal_fee',
-                assetId, amount, network,
-                withdrawFee => setState({ withdrawFee: withdrawFee?.[0] }))
+                                                assetId, amount, network,
+                                                withdrawFee => setState({ withdrawFee: withdrawFee?.[0] }))
         } catch (e) {
             console.log(`Can't estimate withdraw fee `, e)
         } finally {
@@ -186,7 +187,7 @@ const ExchangeWithdraw = () => {
                     // result.data = phakePhake
 
                     if (result?.data?.status === ApiStatus.SUCCESS) {
-                        setState({  withdrawResult: result?.data })
+                        setState({ withdrawResult: result?.data })
                     } else {
                         switch (result?.data?.status) {
                             case WITHDRAW_RESULT.MISSING_OTP:
@@ -196,34 +197,84 @@ const ExchangeWithdraw = () => {
                                 setState({ errors: { message: <Trans>{t('wallet:errors.wrong_otp')}</Trans> } })
                                 break
                             case WITHDRAW_RESULT.INSUFFICIENT:
-                                setState({ errors: { status: WITHDRAW_RESULT.INSUFFICIENT , message: t('error:BALANCE_NOT_ENOUGH') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.INSUFFICIENT,
+                                                 message: t('error:BALANCE_NOT_ENOUGH')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.INVALID_ADDRESS:
-                                setState({ errors: { status: WITHDRAW_RESULT.INVALID_ADDRESS , message: t('error:INVALID_ADDRESS') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.INVALID_ADDRESS,
+                                                 message: t('error:INVALID_ADDRESS')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.MEMO_TOO_LONG:
-                                setState({ errors: { status: WITHDRAW_RESULT.MEMO_TOO_LONG , message: t('error:INVALID_MEMO') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.MEMO_TOO_LONG,
+                                                 message: t('error:INVALID_MEMO')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.INVALID_AMOUNT:
-                                setState({ errors: { status: WITHDRAW_RESULT.INVALID_AMOUNT , message: t('error:INVALID_ADDRESS') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.INVALID_AMOUNT,
+                                                 message: t('error:INVALID_ADDRESS')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.INVALID_CURRENCY:
-                                setState({ errors: { status: WITHDRAW_RESULT.INVALID_CURRENCY , message: t('error:INVALID_CURRENCY') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.INVALID_CURRENCY,
+                                                 message: t('error:INVALID_CURRENCY')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.NOT_ENOUGH_FEE:
-                                setState({ errors: { status: WITHDRAW_RESULT.NOT_ENOUGH_FEE , message: t('error:NOT_ENOUGH_FEE') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.NOT_ENOUGH_FEE,
+                                                 message: t('error:NOT_ENOUGH_FEE')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD:
-                                setState({ errors: { status: WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD , message: t('error:WITHDRAW_AMOUNT_NOT_REACH_MIN') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD,
+                                                 message: t('error:WITHDRAW_AMOUNT_NOT_REACH_MIN')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.AMOUNT_EXCEEDED:
-                                setState({ errors: { status: WITHDRAW_RESULT.AMOUNT_EXCEEDED , message: t('error:WITHDRAW_AMOUNT_NOT_REACH_MAX') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.AMOUNT_EXCEEDED,
+                                                 message: t('error:WITHDRAW_AMOUNT_NOT_REACH_MAX')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.UNKNOWN_ERROR:
-                                setState({ errors: { status: WITHDRAW_RESULT.UNKNOWN_ERROR , message: t('error:UNKNOWN_ERROR') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.UNKNOWN_ERROR,
+                                                 message: t('error:UNKNOWN_ERROR')
+                                             }
+                                         })
                                 break
                             case WITHDRAW_RESULT.INVALID_KYC_STATUS:
-                                setState({ errors: { status: WITHDRAW_RESULT.INVALID_KYC_STATUS , message: t('error:INVALID_KYC_STATUS') } })
+                                setState({
+                                             errors: {
+                                                 status: WITHDRAW_RESULT.INVALID_KYC_STATUS,
+                                                 message: t('error:INVALID_KYC_STATUS')
+                                             }
+                                         })
                                 break
                             default:
                                 return false
@@ -241,16 +292,16 @@ const ExchangeWithdraw = () => {
 
     const onChangeAsset = () => {
         setState({
-            address: '',
-            memo: '',
-            search: '',
-            openList: {},
-            selectedNetwork: null,
-            withdrawFee: null,
-            feeCurrency: null,
-            validator: {},
+                     address: '',
+                     memo: '',
+                     search: '',
+                     openList: {},
+                     selectedNetwork: null,
+                     withdrawFee: null,
+                     feeCurrency: null,
+                     validator: {}
 
-        })
+                 })
     }
 
     const onClearInput = (type) => {
@@ -274,11 +325,11 @@ const ExchangeWithdraw = () => {
 
     const onCancelWdlOrder = () => {
         setState({
-            openWithdrawConfirm: false,
-            withdrawResult: null,
-            errors: null,
-            otp: {},
-        })
+                     openWithdrawConfirm: false,
+                     withdrawResult: null,
+                     errors: null,
+                     otp: {}
+                 })
     }
 
     const handleOtp = (origin, mode, code) => setState({ otp: { ...origin, [mode]: code } })
@@ -308,7 +359,8 @@ const ExchangeWithdraw = () => {
                         'flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark'
                         : 'flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark'}>
                         <div className="pb-2.5">TOKEN</div>
-                        <div className={state.type === TYPE.crypto ? 'w-[32px] h-[3px] md:h-[2px] bg-dominant' : 'w-[32px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
+                        <div
+                            className={state.type === TYPE.crypto ? 'w-[32px] h-[3px] md:h-[2px] bg-dominant' : 'w-[32px] h-[3px] md:h-[2px] bg-dominant invisible'}/>
                     </a>
                 </Link>
             </div>
@@ -356,7 +408,8 @@ const ExchangeWithdraw = () => {
                             <div className="flex items-center w-full">
                                 <AssetLogo assetCode={cfg?.assetCode} size={24}/>
                                 <span className="font-bold text-sm ml-2">{cfg?.assetCode}</span>
-                                <span className="font-medium text-sm ml-2 text-txtSecondary dark:text-txtSecondary-dark">
+                                <span
+                                    className="font-medium text-sm ml-2 text-txtSecondary dark:text-txtSecondary-dark">
                                     {cfg?.fullName || cfg?.assetCode}
                                 </span>
                             </div>
@@ -386,7 +439,8 @@ const ExchangeWithdraw = () => {
                     </div>
                 </div>
                 <div className="max-h-[200px] overflow-y-auto">
-                    {!items.length ? <div className="py-6"><Empty grpSize={68} message={t('common:not_found')} messageStyle="text-sm"/></div> : items}
+                    {!items.length ? <div className="py-6"><Empty grpSize={68} message={t('common:not_found')}
+                                                                  messageStyle="text-sm"/></div> : items}
                 </div>
             </div>
         )
@@ -396,7 +450,8 @@ const ExchangeWithdraw = () => {
 
         return (
             <>
-                <div className={state.selectedNetwork?.allowWithdraw ? 'flex items-center' : 'flex items-center opacity-40'}>
+                <div
+                    className={state.selectedNetwork?.allowWithdraw ? 'flex items-center' : 'flex items-center opacity-40'}>
                     <span className="font-bold text-sm text-dominant">
                         {getTokenType(state.selectedNetwork?.tokenType) || '--'}
                     </span>
@@ -415,8 +470,8 @@ const ExchangeWithdraw = () => {
         return (
             <div className={state.focus === 'address' ?
                 'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-dominant cursor-pointer select-none'
-                :'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
-                onClick={() => addressInputRef?.current?.focus()}>
+                : 'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
+                 onClick={() => addressInputRef?.current?.focus()}>
                 <input className="w-full font-medium text-sm pr-3"
                        placeholder={t('wallet:receive_address_placeholder')}
                        value={state.address}
@@ -425,8 +480,9 @@ const ExchangeWithdraw = () => {
                        onFocus={() => setState({ focus: 'address' })}
                        onBlur={() => setState({ focus: null })}
                 />
-                <span className={state.address ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
-                      onClick={() => onClearInput('address_input')}>
+                <span
+                    className={state.address ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
+                    onClick={() => onClearInput('address_input')}>
                       {t('common:clear')}
                 </span>
             </div>
@@ -437,8 +493,8 @@ const ExchangeWithdraw = () => {
         return (
             <div className={state.focus === 'amount' ?
                 'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-dominant cursor-pointer select-none'
-                :'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
-                onClick={() => amountInputRef?.current?.focus()}>
+                : 'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
+                 onClick={() => amountInputRef?.current?.focus()}>
                 <NumberFormat
                     thousandSeparator
                     allowNegative={false}
@@ -450,8 +506,9 @@ const ExchangeWithdraw = () => {
                     onFocus={() => setState({ focus: 'amount' })}
                     onBlur={() => setState({ focus: null })}
                 />
-                <span className={state.amount ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
-                      onClick={() => onClearInput('amount_input')}>
+                <span
+                    className={state.amount ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
+                    onClick={() => onClearInput('amount_input')}>
                       {t('common:clear')}
                 </span>
             </div>
@@ -468,11 +525,12 @@ const ExchangeWithdraw = () => {
                 <div key={`wdl_networkList___${nw?.tokenType}`}
                      className={nw?.allowWithdraw ?
                          'flex items-center justify-between px-3.5 py-3 md:px-5 hover:bg-teal-opacity cursor-pointer'
-                     : 'flex items-center justify-between px-3.5 py-3 md:px-5 cursor-not-allowed opacity-40'}
+                         : 'flex items-center justify-between px-3.5 py-3 md:px-5 cursor-not-allowed opacity-40'}
                      onClick={() => setState({ selectedNetwork: nw, openList: {} })}>
                     <div>
                         <span className="text-sm font-medium">{getTokenType(nw?.tokenType)}</span>
-                        <span className="ml-2 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">{nw?.displayNetwork}</span>
+                        <span
+                            className="ml-2 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">{nw?.displayNetwork}</span>
                     </div>
                     {state.selectedNetwork?.tokenType === nw?.tokenType && <Check size={16}/>}
                 </div>
@@ -486,7 +544,8 @@ const ExchangeWithdraw = () => {
                  ref={networkListRef}>
                 <div className="max-h-[200px] overflow-y-auto">
                     {!items.length ?
-                        <div className="py-6 h-full w-full items-center justify-center">Chưa hỗ trợ rút đối với token {state.selectedAsset?.assetCode}</div>
+                        <div className="py-6 h-full w-full items-center justify-center">Chưa hỗ trợ rút đối với
+                            token {state.selectedAsset?.assetCode}</div>
                         : items}
                 </div>
             </div>
@@ -512,7 +571,8 @@ const ExchangeWithdraw = () => {
                 <span className="text-txtSecondary dark:text-txtSecondary-dark mr-2">
                    {t('common:available_balance')}
                 </span>
-                <span className="font-bold flex items-center">{_ === '0' ? '0.0000' : _} <span className="ml-1">{state.selectedAsset?.assetCode}</span></span>
+                <span className="font-bold flex items-center">{_ === '0' ? '0.0000' : _} <span
+                    className="ml-1">{state.selectedAsset?.assetCode}</span></span>
             </div>
         )
     }, [assetBalance, state.selectedAsset])
@@ -596,7 +656,7 @@ const ExchangeWithdraw = () => {
 
         return (
             <div className={state.validator?.allPass ? passedStl : preventStl}
-            onClick={() => state.validator?.allPass && setState({ openWithdrawConfirm: true })}>
+                 onClick={() => state.validator?.allPass && setState({ openWithdrawConfirm: true })}>
                 {t('common:withdraw')}
             </div>
         )
@@ -611,7 +671,10 @@ const ExchangeWithdraw = () => {
                     // inner = <Check className="text-dominant" size={16}/>
                 } else {
                     inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
-                        {t('wallet:errors.network_not_support', { asset: state.selectedAsset?.assetCode, chain: state.selectedNetwork?.tokenType })}
+                        {t('wallet:errors.network_not_support', {
+                            asset: state.selectedAsset?.assetCode,
+                            chain: state.selectedNetwork?.tokenType
+                        })}
                     </span>
                 }
             } else {
@@ -638,11 +701,11 @@ const ExchangeWithdraw = () => {
                 if (state?.validator.amount === AMOUNT.LESS_THAN_MIN) {
                     inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
                         {t('wallet:errors.invalid_min_amount',
-                            {
-                                value: state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw ?
-                                    formatWallet(state.withdrawFee?.amount, state.selectedNetwork?.assetDigit)
-                                    : formatWallet(state.selectedNetwork?.minWithdraw, state.selectedNetwork?.assetDigit)
-                            })}
+                           {
+                               value: state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw ?
+                                   formatWallet(state.withdrawFee?.amount, state.selectedNetwork?.assetDigit)
+                                   : formatWallet(state.selectedNetwork?.minWithdraw, state.selectedNetwork?.assetDigit)
+                           })}
                     </span>
                 } else if (state?.validator.amount === AMOUNT.OVER_THAN_MAX) {
                     inner = <span className="block w-full font-medium text-red text-xs lg:text-sm text-right mt-2">
@@ -686,13 +749,14 @@ const ExchangeWithdraw = () => {
 
         return (
             <div className="relative mt-5">
-                <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                <div
+                    className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                     <span className="mr-1.5">Memo ({t('common:optional')})</span>
                     <span>{state.validator?.memo === true && <Check size={16} className="text-dominant"/>}</span>
                 </div>
                 <div className={state.focus === 'memo' ?
                     'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-dominant cursor-pointer select-none'
-                    :'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
+                    : 'min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'}
                 >
                     <input className="w-full font-medium text-sm pr-3"
                            placeholder={t('wallet:receiver_memo')}
@@ -701,8 +765,9 @@ const ExchangeWithdraw = () => {
                            onFocus={() => setState({ focus: 'memo' })}
                            onBlur={() => setState({ focus: null })}
                     />
-                    <span className={state.memo ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
-                          onClick={() => setState({ memo: '' })}>
+                    <span
+                        className={state.memo ? 'font-bold text-sm text-dominant hover:opacity-80' : 'font-bold text-sm text-dominant hover:opacity-80 invisible'}
+                        onClick={() => setState({ memo: '' })}>
                       {t('common:clear')}
                 </span>
                 </div>
@@ -728,7 +793,7 @@ const ExchangeWithdraw = () => {
             { key: 'withdraw_to', dataIndex: 'withdraw_to', title: 'Withdraw To', width: 100, align: 'right' },
             { key: 'txhash', dataIndex: 'txhash', title: 'TxHash', width: 100, align: 'right' },
             { key: 'time', dataIndex: 'time', title: 'Time', width: 100, align: 'right' },
-            { key: 'status', dataIndex: 'status', title: 'Status', width: 100, align: 'right' },
+            { key: 'status', dataIndex: 'status', title: 'Status', width: 100, align: 'right' }
         ]
 
         if (!state.histories?.length) {
@@ -760,14 +825,16 @@ const ExchangeWithdraw = () => {
     const renderPagination = useCallback(() => {
         return (
             <div className="w-full mt-6 mb-10 flex items-center justify-center select-none">
-                <div className={state.historyPage !== 0 ? 'flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
-                    : 'flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'}
-                     onClick={() => state.historyPage !== 0 && setState({ historyPage: state.historyPage - 1 })}>
+                <div
+                    className={state.historyPage !== 0 ? 'flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
+                        : 'flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'}
+                    onClick={() => state.historyPage !== 0 && setState({ historyPage: state.historyPage - 1 })}>
                     <ChevronLeft size={18} className="mr-2"/> {language === LANGUAGE_TAG.VI ? 'Trước' : 'Previous'}
                 </div>
-                <div className={state.histories?.length ? 'ml-10 flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
-                    : 'ml-10 flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'}
-                     onClick={() => state.histories?.length && setState({ historyPage: state.historyPage + 1 })}>
+                <div
+                    className={state.histories?.length ? 'ml-10 flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
+                        : 'ml-10 flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'}
+                    onClick={() => state.histories?.length && setState({ historyPage: state.historyPage + 1 })}>
                     {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'} <ChevronRight size={18} className="ml-2"/>
                 </div>
             </div>
@@ -819,12 +886,15 @@ const ExchangeWithdraw = () => {
                     {!state.withdrawResult &&
                     <>
                         <div className="text-sm mb-2 flex items-center justify-between">
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:withdraw')}</span>
-                            <span className="font-medium">{state.selectedAsset?.assetCode} {state.selectedAsset?.fullName &&
+                            <span
+                                className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:withdraw')}</span>
+                            <span
+                                className="font-medium">{state.selectedAsset?.assetCode} {state.selectedAsset?.fullName &&
                             <span className="ml-1">({state.selectedAsset?.fullName})</span>}</span>
                         </div>
                         <div className="text-sm mb-2 flex items-center justify-between">
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:receive_address')}</span>
+                            <span
+                                className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:receive_address')}</span>
                             <span className="font-medium cursor-pointer"
                                   title={`${t('wallet:receive_address')}: ${state.address}`}>
                             {shortHashAddress(state.address, 8, 8)}
@@ -836,14 +906,17 @@ const ExchangeWithdraw = () => {
                         </div>}
                         <div className="text-sm mb-2 flex items-center justify-between">
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:amount')}</span>
-                            <span className="font-medium">{formatWallet(state.amount, state.selectedNetwork?.assetDigit)} {state.selectedAsset?.assetCode}</span>
+                            <span
+                                className="font-medium">{formatWallet(state.amount, state.selectedNetwork?.assetDigit)} {state.selectedAsset?.assetCode}</span>
                         </div>
                         <div className="text-sm mb-2 flex items-center justify-between">
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:fee')}</span>
-                            <span className="font-medium">{formatWallet(state.withdrawFee?.amount, state.feeCurrency?.assetDigit)} {state.feeCurrency?.assetCode}</span>
+                            <span
+                                className="font-medium">{formatWallet(state.withdrawFee?.amount, state.feeCurrency?.assetDigit)} {state.feeCurrency?.assetCode}</span>
                         </div>
                         <div className="text-sm mb-2 flex items-center justify-between">
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:will_receive')}</span>
+                            <span
+                                className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:will_receive')}</span>
                             <span className="font-medium">
                                 {formatWallet(+state.amount - state.withdrawFee?.amount, state.selectedAsset?.assetDigit)} {state.selectedAsset?.assetCode}
                             </span>
@@ -859,58 +932,60 @@ const ExchangeWithdraw = () => {
 
                     {/*OTP Phase*/}
                     {state.withdrawResult && !isErrors && !isSuccess &&
-                      <div className="">
-                          {state.otpModes.includes('email') &&
-                          <div>
-                              <div className="font-medium text-sm ">
-                                  {t('common:email_authentication')}
-                              </div>
-                              <div className="mt-0.5 flex items-center justify-between text-xs lg:text-sm text-txtSecondary dark:text-txtSecondary">
-                                  {t('wallet:withdraw_prompt.email_description')}
-                                  <span className={resendTimeOut ?
-                                      'font-medium text-txt-gray-1 dark:text-txt-darkBlue5 cursor-not-allowed'
-                                      : 'font-medium text-dominant cursor-pointer hover:opacity-80'}
-                                        onClick={() => {
-                                            if (!resendTimeOut) {
-                                                withdraw({ ...params, otp: undefined })
-                                                setResendTimeOut(60)
-                                            }
-                                        }}>
-                                      {t('common:resend')}<span className="ml-1">{!!resendTimeOut && `(${resendTimeOut})`}</span>
+                    <div className="">
+                        {state.otpModes.includes('email') &&
+                        <div>
+                            <div className="font-medium text-sm ">
+                                {t('common:email_authentication')}
+                            </div>
+                            <div
+                                className="mt-0.5 flex items-center justify-between text-xs lg:text-sm text-txtSecondary dark:text-txtSecondary">
+                                {t('wallet:withdraw_prompt.email_description')}
+                                <span className={resendTimeOut ?
+                                    'font-medium text-txt-gray-1 dark:text-txt-darkBlue5 cursor-not-allowed'
+                                    : 'font-medium text-dominant cursor-pointer hover:opacity-80'}
+                                      onClick={() => {
+                                          if (!resendTimeOut) {
+                                              withdraw({ ...params, otp: undefined })
+                                              setResendTimeOut(60)
+                                          }
+                                      }}>
+                                      {t('common:resend')}<span
+                                    className="ml-1">{!!resendTimeOut && `(${resendTimeOut})`}</span>
                                   </span>
-                              </div>
-                              <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                                  <OtpInput
-                                      value={state.otp?.email}
-                                      onChange={otp => handleOtp(state.otp, 'email', otp)}
-                                      numInputs={6}
-                                      placeholder="------"
-                                      isInputNum
-                                  />
-                              </OtpWrapper>
-                          </div>}
-                          {state.otpModes.includes('tfa') &&
-                          <div className="mt-6">
-                              <div className="font-medium text-sm ">
-                                  {t('common:tfa_authentication')}
-                              </div>
-                              <div className="mt-0.5 text-xs lg:text-sm text-txtSecondary dark:text-txtSecondary">
-                                  {t('wallet:withdraw_prompt.google_description')}
-                              </div>
-                              <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                                  <OtpInput
-                                      value={state.otp?.tfa}
-                                      onChange={otp => handleOtp(state.otp, 'tfa', otp)}
-                                      numInputs={6}
-                                      placeholder="------"
-                                      isInputNum
-                                  />
-                              </OtpWrapper>
-                          </div>}
-                          {state.errors && <div className="mt-4 text-red text-xs lg:text-sm font-medium text-center">
-                              {state.errors?.message}
-                          </div>}
-                      </div>}
+                            </div>
+                            <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
+                                <OtpInput
+                                    value={state.otp?.email}
+                                    onChange={otp => handleOtp(state.otp, 'email', otp)}
+                                    numInputs={6}
+                                    placeholder="------"
+                                    isInputNum
+                                />
+                            </OtpWrapper>
+                        </div>}
+                        {state.otpModes.includes('tfa') &&
+                        <div className="mt-6">
+                            <div className="font-medium text-sm ">
+                                {t('common:tfa_authentication')}
+                            </div>
+                            <div className="mt-0.5 text-xs lg:text-sm text-txtSecondary dark:text-txtSecondary">
+                                {t('wallet:withdraw_prompt.google_description')}
+                            </div>
+                            <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
+                                <OtpInput
+                                    value={state.otp?.tfa}
+                                    onChange={otp => handleOtp(state.otp, 'tfa', otp)}
+                                    numInputs={6}
+                                    placeholder="------"
+                                    isInputNum
+                                />
+                            </OtpWrapper>
+                        </div>}
+                        {state.errors && <div className="mt-4 text-red text-xs lg:text-sm font-medium text-center">
+                            {state.errors?.message}
+                        </div>}
+                    </div>}
 
                     {/*Catch Err*/}
                     {!isSuccess && state.errors?.status &&
@@ -942,10 +1017,12 @@ const ExchangeWithdraw = () => {
                         </div>
                     </div>}
                 </div>
-                <div className={(!isErrors && !isSuccess) ? 'mt-8 w-[300px] md:min-w-[410px] flex items-center justify-between' : 'mt-8 w-[300px] md:min-w-[410px] flex items-center justify-center'}>
-                    <div className="w-[48%] py-2 bg-gray-1 text-center rounded-lg text-sm text-dominant font-medium cursor-pointer hover:opacity-80"
-                         onClick={onCancelWdlOrder}>
-                         {(!isErrors && !isSuccess) ? t('common:cancel') : t('common:close')}
+                <div
+                    className={(!isErrors && !isSuccess) ? 'mt-8 w-[300px] md:min-w-[410px] flex items-center justify-between' : 'mt-8 w-[300px] md:min-w-[410px] flex items-center justify-center'}>
+                    <div
+                        className="w-[48%] py-2 bg-gray-1 text-center rounded-lg text-sm text-dominant font-medium cursor-pointer hover:opacity-80"
+                        onClick={onCancelWdlOrder}>
+                        {(!isErrors && !isSuccess) ? t('common:cancel') : t('common:close')}
                     </div>
                     {(!isErrors && !isSuccess) && <div
                         className="w-[48%] py-2 bg-dominant text-center rounded-lg text-sm text-white font-medium cursor-pointer hover:opacity-80"
@@ -954,37 +1031,66 @@ const ExchangeWithdraw = () => {
                     </div>}
                 </div>
                 {state.processingWithdraw && <div style={{ backgroundColor: colors.overlayLight }}
-                      className="absolute z-10 w-full h-full left-0 top-0 rounded-xl flex items-center justify-center select-none pointer-event-none">
+                                                  className="absolute z-10 w-full h-full left-0 top-0 rounded-xl flex items-center justify-center select-none pointer-event-none">
                     <ScaleThinLoader thin={2} height={20}/>
                 </div>}
             </Modal>
         )
     }, [
-        currentTheme,
-        state.openWithdrawConfirm,
-        state.type,
-        state.amount,
-        state.address,
-        state.memo,
-        state.selectedAsset,
-        state.selectedNetwork,
-        state.withdrawFee,
-        state.feeCurrency,
-        state.processingWithdraw,
-        state.withdrawResult,
-        state.otpModes,
-        state.otp,
-        state.errors,
-        resendTimeOut
-    ])
+                                             currentTheme,
+                                             state.openWithdrawConfirm,
+                                             state.type,
+                                             state.amount,
+                                             state.address,
+                                             state.memo,
+                                             state.selectedAsset,
+                                             state.selectedNetwork,
+                                             state.withdrawFee,
+                                             state.feeCurrency,
+                                             state.processingWithdraw,
+                                             state.withdrawResult,
+                                             state.otpModes,
+                                             state.otp,
+                                             state.errors,
+                                             resendTimeOut
+                                         ])
 
-    useDebounce( () => {
-        if (userSocket && state.selectedAsset?.currency && state.amount && state.selectedNetwork?.network) {
-            getWithdrawFee(state.selectedAsset.currency, +state.amount, state.selectedNetwork.network)
-        }
-    },
-    500,
-    [userSocket, state.selectedAsset, state.amount, state.selectedNetwork])
+    const renderKycRequiredModal = useCallback(() => {
+        const isVisible = auth?.vndc_user_id > 0 && auth.kycStatus !== 2
+        return (
+            <ReModal isVisible={isVisible} containerClassName="p-6 max-w-[400px]">
+                <div className="mb-4 font-bold text-lg text-center capitalize">
+                    {t('modal:notice')}
+                </div>
+                <div className="text-center px-4">
+                    {t('wallet:errors.invalid_kyc_status')}
+                </div>
+                <div className="mt-6 flex items-center justify-between">
+                    <div className="w-[47%]">
+                        <Button componentType="button"
+                                onClick={() => router?.back && router.back()}
+                                title={t('common:back_to_home')}
+                                className="!py-[8px]"/>
+                    </div>
+                    <div className="w-[47%]">
+                        <Button title={t('common:view_manual')}
+                                type="primary"
+                                href="https://nami.io/tutorial-vi/huong-dan-xac-minh-tai-khoan-kyc-tren-nami-exchange/"
+                                target="_blank"
+                                className="!py-[8px]"/>
+                    </div>
+                </div>
+            </ReModal>
+        )
+    }, [auth])
+
+    useDebounce(() => {
+                    if (userSocket && state.selectedAsset?.currency && state.amount && state.selectedNetwork?.network) {
+                        getWithdrawFee(state.selectedAsset.currency, +state.amount, state.selectedNetwork.network)
+                    }
+                },
+                500,
+                [userSocket, state.selectedAsset, state.amount, state.selectedNetwork])
 
     useEffect(() => {
         getWithdrawConfig()
@@ -1039,21 +1145,29 @@ const ExchangeWithdraw = () => {
     useEffect(() => {
         if (state.selectedAsset) {
             const networkList = []
-            const { tokenType, allowWithdraw, network, displayNetwork, minWithdraw, maxWithdraw, assetDigit } = state.selectedAsset
+            const {
+                tokenType,
+                allowWithdraw,
+                network,
+                displayNetwork,
+                minWithdraw,
+                maxWithdraw,
+                assetDigit
+            } = state.selectedAsset
             if (allowWithdraw && allowWithdraw.length) {
                 allowWithdraw.forEach((isAllow, index) =>
-                    // isAllow
-                    // &&
-                    networkList.push({
-                        allowWithdraw: isAllow,
-                        assetDigit,
-                        minWithdraw: minWithdraw[index],
-                        maxWithdraw: maxWithdraw[index],
-                        tokenType: tokenType[index],
-                        tokenTypeIndex: index,
-                        network: network[index],
-                        displayNetwork: displayNetwork[index],
-                    }))
+                                          // isAllow
+                                          // &&
+                                          networkList.push({
+                                                               allowWithdraw: isAllow,
+                                                               assetDigit,
+                                                               minWithdraw: minWithdraw[index],
+                                                               maxWithdraw: maxWithdraw[index],
+                                                               tokenType: tokenType[index],
+                                                               tokenTypeIndex: index,
+                                                               network: network[index],
+                                                               displayNetwork: displayNetwork[index]
+                                                           }))
             }
             setState({ networkList })
             if (networkList.length) {
@@ -1079,30 +1193,30 @@ const ExchangeWithdraw = () => {
 
     useEffect(() => {
         setState({
-            validator: withdrawValidator(
-                state.selectedAsset?.assetCode,
-                +state.amount,
-                state.address,
-                state.memo,
-                state.selectedNetwork?.network,
-                state.selectedNetwork?.tokenType,
-                state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw ?
-                    state.withdrawFee?.amount
-                    : state.selectedNetwork?.minWithdraw,
-                state.selectedNetwork?.maxWithdraw?.value,
-                assetBalance?.value - assetBalance?.locked_value,
-                state.selectedNetwork?.allowWithdraw
-            )
-        })
+                     validator: withdrawValidator(
+                         state.selectedAsset?.assetCode,
+                         +state.amount,
+                         state.address,
+                         state.memo,
+                         state.selectedNetwork?.network,
+                         state.selectedNetwork?.tokenType,
+                         state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw ?
+                             state.withdrawFee?.amount
+                             : state.selectedNetwork?.minWithdraw,
+                         state.selectedNetwork?.maxWithdraw?.value,
+                         assetBalance?.value - assetBalance?.locked_value,
+                         state.selectedNetwork?.allowWithdraw
+                     )
+                 })
     }, [
-        state.selectedAsset,
-        state.amount,
-        state.address,
-        state.memo,
-        state.selectedNetwork,
-        state.withdrawFee,
-        assetBalance
-    ])
+                  state.selectedAsset,
+                  state.amount,
+                  state.address,
+                  state.memo,
+                  state.selectedNetwork,
+                  state.withdrawFee,
+                  assetBalance
+              ])
 
     useEffect(() => {
         let interval
@@ -1119,9 +1233,9 @@ const ExchangeWithdraw = () => {
         return () => clearInterval(interval)
     }, [resendTimeOut])
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: => ', router)
-    }, [router])
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: => ', router)
+    // }, [router])
 
 
     return (
@@ -1131,7 +1245,8 @@ const ExchangeWithdraw = () => {
                     <div className="t-common mb-4">
                        <span className="max-w-[150px] flex items-center cursor-pointer rounded-lg hover:text-dominant"
                              onClick={() => router?.push(PATHS.WALLET.EXCHANGE.DEFAULT)}>
-                           <span className="inline-flex items-center justify-center h-full mr-3 mt-0.5"><ChevronLeft size={24}/></span>
+                           <span className="inline-flex items-center justify-center h-full mr-3 mt-0.5"><ChevronLeft
+                               size={24}/></span>
                            {t('common:withdraw')}
                        </span>
                     </div>
@@ -1143,7 +1258,8 @@ const ExchangeWithdraw = () => {
                                 {state.type === TYPE.crypto &&
                                 <>
                                     <div className="relative">
-                                        <div className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                        <div
+                                            className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                             {t('wallet:crypto_select')}
                                         </div>
                                         <div className="min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between
@@ -1154,9 +1270,11 @@ const ExchangeWithdraw = () => {
                                         {state.openList?.cryptoList && renderCryptoList()}
                                     </div>
                                     <div className="relative mt-5">
-                                        <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                        <div
+                                            className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                             {t('wallet:network')}
-                                            <span>{state.validator?.allowWithdraw && <Check size={16} className="text-dominant"/>}</span>
+                                            <span>{state.validator?.allowWithdraw &&
+                                            <Check size={16} className="text-dominant"/>}</span>
                                         </div>
                                         <div className="min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between
                                                     rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant"
@@ -1167,18 +1285,22 @@ const ExchangeWithdraw = () => {
                                         {state.openList?.networkList && renderNetworkList()}
                                     </div>
                                     <div className="relative mt-5">
-                                        <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                        <div
+                                            className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                             {t('wallet:receive_address')}
-                                            <span>{state.validator?.address === true && <Check size={16} className="text-dominant"/>}</span>
+                                            <span>{state.validator?.address === true &&
+                                            <Check size={16} className="text-dominant"/>}</span>
                                         </div>
                                         {renderAddressInput()}
                                         {renderInputIssues('address')}
                                     </div>
                                     {renderMemoInput()}
                                     <div className="relative mt-5">
-                                        <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                        <div
+                                            className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                             {t('common:amount')}
-                                            <span>{state.validator?.amount === AMOUNT.OK && <Check size={16} className="text-dominant"/>}</span>
+                                            <span>{state.validator?.amount === AMOUNT.OK &&
+                                            <Check size={16} className="text-dominant"/>}</span>
                                         </div>
                                         {renderAmountInput()}
                                         {renderInputIssues('amount')}
@@ -1205,6 +1327,7 @@ const ExchangeWithdraw = () => {
                     {renderPagination()}
                 </div>
                 {renderWdlConfirm()}
+                {renderKycRequiredModal()}
             </Background>
         </MaldivesLayout>
     )
@@ -1216,29 +1339,29 @@ const Background = styled.div.attrs({ className: 'w-full h-full pt-10' })`
 
 const OtpWrapper = styled.div.attrs({ className: 'mt-4' })`
   > div {
-      width: 100%;
-      justify-content: space-between;
+    width: 100%;
+    justify-content: space-between;
 
-      div {
-          width: 33px;
-          height: 30px;
-          background-color: ${({ isDark }) => isDark ? colors.darkBlue4 : colors.lightTeal};
-          justify-content: center;
-          border-radius: 6px;
+    div {
+      width: 33px;
+      height: 30px;
+      background-color: ${({ isDark }) => isDark ? colors.darkBlue4 : colors.lightTeal};
+      justify-content: center;
+      border-radius: 6px;
 
-          input {
-              font-weight: 500;
-              font-size: 14px;
-          }
-
-          @media (min-width: 768px) {
-              width: 53px;
-              height: 50px;
-              input {
-                  font-size: 24px;
-              }
-          }
+      input {
+        font-weight: 500;
+        font-size: 14px;
       }
+
+      @media (min-width: 768px) {
+        width: 53px;
+        height: 50px;
+        input {
+          font-size: 24px;
+        }
+      }
+    }
   }
 `
 
@@ -1258,7 +1381,7 @@ function dataHandler(data, loading, configList, utils) {
     if (loading) {
         const skeleton = []
         for (let i = 0; i < HISTORY_SIZE; ++i) {
-            skeleton.push({...ROW_LOADING_SKELETON, key: `wdl__skeletor___${i}`})
+            skeleton.push({ ...ROW_LOADING_SKELETON, key: `wdl__skeletor___${i}` })
         }
         return skeleton
     }
@@ -1271,12 +1394,14 @@ function dataHandler(data, loading, configList, utils) {
         const { id, time, amount, currency, status, withdraw_to, network, txhash } = h
         const assetName = utils?.getAssetName(configList, currency)
 
-        let txhashInner = <span className="!text-sm whitespace-nowrap">{txhash ? shortHashAddress(txhash, 6, 6) : '--'}</span>
+        let txhashInner = <span
+            className="!text-sm whitespace-nowrap">{txhash ? shortHashAddress(txhash, 6, 6) : '--'}</span>
         const value = txhash || withdraw_to
         const url = buildExplorerUrl(value, network)
 
         if (url) {
-            txhashInner = <a href={url} target="_blank" className="!text-sm whitespace-nowrap cursor-pointer hover:text-dominant hover:!underline">
+            txhashInner = <a href={url} target="_blank"
+                             className="!text-sm whitespace-nowrap cursor-pointer hover:text-dominant hover:!underline">
                 {txhash ? shortHashAddress(txhash, 6, 6) : '--'}
             </a>
         }
@@ -1300,22 +1425,24 @@ function dataHandler(data, loading, configList, utils) {
         }
 
         result.push({
-            key: `wdl_${id}_${txhash}`,
-            id: <span className="!text-sm whitespace-nowrap">{id}</span>,
-            asset: <div className="flex items-center">
-                <AssetLogo assetCode={assetName} size={24}/>
-                <span className="!text-sm whitespace-nowrap ml-2">{assetName}</span>
-            </div>,
-            amount: <span className="!text-sm whitespace-nowrap">{amount}</span>,
-            network: <span className="!text-sm whitespace-nowrap">{network}</span>,
-            withdraw_to: <span className="!text-sm whitespace-nowrap">{shortHashAddress(withdraw_to, 5, 5)}</span>,
-            txhash: txhashInner,
-            time: <span className="!text-sm whitespace-nowrap">{formatTime(time, 'HH:mm dd-MM-yyyy')}</span>,
-            status: <span className="!text-sm whitespace-nowrap">{statusInner}</span>,
-            [RETABLE_SORTBY]: {
-                id, asset: assetName, amount: +amount, network, withdraw_to, txhash, time, status
-            }
-        })
+                        key: `wdl_${id}_${txhash}`,
+                        id: <span className="!text-sm whitespace-nowrap">{id}</span>,
+                        asset: <div className="flex items-center">
+                            <AssetLogo assetCode={assetName} size={24}/>
+                            <span className="!text-sm whitespace-nowrap ml-2">{assetName}</span>
+                        </div>,
+                        amount: <span className="!text-sm whitespace-nowrap">{amount}</span>,
+                        network: <span className="!text-sm whitespace-nowrap">{network}</span>,
+                        withdraw_to: <span
+                            className="!text-sm whitespace-nowrap">{shortHashAddress(withdraw_to, 5, 5)}</span>,
+                        txhash: txhashInner,
+                        time: <span
+                            className="!text-sm whitespace-nowrap">{formatTime(time, 'HH:mm dd-MM-yyyy')}</span>,
+                        status: <span className="!text-sm whitespace-nowrap">{statusInner}</span>,
+                        [RETABLE_SORTBY]: {
+                            id, asset: assetName, amount: +amount, network, withdraw_to, txhash, time, status
+                        }
+                    })
     })
 
     return result
@@ -1328,14 +1455,14 @@ const getAssetName = (assetList, assetId) => {
 }
 
 const ROW_LOADING_SKELETON = {
-    id: <Skeletor width={65} />,
-    asset: <Skeletor width={65} />,
-    amount: <Skeletor width={65} />,
-    network: <Skeletor width={65} />,
-    withdraw_to: <Skeletor width={65} />,
-    txhash: <Skeletor width={65} />,
-    time: <Skeletor width={65} />,
-    status: <Skeletor width={65} />,
+    id: <Skeletor width={65}/>,
+    asset: <Skeletor width={65}/>,
+    amount: <Skeletor width={65}/>,
+    network: <Skeletor width={65}/>,
+    withdraw_to: <Skeletor width={65}/>,
+    txhash: <Skeletor width={65}/>,
+    time: <Skeletor width={65}/>,
+    status: <Skeletor width={65}/>
 }
 
 

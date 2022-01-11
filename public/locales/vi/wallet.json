@@ -92,7 +92,8 @@
     "address_not_found": "Không tìm thấy địa chỉ ví, vui lòng liên hệ với hỗ trợ.",
     "transfer_source_wallet_issues": "Vui lòng chọn ví nguồn",
     "transfer_destination_wallet_issues": "Vui lòng chọn ví đích",
-    "invalid_amount": "Giá trị không hợp lệ"
+    "invalid_amount": "Giá trị không hợp lệ",
+    "invalid_kyc_status": "Vui lòng xác minh tài khoản để thực hiện hành động này"
   },
   "est_balance": "Tài sản ước lượng",
   "hide_asset": "Ẩn số dư",

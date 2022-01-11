@@ -1,3 +1,4 @@
+// !NOTE: Not recommend to use 11/01/2022
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'next-i18next'
 import { PulseLoader } from 'react-spinners'
@@ -6,8 +7,9 @@ import { X } from 'react-feather'
 
 import Button from 'components/common/Button'
 import colors from 'styles/colors'
+import Deprecated from 'components/hoc/Deprecated'
 
-const ReModal = (
+const ReModalOld = (
     {
         children,
         isVisible,
@@ -160,7 +162,7 @@ const ReModal = (
     }, [useButtonGroup, positiveLabel, negativeLabel, onPositiveCb, onPositiveLoading, onNegativeCb])
 
     useEffect(() => {
-        debug && log.d('[ReModal] isVisible => ', isVisible)
+        debug && log.d('[ReModalOld] isVisible => ', isVisible)
     }, [isVisible, debug])
 
     // useEffect(() => {
@@ -178,7 +180,7 @@ const ReModal = (
             {useOverlay && position?.mode !== REMODAL_POSITION.FULLSCREEN.MODE &&
             <div className={`mal-overlay ${isVisible ? 'mal-overlay__active' : ''}`}
                  onClick={() => {
-                     debug && log.d('[ReModal] onBackdropCb triggered!')
+                     debug && log.d('[ReModalOld] onBackdropCb triggered!')
                      onBackdropCb && onBackdropCb()
                  }}/>}
             {/*END OVERLAY*/}
@@ -253,4 +255,4 @@ export const REMODAL_BUTTON_GROUP = {
     NOT_USE: 'not_use'
 }
 
-export default ReModal
+export default Deprecated(ReModalOld)

@@ -99,6 +99,7 @@
   "max": "Max",
   "min": "Min",
   "back": "Back",
+  "back_to_home": "Back to Home",
   "copy": "Copy",
   "continue": "Continue",
   "paste": "Paste",
@@ -192,5 +193,6 @@
   "view_rules": "View Rules",
   "notes": "Notes",
   "completed": "Completed",
-  "incomplete": "Incomplete"
+  "incomplete": "Incomplete",
+  "view_manual": "View Manual"
 }

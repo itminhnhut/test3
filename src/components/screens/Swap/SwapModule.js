@@ -10,7 +10,7 @@ import Link from 'next/link'
 import * as Error from '../../../redux/actions/apiError'
 import Skeletor from 'src/components/common/Skeletor'
 import useOutsideClick from 'hooks/useOutsideClick'
-import Modal from 'src/components/common/Modal'
+import Modal from 'src/components/common/ReModal'
 
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAsync, useDebounce } from 'react-use'

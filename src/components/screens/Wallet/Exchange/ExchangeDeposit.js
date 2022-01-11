@@ -30,7 +30,7 @@ import styled from 'styled-components'
 import colors from 'styles/colors'
 import Axios from 'axios'
 import ReTable from 'components/common/ReTable'
-import Modal from 'components/common/Modal'
+import Modal from 'components/common/ReModal'
 import Tooltip from 'components/common/Tooltip'
 
 
