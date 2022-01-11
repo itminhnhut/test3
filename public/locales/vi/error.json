@@ -93,5 +93,6 @@
   "WITHDRAW_AMOUNT_NOT_REACH_MAX": "Giá trị rút vượt hạn mức",
   "WITHDRAW_AMOUNT_NOT_REACH_MIN": "Giá trị rút nhỏ hơn mức tối thiểu",
   "UNKNOWN_ERROR": "Lỗi không rõ, vui lòng liên hệ với hỗ trợ",
-  "ASSET_NOT_SUPPORT": "Tài sản này chưa được hỗ trợ {{ function }}"
+  "ASSET_NOT_SUPPORT": "Tài sản này chưa được hỗ trợ {{ function }}",
+  "INVALID_KYC_STATUS": "Please verify your account"
 }

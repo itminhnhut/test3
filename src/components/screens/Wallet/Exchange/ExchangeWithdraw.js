@@ -222,6 +222,9 @@ const ExchangeWithdraw = () => {
                             case WITHDRAW_RESULT.UNKNOWN_ERROR:
                                 setState({ errors: { status: WITHDRAW_RESULT.UNKNOWN_ERROR , message: t('error:UNKNOWN_ERROR') } })
                                 break
+                            case WITHDRAW_RESULT.INVALID_KYC_STATUS:
+                                setState({ errors: { status: WITHDRAW_RESULT.INVALID_KYC_STATUS , message: t('error:INVALID_KYC_STATUS') } })
+                                break
                             default:
                                 return false
                         }
