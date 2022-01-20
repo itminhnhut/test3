@@ -33,6 +33,7 @@ import { buildLogoutUrl } from 'src/utils';
 import { useWindowSize } from 'utils/customHooks';
 import { PATHS } from 'constants/paths'
 import { useRouter } from 'next/router'
+import useApp from 'hooks/useApp'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
