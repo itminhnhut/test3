@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { BREAK_POINTS } from 'constants/constants'
 import { useRouter } from 'next/router'
@@ -13,42 +13,19 @@ import Image from 'next/image'
 import useApp from 'hooks/useApp'
 
 const Support = () => {
-    // ? State
-    const [searchKey, setSearchKey] = useState(null)
-    const [focus, setFocus] = useState(false)
-
     // ? Use hooks
-    const isApp = useApp()
-    const router = useRouter()
     const { width } = useWindowSize()
 
     // ? Memmoized
     const sectionIconSize = useMemo(() => width >= BREAK_POINTS.lg ? 32 : 24, [width])
-
-    // ? Helper
-    const onSearch = (searchKey) => {
-        if (!searchKey) return
-        router.push(
-            {
-                pathname: PATHS.SUPPORT.SEARCH,
-                query: { type: 0, query: searchKey, source: isApp ? 'app' : undefined }
-            }
-        )
-    }
 
     // ? Render input
     const renderInput = useCallback(() => {
         return (
             <SupportSearchBar
                 simpleMode={width < BREAK_POINTS.lg}
-                placeholder="Tìm kiếm bài viết trợ giúp"
-                value={searchKey} onChange={(value) => setSearchKey(value)}
-                onCallBack={() => onSearch(searchKey)}
-                onFocus={() => setFocus(true)}
-                onBlur={() => setFocus(false)}
-                onKeyPress={(e) => focus && e.nativeEvent.code === 'Enter' && onSearch(searchKey)}
             />)
-    }, [searchKey, focus, width])
+    }, [width])
 
     return (
         <MaldivesLayout>
@@ -62,7 +39,8 @@ const Support = () => {
 
                         <div className="mt-6 lg:mt-8">
                             <SupportSection title="Câu hỏi thường gặp" containerClassNames="lg:pb-[32px]">
-                                <SupportSectionItem title="Tính năng về tài khoản"
+                                <SupportSectionItem href={PATHS.SUPPORT.FAQ}
+                                                    title="Tính năng về tài khoản"
                                                     titleClassNames="truncate"
                                                     icon={<Image src="/images/screen/support/ic_user.png"
                                                                  width={sectionIconSize}
@@ -97,7 +75,8 @@ const Support = () => {
 
                         <div className="mt-6 lg:mt-8">
                             <SupportSection title="Thông báo" containerClassNames="lg:pb-[32px]">
-                                <SupportSectionItem title="Niêm yết mới"
+                                <SupportSectionItem href={PATHS.SUPPORT.ANNOUNCEMENT}
+                                                    title="Niêm yết mới"
                                                     titleClassNames="truncate"
                                                     icon={<Image src="/images/screen/support/ic_duo_dollar.png"
                                                                  width={sectionIconSize} height={sectionIconSize}/>}/>

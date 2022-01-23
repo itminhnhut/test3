@@ -10,12 +10,12 @@ import Link from 'next/link'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import useApp from 'hooks/useApp'
 import SearchResultItem from 'components/screens/Support/SearchResultItem'
+import useWindowSize from 'hooks/useWindowSize'
+import { BREAK_POINTS } from 'constants/constants'
 
 const INITIAL_STATE = {
     tab: 0,
-    query: null,
-    searchKey: null,
-    isFocus: false
+    query: null
 }
 
 const SupportSearchResult = () => {
@@ -25,23 +25,18 @@ const SupportSearchResult = () => {
     const [theme] = useDarkMode()
     const router = useRouter()
     const isApp = useApp()
+    const { width } = useWindowSize()
 
     // ? helper
     const onQuery = (tab, query) => router.push(
         {
             pathname: PATHS.SUPPORT.SEARCH,
-            query: { type: tab, query, source: isApp ? 'app' : undefined }
-        })
-
-    const onSearch = (searchKey) => {
-        if (!searchKey) return
-        router.push(
-            {
-                pathname: PATHS.SUPPORT.SEARCH,
-                query: { type: state.tab, query: searchKey, source: isApp ? 'app' : undefined }
+            query: {
+                type: tab,
+                query,
+                source: isApp ? 'app' : undefined
             }
-        )
-    }
+        })
 
     // ? render
     const renderTab = useCallback(() => TAB_SERIES.map(item => (
@@ -61,13 +56,15 @@ const SupportSearchResult = () => {
     useEffect(() => {
         if (router?.query && Object.keys(router.query).length && router.query?.query && router.query?.type) {
             // console.log('namidev ', router.query)
-            setState({ tab: +router.query?.type, query: router.query.query })
+            setState({
+                tab: +router.query?.type,
+                query: router.query.query
+            })
             if (router.query.query?.length) {
                 setState({ searchKey: router.query.query })
             }
         }
     }, [router])
-
 
     return (
         <MaldivesLayout>
@@ -75,14 +72,7 @@ const SupportSearchResult = () => {
                 <>
                     Chúng tôi có thể <br className="hidden lg:block"/> giúp gì cho bạn?
                 </>
-            }
-                           placeholder="Tìm kiếm bài viết trợ giúp"
-                           value={state.searchKey} onChange={(value) => setState({ searchKey: value })}
-                           onCallBack={() => onSearch(state.searchKey)}
-                           onFocus={() => setState({ isFocus: true })}
-                           onBlur={() => setState({ isFocus: false })}
-                           onKeyPress={(e) => state.isFocus && e.nativeEvent.code === 'Enter' && onSearch(state.searchKey)}
-            />
+            }/>
             <div className="block md:hidden bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:shadow-none">
                 <div
                     className="container px-4 py-2 flex items-center text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark">
@@ -93,8 +83,9 @@ const SupportSearchResult = () => {
                     <div>Kết quả tìm kiếm</div>
                 </div>
             </div>
-            <div className="container md:mt-4 md:px-5 md:pt-2 md:pb-[100px] md:bg-bgPrimary md:dark:bg-bgPrimary-dark md:rounded-t-[20px]"
-                 style={theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}>
+            <div
+                className="container md:mt-4 md:px-5 md:pt-2 md:pb-[100px] md:bg-bgPrimary md:dark:bg-bgPrimary-dark md:rounded-t-[20px]"
+                style={theme === THEME_MODE.LIGHT && width >= BREAK_POINTS.md ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}>
                 <div className="mt-4 px-4 flex items-center select-none overflow-x-auto no-scrollbar">
                     {renderTab()}
                 </div>
@@ -113,9 +104,21 @@ const SupportSearchResult = () => {
 }
 
 const TAB_SERIES = [
-    { key: 0, title: 'Câu hỏi thường gặp', localizedPath: null },
-    { key: 1, title: 'Thông báo', localizedPath: null },
-    { key: 2, title: 'Tất cả', localizedPath: null }
+    {
+        key: 0,
+        title: 'Câu hỏi thường gặp',
+        localizedPath: null
+    },
+    {
+        key: 1,
+        title: 'Thông báo',
+        localizedPath: null
+    },
+    {
+        key: 2,
+        title: 'Tất cả',
+        localizedPath: null
+    }
 ]
 
 export const getStaticProps = async ({ locale }) => ({

@@ -12,7 +12,7 @@ const SearchResultItem = () => {
     const iconSize = useMemo(() => width >= BREAK_POINTS.lg ? 20 : 16, [width])
 
     return (
-        <div className="mb-6 lg:mb-9 max-w-[1140px]">
+        <div className="mb-6 lg:mb-9">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <Link href="#">
                     <a className="font-bold text-sm lg:text-[18px] hover:text-dominant hover:!underline cursor-pointer">

@@ -9,7 +9,9 @@ const SUPPORT = {
     DEFAULT: '/support',
     FAQ: '/support/faq',
     ANNOUNCEMENT: '/support/announcement',
-    SEARCH: '/support/search'
+    SEARCH: '/support/search',
+    TOPICS: '/support/announcement/[topic]',
+    ARTICLES: '/support/announcement/[topic]/[articles]'
 }
 
 const EXCHANGE = {
