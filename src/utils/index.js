@@ -1,6 +1,7 @@
 import qs from 'qs'
-import { get } from 'lodash'
+import { get, orderBy } from 'lodash'
 import { TRADING_MODE } from 'redux/actions/const'
+import GhostContentAPI from '@tryghost/content-api'
 
 export const ___DEV___ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev'
 
@@ -134,3 +135,65 @@ export const unsubscribeExchangeSocket = (socket, symbol) => {
 export const sparkLineBuilder = (symbol, color) => {
     return `${process.env.NEXT_PUBLIC_PRICE_API_URL}/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
 }
+
+export const ghost = new GhostContentAPI({
+    url: process.env.NEXT_PUBLIC_BLOG_API_URL,
+    key: process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY,
+    version: 'v3'
+})
+
+const CATEGORIES_IGRONED = ['noti', 'faq', 'en', 'vi']
+
+export const getSupportCategories = async (language) => {
+    const allTags = await ghost.tags.browse({ limit: 'all' })
+    // console.log('namidev ', allTags)
+    if (allTags) {
+        const announcementCategories = allTags?.map(o => ({
+            id: o?.id,
+            name: o?.name,
+            iconUrl: o?.feature_image ||  '/images/screen/support/ic_command.png',
+            slug: o?.slug,
+            displaySlug: o?.slug?.replace('noti-vi-', '')
+                .replace('noti-en-', ''),
+            description: o?.description
+        }))
+            ?.filter(f => !CATEGORIES_IGRONED.includes(f.slug) && f.slug.startsWith(`noti-${language}`))
+        const faqCategories = allTags?.map(o => ({
+            id: o?.id,
+            name: o?.name,
+            iconUrl: o?.feature_image || '/images/screen/support/ic_command.png',
+            slug: o?.slug,
+            displaySlug: o?.slug?.replace('faq-vi-', '')
+                .replace('faq-en-', ''),
+            description: o?.description
+        }))
+            ?.filter(f => !CATEGORIES_IGRONED.includes(f.slug) && f.slug.startsWith(`faq-${language}`))
+        return {
+            announcementCategories,
+            faqCategories
+        }
+    }
+}
+
+export const getSupportArticles = async (tag) => {
+    const options = {
+        limit: 'all',
+        include: 'tags'
+    }
+    if (tag) options.filter = `tag:${tag}`
+    return await ghost.posts.browse(options)
+}
+
+export const getLastedArticles = async (tag = '', limit = 10) => {
+    const options = {
+        limit: 'all',
+        include: 'tags'
+    }
+    if (tag) options.filter = `tag:${tag}`
+    const result = await ghost.posts.browse(options)
+    return orderBy(result, [o => Date.parse(o.created_at)], ['desc'])
+        .splice(0, limit)
+}
+
+export const getArticle = async (id) => await ghost.posts.read({ id })
+

@@ -8,7 +8,7 @@ const TopicItem = ({
             <div className="w-[24px] h-[24px] md:w-[48px] md:h-[48px] lg:w-[52px] lg:h-[52px] xl:w-[70px] xl:h-[70px]">
                 {icon || null}
             </div>
-            <div className="text-sm md:text-[18px] text-center font-bold mt-2 md:mt-3.5">{title || '---'}</div>
+            <div className="px-4 sm:px-0 text-sm md:text-[18px] text-center font-bold mt-2 md:mt-3.5">{title || '---'}</div>
             <div className="hidden md:block text-sm text-txtSecondary dark:text-txtSecondary-dark mt-2.5">
                 {description}
             </div>

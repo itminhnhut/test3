@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { BREAK_POINTS } from 'constants/constants'
 import { useRouter } from 'next/router'
@@ -9,12 +9,23 @@ import SupportSearchBar from 'components/screens/Support/SupportSearchBar'
 import SupportSection from 'components/screens/Support/SupportSection'
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useWindowSize from 'hooks/useWindowSize'
-import Image from 'next/image'
 import useApp from 'hooks/useApp'
+import Image from 'next/image'
+import { useAsync } from 'react-use'
+import { getLastedArticles, getSupportCategories, ghost } from 'utils'
+import { useTranslation } from 'next-i18next'
+import { formatTime } from 'redux/actions/utils'
+
 
 const Support = () => {
+    // ? State
+    const [announcementCategories, setAnnouncementCategories] = useState([])
+    const [faqCategories, setFaqCategories] = useState([])
+    const [lastedArticles, setLastedArticles] = useState([])
+
     // ? Use hooks
     const { width } = useWindowSize()
+    const { t, i18n: { language } } = useTranslation()
 
     // ? Memmoized
     const sectionIconSize = useMemo(() => width >= BREAK_POINTS.lg ? 32 : 24, [width])
@@ -27,110 +38,97 @@ const Support = () => {
             />)
     }, [width])
 
+    const renderFaqCategories = useCallback(() => {
+        return faqCategories.map(faq => (
+            <SupportSectionItem
+                key={faq.id}
+                href={{
+                    pathname: PATHS.SUPPORT.FAQ + '/[topic]',
+                    query: { topic: faq.displaySlug }
+                }}
+                title={faq?.name || '--'}
+                titleClassNames="truncate"
+                icon={<Image src={faq?.iconUrl}
+                             width={sectionIconSize}
+                             height={sectionIconSize}/>}
+            />
+        ))
+    }, [faqCategories])
+
+    const renderAnnouncementCategories = useCallback(() => {
+        return announcementCategories.map(announcement => (
+            <SupportSectionItem
+                key={announcement.id}
+                href={{
+                    pathname: PATHS.SUPPORT.ANNOUNCEMENT + '/[topic]',
+                    query: { topic: announcement.displaySlug }
+                }}
+                title={announcement?.name || '--'}
+                titleClassNames="truncate"
+                icon={<Image src={announcement?.iconUrl}
+                             width={sectionIconSize} height={sectionIconSize}/>}/>
+        ))
+    }, [announcementCategories])
+
+    const renderLastedArticles = useCallback(() => {
+        return lastedArticles.map(article => (
+            <SupportSectionItem
+                key={article.id}
+                title={<>
+                                            <span
+                                                className="mr-2">
+                                                {article.title}
+                                            </span>
+                    <span
+                        className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
+                        {formatTime(article.created_at, 'dd-MM-yyyy')}
+                    </span>
+                </>}
+                containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
+                classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
+        ))
+    }, [lastedArticles])
+
+    useAsync(async () => {
+        const data = await getSupportCategories(language)
+        const lastedArticles = await getLastedArticles(undefined, 5)
+        console.log('namidev ', lastedArticles)
+        setAnnouncementCategories(data.announcementCategories)
+        setFaqCategories(data.faqCategories)
+        setLastedArticles(lastedArticles)
+    }, [language])
+
     return (
         <MaldivesLayout>
             <div className="bg-[#F8F9FA] dark:bg-darkBlue-1">
                 <div className="container pt-6 max-w-[1400px]">
-                    <div className="font-bold px-4 text-[20px] mt-8 lg:mt-[40px] lg:text-[26px]">Trung tâm hỗ trợ</div>
+                    <div className="font-bold px-4 text-[20px] mt-8 lg:mt-[40px] lg:text-[26px]">
+                        {t('support-center:title')}
+                    </div>
                     <div
                         className="mt-8 pt-4 pb-[80px] px-4 h-full bg-[#FCFCFC] dark:bg-darkBlue-2 rounded-t-[20px] drop-shadow-onlyLight lg:!bg-transparent">
-                        <div className="text-[16px] font-medium">Tìm kiếm câu hỏi thường gặp</div>
+                        <div className="text-[16px] font-medium">{t('support-center:search_faq')}</div>
                         {renderInput()}
 
                         <div className="mt-6 lg:mt-8">
-                            <SupportSection title="Câu hỏi thường gặp" containerClassNames="lg:pb-[32px]">
-                                <SupportSectionItem href={PATHS.SUPPORT.FAQ}
-                                                    title="Tính năng về tài khoản"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_user.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
-                                <SupportSectionItem title="Mua trực tiếp Crypto (từ Fiat)"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_dollar.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
-                                <SupportSectionItem title="Hướng dẫn sử dụng"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_book.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
-                                <SupportSectionItem title="Giao dịch Exchange"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_analytic.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
-                                <SupportSectionItem title="API"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_command.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
-                                <SupportSectionItem title="Bảo mật"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_shield.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
+                            <SupportSection title={t('support-center:faq')} mode="faq" containerClassNames="lg:pb-[32px]">
+                                {renderFaqCategories()}
                             </SupportSection>
                         </div>
 
                         <div className="mt-6 lg:mt-8">
-                            <SupportSection title="Thông báo" containerClassNames="lg:pb-[32px]">
-                                <SupportSectionItem href={PATHS.SUPPORT.ANNOUNCEMENT}
-                                                    title="Niêm yết mới"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_duo_dollar.png"
-                                                                 width={sectionIconSize} height={sectionIconSize}/>}/>
-                                <SupportSectionItem title="Tin tức mới nhất về Nami"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_book.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
-                                <SupportSectionItem title="Các chương trình khuyến mãi"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_reward.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
-                                <SupportSectionItem title="Cập nhật API"
-                                                    titleClassNames="truncate"
-                                                    icon={<Image src="/images/screen/support/ic_command.png"
-                                                                 width={sectionIconSize}
-                                                                 height={sectionIconSize}/>}/>
+                            <SupportSection title={t('support-center:announcement')} containerClassNames="lg:pb-[32px]">
+                                {renderAnnouncementCategories()}
                             </SupportSection>
                         </div>
 
                         <div className="mt-6 lg:mt-8">
                             <div className="lg:bg-bgPrimary dark:bg-bgPrimary-dark lg:rounded-xl lg:flex lg:mt-4">
-                                <SupportSection title="Tin mới nhất"
+                                <SupportSection title={t('support-center:lasted_articles')}
                                                 contentContainerClassName="lg:!py-0 lg:!pb-6 lg:!mt-4">
-                                    <SupportSectionItem
-                                        title={<>
-                                            <span
-                                                className="mr-2">
-                                                Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop
-                                            </span>
-                                            <span
-                                                className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">2021-12-30</span>
-                                        </>}
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
+                                    {renderLastedArticles()}
                                 </SupportSection>
-                                <SupportSection title="Tin nổi bật"
+                                <SupportSection title={t('support-center:highlight_articles')}
                                                 contentContainerClassName="lg:!py-0 lg:!pb-6 lg:!mt-4"
                                                 containerClassNames="mt-6 lg:mt-0">
                                     <SupportSectionItem
@@ -165,7 +163,7 @@ const Support = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar'])
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'support-center'])
     }
 })
 

@@ -754,6 +754,13 @@
   resolved "https://registry.npmjs.org/@tailwindcss/line-clamp/-/line-clamp-0.2.1.tgz"
   integrity sha512-Hq2KJY1+T2v7jw/mnT3mnC7CKbp5kj1XTqzSb2xbEt1j+JkxIR6N3ijsN/WevZtsKJfVE1KOejA/3IRKuhZEsQ==
 
+"@tryghost/content-api@^1.5.17":
+  version "1.5.17"
+  resolved "https://registry.yarnpkg.com/@tryghost/content-api/-/content-api-1.5.17.tgz#b0d1df2c030b9ff045f5e7db5088174e4a0d5259"
+  integrity sha512-O7Zl7UH5XKbhkwHIVidYgiUiGa5D3Sofli3GwNpxPtC+t9Y3wt/0VnI7brG9qLerWjehZFsyGgT/dv+yJoBtjw==
+  dependencies:
+    axios "^0.21.1"
+
 "@types/hoist-non-react-statics@^3.3.0", "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
   resolved "https://registry.npmjs.org/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz"
