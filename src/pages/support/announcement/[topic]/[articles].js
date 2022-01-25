@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import TopicsLayout from 'components/screens/Support/TopicsLayout'
-import axios from 'axios'
-import { API_GET_ALL_BLOG_POSTS, API_GET_ALL_BLOG_TAGS } from 'redux/actions/apis'
-import { useAsync } from 'react-use'
-import { PATHS } from 'constants/paths'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import Link from 'next/link'
-import { getArticle, getSupportArticles, getSupportCategories } from 'utils'
+import { getArticle, getLastedArticles, getSupportCategories } from 'utils'
 import { formatTime } from 'redux/actions/utils'
 import Parser from 'html-react-parser'
 
@@ -19,8 +14,8 @@ const AnnouncementArticle = (props) => {
     }, [props])
 
     return (
-        <TopicsLayout useTopicTitle={false} topics={props?.data?.tags} lastedArticles={props?.data?.lastedArticles}>
-            <div className="mt-6 text-sm sm:text-[18px] lg:text-[28px] leading-[36px] font-bold">
+        <TopicsLayout mode="announcement" useTopicTitle={false} topics={props?.data?.tags} lastedArticles={props?.data?.lastedArticles}>
+            <div className="mt-6 lg:mt-0 text-sm sm:text-[18px] lg:text-[20px] xl:text-[28px] leading-[36px] font-bold">
                 {props?.data?.article?.title}
             </div>
             <div
@@ -34,31 +29,21 @@ const AnnouncementArticle = (props) => {
     )
 }
 
-export async function getServerSideProps({
-    locale,
-    query
-}) {
+export async function getServerSideProps({ locale, query }) {
     const tags = await getSupportCategories(locale)
     const article = await getArticle(query.articles)
+    const lastedArticles = await getLastedArticles('noti', 8, locale)
 
     return {
         props: {
             data: {
                 tags: tags.announcementCategories,
-                article
+                article,
+                lastedArticles
             },
             ...await serverSideTranslations(locale, ['common', 'navbar', 'support-center'])
         }
     }
 }
-
-// export async function getStaticPaths() {
-//     return {
-//         paths: [
-//             { params: { topic: 'new_listing', articles: 'abcdxyz' } }
-//         ],
-//         fallback: true
-//     }
-// }
 
 export default AnnouncementArticle

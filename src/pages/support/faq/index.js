@@ -6,10 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PATHS } from 'constants/paths'
-import { useRouter } from 'next/router'
-import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
-import { getLastedArticles, getSupportCategories, ghost } from 'utils'
+import { useCallback, useState } from 'react'
+import { getLastedArticles, getSupportCategories } from 'utils'
 import { useAsync } from 'react-use'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
@@ -82,7 +80,7 @@ const SupportAnnouncement = () => {
 
     return (
         <MaldivesLayout>
-            <SupportBanner title={t('support-center:title')} href={PATHS.SUPPORT.DEFAULT}/>
+            <SupportBanner title={t('support-center:title')} innerClassNames="container" href={PATHS.SUPPORT.DEFAULT}/>
             <div className="">
                 <div style={
                     theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}
@@ -98,7 +96,6 @@ const SupportAnnouncement = () => {
                                 <TopicItem
                                     icon={<Image src="/images/icon/ic_exchange.png" layout="responsive" width="24"
                                                  height="24"/>}
-                                    // title={cat.name}
                                     description="Check out the latest coin listings and pairs on Exchange, Futures Markets, Launchpad..."
                                 />
                             </a>}

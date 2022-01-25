@@ -1,13 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import TopicsLayout from 'components/screens/Support/TopicsLayout'
-import axios from 'axios'
-import { API_GET_ALL_BLOG_POSTS, API_GET_ALL_BLOG_TAGS } from 'redux/actions/apis'
-import { useAsync } from 'react-use'
 import { PATHS } from 'constants/paths'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Link from 'next/link'
-import { getSupportArticles, getSupportCategories, ghost } from 'utils'
+import { getSupportArticles, getSupportCategories } from 'utils'
 import { formatTime } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
 
@@ -15,7 +11,7 @@ const FaqTopics = (props) => {
     const router = useRouter()
     const {t} = useTranslation()
 
-    const renderTopics = () => {
+    const renderCats = () => {
         const data = props?.data?.articles?.filter(f => {
             const _tags = f.tags.map(e => e.slug?.replace('faq-vi-', '')
                 .replace('faq-en-', ''))
@@ -45,7 +41,7 @@ const FaqTopics = (props) => {
 
     return (
         <TopicsLayout useTopicTitle mode="faq" topics={props?.data?.tags}>
-            {renderTopics()}
+            {renderCats()}
         </TopicsLayout>
     )
 }
@@ -64,14 +60,5 @@ export async function getServerSideProps({ locale }) {
         }
     }
 }
-
-// export async function getStaticPaths() {
-//     return {
-//         paths: [
-//             { params: { topic: 'new_listing' } }
-//         ],
-//         fallback: true
-//     }
-// }
 
 export default FaqTopics

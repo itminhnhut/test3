@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { BREAK_POINTS } from 'constants/constants'
-import { useRouter } from 'next/router'
 import { PATHS } from 'constants/paths'
 
 import SupportSectionItem from 'components/screens/Support/SupportSectionItem'
@@ -9,12 +8,12 @@ import SupportSearchBar from 'components/screens/Support/SupportSearchBar'
 import SupportSection from 'components/screens/Support/SupportSection'
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useWindowSize from 'hooks/useWindowSize'
-import useApp from 'hooks/useApp'
 import Image from 'next/image'
 import { useAsync } from 'react-use'
-import { getLastedArticles, getSupportCategories, ghost } from 'utils'
+import { getLastedArticles, getSupportCategories } from 'utils'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
+import classNames from 'classnames'
 
 
 const Support = () => {
@@ -22,10 +21,13 @@ const Support = () => {
     const [announcementCategories, setAnnouncementCategories] = useState([])
     const [faqCategories, setFaqCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
+    const [highlightedArticles, setHighlightedArticles] = useState([])
 
     // ? Use hooks
     const { width } = useWindowSize()
-    const { t, i18n: { language } } = useTranslation()
+    let { t, i18n: { language } } = useTranslation()
+
+    language = 'vi'
 
     // ? Memmoized
     const sectionIconSize = useMemo(() => width >= BREAK_POINTS.lg ? 32 : 24, [width])
@@ -71,7 +73,48 @@ const Support = () => {
     }, [announcementCategories])
 
     const renderLastedArticles = useCallback(() => {
-        return lastedArticles.map(article => (
+        return lastedArticles.map(article => {
+            let mode, topic, ownedTags, _tagsLib, categories
+            if (article?.primary_tag?.slug?.includes('noti-')) {
+                mode = 'announcement'
+                categories = announcementCategories
+                ownedTags = article.tags.filter(f => f.slug !== 'noti')
+                    ?.map(o => o?.slug?.replace('noti-vi-', '')
+                        ?.replace('noti-en-', ''))
+            } else {
+                mode = 'faq'
+                categories = faqCategories
+                ownedTags = article.tags.filter(f => f.slug !== 'faq')
+                    ?.map(o => o?.slug?.replace('faq-vi-', '')
+                        ?.replace('faq-en-', ''))
+            }
+
+            _tagsLib = categories.map(o => o.displaySlug)
+
+            ownedTags.forEach(e => {
+                if (_tagsLib.includes(e)) topic = e
+            })
+
+            return (
+                <SupportSectionItem
+                    key={article.id}
+                    href={{
+                        pathname: PATHS.SUPPORT.DEFAULT + `/[mode]/[topic]/[articles]`,
+                        query: { mode, topic, articles: article.id.toString() }
+                    }}
+                    title={<><span className="mr-2">{article.title}</span>
+                                <span
+                                    className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
+                                {formatTime(article.created_at, 'dd-MM-yyyy')}
+                            </span></>}
+                    containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
+                    classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
+            )
+        })
+    }, [lastedArticles, announcementCategories, faqCategories])
+
+    const renderHighlightedArticles = useCallback(() => {
+        return highlightedArticles.map(article => (
             <SupportSectionItem
                 key={article.id}
                 title={<>
@@ -87,15 +130,18 @@ const Support = () => {
                 containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
                 classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
         ))
-    }, [lastedArticles])
+    }, [highlightedArticles])
+
 
     useAsync(async () => {
         const data = await getSupportCategories(language)
-        const lastedArticles = await getLastedArticles(undefined, 5)
-        console.log('namidev ', lastedArticles)
+        const lastedArticles = await getLastedArticles(undefined, 5, language)
+        const highlightedArticles = await getLastedArticles(undefined, 5, language, true)
+
         setAnnouncementCategories(data.announcementCategories)
         setFaqCategories(data.faqCategories)
         setLastedArticles(lastedArticles)
+        setHighlightedArticles(highlightedArticles)
     }, [language])
 
     return (
@@ -117,7 +163,7 @@ const Support = () => {
                         </div>
 
                         <div className="mt-6 lg:mt-8">
-                            <SupportSection title={t('support-center:announcement')} containerClassNames="lg:pb-[32px]">
+                            <SupportSection title={t('support-center:announcement')} mode="announcement" containerClassNames="lg:pb-[32px]">
                                 {renderAnnouncementCategories()}
                             </SupportSection>
                         </div>
@@ -125,33 +171,19 @@ const Support = () => {
                         <div className="mt-6 lg:mt-8">
                             <div className="lg:bg-bgPrimary dark:bg-bgPrimary-dark lg:rounded-xl lg:flex lg:mt-4">
                                 <SupportSection title={t('support-center:lasted_articles')}
-                                                contentContainerClassName="lg:!py-0 lg:!pb-6 lg:!mt-4">
+                                                contentContainerClassName="lg:!py-0 lg:!pb-6 lg:!mt-4"
+                                                containerClassNames={classNames(
+                                                    { 'lg:w-1/2': !!highlightedArticles.length }
+                                                )}
+                                >
                                     {renderLastedArticles()}
                                 </SupportSection>
-                                <SupportSection title={t('support-center:highlight_articles')}
-                                                contentContainerClassName="lg:!py-0 lg:!pb-6 lg:!mt-4"
-                                                containerClassNames="mt-6 lg:mt-0">
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                    <SupportSectionItem
-                                        title="Lorem ip sum nonstop Lorem ip sum nonstop Lorem ip sum nonstop"
-                                        containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                                        classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-                                </SupportSection>
+                                {highlightedArticles?.length ?
+                                    <SupportSection title={t('support-center:highlight_articles')}
+                                                    contentContainerClassName="lg:!py-0 lg:!pb-6 lg:!mt-4"
+                                                    containerClassNames="mt-6 lg:mt-0 lg:w-1/2">
+                                        {renderHighlightedArticles()}
+                                    </SupportSection> : null}
                             </div>
                         </div>
                     </div>

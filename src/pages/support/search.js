@@ -68,11 +68,13 @@ const SupportSearchResult = () => {
 
     return (
         <MaldivesLayout>
-            <SupportBanner title={
+            <SupportBanner
+                href={PATHS.SUPPORT.DEFAULT}
+                title={
                 <>
                     Chúng tôi có thể <br className="hidden lg:block"/> giúp gì cho bạn?
                 </>
-            }/>
+            } innerClassNames="container"/>
             <div className="block md:hidden bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:shadow-none">
                 <div
                     className="container px-4 py-2 flex items-center text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark">

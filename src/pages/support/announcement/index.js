@@ -6,11 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { PATHS } from 'constants/paths'
-import { useRouter } from 'next/router'
-import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
-import { getLastedArticles, getSupportCategories, ghost } from 'utils'
-import { useAsync } from 'react-use'
+import { getLastedArticles, getSupportCategories } from 'utils'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
 
@@ -18,6 +15,14 @@ const SupportAnnouncement = () => {
     const [theme] = useDarkMode()
     const [categories, setCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
+
+    const getData = async (language) => {
+        const categories = await getSupportCategories(language)
+        const lastedArticles = await getLastedArticles('noti')
+
+        setCategories(categories.announcementCategories)
+        setLastedArticles(lastedArticles)
+    }
 
     const {
         t,
@@ -71,17 +76,13 @@ const SupportAnnouncement = () => {
         })
     }, [lastedArticles, categories])
 
-    useAsync(async () => {
-        const categories = await getSupportCategories(language)
-        console.log('namidev ', categories.announcementCategories)
-        const lastedArticles = await getLastedArticles('noti')
-        setCategories(categories.announcementCategories)
-        setLastedArticles(lastedArticles)
+    useEffect(() => {
+        getData(language)
     }, [language])
 
     return (
         <MaldivesLayout>
-            <SupportBanner title={t('support-center:title')} href={PATHS.SUPPORT.DEFAULT}/>
+            <SupportBanner title={t('support-center:title')} innerClassNames="container" href={PATHS.SUPPORT.DEFAULT}/>
             <div className="">
                 <div style={
                     theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}

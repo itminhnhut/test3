@@ -1,13 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import TopicsLayout from 'components/screens/Support/TopicsLayout'
-import axios from 'axios'
-import { API_GET_ALL_BLOG_POSTS, API_GET_ALL_BLOG_TAGS } from 'redux/actions/apis'
-import { useAsync } from 'react-use'
 import { PATHS } from 'constants/paths'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Link from 'next/link'
-import { getSupportArticles, getSupportCategories, ghost } from 'utils'
+import { getLastedArticles, getSupportArticles, getSupportCategories, ghost } from 'utils'
 import { formatTime } from 'redux/actions/utils'
 
 const AnnouncementTopics = (props) => {
@@ -49,7 +45,7 @@ const AnnouncementTopics = (props) => {
 }
 
 export async function getServerSideProps({ locale }) {
-    const articles = await getSupportArticles('noti')
+    const articles = await getLastedArticles('noti', 'all', locale)
     const tags = await getSupportCategories(locale)
 
     return {
@@ -62,14 +58,5 @@ export async function getServerSideProps({ locale }) {
         }
     }
 }
-
-// export async function getStaticPaths() {
-//     return {
-//         paths: [
-//             { params: { topic: 'new_listing' } }
-//         ],
-//         fallback: true
-//     }
-// }
 
 export default AnnouncementTopics

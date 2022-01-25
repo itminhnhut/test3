@@ -7,9 +7,9 @@ export const ___DEV___ = process.env.NODE_ENV === 'development' || process.env.N
 
 export const SECRET_STRING = '******'
 
-export const log =  {
+export const log = {
     d: (...arg) => {
-       ___DEV___ && console.log('%cnamidev-DEBUG: ', 'color: purple;font-weight: bold', ...arg)
+        ___DEV___ && console.log('%cnamidev-DEBUG: ', 'color: purple;font-weight: bold', ...arg)
     },
     i: (...arg) => {
         ___DEV___ && console.log('%cnamidev-INFO: ', 'color: green;font-weight: bold', ...arg)
@@ -23,12 +23,12 @@ export const log =  {
 }
 
 export function buildLogoutUrl() {
-    let currentUrl = window.location.href;
+    let currentUrl = window.location.href
     currentUrl = currentUrl.replace('/vi', '/')
     const params = {
         redirect: currentUrl
-    };
-    return `${process.env.NEXT_PUBLIC_APP_URL}/logout?${qs.stringify(params)}`;
+    }
+    return `${process.env.NEXT_PUBLIC_APP_URL}/logout?${qs.stringify(params)}`
 }
 
 export function isNumeric(val) {
@@ -37,10 +37,10 @@ export function isNumeric(val) {
             !!val && !isNaN(+val)
         )
         || typeof val === 'number'
-    );
+    )
 }
 
-export function marketWatchToFavorite (favList = [], tradingMode = TRADING_MODE.EXCHANGE, marketWatch, isFutureDataOrigin = false) {
+export function marketWatchToFavorite(favList = [], tradingMode = TRADING_MODE.EXCHANGE, marketWatch, isFutureDataOrigin = false) {
     if (!favList || !favList.length || !marketWatch) return []
 
     if (tradingMode === TRADING_MODE.EXCHANGE) {
@@ -57,7 +57,7 @@ export function marketWatchToFavorite (favList = [], tradingMode = TRADING_MODE.
     }
 }
 
-export function initMarketWatchItem (pair, debug = false) {
+export function initMarketWatchItem(pair, debug = false) {
     const _ = {
         symbol: get(pair, 's', null),     // this.symbol = source.s;
         lastPrice: get(pair, 'p', null), // this.lastPrice = +source.p;
@@ -75,7 +75,7 @@ export function initMarketWatchItem (pair, debug = false) {
         up: get(pair, 'u', false), // this.up = source.u;
         lastHistoryId: get(pair, 'li', null),  // this.lastHistoryId = source.li;
         supply: get(pair, 'sp', null), // this.supply = source.sp;
-        label: get(pair, 'lbl', null), // this.label = source.lbl;
+        label: get(pair, 'lbl', null) // this.label = source.lbl;
     }
     debug && log.d('ExchangePair', _)
     return _
@@ -89,7 +89,7 @@ export function getMarketAvailable(assetCode, marketWatch) {
     return markets
 }
 
-export function initFuturesMarketWatchItem (pair, debug = false) {
+export function initFuturesMarketWatchItem(pair, debug = false) {
     const lcp = get(pair, 'lcp', null)
 
     const _ = {
@@ -106,8 +106,9 @@ export function initFuturesMarketWatchItem (pair, debug = false) {
         up: get(pair, 'u', null), // up: source.u,
         label: get(pair, 'lbl', null), // label: source.lbl,
         placeCurrency: get(pair, 'pa', null), // placeCurrency: FuturesCurrency.fromName(source.pa),
-        lastChangePercentage: isNumeric(lcp) ? lcp * 100 : 0, // lastChangePercentage: isNumeric(source.lcp) ? +source.lcp * 100 : 0,
-        hideInMarketWatch: get(pair, 'hide_in_market_watch', null), // hideInMarketWatch: source.hide_in_market_watch,
+        lastChangePercentage: isNumeric(lcp) ? lcp * 100 : 0, // lastChangePercentage: isNumeric(source.lcp) ?
+                                                              // +source.lcp * 100 : 0,
+        hideInMarketWatch: get(pair, 'hide_in_market_watch', null) // hideInMarketWatch: source.hide_in_market_watch,
     }
     debug && log.d('FuturesPair: ', _)
     return _
@@ -136,22 +137,25 @@ export const sparkLineBuilder = (symbol, color) => {
     return `${process.env.NEXT_PUBLIC_PRICE_API_URL}/api/v1/chart/sparkline?symbol=${symbol}&broker=NAMI_SPOT&color=%23${color.replace('#', '')}`
 }
 
-export const ghost = new GhostContentAPI({
-    url: process.env.NEXT_PUBLIC_BLOG_API_URL,
-    key: process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY,
-    version: 'v3'
-})
+export const ghost = new GhostContentAPI(
+    {
+        url: process.env.NEXT_PUBLIC_BLOG_API_URL,
+        key: process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY,
+        version: 'v3'
+    }
+)
 
 const CATEGORIES_IGRONED = ['noti', 'faq', 'en', 'vi']
 
 export const getSupportCategories = async (language) => {
     const allTags = await ghost.tags.browse({ limit: 'all' })
     // console.log('namidev ', allTags)
+
     if (allTags) {
         const announcementCategories = allTags?.map(o => ({
             id: o?.id,
             name: o?.name,
-            iconUrl: o?.feature_image ||  '/images/screen/support/ic_command.png',
+            iconUrl: o?.feature_image || '/images/screen/support/ic_command.png',
             slug: o?.slug,
             displaySlug: o?.slug?.replace('noti-vi-', '')
                 .replace('noti-en-', ''),
@@ -168,6 +172,10 @@ export const getSupportCategories = async (language) => {
             description: o?.description
         }))
             ?.filter(f => !CATEGORIES_IGRONED.includes(f.slug) && f.slug.startsWith(`faq-${language}`))
+
+
+        // console.log('namidev check get cat =>', announcementCategories, faqCategories)
+
         return {
             announcementCategories,
             faqCategories
@@ -184,15 +192,29 @@ export const getSupportArticles = async (tag) => {
     return await ghost.posts.browse(options)
 }
 
-export const getLastedArticles = async (tag = '', limit = 10) => {
+export const getLastedArticles = async (tag = '', limit = 10, language = 'vi', isHighlighted = false) => {
     const options = {
         limit: 'all',
         include: 'tags'
     }
-    if (tag) options.filter = `tag:${tag}`
+    options.filter = `${tag ? `tag:${tag}` : ''}${tag && isHighlighted ? '+' : ''}${isHighlighted ? 'featured:true' : ''}`
+
     const result = await ghost.posts.browse(options)
-    return orderBy(result, [o => Date.parse(o.created_at)], ['desc'])
-        .splice(0, limit)
+    const sorted = orderBy(result, [o => Date.parse(o.created_at)], ['desc'])
+    // .filter(f => f?.primary_tag?.slug?.includes(`${tag || ''}-${language}-`))
+
+    const data = []
+    sorted.forEach(f => {
+        const isCorrectLangIndex = f?.tags?.findIndex(e => e?.slug?.includes(`${tag || ''}-${language}-`))
+        if (typeof isCorrectLangIndex === 'number' && isCorrectLangIndex !== -1) {
+            data.push(f)
+        }
+    })
+
+    if (typeof limit === 'string' && limit === 'all') {
+        return data
+    }
+    return data.slice(0, limit)
 }
 
 export const getArticle = async (id) => await ghost.posts.read({ id })

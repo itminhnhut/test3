@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
@@ -13,20 +12,23 @@ import Image from 'next/image'
 const COL_WIDTH = 304
 
 const TopicsLayout = ({
-    children,
-    lastedArticles,
-    topics,
-    useTopicTitle = true,
-    mode = 'announcement'
-}) => {
+                          children,
+                          lastedArticles,
+                          topics,
+                          useTopicTitle = true,
+                          mode = 'announcement'
+                      }) => {
     const router = useRouter()
     const [theme] = useDarkMode()
-    const {t} = useTranslation()
-    console.log('namidev ', topics)
+    const { t } = useTranslation()
+
+    const baseHref = mode === 'announcement' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ
+    const queryMode = mode === 'announcement' ? 'noti' : 'faq'
+
     return (
         <MaldivesLayout>
             <SupportBanner title={mode === 'announcement' ? t('support-center:announcement') : t('support-center:faq')}
-                           href={mode === 'announcement' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ}
+                           href={baseHref}
                            containerClassNames="hidden lg:block"/>
             <div style={
                 theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}
@@ -39,7 +41,7 @@ const TopicsLayout = ({
                             query: { topic: item.displaySlug }
                         }}>
                             <a className={classNames('flex items-center block px-5 lg:py-2.5 2xl:py-4 text-[16px] font-medium hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer',
-                                { 'bg-teal-lightTeal dark:bg-teal-opacity': router?.query?.topic === item.displaySlug }
+                                                     { 'bg-teal-lightTeal dark:bg-teal-opacity': router?.query?.topic === item.displaySlug }
                             )}>
                                 <div className="w-[32px] h-[32px] mr-4">
                                     {<Image src={item?.iconUrl} layout="responsive" width={32} height={32}/>}
@@ -59,8 +61,32 @@ const TopicsLayout = ({
                     </div>
 
                     {lastedArticles && Array.isArray(lastedArticles) && lastedArticles.length &&
-                    <div style={{ width: COL_WIDTH, minWidth: COL_WIDTH }} className="hidden lg:block py-5 lg:py-[40px] bg-red">
+                    <div style={{ width: COL_WIDTH, minWidth: COL_WIDTH }}
+                         className="hidden lg:block py-5 lg:py-[40px] pr-4 lg:pr-6 xl:pr-8">
+                        <div className="px-3 text-[16px] font-bold mb-2.5">{t('support-center:lasted_articles')}</div>
+                        {lastedArticles.map(article => {
+                            let topic
+                            const ownedTags = article.tags.filter(f => f.slug !== queryMode)
+                                ?.map(o => o?.slug?.replace(`${queryMode}-vi-`, '')
+                                    ?.replace(`${queryMode}-en-`, ''))
+                            const _tagsLib = topics.map(o => o.displaySlug)
 
+                            ownedTags.forEach(e => {
+                                if (_tagsLib.includes(e)) topic = e
+                            })
+
+                            return (
+                                <Link key={article.id} href={{
+                                    pathname: baseHref + '/[topic]/[articles]',
+                                    query: { topic, articles: article.id?.toString() }
+                                }}>
+                                    <a className={classNames('block mb-2.5 font-medium px-3 py-2.5 rounded-[8px]',
+                                                             { 'bg-gray-4 dark:bg-darkBlue-4': article.id === router?.query?.articles })}>
+                                        {article?.title}
+                                    </a>
+                                </Link>
+                            )
+                        })}
                     </div>}
                 </div>
             </div>
