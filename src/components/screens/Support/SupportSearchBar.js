@@ -7,9 +7,9 @@ import useApp from 'hooks/useApp'
 import { useRouter } from 'next/router'
 
 const SupportSearchBar = ({
-    containerClassNames = '',
-    simpleMode = false
-}) => {
+                              containerClassNames = '',
+                              simpleMode = false
+                          }) => {
     const [type, setType] = useState(0)
     const [query, setQuery] = useState('')
     const [searchKey, setSearchKey] = useState()
@@ -45,9 +45,9 @@ const SupportSearchBar = ({
     return (
         <div
             className={classNames('mt-2 lg:mt-3 flex items-center bg-gray-4 lg:bg-white dark:bg-darkBlue-4 p-2 lg:pl-[18px] lg:py-3.5 rounded-md lg:rounded-xl lg:max-w-[600px] lg:max-h-[56px]',
-                {
-                    'min-w-[280px] max-w-[310px] md:min-w-[450px] md:rounded-xl xl:min-w-[600px] xl:max-w-[600px]': !simpleMode
-                }, containerClassNames)}>
+                                  {
+                                      'min-w-[280px] max-w-[310px] md:min-w-[450px] md:rounded-xl xl:min-w-[600px] xl:max-w-[600px]': !simpleMode
+                                  }, containerClassNames)}>
             <Search strokeWidth={2}
                     className="text-txtSecondary dark:text-txtSecondary-dark w-4 h-4 lg:w-[24px] lg:h-[24px] lg:!text-dominant"/>
             <input className="px-2 lg:px-4 flex-grow font-medium text-xs md:text-sm lg:text-[16px]"

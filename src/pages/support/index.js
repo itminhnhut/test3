@@ -14,10 +14,12 @@ import { getLastedArticles, getSupportCategories } from 'utils'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
 import classNames from 'classnames'
+import Skeletor from 'components/common/Skeletor'
 
 
 const Support = () => {
     // ? State
+    const [loading, setLoading] = useState(false)
     const [announcementCategories, setAnnouncementCategories] = useState([])
     const [faqCategories, setFaqCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
@@ -41,6 +43,21 @@ const Support = () => {
     }, [width])
 
     const renderFaqCategories = useCallback(() => {
+        if (loading) {
+            return (
+                <>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                </>
+            )
+        }
+
         return faqCategories.map(faq => (
             <SupportSectionItem
                 key={faq.id}
@@ -55,9 +72,24 @@ const Support = () => {
                              height={sectionIconSize}/>}
             />
         ))
-    }, [faqCategories])
+    }, [faqCategories, loading])
 
     const renderAnnouncementCategories = useCallback(() => {
+        if (loading) {
+            return (
+                <>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                </>
+            )
+        }
+
         return announcementCategories.map(announcement => (
             <SupportSectionItem
                 key={announcement.id}
@@ -70,9 +102,23 @@ const Support = () => {
                 icon={<Image src={announcement?.iconUrl}
                              width={sectionIconSize} height={sectionIconSize}/>}/>
         ))
-    }, [announcementCategories])
+    }, [announcementCategories, loading])
 
     const renderLastedArticles = useCallback(() => {
+        if (loading) {
+            return (
+                <>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                </>
+            )
+        }
+
         return lastedArticles.map(article => {
             let mode, topic, ownedTags, _tagsLib, categories
             if (article?.primary_tag?.slug?.includes('noti-')) {
@@ -103,17 +149,31 @@ const Support = () => {
                         query: { mode, topic, articles: article.id.toString() }
                     }}
                     title={<><span className="mr-2">{article.title}</span>
-                                <span
-                                    className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
+                        <span
+                            className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
                                 {formatTime(article.created_at, 'dd-MM-yyyy')}
                             </span></>}
                     containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
                     classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
             )
         })
-    }, [lastedArticles, announcementCategories, faqCategories])
+    }, [lastedArticles, announcementCategories, faqCategories, loading])
 
     const renderHighlightedArticles = useCallback(() => {
+        if (loading) {
+            return (
+                <>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                </>
+            )
+        }
+
         return highlightedArticles.map(article => (
             <SupportSectionItem
                 key={article.id}
@@ -130,10 +190,12 @@ const Support = () => {
                 containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
                 classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
         ))
-    }, [highlightedArticles])
+    }, [highlightedArticles, loading])
 
 
     useAsync(async () => {
+        setLoading(true)
+
         const data = await getSupportCategories(language)
         const lastedArticles = await getLastedArticles(undefined, 5, language)
         const highlightedArticles = await getLastedArticles(undefined, 5, language, true)
@@ -142,6 +204,8 @@ const Support = () => {
         setFaqCategories(data.faqCategories)
         setLastedArticles(lastedArticles)
         setHighlightedArticles(highlightedArticles)
+
+        setLoading(false)
     }, [language])
 
     return (
@@ -157,13 +221,15 @@ const Support = () => {
                         {renderInput()}
 
                         <div className="mt-6 lg:mt-8">
-                            <SupportSection title={t('support-center:faq')} mode="faq" containerClassNames="lg:pb-[32px]">
+                            <SupportSection title={t('support-center:faq')} mode="faq"
+                                            containerClassNames="lg:pb-[32px]">
                                 {renderFaqCategories()}
                             </SupportSection>
                         </div>
 
                         <div className="mt-6 lg:mt-8">
-                            <SupportSection title={t('support-center:announcement')} mode="announcement" containerClassNames="lg:pb-[32px]">
+                            <SupportSection title={t('support-center:announcement')} mode="announcement"
+                                            containerClassNames="lg:pb-[32px]">
                                 {renderAnnouncementCategories()}
                             </SupportSection>
                         </div>

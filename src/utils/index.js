@@ -192,13 +192,13 @@ export const getSupportArticles = async (tag) => {
     return await ghost.posts.browse(options)
 }
 
-export const getLastedArticles = async (tag = '', limit = 10, language = 'vi', isHighlighted = false) => {
+export const getLastedArticles = async (tag = '', limit = 10, language = 'vi', isHighlighted = false, search = null) => {
     const options = {
         limit: 'all',
         include: 'tags'
     }
-    options.filter = `${tag ? `tag:${tag}` : ''}${tag && isHighlighted ? '+' : ''}${isHighlighted ? 'featured:true' : ''}`
-
+    options.filter = `${tag ? `tag:${tag}` : ''}${tag && isHighlighted ? '+' : ''}${isHighlighted ? 'featured:true' : ''}${search ? `slug:${search}` : ''}`
+    // console.log('namidev ', options)
     const result = await ghost.posts.browse(options)
     const sorted = orderBy(result, [o => Date.parse(o.created_at)], ['desc'])
     // .filter(f => f?.primary_tag?.slug?.includes(`${tag || ''}-${language}-`))
