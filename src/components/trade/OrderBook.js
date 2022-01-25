@@ -174,7 +174,7 @@ const OrderBook = (props) => {
             >
                 <div className="flex items-center flex-1">
                     <div className={`flex-1  text-xs font-medium leading-table ${side === 'buy' ? 'text-red' : 'text-teal'}`}>
-                        {p ? formatPrice(p, exchangeConfig, symbolString) : '-'}
+                        {p ? formatPrice(p, decimal || 8) : '-'}
                     </div>
                     <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
                         {q ? formatPrice(+q, exchangeConfig, symbolString) : '-'}
