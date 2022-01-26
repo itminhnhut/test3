@@ -12,7 +12,7 @@ import { getUserFuturesBalance, getWallet } from 'redux/actions/user'
 import { orderBy, sortBy } from 'lodash'
 
 import Axios from 'axios'
-import Modal from 'components/common/Modal'
+import Modal from 'components/common/ReModal'
 import useOutsideClick from 'hooks/useOutsideClick'
 import NumberFormat from 'react-number-format'
 import AssetLogo from 'components/wallet/AssetLogo'

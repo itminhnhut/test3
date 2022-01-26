@@ -48,5 +48,6 @@ export const WITHDRAW_RESULT = {
     INVALID_OTP: 'invalid_otp',
     MISSING_OTP: 'missing_otp',
     AMOUNT_EXCEEDED: 'invalid_max_amount',
-    UNKNOWN_ERROR: 'unknown_error'
+    UNKNOWN_ERROR: 'unknown_error',
+    INVALID_KYC_STATUS: 'invalid_kyc_status'
 }

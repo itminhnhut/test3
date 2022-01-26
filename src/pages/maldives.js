@@ -3,7 +3,7 @@ import AttractiveFeatures from 'src/components/screens/LandingPage/AttractiveFea
 import PaymentAndKYC from 'src/components/screens/LandingPage/PaymentAndKYC'
 import ThemingSystem from 'src/components/screens/LandingPage/ThemingSystem'
 import MadivesLayout from 'src/components/common/layouts/MaldivesLayout'
-import Modal from 'src/components/common/Modal'
+import Modal from 'src/components/common/ReModal'
 import {default as MobileScreenPresent } from 'src/components/screens/LandingPage/ScreenPresent'
 
 import colors from 'styles/colors'

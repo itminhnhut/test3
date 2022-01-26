@@ -92,7 +92,8 @@
     "address_not_found": "Address not found, please contact to supporter for information.",
     "transfer_source_wallet_issues": "Please select source wallet",
     "transfer_destination_wallet_issues": "Please select destination wallet",
-    "invalid_amount": "Invalid amount"
+    "invalid_amount": "Invalid amount",
+    "invalid_kyc_status": "Please verify your account to perform this action."
   },
   "est_balance": "Estimated Balance",
   "hide_asset": "Hide Asset",

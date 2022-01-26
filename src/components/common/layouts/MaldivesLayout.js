@@ -6,6 +6,7 @@ import ReactNotification from 'react-notifications-component';
 import { useWindowSize } from 'utils/customHooks';
 import TransferModal from 'components/wallet/TransferModal'
 import useApp from 'hooks/useApp'
+import { PORTAL_MODAL_ID } from 'constants/constants'
 
 const MadivesLayout = ({
     navOverComponent,
@@ -67,6 +68,7 @@ const MadivesLayout = ({
             </div>
             {(!hideFooter && !hideInApp) && <Footer/>}
             <TransferModal/>
+            <div id={`${PORTAL_MODAL_ID}`}/>
         </div>
     );
 };

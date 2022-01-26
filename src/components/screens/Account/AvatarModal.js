@@ -15,7 +15,7 @@ import CheckSuccess from 'components/svg/CheckSuccess'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import Dropzone from 'react-dropzone'
 import Skeletor from 'components/common/Skeletor'
-import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModal'
+import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModalOld'
 import colors from 'styles/colors'
 import Axios from 'axios'
 
