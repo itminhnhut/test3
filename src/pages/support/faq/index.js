@@ -11,9 +11,11 @@ import { getLastedArticles, getSupportCategories } from 'utils'
 import { useAsync } from 'react-use'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
+import Skeletor from 'components/common/Skeletor'
 
 const SupportAnnouncement = () => {
     const [theme] = useDarkMode()
+    const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
 
@@ -23,6 +25,21 @@ const SupportAnnouncement = () => {
     } = useTranslation()
 
     const renderTopics = useCallback(() => {
+        if (loading) {
+            return (
+                <>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                </>
+            )
+        }
         return categories?.map(cat => (
             <Link key={cat.displaySlug} href={{
                 pathname: PATHS.SUPPORT.FAQ + '/[topic]',
@@ -38,9 +55,24 @@ const SupportAnnouncement = () => {
                 </a>
             </Link>
         ))
-    }, [categories])
+    }, [categories, loading])
 
     const renderLastedArticles = useCallback(() => {
+        if (loading) {
+            return (
+                <>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                </>
+            )
+        }
         return lastedArticles.map(article => {
             let topic
             const ownedTags = article.tags.filter(f => f.slug !== 'faq')
@@ -51,8 +83,6 @@ const SupportAnnouncement = () => {
             ownedTags.forEach(e => {
                 if (_tagsLib.includes(e)) topic = e
             })
-
-            // console.log('namidev ', article.title, article.tags)
 
             return (
                 <Link key={article?.id} href={{
@@ -69,13 +99,15 @@ const SupportAnnouncement = () => {
                 </Link>
             )
         })
-    }, [lastedArticles, categories])
+    }, [lastedArticles, categories, loading])
 
     useAsync(async () => {
+        setLoading(true)
         const categories = await getSupportCategories(language)
         const lastedArticles = await getLastedArticles('faq')
         setCategories(categories.faqCategories)
         setLastedArticles(lastedArticles)
+        setLoading(false)
     }, [language])
 
     return (
@@ -91,7 +123,7 @@ const SupportAnnouncement = () => {
                         </div>
                         <div className="flex flex-wrap justify-between w-full mb-8 md:mb-12 lg:mb-[80px]">
                             {renderTopics()}
-                            {categories?.length / 3 !== 0 &&
+                            {!loading && categories?.length / 3 !== 0 &&
                             <a className="invisible pointer-event-none block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
                                 <TopicItem
                                     icon={<Image src="/images/icon/ic_exchange.png" layout="responsive" width="24"

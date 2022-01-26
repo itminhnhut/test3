@@ -38,7 +38,7 @@ const AnnouncementTopics = (props) => {
     }
 
     return (
-        <TopicsLayout useTopicTitle topics={props?.data?.tags}>
+        <TopicsLayout useTopicTitle mode="announcement" topics={props?.data?.tags}>
             {renderTopics()}
         </TopicsLayout>
     )

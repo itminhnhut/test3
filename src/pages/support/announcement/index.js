@@ -10,18 +10,22 @@ import { useCallback, useEffect, useState } from 'react'
 import { getLastedArticles, getSupportCategories } from 'utils'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
+import Skeletor from 'components/common/Skeletor'
 
 const SupportAnnouncement = () => {
     const [theme] = useDarkMode()
+    const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
 
     const getData = async (language) => {
+        setLoading(true)
         const categories = await getSupportCategories(language)
         const lastedArticles = await getLastedArticles('noti')
 
         setCategories(categories.announcementCategories)
         setLastedArticles(lastedArticles)
+        setLoading(false)
     }
 
     const {
@@ -30,6 +34,21 @@ const SupportAnnouncement = () => {
     } = useTranslation()
 
     const renderTopics = useCallback(() => {
+        if (loading) {
+            return (
+                <>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                </>
+            )
+        }
         return categories?.map(cat => (
             <Link key={cat.displaySlug} href={{
                 pathname: PATHS.SUPPORT.TOPICS,
@@ -45,9 +64,24 @@ const SupportAnnouncement = () => {
                 </a>
             </Link>
         ))
-    }, [categories])
+    }, [categories, loading])
 
     const renderLastedArticles = useCallback(() => {
+        if (loading) {
+            return (
+                <>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                </>
+            )
+        }
         return lastedArticles.map(article => {
             let topic
             const ownedTags = article.tags.filter(f => f.slug !== 'noti')
@@ -74,7 +108,7 @@ const SupportAnnouncement = () => {
                 </Link>
             )
         })
-    }, [lastedArticles, categories])
+    }, [lastedArticles, categories, loading])
 
     useEffect(() => {
         getData(language)
