@@ -3,7 +3,7 @@ import HomeMarketTrend from 'src/components/screens/Home/HomeMarketTrend'
 import HomeAdditional from 'src/components/screens/Home/HomeAdditional'
 import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout'
 import HomeNews from 'src/components/screens/Home/HomeNews'
-import Modal from 'src/components/common/Modal'
+import Modal from 'src/components/common/ReModal'
 
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'next-i18next'

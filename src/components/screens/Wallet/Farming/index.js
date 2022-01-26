@@ -17,7 +17,7 @@ import AssetValue from 'components/common/AssetValue'
 import Skeletor from 'components/common/Skeletor'
 import { BREAK_POINTS } from 'constants/constants'
 import RePagination from 'components/common/ReTable/RePagination'
-import Modal from 'components/common/Modal'
+import Modal from 'components/common/ReModal'
 import { SECRET_STRING } from 'utils'
 
 

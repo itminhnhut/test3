@@ -11,6 +11,7 @@ const Button = memo((props) => {
         type,
         onClick,
         disabled,
+        className = '',
         target = ''
     } = props
 
@@ -31,7 +32,7 @@ const Button = memo((props) => {
                         type === 'primary'
                             ? 'bg-bgBtnPrimary text-txtBtnPrimary'
                             : 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'
-                    } ${disabledStyle}`}
+                    } ${disabledStyle} ${className}`}
                 >
                     {title || 'TITLE_NOT_FOUND'}
                 </a>
@@ -46,7 +47,7 @@ const Button = memo((props) => {
                         type === 'primary'
                             ? 'bg-bgBtnPrimary text-txtBtnPrimary'
                             : 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'
-                    } ${disabledStyle}`}
+                    } ${disabledStyle} ${className}`}
                     onClick={() => onClick && !disabled && onClick()}
                 >
                     {title || 'TITLE_NOT_FOUND'}
@@ -55,7 +56,7 @@ const Button = memo((props) => {
         }
 
         return null
-    }, [href, title, componentType, type, onClick, disabled, color, style, target])
+    }, [href, title, componentType, type, onClick, disabled, color, style, target, className])
 
     return render()
 })

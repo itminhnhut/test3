@@ -11,7 +11,7 @@ import SegmentTabs from 'components/common/SegmentTabs'
 
 import { REWARD_STATUS, REWARD_TYPE } from 'components/screens/Account/_reward_data'
 import Empty from 'components/common/Empty'
-import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModal'
+import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModalOld'
 import useInView from 'react-cool-inview'
 import { PATHS } from 'constants/paths'
 import Axios from 'axios'

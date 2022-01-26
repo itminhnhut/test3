@@ -99,6 +99,7 @@
   "max": "Tối đa",
   "min": "Tối thiểu",
   "back": "Quay lại",
+  "back_to_home": "Về trang chủ",
   "copy": "Sao chép",
   "continue": "Tiếp tục",
   "paste": "Dán",
@@ -193,5 +194,6 @@
   "notes": "Ghi chú",
   "completed": "Đã hoàn thành",
   "incomplete": "Chưa hoàn thành",
+  "view_manual": "Xem hướng dẫn",
   "search_articles": "Tìm kiếm bài viết"
 }
