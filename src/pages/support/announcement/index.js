@@ -11,6 +11,7 @@ import { getLastedArticles, getSupportCategories } from 'utils'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
 import Skeletor from 'components/common/Skeletor'
+import useApp from 'hooks/useApp'
 
 const SupportAnnouncement = () => {
     const [theme] = useDarkMode()
@@ -21,17 +22,20 @@ const SupportAnnouncement = () => {
     const getData = async (language) => {
         setLoading(true)
         const categories = await getSupportCategories(language)
-        const lastedArticles = await getLastedArticles('noti')
+        const lastedArticles = await getLastedArticles('noti', 10, language)
 
         setCategories(categories.announcementCategories)
         setLastedArticles(lastedArticles)
         setLoading(false)
     }
 
-    const {
+    let {
         t,
         i18n: { language }
     } = useTranslation()
+    const isApp = useApp()
+
+    // language = 'vi'
 
     const renderTopics = useCallback(() => {
         if (loading) {
@@ -49,10 +53,11 @@ const SupportAnnouncement = () => {
                 </>
             )
         }
+
         return categories?.map(cat => (
             <Link key={cat.displaySlug} href={{
                 pathname: PATHS.SUPPORT.TOPICS,
-                query: { topic: cat.displaySlug }
+                query: { topic: cat.displaySlug, source: isApp ? 'app' : '' }
             }}>
                 <a className="block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
                     <TopicItem
@@ -96,7 +101,7 @@ const SupportAnnouncement = () => {
             return (
                 <Link key={article?.id} href={{
                     pathname: PATHS.SUPPORT.ANNOUNCEMENT + '/[topic]/[articles]',
-                    query: { topic, articles: article.id }
+                    query: { topic, articles: article.id, source: isApp ? 'app' : '' }
                 }}>
                     <a className="w-full md:w-1/2 text-sm lg:text-[16px] font-medium hover:text-dominant mb-5 lg:mb-8">
                         {article.title}
@@ -127,6 +132,14 @@ const SupportAnnouncement = () => {
                         </div>
                         <div className="flex flex-wrap justify-between w-full mb-8 md:mb-12 lg:mb-[80px]">
                             {renderTopics()}
+                            {!loading && categories?.length % 3 !== 0 &&
+                            <a className="invisible pointer-event-none block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
+                                <TopicItem
+                                    icon={<Image src="/images/icon/ic_exchange.png" layout="responsive" width="24"
+                                                 height="24"/>}
+                                    description="Check out the latest coin listings and pairs on Exchange, Futures Markets, Launchpad..."
+                                />
+                            </a>}
                         </div>
                         <div className="text-[16px] font-bold md:text-[20px] lg:text-[28px] mb-6 md:mb-8">
                             {t('support-center:lasted_articles')}

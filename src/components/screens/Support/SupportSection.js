@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { PATHS } from 'constants/paths'
 import Link from 'next/link'
+import useApp from 'hooks/useApp'
 
 const SupportSection = ({
                             mode,
@@ -14,6 +15,9 @@ const SupportSection = ({
     if (mode !== undefined) {
         href = mode === 'announcement' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ
     }
+
+    const isApp = useApp()
+    href = isApp ? href + '?source=app' : href
 
     return (
         <div className={classNames('lg:bg-bgPrimary dark:bg-bgPrimary-dark lg:rounded-xl', containerClassNames)}>

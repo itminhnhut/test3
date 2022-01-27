@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
 import classNames from 'classnames'
 import Skeletor from 'components/common/Skeletor'
+import useApp from 'hooks/useApp'
 
 
 const Support = () => {
@@ -28,8 +29,9 @@ const Support = () => {
     // ? Use hooks
     const { width } = useWindowSize()
     let { t, i18n: { language } } = useTranslation()
+    const isApp = useApp()
 
-    language = 'vi'
+    // language = 'vi'
 
     // ? Memmoized
     const sectionIconSize = useMemo(() => width >= BREAK_POINTS.lg ? 32 : 24, [width])
@@ -46,14 +48,22 @@ const Support = () => {
         if (loading) {
             return (
                 <>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
                 </>
             )
         }
@@ -63,7 +73,7 @@ const Support = () => {
                 key={faq.id}
                 href={{
                     pathname: PATHS.SUPPORT.FAQ + '/[topic]',
-                    query: { topic: faq.displaySlug }
+                    query: { topic: faq.displaySlug, source: isApp ? 'app' : '' }
                 }}
                 title={faq?.name || '--'}
                 titleClassNames="truncate"
@@ -78,14 +88,22 @@ const Support = () => {
         if (loading) {
             return (
                 <>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
                 </>
             )
         }
@@ -95,7 +113,7 @@ const Support = () => {
                 key={announcement.id}
                 href={{
                     pathname: PATHS.SUPPORT.ANNOUNCEMENT + '/[topic]',
-                    query: { topic: announcement.displaySlug }
+                    query: { topic: announcement.displaySlug, source: isApp ? 'app' : '' }
                 }}
                 title={announcement?.name || '--'}
                 titleClassNames="truncate"
@@ -108,13 +126,20 @@ const Support = () => {
         if (loading) {
             return (
                 <>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
                 </>
             )
         }
@@ -146,7 +171,7 @@ const Support = () => {
                     key={article.id}
                     href={{
                         pathname: PATHS.SUPPORT.DEFAULT + `/[mode]/[topic]/[articles]`,
-                        query: { mode, topic, articles: article.id.toString() }
+                        query: { mode, topic, articles: article.id.toString(), source: isApp ? 'app' : '' }
                     }}
                     title={<><span className="mr-2">{article.title}</span>
                         <span
@@ -163,35 +188,68 @@ const Support = () => {
         if (loading) {
             return (
                 <>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3"><Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full"/></div>
                 </>
             )
         }
 
-        return highlightedArticles.map(article => (
-            <SupportSectionItem
-                key={article.id}
-                title={<>
+        return highlightedArticles.map(article => {
+            let mode, topic, ownedTags, _tagsLib, categories
+            if (article?.primary_tag?.slug?.includes('noti-')) {
+                mode = 'announcement'
+                categories = announcementCategories
+                ownedTags = article.tags.filter(f => f.slug !== 'noti')
+                    ?.map(o => o?.slug?.replace('noti-vi-', '')
+                        ?.replace('noti-en-', ''))
+            } else {
+                mode = 'faq'
+                categories = faqCategories
+                ownedTags = article.tags.filter(f => f.slug !== 'faq')
+                    ?.map(o => o?.slug?.replace('faq-vi-', '')
+                        ?.replace('faq-en-', ''))
+            }
+
+            _tagsLib = categories.map(o => o.displaySlug)
+
+            ownedTags.forEach(e => {
+                if (_tagsLib.includes(e)) topic = e
+            })
+
+            return (
+                <SupportSectionItem
+                    key={article.id}
+                    href={{
+                        pathname: PATHS.SUPPORT.DEFAULT + `/[mode]/[topic]/[articles]`,
+                        query: { mode, topic, articles: article.id.toString(), source: isApp ? 'app' : '' }
+                    }}
+                    title={<>
                                             <span
                                                 className="mr-2">
                                                 {article.title}
                                             </span>
-                    <span
-                        className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
+                        <span
+                            className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
                         {formatTime(article.created_at, 'dd-MM-yyyy')}
                     </span>
-                </>}
-                containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
-                classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
-        ))
+                    </>}
+                    containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
+                    classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
+            )
+        })
     }, [highlightedArticles, loading])
-
 
     useAsync(async () => {
         setLoading(true)

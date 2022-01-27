@@ -1,7 +1,8 @@
 import qs from 'qs'
-import { get, orderBy } from 'lodash'
+import { get } from 'lodash'
 import { TRADING_MODE } from 'redux/actions/const'
 import GhostContentAPI from '@tryghost/content-api'
+import { slugify } from '@tryghost/string'
 
 export const ___DEV___ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev'
 
@@ -147,18 +148,16 @@ export const ghost = new GhostContentAPI(
 
 const CATEGORIES_IGRONED = ['noti', 'faq', 'en', 'vi']
 
-export const getSupportCategories = async (language) => {
-    const allTags = await ghost.tags.browse({ limit: 'all' })
+export const getSupportCategories = async (language = 'vi') => {
+    const allTags = await ghost.tags.browse({ limit: 'all', fields: 'slug,name,id,description' })
     // console.log('namidev ', allTags)
-
     if (allTags) {
         const announcementCategories = allTags?.map(o => ({
             id: o?.id,
             name: o?.name,
             iconUrl: o?.feature_image || '/images/screen/support/ic_command.png',
             slug: o?.slug,
-            displaySlug: o?.slug?.replace('noti-vi-', '')
-                .replace('noti-en-', ''),
+            displaySlug: o?.slug?.replace(`noti-${language}-`, ''),
             description: o?.description
         }))
             ?.filter(f => !CATEGORIES_IGRONED.includes(f.slug) && f.slug.startsWith(`noti-${language}`))
@@ -167,14 +166,10 @@ export const getSupportCategories = async (language) => {
             name: o?.name,
             iconUrl: o?.feature_image || '/images/screen/support/ic_command.png',
             slug: o?.slug,
-            displaySlug: o?.slug?.replace('faq-vi-', '')
-                .replace('faq-en-', ''),
+            displaySlug: o?.slug?.replace(`faq-${language}-`, ''),
             description: o?.description
         }))
             ?.filter(f => !CATEGORIES_IGRONED.includes(f.slug) && f.slug.startsWith(`faq-${language}`))
-
-
-        // console.log('namidev check get cat =>', announcementCategories, faqCategories)
 
         return {
             announcementCategories,
@@ -192,30 +187,82 @@ export const getSupportArticles = async (tag) => {
     return await ghost.posts.browse(options)
 }
 
-export const getLastedArticles = async (tag = '', limit = 10, language = 'vi', isHighlighted = false, search = null) => {
+export const getLastedArticles = async (tag = '', limit = 10, language = 'vi', isHighlighted = false) => {
+    const filter = []
     const options = {
-        limit: 'all',
-        include: 'tags'
+        limit: limit,
+        include: 'tags',
+        order: 'published_at DESC'
     }
-    options.filter = `${tag ? `tag:${tag}` : ''}${tag && isHighlighted ? '+' : ''}${isHighlighted ? 'featured:true' : ''}${search ? `slug:${search}` : ''}`
-    // console.log('namidev ', options)
-    const result = await ghost.posts.browse(options)
-    const sorted = orderBy(result, [o => Date.parse(o.created_at)], ['desc'])
-    // .filter(f => f?.primary_tag?.slug?.includes(`${tag || ''}-${language}-`))
+    const lang = language === 'vi' ? '-en' : 'en'
 
-    const data = []
-    sorted.forEach(f => {
-        const isCorrectLangIndex = f?.tags?.findIndex(e => e?.slug?.includes(`${tag || ''}-${language}-`))
-        if (typeof isCorrectLangIndex === 'number' && isCorrectLangIndex !== -1) {
-            data.push(f)
-        }
-    })
-
-    if (typeof limit === 'string' && limit === 'all') {
-        return data
+    if (tag) {
+        filter.push(`tags:${lang}+tags:${tag}`)
+    } else {
+        filter.push(`tags:${lang}`)
     }
-    return data.slice(0, limit)
+
+    if (isHighlighted) {
+        filter.push('featured:true')
+    }
+
+    options.filter = filter.join('+')
+    return await ghost.posts.browse(options)
 }
 
 export const getArticle = async (id) => await ghost.posts.read({ id })
 
+export const articlesIndexKey = 'support-search-indexed'
+
+export const indexingArticles = async (language) => {
+    const result = await ghost.posts.browse(
+        {
+            limit: 'all',
+            order: 'published_at DESC',
+            fields: 'id,title,slug',
+            filter: `tags:${language === 'en' ? 'en' : '-en'}`
+        }
+    )
+
+    // store { [id]: slug }
+    const indexer = result.reduce((a, v) => ({...a, [v?.id]: v.slug}), {})
+    localStorage.setItem(articlesIndexKey, JSON.stringify(indexer))
+}
+
+export const querySupportArticles = async (tag, keyword = '', language = 'vi', currentPage, limit = 15) => {
+    console.log('namidev-DEBUG: PRE CHECK ___ ', tag, keyword, language, currentPage, limit)
+    const localIndex = localStorage.getItem(articlesIndexKey)
+    const filter = []
+
+    let cat
+    if (tag === 0) cat = 'faq'
+    if (tag === 1) cat = 'noti'
+    if (tag === 2) cat = undefined
+
+    if (tag) {
+        filter.push(`tags:${cat}`)
+    }
+    language === 'en' ? filter.push(`tags:en`) : filter.push(`tags:-en`)
+
+    if (localIndex) {
+        const indexedDb = JSON.parse(localIndex)
+        const queryTags = Object.values(indexedDb).filter(o => o.includes(slugify(keyword)))
+
+        filter.push(`tags:${queryTags.join('+tags:')}`)
+
+        const options = {
+            limit,
+            filter: filter.join('+')
+        }
+
+        console.log('namidev check id query ', filter.join('+'))
+
+        const query = await ghost.posts.browse(options)
+        console.log('namidev-DEBUG: Query Options => ', options.filter)
+        console.log('namidev-DEBUG: Query articles => ', query)
+    }
+}
+
+export function wait(timeout) {
+    return new Promise(resolve => setTimeout(resolve, timeout))
+}

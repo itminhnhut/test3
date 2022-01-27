@@ -5,9 +5,12 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Link from 'next/link'
 import { getLastedArticles, getSupportArticles, getSupportCategories, ghost } from 'utils'
 import { formatTime } from 'redux/actions/utils'
+import useApp from 'hooks/useApp'
+import { ChevronLeft } from 'react-feather'
 
 const AnnouncementTopics = (props) => {
     const router = useRouter()
+    const isApp = useApp()
 
     const renderTopics = () => {
         const data = props?.data?.articles?.filter(f => {
@@ -19,12 +22,13 @@ const AnnouncementTopics = (props) => {
         if (!data || !data?.length) {
             return <div>No topics</div>
         }
-        // console.log('namidev ', data)
+
         return data?.map(item => (
             <Link href={{
                 pathname: PATHS.SUPPORT.ANNOUNCEMENT + `/${router?.query?.topic}/[articles]`,
                 query: {
-                    articles: item.id.toString()
+                    articles: item.id.toString(),
+                    source: isApp ? 'app' : ''
                 }
             }} key={item.uuid}>
                 <a className="block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant">
@@ -37,10 +41,28 @@ const AnnouncementTopics = (props) => {
         ))
     }
 
+    const renderAppHeader = () => {
+        if (!isApp) return null
+        const topic = props?.data?.tags?.find(o => o?.displaySlug === router?.query?.topic)?.name
+        return (
+            <div onClick={router?.back} className="active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium">
+                <ChevronLeft size={16}
+                             className="mr-2.5"/>
+                {topic}
+                {topic && ' | '}
+                Nami FAQ
+            </div>
+        )
+    }
+
+
     return (
-        <TopicsLayout useTopicTitle mode="announcement" topics={props?.data?.tags}>
-            {renderTopics()}
-        </TopicsLayout>
+        <>
+            {renderAppHeader()}
+            <TopicsLayout useTopicTitle mode="announcement" topics={props?.data?.tags}>
+                {renderTopics()}
+            </TopicsLayout>
+        </>
     )
 }
 

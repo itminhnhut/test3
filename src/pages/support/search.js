@@ -12,7 +12,7 @@ import useApp from 'hooks/useApp'
 import SearchResultItem from 'components/screens/Support/SearchResultItem'
 import useWindowSize from 'hooks/useWindowSize'
 import { BREAK_POINTS } from 'constants/constants'
-import { getLastedArticles } from 'utils'
+import { getLastedArticles, querySupportArticles } from 'utils'
 import { useAsync } from 'react-use'
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
@@ -85,7 +85,7 @@ const SupportSearchResult = () => {
         }
 
         const data = state.searchResult?.slice((state.currentPage - 1) * PAGE_SIZE, state.currentPage * PAGE_SIZE)
-        return data?.map(search => <SearchResultItem article={search}/>)
+        return data?.map(search => <SearchResultItem key={search?.id} article={search}/>)
     }, [state.searchResult, state.currentPage, state.loading])
 
     useEffect(() => {
@@ -102,6 +102,7 @@ const SupportSearchResult = () => {
 
     useAsync(async () => {
         setState({ loading: true })
+
         if (state.query) {
             let tag
             if (state.tab === 0) {
@@ -124,9 +125,13 @@ const SupportSearchResult = () => {
         setState({ loading: false })
     }, [state.query, state.tab, language])
 
-    useEffect(() => {
-        console.log('namidev ', state)
-    }, [state])
+    // useAsync(async () => {
+    //     await querySupportArticles(+router.query?.type, encodeURI(router?.query?.query), language, state.currentPage, PAGE_SIZE)
+    // }, [router, state.currentPage, language])
+
+    // useEffect(() => {
+    //     console.log('namidev ', state)
+    // }, [state])
 
     return (
         <MaldivesLayout>
@@ -156,7 +161,7 @@ const SupportSearchResult = () => {
                 <div className="mt-4 px-4 flex items-center select-none overflow-x-auto no-scrollbar">
                     {renderTab()}
                 </div>
-                <div
+                <div id="my-custom-results"
                     style={theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}
                     className="px-4 py-5 bg-[#FCFCFC] dark:bg-darkBlue-2 rounded-[20px] lg:p-8">
                     {state.searchResult?.length ?

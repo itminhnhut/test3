@@ -1,6 +1,6 @@
 /* eslint-disable no-alert, no-console */
 
-import { appWithTranslation } from 'next-i18next';
+import { appWithTranslation, useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import 'public/css/font.css';
@@ -19,6 +19,7 @@ import { useStore } from 'src/redux/store';
 // import * as fpixel from 'src/utils/fpixel';
 import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
+import { indexingArticles } from 'utils'
 
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
@@ -55,6 +56,7 @@ let initConfig = false;
 const App = ({ Component, pageProps }) => {
     const store = useStore(pageProps.initialReduxState);
     const router = useRouter();
+    const { i18n: { language } } = useTranslation()
 
     useEffect(() => {
         router.events.on('routeChangeStart', url => {
@@ -96,6 +98,10 @@ const App = ({ Component, pageProps }) => {
             store.dispatch(setTheme())
         }
     }, []);
+
+    useEffect(() => {
+        indexingArticles(language)
+    }, [language])
 
     store.subscribe(() => {
         if (!ignoreAuthUrls.includes(router.pathname)) {
