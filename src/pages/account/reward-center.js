@@ -21,6 +21,9 @@ import Types from 'components/screens/Account/types'
 import { formatNumber, getS3Url } from 'redux/actions/utils'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import Button from 'components/common/Button'
+import { orderBy } from 'lodash'
+import PortalPopup from 'components/common/Modal'
+import { FacebookShareButton } from 'react-share'
 
 export const REWARD_ROW_ID_KEY = 'reward_item_id_' // for identify reward will scrollTo after init
 const REWARD_ID_QUERY_KEY = 'reward_id' // for query url
@@ -48,6 +51,7 @@ const INITIAL_STATE = {
     isQueryDone: false,
     claim: null,
     claiming: false,
+    lunarNewYear: null
 }
 
 const RewardCenter = () => {
@@ -76,36 +80,47 @@ const RewardCenter = () => {
             const { data } = await Axios.post(API_CLAIM_MISSION_REWARD, { id })
             if (data?.status === ApiStatus.SUCCESS) {
                 let msg
-                const { reward, assetConfig } = payload
-                // console.log('namidev-DEBUG: Asset Config => ', assetConfig)
-                if (language === LANGUAGE_TAG.VI) {
-                    msg = <>
-                        Chúc mừng!<br/>Bạn đã nhận được <span className="ml-0.5 text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
-                    </>
+                const { reward, category, assetConfig } = payload
+                // console.log('namidev-DEBUG: reward => ', reward)
+
+                if (category === 'LUCKY_MONEY') {
+                    setState({ lunarNewYear: data?.data })
+                    // console.log('namidev-DEBUG: response => ', data)
                 } else {
-                    msg = <>
-                        Congratulation!<br/>You have successfully received <span className="ml-0.5 text-dominant">{formatNumber(reward?.value, assetConfig?.assetDigit)} {assetConfig?.assetCode}</span>
-                    </>
+                    if (language === LANGUAGE_TAG.VI) {
+                        msg = <>
+                            Chúc mừng!<br/>Bạn đã nhận được <span className="ml-0.5 text-dominant">
+                        {formatNumber(data?.data?.reward?.value || reward?.value, assetConfig?.assetDigit || 0)} {data?.data?.reward?.asset || assetConfig?.assetCode}
+                        </span>
+                        </>
+                    } else {
+                        msg = <>
+                            Congratulation!<br/>You have successfully received <span className="ml-0.5 text-dominant">
+                        {formatNumber(data?.data?.reward?.value || reward?.value, assetConfig?.assetDigit || 0)} {data?.data?.reward?.asset || assetConfig?.assetCode}
+                        </span>
+                        </>
+                    }
+                    const popupMsg = {
+                        type: 'success',
+                        msg
+                    }
+                    // console.log('namidev-DEBUG: => ', popupMsg, data?.data)
+                    // re-fetch reward data
+                    setState({ claim: data?.data, popupMsg })
+                    // await getRewardData()
                 }
-                const popupMsg = {
-                    type: 'success',
-                    msg
-                }
-                // console.log('namidev-DEBUG: => ', popupMsg, data?.data)
-                // re-fetch reward data
-                setState({ claim: data?.data, popupMsg })
-                // await getRewardData()
+
             } else {
                 switch (data?.status) {
                     case Types.CLAIM_RESULT.INVALID_MISSION:
                     case Types.CLAIM_RESULT.INVALID_USER:
                     case Types.CLAIM_RESULT.INVALID_TIME:
-                        setState({popupMsg: { type: 'error', msg: t(`reward-center:reward_error.${data?.status}`) }})
+                        setState({ popupMsg: { type: 'error', msg: t(`reward-center:reward_error.${data?.status}`) } })
                         break
                     case Types.CLAIM_RESULT.INVALID_CLAIM_STATUS:
                     case Types.CLAIM_RESULT.INVALID_STATUS:
                     default:
-                        setState({popupMsg: { type: 'error', msg: t(`reward-center:reward_error.unknown`) }})
+                        setState({ popupMsg: { type: 'error', msg: t(`reward-center:reward_error.unknown`) } })
                         break
                 }
             }
@@ -122,7 +137,7 @@ const RewardCenter = () => {
         try {
             const { data } = await Axios.get(API_GET_MISSION)
             if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                setState({ rewards: data.data })
+                setState({ rewards: orderBy(data.data, 'created_at', 'desc') })
             }
         } catch (e) {
             console.log(`Can't get mission data `, e)
@@ -197,7 +212,7 @@ const RewardCenter = () => {
 
         return [
             { key: 0, title: `${t('common:all')}${counter?.all ? ` (${counter.all})` : ''}` },
-            { key: 1, title: `Promotion${counter?.promotion ? ` (${counter.promotion})` : ''}` },
+            { key: 1, title: `Promotion${counter?.promotion ? ` (${counter.promotion})` : ''}` }
             // { key: 2, title: `Trading${counter?.trading ? ` (${counter.trading})` : ''}` }
         ]
     }, [state.rewards])
@@ -211,7 +226,7 @@ const RewardCenter = () => {
                     query: isApp ? { source: 'app' } : undefined
                 },
                 undefined,
-                {shallow: true}
+                { shallow: true }
             )
             setState({ isQueryDone: true })
         }
@@ -252,7 +267,8 @@ const RewardCenter = () => {
 
         if (!data?.length) {
             return (
-                <div className="min-h-[400px] xl:min-h-[520px] 2xl:min-h-[550px] h-full flex items-center justify-center dark:bg-darkBlue-2">
+                <div
+                    className="min-h-[400px] xl:min-h-[520px] 2xl:min-h-[550px] h-full flex items-center justify-center dark:bg-darkBlue-2">
                     <Empty message={t('reward-center:no_promo')}
                            messageStyle="text-xs sm:text-sm"
                     />
@@ -268,7 +284,6 @@ const RewardCenter = () => {
                 active={state?.rewardExpand?.[reward?._id]}
                 onToggleReward={(rewardId, status) => onToggleReward(rewardId, status)}
                 showGuide={showGuide}
-
                 claim={state.claim}
                 claiming={state.claiming}
                 onClaim={onClaim}
@@ -308,23 +323,28 @@ const RewardCenter = () => {
                 // buttonGroupWrapper="mx-auto"
             >
                 {state.popupMsg?.type === 'error' && <div className="w-full">
-                    <img className="m-auto w-[45px] h-[45px]" src={getS3Url('/images/icon/errors.png')} alt="ERRORS" />
+                    <img className="m-auto w-[45px] h-[45px]" src={getS3Url('/images/icon/errors.png')} alt="ERRORS"/>
                 </div>}
                 {state.popupMsg?.type === 'success' &&
                 <>
-                    <img className="w-[28px] sm:w-[32px] h-auto" src={getS3Url('/images/logo/nami_maldives.png')} alt=""/>
+                    <img className="w-[28px] sm:w-[32px] h-auto" src={getS3Url('/images/logo/nami_maldives.png')}
+                         alt=""/>
                     <div className="w-full">
-                        <img className="m-auto w-[220px] h-[220px] md:w-[265px] md:h-[265px]" src={getS3Url('/images/screen/reward/treasure.png')} alt="SUCCESS" />
+                        <img className="m-auto w-[220px] h-[220px] md:w-[265px] md:h-[265px]"
+                             src={getS3Url('/images/screen/reward/treasure.png')} alt="SUCCESS"/>
                     </div>
                 </>}
-                <div className={state.popupMsg?.type ? 'mb-4 px-2 sm:px-4 md:px-8 lg:mb-5 leading-6 font-medium text-sm xl:text-[16px] text-center'
-                    : 'mt-4 mb-4 lg:mb-5 font-medium text-sm text-center'}>
+                <div
+                    className={state.popupMsg?.type ? 'mb-4 px-2 sm:px-4 md:px-8 lg:mb-5 leading-6 font-medium text-sm xl:text-[16px] text-center'
+                        : 'mt-4 mb-4 lg:mb-5 font-medium text-sm text-center'}>
                     {state.popupMsg?.msg}
                 </div>
                 {state.popupMsg?.type === 'success' &&
                 <div>
-                    <Button title={t('reward-center:go_to_wallet')} href={PATHS.WALLET.EXCHANGE.DEFAULT} type="primary"/>
-                    <Button title={t('common:continue')} type="secondary"  componentType="button" onClick={closePopup} style={{marginTop: 10}}/>
+                    <Button title={t('reward-center:go_to_wallet')} href={PATHS.WALLET.EXCHANGE.DEFAULT}
+                            type="primary"/>
+                    <Button title={t('common:continue')} type="secondary" componentType="button" onClick={closePopup}
+                            style={{ marginTop: 10 }}/>
                 </div>}
             </ReModal>
         )
@@ -341,6 +361,37 @@ const RewardCenter = () => {
             </div>
         )
     }, [state.showFixedAppSegment, state.rewards, isApp, renderSegmentTabs])
+
+    const renderLunarPopup = useCallback(() => {
+        const rwValue = state.lunarNewYear?.reward?.value?.toString()?.slice(0, -3)
+        let imgSrc = `/images/reward-center/lucky-money/ny_${rwValue || '10'}_${language}.png`
+
+        return (
+            <PortalPopup noButton
+                         isVisible={!!!state.lunarNewYear}
+                         onBackdropCb={() => setState({lunarNewYear: null})}
+                         containerClassName="!bg-transparent"
+            >
+                <div className="relative min-w-[280px] sm:w-[380px] lg:w-[420px] max-w-[420px]">
+                    <img className="relative z-10 rounded-[20px]"
+                         src={getS3Url(imgSrc)}
+                         alt={null}/>
+                    <div className="absolute z-20 bottom-0 left-0 w-full flex items-center h-[50px] sm:h-[75px]">
+                        <div className="w-1/2 h-full cursor-pointer" onClick={() => setState({ lunarNewYear: null })}/>
+                        <div className="w-1/2 h-full cursor-pointer">
+                            <FacebookShareButton
+                                shareUrl={`https://nami.exchange/account/reward-center`}
+                                quote="Sharing"
+                                hashtag="#nami #namiexchange"
+                                className="w-full h-full"
+                                onClick={() => alert('Test')}>
+                            </FacebookShareButton>
+                        </div>
+                    </div>
+                </div>
+            </PortalPopup>
+        )
+    }, [state.lunarNewYear, language])
 
     useEffect(() => {
         getRewardData()
@@ -382,9 +433,9 @@ const RewardCenter = () => {
         }
     }, [state.rewards])
 
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: State => ', state)
-    // }, [state])
+    useEffect(() => {
+        console.log('namidev-DEBUG: State => ', state.lunarNewYear)
+    }, [state.lunarNewYear])
 
     return (
         <>
@@ -404,6 +455,7 @@ const RewardCenter = () => {
                 </div>
             </div>
             {renderPopup()}
+            {renderLunarPopup()}
         </>
     )
 }

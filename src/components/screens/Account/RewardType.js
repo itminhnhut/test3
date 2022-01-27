@@ -135,7 +135,7 @@ const RewardType = memo(({ data, active, assetConfig, claim, claiming, onClaim }
         buttonGroup.push(
             <RewardButton key="reward_button_claim"
                           onClick={() => claimProps?.status === REWARD_BUTTON_STATUS.AVAILABLE
-                              && onClaim(data?.user_metadata?._id, { reward: data?.reward, assetConfig })}
+                              && onClaim(data?.user_metadata?._id, { reward: data?.reward, assetConfig, category: data?.category })}
                           title={claiming ? <PulseLoader size={3} color={colors.teal}/> : claimProps?.title}
                           status={claimProps?.status}
                           buttonStyles="w-[47%] max-w-[47%] sm:max-w-[120px] xl:min-w-[90px] xl:w-[120px]"

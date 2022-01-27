@@ -2,21 +2,23 @@ import Button from 'src/components/common/Button'
 
 import { useCallback } from 'react'
 import { useTranslation } from 'next-i18next'
+import classNames from 'classnames'
 
 const Modal = ({
-    isVisible,
-    children,
-    title,
-    positiveLabel,
-    negativeLabel,
-    onConfirmCb,
-    onCloseCb,
-    onBackdropCb,
-    className = '',
-    type = 'alert',
-    noButton = false,
-    titleStyle
-}) => {
+                   isVisible,
+                   children,
+                   title,
+                   positiveLabel,
+                   negativeLabel,
+                   onConfirmCb,
+                   onCloseCb,
+                   onBackdropCb,
+                   className = '',
+                   containerClassName = '',
+                   type = 'alert',
+                   noButton = false,
+                   titleStyle
+               }) => {
 
     const { t } = useTranslation(['common'])
 
@@ -44,9 +46,9 @@ const Modal = ({
         }
 
         if (type === 'alert') {
-          return <Button title={negativeLabel || t('common:close')} type="secondary"
-                         componentType="button"
-                         onClick={() => onCloseCb && onCloseCb()}/>
+            return <Button title={negativeLabel || t('common:close')} type="secondary"
+                           componentType="button"
+                           onClick={() => onCloseCb && onCloseCb()}/>
         }
     }, [type, positiveLabel, negativeLabel, onConfirmCb, onCloseCb])
 
@@ -54,10 +56,11 @@ const Modal = ({
         <>
             <div className={`mal-overlay ${isVisible ? 'mal-overlay__active' : ''}`}
                  onClick={() => onBackdropCb && onBackdropCb()}/>
-            <div className="mal-modal z-[9999999999] min-w-[280px]">
+            <div className={classNames('mal-modal z-[9999999999] min-w-[280px]', containerClassName)}>
                 {isVisible &&
                 <div className={'p-4 ' + className}>
-                    {title && <div className={titleStyle ? 'mt-3 text-center font-bold ' + titleStyle : 'mt-3 text-center font-bold'}>{title}</div>}
+                    {title && <div
+                        className={titleStyle ? 'mt-3 text-center font-bold ' + titleStyle : 'mt-3 text-center font-bold'}>{title}</div>}
                     {children}
                     {!noButton && <div className="flex flex-row items-center justify-between mt-5">
                         {renderButtonGroup()}

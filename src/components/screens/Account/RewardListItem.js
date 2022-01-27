@@ -91,7 +91,13 @@ const RewardListItem = ({ data, loading, showGuide, claim, claiming, onClaim }) 
                             <div className="pt-2.5 md:pt-3 flex flex-wrap items-center justify-between lg:justify-start font-medium text-xs md:text-sm">
                                 <div>
                                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reward-center:reward')}:</span>
-                                    <span className="mx-0.5 text-dominant">{formatNumber(value, assetConfig?.assetDigit)}</span>
+                                    <span className="mx-0.5 text-dominant">
+                                        {
+                                            typeof value === 'string' ?
+                                                value :
+                                                formatNumber(value, assetConfig?.assetDigit)
+                                        }
+                                    </span>
                                     <AssetName assetId={assetId}/>
                                 </div>
                                 {(isActive || width >= BREAK_POINTS.lg) &&
