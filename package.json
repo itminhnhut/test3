@@ -54,7 +54,6 @@
     "eventemitter3": "^4.0.7",
     "flexsearch": "^0.7.21",
     "formik": "^2.2.8",
-    "ghost-search": "^1.1.0",
     "highcharts": "^9.1.0",
     "highcharts-react-official": "^3.0.0",
     "html-react-parser": "^1.4.4",

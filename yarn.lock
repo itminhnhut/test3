@@ -2944,11 +2944,6 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-fuzzysort@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/fuzzysort/-/fuzzysort-1.1.4.tgz#a0510206ed44532cbb52cf797bf5a3cb12acd4ba"
-  integrity sha512-JzK/lHjVZ6joAg3OnCjylwYXYVjRiwTY6Yb25LvfpJHK8bjisfnZJ5bY8aVWwTwCXgxPNgLAtmHL+Hs5q1ddLQ==
-
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.npmjs.org/gauge/-/gauge-2.7.4.tgz"
@@ -3008,13 +3003,6 @@ get-user-locale@^1.2.0:
   integrity sha512-gQo03lP1OArHLKlnoglqrGGl7b04u2EP9Xutmp72cMdtrrSD7ZgIsCsUKZynYWLDkVJW33Cj3pliP7uP0UonHQ==
   dependencies:
     lodash.once "^4.1.1"
-
-ghost-search@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/ghost-search/-/ghost-search-1.1.0.tgz#5f105297629425391ff5d4e5d4532efbbf61bef6"
-  integrity sha512-nLmGFhY7iob5IIgo99l2dNZPvoDWqS0tSH9RnR5njs1gTnew5hI6pTpGSNbDNC/r/n0P2QfmFcSm8LmmdcnUWA==
-  dependencies:
-    fuzzysort "^1.1.4"
 
 glob-parent@^5.1.2, glob-parent@~5.1.0, glob-parent@~5.1.2:
   version "5.1.2"
