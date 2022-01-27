@@ -368,7 +368,7 @@ const RewardCenter = () => {
 
         return (
             <PortalPopup noButton
-                         isVisible={!!!state.lunarNewYear}
+                         isVisible={!!state.lunarNewYear}
                          onBackdropCb={() => setState({lunarNewYear: null})}
                          containerClassName="!bg-transparent"
             >
@@ -380,12 +380,11 @@ const RewardCenter = () => {
                         <div className="w-1/2 h-full cursor-pointer" onClick={() => setState({ lunarNewYear: null })}/>
                         <div className="w-1/2 h-full cursor-pointer">
                             <FacebookShareButton
-                                shareUrl={`https://nami.exchange/account/reward-center`}
-                                quote="Sharing"
-                                hashtag="#nami #namiexchange"
+                                url={getS3Url(imgSrc)}
+                                hashtag="#namiexchange#nami"
                                 className="w-full h-full"
-                                onClick={() => alert('Test')}>
-                            </FacebookShareButton>
+                                onShareWindowClose={() => setState({ lunarNewYear: null })}
+                            />
                         </div>
                     </div>
                 </div>
@@ -433,9 +432,9 @@ const RewardCenter = () => {
         }
     }, [state.rewards])
 
-    useEffect(() => {
-        console.log('namidev-DEBUG: State => ', state.lunarNewYear)
-    }, [state.lunarNewYear])
+    // useEffect(() => {
+    //     console.log('namidev-DEBUG: State => ', state.lunarNewYear)
+    // }, [state.lunarNewYear])
 
     return (
         <>
