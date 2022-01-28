@@ -29,6 +29,9 @@ export const REWARD_ROW_ID_KEY = 'reward_item_id_' // for identify reward will s
 const REWARD_ID_QUERY_KEY = 'reward_id' // for query url
 const REWARD_TYPE_QUERY_KEY = 'reward' // for query url
 
+const shareUrlVi = "https://nami.io/insight-vi/nhan-loc-dau-nam-cung-chuong-trinh-li-xi-tet-tu-nami-exchange/"
+const shareUrlEn = "https://nami.io/en/insight/nami-exchange-airdrop-lunar-new-years-lucky-money/"
+
 const REWARD_TYPE_QUERY_VALUE = {
     ALL: 'all',
     PROMOTION: 'promotion',
@@ -380,7 +383,7 @@ const RewardCenter = () => {
                         <div className="w-1/2 h-full cursor-pointer" onClick={() => setState({ lunarNewYear: null })}/>
                         <div className="w-1/2 h-full cursor-pointer">
                             <FacebookShareButton
-                                url={getS3Url(imgSrc)}
+                                url={language === 'vi' ? shareUrlVi : shareUrlEn}
                                 hashtag="#namiexchange#nami"
                                 className="w-full h-full"
                                 onShareWindowClose={() => setState({ lunarNewYear: null })}
