@@ -98,7 +98,10 @@ const RewardListItem = ({ data, loading, showGuide, claim, claiming, onClaim }) 
                                                 formatNumber(value, assetConfig?.assetDigit)
                                         }
                                     </span>
-                                    <AssetName assetId={assetId}/>
+                                    {
+                                        typeof value !== 'string' &&  <AssetName assetId={assetId}/>
+                                    }
+
                                 </div>
                                 {(isActive || width >= BREAK_POINTS.lg) &&
                                 <div className="lg:ml-4">
