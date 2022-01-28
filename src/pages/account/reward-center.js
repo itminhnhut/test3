@@ -363,7 +363,7 @@ const RewardCenter = () => {
     }, [state.showFixedAppSegment, state.rewards, isApp, renderSegmentTabs])
 
     const renderLunarPopup = useCallback(() => {
-        const rwValue = state.lunarNewYear?.reward?.value?.toString()?.slice(0, -3)
+        const rwValue = state.lunarNewYear?.reward?.value?.toString()
         let imgSrc = `/images/reward-center/lucky-money/ny_${rwValue || '10'}_${language}.png`
 
         return (
