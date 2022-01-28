@@ -178,12 +178,20 @@ export const getSupportCategories = async (language = 'vi') => {
     }
 }
 
-export const getSupportArticles = async (tag) => {
+export const getSupportArticles = async (tag, language) => {
     const options = {
         limit: 'all',
         include: 'tags'
     }
-    if (tag) options.filter = `tag:${tag}`
+    const filter = []
+    if (tag) filter.push(`tag:${tag}`)
+    if (language === 'vi') {
+        filter.push('tags:-en')
+    } else {
+        filter.push('tags:en')
+    }
+    options.filter = filter.join('+')
+    console.log('namidev otps ', options)
     return await ghost.posts.browse(options)
 }
 
@@ -230,7 +238,7 @@ export const indexingArticles = async (language) => {
 }
 
 export const querySupportArticles = async (tag, keyword = '', language = 'vi', currentPage, limit = 15) => {
-    console.log('namidev-DEBUG: PRE CHECK ___ ', tag, keyword, language, currentPage, limit)
+    // console.log('namidev-DEBUG: PRE CHECK ___ ', tag, keyword, language, currentPage, limit)
     const localIndex = localStorage.getItem(articlesIndexKey)
     const filter = []
 
@@ -255,11 +263,11 @@ export const querySupportArticles = async (tag, keyword = '', language = 'vi', c
             filter: filter.join('+')
         }
 
-        console.log('namidev check id query ', filter.join('+'))
+        // console.log('namidev check id query ', filter.join('+'))
 
         const query = await ghost.posts.browse(options)
-        console.log('namidev-DEBUG: Query Options => ', options.filter)
-        console.log('namidev-DEBUG: Query articles => ', query)
+        // console.log('namidev-DEBUG: Query Options => ', options.filter)
+        // console.log('namidev-DEBUG: Query articles => ', query)
     }
 }
 
