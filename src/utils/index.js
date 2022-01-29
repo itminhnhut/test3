@@ -218,7 +218,7 @@ export const getLastedArticles = async (tag = '', limit = 10, language = 'vi', i
     return await ghost.posts.browse(options)
 }
 
-export const getArticle = async (id) => await ghost.posts.read({ id })
+export const getArticle = async (slug) => await ghost.posts.read({ slug })
 
 export const articlesIndexKey = 'support-search-indexed'
 

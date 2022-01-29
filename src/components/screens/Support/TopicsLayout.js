@@ -9,23 +9,24 @@ import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import useApp from 'hooks/useApp'
+import { getSupportCategoryIcons, SupportCategories } from 'pages/support/faq/faqHelper'
 
 const COL_WIDTH = 304
 
 const TopicsLayout = ({
                           children,
                           lastedArticles,
-                          topics,
                           useTopicTitle = true,
                           mode = 'announcement'
                       }) => {
     const router = useRouter()
     const [theme] = useDarkMode()
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const isApp = useApp()
 
     const baseHref = mode === 'announcement' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ
     const queryMode = mode === 'announcement' ? 'noti' : 'faq'
+    const topics = mode === 'announcement' ? SupportCategories.announcements[language] : SupportCategories.faq[language]
 
     return (
         <MaldivesLayout>
@@ -43,21 +44,27 @@ const TopicsLayout = ({
                             query: { topic: item.displaySlug, source: isApp ? 'app' : '' }
                         }}>
                             <a className={classNames('flex items-center block px-5 lg:py-2.5 2xl:py-4 text-[16px] font-medium hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer',
-                                                     { 'bg-teal-lightTeal dark:bg-teal-opacity': router?.query?.topic === item.displaySlug }
+                                                     {
+                                                         'bg-teal-lightTeal dark:bg-teal-opacity': router?.query?.topic === item.displaySlug
+                                                     }
                             )}>
                                 <div className="w-[32px] h-[32px] mr-4">
-                                    {<Image src={item?.iconUrl} layout="responsive" width={32} height={32}/>}
+                                    {<Image src={getSupportCategoryIcons(item.id)} layout="responsive" width={32}
+                                            height={32}/>}
                                 </div>
-                                <span> {item?.name}</span>
+                                <span> {item?.title}</span>
                             </a>
                         </Link>)}
                     </div>
 
                     <div className="flex-grow px-4 pb-8 md:px-6 lg:px-8 lg:py-[40px]">
-                        <SupportSearchBar simpleMode containerClassNames="!mt-4 lg:hidden"/>
+                        <SupportSearchBar simpleMode containerClassNames="!mt-4 lg:!mt-0 lg:hidden"/>
                         {useTopicTitle &&
-                        <div className="text-[16px] md:text-[20px] lg:text-[28px] font-bold my-6 lg:mt-0 lg:mb-10">
-                            {topics.find(o => o?.displaySlug === router?.query?.topic)?.name}
+                        <div className={classNames('text-[16px] md:text-[20px] lg:text-[28px] font-bold mt-4 mb-6 lg:mt-0 lg:mb-10',
+                                                   {
+                                                       'lg:!m-0': !useTopicTitle,
+                                                   })}>
+                            {topics.find(o => o?.displaySlug === router?.query?.topic)?.title}
                         </div>}
                         {children}
                     </div>

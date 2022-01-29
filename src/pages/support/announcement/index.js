@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
 import Skeletor from 'components/common/Skeletor'
 import useApp from 'hooks/useApp'
+import { getSupportCategoryIcons, SupportCategories } from 'pages/support/faq/faqHelper'
 
 const SupportAnnouncement = () => {
     const [theme] = useDarkMode()
@@ -54,16 +55,16 @@ const SupportAnnouncement = () => {
             )
         }
 
-        return categories?.map(cat => (
-            <Link key={cat.displaySlug} href={{
+        return SupportCategories.announcements[language]?.map(cat => (
+            <Link key={cat.id} href={{
                 pathname: PATHS.SUPPORT.TOPICS,
                 query: { topic: cat.displaySlug, source: isApp ? 'app' : '' }
             }}>
                 <a className="block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
                     <TopicItem
-                        icon={<Image src={cat?.iconUrl} layout="responsive" width="24"
+                        icon={<Image src={getSupportCategoryIcons(cat.id)} layout="responsive" width="24"
                                      height="24"/>}
-                        title={cat.name}
+                        title={cat.title}
                         description={cat?.description || '---'}
                     />
                 </a>

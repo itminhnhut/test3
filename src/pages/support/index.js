@@ -10,19 +10,18 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useWindowSize from 'hooks/useWindowSize'
 import Image from 'next/image'
 import { useAsync } from 'react-use'
-import { getLastedArticles, getSupportCategories } from 'utils'
+import { getLastedArticles } from 'utils'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
 import classNames from 'classnames'
 import Skeletor from 'components/common/Skeletor'
 import useApp from 'hooks/useApp'
+import { getSupportCategoryIcons, SupportCategories } from 'pages/support/faq/faqHelper'
 
 
 const Support = () => {
     // ? State
     const [loading, setLoading] = useState(false)
-    const [announcementCategories, setAnnouncementCategories] = useState([])
-    const [faqCategories, setFaqCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
     const [highlightedArticles, setHighlightedArticles] = useState([])
 
@@ -30,8 +29,6 @@ const Support = () => {
     const { width } = useWindowSize()
     let { t, i18n: { language } } = useTranslation()
     const isApp = useApp()
-
-    // language = 'vi'
 
     // ? Memmoized
     const sectionIconSize = useMemo(() => width >= BREAK_POINTS.lg ? 32 : 24, [width])
@@ -44,83 +41,60 @@ const Support = () => {
             />)
     }, [width])
 
-    const renderFaqCategories = useCallback(() => {
-        if (loading) {
-            return (
-                <>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                </>
-            )
-        }
+    const renderFaqCategories = () => {
+        // if (loading) {
+        //     return (
+        //         <>
+        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+        //                 <Skeletor className="!w-full !h-full"/></div>
+        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+        //                 <Skeletor className="!w-full !h-full"/></div>
+        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+        //                 <Skeletor className="!w-full !h-full"/></div>
+        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+        //                 <Skeletor className="!w-full !h-full"/></div>
+        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+        //                 <Skeletor className="!w-full !h-full"/></div>
+        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+        //                 <Skeletor className="!w-full !h-full"/></div>
+        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+        //                 <Skeletor className="!w-full !h-full"/></div>
+        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
+        //                 <Skeletor className="!w-full !h-full"/></div>
+        //         </>
+        //     )
+        // }
 
-        return faqCategories.map(faq => (
+        return SupportCategories.faq[language].map(faq => (
             <SupportSectionItem
                 key={faq.id}
                 href={{
                     pathname: PATHS.SUPPORT.FAQ + '/[topic]',
                     query: { topic: faq.displaySlug, source: isApp ? 'app' : '' }
                 }}
-                title={faq?.name || '--'}
+                title={faq?.title || '--'}
                 titleClassNames="truncate"
-                icon={<Image src={faq?.iconUrl}
+                icon={<Image src={getSupportCategoryIcons(faq.id)}
                              width={sectionIconSize}
                              height={sectionIconSize}/>}
             />
         ))
-    }, [faqCategories, loading])
+    }
 
-    const renderAnnouncementCategories = useCallback(() => {
-        if (loading) {
-            return (
-                <>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                    <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-                        <Skeletor className="!w-full !h-full"/></div>
-                </>
-            )
-        }
-
-        return announcementCategories.map(announcement => (
+    const renderAnnouncementCategories = () => {
+        return SupportCategories.announcements[language].map(announcement => (
             <SupportSectionItem
                 key={announcement.id}
                 href={{
                     pathname: PATHS.SUPPORT.ANNOUNCEMENT + '/[topic]',
                     query: { topic: announcement.displaySlug, source: isApp ? 'app' : '' }
                 }}
-                title={announcement?.name || '--'}
+                title={announcement?.title || '--'}
                 titleClassNames="truncate"
-                icon={<Image src={announcement?.iconUrl}
+                icon={<Image src={getSupportCategoryIcons(announcement.id)}
                              width={sectionIconSize} height={sectionIconSize}/>}/>
         ))
-    }, [announcementCategories, loading])
+    }
 
     const renderLastedArticles = useCallback(() => {
         if (loading) {
@@ -144,17 +118,21 @@ const Support = () => {
             )
         }
 
+        // console.log('namidev ', lastedArticles)
+
         return lastedArticles.map(article => {
             let mode, topic, ownedTags, _tagsLib, categories
-            if (article?.primary_tag?.slug?.includes('noti-')) {
+            const isNoti = !!article?.tags?.find(o => o.slug?.includes('noti-'))
+
+            if (isNoti) {
                 mode = 'announcement'
-                categories = announcementCategories
+                categories = SupportCategories.announcements[language]
                 ownedTags = article.tags.filter(f => f.slug !== 'noti')
                     ?.map(o => o?.slug?.replace('noti-vi-', '')
                         ?.replace('noti-en-', ''))
             } else {
                 mode = 'faq'
-                categories = faqCategories
+                categories = SupportCategories.faq[language]
                 ownedTags = article.tags.filter(f => f.slug !== 'faq')
                     ?.map(o => o?.slug?.replace('faq-vi-', '')
                         ?.replace('faq-en-', ''))
@@ -171,18 +149,23 @@ const Support = () => {
                     key={article.id}
                     href={{
                         pathname: PATHS.SUPPORT.DEFAULT + `/[mode]/[topic]/[articles]`,
-                        query: { mode, topic, articles: article.id.toString(), source: isApp ? 'app' : '' }
+                        query: { mode, topic, articles: article.slug.toString(), source: isApp ? 'app' : '' }
                     }}
-                    title={<><span className="mr-2">{article.title}</span>
+                    title={<>
+                                            <span
+                                                className="mr-2">
+                                                {article.title}
+                                            </span>
                         <span
                             className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
-                                {formatTime(article.created_at, 'dd-MM-yyyy')}
-                            </span></>}
+                        {formatTime(article.created_at, 'dd-MM-yyyy')}
+                    </span>
+                    </>}
                     containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
                     classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
             )
         })
-    }, [lastedArticles, announcementCategories, faqCategories, loading])
+    }, [lastedArticles, loading, language])
 
     const renderHighlightedArticles = useCallback(() => {
         if (loading) {
@@ -208,15 +191,17 @@ const Support = () => {
 
         return highlightedArticles.map(article => {
             let mode, topic, ownedTags, _tagsLib, categories
-            if (article?.primary_tag?.slug?.includes('noti-')) {
+            const isNoti = !!article?.tags?.find(o => o.slug?.includes('noti-'))
+
+            if (isNoti) {
                 mode = 'announcement'
-                categories = announcementCategories
+                categories = SupportCategories.announcements[language]
                 ownedTags = article.tags.filter(f => f.slug !== 'noti')
                     ?.map(o => o?.slug?.replace('noti-vi-', '')
                         ?.replace('noti-en-', ''))
             } else {
                 mode = 'faq'
-                categories = faqCategories
+                categories = SupportCategories.faq[language]
                 ownedTags = article.tags.filter(f => f.slug !== 'faq')
                     ?.map(o => o?.slug?.replace('faq-vi-', '')
                         ?.replace('faq-en-', ''))
@@ -233,7 +218,7 @@ const Support = () => {
                     key={article.id}
                     href={{
                         pathname: PATHS.SUPPORT.DEFAULT + `/[mode]/[topic]/[articles]`,
-                        query: { mode, topic, articles: article.id.toString(), source: isApp ? 'app' : '' }
+                        query: { mode, topic, articles: article.slug.toString(), source: isApp ? 'app' : '' }
                     }}
                     title={<>
                                             <span
@@ -249,17 +234,14 @@ const Support = () => {
                     classNames="active:!bg-transparent hover:!underline hover:!text-dominant"/>
             )
         })
-    }, [highlightedArticles, loading])
+    }, [highlightedArticles, loading, language])
 
     useAsync(async () => {
         setLoading(true)
 
-        const data = await getSupportCategories(language)
         const lastedArticles = await getLastedArticles(undefined, 5, language)
         const highlightedArticles = await getLastedArticles(undefined, 5, language, true)
 
-        setAnnouncementCategories(data.announcementCategories)
-        setFaqCategories(data.faqCategories)
         setLastedArticles(lastedArticles)
         setHighlightedArticles(highlightedArticles)
 
