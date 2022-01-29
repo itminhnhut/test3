@@ -6,7 +6,7 @@ import GhostContent from 'components/screens/Support/GhostContent'
 import { ChevronLeft } from 'react-feather'
 import useApp from 'hooks/useApp'
 import { useRouter } from 'next/router'
-import { SupportCategories } from 'pages/support/faq/faqHelper'
+import { SupportCategories } from 'constants/faqHelper'
 import { useTranslation } from 'next-i18next'
 
 const AnnouncementArticle = (props) => {

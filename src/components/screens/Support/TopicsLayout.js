@@ -9,7 +9,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import useApp from 'hooks/useApp'
-import { getSupportCategoryIcons, SupportCategories } from 'pages/support/faq/faqHelper'
+import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
 
 const COL_WIDTH = 304
 

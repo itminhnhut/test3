@@ -1,12 +1,12 @@
 import TopicsLayout from 'components/screens/Support/TopicsLayout'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getArticle, getLastedArticles, getSupportCategories } from 'utils'
+import { getArticle, getLastedArticles } from 'utils'
 import { formatTime } from 'redux/actions/utils'
 import GhostContent from 'components/screens/Support/GhostContent'
 import { ChevronLeft } from 'react-feather'
 import useApp from 'hooks/useApp'
 import { useRouter } from 'next/router'
-import { SupportCategories } from 'pages/support/faq/faqHelper'
+import { SupportCategories } from 'constants/faqHelper'
 import { useTranslation } from 'next-i18next'
 
 const FaqArticle = (props) => {

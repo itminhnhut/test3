@@ -13,7 +13,7 @@ import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
 import Skeletor from 'components/common/Skeletor'
 import useApp from 'hooks/useApp'
-import { getSupportCategoryIcons, SupportCategories } from 'pages/support/faq/faqHelper'
+import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
 
 const SupportAnnouncement = () => {
     const [theme] = useDarkMode()

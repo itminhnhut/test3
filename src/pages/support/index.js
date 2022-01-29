@@ -16,7 +16,7 @@ import { formatTime } from 'redux/actions/utils'
 import classNames from 'classnames'
 import Skeletor from 'components/common/Skeletor'
 import useApp from 'hooks/useApp'
-import { getSupportCategoryIcons, SupportCategories } from 'pages/support/faq/faqHelper'
+import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
 
 
 const Support = () => {
