@@ -25,7 +25,7 @@ export const SupportCategories = {
                 title: 'Chức năng tài khoản',
                 slug: 'faq-vi-chuc-nang-tai-khoan',
                 displaySlug: 'chuc-nang-tai-khoan',
-                description: null,
+                description: 'Các câu hỏi về tài khoản và cài đặt thông tin khoản',
                 iconUrl: '',
                 subCats: [
                     {
@@ -87,7 +87,7 @@ export const SupportCategories = {
                 slug: 'faq-vi-token-nami',
                 displaySlug: 'token-nami',
                 description: null,
-                iconUrl: '',
+                iconUrl: 'Thông tin về token NAMI',
                 subCats: []
             },
             {
@@ -95,7 +95,7 @@ export const SupportCategories = {
                 title: 'Nạp/Rút tiền mã hoá',
                 slug: 'faq-vi-nap-rut-tien-ma-hoa',
                 displaySlug: 'nap-rut-tien-ma-hoa',
-                description: null,
+                description: '',
                 iconUrl: '',
                 subCats: [
                     {
@@ -124,7 +124,7 @@ export const SupportCategories = {
                 slug: 'faq-vi-giao-dich-spot',
                 displaySlug: 'giao-dich-spot',
                 description: null,
-                iconUrl: '',
+                iconUrl: 'Hướng dẫn về giao dịch spot trên Nami Exchange',
                 subCats: []
             },
             {
@@ -142,7 +142,7 @@ export const SupportCategories = {
                 slug: 'faq-vi-giao-dich-futures',
                 displaySlug: 'giao-dich-futures',
                 description: null,
-                iconUrl: '',
+                iconUrl: 'Hướng dẫn về giao dịch Futures trên Nami Exchange',
                 subCats: [
                     {
                         id: 'vndc_futures',
@@ -163,7 +163,7 @@ export const SupportCategories = {
                 title: 'Sản phẩm tài chính',
                 slug: 'faq-vi-san-pham-tai-chinh',
                 displaySlug: 'san-pham-tai-chinh',
-                description: null,
+                description: 'Các thông tin về nhóm sản phẩm tài chính trên Nami Exchange',
                 iconUrl: '',
                 subCats: [
                     {
@@ -475,25 +475,32 @@ export const SupportCategories = {
 export const getSupportCategoryIcons = (id) => {
     switch (id) {
         case CatsKey.AccountFunctions:
+            return '/images/screen/support/ic_user.png'
         case CatsKey.Tutorial:
-        case CatsKey.NamiToken:
-        case CatsKey.DepWdlCrypto:
-        case CatsKey.SpotTrading:
-        case CatsKey.FuturesTrading:
-        case CatsKey.Swap:
-        case CatsKey.Finance:
-        case CatsKey.Others:
-        case CatsKey.BusinessPartner:
-        case CatsKey.NewTokenListing:
         case CatsKey.NamiNews:
         case CatsKey.Announcement:
         case CatsKey.Event:
-            return '/images/icon/ic_exchange.png'
+            return '/images/screen/support/ic_book.png'
+        case CatsKey.DepWdlCrypto:
+            return '/images/screen/support/ic_dollar.png'
+        case CatsKey.NamiToken:
+            return '/images/screen/support/ic_nami_token.png'
+        case CatsKey.SpotTrading:
+            return '/images/screen/support/ic_analytic.png'
+        case CatsKey.FuturesTrading:
+            return '/images/screen/support/ic_trend.png'
+        case CatsKey.Swap:
+        case CatsKey.NewTokenListing:
+            return '/images/screen/support/ic_duo_dollar.png'
+        case CatsKey.Finance:
+            return '/images/screen/support/ic_wallet.png'
+        case CatsKey.Others:
+            return '/images/screen/support/ic_other.png'
+        case CatsKey.BusinessPartner:
+            return '/images/icon/ic_globe.png'
     }
 }
 
 export const getCategories = async () => {
     const cats = await ghost.tags.browse({ limit: 'all' })
-    console.log('namidev ', cats)
-    console.log('namidev-DEBUG: founded parent => ', cats.find(o => o?.id === '61ea632396458f0c62ae69dc'))
 }

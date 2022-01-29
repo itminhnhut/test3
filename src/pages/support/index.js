@@ -10,7 +10,7 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import useWindowSize from 'hooks/useWindowSize'
 import Image from 'next/image'
 import { useAsync } from 'react-use'
-import { getLastedArticles } from 'utils'
+import { getLastedArticles, ghost } from 'utils'
 import { useTranslation } from 'next-i18next'
 import { formatTime } from 'redux/actions/utils'
 import classNames from 'classnames'
@@ -244,6 +244,9 @@ const Support = () => {
 
         setLastedArticles(lastedArticles)
         setHighlightedArticles(highlightedArticles)
+
+        const a = await ghost.tags.browse({ limit: 'all' })
+        console.log('namidev ', a)
 
         setLoading(false)
     }, [language])
