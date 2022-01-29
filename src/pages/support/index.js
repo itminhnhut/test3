@@ -245,8 +245,8 @@ const Support = () => {
         setLastedArticles(lastedArticles)
         setHighlightedArticles(highlightedArticles)
 
-        const a = await ghost.tags.browse({ limit: 'all' })
-        console.log('namidev ', a)
+        // const a = await ghost.tags.browse({ limit: 'all' })
+        // console.log('namidev ', a)
 
         setLoading(false)
     }, [language])

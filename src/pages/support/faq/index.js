@@ -67,7 +67,7 @@ const SupportAnnouncement = () => {
                 </a>
             </Link>
         ))
-    }, [categories, loading, language])
+    }, [loading, language])
 
     const renderLastedArticles = useCallback(() => {
         if (loading) {
@@ -104,7 +104,7 @@ const SupportAnnouncement = () => {
             return (
                 <Link key={article?.id} href={{
                     pathname: PATHS.SUPPORT.FAQ + '/[topic]/[articles]',
-                    query: { topic, articles: article.id, source: isApp ? 'app' : '' }
+                    query: { topic, articles: article.slug, source: isApp ? 'app' : '' }
                 }}>
                     <a className="w-full md:w-1/2 text-sm lg:text-[16px] font-medium hover:text-dominant mb-5 lg:mb-8">
                         {article.title}
