@@ -8,6 +8,7 @@ import { formatTime } from 'redux/actions/utils'
 import useApp from 'hooks/useApp'
 import { ChevronLeft } from 'react-feather'
 import { useTranslation } from 'next-i18next'
+import { appUrlHandler } from 'constants/faqHelper'
 
 const AnnouncementTopics = (props) => {
     const router = useRouter()
@@ -23,10 +24,7 @@ const AnnouncementTopics = (props) => {
         return props?.data?.articles?.map(item => (
             <Link href={{
                 pathname: PATHS.SUPPORT.ANNOUNCEMENT + `/${router?.query?.topic}/[articles]`,
-                query: {
-                    articles: item.slug.toString(),
-                    source: isApp ? 'app' : ''
-                }
+                query: appUrlHandler({ articles: item.slug.toString() }, isApp)
             }} key={item.uuid}>
                 <a className="block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant">
                     {item?.title}{' '}{' '}

@@ -6,7 +6,7 @@ import { ChevronLeft } from 'react-feather'
 import TopicsLayout from 'components/screens/Support/TopicsLayout'
 import Link from 'next/link'
 import useApp from 'hooks/useApp'
-import { SupportCategories } from 'constants/faqHelper'
+import { appUrlHandler, SupportCategories } from 'constants/faqHelper'
 import { useTranslation } from 'next-i18next'
 import { useCallback, useEffect, useState } from 'react'
 import { ghost } from 'utils'
@@ -27,10 +27,7 @@ const FaqTopics = (props) => {
             <div key={item.id} title={item.title} className="mb-[18px] h-full w-full sm:w-1/2 lg:w-1/3 sm:pr-3">
                 <Link href={{
                     pathname: PATHS.SUPPORT.FAQ + `/${router?.query?.topic}`,
-                    query: {
-                        group: item.displaySlug,
-                        source: isApp ? 'app' : ''
-                    }
+                    query: appUrlHandler({group: item.displaySlug}, isApp)
                 }} key={item.uuid}>
                     <a className="truncate block bg-gray-4 dark:bg-darkBlue-4 rounded-sm hover:opacity-80 px-4 py-3 text-sm font-medium lg:text-[16px]">
                         {item?.title}
@@ -72,10 +69,7 @@ const FaqTopics = (props) => {
         return data?.map(article => (
             <Link href={{
                 pathname: PATHS.SUPPORT.FAQ + `/${router?.query?.topic}/[articles]`,
-                query: {
-                    articles: article.slug.toString(),
-                    source: isApp ? 'app' : ''
-                }
+                query: appUrlHandler({ articles: article.slug.toString() }, isApp)
             }} key={article.uuid}>
                 <a className="block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant">
                     {article?.title}{' '}{' '}
@@ -99,10 +93,7 @@ const FaqTopics = (props) => {
         return data.map(article => (
             <Link href={{
                 pathname: PATHS.SUPPORT.FAQ + `/${router?.query?.topic}/[articles]`,
-                query: {
-                    articles: article.slug.toString(),
-                    source: isApp ? 'app' : ''
-                }
+                query: appUrlHandler({ articles: article.slug.toString() }, isApp)
             }} key={article.uuid}>
                 <a className="!block !w-full text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant">
                     {article?.title}{' '}{' '}

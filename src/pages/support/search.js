@@ -17,6 +17,7 @@ import { useAsync } from 'react-use'
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import RePagination from 'components/common/ReTable/RePagination'
+import { appUrlHandler } from 'constants/faqHelper'
 
 const PAGE_SIZE = 15
 
@@ -42,11 +43,10 @@ const SupportSearchResult = () => {
     const onQuery = (tab, query) => router.push(
         {
             pathname: PATHS.SUPPORT.SEARCH,
-            query: {
-                type: tab,
-                query,
-                source: isApp ? 'app' : undefined
-            }
+            query: appUrlHandler({
+                                     type: tab,
+                                     query
+                                 }, isApp)
         })
 
     // ? render

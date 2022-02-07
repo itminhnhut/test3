@@ -9,7 +9,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import useApp from 'hooks/useApp'
-import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
+import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
 import { ChevronUp, ChevronDown } from 'react-feather'
 import { useEffect, useState } from 'react'
 
@@ -69,7 +69,7 @@ const TopicsLayout = ({
                             >
                                 <Link href={{
                                     pathname: PATHS.SUPPORT.DEFAULT + `/${mode}/[topic]`,
-                                    query: { topic: item.displaySlug, source: isApp ? 'app' : '' }
+                                    query: appUrlHandler({ topic: item.displaySlug }, isApp)
                                 }}>
                                     <a className={classNames('flex flex-grow items-center block text-[16px] font-medium cursor-pointer')}>
                                         <div className="w-[32px] h-[32px] mr-4">
@@ -99,10 +99,7 @@ const TopicsLayout = ({
                                 {item.subCats?.map(subCats => (
                                     <Link href={{
                                         pathname: PATHS.SUPPORT.FAQ + `/${item.displaySlug}`,
-                                        query: {
-                                            group: subCats.displaySlug,
-                                            source: isApp ? 'app' : ''
-                                        }
+                                        query: appUrlHandler({ group: subCats.displaySlug }, isApp)
                                     }}>
                                         <a className={classNames(
                                             'block pl-[64px] text-[16px] cursor-pointer lg:py-2.5 2xl:py-4 font-medium hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
@@ -148,7 +145,7 @@ const TopicsLayout = ({
                             return (
                                 <Link key={article.id} href={{
                                     pathname: baseHref + '/[topic]/[articles]',
-                                    query: { topic, articles: article.slug?.toString(), source: isApp ? 'app' : '' }
+                                    query: appUrlHandler({ topic, articles: article.slug?.toString() }, isApp)
                                 }}>
                                     <a className={classNames('block mb-2.5 font-medium px-3 py-2.5 rounded-[8px]',
                                                              { 'bg-gray-4 dark:bg-darkBlue-4': article.id === router?.query?.articles })}>

@@ -504,3 +504,11 @@ export const getSupportCategoryIcons = (id) => {
 export const getCategories = async () => {
     const cats = await ghost.tags.browse({ limit: 'all' })
 }
+
+export const appUrlHandler = (obj, isApp) => {
+    if (!isApp) return obj
+    return {
+        ...obj,
+        source: 'app'
+    }
+}
