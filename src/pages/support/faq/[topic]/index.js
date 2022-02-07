@@ -32,7 +32,7 @@ const FaqTopics = (props) => {
                         source: isApp ? 'app' : ''
                     }
                 }} key={item.uuid}>
-                    <a className="truncate block bg-gray-4 rounded-sm hover:opacity-80 px-4 py-3 text-sm font-medium lg:text-[16px]">
+                    <a className="truncate block bg-gray-4 dark:bg-darkBlue-4 rounded-sm hover:opacity-80 px-4 py-3 text-sm font-medium lg:text-[16px]">
                         {item?.title}
                     </a>
                 </Link>
@@ -125,7 +125,7 @@ const FaqTopics = (props) => {
     return (
         <>
             {renderAppHeader()}
-            <TopicsLayout useTopicTitle mode="faq">
+            <TopicsLayout useTopicTitle mode="faq" faqCurrentGroup={currentGroup}>
                 <div className={
                     classNames('flex flex-wrap',
                                {

@@ -10,6 +10,8 @@ import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import useApp from 'hooks/useApp'
 import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
+import { ChevronUp, ChevronDown } from 'react-feather'
+import { useEffect, useState } from 'react'
 
 const COL_WIDTH = 304
 
@@ -17,8 +19,11 @@ const TopicsLayout = ({
                           children,
                           lastedArticles,
                           useTopicTitle = true,
-                          mode = 'announcement'
+                          mode = 'announcement',
+                          faqCurrentGroup
                       }) => {
+    const [showDropdown, setShowDropdown] = useState({})
+
     const router = useRouter()
     const [theme] = useDarkMode()
     const { t, i18n: { language } } = useTranslation()
@@ -27,6 +32,21 @@ const TopicsLayout = ({
     const baseHref = mode === 'announcement' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ
     const queryMode = mode === 'announcement' ? 'noti' : 'faq'
     const topics = mode === 'announcement' ? SupportCategories.announcements[language] : SupportCategories.faq[language]
+    const isFaq = mode === 'faq'
+
+    const mainTopic = topics.find(o => o?.displaySlug === router?.query?.topic)
+    const subTopics = mainTopic.subCats?.find(o => o?.displaySlug === faqCurrentGroup) || false
+
+    useEffect(() => {
+        if (isFaq && router?.query?.topic) {
+            setShowDropdown({ [router.query.topic]: true })
+        }
+    }, [isFaq, router])
+
+    // useEffect(() => {
+    //     console.log('namidev ', showDropdown)
+    // }, [showDropdown])
+
 
     return (
         <MaldivesLayout>
@@ -39,22 +59,63 @@ const TopicsLayout = ({
                 <div className="flex min-h-[500px]">
                     <div style={{ width: COL_WIDTH, minWidth: COL_WIDTH }}
                          className="hidden lg:block py-5 lg:py-[40px] border-r border-divider dark:border-divider-dark">
-                        {topics?.map(item => <Link key={item.id} href={{
-                            pathname: PATHS.SUPPORT.DEFAULT + `/${mode}/[topic]`,
-                            query: { topic: item.displaySlug, source: isApp ? 'app' : '' }
-                        }}>
-                            <a className={classNames('flex items-center block px-5 lg:py-2.5 2xl:py-4 text-[16px] font-medium hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer',
-                                                     {
-                                                         'bg-teal-lightTeal dark:bg-teal-opacity': router?.query?.topic === item.displaySlug
-                                                     }
+                        {topics?.map(item => <div key={item.id}>
+                            <div className={classNames(
+                                'flex items-center px-5 lg:py-2.5 2xl:py-4 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
+                                {
+                                    'bg-teal-lightTeal dark:bg-teal-opacity': !isFaq && router?.query?.topic === item.displaySlug
+                                }
+                            )}
+                            >
+                                <Link href={{
+                                    pathname: PATHS.SUPPORT.DEFAULT + `/${mode}/[topic]`,
+                                    query: { topic: item.displaySlug, source: isApp ? 'app' : '' }
+                                }}>
+                                    <a className={classNames('flex flex-grow items-center block text-[16px] font-medium cursor-pointer')}>
+                                        <div className="w-[32px] h-[32px] mr-4">
+                                            {<Image src={getSupportCategoryIcons(item.id)}
+                                                    layout="responsive" width={32}
+                                                    height={32}/>}
+                                        </div>
+                                        <span className="flex-grow"> {item?.title}</span>
+                                    </a>
+                                </Link>
+                                {isFaq && !!item.subCats?.length && <span
+                                    className="hover:text-dominant cursor-pointer"
+                                    onClick={() => setShowDropdown(prevState => (
+                                        { ...prevState, [item.displaySlug]: !showDropdown?.[item.displaySlug] }
+                                    ))}>
+                                            {!!showDropdown?.[item.displaySlug] ?
+                                                <ChevronUp size={14} strokeWidth={1.2}/>
+                                                : <ChevronDown size={14} strokeWidth={1.2}/>}
+                                    </span>}
+                            </div>
+                            {isFaq && !!item.subCats?.length &&
+                            <div className={classNames('hidden',
+                                                       {
+                                                           '!block': !!showDropdown?.[item.displaySlug]
+                                                       }
                             )}>
-                                <div className="w-[32px] h-[32px] mr-4">
-                                    {<Image src={getSupportCategoryIcons(item.id)} layout="responsive" width={32}
-                                            height={32}/>}
-                                </div>
-                                <span> {item?.title}</span>
-                            </a>
-                        </Link>)}
+                                {item.subCats?.map(subCats => (
+                                    <Link href={{
+                                        pathname: PATHS.SUPPORT.FAQ + `/${item.displaySlug}`,
+                                        query: {
+                                            group: subCats.displaySlug,
+                                            source: isApp ? 'app' : ''
+                                        }
+                                    }}>
+                                        <a className={classNames(
+                                            'block pl-[64px] text-[16px] cursor-pointer lg:py-2.5 2xl:py-4 font-medium hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
+                                            {
+                                                'bg-teal-lightTeal dark:bg-teal-opacity': subCats.displaySlug === faqCurrentGroup
+                                            }
+                                        )}>
+                                            {subCats.title}
+                                        </a>
+                                    </Link>
+                                ))}
+                            </div>}
+                        </div>)}
                     </div>
 
                     <div className="flex-grow px-4 pb-8 md:px-6 lg:px-8 lg:py-[40px]">
@@ -64,7 +125,7 @@ const TopicsLayout = ({
                                                    {
                                                        'lg:!m-0': !useTopicTitle,
                                                    })}>
-                            {topics.find(o => o?.displaySlug === router?.query?.topic)?.title}
+                            {!faqCurrentGroup ? mainTopic?.title : subTopics?.title}
                         </div>}
                         {children}
                     </div>
@@ -87,7 +148,7 @@ const TopicsLayout = ({
                             return (
                                 <Link key={article.id} href={{
                                     pathname: baseHref + '/[topic]/[articles]',
-                                    query: { topic, articles: article.id?.toString(), source: isApp ? 'app' : '' }
+                                    query: { topic, articles: article.slug?.toString(), source: isApp ? 'app' : '' }
                                 }}>
                                     <a className={classNames('block mb-2.5 font-medium px-3 py-2.5 rounded-[8px]',
                                                              { 'bg-gray-4 dark:bg-darkBlue-4': article.id === router?.query?.articles })}>

@@ -146,13 +146,13 @@ export const SupportCategories = {
                 subCats: [
                     {
                         id: 'vndc_futures',
-                        title: 'VNDC Fututures',
+                        title: 'VNDC Futures',
                         slug: 'faq-vi-vndc-futures',
                         displaySlug: 'vndc-futures'
                     },
                     {
                         id: 'usdt_futures',
-                        title: 'USDT Fututures',
+                        title: 'USDT Futures',
                         slug: 'faq-vi-usdt-futures',
                         displaySlug: 'usdt-futures'
                     },
@@ -334,13 +334,13 @@ export const SupportCategories = {
                 subCats: [
                     {
                         id: 'vndc_futures',
-                        title: 'VNDC Fututures',
+                        title: 'VNDC Futures',
                         slug: 'faq-en-vndc-futures',
                         displaySlug: 'vndc-futures'
                     },
                     {
                         id: 'usdt_futures',
-                        title: 'USDT Fututures',
+                        title: 'USDT Futures',
                         slug: 'faq-en-usdt-futures',
                         displaySlug: 'usdt-futures'
                     },
