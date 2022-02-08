@@ -754,6 +754,20 @@
   resolved "https://registry.npmjs.org/@tailwindcss/line-clamp/-/line-clamp-0.2.1.tgz"
   integrity sha512-Hq2KJY1+T2v7jw/mnT3mnC7CKbp5kj1XTqzSb2xbEt1j+JkxIR6N3ijsN/WevZtsKJfVE1KOejA/3IRKuhZEsQ==
 
+"@tryghost/content-api@^1.5.17":
+  version "1.5.17"
+  resolved "https://registry.yarnpkg.com/@tryghost/content-api/-/content-api-1.5.17.tgz#b0d1df2c030b9ff045f5e7db5088174e4a0d5259"
+  integrity sha512-O7Zl7UH5XKbhkwHIVidYgiUiGa5D3Sofli3GwNpxPtC+t9Y3wt/0VnI7brG9qLerWjehZFsyGgT/dv+yJoBtjw==
+  dependencies:
+    axios "^0.21.1"
+
+"@tryghost/string@^0.1.22":
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/@tryghost/string/-/string-0.1.22.tgz#50a78c5eb1a79c88ccaa7b7012a3c0e5885baf03"
+  integrity sha512-GnlEUPMj2eLFoJcRe7bI4UG6yjcdCuh1vazbsuQfA3pBf4rVSIiqE0/oY4UKNVZATVc8EpXsEfAqdHYQGPysvw==
+  dependencies:
+    unidecode "^0.1.8"
+
 "@types/hoist-non-react-statics@^3.3.0", "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
   resolved "https://registry.npmjs.org/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz"
@@ -2838,6 +2852,11 @@ flatted@^3.1.0:
   version "3.2.2"
   resolved "https://registry.npmjs.org/flatted/-/flatted-3.2.2.tgz"
   integrity sha512-JaTY/wtrcSyvXJl4IMFHPKyFur1sE9AUqc0QnhOaJ0CxHtAoIV8pYDzeEfAaNEtGkOfq4gr3LBFmdXW5mOQFnA==
+
+flexsearch@^0.7.21:
+  version "0.7.21"
+  resolved "https://registry.yarnpkg.com/flexsearch/-/flexsearch-0.7.21.tgz#0f5ede3f2aae67ddc351efbe3b24b69d29e9d48b"
+  integrity sha512-W7cHV7Hrwjid6lWmy0IhsWDFQboWSng25U3VVywpHOTJnnAZNPScog67G+cVpeX9f7yDD21ih0WDrMMT+JoaYg==
 
 follow-redirects@^1.0.0, follow-redirects@^1.14.0:
   version "1.14.3"
@@ -6808,6 +6827,11 @@ unbox-primitive@^1.0.1:
     has-bigints "^1.0.1"
     has-symbols "^1.0.2"
     which-boxed-primitive "^1.0.2"
+
+unidecode@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/unidecode/-/unidecode-0.1.8.tgz#efbb301538bc45246a9ac8c559d72f015305053e"
+  integrity sha1-77swFTi8RSRqmsjFWdcvAVMFBT4=
 
 universalify@^0.1.0:
   version "0.1.2"

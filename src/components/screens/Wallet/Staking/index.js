@@ -18,7 +18,10 @@ import Skeletor from 'components/common/Skeletor'
 import { BREAK_POINTS } from 'constants/constants'
 import RePagination from 'components/common/ReTable/RePagination'
 import Modal from 'components/common/ReModal'
-import { SECRET_STRING } from 'utils'
+import { SECRET_STRING, wait } from 'utils'
+import Button from 'components/common/Button'
+import { PulseLoader } from 'react-spinners'
+import colors from 'styles/colors'
 
 
 const INITIAL_STATE = {
@@ -35,7 +38,9 @@ const INITIAL_STATE = {
     apiResponse: {},
     openModal: {},
     cancelObj: {},
-
+    onCancelling: false,
+    canceledMsg: null,
+    showMsg: null
     // ...
 }
 
@@ -83,19 +88,24 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
         try {
             const { data } = await Axios.post(API_STAKING_CANCEL_EARNING, { earnOrderId })
             if (data?.status === ApiStatus.SUCCESS) {
-                setState({ apiResponse: { cancel: 'OK' } })
+                setState({ apiResponse: { cancel: 'OK' }, canceledMsg: t('common:success') })
             } else {
-                setState({ apiResponse: { cancel: "ERROR" } })
+                setState({ apiResponse: { cancel: "ERROR" }, canceledMsg: t('common:failure') })
             }
         } catch (e) {
             console.log(`Can't cancel order ${earnOrderId} => `, e)
         } finally {
             await getOrder(state.page, state.tableTab)
             setState({ onCancelling: false })
+            onCloseModal()
+            await wait(500)
+            showMsg(true)
         }
     }
 
     const onCloseModal = () => setState({ openModal: {}, cancelObj: {}, apiResponse: {} })
+
+    const showMsg = (status) => setState({ openModal: { showMsg: status } })
 
     const onOpenModal = (earnOrderId, displayId) => {
         setState({
@@ -367,8 +377,7 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
 
         return (
             <Modal
-                   title={t('wallet:earn_prompt.cancel_confirmation', { action })}
-                   titleStyle="capitalize"
+                   titleStyle=""
                    type={state.apiResponse?.cancel ? 'alert' : 'confirmation'}
                    isVisible={state.openModal?.cancel}
                    onBackdropCb={onCloseModal}
@@ -376,6 +385,7 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
                    onConfirmCb={() => onCancel(state.cancelObj?.earnOrderId)}
             >
                 <div className="w-full">
+                    <div className="text-center text-md font-bold capitalize">{t('wallet:earn_prompt.cancel_confirmation', { action })}</div>
                     {!!!Object.keys(state.apiResponse)?.length ?
                         <div className="text-sm 2xl:text-[16px] text-center font-medium mt-2">
                             {t('wallet:earn_prompt.cancel_message', { action, id })} ?
@@ -386,10 +396,44 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
                                 : t('wallet:earn_prompt.cancel_failure', { action, id })}
                         </div>
                     }
+                    <div className="mt-4 w-full flex flex-row items-center justify-between">
+                        <Button title={t('common:close')} type="secondary"
+                                componentType="button"
+                                style={{ width: '48%' }}
+                                onClick={onCloseModal}/>
+                        <Button title={state.onCancelling ? <PulseLoader color={colors.white} size={3}/> : t('common:confirm')} type="primary"
+                                componentType="button"
+                                style={{ width: '48%' }}
+                                onClick={() => onCancel(state.cancelObj?.earnOrderId)}/>
+                    </div>
                 </div>
             </Modal>
         )
-    }, [state.openModal?.cancel, state.cancelObj, state.apiResponse?.cancel])
+    }, [state.openModal?.cancel, state.cancelObj, state.onCancelling, state.apiResponse?.cancel])
+
+    const renderShowMsg = useCallback(() => {
+        return (
+            <Modal
+                isVisible={state.openModal?.showMsg}
+                onBackdropCb={() => showMsg(false)}
+            >
+                <div className="w-full">
+                    <div className="text-center text-md font-bold capitalize">
+                        {t('modal:notice')}
+                    </div>
+                    <div className="mt-3 text-center font-medium text-md">
+                        {state?.canceledMsg}
+                    </div>
+                    <div className="mt-4 w-full flex flex-row items-center justify-center">
+                        <Button title={t('common:confirm')} type="primary"
+                                componentType="button"
+                                style={{ width: '48%' }}
+                                onClick={() => showMsg(false)}/>
+                    </div>
+                </div>
+            </Modal>
+        )
+    }, [state.openModal?.showMsg, state.canceledMsg])
 
     useEffect(() => {
         getOrder(state.page, state.tableTab)
@@ -428,6 +472,7 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
                 </div>
             </MCard>
             {state.tableTab === 0 && renderCancelEarnModal()}
+            {renderShowMsg()}
         </div>
     )
 })

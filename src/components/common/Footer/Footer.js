@@ -2,6 +2,7 @@ import { useWindowSize } from 'utils/customHooks'
 import { memo, useState } from 'react'
 
 import PocketFooter from 'src/components/common/Footer/PocketFooter'
+import useApp from 'hooks/useApp'
 
 const Footer = memo(() => {
     // * Initial State
@@ -12,6 +13,9 @@ const Footer = memo(() => {
 
     // * Use Hooks
     const { width } = useWindowSize()
+    const isApp = useApp()
+
+    if (isApp) return null
 
     return (
         <section className="mal-footer">

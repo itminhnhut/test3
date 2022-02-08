@@ -1,6 +1,12 @@
 const API_PREFIX = "/api/v1/";
 const API_V2_PREFIX = "/api/v2/";
 const API_V3_PREFIX = "/api/v3/";
+const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/content`
+
+export const getBlogApi = (apiEndpoint, params) => {
+    if (!apiEndpoint) return ''
+    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY}${params|| ''}`
+}
 
 export const API_REGISTER = API_PREFIX + "user/register";
 export const API_LOGIN = API_PREFIX + "user/login";
@@ -143,3 +149,7 @@ export const API_EARNING_POOL_WITHDRAW = API_PREFIX + "earning/pool/withdraw";
 // Mission
 export const API_GET_MISSION = API_PREFIX + "reward_center/mission";
 export const API_CLAIM_MISSION_REWARD = API_PREFIX + "reward_center/claim";
+
+// Support center
+export const API_GET_ALL_BLOG_POSTS = getBlogApi('posts')
+export const API_GET_ALL_BLOG_TAGS = getBlogApi('tags')

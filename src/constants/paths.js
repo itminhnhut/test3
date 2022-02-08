@@ -5,6 +5,15 @@ const DEFAULT_BASE_ASSET = 'BTC'
 const DEFAULT_QUOTE_ASSET = 'USDT'
 const DEFAULT_PAIR = `${DEFAULT_BASE_ASSET}-${DEFAULT_QUOTE_ASSET}`
 
+const SUPPORT = {
+    DEFAULT: '/support',
+    FAQ: '/support/faq',
+    ANNOUNCEMENT: '/support/announcement',
+    SEARCH: '/support/search',
+    TOPICS: '/support/announcement/[topic]',
+    ARTICLES: '/support/announcement/[topic]/[articles]'
+}
+
 const EXCHANGE = {
     TRADE: {
         DEFAULT: '/trade',
@@ -48,7 +57,7 @@ const FEE_STRUCTURES = {
 const TERM_OF_SERVICES = {
     DEFAULT: '/terms-of-service',
     SWAP: '/terms-of-service',
-    TRANSFER: '/terms-of-service',
+    TRANSFER: '/terms-of-service'
 }
 
 const ACCOUNT = {
@@ -64,7 +73,7 @@ const ACCOUNT = {
 const REFERENCE = {
     HOW_TO_UPGRADE_VIP: 'https://nami.io/thong-cao/nami-corporation-thong-bao-cap-nhat-chinh-sach-tai-khoan-vip/',
     HOW_TO_UPGRADE_VIP_EN: 'https://nami.io/en/press/announcement-nami-corporation-updates-vip-account-policy/',
-    MAKER_TAKER: 'https://nami.today/maker-taker-la-gi/',
+    MAKER_TAKER: 'https://nami.today/maker-taker-la-gi/'
 }
 
 export const PATHS = {
@@ -75,6 +84,7 @@ export const PATHS = {
     FEE_STRUCTURES,
     TERM_OF_SERVICES,
     REFERENCE,
+    SUPPORT
 
     // Add news path here
 }
