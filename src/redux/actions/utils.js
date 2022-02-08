@@ -106,7 +106,8 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
         switch (mode) {
             case 'sso':
                 if (action === 'register') {
-                    return `${___DEV___ ? 'https://auth-test.nami.trade' : 'https://auth.nami.io'}/register?${qs.stringify(params)}`;
+                    return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/register/nami?${qs.stringify(params)}`;
+                    // return `${___DEV___ ? 'https://auth-test.nami.trade' : 'https://auth.nami.io'}/register?${qs.stringify(params)}`;
                 }
                 return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/login/nami?${qs.stringify(params)}`;
 
