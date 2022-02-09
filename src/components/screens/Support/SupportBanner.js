@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import useApp from 'hooks/useApp'
 
-const SupportBanner = ({ title, href = '#', containerClassNames = '', innerClassNames = '' }) => {
+const SupportBanner = ({ title, href = '#', containerClassNames = '', innerClassNames = '', resetPage = undefined }) => {
     const { t } = useTranslation()
     const isApp = useApp()
 
@@ -20,6 +20,7 @@ const SupportBanner = ({ title, href = '#', containerClassNames = '', innerClass
                 <SupportSearchBar
                     placeholder={t('common:search_articles')}
                     containerClassNames={classNames('rounded-lg bg-white dark:bg-darkBlue-2')}
+                    resetPage={resetPage}
                 />
             </div>
         </div>

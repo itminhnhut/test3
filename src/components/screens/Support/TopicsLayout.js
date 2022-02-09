@@ -71,7 +71,7 @@ const TopicsLayout = ({
                                     pathname: PATHS.SUPPORT.DEFAULT + `/${mode}/[topic]`,
                                     query: appUrlHandler({ topic: item.displaySlug }, isApp)
                                 }}>
-                                    <a className={classNames('flex flex-grow items-center block text-[16px] font-medium cursor-pointer')}>
+                                    <a className={classNames('flex flex-grow items-center text-[16px] font-medium cursor-pointer')}>
                                         <div className="w-[32px] h-[32px] mr-4">
                                             {<Image src={getSupportCategoryIcons(item.id)}
                                                     layout="responsive" width={32}
@@ -102,7 +102,7 @@ const TopicsLayout = ({
                                         query: appUrlHandler({ group: subCats.displaySlug }, isApp)
                                     }}>
                                         <a className={classNames(
-                                            'block pl-[64px] text-[16px] cursor-pointer lg:py-2.5 2xl:py-4 font-medium hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
+                                            'block pl-[68px] text-[16px] cursor-pointer lg:py-2.5 2xl:py-4 font-medium hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
                                             {
                                                 'bg-teal-lightTeal dark:bg-teal-opacity': subCats.displaySlug === faqCurrentGroup
                                             }

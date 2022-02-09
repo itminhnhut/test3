@@ -41,6 +41,7 @@
     "@tailwindcss/line-clamp": "^0.2.1",
     "@tryghost/content-api": "^1.5.17",
     "@tryghost/string": "^0.1.22",
+    "algoliasearch": "^4.12.1",
     "animate.css": "^4.1.1",
     "apexcharts": "^3.27.1",
     "axios": "^0.21.1",

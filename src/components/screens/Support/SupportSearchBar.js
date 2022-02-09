@@ -9,7 +9,8 @@ import { appUrlHandler } from 'constants/faqHelper'
 
 const SupportSearchBar = ({
                               containerClassNames = '',
-                              simpleMode = false
+                              simpleMode = false,
+                              resetPage
                           }) => {
     const [type, setType] = useState(0)
     const [query, setQuery] = useState('')
@@ -19,16 +20,19 @@ const SupportSearchBar = ({
     const isApp = useApp()
     const router = useRouter()
 
-    const onSearch = (type, searchKey) => router.push(
-        {
-            pathname: PATHS.SUPPORT.SEARCH,
-            query: appUrlHandler(
-                {
-                    type,
-                    query: searchKey
-                }, isApp)
-        }
-    )
+    const onSearch = (type, searchKey) => {
+        resetPage && resetPage()
+        router.push(
+            {
+                pathname: PATHS.SUPPORT.SEARCH,
+                query: appUrlHandler(
+                    {
+                        type,
+                        query: searchKey
+                    }, isApp)
+            }
+        )
+    }
 
     useEffect(() => {
         if (router?.query && Object.keys(router.query).length && router.query?.query && router.query?.type) {

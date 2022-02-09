@@ -12,7 +12,7 @@ import useApp from 'hooks/useApp'
 import SearchResultItem from 'components/screens/Support/SearchResultItem'
 import useWindowSize from 'hooks/useWindowSize'
 import { BREAK_POINTS } from 'constants/constants'
-import { getLastedArticles, querySupportArticles } from 'utils'
+import { algoliaIndex, getLastedArticles, querySupportArticles } from 'utils'
 import { useAsync } from 'react-use'
 import { useTranslation } from 'next-i18next'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
@@ -26,7 +26,8 @@ const INITIAL_STATE = {
     query: null,
     loading: false,
     searchResult: [],
-    currentPage: 1
+    currentPage: 1,
+    totalArticle: null,
 }
 
 const SupportSearchResult = () => {
@@ -43,24 +44,21 @@ const SupportSearchResult = () => {
     const onQuery = (tab, query) => router.push(
         {
             pathname: PATHS.SUPPORT.SEARCH,
-            query: appUrlHandler({
-                                     type: tab,
-                                     query
-                                 }, isApp)
+            query: appUrlHandler({ type: tab, query }, isApp)
         })
 
     // ? render
     const renderTab = useCallback(() => TAB_SERIES.map(item => (
         <div key={item.key} className="mr-8 cursor-pointer min-h-[33px]"
-             onClick={() => onQuery(item.key, state.query)}>
+            onClick={() => onQuery(item.key, state.query)}>
             <div className={classNames(
-                'mb-2 truncate text-sm',
+                'mb-2 truncate text-sm text-center',
                 { 'font-bold': item.key === state.tab },
                 { 'text-txtSecondary dark:text-txtSecondary-dark font-medium': item.key !== state.tab }
             )}>
                 {item.localizedPath ? t(item.localizedPath) : item.title}
             </div>
-            {state.tab === item.key && <div className="m-auto w-[32px] h-[4px] bg-dominant"/>}
+            {state.tab === item.key && <div className="m-auto w-[32px] h-[4px] bg-dominant" />}
         </div>
     )), [state.tab, state.query])
 
@@ -68,32 +66,32 @@ const SupportSearchResult = () => {
         if (state.loading) {
             return (
                 <>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
-                    <SearchResultItem loading={true}/>
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
+                    <SearchResultItem loading={true} />
                 </>
             )
         }
 
-        const data = state.searchResult?.slice((state.currentPage - 1) * PAGE_SIZE, state.currentPage * PAGE_SIZE)
-        return data?.map(search => <SearchResultItem key={search?.id} article={search}/>)
+        const data = state.searchResult
+        return data?.map(search => <SearchResultItem key={search?.id} article={search} />)
     }, [state.searchResult, state.currentPage, state.loading])
 
     useEffect(() => {
         if (router?.query && Object.keys(router.query).length && router.query?.query && router.query?.type) {
             setState({
-                         tab: +router.query?.type,
-                         query: router.query.query
-                     })
+                tab: +router.query?.type,
+                query: router.query.query
+            })
             if (router.query.query?.length) {
                 setState({ searchKey: router.query.query })
             }
@@ -113,21 +111,28 @@ const SupportSearchResult = () => {
                 tag = undefined
             }
 
-            const allPosts = await getLastedArticles(tag, 'all', language, false)
-            if (allPosts?.length) {
-                setState(
-                    {
-                        searchResult: allPosts.filter(o => o?.title?.toLowerCase().includes(state.query?.toLowerCase()))
-                    }
-                )
-            }
+            // const allPosts = await getLastedArticles(tag, 'all', language, false)
+            // if (allPosts?.length) {
+            //     setState(
+            //         {
+            //             searchResult: allPosts.filter(o => o?.title?.toLowerCase().includes(state.query?.toLowerCase()))
+            //         }
+            //     )
+            // }
         }
         setState({ loading: false })
     }, [state.query, state.tab, language])
 
-    // useAsync(async () => {
-    //     await querySupportArticles(+router.query?.type, encodeURI(router?.query?.query), language, state.currentPage, PAGE_SIZE)
-    // }, [router, state.currentPage, language])
+    useAsync(async () => {
+        console.log('namidev ', `${language === 'vi' ? 'NOT ': ''}tags.slug:en`);
+        const algoSearch = await algoliaIndex.search(state.query, {
+            page: state.currentPage - 1,
+            hitsPerPage: 15,
+            // filters: `${language === 'vi' ? 'NOT ': ''}tags.slug:en`
+        })
+        console.log('namidev ', algoSearch);
+        setState({ totalArticle: algoSearch?.nbHits, searchResult: algoSearch?.hits })
+    }, [state.query, state.currentPage, language])
 
     // useEffect(() => {
     //     console.log('namidev ', state)
@@ -137,21 +142,22 @@ const SupportSearchResult = () => {
         <MaldivesLayout>
             <SupportBanner
                 href={PATHS.SUPPORT.DEFAULT}
+                resetPage={() => setState({ currentPage: 1 })}
                 title={language === LANGUAGE_TAG.VI ?
                     <>
-                        Chúng tôi có thể <br className="hidden lg:block"/> giúp gì cho bạn?
+                        Chúng tôi có thể <br className="hidden lg:block" /> giúp gì cho bạn?
                     </> :
                     <>
-                        Can we help you?
+                        How can we help you?
                     </>
-                } innerClassNames="container"/>
+                } innerClassNames="container" />
             <div className="block md:hidden bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:shadow-none">
                 <div
                     className="container px-4 py-2 flex items-center text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark">
                     <Link href={PATHS.SUPPORT.DEFAULT}>
                         <a className="hover:!underline">{t('support-center:title')}</a>
                     </Link>
-                    <ChevronRight strokeWidth={1.5} size={16} className="mx-2"/>
+                    <ChevronRight strokeWidth={1.5} size={16} className="mx-2" />
                     <div>{t('support-center:search_result')}</div>
                 </div>
             </div>
@@ -168,16 +174,16 @@ const SupportSearchResult = () => {
                         renderSearchResult()
                         : <div
                             className="min-h-[200px] flex-center text-center text-xs md:text-sm xl:text-[16px] font-medium text-txtSecondary dark:text-txtSecondary-dark">
-                            <Slash size={45} color="currentColor"/>
-                            <br/>
+                            <Slash size={45} color="currentColor" />
+                            <br />
                             <span className="px-16">{t('support-center:search_no_result')}</span>
                         </div>}
                 </div>
                 <div className="mt-10 mb-20 flex items-center justify-center">
-                    <RePagination total={state.searchResult?.length}
-                                  current={state.currentPage}
-                                  pageSize={PAGE_SIZE}
-                                  onChange={(currentPage) => setState({ currentPage })}
+                    <RePagination total={state.totalArticle || 0}
+                        current={state.currentPage}
+                        pageSize={PAGE_SIZE}
+                        onChange={(currentPage) => setState({ currentPage })}
                     />
                 </div>
             </div>
