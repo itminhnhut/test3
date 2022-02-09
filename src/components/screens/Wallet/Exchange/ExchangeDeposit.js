@@ -32,6 +32,8 @@ import Axios from 'axios'
 import ReTable from 'components/common/ReTable'
 import Modal from 'components/common/ReModal'
 import Tooltip from 'components/common/Tooltip'
+import Button from 'components/common/Button'
+import { PulseLoader } from 'react-spinners'
 
 
 const INITIAL_STATE = {
@@ -687,11 +689,21 @@ const ExchangeDeposit = () => {
 
         return (
             <Modal isVisible={state.openModal?.memoNotice}
-                   type="confirm-one-choice"
-                   title={t('common:important_notes')}
-                   onConfirmCb={closeModal}>
-                <div className="text-center text-sm font-medium mt-4 w-[320px]">
-                    {msg}
+                // onBackdropCb={closeModal}
+            >
+                <div className="text-center text-sm font-medium w-[320px]">
+                    <div className="my-2 text-center font-bold text-[18px]">
+                        {t('common:important_notes')}
+                    </div>
+                    <div>
+                        {msg}
+                    </div>
+                    <div className="mt-4 w-full flex flex-row items-center justify-between">
+                        <Button title={t('common:confirm')} type="primary"
+                                componentType="button"
+                                className="!py-2"
+                                onClick={closeModal}/>
+                    </div>
                 </div>
             </Modal>
         )
