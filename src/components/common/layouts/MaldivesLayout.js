@@ -47,7 +47,6 @@ const MadivesLayout = ({
 
     return (
         <>
-            <ReactNotification/>
             <div
                 className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''} ${dark ? 'mal-layouts___dark' : ''}`}
                 style={state.isDrawer ? {
@@ -55,6 +54,7 @@ const MadivesLayout = ({
                     overflow: 'hidden'
                 } : {}}
             >
+                <ReactNotification className="fixed z-[9000] pointer-events-none w-full h-full"/>
                 {(!hideNavBar && !hideInApp) && !isApp &&
                 <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }}
                         spotState={spotState}
