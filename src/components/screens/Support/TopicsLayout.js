@@ -35,7 +35,7 @@ const TopicsLayout = ({
     const isFaq = mode === 'faq'
 
     const mainTopic = topics.find(o => o?.displaySlug === router?.query?.topic)
-    const subTopics = mainTopic.subCats?.find(o => o?.displaySlug === faqCurrentGroup) || false
+    const subTopics = mainTopic?.subCats?.find(o => o?.displaySlug === faqCurrentGroup) || false
 
     useEffect(() => {
         if (isFaq && router?.query?.topic) {
