@@ -46,33 +46,35 @@ const MadivesLayout = ({
     }
 
     return (
-        <div
-            className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''} ${dark ? 'mal-layouts___dark' : ''}`}
-            style={state.isDrawer ? {
-                height,
-                overflow: 'hidden'
-            } : {}}
-        >
+        <>
             <ReactNotification/>
-            {(!hideNavBar && !hideInApp) && !isApp &&
-            <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }}
-                    spotState={spotState}
-                    onChangeSpotState={onChangeSpotState}
-                    resetDefault={resetDefault}
-                    layoutStateHandler={setState} page={page} changeLayoutCb={changeLayoutCb}/>}
             <div
-                style={{
-                    paddingTop: !navOverComponent && !hideInApp && !isApp ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,
-                    ...contentWrapperStyle
-                }}
-                className="relative flex-1 bg-white dark:bg-darkBlue-1"
+                className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''} ${dark ? 'mal-layouts___dark' : ''}`}
+                style={state.isDrawer ? {
+                    height,
+                    overflow: 'hidden'
+                } : {}}
             >
-                {children}
+                {(!hideNavBar && !hideInApp) && !isApp &&
+                <NavBar name={navName} useOnly={navMode} style={{ ...navbarStyle, ...navStyle }}
+                        spotState={spotState}
+                        onChangeSpotState={onChangeSpotState}
+                        resetDefault={resetDefault}
+                        layoutStateHandler={setState} page={page} changeLayoutCb={changeLayoutCb}/>}
+                <div
+                    style={{
+                        paddingTop: !navOverComponent && !hideInApp && !isApp ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,
+                        ...contentWrapperStyle
+                    }}
+                    className="relative flex-1 bg-white dark:bg-darkBlue-1"
+                >
+                    {children}
+                </div>
+                {(!hideFooter && !hideInApp) && <Footer/>}
+                <TransferModal/>
+                <div id={`${PORTAL_MODAL_ID}`}/>
             </div>
-            {(!hideFooter && !hideInApp) && <Footer/>}
-            <TransferModal/>
-            <div id={`${PORTAL_MODAL_ID}`}/>
-        </div>
+        </>
     )
 }
 
