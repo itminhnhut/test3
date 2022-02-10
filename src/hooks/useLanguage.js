@@ -14,8 +14,23 @@ const useLanguage = () => {
             currentLocale === LANGUAGE_TAG.VI
                 ? LANGUAGE_TAG.EN
                 : LANGUAGE_TAG.VI;
+        const isSupportScreen = router.pathname.includes('support')
         localStorage.setItem('local_lang', nextLang)
-        router.push(router.asPath, router.asPath, { locale: nextLang });
+        if (isSupportScreen) {
+            if (router.pathname.includes('/support/faq')) {
+                router.push({
+                    pathname: `/${nextLang}/support/faq`
+                })
+            } else if (router.pathname.includes('support/announcement')) {
+                router.push({
+                    pathname: `/${nextLang}/support/announcement`
+                })
+            } else {
+                router.push(router.asPath, router.asPath, { locale: nextLang });
+            }
+        } else {
+            router.push(router.asPath, router.asPath, { locale: nextLang });
+        }
     };
 
     return [currentLocale, onChangeLang];

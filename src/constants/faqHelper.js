@@ -77,7 +77,7 @@ export const SupportCategories = {
                 title: 'Hướng dẫn chung',
                 slug: 'faq-vi-huong-dan-chung',
                 displaySlug: 'huong-dan-chung',
-                description: null,
+                description: 'Các câu hỏi tổng quát',
                 iconUrl: '',
                 subCats: []
             },
@@ -86,7 +86,7 @@ export const SupportCategories = {
                 title: 'Token NAMI',
                 slug: 'faq-vi-token-nami',
                 displaySlug: 'token-nami',
-                description: null,
+                description: 'Thông tin về token NAMI',
                 iconUrl: 'Thông tin về token NAMI',
                 subCats: []
             },
@@ -95,7 +95,7 @@ export const SupportCategories = {
                 title: 'Nạp/Rút tiền mã hoá',
                 slug: 'faq-vi-nap-rut-tien-ma-hoa',
                 displaySlug: 'nap-rut-tien-ma-hoa',
-                description: '',
+                description: 'Hướng dẫn chi tiết nạp rút tiền mã hóa',
                 iconUrl: '',
                 subCats: [
                     {
@@ -123,7 +123,7 @@ export const SupportCategories = {
                 title: 'Giao dịch Spot',
                 slug: 'faq-vi-giao-dich-spot',
                 displaySlug: 'giao-dich-spot',
-                description: null,
+                description: 'Hướng dẫn về giao dịch spot trên Nami Exchange',
                 iconUrl: 'Hướng dẫn về giao dịch spot trên Nami Exchange',
                 subCats: []
             },
@@ -132,7 +132,7 @@ export const SupportCategories = {
                 title: 'Quy đổi',
                 slug: 'faq-vi-quy-doi',
                 displaySlug: 'quy-doi',
-                description: null,
+                description: 'Các thông tin về sản phẩm Quy đổi',
                 iconUrl: '',
                 subCats: []
             },
@@ -141,18 +141,18 @@ export const SupportCategories = {
                 title: 'Giao dịch Futures',
                 slug: 'faq-vi-giao-dich-futures',
                 displaySlug: 'giao-dich-futures',
-                description: null,
-                iconUrl: 'Hướng dẫn về giao dịch Futures trên Nami Exchange',
+                description: 'Hướng dẫn về giao dịch Futures trên Nami Exchange',
+                iconUrl: '',
                 subCats: [
                     {
                         id: 'vndc_futures',
-                        title: 'VNDC Fututures',
+                        title: 'VNDC Futures',
                         slug: 'faq-vi-vndc-futures',
                         displaySlug: 'vndc-futures'
                     },
                     {
                         id: 'usdt_futures',
-                        title: 'USDT Fututures',
+                        title: 'USDT Futures',
                         slug: 'faq-vi-usdt-futures',
                         displaySlug: 'usdt-futures'
                     },
@@ -191,7 +191,7 @@ export const SupportCategories = {
                 title: 'Chuyên mục khác',
                 slug: 'faq-vi-chuyen-muc-khac',
                 displaySlug: 'chuyen-muc-khac',
-                description: null,
+                description: 'Thông tin về điều khoản sử dụng sản phẩm dịch vụ',
                 iconUrl: '',
                 subCats: [
                     {
@@ -207,7 +207,7 @@ export const SupportCategories = {
                 title: 'Hợp tác kinh doanh',
                 slug: 'faq-vi-hop-tac-kinh-doanh',
                 displaySlug: 'hop-tac-kinh-doanh',
-                description: null,
+                description: 'Thông tin liên hệ và cách thức hợp tác phát triển kinh doanh',
                 iconUrl: ''
             }
         ],
@@ -217,7 +217,7 @@ export const SupportCategories = {
                 title: 'Account Functions',
                 slug: 'faq-en-account-functions',
                 displaySlug: 'account-functions',
-                description: null,
+                description: 'Questions about accounts and account settings account information',
                 iconUrl: '',
                 subCats: [
                     {
@@ -269,7 +269,7 @@ export const SupportCategories = {
                 title: 'Tutorial',
                 slug: 'faq-en-tutorial',
                 displaySlug: 'tutorial',
-                description: null,
+                description: 'General questions',
                 iconUrl: ''
             },
             {
@@ -277,7 +277,7 @@ export const SupportCategories = {
                 title: 'NAMI Token',
                 slug: 'faq-en-nami-token',
                 displaySlug: 'nami-token',
-                description: null,
+                description: 'Information about the NAMI token',
                 iconUrl: ''
             },
             {
@@ -285,7 +285,7 @@ export const SupportCategories = {
                 title: 'Crypto Deposit/Withdrawal',
                 slug: 'faq-en-crypto-deposit-withdrawal',
                 displaySlug: 'crypto-deposit-withdrawal',
-                description: null,
+                description: 'Detailed instructions for depositing and withdrawing cryptocurrencies',
                 iconUrl: '',
                 subCats: [
                     {
@@ -313,7 +313,7 @@ export const SupportCategories = {
                 title: 'Spot Trading',
                 slug: 'faq-en-spot-trading',
                 displaySlug: 'spot-trading',
-                description: null,
+                description: 'Guide to spot trading on Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -321,7 +321,7 @@ export const SupportCategories = {
                 title: 'Swap',
                 slug: 'faq-en-swap',
                 displaySlug: 'swap',
-                description: null,
+                description: 'Swaps is the process of transferring digital tokens between two blockchains',
                 iconUrl: ''
             },
             {
@@ -329,18 +329,18 @@ export const SupportCategories = {
                 title: 'Futures Trading',
                 slug: 'faq-en-futures-trading',
                 displaySlug: 'futures-trading',
-                description: null,
+                description: 'Guide to Trading Futures on Nami Exchange',
                 iconUrl: '',
                 subCats: [
                     {
                         id: 'vndc_futures',
-                        title: 'VNDC Fututures',
+                        title: 'VNDC Futures',
                         slug: 'faq-en-vndc-futures',
                         displaySlug: 'vndc-futures'
                     },
                     {
                         id: 'usdt_futures',
-                        title: 'USDT Fututures',
+                        title: 'USDT Futures',
                         slug: 'faq-en-usdt-futures',
                         displaySlug: 'usdt-futures'
                     },
@@ -351,7 +351,7 @@ export const SupportCategories = {
                 title: 'Finance',
                 slug: 'faq-en-finance',
                 displaySlug: 'finance',
-                description: null,
+                description: 'Information about financial products on Nami Exchange',
                 iconUrl: '',
                 subCats: [
                     {
@@ -379,7 +379,7 @@ export const SupportCategories = {
                 title: 'Other topics',
                 slug: 'faq-en-other-topics',
                 displaySlug: 'other-topics',
-                description: null,
+                description: 'Information about terms of use of products and services',
                 iconUrl: '',
                 subCats: [
                     {
@@ -395,7 +395,7 @@ export const SupportCategories = {
                 title: 'Business Corperation',
                 slug: 'faq-en-business-corperation',
                 displaySlug: 'business-corperation',
-                description: null,
+                description: 'Contact information and ways to cooperate for business development',
                 iconUrl: ''
             }
         ]
@@ -407,7 +407,7 @@ export const SupportCategories = {
                 title: 'Token mới Niêm yết ',
                 slug: 'noti-vi-token-moi-niem-yet',
                 displaySlug: 'token-moi-niem-yet',
-                description: null,
+                description: 'Các bài thông báo niêm yết',
                 iconUrl: ''
             },
             {
@@ -415,7 +415,7 @@ export const SupportCategories = {
                 title: 'Tin tức về Nami',
                 slug: 'noti-vi-tin-tuc-ve-nami',
                 displaySlug: 'tin-tuc-ve-nami',
-                description: null,
+                description: 'Nhóm các bài viết liên quan đến các thông tin hợp tác giữa Nami Corp / Nami Exchange và đối tác... ', //Các bài viết liên quan đến các sản phẩm cũ (NAC và các sản phẩm liên quan tới NAC hoặc các sản phẩm không còn chạy) thì cần rà soát loại và ẩn đi.
                 iconUrl: ''
             },
             {
@@ -423,7 +423,7 @@ export const SupportCategories = {
                 title: 'Thông báo',
                 slug: 'noti-vi-thong-bao',
                 displaySlug: 'thong-bao',
-                description: null,
+                description: 'Mục này sẽ bao gồm các bài thông báo về hệ thống, trạng thái giao dịch, bảo trì, lịch làm việc dịp nghỉ lễ tết…',
                 iconUrl: ''
             },
             {
@@ -431,7 +431,7 @@ export const SupportCategories = {
                 title: 'Sự kiện',
                 slug: 'noti-vi-su-kien',
                 displaySlug: 'su-kien',
-                description: null,
+                description: 'Cũng như các bài viết liên quan đến các chương trình promotion, marketing... ',
                 iconUrl: ''
             }
         ],
@@ -441,7 +441,7 @@ export const SupportCategories = {
                 title: 'New Token Listing',
                 slug: 'noti-en-new-cryptocurrency-listing',
                 displaySlug: 'new-cryptocurrency-listing',
-                description: null,
+                description: 'Listing announcements',
                 iconUrl: ''
             },
             {
@@ -449,7 +449,7 @@ export const SupportCategories = {
                 title: 'Nami news',
                 slug: 'noti-en-nami-news',
                 displaySlug: 'nami-news',
-                description: null,
+                description: 'Group of articles related to information on cooperation between Nami Corp / Nami Exchange and partners...', // Posts related to legacy products (NAC and NAC-related products, or products that are no longer running) should be re-categorized and hidden.
                 iconUrl: ''
             },
             {
@@ -457,7 +457,7 @@ export const SupportCategories = {
                 title: 'Annoucement',
                 slug: 'noti-en-annoucement',
                 displaySlug: 'annoucement',
-                description: null,
+                description: 'This section will include announcements about the system, transaction status, maintenance, working schedule during Tet holidays...',
                 iconUrl: ''
             },
             {
@@ -465,7 +465,7 @@ export const SupportCategories = {
                 title: 'Event',
                 slug: 'noti-en-event',
                 displaySlug: 'event',
-                description: null,
+                description: 'Articles related to promotions, marketing.',
                 iconUrl: ''
             }
         ]
@@ -503,4 +503,12 @@ export const getSupportCategoryIcons = (id) => {
 
 export const getCategories = async () => {
     const cats = await ghost.tags.browse({ limit: 'all' })
+}
+
+export const appUrlHandler = (obj, isApp) => {
+    if (!isApp) return obj
+    return {
+        ...obj,
+        source: 'app'
+    }
 }

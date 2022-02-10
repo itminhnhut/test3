@@ -3,6 +3,7 @@ import { get } from 'lodash'
 import { TRADING_MODE } from 'redux/actions/const'
 import GhostContentAPI from '@tryghost/content-api'
 import { slugify } from '@tryghost/string'
+import algoliasearch from 'algoliasearch'
 
 export const ___DEV___ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev'
 
@@ -22,6 +23,14 @@ export const log = {
         ___DEV___ && console.log('%cnamidev-WARNING: ', 'color: orange;font-weight: bold', ...arg)
     }
 }
+
+
+const NEXT_PUBLIC_ALGOLIA_APP_ID = 'DO34AS45G2'
+const NEXT_PUBLIC_ALGOLIA_API_KEY = '1a7ec3ba79285ba40cb8547135e7d297'
+const NEXT_PUBLIC_ALGOLIA_INDEX_NAME = 'blog_nami'
+
+const algoliaClient = algoliasearch(NEXT_PUBLIC_ALGOLIA_APP_ID, NEXT_PUBLIC_ALGOLIA_API_KEY)
+export const algoliaIndex = algoliaClient.initIndex(NEXT_PUBLIC_ALGOLIA_INDEX_NAME)
 
 export function buildLogoutUrl() {
     let currentUrl = window.location.href
@@ -191,7 +200,6 @@ export const getSupportArticles = async (tag, language) => {
         filter.push('tags:en')
     }
     options.filter = filter.join('+')
-    console.log('namidev otps ', options)
     return await ghost.posts.browse(options)
 }
 

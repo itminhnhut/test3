@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react'
 import { PATHS } from 'constants/paths'
 import useApp from 'hooks/useApp'
 import { useRouter } from 'next/router'
+import { appUrlHandler } from 'constants/faqHelper'
 
 const SupportSearchBar = ({
                               containerClassNames = '',
-                              simpleMode = false
+                              simpleMode = false,
+                              resetPage
                           }) => {
     const [type, setType] = useState(0)
     const [query, setQuery] = useState('')
@@ -19,15 +21,15 @@ const SupportSearchBar = ({
     const router = useRouter()
 
     const onSearch = (type, searchKey) => {
-        if (!searchKey) return
+        resetPage && resetPage()
         router.push(
             {
                 pathname: PATHS.SUPPORT.SEARCH,
-                query: {
-                    type,
-                    query: searchKey,
-                    source: isApp ? 'app' : undefined
-                }
+                query: appUrlHandler(
+                    {
+                        type,
+                        query: searchKey
+                    }, isApp)
             }
         )
     }

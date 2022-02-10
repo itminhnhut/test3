@@ -16,7 +16,7 @@ import { formatTime } from 'redux/actions/utils'
 import classNames from 'classnames'
 import Skeletor from 'components/common/Skeletor'
 import useApp from 'hooks/useApp'
-import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
+import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
 
 
 const Support = () => {
@@ -70,7 +70,7 @@ const Support = () => {
                 key={faq.id}
                 href={{
                     pathname: PATHS.SUPPORT.FAQ + '/[topic]',
-                    query: { topic: faq.displaySlug, source: isApp ? 'app' : '' }
+                    query: appUrlHandler({ topic: faq.displaySlug }, isApp)
                 }}
                 title={faq?.title || '--'}
                 titleClassNames="truncate"
@@ -87,7 +87,7 @@ const Support = () => {
                 key={announcement.id}
                 href={{
                     pathname: PATHS.SUPPORT.ANNOUNCEMENT + '/[topic]',
-                    query: { topic: announcement.displaySlug, source: isApp ? 'app' : '' }
+                    query: appUrlHandler({ topic: announcement.displaySlug }, isApp)
                 }}
                 title={announcement?.title || '--'}
                 titleClassNames="truncate"
@@ -149,7 +149,7 @@ const Support = () => {
                     key={article.id}
                     href={{
                         pathname: PATHS.SUPPORT.DEFAULT + `/[mode]/[topic]/[articles]`,
-                        query: { mode, topic, articles: article.slug.toString(), source: isApp ? 'app' : '' }
+                        query: appUrlHandler({ mode, topic, articles: article.slug.toString() }, isApp)
                     }}
                     title={<>
                                             <span
@@ -218,7 +218,7 @@ const Support = () => {
                     key={article.id}
                     href={{
                         pathname: PATHS.SUPPORT.DEFAULT + `/[mode]/[topic]/[articles]`,
-                        query: { mode, topic, articles: article.slug.toString(), source: isApp ? 'app' : '' }
+                        query: appUrlHandler({ mode, topic, articles: article.slug.toString() }, isApp)
                     }}
                     title={<>
                                             <span
