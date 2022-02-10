@@ -1,9 +1,12 @@
 import NextHead from 'next/head';
 import { config as configFont } from '@fortawesome/fontawesome-svg-core';
+import { useRouter } from 'next/router';
 
 configFont.autoAddCss = false;
 
 const SupportCenterHead = ({ article }) => {
+    const router = useRouter();
+    const { route } = router;
     return (
         <>
             {/* <DefaultSeo {...config} /> */}
@@ -18,10 +21,10 @@ const SupportCenterHead = ({ article }) => {
                     <meta name="twitter:site" content="@Nami"/>
                     <meta property="og:title" content="Nami Exchange"/>
                     <meta property="og:description" content={article?.title}/>
-                    {/*<meta property="og:url" content="https://nami.exchange" key="og-url" />*/}
+                    <meta property="og:url" content={`${process.env.NEXT_PUBLIC_APP_URL}${router.asPath}`} key="og-url" />
                     <meta name="twitter:title" content="Nami Exchange"/>
                     <meta name="twitter:description" content={article?.title}/>
-                    {/*<meta name="twitter:url" content="https://nami.exchange" />*/}
+                    <meta name="twitter:url" content={`${process.env.NEXT_PUBLIC_APP_URL}${router.asPath}`} />
                     <meta name="description" content={article?.title}/>
                     <meta
                         property="og:image"
