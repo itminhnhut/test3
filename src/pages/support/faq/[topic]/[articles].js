@@ -8,6 +8,7 @@ import useApp from 'hooks/useApp'
 import { useRouter } from 'next/router'
 import { SupportCategories } from 'constants/faqHelper'
 import { useTranslation } from 'next-i18next'
+import SupportCenterHead from 'components/common/SupportCenterHead';
 
 const FaqArticle = (props) => {
     const router = useRouter()
@@ -30,6 +31,7 @@ const FaqArticle = (props) => {
 
     return (
         <>
+            <SupportCenterHead article={props?.data?.article}/>
             {renderAppHeader()}
             <TopicsLayout mode="faq" useTopicTitle={false} lastedArticles={props?.data?.lastedArticles}>
                 <div className="mt-6 lg:mt-0 text-sm sm:text-[18px] lg:text-[20px] xl:text-[28px] leading-[36px] font-bold">
@@ -48,6 +50,7 @@ const FaqArticle = (props) => {
 export async function getServerSideProps({ locale, query }) {
     const article = await getArticle(query.articles)
     const lastedArticles = await getLastedArticles('faq', 8, locale)
+
 
     return {
         props: {
