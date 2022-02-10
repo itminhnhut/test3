@@ -7,6 +7,7 @@ configFont.autoAddCss = false;
 const SupportCenterHead = ({ article }) => {
     const router = useRouter();
     const { route } = router;
+    const articleUrl =  `${process.env.NEXT_PUBLIC_APP_URL}${router.asPath}`
     return (
         <>
             {/* <DefaultSeo {...config} /> */}
@@ -15,16 +16,18 @@ const SupportCenterHead = ({ article }) => {
                 <meta name="description" content={article?.excerpt}/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <link rel="manifest" href="/site.webmanifest" key="site-manifest"/>
+                <link rel="canonical" href={articleUrl}/>
                 <>
                     <meta name="twitter:card" content="summary"/>
                     <meta name="twitter:creator" content="@Nami"/>
                     <meta name="twitter:site" content="@Nami"/>
                     <meta property="og:title" content="Nami Exchange"/>
                     <meta property="og:description" content={article?.title}/>
-                    <meta property="og:url" content={`${process.env.NEXT_PUBLIC_APP_URL}${router.asPath}`} key="og-url" />
+                    <meta property="og:url" content={articleUrl}
+                          key="og-url"/>
                     <meta name="twitter:title" content="Nami Exchange"/>
                     <meta name="twitter:description" content={article?.title}/>
-                    <meta name="twitter:url" content={`${process.env.NEXT_PUBLIC_APP_URL}${router.asPath}`} />
+                    <meta name="twitter:url" content={articleUrl}/>
                     <meta name="description" content={article?.title}/>
                     <meta
                         property="og:image"
