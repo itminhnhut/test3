@@ -1023,6 +1023,11 @@ production stylesheet in assets/built/screen.css
     word-break: break-word;
   }
 
+
+  .gh-content > ul {
+    list-style-type: inherit;
+  }
+
   .gh-content > blockquote:not([class]),
   .gh-content > ol,
   .gh-content > ul,
