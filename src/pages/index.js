@@ -10,6 +10,7 @@ import { useTranslation } from 'next-i18next'
 import { QRCode } from 'react-qrcode-logo'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar'
+import Button from 'components/common/Button'
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange'
 
@@ -28,12 +29,15 @@ const Index = () => {
         return (
             <Modal isVisible={state.showQR}
                    title={t('modal:scan_qr_to_download')}
-                   type="confirm-one-choice"
-                   positiveLabel={t('common:cancel')}
-                   onConfirmCb={() => setState({ showQR: false })}
                    onBackdropCb={() => setState({ showQR: false })}>
                 <div className="flex items-center justify-center">
                     <QRCode value={`${APP_URL}#nami_exchange_download_app`} size={128}/>
+                </div>
+                <div className="mt-4 w-full flex flex-row items-center justify-between">
+                    <Button title={t('common:close')} type="secondary"
+                            componentType="button"
+                            className="!py-2"
+                            onClick={() => setState({ showQR: false })}/>
                 </div>
             </Modal>
         )

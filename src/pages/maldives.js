@@ -15,6 +15,7 @@ import { getS3Url } from 'redux/actions/utils'
 import { QRCode } from 'react-qrcode-logo'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Button from 'components/common/Button'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://nami.exchange'
 
@@ -31,12 +32,17 @@ const LandingPage = () => {
         return (
             <Modal isVisible={state.showQR}
                    title={t('modal:scan_qr_to_download')}
-                   type="confirm-one-choice"
-                   positiveLabel={t('common:cancel')}
-                   onConfirmCb={() => setState({ showQR: false })}
-                   onBackdropCb={() => setState({ showQR: false })}>
+                   onBackdropCb={() => setState({ showQR: false })}
+                    containerClassName="lg:min-w-[320px]"
+            >
                 <div className="flex items-center justify-center">
                     <QRCode value={`${APP_URL}#nami_exchange_download_app`} size={128}/>
+                </div>
+                <div className="mt-4 w-full flex flex-row items-center justify-between">
+                    <Button title={t('common:close')} type="secondary"
+                            componentType="button"
+                            className="!py-2"
+                            onClick={() => setState({ showQR: false })}/>
                 </div>
             </Modal>
         )
