@@ -783,12 +783,16 @@ const ExchangeDeposit = () => {
 
         return (
             <Modal isVisible={!!state.pushedOrder}
-                   type="alert"
-                   onCloseCb={() => setState({ pushedOrder: null })}
                    title={t('modal:notice')}
                    onBackdropCb={() => setState({ pushedOrder: null })}
             >
                 <div className="text-sm text-center mt-5">{msg}</div>
+                <div className="mt-4 w-full flex flex-row items-center justify-between">
+                    <Button title={t('common:confirm')} type="primary"
+                            componentType="button"
+                            className="!py-2"
+                            onClick={() => setState({ pushedOrder: null })}/>
+                </div>
             </Modal>
         )
     }, [state.pushedOrder, language])

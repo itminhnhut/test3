@@ -23,6 +23,7 @@ import { ApiStatus } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { PATHS } from 'constants/paths'
 import { roundToDown } from 'round-to'
+import Button from 'components/common/Button'
 
 const FEE_RATE = 0 / 100
 const DEBOUNCE_TIMEOUT = 500
@@ -546,13 +547,8 @@ const SwapModule = ({ width, pair }) => {
 
         return (
             <Modal isVisible={state.openModal}
-                   type="confirm-one-choice"
                    title={t('convert:confirm')}
-                   positiveLabel={positiveLabel}
-                   onConfirmCb={() => swapTimer ? onConfirmOrder(state.preOrder?.preOrderId)
-                                      : !state.loadingPreOrder &&
-                                      fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)}
-                   className="px-6 py-5">
+                   containerClassName="px-6 py-5 md:min-w-[400px]">
                 <div className="absolute top-5 right-6 cursor-pointer" onClick={onCloseSwapModal}>
                     <X size={18} className="text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant"/>
                 </div>
@@ -569,6 +565,14 @@ const SwapModule = ({ width, pair }) => {
                     <span className="font-medium">
                         1 {state.preOrder?.fromAsset === config?.displayPriceAsset ? state.preOrder?.toAsset : state.preOrder?.fromAsset} = {formatPrice(state.preOrder?.displayingPrice)} {config?.displayPriceAsset}
                     </span>
+                </div>
+                <div className="mt-6 w-full flex flex-row items-center justify-between">
+                    <Button title={positiveLabel} type="primary"
+                            componentType="button"
+                            className="!py-2"
+                            onClick={() => swapTimer ? onConfirmOrder(state.preOrder?.preOrderId)
+                                : !state.loadingPreOrder &&
+                                fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)}/>
                 </div>
             </Modal>
         )

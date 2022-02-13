@@ -6,7 +6,7 @@ import Portal from 'components/hoc/Portal'
 import hexRgb from 'utils/hexRgb'
 import colors from '../../../styles/colors'
 
-const Modal = ({ isVisible, children = null, containerClassName = '', useCross = false, onBackdropCb, onClose }) => {
+const Modal = ({ isVisible, title, children = null, containerClassName = '', useCross = false, onBackdropCb, onClose }) => {
     return (
         <Portal portalId={PORTAL_MODAL_ID}
         >
@@ -43,6 +43,9 @@ const Modal = ({ isVisible, children = null, containerClassName = '', useCross =
                             </div>
                         )}
                     </div>
+                    {title && <div className="my-2 text-center font-bold text-[18px]">
+                        {title}
+                    </div>}
                     {children}
                 </div>
             </div>
