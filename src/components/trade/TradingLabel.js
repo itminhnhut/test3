@@ -1,15 +1,18 @@
-const TradingLabel = (
+import classNames from 'classnames'
+
+const TradingLabel = ({
+    useColon = false,
     label = '--',
     value = '--',
     valueLoading,
-    useColon = false
-) => {
+    containerClassName = '',
+}) => {
     return (
-        <div>
-            <span>
+        <div className={classNames('font-medium text-sm', containerClassName)}>
+            <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                 {label}
-                {useColon && ': '}
-            </span>
+                {useColon && ':'}
+            </span>{' '}
             <span>{value}</span>
         </div>
     )

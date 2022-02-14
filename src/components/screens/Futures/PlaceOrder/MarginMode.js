@@ -11,7 +11,7 @@ const FuturesMarginMode = () => {
                     20x
                 </div>
             </div>
-            <div className='-mr-1.5 w-8 h-7 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-3 dark:hover:bg-darkBlue-3'>
+            <div className='-mr-1.5 w-8 h-7 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3'>
                 <TradeSetings size={16} />
             </div>
         </div>

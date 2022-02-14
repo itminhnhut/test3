@@ -2,9 +2,10 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import FuturesMarginMode from './MarginMode'
+import FuturesOrderModule from './OrderModule'
 import FuturesOrderTypes from './OrderTypes'
 
-const FuturesPlaceOrder = ({ config }) => {
+const FuturesPlaceOrder = ({ pairConfig }) => {
     // ? get rdx state
     const currentType = useSelector((state) => state.futures.orderType)
 
@@ -17,9 +18,13 @@ const FuturesPlaceOrder = ({ config }) => {
             <div className='mt-5'>
                 <FuturesOrderTypes
                     currentType={currentType}
-                    orderTypes={config?.orderTypes}
+                    orderTypes={pairConfig?.orderTypes}
                 />
             </div>
+            <FuturesOrderModule
+                currentType={currentType}
+                pairConfig={pairConfig}
+            />
         </div>
     )
 }

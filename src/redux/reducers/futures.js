@@ -3,7 +3,7 @@ import { SET_FUTURES_ORDER_TYPES } from 'redux/actions/types'
 export const FuturesOrderTypes = {
     Limit: 'LIMIT',
     Market: 'MARKET',
-    StopLimit: 'STOP',
+    // StopLimit: 'STOP',
 }
 
 export const initialState = {

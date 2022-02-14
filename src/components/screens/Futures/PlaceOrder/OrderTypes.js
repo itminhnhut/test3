@@ -10,33 +10,40 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
     const dispatch = useDispatch()
 
     const setOrderTypes = (payload) =>
+        currentType !== payload &&
         dispatch({
             type: SET_FUTURES_ORDER_TYPES,
             payload,
         })
 
+    const renderTabTypes = () => {
+        const types = []
+        orderTypes?.forEach(
+            (o) => SupportedOrderTypes.includes(o) && types.push(o)
+        )
+        if (!types.length) return null
+        return types.map((o) => (
+            <div
+                key={`futures_margin_mode_${o}`}
+                className={classNames(
+                    'pb-2 min-w-[78px] text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs text-center capitalize cursor-pointer border-b-[2px] border-transparent',
+                    {
+                        '!text-txtPrimary dark:!text-txtPrimary-dark border-dominant':
+                            o === currentType,
+                    },
+                    `w-1/${types.length}`
+                )}
+                onClick={() => setOrderTypes(o)}
+            >
+                {o.toLowerCase()}
+            </div>
+        ))
+    }
+
     return (
         <div className='relative flex items-center'>
             <div className='relative z-20 mr-[18px] flex flex-grow'>
-                {orderTypes?.map((o) => {
-                    if (SupportedOrderTypes.includes(o)) {
-                        return (
-                            <div
-                                key={`futures_margin_mode_${o}`}
-                                className={classNames(
-                                    'pb-2 w-1/3 text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs text-center capitalize cursor-pointer border-b-[2px] border-transparent',
-                                    {
-                                        '!text-txtPrimary dark:!text-txtPrimary-dark border-dominant':
-                                            o === currentType,
-                                    }
-                                )}
-                                onClick={() => setOrderTypes(o)}
-                            >
-                                {o.toLowerCase()}
-                            </div>
-                        )
-                    }
-                })}
+                {renderTabTypes()}
             </div>
             <div className='pb-2.5 cursor-help'>
                 <Info

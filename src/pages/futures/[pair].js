@@ -77,6 +77,10 @@ const Futures = () => {
         setLoadingConfigs(false)
     }, [])
 
+    useEffect(() => {
+        console.log('pairConfig: ', pairConfig)
+    }, [pairConfig])
+
     return (
         <DynamicNoSsr>
             <MaldivesLayout useNavShadow hideFooter>
@@ -136,7 +140,7 @@ const Futures = () => {
                                 key={futuresGridKey.placeOrder}
                                 className='border border-divider dark:border-divider-dark'
                             >
-                                <FuturesPlaceOrder config={pairConfig} />
+                                <FuturesPlaceOrder pairConfig={pairConfig} />
                             </div>
                             <div
                                 key={futuresGridKey.marginRatio}
