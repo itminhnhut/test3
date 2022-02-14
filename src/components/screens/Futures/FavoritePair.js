@@ -1,5 +1,5 @@
 const FuturesFavoritePair = () => {
-    return <div className='bg-red'>FuturesFavoritePair</div>
+    return <div className='dragHandleArea'>FuturesFavoritePair</div>
 }
 
 export default FuturesFavoritePair

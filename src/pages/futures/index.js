@@ -6,25 +6,24 @@ export const FUTURES_DEFAULT_SYMBOL = 'BTCUSDT'
 
 const FuturesIndex = () => {
     const router = useRouter()
-    router.push('https://nami.exchange/futures/')
 
-    // if (typeof window !== 'undefined') {
-    //     // Find previous symbol
-    //     const prevSymbol = localStorage.getItem(
-    //         LOCAL_STORAGE_KEY.PreviousFuturesPair
-    //     )
-    //
-    //     router.push(
-    //         `${PATHS.FUTURES_V2.DEFAULT}/${
-    //             prevSymbol && !!prevSymbol?.toString()?.length
-    //                 ? prevSymbol
-    //                 : FUTURES_DEFAULT_SYMBOL
-    //         }`,
-    //         undefined,
-    //         { shallow: true }
-    //     )
-    // }
-    // return null
+    if (typeof window !== 'undefined') {
+        // Find previous symbol
+        const prevSymbol = localStorage.getItem(
+            LOCAL_STORAGE_KEY.PreviousFuturesPair
+        )
+
+        router.push(
+            `${PATHS.FUTURES_V2.DEFAULT}/${
+                prevSymbol && !!prevSymbol?.toString()?.length
+                    ? prevSymbol
+                    : FUTURES_DEFAULT_SYMBOL
+            }`,
+            undefined,
+            { shallow: true }
+        )
+    }
+    return null
 }
 
 export default FuturesIndex

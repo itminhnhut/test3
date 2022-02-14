@@ -1,5 +1,5 @@
 const FuturesChart = () => {
-    return <div>FuturesChart</div>
+    return <div className='dragHandleArea'>FuturesChart</div>
 }
 
 export default FuturesChart

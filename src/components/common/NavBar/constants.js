@@ -53,7 +53,7 @@ export const NAV_DATA = [
                 title: 'Futures',
                 localized: 'futures',
                 isNew: false,
-                url: getV1Url('/futures'),
+                url: '/futures',
                 child_lv1: [],
             },
             {

@@ -1,5 +1,5 @@
 const FuturesTradeRecord = () => {
-    return <div>FuturesTradeRecord</div>
+    return <div className='dragHandleArea'>FuturesTradeRecord</div>
 }
 
 export default FuturesTradeRecord

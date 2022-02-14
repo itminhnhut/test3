@@ -149,4 +149,5 @@ export const PORTAL_MODAL_ID = 'PORTAL_MODAL'
 
 export const LOCAL_STORAGE_KEY = {
     PreviousFuturesPair: 'previous_futures_pair',
+    FuturesGridLayouts: 'futures_grid_layouts',
 }

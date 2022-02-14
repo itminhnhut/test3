@@ -1,5 +1,5 @@
 const FuturesPairDetail = () => {
-    return <div>Futures Pair Detail</div>
+    return <div className='dragHandleArea'>Futures Pair Detail</div>
 }
 
 export default FuturesPairDetail

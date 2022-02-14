@@ -1,5 +1,5 @@
 const FuturesMarginRatio = () => {
-    return <div>FuturesMarginRatio</div>
+    return <div className='dragHandleArea'>FuturesMarginRatio</div>
 }
 
 export default FuturesMarginRatio
