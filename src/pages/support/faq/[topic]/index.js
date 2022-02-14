@@ -142,7 +142,7 @@ const FaqTopics = (props) => {
 export async function getServerSideProps({ locale, query }) {
     const articles = await ghost.posts.browse(
         {
-            filter: `tags:faq-vi-${query?.topic}`,
+            filter: `tags:faq-${locale || 'en'}-${query?.topic}`,
             include: `tags`
         })
 
