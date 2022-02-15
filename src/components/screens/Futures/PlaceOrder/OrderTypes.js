@@ -1,62 +1,133 @@
 import { memo } from 'react'
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures'
 import { useDispatch, useSelector } from 'react-redux'
-import { SET_FUTURES_ORDER_TYPES } from 'redux/actions/types'
-import { Info } from 'react-feather'
+import {
+    SET_FUTURES_ORDER_ADVANCE_TYPES,
+    SET_FUTURES_ORDER_TYPES,
+} from 'redux/actions/types'
+import { useTranslation } from 'next-i18next'
+import { ChevronDown } from 'react-feather'
 
 import classNames from 'classnames'
+import { setFuturesOrderTypes } from 'redux/actions/futures'
 
 const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
+    const { t } = useTranslation()
+    const currentAdvType = useSelector(
+        (state) => state.futures.orderAdvanceType
+    )
     const dispatch = useDispatch()
 
-    const setOrderTypes = (payload) =>
-        currentType !== payload &&
-        dispatch({
-            type: SET_FUTURES_ORDER_TYPES,
-            payload,
-        })
+    // ? Helper
+    const getTypesLabel = (type) => {
+        switch (type) {
+            case OrderTypes.Limit:
+                return t('trade:order_types.limit')
+            case OrderTypes.StopLimit:
+                return t('trade:order_types.stop_limit')
+            case OrderTypes.Market:
+                return t('trade:order_types.market')
+            case OrderTypes.StopMarket:
+                return t('trade:order_types.stop_market')
+            case OrderTypes.TrailingStopMarket:
+                return t('trade:order_types.trailing_stop')
+            case OrderTypes.TakeProfit:
+            case OrderTypes.TakeProfitMarket:
+            default:
+                return '--'
+        }
+    }
+    const setOrderTypes = (payload, isAdvance = false) =>
+        payload !== currentType &&
+        dispatch(setFuturesOrderTypes(payload, isAdvance))
 
-    const renderTabTypes = () => {
-        const types = []
-        orderTypes?.forEach(
-            (o) => SupportedOrderTypes.includes(o) && types.push(o)
+    // ? Render handler
+    const renderCommonTypes = () => {
+        return orderTypes
+            ?.filter((o) => o === OrderTypes.Limit || o === OrderTypes.Market)
+            .map((o) => (
+                <div
+                    key={`futures_margin_mode_${o}`}
+                    className={classNames(
+                        'pb-2 w-1/3 min-w-[78px] text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs text-center cursor-pointer border-b-[2px] border-transparent',
+                        {
+                            '!text-txtPrimary dark:!text-txtPrimary-dark border-dominant':
+                                o === currentType,
+                        }
+                    )}
+                    onClick={() => setOrderTypes(o)}
+                >
+                    {getTypesLabel(o)}
+                </div>
+            ))
+    }
+
+    const renderCurrentAdvanceTypes = () => {
+        return (
+            <>
+                <div
+                    className={classNames(
+                        'pb-2 w-1/3 max-w-1/3 max-w-[78px] text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs text-center cursor-pointer border-b-[2px] border-transparent truncate',
+                        {
+                            '!text-txtPrimary dark:!text-txtPrimary-dark border-dominant':
+                                currentAdvType === currentType,
+                        }
+                    )}
+                    onClick={() => setOrderTypes(currentAdvType)}
+                >
+                    {getTypesLabel(currentAdvType)}
+                </div>
+            </>
         )
-        if (!types.length) return null
-        return types.map((o) => (
+    }
+
+    const renderAdvanceTypesDropdown = () => {
+        const advanceTypes =
+            orderTypes?.filter(
+                (o) => o !== OrderTypes.Limit && o !== OrderTypes.Market
+            ) || false
+        if (!advanceTypes) return null
+
+        const advTypesElement = advanceTypes?.map((o) => (
             <div
                 key={`futures_margin_mode_${o}`}
                 className={classNames(
-                    'pb-2 min-w-[78px] text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs text-center capitalize cursor-pointer border-b-[2px] border-transparent',
+                    'px-3 py-2 mb-2 last:mb-0 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
                     {
-                        '!text-txtPrimary dark:!text-txtPrimary-dark border-dominant':
-                            o === currentType,
-                    },
-                    `w-1/${types.length}`
+                        'text-dominant': currentType === o,
+                    }
                 )}
-                onClick={() => setOrderTypes(o)}
+                onClick={() => setOrderTypes(o, true)}
             >
-                {o.toLowerCase()}
+                {getTypesLabel(o)}
             </div>
         ))
+        return (
+            <div className='pt-2 absolute z-30 bottom-0 right-0 translate-y-full hidden group-hover:block'>
+                <div className='py-1 rounded-md min-w-[114px] bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4 text-xs font-medium whitespace-nowrap'>
+                    {advTypesElement}
+                </div>
+            </div>
+        )
     }
 
     return (
-        <div className='relative flex items-center'>
+        <div className='relative flex items-center select-none'>
             <div className='relative z-20 mr-[18px] flex flex-grow'>
-                {renderTabTypes()}
+                {renderCommonTypes()}
+                {renderCurrentAdvanceTypes()}
             </div>
-            <div className='pb-2.5 cursor-help'>
-                <Info
+            <div className='relative group pb-2 cursor-pointer'>
+                <ChevronDown
                     size={16}
                     strokeWidth={1.8}
-                    className='text-txtSecondary dark:text-txtSecondary-dark hover:text-txtPrimary dark:hover:text-txtPrimary-dark'
+                    className='text-txtSecondary dark:text-txtSecondary-dark hover:text-txtPrimary dark:hover:text-txtPrimary-dark group-hover:rotate-180'
                 />
+                {renderAdvanceTypesDropdown()}
             </div>
             <div className='absolute z-10 w-full left-0 bottom-0 h-[2px] bg-divider dark:bg-divider-dark' />
         </div>
     )
 })
-
-const SupportedOrderTypes = Object.values(OrderTypes)
 
 export default FuturesOrderTypes

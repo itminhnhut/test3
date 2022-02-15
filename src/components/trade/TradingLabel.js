@@ -9,10 +9,10 @@ const TradingLabel = ({
 }) => {
     return (
         <div className={classNames('font-medium text-sm', containerClassName)}>
-            <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+            <span className='mr-1 text-txtSecondary dark:text-txtSecondary-dark'>
                 {label}
                 {useColon && ':'}
-            </span>{' '}
+            </span>
             <span>{value}</span>
         </div>
     )

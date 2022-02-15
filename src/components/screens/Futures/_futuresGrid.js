@@ -115,10 +115,10 @@ export default {
             {
                 i: futuresGridKey.placeOrder,
                 w: 4,
-                h: 15,
+                h: 24,
                 x: 10,
                 y: 0,
-
+                minW: 4,
                 isDraggable: true,
                 isResizable: true,
                 isDroppable: false,

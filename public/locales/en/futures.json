@@ -1,0 +1,7 @@
+{
+    "size": "Size",
+    "take_profit": "Take Profit",
+    "stop_loss": "Stop Loss",
+    "last_mark_price": "Last",
+    "last_mark_price_tooltip": "Đặt giá gần nhất"
+}

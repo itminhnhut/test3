@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const colors = require('tailwindcss/colors');
+const colors = require('tailwindcss/colors')
 
 // Common colors
 const commonColors = {
@@ -21,7 +21,7 @@ const commonColors = {
     white: 'white',
     teal: '#00C8BC',
     lightTeal: '#E2F6F5',
-};
+}
 
 module.exports = {
     // future: {
@@ -31,7 +31,7 @@ module.exports = {
     mode: 'jit',
     purge: [
         './src/pages/**/**/*.{js,ts,jsx,tsx}',
-        './src/components/**/**/*.{js,ts,jsx,tsx}'
+        './src/components/**/**/*.{js,ts,jsx,tsx}',
     ],
     darkMode: 'class',
     theme: {
@@ -52,58 +52,97 @@ module.exports = {
             serif: ['serif'],
         },
         fontSize: {
-            'xxs': ['.625rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '1rem',
-            }], // Outline 10px
-            'xs': ['.75rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '1.125rem',
-            }], // Caption 12px
-            'sm': ['.875rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '1.3125rem',
-            }], // Small text 14px
-            'tiny': ['.875rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '1.3125rem',
-            }], // 14px
-            'base': ['1rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '1.5rem',
-            }], // 16px
-            'lg': ['1.125rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '1.75rem',
-            }], // Body 2 18px
-            'xl': ['1.3125rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '2rem',
-            }], // Body 1, Heading 6 21px
-            '2xl': ['1.5rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '2.25rem',
-            }], // Heading 5 24px
-            '3xl': ['1.75rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '2.5rem',
-            }], // Heading 4 28px
-            '4xl': ['2.25rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '3.5rem',
-            }], // Heading 3 36px
-            '5xl': ['2.5rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '3.5rem',
-            }], // Heading 2 40px
-            '6xl': ['4rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '4.5rem',
-            }], // Heading 1 64px
-            '5.5xl': ['3.5rem', {
-                letterSpacing: '-0.01em',
-                lineHeight: '4.25rem',
-            }], // Heading 2 56px
+            xxs: [
+                '.625rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '1rem',
+                },
+            ], // Outline 10px
+            xs: [
+                '.75rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '1.125rem',
+                },
+            ], // Caption 12px
+            sm: [
+                '.875rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '1.3125rem',
+                },
+            ], // Small text 14px
+            tiny: [
+                '.875rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '1.3125rem',
+                },
+            ], // 14px
+            base: [
+                '1rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '1.5rem',
+                },
+            ], // 16px
+            lg: [
+                '1.125rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '1.75rem',
+                },
+            ], // Body 2 18px
+            xl: [
+                '1.3125rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '2rem',
+                },
+            ], // Body 1, Heading 6 21px
+            '2xl': [
+                '1.5rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '2.25rem',
+                },
+            ], // Heading 5 24px
+            '3xl': [
+                '1.75rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '2.5rem',
+                },
+            ], // Heading 4 28px
+            '4xl': [
+                '2.25rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '3.5rem',
+                },
+            ], // Heading 3 36px
+            '5xl': [
+                '2.5rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '3.5rem',
+                },
+            ], // Heading 2 40px
+            '6xl': [
+                '4rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '4.5rem',
+                },
+            ], // Heading 1 64px
+            '5.5xl': [
+                '3.5rem',
+                {
+                    letterSpacing: '-0.01em',
+                    lineHeight: '4.25rem',
+                },
+            ], // Heading 2 56px
         },
         // TODO split text, background
         colors: {
@@ -113,12 +152,12 @@ module.exports = {
 
             listItemSelected: {
                 DEFAULT: commonColors.lightTeal,
-                dark: commonColors.darkBlue3
+                dark: commonColors.darkBlue3,
             },
 
             divider: {
                 DEFAULT: commonColors.gray4,
-                dark: '#202C4C'
+                dark: '#202C4C',
             },
 
             //--------------------------------------------
@@ -133,7 +172,7 @@ module.exports = {
                 500: '#8B8C9B', // 3
                 600: '#3e3b3b', // 2
                 700: '#02083D', // 1,
-                800: '#000000'
+                800: '#000000',
             },
             white: colors.white,
             blue: {
@@ -147,7 +186,7 @@ module.exports = {
                 600: '#646e85',
                 700: '#4e5973',
                 800: '#384562',
-                900: '#223050'
+                900: '#223050',
             },
             darkBlue: {
                 DEFAULT: '#223050',
@@ -156,7 +195,7 @@ module.exports = {
                 3: commonColors.darkBlue3,
                 4: commonColors.darkBlue4,
                 5: commonColors.darkBlue5,
-                '5a': 'rgba(123, 140, 178, 0.8)'
+                '5a': 'rgba(123, 140, 178, 0.8)',
             },
             gray: {
                 DEFAULT: '#8D9091',
@@ -179,24 +218,24 @@ module.exports = {
                 600: '#00C8BC',
                 700: '#00C8BC',
                 lightTeal: '#E2F6F5',
-                opacity: 'rgba(0, 200, 188, 0.5)'
+                opacity: 'rgba(0, 200, 188, 0.5)',
             },
             green: {
                 DEFAULT: '#22B02E',
-                opacity: 'rgba(34, 176, 46, 0.18)'
+                opacity: 'rgba(34, 176, 46, 0.18)',
             },
             yellow: { DEFAULT: '#FFD965' },
             red: {
                 DEFAULT: '#E5544B',
-                lightRed: '#E5544B19'
+                lightRed: '#E5544B19',
             },
             pink: { DEFAULT: '#E5544B' },
             mint: { DEFAULT: '#00C8BC' },
         },
         extend: {
             spacing: {
-                '128': '32rem',
-                '144': '36rem',
+                128: '32rem',
+                144: '36rem',
             },
             // borderRadius: {
             //     'xl': '0.625rem',
@@ -206,81 +245,81 @@ module.exports = {
             placeholderColor: {
                 txtSecondary: {
                     DEFAULT: commonColors.gray1,
-                    dark: commonColors.darkBlue5
+                    dark: commonColors.darkBlue5,
                 },
             },
             textColor: {
                 txtPrimary: {
                     DEFAULT: commonColors.darkBlue,
-                    dark: commonColors.gray4
+                    dark: commonColors.gray4,
                 },
                 txtSemiPrimary: {
                     DEFAULT: commonColors.gray2,
-                    dark: commonColors.darkBlue4
+                    dark: commonColors.darkBlue4,
                 },
                 txtSecondary: {
                     DEFAULT: commonColors.gray1,
-                    dark: commonColors.darkBlue5
+                    dark: commonColors.darkBlue5,
                 },
 
                 txtBtnPrimary: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.white
+                    dark: commonColors.white,
                 },
                 txtBtnSecondary: {
                     DEFAULT: commonColors.teal,
-                    dark: commonColors.teal
+                    dark: commonColors.teal,
                 },
                 txtTabInactive: {
                     DEFAULT: commonColors.gray1,
-                    dark: commonColors.darkBlue5
+                    dark: commonColors.darkBlue5,
                 },
                 txtTabActive: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.white
+                    dark: commonColors.white,
                 },
             },
             backgroundColor: {
                 bgTabInactive: {
                     DEFAULT: commonColors.gray4,
-                    dark: commonColors.darkBlue3
+                    dark: commonColors.darkBlue3,
                 },
                 bgTabActive: commonColors.teal,
                 bgPrimary: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.darkBlue2
+                    dark: commonColors.darkBlue2,
                 },
                 bgSecondary: {
                     DEFAULT: commonColors.gray4,
-                    dark: commonColors.darkBlue5
+                    dark: commonColors.darkBlue5,
                 },
                 bgContainer: {
                     DEFAULT: '#fff',
-                    dark: commonColors.darkBlue2
+                    dark: commonColors.darkBlue2,
                 },
                 bgSpotContainer: {
                     DEFAULT: '#fff',
-                    dark: commonColors.darkBlue1
+                    dark: commonColors.darkBlue1,
                 },
                 headerBg: {
                     DEFAULT: 'rgba(0, 0, 0, 0.3)',
-                    dark: 'rgba(0, 0, 0, 0.3)'
+                    dark: 'rgba(0, 0, 0, 0.3)',
                 },
                 homepageBg: {
                     DEFAULT: '#f2f4f66e',
-                    dark: commonColors.darkBlue2
+                    dark: commonColors.darkBlue2,
                 },
                 bgBtnPrimary: {
                     DEFAULT: commonColors.teal,
-                    dark: commonColors.teal
+                    dark: commonColors.teal,
                 },
                 bgBtnSecondary: {
                     DEFAULT: commonColors.gray4,
-                    dark: commonColors.darkBlue
+                    dark: commonColors.darkBlue,
                 },
                 bgInput: {
                     DEFAULT: commonColors.gray5,
-                    dark: commonColors.darkBlue3
+                    dark: commonColors.darkBlue3,
                 },
             },
             fontWeight: { bold: 600 },
@@ -295,11 +334,12 @@ module.exports = {
         extend: {
             backgroundColor: ['checked'],
             borderColor: ['checked'],
-        }
+            display: ['group-hover'],
+            visibility: ['group-hover'],
+        },
     },
     plugins: [
-        require('@tailwindcss/forms')({ strategy: 'class',
-        }),
+        require('@tailwindcss/forms')({ strategy: 'class' }),
         require('@tailwindcss/line-clamp'),
     ],
-};
+}

@@ -10,7 +10,7 @@ const FuturesPlaceOrder = ({ pairConfig }) => {
     const currentType = useSelector((state) => state.futures.orderType)
 
     return (
-        <div className='pr-5 pb-5 pl-[11px] h-full'>
+        <div className='pr-5 pb-5 pl-[11px] h-full bg-bgPrimary dark:bg-darkBlue-2'>
             <div className='relative'>
                 <FuturesMarginMode />
                 <div className='absolute left-0 -bottom-5 w-full h-5 dragHandleArea' />

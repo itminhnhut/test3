@@ -159,7 +159,12 @@ const Futures = () => {
 export const getStaticProps = async ({ locale }) => {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'navbar'])),
+            ...(await serverSideTranslations(locale, [
+                'common',
+                'navbar',
+                'trade',
+                'futures',
+            ])),
         },
     }
 }

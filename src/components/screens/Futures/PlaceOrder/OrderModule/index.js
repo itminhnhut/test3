@@ -1,55 +1,110 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { FuturesOrderTypes } from 'redux/reducers/futures'
 import { useTranslation } from 'next-i18next'
-import { File } from 'react-feather'
 
+import FuturesOrderButtonsGroup from './OrderButtonsGroup'
+import FuturesOrderUtilities from './OrderUtilities'
+import FuturesOrderSlider from './OrderSlider'
 import FuturesOrderMarket from './OrderMarket'
 import FuturesOrderLimit from './OrderLimit'
+import FuturesOrderSLTP from './OrderSLTP'
 import TradingLabel from 'components/trade/TradingLabel'
 import SvgExchange from 'components/svg/Exchange'
-import AvblAsset from 'components/trade/AvblAsset'
+import Divider from 'components/common/Divider'
+
+const INITIAL_STATE = {
+    percentage: null,
+}
 
 const FuturesOrderModule = memo(({ currentType, pairConfig }) => {
+    // ? State Management
+    const [state, set] = useState(INITIAL_STATE)
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }))
+
     const { t } = useTranslation()
 
+    // ? Render Handler
     const renderOrderInput = () => {
         switch (currentType) {
             case FuturesOrderTypes.Market:
-                return <FuturesOrderMarket />
+                return <FuturesOrderMarket pairConfig={pairConfig} />
             case FuturesOrderTypes.Limit:
+                return (
+                    <FuturesOrderLimit
+                        quoteAsset={pairConfig?.quoteAsset}
+                        baseAsset={pairConfig?.baseAsset}
+                    />
+                )
             default:
-                return <FuturesOrderLimit />
+                return null
         }
     }
 
     return (
         <div className='pt-5 pb-[18px]'>
             {/* Order Utilities */}
-            <div className='flex items-center'>
-                <div className='flex-grow'>
-                    <TradingLabel
-                        label={t('common:available_balance')}
-                        value={
-                            <AvblAsset
-                                useSuffix
-                                assetId={pairConfig?.quoteAssetId}
-                            />
-                        }
-                    />
-                </div>
-                <div className='w-6 h-6 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3'>
-                    <div className='flex flex-col text-txtSecondary dark:text-txtSecondary-dark'>
-                        <i className='block translate-y-1/3 ci-small_long_left' />
-                        <i className='block -translate-y-1/3 ci-small_long_right' />
-                    </div>
-                </div>
-                <div className='w-6 h-6 ml-2 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3 text-txtSecondary dark:text-txtSecondary-dark'>
-                    <File size={16} strokeWidth={1.8} />
-                </div>
+            <FuturesOrderUtilities quoteAssetId={pairConfig?.quoteAssetId} />
+
+            {/* Order Input Scenario */}
+            <div className='mt-4'>
+                {/*  */}
+                {renderOrderInput()}
             </div>
 
-            {/* Main Order */}
-            <div className='mt-4'>{renderOrderInput()}</div>
+            {/* Slider */}
+            <div className='mt-4'>
+                <FuturesOrderSlider />
+            </div>
+            <div className='mt-3.5 flex items-center justify-between select-none'>
+                <TradingLabel
+                    label={t('common:buy')}
+                    value={'0.0000 BTC'}
+                    containerClassName='text-xs'
+                />
+                <TradingLabel
+                    label={t('common:sell')}
+                    value={'0.0000 BTC'}
+                    containerClassName='text-xs'
+                />
+            </div>
+
+            <Divider className='my-5' />
+
+            {/* Order SL-TP */}
+            <FuturesOrderSLTP />
+
+            <Divider className='my-5' />
+
+            {/* Buttons Group */}
+            <FuturesOrderButtonsGroup />
+
+            {/* Cost and Stuff */}
+            <div className='mt-4 select-none'>
+                <div className='flex items-center justify-between'>
+                    <TradingLabel
+                        label={t('common:cost')}
+                        value={'100 USDT'}
+                        containerClassName='text-xs'
+                    />
+                    <TradingLabel
+                        label={t('common:cost')}
+                        value={'100 USDT'}
+                        containerClassName='text-xs'
+                    />
+                </div>
+                <div className='mt-2 flex items-center justify-between'>
+                    <TradingLabel
+                        label={t('common:max')}
+                        value={'100 USDT'}
+                        containerClassName='text-xs'
+                    />
+                    <TradingLabel
+                        label={t('common:max')}
+                        value={'100 USDT'}
+                        containerClassName='text-xs'
+                    />
+                </div>
+            </div>
         </div>
     )
 })
