@@ -490,6 +490,9 @@ const TradingFee = () => {
                     <a className="ml-3 text-dominant hover:!underline">{t('common:read_more')}</a>
                 </Link>
             </div>
+            <div className="mt-3 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                {t('fee-structure:swap_fee_description')}
+            </div>
         </>
     )
 }
