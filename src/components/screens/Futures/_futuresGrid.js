@@ -55,9 +55,12 @@ export default {
             {
                 i: futuresGridKey.favoritePair,
                 w: 7,
-                h: 1,
+                h: 2,
                 x: 0,
                 y: 0,
+                minW: 5,
+                minH: 2,
+                maxH: 2,
                 isDraggable: true,
                 isResizable: true,
                 isDroppable: true,
