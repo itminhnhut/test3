@@ -173,7 +173,7 @@ const PocketFooter = ({ active, parentState }) => {
                                 <img src={getS3Url('/images/icon/ic_footer_reddit.png')} className="mr-3" alt="" width="16" height="16"/> Reddit
                             </a>
                         </Link>
-                        <Link href="https://nami.io/">
+                        <Link href="/support">
                             <a target="_blank" className="!flex items-center">
                                 <img src={getS3Url('/images/icon/ic_footer_globe.png')} className="mr-3" alt="" width="16" height="16"/> Blog
                             </a>
@@ -198,19 +198,23 @@ const PocketFooter = ({ active, parentState }) => {
                                      ${active.support ?
             'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
-                        {/*<Link href="/">*/}
+                        <Link href="/support/announcement"
+                              className="cursor-pointer">
+                            {language === LANGUAGE_TAG.VI ? 'Thông báo' : 'Announcements'}
+                        </Link>
+                        <Link href="/support"
+                              className="cursor-pointer">
+                            {language === LANGUAGE_TAG.VI ? 'Trung tâm hỗ trợ' : 'Support Center'}
+                        </Link>
                         <a onClick={() => window.fcWidget.open()}
                            className="cursor-pointer">
-                            {language === LANGUAGE_TAG.VI ? 'Trung tâm hỗ trợ' : 'Support Center'}
+                            {language === LANGUAGE_TAG.VI ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                         </a>
-                        {/*</Link>*/}
-                        {/*<Link href="/">*/}
-                        <a onClick={() => window.fcWidget.open()}
-                           className="cursor-pointer invisible">
-                            {language === LANGUAGE_TAG.VI ? 'Phản hồi' : 'Feedback'}
-                        </a>
-                        {/*</Link>*/}
-                        {/*<Link href="/">*/}
+                        <Link href="/support/faq"
+                              className="cursor-pointer">
+                            {language === LANGUAGE_TAG.VI ? 'FAQs' : 'FAQs'}
+                        </Link>
+
                         <a onClick={() => window.fcWidget.open()}
                            className="cursor-pointer invisible">
                             {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}

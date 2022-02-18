@@ -131,47 +131,6 @@ export const NAV_DATA = [
             },
         ],
     },
-    // {
-    //     key: 2,
-    //     title: 'Wallet',
-    //     localized: 'wallet',
-    //     isNew: false,
-    //     url: '/',
-    //     child_lv1: [
-    //         {
-    //             key: 0,
-    //             title: 'Spot Wallet',
-    //             localized: 'spot_wallet',
-    //             isNew: false,
-    //             url: getV1Url('/wallet/account?type=spot'),
-    //             child_lv2: []
-    //         },
-    //         {
-    //             key: 1,
-    //             title: 'Futures Wallet',
-    //             localized: 'futures_wallet',
-    //             isNew: false,
-    //             url: getV1Url('/wallet/account?type=futures'),
-    //             child_lv2: []
-    //         },
-    //         {
-    //             key: 2,
-    //             title: 'Staking Wallet',
-    //             localized: 'staking_wallet',
-    //             isNew: false,
-    //             url: getV1Url('/wallet/account?type=staking'),
-    //             child_lv2: []
-    //         },
-    //         {
-    //             key: 3,
-    //             title: 'Farming Wallet',
-    //             localized: 'farming_wallet',
-    //             isNew: false,
-    //             url: getV1Url('/wallet/account?type=farming'),
-    //             child_lv2: []
-    //         },
-    //     ]
-    // },
     {
         key: 3,
         title: 'Nami.Today',
@@ -182,38 +141,12 @@ export const NAV_DATA = [
     },
     {
         key: 4,
-        title: 'Blog',
-        localized: 'blog',
+        title: 'Support Center',
+        localized: 'support_center',
         isNew: false,
-        url: 'https://nami.io/',
+        url: '/support',
         child_lv1: [],
     },
-    // {
-    //     key: 5,
-    //     title: 'Support',
-    //     localized: 'support',
-    //     isNew: false,
-    //     url: '/',
-    //     child_lv1: []
-    // },
-    // {
-    //     key: 6,
-    //     title: 'Fee Schedule',
-    //     localized: 'fee',
-    //     isNew: false,
-    //     url: getV1Url('/fee-schedule'),
-    //     child_lv1: []
-    // },
-    // {
-    //     key: 7,
-    //     title: 'More',
-    //     localized: 'more',
-    //     isNew: false,
-    //     url: '/',
-    //     child_lv1: [
-    //         // SPOTLIGHT,
-    //     ]
-    // },
 ]
 
 export const MOBILE_NAV_DATA = [
@@ -367,10 +300,10 @@ export const MOBILE_NAV_DATA = [
     },
     {
         key: 2,
-        title: 'Blog',
-        localized: 'blog',
+        title: 'Support Center',
+        localized: 'support_center',
         isNew: false,
-        url: 'https://nami.io/',
+        url: '/support',
         child_lv1: [],
     },
     // {

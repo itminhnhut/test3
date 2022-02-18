@@ -246,7 +246,7 @@ export const SupportCategories = {
                     },
                     {
                         id: 'referral_freshman',
-                        title: 'Introducing new users',
+                        title: 'Referral Program',
                         slug: 'faq-en-introducing-new-users',
                         displaySlug: 'introducing-new-users',
                     },
