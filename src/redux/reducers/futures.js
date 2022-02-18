@@ -4,6 +4,7 @@ import {
     SET_FUTURES_USE_SLTP,
     GET_FUTURES_FAVORITE_PAIRS,
     SET_FUTURES_PAIR_CONFIGS,
+    GET_FUTURES_MARKET_WATCH,
 } from 'redux/actions/types'
 
 export const FuturesOrderTypes = {
@@ -17,17 +18,18 @@ export const FuturesOrderTypes = {
 }
 
 export const initialState = {
-    pairConfig: [],
+    pairConfigs: [],
     orderType: FuturesOrderTypes.Limit,
     orderAdvanceType: FuturesOrderTypes.StopLimit,
     useSltp: false,
     favoritePairs: [],
+    marketWatch: [],
 }
 
 export default (state = initialState, { payload, type }) => {
     switch (type) {
         case SET_FUTURES_PAIR_CONFIGS:
-            return { ...state, pairConfig: payload }
+            return { ...state, pairConfigs: payload }
         case SET_FUTURES_ORDER_TYPES:
             return { ...state, orderType: payload }
         case SET_FUTURES_ORDER_ADVANCE_TYPES:
@@ -36,6 +38,8 @@ export default (state = initialState, { payload, type }) => {
             return { ...state, useSltp: payload }
         case GET_FUTURES_FAVORITE_PAIRS:
             return { ...state, favoritePairs: payload }
+        case GET_FUTURES_MARKET_WATCH:
+            return { ...state, marketWatch: payload }
         default:
             return state
     }

@@ -12,6 +12,7 @@ const InfoSlider = ({
     forceUpdateState,
     children,
     gutter = 12,
+    className,
     containerClassName,
     gradientColor,
 }) => {
@@ -32,7 +33,7 @@ const InfoSlider = ({
     // Helper
     const watchingScrollPosition = () => {
         const position = ref.current?.scrollLeft || 0
-        position <= 12 ? setLeftControllable(false) : setLeftControllable(true)
+        position <= 0 ? setLeftControllable(false) : setLeftControllable(true)
 
         ref?.current?.offsetWidth + position >= ref.current?.scrollWidth &&
         position >= gutter
@@ -51,7 +52,6 @@ const InfoSlider = ({
                     ref.current?.scrollWidth && position >= gutter
             )
         ) {
-            console.log('Should? ')
             setRightControllable(true)
         }
 
@@ -81,14 +81,20 @@ const InfoSlider = ({
     }, [forceUpdateState, gutter])
 
     return (
-        <div ref={containerRef} className='flex items-center overflow-hidden'>
+        <div
+            ref={containerRef}
+            className={classNames(
+                'flex items-center overflow-hidden',
+                className
+            )}
+        >
             <div
                 onClick={() => onScroll(-scrollStepSize)}
                 style={{
                     background: `linear-gradient(to right, ${gradientColor} 42.24%, transparent 95.69%)`,
                 }}
                 className={classNames(
-                    'min-w-[24px] h-full min-h-[45px] flex items-center justify-center invisible cursor-pointer pointer-events-none',
+                    'min-w-[24px] h-full min-h-[45px] flex items-center justify-center invisible cursor-pointer pointer-events-none hover:text-dominant',
                     { '!visible !pointer-events-auto': leftControllable }
                 )}
             >

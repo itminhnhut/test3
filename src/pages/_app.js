@@ -7,7 +7,11 @@ import 'public/css/font.css'
 import { useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { useAsync } from 'react-use'
-import { getFuturesConfigs } from 'redux/actions/futures'
+import {
+    getFuturesConfigs,
+    getFuturesFavoritePairs,
+    getFuturesMarketWatch,
+} from 'redux/actions/futures'
 import { getAssetConfig, getExchangeConfig } from 'redux/actions/market'
 import { getWallet, setTheme } from 'redux/actions/user'
 import Head from 'src/components/common/Head'
@@ -91,6 +95,8 @@ const App = ({ Component, pageProps }) => {
             store.dispatch(getAssetConfig())
             store.dispatch(getExchangeConfig())
             store.dispatch(getFuturesConfigs())
+            store.dispatch(getFuturesFavoritePairs())
+            store.dispatch(getFuturesMarketWatch())
             initConfig = true
             // Get common data
 

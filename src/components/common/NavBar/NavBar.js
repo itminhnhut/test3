@@ -744,7 +744,10 @@ const NavBar = ({
 export const NavBarBottomShadow = ({ style = {}, className = '' }) => {
     return (
         <div
-            className={classNames('-translate-y-full h-[20px]', className)}
+            className={classNames(
+                'z-[99] -translate-y-full h-[20px]',
+                className
+            )}
             style={{
                 boxShadow: ' 0px 15px 20px rgba(0, 0, 0, 0.03)',
                 ...style,

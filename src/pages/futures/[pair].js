@@ -1,18 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getFuturesMarketWatch, getMarketWatch } from 'redux/actions/market'
 import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants'
 import { ApiStatus, PublicSocketEvent } from 'redux/actions/const'
 import { WidthProvider, Responsive } from 'react-grid-layout'
-import { API_GET_FUTURES_CONFIGS } from 'redux/actions/apis'
+import { useSelector, useDispatch } from 'react-redux'
+import {
+    API_GET_FUTURES_CONFIGS,
+    API_GET_FUTURES_MARKET_WATCH,
+    API_GET_FUTURES_MARK_PRICE,
+} from 'redux/actions/apis'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { FUTURES_DEFAULT_SYMBOL } from './index'
 import { NavBarBottomShadow } from 'components/common/NavBar/NavBar'
-import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useAsync } from 'react-use'
+import { roundTo } from 'round-to'
 
-import FuturesRecentTrades from 'components/screens/Futures/RecentTrades'
+import FuturesMarketWatch from '../../models/FuturesMarketWatch'
+import FuturesMarkPrice from '../../models/FuturesMarkPrice'
 import FuturesFavoritePairs from 'components/screens/Futures/FavoritePairs'
+import FuturesRecentTrades from 'components/screens/Futures/RecentTrades'
 import FuturesTradeRecord from 'components/screens/Futures/TradeRecord'
 import FuturesMarginRatio from 'components/screens/Futures/MarginRatio'
 import FuturesPairDetail from 'components/screens/Futures/PairDetail'
@@ -29,19 +35,23 @@ import futuresGridConfig, {
 import useWindowSize from 'hooks/useWindowSize'
 import DynamicNoSsr from 'components/DynamicNoSsr'
 import dynamic from 'next/dynamic'
-import Axios from 'axios'
 import Emitter from 'redux/actions/emitter'
+import Axios from 'axios'
+
 import 'react-grid-layout/css/styles.css'
+import futures from 'redux/reducers/futures'
 
 const GridLayout = WidthProvider(Responsive)
 const originLayouts = getLayoutFromLS('layouts')
 
 const INITIAL_STATE = {
     layouts: futuresGridConfig.layouts,
-    pair: FUTURES_DEFAULT_SYMBOL,
+    loading: false,
+    pair: null,
     prevPair: null,
     socketStatus: false,
-    pairTicker: null,
+    pairPrice: null,
+    markPrice: null,
     forceUpdateState: 1,
 }
 
@@ -50,7 +60,8 @@ const Futures = () => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }))
 
     const publicSocket = useSelector((state) => state.socket.publicSocket)
-    const allConfigs = useSelector((state) => state.futures.pairConfig)
+    const allPairConfigs = useSelector((state) => state.futures.pairConfigs)
+    const marketWatch = useSelector((state) => state.futures.marketWatch)
 
     const router = useRouter()
     const { width } = useWindowSize()
@@ -58,22 +69,93 @@ const Futures = () => {
 
     // Memmoized Variable
     const pairConfig = useMemo(
-        () => allConfigs?.find((o) => o.pair === state.pair),
-        [allConfigs, state.pair]
+        () => allPairConfigs?.find((o) => o.pair === state.pair),
+        [allPairConfigs, state.pair]
     )
 
     // Helper
+    const getPairMarkPrice = async (symbol) => {
+        if (!symbol) return
+        setState({ loading: true })
+        try {
+            const { data } = await Axios.get(API_GET_FUTURES_MARK_PRICE, {
+                params: { symbol },
+            })
+            if (data?.status === ApiStatus.SUCCESS) {
+                setState({ markPrice: FuturesMarkPrice.create(data?.data) })
+            }
+        } catch (e) {
+            console.log(`Can't get ${symbol} marketWatch `, e)
+        }
+    }
+
+    const subscribeFuturesSocket = (pair) => {
+        if (!publicSocket) {
+            setState({ socketStatus: !!publicSocket })
+        } else {
+            if (
+                !state.prevPair ||
+                state.prevPair !== pair ||
+                !!publicSocket !== state.socketStatus
+            ) {
+                publicSocket.emit('subscribe:futures:depth', pair)
+                publicSocket.emit('subscribe:futures:recent_trade', pair)
+                publicSocket.emit('subscribe:futures:ticker', pair)
+                publicSocket.emit('subscribe:futures:mark_price', pair)
+                publicSocket.emit('subscribe:futures:mini_ticker', 'all')
+                setState({ socketStatus: !!publicSocket, prevPair: pair })
+            }
+        }
+    }
+
+    const unsubscribeFuturesSocket = (pair) => {
+        publicSocket?.emit('unsubscribe:futures:depth', pair)
+        publicSocket?.emit('unsubscribe:futures:recent_trade', pair)
+        publicSocket?.emit('unsubscribe:futures:ticker', pair)
+        publicSocket?.emit('unsubscribe:futures:mark_price', pair)
+        publicSocket?.emit('unsubscribe:futures:mini_ticker', 'all')
+    }
+
     const onLayoutChange = (layout, layouts) => {
         setLayoutToLS('layouts', layouts)
         setState({ layouts })
+        setState({
+            forceUpdateState: state.forceUpdateState + 1,
+        })
     }
 
+    // ? Init Price and MarkPrice
     useEffect(() => {
+        setState({ pairPrice: null })
+        if (Array.isArray(marketWatch) && marketWatch?.length) {
+            setState({
+                pairPrice: marketWatch.find((o) => o.symbol === state.pair),
+            })
+        }
+    }, [marketWatch, state.pair])
+
+    useEffect(() => {
+        setState({ markPrice: null })
+        getPairMarkPrice(state.pair)
+    }, [state.pair])
+
+    useEffect(() => {
+        // ? Hide global scroll
+        document.body.className += ' no-scrollbar'
+
+        // Re-init lastest layouts
         if (!!originLayouts) {
             setState({ layouts: JSON.parse(JSON.stringify(originLayouts)) })
         }
+        return () => {
+            document.body.className = document.body.className?.replace(
+                'no-scrollbar',
+                ''
+            )
+        }
     }, [])
 
+    // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
             setState({ pair: router.query.pair })
@@ -84,32 +166,57 @@ const Futures = () => {
         }
     }, [router])
 
-    // ? Subscribe public socket
-
-    // ? Get Pair Ticker
+    // ? Subscribe publicSocket
     useEffect(() => {
+        if (!state.pair) return
+        subscribeFuturesSocket(state.pair)
+        return () => publicSocket && unsubscribeFuturesSocket(state.pair)
+    }, [publicSocket, state.pair])
+
+    useEffect(() => {
+        // ? Get Pair Ticker
         Emitter.on(
-            PublicSocketEvent.FUTURES_TICKER_UPDATE + state.pair,
-            async (data) => {
-                console.log('Futures Ticker Emitting...', data)
-            }
+            PublicSocketEvent.FUTURES_TICKER_UPDATE,
+            async (data) =>
+                data && setState({ pairPrice: FuturesMarketWatch.create(data) })
         )
-    }, [state.pair])
+
+        // ? Get Mark Price
+        Emitter.on(
+            PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE + state.pair,
+            async (data) =>
+                data && setState({ markPrice: FuturesMarkPrice.create(data) })
+        )
+
+        return () => {
+            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE)
+            Emitter.off(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE)
+        }
+    }, [publicSocket, state.pair])
 
     useEffect(() => {
-        console.log('pairConfig: ', pairConfig)
+        console.log('pairConfig => ', pairConfig)
     }, [pairConfig])
 
-    useEffect(() => {
-        console.log('Watching pairTicker: ', state.pair, state.pairTicker)
-    }, [state.pairTicker, state.pair])
+    // useEffect(() => {
+    //     console.log('Watching State => ', state)
+    // }, [state])
 
     return (
         <>
-            <FuturesPageTitle pair={state.pair} />
+            <FuturesPageTitle
+                pair={state.pair}
+                price={state.pairPrice?.lastPrice}
+                pricePrecision={pairConfig?.pricePrecision}
+            />
             <DynamicNoSsr>
-                <MaldivesLayout useNavShadow hideFooter>
-                    <div className='-mt-5 w-full'>
+                <MaldivesLayout
+                    navStyle={{
+                        boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)',
+                    }}
+                    hideFooter
+                >
+                    <div className='w-full'>
                         {isMediumDevices && (
                             <GridLayout
                                 className='layout'
@@ -133,7 +240,7 @@ const Futures = () => {
                             >
                                 <div
                                     key={futuresGridKey.favoritePair}
-                                    className='border border-divider dark:border-divider-dark'
+                                    className='border bg-bgPrimary border-divider dark:border-divider-dark'
                                 >
                                     <FuturesFavoritePairs
                                         forceUpdateState={
@@ -143,9 +250,16 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.pairDetail}
-                                    className='border border-divider dark:border-divider-dark'
+                                    className='relative z-20 border border-divider dark:border-divider-dark'
                                 >
-                                    <FuturesPairDetail />
+                                    <FuturesPairDetail
+                                        pairPrice={state.pairPrice}
+                                        markPrice={state.markPrice}
+                                        pairConfig={pairConfig}
+                                        forceUpdateState={
+                                            state.forceUpdateState
+                                        }
+                                    />
                                 </div>
                                 <div
                                     key={futuresGridKey.chart}

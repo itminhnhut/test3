@@ -1,14 +1,21 @@
+import { memo } from 'react'
 import { PRODUCT } from 'constants/constants'
 import Head from 'next/head'
+import { formatNumber } from 'redux/actions/utils'
+import { roundTo } from 'round-to'
 
-const FuturesPageTitle = ({ pair, price }) => {
+const FuturesPageTitle = memo(({ pair, price, pricePrecision }) => {
     return (
         <Head>
             <title>
-                {!!price ? `${price} |` : ''} {pair} | {PRODUCT.FUTURES}
+                {`${formatNumber(
+                    roundTo(price || 0, pricePrecision || 0),
+                    pricePrecision
+                )}`}{' '}
+                | {pair} | {PRODUCT.FUTURES}
             </title>
         </Head>
     )
-}
+})
 
 export default FuturesPageTitle

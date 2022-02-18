@@ -508,6 +508,7 @@ export const PublicSocketEvent = {
     FUTURES_DEPTH_UPDATE: 'futures:depth:update',
     FUTURES_TICKER_UPDATE: 'futures:ticker:update',
     FUTURES_MINI_TICKER_UPDATE: 'futures:mini_ticker:update',
+    FUTURES_MARK_PRICE_UPDATE: 'futures:mark_price:update',
 
     IEO_PERCENTAGE_UPDATE: 'ieo:project_update',
     IEO_TICKET_STATUS_UPDATE: 'ieo:buy_response',
