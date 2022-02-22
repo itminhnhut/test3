@@ -5,10 +5,10 @@ import {
     PublicSocketEvent,
 } from 'redux/actions/const'
 import { API_GET_FUTURES_DEPTH } from 'redux/actions/apis'
-import { getDecimalScale } from 'redux/actions/utils'
-import { handleTickSize, roundNearest } from './orderBookHelper'
-import { useAsync } from 'react-use'
 import { isNumber, orderBy } from 'lodash'
+import { getDecimalScale } from 'redux/actions/utils'
+import { handleTickSize } from 'utils/MarketDepthMerger'
+import { useAsync } from 'react-use'
 
 import FuturesOrderBookFilter from './OrderBookFilter'
 import FuturesOrderBookMerger from './OrderBookMerger'
