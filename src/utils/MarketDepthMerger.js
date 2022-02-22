@@ -1,4 +1,4 @@
-import { ceil, floor, groupBy, map, sumBy } from 'lodash'
+import { ceil, floor, groupBy, map, sumBy, orderBy } from 'lodash'
 import { getDecimalScale } from 'redux/actions/utils'
 
 export const handleTickSize = (data, tickSize, type = null) => {
@@ -32,7 +32,12 @@ export const handleTickSize = (data, tickSize, type = null) => {
         return true
     })
 
-    return output
+    // asks = orderBy(asks, [(e) => +e[0]], ['desc'])
+    // bids = orderBy(bids, [(e) => -e[0]])
+
+    return type === 'ask'
+        ? orderBy(output, (e) => +e[0], 'desc')
+        : orderBy(output, (e) => -e[0])
 }
 
 function decimalAdjust(type, value, exp) {

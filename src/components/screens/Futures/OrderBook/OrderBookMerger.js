@@ -20,7 +20,7 @@ const FuturesOrderBookMerger = memo(
         return (
             <div className='relative select-none cursor-pointer'>
                 <div
-                    className='flex items-center justify-center w-[56px] bg-gray-5 dark:bg-darkBlue-3 rounded-[2px] font-medium text-[10px] text-txtSecondary dark:text-txtSecondary-dark'
+                    className='px-2 flex items-center justify-center min-w-[56px] bg-gray-5 dark:bg-darkBlue-3 rounded-[2px] font-medium text-[10px] text-txtSecondary dark:text-txtSecondary-dark'
                     onClick={onActive}
                 >
                     {tickSize}
@@ -33,7 +33,7 @@ const FuturesOrderBookMerger = memo(
                 {active && (
                     <div
                         ref={ref}
-                        className='py-2 absolute z-10 mt-1.5 left-1/2 -translate-x-1/2 top-full bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-3 rounded-md'
+                        className='py-2 absolute z-10 mt-1.5 left-1/2 -translate-x-1/2 top-full bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:drop-shadow-none dark:border dark:border-darkBlue-3 rounded-md'
                     >
                         {tickSizeList?.map((tickSz) => (
                             <div

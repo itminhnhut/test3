@@ -219,6 +219,7 @@ module.exports = {
                 700: '#00C8BC',
                 lightTeal: '#E2F6F5',
                 opacity: 'rgba(0, 200, 188, 0.5)',
+                opacitier: 'rgba(0, 200, 188, 0.1)',
             },
             green: {
                 DEFAULT: '#22B02E',
@@ -320,6 +321,10 @@ module.exports = {
                 bgInput: {
                     DEFAULT: commonColors.gray5,
                     dark: commonColors.darkBlue3,
+                },
+                bgHover: {
+                    DEFAULT: 'rgba(245, 245, 245, 0.5)',
+                    dark: 'rgba(38, 52, 89, 0.3)',
                 },
             },
             fontWeight: { bold: 600 },

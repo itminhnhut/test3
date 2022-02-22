@@ -128,6 +128,10 @@ const Futures = () => {
         })
     }
 
+    const setOrderInput = (depth = { rate: 0, amount: 0 }) => {
+        console.log('Set Input ', depth)
+    }
+
     // ? Init Price and MarkPrice
     useEffect(() => {
         setState({ pairPrice: null })
@@ -285,6 +289,7 @@ const Futures = () => {
                                         markPrice={state.markPrice?.markPrice}
                                         lastPrice={state.pairPrice?.lastPrice}
                                         orderBookLayout={state.orderBookLayout}
+                                        setOrderInput={setOrderInput}
                                     />
                                 </div>
                                 <div
