@@ -1,4 +1,11 @@
 {
+    "mark_price": "Mark",
+    "index_price": "Index",
+    "funding_countdown": "Funding / Countdown",
+    "24h_change": "24h Change",
+    "24h_high": "24h High",
+    "24h_low": "24h Low",
+    "24h_volume": "24h Volume",
     "size": "Size",
     "take_profit": "Take Profit",
     "stop_loss": "Stop Loss",

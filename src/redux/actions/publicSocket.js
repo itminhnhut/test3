@@ -64,6 +64,10 @@ function initPublicSocket() {
                     data
                 )
             })
+
+            WS.on(PublicSocketEvent.FUTURES_DEPTH_UPDATE, (data) => {
+                Emitter.emit(PublicSocketEvent.FUTURES_DEPTH_UPDATE, data)
+            })
         })
 
         WS.on('disconnect', () => {

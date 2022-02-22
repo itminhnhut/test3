@@ -818,3 +818,20 @@ export function measureTextWidth(value) {
     context.font = getComputedStyle(document.body).font
     return context.measureText(value).width
 }
+
+export const secondToMinutesAndSeconds = (time) => {
+    let hours = Math.floor(time / 3600)
+    let minutes = Math.floor((time % 3600) / 60)
+    let seconds = Math.floor(time % 60)
+
+    // Output like "1:01" or "01:01:01"
+    let result = ''
+    if (hours > 0) result += '' + hours + ':' + (minutes < 10 ? '0' : '')
+    result += '' + minutes + ':' + (seconds < 10 ? '0' : '')
+    result += '' + seconds
+
+    return {
+        toString: () => result,
+        parse: () => ({ hours, minutes, seconds }),
+    }
+}

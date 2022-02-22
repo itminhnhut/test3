@@ -61,6 +61,7 @@ export const API_SET_ASSET_AS_FEE = API_PREFIX + 'user/set_fee_currency'
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'futures/ticker'
+export const API_GET_FUTURES_DEPTH = API_V3_PREFIX + 'futures/depth'
 export const API_GET_FUTURE_FEE_CONFIGS = API_PREFIX + 'futures/fee-config'
 export const API_GET_FUTURES_CONFIGS = API_V3_PREFIX + 'futures/config'
 export const API_GET_FUTURES_MARK_PRICE = API_V3_PREFIX + 'futures/mark_price'

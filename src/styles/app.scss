@@ -481,6 +481,10 @@ input[type='number'] {
     -webkit-text-fill-color: transparent;
 }
 
+.futures-component-title {
+    @apply font-bold text-sm text-txtPrimary dark:text-txtPrimary-dark;
+}
+
 .flex-center {
     @apply flex items-center justify-center;
 }

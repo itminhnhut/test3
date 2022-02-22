@@ -22,7 +22,7 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
         >
             <div className='mr-1'>{pair?.symbol}</div>
             <div
-                className={classNames('tracking-wide', {
+                className={classNames('tracking-wide min-w-[40px] text-right', {
                     'text-red': pair?.priceChangePercent < 0,
                     'text-dominant': pair?.priceChangePercent >= 0,
                 })}

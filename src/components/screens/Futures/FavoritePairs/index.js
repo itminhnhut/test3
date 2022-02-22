@@ -47,8 +47,12 @@ const FuturesFavoritePairs = memo(({ forceUpdateState }) => {
         fetchMarketWatch()
 
         // Refresh per 1.5s
-        let interval = setInterval(() => fetchMarketWatch(true), 1500)
-        return () => interval && clearInterval(interval)
+        // let interval = setInterval(() => fetchMarketWatch(true), 1500)
+        // return () => {
+        //     if (interval) {
+        //         clearInterval(interval)
+        //     }
+        // }
     }, [])
 
     return (

@@ -1,4 +1,11 @@
 {
+    "mark_price": "Giá đánh dấu",
+    "index_price": "Chỉ số",
+    "funding_countdown": "Funding / Đếm ngược",
+    "24h_change": "Biến động 24h",
+    "24h_high": "Cao nhất 24h",
+    "24h_low": "Thấp nhất 24h",
+    "24h_volume": "KL 24h",
     "size": "Số lượng",
     "take_profit": "Take Profit",
     "stop_loss": "Stop Loss",

@@ -53,6 +53,7 @@ const INITIAL_STATE = {
     pairPrice: null,
     markPrice: null,
     forceUpdateState: 1,
+    orderBookLayout: null,
 }
 
 const Futures = () => {
@@ -118,8 +119,11 @@ const Futures = () => {
 
     const onLayoutChange = (layout, layouts) => {
         setLayoutToLS('layouts', layouts)
-        setState({ layouts })
         setState({
+            layouts,
+            orderBookLayout: layout?.find(
+                (o) => o.i === futuresGridKey.orderBook
+            ),
             forceUpdateState: state.forceUpdateState + 1,
         })
     }
@@ -175,17 +179,22 @@ const Futures = () => {
 
     useEffect(() => {
         // ? Get Pair Ticker
-        Emitter.on(
-            PublicSocketEvent.FUTURES_TICKER_UPDATE,
-            async (data) =>
-                data && setState({ pairPrice: FuturesMarketWatch.create(data) })
-        )
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
+            const pairPrice = FuturesMarketWatch.create(data)
+            if (state.pair === pairPrice?.symbol) {
+                setState({ pairPrice })
+            }
+        })
 
         // ? Get Mark Price
         Emitter.on(
             PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE + state.pair,
-            async (data) =>
-                data && setState({ markPrice: FuturesMarkPrice.create(data) })
+            async (data) => {
+                const markPrice = FuturesMarkPrice.create(data)
+                if (state.pair === markPrice?.symbol) {
+                    setState({ markPrice })
+                }
+            }
         )
 
         return () => {
@@ -240,7 +249,7 @@ const Futures = () => {
                             >
                                 <div
                                     key={futuresGridKey.favoritePair}
-                                    className='border bg-bgPrimary border-divider dark:border-divider-dark'
+                                    className='border border-divider dark:border-divider-dark'
                                 >
                                     <FuturesFavoritePairs
                                         forceUpdateState={
@@ -269,9 +278,14 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.orderBook}
-                                    className='border border-divider dark:border-divider-dark'
+                                    className='border z-20 border-divider dark:border-divider-dark'
                                 >
-                                    <FuturesOrderBook />
+                                    <FuturesOrderBook
+                                        pairConfig={pairConfig}
+                                        markPrice={state.markPrice?.markPrice}
+                                        lastPrice={state.pairPrice?.lastPrice}
+                                        orderBookLayout={state.orderBookLayout}
+                                    />
                                 </div>
                                 <div
                                     key={futuresGridKey.recentTrades}

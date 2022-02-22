@@ -7,14 +7,23 @@ import {
     useRef,
     createRef,
 } from 'react'
-import { formatNumber } from 'redux/actions/utils'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
+import {
+    formatNumber,
+    formatTime,
+    getDecimalScale,
+    secondToMinutesAndSeconds,
+} from 'redux/actions/utils'
+import { usePrevious } from 'react-use'
 import { ChevronDown } from 'react-feather'
 import { roundTo } from 'round-to'
 
 import FuturesPairDetailItem from './PairDetailItem'
 import FuturesPairList from '../PairList'
 import InfoSlider from 'components/markets/InfoSlider'
-import { useRouter } from 'next/router'
+import classNames from 'classnames'
+import Countdown from 'react-countdown'
 
 const FuturesPairDetail = ({
     pairPrice,
@@ -28,10 +37,14 @@ const FuturesPairDetail = ({
     const [lastPriceMinW, setLastPriceMinW] = useState(0)
 
     const router = useRouter()
+    const { t } = useTranslation()
 
     // ? Helper
     const itemsPriceRef = useRef()
     const lastPriceRef = useRef()
+    const prevLastPrice = usePrevious(pairPrice?.lastPrice)
+
+    // ? Memmoized Var
     const pricePrecision = useMemo(
         () => pairConfig?.pricePrecision || 0,
         [pairConfig?.pricePrecision]
@@ -39,11 +52,17 @@ const FuturesPairDetail = ({
 
     // ? Render lastPrice
     const renderLastPrice = useCallback(() => {
+        // console.log(
+        //     pairPrice?.lastPrice < prevLastPrice ? 'text-red' : 'text-dominant'
+        // )
         return (
             <div
                 ref={lastPriceRef}
                 style={{ minWidth: lastPriceMinW }}
-                className='ml-6 font-bold text-center text-sm text-dominant dragHandleArea tracking-wide'
+                className={classNames(
+                    'ml-6 font-bold text-center text-sm text-dominant dragHandleArea tracking-wide',
+                    { '!text-red': pairPrice?.lastPrice < prevLastPrice }
+                )}
             >
                 {formatNumber(
                     roundTo(pairPrice?.lastPrice || 0, pricePrecision),
@@ -52,14 +71,14 @@ const FuturesPairDetail = ({
                 )}
             </div>
         )
-    }, [pairPrice?.lastPrice, pricePrecision, lastPriceMinW])
+    }, [pairPrice?.lastPrice, pricePrecision, lastPriceMinW, prevLastPrice])
 
     // ? Render markPrice
     const renderMarkPrice = useCallback(() => {
         return (
             <FuturesPairDetailItem
                 containerClassName='pr-4'
-                label='Mark'
+                label={t('futures:mark_price')}
                 value={formatNumber(
                     roundTo(markPrice?.markPrice || 0, pricePrecision),
                     pricePrecision,
@@ -69,76 +88,174 @@ const FuturesPairDetail = ({
         )
     }, [markPrice?.markPrice, pricePrecision, itemsPriceMinW])
 
-    // ? Render indexPrice
-    const renderIndexPrice = useCallback(
-        () => (
-            <FuturesPairDetailItem
-                containerClassName='pr-4'
-                label='Index'
-                value={formatNumber(
-                    roundTo(markPrice?.indexPrice || 0, pricePrecision),
-                    pricePrecision
-                )}
-            />
-        ),
-        [markPrice?.indexPrice, pricePrecision]
-    )
+    const renderMarkPriceItems = useCallback(() => {
+        return MARK_PRICE_ITEMS.map((mark) => {
+            const { key, code, localized: localizedPath } = mark
+            let minWidth = itemsPriceMinW || 0
+            let value = null
+            let localized = t(localizedPath)
 
-    // ? Render 24h High
-    const render24hHigh = useCallback(() => {
-        return (
-            <FuturesPairDetailItem
-                containerClassName='pr-4'
-                label='24h High'
-                value={formatNumber(
-                    roundTo(pairPrice?.highPrice || 0, pricePrecision),
-                    pricePrecision
-                )}
-            />
-        )
-    }, [pairPrice?.highPrice, pricePrecision])
+            switch (code) {
+                case 'indexPrice':
+                    value = formatNumber(
+                        roundTo(markPrice?.indexPrice || 0, pricePrecision),
+                        pricePrecision
+                    )
+                    break
+                case 'fundingCountdown':
+                    const rateWidth =
+                        markPrice?.fundingRate?.toString()?.length +
+                            getDecimalScale(markPrice?.fundingRate) *
+                                TEXT_XS_WIDTH_PER_LETTER || 0
+                    const timerWidth = TEXT_XS_WIDTH_PER_LETTER * 8
 
-    // ? Render 24h Low
-    const render24hLow = useCallback(() => {
-        return (
-            <FuturesPairDetailItem
-                containerClassName='pr-4'
-                label='24h Low'
-                value={formatNumber(
-                    roundTo(pairPrice?.lowPrice || 0, pricePrecision),
-                    pricePrecision
-                )}
-            />
-        )
-    }, [pairPrice?.lowPrice, pricePrecision])
+                    value = (
+                        <div className='flex items-center justify-between'>
+                            <div
+                                style={{
+                                    minWidth: rateWidth,
+                                }}
+                                className={classNames({
+                                    'text-red': !!markPrice?.fundingRate,
+                                })}
+                            >
+                                {formatNumber(
+                                    markPrice?.fundingRate,
+                                    4,
+                                    4,
+                                    true
+                                )}
+                                %
+                            </div>
+                            <div>
+                                {markPrice?.nextFundingTime
+                                    ? secondToMinutesAndSeconds(
+                                          (markPrice?.nextFundingTime -
+                                              Date.now()) *
+                                              0.001
+                                      ).toString()
+                                    : '--:--'}
+                            </div>
+                        </div>
+                    )
+                    minWidth = rateWidth + timerWidth + 18
+                    break
+                default:
+                    return null
+            }
 
-    // ? Render baseAsset Traded Volume
-    const renderTradedBaseAssetVolume = useCallback(() => {
-        return (
-            <FuturesPairDetailItem
-                containerClassName='pr-4'
-                label={`24h Volume (${pairPrice?.baseAsset})`}
-                value={formatNumber(
-                    roundTo(pairPrice?.baseAssetVolume || 0, 3),
-                    3
-                )}
-            />
-        )
-    }, [pairPrice?.baseAssetVolume, pairPrice?.baseAsset])
+            return (
+                <div key={`markPrice_items_${key}`} style={{ minWidth }}>
+                    <FuturesPairDetailItem
+                        containerClassName='pr-4'
+                        label={localized}
+                        value={value}
+                    />
+                </div>
+            )
+        })
+    }, [markPrice, pricePrecision, itemsPriceMinW])
 
-    // ? Render quoteAsset Traded Volume
-    const renderTradedQuoteAssetVolume = useCallback(() => {
-        return (
-            <FuturesPairDetailItem
-                containerClassName='pr-4'
-                label={`24h Volume (${pairPrice?.quoteAsset})`}
-                value={formatNumber(
-                    roundTo(pairPrice?.quoteAssetVolume || 0, 3),
-                    3
-                )}
-            />
-        )
-    }, [pairPrice?.quoteAssetVolume, pairPrice?.quoteAsset])
+    const renderPairPriceItems = useCallback(() => {
+        return PAIR_PRICE_DETAIL_ITEMS.map((detail) => {
+            const { key, code, localized: localizedPath } = detail
+
+            let minWidth = itemsPriceMinW || 0
+            let value = null
+            let localized = t(localizedPath)
+
+            switch (code) {
+                case '24hHigh':
+                    value = formatNumber(
+                        roundTo(pairPrice?.highPrice || 0, pricePrecision),
+                        pricePrecision
+                    )
+                    break
+                case '24hLow':
+                    value = formatNumber(
+                        roundTo(pairPrice?.lowPrice || 0, pricePrecision),
+                        pricePrecision
+                    )
+                    break
+                case '24hChange':
+                    const changeWidth =
+                        pairPrice?.priceChange?.toString()?.length +
+                            pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0
+                    value = (
+                        <div className='w-full flex items-center justify-between'>
+                            <div
+                                style={{
+                                    minWidth: changeWidth,
+                                }}
+                                className={classNames('w-1/2 text-dominant', {
+                                    '!text-red': pairPrice?.priceChange < 0,
+                                })}
+                            >
+                                {formatNumber(
+                                    roundTo(
+                                        pairPrice?.priceChange || 0,
+                                        pricePrecision
+                                    ),
+                                    pricePrecision,
+                                    pricePrecision,
+                                    true
+                                )}
+                            </div>
+                            <div
+                                className={classNames('pl-1 text-dominant', {
+                                    '!text-red':
+                                        pairPrice?.priceChangePercent < 0,
+                                })}
+                            >
+                                {formatNumber(
+                                    roundTo(
+                                        pairPrice?.priceChangePercent || 0,
+                                        2
+                                    ),
+                                    2,
+                                    2,
+                                    true
+                                )}
+                                %
+                            </div>
+                        </div>
+                    )
+                    minWidth = itemsPriceMinW + 20
+                    break
+                case '24hBaseVolume':
+                    localized += ` (${pairPrice?.baseAsset})`
+                    minWidth = itemsPriceMinW + 25
+                    value = formatNumber(
+                        roundTo(pairPrice?.baseAssetVolume || 0, 3),
+                        3
+                    )
+                    break
+                case '24hQuoteVolume':
+                    localized += ` (${pairPrice?.quoteAsset})`
+                    minWidth = itemsPriceMinW + 50
+                    value = formatNumber(
+                        roundTo(pairPrice?.quoteAssetVolume || 0, 3),
+                        3
+                    )
+                    break
+                default:
+                    return null
+            }
+
+            return (
+                <div
+                    key={`pairPrice_items_${key}`}
+                    style={{ minWidth: minWidth || 0 }}
+                >
+                    <FuturesPairDetailItem
+                        label={localized}
+                        containerClassName='pr-4'
+                        value={value}
+                    />
+                </div>
+            )
+        })
+    }, [pairPrice, itemsPriceMinW, pricePrecision])
 
     useEffect(() => {
         setItemsPriceMinW(undefined)
@@ -153,7 +270,6 @@ const FuturesPairDetail = ({
             pairPrice &&
             pairPrice?.lastPrice
         ) {
-            console.log('Re-calculate lastPrice Width')
             setLastPriceMinW(lastPriceRef.current?.clientWidth + 6 || 0)
         }
     }, [
@@ -172,11 +288,6 @@ const FuturesPairDetail = ({
             markPrice &&
             markPrice?.markPrice
         ) {
-            console.log(
-                'Re-calculate itemsPrice Width ',
-                itemsPriceRef?.current?.clientWidth,
-                markPrice?.markPrice
-            )
             setItemsPriceMinW(itemsPriceRef?.current?.clientWidth + 6 || 0)
         }
     }, [
@@ -217,44 +328,32 @@ const FuturesPairDetail = ({
                 >
                     {renderMarkPrice()}
                 </div>
-                <div style={{ minWidth: itemsPriceMinW || 0 }}>
-                    {renderIndexPrice()}
-                </div>
 
-                <div style={{ minWidth: itemsPriceMinW || 0 }}>
-                    <FuturesPairDetailItem
-                        label='Funding/Countdown'
-                        containerClassName='pr-4'
-                        value='-0.0062% 02:51:55'
-                    />
-                </div>
-
-                <div style={{ minWidth: itemsPriceMinW || 0 }}>
-                    <FuturesPairDetailItem
-                        label='24h Change'
-                        containerClassName='pr-4'
-                        value='43,141.3'
-                    />
-                </div>
-
-                <div style={{ minWidth: itemsPriceMinW || 0 }}>
-                    {render24hHigh()}
-                </div>
-
-                <div style={{ minWidth: itemsPriceMinW || 0 }}>
-                    {render24hLow()}
-                </div>
-
-                <div style={{ minWidth: itemsPriceMinW || 0 }}>
-                    {renderTradedBaseAssetVolume()}
-                </div>
-
-                <div style={{ minWidth: itemsPriceMinW || 0 }}>
-                    {renderTradedQuoteAssetVolume()}
-                </div>
+                {renderMarkPriceItems()}
+                {renderPairPriceItems()}
             </InfoSlider>
         </div>
     )
 }
+
+const TEXT_XS_WIDTH_PER_LETTER = 6.7
+
+const MARK_PRICE_ITEMS = [
+    // { key: 0, code: 'markPrice', localized: 'futures:mark_price' },
+    { key: 1, code: 'indexPrice', localized: 'futures:index_price' },
+    {
+        key: 2,
+        code: 'fundingCountdown',
+        localized: 'futures:funding_countdown',
+    },
+]
+
+const PAIR_PRICE_DETAIL_ITEMS = [
+    { key: 3, code: '24hChange', localized: 'futures:24h_change' },
+    { key: 4, code: '24hHigh', localized: 'futures:24h_high' },
+    { key: 5, code: '24hLow', localized: 'futures:24h_low' },
+    { key: 6, code: '24hBaseVolume', localized: 'futures:24h_volume' },
+    { key: 7, code: '24hQuoteVolume', localized: 'futures:24h_volume' },
+]
 
 export default FuturesPairDetail
