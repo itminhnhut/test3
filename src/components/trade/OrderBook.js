@@ -30,6 +30,7 @@ import { ORDER_BOOK_MODE } from 'redux/actions/const'
 import SvgChevronDown from 'src/components/svg/ChevronDown'
 import { getDecimalScale } from 'redux/actions/utils'
 import { handleTickSize } from 'utils/MarketDepthMerger'
+import classNames from 'classnames'
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot'])
@@ -266,7 +267,12 @@ const OrderBook = (props) => {
 
         if (inner) {
             return (
-                <div className='flex flex-col justify-start flex-1'>
+                <div
+                    className={classNames(
+                        'flex flex-col justify-start flex-1',
+                        { '!justify-end': side === 'buy' }
+                    )}
+                >
                     {inner}
                 </div>
             )
