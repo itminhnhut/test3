@@ -6,7 +6,7 @@ import FuturesOrderBookItem from './OrderBookItem'
 import classNames from 'classnames'
 
 const FuturesOrdersList = ({ side, orders, isOnly, pairConfig }) => {
-    const footerRef = useRef()
+    const ref = useRef()
 
     const renderOrderItems = useCallback(() => {
         const maxQuote = maxBy(orders, (o) => o[1])
@@ -29,13 +29,14 @@ const FuturesOrdersList = ({ side, orders, isOnly, pairConfig }) => {
     }, [side, orders, pairConfig])
 
     useEffect(() => {
-        if (footerRef.current && isOnly) {
-            footerRef.current.scrollIntoView()
+        if (side === ORDER_BOOK_MODE.ASKS && isOnly && ref.current) {
+            ref.current.scrollTop = ref.current?.scrollHeight
         }
-    }, [footerRef, isOnly])
+    }, [ref, isOnly, side])
 
     return (
         <div
+            ref={ref}
             className={classNames(
                 'px-3.5 h-full overflow-hidden transition-all duration-100',
                 {
@@ -47,7 +48,6 @@ const FuturesOrdersList = ({ side, orders, isOnly, pairConfig }) => {
             )}
         >
             {renderOrderItems()}
-            {side === ORDER_BOOK_MODE.ASKS && isOnly && <div ref={footerRef} />}
         </div>
     )
 }

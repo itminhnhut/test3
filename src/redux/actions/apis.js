@@ -65,6 +65,8 @@ export const API_GET_FUTURES_DEPTH = API_V3_PREFIX + 'futures/depth'
 export const API_GET_FUTURE_FEE_CONFIGS = API_PREFIX + 'futures/fee-config'
 export const API_GET_FUTURES_CONFIGS = API_V3_PREFIX + 'futures/config'
 export const API_GET_FUTURES_MARK_PRICE = API_V3_PREFIX + 'futures/mark_price'
+export const API_GET_FUTURES_RECENT_TRADES =
+    API_V3_PREFIX + 'futures/recent_trade'
 
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'

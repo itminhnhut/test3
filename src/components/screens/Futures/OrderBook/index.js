@@ -82,9 +82,8 @@ const FuturesOrderBook = ({
         return (
             <>
                 <div
-                    className={classNames('text-right w-[47%]', {
+                    className={classNames('text-right w-[47%] text-dominant', {
                         '!text-red': lastPrice < prevLastPrice,
-                        '!text-dominant': lastPrice > prevLastPrice,
                     })}
                 >
                     {formatNumber(

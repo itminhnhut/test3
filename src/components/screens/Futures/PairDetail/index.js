@@ -77,7 +77,7 @@ const FuturesPairDetail = ({
     const renderMarkPrice = useCallback(() => {
         return (
             <FuturesPairDetailItem
-                containerClassName='pr-4'
+                containerClassName=''
                 label={t('futures:mark_price')}
                 value={formatNumber(
                     roundTo(markPrice?.markPrice || 0, pricePrecision),
@@ -110,7 +110,7 @@ const FuturesPairDetail = ({
                     const timerWidth = TEXT_XS_WIDTH_PER_LETTER * 8
 
                     value = (
-                        <div className='flex items-center justify-between'>
+                        <div className='w-[90%] flex items-center justify-between'>
                             <div
                                 style={{
                                     minWidth: rateWidth,
@@ -147,7 +147,7 @@ const FuturesPairDetail = ({
             return (
                 <div key={`markPrice_items_${key}`} style={{ minWidth }}>
                     <FuturesPairDetailItem
-                        containerClassName='pr-4'
+                        containerClassName=''
                         label={localized}
                         value={value}
                     />
@@ -161,7 +161,8 @@ const FuturesPairDetail = ({
             const { key, code, localized: localizedPath } = detail
 
             let minWidth = itemsPriceMinW || 0
-            let value = null
+            let value = null,
+                className = ''
             let localized = t(localizedPath)
 
             switch (code) {
@@ -182,14 +183,17 @@ const FuturesPairDetail = ({
                         pairPrice?.priceChange?.toString()?.length +
                             pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0
                     value = (
-                        <div className='w-full flex items-center justify-between'>
+                        <div className='w-[88%] flex items-center'>
                             <div
                                 style={{
                                     minWidth: changeWidth,
                                 }}
-                                className={classNames('w-1/2 text-dominant', {
-                                    '!text-red': pairPrice?.priceChange < 0,
-                                })}
+                                className={classNames(
+                                    'min-w-1/2 text-dominant',
+                                    {
+                                        '!text-red': pairPrice?.priceChange < 0,
+                                    }
+                                )}
                             >
                                 {formatNumber(
                                     roundTo(
@@ -197,12 +201,12 @@ const FuturesPairDetail = ({
                                         pricePrecision
                                     ),
                                     pricePrecision,
-                                    pricePrecision,
+                                    0,
                                     true
                                 )}
                             </div>
                             <div
-                                className={classNames('pl-1 text-dominant', {
+                                className={classNames('pl-2 text-dominant', {
                                     '!text-red':
                                         pairPrice?.priceChangePercent < 0,
                                 })}
@@ -220,11 +224,11 @@ const FuturesPairDetail = ({
                             </div>
                         </div>
                     )
-                    minWidth = itemsPriceMinW + 20
+                    minWidth = itemsPriceMinW + 36
                     break
                 case '24hBaseVolume':
                     localized += ` (${pairPrice?.baseAsset})`
-                    minWidth = itemsPriceMinW + 25
+                    minWidth = itemsPriceMinW + 41
                     value = formatNumber(
                         roundTo(pairPrice?.baseAssetVolume || 0, 3),
                         3
@@ -249,7 +253,7 @@ const FuturesPairDetail = ({
                 >
                     <FuturesPairDetailItem
                         label={localized}
-                        containerClassName='pr-4'
+                        containerClassName={className}
                         value={value}
                     />
                 </div>
@@ -288,7 +292,7 @@ const FuturesPairDetail = ({
             markPrice &&
             markPrice?.markPrice
         ) {
-            setItemsPriceMinW(itemsPriceRef?.current?.clientWidth + 6 || 0)
+            setItemsPriceMinW(itemsPriceRef?.current?.clientWidth + 24 || 0)
         }
     }, [
         router.query,

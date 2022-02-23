@@ -39,7 +39,6 @@ import Emitter from 'redux/actions/emitter'
 import Axios from 'axios'
 
 import 'react-grid-layout/css/styles.css'
-import futures from 'redux/reducers/futures'
 
 const GridLayout = WidthProvider(Responsive)
 const originLayouts = getLayoutFromLS('layouts')
@@ -296,7 +295,9 @@ const Futures = () => {
                                     key={futuresGridKey.recentTrades}
                                     className='border border-divider dark:border-divider-dark'
                                 >
-                                    <FuturesRecentTrades />
+                                    <FuturesRecentTrades
+                                        pairConfig={pairConfig}
+                                    />
                                 </div>
                                 <div
                                     key={futuresGridKey.tradeRecord}

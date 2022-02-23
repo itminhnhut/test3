@@ -13,7 +13,7 @@ const FuturesOrderBookItem = memo(
                         width: progress || 0,
                     }}
                     className={classNames(
-                        '-mx-2 px-2 absolute z-10 top-0 left-0 h-full rounded-[2px]',
+                        '-mx-2 px-2 absolute z-10 top-0 right-0 h-full rounded-[2px]',
                         {
                             'bg-red-lightRed': side === ORDER_BOOK_MODE.ASKS,
                             'bg-teal-opacitier': side === ORDER_BOOK_MODE.BIDS,
@@ -40,7 +40,7 @@ const FuturesOrderBookItem = memo(
                     >
                         {formatNumber(
                             +amount,
-                            pairConfig?.baseAssetPrecision || 8
+                            pairConfig?.baseAssetPrecision || 5
                         )}
                     </div>
                     <div
@@ -49,7 +49,7 @@ const FuturesOrderBookItem = memo(
                     >
                         {formatNumber(
                             +rate * +amount,
-                            pairConfig?.baseAssetPrecision || 8
+                            pairConfig?.baseAssetPrecision || 5
                         )}
                     </div>
                 </div>
