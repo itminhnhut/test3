@@ -17,15 +17,15 @@ const FuturesOrderLimit = memo(({ quoteAsset, baseAsset }) => {
                     <>
                         <div
                             data-tip=''
-                            data-for='last_mark_price'
+                            data-for='last_price'
                             className='truncate mr-2 text-dominant cursor-pointer'
                         >
-                            {t('futures:last_mark_price')}
+                            {t('futures:last_price')}
                         </div>
                         <div>{quoteAsset}</div>
-                        <Tooltip id='last_mark_price' place='top'>
+                        <Tooltip id='last_price' place='top'>
                             <span className='text-xs'>
-                                {t('futures:last_mark_price_tooltip')}
+                                {t('futures:last_price_tooltip')}
                             </span>
                         </Tooltip>
                     </>

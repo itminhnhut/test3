@@ -1,10 +1,7 @@
 import { memo } from 'react'
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures'
+import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-    SET_FUTURES_ORDER_ADVANCE_TYPES,
-    SET_FUTURES_ORDER_TYPES,
-} from 'redux/actions/types'
 import { useTranslation } from 'next-i18next'
 import { ChevronDown } from 'react-feather'
 
@@ -37,9 +34,18 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
                 return '--'
         }
     }
-    const setOrderTypes = (payload, isAdvance = false) =>
-        payload !== currentType &&
-        dispatch(setFuturesOrderTypes(payload, isAdvance))
+    const setOrderTypes = (payload, isAdvance = false) => {
+        if (payload !== currentType) {
+            dispatch({
+                type: SET_FUTURES_PRELOADED_FORM,
+                payload: isAdvance
+                    ? { orderAdvanceType: payload }
+                    : { orderType: payload },
+            })
+
+            dispatch(setFuturesOrderTypes(payload, isAdvance))
+        }
+    }
 
     // ? Render handler
     const renderCommonTypes = () => {

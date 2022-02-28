@@ -62,6 +62,7 @@ const Futures = () => {
     const publicSocket = useSelector((state) => state.socket.publicSocket)
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs)
     const marketWatch = useSelector((state) => state.futures.marketWatch)
+    const auth = useSelector((state) => state.auth?.user)
 
     const router = useRouter()
     const { width } = useWindowSize()
@@ -252,16 +253,18 @@ const Futures = () => {
                                     })
                                 }
                             >
-                                <div
-                                    key={futuresGridKey.favoritePair}
-                                    className='border border-divider dark:border-divider-dark'
-                                >
-                                    <FuturesFavoritePairs
-                                        forceUpdateState={
-                                            state.forceUpdateState
-                                        }
-                                    />
-                                </div>
+                                {auth && (
+                                    <div
+                                        key={futuresGridKey.favoritePair}
+                                        className='border border-divider dark:border-divider-dark'
+                                    >
+                                        <FuturesFavoritePairs
+                                            forceUpdateState={
+                                                state.forceUpdateState
+                                            }
+                                        />
+                                    </div>
+                                )}
                                 <div
                                     key={futuresGridKey.pairDetail}
                                     className='relative z-20 border border-divider dark:border-divider-dark'

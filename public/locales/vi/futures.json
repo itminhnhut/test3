@@ -9,6 +9,6 @@
     "size": "Số lượng",
     "take_profit": "Take Profit",
     "stop_loss": "Stop Loss",
-    "last_mark_price": "Gần nhất",
-    "last_mark_price_tooltip": "Fill in the current last price"
+    "last_price": "Gần nhất",
+    "last_price_tooltip": "Đặt giá gần nhất"
 }
