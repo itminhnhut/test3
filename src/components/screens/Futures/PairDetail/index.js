@@ -36,12 +36,16 @@ const FuturesPairDetail = ({
     const [itemsPriceMinW, setItemsPriceMinW] = useState(0)
     const [lastPriceMinW, setLastPriceMinW] = useState(0)
 
+    const [activePairList, setActivePairList] = useState(false)
+    const [pairListMode, setPairListMode] = useState('Starred')
+
     const router = useRouter()
     const { t } = useTranslation()
 
     // ? Helper
     const itemsPriceRef = useRef()
     const lastPriceRef = useRef()
+    const pairListRef = useRef()
     const prevLastPrice = usePrevious(pairPrice?.lastPrice)
 
     // ? Memmoized Var
@@ -305,20 +309,37 @@ const FuturesPairDetail = ({
     return (
         <div className='h-full pl-5 flex items-center'>
             {/* Pair */}
-            <div className='relative group cursor-pointer'>
+            <div
+                className='group relative cursor-pointer'
+                onMouseOver={() => setActivePairList(true)}
+                onMouseLeave={() => setActivePairList(false)}
+            >
                 <div className='relative z-10 flex items-center font-bold text-[18px]'>
                     {pairPrice?.symbol}
                     <ChevronDown
                         size={16}
-                        className='mt-1 ml-2 transition-transform duration-75 group-hover:rotate-180'
+                        className={classNames(
+                            'mt-1 ml-2 transition-transform duration-75',
+                            { 'rotate-180': activePairList }
+                        )}
                     />
                 </div>
                 <div className='relative z-10 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>
                     Perpetual
                 </div>
-                <div className='hidden group-hover:block absolute z-30 left-0 top-full'>
-                    <FuturesPairList />
+                {/* { && ( */}
+                <div
+                    className='hidden group-hover:block absolute z-30 left-0 top-full'
+                    ref={pairListRef}
+                >
+                    {activePairList && (
+                        <FuturesPairList
+                            mode={pairListMode}
+                            setMode={setPairListMode}
+                        />
+                    )}
                 </div>
+                {/* )} */}
             </div>
 
             {/* Price */}

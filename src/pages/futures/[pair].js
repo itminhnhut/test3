@@ -100,9 +100,11 @@ const Futures = () => {
             ) {
                 publicSocket.emit('subscribe:futures:depth', pair)
                 publicSocket.emit('subscribe:futures:recent_trade', pair)
-                publicSocket.emit('subscribe:futures:ticker', pair)
+                // publicSocket.emit('subscribe:futures:ticker', pair)
                 publicSocket.emit('subscribe:futures:mark_price', pair)
-                publicSocket.emit('subscribe:futures:mini_ticker', 'all')
+                publicSocket.emit('subscribe:futures:ticker', 'all')
+                // publicSocket.emit('subscribe:futures:mini_ticker', 'all')
+
                 setState({ socketStatus: !!publicSocket, prevPair: pair })
             }
         }
@@ -111,9 +113,9 @@ const Futures = () => {
     const unsubscribeFuturesSocket = (pair) => {
         publicSocket?.emit('unsubscribe:futures:depth', pair)
         publicSocket?.emit('unsubscribe:futures:recent_trade', pair)
-        publicSocket?.emit('unsubscribe:futures:ticker', pair)
+        publicSocket?.emit('unsubscribe:futures:ticker', 'all')
         publicSocket?.emit('unsubscribe:futures:mark_price', pair)
-        publicSocket?.emit('unsubscribe:futures:mini_ticker', 'all')
+        // publicSocket?.emit('unsubscribe:futures:mini_ticker', 'all')
     }
 
     const onLayoutChange = (layout, layouts) => {
@@ -173,14 +175,12 @@ const Futures = () => {
         }
     }, [router])
 
-    // ? Subscribe publicSocket
     useEffect(() => {
         if (!state.pair) return
-        subscribeFuturesSocket(state.pair)
-        return () => publicSocket && unsubscribeFuturesSocket(state.pair)
-    }, [publicSocket, state.pair])
 
-    useEffect(() => {
+        // ? Subscribe publicSocket
+        subscribeFuturesSocket(state.pair)
+
         // ? Get Pair Ticker
         Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
             const pairPrice = FuturesMarketWatch.create(data)
@@ -200,7 +200,9 @@ const Futures = () => {
             }
         )
 
+        // ? Unsubscribe publicSocket
         return () => {
+            publicSocket && unsubscribeFuturesSocket(state.pair)
             Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE)
             Emitter.off(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE)
         }

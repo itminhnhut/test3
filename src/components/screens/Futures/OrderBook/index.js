@@ -159,7 +159,9 @@ const FuturesOrderBook = ({
                 )
         )
 
-        return () => Emitter.off(PublicSocketEvent.FUTURES_DEPTH_UPDATE)
+        return () => {
+            Emitter.off(PublicSocketEvent.FUTURES_DEPTH_UPDATE)
+        }
     }, [state.tickSize, state.componentHeight, state.filterMode])
 
     useEffect(() => {

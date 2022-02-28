@@ -39,10 +39,11 @@ const FuturesRecentTrades = ({ pairConfig }) => {
     // ? Render
     const renderRecentTradesItems = useCallback(
         () =>
-            recentTrades?.map((trade) => {
+            recentTrades?.map((trade, index) => {
                 const { p: rate, q: amount, T: time } = trade
                 return (
                     <div
+                        key={`futures_recentTrades_${index}`}
                         style={{ height: FUTURES_ORDER_BOOK_ITEMS_HEIGHT }}
                         className='relative z-20 -mx-2 px-2 flex items-center justify-between font-medium text-xs rounded-[2px] hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer select-none'
                     >
@@ -111,16 +112,17 @@ const FuturesRecentTrades = ({ pairConfig }) => {
         }
         router.events.on('routeChangeStart', handleRouteChange)
         return function cleanup() {
-            if (!(publicSocket && pairConfig?.pair)) return
-            publicSocket.removeListener(
-                PublicSocketEvent.FUTURES_RECENT_TRADE_ADD,
-                updateRecentTrades
-            )
-            publicSocket.emit(
-                'unsubscribe:futures:recent_trade',
-                pairConfig.pair
-            )
-            router.events.off('routeChangeStart', handleRouteChange)
+            if (publicSocket && pairConfig?.pair) {
+                publicSocket.removeListener(
+                    PublicSocketEvent.FUTURES_RECENT_TRADE_ADD,
+                    updateRecentTrades
+                )
+                publicSocket.emit(
+                    'unsubscribe:futures:recent_trade',
+                    pairConfig.pair
+                )
+                router.events.off('routeChangeStart', handleRouteChange)
+            }
         }
     }, [publicSocket, router, pairConfig?.pair])
 
