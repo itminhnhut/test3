@@ -835,3 +835,6 @@ export const secondToMinutesAndSeconds = (time) => {
         parse: () => ({ hours, minutes, seconds }),
     }
 }
+
+export const getPriceColor = (value) =>
+    value < 0 ? 'text-red' : 'text-dominant'

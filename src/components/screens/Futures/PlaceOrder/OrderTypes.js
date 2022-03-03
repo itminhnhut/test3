@@ -11,7 +11,7 @@ import { setFuturesOrderTypes } from 'redux/actions/futures'
 const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
     const { t } = useTranslation()
     const currentAdvType = useSelector(
-        (state) => state.futures.orderAdvanceType
+        (state) => state.futures.preloadedState?.orderAdvanceType
     )
     const dispatch = useDispatch()
 
@@ -29,7 +29,9 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
             case OrderTypes.TrailingStopMarket:
                 return t('trade:order_types.trailing_stop')
             case OrderTypes.TakeProfit:
+                return 'TAKE_PROFIT'
             case OrderTypes.TakeProfitMarket:
+                return 'TAKE_PROFIT_MARKET'
             default:
                 return '--'
         }
@@ -38,12 +40,13 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
         if (payload !== currentType) {
             dispatch({
                 type: SET_FUTURES_PRELOADED_FORM,
-                payload: isAdvance
-                    ? { orderAdvanceType: payload }
-                    : { orderType: payload },
+                payload: { orderType: payload },
             })
-
-            dispatch(setFuturesOrderTypes(payload, isAdvance))
+            isAdvance &&
+                dispatch({
+                    type: SET_FUTURES_PRELOADED_FORM,
+                    payload: { orderAdvanceType: payload },
+                })
         }
     }
 

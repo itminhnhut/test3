@@ -7,7 +7,7 @@ import { ChevronDown } from 'react-feather'
 
 const FuturesOrderSLTP = () => {
     const useSltp =
-        useSelector((state) => state.futures.preloadedForm?.useSltp) || false
+        useSelector((state) => state.futures.preloadedState?.useSltp) || false
 
     const dispatch = useDispatch()
     const { t } = useTranslation()

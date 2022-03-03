@@ -53,6 +53,7 @@ const INITIAL_STATE = {
     markPrice: null,
     forceUpdateState: 1,
     orderBookLayout: null,
+    tradeRecordLayout: null,
 }
 
 const Futures = () => {
@@ -126,6 +127,9 @@ const Futures = () => {
             orderBookLayout: layout?.find(
                 (o) => o.i === futuresGridKey.orderBook
             ),
+            tradeRecordLayout: layout?.find(
+                (o) => o.i === futuresGridKey.tradeRecord
+            ),
             forceUpdateState: state.forceUpdateState + 1,
         })
     }
@@ -140,6 +144,7 @@ const Futures = () => {
         if (Array.isArray(marketWatch) && marketWatch?.length) {
             setState({
                 pairPrice: marketWatch.find((o) => o.symbol === state.pair),
+                forceUpdateState: state.forceUpdateState + 1,
             })
         }
     }, [marketWatch, state.pair])
@@ -155,7 +160,10 @@ const Futures = () => {
 
         // Re-init lastest layouts
         if (!!originLayouts) {
-            setState({ layouts: JSON.parse(JSON.stringify(originLayouts)) })
+            setState({
+                layouts: JSON.parse(JSON.stringify(originLayouts)),
+                forceUpdateState: state.forceUpdateState + 1,
+            })
         }
         return () => {
             document.body.className = document.body.className?.replace(
@@ -308,7 +316,10 @@ const Futures = () => {
                                     key={futuresGridKey.tradeRecord}
                                     className='border border-divider dark:border-divider-dark'
                                 >
-                                    <FuturesTradeRecord />
+                                    <FuturesTradeRecord
+                                        layoutConfig={state.tradeRecordLayout}
+                                        pairConfig={pairConfig}
+                                    />
                                 </div>
                                 <div
                                     key={futuresGridKey.placeOrder}
