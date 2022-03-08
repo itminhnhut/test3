@@ -6,8 +6,6 @@ import FuturesPosition from './Position'
 import classNames from 'classnames'
 import CheckBox from 'components/common/CheckBox'
 import FuturesOpenOrders from './OpenOrders'
-import FuturesTxHistory from './TxHistory'
-import FuturesAssets from './Assets'
 
 const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
     const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.position)
@@ -99,18 +97,6 @@ const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
                             }
                             onChangeTimePicker={onChangeTimePicker}
                         />
-                    )}
-                    {tabActive === FUTURES_RECORD_CODE.txHistory && (
-                        <FuturesTxHistory
-                            pairConfig={pairConfig}
-                            pickedTime={
-                                pickedTime?.[FUTURES_RECORD_CODE.txHistory]
-                            }
-                            onChangeTimePicker={onChangeTimePicker}
-                        />
-                    )}
-                    {tabActive === FUTURES_RECORD_CODE.assets && (
-                        <FuturesAssets pairConfig={pairConfig} />
                     )}
                 </div>
             </div>
