@@ -221,10 +221,6 @@ const Futures = () => {
         console.log('pairConfig => ', pairConfig)
     }, [pairConfig])
 
-    // useEffect(() => {
-    //     console.log('Watching State => ', state)
-    // }, [state])
-
     return (
         <>
             <FuturesPageTitle

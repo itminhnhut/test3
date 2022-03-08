@@ -1,15 +1,14 @@
 import { useMemo, useEffect } from 'react'
-import { customTableStyles } from './index'
 import { formatNumber, getPriceColor } from 'redux/actions/utils'
+import { customTableStyles } from './index'
 import { ChevronDown, Edit } from 'react-feather'
 
+import FuturesRecordSymbolItem from './SymbolItem'
 import DataTable from 'react-data-table-component'
 import classNames from 'classnames'
 import colors from 'styles/colors'
-import FuturesRecordSymbolItem from './SymbolItem'
 
 const FuturesPosition = ({ pairConfig }) => {
-    //
     const columns = useMemo(
         () => [
             {
@@ -18,7 +17,7 @@ const FuturesPosition = ({ pairConfig }) => {
                 cell: (row) => (
                     <div className='flex items-center'>
                         <div
-                            className={classNames('h-[40px] w-[2px]', {
+                            className={classNames('mr-2 h-[40px] w-[2px]', {
                                 'bg-red': row?.side === 'SELL',
                                 'bg-dominant': row?.side === 'BUY',
                             })}

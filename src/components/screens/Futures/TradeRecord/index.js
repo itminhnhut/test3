@@ -5,6 +5,9 @@ import FuturesTradeHistory from './TradeHistory'
 import FuturesPosition from './Position'
 import classNames from 'classnames'
 import CheckBox from 'components/common/CheckBox'
+import FuturesOpenOrders from './OpenOrders'
+import FuturesTxHistory from './TxHistory'
+import FuturesAssets from './Assets'
 
 const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
     const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.position)
@@ -26,7 +29,7 @@ const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
         setPickedTime({ ...pickedTime, [field]: nextPickedTime })
 
     useEffect(() => {
-        if (layoutConfig?.h && tableRef?.current?.clientHeight) {
+        if (tableRef?.current?.clientHeight) {
             const tableHeight = tableRef.current.clientHeight - 42
 
             const tableHeaderElement =
@@ -35,9 +38,19 @@ const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
                 document.getElementsByClassName('rdt_TableBody')?.[0]
 
             if (tableHeight && tableHeaderElement && tableBodyElement) {
-                tableBodyElement.style.maxHeight = `${
-                    tableHeight - tableHeaderElement?.clientHeight - 15
-                }px`
+                if (
+                    tabActive === FUTURES_RECORD_CODE.orderHistory ||
+                    tabActive === FUTURES_RECORD_CODE.tradingHistory ||
+                    tabActive === FUTURES_RECORD_CODE.txHistory
+                ) {
+                    tableBodyElement.style.height = `${
+                        tableHeight - tableHeaderElement?.clientHeight - 15 - 32
+                    }px`
+                } else {
+                    tableBodyElement.style.maxHeight = `${
+                        tableHeight - tableHeaderElement?.clientHeight - 15
+                    }px`
+                }
             }
         }
     }, [layoutConfig?.h, tableRef?.current, tabActive])
@@ -54,7 +67,9 @@ const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
                     onClick={hideOtherToggle}
                 >
                     <CheckBox active={hideOther} />{' '}
-                    <span className='ml-1'>Hide Other Symbols</span>
+                    <span className='ml-1 whitespace-nowrap'>
+                        Hide Other Symbols
+                    </span>
                 </div>
             </div>
             <div className='flex-grow'>
@@ -62,8 +77,14 @@ const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
                     {tabActive === FUTURES_RECORD_CODE.position && (
                         <FuturesPosition pairConfig={pairConfig} />
                     )}
+
+                    {tabActive === FUTURES_RECORD_CODE.openOrders && (
+                        <FuturesOpenOrders pairConfig={pairConfig} />
+                    )}
+
                     {tabActive === FUTURES_RECORD_CODE.orderHistory && (
                         <FuturesOrderHistory
+                            pairConfig={pairConfig}
                             pickedTime={
                                 pickedTime?.[FUTURES_RECORD_CODE.orderHistory]
                             }
@@ -72,11 +93,24 @@ const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
                     )}
                     {tabActive === FUTURES_RECORD_CODE.tradingHistory && (
                         <FuturesTradeHistory
+                            pairConfig={pairConfig}
                             pickedTime={
                                 pickedTime?.[FUTURES_RECORD_CODE.tradingHistory]
                             }
                             onChangeTimePicker={onChangeTimePicker}
                         />
+                    )}
+                    {tabActive === FUTURES_RECORD_CODE.txHistory && (
+                        <FuturesTxHistory
+                            pairConfig={pairConfig}
+                            pickedTime={
+                                pickedTime?.[FUTURES_RECORD_CODE.txHistory]
+                            }
+                            onChangeTimePicker={onChangeTimePicker}
+                        />
+                    )}
+                    {tabActive === FUTURES_RECORD_CODE.assets && (
+                        <FuturesAssets pairConfig={pairConfig} />
                     )}
                 </div>
             </div>

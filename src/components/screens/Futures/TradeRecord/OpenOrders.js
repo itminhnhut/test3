@@ -1,18 +1,12 @@
 import { useMemo } from 'react'
-import { formatNumber, formatTime } from 'redux/actions/utils'
-import { FUTURES_RECORD_CODE } from './RecordTableTab'
 import { customTableStyles } from './index'
-import { ChevronDown } from 'react-feather'
+import { ChevronDown, X } from 'react-feather'
+import { formatNumber, formatTime } from 'redux/actions/utils'
 
 import FuturesRecordSymbolItem from './SymbolItem'
-import FuturesTimeFilter from '../TimeFilter'
 import DataTable from 'react-data-table-component'
 
-const FuturesTradeHistory = ({
-    pickedTime,
-    onChangeTimePicker,
-    pairConfig,
-}) => {
+const FuturesOpenOrders = ({ pairConfig }) => {
     const columns = useMemo(
         () => [
             {
@@ -59,12 +53,12 @@ const FuturesTradeHistory = ({
                 sortable: true,
             },
             {
-                name: 'Quantity',
-                selector: (row) => row?.quantity,
+                name: 'Amount',
+                selector: (row) => row?.amount,
                 cell: (row) => (
                     <span>
                         {formatNumber(
-                            row?.quantity,
+                            row?.amount,
                             pairConfig?.quotePrecision || 2
                         )}{' '}
                         {row?.symbol?.quoteAsset}
@@ -73,12 +67,12 @@ const FuturesTradeHistory = ({
                 sortable: true,
             },
             {
-                name: 'Fee',
-                selector: (row) => row?.fee,
+                name: 'Filled',
+                selector: (row) => row?.filled,
                 cell: (row) => (
                     <span>
                         {formatNumber(
-                            row?.fee,
+                            row?.filled,
                             pairConfig?.quotePrecision || 2
                         )}{' '}
                         {row?.symbol?.quoteAsset}
@@ -87,44 +81,60 @@ const FuturesTradeHistory = ({
                 sortable: true,
             },
             {
-                name: 'Realized Profit',
-                selector: (row) => row?.realizedProfit,
+                name: 'Reduce Only',
+                selector: (row) => row?.reduceOnly,
+                cell: () => <span>Yes</span>,
+                sortable: true,
+            },
+            {
+                name: 'Post Only',
+                selector: (row) => row?.postOnly,
+                cell: () => <span>No</span>,
+                sortable: true,
+            },
+            {
+                name: 'Trigger Conditions',
+                selector: (row) => row?.triggerConditions,
                 cell: (row) => (
+                    <div>
+                        Mark Price
+                        <div>{'>= 3,140.00'}</div>
+                    </div>
+                ),
+                minWidth: '180px',
+                sortable: true,
+            },
+            {
+                name: 'TP/SL',
+                selector: (row) => row?.tpsl,
+                cell: () => <span className='text-dominant'>View</span>,
+                sortable: true,
+            },
+            {
+                name: 'Cancel All',
+                cell: () => (
                     <span>
-                        {formatNumber(
-                            row?.realizedProfit,
-                            pairConfig?.quotePrecision || 2
-                        )}{' '}
-                        {row?.symbol?.quoteAsset}
+                        <X
+                            strokeWidth={1}
+                            size={16}
+                            className='text-txtSecondary dark:text-txtSecondary-dark'
+                        />
                     </span>
                 ),
-                sortable: true,
             },
         ],
         []
     )
 
     return (
-        <>
-            <FuturesTimeFilter
-                currentTimeRange={pickedTime}
-                onChange={(pickedTime) =>
-                    onChangeTimePicker(
-                        FUTURES_RECORD_CODE.tradingHistory,
-                        pickedTime
-                    )
-                }
-            />
-            <DataTable
-                responsive
-                fixedHeader
-                data={data}
-                columns={columns}
-                className='mt-3'
-                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-                customStyles={customTableStyles}
-            />
-        </>
+        <DataTable
+            responsive
+            fixedHeader
+            sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
+            data={data}
+            columns={columns}
+            customStyles={customTableStyles}
+        />
     )
 }
 
@@ -136,32 +146,41 @@ const data = [
         type: 1,
         side: 2,
         price: 17.99,
-        quantity: 27.8,
-        fee: 0.1032,
-        realizedProfit: 0.1032,
+        amount: 27.8,
+        filled: 0,
+        reduceOnly: true,
+        postOnly: false,
+        triggerConditions: {},
+        tpsl: 'View',
     },
     {
         id: 2,
         created_at: 1646607132000,
-        symbol: { pair: 'SLPUSDT', baseAsset: 'SLP', quoteAsset: 'USDT' },
+        symbol: { pair: 'ETHUSDT', baseAsset: 'ETH', quoteAsset: 'USDT' },
         type: 1,
         side: 2,
         price: 17.99,
-        quantity: 27.8,
-        fee: 0.1032,
-        realizedProfit: 0.1032,
+        amount: 27.8,
+        filled: 0,
+        reduceOnly: true,
+        postOnly: false,
+        triggerConditions: {},
+        tpsl: 'View',
     },
     {
         id: 3,
         created_at: 1646607132000,
-        symbol: { pair: 'AXSUSDT', baseAsset: 'AXS', quoteAsset: 'USDT' },
+        symbol: { pair: 'BTCUSDT', baseAsset: 'BTC', quoteAsset: 'USDT' },
         type: 1,
         side: 2,
         price: 17.99,
-        quantity: 27.8,
-        fee: 0.1032,
-        realizedProfit: 0.1032,
+        amount: 27.8,
+        filled: 0,
+        reduceOnly: true,
+        postOnly: false,
+        triggerConditions: {},
+        tpsl: 'View',
     },
 ]
 
-export default FuturesTradeHistory
+export default FuturesOpenOrders

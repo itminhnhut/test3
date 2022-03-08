@@ -1,6 +1,6 @@
 const FuturesRecordSymbolItem = ({ symbol, leverage }) => {
     return (
-        <div className='pl-2 flex items-center whitespace-nowrap'>
+        <div className='flex items-center whitespace-nowrap'>
             <div className='font-medium text-xs'>
                 <div>{symbol}</div>
                 <div className='text-txtSecondary dark:text-txtSecondary-dark'>

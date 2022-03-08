@@ -131,7 +131,7 @@ const FuturesPairDetail = ({
                                 )}
                                 %
                             </div>
-                            <div>
+                            <div className='ml-4'>
                                 {markPrice?.nextFundingTime
                                     ? secondToMinutesAndSeconds(
                                           (markPrice?.nextFundingTime -

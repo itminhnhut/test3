@@ -10,7 +10,7 @@ const { RangePicker } = DatePicker
 
 const FuturesTimeFilter = memo(({ currentTimeRange, onChange }) => {
     return (
-        <div className='flex items-center font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none'>
+        <div className='px-5 flex items-center font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none'>
             <div
                 onClick={() => onChange('1_day')}
                 className={classNames(
