@@ -64,8 +64,8 @@ export const FEE_TABLE = [
         vol_30d: '< 50 BTC',
         andor: 'or',
         nami_holding: 0,
-        maker_taker: '0.08000% / 0.08000%',
-        maker_taker_deducted: '0.06000% / 0.06000%',
+        maker_taker: '0.1000% / 0.1000%',
+        maker_taker_deducted: '0.07500% / 0.07500%',
     },
     {
         level: 1,
