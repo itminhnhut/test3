@@ -583,3 +583,9 @@ input[type='number'] {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 }
+
+.rounded-qr-canvas {
+    canvas {
+        @apply rounded-[12px];
+    }
+}

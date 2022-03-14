@@ -8,6 +8,7 @@ import {
     SET_FUTURES_PRELOADED_FORM,
     SET_FUTURES_PRELOADED_LEVERAGE,
     SET_FUTURES_PREFERENCES,
+    GET_FUTURES_USER_SETTINGS,
 } from 'redux/actions/types'
 
 export const FuturesOrderTypes = {
@@ -21,8 +22,8 @@ export const FuturesOrderTypes = {
 }
 
 export const FuturesMarginMode = {
-    Isolated: 'Isolated',
-    Cross: 'Cross',
+    Isolated: 'ISOLATED',
+    Cross: 'CROSSED',
 }
 
 export const FuturesPositionMode = {
@@ -37,13 +38,11 @@ export const initialState = {
     useSltp: false,
     favoritePairs: [],
     marketWatch: [],
-    preloadedLeverage: {
-        // pair: leverage value
-    },
+    userSettings: {},
+
     preloadedState: {
         orderType: FuturesOrderTypes.Limit,
         orderAdvanceType: FuturesOrderTypes.StopLimit,
-        marginMode: FuturesMarginMode.Cross,
         useSltp: false,
     },
     preferences: {
@@ -67,15 +66,12 @@ export default (state = initialState, { payload, type }) => {
             return { ...state, favoritePairs: payload }
         case GET_FUTURES_MARKET_WATCH:
             return { ...state, marketWatch: payload }
+        case GET_FUTURES_USER_SETTINGS:
+            return { ...state, userSettings: payload }
         case SET_FUTURES_PRELOADED_FORM:
             return {
                 ...state,
                 preloadedState: { ...state.preloadedState, ...payload },
-            }
-        case SET_FUTURES_PRELOADED_LEVERAGE:
-            return {
-                ...state,
-                preloadedLeverage: { ...state.preloadedLeverage, ...payload },
             }
         case SET_FUTURES_PREFERENCES:
             return {

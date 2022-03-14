@@ -6,8 +6,12 @@ import FuturesPosition from './Position'
 import classNames from 'classnames'
 import CheckBox from 'components/common/CheckBox'
 import FuturesOpenOrders from './OpenOrders'
+import FuturesTxHistory from './TxHistory'
+import FuturesAssets from './Assets'
+import FuturesOpenOrdersVndc from './OpenOrdersVndc'
+import FuturesOrderHistoryVndc from './OrderHistoryVndc'
 
-const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
+const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig }) => {
     const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.position)
     const [hideOther, setHideOther] = useState(false)
     const [pickedTime, setPickedTime] = useState({
@@ -76,19 +80,27 @@ const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
                         <FuturesPosition pairConfig={pairConfig} />
                     )}
 
-                    {tabActive === FUTURES_RECORD_CODE.openOrders && (
-                        <FuturesOpenOrders pairConfig={pairConfig} />
-                    )}
+                    {tabActive === FUTURES_RECORD_CODE.openOrders &&
+                        (isVndcFutures ? (
+                            <FuturesOpenOrdersVndc pairConfig={pairConfig} />
+                        ) : (
+                            <FuturesOpenOrders pairConfig={pairConfig} />
+                        ))}
 
-                    {tabActive === FUTURES_RECORD_CODE.orderHistory && (
-                        <FuturesOrderHistory
-                            pairConfig={pairConfig}
-                            pickedTime={
-                                pickedTime?.[FUTURES_RECORD_CODE.orderHistory]
-                            }
-                            onChangeTimePicker={onChangeTimePicker}
-                        />
-                    )}
+                    {tabActive === FUTURES_RECORD_CODE.orderHistory &&
+                        (isVndcFutures ? (
+                            <FuturesOrderHistoryVndc pairConfig={pairConfig} />
+                        ) : (
+                            <FuturesOrderHistory
+                                pairConfig={pairConfig}
+                                pickedTime={
+                                    pickedTime?.[
+                                        FUTURES_RECORD_CODE.orderHistory
+                                    ]
+                                }
+                                onChangeTimePicker={onChangeTimePicker}
+                            />
+                        ))}
                     {tabActive === FUTURES_RECORD_CODE.tradingHistory && (
                         <FuturesTradeHistory
                             pairConfig={pairConfig}
@@ -97,6 +109,18 @@ const FuturesTradeRecord = ({ layoutConfig, pairConfig }) => {
                             }
                             onChangeTimePicker={onChangeTimePicker}
                         />
+                    )}
+                    {tabActive === FUTURES_RECORD_CODE.txHistory && (
+                        <FuturesTxHistory
+                            pairConfig={pairConfig}
+                            pickedTime={
+                                pickedTime?.[FUTURES_RECORD_CODE.txHistory]
+                            }
+                            onChangeTimePicker={onChangeTimePicker}
+                        />
+                    )}
+                    {tabActive === FUTURES_RECORD_CODE.assets && (
+                        <FuturesAssets pairConfig={pairConfig} />
                     )}
                 </div>
             </div>

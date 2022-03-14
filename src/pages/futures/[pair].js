@@ -39,9 +39,15 @@ import Emitter from 'redux/actions/emitter'
 import Axios from 'axios'
 
 import 'react-grid-layout/css/styles.css'
+import { log } from 'utils'
 
 const GridLayout = WidthProvider(Responsive)
 const originLayouts = getLayoutFromLS('layouts')
+
+const FuturesProfitEarned = dynamic(
+    () => import('components/screens/Futures/TakedProfit'),
+    { ssr: false }
+)
 
 const INITIAL_STATE = {
     layouts: futuresGridConfig.layouts,
@@ -54,6 +60,7 @@ const INITIAL_STATE = {
     forceUpdateState: 1,
     orderBookLayout: null,
     tradeRecordLayout: null,
+    isVndcFutures: false,
 }
 
 const Futures = () => {
@@ -64,6 +71,7 @@ const Futures = () => {
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs)
     const marketWatch = useSelector((state) => state.futures.marketWatch)
     const auth = useSelector((state) => state.auth?.user)
+    const userSettings = useSelector((state) => state.futures.userSettings)
 
     const router = useRouter()
     const { width } = useWindowSize()
@@ -160,6 +168,7 @@ const Futures = () => {
 
         // Re-init lastest layouts
         if (!!originLayouts) {
+            log.d('Re-init')
             setState({
                 layouts: JSON.parse(JSON.stringify(originLayouts)),
                 forceUpdateState: state.forceUpdateState + 1,
@@ -218,8 +227,9 @@ const Futures = () => {
     }, [publicSocket, state.pair])
 
     useEffect(() => {
-        console.log('pairConfig => ', pairConfig)
-    }, [pairConfig])
+        log.i('pairConfig => ', pairConfig, userSettings, state.layouts)
+        setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' })
+    }, [pairConfig, userSettings, state.layouts])
 
     return (
         <>
@@ -286,7 +296,10 @@ const Futures = () => {
                                     key={futuresGridKey.chart}
                                     className='border border-divider dark:border-divider-dark'
                                 >
-                                    <FuturesChart />
+                                    <FuturesChart
+                                        pair={pairConfig?.pair}
+                                        initTimeFrame='1D'
+                                    />
                                 </div>
                                 <div
                                     key={futuresGridKey.orderBook}
@@ -313,6 +326,7 @@ const Futures = () => {
                                     className='border border-divider dark:border-divider-dark'
                                 >
                                     <FuturesTradeRecord
+                                        isVndcFutures={state.isVndcFutures}
                                         layoutConfig={state.tradeRecordLayout}
                                         pairConfig={pairConfig}
                                     />
@@ -323,6 +337,7 @@ const Futures = () => {
                                 >
                                     <FuturesPlaceOrder
                                         pairConfig={pairConfig}
+                                        userSettings={userSettings}
                                     />
                                 </div>
                                 <div
@@ -336,6 +351,7 @@ const Futures = () => {
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>
+            <FuturesProfitEarned isVisible={false} />
         </>
     )
 }

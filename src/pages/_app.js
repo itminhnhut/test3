@@ -11,6 +11,7 @@ import {
     getFuturesConfigs,
     getFuturesFavoritePairs,
     getFuturesMarketWatch,
+    getFuturesUserSettings,
 } from 'redux/actions/futures'
 import { getAssetConfig, getExchangeConfig } from 'redux/actions/market'
 import { getWallet, setTheme } from 'redux/actions/user'
@@ -97,6 +98,8 @@ const App = ({ Component, pageProps }) => {
             store.dispatch(getFuturesConfigs())
             store.dispatch(getFuturesFavoritePairs())
             store.dispatch(getFuturesMarketWatch())
+            store.dispatch(getFuturesUserSettings())
+
             initConfig = true
             // Get common data
 

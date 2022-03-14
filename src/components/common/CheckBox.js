@@ -7,10 +7,11 @@ const CheckBox = ({
     label,
     labelClassName,
     onChange,
+    className,
 }) => {
     const onCheck = () => onChange && onChange()
     return (
-        <div className='flex items-center select-none'>
+        <div className={classNames('flex items-center select-none', className)}>
             <div
                 onClick={onCheck}
                 className={classNames(

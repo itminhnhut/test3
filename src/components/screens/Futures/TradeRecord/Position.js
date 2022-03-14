@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { formatNumber, getPriceColor } from 'redux/actions/utils'
 import { customTableStyles } from './index'
 import { ChevronDown, Edit } from 'react-feather'
@@ -7,8 +7,22 @@ import FuturesRecordSymbolItem from './SymbolItem'
 import DataTable from 'react-data-table-component'
 import classNames from 'classnames'
 import colors from 'styles/colors'
+import FuturesEditSLTP from './EditSLTP'
 
 const FuturesPosition = ({ pairConfig }) => {
+    const [isEdit, setIsEdit] = useState(false)
+    const [currentOrder, setCurrentOrder] = useState(null)
+
+    const onEditSltp = (order) => {
+        setIsEdit(true)
+        setCurrentOrder(order)
+    }
+
+    const onCloseEditSltp = () => {
+        setIsEdit(false)
+        setCurrentOrder(null)
+    }
+
     const columns = useMemo(
         () => [
             {
@@ -134,7 +148,10 @@ const FuturesPosition = ({ pairConfig }) => {
                             <div>{row?.tpslForPosition?.[0]}/</div>
                             <div>{row?.tpslForPosition?.[1]}</div>
                         </div>
-                        <Edit className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
+                        <Edit
+                            className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60'
+                            onClick={() => onEditSltp(row)}
+                        />
                     </div>
                 ),
                 sortable: true,
@@ -144,14 +161,21 @@ const FuturesPosition = ({ pairConfig }) => {
     )
 
     return (
-        <DataTable
-            responsive
-            fixedHeader
-            sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-            data={data}
-            columns={columns}
-            customStyles={customTableStyles}
-        />
+        <>
+            <DataTable
+                responsive
+                fixedHeader
+                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
+                data={data}
+                columns={columns}
+                customStyles={customTableStyles}
+            />
+            <FuturesEditSLTP
+                isVisible={isEdit}
+                order={currentOrder}
+                onClose={onCloseEditSltp}
+            />
+        </>
     )
 }
 

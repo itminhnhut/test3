@@ -25,7 +25,9 @@ const FuturesRecordTableTab = ({ tabActive, onChangeTab }) => {
 export const FUTURES_RECORD_CODE = {
     position: 'position',
     openOrders: 'openOrders',
+    openOrdersVndc: 'openOrdersVndc',
     orderHistory: 'orderHistory',
+    orderHistoryVndc: 'orderHistoryVndc',
     tradingHistory: 'tradingHistory',
     txHistory: 'txHistory',
     assets: 'assets',

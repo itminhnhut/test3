@@ -10,6 +10,7 @@ import {
     Track,
 } from './StyleInputSlider'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import classNames from 'classnames'
 
 function getClientPosition(e) {
     const { touches } = e
@@ -45,6 +46,7 @@ const Slider = ({
     xreverse,
     yreverse,
     styles: customStyles,
+    leverage = false,
     ...props
 }) => {
     const container = useRef(null)
@@ -98,7 +100,7 @@ const Slider = ({
         let x = (dx !== 0 ? parseInt(dx / xstep, 10) * xstep : 0) + xmin
         const y = (dy !== 0 ? parseInt(dy / ystep, 10) * ystep : 0) + ymin
 
-        if (bias < BIAS) {
+        if (leverage && bias < BIAS) {
             x = largeStep * 25
         }
 
@@ -226,6 +228,34 @@ const Slider = ({
         handleStyle.left = '50%'
     }
 
+    const renderDot = () => {
+        let dot = [],
+            dotStep = 15
+
+        if (xmax % 5 === 0) dotStep = 5
+        if (xmax > 10 && xmax % 10 === 0) dotStep = 10
+        if (xmax > 15 && xmax % 15 === 0) dotStep = 15
+        if (xmax > 25 && xmax % 25 === 0) dotStep = 25
+
+        const size = 100 / (xmax / dotStep)
+
+        for (let i = 0; i <= xmax / dotStep; ++i) {
+            dot.push(
+                <Dot
+                    key={i}
+                    active={pos.left >= i * size}
+                    percentage={i * size}
+                    isDark={currentTheme === THEME_MODE.DARK}
+                    onClick={() => {
+                        onChange && onChange({ x: i * dotStep })
+                    }}
+                />
+            )
+        }
+
+        return dot
+    }
+
     return (
         <Track
             {...props}
@@ -240,34 +270,8 @@ const Slider = ({
                     active={pos.left >= 0}
                     percentage={0}
                     isDark={currentTheme === THEME_MODE.DARK}
-                    onClick={() => {
-                        console.log('click', 0)
-                    }}
                 />
-                {/* <Dash /> */}
-                <Dot
-                    active={pos.left >= 25}
-                    isDark={currentTheme === THEME_MODE.DARK}
-                    percentage={25}
-                />
-                {/* <Dash /> */}
-                <Dot
-                    active={pos.left >= 50}
-                    isDark={currentTheme === THEME_MODE.DARK}
-                    percentage={50}
-                />
-                {/* <Dash /> */}
-                <Dot
-                    active={pos.left >= 75}
-                    isDark={currentTheme === THEME_MODE.DARK}
-                    percentage={75}
-                />
-                {/* <Dash /> */}
-                <Dot
-                    active={pos.left >= 100}
-                    isDark={currentTheme === THEME_MODE.DARK}
-                    percentage={100}
-                />
+                {renderDot()}
             </DotContainer>
             <div
                 ref={handle}

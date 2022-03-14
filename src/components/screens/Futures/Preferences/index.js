@@ -16,7 +16,7 @@ const PREFERENCES = {
     NOTIFICATION: 'NOTIFICATION',
 }
 
-const FuturesPreferences = ({ isVisible, onClose }) => {
+const FuturesPreferences = ({ isVisible, onClose, positionMode }) => {
     const [section, setSection] = useState(PREFERENCES.ORDER_CONFIRMATION)
     const preferences = useSelector((state) => state.futures.preferences)
 
@@ -89,7 +89,9 @@ const FuturesPreferences = ({ isVisible, onClose }) => {
                             <FuturesPreferencesOrderConfirmation />
                         )}
                         {section === PREFERENCES.POSITION_MODE && (
-                            <FuturesPreferencesPositionMode />
+                            <FuturesPreferencesPositionMode
+                                positionMode={positionMode}
+                            />
                         )}
                         {section === PREFERENCES.NOTIFICATION && (
                             <FuturesPreferencesNotification />

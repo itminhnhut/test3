@@ -1,5 +1,7 @@
 export const EMPTY_VALUE = '--'
 
+export const NAMI_FUTURES_EARNED_SHARE = 'NamiFutures_TakeProfit_'
+
 export const ROOT_TOKEN = 'NAMI'
 
 export const USER_DEVICE_STATUS = {

@@ -67,6 +67,12 @@ export const API_GET_FUTURES_CONFIGS = API_V3_PREFIX + 'futures/config'
 export const API_GET_FUTURES_MARK_PRICE = API_V3_PREFIX + 'futures/mark_price'
 export const API_GET_FUTURES_RECENT_TRADES =
     API_V3_PREFIX + 'futures/recent_trade'
+export const API_GET_FUTURES_USER_SETTINGS =
+    API_V3_PREFIX + 'futures/userSetting'
+export const API_SET_FUTURES_MARGIN_MODE = API_V3_PREFIX + 'futures/marginType'
+export const API_SET_FUTURES_POSITION_MODE =
+    API_V3_PREFIX + 'futures/positionSide'
+export const API_FUTURES_LEVERAGE = API_V3_PREFIX + 'futures/leverage'
 
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'

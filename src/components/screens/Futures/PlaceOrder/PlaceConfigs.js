@@ -1,23 +1,40 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, memo, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { FuturesMarginMode as MarginModes } from 'redux/reducers/futures'
+import { API_FUTURES_LEVERAGE } from 'redux/actions/apis'
+import { getMarginModeLabel } from 'redux/actions/futures'
 
 import FuturesMarginModeSettings from '../MarginModeSettings'
 import FuturesLeverageSettings from '../LeverageSettings'
 import FuturesPreferences from '../Preferences'
 import TradeSetings from 'components/svg/TradeSettings'
+import axios from 'axios'
 
-const PlaceConfigs = ({ pairConfig }) => {
+const PlaceConfigs = memo(({ pairConfig, userSettings }) => {
     const pair = pairConfig?.pair
+    const marginMode = userSettings?.marginType?.[pairConfig?.pair]
+    const positionMode = userSettings?.dualSidePosition || false
 
     const [isActive, setIsActive] = useState({})
-
-    const marginMode = useSelector(
-        (state) => state.futures.preloadedState?.marginMode || MarginModes.Cross
-    )
+    const [leverage, setLeverage] = useState(0)
 
     const openPopup = (key) => setIsActive({ [key]: true })
     const closePopup = (key) => setIsActive({ [key]: false })
+
+    const getLeverage = async (symbol) => {
+        const { data } = await axios.get(API_FUTURES_LEVERAGE, {
+            params: {
+                symbol,
+            },
+        })
+        if (data?.status === 'ok') {
+            setLeverage(data?.data?.[pair])
+        }
+    }
+
+    useEffect(() => {
+        getLeverage(pair)
+    }, [pair])
 
     return (
         <>
@@ -27,13 +44,13 @@ const PlaceConfigs = ({ pairConfig }) => {
                         onClick={() => openPopup('marginMode')}
                         className='px-[16px] py-1 mr-2.5 text-xs font-bold bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md'
                     >
-                        {marginMode}
+                        {getMarginModeLabel(marginMode) || '--'}
                     </div>
                     <div
                         onClick={() => openPopup('leverage')}
                         className='px-[16px] py-1 mr-2.5 text-xs font-bold bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md'
                     >
-                        20x
+                        {leverage}x
                     </div>
                 </div>
                 <div
@@ -45,19 +62,27 @@ const PlaceConfigs = ({ pairConfig }) => {
             </div>
             <FuturesPreferences
                 isVisible={!!isActive?.preferences}
+                positionMode={positionMode}
                 onClose={() => closePopup('preferences')}
             />
             <FuturesMarginModeSettings
                 isVisible={!!isActive?.marginMode}
+                marginMode={marginMode}
+                pair={pairConfig?.pair}
                 onClose={() => closePopup('marginMode')}
             />
-            <FuturesLeverageSettings
-                pair={pair}
-                isVisible={!!isActive?.leverage}
-                onClose={() => closePopup('leverage')}
-            />
+            {!!isActive?.leverage && (
+                <FuturesLeverageSettings
+                    pair={pair}
+                    leverage={leverage}
+                    setLeverage={setLeverage}
+                    leverageConfig={pairConfig?.leverageConfig}
+                    isVisible={!!isActive?.leverage}
+                    onClose={() => closePopup('leverage')}
+                />
+            )}
         </>
     )
-}
+})
 
 export default PlaceConfigs

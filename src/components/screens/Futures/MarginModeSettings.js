@@ -1,23 +1,43 @@
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types'
 import { FuturesMarginMode as MarginModes } from 'redux/reducers/futures'
+import {
+    getFuturesUserSettings,
+    setFuturesMarginMode,
+} from 'redux/actions/futures'
 import { X } from 'react-feather'
 
 import classNames from 'classnames'
 import Modal from 'components/common/ReModal'
 import Button from 'components/common/Button'
+import { ScaleLoader } from 'react-spinners'
+import colors from 'styles/colors'
 
-const FuturesMarginModeSettings = ({ isVisible, onClose }) => {
-    const marginMode = useSelector(
-        (state) => state.futures.preloadedState?.marginMode || MarginModes.Cross
-    )
-
+const FuturesMarginModeSettings = ({
+    isVisible,
+    onClose,
+    pair,
+    marginMode,
+}) => {
+    const [mode, setMode] = useState(marginMode)
+    const [error, setError] = useState(false)
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
-    const setMarginMode = (marginMode) =>
-        dispatch({
-            type: SET_FUTURES_PRELOADED_FORM,
-            payload: { marginMode },
-        })
+
+    const onSetMarginMode = async (pair, mode) => {
+        setError(false)
+        setLoading(true)
+        const data = await setFuturesMarginMode(pair, mode)
+        if (data) {
+            setMode(data)
+            setLoading(false)
+            dispatch(getFuturesUserSettings())
+            onClose()
+        } else {
+            setError(true)
+            setLoading(false)
+        }
+    }
 
     return (
         <Modal
@@ -36,24 +56,24 @@ const FuturesMarginModeSettings = ({ isVisible, onClose }) => {
             </div>
             <div className='mb-3 flex items-center justify-between'>
                 <div
-                    onClick={() => setMarginMode(MarginModes.Cross)}
+                    onClick={() => setMode(MarginModes.Cross)}
                     className={classNames(
                         'w-[48%] py-1.5 font-medium text-center text-sm text-txtSecondary dark:text-txtSecondary-dark rounded-[4px] select-none border border-divider dark:border-divider-dark cursor-pointer hover:text-dominant hover:border-dominant',
                         {
                             '!text-dominant !border-dominant':
-                                marginMode === MarginModes.Cross,
+                                mode === MarginModes.Cross,
                         }
                     )}
                 >
                     Cross
                 </div>
                 <div
-                    onClick={() => setMarginMode(MarginModes.Isolated)}
+                    onClick={() => setMode(MarginModes.Isolated)}
                     className={classNames(
                         'w-[48%] py-1.5 font-medium text-center text-sm text-txtSecondary dark:text-txtSecondary-dark rounded-[4px] select-none border border-divider dark:border-divider-dark cursor-pointer hover:text-dominant hover:border-dominant',
                         {
                             '!text-dominant !border-dominant':
-                                marginMode === MarginModes.Isolated,
+                                mode === MarginModes.Isolated,
                         }
                     )}
                 >
@@ -81,12 +101,27 @@ const FuturesMarginModeSettings = ({ isVisible, onClose }) => {
                     tài khoản và tất cả các vị thế đang mở.
                 </span>
             </div>
+            {error && (
+                <div className='text-red text-xs text-center'>
+                    Error occurred, please try again.
+                </div>
+            )}
             <div className='mt-5 mb-2'>
                 <Button
-                    title='Confirm'
+                    title={
+                        loading ? (
+                            <ScaleLoader
+                                color={colors.white}
+                                width={2}
+                                height={12}
+                            />
+                        ) : (
+                            'Confirm'
+                        )
+                    }
                     componentType='button'
                     type='primary'
-                    onClick={onClose}
+                    onClick={() => onSetMarginMode(pair, mode)}
                 />
             </div>
         </Modal>

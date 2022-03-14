@@ -50,15 +50,18 @@
     "classnames": "^2.3.1",
     "clevertap-web-sdk": "^1.0.0",
     "date-fns": "^2.21.3",
+    "dom-to-image-more": "^2.9.5",
     "dompurify": "^2.2.8",
     "dotenv": "^8.2.0",
     "ethereum-address": "^0.0.4",
     "eventemitter3": "^4.0.7",
+    "file-saver": "^2.0.5",
     "flexsearch": "^0.7.21",
     "formik": "^2.2.8",
     "highcharts": "^9.1.0",
     "highcharts-react-official": "^3.0.0",
     "html-react-parser": "^1.4.4",
+    "html2canvas": "^1.4.1",
     "http-proxy-middleware": "^2.0.1",
     "keen-slider": "^5.5.1",
     "lodash": "^4.17.21",
@@ -127,7 +130,8 @@
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^2.1.1",
     "styled-components": "^4.4.1",
-    "swiper": "6.8.0"
+    "swiper": "6.8.0",
+    "use-react-screenshot": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
