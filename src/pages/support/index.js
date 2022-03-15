@@ -70,10 +70,10 @@ const Support = () => {
         return SupportCategories.faq[language].map((faq) => (
             <SupportSectionItem
                 key={faq.id}
-                href={{
-                    pathname: PATHS.SUPPORT.FAQ + '/[topic]',
-                    query: appUrlHandler({ topic: faq.displaySlug }, isApp),
-                }}
+                href={
+                    PATHS.SUPPORT.FAQ +
+                    `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
+                }
                 title={faq?.title || '--'}
                 titleClassNames='truncate'
                 icon={
@@ -91,13 +91,10 @@ const Support = () => {
         return SupportCategories.announcements[language].map((announcement) => (
             <SupportSectionItem
                 key={announcement.id}
-                href={{
-                    pathname: PATHS.SUPPORT.ANNOUNCEMENT + '/[topic]',
-                    query: appUrlHandler(
-                        { topic: announcement.displaySlug },
-                        isApp
-                    ),
-                }}
+                href={
+                    PATHS.SUPPORT.ANNOUNCEMENT +
+                    `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
+                }
                 title={announcement?.title || '--'}
                 titleClassNames='truncate'
                 icon={
