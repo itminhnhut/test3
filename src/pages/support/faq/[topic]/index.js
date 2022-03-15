@@ -6,7 +6,7 @@ import { ChevronLeft } from 'react-feather'
 import TopicsLayout from 'components/screens/Support/TopicsLayout'
 import Link from 'next/link'
 import useApp from 'hooks/useApp'
-import { SupportCategories } from 'constants/faqHelper'
+import { appUrlHandler, SupportCategories } from 'constants/faqHelper'
 import { useTranslation } from 'next-i18next'
 import { useCallback, useEffect, useState } from 'react'
 import { ghost } from 'utils'
@@ -121,15 +121,12 @@ const FaqTopics = (props) => {
 
         return data.map((article) => (
             <Link
-                href={{
-                    pathname:
-                        PATHS.SUPPORT.FAQ +
-                        `/${router?.query?.topic}/[articles]`,
-                    query: appUrlHandler(
-                        { articles: article.slug.toString() },
-                        isApp
-                    ),
-                }}
+                href={
+                    PATHS.SUPPORT.FAQ +
+                    `/${router?.query?.topic}/${article.slug.toString()}${
+                        isApp ? '?source=app' : ''
+                    }`
+                }
                 key={article.uuid}
             >
                 <a className='!block !w-full text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant'>
