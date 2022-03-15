@@ -296,7 +296,7 @@ const FuturesPairDetail = ({
             markPrice &&
             markPrice?.markPrice
         ) {
-            setItemsPriceMinW(itemsPriceRef?.current?.clientWidth + 24 || 0)
+            setItemsPriceMinW((itemsPriceRef?.current?.clientWidth || 20) + 24)
         }
     }, [
         router.query,
