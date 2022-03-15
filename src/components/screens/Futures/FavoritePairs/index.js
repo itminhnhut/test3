@@ -11,7 +11,7 @@ import colors from 'styles/colors'
 import axios from 'axios'
 import Star from 'components/svg/Star'
 
-const FuturesFavoritePairs = memo(({ forceUpdateState }) => {
+const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
     const [loading, setLoading] = useState(false)
     const [refreshMarketWatch, setRefreshMarketWatch] = useState(null)
 
@@ -63,7 +63,10 @@ const FuturesFavoritePairs = memo(({ forceUpdateState }) => {
             {loading ? (
                 <div>Loading...</div>
             ) : (
-                <InfoSlider gutter={18} forceUpdateState={forceUpdateState}>
+                <InfoSlider
+                    gutter={18}
+                    forceUpdateState={favoritePairLayout?.h}
+                >
                     {renderPairItems()}
                 </InfoSlider>
             )}

@@ -58,6 +58,7 @@ const INITIAL_STATE = {
     pairPrice: null,
     markPrice: null,
     forceUpdateState: 1,
+    favoritePairLayout: null,
     orderBookLayout: null,
     tradeRecordLayout: null,
     isVndcFutures: false,
@@ -92,7 +93,9 @@ const Futures = () => {
                 params: { symbol },
             })
             if (data?.status === ApiStatus.SUCCESS) {
-                setState({ markPrice: FuturesMarkPrice.create(data?.data) })
+                setState({
+                    markPrice: FuturesMarkPrice.create(data?.data?.[0]),
+                })
             }
         } catch (e) {
             console.log(`Can't get ${symbol} marketWatch `, e)
@@ -132,6 +135,9 @@ const Futures = () => {
         setLayoutToLS('layouts', layouts)
         setState({
             layouts,
+            favoritePairLayout: layout?.find(
+                (o) => o.i === futuresGridKey.favoritePair
+            ),
             orderBookLayout: layout?.find(
                 (o) => o.i === futuresGridKey.orderBook
             ),
@@ -168,7 +174,7 @@ const Futures = () => {
 
         // Re-init lastest layouts
         if (!!originLayouts) {
-            log.d('Re-init')
+            log.d('Re-init layouts', JSON.parse(JSON.stringify(originLayouts)))
             setState({
                 layouts: JSON.parse(JSON.stringify(originLayouts)),
                 forceUpdateState: state.forceUpdateState + 1,
@@ -211,8 +217,12 @@ const Futures = () => {
         Emitter.on(
             PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE + state.pair,
             async (data) => {
+                console.log('socket markprice?', data)
                 const markPrice = FuturesMarkPrice.create(data)
-                if (state.pair === markPrice?.symbol) {
+                if (
+                    state.pair === markPrice?.symbol &&
+                    !!markPrice?.markPrice
+                ) {
                     setState({ markPrice })
                 }
             }
@@ -273,8 +283,8 @@ const Futures = () => {
                                         className='border border-divider dark:border-divider-dark'
                                     >
                                         <FuturesFavoritePairs
-                                            forceUpdateState={
-                                                state.forceUpdateState
+                                            favoritePairLayout={
+                                                state.favoritePairLayout
                                             }
                                         />
                                     </div>
@@ -364,6 +374,7 @@ export const getStaticProps = async ({ locale }) => {
                 'navbar',
                 'trade',
                 'futures',
+                'wallet',
             ])),
         },
     }

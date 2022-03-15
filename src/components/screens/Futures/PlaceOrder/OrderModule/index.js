@@ -43,7 +43,10 @@ const FuturesOrderModule = memo(({ currentType, pairConfig }) => {
     return (
         <div className='pt-5 pb-[18px]'>
             {/* Order Utilities */}
-            <FuturesOrderUtilities quoteAssetId={pairConfig?.quoteAssetId} />
+            <FuturesOrderUtilities
+                quoteAsset={pairConfig?.quoteAsset}
+                quoteAssetId={pairConfig?.quoteAssetId}
+            />
 
             {/* Order Input Scenario */}
             <div className='mt-4'>

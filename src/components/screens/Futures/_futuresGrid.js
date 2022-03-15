@@ -54,7 +54,7 @@ export default {
         lg: [
             {
                 w: 14,
-                h: 3,
+                h: 2,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.favoritePair,
