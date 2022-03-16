@@ -28,10 +28,6 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
                 return t('trade:order_types.stop_market')
             case OrderTypes.TrailingStopMarket:
                 return t('trade:order_types.trailing_stop')
-            case OrderTypes.TakeProfit:
-                return 'TAKE_PROFIT'
-            case OrderTypes.TakeProfitMarket:
-                return 'TAKE_PROFIT_MARKET'
             default:
                 return '--'
         }
@@ -93,7 +89,11 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
     const renderAdvanceTypesDropdown = () => {
         const advanceTypes =
             orderTypes?.filter(
-                (o) => o !== OrderTypes.Limit && o !== OrderTypes.Market
+                (o) =>
+                    o !== OrderTypes.TakeProfit &&
+                    o !== OrderTypes.TakeProfitMarket &&
+                    o !== OrderTypes.Limit &&
+                    o !== OrderTypes.Market
             ) || false
         if (!advanceTypes) return null
 

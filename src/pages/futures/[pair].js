@@ -346,6 +346,7 @@ const Futures = () => {
                                     className='border border-divider dark:border-divider-dark'
                                 >
                                     <FuturesPlaceOrder
+                                        markPrice={state.markPrice?.markPrice}
                                         pairConfig={pairConfig}
                                         userSettings={userSettings}
                                     />

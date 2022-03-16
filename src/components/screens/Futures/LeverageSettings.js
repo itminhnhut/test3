@@ -36,6 +36,7 @@ const FuturesLeverageSettings = ({
                 symbol,
                 leverage,
             })
+            console.log(data)
             if (data?.status === 'ok') {
                 setLeverage(data?.data?.[symbol])
             }
@@ -58,6 +59,30 @@ const FuturesLeverageSettings = ({
             </span>
         )
     }, [_leverageBracket, pairConfig])
+
+    const renderConfirmButton = useCallback(
+        () => (
+            <Button
+                title={
+                    loading ? (
+                        <ScaleLoader
+                            color={colors.white}
+                            width={2}
+                            height={12}
+                        />
+                    ) : (
+                        'Confirm'
+                    )
+                }
+                componentType='button'
+                className='!h-[36px]'
+                type='primary'
+                disabled={loading}
+                onClick={() => !loading && onSetLeverage(pair, _leverage)}
+            />
+        ),
+        [_leverage, pair, loading]
+    )
 
     useEffect(() => {
         if (_leverage && pairConfig) {
@@ -147,25 +172,7 @@ const FuturesLeverageSettings = ({
                     articles for more information.
                 </div>
             </div>
-            <div className='mt-5 mb-2'>
-                <Button
-                    title={
-                        loading ? (
-                            <ScaleLoader
-                                color={colors.white}
-                                width={2}
-                                height={12}
-                            />
-                        ) : (
-                            'Confirm'
-                        )
-                    }
-                    componentType='button'
-                    className='!h-[36px]'
-                    type='primary'
-                    onClick={() => onSetLeverage(pair, leverage)}
-                />
-            </div>
+            <div className='mt-5 mb-2'>{renderConfirmButton()}</div>
         </Modal>
     )
 }

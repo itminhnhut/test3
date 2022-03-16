@@ -12,6 +12,11 @@ export const USER_DEVICE_STATUS = {
     WAITING_FOR_AUTHORIZATION: 4, // Wait to be authorized
 }
 
+export const FUTURES_NUMBER_OF_CONTRACT = {
+    longOrder: 1,
+    shortOrder: -1,
+}
+
 export const ASSET_IGNORE = [
     'TURN_CHRISTMAS_2017',
     'TURN_CHRISTMAS_2017_FREE',

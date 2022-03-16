@@ -245,14 +245,14 @@ const Slider = ({
         for (let i = 0; i <= xmax / dotStep; ++i) {
             dot.push(
                 <Dot
-                    key={i}
+                    key={`inputSlider_dot_${i}`}
                     active={pos.left >= i * size}
                     percentage={i * size}
                     isDark={currentTheme === THEME_MODE.DARK}
                 />
             )
             label.push(
-                <div className='relative'>
+                <div className='relative' key={`inputSlider_label_${i}`}>
                     <span
                         onClick={() => {
                             onChange && onChange({ x: i * dotStep })
