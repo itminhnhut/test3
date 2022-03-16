@@ -47,6 +47,8 @@ const Slider = ({
     yreverse,
     styles: customStyles,
     leverage = false,
+    useLabel = false,
+    labelSuffix = '',
     ...props
 }) => {
     const container = useRef(null)
@@ -228,9 +230,10 @@ const Slider = ({
         handleStyle.left = '50%'
     }
 
-    const renderDot = () => {
-        let dot = [],
-            dotStep = 15
+    const renderDotAndLabel = () => {
+        let dotStep = 15
+        const dot = []
+        const label = []
 
         if (xmax % 5 === 0) dotStep = 5
         if (xmax > 10 && xmax % 10 === 0) dotStep = 10
@@ -246,56 +249,84 @@ const Slider = ({
                     active={pos.left >= i * size}
                     percentage={i * size}
                     isDark={currentTheme === THEME_MODE.DARK}
-                    onClick={() => {
-                        onChange && onChange({ x: i * dotStep })
-                    }}
                 />
+            )
+            label.push(
+                <div className='relative'>
+                    <span
+                        onClick={() => {
+                            onChange && onChange({ x: i * dotStep })
+                        }}
+                        className={classNames(
+                            'block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
+                            {
+                                'left-1/2 -translate-x-1/2':
+                                    i > 0 && i !== xmax / dotStep,
+                                '-left-1/2 translate-x-[-80%]':
+                                    i === xmax / dotStep,
+                            }
+                        )}
+                    >
+                        {i === 0 ? 1 : i * dotStep}
+                        {labelSuffix}
+                    </span>
+                </div>
             )
         }
 
-        return dot
+        return { dot, label }
     }
 
     return (
-        <Track
-            {...props}
-            ref={container}
-            onTouchStart={handleTrackMouseDown}
-            onMouseDown={handleTrackMouseDown}
-        >
-            <Active style={valueStyle} />
-            <SliderBackground isDark={currentTheme === THEME_MODE.DARK} />
-            <DotContainer>
-                <Dot
-                    active={pos.left >= 0}
-                    percentage={0}
-                    isDark={currentTheme === THEME_MODE.DARK}
-                />
-                {renderDot()}
-            </DotContainer>
-            <div
-                ref={handle}
-                style={handleStyle}
-                onTouchStart={handleMouseDown}
-                onMouseDown={handleMouseDown}
-                onClick={function (e) {
-                    e.stopPropagation()
-                    e.nativeEvent.stopImmediatePropagation()
-                }}
+        <>
+            <Track
+                {...props}
+                ref={container}
+                onTouchStart={handleTrackMouseDown}
+                onMouseDown={handleTrackMouseDown}
             >
-                <Thumb
-                    isZero={pos.left === 0}
-                    isDark={currentTheme === THEME_MODE.DARK}
+                <Active style={valueStyle} />
+                <SliderBackground isDark={currentTheme === THEME_MODE.DARK} />
+                <DotContainer>
+                    <Dot
+                        active={pos.left >= 0}
+                        percentage={0}
+                        isDark={currentTheme === THEME_MODE.DARK}
+                    />
+                    {renderDotAndLabel()?.dot}
+                </DotContainer>
+                <div
+                    ref={handle}
+                    style={handleStyle}
+                    onTouchStart={handleMouseDown}
+                    onMouseDown={handleMouseDown}
+                    onClick={function (e) {
+                        e.stopPropagation()
+                        e.nativeEvent.stopImmediatePropagation()
+                    }}
                 >
-                    <ThumbLabel
+                    <Thumb
                         isZero={pos.left === 0}
                         isDark={currentTheme === THEME_MODE.DARK}
                     >
-                        {ceil(pos.left, 0)}%
-                    </ThumbLabel>
-                </Thumb>
-            </div>
-        </Track>
+                        <ThumbLabel
+                            isZero={pos.left === 0}
+                            isDark={currentTheme === THEME_MODE.DARK}
+                        >
+                            {ceil(pos.left, 0)}%
+                        </ThumbLabel>
+                    </Thumb>
+                </div>
+            </Track>
+            {useLabel && (
+                <>
+                    <div className='relative w-full flex items-center justify-between'>
+                        {renderDotAndLabel()?.label}
+                    </div>
+                    <div className='h-[12px] w-full' />
+                </>
+            )}
+        </>
     )
 }
 

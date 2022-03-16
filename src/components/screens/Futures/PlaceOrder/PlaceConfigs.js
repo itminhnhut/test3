@@ -76,7 +76,7 @@ const PlaceConfigs = memo(({ pairConfig, userSettings }) => {
                     pair={pair}
                     leverage={leverage}
                     setLeverage={setLeverage}
-                    leverageConfig={pairConfig?.leverageConfig}
+                    pairConfig={pairConfig}
                     isVisible={!!isActive?.leverage}
                     onClose={() => closePopup('leverage')}
                 />

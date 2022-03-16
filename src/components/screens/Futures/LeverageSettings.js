@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { SET_FUTURES_PRELOADED_LEVERAGE } from 'redux/actions/types'
 import { API_FUTURES_LEVERAGE } from 'redux/actions/apis'
@@ -12,6 +12,7 @@ import Slider from 'components/trade/InputSlider'
 import colors from 'styles/colors'
 import Modal from 'components/common/ReModal'
 import axios from 'axios'
+import { formatNumber } from 'redux/actions/utils'
 
 const FuturesLeverageSettings = ({
     pair,
@@ -19,10 +20,14 @@ const FuturesLeverageSettings = ({
     onClose,
     leverage,
     setLeverage,
-    leverageConfig,
+    pairConfig,
+    leverageBracket,
 }) => {
     const [loading, setLoading] = useState(false)
     const [_leverage, _setLeverage] = useState(leverage)
+    const [_leverageBracket, _setLeverageBracket] = useState(
+        pairConfig?.leverageBracket?.[0]
+    )
 
     const onSetLeverage = async (symbol, leverage) => {
         setLoading(true)
@@ -41,6 +46,28 @@ const FuturesLeverageSettings = ({
             onClose()
         }
     }
+
+    const renderNotionalCap = useCallback(() => {
+        return (
+            <span className='text-txtPrimary dark:text-txtPrimary-dark'>
+                {formatNumber(
+                    _leverageBracket?.notionalCap,
+                    pairConfig?.quoteAssetPrecision
+                )}{' '}
+                {pairConfig?.quoteAsset}
+            </span>
+        )
+    }, [_leverageBracket, pairConfig])
+
+    useEffect(() => {
+        if (_leverage && pairConfig) {
+            _setLeverageBracket(
+                pairConfig?.leverageBracket?.find(
+                    (o) => _leverage >= o?.initialLeverage
+                )
+            )
+        }
+    }, [_leverage, pairConfig])
 
     return (
         <Modal
@@ -83,7 +110,7 @@ const FuturesLeverageSettings = ({
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
                         onClick={() =>
-                            _leverage < leverageConfig?.max &&
+                            _leverage < pairConfig?.leverageConfig?.max &&
                             _setLeverage((prevState) => prevState + 1)
                         }
                     />
@@ -91,19 +118,18 @@ const FuturesLeverageSettings = ({
             </div>
             <div className='mb-3'>
                 <Slider
-                    axis='x'
+                    useLabel
+                    labelSuffix='x'
                     x={_leverage}
-                    xmax={leverageConfig?.max}
+                    axis='x'
+                    xmax={pairConfig?.leverageConfig?.max}
                     onChange={({ x }) =>
                         x === 0 ? _setLeverage(1) : _setLeverage(x)
                     }
                 />
             </div>
             <div className='mb-1 text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark select-none'>
-                *Maximum position at current leverage:{' '}
-                <span className='text-txtPrimary dark:text-txtPrimary-dark'>
-                    1,000.000 USDT
-                </span>
+                *Maximum position at current leverage: {renderNotionalCap()}
             </div>
             <span className='block mb-1 font-medium text-xs text-dominant'>
                 Check on Leverage & Margin table
