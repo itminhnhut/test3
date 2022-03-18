@@ -62,6 +62,7 @@ const INITIAL_STATE = {
     orderBookLayout: null,
     tradeRecordLayout: null,
     isVndcFutures: false,
+    assumingPrice: null,
 }
 
 const Futures = () => {
@@ -321,6 +322,9 @@ const Futures = () => {
                                         lastPrice={state.pairPrice?.lastPrice}
                                         orderBookLayout={state.orderBookLayout}
                                         setOrderInput={setOrderInput}
+                                        setAssumingPrice={(assumingPrice) =>
+                                            setState({ assumingPrice })
+                                        }
                                     />
                                 </div>
                                 <div
@@ -349,6 +353,7 @@ const Futures = () => {
                                         markPrice={state.markPrice?.markPrice}
                                         pairConfig={pairConfig}
                                         userSettings={userSettings}
+                                        assumingPrice={state.assumingPrice}
                                     />
                                 </div>
                                 <div

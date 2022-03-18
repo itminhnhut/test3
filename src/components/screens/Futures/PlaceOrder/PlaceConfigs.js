@@ -18,6 +18,7 @@ const PlaceConfigs = memo(
         const [isActive, setIsActive] = useState({})
 
         const openPopup = (key) => setIsActive({ [key]: true })
+
         const closePopup = (key) => setIsActive({ [key]: false })
 
         return (

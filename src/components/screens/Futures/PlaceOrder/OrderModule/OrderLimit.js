@@ -9,19 +9,14 @@ const FuturesOrderLimit = ({
     pairConfig,
     price,
     size,
-    setState,
     selectedAsset,
     getLastedLastPrice,
+    setPrice,
+    setSize,
+    setStopPrice,
+    setAsset,
 }) => {
     const { t } = useTranslation()
-
-    useEffect(() => {
-        console.log('check price ', price)
-    }, [price])
-
-    useEffect(() => {
-        console.log('check size ', size)
-    }, [size])
 
     return (
         <div>
@@ -55,7 +50,7 @@ const FuturesOrderLimit = ({
                 containerClassName='mb-[12px]'
                 label={t('common:price')}
                 value={price}
-                onChange={(e) => setState({ price: +e?.target?.value?.trim() })}
+                onChange={(e) => setPrice(+e?.target?.value?.trim())}
                 tailContainerClassName='relative flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
                     <>
@@ -78,7 +73,7 @@ const FuturesOrderLimit = ({
             <TradingInput
                 label={t('futures:size')}
                 value={size}
-                onChange={(e) => setState({ size: +e?.target?.value?.trim() })}
+                onChange={(e) => setSize(+e?.target?.value?.trim())}
                 labelClassName='whitespace-nowrap'
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
@@ -93,21 +88,13 @@ const FuturesOrderLimit = ({
                         <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
                             <div
                                 className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                onClick={() =>
-                                    setState({
-                                        selectedAsset: pairConfig?.quoteAsset,
-                                    })
-                                }
+                                onClick={() => setAsset(pairConfig?.quoteAsset)}
                             >
                                 {pairConfig?.quoteAsset}
                             </div>
                             <div
                                 className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                onClick={() =>
-                                    setState({
-                                        selectedAsset: pairConfig?.baseAsset,
-                                    })
-                                }
+                                onClick={() => setAsset(pairConfig?.baseAsset)}
                             >
                                 {pairConfig?.baseAsset}
                             </div>

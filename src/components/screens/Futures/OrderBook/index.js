@@ -35,6 +35,7 @@ const FuturesOrderBook = ({
     markPrice,
     orderBookLayout,
     setOrderInput,
+    setAssumingPrice,
 }) => {
     const [state, set] = useState(INITIAL_STATE)
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }))
@@ -67,6 +68,11 @@ const FuturesOrderBook = ({
             ask: handleTickSize(ask, tickSize, 'ask').splice(0, maxRow),
             bids: handleTickSize(bids, tickSize)?.splice(0, maxRow),
         }
+
+        setAssumingPrice({
+            ask: orderBook?.ask?.[0]?.[0],
+            bid: orderBook?.bid?.[orderBook?.bid?.length - 1]?.[0],
+        })
 
         setState({ ordersMinHeight, orderBook })
     }
@@ -147,17 +153,15 @@ const FuturesOrderBook = ({
     }, [state.tickSize, state.componentHeight])
 
     useEffect(() => {
-        Emitter.on(
-            PublicSocketEvent.FUTURES_DEPTH_UPDATE,
-            (data) =>
-                data &&
+        Emitter.on(PublicSocketEvent.FUTURES_DEPTH_UPDATE, (data) => {
+            data &&
                 initOrderBookData(
                     data,
                     state.tickSize,
                     state.componentHeight,
                     state.filterMode
                 )
-        )
+        })
 
         return () => {
             Emitter.off(PublicSocketEvent.FUTURES_DEPTH_UPDATE)

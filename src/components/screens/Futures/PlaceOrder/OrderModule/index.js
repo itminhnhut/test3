@@ -1,8 +1,11 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis'
+import { FUTURES_NUMBER_OF_CONTRACT } from 'constants/constants'
 import { FuturesOrderTypes } from 'redux/reducers/futures'
 import { useTranslation } from 'next-i18next'
+import { formatNumber } from 'redux/actions/utils'
 import { ApiStatus } from 'redux/actions/const'
+import { log } from 'utils'
 
 import FuturesOrderButtonsGroup from './OrderButtonsGroup'
 import FuturesOrderUtilities from './OrderUtilities'
@@ -15,41 +18,27 @@ import TradingLabel from 'components/trade/TradingLabel'
 import SvgExchange from 'components/svg/Exchange'
 import Divider from 'components/common/Divider'
 import axios from 'axios'
-import { log } from 'utils'
 import min from 'lodash/min'
-import { FUTURES_NUMBER_OF_CONTRACT } from 'constants/constants'
-
-const INITIAL_STATE = {
-    percentage: null,
-    price: '',
-    stopPrice: '',
-    size: '',
-}
 
 const FuturesOrderModule = memo(
-    ({ markPrice, currentType, currentLeverage, pairConfig }) => {
-        // ? State Management
-        const [state, set] = useState({
-            ...INITIAL_STATE,
-            selectedAsset: pairConfig?.baseAsset,
-        })
-        const setState = (state) =>
-            set((prevState) => ({ ...prevState, ...state }))
-
+    ({
+        markPrice,
+        currentType,
+        currentLeverage,
+        pairConfig,
+        price,
+        stopPrice,
+        size,
+        selectedAsset,
+        setPrice,
+        setStopPrice,
+        setAsset,
+        setSize,
+    }) => {
         // ? Use hooks
         const { t } = useTranslation()
 
-        // ? Memmoized Variable
-        const initialMargin = useMemo(() => {
-            if (!state.price || !state.size || !currentLeverage) {
-                return 0
-            }
-            log.d(
-                'Futures Initial Margin: ',
-                (+state.price * +state.size) / currentLeverage
-            )
-            return (+state.price * +state.size) / currentLeverage
-        }, [state.price, state.size, currentLeverage])
+        console.log('OrderModule re-render')
 
         // ? Data helper
         const getLastedLastPrice = async (symbol) => {
@@ -61,7 +50,7 @@ const FuturesOrderModule = memo(
                     data?.data?.[0]
                 )?.lastPrice
                 log.d('Setted lasted lastPrice ', lastedLastPrice)
-                setState({ price: lastedLastPrice })
+                setPrice(lastedLastPrice)
             }
         }
 
@@ -69,10 +58,6 @@ const FuturesOrderModule = memo(
         useEffect(() => {
             getLastedLastPrice(pairConfig?.pair)
         }, [pairConfig?.pair])
-
-        useEffect(() => {
-            console.log('Listen markPrice ', markPrice)
-        }, [markPrice])
 
         return (
             <div className='pt-5 pb-[18px]'>
@@ -87,10 +72,9 @@ const FuturesOrderModule = memo(
                     {(currentType === FuturesOrderTypes.Market ||
                         currentType === FuturesOrderTypes.StopMarket) && (
                         <FuturesOrderMarket
-                            price={state.price}
-                            stopPrice={state.stopPrice}
-                            size={state.size}
-                            setState={setState}
+                            price={price}
+                            stopPrice={stopPrice}
+                            size={size}
                             isStopMarket={
                                 currentType === FuturesOrderTypes.StopMarket
                             }
@@ -100,11 +84,14 @@ const FuturesOrderModule = memo(
                     {(currentType === FuturesOrderTypes.Limit ||
                         currentType === FuturesOrderTypes.StopLimit) && (
                         <FuturesOrderLimit
-                            price={state.price}
-                            stopPrice={state.stopPrice}
-                            size={state.size}
-                            setState={setState}
-                            selectedAsset={state.selectedAsset}
+                            price={price}
+                            stopPrice={stopPrice}
+                            size={size}
+                            setPrice={setPrice}
+                            setSize={setSize}
+                            setStopPrice={setStopPrice}
+                            setAsset={setAsset}
+                            selectedAsset={selectedAsset}
                             getLastedLastPrice={() =>
                                 getLastedLastPrice(pairConfig?.pair)
                             }
@@ -120,15 +107,16 @@ const FuturesOrderModule = memo(
                 <div className='mt-4'>
                     <FuturesOrderSlider />
                 </div>
+
                 <div className='mt-3.5 flex items-center justify-between select-none'>
                     <TradingLabel
                         label={t('common:buy')}
-                        value={`0.0000 ${state.selectedAsset}`}
+                        value={`0.0000 ${selectedAsset}`}
                         containerClassName='text-xs'
                     />
                     <TradingLabel
                         label={t('common:sell')}
-                        value={`0.0000 ${state.selectedAsset}`}
+                        value={`0.0000 ${selectedAsset}`}
                         containerClassName='text-xs'
                     />
                 </div>
@@ -142,34 +130,6 @@ const FuturesOrderModule = memo(
 
                 {/* Buttons Group */}
                 <FuturesOrderButtonsGroup />
-
-                {/* Cost and Stuff */}
-                <div className='mt-4 select-none'>
-                    <div className='flex items-center justify-between'>
-                        <TradingLabel
-                            label={t('common:cost')}
-                            value={` ${pairConfig?.quoteAsset}`}
-                            containerClassName='text-xs'
-                        />
-                        <TradingLabel
-                            label={t('common:cost')}
-                            value={`100 ${pairConfig?.quoteAsset}`}
-                            containerClassName='text-xs'
-                        />
-                    </div>
-                    <div className='mt-2 flex items-center justify-between'>
-                        <TradingLabel
-                            label={t('common:max')}
-                            value={`100 ${state.selectedAsset}`}
-                            containerClassName='text-xs'
-                        />
-                        <TradingLabel
-                            label={t('common:max')}
-                            value={`100 ${state.selectedAsset}`}
-                            containerClassName='text-xs'
-                        />
-                    </div>
-                </div>
             </div>
         )
     }
