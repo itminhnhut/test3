@@ -19,13 +19,13 @@ import {
     X,
 } from 'react-feather'
 import {
-    API_GET_DEPOSIT_HISTORY,
+    API_GET_DEPWDL_HISTORY,
     API_GET_WALLET_CONFIG,
     API_PUSH_ORDER_BINANCE,
     API_REVEAL_DEPOSIT_TOKEN_ADDRESS,
 } from 'redux/actions/apis'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { DepositStatus, TokenConfig } from 'redux/actions/const'
+import { DepositStatus, DepWdlStatus, TokenConfig } from 'redux/actions/const'
 import { LANGUAGE_TAG } from 'hooks/useLanguage'
 import { ApiStatus } from 'redux/actions/const'
 import { find, get, pick } from 'lodash'
@@ -71,6 +71,7 @@ const INITIAL_STATE = {
     isCopying: {},
     histories: null,
     loadingHistory: false,
+    historyLastId: undefined,
     historyPage: 0,
     blockConfirm: {},
     openModal: {},
@@ -96,7 +97,7 @@ const ExchangeDeposit = () => {
 
     // Rdx
     const paymentConfigs = useSelector((state) => state.wallet.paymentConfigs)
-    const socket = useSelector((state) => state.socket.userSocket)
+    // const socket = useSelector((state) => state.socket.userSocket)
 
     // Use Hooks
     const router = useRouter()
@@ -131,21 +132,20 @@ const ExchangeDeposit = () => {
     }, [state.address?.memo, width])
 
     // Helper
-    const getDepositTokenAddress = async (
-        createIfNotExist,
-        currency,
-        tokenTypeIndex
-    ) => {
-        if (!currency || typeof tokenTypeIndex !== 'number') {
+    const getDepositTokenAddress = async (shouldCreate, assetId, network) => {
+        if (!assetId || !network) {
             return
         }
 
         setState({ address: '', loadingAddress: true })
         try {
-            const { data } = await Axios.post(
-                API_REVEAL_DEPOSIT_TOKEN_ADDRESS,
-                { currency, tokenTypeIndex, createIfNotExist }
-            )
+            const { data } = await Axios.get(API_REVEAL_DEPOSIT_TOKEN_ADDRESS, {
+                params: {
+                    assetId,
+                    network,
+                    shouldCreate,
+                },
+            })
             if (data && data?.status === 'ok') {
                 // setState({ address: {...data.data, memo: 'abcxyszmemo34723'} })
                 setState({ address: data.data })
@@ -160,12 +160,17 @@ const ExchangeDeposit = () => {
         }
     }
 
-    const getDepositHistory = async (pageIndex, isReNew = false) => {
+    const getDepositHistory = async (page, isReNew = false) => {
         !isReNew && setState({ loadingHistory: true })
 
         try {
-            const { data } = await Axios.get(API_GET_DEPOSIT_HISTORY, {
-                params: { pageIndex, pageSize: HISTORY_SIZE },
+            const { data } = await Axios.get(API_GET_DEPWDL_HISTORY, {
+                params: {
+                    type: 1,
+                    lastId: undefined,
+                    page,
+                    pageSize: HISTORY_SIZE,
+                },
             })
 
             if (data?.status === ApiStatus.SUCCESS) {
@@ -175,30 +180,6 @@ const ExchangeDeposit = () => {
             console.log(`Can't get deposit history `, e)
         } finally {
             setState({ loadingHistory: false })
-        }
-    }
-
-    const updateBlockConfirmationEvent = (data, blockConfirmOrigin) => {
-        log.i('Deposit socket => ', data)
-        const { command, ...rest } = data
-        switch (command) {
-            case 'update':
-                updateOrInsertDepositHistory(
-                    pick(rest.data, ['_history_type', 'id']),
-                    rest.data
-                )
-                break
-            case 'update_block_confirmation':
-                const { _history_type, _history_id, blockConfirmations } =
-                    rest.data
-                setState({
-                    blockConfirm: {
-                        ...blockConfirmOrigin,
-                        [`history:${_history_type}:${_history_id}`]:
-                            blockConfirmations,
-                    },
-                })
-                break
         }
     }
 
@@ -305,7 +286,8 @@ const ExchangeDeposit = () => {
                         {state.selectedAsset?.assetCode || '--'}
                     </span>
                     <span className='ml-2 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-                        {state.selectedAsset?.fullName || '--'}
+                        {state.selectedAsset?.assetCode ||
+                            state.selectedAsset?.assetCode}
                     </span>
                 </div>
                 <div className={state.openList?.cryptoList ? 'rotate-180' : ''}>
@@ -505,7 +487,20 @@ const ExchangeDeposit = () => {
     }, [state.selectedAsset, state.selectedNetwork])
 
     const renderAddressInput = useCallback(() => {
-        if (state.address === 0) {
+        if (!state.selectedNetwork?.depositEnable) {
+            return (
+                <div className='flex flex-col items-center justify-center py-3'>
+                    <div className='text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                        {t('wallet:errors.network_not_support', {
+                            asset: state.selectedNetwork?.coin,
+                            chain: state.selectedNetwork?.network,
+                        })}
+                    </div>
+                </div>
+            )
+        }
+
+        if (!state.address) {
             return (
                 <div className='flex flex-col items-center justify-center py-3'>
                     <div className='text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark'>
@@ -517,8 +512,8 @@ const ExchangeDeposit = () => {
                         onClick={() =>
                             getDepositTokenAddress(
                                 true,
-                                state.selectedNetwork?.assetCode,
-                                state.selectedNetwork?.tokenTypeIndex
+                                state.selectedAsset?.assetId,
+                                state.selectedNetwork?.network
                             )
                         }
                     >
@@ -588,6 +583,7 @@ const ExchangeDeposit = () => {
         )
     }, [
         state.address,
+        state.selectedAsset,
         state.selectedNetwork,
         state.errors,
         state.isCopying?.address,
@@ -595,7 +591,7 @@ const ExchangeDeposit = () => {
     ])
 
     const renderMemoInput = useCallback(() => {
-        if (state.address?.memo) {
+        if (state.selectedNetwork?.memoRegex && state.address?.addressTag) {
             return (
                 <div
                     className='min-h-[55px] max-h-[55px] lg:min-h-[62px] lg:max-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center
@@ -603,15 +599,15 @@ const ExchangeDeposit = () => {
                             hover:!border-dominant'
                 >
                     <div className='w-full font-medium text-xs sm:text-sm pr-3 cursor-text break-all'>
-                        {state.address?.memo}
+                        {state.address.addressTag}
                     </div>
                     <CopyToClipboard
-                        text={state.address?.memo}
+                        text={state.address.addressTag}
                         onCopy={() => !state.isCopying?.memo && onCopy('memo')}
                     >
                         <span
                             className={
-                                state.address.memo
+                                state.address.addressTag
                                     ? 'font-bold text-sm hover:opacity-80 cursor-pointer'
                                     : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                             }
@@ -628,7 +624,7 @@ const ExchangeDeposit = () => {
         }
 
         return null
-    }, [state.address, state.isCopying?.memo])
+    }, [state.address, state.selectedNetwork, state.isCopying?.memo])
 
     const renderDepositConfirmBlocks = useCallback(() => {
         let inner
@@ -636,18 +632,18 @@ const ExchangeDeposit = () => {
         if (language === LANGUAGE_TAG.EN) {
             inner = (
                 <>
-                    <span className='text-dominant font-bold'>
+                    <span className='text-dominant font-bold mr-1'>
                         {state.selectedNetwork?.minConfirm}
-                    </span>{' '}
+                    </span>
                     network confirmation
                 </>
             )
         } else {
             inner = (
                 <>
-                    <span className='text-dominant font-bold'>
+                    <span className='text-dominant font-bold mr-1'>
                         {state.selectedNetwork?.minConfirm}
-                    </span>{' '}
+                    </span>
                     lần xác nhận từ mạng lưới
                 </>
             )
@@ -979,7 +975,9 @@ const ExchangeDeposit = () => {
     }, [language, state.selectedAsset, state.selectedNetwork])
 
     const renderMemoNotice = useCallback(() => {
-        const isMemoNotice = WITH_MEMO.includes(state.selectedNetwork?.network)
+        const isMemoNotice =
+            WITH_MEMO.includes(state.selectedNetwork?.network) &&
+            state.selectedNetwork?.depositEnable
         if (!isMemoNotice) return null
 
         let msg
@@ -1204,16 +1202,16 @@ const ExchangeDeposit = () => {
         )
     }, [state.pushedOrder, language])
 
-    useEffect(() => {
-        if (!socket?._callbacks['$deposit::update_history_row']) {
-            socket?.on('deposit::update_history_row', (data) =>
-                updateBlockConfirmationEvent(data, state.blockConfirm)
-            )
-        }
-        return socket?.removeListener('deposit::update_history_row', (data) =>
-            updateBlockConfirmationEvent(data, state.blockConfirm)
-        )
-    }, [socket, state.blockConfirm])
+    // useEffect(() => {
+    //     if (!socket?._callbacks['$deposit::update_history_row']) {
+    //         socket?.on('deposit::update_history_row', (data) =>
+    //             updateBlockConfirmationEvent(data, state.blockConfirm)
+    //         )
+    //     }
+    //     return socket?.removeListener('deposit::update_history_row', (data) =>
+    //         updateBlockConfirmationEvent(data, state.blockConfirm)
+    //     )
+    // }, [socket, state.blockConfirm])
 
     useEffect(() => {
         getDepositHistory(state.historyPage)
@@ -1222,8 +1220,8 @@ const ExchangeDeposit = () => {
     useEffect(() => {
         getDepositTokenAddress(
             false,
-            state.selectedNetwork?.assetCode,
-            state.selectedNetwork?.tokenTypeIndex
+            state.selectedAsset?.assetId,
+            state.selectedNetwork?.network
         )
 
         if (WITH_MEMO.includes(state.selectedNetwork?.network)) {
@@ -1231,7 +1229,7 @@ const ExchangeDeposit = () => {
         } else {
             setState({ openModal: { memoNotice: false } })
         }
-    }, [state.selectedNetwork])
+    }, [state.selectedNetwork, state.selectedAsset])
 
     useEffect(() => {
         const type = get(router?.query, 'type', 'crypto')
@@ -1288,7 +1286,7 @@ const ExchangeDeposit = () => {
                     {renderTab()}
                     <MCard addClass='pt-12 pb-10 px-6 lg:px-16 xl:px-8'>
                         <div className='flex flex-col xl:flex-row items-center xl:items-start justify-center'>
-                            <div className='w-full xl:w-1/2 max-w-[453px] xl:ml-16 xl:mr-16 xl:mr-32'>
+                            <div className='w-full xl:w-1/2 max-w-[453px] xl:ml-16 xl:mr-32'>
                                 {renderDepositFiat()}
                                 {state.type === TYPE.crypto && (
                                     <>
@@ -1337,14 +1335,16 @@ const ExchangeDeposit = () => {
                                             {state.openList?.networkList &&
                                                 renderNetworkList()}
                                         </div>
-                                        {state.address?.memo && (
-                                            <div className='relative mt-5'>
-                                                <div className='mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark'>
-                                                    Memo
+                                        {state.address?.addressTag &&
+                                            state.selectedNetwork
+                                                ?.memoRegex && (
+                                                <div className='relative mt-5'>
+                                                    <div className='mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark'>
+                                                        Memo
+                                                    </div>
+                                                    {renderMemoInput()}
                                                 </div>
-                                                {renderMemoInput()}
-                                            </div>
-                                        )}
+                                            )}
                                         <div className='relative mt-5'>
                                             <div className='mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark'>
                                                 {t('wallet:deposit_address')}
@@ -1415,96 +1415,40 @@ function dataHandler(data, loading, configList, utils) {
     if (!Array.isArray(data) || !data || !data.length) return []
 
     const result = []
-    console.log(data)
+    let networkList = []
+
+    configList?.forEach((e) =>
+        networkList.push(...e.networkList?.map((o) => o?.network))
+    )
+
+    networkList = [...new Set(networkList)]
+
     data.forEach((h) => {
         const {
-            id,
-            currency,
+            _id,
             amount,
+            assetId,
+            fee,
+            executeAt,
             network,
-            address,
-            hash,
-            time,
             status,
-            _history_type,
+            metadata: { id, address, transactionHash },
         } = h
-        const assetName = utils?.getAssetName(configList, currency)
-        const explorerLink = buildExplorerUrl(hash, network)
+        const assetName = utils?.getAssetName(configList, assetId)
+        const explorerLink = buildExplorerUrl(transactionHash, network)
 
         let statusInner
-        let txLink
+        console.log('Explorer ', explorerLink)
 
         switch (status) {
-            case DepositStatus.COMPLETED:
-                if (!hash) {
-                    statusInner = (
-                        <span className='text-green'>
-                            {utils?.t('common:success')}
-                        </span>
-                    )
-                } else {
-                    statusInner = explorerLink ? (
-                        <a
-                            className='text-green'
-                            target='_blank'
-                            href={explorerLink}
-                        >
-                            {utils?.t('common:success')}
-                        </a>
-                    ) : (
-                        '--'
-                    )
-                    txLink = explorerLink ? (
-                        <a
-                            className='text-sm hover:text-dominant hover:!underline'
-                            target='_blank'
-                            href={explorerLink}
-                        >
-                            {shortHashAddress(hash, 6, 6)}
-                        </a>
-                    ) : (
-                        '--'
-                    )
-                }
-                break
-            case DepositStatus.PENDING:
+            case DepWdlStatus.Success:
                 statusInner = (
-                    <span className='text-yellow'>
-                        {utils?.t('common:pending')}
+                    <span className='text-green'>
+                        {utils?.t('common:success')}
                     </span>
                 )
                 break
-            case DepositStatus.WAITING_FOR_BLOCK_CONFIRMATION:
-                const confirmedNumber = get(
-                    utils?.blockConfirm,
-                    `history:${_history_type}:${id}`,
-                    h?.blockConfirmations?.confirmed || 0
-                )
-                return (
-                    <a
-                        href={buildExplorerUrl(hash, network)}
-                        className='text_yellow'
-                        target='_blank'
-                    >
-                        {confirmedNumber}/{h?.blockConfirmations?.minimum}
-                    </a>
-                )
-
-            case DepositStatus.CONFIRMED_WAIT_TO_DEPOSIT: {
-                statusInner = explorerLink ? (
-                    <a
-                        className='text-yellow'
-                        target='_blank'
-                        href={explorerLink}
-                    >
-                        {utils?.t('common:pending')}
-                    </a>
-                ) : (
-                    '--'
-                )
-                break
-            }
-            case DepositStatus.BLOCK_DENIED: {
+            case DepWdlStatus.Declined: {
                 statusInner = (
                     <span className='text-red'>
                         {utils?.t('common:declined')}
@@ -1512,13 +1456,23 @@ function dataHandler(data, loading, configList, utils) {
                 )
                 break
             }
+            case DepWdlStatus.Pending:
             default:
-                statusInner = '--'
+                statusInner = (
+                    <span className='text-yellow'>
+                        {utils?.t('common:pending')}
+                    </span>
+                )
+                break
         }
 
         result.push({
-            key: `dep_${id}_${hash}`,
-            id: <span className='!text-sm whitespace-nowrap'>{id}</span>,
+            key: `dep_${_id}_${transactionHash}`,
+            id: (
+                <span className='!text-sm whitespace-nowrap uppercase'>
+                    {id?.replace('log_', '')}
+                </span>
+            ),
             asset: (
                 <div className='flex items-center'>
                     <AssetLogo assetCode={assetName} size={24} />
@@ -1542,10 +1496,10 @@ function dataHandler(data, loading, configList, utils) {
                     {network === '0' ? 'Internal' : network}
                 </span>
             ),
-            txhash: <span>{txLink || '--'}</span>,
+            txhash: <span>{explorerLink || '--'}</span>,
             time: (
                 <span className='!text-sm whitespace-nowrap'>
-                    {formatTime(time, 'HH:mm dd-MM-yyyy')}
+                    {formatTime(executeAt, 'HH:mm dd-MM-yyyy')}
                 </span>
             ),
             status: (

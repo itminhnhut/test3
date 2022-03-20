@@ -51,9 +51,8 @@ export const API_USER_SYMBOL_LIST = API_PREFIX + 'user/symbol_list'
 export const API_GET_WALLET_CONFIG = API_PREFIX + 'wallet/token_config'
 export const API_WITHDRAW = API_V2_PREFIX + 'token/withdraw_asset'
 export const API_GET_WITHDRAW_HISTORY = API_PREFIX + 'token/withdraw_history'
-export const API_GET_DEPOSIT_HISTORY = API_PREFIX + 'wallet/deposit_history'
 export const API_REVEAL_DEPOSIT_TOKEN_ADDRESS =
-    API_PREFIX + 'deposit/reveal_address'
+    API_V3_PREFIX + 'payment/deposit_address'
 export const POST_WALLET_TRANSFER = API_PREFIX + 'wallet/transfer'
 export const API_PUSH_ORDER_BINANCE =
     API_PREFIX + 'request_check_deposit_binance' // post => data: { currency }
@@ -61,6 +60,9 @@ export const API_SET_ASSET_AS_FEE = API_PREFIX + 'user/set_fee_currency'
 
 // Payment
 export const API_GET_PAYMENT_CONFIG = API_V3_PREFIX + 'payment/config'
+export const API_WITHDRAW_v3 = API_V3_PREFIX + 'payment/withdraw'
+export const API_GET_DEPWDL_HISTORY =
+    API_V3_PREFIX + 'payment/deposit_withdraw_history'
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'spot/temp_futures'

@@ -1,38 +1,43 @@
 import Axios from 'axios'
 
-import { API_WITHDRAW } from 'redux/actions/apis'
+import { API_WITHDRAW_v3 } from 'redux/actions/apis'
 import { ApiStatus } from 'redux/actions/const'
 
-export const withdrawHelper = async (_address, _amount, currency, otp, memo, tokenTypeIndex, networkType) => {
-    const address = _address.trim()
+export const withdrawHelper = async (
+    assetId,
+    _amount,
+    network,
+    _withdrawTo,
+    tag,
+    otp
+) => {
+    const withdrawTo = _withdrawTo.trim()
     const amount = +_amount
 
     try {
-        const { data } = await Axios.post(API_WITHDRAW,
-            {
-                address,
-                amount,
-                currency,
-                otp,
-                memo,
-                tokenTypeIndex,
-                networkType
-            })
+        const { data } = await Axios.post(API_WITHDRAW_v3, {
+            assetId,
+            amount,
+            network,
+            withdrawTo,
+            tag,
+            otp,
+        })
         if (data) {
             return {
                 status: ApiStatus.SUCCESS,
-                data: data
+                data: data,
             }
         }
 
         return {
             status: ApiStatus.ERROR,
-            data: null
+            data: null,
         }
     } catch (err) {
         return {
             status: ApiStatus.ERROR,
-            data: null
+            data: null,
         }
     }
 }
@@ -49,5 +54,5 @@ export const WITHDRAW_RESULT = {
     MISSING_OTP: 'missing_otp',
     AMOUNT_EXCEEDED: 'invalid_max_amount',
     UNKNOWN_ERROR: 'unknown_error',
-    INVALID_KYC_STATUS: 'invalid_kyc_status'
+    INVALID_KYC_STATUS: 'invalid_kyc_status',
 }

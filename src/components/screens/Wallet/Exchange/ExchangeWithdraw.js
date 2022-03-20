@@ -3,8 +3,13 @@ import { Trans, useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { useDebounce } from 'react-use'
 import { useRouter } from 'next/router'
-import { ApiStatus, TokenConfigV1 as TokenConfig } from 'redux/actions/const'
 import {
+    ApiStatus,
+    DepWdlStatus,
+    TokenConfigV1 as TokenConfig,
+} from 'redux/actions/const'
+import {
+    API_GET_DEPWDL_HISTORY,
     API_GET_PAYMENT_CONFIG,
     API_GET_WALLET_CONFIG,
     API_GET_WITHDRAW_HISTORY,
@@ -136,25 +141,6 @@ const ExchangeWithdraw = () => {
     }, [allAssets, state.selectedAsset])
 
     // Helper
-    const getWithdrawConfig = async () => {
-        setState({ loadingConfigs: true })
-
-        try {
-            const { data } = await Axios.get(API_GET_WALLET_CONFIG)
-            const paymentConfigs = await Axios.get(API_GET_PAYMENT_CONFIG)
-            console.log('paymentConfigs?', paymentConfigs)
-            if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                const configs = Object.values(data.data)
-                // .filter(e => e.allowWithdraw.includes(true))
-                setState({ configs })
-            }
-        } catch (e) {
-            console.log(`Can't get withdraw config `, e)
-        } finally {
-            setState({ loadingConfigs: false })
-        }
-    }
-
     const getWithdrawFee = async (assetId, amount, network) => {
         if (!assetId || !amount || !network) return
 
@@ -181,8 +167,9 @@ const ExchangeWithdraw = () => {
         try {
             const {
                 data: { status, data: histories },
-            } = await Axios.get(API_GET_WITHDRAW_HISTORY, {
+            } = await Axios.get(API_GET_DEPWDL_HISTORY, {
                 params: {
+                    type: 2,
                     page,
                     pageSize: HISTORY_SIZE,
                 },
@@ -204,23 +191,14 @@ const ExchangeWithdraw = () => {
         setState({ processingWithdraw: true, errors: {} })
 
         try {
-            const {
-                address,
-                amount,
-                currency,
-                otp,
-                memo,
-                tokenTypeIndex,
-                networkType,
-            } = params
+            const { assetId, amount, network, withdrawTo, tag, otp } = params
             const result = await withdrawHelper(
-                address,
+                assetId,
                 amount,
-                currency,
-                otp,
-                memo,
-                tokenTypeIndex,
-                networkType
+                network,
+                withdrawTo,
+                tag,
+                otp
             )
             setState({ withdrawResult: result?.data })
 
@@ -452,7 +430,8 @@ const ExchangeWithdraw = () => {
                         {state.selectedAsset?.assetCode || '--'}
                     </span>
                     <span className='ml-2 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-                        {state.selectedAsset?.fullName || '--'}
+                        {state.selectedAsset?.fullName ||
+                            state.selectedAsset?.assetCode}
                     </span>
                 </div>
                 <div className={state.openList?.cryptoList ? 'rotate-180' : ''}>
@@ -771,7 +750,7 @@ const ExchangeWithdraw = () => {
                 </span>
             </div>
         )
-    }, [state.configs, state.withdrawFee, state.feeCurrency])
+    }, [state.withdrawFee, state.feeCurrency])
 
     const renderMinWdl = useCallback(() => {
         let min
@@ -898,7 +877,10 @@ const ExchangeWithdraw = () => {
             }
 
             if (type === 'address') {
-                if (state?.validator?.hasOwnProperty('address')) {
+                if (
+                    state?.validator?.hasOwnProperty('address') &&
+                    state.address
+                ) {
                     if (state?.validator?.address) {
                         // inner = <Check className='text-dominant' size={16} />
                     } else {
@@ -921,7 +903,7 @@ const ExchangeWithdraw = () => {
                                 {t('wallet:errors.invalid_min_amount', {
                                     value:
                                         state.withdrawFee?.amount >=
-                                        state.selectedNetwork?.minWithdraw
+                                        state.selectedNetwork?.withdrawMin
                                             ? formatWallet(
                                                   state.withdrawFee?.amount,
                                                   state.selectedNetwork
@@ -929,11 +911,12 @@ const ExchangeWithdraw = () => {
                                               )
                                             : formatWallet(
                                                   state.selectedNetwork
-                                                      ?.minWithdraw,
+                                                      ?.withdrawMin,
                                                   state.selectedNetwork
                                                       ?.assetDigit
                                               ),
-                                })}
+                                })}{' '}
+                                {state.selectedNetwork?.coin}
                             </span>
                         )
                     } else if (
@@ -943,11 +926,12 @@ const ExchangeWithdraw = () => {
                             <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
                                 {t('wallet:errors.invalid_max_amount', {
                                     value: formatWallet(
-                                        state.selectedNetwork?.maxWithdraw
+                                        state.selectedNetwork?.withdrawMax
                                             ?.value,
                                         state.selectedNetwork?.assetDigit
                                     ),
-                                })}
+                                })}{' '}
+                                {state.selectedNetwork?.coin}
                             </span>
                         )
                     } else if (
@@ -988,6 +972,7 @@ const ExchangeWithdraw = () => {
         },
         [
             state.validator,
+            state.address,
             state.selectedNetwork,
             state.selectedAsset,
             state.withdrawFee,
@@ -995,9 +980,7 @@ const ExchangeWithdraw = () => {
     )
 
     const renderMemoInput = useCallback(() => {
-        if (!state.selectedNetwork) return null
-
-        if (!MEMO_INPUT.includes(state.selectedNetwork?.network)) {
+        if (!state?.selectedNetwork?.memoRegex) {
             return null
         }
 
@@ -1054,7 +1037,7 @@ const ExchangeWithdraw = () => {
         const data = dataHandler(
             state.histories,
             state.loadingHistories,
-            state.configs,
+            paymentConfigs,
             { getAssetName, t }
         )
         let tableStatus
@@ -1143,7 +1126,7 @@ const ExchangeWithdraw = () => {
                 }}
             />
         )
-    }, [state.histories, state.loadingHistories, state.configs, width])
+    }, [state.histories, state.loadingHistories, paymentConfigs, width])
 
     const renderPagination = useCallback(() => {
         return (
@@ -1184,13 +1167,19 @@ const ExchangeWithdraw = () => {
         if (state.type !== TYPE.crypto) return null
 
         const params = {
-            address: state.address.trim(),
+            // address: state.address.trim(),
+            // amount: +state.amount,
+            // currency: state.selectedAsset?.id,
+            // otp: otpHandler(state.otpModes, state.otp),
+            // memo: state.memo,
+            // tokenTypeIndex: state.selectedNetwork?.tokenTypeIndex,
+            // networkType: state.selectedNetwork?.network,
+            assetId: state.selectedAsset?.assetId,
             amount: +state.amount,
-            currency: state.selectedAsset?.id,
+            network: state.selectedNetwork?.network,
+            withdrawTo: state?.address.trim(),
+            tag: state?.memo?.trim(),
             otp: otpHandler(state.otpModes, state.otp),
-            memo: state.memo,
-            tokenTypeIndex: state.selectedNetwork?.tokenTypeIndex,
-            networkType: state.selectedNetwork?.network,
         }
 
         const cleverProps = {
@@ -1207,7 +1196,7 @@ const ExchangeWithdraw = () => {
 
         const isSuccess =
             state.withdrawResult?.status === ApiStatus.SUCCESS &&
-            !!state.withdrawResult?.data?.length
+            !!Object.keys(state.withdrawResult?.data)?.length
         const isErrors = !!state.errors?.status
 
         if (isSuccess && !isErrors) {
@@ -1567,10 +1556,6 @@ const ExchangeWithdraw = () => {
     )
 
     useEffect(() => {
-        getWithdrawConfig()
-    }, [])
-
-    useEffect(() => {
         getWithdrawHistory(state.historyPage)
     }, [state.historyPage])
 
@@ -1617,7 +1602,11 @@ const ExchangeWithdraw = () => {
                 paymentConfigs,
                 (o) => o?.assetCode === state.asset
             )
+            const defaultNetwork =
+                selectedAsset?.networkList?.find((o) => o.isDefault) ||
+                selectedAsset?.networkList?.[0]
             selectedAsset && setState({ selectedAsset })
+            defaultNetwork && setState({ selectedNetwork: defaultNetwork })
         }
     }, [state.asset, paymentConfigs])
 
@@ -1669,9 +1658,9 @@ const ExchangeWithdraw = () => {
     }, [state.openList])
 
     useEffect(() => {
-        if (state.withdrawFee && state.configs) {
-            const cfg = state.configs.filter(
-                (e) => e.id === state.withdrawFee?.currency
+        if (state.withdrawFee && paymentConfigs) {
+            const cfg = paymentConfigs?.filter(
+                (e) => e.assetId === state.withdrawFee?.currency
             )?.[0]
             cfg &&
                 setState({
@@ -1681,7 +1670,7 @@ const ExchangeWithdraw = () => {
                     },
                 })
         }
-    }, [state.withdrawFee, state.configs])
+    }, [state.withdrawFee, paymentConfigs])
 
     useEffect(() => {
         setState({
@@ -1691,12 +1680,13 @@ const ExchangeWithdraw = () => {
                 state.address,
                 state.selectedNetwork?.addressRegex,
                 state.memo,
+                state.selectedNetwork?.memoRegex,
                 state.selectedNetwork?.network,
                 state.selectedNetwork?.tokenType,
-                state.withdrawFee?.amount >= state.selectedNetwork?.minWithdraw
+                state.withdrawFee?.amount >= state.selectedNetwork?.withdrawMin
                     ? state.withdrawFee?.amount
-                    : state.selectedNetwork?.minWithdraw,
-                state.selectedNetwork?.maxWithdraw?.value,
+                    : state.selectedNetwork?.withdrawMin,
+                state.selectedNetwork?.withdrawMax?.value,
                 assetBalance?.value - assetBalance?.locked_value,
                 state.selectedNetwork?.withdrawEnable
             ),
@@ -1763,7 +1753,6 @@ const ExchangeWithdraw = () => {
                                                 className='min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between
                                                     rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'
                                                 onClick={() =>
-                                                    state.configs &&
                                                     setState({
                                                         openList: {
                                                             cryptoList:
@@ -1795,7 +1784,6 @@ const ExchangeWithdraw = () => {
                                                 className='min-h-[55px] lg:min-h-[62px] px-3.5 py-2.5 md:px-5 md:py-4 flex items-center justify-between
                                                     rounded-xl border border-divider dark:border-divider-dark cursor-pointer select-none hover:!border-dominant'
                                                 onClick={() =>
-                                                    state.configs &&
                                                     setState({
                                                         openList: {
                                                             networkList:
@@ -1941,26 +1929,27 @@ function dataHandler(data, loading, configList, utils) {
     if (!Array.isArray(data) || !data || !data.length) return []
 
     const result = []
+    console.log(configList)
 
     data.forEach((h) => {
         const {
-            id,
-            time,
+            _id,
+            executeAt,
+            assetId,
             amount,
-            currency,
             status,
-            withdraw_to,
-            network,
-            txhash,
+            to: { address },
+            metadata: { network },
         } = h
-        const assetName = utils?.getAssetName(configList, currency)
+        const assetName = utils?.getAssetName(configList, assetId)
+        const txhash = null
 
         let txhashInner = (
             <span className='!text-sm whitespace-nowrap'>
                 {txhash ? shortHashAddress(txhash, 6, 6) : '--'}
             </span>
         )
-        const value = txhash || withdraw_to
+        const value = txhash || address
         const url = buildExplorerUrl(value, network)
 
         if (url) {
@@ -1977,23 +1966,23 @@ function dataHandler(data, loading, configList, utils) {
 
         let statusInner
         switch (status) {
-            case WithdrawalStatus.COMPLETED:
+            case DepWdlStatus.Success:
                 statusInner = (
                     <span className='text-green'>
                         {utils?.t('common:success')}
                     </span>
                 )
                 break
-            case WithdrawalStatus.WAITING_FOR_CONFIRMATIONS:
-            case WithdrawalStatus.WAITING_FOR_BALANCE:
-            case WithdrawalStatus.PENDING:
+            // case WithdrawalStatus.WAITING_FOR_CONFIRMATIONS:
+            // case WithdrawalStatus.WAITING_FOR_BALANCE:
+            case DepWdlStatus.Pending:
                 statusInner = (
                     <span className='text-yellow'>
                         {utils?.t('common:pending')}
                     </span>
                 )
                 break
-            case WithdrawalStatus.REJECTED:
+            case DepWdlStatus.Declined:
                 statusInner = (
                     <span className='text-red'>
                         {utils?.t('common:declined')}
@@ -2006,8 +1995,12 @@ function dataHandler(data, loading, configList, utils) {
         }
 
         result.push({
-            key: `wdl_${id}_${txhash}`,
-            id: <span className='!text-sm whitespace-nowrap'>{id}</span>,
+            key: `wdl_${_id}_${txhash}`,
+            id: (
+                <span className='!text-sm whitespace-nowrap'>
+                    {_id?.substring(_id.length - 6, _id.length)}
+                </span>
+            ),
             asset: (
                 <div className='flex items-center'>
                     <AssetLogo assetCode={assetName} size={24} />
@@ -2024,13 +2017,13 @@ function dataHandler(data, loading, configList, utils) {
             ),
             withdraw_to: (
                 <span className='!text-sm whitespace-nowrap'>
-                    {shortHashAddress(withdraw_to, 5, 5)}
+                    {shortHashAddress(address, 5, 5)}
                 </span>
             ),
             txhash: txhashInner,
             time: (
                 <span className='!text-sm whitespace-nowrap'>
-                    {formatTime(time, 'HH:mm dd-MM-yyyy')}
+                    {formatTime(executeAt, 'HH:mm dd-MM-yyyy')}
                 </span>
             ),
             status: (
@@ -2039,13 +2032,13 @@ function dataHandler(data, loading, configList, utils) {
                 </span>
             ),
             [RETABLE_SORTBY]: {
-                id,
+                id: _id,
                 asset: assetName,
                 amount: +amount,
                 network,
-                withdraw_to,
+                withdraw_to: address,
                 txhash,
-                time,
+                time: executeAt,
                 status,
             },
         })
@@ -2077,6 +2070,7 @@ function withdrawValidator(
     address,
     addressRegex,
     memo = undefined,
+    memoRegex,
     network,
     networkType,
     min,
@@ -2085,7 +2079,10 @@ function withdrawValidator(
     isAllow
 ) {
     const result = {}
-    const regex = new RegExp(addressRegex)
+    const _addressRegex = new RegExp(addressRegex)
+    const _memoRegex = new RegExp(memoRegex)
+    const useMemo = !!memoRegex
+
     let memoType
 
     if (network === TokenConfig.Network.BINANCE_CHAIN) memoType = 'BEP2MEMO'
@@ -2095,10 +2092,18 @@ function withdrawValidator(
         result.asset = !!(typeof asset === 'string' && asset.length)
     }
 
-    if (regex.test(address)) {
+    if (_addressRegex.test(address)) {
         result.address = true
     } else {
         result.address = false
+    }
+
+    if (memo !== undefined) {
+        if (memo && _memoRegex.test(memo)) {
+            result.memo = true
+        } else {
+            result.memo = false
+        }
     }
 
     if (isAllow !== undefined) {
@@ -2117,30 +2122,28 @@ function withdrawValidator(
         }
     }
 
-    if (address && networkType) {
-        result.address = hashValidator(address, networkType)
+    let isValid
+
+    if (useMemo) {
+        isValid =
+            result.address &&
+            result.asset &&
+            result?.amount === AMOUNT.OK &&
+            result.allowWithdraw &&
+            result.memo
+    } else {
+        isValid =
+            result.address &&
+            result.asset &&
+            result?.amount === AMOUNT.OK &&
+            result.allowWithdraw
     }
 
-    if (
-        (network === TokenConfig.Network.BINANCE_CHAIN ||
-            network === TokenConfig.Network.VITE_CHAIN) &&
-        memo &&
-        memoType
-    ) {
-        result.memo = hashValidator(memo, memoType)
-    }
-
-    if (
-        result.address &&
-        result.asset &&
-        result?.amount === AMOUNT.OK &&
-        result.allowWithdraw
-    ) {
+    if (isValid) {
         result.allPass = true
     }
 
-    console.log('Validated Input: ', result)
-
+    // console.log('Validated...', result)
     return result
 }
 
