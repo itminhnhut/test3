@@ -491,7 +491,7 @@ const ExchangeDeposit = () => {
             return (
                 <div className='flex flex-col items-center justify-center py-3'>
                     <div className='text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                        {t('wallet:errors.network_not_support', {
+                        {t('wallet:errors.network_not_support_dep', {
                             asset: state.selectedNetwork?.coin,
                             chain: state.selectedNetwork?.network,
                         })}
@@ -628,12 +628,17 @@ const ExchangeDeposit = () => {
 
     const renderDepositConfirmBlocks = useCallback(() => {
         let inner
+        const block =
+            state.selectedNetwork?.minConfirm >
+            state.selectedNetwork?.unLockConfirm
+                ? state.selectedNetwork?.minConfirm
+                : state.selectedNetwork?.unLockConfirm
 
         if (language === LANGUAGE_TAG.EN) {
             inner = (
                 <>
                     <span className='text-dominant font-bold mr-1'>
-                        {state.selectedNetwork?.minConfirm}
+                        {block}
                     </span>
                     network confirmation
                 </>
@@ -642,7 +647,7 @@ const ExchangeDeposit = () => {
             inner = (
                 <>
                     <span className='text-dominant font-bold mr-1'>
-                        {state.selectedNetwork?.minConfirm}
+                        {block}
                     </span>
                     lần xác nhận từ mạng lưới
                 </>
@@ -1047,7 +1052,7 @@ const ExchangeDeposit = () => {
                 key: 'id',
                 dataIndex: 'id',
                 title: 'ID',
-                width: 100,
+                width: 200,
                 fixed: 'left',
                 align: 'left',
             },
@@ -1335,6 +1340,12 @@ const ExchangeDeposit = () => {
                                             {state.openList?.networkList &&
                                                 renderNetworkList()}
                                         </div>
+                                        <div className='relative mt-5'>
+                                            <div className='mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark'>
+                                                {t('wallet:deposit_address')}
+                                            </div>
+                                            {renderAddressInput()}
+                                        </div>
                                         {state.address?.addressTag &&
                                             state.selectedNetwork
                                                 ?.memoRegex && (
@@ -1345,12 +1356,6 @@ const ExchangeDeposit = () => {
                                                     {renderMemoInput()}
                                                 </div>
                                             )}
-                                        <div className='relative mt-5'>
-                                            <div className='mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark'>
-                                                {t('wallet:deposit_address')}
-                                            </div>
-                                            {renderAddressInput()}
-                                        </div>
                                         <div className='mt-4'>
                                             {renderDepositConfirmBlocks()}
                                             {/*{renderMinDep()}*/}
@@ -1470,7 +1475,7 @@ function dataHandler(data, loading, configList, utils) {
             key: `dep_${_id}_${transactionHash}`,
             id: (
                 <span className='!text-sm whitespace-nowrap uppercase'>
-                    {id?.replace('log_', '')}
+                    {_id}
                 </span>
             ),
             asset: (

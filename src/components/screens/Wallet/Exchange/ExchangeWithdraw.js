@@ -214,7 +214,7 @@ const ExchangeWithdraw = () => {
                         setState({ withdrawResult: result?.data })
                     } else {
                         switch (result?.data?.status) {
-                            case WITHDRAW_RESULT.MISSING_OTP:
+                            case WITHDRAW_RESULT.MissingOtp:
                                 setState({
                                     errors: {
                                         message: t(
@@ -223,7 +223,7 @@ const ExchangeWithdraw = () => {
                                     },
                                 })
                                 break
-                            case WITHDRAW_RESULT.INVALID_OTP:
+                            case WITHDRAW_RESULT.InvalidOtp:
                                 setState({
                                     errors: {
                                         message: (
@@ -234,82 +234,76 @@ const ExchangeWithdraw = () => {
                                     },
                                 })
                                 break
-                            case WITHDRAW_RESULT.INSUFFICIENT:
+                            case WITHDRAW_RESULT.NotEnoughBalance:
                                 setState({
                                     errors: {
-                                        status: WITHDRAW_RESULT.INSUFFICIENT,
+                                        status: WITHDRAW_RESULT.NotEnoughBalance,
                                         message: t('error:BALANCE_NOT_ENOUGH'),
                                     },
                                 })
                                 break
-                            case WITHDRAW_RESULT.INVALID_ADDRESS:
+                            case WITHDRAW_RESULT.UnsupportedAddress:
                                 setState({
                                     errors: {
-                                        status: WITHDRAW_RESULT.INVALID_ADDRESS,
+                                        status: WITHDRAW_RESULT.UnsupportedAddress,
                                         message: t('error:INVALID_ADDRESS'),
                                     },
                                 })
                                 break
-                            case WITHDRAW_RESULT.MEMO_TOO_LONG:
-                                setState({
-                                    errors: {
-                                        status: WITHDRAW_RESULT.MEMO_TOO_LONG,
-                                        message: t('error:INVALID_MEMO'),
-                                    },
-                                })
-                                break
-                            case WITHDRAW_RESULT.INVALID_AMOUNT:
+                            // case WITHDRAW_RESULT.MEMO_TOO_LONG:
+                            //     setState({
+                            //         errors: {
+                            //             status: WITHDRAW_RESULT.MEMO_TOO_LONG,
+                            //             message: t('error:INVALID_MEMO'),
+                            //         },
+                            //     })
+                            //     break
+                            case WITHDRAW_RESULT.AmountExceeded:
+                            case WITHDRAW_RESULT.AmountTooSmall:
                                 setState({
                                     errors: {
                                         status: WITHDRAW_RESULT.INVALID_AMOUNT,
-                                        message: t('error:INVALID_ADDRESS'),
+                                        message: t('error:INVALID_AMOUNT'),
                                     },
                                 })
                                 break
-                            case WITHDRAW_RESULT.INVALID_CURRENCY:
+                            case WITHDRAW_RESULT.InvalidAsset:
                                 setState({
                                     errors: {
-                                        status: WITHDRAW_RESULT.INVALID_CURRENCY,
+                                        status: WITHDRAW_RESULT.InvalidAsset,
                                         message: t('error:INVALID_CURRENCY'),
                                     },
                                 })
                                 break
-                            case WITHDRAW_RESULT.NOT_ENOUGH_FEE:
-                                setState({
-                                    errors: {
-                                        status: WITHDRAW_RESULT.NOT_ENOUGH_FEE,
-                                        message: t('error:NOT_ENOUGH_FEE'),
-                                    },
-                                })
-                                break
-                            case WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD:
-                                setState({
-                                    errors: {
-                                        status: WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD,
-                                        message: t(
-                                            'error:WITHDRAW_AMOUNT_NOT_REACH_MIN'
-                                        ),
-                                    },
-                                })
-                                break
-                            case WITHDRAW_RESULT.AMOUNT_EXCEEDED:
-                                setState({
-                                    errors: {
-                                        status: WITHDRAW_RESULT.AMOUNT_EXCEEDED,
-                                        message: t(
-                                            'error:WITHDRAW_AMOUNT_NOT_REACH_MAX'
-                                        ),
-                                    },
-                                })
-                                break
-                            case WITHDRAW_RESULT.UNKNOWN_ERROR:
-                                setState({
-                                    errors: {
-                                        status: WITHDRAW_RESULT.UNKNOWN_ERROR,
-                                        message: t('error:UNKNOWN_ERROR'),
-                                    },
-                                })
-                                break
+                            // case WITHDRAW_RESULT.NOT_ENOUGH_FEE:
+                            //     setState({
+                            //         errors: {
+                            //             status: WITHDRAW_RESULT.NOT_ENOUGH_FEE,
+                            //             message: t('error:NOT_ENOUGH_FEE'),
+                            //         },
+                            //     })
+                            //     break
+                            // case WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD:
+                            //     setState({
+                            //         errors: {
+                            //             status: WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD,
+                            //             message: t(
+                            //                 'error:WITHDRAW_AMOUNT_NOT_REACH_MIN'
+                            //             ),
+                            //         },
+                            //     })
+                            //     break
+                            // case WITHDRAW_RESULT.AMOUNT_EXCEEDED:
+                            //     setState({
+                            //         errors: {
+                            //             status: WITHDRAW_RESULT.AMOUNT_EXCEEDED,
+                            //             message: t(
+                            //                 'error:WITHDRAW_AMOUNT_NOT_REACH_MAX'
+                            //             ),
+                            //         },
+                            //     })
+                            //     break
+
                             case WITHDRAW_RESULT.INVALID_KYC_STATUS:
                                 setState({
                                     errors: {
@@ -318,8 +312,15 @@ const ExchangeWithdraw = () => {
                                     },
                                 })
                                 break
+                            case WITHDRAW_RESULT.Unknown:
                             default:
-                                return false
+                                setState({
+                                    errors: {
+                                        status: WITHDRAW_RESULT.UNKNOWN_ERROR,
+                                        message: t('error:UNKNOWN_ERROR'),
+                                    },
+                                })
+                                break
                         }
                     }
                 }
@@ -743,14 +744,14 @@ const ExchangeWithdraw = () => {
                               state.withdrawFee?.amount,
                               state.feeCurrency?.assetDigit
                           )
-                        : '--'}{' '}
+                        : state.selectedNetwork?.withdrawFee}{' '}
                     {state.withdrawFee && state.feeCurrency
                         ? state.feeCurrency?.assetCode
-                        : null}
+                        : state.selectedNetwork?.coin}
                 </span>
             </div>
         )
-    }, [state.withdrawFee, state.feeCurrency])
+    }, [state.withdrawFee, state.feeCurrency, state.selectedNetwork])
 
     const renderMinWdl = useCallback(() => {
         let min
@@ -866,7 +867,7 @@ const ExchangeWithdraw = () => {
                             <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
                                 {t('wallet:errors.network_not_support', {
                                     asset: state.selectedAsset?.assetCode,
-                                    chain: state.selectedNetwork?.tokenType,
+                                    chain: state.selectedNetwork?.network,
                                 })}
                             </span>
                         )
@@ -953,7 +954,7 @@ const ExchangeWithdraw = () => {
             }
 
             if (type === 'memo') {
-                if (state?.validator?.hasOwnProperty('memo')) {
+                if (state.memo && state?.validator?.hasOwnProperty('memo')) {
                     if (state?.validator.memo) {
                         // inner = <Check className="text-dominant" size={16}/>
                     } else {
@@ -1047,7 +1048,7 @@ const ExchangeWithdraw = () => {
                 key: 'id',
                 dataIndex: 'id',
                 title: 'Order#ID',
-                width: 100,
+                width: 200,
                 fixed: 'left',
                 align: 'left',
             },
@@ -1304,6 +1305,11 @@ const ExchangeWithdraw = () => {
                                     </span> */}
                                 </span>
                             </div>
+                            {!state.memo && (
+                                <div className='mt-2 text-xs text-red'>
+                                    * {t('wallet:notes.memo_wdl_tips')}
+                                </div>
+                            )}
                         </>
                     )}
 
@@ -1929,7 +1935,6 @@ function dataHandler(data, loading, configList, utils) {
     if (!Array.isArray(data) || !data || !data.length) return []
 
     const result = []
-    console.log(configList)
 
     data.forEach((h) => {
         const {
@@ -1938,8 +1943,8 @@ function dataHandler(data, loading, configList, utils) {
             assetId,
             amount,
             status,
+            network,
             to: { address },
-            metadata: { network },
         } = h
         const assetName = utils?.getAssetName(configList, assetId)
         const txhash = null
@@ -1996,11 +2001,7 @@ function dataHandler(data, loading, configList, utils) {
 
         result.push({
             key: `wdl_${_id}_${txhash}`,
-            id: (
-                <span className='!text-sm whitespace-nowrap'>
-                    {_id?.substring(_id.length - 6, _id.length)}
-                </span>
-            ),
+            id: <span className='!text-sm whitespace-nowrap'>{_id}</span>,
             asset: (
                 <div className='flex items-center'>
                     <AssetLogo assetCode={assetName} size={24} />
@@ -2081,7 +2082,7 @@ function withdrawValidator(
     const result = {}
     const _addressRegex = new RegExp(addressRegex)
     const _memoRegex = new RegExp(memoRegex)
-    const useMemo = !!memoRegex
+    const useMemo = memo && !!memoRegex
 
     let memoType
 
