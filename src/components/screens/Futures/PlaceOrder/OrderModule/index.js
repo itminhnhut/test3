@@ -38,8 +38,6 @@ const FuturesOrderModule = memo(
         // ? Use hooks
         const { t } = useTranslation()
 
-        console.log('OrderModule re-render')
-
         // ? Data helper
         const getLastedLastPrice = async (symbol) => {
             const { data } = await axios.get(API_GET_FUTURES_MARKET_WATCH, {

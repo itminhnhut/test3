@@ -20,13 +20,11 @@ const FuturesPreferences = ({ isVisible, onClose, positionMode }) => {
     const [section, setSection] = useState(PREFERENCES.ORDER_CONFIRMATION)
     const preferences = useSelector((state) => state.futures.preferences)
 
-    useEffect(() => console.log('Preferences ', preferences), [preferences])
-
     return (
         <Modal
             isVisible={isVisible}
             onBackdropCb={onClose}
-            containerClassName='p-0 w-[596px] h-[380px]'
+            containerClassName='p-0 w-[596px] h-[380px] dark:border border-divider-dark'
         >
             <div className='flex flex-col h-full'>
                 <div className='-mt-1 p-5 pb-4 flex items-center justify-between font-bold text-sm border-b border-divider dark:border-divider-dark'>

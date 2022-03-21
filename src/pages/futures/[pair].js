@@ -218,7 +218,6 @@ const Futures = () => {
         Emitter.on(
             PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE + state.pair,
             async (data) => {
-                console.log('socket markprice?', data)
                 const markPrice = FuturesMarkPrice.create(data)
                 if (
                     state.pair === markPrice?.symbol &&
