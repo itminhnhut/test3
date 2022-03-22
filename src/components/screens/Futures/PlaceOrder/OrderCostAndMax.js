@@ -5,96 +5,108 @@ import { formatNumber } from 'redux/actions/utils'
 
 import TradingLabel from 'components/trade/TradingLabel'
 import min from 'lodash/min'
+import { useSelector } from 'react-redux'
 
-const FuturesOrderCostAndMax = memo(
-    ({
-        selectedAsset,
-        pairConfig,
-        price,
-        markPrice,
-        assumingPrice,
-        initialMargin,
-        currentType,
-    }) => {
-        const { t } = useTranslation()
+const FuturesOrderCostAndMax = ({
+    selectedAsset,
+    pairConfig,
+    price,
+    markPrice,
+    assumingPrice,
+    initialMargin,
+    currentType,
+}) => {
+    const { t } = useTranslation()
 
-        const renderCost = useCallback(() => {
-            let longOrderOpenLoss = 0,
-                shortOrderOpenLoss = 0
+    const avlbAsset =
+        useSelector((state) => state.wallet?.FUTURES)?.[
+            pairConfig?.quoteAssetId
+        ] || false
 
-            const decimal = pairConfig?.pricePrecision
-            const isMarket =
-                currentType === FuturesOrderTypes.Market ||
-                currentType === FuturesOrderTypes.StopMarket
+    const renderCost = useCallback(() => {
+        let longOrderOpenLoss = 0,
+            shortOrderOpenLoss = 0
 
-            if (price && initialMargin && markPrice) {
-                const priceDifference = markPrice - +price
+        const decimal = pairConfig?.pricePrecision
+        const isMarket =
+            currentType === FuturesOrderTypes.Market ||
+            currentType === FuturesOrderTypes.StopMarket
 
-                if (isMarket) {
-                    longOrderOpenLoss =
-                        0.2 * Math.abs(min([0, 1 * priceDifference])) +
-                        initialMargin?.[0]
-                    shortOrderOpenLoss =
-                        0.2 * Math.abs(min([0, -1 * priceDifference])) +
-                        initialMargin?.[1]
-                } else {
-                    longOrderOpenLoss =
-                        1 * Math.abs(min([0, 1 * priceDifference])) +
-                        initialMargin
-                    shortOrderOpenLoss =
-                        1 * Math.abs(min([0, -1 * priceDifference])) +
-                        initialMargin
-                }
+        if (price && initialMargin && markPrice) {
+            const priceDifference = markPrice - +price
+
+            if (isMarket) {
+                longOrderOpenLoss =
+                    0.2 * Math.abs(min([0, 1 * priceDifference])) +
+                    initialMargin?.[0]
+                shortOrderOpenLoss =
+                    0.2 * Math.abs(min([0, -1 * priceDifference])) +
+                    initialMargin?.[1]
+            } else {
+                longOrderOpenLoss =
+                    1 * Math.abs(min([0, 1 * priceDifference])) + initialMargin
+                shortOrderOpenLoss =
+                    1 * Math.abs(min([0, -1 * priceDifference])) + initialMargin
             }
+        }
 
-            // console.log([longOrderOpenLoss, shortOrderOpenLoss])
-
-            return (
-                <>
-                    <TradingLabel
-                        label={t('common:cost')}
-                        value={`${formatNumber(longOrderOpenLoss, decimal)} ${
-                            pairConfig?.quoteAsset
-                        }`}
-                        containerClassName='text-xs'
-                    />
-                    <TradingLabel
-                        label={t('common:cost')}
-                        value={`${formatNumber(shortOrderOpenLoss, decimal)} ${
-                            pairConfig?.quoteAsset
-                        }`}
-                        containerClassName='text-xs'
-                    />
-                </>
-            )
-        }, [
-            price,
-            initialMargin,
-            pairConfig?.pricePrecision,
-            currentType,
-            markPrice,
-        ])
+        // console.log([longOrderOpenLoss, shortOrderOpenLoss])
 
         return (
-            <div className='mt-4 select-none'>
-                <div className='flex items-center justify-between'>
-                    {renderCost()}
-                </div>
-                <div className='mt-2 flex items-center justify-between'>
-                    <TradingLabel
-                        label={t('common:max')}
-                        value={`100 ${selectedAsset}`}
-                        containerClassName='text-xs'
-                    />
-                    <TradingLabel
-                        label={t('common:max')}
-                        value={`100 ${selectedAsset}`}
-                        containerClassName='text-xs'
-                    />
-                </div>
-            </div>
+            <>
+                <TradingLabel
+                    label={t('common:cost')}
+                    value={`${formatNumber(longOrderOpenLoss, decimal)} ${
+                        pairConfig?.quoteAsset
+                    }`}
+                    containerClassName='text-xs'
+                />
+                <TradingLabel
+                    label={t('common:cost')}
+                    value={`${formatNumber(shortOrderOpenLoss, decimal)} ${
+                        pairConfig?.quoteAsset
+                    }`}
+                    containerClassName='text-xs'
+                />
+            </>
         )
-    }
-)
+    }, [
+        price,
+        initialMargin,
+        pairConfig?.pricePrecision,
+        currentType,
+        markPrice,
+    ])
+
+    const renderMax = useCallback(() => {
+        const _avlb = avlbAsset?.value - avlbAsset?.locked_value
+
+        return (
+            <>
+                <TradingLabel
+                    label={t('common:max')}
+                    value={`100 ${selectedAsset}`}
+                    containerClassName='text-xs'
+                />
+                <TradingLabel
+                    label={t('common:max')}
+                    value={`100 ${selectedAsset}`}
+                    containerClassName='text-xs'
+                />
+            </>
+        )
+    }, [avlbAsset, selectedAsset])
+
+    return (
+        <div className='mt-4 select-none'>
+            <div className='flex items-center justify-between'>
+                {renderCost()}
+            </div>
+            <div className='mt-2 flex items-center justify-between'>
+                {renderMax()}
+            </div>
+        </div>
+    )
+}
 
 export default FuturesOrderCostAndMax

@@ -21,8 +21,6 @@ const AvblAsset = memo(
                 ) || {}
         )
 
-        // console.log('namidev wallet avbl ', wallets)
-
         const renderValue = useCallback(() => {
             if (!wallets) return null
 

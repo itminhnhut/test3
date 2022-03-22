@@ -9,6 +9,7 @@ import FuturesOrderModule from './OrderModule'
 import FuturesOrderTypes from './OrderTypes'
 import PlaceConfigs from './PlaceConfigs'
 import axios from 'axios'
+import max from 'lodash/max'
 
 const FuturesPlaceOrder = ({
     pairConfig,
