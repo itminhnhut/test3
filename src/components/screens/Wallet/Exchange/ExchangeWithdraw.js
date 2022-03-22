@@ -18,6 +18,10 @@ import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather'
 import { find, get, isNumber } from 'lodash'
 import {
     buildExplorerUrl,
+    countDecimals,
+    eToNumber,
+    formatNumber,
+    formatNumberToText,
     formatTime,
     formatWallet,
     getS3Url,
@@ -53,6 +57,7 @@ import useWindowSize from 'hooks/useWindowSize'
 import AssetName from 'components/wallet/AssetName'
 import useWindowFocus from 'hooks/useWindowFocus'
 import Button from 'components/common/Button'
+import classNames from 'classnames'
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {
@@ -402,19 +407,20 @@ const ExchangeWithdraw = () => {
                     prefetch={false}
                 >
                     <a
-                        className={
-                            state.type === TYPE.crypto
-                                ? 'flex flex-col items-center font-bold text-sm lg:text-[16px] text-Primary dark:text-Primary-dark'
-                                : 'flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark'
-                        }
+                        className={classNames(
+                            'flex flex-col items-center font-medium text-sm lg:text-[16px] text-txtSecondary dark:text-txtSecondary-dark',
+                            {
+                                '!font-bold !tex-txtPrimary dark:!text-txtPrimary-dark':
+                                    state.type === TYPE.crypto,
+                            }
+                        )}
                     >
                         <div className='pb-2.5'>TOKEN</div>
                         <div
-                            className={
-                                state.type === TYPE.crypto
-                                    ? 'w-[32px] h-[3px] md:h-[2px] bg-dominant'
-                                    : 'w-[32px] h-[3px] md:h-[2px] bg-dominant invisible'
-                            }
+                            className={classNames(
+                                'w-[32px] h-[3px] md:h-[2px] bg-dominant invisible',
+                                { '!visible': state.type === TYPE.crypto }
+                            )}
                         />
                     </a>
                 </Link>
@@ -898,55 +904,69 @@ const ExchangeWithdraw = () => {
 
             if (type === 'amount') {
                 if (state?.validator?.hasOwnProperty('amount')) {
-                    if (state?.validator.amount === AMOUNT.LESS_THAN_MIN) {
-                        inner = (
-                            <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
-                                {t('wallet:errors.invalid_min_amount', {
-                                    value:
-                                        state.withdrawFee?.amount >=
-                                        state.selectedNetwork?.withdrawMin
-                                            ? formatWallet(
-                                                  state.withdrawFee?.amount,
-                                                  state.selectedNetwork
-                                                      ?.assetDigit
-                                              )
-                                            : formatWallet(
-                                                  state.selectedNetwork
-                                                      ?.withdrawMin,
-                                                  state.selectedNetwork
-                                                      ?.assetDigit
-                                              ),
-                                })}{' '}
-                                {state.selectedNetwork?.coin}
-                            </span>
-                        )
-                    } else if (
-                        state?.validator.amount === AMOUNT.OVER_THAN_MAX
-                    ) {
-                        inner = (
-                            <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
-                                {t('wallet:errors.invalid_max_amount', {
-                                    value: formatWallet(
-                                        state.selectedNetwork?.withdrawMax
-                                            ?.value,
-                                        state.selectedNetwork?.assetDigit
-                                    ),
-                                })}{' '}
-                                {state.selectedNetwork?.coin}
-                            </span>
-                        )
-                    } else if (
-                        state?.validator.amount === AMOUNT.OVER_BALANCE
-                    ) {
-                        inner = (
-                            <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
-                                {t(
-                                    'wallet:errors.invalid_insufficient_balance'
-                                )}
-                            </span>
-                        )
-                    } else if (state?.validator.amount === AMOUNT.OK) {
-                        // inner = <Check className="text-dominant" size={16}/>
+                    switch (state.validator.amount) {
+                        case AMOUNT.LESS_THAN_MIN:
+                            inner = (
+                                <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
+                                    {t('wallet:errors.invalid_min_amount', {
+                                        value:
+                                            state.withdrawFee?.amount >=
+                                            state.selectedNetwork?.withdrawMin
+                                                ? formatWallet(
+                                                      state.withdrawFee?.amount,
+                                                      state.selectedNetwork
+                                                          ?.assetDigit
+                                                  )
+                                                : formatWallet(
+                                                      state.selectedNetwork
+                                                          ?.withdrawMin,
+                                                      state.selectedNetwork
+                                                          ?.assetDigit
+                                                  ),
+                                    })}{' '}
+                                    {state.selectedNetwork?.coin}
+                                </span>
+                            )
+                            break
+                        case AMOUNT.OVER_THAN_MAX:
+                            inner = (
+                                <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
+                                    {t('wallet:errors.invalid_max_amount', {
+                                        value: formatWallet(
+                                            state.selectedNetwork?.withdrawMax
+                                                ?.value,
+                                            state.selectedNetwork?.assetDigit
+                                        ),
+                                    })}{' '}
+                                    {state.selectedNetwork?.coin}
+                                </span>
+                            )
+                            break
+                        case AMOUNT.OVER_BALANCE:
+                            inner = (
+                                <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
+                                    {t(
+                                        'wallet:errors.invalid_insufficient_balance'
+                                    )}
+                                </span>
+                            )
+                            break
+                        case AMOUNT.OVER_DECIMAL_SCALE:
+                            inner = (
+                                <span className='block w-full font-medium text-red text-xs lg:text-sm text-right mt-2'>
+                                    {t('wallet:errors.decimal_scale_limit', {
+                                        value: countDecimals(
+                                            eToNumber(
+                                                state.selectedNetwork
+                                                    ?.withdrawIntegerMultiple
+                                            )
+                                        ),
+                                    })}
+                                </span>
+                            )
+                            break
+                        default:
+                            inner = null
                     }
                 } else {
                     inner = null
@@ -1683,6 +1703,7 @@ const ExchangeWithdraw = () => {
             validator: withdrawValidator(
                 state.selectedAsset?.assetCode,
                 +state.amount,
+                countDecimals(+state.selectedNetwork?.withdrawIntegerMultiple),
                 state.address,
                 state.selectedNetwork?.addressRegex,
                 state.memo,
@@ -1917,6 +1938,7 @@ const AMOUNT = {
     LESS_THAN_MIN: 0,
     OVER_THAN_MAX: 1,
     OVER_BALANCE: 2,
+    OVER_DECIMAL_SCALE: 3,
     OK: 'ok',
 }
 
@@ -2011,7 +2033,9 @@ function dataHandler(data, loading, configList, utils) {
                 </div>
             ),
             amount: (
-                <span className='!text-sm whitespace-nowrap'>{amount}</span>
+                <span className='!text-sm whitespace-nowrap'>
+                    {formatNumber(amount, 4, 2)}
+                </span>
             ),
             network: (
                 <span className='!text-sm whitespace-nowrap'>{network}</span>
@@ -2068,6 +2092,7 @@ const ROW_LOADING_SKELETON = {
 function withdrawValidator(
     asset,
     amount,
+    decimalLimit,
     address,
     addressRegex,
     memo = undefined,
@@ -2118,6 +2143,8 @@ function withdrawValidator(
             result.amount = AMOUNT.OVER_THAN_MAX
         } else if (isNumber(+available) && amount > available) {
             result.amount = AMOUNT.OVER_BALANCE
+        } else if (decimalLimit && countDecimals(+amount) > +decimalLimit) {
+            result.amount = AMOUNT.OVER_DECIMAL_SCALE
         } else {
             result.amount = AMOUNT.OK
         }

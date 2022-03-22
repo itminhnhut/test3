@@ -94,7 +94,8 @@
         "transfer_source_wallet_issues": "Please select source wallet",
         "transfer_destination_wallet_issues": "Please select destination wallet",
         "invalid_amount": "Invalid amount",
-        "invalid_kyc_status": "Please verify your account to perform this action."
+        "invalid_kyc_status": "Please verify your account to perform this action.",
+        "decimal_scale_limit": "Please enter amount with no more than {{ value }} decimal places"
     },
     "est_balance": "Estimated Balance",
     "hide_asset": "Hide Asset",
