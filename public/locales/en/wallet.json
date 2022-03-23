@@ -89,13 +89,14 @@
         "invalid_insufficient_balance": "Insufficient balance",
         "network_not_support": "Withdrawal of {{ asset }} on {{ chain }} network is currently not supported.",
         "network_not_support_dep": "Deposit of {{ asset }} on {{ chain }} network is currently not supported.",
-        "wrong_otp": "Email or GoogleAuth authentication code is incorrect,<br/>please try again",
+        "wrong_otp": "Invalid OTP",
         "address_not_found": "Address not found, please contact to supporter for information.",
         "transfer_source_wallet_issues": "Please select source wallet",
         "transfer_destination_wallet_issues": "Please select destination wallet",
         "invalid_amount": "Invalid amount",
         "invalid_kyc_status": "Please verify your account to perform this action.",
-        "decimal_scale_limit": "Please enter amount with no more than {{ value }} decimal places"
+        "decimal_scale_limit": "Please enter amount with no more than {{ value }} decimal places",
+        "withdraw_disabled": "Withdrawal is currently under maintenance, please try again later."
     },
     "est_balance": "Estimated Balance",
     "hide_asset": "Hide Asset",

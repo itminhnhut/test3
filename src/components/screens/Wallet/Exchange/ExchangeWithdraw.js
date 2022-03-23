@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { Trans, useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
-import { useDebounce } from 'react-use'
+import { useAsync, useDebounce } from 'react-use'
 import { useRouter } from 'next/router'
 import {
     ApiStatus,
@@ -9,6 +9,7 @@ import {
     TokenConfigV1 as TokenConfig,
 } from 'redux/actions/const'
 import {
+    API_GET_ASSET_CONFIG,
     API_GET_DEPWDL_HISTORY,
     API_GET_PAYMENT_CONFIG,
     API_GET_WALLET_CONFIG,
@@ -90,7 +91,7 @@ const INITIAL_STATE = {
     histories: null,
     loadingHistories: false,
     historyPage: 0,
-
+    assetConfigs: null,
     // ... Add new state
 }
 
@@ -145,27 +146,35 @@ const ExchangeWithdraw = () => {
         return allAssets && allAssets[state.selectedAsset?.assetId]
     }, [allAssets, state.selectedAsset])
 
-    // Helper
-    const getWithdrawFee = async (assetId, amount, network) => {
-        if (!assetId || !amount || !network) return
+    const assetConfig = useMemo(
+        () =>
+            state.assetConfigs?.find(
+                (o) => o.assetCode === state.selectedNetwork?.coin
+            ),
+        [state.assetConfigs, state.selectedNetwork]
+    )
 
-        setState({ estimatingFee: true })
-        try {
-            log.i('fetching withdraw fee...')
-            userSocket &&
-                (await userSocket.emit(
-                    'calculate_withdrawal_fee',
-                    assetId,
-                    amount,
-                    network,
-                    (withdrawFee) => setState({ withdrawFee: withdrawFee?.[0] })
-                ))
-        } catch (e) {
-            console.log(`Can't estimate withdraw fee `, e)
-        } finally {
-            setState({ estimatingFee: false })
-        }
-    }
+    // Helper
+    // const getWithdrawFee = async (assetId, amount, network) => {
+    //     if (!assetId || !amount || !network) return
+
+    //     setState({ estimatingFee: true })
+    //     try {
+    //         log.i('fetching withdraw fee...')
+    //         userSocket &&
+    //             (await userSocket.emit(
+    //                 'calculate_withdrawal_fee',
+    //                 assetId,
+    //                 amount,
+    //                 network,
+    //                 (withdrawFee) => setState({ withdrawFee: withdrawFee?.[0] })
+    //             ))
+    //     } catch (e) {
+    //         console.log(`Can't estimate withdraw fee `, e)
+    //     } finally {
+    //         setState({ estimatingFee: false })
+    //     }
+    // }
 
     const getWithdrawHistory = async (page) => {
         setState({ loadingHistories: true })
@@ -218,7 +227,7 @@ const ExchangeWithdraw = () => {
                     if (result?.data?.status === ApiStatus.SUCCESS) {
                         setState({ withdrawResult: result?.data })
                     } else {
-                        switch (result?.data?.status) {
+                        switch (result?.data?.data) {
                             case WITHDRAW_RESULT.MissingOtp:
                                 setState({
                                     errors: {
@@ -255,14 +264,6 @@ const ExchangeWithdraw = () => {
                                     },
                                 })
                                 break
-                            // case WITHDRAW_RESULT.MEMO_TOO_LONG:
-                            //     setState({
-                            //         errors: {
-                            //             status: WITHDRAW_RESULT.MEMO_TOO_LONG,
-                            //             message: t('error:INVALID_MEMO'),
-                            //         },
-                            //     })
-                            //     break
                             case WITHDRAW_RESULT.AmountExceeded:
                             case WITHDRAW_RESULT.AmountTooSmall:
                                 setState({
@@ -280,34 +281,6 @@ const ExchangeWithdraw = () => {
                                     },
                                 })
                                 break
-                            // case WITHDRAW_RESULT.NOT_ENOUGH_FEE:
-                            //     setState({
-                            //         errors: {
-                            //             status: WITHDRAW_RESULT.NOT_ENOUGH_FEE,
-                            //             message: t('error:NOT_ENOUGH_FEE'),
-                            //         },
-                            //     })
-                            //     break
-                            // case WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD:
-                            //     setState({
-                            //         errors: {
-                            //             status: WITHDRAW_RESULT.NOT_REACHED_MIN_WITHDRAW_IN_USD,
-                            //             message: t(
-                            //                 'error:WITHDRAW_AMOUNT_NOT_REACH_MIN'
-                            //             ),
-                            //         },
-                            //     })
-                            //     break
-                            // case WITHDRAW_RESULT.AMOUNT_EXCEEDED:
-                            //     setState({
-                            //         errors: {
-                            //             status: WITHDRAW_RESULT.AMOUNT_EXCEEDED,
-                            //             message: t(
-                            //                 'error:WITHDRAW_AMOUNT_NOT_REACH_MAX'
-                            //             ),
-                            //         },
-                            //     })
-                            //     break
 
                             case WITHDRAW_RESULT.INVALID_KYC_STATUS:
                                 setState({
@@ -317,6 +290,15 @@ const ExchangeWithdraw = () => {
                                     },
                                 })
                                 break
+                            case WITHDRAW_RESULT.WithdrawDisabled:
+                                setState({
+                                    errors: {
+                                        status: WITHDRAW_RESULT.WithdrawDisabled,
+                                        message: t(
+                                            'wallet:errors.withdraw_disabled'
+                                        ),
+                                    },
+                                })
                             case WITHDRAW_RESULT.Unknown:
                             default:
                                 setState({
@@ -767,12 +749,12 @@ const ExchangeWithdraw = () => {
         ) {
             min = `${formatWallet(
                 state.withdrawFee?.amount,
-                state.selectedAsset?.assetDigit
+                assetConfig?.assetDigit
             )} ${state.selectedAsset?.assetCode}`
         } else {
             min = `${formatWallet(
                 +state.selectedNetwork?.withdrawMin,
-                state.selectedAsset?.assetDigit
+                assetConfig?.assetDigit
             )} ${state.selectedAsset?.assetCode} `
         }
 
@@ -789,6 +771,7 @@ const ExchangeWithdraw = () => {
         state.selectedAsset,
         state.withdrawFee,
         state.feeCurrency,
+        assetConfig,
     ])
 
     const renderMaxWdl = useCallback(() => {
@@ -914,14 +897,12 @@ const ExchangeWithdraw = () => {
                                             state.selectedNetwork?.withdrawMin
                                                 ? formatWallet(
                                                       state.withdrawFee?.amount,
-                                                      state.selectedNetwork
-                                                          ?.assetDigit
+                                                      assetConfig?.assetDigit
                                                   )
                                                 : formatWallet(
                                                       state.selectedNetwork
                                                           ?.withdrawMin,
-                                                      state.selectedNetwork
-                                                          ?.assetDigit
+                                                      assetConfig?.assetDigit
                                                   ),
                                     })}{' '}
                                     {state.selectedNetwork?.coin}
@@ -935,7 +916,7 @@ const ExchangeWithdraw = () => {
                                         value: formatWallet(
                                             state.selectedNetwork?.withdrawMax
                                                 ?.value,
-                                            state.selectedNetwork?.assetDigit
+                                            assetConfig?.assetDigit
                                         ),
                                     })}{' '}
                                     {state.selectedNetwork?.coin}
@@ -997,6 +978,7 @@ const ExchangeWithdraw = () => {
             state.selectedNetwork,
             state.selectedAsset,
             state.withdrawFee,
+            assetConfig,
         ]
     )
 
@@ -1284,7 +1266,7 @@ const ExchangeWithdraw = () => {
                                 <span className='font-medium'>
                                     {formatWallet(
                                         state.amount,
-                                        state.selectedNetwork?.assetDigit
+                                        assetConfig?.assetDigit
                                     )}{' '}
                                     {state.selectedAsset?.assetCode}
                                 </span>
@@ -1296,7 +1278,7 @@ const ExchangeWithdraw = () => {
                                 <span className='font-medium'>
                                     {formatWallet(
                                         state.withdrawFee?.amount,
-                                        state.feeCurrency?.assetDigit
+                                        assetConfig?.assetDigit
                                     )}{' '}
                                     {state.feeCurrency?.assetCode}
                                 </span>
@@ -1309,7 +1291,7 @@ const ExchangeWithdraw = () => {
                                     {formatWallet(
                                         +state.amount -
                                             state.withdrawFee?.amount,
-                                        state.selectedAsset?.assetDigit
+                                        assetConfig?.assetDigit
                                     )}{' '}
                                     {state.selectedAsset?.assetCode}
                                 </span>
@@ -1345,7 +1327,7 @@ const ExchangeWithdraw = () => {
                                         {t(
                                             'wallet:withdraw_prompt.email_description'
                                         )}
-                                        <span
+                                        {/* <span
                                             className={
                                                 resendTimeOut
                                                     ? 'font-medium text-txt-gray-1 dark:text-txt-darkBlue5 cursor-not-allowed'
@@ -1366,7 +1348,7 @@ const ExchangeWithdraw = () => {
                                                 {!!resendTimeOut &&
                                                     `(${resendTimeOut})`}
                                             </span>
-                                        </span>
+                                        </span> */}
                                     </div>
                                     <OtpWrapper
                                         isDark={
@@ -1523,6 +1505,7 @@ const ExchangeWithdraw = () => {
         state.otp,
         state.errors,
         resendTimeOut,
+        assetConfig,
     ])
 
     const renderKycRequiredModal = useCallback(() => {
@@ -1562,24 +1545,31 @@ const ExchangeWithdraw = () => {
         )
     }, [auth])
 
-    useDebounce(
-        () => {
-            if (
-                userSocket &&
-                state.selectedAsset?.assetId &&
-                state.amount &&
-                state.selectedNetwork?.network
-            ) {
-                getWithdrawFee(
-                    state.selectedAsset.assetId,
-                    +state.amount,
-                    state.selectedNetwork.network
-                )
-            }
-        },
-        500,
-        [userSocket, state.selectedAsset, state.amount, state.selectedNetwork]
-    )
+    // useDebounce(
+    //     () => {
+    //         if (
+    //             userSocket &&
+    //             state.selectedAsset?.assetId &&
+    //             state.amount &&
+    //             state.selectedNetwork?.network
+    //         ) {
+    //             getWithdrawFee(
+    //                 state.selectedAsset.assetId,
+    //                 +state.amount,
+    //                 state.selectedNetwork.network
+    //             )
+    //         }
+    //     },
+    //     500,
+    //     [userSocket, state.selectedAsset, state.amount, state.selectedNetwork]
+    // )
+
+    useAsync(async () => {
+        const { data } = await Axios.get(API_GET_ASSET_CONFIG)
+        if (data?.status === ApiStatus.SUCCESS) {
+            setState({ assetConfigs: data?.data })
+        }
+    }, [])
 
     useEffect(() => {
         getWithdrawHistory(state.historyPage)
@@ -1692,11 +1682,11 @@ const ExchangeWithdraw = () => {
                 setState({
                     feeCurrency: {
                         assetCode: cfg?.assetCode,
-                        assetDigit: cfg?.assetDigit,
+                        assetDigit: assetConfig?.assetDigit,
                     },
                 })
         }
-    }, [state.withdrawFee, paymentConfigs])
+    }, [state.withdrawFee, paymentConfigs, assetConfig])
 
     useEffect(() => {
         setState({
@@ -1743,9 +1733,16 @@ const ExchangeWithdraw = () => {
         return () => clearInterval(interval)
     }, [resendTimeOut])
 
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: => ', router)
-    // }, [router])
+    useEffect(() => {
+        if (state.selectedNetwork) {
+            setState({
+                withdrawFee: {
+                    amount: +state.selectedNetwork?.withdrawFee,
+                    currency: assetConfig?.id,
+                },
+            })
+        }
+    }, [state.selectedNetwork])
 
     return (
         <MaldivesLayout>
