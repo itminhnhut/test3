@@ -1429,12 +1429,11 @@ function dataHandler(data, loading, configList, utils) {
     const result = [];
     let networkList = [];
 
-    if(configList && configList.length){
+    if (configList && configList.length) {
         configList.forEach((e) =>
             networkList.push(...e.networkList?.map((o) => o?.network))
         );
     }
-
 
     networkList = [...new Set(networkList)];
 
@@ -1447,15 +1446,12 @@ function dataHandler(data, loading, configList, utils) {
             executeAt,
             network,
             status,
-            metadata: {
-                id,
-                address,
-                transactionHash
-            },
             txId,
             txIdUrl,
         } = h;
         let statusInner;
+        let address = h?.metadata?.address;
+        let transactionHash = h?.metadata?.transactionHash;
         switch (status) {
             case DepWdlStatus.Success:
                 statusInner = (
