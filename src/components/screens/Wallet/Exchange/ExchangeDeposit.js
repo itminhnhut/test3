@@ -1510,7 +1510,7 @@ function dataHandler(data, loading, configList, utils) {
                     {network === '0' ? 'Internal' : network}
                 </span>
             ),
-            txhash: <span>{explorerLink || '--'}</span>,
+            txhash: <span>{txId || '--'}</span>,
             time: (
                 <span className="!text-sm whitespace-nowrap">
                     {formatTime(executeAt, 'HH:mm dd-MM-yyyy')}
