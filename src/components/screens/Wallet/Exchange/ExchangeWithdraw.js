@@ -8,7 +8,6 @@ import { API_GET_ASSET_CONFIG, API_GET_DEPWDL_HISTORY, } from 'redux/actions/api
 import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather';
 import { find, get, isNumber } from 'lodash';
 import {
-    buildExplorerUrl,
     countDecimals,
     eToNumber,
     formatNumber,
@@ -40,7 +39,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import Axios from 'axios';
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import ReTable from 'components/common/ReTable';
 import useWindowSize from 'hooks/useWindowSize';
 import AssetName from 'components/wallet/AssetName';
 import useWindowFocus from 'hooks/useWindowFocus';
@@ -1983,6 +1982,7 @@ function dataHandler(data, loading, configList, utils) {
             network,
             to: { address },
             txId,
+            txIdUrl
         } = h;
         const txhash = txId;
 
@@ -1992,7 +1992,7 @@ function dataHandler(data, loading, configList, utils) {
             </span>
         );
         const value = txhash || address;
-        const url = buildExplorerUrl(value, network);
+        const url = txIdUrl;
 
         if (url) {
             txhashInner = (
