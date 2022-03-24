@@ -54,6 +54,7 @@ import ReTable from 'components/common/ReTable'
 import Modal from 'components/common/ReModal'
 import Tooltip from 'components/common/Tooltip'
 import Button from 'components/common/Button'
+import AssetName from 'components/wallet/AssetName';
 
 const INITIAL_STATE = {
     type: 1, // 0. fiat, 1. crypto
@@ -1438,13 +1439,10 @@ function dataHandler(data, loading, configList, utils) {
             network,
             status,
             metadata: { id, address, transactionHash },
+            txId,
         } = h
-        const assetName = utils?.getAssetName(configList, assetId)
-        const explorerLink = buildExplorerUrl(transactionHash, network)
-
+        const explorerLink = buildExplorerUrl(txId, network)
         let statusInner
-        console.log('Explorer ', explorerLink)
-
         switch (status) {
             case DepWdlStatus.Success:
                 statusInner = (
@@ -1480,9 +1478,9 @@ function dataHandler(data, loading, configList, utils) {
             ),
             asset: (
                 <div className='flex items-center'>
-                    <AssetLogo assetCode={assetName} size={24} />
+                    <AssetLogo assetId={assetId} size={24} />
                     <span className='!text-sm whitespace-nowrap ml-2.5'>
-                        {assetName}
+                        <AssetName assetId={assetId}/>
                     </span>
                 </div>
             ),
