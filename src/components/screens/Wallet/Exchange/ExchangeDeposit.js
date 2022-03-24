@@ -309,7 +309,7 @@ const ExchangeDeposit = () => {
                     e?.assetCode?.includes(state.search.toUpperCase())
                 );
         }
-
+        if (!origin.length) return null;
         origin.forEach((cfg) => {
             if (!IGNORE_TOKEN.includes(cfg?.assetCode)) {
                 items.push(
@@ -1429,9 +1429,12 @@ function dataHandler(data, loading, configList, utils) {
     const result = [];
     let networkList = [];
 
-    configList?.forEach((e) =>
-        networkList.push(...e.networkList?.map((o) => o?.network))
-    );
+    if(configList && configList.length){
+        configList.forEach((e) =>
+            networkList.push(...e.networkList?.map((o) => o?.network))
+        );
+    }
+
 
     networkList = [...new Set(networkList)];
 
@@ -1452,7 +1455,6 @@ function dataHandler(data, loading, configList, utils) {
             txId,
             txIdUrl,
         } = h;
-        const explorerLink = txIdUrl;
         let statusInner;
         switch (status) {
             case DepWdlStatus.Success:
@@ -1510,7 +1512,9 @@ function dataHandler(data, loading, configList, utils) {
                     {network === '0' ? 'Internal' : network}
                 </span>
             ),
-            txhash: <span>{txId || '--'}</span>,
+            txId: <span className="!text-sm whitespace-nowrap ml-2.5">
+                 {txId ? shortHashAddress(txId, 6, 6) : '--'}
+            </span>,
             time: (
                 <span className="!text-sm whitespace-nowrap">
                     {formatTime(executeAt, 'HH:mm dd-MM-yyyy')}

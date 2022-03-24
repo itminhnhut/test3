@@ -2089,7 +2089,7 @@ const ROW_LOADING_SKELETON = {
     amount: <Skeletor width={65}/>,
     network: <Skeletor width={65}/>,
     withdraw_to: <Skeletor width={65}/>,
-    txhash: <Skeletor width={65}/>,
+    txId: <Skeletor width={65}/>,
     time: <Skeletor width={65}/>,
     status: <Skeletor width={65}/>,
 };
