@@ -23,7 +23,7 @@ import {
     ExternalWdlRoot,
     MoreToken,
     NoticePopup,
-} from './styledExternalWdl'
+} from '../../components/screens/OnusWithdrawGate/styledExternalWdl'
 import { useDispatch, useSelector } from 'react-redux'
 import { Sun, Moon, Check, Download, X, Coffee, Key } from 'react-feather'
 
@@ -33,7 +33,7 @@ import NumberFormat from 'react-number-format'
 import { roundToDown } from 'round-to'
 import Axios from 'axios'
 import InputRange from 'react-input-range'
-import WithdrawSuccessIMG from './wdl_success.png'
+import WithdrawSuccessIMG from '../../components/screens/OnusWithdrawGate/wdl_success.png'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import useLanguage from 'hooks/useLanguage'
 import {
@@ -45,7 +45,7 @@ import {
     currencyToText,
     buildNamiExchangeAppLink,
     handleLogin,
-} from './helper'
+} from '../../components/screens/OnusWithdrawGate/helper'
 import { DIRECT_WITHDRAW_VNDC } from 'redux/actions/apis'
 import { formatNumber, formatTime } from 'redux/actions/utils'
 import { useTranslation } from 'next-i18next'
