@@ -1083,8 +1083,8 @@ const ExchangeWithdraw = () => {
                 align: 'right',
             },
             {
-                key: 'txhash',
-                dataIndex: 'txhash',
+                key: 'txId',
+                dataIndex: 'txId',
                 title: 'TxHash',
                 width: 100,
                 align: 'right',
