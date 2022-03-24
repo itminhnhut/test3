@@ -54,7 +54,7 @@ import ReTable from 'components/common/ReTable'
 import Modal from 'components/common/ReModal'
 import Tooltip from 'components/common/Tooltip'
 import Button from 'components/common/Button'
-import AssetName from 'components/wallet/AssetName';
+import AssetName from 'components/wallet/AssetName'
 
 const INITIAL_STATE = {
     type: 1, // 0. fiat, 1. crypto
@@ -1044,7 +1044,7 @@ const ExchangeDeposit = () => {
             state.histories,
             state.loadingHistory,
             paymentConfigs,
-            { getAssetName, t, blockConfirm: state.blockConfirm }
+            { t, blockConfirm: state.blockConfirm }
         )
         let tableStatus
 
@@ -1480,7 +1480,7 @@ function dataHandler(data, loading, configList, utils) {
                 <div className='flex items-center'>
                     <AssetLogo assetId={assetId} size={24} />
                     <span className='!text-sm whitespace-nowrap ml-2.5'>
-                        <AssetName assetId={assetId}/>
+                        <AssetName assetId={assetId} />
                     </span>
                 </div>
             ),
@@ -1518,11 +1518,11 @@ function dataHandler(data, loading, configList, utils) {
 
 const WITH_MEMO = ['BNB', 'VITE']
 
-const getAssetName = (assetList, assetId) => {
-    if (!Array.isArray(assetList) || !assetId) return
-    const _ = assetList.filter((e) => e.assetId === assetId)?.[0]
-    return _?.assetCode
-}
+// const getAssetName = (assetList, assetId) => {
+//     if (!Array.isArray(assetList) || !assetId) return
+//     const _ = assetList.filter((e) => e.assetId === assetId)?.[0]
+//     return _?.assetCode
+// }
 
 const ROW_LOADING_SKELETON = {
     id: <Skeletor width={65} />,
