@@ -30,6 +30,7 @@ const MadivesLayout = ({
     resetDefault,
     onChangeSpotState,
     useNavShadow = false,
+    useGridSettings = false,
 }) => {
     // * Initial State
     const [state, set] = useState({ isDrawer: false })
@@ -75,6 +76,7 @@ const MadivesLayout = ({
                         layoutStateHandler={setState}
                         page={page}
                         changeLayoutCb={changeLayoutCb}
+                        useGridSettings={useGridSettings}
                     />
                 )}
                 <div

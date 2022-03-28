@@ -250,6 +250,7 @@ const Futures = () => {
             />
             <DynamicNoSsr>
                 <MaldivesLayout
+                    useGridSettings
                     navStyle={{
                         boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)',
                     }}

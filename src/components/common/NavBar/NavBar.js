@@ -39,6 +39,7 @@ import { PATHS } from 'constants/paths'
 import { useRouter } from 'next/router'
 import useApp from 'hooks/useApp'
 import classNames from 'classnames'
+import GridLayoutSettings from './GridLayoutSettings'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -55,6 +56,7 @@ const NavBar = ({
     name,
     page,
     changeLayoutCb,
+    useGridSettings,
 
     spotState,
     resetDefault,
@@ -716,6 +718,8 @@ const NavBar = ({
                             )}
                         </div>
                     )}
+
+                    {useGridSettings && <GridLayoutSettings />}
 
                     {width < 1366 && (
                         <div
