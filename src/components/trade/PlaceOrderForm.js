@@ -721,7 +721,7 @@ const PlaceOrderForm = ({ symbol }) => {
             <div className="flex justify-between items-center mb-3">
                 <div className="form-group w-full">
                     <div className="input-group">
-                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
+                        <div className="input-group-prepend px-3 flex-shrink-0 flex  items-center">
                             <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">
                                 {t('common:amount')}
                             </div>
@@ -743,7 +743,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             onValueChange={({ value }) => setQuantity(value)}
                         />
 
-                        <div className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center">
+                        <div className="input-group-append px-3 flex-shrink-0 flex justify-end items-center">
                             <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {base}
                             </span>

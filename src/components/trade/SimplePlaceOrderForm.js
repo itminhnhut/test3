@@ -844,7 +844,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
                 <div className="form-group w-full">
                     <div className="input-group">
-                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
+                        <div className="input-group-prepend px-3 flex-shrink-0 flex  items-center">
                             <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('common:amount')}</div>
                         </div>
                         <NumberFormat
@@ -869,7 +869,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                         />
 
                         <div
-                            className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
+                            className="input-group-append px-3 flex-shrink-0 flex justify-end items-center"
                         >
                             <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
                                 {base}
