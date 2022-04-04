@@ -8,7 +8,7 @@ import MCard from '../../components/common/MCard';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getS3Url } from 'redux/actions/utils';
 import Link from 'next/link';
-
+import { KYC_STATUS } from '../../redux/actions/const';
 
 
 const Identification = () => {
@@ -18,31 +18,24 @@ const Identification = () => {
     const renderStatus = () => {
         if (!user) return null;
         const status = user?.kyc_status;
-        const src = getS3Url(`/images/screen/identification/${status === 0 ? 'not_verified' : status === 1 ? 'process' : 'verified'}.png`);
-        const statusName = status === 2 ? t('identification:account.congratulations') : status === 1 ? t('identification:account.process') : t('identification:account.not_verified');
-        const title = status !== 2 ? t('identification:account.not_verified_2') : t('identification:account.verified');
+        const src = getS3Url(`/images/screen/identification/${status === KYC_STATUS.NO_KYC ? 'not_verified' : status === KYC_STATUS.PENDING_APPROVAL ? 'process' : 'verified'}.png`);
+        const statusName = status === KYC_STATUS.APPROVED ? t('identification:account.congratulations') : status === KYC_STATUS.PENDING_APPROVAL ? t('identification:account.process') : t('identification:account.not_verified');
+        const title = status !== KYC_STATUS.APPROVED ? t('identification:account.not_verified_2') : t('identification:account.verified');
         return (
             <>
                 <div className="w-[200px] h-[200px] m-auto">
                     <img src={src} alt="" /></div>
-                <span className={`pt-8 lg:pt-12 text-base font-bold ${status !== 2 ? 'text-red' : ''}`}>{statusName}</span>
-                <span className={`text-sm ${status === 2 ? 'text-base font-bold text-teal' : 'text-gray-1 font-medium'}`}>{title}</span>
+                <span className={`pt-8 lg:pt-12 text-base font-bold ${status !== KYC_STATUS.APPROVED ? 'text-red' : ''}`}>{statusName}</span>
+                <span className={`text-sm ${status === KYC_STATUS.APPROVED ? 'text-base font-bold text-teal' : 'text-gray-1 font-medium'}`}>{title}</span>
             </>
-        )
-    }
-
-    const redirect = (platform) => {
-        window.open(
-            platform === 'ios' ? 'https://apps.apple.com/app/id1480302334' : 'https://play.google.com/store/apps/details?id=com.namicorp.exchange',
-            '_blank'
         )
     }
 
     const renderInfo = () => {
         if (!user) return null;
-        const status = user?.kyc_status;;
+        const status = user?.kyc_status;
         return (
-            status !== 2 ?
+            status !== KYC_STATUS.APPROVED ?
                 <div className="grid sm:grid-cols-1 lg:grid-cols-2 ">
                     <div className="grid-span-1 flex flex-col justify-between">
                         <div className="font-bold leading-[40px] text-[26px] mb-6">
@@ -74,12 +67,12 @@ const Identification = () => {
                         <div className="flex mt-[24px] justify-between max-w-[270px] m-auto">
                             <Link href="https://apps.apple.com/app/id1480302334">
                                 <a target="_blank">
-                                    <img className="m-auto w-[118px] h-[40px]" onClick={() => redirect('ios')} src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="" />
+                                    <img className="m-auto w-[118px] h-[40px]" src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="" />
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                                 <a target="_blank">
-                                    <img className="m-auto w-[118px] h-[40px]" onClick={() => redirect('android')} src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="" />
+                                    <img className="m-auto w-[118px] h-[40px]" src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="" />
                                 </a>
                             </Link>
                         </div>
