@@ -19,7 +19,7 @@
         "not_verified": "Your account is currently not verified.",
         "process": "Your KYC process is under review.",
         "congratulations": "Congratulations!",
-        "not_verified_1": "Complete verification to access services on Nami.",
+        "not_verified_2": "Complete verification to access services on Nami.",
         "verified": "Your account was successfully verified!"
     }
 }

@@ -7,7 +7,8 @@ import { useTranslation } from 'next-i18next'
 import MCard from '../../components/common/MCard';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getS3Url } from 'redux/actions/utils';
-import colors from 'styles/colors'
+import Link from 'next/link';
+
 
 
 const Identification = () => {
@@ -18,23 +19,28 @@ const Identification = () => {
         if (!user) return null;
         const status = user?.kyc_status;
         const src = getS3Url(`/images/screen/identification/${status === 0 ? 'not_verified' : status === 1 ? 'process' : 'verified'}.png`);
-        const statusName = status === 0 ? t('identification:account.not_verified') : status === 1 ? t('identification:account.process') : t('identification:account.congratulations');
+        const statusName = status === 2 ? t('identification:account.congratulations') : status === 1 ? t('identification:account.process') : t('identification:account.not_verified');
         const title = status !== 2 ? t('identification:account.not_verified_2') : t('identification:account.verified');
         return (
             <>
                 <div className="w-[200px] h-[200px] m-auto">
                     <img src={src} alt="" /></div>
-                <span className={`pt-8 lg:pt-12 text-base font-bold`}
-                    style={{ color: status !== 2 ? colors.red2 : '' }}>{statusName}</span>
-                <span className={`text-sm ${status === 2 ? 'text-base font-bold' : ''}`}
-                    style={{ color: status !== 2 ? colors.grey1 : colors.teal }}>{title}</span>
+                <span className={`pt-8 lg:pt-12 text-base font-bold ${status !== 2 ? 'text-red' : ''}`}>{statusName}</span>
+                <span className={`text-sm ${status === 2 ? 'text-base font-bold text-teal' : 'text-gray-1 font-medium'}`}>{title}</span>
             </>
+        )
+    }
+
+    const redirect = (platform) => {
+        window.open(
+            platform === 'ios' ? 'https://apps.apple.com/app/id1480302334' : 'https://play.google.com/store/apps/details?id=com.namicorp.exchange',
+            '_blank'
         )
     }
 
     const renderInfo = () => {
         if (!user) return null;
-        const status = user?.kyc_status;
+        const status = 0;
         return (
             status !== 2 ?
                 <div className="grid sm:grid-cols-1 lg:grid-cols-2 ">
@@ -42,32 +48,40 @@ const Identification = () => {
                         <div className="font-bold leading-[40px] text-[26px] mb-6">
                             {t('identification:title_2')}
                         </div>
-                        <div className="flex mb-[18px]">
+                        <div className="flex items-center mb-[18px]">
                             <img className="w-[32px] h-[32px]" src={getS3Url('/images/screen/identification/ic_person.png')} alt="" />
-                            <span className="pl-[16px]">{t('identification:personal')}</span>
+                            <span className="pl-[16px] font-medium">{t('identification:personal')}</span>
                         </div>
-                        <div className="flex mb-[18px] mt-[18px]">
+                        <div className="flex items-center mb-[18px] mt-[18px]">
                             <img className="w-[32px] h-[32px]" src={getS3Url('/images/screen/identification/ic_info.png')} alt="" />
-                            <span className="pl-[16px]">{t('identification:government')}</span>
+                            <span className="pl-[16px] font-medium">{t('identification:government')}</span>
                         </div>
-                        <div className="flex mb-[18px] mt-[18px]">
+                        <div className="flex items-center mb-[18px] mt-[18px]">
                             <img className="w-[32px] h-[32px]" src={getS3Url('/images/screen/identification/ic_facial.png')} alt="" />
-                            <span className="pl-[16px]">{t('identification:facial')}</span>
+                            <span className="pl-[16px] font-medium">{t('identification:facial')}</span>
                         </div>
-                        <div className="flex mt-[18px]">
+                        <div className="flex items-center mt-[18px]">
                             <img className="w-[32px] h-[32px]" src={getS3Url('/images/screen/identification/ic_timer.png')} alt="" />
-                            <span className="pl-[16px]">{t('identification:timer')}</span>
+                            <span className="pl-[16px] font-medium">{t('identification:timer')}</span>
                         </div>
                     </div>
                     <div className="grid-span-1 text-center mt-5 sm:mt-0">
                         <div className="mb-[24px] m-auto rounded-[10px] p-[10px] border-teal border-[1px] w-[160px] h-[160px]">
                             <img src={getS3Url('/images/screen/identification/qr.jpg')} alt="" />
                         </div>
-                        <span className="text-base font-medium " style={{ color: colors.darkBlue }}>
+                        <span className="text-base font-medium dark:text-darkBlue">
                             {t('identification:qr_1')}<br /> {t('identification:qr_2')}</span>
-                        <div className="flex mt-[24px]">
-                            <img className="m-auto w-[118px] h-[40px]" src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="" />
-                            <img className="m-auto w-[118px] h-[40px]" src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="" />
+                        <div className="flex mt-[24px] justify-between max-w-[270px] m-auto">
+                            <Link href="https://apps.apple.com/app/id1480302334">
+                                <a target="_blank">
+                                    <img className="m-auto w-[118px] h-[40px]" onClick={() => redirect('ios')} src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="" />
+                                </a>
+                            </Link>
+                            <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
+                                <a target="_blank">
+                                    <img className="m-auto w-[118px] h-[40px]" onClick={() => redirect('android')} src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="" />
+                                </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
