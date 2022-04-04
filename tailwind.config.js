@@ -287,8 +287,11 @@ module.exports = {
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
-                onlyDark: '0px 7px 23px rgba(245, 245, 245, 0.05)',
+                onlyDark: '0px 7px 23px rgba(245, 245, 245, 0.05)'
             },
+            boxShadow: {
+                'features': '0px 10px 30px rgba(89, 111, 153, 0.05)',
+            }
         },
     },
     variants: {
@@ -298,7 +301,8 @@ module.exports = {
         }
     },
     plugins: [
-        require('@tailwindcss/forms')({ strategy: 'class',
+        require('@tailwindcss/forms')({
+            strategy: 'class',
         }),
         require('@tailwindcss/line-clamp'),
     ],
