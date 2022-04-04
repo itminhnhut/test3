@@ -8,6 +8,7 @@ export const CatsKey = {
     SpotTrading: 'spot_trading',
     FuturesTrading: 'futures_trading',
     Swap: 'swap',
+    TokenPrediction: 'token_prediction',
     Finance: 'finance_product',
     Others: 'others',
     BusinessPartner: 'business_partner',
@@ -135,6 +136,14 @@ export const SupportCategories = {
                 description: 'Các thông tin về sản phẩm Quy đổi',
                 iconUrl: '',
                 subCats: []
+            },
+            {
+                id: CatsKey.TokenPrediction,
+                title: 'Token dự đoán',
+                slug: 'faq-vi-token-prediction',
+                displaySlug: 'token-prediction',
+                description: 'Token Prediction là mô hình đầu tư mới do Nami.Exchange nghiên cứu và phát triển để giúp người dùng Crypto đa dạng hóa các sản phẩm đầu tư và công cụ kiểm soát rủi ro. Bên cạnh các sản phẩm giao dịch truyền thống như Spot, Futures, Margin…',
+                iconUrl: ''
             },
             {
                 id: CatsKey.FuturesTrading,
@@ -325,6 +334,14 @@ export const SupportCategories = {
                 iconUrl: ''
             },
             {
+                id: CatsKey.TokenPrediction,
+                title: 'Token Prediction',
+                slug: 'faq-en-token-prediction',
+                displaySlug: 'token-prediction',
+                description: 'Token Prediction is a new investment model researched and developed by Nami.Exchange to help Crypto users diversify investment products and risk control tools. Besides traditional trading products such as Spot, Futures, Margin…',
+                iconUrl: ''
+            },
+            {
                 id: CatsKey.FuturesTrading,
                 title: 'Futures Trading',
                 slug: 'faq-en-futures-trading',
@@ -486,6 +503,7 @@ export const getSupportCategoryIcons = (id) => {
         case CatsKey.NamiToken:
             return '/images/screen/support/ic_nami_token.png'
         case CatsKey.SpotTrading:
+        case CatsKey.TokenPrediction:
             return '/images/screen/support/ic_analytic.png'
         case CatsKey.FuturesTrading:
             return '/images/screen/support/ic_trend.png'

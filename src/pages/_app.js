@@ -99,7 +99,7 @@ const App = ({ Component, pageProps }) => {
             store.dispatch(getFuturesFavoritePairs())
             store.dispatch(getFuturesMarketWatch())
             store.dispatch(getFuturesUserSettings())
-
+            store.dispatch(getPaymentConfigs())
             initConfig = true
             // Get common data
 

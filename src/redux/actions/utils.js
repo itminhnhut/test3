@@ -37,6 +37,18 @@ export const getDecimalScale = memoize((value = 0.00000001) => {
     return decimalScale
 })
 
+export const countDecimals = function (value) {
+    if (Math.floor(value) === value) return 0
+
+    var str = value.toString()
+    if (str.indexOf('.') !== -1 && str.indexOf('-') !== -1) {
+        return str.split('-')[1] || 0
+    } else if (str.indexOf('.') !== -1) {
+        return str.split('.')[1].length || 0
+    }
+    return str.split('-')[1] || 0
+}
+
 export const formatSwapRate = (value, scaleMore = 2) => {
     if (!value) return
     let x
@@ -263,7 +275,6 @@ export function formatNumber(
     if (isNil(value)) return defaultValue
     if (Math.abs(+value) < 1e-9) return defaultValue
     if (!acceptNegative && +value < 0) return defaultValue
-
     return numeral(+value).format(
         `0,0.${'0'.repeat(forceDigits)}${
             digits > 0 ? `[${'0'.repeat(digits)}]` : ''

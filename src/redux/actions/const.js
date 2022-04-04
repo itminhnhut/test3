@@ -371,6 +371,16 @@ export const DepositStatus = {
     CONFIRMED_WAIT_TO_DEPOSIT: 4,
 }
 
+export const DepWdlStatus = {
+    Pending: 1,
+    Success: 2,
+    Declined: 3,
+    DepositedWaitingForConfirmation: 4,
+    TransferredWaitingForConfirmation: 5,
+    WithdrawWaitingForBalance: 6, // When user withdraws, switches to this status when Nami's withdrawal wallet is not enough money
+    WithdrawWaitingForApproval: 7, // Admin verify
+}
+
 export const ChatResult = {
     CHAT_ANGRY: 'chat_angry',
     SPAM: 'spam',
