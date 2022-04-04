@@ -40,7 +40,7 @@ const Identification = () => {
 
     const renderInfo = () => {
         if (!user) return null;
-        const status = 0;
+        const status = user?.kyc_status;;
         return (
             status !== 2 ?
                 <div className="grid sm:grid-cols-1 lg:grid-cols-2 ">
