@@ -19,7 +19,7 @@ const Identification = () => {
     const renderStatus = () => {
         if (!user) return null;
         const status = user?.kyc_status;
-        const src = getS3Url(`/images/screen/identification/${status === KYC_STATUS.NO_KYC ? 'not_verified' : status === KYC_STATUS.PENDING_APPROVAL ? 'process' : 'verified'}.png`);
+        const src = getS3Url(`/images/screen/identification/${status === KYC_STATUS.APPROVED ? 'verified' : status === KYC_STATUS.PENDING_APPROVAL ? 'process' : 'not_verified'}.png`);
         const statusName = status === KYC_STATUS.APPROVED ? t('identification:account.congratulations') : status === KYC_STATUS.PENDING_APPROVAL ? t('identification:account.process') : t('identification:account.not_verified');
         const title = status !== KYC_STATUS.APPROVED ? t('identification:account.not_verified_2') : t('identification:account.verified');
         return (
