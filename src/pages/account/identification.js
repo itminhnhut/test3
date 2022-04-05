@@ -68,15 +68,15 @@ const Identification = () => {
                         </div>
                         <span className="text-base font-medium dark:text-darkBlue">
                             {t('identification:qr_1')}<br /> {t('identification:qr_2')}</span>
-                        <div className="flex mt-[24px] justify-between max-w-[270px] m-auto">
+                        <div className="flex mt-[24px] justify-between max-w-[290px] m-auto">
                             <Link href="https://apps.apple.com/app/id1480302334">
                                 <a target="_blank">
-                                    <img className="m-auto w-[118px] h-[40px]" src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="" />
+                                    <img className="m-auto w-[135px] h-[40px] mr-[20px]" src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="" />
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                                 <a target="_blank">
-                                    <img className="m-auto w-[118px] h-[40px]" src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="" />
+                                    <img className="m-auto w-[135px] h-[40px]" src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="" />
                                 </a>
                             </Link>
                         </div>
@@ -149,7 +149,7 @@ const Identification = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['navbar', 'profile', 'fee-structure', 'identification'])
+        ...await serverSideTranslations(locale, ['navbar', 'profile', 'fee-structure', 'identification', 'reward-center'])
     }
 })
 export default withTabLayout(

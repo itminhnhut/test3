@@ -687,7 +687,7 @@ const AccountProfile = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'profile', 'fee-structure'])
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'profile', 'fee-structure', 'reward-center', 'identification'])
     }
 })
 

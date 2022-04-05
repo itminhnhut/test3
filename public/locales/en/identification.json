@@ -21,5 +21,6 @@
         "congratulations": "Congratulations!",
         "not_verified_2": "Complete verification to access services on Nami.",
         "verified": "Your account was successfully verified!"
-    }
+    },
+    "title_tab": "Identification"
 }
