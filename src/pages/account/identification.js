@@ -9,6 +9,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getS3Url } from 'redux/actions/utils';
 import Link from 'next/link';
 import { KYC_STATUS } from '../../redux/actions/const';
+import QRCode from 'qrcode.react';
 
 
 const Identification = () => {
@@ -60,7 +61,10 @@ const Identification = () => {
                     </div>
                     <div className="grid-span-1 text-center mt-5 sm:mt-0">
                         <div className="mb-[24px] m-auto rounded-[10px] p-[10px] border-teal border-[1px] w-[160px] h-[160px]">
-                            <img src={getS3Url('/images/screen/identification/qr.jpg')} alt="" />
+                            <QRCode
+                                value={'account_verification'}
+                                size={140}
+                            />
                         </div>
                         <span className="text-base font-medium dark:text-darkBlue">
                             {t('identification:qr_1')}<br /> {t('identification:qr_2')}</span>
