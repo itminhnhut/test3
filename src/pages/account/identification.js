@@ -66,7 +66,7 @@ const Identification = () => {
                                 size={140}
                             />
                         </div>
-                        <span className="text-base font-medium dark:text-darkBlue">
+                        <span className="text-base font-medium">
                             {t('identification:qr_1')}<br /> {t('identification:qr_2')}</span>
                         <div className="flex mt-[24px] justify-between max-w-[290px] m-auto">
                             <Link href="https://apps.apple.com/app/id1480302334">
