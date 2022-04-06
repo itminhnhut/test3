@@ -1148,6 +1148,9 @@ production stylesheet in assets/built/screen.css
     .gh-content blockquote:not([class])::before {
       left: -4vmin;
     }
+    .kg-image-card img {
+      max-height: 500px !important;
+    }
   }
 
 
@@ -1181,7 +1184,9 @@ production stylesheet in assets/built/screen.css
 
   /* This keeps small iamges centered */
   .kg-image-card img {
-    //margin: auto;
+    margin: auto;
+    max-height: 1000px;
+    width: auto;
   }
 
   .has-serif-title .kg-toggle-card .kg-toggle-heading-text {
