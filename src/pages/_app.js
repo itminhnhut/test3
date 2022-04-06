@@ -14,6 +14,7 @@ import {
     getFuturesUserSettings,
 } from 'redux/actions/futures'
 import { getAssetConfig, getExchangeConfig } from 'redux/actions/market'
+import { getPaymentConfigs } from 'redux/actions/payment'
 import { getWallet, setTheme } from 'redux/actions/user'
 import Head from 'src/components/common/Head'
 import Tracking from 'src/components/common/Tracking'

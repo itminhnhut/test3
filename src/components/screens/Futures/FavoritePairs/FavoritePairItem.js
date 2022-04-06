@@ -11,7 +11,7 @@ import classNames from 'classnames'
 
 const FuturesFavoritePairItem = memo(({ pair }) => {
     const router = useRouter()
-
+    console.log('Pairs ', pair)
     return (
         <div
             className='flex items-center font-medium text-xs px-2.5 py-2 hover:bg-gray-4 dark:hover:bg-darkBlue-3 cursor-pointer rounded-md select-none'

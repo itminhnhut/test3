@@ -2,13 +2,15 @@ import Axios from 'axios'
 import FuturesMarketWatch from 'models/FuturesMarketWatch'
 import numeral from 'numeral'
 
-import { isNil } from 'lodash'
+import isNil from 'lodash/isNil'
+
 import {
     API_GET_FUTURES_CONFIGS,
     API_SET_FUTURES_MARGIN_MODE,
     API_GET_FUTURES_MARKET_WATCH,
     API_GET_FUTURES_USER_SETTINGS,
     API_SET_FUTURES_POSITION_MODE,
+    API_FUTURES_PLACE_ORDER,
 } from './apis'
 import { ApiStatus, TRADING_MODE } from './const'
 import {
@@ -150,5 +152,17 @@ export const getMarginModeLabel = (mode) => {
             return 'Isolated'
         default:
             return null
+    }
+}
+
+export const placeFuturesOrder = async (params = {}) => {
+    console.log('placeFuturesOrder check params: ', params)
+    try {
+        const { data } = await Axios.post(API_FUTURES_PLACE_ORDER, {
+            ...params,
+        })
+        console.log('placeFuturesOrder result: ', data)
+    } catch (e) {
+        console.log(`Can't place order `, e)
     }
 }

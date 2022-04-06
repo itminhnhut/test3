@@ -250,7 +250,7 @@ const Futures = () => {
             />
             <DynamicNoSsr>
                 <MaldivesLayout
-                    useGridSettings
+                    // useGridSettings
                     navStyle={{
                         boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)',
                     }}
@@ -350,7 +350,9 @@ const Futures = () => {
                                     className='border border-divider dark:border-divider-dark'
                                 >
                                     <FuturesPlaceOrder
+                                        isAuth={!!auth}
                                         markPrice={state.markPrice?.markPrice}
+                                        lastPrice={state.pairPrice?.lastPrice}
                                         pairConfig={pairConfig}
                                         userSettings={userSettings}
                                         assumingPrice={state.assumingPrice}

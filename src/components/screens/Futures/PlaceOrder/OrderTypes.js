@@ -9,8 +9,6 @@ import { ChevronDown } from 'react-feather'
 import classNames from 'classnames'
 
 const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
-    console.log('FuturesOrderTypes re-render')
-
     const { t } = useTranslation()
     const currentAdvType = useSelector(
         (state) => state.futures.preloadedState?.orderAdvanceType

@@ -11,12 +11,20 @@ const FuturesOrderLimit = ({
     size,
     selectedAsset,
     getLastedLastPrice,
-    setPrice,
-    setSize,
+    handlePrice,
+    handleQuantity,
+    stopPrice,
     setStopPrice,
     setAsset,
+    usingPercent,
 }) => {
     const { t } = useTranslation()
+
+    const onReverseAsset = (current, asset) => {
+        if (current === asset) return
+        setAsset(asset)
+        handleQuantity('')
+    }
 
     return (
         <div>
@@ -24,6 +32,9 @@ const FuturesOrderLimit = ({
                 <TradingInput
                     containerClassName='mb-[12px]'
                     label={'Stop Price'}
+                    value={stopPrice}
+                    onValueChange={({ value }) => setStopPrice(value)}
+                    decimalScale={pairConfig?.pricePrecision}
                     tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                     renderTail={() => (
                         <div className='relative group select-none'>
@@ -50,7 +61,8 @@ const FuturesOrderLimit = ({
                 containerClassName='mb-[12px]'
                 label={t('common:price')}
                 value={price}
-                onChange={(e) => setPrice(+e?.target?.value?.trim())}
+                onValueChange={({ value }) => handlePrice(value)}
+                decimalScale={pairConfig?.pricePrecision}
                 tailContainerClassName='relative flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
                     <>
@@ -71,9 +83,12 @@ const FuturesOrderLimit = ({
                 )}
             />
             <TradingInput
+                thousandSeparator={false}
                 label={t('futures:size')}
                 value={size}
-                onChange={(e) => setSize(+e?.target?.value?.trim())}
+                suffix={size?.includes('%') ? '%' : ''}
+                onChange={({ target: { value } }) => handleQuantity(value)}
+                // onValueChange={({ value }) => handleQuantity(value)}
                 labelClassName='whitespace-nowrap'
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
@@ -88,13 +103,23 @@ const FuturesOrderLimit = ({
                         <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
                             <div
                                 className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                onClick={() => setAsset(pairConfig?.quoteAsset)}
+                                onClick={() =>
+                                    onReverseAsset(
+                                        selectedAsset,
+                                        pairConfig?.quoteAsset
+                                    )
+                                }
                             >
                                 {pairConfig?.quoteAsset}
                             </div>
                             <div
                                 className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                onClick={() => setAsset(pairConfig?.baseAsset)}
+                                onClick={() =>
+                                    onReverseAsset(
+                                        selectedAsset,
+                                        pairConfig?.baseAsset
+                                    )
+                                }
                             >
                                 {pairConfig?.baseAsset}
                             </div>

@@ -10,7 +10,7 @@ const FuturesMarginRatio = () => {
                         Margin Ratio
                     </div>
                     <div className='w-[24px] h-[24px] flex items-center justify-center rounded-md cursor-pointer hover:bg-bgHover dark:hover:bg-bgHover-dark'>
-                        <X size={16} strokeWidth={1} />
+                        {/* <X size={16} strokeWidth={1} /> */}
                     </div>
                 </div>
                 <div className='mt-3.5 flex items-center justify-between'>

@@ -11,7 +11,7 @@ import RadioBox from 'components/common/RadioBox'
 const FuturesPreferencesPositionMode = ({ positionMode }) => {
     const dispatch = useDispatch()
 
-    const onSetPositionMode = async (mode) => {
+    const onSetPositionMode = (mode) => {
         setFuturesPositionMode(mode)
         dispatch(getFuturesUserSettings())
     }
@@ -25,7 +25,7 @@ const FuturesPreferencesPositionMode = ({ positionMode }) => {
                     checked={!positionMode}
                     description='In the One-way Mode, one contract can only hold positions in
                     one direction.'
-                    onChange={() => positionMode && onSetPositionMode(false)}
+                    onChange={() => onSetPositionMode(false)}
                 />
             </div>
             <div>
@@ -34,7 +34,7 @@ const FuturesPreferencesPositionMode = ({ positionMode }) => {
                     label='Hedge Mode'
                     checked={positionMode}
                     description='In the Hedge-way Mode, one contract can only hold positions in both long and short directions at the same time, and hedge positions in different directions under the same contract.'
-                    onChange={() => !positionMode && onSetPositionMode(true)}
+                    onChange={() => onSetPositionMode(true)}
                 />
             </div>
             <div className='mt-5 text-xs text-txtSecondary dark:text-txtSecondary-dark'>

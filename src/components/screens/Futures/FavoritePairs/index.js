@@ -55,6 +55,8 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
         // }
     }, [])
 
+    if (!favoritePairs) return null
+
     return (
         <div className='h-full flex items-center pr-3'>
             <div className='flex items-center pl-5 pr-[10px] h-full dragHandleArea'>

@@ -144,6 +144,17 @@ export default {
         ],
         xl: [
             {
+                w: 14,
+                h: 2,
+                x: 0,
+                y: 0,
+                i: futuresGridKey.favoritePair,
+                moved: false,
+                static: false,
+                isDraggable: true,
+                isResizable: true,
+            },
+            {
                 w: 8,
                 h: 3,
                 x: 0,
@@ -222,6 +233,15 @@ export default {
             },
         ],
         '2xl': [
+            {
+                h: 2,
+                i: futuresGridKey.pairDetail,
+                moved: false,
+                static: false,
+                w: 12,
+                x: 0,
+                y: 0,
+            },
             {
                 w: 12,
                 h: 3,

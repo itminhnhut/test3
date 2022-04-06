@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { API_FUTURES_LEVERAGE } from 'redux/actions/apis'
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures'
+import { roundToDown } from 'round-to'
 import { useSelector } from 'react-redux'
 import { ApiStatus } from 'redux/actions/const'
 
@@ -15,18 +16,23 @@ const FuturesPlaceOrder = ({
     pairConfig,
     userSettings,
     markPrice,
+    lastPrice,
     assumingPrice,
+    isAuth,
 }) => {
-    const [leverage, setLeverage] = useState(0)
+    const [leverage, setLeverage] = useState(1)
     const [percentage, setPercentage] = useState(null)
     const [price, setPrice] = useState('')
     const [stopPrice, setStopPrice] = useState('')
     const [size, setSize] = useState('')
+    const [parsedSize, setParsedSize] = useState('')
     const [selectedAsset, setSelectedAsset] = useState(null)
-    const [initialMargin, setInitialMargin] = useState(0)
+    const [assetReversed, setAssetReversed] = useState(false)
+    const [availableAsset, setAvailableAsset] = useState(null)
 
     // ? get rdx state
     const preloadedForm = useSelector((state) => state.futures.preloadedState)
+    const avlbAsset = useSelector((state) => state.wallet?.FUTURES)
     const currentType = useMemo(
         () => preloadedForm?.orderType || OrderTypes.Limit,
         [preloadedForm]
@@ -43,36 +49,52 @@ const FuturesPlaceOrder = ({
         }
     }
 
-    useEffect(() => {
-        // Limit initial margin
-        if ([OrderTypes.Limit, OrderTypes.StopLimit].includes(currentType)) {
-            if (price && size && leverage) {
-                setInitialMargin((+price * +size) / leverage)
+    const handleQuantity = (size, isPercent = false) => {
+        if (isPercent) {
+            console.log('Percent...', size)
+            setSize(size)
+            if (assetReversed) {
+                setParsedSize((parseFloat(size) / 100) * availableAsset)
+            } else {
+                setParsedSize(
+                    ((parseFloat(size) / 100) * availableAsset) / lastPrice
+                )
             }
         } else {
-            setInitialMargin(0)
+            setSize(size)
+            setParsedSize(size)
         }
+    }
 
-        // ? Market initial margin
-        if ([OrderTypes.Market, OrderTypes.StopMarket].includes(currentType)) {
-            if (assumingPrice && price && size && leverage) {
-                setInitialMargin([
-                    (assumingPrice?.ask * (1 + 0.0005) * 0.2) / leverage,
-                    (max([assumingPrice?.bid, markPrice]) * 0.2) /
-                        state.leverage,
-                ])
-            } else {
-                setInitialMargin(0)
-            }
-        }
-    }, [currentType, markPrice, assumingPrice, leverage, size, price])
+    const handlePrice = (price) => {
+        setPrice(price)
+    }
 
     useEffect(() => {
-        getLeverage(pairConfig?.pair)
-        if (pairConfig?.quoteAsset) {
-            setSelectedAsset(pairConfig.quoteAsset)
+        handleQuantity('')
+    }, [currentType])
+
+    useEffect(() => {
+        isAuth && getLeverage(pairConfig?.pair)
+        if (pairConfig?.baseAsset) {
+            setSelectedAsset(pairConfig.baseAsset)
         }
-    }, [pairConfig])
+    }, [pairConfig, isAuth])
+
+    useEffect(() => {
+        if (selectedAsset === pairConfig?.quoteAsset) {
+            setAssetReversed(true)
+        } else {
+            setAssetReversed(false)
+        }
+    }, [pairConfig, selectedAsset])
+
+    useEffect(() => {
+        if (avlbAsset) {
+            const _avlb = avlbAsset?.[pairConfig?.quoteAssetId]
+            setAvailableAsset(_avlb?.value - _avlb?.locked_value)
+        }
+    }, [avlbAsset, pairConfig])
 
     return (
         <div className='pr-5 pb-5 pl-[11px] h-full bg-bgPrimary dark:bg-darkBlue-2 !overflow-x-hidden overflow-y-auto'>
@@ -99,23 +121,31 @@ const FuturesPlaceOrder = ({
                 currentLeverage={leverage}
                 currentType={currentType}
                 pairConfig={pairConfig}
+                positionMode={userSettings?.dualSidePosition || false}
                 price={price}
                 stopPrice={stopPrice}
                 size={size}
-                setPrice={setPrice}
+                quantity={parsedSize}
+                handlePrice={handlePrice}
                 setStopPrice={setStopPrice}
                 setAsset={setSelectedAsset}
-                setSize={setSize}
+                handleQuantity={handleQuantity}
+                availableAsset={availableAsset}
             />
 
             <FuturesOrderCostAndMax
-                selectedAsset={selectedAsset}
-                initialMargin={initialMargin}
                 price={price}
+                size={parsedSize}
+                leverage={leverage}
+                currentType={currentType}
+                selectedAsset={selectedAsset}
                 assumingPrice={assumingPrice}
                 currentType={currentType}
                 pairConfig={pairConfig}
                 markPrice={markPrice}
+                isAssetReversed={assetReversed}
+                availableAsset={availableAsset}
+                lastPrice={lastPrice}
             />
         </div>
     )
