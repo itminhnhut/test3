@@ -77,7 +77,7 @@ const OverviewWallet = (props) => {
                 >
                     <a className="mr-3">
                         <AssetLogo
-                            assetCode={allAssets[i]?.assetName}
+                            assetCode={allAssets[i]?.assetCode}
                             size={30}
                         />
                     </a>
