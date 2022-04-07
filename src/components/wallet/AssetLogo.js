@@ -28,7 +28,8 @@ const AssetLogo = (props) => {
                 height={logoSize}
             />;
         }
-        return <img src="/images/icon/ic_exchange_unknown.png" style={{ minWidth: logoSize }} width={logoSize} height={logoSize} alt="" />;
+        return null;
+        // return <img src="/images/icon/ic_exchange_unknown.png" style={{ minWidth: logoSize }} width={logoSize} height={logoSize} alt="" />;
     }, [size, assetCode, assetId, assetConfig]);
 
     return assetLogo;
