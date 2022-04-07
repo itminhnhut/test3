@@ -246,7 +246,7 @@ const dataHandler = (data, translator, dispatch, utils) => {
         result.push({
             key: `exchange_asset___${item?.assetName}`,
             asset: <div className="flex items-center">
-                <AssetLogo assetCode={item?.assetName} size={32}/>
+                <AssetLogo assetCode={item?.assetCode} size={32}/>
                 <div className="ml-2 text-sm">
                     <div>{item?.assetName}</div>
                     <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
