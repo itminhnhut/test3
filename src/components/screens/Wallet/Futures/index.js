@@ -244,13 +244,13 @@ const dataHandler = (data, translator, dispatch, utils) => {
         const totalBtc = totalUsd / btcUsdRate
 
         result.push({
-            key: `exchange_asset___${item?.assetName}`,
+            key: `exchange_asset___${item?.assetCode}`,
             asset: <div className="flex items-center">
                 <AssetLogo assetCode={item?.assetCode} size={32}/>
                 <div className="ml-2 text-sm">
-                    <div>{item?.assetName}</div>
+                    <div>{item?.assetCode}</div>
                     <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
-                        {item?.assetFullName || item?.assetName || item?.assetCode}
+                        {item?.assetFullName || item?.assetCode || item?.assetName}
                     </div>
                 </div>
             </div>,
