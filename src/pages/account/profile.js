@@ -34,6 +34,10 @@ import Switcher from 'components/common/Switcher'
 
 import "react-contexify/dist/ReactContexify.css"
 import AvatarModal from 'components/screens/Account/AvatarModal'
+import { getLastedArticles, ghost } from 'utils'
+import { SupportCategories } from 'constants/faqHelper'
+import useApp from 'hooks/useApp'
+
 
 const DEFAULT_USER = {
     name: '',
@@ -76,6 +80,7 @@ const INITIAL_STATE = {
 const AccountProfile = () => {
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({ ...prevState, ...state }))
+    const isApp = useApp()
 
     const firstInputRef = useRef()
 
@@ -134,10 +139,9 @@ const AccountProfile = () => {
     const getAnnouncements = async (lang = 'vi') => {
         setState({ loadingAnnouncements: true })
         try {
-            const { status, data: announcements } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`)
-            if (status === 200 && announcements) {
-                setState({ announcements })
-            }
+            const lastedArticles = await getLastedArticles(undefined, 10, language)
+            // const { status, data: announcements } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`)
+            setState({ announcements: lastedArticles })
         } catch (e) {
             console.log(`Can't get announcements `, e)
         } finally {
@@ -593,19 +597,54 @@ const AccountProfile = () => {
 
         if (!state.announcements) return null
 
-        return orderBy(state.announcements, [(e) => Date.parse(e?.post_modified)], ['desc'])?.map(a => (
-            <div key={a?.ID} className="block text-sm font-medium mb-5">
+        return state.announcements.map((article) => {
+            let mode, topic, ownedTags, _tagsLib, categories
+            const isNoti = !!article?.tags?.find((o) =>
+                o.slug?.includes('noti-')
+            )
+
+            if (isNoti) {
+                mode = 'announcement'
+                categories = SupportCategories.announcements[language]
+                ownedTags = article.tags
+                    .filter((f) => f.slug !== 'noti')
+                    ?.map((o) =>
+                        o?.slug
+                            ?.replace('noti-vi-', '')
+                            ?.replace('noti-en-', '')
+                    )
+            } else {
+                mode = 'faq'
+                categories = SupportCategories.faq[language]
+                ownedTags = article.tags
+                    .filter((f) => f.slug !== 'faq')
+                    ?.map((o) =>
+                        o?.slug?.replace('faq-vi-', '')?.replace('faq-en-', '')
+                    )
+            }
+
+            _tagsLib = categories.map((o) => o.displaySlug)
+
+            ownedTags.forEach((e) => {
+                if (_tagsLib.includes(e)) topic = e
+            })
+
+            return <div key={article.id} className="block text-sm font-medium mb-5">
                 <a className="device font-bold hover:text-dominant hover:!underline"
-                   href={a?.guid}
-                   target="_blank">
-                    {a?.post_title}
+                    href={
+                        PATHS.SUPPORT.DEFAULT +
+                        `/${mode}/${topic}/${article.slug.toString()}${isApp ? '?source=app' : ''
+                        }`
+                    }
+                    target="_blank">
+                    {article.title}
                 </a>
 
                 <div className="location mt-2 text-txtSecondary dark:text-txtSecondary-dark">
-                    {formatTime(a?.post_date, 'dd-MM-yyyy HH:mm')}
+                    {formatTime(article.created_at, 'dd-MM-yyyy HH:mm')}
                 </div>
             </div>
-        ))
+        })
     }, [state.announcements, state.loadingAnnouncements])
 
     useEffect(() => {
