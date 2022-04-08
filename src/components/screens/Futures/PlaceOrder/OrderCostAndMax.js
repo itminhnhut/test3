@@ -17,18 +17,22 @@ const FuturesOrderCostAndMax = ({
     lastPrice,
     assumingPrice,
     currentType,
+    quantity,
     size,
     leverage,
     isAssetReversed,
     availableAsset,
+    maxBuy,
+    maxSell,
 }) => {
     const [shortOrderOpenLoss, setShortOrderOpenLoss] = useState(0)
     const [longOrderOpenLoss, setLongOrderOpenLoss] = useState(0)
-    const [initialMargin, setInitialMargin] = useState(0)
+    const [marketInitialMargin, setMarketInitialMargin] = useState(0)
+    const [shortInitialMargin, setShortInitialMargin] = useState(0)
+    const [longInitialMargin, setLongInitialMargin] = useState(0)
 
     const { t } = useTranslation()
 
-    const decimal = pairConfig?.pricePrecision || 2
     const isMarket =
         currentType === FuturesOrderTypes.Market ||
         currentType === FuturesOrderTypes.StopMarket
@@ -38,16 +42,18 @@ const FuturesOrderCostAndMax = ({
             <>
                 <TradingLabel
                     label={t('common:cost')}
-                    value={`${formatNumber(longOrderOpenLoss, decimal)} ${
-                        pairConfig?.quoteAsset
-                    }`}
+                    value={`${formatNumber(
+                        longOrderOpenLoss,
+                        pairConfig?.pricePrecision || 2
+                    )} ${pairConfig?.quoteAsset}`}
                     containerClassName='text-xs'
                 />
                 <TradingLabel
                     label={t('common:cost')}
-                    value={`${formatNumber(shortOrderOpenLoss, decimal)} ${
-                        pairConfig?.quoteAsset
-                    }`}
+                    value={`${formatNumber(
+                        shortOrderOpenLoss,
+                        pairConfig?.pricePrecision || 2
+                    )} ${pairConfig?.quoteAsset}`}
                     containerClassName='text-xs'
                 />
             </>
@@ -55,28 +61,21 @@ const FuturesOrderCostAndMax = ({
     }
 
     const renderMax = () => {
-        let shortPlaceMax = 0,
-            longPlaceMax = 0
-        const _size = isAssetReversed ? size / lastPrice : size
-
-        shortPlaceMax = (availableAsset * _size) / shortOrderOpenLoss
-        longPlaceMax = (availableAsset * _size) / longOrderOpenLoss
-
         return (
             <>
                 <TradingLabel
                     label={t('common:max')}
                     value={`${formatNumber(
-                        shortPlaceMax,
-                        decimal
+                        maxBuy,
+                        pairConfig?.quantityPrecision
                     )} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
                 <TradingLabel
                     label={t('common:max')}
                     value={`${formatNumber(
-                        longPlaceMax,
-                        decimal
+                        maxSell,
+                        pairConfig?.quantityPrecision
                     )} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
@@ -87,23 +86,37 @@ const FuturesOrderCostAndMax = ({
     useEffect(() => {
         // Limit initial margin
         if ([OrderTypes.Limit, OrderTypes.StopLimit].includes(currentType)) {
-            if (price && size && leverage) {
-                const _size = isAssetReversed ? +size / lastPrice : +size
-                setInitialMargin((+price * _size) / leverage)
+            if (
+                price &&
+                leverage &&
+                size &&
+                (quantity?.buy || quantity?.sell)
+            ) {
+                setShortInitialMargin((+price * quantity?.sell) / leverage)
+                setLongInitialMargin((+price * +quantity?.buy) / leverage)
             } else {
-                setInitialMargin(0)
+                setShortInitialMargin(0)
+                setLongInitialMargin(0)
             }
         }
 
         // ? Market initial margin
         if ([OrderTypes.Market, OrderTypes.StopMarket].includes(currentType)) {
-            if (assumingPrice && price && size && leverage) {
-                setInitialMargin([
-                    (assumingPrice?.ask * (1 + 0.0005) * 0.2) / leverage,
-                    (max([assumingPrice?.bid, markPrice]) * 0.2) / leverage,
+            if (
+                assumingPrice &&
+                lastPrice &&
+                leverage &&
+                size &&
+                (quantity?.buy || quantity?.sell)
+            ) {
+                setMarketInitialMargin([
+                    (assumingPrice?.ask * (1 + 0.0005) * +quantity?.buy) /
+                        leverage,
+                    (max([assumingPrice?.bid, markPrice]) * +quantity?.sell) /
+                        leverage,
                 ])
             } else {
-                setInitialMargin(0)
+                setMarketInitialMargin([0, 0])
             }
         }
     }, [
@@ -111,6 +124,7 @@ const FuturesOrderCostAndMax = ({
         markPrice,
         assumingPrice,
         leverage,
+        quantity,
         size,
         price,
         isAssetReversed,
@@ -118,33 +132,47 @@ const FuturesOrderCostAndMax = ({
     ])
 
     useEffect(() => {
-        if (price && initialMargin && markPrice) {
-            const priceDifference = markPrice - +price
-
-            if (isMarket) {
+        if (isMarket) {
+            if (lastPrice && marketInitialMargin && markPrice) {
+                const priceDifference = markPrice - lastPrice
                 setLongOrderOpenLoss(
                     0.2 * Math.abs(min([0, 1 * priceDifference])) +
-                        initialMargin?.[0]
+                        marketInitialMargin?.[0]
                 )
 
                 setShortOrderOpenLoss(
                     0.2 * Math.abs(min([0, -1 * priceDifference])) +
-                        initialMargin?.[1]
+                        marketInitialMargin?.[1]
                 )
             } else {
+                setLongOrderOpenLoss(0)
+                setShortOrderOpenLoss(0)
+            }
+        } else {
+            if (price && marketInitialMargin && markPrice) {
+                const priceDifference = markPrice - +price
                 setLongOrderOpenLoss(
-                    1 * Math.abs(min([0, 1 * priceDifference])) + initialMargin
+                    1 * Math.abs(min([0, 1 * priceDifference])) +
+                        longInitialMargin
                 )
 
                 setShortOrderOpenLoss(
-                    1 * Math.abs(min([0, -1 * priceDifference])) + initialMargin
+                    1 * Math.abs(min([0, -1 * priceDifference])) +
+                        shortInitialMargin
                 )
+            } else {
+                setLongOrderOpenLoss(0)
+                setShortOrderOpenLoss(0)
             }
-        } else {
-            setLongOrderOpenLoss(0)
-            setShortOrderOpenLoss(0)
         }
-    }, [price, initialMargin, markPrice])
+    }, [
+        price,
+        marketInitialMargin,
+        longInitialMargin,
+        shortInitialMargin,
+        markPrice,
+        isMarket,
+    ])
 
     return (
         <div className='mt-4 select-none'>

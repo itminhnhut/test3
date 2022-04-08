@@ -93,7 +93,8 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
                     o !== OrderTypes.TakeProfit &&
                     o !== OrderTypes.TakeProfitMarket &&
                     o !== OrderTypes.Limit &&
-                    o !== OrderTypes.Market
+                    o !== OrderTypes.Market &&
+                    o !== OrderTypes.TrailingStopMarket
             ) || false
         if (!advanceTypes) return null
 

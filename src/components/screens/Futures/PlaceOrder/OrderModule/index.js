@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis'
 import { FUTURES_NUMBER_OF_CONTRACT } from 'constants/constants'
-import { FuturesOrderTypes } from 'redux/reducers/futures'
+import { FuturesOrderTypes, FuturesStopOrderMode } from 'redux/reducers/futures'
 import { useTranslation } from 'next-i18next'
-import { formatNumber } from 'redux/actions/utils'
+import { countDecimals, formatNumber } from 'redux/actions/utils'
 import { ApiStatus } from 'redux/actions/const'
 import { log } from 'utils'
 
@@ -19,6 +19,8 @@ import SvgExchange from 'components/svg/Exchange'
 import Divider from 'components/common/Divider'
 import axios from 'axios'
 import min from 'lodash/min'
+import { useSelector } from 'react-redux'
+import { roundToDown } from 'round-to'
 
 const FuturesOrderModule = ({
     markPrice,
@@ -36,9 +38,18 @@ const FuturesOrderModule = ({
     handlePrice,
     positionMode,
     availableAsset,
+    isReversedAsset,
+    lastPrice,
+    maxBuy,
+    maxSell,
+    stopOrderMode,
+    setStopOrderMode,
 }) => {
     // ? Use hooks
+    const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
+
     const { t } = useTranslation()
+    const usdRate = useSelector((state) => state.utils.usdRate)
 
     // ? Data helper
     const getLastedLastPrice = async (symbol) => {
@@ -54,10 +65,118 @@ const FuturesOrderModule = ({
         }
     }
 
+    const inputValidator = (type) => {
+        let isValid = true,
+            msg = null
+
+        const lotSize =
+            pairConfig?.filters?.find((o) =>
+                [
+                    FuturesOrderTypes.Market,
+                    FuturesOrderTypes.StopMarket,
+                ].includes(currentType)
+                    ? o?.filterType === 'MARKET_LOT_SIZE'
+                    : o?.filterType === 'LOT_SIZE'
+            ) || {}
+
+        const priceFilter =
+            pairConfig?.filters?.find((o) => o.filterType === 'PRICE_FILTER') ||
+            {}
+
+        switch (type) {
+            // input check
+            case 'quantity':
+                const _max = isReversedAsset
+                    ? lotSize?.maxQty * baseAssetUsdValue
+                    : lotSize?.maxQty
+                const _min = isReversedAsset
+                    ? lotSize?.minQty * baseAssetUsdValue
+                    : lotSize?.minQty
+
+                const _displayingMax = isReversedAsset
+                    ? `${_max} ${pairConfig?.quoteAsset} ≈ ${lotSize?.maxQty} ${pairConfig?.baseAsset}`
+                    : `${lotSize?.maxQty} ${pairConfig?.baseAsset}`
+                const _displayingMin = isReversedAsset
+                    ? `${_min} ${pairConfig?.quoteAsset} ≈ ${lotSize?.minQty} ${pairConfig?.baseAsset}`
+                    : `${lotSize?.minQty} ${pairConfig?.baseAsset}`
+
+                if (quantity?.both < _min) {
+                    msg = `Minium Qty is ${_displayingMin}`
+                    isValid = false
+                }
+
+                if (quantity?.both > _max) {
+                    msg = `Maxium Qty is ${_displayingMax}`
+                    isValid = false
+                }
+
+                return { isValid, msg }
+
+            case 'price':
+                const _maxPrice = priceFilter?.maxPrice
+                const _minPrice = priceFilter?.minPrice
+
+                if (+price < _minPrice) {
+                    isValid = false
+                    msg = `Minium Price is ${_minPrice}`
+                }
+
+                if (+price > _maxPrice) {
+                    isValid = false
+                    msg = `Maxium Price is ${_maxPrice}`
+                }
+
+                return { isValid, msg }
+            default:
+                return {}
+        }
+    }
+
+    const getOrderStopModeLabel = (mode) => {
+        switch (mode) {
+            case FuturesStopOrderMode.lastPrice:
+                return 'Last'
+            case FuturesStopOrderMode.markPrice:
+                return 'Mark'
+            default:
+                return ''
+        }
+    }
+
+    const renderBuySellByPercent = useCallback(() => {
+        const _buy = size?.includes('%')
+            ? formatNumber(quantity?.buy, pairConfig?.quantityPrecision || 4)
+            : '0.0000'
+        const _sell = size?.includes('%')
+            ? formatNumber(quantity?.sell, pairConfig?.quantityPrecision || 4)
+            : '0.0000'
+
+        return (
+            <>
+                <TradingLabel
+                    label={t('common:buy')}
+                    value={`${_buy} ${selectedAsset}`}
+                    containerClassName='text-xs'
+                />
+                <TradingLabel
+                    label={t('common:sell')}
+                    value={`${_sell} ${selectedAsset}`}
+                    containerClassName='text-xs'
+                />
+            </>
+        )
+    }, [size, pairConfig, selectedAsset, quantity])
+
     // ? Init lastPrice
     useEffect(() => {
         getLastedLastPrice(pairConfig?.pair)
     }, [pairConfig?.pair])
+
+    useEffect(() => {
+        if (usdRate) {
+            setBaseAssetUsdValue(usdRate?.[pairConfig?.baseAssetId])
+        }
+    }, [pairConfig?.baseAssetId, usdRate])
 
     return (
         <div className='pt-5 pb-[18px]'>
@@ -79,6 +198,10 @@ const FuturesOrderModule = ({
                         pairConfig={pairConfig}
                         setAsset={setAsset}
                         selectedAsset={selectedAsset}
+                        getValidator={inputValidator}
+                        stopOrderMode={stopOrderMode}
+                        setStopOrderMode={setStopOrderMode}
+                        getOrderStopModeLabel={getOrderStopModeLabel}
                         isStopMarket={
                             currentType === FuturesOrderTypes.StopMarket
                         }
@@ -88,20 +211,22 @@ const FuturesOrderModule = ({
                     currentType === FuturesOrderTypes.StopLimit) && (
                     <FuturesOrderLimit
                         price={price}
-                        stopPrice={stopPrice}
-                        size={size}
                         handlePrice={handlePrice}
+                        size={size}
                         handleQuantity={handleQuantity}
+                        stopPrice={stopPrice}
                         setStopPrice={setStopPrice}
                         setAsset={setAsset}
                         selectedAsset={selectedAsset}
-                        getLastedLastPrice={() =>
-                            getLastedLastPrice(pairConfig?.pair)
-                        }
+                        stopOrderMode={stopOrderMode}
+                        setStopOrderMode={setStopOrderMode}
+                        getOrderStopModeLabel={getOrderStopModeLabel}
+                        pairConfig={pairConfig}
+                        getValidator={inputValidator}
+                        getLastedLastPrice={() => handlePrice(lastPrice)}
                         isStopLimit={
                             currentType === FuturesOrderTypes.StopLimit
                         }
-                        pairConfig={pairConfig}
                     />
                 )}
             </div>
@@ -116,16 +241,7 @@ const FuturesOrderModule = ({
             </div>
 
             <div className='mt-3.5 flex items-center justify-between select-none'>
-                <TradingLabel
-                    label={t('common:buy')}
-                    value={`0.0000 ${selectedAsset}`}
-                    containerClassName='text-xs'
-                />
-                <TradingLabel
-                    label={t('common:sell')}
-                    value={`0.0000 ${selectedAsset}`}
-                    containerClassName='text-xs'
-                />
+                {renderBuySellByPercent()}
             </div>
 
             <Divider className='my-5' />
@@ -137,14 +253,18 @@ const FuturesOrderModule = ({
 
             {/* Buttons Group */}
             <FuturesOrderButtonsGroup
-                symbol={pairConfig?.symbol}
+                pairConfig={pairConfig}
                 positionMode={positionMode}
                 type={currentType}
                 quantity={quantity}
                 price={price}
                 stopPrice={stopPrice}
+                lastPrice={lastPrice}
+                currentType={currentType}
+                stopOrderMode={stopOrderMode}
             />
         </div>
     )
 }
+
 export default FuturesOrderModule

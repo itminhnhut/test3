@@ -24,6 +24,9 @@ import {
 } from './types'
 import { favoriteAction } from './user'
 import { FuturesMarginMode } from 'redux/reducers/futures'
+import { log } from 'utils'
+import showNotification from 'utils/notificationService'
+import { roundToDown } from 'round-to'
 
 export const setUsingSltp = (payload) => (dispatch) =>
     dispatch({
@@ -155,14 +158,108 @@ export const getMarginModeLabel = (mode) => {
     }
 }
 
-export const placeFuturesOrder = async (params = {}) => {
-    console.log('placeFuturesOrder check params: ', params)
+export const placeFuturesOrder = async (params = {}, utils = {}) => {
+    const validator = placeFuturesOrderValidator(params, utils)
+    log.d('placeFuturesOrder Pre-processing...')
+    const isValid = Object.values(validator)?.filter((e) => !e)
+
+    if (isValid.length) {
+        log.d(`placeFuturesOrder Pre-Process detect mistake `, validator)
+        showNotification(
+            {
+                message: `TEST NOTI`,
+                title: 'Error',
+                type: 'failure',
+            },
+            1800,
+            'bottom',
+            'bottom-right'
+        )
+
+        return
+    } else {
+        log.d('placeFuturesOrder All params passed...', params)
+        // return
+    }
+
     try {
         const { data } = await Axios.post(API_FUTURES_PLACE_ORDER, {
             ...params,
         })
-        console.log('placeFuturesOrder result: ', data)
+        if (data?.status === ApiStatus.SUCCESS) {
+            log.i('placeFuturesOrder result: ', data)
+            showNotification(
+                {
+                    message: `Place Order Success`,
+                    title: 'Success',
+                    type: 'success',
+                },
+                1800,
+                'bottom',
+                'bottom-right'
+            )
+        } else {
+            log.i('placeFuturesOrder result: ', data)
+            showNotification(
+                {
+                    message: `${data?.message}`,
+                    title: 'Error',
+                    type: 'failure',
+                },
+                1800,
+                'bottom',
+                'bottom-right'
+            )
+        }
     } catch (e) {
         console.log(`Can't place order `, e)
     }
+}
+
+const placeFuturesOrderValidator = (params, utils) => {
+    const _validator = {}
+
+    const percentPrice =
+        utils?.filters?.find((o) => o.filterType === 'PERCENT_PRICE') || {}
+
+    const minNotional =
+        utils?.filters?.find((o) => o.filterType === 'MIN_NOTIONAL') || {}
+
+    // ? Check quantity is exist
+    _validator.quantity = !!params?.quantity && params?.quantity > 0
+
+    // ? Check Order's notional
+    if (params?.quantity && params?.price && Object.keys(minNotional)?.length) {
+        log.d(
+            'Filter Orders notional ',
+            'Quantity x Price: ',
+            params?.quantity * params?.price,
+            'Min Notional: ',
+            +minNotional?.notional
+        )
+        _validator.ordersNotional =
+            params?.quantity * params?.price >= +minNotional?.notional
+    }
+
+    // ? Check percent price
+    if (params?.price && utils?.lastPrice) {
+        const _percentPriceDiff = roundToDown(
+            +(params?.price / utils?.lastPrice) || 0,
+            +percentPrice?.multiplierDecimal || 2
+        )
+        log.d(
+            'Filter Percent Price ',
+            'Price - Last Price: ',
+            _percentPriceDiff,
+            `Is price diff between ${percentPrice?.multiplierDown} and ${percentPrice?.multiplierUp}`,
+            _percentPriceDiff >= +percentPrice?.multiplierDown &&
+                _percentPriceDiff <= +percentPrice?.multiplierUp
+        )
+        _validator.percentPrice =
+            _percentPriceDiff >= +percentPrice?.multiplierDown &&
+            _percentPriceDiff <= +percentPrice?.multiplierUp
+    }
+
+    log.d('Place Pre-Validator ', _validator)
+    return _validator
 }

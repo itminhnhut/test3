@@ -13,8 +13,13 @@ import {
     getFuturesMarketWatch,
     getFuturesUserSettings,
 } from 'redux/actions/futures'
-import { getAssetConfig, getExchangeConfig } from 'redux/actions/market'
+import {
+    getAssetConfig,
+    getExchangeConfig,
+    getUsdRate,
+} from 'redux/actions/market'
 import { getPaymentConfigs } from 'redux/actions/payment'
+import { SET_USD_RATE } from 'redux/actions/types'
 import { getWallet, setTheme } from 'redux/actions/user'
 import Head from 'src/components/common/Head'
 import Tracking from 'src/components/common/Tracking'
@@ -86,6 +91,11 @@ const App = ({ Component, pageProps }) => {
         store.dispatch({
             type: types.SET_LOADING_USER,
             payload: false,
+        })
+
+        store.dispatch({
+            type: SET_USD_RATE,
+            payload: await getUsdRate(),
         })
     }, [])
 
