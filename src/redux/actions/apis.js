@@ -170,3 +170,7 @@ export const API_CLAIM_MISSION_REWARD = API_PREFIX + 'reward_center/claim'
 // Support center
 export const API_GET_ALL_BLOG_POSTS = getBlogApi('posts')
 export const API_GET_ALL_BLOG_TAGS = getBlogApi('tags')
+
+
+export const API_GET_TRADE_HISTORY = API_V3_PREFIX + 'futures/userTrades'
+export const API_GET_TRANSACTION_HISTORY = API_V3_PREFIX + 'futures/income'

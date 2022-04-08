@@ -333,6 +333,9 @@ module.exports = {
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
                 onlyDark: '0px 7px 23px rgba(245, 245, 245, 0.05)',
             },
+            boxShadow:{
+                onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
+            }
         },
     },
     variants: {
