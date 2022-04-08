@@ -17,6 +17,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig }) => {
     const [pickedTime, setPickedTime] = useState({
         [FUTURES_RECORD_CODE.orderHistory]: null,
         [FUTURES_RECORD_CODE.tradingHistory]: null,
+        [FUTURES_RECORD_CODE.txHistory]: null,
     })
     const [bodyMaxH, setBodyMaxH] = useState(0)
 

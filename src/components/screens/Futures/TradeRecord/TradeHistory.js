@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { formatNumber, formatTime } from 'redux/actions/utils'
 import { FUTURES_RECORD_CODE } from './RecordTableTab'
 import { customTableStyles } from './index'
@@ -7,6 +7,11 @@ import { ChevronDown } from 'react-feather'
 import FuturesRecordSymbolItem from './SymbolItem'
 import FuturesTimeFilter from '../TimeFilter'
 import DataTable from 'react-data-table-component'
+import fetchApi from 'utils/fetch-api'
+import { API_GET_TRADE_HISTORY } from 'redux/actions/apis'
+import { ApiStatus } from 'redux/actions/const';
+import Skeletor from 'src/components/common/Skeletor'
+
 
 const FuturesTradeHistory = ({
     pickedTime,
@@ -17,9 +22,9 @@ const FuturesTradeHistory = ({
         () => [
             {
                 name: 'Time',
-                selector: (row) => row?.created_at,
+                selector: (row) => row?.time,
                 cell: (row) =>
-                    formatTime(row?.created_at, 'dd-MM-yyyy HH:mm:ss'),
+                    formatTime(row?.time, 'dd-MM-yyyy HH:mm:ss'),
                 minWidth: '150px',
                 sortable: true,
             },
@@ -104,6 +109,34 @@ const FuturesTradeHistory = ({
         []
     )
 
+    const [dataSource, setDataSource] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        onFilter();
+    }, [])
+
+    const onFilter = async (filter) => {
+        setLoading(true);
+        try {
+            const { status, data } = await fetchApi({
+                url: API_GET_TRADE_HISTORY,
+                options: { method: 'GET' },
+                params: { symbol: pairConfig?.symbol, ...filter }
+            })
+
+            if (status === ApiStatus.SUCCESS) {
+                setDataSource(data)
+            } else {
+                setDataSource([])
+            }
+        } catch (e) {
+            console.log(`Can't get swap history `, e)
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <>
             <FuturesTimeFilter
@@ -114,16 +147,24 @@ const FuturesTradeHistory = ({
                         pickedTime
                     )
                 }
+                onFilter={onFilter}
             />
-            <DataTable
-                responsive
-                fixedHeader
-                data={data}
-                columns={columns}
-                className='mt-3'
-                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-                customStyles={customTableStyles}
-            />
+            {loading ?
+                <div className="px-[20px] mt-3">
+                    <div className="mb-[10px]"><Skeletor width={'100%'} /></div>
+                    <Skeletor width={'100%'} count={5} height={10} />
+                </div>
+                :
+                <DataTable
+                    responsive
+                    fixedHeader
+                    data={dataSource}
+                    columns={columns}
+                    className='mt-3'
+                    sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
+                    customStyles={customTableStyles}
+                />
+            }
         </>
     )
 }
