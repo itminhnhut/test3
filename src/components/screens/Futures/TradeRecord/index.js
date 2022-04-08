@@ -19,7 +19,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig }) => {
         [FUTURES_RECORD_CODE.tradingHistory]: null,
         [FUTURES_RECORD_CODE.txHistory]: null,
     })
-    const [bodyMaxH, setBodyMaxH] = useState(0)
+    const [forceUpdateState, setForceUpdateState] = useState(0)
 
     const tableRef = useRef(null)
 
@@ -28,11 +28,15 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig }) => {
 
     const hideOtherToggle = () => setHideOther((prevState) => !prevState)
 
+    const onForceUpdate = () =>
+        setForceUpdateState((prevState) => (prevState > 15 ? 0 : prevState + 1))
+
     const onChangeTimePicker = (field, nextPickedTime) =>
         setPickedTime({ ...pickedTime, [field]: nextPickedTime })
 
     useEffect(() => {
         if (tableRef?.current?.clientHeight) {
+            // console.log('Re-calculate height ')
             const tableHeight = tableRef.current.clientHeight - 42
 
             const tableHeaderElement =
@@ -56,7 +60,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig }) => {
                 }
             }
         }
-    }, [layoutConfig?.h, tableRef?.current, tabActive])
+    }, [layoutConfig?.h, tableRef, tabActive, forceUpdateState])
 
     return (
         <div ref={tableRef} className='h-full flex flex-col overflow-y-hidden'>
@@ -105,6 +109,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig }) => {
                     {tabActive === FUTURES_RECORD_CODE.tradingHistory && (
                         <FuturesTradeHistory
                             pairConfig={pairConfig}
+                            onForceUpdate={onForceUpdate}
                             pickedTime={
                                 pickedTime?.[FUTURES_RECORD_CODE.tradingHistory]
                             }
@@ -114,6 +119,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig }) => {
                     {tabActive === FUTURES_RECORD_CODE.txHistory && (
                         <FuturesTxHistory
                             pairConfig={pairConfig}
+                            onForceUpdate={onForceUpdate}
                             pickedTime={
                                 pickedTime?.[FUTURES_RECORD_CODE.txHistory]
                             }
@@ -136,7 +142,9 @@ export const customTableStyles = {
         },
     },
     rows: {
-        style: {},
+        style: {
+            marginBottom: '8px',
+        },
     },
 }
 

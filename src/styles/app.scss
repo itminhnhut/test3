@@ -104,7 +104,7 @@ body {
             @apply overflow-x-hidden pb-4;
 
             .rdt_TableRow {
-                @apply border-0 min-h-[40px] mb-3 last:mb-0;
+                @apply border-0 min-h-[40px] last:mb-0;
 
                 .rdt_TableCell {
                     @apply text-xs font-medium whitespace-nowrap;
