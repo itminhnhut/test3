@@ -103,8 +103,8 @@ export const SupportCategories = {
                     {
                         id: 'how_to_dep_wdl',
                         title: 'Hướng dẫn nạp/rút chung',
-                        slug: 'faq-vi-huong-dan-nap-rut',
-                        displaySlug: 'huong-dan-nap-rut'
+                        slug: 'faq-vi-huong-dan-nap-rut-chung',
+                        displaySlug: 'huong-dan-nap-rut-chung'
                     },
                     {
                         id: 'how_to_dep',
