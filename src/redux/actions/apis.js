@@ -79,6 +79,8 @@ export const API_SET_FUTURES_POSITION_MODE =
     API_V3_PREFIX + 'futures/positionSide'
 export const API_FUTURES_LEVERAGE = API_V3_PREFIX + 'futures/leverage'
 export const API_FUTURES_PLACE_ORDER = API_V3_PREFIX + 'futures/order'
+export const API_GET_FUTURES_OPEN_ORDERS = API_V3_PREFIX + 'futures/openOrders'
+export const API_FUTURES_CANCEL_OPEN_ORDERS = API_V3_PREFIX + 'futures/order'
 
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'

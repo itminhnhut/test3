@@ -10,5 +10,7 @@
     "take_profit": "Take Profit",
     "stop_loss": "Stop Loss",
     "last_price": "Last",
-    "last_price_tooltip": "Fill in the current last price"
+    "last_price_tooltip": "Fill in the current last price",
+    "close_order_success": "Order #{{orderId}} was closed successfully.",
+    "close_order_failed": "Order #{{orderId}} was failed to close."
 }

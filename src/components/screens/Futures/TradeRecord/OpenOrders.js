@@ -1,27 +1,85 @@
-import { useMemo } from 'react'
-import { customTableStyles } from './index'
-import { ChevronDown, X } from 'react-feather'
-import { formatNumber, formatTime } from 'redux/actions/utils'
+import {useEffect, useMemo, useState} from 'react'
+import {customTableStyles} from './index'
+import {ChevronDown, X} from 'react-feather'
+import {formatNumber, formatTime} from 'redux/actions/utils'
 
 import FuturesRecordSymbolItem from './SymbolItem'
 import DataTable from 'react-data-table-component'
+import fetchAPI from "utils/fetch-api";
+import {ApiStatus} from "redux/actions/const";
+import showNotification from "utils/notificationService";
+import fetchApi from "utils/fetch-api";
+import {useTranslation} from "next-i18next";
+import {
+    API_FUTURES_CANCEL_OPEN_ORDERS,
+    API_GET_FUTURES_OPEN_ORDERS,
+} from "redux/actions/apis";
+import TableNoData from "components/common/table.old/TableNoData";
+import Skeletor from "components/common/Skeletor";
 
-const FuturesOpenOrders = ({ pairConfig }) => {
+const FuturesOpenOrders = ({pairConfig}) => {
+    const {t} = useTranslation(['common', 'futures']);
+    const [orders, setOrders] = useState([])
+    const [loading, setLoading] = useState(false)
+
+    const cancelOrder = ({orderId, symbol}) => async () => {
+        setLoading(true)
+        const {status} = await fetchAPI({
+            url: API_FUTURES_CANCEL_OPEN_ORDERS,
+            options: {
+                method: 'DELETE',
+            },
+            params: {
+                orderId,
+                symbol,
+            },
+        });
+        setLoading(false)
+        let message = '';
+        if (status === ApiStatus.SUCCESS) {
+            message = t('futures:close_order_success', {orderId});
+            showNotification({message, title: 'Success', type: 'success'}, null, 'bottom', 'bottom-right');
+        } else {
+            showNotification({
+                message: t('futures:close_order_failed', {orderId}), title: 'Failure', type: 'failure'
+            }, null, 'bottom', 'bottom-right');
+        }
+        getOrderList()
+    }
+
+    const getOrderList = async () => {
+        setLoading(true)
+        const {status, data} = await fetchApi({
+            url: API_GET_FUTURES_OPEN_ORDERS,
+            options: {method: 'GET'},
+            params: {symbol: 'BTCUSDT'},
+        })
+        setLoading(false)
+
+        if (status === ApiStatus.SUCCESS) {
+            setOrders(data || [])
+        }
+    }
+
+    useEffect(() => {
+        getOrderList()
+    }, [])
+
     const columns = useMemo(
         () => [
             {
                 name: 'Time',
-                selector: (row) => row?.created_at,
+                selector: (row) => row?.time,
                 cell: (row) =>
-                    formatTime(row?.created_at, 'dd-MM-yyyy HH:mm:ss'),
+                    formatTime(row?.time, 'dd-MM-yyyy HH:mm:ss'),
                 minWidth: '150px',
                 sortable: true,
             },
             {
                 name: 'Symbol',
-                selector: (row) => row?.symbol?.pair,
+                selector: (row) => row?.symbol,
                 cell: (row) => (
-                    <FuturesRecordSymbolItem symbol={row?.symbol?.pair} />
+                    <FuturesRecordSymbolItem symbol={row?.symbol}/>
                 ),
                 minWidth: '150px',
                 sortable: true,
@@ -29,13 +87,13 @@ const FuturesOpenOrders = ({ pairConfig }) => {
             {
                 name: 'Type',
                 selector: (row) => row?.type,
-                cell: () => <span>Limit</span>,
+                cell: (row) => <span>{row.type}</span>,
                 sortable: true,
             },
             {
                 name: 'Side',
                 selector: (row) => row?.side,
-                cell: () => <span className='text-dominant'>BUY</span>,
+                cell: (row) => <span className='text-dominant'>{row.side}</span>,
                 sortable: true,
             },
             {
@@ -46,7 +104,7 @@ const FuturesOpenOrders = ({ pairConfig }) => {
                         {formatNumber(
                             row?.price,
                             pairConfig?.quotePrecision || 2
-                        )}{' '}
+                        )}
                         {row?.symbol?.quoteAsset}
                     </span>
                 ),
@@ -54,28 +112,26 @@ const FuturesOpenOrders = ({ pairConfig }) => {
             },
             {
                 name: 'Amount',
-                selector: (row) => row?.amount,
+                selector: (row) => row?.origQty,
                 cell: (row) => (
                     <span>
                         {formatNumber(
-                            row?.amount,
+                            row?.origQty,
                             pairConfig?.quotePrecision || 2
-                        )}{' '}
-                        {row?.symbol?.quoteAsset}
+                        )}
                     </span>
                 ),
                 sortable: true,
             },
             {
                 name: 'Filled',
-                selector: (row) => row?.filled,
+                selector: (row) => row?.executedQty,
                 cell: (row) => (
                     <span>
                         {formatNumber(
-                            row?.filled,
+                            row?.executedQty,
                             pairConfig?.quotePrecision || 2
-                        )}{' '}
-                        {row?.symbol?.quoteAsset}
+                        )}
                     </span>
                 ),
                 sortable: true,
@@ -89,31 +145,13 @@ const FuturesOpenOrders = ({ pairConfig }) => {
             {
                 name: 'Post Only',
                 selector: (row) => row?.postOnly,
-                cell: () => <span>No</span>,
-                sortable: true,
-            },
-            {
-                name: 'Trigger Conditions',
-                selector: (row) => row?.triggerConditions,
-                cell: (row) => (
-                    <div>
-                        Mark Price
-                        <div>{'>= 3,140.00'}</div>
-                    </div>
-                ),
-                minWidth: '180px',
-                sortable: true,
-            },
-            {
-                name: 'TP/SL',
-                selector: (row) => row?.tpsl,
-                cell: () => <span className='text-dominant'>View</span>,
+                cell: (row) => <span>{row?.postOnly}</span>,
                 sortable: true,
             },
             {
                 name: 'Cancel All',
-                cell: () => (
-                    <span>
+                cell: (row) => (
+                    <span className="cursor-pointer" onClick={cancelOrder(row)}>
                         <X
                             strokeWidth={1}
                             size={16}
@@ -130,57 +168,19 @@ const FuturesOpenOrders = ({ pairConfig }) => {
         <DataTable
             responsive
             fixedHeader
-            sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-            data={data}
+            sortIcon={<ChevronDown size={8} strokeWidth={1.5}/>}
+            data={orders}
             columns={columns}
             customStyles={customTableStyles}
+            noDataComponent={<TableNoData/>}
+            progressPending={loading}
+            progressComponent={
+                <div style={{width: '100%'}} className="p-4">
+                    <Skeletor width={'100%'} count={10} height={10}/>
+                </div>
+            }
         />
     )
 }
-
-const data = [
-    {
-        id: 1,
-        created_at: 1646607132000,
-        symbol: { pair: 'BTCUSDT', baseAsset: 'BTC', quoteAsset: 'USDT' },
-        type: 1,
-        side: 2,
-        price: 17.99,
-        amount: 27.8,
-        filled: 0,
-        reduceOnly: true,
-        postOnly: false,
-        triggerConditions: {},
-        tpsl: 'View',
-    },
-    {
-        id: 2,
-        created_at: 1646607132000,
-        symbol: { pair: 'ETHUSDT', baseAsset: 'ETH', quoteAsset: 'USDT' },
-        type: 1,
-        side: 2,
-        price: 17.99,
-        amount: 27.8,
-        filled: 0,
-        reduceOnly: true,
-        postOnly: false,
-        triggerConditions: {},
-        tpsl: 'View',
-    },
-    {
-        id: 3,
-        created_at: 1646607132000,
-        symbol: { pair: 'BTCUSDT', baseAsset: 'BTC', quoteAsset: 'USDT' },
-        type: 1,
-        side: 2,
-        price: 17.99,
-        amount: 27.8,
-        filled: 0,
-        reduceOnly: true,
-        postOnly: false,
-        triggerConditions: {},
-        tpsl: 'View',
-    },
-]
-
+//
 export default FuturesOpenOrders
