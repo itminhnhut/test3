@@ -21,6 +21,11 @@ export const FuturesOrderTypes = {
     TrailingStopMarket: 'TRAILING_STOP_MARKET',
 }
 
+export const FuturesStopOrderMode = {
+    markPrice: 'MARK_PRICE',
+    lastPrice: 'CONTRACT_PRICE',
+}
+
 export const FuturesMarginMode = {
     Isolated: 'ISOLATED',
     Cross: 'CROSSED',

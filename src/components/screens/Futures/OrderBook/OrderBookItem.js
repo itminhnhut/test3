@@ -32,7 +32,7 @@ const FuturesOrderBookItem = memo(
                             'text-red': side === ORDER_BOOK_MODE.ASKS,
                         })}
                     >
-                        {formatNumber(+rate, pairConfig?.quotePrecision || 2)}
+                        {formatNumber(+rate, pairConfig?.pricePrecision || 4)}
                     </div>
                     <div
                         style={{ flex: '1 1 0%' }}
@@ -40,7 +40,7 @@ const FuturesOrderBookItem = memo(
                     >
                         {formatNumber(
                             +amount,
-                            pairConfig?.baseAssetPrecision || 5
+                            pairConfig?.quantityPrecision || 5
                         )}
                     </div>
                     <div
@@ -49,7 +49,7 @@ const FuturesOrderBookItem = memo(
                     >
                         {formatNumber(
                             +rate * +amount,
-                            pairConfig?.baseAssetPrecision || 5
+                            pairConfig?.quantityPrecision || 5
                         )}
                     </div>
                 </div>

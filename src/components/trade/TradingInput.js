@@ -13,6 +13,7 @@ const TradingInput = ({
     inputClassName,
     renderTail = null,
     tailContainerClassName,
+    validator = {},
     ...inputProps
 }) => {
     // ? Input state management
@@ -44,6 +45,22 @@ const TradingInput = ({
             >
                 {label || 'Label?'}
             </div>
+
+            {inputProps?.value &&
+            Object.keys(validator)?.length &&
+            !validator?.isValid ? (
+                <div className='absolute right-0 top-0 -translate-y-full z-50 flex flex-col items-center'>
+                    <div className='px-3 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4'>
+                        {validator?.msg}
+                    </div>
+                    <div
+                        className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'
+                        style={{
+                            clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
+                        }}
+                    />
+                </div>
+            ) : null}
 
             {/* Input  */}
             <NumberFormat

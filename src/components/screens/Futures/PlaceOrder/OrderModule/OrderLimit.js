@@ -1,8 +1,9 @@
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 import { useTranslation } from 'next-i18next'
 import { ChevronDown } from 'react-feather'
 
 import TradingInput from 'components/trade/TradingInput'
+import { FuturesStopOrderMode } from 'redux/reducers/futures'
 
 const FuturesOrderLimit = ({
     isStopLimit,
@@ -16,7 +17,10 @@ const FuturesOrderLimit = ({
     stopPrice,
     setStopPrice,
     setAsset,
-    usingPercent,
+    getValidator,
+    stopOrderMode,
+    setStopOrderMode,
+    getOrderStopModeLabel,
 }) => {
     const { t } = useTranslation()
 
@@ -39,17 +43,31 @@ const FuturesOrderLimit = ({
                     renderTail={() => (
                         <div className='relative group select-none'>
                             <div className='flex items-center'>
-                                Mark
+                                {getOrderStopModeLabel(stopOrderMode)}
                                 <ChevronDown
                                     size={12}
                                     className='ml-1 group-hover:rotate-180'
                                 />
                             </div>
                             <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
-                                <div className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'>
+                                <div
+                                    className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
+                                    onClick={() =>
+                                        setStopOrderMode(
+                                            FuturesStopOrderMode.lastPrice
+                                        )
+                                    }
+                                >
                                     Last
                                 </div>
-                                <div className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'>
+                                <div
+                                    className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
+                                    onClick={() =>
+                                        setStopOrderMode(
+                                            FuturesStopOrderMode.markPrice
+                                        )
+                                    }
+                                >
                                     Mark
                                 </div>
                             </div>
@@ -63,6 +81,7 @@ const FuturesOrderLimit = ({
                 value={price}
                 onValueChange={({ value }) => handlePrice(value)}
                 decimalScale={pairConfig?.pricePrecision}
+                validator={getValidator('price')}
                 tailContainerClassName='relative flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
                     <>
@@ -89,6 +108,8 @@ const FuturesOrderLimit = ({
                 suffix={size?.includes('%') ? '%' : ''}
                 onChange={({ target: { value } }) => handleQuantity(value)}
                 // onValueChange={({ value }) => handleQuantity(value)}
+                validator={getValidator('quantity')}
+                decimalScale={pairConfig?.quantityPrecision}
                 labelClassName='whitespace-nowrap'
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
