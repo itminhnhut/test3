@@ -849,3 +849,55 @@ export const secondToMinutesAndSeconds = (time) => {
 
 export const getPriceColor = (value) =>
     value < 0 ? 'text-red' : 'text-dominant'
+
+const BASE_ASSET = ['VNDC', 'USDT']
+
+export const getSymbolObject = (symbol) => {
+    if (
+        !symbol ||
+        [
+            'USDTVNDC',
+            'VNDCUSDT',
+            'VNDC/USDT',
+            'USDT/VNDC',
+            'VNDC/',
+            'USDT/',
+        ].includes(symbol)
+    ) {
+        log?.d(`Symbol not support`)
+        return
+    }
+
+    if (
+        symbol?.includes('/VNDC') ||
+        symbol?.includes('/USDT') ||
+        symbol?.includes('VNDC') ||
+        symbol?.includes('USDT')
+    ) {
+        let baseAsset = '',
+            quoteAsset = ''
+
+        if (symbol?.includes('VNDC')) {
+            quoteAsset = 'VNDC'
+            baseAsset = symbol?.replace('VNDC', '')
+        }
+
+        if (symbol?.includes('USDT')) {
+            quoteAsset = 'USDT'
+            baseAsset = symbol?.replace('USDT', '')
+        }
+
+        // ? Handle predictable symbol
+        if (baseAsset?.includes('_')) {
+            baseAsset = baseAsset?.split('_')?.[0]
+        }
+
+        return {
+            symbol,
+            baseAsset,
+            quoteAsset,
+        }
+    }
+
+    return {}
+}
