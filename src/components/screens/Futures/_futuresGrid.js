@@ -30,12 +30,24 @@ export const getLayoutFromLS = (key) => {
 
 export const setLayoutToLS = (key, value) => {
     if (global.localStorage) {
-        global.localStorage.setItem(
-            LOCAL_STORAGE_KEY.FuturesGridLayouts,
-            JSON.stringify({
-                [key]: value,
-            })
+        let localStorage = global.localStorage.getItem(
+            LOCAL_STORAGE_KEY.FuturesGridLayouts
         )
+        if (localStorage) {
+            localStorage = JSON.parse(localStorage);
+            localStorage[key] = value;
+            global.localStorage.setItem(
+                LOCAL_STORAGE_KEY.FuturesGridLayouts,
+                JSON.stringify(localStorage)
+            )
+        } else {
+            global.localStorage.setItem(
+                LOCAL_STORAGE_KEY.FuturesGridLayouts,
+                JSON.stringify({
+                    [key]: value
+                })
+            )
+        }
     }
 }
 

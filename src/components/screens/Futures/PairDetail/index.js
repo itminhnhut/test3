@@ -30,6 +30,7 @@ const FuturesPairDetail = ({
     pairConfig,
     markPrice,
     forceUpdateState,
+    isVndcFutures
 }) => {
     // ? Xử lí minW để khi giá thay đổi, giao diện này sẽ không bị xê dịch.
     // ? Nguyên nhân: Font sida (;_;)
@@ -109,8 +110,8 @@ const FuturesPairDetail = ({
                 case 'fundingCountdown':
                     const rateWidth =
                         markPrice?.fundingRate?.toString()?.length +
-                            getDecimalScale(markPrice?.fundingRate) *
-                                TEXT_XS_WIDTH_PER_LETTER || 0
+                        getDecimalScale(markPrice?.fundingRate) *
+                        TEXT_XS_WIDTH_PER_LETTER || 0
                     const timerWidth = TEXT_XS_WIDTH_PER_LETTER * 8
 
                     value = (
@@ -134,10 +135,10 @@ const FuturesPairDetail = ({
                             <div className='ml-4'>
                                 {markPrice?.nextFundingTime
                                     ? secondToMinutesAndSeconds(
-                                          (markPrice?.nextFundingTime -
-                                              Date.now()) *
-                                              0.001
-                                      ).toString()
+                                        (markPrice?.nextFundingTime -
+                                            Date.now()) *
+                                        0.001
+                                    ).toString()
                                     : '--:--'}
                             </div>
                         </div>
@@ -185,9 +186,9 @@ const FuturesPairDetail = ({
                 case '24hChange':
                     const changeWidth =
                         pairPrice?.priceChange?.toString()?.length +
-                            pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0
+                        pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0
                     value = (
-                        <div className='w-[88%] flex items-center'>
+                        <div className='flex items-center'>
                             <div
                                 style={{
                                     minWidth: changeWidth,
@@ -231,6 +232,7 @@ const FuturesPairDetail = ({
                     minWidth = itemsPriceMinW + 36
                     break
                 case '24hBaseVolume':
+                    if (isVndcFutures) return;
                     localized += ` (${pairPrice?.baseAsset})`
                     minWidth = itemsPriceMinW + 41
                     value = formatNumber(
@@ -239,6 +241,7 @@ const FuturesPairDetail = ({
                     )
                     break
                 case '24hQuoteVolume':
+                    if (isVndcFutures) return;
                     localized += ` (${pairPrice?.quoteAsset})`
                     minWidth = itemsPriceMinW + 50
                     value = formatNumber(
@@ -257,13 +260,13 @@ const FuturesPairDetail = ({
                 >
                     <FuturesPairDetailItem
                         label={localized}
-                        containerClassName={className}
+                        containerClassName={`${className} ${isVndcFutures ? 'mr-[20px]' : ''}`}
                         value={value}
                     />
                 </div>
             )
         })
-    }, [pairPrice, itemsPriceMinW, pricePrecision])
+    }, [pairPrice, itemsPriceMinW, pricePrecision, isVndcFutures])
 
     useEffect(() => {
         setItemsPriceMinW(undefined)
@@ -315,7 +318,7 @@ const FuturesPairDetail = ({
                 onMouseLeave={() => setActivePairList(false)}
             >
                 <div className='relative z-10 flex items-center font-bold text-[18px]'>
-                    {pairPrice?.symbol}
+                    {pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset}
                     <ChevronDown
                         size={16}
                         className={classNames(
@@ -347,14 +350,16 @@ const FuturesPairDetail = ({
 
             {/* Details */}
             <InfoSlider forceUpdateState={forceUpdateState} className='ml-2'>
-                <div
-                    ref={itemsPriceRef}
-                    style={{ minWidth: itemsPriceMinW || 0 }}
-                >
-                    {renderMarkPrice()}
-                </div>
+                {!isVndcFutures && <>
+                    <div
+                        ref={itemsPriceRef}
+                        style={{ minWidth: itemsPriceMinW || 0 }}
+                    >
+                        {renderMarkPrice()}
+                    </div>
 
-                {renderMarkPriceItems()}
+                    {renderMarkPriceItems()}
+                </>}
                 {renderPairPriceItems()}
             </InfoSlider>
         </div>

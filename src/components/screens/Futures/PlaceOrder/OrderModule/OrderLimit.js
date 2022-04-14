@@ -21,6 +21,7 @@ const FuturesOrderLimit = ({
     stopOrderMode,
     setStopOrderMode,
     getOrderStopModeLabel,
+    isVndcFutures
 }) => {
     const { t } = useTranslation()
 
@@ -29,6 +30,8 @@ const FuturesOrderLimit = ({
         setAsset(asset)
         handleQuantity('')
     }
+
+    const _size = (isVndcFutures && isNaN(size)) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
 
     return (
         <div>
@@ -43,34 +46,39 @@ const FuturesOrderLimit = ({
                     renderTail={() => (
                         <div className='relative group select-none'>
                             <div className='flex items-center'>
-                                {getOrderStopModeLabel(stopOrderMode)}
-                                <ChevronDown
-                                    size={12}
-                                    className='ml-1 group-hover:rotate-180'
-                                />
+                                {isVndcFutures ? 'VNDC' : <>
+                                    {getOrderStopModeLabel(stopOrderMode)}
+                                    <ChevronDown
+                                        size={12}
+                                        className='ml-1 group-hover:rotate-180'
+                                    />
+                                </>
+                                }
                             </div>
-                            <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
-                                <div
-                                    className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                    onClick={() =>
-                                        setStopOrderMode(
-                                            FuturesStopOrderMode.lastPrice
-                                        )
-                                    }
-                                >
-                                    Last
+                            {!isVndcFutures &&
+                                <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
+                                    <div
+                                        className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
+                                        onClick={() =>
+                                            setStopOrderMode(
+                                                FuturesStopOrderMode.lastPrice
+                                            )
+                                        }
+                                    >
+                                        Last
+                                    </div>
+                                    <div
+                                        className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
+                                        onClick={() =>
+                                            setStopOrderMode(
+                                                FuturesStopOrderMode.markPrice
+                                            )
+                                        }
+                                    >
+                                        Mark
+                                    </div>
                                 </div>
-                                <div
-                                    className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                    onClick={() =>
-                                        setStopOrderMode(
-                                            FuturesStopOrderMode.markPrice
-                                        )
-                                    }
-                                >
-                                    Mark
-                                </div>
-                            </div>
+                            }
                         </div>
                     )}
                 />
@@ -89,7 +97,7 @@ const FuturesOrderLimit = ({
                             className='group truncate mr-2 text-dominant cursor-pointer'
                             onClick={getLastedLastPrice}
                         >
-                            {t('futures:last_price')}
+                            {isVndcFutures ? '' : t('futures:last_price')}
                             <div className='hidden group-hover:block absolute p-2 rounded-md -top-2 left-1/2 translate-x-[-85%] -translate-y-full text-xs text-txtPrimary dark:text-txtPrimary-dark bg-gray-3 dark:bg-darkBlue-4'>
                                 {t('futures:last_price_tooltip')}
                                 <div className='absolute bottom-0 translate-y-4 left-1/2 -translate-x-1/2 text-lg text-gray-3 dark:text-darkBlue-4'>
@@ -104,8 +112,8 @@ const FuturesOrderLimit = ({
             <TradingInput
                 thousandSeparator={false}
                 label={t('futures:size')}
-                value={size}
-                suffix={size?.includes('%') ? '%' : ''}
+                value={_size}
+                suffix={isVndcFutures ? '' : size?.includes('%') ? '%' : ''}
                 onChange={({ target: { value } }) => handleQuantity(value)}
                 // onValueChange={({ value }) => handleQuantity(value)}
                 validator={getValidator('quantity')}

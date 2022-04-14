@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 
-const FuturesRecordTableTab = ({ tabActive, onChangeTab }) => {
+const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures }) => {
     return (
         <div className='flex items-center flex-grow font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-            {RECORD_TAB.map((tab) => (
+            {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((tab) => (
                 <div
                     key={tab.code}
                     onClick={() => onChangeTab(tab.code)}
@@ -32,6 +32,21 @@ export const FUTURES_RECORD_CODE = {
     txHistory: 'txHistory',
     assets: 'assets',
 }
+
+const RECORD_TAB_VNDC = [
+    {
+        key: 1,
+        code: FUTURES_RECORD_CODE.openOrders,
+        title: 'Open Orders',
+        localized: null,
+    },
+    {
+        key: 2,
+        code: FUTURES_RECORD_CODE.orderHistory,
+        title: 'Order History',
+        localized: null,
+    },
+]
 
 const RECORD_TAB = [
     {

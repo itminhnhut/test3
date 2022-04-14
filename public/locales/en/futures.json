@@ -10,5 +10,41 @@
     "take_profit": "Take Profit",
     "stop_loss": "Stop Loss",
     "last_price": "Last",
-    "last_price_tooltip": "Fill in the current last price"
+    "last_price_tooltip": "Fill in the current last price",
+    "fee_level": "Fee level",
+    "order_table": {
+        "opening_title": "Opening",
+        "history_title": "History",
+        "id": "ID",
+        "symbol": "Symbol",
+        "quantity": "Quantity",
+        "created_time": "Time",
+        "closed_time": "Closed Time",
+        "type": "Type",
+        "side": "Side",
+        "open_price": "Entry Price",
+        "mark_price": "Market Price",
+        "liquidation_price": "Liq. Price",
+        "close_price": "Close",
+        "last_price": "Last Price",
+        "sl": "Stop-loss",
+        "tp": "Take-profit",
+        "profit": "Profit",
+        "note": "Note",
+        "no_opening_order": "No opening orders",
+        "no_history_order": "No history orders",
+        "login_to_continue": "Please login to continue",
+        "loading": "Loading...",
+        "mobile": {
+            "order": "Order"
+        }
+    },
+    "close_order": {
+        "modal_title": "Close Order#{{value}}",
+        "confirm_message": "Do you want to close your order with ticket <span class='font-medium'>#{{value}}</span> ?",
+        "future_note": "* Eco Close mode will close your order by placing Limit order close to the current price and get a discount on fees compared to normal order. See details at ",
+        "close_successfully": "Close order #{{value}} successfully",
+        "btn_ok": "OK",
+        "btn_cancel": "Cancel"
+    }
 }

@@ -36,9 +36,11 @@ class FuturesMarketWatch {
         this.statisticsOpenTime = options.statisticsOpenTime
         this.statisticsCloseTime = options.statisticsCloseTime
         this.weightedAveragePrice = options.weightedAveragePrice
+        this.ask = options.ask
+        this.bid = options.bid
     }
 
-    static create(source) {
+    static create(source, mode) {
         const pairKey = getPairKey(source?.s)
         return new FuturesMarketWatch({
             symbol: source?.s,
@@ -49,7 +51,7 @@ class FuturesMarketWatch {
             openPrice: +source?.o || 0,
             highPrice: +source?.h || 0,
             lowPrice: +source?.l || 0,
-            lastPrice: +source?.c || 0,
+            lastPrice: +source?.[mode === 'VNDC' ? 'l' : 'c'] || 0,
             priceChange: +source?.p || 0,
             priceChangePercent: +source?.P || 0,
             lastQuantity: +source?.Q || 0,
@@ -61,6 +63,8 @@ class FuturesMarketWatch {
             statisticsOpenTime: source?.O,
             statisticsCloseTime: source?.C,
             weightedAveragePrice: +source?.w,
+            ask: source?.ap,
+            bid: source?.bp,
         })
     }
 }
