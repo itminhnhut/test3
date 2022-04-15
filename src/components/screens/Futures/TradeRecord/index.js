@@ -107,6 +107,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                             <FuturesOrderHistoryVndc
                                 onForceUpdate={onForceUpdate}
                                 pairConfig={pairConfig}
+                                pairPrice={pairPrice}
                                 pickedTime={
                                     pickedTime?.[
                                     FUTURES_RECORD_CODE.orderHistoryVndc

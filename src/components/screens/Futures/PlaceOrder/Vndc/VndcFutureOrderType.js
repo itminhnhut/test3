@@ -38,7 +38,7 @@ export const VndcFutureOrderType = {
 }
 
 export const getProfitVndc = (order, lastPrice = 0) => {
-    const { status, quantity, open_price, type, symbol, side, close_price } = order;
+    const { status, quantity, open_price, type, symbol, side, close_price } = order || {};
     if (!order || !symbol) return null
     let { fee } = order;
     fee = fee || 0

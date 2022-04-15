@@ -18,6 +18,7 @@ import { VndcFutureOrderType } from './VndcFutureOrderType'
 import OrderProfit from '../../TradeRecord/OrderProfit';
 import Big from "big.js";
 import FuturesEditSLTPVndc from './EditSLTPVndc'
+import ShareFuturesOrder from "components/screens/Futures/ShareFuturesOrder";
 
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice }) => {
@@ -74,7 +75,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             {
                 name: 'PNL (ROE%)',
                 selector: (row) => row?.pnl?.value,
-                cell: (row) => <OrderProfit order={row} pairPrice={pairPrice} />,
+                cell: (row) => <OrderProfit order={row} pairPrice={pairPrice} setShareOrderModal={() => setShareOrder(row)} />,
                 minWidth: '150px',
                 sortable: true,
             },
@@ -111,6 +112,9 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     const rowData = useRef(null);
     const userSocket = useSelector((state) => state.socket.userSocket);
     const [showModalEdit, setShowModalEdit] = useState(false)
+    const [shareOrder, setShareOrder] = useState(null)
+
+    // console.log(pairConfig)
 
     useEffect(() => {
         getDataSource();
@@ -284,6 +288,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     </div>
                 </div>
             </Modal>
+            <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)}/>
             {showModalEdit &&
                 <FuturesEditSLTPVndc
                     isVisible={showModalEdit}
