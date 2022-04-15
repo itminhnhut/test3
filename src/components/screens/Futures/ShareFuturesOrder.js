@@ -38,13 +38,14 @@ const ShareFuturesOrder = ({isVisible, onClose, pairPrice, order = {}, isClosePr
     } = useMemo(() => {
         if (!order) return {}
         const profit = getProfitVndc(order, pairPrice?.lastPrice)
-        const price = {
+        let price = {
             [PENDING]: order?.price,
             [ACTIVE]: order?.open_price,
             [CLOSED]: order?.close_price,
         }[order?.status]
-        const openPrice = order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
-        const biasValue = order.status === PENDING ? +Big(price).minus(openPrice) : 0
+
+        if (isClosePrice) price = order?.open_price
+
         return {
             leverage: order?.leverage,
             profit: formatNumber(profit, 0, 0, true),

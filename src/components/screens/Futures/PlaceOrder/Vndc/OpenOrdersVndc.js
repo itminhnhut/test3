@@ -218,7 +218,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                             </span>
                         );
                 }
-                text = row.price ? (formatNumber(row.price, 8) + ' ' + pairPrice?.quoteAsset) : '';;
+                text = row.price ? (formatNumber(row.price, 8) + ' ' + pairPrice?.quoteAsset) : '';
                 return <div className="flex items-center ">
                     <div>{text}<br />{bias}</div>
                     <Edit onClick={() => onOpenModify(row)} className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
