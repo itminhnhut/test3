@@ -52,7 +52,7 @@ const SupportSearchBar = ({
                                   }, containerClassNames)}>
             <Search strokeWidth={2}
                     className="text-txtSecondary dark:text-txtSecondary-dark w-4 h-4 lg:w-[24px] lg:h-[24px] lg:!text-dominant"/>
-            <input id="my-custom-input" className="px-2 lg:px-4 flex-grow font-medium text-xs md:text-sm lg:text-[16px]"
+            <input id="my-custom-input" className="px-2 lg:px-4 flex-grow font-medium text-sm md:text-sm lg:text-[16px]"
                    placeholder={t('support-center:search_articles')}
                    value={searchKey}
                    onChange={({ target: { value } }) => setSearchKey(value)}
