@@ -45,7 +45,7 @@ const FuturesOrderCostAndMaxVndc = ({
                         longOrderOpenLoss,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
-                    containerClassName='text-xs'
+                    containerClassName='text-md'
                 />
                 <TradingLabel
                     label={t('common:cost')}
@@ -53,7 +53,7 @@ const FuturesOrderCostAndMaxVndc = ({
                         shortOrderOpenLoss,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
-                    containerClassName='text-xs'
+                    containerClassName='text-md'
                 />
             </>
         )
@@ -68,7 +68,7 @@ const FuturesOrderCostAndMaxVndc = ({
                         maxBuy,
                         pairConfig?.quantityPrecision
                     )} ${selectedAsset}`}
-                    containerClassName='text-xs'
+                    containerClassName='text-md'
                 />
                 <TradingLabel
                     label={t('common:max')}
@@ -76,7 +76,7 @@ const FuturesOrderCostAndMaxVndc = ({
                         maxSell,
                         pairConfig?.quantityPrecision
                     )} ${selectedAsset}`}
-                    containerClassName='text-xs'
+                    containerClassName='text-md'
                 />
             </>
         )

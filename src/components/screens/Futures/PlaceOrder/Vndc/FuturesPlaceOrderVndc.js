@@ -160,6 +160,7 @@ const FuturesPlaceOrderVndc = ({
                     setLeverage={setLeverage}
                     pairConfig={pairConfig}
                     userSettings={userSettings}
+                    isVndcFutures={isVndcFutures}
                 />
                 <div className='absolute left-0 -bottom-5 w-full h-5 dragHandleArea' />
             </div>

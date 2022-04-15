@@ -43,9 +43,9 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h }) => {
             >
                 {pairTicker?.lastPrice
                     ? formatNumber(
-                          pairTicker?.lastPrice,
-                          pairConfig?.pricePrecision
-                      )
+                        pairTicker?.lastPrice,
+                        pairConfig?.pricePrecision
+                    )
                     : '--'}
             </div>
         )
@@ -64,11 +64,11 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h }) => {
             >
                 {pairTicker?.priceChangePercent
                     ? formatNumber(
-                          roundTo(pairTicker.priceChangePercent, 2),
-                          2,
-                          2,
-                          true
-                      ) + '%'
+                        roundTo(pairTicker.priceChangePercent, 2),
+                        2,
+                        2,
+                        true
+                    ) + '%'
                     : '--'}
             </div>
         )
@@ -97,7 +97,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h }) => {
                 PublicSocketEvent.FUTURES_TICKER_UPDATE,
                 async (data) => {
                     if (data) {
-                        const _pairTicker = FuturesMarketWatch.create(data)
+                        const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset)
                         if (_pairTicker?.symbol === pairConfig.pair) {
                             setPairTicker(_pairTicker)
                         }

@@ -18,6 +18,7 @@
         "id": "ID",
         "symbol": "Cặp tiền",
         "quantity": "Số lượng",
+        "amount": "Số lượng",
         "created_time": "Mở lệnh",
         "closed_time": "Đóng lệnh",
         "type": "Loại",

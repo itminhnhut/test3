@@ -8,14 +8,19 @@ const OrderProfit = ({ order, pairPrice }) => {
     const percent = formatNumber((profit / order.margin), 2, 0, true);
     return <div className='flex items-center'>
         <div className={getPriceColor(profit)}>
-            <div>
-                {profit > 0 ? '+' : ''}
-                {formatNumber(profit, 0, 0, true)} {pairPrice?.quoteAsset}
-            </div>
-            <div>
-                ({percent > 0 ? '+' : ''}
-                {percent + '%'})
-            </div>
+            {profit !== 0 ? <>
+                <div>
+                    {profit > 0 ? '+' : ''}
+                    {formatNumber(profit, 0, 0, true)} {pairPrice?.quoteAsset}
+                </div>
+                <div>
+                    ({percent > 0 ? '+' : ''}
+                    {percent + '%'})
+                </div>
+            </>
+                :
+                '-'
+            }
         </div>
         <Share2 size={16} className='ml-1' />
     </div>

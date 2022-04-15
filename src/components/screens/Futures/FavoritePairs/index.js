@@ -17,6 +17,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
 
     const favoritePairs = useSelector((state) => state.futures.favoritePairs)
     const publicSocket = useSelector((state) => state.socket.publicSocket)
+    const allPairConfigs = useSelector((state) => state.futures.pairConfigs)
 
     const fetchMarketWatch = async (isRefresh = false) => {
         !isRefresh && setLoading(true)
@@ -33,9 +34,10 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
     }
 
     const renderPairItems = useCallback(() => {
-        const marketWatch = refreshMarketWatch?.map((o) =>
-            FuturesMarketWatch.create(o)
-        )
+        const marketWatch = refreshMarketWatch?.map((o) => {
+            const quoteAsset = allPairConfigs.find(i => i.pair === o.s)?.quoteAsset
+            return FuturesMarketWatch.create(o, quoteAsset)
+        })
         const pairs = mergeFuturesFavoritePairs(favoritePairs, marketWatch)
         return pairs?.map((pair) => (
             <FuturesFavoritePairItem key={pair?.symbol} pair={pair} />

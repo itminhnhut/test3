@@ -20,7 +20,7 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
                 router.push(PATHS.FUTURES_V2.DEFAULT + `/${pair?.symbol}`)
             }
         >
-            <div className='mr-1'>{pair?.symbol}</div>
+            <div className='mr-1 text-gray-1'>{pair?.symbol}</div>
             <div
                 className={classNames('tracking-wide min-w-[40px] text-right', {
                     'text-red': pair?.priceChangePercent < 0,

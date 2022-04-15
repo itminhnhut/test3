@@ -9,7 +9,7 @@ import FuturesPreferences from '../Preferences'
 import TradeSetings from 'components/svg/TradeSettings'
 import axios from 'axios'
 
-const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage }) => {
+const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcFutures }) => {
     const pair = pairConfig?.pair
     const marginMode = userSettings?.marginType?.[pairConfig?.pair]
     const positionMode = userSettings?.dualSidePosition || false
@@ -25,10 +25,10 @@ const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage }) => {
             <div className='pt-5 flex items-center w-full'>
                 <div className='flex-grow flex items-center w-full'>
                     <div
-                        onClick={() => openPopup('marginMode')}
+                        onClick={() => !isVndcFutures && openPopup('marginMode')}
                         className='px-[16px] py-1 mr-2.5 text-xs font-bold bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md'
                     >
-                        {getMarginModeLabel(marginMode) || '--'}
+                        {isVndcFutures ? 'Isolated' : getMarginModeLabel(marginMode) || '--'}
                     </div>
                     <div
                         onClick={() => openPopup('leverage')}

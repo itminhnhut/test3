@@ -9,8 +9,8 @@ import { ApiStatus } from 'redux/actions/const'
 import Skeletor from 'src/components/common/Skeletor'
 import FuturesTimeFilter from '../../TimeFilter'
 import { FUTURES_RECORD_CODE } from '../../TradeRecord/RecordTableTab'
-import { formatTime, formatNumber } from 'redux/actions/utils'
-
+import { formatTime, formatNumber, getPriceColor } from 'redux/actions/utils'
+import { VndcFutureOrderType } from './VndcFutureOrderType';
 
 
 const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker, pickedTime }) => {
@@ -52,34 +52,43 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
                 sortable: true,
             },
             {
+                name: 'Side',
+                selector: (row) => row?.sdie,
+                cell: (row) => <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{row?.side}</span>,
+                sortable: true,
+            },
+            {
                 name: 'Amount',
-                selector: (row) => formatNumber(row?.quantity, 0, 0, true),
+                cell: (row) => row?.quantity ? formatNumber(row?.quantity, 8, 0, true) : '-',
                 sortable: true,
             },
             {
                 name: 'Open Price',
-                selector: (row) => formatNumber(row?.open_price, 0, 0, true),
+                cell: (row) => row?.open_price ? formatNumber(row?.open_price, 0, 0, true) : '-',
                 sortable: true,
             },
             {
                 name: 'Close Price',
-                selector: (row) => formatNumber(row?.close_price, 0, 0, true),
+                cell: (row) => row?.close_price ? formatNumber(row?.close_price, 0, 0, true) : '-',
                 sortable: true,
             },
             {
-                name: 'Stop-loss',
-                selector: (row) => formatNumber(row?.sl, 0, 0, true),
+                name: 'TP/SL',
+                cell: (row) => (
+                    <div className='flex items-center'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
+                            <div>{formatNumber(row?.tp, 0, 0, true)}/</div>
+                            <div>{formatNumber(row?.sl, 0, 0, true)}</div>
+                        </div>
+                    </div>
+                ),
                 minWidth: '150px',
                 sortable: true,
             },
             {
-                name: 'Take-profit',
-                selector: (row) => formatNumber(row?.tp, 0, 0, true),
-                sortable: true,
-            },
-            {
-                name: 'revenue',
-                selector: (row) => formatNumber(row?.profit, 0, 0, true),
+                name: 'Revenue',
+                cell: (row) => cellRenderRevenue(row),
+                minWidth: '150px',
                 sortable: true,
             },
             {
@@ -129,6 +138,19 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
                 onForceUpdate()
             }, 2000)
         }
+    }
+
+    const cellRenderRevenue = (row) => {
+        const profit = formatNumber(String(row?.profit).replace(',', ''), 0, 0, true)
+        const percent = formatNumber((row?.profit / row?.margin), 2, 0, true);
+        if (!row?.profit) return '-'
+        return <div className={getPriceColor(Number(row?.profit)) + ' flex'}>
+            {profit}
+            <div>
+                ({percent > 0 ? '+' : ''}
+                {percent + '%'})
+            </div>
+        </div>
     }
 
     return (

@@ -54,6 +54,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 sortable: true,
             },
             {
+                name: t('futures:order_table:amount'),
+                cell: (row) => row?.quantity,
+                sortable: true,
+            },
+            {
                 name: t('futures:order_table:open_price'),
                 selector: (row) => row?.open_price,
                 cell: (row) => renderOpenPrice(row),

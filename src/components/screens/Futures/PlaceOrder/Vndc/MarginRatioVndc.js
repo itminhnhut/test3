@@ -96,14 +96,6 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
             <div className='pt-4 pb-5 px-[10px]'>
                 <div className='flex items-center justify-between'>
                     <span className='futures-component-title'>Assets</span>
-                    <span className='flex items-center'>
-                        {pairConfig?.quoteAsset}
-                        <ChevronDown
-                            size={16}
-                            strokeWidth={1}
-                            className='ml-1'
-                        />
-                    </span>
                 </div>
                 <div className='mt-4 flex items-center'>
                     <Link href="https://nami.exchange/trade">
