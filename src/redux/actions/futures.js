@@ -11,7 +11,7 @@ import {
     API_GET_FUTURES_USER_SETTINGS,
     API_SET_FUTURES_POSITION_MODE,
     API_FUTURES_PLACE_ORDER,
-    API_ORDER_TEST
+    API_GET_FUTURES_ORDER,
 } from './apis'
 import { ApiStatus, TRADING_MODE } from './const'
 import {
@@ -183,9 +183,8 @@ export const placeFuturesOrder = async (params = {}, utils = {}) => {
         // return
     }
     // API_FUTURES_PLACE_ORDER
-    console.log(params)
     try {
-        const { data } = await Axios.post(API_ORDER_TEST, {
+        const { data } = await Axios.post(API_GET_FUTURES_ORDER, {
             ...params,
         })
         if (data?.status === ApiStatus.SUCCESS) {

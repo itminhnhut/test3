@@ -5,7 +5,7 @@ import { ChevronDown, Edit, Share2 } from 'react-feather'
 
 import FuturesRecordSymbolItem from '../../TradeRecord/SymbolItem'
 import DataTable from 'react-data-table-component'
-import { API_ORDER_TEST } from 'redux/actions/apis'
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { ApiStatus, UserSocketEvent } from 'redux/actions/const'
 import Skeletor from 'src/components/common/Skeletor'
 import fetchApi from 'utils/fetch-api'
@@ -62,7 +62,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             },
             {
                 name: t('futures:order_table:last_price'),
-                selector: (row) => <span>{pairPrice?.lastPrice + ' ' + pairPrice?.quoteAsset}</span>,
+                selector: (row) => <span>{formatNumber(pairPrice?.lastPrice, 0, 0, true) + ' ' + pairPrice?.quoteAsset}</span>,
                 minWidth: '150px',
                 sortable: true,
             },
@@ -78,8 +78,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 cell: (row) => (
                     <div className='flex items-center'>
                         <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div>{row?.sl}/</div>
-                            <div>{row?.tp}</div>
+                            <div>{formatNumber(row?.tp, 0, 0, true)}/</div>
+                            <div>{formatNumber(row?.sl, 0, 0, true)}</div>
                         </div>
                         {row.status !== VndcFutureOrderType.Status.CLOSED &&
                             <Edit onClick={() => onOpenModify(row)} className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
@@ -114,8 +114,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     const getDataSource = () => {
         const params = {
             status: 0,
-            pageSize: 20,
-            page: 0
         }
         getOrders('GET', params, (data) => {
             setDataSource(data);
@@ -137,7 +135,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     const getOrders = async (method = 'GET', params, cb) => {
         try {
             const { status, data, message } = await fetchApi({
-                url: API_ORDER_TEST,
+                url: API_GET_FUTURES_ORDER,
                 options: { method },
                 params: params,
             })

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { API_FUTURES_LEVERAGE } from 'redux/actions/apis'
 import {
     FuturesOrderTypes as OrderTypes,
@@ -17,6 +17,7 @@ import max from 'lodash/max'
 import { log } from 'utils'
 import FuturesOrderCostAndMaxVndc from './OrderCostAndMaxVndc';
 
+
 const FuturesPlaceOrderVndc = ({
     pairConfig,
     userSettings,
@@ -30,8 +31,8 @@ const FuturesPlaceOrderVndc = ({
 }) => {
     const [leverage, setLeverage] = useState(1)
     const [percentage, setPercentage] = useState(null)
-    const [price, setPrice] = useState('')
-    const [stopPrice, setStopPrice] = useState('')
+    const [price, setPrice] = useState(lastPrice)
+    const [stopPrice, setStopPrice] = useState(lastPrice)
     const [size, setSize] = useState('')
     const [quantity, setQuantity] = useState({ buy: '', sell: '' })
     const [selectedAsset, setSelectedAsset] = useState(null)
@@ -50,6 +51,7 @@ const FuturesPlaceOrderVndc = ({
         () => preloadedForm?.orderType || OrderTypes.Limit,
         [preloadedForm]
     )
+    const firstTime = useRef(true);
 
     const getLeverage = async (symbol) => {
         const { data } = await axios.get(API_FUTURES_LEVERAGE, {
@@ -86,7 +88,18 @@ const FuturesPlaceOrderVndc = ({
     useEffect(() => {
         handleQuantity('')
         setStopOrderMode(FuturesStopOrderMode.markPrice)
+        if (currentType === OrderTypes.Limit || currentType === OrderTypes.StopMarket) {
+            setPrice(lastPrice)
+            setStopPrice(lastPrice)
+        }
     }, [currentType])
+
+    useEffect(() => {
+        if (firstTime.current && lastPrice) {
+            firstTime.current = false;
+            setPrice(lastPrice);
+        }
+    }, [firstTime.current, lastPrice])
 
     useEffect(() => {
         isAuth && getLeverage(pairConfig?.pair)
@@ -112,15 +125,15 @@ const FuturesPlaceOrderVndc = ({
 
     useEffect(() => {
         const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
-        if (availableAsset && _size && leverage) {
+        if (availableAsset) {
             let maxBuy = 0;
             let maxSell = 0;
-            if ([OrderTypes.Limit, OrderTypes.StopLimit].includes(currentType) && price > 0) {
-                maxBuy = availableAsset / ((1 / leverage) + (_size * price * 0.1));
+            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType)) {
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / price;
                 maxSell = maxBuy;
-            } else if ([OrderTypes.Market, OrderTypes.StopMarket].includes(currentType)) {
-                maxBuy = availableAsset / ((1 / leverage) + (_size * ask * 0.1));
-                maxSell = availableAsset / ((1 / leverage) + (_size * bid * 0.1));
+            } else if ([OrderTypes.Market].includes(currentType)) {
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / ask;
+                maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / bid;
             }
             setMaxBuy(maxBuy)
             setMaxSell(maxSell)
@@ -155,6 +168,7 @@ const FuturesPlaceOrderVndc = ({
                 <FuturesOrderTypes
                     currentType={currentType}
                     orderTypes={pairConfig?.orderTypes}
+                    isVndcFutures={isVndcFutures}
                 />
             </div>
 
@@ -200,6 +214,7 @@ const FuturesPlaceOrderVndc = ({
                 maxSell={maxSell}
                 ask={ask}
                 bid={bid}
+                stopPrice={stopPrice}
             />
         </div>
     )

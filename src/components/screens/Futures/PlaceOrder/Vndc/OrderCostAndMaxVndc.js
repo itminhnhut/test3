@@ -24,7 +24,8 @@ const FuturesOrderCostAndMaxVndc = ({
     maxBuy,
     maxSell,
     ask,
-    bid
+    bid,
+    stopPrice
 }) => {
     const [shortOrderOpenLoss, setShortOrderOpenLoss] = useState(0)
     const [longOrderOpenLoss, setLongOrderOpenLoss] = useState(0)
@@ -84,16 +85,18 @@ const FuturesOrderCostAndMaxVndc = ({
     useEffect(() => {
         // Limit initial margin
         const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
-        if (leverage && size) {
+        if (leverage) {
             let costBuy = 0;
             let costSell = 0;
-            if ([OrderTypes.Limit, OrderTypes.StopLimit].includes(currentType)) {
-                const fee = _size * price * 0.1;
-                costBuy = ((+price * _size) / leverage) + fee;
+            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType)) {
+                const _price = currentType === OrderTypes.Limit ? price : stopPrice;
+                const notional = +_price * _size;
+                const fee = notional * (0.1 / 100);
+                costBuy = (notional / leverage) + fee;
                 costSell = costBuy;
-            } else if ([OrderTypes.Market, OrderTypes.StopMarket].includes(currentType)) {
-                costBuy = ((ask * _size) / leverage) + (_size * ask * 0.1);
-                costSell = ((bid * _size) / leverage) + (_size * bid * 0.1);;
+            } else if ([OrderTypes.Market].includes(currentType)) {
+                costBuy = ((ask * _size) / leverage) + (_size * ask * (0.1 / 100));
+                costSell = ((bid * _size) / leverage) + (_size * bid * (0.1 / 100));;
             }
             setShortOrderOpenLoss(costBuy)
             setLongOrderOpenLoss(costSell)

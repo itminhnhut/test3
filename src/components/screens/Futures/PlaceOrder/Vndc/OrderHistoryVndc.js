@@ -4,7 +4,7 @@ import { ChevronDown } from 'react-feather'
 
 import DataTable from 'react-data-table-component'
 import fetchApi from 'utils/fetch-api'
-import { API_ORDER_TEST } from 'redux/actions/apis'
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { ApiStatus } from 'redux/actions/const'
 import Skeletor from 'src/components/common/Skeletor'
 import FuturesTimeFilter from '../../TimeFilter'
@@ -53,28 +53,28 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
             },
             {
                 name: 'Amount',
-                selector: (row) => row?.quantity,
+                selector: (row) => formatNumber(row?.quantity, 0, 0, true),
                 sortable: true,
             },
             {
                 name: 'Open Price',
-                selector: (row) => row?.open_price,
+                selector: (row) => formatNumber(row?.open_price, 0, 0, true),
                 sortable: true,
             },
             {
                 name: 'Close Price',
-                selector: (row) => row?.close_price,
+                selector: (row) => formatNumber(row?.close_price, 0, 0, true),
                 sortable: true,
             },
             {
                 name: 'Stop-loss',
-                selector: (row) => row?.sl,
+                selector: (row) => formatNumber(row?.sl, 0, 0, true),
                 minWidth: '150px',
                 sortable: true,
             },
             {
                 name: 'Take-profit',
-                selector: (row) => row?.tp,
+                selector: (row) => formatNumber(row?.tp, 0, 0, true),
                 sortable: true,
             },
             {
@@ -106,7 +106,7 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
         setLoading(true)
         try {
             const { status, data } = await fetchApi({
-                url: API_ORDER_TEST,
+                url: API_GET_FUTURES_ORDER,
                 options: { method: 'GET' },
                 params: {
                     status: 1,

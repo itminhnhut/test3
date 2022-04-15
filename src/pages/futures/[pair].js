@@ -41,6 +41,7 @@ import Axios from 'axios'
 import 'react-grid-layout/css/styles.css'
 import { log } from 'utils'
 import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
+import FuturesMarginRatioVndc from 'components/screens/Futures/PlaceOrder/Vndc/MarginRatioVndc';
 
 const GridLayout = WidthProvider(Responsive)
 
@@ -405,7 +406,17 @@ const Futures = () => {
                                     key={futuresGridKey.marginRatio}
                                     className='border border-divider dark:border-divider-dark'
                                 >
-                                    <FuturesMarginRatio isVndcFutures={state.isVndcFutures} pairConfig={pairConfig} />
+                                    {state.isVndcFutures ?
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            auth={auth}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                        />
+                                        :
+                                        <FuturesMarginRatio
+                                            pairConfig={pairConfig}
+                                        />
+                                    }
                                 </div>
                             </GridLayout>
                         )}

@@ -28,7 +28,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h }) => {
     const renderContract = useCallback(() => {
         return (
             <div style={{ flex: '1 1 0%' }} className='flex items-center'>
-                <div></div> {pairConfig?.pair}
+                <div></div> {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
             </div>
         )
     }, [pairConfig?.pair])

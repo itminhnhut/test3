@@ -37,7 +37,28 @@ export const VndcFutureOrderType = {
     }
 }
 
+export const getProfitVndc = (order, lastPrice = 0) => {
+    const { status, quantity, open_price, type, symbol, side, close_price } = order;
+    if (!order || !symbol) return null
+    let { fee } = order;
+    fee = fee || 0
+    let profitVNDC = 0;
+    let closePrice = 1
+    if (status === VndcFutureOrderType.Status.ACTIVE) {
+        closePrice = lastPrice;
+    } else if (status === VndcFutureOrderType.Status.CLOSED) {
+        closePrice = close_price
+    }
+    try {
+        let buyProfitVNDC = 0;
+        buyProfitVNDC = quantity * (closePrice - open_price)
+        profitVNDC = side === VndcFutureOrderType.Side.BUY ? buyProfitVNDC - fee : -buyProfitVNDC - fee;
 
+    } catch (e) {
+        console.error('__ e ', e);
+    }
+    return profitVNDC;
+}
 
 
 
