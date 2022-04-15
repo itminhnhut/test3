@@ -47,5 +47,7 @@
         "close_successfully": "Close order #{{value}} successfully",
         "btn_ok": "OK",
         "btn_cancel": "Cancel"
-    }
+    },
+    "close_order_success": "Order #{{orderId}} was closed successfully.",
+    "close_order_failed": "Order #{{orderId}} was failed to close."
 }
