@@ -211,6 +211,7 @@ const FuturesPlaceOrder = ({
                 setAsset={setSelectedAsset}
                 availableAsset={availableAsset}
                 isReversedAsset={assetReversed}
+                isAuth={isAuth}
             />
 
             <FuturesOrderCostAndMax

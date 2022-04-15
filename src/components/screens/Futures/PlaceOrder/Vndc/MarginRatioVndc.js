@@ -13,7 +13,6 @@ import fetchApi from 'utils/fetch-api'
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { getProfitVndc } from './VndcFutureOrderType';
 
-
 const AVAILBLE_KEY = 'futures_available'
 
 const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {

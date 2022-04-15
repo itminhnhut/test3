@@ -8,11 +8,11 @@ const FuturesPageTitle = memo(({ pair, price, pricePrecision }) => {
     return (
         <Head>
             <title>
-                {`${formatNumber(
+                {price && `${formatNumber(
                     roundTo(price || 0, pricePrecision || 0),
                     pricePrecision
-                )}`}{' '}
-                | {pair} | {PRODUCT.FUTURES}
+                )}` + ' | ' + pair + ' | '}{' '}
+                {PRODUCT.FUTURES}
             </title>
         </Head>
     )

@@ -11,7 +11,7 @@ import FuturesAssets from './Assets'
 import FuturesOpenOrdersVndc from '../PlaceOrder/Vndc/OpenOrdersVndc'
 import FuturesOrderHistoryVndc from '../PlaceOrder/Vndc/OrderHistoryVndc'
 
-const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice }) => {
+const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, auth }) => {
     const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.position)
     const [hideOther, setHideOther] = useState(false)
     const [pickedTime, setPickedTime] = useState({
@@ -97,6 +97,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                                 onForceUpdate={onForceUpdate}
                                 hideOther={hideOther}
                                 pairPrice={pairPrice}
+                                auth={auth}
                             />
                         ) : (
                             <FuturesOpenOrders pairConfig={pairConfig} />

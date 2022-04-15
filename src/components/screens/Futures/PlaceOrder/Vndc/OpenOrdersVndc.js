@@ -20,7 +20,7 @@ import Big from "big.js";
 import FuturesEditSLTPVndc from './EditSLTPVndc'
 
 
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice }) => {
+const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, auth }) => {
     const { t } = useTranslation()
     const columns = useMemo(
         () => [
@@ -67,7 +67,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             },
             {
                 name: t('futures:order_table:last_price'),
-                selector: (row) => <span>{formatNumber(pairPrice?.lastPrice, 0, 0, true) + ' ' + pairPrice?.quoteAsset}</span>,
+                selector: (row) => formatNumber(pairPrice?.lastPrice, 0, 0, true),
                 minWidth: '150px',
                 sortable: true,
             },
@@ -117,6 +117,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     }, [])
 
     const getDataSource = () => {
+        if (!auth) return;
         const params = {
             status: 0,
         }
@@ -201,7 +202,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 const openPrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
                 const closePrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask;
                 if (pairPrice?.lastPrice > 0 && value > 0) {
-                    let biasValue = biasValue = +Big(value).minus(openPrice);
+                    let biasValue = +Big(value).minus(openPrice);
                     const formatedBias = formatNumber(biasValue, 8, 0, true);
                     bias =
                         biasValue > 0 ? (
@@ -214,19 +215,19 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                             </span>
                         );
                 }
-                text = row.price ? (formatNumber(row.price, 8) + ' ' + pairPrice?.quoteAsset) : '';;
+                text = row.price ? (formatNumber(row.price, 8)) : '';
                 return <div className="flex items-center ">
                     <div>{text}<br />{bias}</div>
                     <Edit onClick={() => onOpenModify(row)} className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
                 </div>;
             case VndcFutureOrderType.Status.ACTIVE:
                 text = row.open_price ? formatNumber(row.open_price, 8) : '';
-                return <div>{text + ' ' + pairPrice?.quoteAsset}</div>;
+                return <div>{text}</div>;
             case VndcFutureOrderType.Status.CLOSED:
-                text = row.price ? formatNumber(row.close_price, 8) : '';
-                return <div>{text + ' ' + pairPrice?.quoteAsset}</div>;
+                text = row.close_price ? formatNumber(row.close_price, 8) : '';
+                return <div>{text}</div>;
             default:
-                return <div>{text + ' ' + pairPrice?.quoteAsset}</div>;
+                return <div>{text}</div>;
         }
     }
 
@@ -255,21 +256,18 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
         return !hideOther ? dataSource : dataSource.filter(i => i.symbol === pairConfig?.symbol);
     }, [hideOther, dataSource])
 
+    if (!auth) return <div className="flex items-center justify-center h-full">{t('futures:order_table:login_to_continue')}</div>;
     return (
         <>
             <Modal
                 isVisible={showModalDelete}
                 onBackdropCb={() => setShowModalDelete(false)}
             >
-                <div className="w-full">
+                <div className="w-[390px]">
                     <div className="text-center text-xl font-bold capitalize">
                         {t('futures:close_order:modal_title', { value: rowData.current?.displaying_id })}
                     </div>
                     <div className="mt-3 text-center text-lg" dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: rowData.current?.displaying_id }) }} >
-                    </div>
-                    <div className="text-center text-xs">
-                        {t('futures:close_order:future_note')}&nbsp;
-                        <a href="https://nami.exchange/fee-schedule" className="text-mint" target="_blank">Fee Schedule</a>
                     </div>
                     <div className="mt-4 w-full flex flex-row items-center justify-center">
                         <Button title={t('common:cancel')} type="default"

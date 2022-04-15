@@ -27,8 +27,6 @@ const FuturesOrderMarket = ({
         handleQuantity('')
     }
 
-    const _size = (isVndcFutures && isNaN(size)) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
-
     return (
         <div>
             {isStopMarket && (
@@ -83,8 +81,8 @@ const FuturesOrderMarket = ({
                 thousandSeparator={false}
                 label={t('futures:size')}
                 labelClassName='whitespace-nowrap'
-                value={_size}
-                suffix={isVndcFutures ? '' : size?.includes('%') ? '%' : ''}
+                value={size}
+                suffix={size?.includes('%') ? '%' : ''}
                 onChange={({ target: { value } }) => handleQuantity(value)}
                 decimalScale={pairConfig?.quantityPrecision}
                 validator={getValidator('quantity')}

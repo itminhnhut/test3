@@ -6,7 +6,7 @@ import { Share2 } from 'react-feather'
 const OrderProfit = ({ order, pairPrice }) => {
     const profit = getProfitVndc(order, pairPrice?.lastPrice);
     const percent = formatNumber((profit / order.margin), 2, 0, true);
-    return <div className='flex items-center'>
+    return <div className='flex items-center justify-between w-full'>
         <div className={getPriceColor(profit)}>
             {profit !== 0 ? <>
                 <div>

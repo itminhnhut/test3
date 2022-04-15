@@ -137,29 +137,41 @@ const Futures = () => {
     }
 
     const getLayoutsVndc = (layouts) => {
-        if (!isVndcFutures) return layouts;
         const oldLayouts = JSON.parse(JSON.stringify(layouts));
-        Object.keys(oldLayouts).map(layout => {
-            return oldLayouts[layout].map(item => {
-                if (item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades) {
-                    item.h = 0;
-                    item.w = 0;
-                }
-                if (item.i === futuresGridKey.favoritePair) {
-                    item.h = 2;
-                }
-                if (item.i === futuresGridKey.chart || item.i === futuresGridKey.favoritePair || item.i === futuresGridKey.pairDetail) {
-                    item.w = layout === 'lg' ? 10 : layout === 'xl' ? 12 : layout === '2xl' ? 15 : item.w;
-                }
-                return item;
+        if (isVndcFutures) {
+            Object.keys(oldLayouts).map(layout => {
+                return oldLayouts[layout].map(item => {
+                    if (item.i === futuresGridKey.favoritePair || item.i === futuresGridKey.pairDetail) {
+                        item.isResizable = false
+                    }
+                    if (item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades) {
+                        item.h = 0;
+                        item.w = 0;
+                    }
+                    if (item.i === futuresGridKey.favoritePair) {
+                        item.h = 2;
+                    }
+                    if (item.i === futuresGridKey.chart || item.i === futuresGridKey.favoritePair || item.i === futuresGridKey.pairDetail) {
+                        item.w = layout === 'lg' ? 10 : layout === 'xl' ? 12 : layout === '2xl' ? 15 : item.w;
+                    }
+                    if (layout === 'lg') {
+                        if (item.i === futuresGridKey.pairDetail) {
+                            item.h = 3;
+                        }
+                        if (item.i === futuresGridKey.chart) {
+                            item.h = 24;
+                        }
+                    }
+                    return item;
+                })
             })
-        })
+        };
+        setLayoutToLS(isVndcFutures ? 'VNDC' : 'USDT', oldLayouts)
         return oldLayouts;
     }
 
     const onLayoutChange = (layout, layouts, isVNDC) => {
-        const _layouts = getLayoutsVndc(layouts, isVndcFutures);
-        setLayoutToLS(isVndcFutures ? 'VNDC' : 'USDT', _layouts)
+        const _layouts = getLayoutsVndc(layouts);
         setState({
             layouts: _layouts,
             favoritePairLayout: layout?.find(
@@ -196,25 +208,26 @@ const Futures = () => {
     }, [state.pair])
 
     useEffect(() => {
-        const originLayouts = getLayoutFromLS(isVndcFutures ? 'VNDC' : 'USDT')
+        let originLayouts = getLayoutFromLS(isVndcFutures ? 'VNDC' : 'USDT')
         // ? Hide global scroll
         document.body.className += ' no-scrollbar'
-
         // Re-init lastest layouts
-        if (!!originLayouts) {
-            log.d('Re-init layouts', JSON.parse(JSON.stringify(originLayouts)))
-            setState({
-                layouts: JSON.parse(JSON.stringify(originLayouts)),
-                forceUpdateState: state.forceUpdateState + 1,
-            })
+        if (originLayouts) {
+            originLayouts = JSON.parse(JSON.stringify(originLayouts))
+        } else {
+            originLayouts = getLayoutsVndc(futuresGridConfig.layouts)
         }
+        setState({
+            layouts: originLayouts,
+            forceUpdateState: state.forceUpdateState + 1,
+        })
         return () => {
             document.body.className = document.body.className?.replace(
                 'no-scrollbar',
                 ''
             )
         }
-    }, [])
+    }, [isVndcFutures])
 
 
     // Re-load Previous Pair
@@ -315,6 +328,7 @@ const Futures = () => {
                                             favoritePairLayout={
                                                 state.favoritePairLayout
                                             }
+                                            pairConfig={pairConfig}
                                         />
                                     </div>
                                 )}
@@ -373,6 +387,7 @@ const Futures = () => {
                                         layoutConfig={state.tradeRecordLayout}
                                         pairConfig={pairConfig}
                                         pairPrice={state.pairPrice}
+                                        auth={auth}
                                     />
                                 </div>
                                 <div

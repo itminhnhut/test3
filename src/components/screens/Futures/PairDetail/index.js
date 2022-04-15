@@ -318,7 +318,7 @@ const FuturesPairDetail = ({
                 onMouseLeave={() => setActivePairList(false)}
             >
                 <div className='relative z-10 flex items-center font-bold text-[18px]'>
-                    {pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset}
+                    {pairPrice?.baseAsset ? pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset : '-/-'}
                     <ChevronDown
                         size={16}
                         className={classNames(

@@ -76,7 +76,7 @@ const FuturesPlaceOrderVndc = ({
         const buy = _size * maxBuy;
         const sell = _size * maxSell;
         setQuantity({
-            buy: buy,
+            buy: roundToDown(buy, pairConfig?.quantityPrecision || 2),
             sell: roundToDown(sell, pairConfig?.quantityPrecision || 2),
         })
     }, [maxBuy, maxSell, size])
@@ -196,6 +196,7 @@ const FuturesPlaceOrderVndc = ({
                 isVndcFutures={isVndcFutures}
                 ask={ask}
                 bid={bid}
+                isAuth={isAuth}
             />
 
             <FuturesOrderCostAndMaxVndc

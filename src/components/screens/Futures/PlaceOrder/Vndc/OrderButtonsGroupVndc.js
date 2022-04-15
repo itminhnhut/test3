@@ -3,6 +3,8 @@ import { placeFuturesOrder } from 'redux/actions/futures'
 import { useTranslation } from 'next-i18next'
 import { FuturesOrderTypes } from 'redux/reducers/futures'
 import { VndcFutureOrderType } from './VndcFutureOrderType'
+import { getLoginUrl } from 'src/redux/actions/utils';
+import { useRouter } from 'next/router'
 
 const getType = (type) => {
     switch (type) {
@@ -39,16 +41,17 @@ const FuturesOrderButtonsGroupVndc = ({
     isError,
     ask,
     bid,
+    isAuth
 }) => {
     const { t } = useTranslation()
+    const router = useRouter();
     const handleParams = useCallback(
         (side) => {
-            const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : Number(size);
             const params = {
                 symbol: pairConfig?.symbol,
                 type: getType(type),
                 side: side,
-                quantity: _size,
+                quantity: isNaN(size) ? side === VndcFutureOrderType.Side.BUY ? +quantity?.buy : +quantity?.sell : Number(size),
                 price: getPrice(getType(type), side, price, ask, bid, stopPrice),
                 leverage,
                 ...orderSlTp
@@ -67,39 +70,45 @@ const FuturesOrderButtonsGroupVndc = ({
         ]
     )
 
+    const onLogin = () => {
+        router.push(getLoginUrl('sso'))
+    }
+
     return (
         <div className='flex items-center justify-between font-bold text-sm text-white select-none'>
             <div
                 className='w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
                 onClick={() =>
-                    !isError &&
-                    placeFuturesOrder(handleParams(VndcFutureOrderType.Side.BUY), {
-                        filters: pairConfig?.filters,
-                        lastPrice,
-                        isMarket: [
-                            FuturesOrderTypes.Market,
-                            FuturesOrderTypes.StopMarket,
-                        ].includes(type),
-                    })
+                    !isAuth ? onLogin() :
+                        !isError &&
+                        placeFuturesOrder(handleParams(VndcFutureOrderType.Side.BUY), {
+                            filters: pairConfig?.filters,
+                            lastPrice,
+                            isMarket: [
+                                FuturesOrderTypes.Market,
+                                FuturesOrderTypes.StopMarket,
+                            ].includes(type),
+                        })
                 }
             >
-                {t('common:buy')}/Long
+                {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
             </div>
             <div
                 className='w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
                 onClick={() =>
-                    !isError &&
-                    placeFuturesOrder(handleParams(VndcFutureOrderType.Side.SELL), {
-                        filters: pairConfig?.filters,
-                        lastPrice,
-                        isMarket: [
-                            FuturesOrderTypes.Market,
-                            FuturesOrderTypes.StopMarket,
-                        ].includes(type),
-                    })
+                    !isAuth ? onLogin() :
+                        !isError &&
+                        placeFuturesOrder(handleParams(VndcFutureOrderType.Side.SELL), {
+                            filters: pairConfig?.filters,
+                            lastPrice,
+                            isMarket: [
+                                FuturesOrderTypes.Market,
+                                FuturesOrderTypes.StopMarket,
+                            ].includes(type),
+                        })
                 }
             >
-                {t('common:sell')}/Short
+                {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
             </div>
         </div>
     )

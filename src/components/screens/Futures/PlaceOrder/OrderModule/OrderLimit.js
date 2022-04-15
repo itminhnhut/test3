@@ -31,8 +31,6 @@ const FuturesOrderLimit = ({
         handleQuantity('')
     }
 
-    const _size = (isVndcFutures && isNaN(size)) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
-
     return (
         <div>
             {isStopLimit && (
@@ -112,8 +110,8 @@ const FuturesOrderLimit = ({
             <TradingInput
                 thousandSeparator={false}
                 label={t('futures:size')}
-                value={_size}
-                suffix={isVndcFutures ? '' : size?.includes('%') ? '%' : ''}
+                value={size}
+                suffix={size?.includes('%') ? '%' : ''}
                 onChange={({ target: { value } }) => handleQuantity(value)}
                 // onValueChange={({ value }) => handleQuantity(value)}
                 validator={getValidator('quantity')}

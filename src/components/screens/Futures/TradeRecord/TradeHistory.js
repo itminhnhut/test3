@@ -151,10 +151,8 @@ const FuturesTradeHistory = ({
             />
             {loading ? (
                 <div className='px-[20px] mt-3'>
-                    <div className='mb-[10px]'>
-                        <Skeletor width={'100%'} />
-                    </div>
-                    <Skeletor width={'100%'} count={5} height={10} />
+                    <Skeletor width={'100%'} height={30} />
+                    <Skeletor width={'100%'} count={20} height={40} />
                 </div>
             ) : (
                 <DataTable

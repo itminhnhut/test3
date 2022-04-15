@@ -47,7 +47,8 @@ const FuturesOrderModule = ({
     setStopOrderMode,
     isVndcFutures,
     ask,
-    bid
+    bid,
+    isAuth
 }) => {
     // ? Use hooks
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
@@ -153,11 +154,11 @@ const FuturesOrderModule = ({
     }
 
     const renderBuySellByPercent = useCallback(() => {
-        const _buy = isVndcFutures ? formatNumber(quantity?.buy, pairConfig?.quantityPrecision || 4) :
+        const _buy =
             size?.includes('%')
                 ? formatNumber(quantity?.buy, pairConfig?.quantityPrecision || 4)
                 : '0.0000'
-        const _sell = isVndcFutures ? formatNumber(quantity?.sell, pairConfig?.quantityPrecision || 4) :
+        const _sell =
             size?.includes('%')
                 ? formatNumber(quantity?.sell, pairConfig?.quantityPrecision || 4)
                 : '0.0000'
@@ -290,6 +291,7 @@ const FuturesOrderModule = ({
                     isError={isError}
                     ask={ask}
                     bid={bid}
+                    isAuth={isAuth}
                 />
                 :
                 <FuturesOrderButtonsGroup
@@ -302,6 +304,7 @@ const FuturesOrderModule = ({
                     lastPrice={lastPrice}
                     currentType={currentType}
                     stopOrderMode={stopOrderMode}
+                    isAuth={isAuth}
                 />
             }
         </div>
