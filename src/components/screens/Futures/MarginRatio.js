@@ -1,7 +1,7 @@
 import SpeedMeter from 'components/svg/SpeedMeter'
 import { ChevronDown, X } from 'react-feather'
 
-const FuturesMarginRatio = () => {
+const FuturesMarginRatio = ({ pairConfig }) => {
     return (
         <div className='pt-5 h-full !overflow-x-hidden overflow-y-auto'>
             <div className='px-[10px] pb-5 border-b border-divider dark:border-divider-dark'>
@@ -31,7 +31,7 @@ const FuturesMarginRatio = () => {
                     <span className='flex items-center'>
                         0.000{' '}
                         <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
-                            USDT
+                            {pairConfig?.quoteAsset}
                         </span>
                     </span>
                 </div>
@@ -42,7 +42,7 @@ const FuturesMarginRatio = () => {
                     <span className='flex items-center'>
                         106.301{' '}
                         <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
-                            USDT
+                            {pairConfig?.quoteAsset}
                         </span>
                     </span>
                 </div>
@@ -51,7 +51,7 @@ const FuturesMarginRatio = () => {
                 <div className='flex items-center justify-between'>
                     <span className='futures-component-title'>Assets</span>
                     <span className='flex items-center'>
-                        USDT{' '}
+                        {pairConfig?.quoteAsset}
                         <ChevronDown
                             size={16}
                             strokeWidth={1}
@@ -77,7 +77,7 @@ const FuturesMarginRatio = () => {
                     <span className='flex items-center'>
                         106.301{' '}
                         <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
-                            USDT
+                            {pairConfig?.quoteAsset}
                         </span>
                     </span>
                 </div>
@@ -88,7 +88,7 @@ const FuturesMarginRatio = () => {
                     <span className='flex items-center'>
                         106.301{' '}
                         <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
-                            USDT
+                            {pairConfig?.quoteAsset}
                         </span>
                     </span>
                 </div>

@@ -10,5 +10,42 @@
     "take_profit": "Take Profit",
     "stop_loss": "Stop Loss",
     "last_price": "Gần nhất",
-    "last_price_tooltip": "Đặt giá gần nhất"
+    "last_price_tooltip": "Đặt giá gần nhất",
+    "fee_level": "Mức phí",
+    "order_table": {
+        "opening_title": "Đang mở",
+        "history_title": "Lịch sử",
+        "id": "ID",
+        "symbol": "Cặp tiền",
+        "quantity": "Số lượng",
+        "amount": "Số lượng",
+        "created_time": "Mở lệnh",
+        "closed_time": "Đóng lệnh",
+        "type": "Loại",
+        "side": "Bên",
+        "open_price": "Giá mở",
+        "close_price": "Giá đóng",
+        "mark_price": "Giá Market",
+        "liquidation_price": "Giá Liq.",
+        "last_price": "Giá đóng",
+        "sl": "Stop-loss",
+        "tp": "Take-profit",
+        "profit": "Lợi nhuận",
+        "note": "Ghi chú",
+        "no_opening_order": "Không có lệnh đang mở",
+        "no_history_order": "Không có lệnh lịch sử",
+        "login_to_continue": "Vui lòng đăng nhập để tiếp tục",
+        "loading": "Đang tải...",
+        "mobile": {
+            "order": "Lệnh"
+        }
+    },
+    "close_order": {
+        "modal_title": "Đóng Lệnh#{{value}}",
+        "confirm_message": "Bạn có muốn đóng lệnh <span class='font-medium'>#{{value}}</span> ?",
+        "future_note": "* Chế độ Eco Close sẽ đóng lệnh của bạn bằng cách đặt lệnh Limit gần với giá hiện tại và được ưu đãi về phí so với đóng lệnh thường. Xem chi tiết tại ",
+        "close_successfully": "Đóng lệnh #{{value}} thành công",
+        "btn_ok": "Đồng ý",
+        "btn_cancel": "Bỏ qua"
+    }
 }

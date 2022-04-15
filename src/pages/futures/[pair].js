@@ -40,9 +40,11 @@ import Axios from 'axios'
 
 import 'react-grid-layout/css/styles.css'
 import { log } from 'utils'
+import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
+import FuturesMarginRatioVndc from 'components/screens/Futures/PlaceOrder/Vndc/MarginRatioVndc';
 
 const GridLayout = WidthProvider(Responsive)
-const originLayouts = getLayoutFromLS('layouts')
+
 
 const FuturesProfitEarned = dynamic(
     () => import('components/screens/Futures/TakedProfit'),
@@ -78,6 +80,8 @@ const Futures = () => {
     const router = useRouter()
     const { width } = useWindowSize()
     const isMediumDevices = width >= BREAK_POINTS.lg
+    const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
+
 
     // Memmoized Variable
     const pairConfig = useMemo(
@@ -116,7 +120,7 @@ const Futures = () => {
                 publicSocket.emit('subscribe:futures:recent_trade', pair)
                 // publicSocket.emit('subscribe:futures:ticker', pair)
                 publicSocket.emit('subscribe:futures:mark_price', pair)
-                publicSocket.emit('subscribe:futures:ticker', 'all')
+                publicSocket.emit('subscribe:futures:ticker', pair)
                 // publicSocket.emit('subscribe:futures:mini_ticker', 'all')
 
                 setState({ socketStatus: !!publicSocket, prevPair: pair })
@@ -132,10 +136,44 @@ const Futures = () => {
         // publicSocket?.emit('unsubscribe:futures:mini_ticker', 'all')
     }
 
-    const onLayoutChange = (layout, layouts) => {
-        setLayoutToLS('layouts', layouts)
+    const getLayoutsVndc = (layouts) => {
+        const oldLayouts = JSON.parse(JSON.stringify(layouts));
+        if (isVndcFutures) {
+            Object.keys(oldLayouts).map(layout => {
+                return oldLayouts[layout].map(item => {
+                    if (item.i === futuresGridKey.favoritePair || item.i === futuresGridKey.pairDetail) {
+                        item.isResizable = false
+                    }
+                    if (item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades) {
+                        item.h = 0;
+                        item.w = 0;
+                    }
+                    if (item.i === futuresGridKey.favoritePair) {
+                        item.h = 2;
+                    }
+                    if (item.i === futuresGridKey.chart || item.i === futuresGridKey.favoritePair || item.i === futuresGridKey.pairDetail) {
+                        item.w = layout === 'lg' ? 10 : layout === 'xl' ? 12 : layout === '2xl' ? 15 : item.w;
+                    }
+                    if (layout === 'lg') {
+                        if (item.i === futuresGridKey.pairDetail) {
+                            item.h = 3;
+                        }
+                        if (item.i === futuresGridKey.chart) {
+                            item.h = 24;
+                        }
+                    }
+                    return item;
+                })
+            })
+        };
+        setLayoutToLS(isVndcFutures ? 'VNDC' : 'USDT', oldLayouts)
+        return oldLayouts;
+    }
+
+    const onLayoutChange = (layout, layouts, isVNDC) => {
+        const _layouts = getLayoutsVndc(layouts);
         setState({
-            layouts,
+            layouts: _layouts,
             favoritePairLayout: layout?.find(
                 (o) => o.i === futuresGridKey.favoritePair
             ),
@@ -170,24 +208,27 @@ const Futures = () => {
     }, [state.pair])
 
     useEffect(() => {
+        let originLayouts = getLayoutFromLS(isVndcFutures ? 'VNDC' : 'USDT')
         // ? Hide global scroll
         document.body.className += ' no-scrollbar'
-
         // Re-init lastest layouts
-        if (!!originLayouts) {
-            log.d('Re-init layouts', JSON.parse(JSON.stringify(originLayouts)))
-            setState({
-                layouts: JSON.parse(JSON.stringify(originLayouts)),
-                forceUpdateState: state.forceUpdateState + 1,
-            })
+        if (originLayouts) {
+            originLayouts = JSON.parse(JSON.stringify(originLayouts))
+        } else {
+            originLayouts = getLayoutsVndc(futuresGridConfig.layouts)
         }
+        setState({
+            layouts: originLayouts,
+            forceUpdateState: state.forceUpdateState + 1,
+        })
         return () => {
             document.body.className = document.body.className?.replace(
                 'no-scrollbar',
                 ''
             )
         }
-    }, [])
+    }, [isVndcFutures])
+
 
     // Re-load Previous Pair
     useEffect(() => {
@@ -208,7 +249,7 @@ const Futures = () => {
 
         // ? Get Pair Ticker
         Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
-            const pairPrice = FuturesMarketWatch.create(data)
+            const pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset)
             if (state.pair === pairPrice?.symbol) {
                 setState({ pairPrice })
             }
@@ -287,6 +328,7 @@ const Futures = () => {
                                             favoritePairLayout={
                                                 state.favoritePairLayout
                                             }
+                                            pairConfig={pairConfig}
                                         />
                                     </div>
                                 )}
@@ -301,6 +343,7 @@ const Futures = () => {
                                         forceUpdateState={
                                             state.forceUpdateState
                                         }
+                                        isVndcFutures={state.isVndcFutures}
                                     />
                                 </div>
                                 <div
@@ -314,7 +357,7 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.orderBook}
-                                    className='border z-20 border-divider dark:border-divider-dark'
+                                    className={`border z-20 border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
                                 >
                                     <FuturesOrderBook
                                         pairConfig={pairConfig}
@@ -329,7 +372,7 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.recentTrades}
-                                    className='border border-divider dark:border-divider-dark'
+                                    className={`border border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
                                 >
                                     <FuturesRecentTrades
                                         pairConfig={pairConfig}
@@ -343,26 +386,52 @@ const Futures = () => {
                                         isVndcFutures={state.isVndcFutures}
                                         layoutConfig={state.tradeRecordLayout}
                                         pairConfig={pairConfig}
+                                        pairPrice={state.pairPrice}
+                                        auth={auth}
                                     />
                                 </div>
                                 <div
                                     key={futuresGridKey.placeOrder}
                                     className='border border-divider dark:border-divider-dark'
                                 >
-                                    <FuturesPlaceOrder
-                                        isAuth={!!auth}
-                                        markPrice={state.markPrice?.markPrice}
-                                        lastPrice={state.pairPrice?.lastPrice}
-                                        pairConfig={pairConfig}
-                                        userSettings={userSettings}
-                                        assumingPrice={state.assumingPrice}
-                                    />
+                                    {state.isVndcFutures ?
+                                        <FuturesPlaceOrderVndc
+                                            isAuth={!!auth}
+                                            markPrice={state.markPrice?.markPrice}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                            pairConfig={pairConfig}
+                                            userSettings={userSettings}
+                                            assumingPrice={state.assumingPrice}
+                                            isVndcFutures={state.isVndcFutures}
+                                            ask={state.pairPrice?.ask}
+                                            bid={state.pairPrice?.bid}
+                                        />
+                                        :
+                                        <FuturesPlaceOrder
+                                            isAuth={!!auth}
+                                            markPrice={state.markPrice?.markPrice}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                            pairConfig={pairConfig}
+                                            userSettings={userSettings}
+                                            assumingPrice={state.assumingPrice}
+                                        />
+                                    }
                                 </div>
                                 <div
                                     key={futuresGridKey.marginRatio}
                                     className='border border-divider dark:border-divider-dark'
                                 >
-                                    <FuturesMarginRatio />
+                                    {state.isVndcFutures ?
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            auth={auth}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                        />
+                                        :
+                                        <FuturesMarginRatio
+                                            pairConfig={pairConfig}
+                                        />
+                                    }
                                 </div>
                             </GridLayout>
                         )}

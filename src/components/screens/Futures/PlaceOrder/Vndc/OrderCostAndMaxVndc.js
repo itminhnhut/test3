@@ -8,13 +8,12 @@ import { useSelector } from 'react-redux'
 import TradingLabel from 'components/trade/TradingLabel'
 import min from 'lodash/min'
 import max from 'lodash/max'
+import Link from 'next/link';
 
-const FuturesOrderCostAndMax = ({
+const FuturesOrderCostAndMaxVndc = ({
     selectedAsset,
     pairConfig,
     price,
-    markPrice,
-    lastPrice,
     assumingPrice,
     currentType,
     quantity,
@@ -24,12 +23,12 @@ const FuturesOrderCostAndMax = ({
     availableAsset,
     maxBuy,
     maxSell,
+    ask,
+    bid,
+    stopPrice
 }) => {
     const [shortOrderOpenLoss, setShortOrderOpenLoss] = useState(0)
     const [longOrderOpenLoss, setLongOrderOpenLoss] = useState(0)
-    const [marketInitialMargin, setMarketInitialMargin] = useState(0)
-    const [shortInitialMargin, setShortInitialMargin] = useState(0)
-    const [longInitialMargin, setLongInitialMargin] = useState(0)
 
     const { t } = useTranslation()
 
@@ -85,93 +84,36 @@ const FuturesOrderCostAndMax = ({
 
     useEffect(() => {
         // Limit initial margin
-        if ([OrderTypes.Limit, OrderTypes.StopLimit].includes(currentType)) {
-            if (
-                price &&
-                leverage &&
-                size &&
-                (quantity?.buy || quantity?.sell)
-            ) {
-                setShortInitialMargin((+price * quantity?.sell) / leverage)
-                setLongInitialMargin((+price * +quantity?.buy) / leverage)
-            } else {
-                setShortInitialMargin(0)
-                setLongInitialMargin(0)
+        const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
+        if (leverage) {
+            let costBuy = 0;
+            let costSell = 0;
+            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType)) {
+                const _price = currentType === OrderTypes.Limit ? price : stopPrice;
+                const notional = +_price * _size;
+                const fee = notional * (0.1 / 100);
+                costBuy = (notional / leverage) + fee;
+                costSell = costBuy;
+            } else if ([OrderTypes.Market].includes(currentType)) {
+                costBuy = ((ask * _size) / leverage) + (_size * ask * (0.1 / 100));
+                costSell = ((bid * _size) / leverage) + (_size * bid * (0.1 / 100));;
             }
-        }
-
-        // ? Market initial margin
-        if ([OrderTypes.Market, OrderTypes.StopMarket].includes(currentType)) {
-            if (
-                assumingPrice &&
-                lastPrice &&
-                leverage &&
-                size &&
-                (quantity?.buy || quantity?.sell)
-            ) {
-                setMarketInitialMargin([
-                    (assumingPrice?.ask * (1 + 0.0005) * +quantity?.buy) /
-                        leverage,
-                    (max([assumingPrice?.bid, markPrice]) * +quantity?.sell) /
-                        leverage,
-                ])
-            } else {
-                setMarketInitialMargin([0, 0])
-            }
+            setShortOrderOpenLoss(costBuy)
+            setLongOrderOpenLoss(costSell)
+        } else {
+            setShortOrderOpenLoss(0)
+            setLongOrderOpenLoss(0)
         }
     }, [
         currentType,
-        markPrice,
         assumingPrice,
         leverage,
         quantity,
         size,
         price,
         isAssetReversed,
-        lastPrice,
-    ])
-
-    useEffect(() => {
-        if (isMarket) {
-            if (lastPrice && marketInitialMargin && markPrice) {
-                const priceDifference = markPrice - lastPrice
-                setLongOrderOpenLoss(
-                    0.2 * Math.abs(min([0, 1 * priceDifference])) +
-                        marketInitialMargin?.[0]
-                )
-
-                setShortOrderOpenLoss(
-                    0.2 * Math.abs(min([0, -1 * priceDifference])) +
-                        marketInitialMargin?.[1]
-                )
-            } else {
-                setLongOrderOpenLoss(0)
-                setShortOrderOpenLoss(0)
-            }
-        } else {
-            if (price && marketInitialMargin && markPrice) {
-                const priceDifference = markPrice - +price
-                setLongOrderOpenLoss(
-                    1 * Math.abs(min([0, 1 * priceDifference])) +
-                        longInitialMargin
-                )
-
-                setShortOrderOpenLoss(
-                    1 * Math.abs(min([0, -1 * priceDifference])) +
-                        shortInitialMargin
-                )
-            } else {
-                setLongOrderOpenLoss(0)
-                setShortOrderOpenLoss(0)
-            }
-        }
-    }, [
-        price,
-        marketInitialMargin,
-        longInitialMargin,
-        shortInitialMargin,
-        markPrice,
-        isMarket,
+        ask,
+        bid
     ])
 
     return (
@@ -182,8 +124,13 @@ const FuturesOrderCostAndMax = ({
             <div className='mt-2 flex items-center justify-between'>
                 {renderMax()}
             </div>
+            <Link href={'https://nami.exchange/fee-schedule/trading'}>
+                <a target='_blank'>
+                    <div className="text-teal underline cursor-pointer float-right mt-[8px] font-medium">{t('futures:fee_level')}</div>
+                </a>
+            </Link>
         </div>
     )
 }
 
-export default FuturesOrderCostAndMax
+export default FuturesOrderCostAndMaxVndc

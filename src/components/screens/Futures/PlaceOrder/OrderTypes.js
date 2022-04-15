@@ -8,7 +8,7 @@ import { ChevronDown } from 'react-feather'
 
 import classNames from 'classnames'
 
-const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
+const FuturesOrderTypes = memo(({ currentType, orderTypes, isVndcFutures }) => {
     const { t } = useTranslation()
     const currentAdvType = useSelector(
         (state) => state.futures.preloadedState?.orderAdvanceType
@@ -48,23 +48,22 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
 
     // ? Render handler
     const renderCommonTypes = () => {
-        return orderTypes
-            ?.filter((o) => o === OrderTypes.Limit || o === OrderTypes.Market)
-            .map((o) => (
-                <div
-                    key={`futures_margin_mode_${o}`}
-                    className={classNames(
-                        'pb-2 w-1/3 min-w-[78px] text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs text-center cursor-pointer border-b-[2px] border-transparent',
-                        {
-                            '!text-txtPrimary dark:!text-txtPrimary-dark border-dominant':
-                                o === currentType,
-                        }
-                    )}
-                    onClick={() => setOrderTypes(o)}
-                >
-                    {getTypesLabel(o)}
-                </div>
-            ))
+        const orderFilter = isVndcFutures ? orderTypes : orderTypes?.filter((o) => o === OrderTypes.Limit || o === OrderTypes.Market)
+        return orderFilter?.map((o) => (
+            <div
+                key={`futures_margin_mode_${o}`}
+                className={classNames(
+                    'pb-2 w-1/3 min-w-[78px] text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs text-center cursor-pointer border-b-[2px] border-transparent',
+                    {
+                        '!text-txtPrimary dark:!text-txtPrimary-dark border-dominant':
+                            o === currentType,
+                    }
+                )}
+                onClick={() => setOrderTypes(o)}
+            >
+                {getTypesLabel(o)}
+            </div>
+        ))
     }
 
     const renderCurrentAdvanceTypes = () => {
@@ -125,16 +124,18 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes }) => {
         <div className='relative flex items-center select-none'>
             <div className='relative z-20 mr-[18px] flex flex-grow'>
                 {renderCommonTypes()}
-                {renderCurrentAdvanceTypes()}
+                {!isVndcFutures && renderCurrentAdvanceTypes()}
             </div>
-            <div className='relative group pb-2 cursor-pointer'>
-                <ChevronDown
-                    size={16}
-                    strokeWidth={1.8}
-                    className='text-txtSecondary dark:text-txtSecondary-dark hover:text-txtPrimary dark:hover:text-txtPrimary-dark group-hover:rotate-180'
-                />
-                {renderAdvanceTypesDropdown()}
-            </div>
+            {!isVndcFutures &&
+                <div className='relative group pb-2 cursor-pointer'>
+                    <ChevronDown
+                        size={16}
+                        strokeWidth={1.8}
+                        className='text-txtSecondary dark:text-txtSecondary-dark hover:text-txtPrimary dark:hover:text-txtPrimary-dark group-hover:rotate-180'
+                    />
+                    {renderAdvanceTypesDropdown()}
+                </div>
+            }
             <div className='absolute z-10 w-full left-0 bottom-0 h-[2px] bg-divider dark:bg-divider-dark' />
         </div>
     )

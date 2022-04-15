@@ -21,6 +21,7 @@ import axios from 'axios'
 import min from 'lodash/min'
 import { useSelector } from 'react-redux'
 import { roundToDown } from 'round-to'
+import FuturesOrderButtonsGroupVndc from '../Vndc/OrderButtonsGroupVndc'
 
 const FuturesOrderModule = ({
     markPrice,
@@ -44,15 +45,24 @@ const FuturesOrderModule = ({
     maxSell,
     stopOrderMode,
     setStopOrderMode,
+    isVndcFutures,
+    ask,
+    bid,
+    isAuth
 }) => {
     // ? Use hooks
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
 
     const { t } = useTranslation()
     const usdRate = useSelector((state) => state.utils.usdRate)
+    const [orderSlTp, setOrderSlTp] = useState({
+        sl: 0,
+        tp: 0
+    })
 
     // ? Data helper
     const getLastedLastPrice = async (symbol) => {
+        if (isVndcFutures) return;
         const { data } = await axios.get(API_GET_FUTURES_MARKET_WATCH, {
             params: { symbol },
         })
@@ -144,12 +154,14 @@ const FuturesOrderModule = ({
     }
 
     const renderBuySellByPercent = useCallback(() => {
-        const _buy = size?.includes('%')
-            ? formatNumber(quantity?.buy, pairConfig?.quantityPrecision || 4)
-            : '0.0000'
-        const _sell = size?.includes('%')
-            ? formatNumber(quantity?.sell, pairConfig?.quantityPrecision || 4)
-            : '0.0000'
+        const _buy =
+            size?.includes('%')
+                ? formatNumber(quantity?.buy, pairConfig?.quantityPrecision || 4)
+                : '0.0000'
+        const _sell =
+            size?.includes('%')
+                ? formatNumber(quantity?.sell, pairConfig?.quantityPrecision || 4)
+                : '0.0000'
 
         return (
             <>
@@ -178,6 +190,12 @@ const FuturesOrderModule = ({
         }
     }, [pairConfig?.baseAssetId, usdRate])
 
+    const isError = useMemo(() => {
+        const obj = inputValidator('price') || inputValidator('quantity');
+        return (!isVndcFutures || currentType === FuturesOrderTypes.Market || currentType === FuturesOrderTypes.StopMarket) ?
+            false : Object.keys(obj)?.length && !obj?.isValid
+    }, [price, size, currentType])
+
     return (
         <div className='pt-5 pb-[18px]'>
             {/* Order Utilities */}
@@ -190,45 +208,47 @@ const FuturesOrderModule = ({
             <div className='mt-4'>
                 {(currentType === FuturesOrderTypes.Market ||
                     currentType === FuturesOrderTypes.StopMarket) && (
-                    <FuturesOrderMarket
-                        stopPrice={stopPrice}
-                        setStopPrice={setStopPrice}
-                        size={size}
-                        handleQuantity={handleQuantity}
-                        pairConfig={pairConfig}
-                        setAsset={setAsset}
-                        selectedAsset={selectedAsset}
-                        getValidator={inputValidator}
-                        stopOrderMode={stopOrderMode}
-                        setStopOrderMode={setStopOrderMode}
-                        getOrderStopModeLabel={getOrderStopModeLabel}
-                        isStopMarket={
-                            currentType === FuturesOrderTypes.StopMarket
-                        }
-                    />
-                )}
+                        <FuturesOrderMarket
+                            stopPrice={stopPrice}
+                            setStopPrice={setStopPrice}
+                            size={size}
+                            handleQuantity={handleQuantity}
+                            pairConfig={pairConfig}
+                            setAsset={setAsset}
+                            selectedAsset={selectedAsset}
+                            getValidator={inputValidator}
+                            stopOrderMode={stopOrderMode}
+                            setStopOrderMode={setStopOrderMode}
+                            getOrderStopModeLabel={getOrderStopModeLabel}
+                            isStopMarket={
+                                currentType === FuturesOrderTypes.StopMarket
+                            }
+                            isVndcFutures={isVndcFutures}
+                        />
+                    )}
                 {(currentType === FuturesOrderTypes.Limit ||
                     currentType === FuturesOrderTypes.StopLimit) && (
-                    <FuturesOrderLimit
-                        price={price}
-                        handlePrice={handlePrice}
-                        size={size}
-                        handleQuantity={handleQuantity}
-                        stopPrice={stopPrice}
-                        setStopPrice={setStopPrice}
-                        setAsset={setAsset}
-                        selectedAsset={selectedAsset}
-                        stopOrderMode={stopOrderMode}
-                        setStopOrderMode={setStopOrderMode}
-                        getOrderStopModeLabel={getOrderStopModeLabel}
-                        pairConfig={pairConfig}
-                        getValidator={inputValidator}
-                        getLastedLastPrice={() => handlePrice(lastPrice)}
-                        isStopLimit={
-                            currentType === FuturesOrderTypes.StopLimit
-                        }
-                    />
-                )}
+                        <FuturesOrderLimit
+                            price={price}
+                            handlePrice={handlePrice}
+                            size={size}
+                            handleQuantity={handleQuantity}
+                            stopPrice={stopPrice}
+                            setStopPrice={setStopPrice}
+                            setAsset={setAsset}
+                            selectedAsset={selectedAsset}
+                            stopOrderMode={stopOrderMode}
+                            setStopOrderMode={setStopOrderMode}
+                            getOrderStopModeLabel={getOrderStopModeLabel}
+                            pairConfig={pairConfig}
+                            getValidator={inputValidator}
+                            getLastedLastPrice={() => handlePrice(lastPrice)}
+                            isStopLimit={
+                                currentType === FuturesOrderTypes.StopLimit
+                            }
+                            isVndcFutures={isVndcFutures}
+                        />
+                    )}
             </div>
 
             {/* Slider */}
@@ -236,7 +256,7 @@ const FuturesOrderModule = ({
                 <FuturesOrderSlider
                     size={size}
                     available={availableAsset}
-                    onChange={(size) => handleQuantity(size, true)}
+                    onChange={(size) => handleQuantity(size, !isVndcFutures)}
                 />
             </div>
 
@@ -247,22 +267,46 @@ const FuturesOrderModule = ({
             <Divider className='my-5' />
 
             {/* Order SL-TP */}
-            <FuturesOrderSLTP />
+            <FuturesOrderSLTP
+                isVndcFutures={isVndcFutures}
+                orderSlTp={orderSlTp}
+                setOrderSlTp={setOrderSlTp}
+            />
 
             <Divider className='my-5' />
 
             {/* Buttons Group */}
-            <FuturesOrderButtonsGroup
-                pairConfig={pairConfig}
-                positionMode={positionMode}
-                type={currentType}
-                quantity={quantity}
-                price={price}
-                stopPrice={stopPrice}
-                lastPrice={lastPrice}
-                currentType={currentType}
-                stopOrderMode={stopOrderMode}
-            />
+            {isVndcFutures ?
+                <FuturesOrderButtonsGroupVndc
+                    pairConfig={pairConfig}
+                    positionMode={positionMode}
+                    type={currentType}
+                    quantity={quantity}
+                    price={price}
+                    stopPrice={stopPrice}
+                    stopOrderMode={stopOrderMode}
+                    leverage={currentLeverage}
+                    orderSlTp={orderSlTp}
+                    size={size}
+                    isError={isError}
+                    ask={ask}
+                    bid={bid}
+                    isAuth={isAuth}
+                />
+                :
+                <FuturesOrderButtonsGroup
+                    pairConfig={pairConfig}
+                    positionMode={positionMode}
+                    type={currentType}
+                    quantity={quantity}
+                    price={price}
+                    stopPrice={stopPrice}
+                    lastPrice={lastPrice}
+                    currentType={currentType}
+                    stopOrderMode={stopOrderMode}
+                    isAuth={isAuth}
+                />
+            }
         </div>
     )
 }

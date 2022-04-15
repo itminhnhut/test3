@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { API_FUTURES_LEVERAGE } from 'redux/actions/apis'
 import {
     FuturesOrderTypes as OrderTypes,
@@ -8,26 +8,31 @@ import { roundToDown } from 'round-to'
 import { useSelector } from 'react-redux'
 import { ApiStatus } from 'redux/actions/const'
 
-import FuturesOrderCostAndMax from './OrderCostAndMax'
-import FuturesOrderModule from './OrderModule'
-import FuturesOrderTypes from './OrderTypes'
-import PlaceConfigs from './PlaceConfigs'
+import FuturesOrderCostAndMax from '../OrderCostAndMax'
+import FuturesOrderModule from '../OrderModule'
+import FuturesOrderTypes from '../OrderTypes'
+import PlaceConfigs from '../PlaceConfigs'
 import axios from 'axios'
 import max from 'lodash/max'
 import { log } from 'utils'
+import FuturesOrderCostAndMaxVndc from './OrderCostAndMaxVndc';
 
-const FuturesPlaceOrder = ({
+
+const FuturesPlaceOrderVndc = ({
     pairConfig,
     userSettings,
     markPrice,
     lastPrice,
     assumingPrice,
     isAuth,
+    isVndcFutures,
+    ask,
+    bid
 }) => {
     const [leverage, setLeverage] = useState(1)
     const [percentage, setPercentage] = useState(null)
-    const [price, setPrice] = useState('')
-    const [stopPrice, setStopPrice] = useState('')
+    const [price, setPrice] = useState(lastPrice)
+    const [stopPrice, setStopPrice] = useState(lastPrice)
     const [size, setSize] = useState('')
     const [quantity, setQuantity] = useState({ buy: '', sell: '' })
     const [selectedAsset, setSelectedAsset] = useState(null)
@@ -46,6 +51,7 @@ const FuturesPlaceOrder = ({
         () => preloadedForm?.orderType || OrderTypes.Limit,
         [preloadedForm]
     )
+    const firstTime = useRef(true);
 
     const getLeverage = async (symbol) => {
         const { data } = await axios.get(API_FUTURES_LEVERAGE, {
@@ -61,31 +67,19 @@ const FuturesPlaceOrder = ({
     const handleQuantity = useCallback(
         (size, isPercent = false) => {
             setSize(size)
-
-            if (isPercent || size?.includes('%')) {
-                log.d('Percent Size: ', size)
-                const buy = assetReversed
-                    ? ((parseFloat(size) / 100) * maxBuy) / lastPrice
-                    : (parseFloat(size) / 100) * maxBuy
-                const sell = assetReversed
-                    ? ((parseFloat(size) / 100) * maxSell) / lastPrice
-                    : (parseFloat(size) / 100) * maxSell
-
-                setQuantity({
-                    buy: roundToDown(buy, pairConfig?.quantityPrecision || 2),
-                    sell: roundToDown(sell, pairConfig?.quantityPrecision || 2),
-                })
-            } else {
-                const _size = size
-                    ? assetReversed
-                        ? +size * lastPrice
-                        : +size
-                    : 0
-                setQuantity({ sell: _size, buy: _size, both: _size })
-            }
         },
-        [maxBuy, maxSell, assetReversed, lastPrice]
+        [maxBuy, maxSell, assetReversed]
     )
+
+    useEffect(() => {
+        const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : Number(size);
+        const buy = _size * maxBuy;
+        const sell = _size * maxSell;
+        setQuantity({
+            buy: roundToDown(buy, pairConfig?.quantityPrecision || 2),
+            sell: roundToDown(sell, pairConfig?.quantityPrecision || 2),
+        })
+    }, [maxBuy, maxSell, size])
 
     const handlePrice = (price) => {
         setPrice(price)
@@ -94,7 +88,18 @@ const FuturesPlaceOrder = ({
     useEffect(() => {
         handleQuantity('')
         setStopOrderMode(FuturesStopOrderMode.markPrice)
+        if (currentType === OrderTypes.Limit || currentType === OrderTypes.StopMarket) {
+            setPrice(lastPrice)
+            setStopPrice(lastPrice)
+        }
     }, [currentType])
+
+    useEffect(() => {
+        if (firstTime.current && lastPrice) {
+            firstTime.current = false;
+            setPrice(lastPrice);
+        }
+    }, [firstTime.current, lastPrice])
 
     useEffect(() => {
         isAuth && getLeverage(pairConfig?.pair)
@@ -119,57 +124,32 @@ const FuturesPlaceOrder = ({
     }, [avlbAsset, pairConfig])
 
     useEffect(() => {
-        if ([OrderTypes.Limit, OrderTypes.StopLimit].includes(currentType)) {
-            if (availableAsset && markPrice && +price > 0 && leverage) {
-                if (assetReversed) {
-                    setMaxBuy(((availableAsset * leverage) / price) * lastPrice)
-                    setMaxSell(
-                        (availableAsset /
-                            (price / leverage + (markPrice - price))) *
-                            lastPrice
-                    )
-                } else {
-                    setMaxBuy((availableAsset * leverage) / price)
-                    setMaxSell(
-                        availableAsset /
-                            (price / leverage + (markPrice - price))
-                    )
-                }
-            } else {
-                setMaxBuy(0)
-                setMaxSell(0)
+        const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
+        if (availableAsset) {
+            let maxBuy = 0;
+            let maxSell = 0;
+            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType)) {
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / price;
+                maxSell = maxBuy;
+            } else if ([OrderTypes.Market].includes(currentType)) {
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / ask;
+                maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / bid;
             }
+            setMaxBuy(maxBuy)
+            setMaxSell(maxSell)
+        } else {
+            setMaxBuy(0)
+            setMaxSell(0)
         }
     }, [
         availableAsset,
-        markPrice,
         price,
+        size,
         leverage,
         currentType,
         assetReversed,
-        lastPrice,
-    ])
-
-    useEffect(() => {
-        if ([OrderTypes.Market, OrderTypes.StopMarket].includes(currentType)) {
-            if (availableAsset && markPrice && lastPrice && leverage) {
-                setMaxBuy((availableAsset * leverage) / lastPrice)
-                setMaxSell(
-                    availableAsset /
-                        (lastPrice / leverage + (markPrice - lastPrice))
-                )
-            } else {
-                setMaxBuy(0)
-                setMaxSell(0)
-            }
-        }
-    }, [
-        availableAsset,
-        markPrice,
-        lastPrice,
-        leverage,
-        currentType,
-        assetReversed,
+        ask,
+        bid
     ])
 
     return (
@@ -180,6 +160,7 @@ const FuturesPlaceOrder = ({
                     setLeverage={setLeverage}
                     pairConfig={pairConfig}
                     userSettings={userSettings}
+                    isVndcFutures={isVndcFutures}
                 />
                 <div className='absolute left-0 -bottom-5 w-full h-5 dragHandleArea' />
             </div>
@@ -188,6 +169,7 @@ const FuturesPlaceOrder = ({
                 <FuturesOrderTypes
                     currentType={currentType}
                     orderTypes={pairConfig?.orderTypes}
+                    isVndcFutures={isVndcFutures}
                 />
             </div>
 
@@ -211,10 +193,13 @@ const FuturesPlaceOrder = ({
                 setAsset={setSelectedAsset}
                 availableAsset={availableAsset}
                 isReversedAsset={assetReversed}
+                isVndcFutures={isVndcFutures}
+                ask={ask}
+                bid={bid}
                 isAuth={isAuth}
             />
 
-            <FuturesOrderCostAndMax
+            <FuturesOrderCostAndMaxVndc
                 price={price}
                 size={size}
                 quantity={quantity}
@@ -229,9 +214,12 @@ const FuturesPlaceOrder = ({
                 lastPrice={lastPrice}
                 maxBuy={maxBuy}
                 maxSell={maxSell}
+                ask={ask}
+                bid={bid}
+                stopPrice={stopPrice}
             />
         </div>
     )
 }
 
-export default FuturesPlaceOrder
+export default FuturesPlaceOrderVndc

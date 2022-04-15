@@ -27,11 +27,14 @@ const TradingInput = ({
     const onFocus = () => setState({ isFocus: true })
     const onInputBlur = () => setState({ isFocus: false })
 
+    const isError = inputProps?.value && Object.keys(validator)?.length && !validator?.isValid;
+
     return (
         <div
             className={classNames(
                 'relative flex items-center px-[12px] py-2.5 rounded-md bg-gray-5 dark:bg-darkBlue-3 border border-transparent hover:border-dominant',
                 { 'border-dominant': state.isFocus },
+                { '!border-red': isError },
                 containerClassName
             )}
         >
@@ -46,9 +49,7 @@ const TradingInput = ({
                 {label || 'Label?'}
             </div>
 
-            {inputProps?.value &&
-            Object.keys(validator)?.length &&
-            !validator?.isValid ? (
+            {isError ? (
                 <div className='absolute right-0 top-0 -translate-y-full z-50 flex flex-col items-center'>
                     <div className='px-3 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4'>
                         {validator?.msg}

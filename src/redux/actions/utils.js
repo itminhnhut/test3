@@ -848,7 +848,7 @@ export const secondToMinutesAndSeconds = (time) => {
 }
 
 export const getPriceColor = (value) =>
-    value < 0 ? 'text-red' : 'text-dominant'
+    value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant'
 
 const BASE_ASSET = ['VNDC', 'USDT']
 
