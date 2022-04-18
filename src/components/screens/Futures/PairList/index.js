@@ -8,11 +8,13 @@ import Star from 'components/svg/Star'
 import colors from 'styles/colors'
 import classNames from 'classnames'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import { mergeFuturesFavoritePairs } from 'redux/actions/futures'
 
-const FuturesPairList = memo(({ mode, setMode }) => {
+
+const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
     const [keyword, setKeyWord] = useState('')
     const [sortBy, setSortBy] = useState({}) // null = default, 1 => desc, 2 => asc
-
+    const favoritePairs = useSelector((state) => state.futures.favoritePairs)
     const [theme] = useDarkMode()
     const isDark = theme === THEME_MODE.DARK
 
@@ -21,15 +23,17 @@ const FuturesPairList = memo(({ mode, setMode }) => {
     const onSort = (field, value) => setSortBy({ field, value })
 
     const renderPairListItems = useCallback(() => {
-        let data = pairConfigs
-
+        let data = mode === '' ? pairConfigs : pairConfigs?.filter(i => {
+            if (mode === 'Starred') return favoritePairs.find(rs => rs.replace('_', '') === i.symbol);
+            return i.quoteAsset === mode
+        })
         // sort by field
         if (Object.keys(sortBy)?.length) {
         }
 
         // filter keyword
         if (keyword) {
-            data = pairConfigs?.filter((o) =>
+            data = data?.filter((o) =>
                 o?.pair?.toLowerCase().includes(keyword?.toLowerCase())
             )
         }
@@ -40,25 +44,31 @@ const FuturesPairList = memo(({ mode, setMode }) => {
                 pairConfig={pair}
             />
         ))
-    }, [pairConfigs, sortBy, keyword])
+    }, [pairConfigs, sortBy, keyword, mode])
+
+    const onHandleMode = (key) => {
+        setMode(key !== mode ? key : '')
+    }
 
     const renderModes = useCallback(
         () => (
             <div className='px-3.5 pb-3.5 flex items-center'>
-                <Star
-                    onClick={() => setMode('Starred')}
-                    size={14}
-                    fill={
-                        mode === 'Starred'
-                            ? colors.yellow
-                            : isDark
-                            ? colors.darkBlue5
-                            : colors.grey2
-                    }
-                    className='cursor-pointer'
-                />
+                {isAuth &&
+                    <Star
+                        onClick={() => onHandleMode('Starred')}
+                        size={14}
+                        fill={
+                            mode === 'Starred'
+                                ? colors.yellow
+                                : isDark
+                                    ? colors.darkBlue5
+                                    : colors.grey2
+                        }
+                        className='cursor-pointer'
+                    />
+                }
                 <div
-                    onClick={() => setMode('USDT')}
+                    onClick={() => onHandleMode('USDT')}
                     className={classNames(
                         'ml-3 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant',
                         { '!text-dominant': mode === 'USDT' }
@@ -67,7 +77,7 @@ const FuturesPairList = memo(({ mode, setMode }) => {
                     USDT
                 </div>
                 <div
-                    onClick={() => setMode('VNDC')}
+                    onClick={() => onHandleMode('VNDC')}
                     className={classNames(
                         'ml-3 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant',
                         { '!text-dominant': mode === 'VNDC' }

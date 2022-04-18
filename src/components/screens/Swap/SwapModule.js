@@ -77,6 +77,7 @@ const SwapModule = ({ width, pair }) => {
     const wallets = useSelector(state => state.wallet.SPOT)
     const auth = useSelector(state => state.auth?.user)
 
+    const [loginUrl, setLoginUrl] = useState('')
     // Refs
     const fromAssetListRef = useRef()
     const toAssetListRef = useRef()
@@ -503,10 +504,14 @@ const SwapModule = ({ width, pair }) => {
         )
     }, [config, state.fromAsset, state.fromAmount, state.toAsset, state.estRate, state.changeEstRatePosition, state.loadingEstRate], state.fromErrors)
 
+    useEffect(() => {
+        setLoginUrl(getLoginUrl('sso', 'login'))
+    },[])
+
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <a href={getLoginUrl('sso', 'login')}
+                <a href={loginUrl}
                    className="block mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold bg-dominant
                                 select-none cursor-pointer hover:opacity-80">
                     {t('common:sign_in')}

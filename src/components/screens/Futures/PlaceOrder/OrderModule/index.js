@@ -48,7 +48,7 @@ const FuturesOrderModule = ({
     isVndcFutures,
     ask,
     bid,
-    isAuth
+    isAuth,
 }) => {
     // ? Use hooks
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)

@@ -163,19 +163,18 @@ export const placeFuturesOrder = async (params = {}, utils = {}) => {
     const validator = placeFuturesOrderValidator(params, utils)
     log.d('placeFuturesOrder Pre-processing...')
     const isValid = Object.values(validator)?.filter((e) => !e)
-
     if (isValid.length) {
-        log.d(`placeFuturesOrder Pre-Process detect mistake `, validator)
-        showNotification(
-            {
-                message: `TEST NOTI`,
-                title: 'Error',
-                type: 'failure',
-            },
-            1800,
-            'bottom',
-            'bottom-right'
-        )
+        // log.d(`placeFuturesOrder Pre-Process detect mistake `, validator)
+        // showNotification(
+        //     {
+        //         message: `TEST NOTI`,
+        //         title: 'Error',
+        //         type: 'failure',
+        //     },
+        //     1800,
+        //     'bottom',
+        //     'bottom-right'
+        // )
 
         return
     } else {

@@ -9,7 +9,7 @@ import FuturesPreferences from '../Preferences'
 import TradeSetings from 'components/svg/TradeSettings'
 import axios from 'axios'
 
-const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcFutures }) => {
+const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcFutures, isAuth }) => {
     const pair = pairConfig?.pair
     const marginMode = userSettings?.marginType?.[pairConfig?.pair]
     const positionMode = userSettings?.dualSidePosition || false
@@ -37,18 +37,22 @@ const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcF
                         {leverage}x
                     </div>
                 </div>
-                <div
-                    onClick={() => openPopup('preferences')}
-                    className='-mr-1.5 w-8 h-7 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3'
-                >
-                    <TradeSetings size={16} />
-                </div>
+                {isAuth &&
+                    <div
+                        onClick={() => openPopup('preferences')}
+                        className='-mr-1.5 w-8 h-7 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3'
+                    >
+                        <TradeSetings size={16} />
+                    </div>
+                }
             </div>
-            <FuturesPreferences
-                isVisible={!!isActive?.preferences}
-                positionMode={positionMode}
-                onClose={() => closePopup('preferences')}
-            />
+            {isAuth &&
+                <FuturesPreferences
+                    isVisible={!!isActive?.preferences}
+                    positionMode={positionMode}
+                    onClose={() => closePopup('preferences')}
+                />
+            }
             <FuturesMarginModeSettings
                 isVisible={!!isActive?.marginMode}
                 marginMode={marginMode}

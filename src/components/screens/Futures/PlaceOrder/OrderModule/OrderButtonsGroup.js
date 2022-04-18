@@ -2,6 +2,8 @@ import { useCallback, useEffect } from 'react'
 import { placeFuturesOrder } from 'redux/actions/futures'
 import { useTranslation } from 'next-i18next'
 import { FuturesOrderTypes } from 'redux/reducers/futures'
+import { getLoginUrl } from 'src/redux/actions/utils';
+import { useRouter } from 'next/router'
 
 const FuturesOrderButtonsGroup = ({
     pairConfig,
@@ -13,9 +15,10 @@ const FuturesOrderButtonsGroup = ({
     lastPrice,
     currentType,
     stopOrderMode,
+    isAuth
 }) => {
     const { t } = useTranslation()
-
+    const router = useRouter();
     const handleParams = useCallback(
         (side) => {
             const params = {
@@ -57,37 +60,43 @@ const FuturesOrderButtonsGroup = ({
         ]
     )
 
+    const onLogin = () => {
+        router.push(getLoginUrl('sso'))
+    }
+
     return (
         <div className='flex items-center justify-between font-bold text-sm text-white select-none'>
             <div
                 className='w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
                 onClick={() =>
-                    placeFuturesOrder(handleParams('BUY'), {
-                        filters: pairConfig?.filters,
-                        lastPrice,
-                        isMarket: [
-                            FuturesOrderTypes.Market,
-                            FuturesOrderTypes.StopMarket,
-                        ].includes(currentType),
-                    })
+                    !isAuth ? onLogin() :
+                        placeFuturesOrder(handleParams('BUY'), {
+                            filters: pairConfig?.filters,
+                            lastPrice,
+                            isMarket: [
+                                FuturesOrderTypes.Market,
+                                FuturesOrderTypes.StopMarket,
+                            ].includes(currentType),
+                        })
                 }
             >
-                {t('common:buy')}/Long
+                {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
             </div>
             <div
                 className='w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
                 onClick={() =>
-                    placeFuturesOrder(handleParams('SELL'), {
-                        filters: pairConfig?.filters,
-                        lastPrice,
-                        isMarket: [
-                            FuturesOrderTypes.Market,
-                            FuturesOrderTypes.StopMarket,
-                        ].includes(currentType),
-                    })
+                    !isAuth ? onLogin() :
+                        placeFuturesOrder(handleParams('SELL'), {
+                            filters: pairConfig?.filters,
+                            lastPrice,
+                            isMarket: [
+                                FuturesOrderTypes.Market,
+                                FuturesOrderTypes.StopMarket,
+                            ].includes(currentType),
+                        })
                 }
             >
-                {t('common:sell')}/Short
+                {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
             </div>
         </div>
     )

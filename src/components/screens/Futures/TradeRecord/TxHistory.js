@@ -17,25 +17,29 @@ const FuturesTxHistory = ({
     pairConfig,
     onForceUpdate,
 }) => {
+
+    const [dataSource, setDataSource] = useState([])
+    const [loading, setLoading] = useState(true)
+
     const columns = useMemo(
         () => [
             {
                 name: 'Time',
                 selector: (row) => row?.time,
-                cell: (row) => formatTime(row?.time, 'dd-MM-yyyy HH:mm:ss'),
+                cell: (row) => loading ? <Skeletor width={65} /> : formatTime(row?.time, 'dd-MM-yyyy HH:mm:ss'),
                 minWidth: '150px',
                 sortable: true,
             },
             {
                 name: 'Type',
                 selector: (row) => row?.type,
-                cell: () => <span>Limit</span>,
+                cell: (row) => loading ? <Skeletor width={65} /> : <span>{row?.type}</span>,
                 sortable: true,
             },
             {
                 name: 'Amount',
                 selector: (row) => row?.amount,
-                cell: (row) => (
+                cell: (row) => loading ? <Skeletor width={65} /> : (
                     <span>
                         {formatNumber(
                             row?.amount,
@@ -50,20 +54,17 @@ const FuturesTxHistory = ({
             },
             {
                 name: 'Asset',
-                selector: (row) => row?.asset,
+                selector: (row) => loading ? <Skeletor width={65} /> : row?.asset,
                 sortable: true,
             },
             {
                 name: 'Symbol',
-                selector: (row) => row?.symbol,
+                selector: (row) => loading ? <Skeletor width={65} /> : row?.symbol,
                 sortable: true,
             },
         ],
-        []
+        [loading]
     )
-
-    const [dataSource, setDataSource] = useState([])
-    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         onFilter()
@@ -116,22 +117,15 @@ const FuturesTxHistory = ({
                 arrCate={category}
                 onReset={() => { }}
             />
-            {loading ? (
-                <div className='px-[20px] mt-3'>
-                    <Skeletor width={'100%'} height={30} />
-                    <Skeletor width={'100%'} count={20} height={40} />
-                </div>
-            ) : (
-                <DataTable
-                    responsive
-                    fixedHeader
-                    data={dataSource.concat(dataSource)}
-                    columns={columns}
-                    className='mt-3'
-                    sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-                    customStyles={customTableStyles}
-                />
-            )}
+            <DataTable
+                responsive
+                fixedHeader
+                data={loading ? data : dataSource}
+                columns={columns}
+                className='mt-3'
+                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
+                customStyles={customTableStyles}
+            />
         </>
     )
 }
@@ -139,24 +133,21 @@ const FuturesTxHistory = ({
 const data = [
     {
         id: 1,
-        created_at: 1646607132000,
-        symbol: { pair: 'BTCUSDT', baseAsset: 'BTC', quoteAsset: 'USDT' },
-        type: 1,
-        amount: 27.8,
     },
     {
         id: 2,
-        created_at: 1646607132000,
-        symbol: { pair: 'BTCUSDT', baseAsset: 'BTC', quoteAsset: 'USDT' },
-        type: 1,
-        amount: 27.8,
     },
     {
         id: 3,
-        created_at: 1646607132000,
-        symbol: { pair: 'BTCUSDT', baseAsset: 'BTC', quoteAsset: 'USDT' },
-        type: 1,
-        amount: 27.8,
+    },
+    {
+        id: 4,
+    },
+    {
+        id: 5,
+    },
+    {
+        id: 6,
     },
 ]
 

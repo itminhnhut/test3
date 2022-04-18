@@ -10,8 +10,12 @@ import FuturesTxHistory from './TxHistory'
 import FuturesAssets from './Assets'
 import FuturesOpenOrdersVndc from '../PlaceOrder/Vndc/OpenOrdersVndc'
 import FuturesOrderHistoryVndc from '../PlaceOrder/Vndc/OrderHistoryVndc'
+import { useRouter } from 'next/router'
+import { getLoginUrl } from 'redux/actions/utils'
 
-const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, auth }) => {
+
+const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, isAuth }) => {
+    const router = useRouter();
     const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.position)
     const [hideOther, setHideOther] = useState(false)
     const [pickedTime, setPickedTime] = useState({
@@ -66,6 +70,10 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
         }
     }, [layoutConfig?.h, tableRef, tabActive, forceUpdateState])
 
+    const onLogin = () => {
+        router.push(getLoginUrl('sso'))
+    }
+
     return (
         <div ref={tableRef} className='h-full flex flex-col overflow-y-hidden'>
             <div className='min-h-[42px] px-5 flex items-center border-b border-divider dark:border-divider-dark'>
@@ -97,7 +105,8 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                                 onForceUpdate={onForceUpdate}
                                 hideOther={hideOther}
                                 pairPrice={pairPrice}
-                                auth={auth}
+                                isAuth={isAuth}
+                                onLogin={onLogin}
                             />
                         ) : (
                             <FuturesOpenOrders pairConfig={pairConfig} />
@@ -114,6 +123,8 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                                     ]
                                 }
                                 onChangeTimePicker={onChangeTimePicker}
+                                isAuth={isAuth}
+                                onLogin={onLogin}
                             />
                         ) : (
                             <FuturesOrderHistory

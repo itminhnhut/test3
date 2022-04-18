@@ -4,6 +4,8 @@ import { ChevronDown } from 'react-feather'
 
 import TradingInput from 'components/trade/TradingInput'
 import { FuturesStopOrderMode } from 'redux/reducers/futures'
+import { formatNumber } from 'redux/actions/utils'
+
 
 const FuturesOrderLimit = ({
     isStopLimit,
@@ -108,7 +110,7 @@ const FuturesOrderLimit = ({
                 )}
             />
             <TradingInput
-                thousandSeparator={false}
+                thousandSeparator={size?.includes('%') ? false : true}
                 label={t('futures:size')}
                 value={size}
                 suffix={size?.includes('%') ? '%' : ''}
@@ -122,35 +124,39 @@ const FuturesOrderLimit = ({
                     <div className='relative group select-none'>
                         <div className='flex items-center'>
                             {selectedAsset}{' '}
-                            <ChevronDown
-                                size={12}
-                                className='ml-1 group-hover:rotate-180'
-                            />
+                            {!isVndcFutures &&
+                                <ChevronDown
+                                    size={12}
+                                    className='ml-1 group-hover:rotate-180'
+                                />
+                            }
                         </div>
-                        <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
-                            <div
-                                className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                onClick={() =>
-                                    onReverseAsset(
-                                        selectedAsset,
-                                        pairConfig?.quoteAsset
-                                    )
-                                }
-                            >
-                                {pairConfig?.quoteAsset}
+                        {!isVndcFutures &&
+                            <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
+                                <div
+                                    className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
+                                    onClick={() =>
+                                        onReverseAsset(
+                                            selectedAsset,
+                                            pairConfig?.quoteAsset
+                                        )
+                                    }
+                                >
+                                    {pairConfig?.quoteAsset}
+                                </div>
+                                <div
+                                    className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
+                                    onClick={() =>
+                                        onReverseAsset(
+                                            selectedAsset,
+                                            pairConfig?.baseAsset
+                                        )
+                                    }
+                                >
+                                    {pairConfig?.baseAsset}
+                                </div>
                             </div>
-                            <div
-                                className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                onClick={() =>
-                                    onReverseAsset(
-                                        selectedAsset,
-                                        pairConfig?.baseAsset
-                                    )
-                                }
-                            >
-                                {pairConfig?.baseAsset}
-                            </div>
-                        </div>
+                        }
                     </div>
                 )}
             />

@@ -51,7 +51,7 @@ class FuturesMarketWatch {
             openPrice: +source?.o || 0,
             highPrice: +source?.h || 0,
             lowPrice: +source?.l || 0,
-            lastPrice: +source?.[mode === 'VNDC' ? 'l' : 'c'] || 0,
+            lastPrice: +source?.[mode === 'VNDC' ? 'p' : 'c'] || 0,
             priceChange: +source?.p || 0,
             priceChangePercent: +source?.[mode === 'VNDC' ? 'lcp' : 'P'] || 0,
             lastQuantity: +source?.Q || 0,

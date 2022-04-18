@@ -161,6 +161,7 @@ const FuturesPlaceOrderVndc = ({
                     pairConfig={pairConfig}
                     userSettings={userSettings}
                     isVndcFutures={isVndcFutures}
+                    isAuth={isAuth}
                 />
                 <div className='absolute left-0 -bottom-5 w-full h-5 dragHandleArea' />
             </div>

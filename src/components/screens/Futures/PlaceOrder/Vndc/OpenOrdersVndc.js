@@ -19,8 +19,7 @@ import OrderProfit from '../../TradeRecord/OrderProfit';
 import Big from "big.js";
 import FuturesEditSLTPVndc from './EditSLTPVndc'
 
-
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, auth }) => {
+const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin }) => {
     const { t } = useTranslation()
     const columns = useMemo(
         () => [
@@ -97,7 +96,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             {
                 name: '',
                 cell: (row) => (
-                    <div onClick={() => onDelete(row)} className='cursor-pointer hover:opacity-80 px-[28px] py-1 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                    <div onClick={() => onDelete(row)} className='cursor-pointer hover:opacity-80 px-[28px] py-1 font-medium text-xs text-txtSecondary dark:text-white bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
                         Close
                     </div>
                 ),
@@ -117,7 +116,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     }, [])
 
     const getDataSource = () => {
-        if (!auth) return;
+        if (!isAuth) return;
         const params = {
             status: 0,
         }
@@ -256,7 +255,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
         return !hideOther ? dataSource : dataSource.filter(i => i.symbol === pairConfig?.symbol);
     }, [hideOther, dataSource])
 
-    if (!auth) return <div className="flex items-center justify-center h-full">{t('futures:order_table:login_to_continue')}</div>;
+    if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
+        <div
+            className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
+            onClick={onLogin}
+        >
+            {t('futures:order_table:login_to_continue')}
+        </div>
+    </div>
+
     return (
         <>
             <Modal

@@ -12,6 +12,7 @@ import { ApiStatus, UserSocketEvent } from 'redux/actions/const'
 import fetchApi from 'utils/fetch-api'
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { getProfitVndc } from './VndcFutureOrderType';
+import { useTranslation } from 'next-i18next'
 
 const AVAILBLE_KEY = 'futures_available'
 
@@ -22,6 +23,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     const wallets = useSelector(state => state.wallet.FUTURES)
     const [balance, setBalance] = useState({});
     const [totalProfit, setTotalProfit] = useState(0);
+    const { t } = useTranslation()
 
     const walletMapper = (allWallet, assetConfig) => {
         if (!allWallet || !assetConfig) return
@@ -48,10 +50,8 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     }, [wallets, assetConfig])
 
     useEffect(() => {
-        if (lastPrice) {
-            getOrders();
-        }
-    }, [lastPrice])
+        getOrders();
+    }, [])
 
     useEffect(() => {
         if (userSocket) {
@@ -94,22 +94,22 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
         <div className='pt-5 h-full !overflow-x-hidden overflow-y-auto'>
             <div className='pt-4 pb-5 px-[10px]'>
                 <div className='flex items-center justify-between'>
-                    <span className='futures-component-title'>Assets</span>
+                    <span className='futures-component-title'>{t('common:assets')}</span>
                 </div>
                 <div className='mt-4 flex items-center'>
                     <Link href="https://nami.exchange/trade">
                         <a className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
-                            Buy Crypto
+                            {t('futures:buy_crypto')}
                         </a>
                     </Link>
                     <Link href="https://nami.exchange/swap">
                         <a className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
-                            Convert
+                            {t('futures:convert')}
                         </a>
                     </Link>
                     {auth &&
                         <div onClick={onOpenTransfer} className='cursor-pointer px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
-                            Transfer
+                            {t('common:transfer')}
                         </div>
                     }
                 </div>

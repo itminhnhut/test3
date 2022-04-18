@@ -63,8 +63,3 @@ export const getProfitVndc = (order, lastPrice = 0) => {
     return profitVNDC;
 }
 
-
-
-
-
-

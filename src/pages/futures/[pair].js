@@ -141,9 +141,6 @@ const Futures = () => {
         if (isVndcFutures) {
             Object.keys(oldLayouts).map(layout => {
                 return oldLayouts[layout].map(item => {
-                    if (item.i === futuresGridKey.favoritePair || item.i === futuresGridKey.pairDetail) {
-                        item.isResizable = false
-                    }
                     if (item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades) {
                         item.h = 0;
                         item.w = 0;
@@ -154,6 +151,7 @@ const Futures = () => {
                     if (item.i === futuresGridKey.chart || item.i === futuresGridKey.favoritePair || item.i === futuresGridKey.pairDetail) {
                         item.w = layout === 'lg' ? 10 : layout === 'xl' ? 12 : layout === '2xl' ? 15 : item.w;
                     }
+
                     if (layout === 'lg') {
                         if (item.i === futuresGridKey.pairDetail) {
                             item.h = 3;
@@ -162,10 +160,35 @@ const Futures = () => {
                             item.h = 24;
                         }
                     }
+                    if (layout === 'xl') {
+                        if (item.i === futuresGridKey.placeOrder) {
+                            item.h = 34;
+                        }
+                    }
+                    if (layout === '2xl') {
+                        if (item.i === futuresGridKey.placeOrder) {
+                            item.h = 30;
+                        }
+                    }
+                    if (!auth) {
+                        if (item.i === futuresGridKey.chart) {
+                            item.h = layout === 'lg' ? 26 : layout === 'xl' ? 31 : layout === '2xl' ? 28 : item.w;
+                        }
+                    }
                     return item;
                 })
             })
-        };
+        } else {
+            Object.keys(oldLayouts).map(layout => {
+                return oldLayouts[layout].map(item => {
+                    if (item.i === futuresGridKey.favoritePair) {
+                        item.h = 2;
+                        item.w = layout === 'lg' ? 14 : layout === 'xl' ? 8 : item.w;
+                    }
+                    return item;
+                })
+            })
+        }
         setLayoutToLS(isVndcFutures ? 'VNDC' : 'USDT', oldLayouts)
         return oldLayouts;
     }
@@ -344,6 +367,7 @@ const Futures = () => {
                                             state.forceUpdateState
                                         }
                                         isVndcFutures={state.isVndcFutures}
+                                        isAuth={!!auth}
                                     />
                                 </div>
                                 <div
@@ -387,7 +411,7 @@ const Futures = () => {
                                         layoutConfig={state.tradeRecordLayout}
                                         pairConfig={pairConfig}
                                         pairPrice={state.pairPrice}
-                                        auth={auth}
+                                        isAuth={!!auth}
                                     />
                                 </div>
                                 <div

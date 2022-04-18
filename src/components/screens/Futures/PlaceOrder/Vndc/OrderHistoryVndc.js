@@ -11,101 +11,101 @@ import FuturesTimeFilter from '../../TimeFilter'
 import { FUTURES_RECORD_CODE } from '../../TradeRecord/RecordTableTab'
 import { formatTime, formatNumber, getPriceColor } from 'redux/actions/utils'
 import { VndcFutureOrderType } from './VndcFutureOrderType';
+import { useTranslation } from 'next-i18next'
 
+const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker, pickedTime, isAuth, onLogin }) => {
+    const { t } = useTranslation()
+    const [dataSource, setDataSource] = useState([])
+    const [loading, setLoading] = useState(true)
 
-const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker, pickedTime }) => {
-    const columns = useMemo(
-        () => [
-            {
-                name: 'ID',
-                selector: (row) => row?.displaying_id,
-                sortable: true,
-            },
-            {
-                name: 'Symbol',
-                selector: (row) => row?.symbol,
-                sortable: true,
-            },
-            {
-                name: 'Open at',
-                selector: (row) => row?.opened_at,
-                cell: (row) => (
-                    <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                        {formatTime(row?.opened_at)}
-                    </span>
-                ),
-                sortable: true,
-            },
-            {
-                name: 'Close at',
-                selector: (row) => row?.closed_at,
-                cell: (row) => (
-                    <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                        {formatTime(row?.closed_at)}
-                    </span>
-                ),
-                sortable: true,
-            },
-            {
-                name: 'Type',
-                selector: (row) => row?.type,
-                sortable: true,
-            },
-            {
-                name: 'Side',
-                selector: (row) => row?.sdie,
-                cell: (row) => <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{row?.side}</span>,
-                sortable: true,
-            },
-            {
-                name: 'Amount',
-                cell: (row) => row?.quantity ? formatNumber(row?.quantity, 8, 0, true) : '-',
-                sortable: true,
-            },
-            {
-                name: 'Open Price',
-                cell: (row) => row?.open_price ? formatNumber(row?.open_price, 0, 0, true) : '-',
-                sortable: true,
-            },
-            {
-                name: 'Close Price',
-                cell: (row) => row?.close_price ? formatNumber(row?.close_price, 0, 0, true) : '-',
-                sortable: true,
-            },
-            {
-                name: 'TP/SL',
-                cell: (row) => (
-                    <div className='flex items-center'>
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div>{formatNumber(row?.tp, 0, 0, true)}/</div>
-                            <div>{formatNumber(row?.sl, 0, 0, true)}</div>
-                        </div>
+    const columns = useMemo(() => [
+        {
+            name: 'ID',
+            cell: (row) => loading ? <Skeletor width={65} /> : row?.displaying_id,
+            sortable: true,
+        },
+        {
+            name: 'Symbol',
+            cell: (row) => loading ? <Skeletor width={65} /> : row?.symbol,
+            sortable: true,
+        },
+        {
+            name: 'Open at',
+            selector: (row) => row?.opened_at,
+            cell: (row) => loading ? <Skeletor width={65} /> : (
+                <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+                    {formatTime(row?.opened_at)}
+                </span>
+            ),
+            sortable: true,
+        },
+        {
+            name: 'Close at',
+            selector: (row) => row?.closed_at,
+            cell: (row) => loading ? <Skeletor width={65} /> : (
+                <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+                    {formatTime(row?.closed_at)}
+                </span>
+            ),
+            sortable: true,
+        },
+        {
+            name: 'Type',
+            cell: (row) => loading ? <Skeletor width={65} /> : row?.type,
+            sortable: true,
+        },
+        {
+            name: 'Side',
+            selector: (row) => row?.sdie,
+            cell: (row) => loading ? <Skeletor width={65} /> : <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{row?.side}</span>,
+            sortable: true,
+        },
+        {
+            name: 'Amount',
+            cell: (row) => loading ? <Skeletor width={65} /> : row?.quantity ? formatNumber(row?.quantity, 8, 0, true) : '-',
+            sortable: true,
+        },
+        {
+            name: 'Open Price',
+            cell: (row) => loading ? <Skeletor width={100} /> : row?.open_price ? formatNumber(row?.open_price, 0, 0, true) : '-',
+            sortable: true,
+        },
+        {
+            name: 'Close Price',
+            cell: (row) => loading ? <Skeletor width={100} /> : row?.close_price ? formatNumber(row?.close_price, 0, 0, true) : '-',
+            sortable: true,
+        },
+        {
+            name: 'TP/SL',
+            cell: (row) => loading ? <Skeletor width={100} /> : (
+                <div className='flex items-center'>
+                    <div className='text-txtSecondary dark:text-txtSecondary-dark'>
+                        <div>{formatNumber(row?.tp, 0, 0, true)}/</div>
+                        <div>{formatNumber(row?.sl, 0, 0, true)}</div>
                     </div>
-                ),
-                minWidth: '150px',
-                sortable: true,
-            },
-            {
-                name: 'Revenue',
-                cell: (row) => cellRenderRevenue(row),
-                minWidth: '150px',
-                sortable: true,
-            },
-            {
-                name: 'Adjustment Details',
-                cell: () => (
-                    <div className='px-[12px] py-1 bg-bgPrimary dark:bg-bgPrimary-dark text-xs text-dominant border border-dominant rounded-[4px]'>
-                        View details
-                    </div>
-                ),
-                sortable: true,
-            },
-        ],
-        []
+                </div>
+            ),
+            minWidth: '150px',
+            sortable: true,
+        },
+        {
+            name: 'Revenue',
+            cell: (row) => loading ? <Skeletor width={100} /> : cellRenderRevenue(row),
+            minWidth: '150px',
+            sortable: true,
+        },
+        {
+            name: 'Adjustment Details',
+            cell: () => loading ? <Skeletor width={65} /> : (
+                <div className='px-[12px] py-1 bg-bgPrimary dark:bg-bgPrimary-dark text-xs text-dominant border border-dominant rounded-[4px]'>
+                    View details
+                </div>
+            ),
+            sortable: true,
+        },
+    ], [loading]
     )
 
-    const [dataSource, setDataSource] = useState([])
-    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         getOrders();
@@ -133,10 +133,8 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
         } catch (e) {
             console.log(e)
         } finally {
-            setTimeout(() => {
-                setLoading(false)
-                onForceUpdate()
-            }, 2000)
+            setLoading(false)
+            onForceUpdate()
         }
     }
 
@@ -153,6 +151,15 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
         </div>
     }
 
+    if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
+        <div
+            className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
+            onClick={onLogin}
+        >
+            {t('futures:order_table:login_to_continue')}
+        </div>
+    </div>
+
     return (
         <>
             <FuturesTimeFilter
@@ -164,22 +171,14 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
                     )}
                 onFilter={getOrders}
             />
-            {loading ?
-                <div className='px-[20px] mt-3'>
-                    <Skeletor width={'100%'} height={30} />
-                    <Skeletor width={'100%'} count={20} height={40} />
-                </div>
-                :
-                <DataTable
-                    responsive
-                    fixedHeader
-                    expandableRows
-                    sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-                    data={dataSource}
-                    columns={columns}
-                    customStyles={customTableStyles}
-                />
-            }
+            <DataTable
+                responsive
+                fixedHeader
+                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
+                data={loading ? data : dataSource}
+                columns={columns}
+                customStyles={customTableStyles}
+            />
         </>
     )
 }
@@ -187,16 +186,21 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
 const data = [
     {
         id: 1,
-        symbol: { pair: 'ETHUSDT', baseAsset: 'ETH', quoteAsset: 'USDT' },
-        open_at: '2022-07-15  13:05:20',
-        close_at: '2022-07-15  13:05:20',
-        type: 'BUY LIMIT',
-        amount: 5,
-        openPrice: '-',
-        closePrice: '-',
-        stopLoss: 42.548,
-        takeProfit: 47.154,
-        revenue: '- VNDC',
+    },
+    {
+        id: 2,
+    },
+    {
+        id: 3,
+    },
+    {
+        id: 4,
+    },
+    {
+        id: 5,
+    },
+    {
+        id: 6,
     },
 ]
 

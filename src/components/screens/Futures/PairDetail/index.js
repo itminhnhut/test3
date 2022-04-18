@@ -30,7 +30,8 @@ const FuturesPairDetail = ({
     pairConfig,
     markPrice,
     forceUpdateState,
-    isVndcFutures
+    isVndcFutures,
+    isAuth
 }) => {
     // ? Xử lí minW để khi giá thay đổi, giao diện này sẽ không bị xê dịch.
     // ? Nguyên nhân: Font sida (;_;)
@@ -38,7 +39,7 @@ const FuturesPairDetail = ({
     const [lastPriceMinW, setLastPriceMinW] = useState(0)
 
     const [activePairList, setActivePairList] = useState(false)
-    const [pairListMode, setPairListMode] = useState('Starred')
+    const [pairListMode, setPairListMode] = useState('')
 
     const router = useRouter()
     const { t } = useTranslation()
@@ -339,6 +340,7 @@ const FuturesPairDetail = ({
                         <FuturesPairList
                             mode={pairListMode}
                             setMode={setPairListMode}
+                            isAuth={isAuth}
                         />
                     )}
                 </div>

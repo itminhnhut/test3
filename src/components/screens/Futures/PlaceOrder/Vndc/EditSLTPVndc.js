@@ -30,7 +30,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
         <Modal isVisible={isVisible} containerClassName='w-[390px] p-0 top-[50%]'>
             <div className='px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark'>
                 <span className='font-bold text-[16px]'>
-                    TP/SL for entire position
+                    Modify TP/SL
                 </span>{' '}
                 <X
                     size={20}

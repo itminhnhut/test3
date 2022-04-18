@@ -47,5 +47,7 @@
         "close_successfully": "Đóng lệnh #{{value}} thành công",
         "btn_ok": "Đồng ý",
         "btn_cancel": "Bỏ qua"
-    }
+    },
+    "buy_crypto": "Mua tiền điện tử",
+    "convert": "Quy đổi"
 }

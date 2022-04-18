@@ -18,19 +18,22 @@ const FuturesTradeHistory = ({
     pairConfig,
     onForceUpdate,
 }) => {
+    const [dataSource, setDataSource] = useState([])
+    const [loading, setLoading] = useState(true)
+
     const columns = useMemo(
         () => [
             {
                 name: 'Time',
                 selector: (row) => row?.time,
-                cell: (row) => formatTime(row?.time, 'dd-MM-yyyy HH:mm:ss'),
+                cell: (row) => loading ? <Skeletor width={65} /> : formatTime(row?.time, 'dd-MM-yyyy HH:mm:ss'),
                 minWidth: '150px',
                 sortable: true,
             },
             {
                 name: 'Symbol',
                 selector: (row) => row?.symbol?.pair,
-                cell: (row) => (
+                cell: (row) => loading ? <Skeletor width={65} /> : (
                     <FuturesRecordSymbolItem symbol={row?.symbol?.pair} />
                 ),
                 minWidth: '150px',
@@ -39,19 +42,19 @@ const FuturesTradeHistory = ({
             {
                 name: 'Type',
                 selector: (row) => row?.type,
-                cell: () => <span>Limit</span>,
+                cell: (row) => loading ? <Skeletor width={65} /> : <span>{row?.type}</span>,
                 sortable: true,
             },
             {
                 name: 'Side',
                 selector: (row) => row?.side,
-                cell: () => <span className='text-dominant'>BUY</span>,
+                cell: () => loading ? <Skeletor width={65} /> : <span className='text-dominant'>BUY</span>,
                 sortable: true,
             },
             {
                 name: 'Price',
                 selector: (row) => row?.price,
-                cell: (row) => (
+                cell: (row) => loading ? <Skeletor width={100} /> : (
                     <span>
                         {formatNumber(
                             row?.price,
@@ -65,7 +68,7 @@ const FuturesTradeHistory = ({
             {
                 name: 'Quantity',
                 selector: (row) => row?.quantity,
-                cell: (row) => (
+                cell: (row) => loading ? <Skeletor width={65} /> : (
                     <span>
                         {formatNumber(
                             row?.quantity,
@@ -79,7 +82,7 @@ const FuturesTradeHistory = ({
             {
                 name: 'Fee',
                 selector: (row) => row?.fee,
-                cell: (row) => (
+                cell: (row) => loading ? <Skeletor width={65} /> : (
                     <span>
                         {formatNumber(
                             row?.fee,
@@ -93,7 +96,7 @@ const FuturesTradeHistory = ({
             {
                 name: 'Realized Profit',
                 selector: (row) => row?.realizedProfit,
-                cell: (row) => (
+                cell: (row) => loading ? <Skeletor width={65} /> : (
                     <span>
                         {formatNumber(
                             row?.realizedProfit,
@@ -105,11 +108,8 @@ const FuturesTradeHistory = ({
                 sortable: true,
             },
         ],
-        []
+        [loading]
     )
-
-    const [dataSource, setDataSource] = useState([])
-    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         onFilter()
@@ -149,22 +149,15 @@ const FuturesTradeHistory = ({
                 }
                 onFilter={onFilter}
             />
-            {loading ? (
-                <div className='px-[20px] mt-3'>
-                    <Skeletor width={'100%'} height={30} />
-                    <Skeletor width={'100%'} count={20} height={40} />
-                </div>
-            ) : (
-                <DataTable
-                    responsive
-                    fixedHeader
-                    data={dataSource}
-                    columns={columns}
-                    className='mt-3'
-                    sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-                    customStyles={customTableStyles}
-                />
-            )}
+            <DataTable
+                responsive
+                fixedHeader
+                data={loading ? data : dataSource}
+                columns={columns}
+                className='mt-3'
+                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
+                customStyles={customTableStyles}
+            />
         </>
     )
 }
@@ -172,36 +165,21 @@ const FuturesTradeHistory = ({
 const data = [
     {
         id: 1,
-        created_at: 1646607132000,
-        symbol: { pair: 'BTCUSDT', baseAsset: 'BTC', quoteAsset: 'USDT' },
-        type: 1,
-        side: 2,
-        price: 17.99,
-        quantity: 27.8,
-        fee: 0.1032,
-        realizedProfit: 0.1032,
     },
     {
         id: 2,
-        created_at: 1646607132000,
-        symbol: { pair: 'SLPUSDT', baseAsset: 'SLP', quoteAsset: 'USDT' },
-        type: 1,
-        side: 2,
-        price: 17.99,
-        quantity: 27.8,
-        fee: 0.1032,
-        realizedProfit: 0.1032,
     },
     {
         id: 3,
-        created_at: 1646607132000,
-        symbol: { pair: 'AXSUSDT', baseAsset: 'AXS', quoteAsset: 'USDT' },
-        type: 1,
-        side: 2,
-        price: 17.99,
-        quantity: 27.8,
-        fee: 0.1032,
-        realizedProfit: 0.1032,
+    },
+    {
+        id: 4,
+    },
+    {
+        id: 5,
+    },
+    {
+        id: 6,
     },
 ]
 

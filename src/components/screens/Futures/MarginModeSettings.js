@@ -43,7 +43,7 @@ const FuturesMarginModeSettings = ({
         <Modal
             isVisible={isVisible}
             onBackdropCb={onClose}
-            containerClassName='max-w-[306px]'
+            containerClassName='max-w-[306px] top-[50%]'
         >
             <div className='-mt-1.5 mb-3 flex items-center justify-between font-bold text-sm'>
                 BTC/USDT Perpetual Margin Mode

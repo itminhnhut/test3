@@ -12,6 +12,8 @@
     "last_price": "Last",
     "last_price_tooltip": "Fill in the current last price",
     "fee_level": "Fee level",
+    "buy_crypto": "Buy Crypto",
+    "convert": "Convert",
     "order_table": {
         "opening_title": "Opening",
         "history_title": "History",

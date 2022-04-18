@@ -14,7 +14,7 @@ const FuturesCalculator = ({ isVisible, onClose }) => {
         <Modal
             isVisible={isVisible}
             onBackdropCb={onClose}
-            containerClassName='p-0 pb-6 w-[596px] dark:border border-divider-dark'
+            containerClassName='p-0 pb-6 w-[596px] dark:border border-divider-dark top-[50%]'
         >
             <div className='-mt-1 p-5 pb-4 flex items-center justify-between font-bold text-sm'>
                 Futures Calculator
