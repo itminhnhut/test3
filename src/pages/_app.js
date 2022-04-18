@@ -19,12 +19,11 @@ import {
     getUsdRate,
 } from 'redux/actions/market'
 import { getPaymentConfigs } from 'redux/actions/payment'
-import { SET_USD_RATE } from 'redux/actions/types'
+import { SET_LOADING_USER, SET_USD_RATE } from 'redux/actions/types';
 import { getWallet, setTheme } from 'redux/actions/user'
 import Head from 'src/components/common/Head'
 import Tracking from 'src/components/common/Tracking'
 import initPublicSocket from 'src/redux/actions/publicSocket'
-import * as types from 'src/redux/actions/types'
 import { getMe, getUserFuturesBalance } from 'src/redux/actions/user'
 import initUserSocket from 'src/redux/actions/userSocket'
 import { useStore } from 'src/redux/store'
@@ -89,7 +88,7 @@ const App = ({ Component, pageProps }) => {
     useAsync(async () => {
         await store.dispatch(getMe())
         store.dispatch({
-            type: types.SET_LOADING_USER,
+            type: SET_LOADING_USER,
             payload: false,
         })
 
