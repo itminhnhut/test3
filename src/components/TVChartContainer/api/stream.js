@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import historyProvider from './historyProvider';
+import { ChartMode } from 'redux/actions/const';
 
 const io = require('socket.io-client');
 
@@ -68,11 +69,15 @@ export default class {
     }
 
     subscribeBars(symbolInfo, resolution, updateCb, uid, resetCache) {
-        socket.emit('subscribe:recent_trade', symbolInfo.symbol);
+        socket.emit(
+            this.mode === ChartMode.SPOT
+                ? 'subscribe:recent_trade'
+                : 'subscribe:futures:ticker',
+            symbolInfo.symbol);
         try {
             lastSymbol = symbolInfo.symbol;
             const newSub = {
-                exchange: 'NAMI_SPOT',
+                exchange: symbolInfo.exchange,
                 symbol: symbolInfo.symbol,
                 uid,
                 resolution,
@@ -100,7 +105,10 @@ socket.on('connect', () => {
     if (isDisconnected) {
         if (_subs.length) {
             _subs.map(sub => {
-                return socket.emit('subscribe:recent_trade', lastSymbol);
+                const emitAction = this.mode === ChartMode.SPOT
+                    ? 'subscribe:recent_trade'
+                    : 'subscribe:futures:ticker'
+                return socket.emit(emitAction, lastSymbol);
             });
         }
         isDisconnected = false;
@@ -113,6 +121,30 @@ socket.on('disconnect', (e) => {
 socket.on('error', err => {
     // console.log('====socket error', err);
 });
+
+socket.on('futures:ticker:update', (update) => {
+    const {
+        s: symbol,
+        t: time,
+        p: price,
+    } = update;
+    const sub = _subs.find(e => e.symbol === symbol);
+    const data = {
+        ts: Math.floor(time / 1000),
+        price: +price,
+    };
+    if (sub) {
+        if (!sub?.lastBar?.time) return;
+        if (data.ts < sub?.lastBar?.time / 1000) {
+            return;
+        }
+        const _lastBar = updateBar(data, sub);
+        sub.listener(_lastBar);
+        // update our own record of lastBar
+        sub.lastBar = _lastBar;
+    }
+});
+
 
 socket.on('spot:recent_trade:add', (update) => {
     const {

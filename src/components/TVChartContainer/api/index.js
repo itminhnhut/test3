@@ -60,10 +60,10 @@ export default class {
             });
     };
     subscribeBars = (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) => {
-        this.streamsubscribeBars(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback);
+        this.stream.subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback);
     };
     unsubscribeBars = subscriberUID => {
-        this.streamunsubscribeBars(subscriberUID);
+        this.stream.unsubscribeBars(subscriberUID);
     };
     calculateHistoryDepth = (resolution, resolutionBack, intervalBack) => {
         return resolution < 60 ? {
