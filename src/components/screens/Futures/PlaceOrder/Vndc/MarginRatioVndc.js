@@ -24,6 +24,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     const [balance, setBalance] = useState({});
     const [totalProfit, setTotalProfit] = useState(0);
     const { t } = useTranslation()
+    const [listOrders, setListOrders] = useState([]);
 
     const walletMapper = (allWallet, assetConfig) => {
         if (!allWallet || !assetConfig) return
@@ -65,6 +66,13 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
         };
     }, [userSocket]);
 
+    useEffect(() => {
+        let _totalProfit = 0;
+        listOrders.forEach((item) => {
+            _totalProfit += getProfitVndc(item, lastPrice);
+        });
+        setTotalProfit(_totalProfit);
+    }, [lastPrice, listOrders])
 
     const getOrders = async () => {
         try {
@@ -74,11 +82,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                 params: { status: 0 },
             })
             if (status === ApiStatus.SUCCESS && Array.isArray(data?.orders)) {
-                let _totalProfit = 0;
-                data?.orders.forEach((item) => {
-                    _totalProfit += getProfitVndc(item, lastPrice);
-                });
-                setTotalProfit(_totalProfit);
+                setListOrders(data?.orders)
             }
         } catch (e) {
             console.log(e)
@@ -97,12 +101,12 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                     <span className='futures-component-title'>{t('common:assets')}</span>
                 </div>
                 <div className='mt-4 flex items-center'>
-                    <Link href="https://nami.exchange/trade">
+                    <Link href="/trade">
                         <a className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
                             {t('futures:buy_crypto')}
                         </a>
                     </Link>
-                    <Link href="https://nami.exchange/swap">
+                    <Link href="/swap">
                         <a className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
                             {t('futures:convert')}
                         </a>

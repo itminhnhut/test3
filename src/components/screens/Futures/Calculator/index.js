@@ -6,9 +6,11 @@ import Modal from 'components/common/ReModal'
 import FuturesCalculatorPML from './PML'
 import FuturesCalculatorTargetPrice from './TargetPrice'
 import FuturesCalculatorLiqPrice from './LiqPrice'
+import { useTranslation } from 'next-i18next'
 
 const FuturesCalculator = ({ isVisible, onClose }) => {
     const [tabIndex, setTabIndex] = useState(0)
+    const { t } = useTranslation();
 
     return (
         <Modal
@@ -17,7 +19,7 @@ const FuturesCalculator = ({ isVisible, onClose }) => {
             containerClassName='p-0 pb-6 w-[596px] dark:border border-divider-dark top-[50%]'
         >
             <div className='-mt-1 p-5 pb-4 flex items-center justify-between font-bold text-sm'>
-                Futures Calculator
+                {t('futures:calulator:futures_calculator')}
                 <div
                     className='flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer'
                     onClick={onClose}
@@ -36,7 +38,7 @@ const FuturesCalculator = ({ isVisible, onClose }) => {
                     )}
                     onClick={() => setTabIndex(0)}
                 >
-                    PML
+                    PNL
                     <div
                         className={classNames(
                             'absolute hidden w-[40px] h-[2px] bg-dominant left-1/2 bottom-0 -translate-x-1/2',
@@ -54,7 +56,7 @@ const FuturesCalculator = ({ isVisible, onClose }) => {
                     )}
                     onClick={() => setTabIndex(1)}
                 >
-                    Target Price
+                    {t('futures:calulator:target_price')}
                     <div
                         className={classNames(
                             'absolute hidden w-[40px] h-[2px] bg-dominant left-1/2 bottom-0 -translate-x-1/2',
@@ -72,7 +74,7 @@ const FuturesCalculator = ({ isVisible, onClose }) => {
                     )}
                     onClick={() => setTabIndex(2)}
                 >
-                    Liquidation Price
+                    {t('futures:calulator:liq_price')}
                     <div
                         className={classNames(
                             'absolute hidden w-[40px] h-[2px] bg-dominant left-1/2 bottom-0 -translate-x-1/2',
@@ -85,13 +87,11 @@ const FuturesCalculator = ({ isVisible, onClose }) => {
             {tabIndex === 1 && <FuturesCalculatorTargetPrice />}
             {tabIndex === 2 && <FuturesCalculatorLiqPrice />}
             <div className='mt-5 px-5 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                See what the potential risk and reward will be in monetary terms
-                on any give trade. Use our Futures Calculator to establish your
-                potential profit/loss on a future trade. Read{' '}
+                {t('futures:calulator:description')}&nbsp;
                 <span className='text-dominant underline cursor-pointer hover:opacity-75'>
-                    tips
-                </span>{' '}
-                on how to use
+                    {t('futures:calulator:tips')}&nbsp;
+                </span>
+                {t('futures:calulator:to_use')}
             </div>
         </Modal>
     )

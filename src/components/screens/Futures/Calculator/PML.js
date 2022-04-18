@@ -4,16 +4,18 @@ import classNames from 'classnames'
 import Button from 'components/common/Button'
 import Slider from 'components/trade/InputSlider'
 import colors from 'styles/colors'
+import { useTranslation } from 'next-i18next'
 
 const FuturesCalculatorPML = () => {
+    const { t } = useTranslation();
     const [side, setSide] = useState('Long')
 
     return (
         <div className='mt-4 flex'>
             <div className='w-1/2 px-5 border-r border-divider dark:border-divider-dark'>
-                <div className='font-bold text-[16px]'>Result</div>
+                <div className='font-bold text-[16px]'>{t('futures:calulator:result')}</div>
                 <div className='mt-4 flex items-center justify-between flex-wrap font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-                    <div>Initial margin</div>
+                    <div>{t('futures:calulator:init_margin')}</div>
                     <div>
                         <span className='text-txtPrimary dark:text-txtPrimary-dark'>
                             60.00
@@ -80,7 +82,7 @@ const FuturesCalculatorPML = () => {
                     <Slider useLabel axis='x' xmax={125} labelSuffix='x' />
                 </div>
                 <div className='mt-3.5 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                    *Maximum position at current leverage:{' '}
+                    *{t('futures:calulator:max_position_leverage')}:{' '}
                     <span className='text-txtPrimary dark:text-txtPrimary-dark'>
                         1000 USDT
                     </span>
@@ -90,7 +92,7 @@ const FuturesCalculatorPML = () => {
                 <div className='mt-5'>
                     <div className='px-3 h-[36px] mb-2 flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
                         <input
-                            placeholder='Entry Price'
+                            placeholder={t('futures:order_table:open_price')}
                             className='flex-grow text-xs pr-3'
                         />
                         <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -99,7 +101,7 @@ const FuturesCalculatorPML = () => {
                     </div>
                     <div className='px-3 h-[36px] mb-2 flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
                         <input
-                            placeholder='Exit Price'
+                            placeholder={t('futures:calulator:exit_price')}
                             className='flex-grow text-xs pr-3'
                         />
                         <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -108,7 +110,7 @@ const FuturesCalculatorPML = () => {
                     </div>
                     <div className='px-3 h-[36px] flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
                         <input
-                            placeholder='Quantity'
+                            placeholder={t('futures:order_table:quantity')}
                             className='flex-grow text-xs pr-3'
                         />
                         <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -121,7 +123,7 @@ const FuturesCalculatorPML = () => {
                 <Button
                     componentType='button'
                     type='primary'
-                    title='Calculate'
+                    title={t('futures:calulator:calculate')}
                     className='mt-5 !h-[36px]'
                 />
             </div>

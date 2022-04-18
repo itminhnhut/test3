@@ -202,6 +202,7 @@ const FuturesOrderModule = ({
             <FuturesOrderUtilities
                 quoteAsset={pairConfig?.quoteAsset}
                 quoteAssetId={pairConfig?.quoteAssetId}
+                isAuth={isAuth}
             />
 
             {/* Order Input Scenario */}

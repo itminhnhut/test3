@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { SET_FUTURES_PRELOADED_LEVERAGE } from 'redux/actions/types'
 import { API_FUTURES_LEVERAGE } from 'redux/actions/apis'
@@ -12,7 +12,11 @@ import Slider from 'components/trade/InputSlider'
 import colors from 'styles/colors'
 import Modal from 'components/common/ReModal'
 import axios from 'axios'
-import { formatNumber } from 'redux/actions/utils'
+import { formatNumber, getLoginUrl } from 'redux/actions/utils'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
+import TradingInput from 'components/trade/TradingInput'
+
 
 const FuturesLeverageSettings = ({
     pair,
@@ -22,8 +26,11 @@ const FuturesLeverageSettings = ({
     setLeverage,
     pairConfig,
     leverageBracket,
+    isAuth
 }) => {
     const [loading, setLoading] = useState(false)
+    const router = useRouter();
+    const { t } = useTranslation();
     const [_leverage, _setLeverage] = useState(leverage)
     const [_leverageBracket, _setLeverageBracket] = useState(
         pairConfig?.leverageBracket?.[0]
@@ -60,6 +67,22 @@ const FuturesLeverageSettings = ({
         )
     }, [_leverageBracket, pairConfig])
 
+    const getValidator = useMemo(() => {
+        let isValid = true;
+        let msg = null;
+        const min = pairConfig?.leverageConfig?.min ?? 0;
+        const max = pairConfig?.leverageConfig?.max ?? 0;
+        if (min > _leverage) {
+            msg = `Minium Qty is ${min}`
+            isValid = false
+        }
+        if (max < _leverage) {
+            msg = `Maxium Qty is ${max}`
+            isValid = false
+        }
+        return { isValid, msg, isError: !isValid }
+    }, [_leverage])
+
     const renderConfirmButton = useCallback(
         () => (
             <Button
@@ -77,7 +100,7 @@ const FuturesLeverageSettings = ({
                 componentType='button'
                 className='!h-[36px]'
                 type='primary'
-                disabled={loading}
+                disabled={loading || getValidator?.isError}
                 onClick={() => !loading && onSetLeverage(pair, _leverage)}
             />
         ),
@@ -94,6 +117,10 @@ const FuturesLeverageSettings = ({
         }
     }, [_leverage, pairConfig])
 
+    const onLogin = () => {
+        router.push(getLoginUrl('sso'))
+    }
+
     return (
         <Modal
             isVisible={isVisible}
@@ -101,7 +128,7 @@ const FuturesLeverageSettings = ({
             containerClassName='max-w-[306px] select-none'
         >
             <div className='-mt-1 mb-3 flex items-center justify-between font-bold text-sm'>
-                Adjust Leverage
+                {t('futures:leverage:title')}
                 <div
                     className='flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer'
                     onClick={onClose}
@@ -119,16 +146,26 @@ const FuturesLeverageSettings = ({
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
                         onClick={() =>
                             _leverage > 1 &&
-                            _setLeverage((prevState) => prevState - 1)
+                            _setLeverage((prevState) => Number(prevState) - 1)
                         }
                     />
                 </div>
-                <input
+                {/* <input
                     value={`${_leverage}x`}
                     onChange={(e) =>
                         _setLeverage(+e.target.value?.trim()?.replace('x', ''))
                     }
                     className='px-2.5 flex-grow text-center text-sm font-medium'
+                /> */}
+                <TradingInput
+                    label=' '
+                    value={_leverage}
+                    suffix={'x'}
+                    decimalScale={0}
+                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[36px]'
+                    inputClassName="!text-center"
+                    onValueChange={({ value }) => _setLeverage(value)}
+                    validator={getValidator}
                 />
                 <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
                     <Plus
@@ -136,7 +173,7 @@ const FuturesLeverageSettings = ({
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
                         onClick={() =>
                             _leverage < pairConfig?.leverageConfig?.max &&
-                            _setLeverage((prevState) => prevState + 1)
+                            _setLeverage((prevState) => Number(prevState) + 1)
                         }
                     />
                 </div>
@@ -168,11 +205,21 @@ const FuturesLeverageSettings = ({
                 </div>
                 <div className='pl-2.5 font-medium text-xs text-red'>
                     Selecting higher leverage such as [10x] increases your
-                    liquidation risk. Always manage your rish levels. See help
+                    liquidation risk. Always manage your risk levels. See help
                     articles for more information.
                 </div>
             </div>
-            <div className='mt-5 mb-2'>{renderConfirmButton()}</div>
+            {isAuth ?
+                <div className='mt-5 mb-2'>{renderConfirmButton()}</div>
+                :
+                <div className="mt-5 mb-2 cursor-pointer flex items-center justify-center h-full">
+                    <div className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
+                        onClick={onLogin}
+                    >
+                        {t('futures:order_table:login_to_continue')}
+                    </div>
+                </div>
+            }
         </Modal>
     )
 }

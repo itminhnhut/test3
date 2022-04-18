@@ -8,7 +8,7 @@ import TradingLabel from 'components/trade/TradingLabel'
 import AvblAsset from 'components/trade/AvblAsset'
 import FuturesCalculator from '../../Calculator'
 
-const FuturesOrderUtilities = ({ quoteAssetId, quoteAsset }) => {
+const FuturesOrderUtilities = ({ quoteAssetId, quoteAsset, isAuth }) => {
     const [openCalculator, setCalculator] = useState(false)
 
     const { t } = useTranslation()
@@ -28,15 +28,17 @@ const FuturesOrderUtilities = ({ quoteAssetId, quoteAsset }) => {
                         value={<AvblAsset useSuffix assetId={quoteAssetId} />}
                     />
                 </div>
-                <div className='w-6 h-6 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3'>
-                    <div
-                        className='flex flex-col text-txtSecondary dark:text-txtSecondary-dark'
-                        onClick={openTransferModal}
-                    >
-                        <i className='block translate-y-1/3 ci-small_long_left' />
-                        <i className='block -translate-y-1/3 ci-small_long_right' />
+                {isAuth &&
+                    <div className='w-6 h-6 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3'>
+                        <div
+                            className='flex flex-col text-txtSecondary dark:text-txtSecondary-dark'
+                            onClick={openTransferModal}
+                        >
+                            <i className='block translate-y-1/3 ci-small_long_left' />
+                            <i className='block -translate-y-1/3 ci-small_long_right' />
+                        </div>
                     </div>
-                </div>
+                }
                 <div
                     className='w-6 h-6 ml-2 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3 text-txtSecondary dark:text-txtSecondary-dark'
                     onClick={onOpenCalculator}

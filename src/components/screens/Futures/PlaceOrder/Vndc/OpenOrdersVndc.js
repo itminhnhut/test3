@@ -260,8 +260,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     }, [hideOther, dataSource])
 
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
-        <div
-            className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
+        <div className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
             onClick={onLogin}
         >
             {t('futures:order_table:login_to_continue')}

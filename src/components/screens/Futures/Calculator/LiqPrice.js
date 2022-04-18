@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import Slider from 'components/trade/InputSlider'
 import colors from 'styles/colors'
 import Button from 'components/common/Button'
+import { useTranslation } from 'next-i18next'
 
 const FuturesCalculatorLiqPrice = () => {
     const [positionMode, setPositionMode] = useState('One-way')
@@ -15,6 +16,7 @@ const FuturesCalculatorLiqPrice = () => {
 
     const marginRef = useRef()
     const positionRef = useRef()
+    const { t } = useTranslation();
 
     useOutsideClick(marginRef, () => dropdown?.marginMode && setDropdown({}))
     useOutsideClick(
@@ -37,16 +39,13 @@ const FuturesCalculatorLiqPrice = () => {
     return (
         <div className='mt-4 flex'>
             <div className='w-1/2 px-5 border-r border-divider dark:border-divider-dark'>
-                <div className='font-bold text-[16px]'>Result</div>
+                <div className='font-bold text-[16px]'>{t('futures:calulator:result')}</div>
                 <div className='mt-4 flex items-center justify-between flex-wrap font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-                    <div>Liquidation Price</div>
+                    <div>{t('futures:calulator:liq_price')}</div>
                     <div>- USDT</div>
                 </div>
                 <div className='mt-[30px] font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                    Your open positions will be taken into consideration when
-                    calculating the liquidation price. Unrealized PNL and
-                    maintenance margin of your open position will affect the
-                    calculation of liquidation price.
+                    {t('futures:calulator:liq_price_description')}
                 </div>
             </div>
             <div className='w-1/2 px-5'>
@@ -119,13 +118,13 @@ const FuturesCalculatorLiqPrice = () => {
                                 className='py-2 hover:bg-dominant hover:text-white'
                                 onClick={() => onChangePositionMode('One-way')}
                             >
-                                One-way Mode
+                                {t('futures:calulator:one_way')}
                             </div>
                             <div
                                 className='py-2 hover:bg-dominant hover:text-white'
                                 onClick={() => onChangePositionMode('Hedge')}
                             >
-                                Hedge Mode
+                                {t('futures:calulator:hedge_mode')}
                             </div>
                         </div>
                     </div>
@@ -173,7 +172,7 @@ const FuturesCalculatorLiqPrice = () => {
                     <Slider useLabel axis='x' xmax={125} labelSuffix='x' />
                 </div>
                 <div className='mt-3.5 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                    *Maximum position at current leverage:{' '}
+                    *{t('futures:calulator:max_position_leverage')}:{' '}
                     <span className='text-txtPrimary dark:text-txtPrimary-dark'>
                         1000 USDT
                     </span>
@@ -183,7 +182,7 @@ const FuturesCalculatorLiqPrice = () => {
                 <div className='mt-5'>
                     <div className='px-3 h-[36px] mb-2 flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
                         <input
-                            placeholder='Entry Price'
+                            placeholder={t('futures:order_table:open_price')}
                             className='flex-grow text-xs pr-3'
                         />
                         <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -192,7 +191,7 @@ const FuturesCalculatorLiqPrice = () => {
                     </div>
                     <div className='px-3 h-[36px] mb-2 flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
                         <input
-                            placeholder='Exit Price'
+                            placeholder={t('futures:calulator:exit_price')}
                             className='flex-grow text-xs pr-3'
                         />
                         <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -201,7 +200,7 @@ const FuturesCalculatorLiqPrice = () => {
                     </div>
                     <div className='px-3 h-[36px] flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
                         <input
-                            placeholder='Quantity'
+                            placeholder={t('futures:order_table:quantity')}
                             className='flex-grow text-xs pr-3'
                         />
                         <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -214,7 +213,7 @@ const FuturesCalculatorLiqPrice = () => {
                 <Button
                     componentType='button'
                     type='primary'
-                    title='Calculate'
+                    title={t('futures:calulator:calculate')}
                     className='mt-5 !h-[36px]'
                 />
             </div>

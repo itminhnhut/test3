@@ -44,13 +44,15 @@ export const getProfitVndc = (order, lastPrice = 0) => {
     fee = fee || 0
     let profitVNDC = 0;
     let closePrice = 0
-    if (status === VndcFutureOrderType.Status.PENDING) {
-        return 0
-    }
+    // if (status === VndcFutureOrderType.Status.PENDING || status === VndcFutureOrderType.Status.PENDING) {
+    //     return 0
+    // }
     if (status === VndcFutureOrderType.Status.ACTIVE) {
         closePrice = lastPrice;
     } else if (status === VndcFutureOrderType.Status.CLOSED) {
         closePrice = close_price
+    }else{
+        return 0
     }
     try {
         let buyProfitVNDC = 0;

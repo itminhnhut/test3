@@ -187,7 +187,8 @@ const FuturesPairDetail = ({
                 case '24hChange':
                     const changeWidth =
                         pairPrice?.priceChange?.toString()?.length +
-                        pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0
+                        pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0;
+                    const _priceChangeVndc = pairPrice?.lastPrice - pairPrice?.priceChange;
                     value = (
                         <div className='flex items-center'>
                             <div
@@ -197,19 +198,23 @@ const FuturesPairDetail = ({
                                 className={classNames(
                                     'min-w-1/2 text-dominant',
                                     {
-                                        '!text-red': pairPrice?.priceChange < 0,
+                                        '!text-red': pairPrice?.priceChange < 0 || _priceChangeVndc < 0,
                                     }
                                 )}
                             >
-                                {formatNumber(
-                                    roundTo(
-                                        pairPrice?.priceChange || 0,
-                                        pricePrecision
-                                    ),
-                                    pricePrecision,
-                                    0,
-                                    true
-                                )}
+
+                                {
+                                    isVndcFutures ? formatNumber(_priceChangeVndc, pricePrecision, 0, true)
+                                        :
+                                        formatNumber(
+                                            roundTo(
+                                                pairPrice?.priceChange || 0,
+                                                pricePrecision
+                                            ),
+                                            pricePrecision,
+                                            0,
+                                            true
+                                        )}
                             </div>
                             <div
                                 className={classNames('pl-2 text-dominant', {
@@ -231,6 +236,16 @@ const FuturesPairDetail = ({
                         </div>
                     )
                     minWidth = itemsPriceMinW + 36
+                    break
+                case 'bestBid':
+                    if (!isVndcFutures) return;
+                    minWidth = itemsPriceMinW + 41
+                    value = <div className="text-red">{formatNumber(pairPrice?.bid, pricePrecision, 0, true)}</div>
+                    break
+                case 'bestAsk':
+                    if (!isVndcFutures) return;
+                    minWidth = itemsPriceMinW + 41
+                    value = <div className="text-dominant">{formatNumber(pairPrice?.ask, pricePrecision, 0, true)}</div>
                     break
                 case '24hBaseVolume':
                     if (isVndcFutures) return;
@@ -382,10 +397,12 @@ const MARK_PRICE_ITEMS = [
 
 const PAIR_PRICE_DETAIL_ITEMS = [
     { key: 3, code: '24hChange', localized: 'futures:24h_change' },
-    { key: 4, code: '24hHigh', localized: 'futures:24h_high' },
-    { key: 5, code: '24hLow', localized: 'futures:24h_low' },
-    { key: 6, code: '24hBaseVolume', localized: 'futures:24h_volume' },
-    { key: 7, code: '24hQuoteVolume', localized: 'futures:24h_volume' },
+    { key: 4, code: 'bestBid', localized: 'futures:best_bid' },
+    { key: 5, code: 'bestAsk', localized: 'futures:best_ask' },
+    { key: 6, code: '24hHigh', localized: 'futures:24h_high' },
+    { key: 7, code: '24hLow', localized: 'futures:24h_low' },
+    { key: 8, code: '24hBaseVolume', localized: 'futures:24h_volume' },
+    { key: 9, code: '24hQuoteVolume', localized: 'futures:24h_volume' },
 ]
 
 export default FuturesPairDetail

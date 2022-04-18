@@ -66,6 +66,7 @@ const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcF
                     setLeverage={setLeverage}
                     pairConfig={pairConfig}
                     isVisible={!!isActive?.leverage}
+                    isAuth={isAuth}
                     onClose={() => closePopup('leverage')}
                 />
             )}

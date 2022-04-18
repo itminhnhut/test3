@@ -12,8 +12,6 @@
     "last_price": "Last",
     "last_price_tooltip": "Fill in the current last price",
     "fee_level": "Fee level",
-    "buy_crypto": "Buy Crypto",
-    "convert": "Convert",
     "order_table": {
         "opening_title": "Opening",
         "history_title": "History",
@@ -49,5 +47,28 @@
         "close_successfully": "Close order #{{value}} successfully",
         "btn_ok": "OK",
         "btn_cancel": "Cancel"
+    },
+    "buy_crypto": "Buy Crypto",
+    "convert": "Convert",
+    "best_bid": "Best bid",
+    "best_ask": "Best ask",
+    "calulator": {
+        "futures_calculator": "Futures Calculator",
+        "target_price": "Target Price",
+        "liq_price": "Liquidation Price",
+        "description": "See what the potential risk and reward will be in monetary terms on any give trade. Use our Futures Calculator to establish your potential profit/loss on a future trade. Read",
+        "tips": "tips",
+        "to_use": "on how to use",
+        "init_margin": "Initial margin",
+        "max_position_leverage": "Maximum position at current leverage",
+        "exit_price": "Exit Price",
+        "calculate": "Calculate",
+        "result": "Result",
+        "liq_price_description": "Your open positions will be taken into consideration when calculating the liquidation price. Unrealized PNL and maintenance margin of your open position will affect the calculation of liquidation price.",
+        "one_way": "One-way Mode",
+        "hedge_mode": "Hedge Mode"
+    },
+    "leverage": {
+        "title": "Adjust Leverage"
     }
 }

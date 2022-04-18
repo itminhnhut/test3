@@ -351,7 +351,9 @@ const SpotComp = () => {
     };
 
     if (!symbol) return null;
-
+    console.log(layoutMode === SPOT_LAYOUT_MODE.PRO
+        ? layoutPro
+        : layoutSimple)
     return (
         <MaldivesLayout
             hideFooter

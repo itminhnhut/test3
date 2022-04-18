@@ -49,5 +49,26 @@
         "btn_cancel": "Bỏ qua"
     },
     "buy_crypto": "Mua tiền điện tử",
-    "convert": "Quy đổi"
+    "convert": "Quy đổi",
+    "best_bid": "Best bid",
+    "best_ask": "Best ask",
+    "calulator": {
+        "futures_calculator": "Bộ tính hợp đồng tương lai",
+        "target_price": "Giá mục tiêu",
+        "liq_price": "Giá thanh lý",
+        "description": "Xem rủi ro tiềm ẩn và phần thưởng liên quan đến tiền tệ trong các giao dịch đã nêu. Sử dụng Bộ tính Hợp đồng tương lai của chúng tôi để thiết lập lãi/lỗ tiềm năng của một giao dịch hợp đồng tương lai. Xem",
+        "tips": "mẹo",
+        "to_use": "để sử dụng",
+        "init_margin": "Margin ban đầu",
+        "max_position_leverage": "Vị thế tối đa",
+        "exit_price": "Giá đóng",
+        "calculate": "Tính toán",
+        "result": "Kết quả",
+        "liq_price_description": "Vị thế đang mở của bạn sẽ được cân nhắc khi tinh giá thanh lý. Lời và lỗ chưa ghi nhận và mức margin duy trì của vị thế đang mở của bạn sẽ ảnh hưởng đến quá trình tính toán giá thanh lý.",
+        "one_way": "Vị thế một bên",
+        "hedge_mode": "Chế độ phòng hộ"
+    },
+    "leverage": {
+        "title": "Điều chỉnh đòn bẩy"
+    }
 }
