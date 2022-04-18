@@ -2,7 +2,7 @@ import io from 'socket.io-client'
 import * as types from 'src/redux/actions/types'
 
 import Emitter from 'src/redux/actions/emitter'
-import { PublicSocketEvent } from 'src/redux/actions/const'
+import {PublicSocketEvent} from 'src/redux/actions/const'
 import throttle from 'lodash/throttle'
 
 let WS
@@ -12,6 +12,19 @@ let futuresLastPrice = 0
 const updateDepthChart = throttle((data) => {
     Emitter.emit(PublicSocketEvent.SPOT_DEPTH_UPDATE + 'depth', data)
 }, 3000)
+
+const updateMultipleMarkPrice = (() => {
+    const data = {}
+
+    const update = throttle((data) => {
+        Emitter.emit(PublicSocketEvent.FUTURES_TICKER_UPDATE + 'markPrices', data)
+    }, 1000)
+
+    return (tick) => {
+        data[tick.s] = tick
+        update(data)
+    }
+})()
 
 function initPublicSocket() {
     return (dispatch) => {
@@ -49,6 +62,8 @@ function initPublicSocket() {
             WS.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, (data) => {
                 futuresLastPrice = data?.c
                 Emitter.emit(PublicSocketEvent.FUTURES_TICKER_UPDATE, data)
+                updateMultipleMarkPrice(data)
+
             })
 
             // WS.on(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE, (data) => {
