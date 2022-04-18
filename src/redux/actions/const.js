@@ -125,13 +125,6 @@ export const SOCIAL_USERNAME_IN_TEXT =
 export const REGEX_URL =
     /(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6})\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/gm
 
-export const ChartMode = {
-    TRADE: 1,
-    GAME: 2,
-    EXCHANGE: 3,
-    FUTURE: 4,
-}
-
 export const ChartBroker = {
     NAMI_FUTURE: 'NamiFuture',
 }
@@ -514,7 +507,6 @@ export const PublicSocketEvent = {
     SPOT_DEPTH_UPDATE: 'spot:depth:update',
     SPOT_TICKER_UPDATE: 'spot:ticker:update',
 
-    FUTURES_RECENT_TRADE_ADD: 'futures:recent_trade:add',
     FUTURES_DEPTH_UPDATE: 'futures:depth:update',
     FUTURES_TICKER_UPDATE: 'futures:ticker:update',
     FUTURES_MINI_TICKER_UPDATE: 'futures:mini_ticker:update',
@@ -785,4 +777,9 @@ export const EarnOrder_Status = {
     SAVING: 1,
     FINISHED: 2,
     CANCELLED: 0,
+}
+
+export const ChartMode = {
+    SPOT: 'SPOT',
+    FUTURES: 'FUTURES',
 }

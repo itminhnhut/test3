@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import historyProvider from './historyProvider';
-import stream from './stream';
+import Stream from './stream';
+import { ChartMode } from 'redux/actions/const';
 
 const supportedResolutions = [
     '1',
@@ -17,17 +18,25 @@ const config = {
     supported_resolutions: supportedResolutions,
 };
 
-export default {
-    onReady: cb => {
+export default class {
+    stream = null;
+    mode = null;
+
+    constructor(mode = ChartMode.SPOT) {
+        this.mode = mode;
+        this.stream = new Stream();
+    }
+
+    onReady = cb => {
         setTimeout(() => cb(config), 0);
-    },
-    searchSymbols: (userInput, exchange, symbolType, onResultReadyCallback) => {
+    };
+    searchSymbols = (userInput, exchange, symbolType, onResultReadyCallback) => {
         // console.log('====Search Symbols running');
-    },
-    resolveSymbol: async (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
+    };
+    resolveSymbol = async (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
         // expects a symbolInfo object in response
         try {
-            const symbol_stub = await historyProvider.getSymbolInfo(symbolName);
+            const symbol_stub = await historyProvider.getSymbolInfo(symbolName, this.mode);
             setTimeout(() => {
                 onSymbolResolvedCallback(symbol_stub);
                 console.log('Resolving that symbol....', symbol_stub);
@@ -35,8 +44,8 @@ export default {
         } catch (e) {
             onResolveErrorCallback('Not feeling it today');
         }
-    },
-    getBars(symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
+    };
+    getBars = (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) => {
         historyProvider.getBars(symbolInfo, resolution, from, to, firstDataRequest)
             .then(bars => {
                 if (bars.length) {
@@ -44,28 +53,31 @@ export default {
                 } else {
                     onHistoryCallback(bars, { noData: true });
                 }
-            }).catch(err => {
+            })
+            .catch(err => {
                 console.log({ err });
                 onErrorCallback(err);
             });
-    },
-
-    subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) => {
-        stream.subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback);
-    },
-    unsubscribeBars: subscriberUID => {
-        stream.unsubscribeBars(subscriberUID);
-    },
-    calculateHistoryDepth: (resolution, resolutionBack, intervalBack) => {
-        return resolution < 60 ? { resolutionBack: 'D', intervalBack: '1' } : undefined;
-    },
-    getMarks: (symbolInfo, startDate, endDate, onDataCallback, resolution) => {
-    },
-    getTimeScaleMarks: (symbolInfo, startDate, endDate, onDataCallback, resolution) => {
+    };
+    subscribeBars = (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) => {
+        this.streamsubscribeBars(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback);
+    };
+    unsubscribeBars = subscriberUID => {
+        this.streamunsubscribeBars(subscriberUID);
+    };
+    calculateHistoryDepth = (resolution, resolutionBack, intervalBack) => {
+        return resolution < 60 ? {
+            resolutionBack: 'D',
+            intervalBack: '1'
+        } : undefined;
+    };
+    getMarks = (symbolInfo, startDate, endDate, onDataCallback, resolution) => {
+    };
+    getTimeScaleMarks = (symbolInfo, startDate, endDate, onDataCallback, resolution) => {
         // optional
         // console.log('=====getTimeScaleMarks running');
-    },
-    getServerTime: cb => {
+    };
+    getServerTime = cb => {
         // console.log('=====getServerTime running');
-    },
+    };
 };

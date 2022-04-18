@@ -60,7 +60,13 @@ function updateBar(data, sub) {
     return _lastBar;
 }
 
-export default {
+export default class {
+    mode = null;
+
+    constructor(mode) {
+        this.mode = mode;
+    }
+
     subscribeBars(symbolInfo, resolution, updateCb, uid, resetCache) {
         socket.emit('subscribe:recent_trade', symbolInfo.symbol);
         try {
@@ -78,7 +84,8 @@ export default {
         } catch (e) {
             console.error('__ subscribeBars e', e);
         }
-    },
+    }
+
     unsubscribeBars(uid) {
         const subIndex = _subs.findIndex(e => e.uid === uid);
         if (subIndex === -1) {
@@ -87,7 +94,7 @@ export default {
         }
         // socket.emit('unsubscribe:recent_trade', lastSymbol);
         _subs.splice(subIndex, 1);
-    },
+    }
 };
 socket.on('connect', () => {
     if (isDisconnected) {
@@ -106,8 +113,14 @@ socket.on('disconnect', (e) => {
 socket.on('error', err => {
     // console.log('====socket error', err);
 });
+
 socket.on('spot:recent_trade:add', (update) => {
-    const { s: symbol, t: time, p: price, q: volume } = update;
+    const {
+        s: symbol,
+        t: time,
+        p: price,
+        q: volume
+    } = update;
     const sub = _subs.find(e => e.symbol === symbol);
     const data = {
         ts: Math.floor(time / 1000),

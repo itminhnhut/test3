@@ -9,6 +9,7 @@ import Datafeed from "./api";
 import DepthChart from "./depth";
 import TimeFrame from "./timeFrame";
 import styles from "./tradingview.module.scss";
+import { ChartMode } from 'redux/actions/const';
 
 
 
@@ -53,7 +54,7 @@ export class TVChartContainer extends React.PureComponent {
             this.props.chartSize !== prevProps.chartSize
         ) {
             // if (this.widget && this.state.chartStatus === ChartStatus.LOADED) {
-                
+
             //     this.widget.setSymbol(
             //         this.props.symbol,
             //         this.state.interval,
@@ -215,10 +216,12 @@ export class TVChartContainer extends React.PureComponent {
     initWidget = (symbol, interval) => {
         if (!symbol) return;
         const isDark = this.props.theme === "dark";
+
+        const datafeed = new Datafeed(this.props.mode || ChartMode.SPOT)
         const widgetOptions = {
             symbol,
             theme: this.props.theme === "dark" ? "Dark" : "Light",
-            datafeed: Datafeed,
+            datafeed,
             interval: this.props.interval,
             container_id: this.containerId,
             library_path: this.props.libraryPath,

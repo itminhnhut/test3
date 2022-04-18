@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+import { ChartMode } from 'redux/actions/const';
+
 const axios = require('axios');
 
 const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
@@ -7,7 +9,8 @@ const history = {};
 function getInterval(resolution) {
     if (resolution.includes('D') || resolution.includes('W') || resolution.includes('M')) {
         return '1d';
-    } if (resolution.includes('S')) {
+    }
+    if (resolution.includes('S')) {
         return '1m';
     }
     // minutes and hour
@@ -38,7 +41,13 @@ export default {
                     time, open, high, low, close, volume,
                 ] = data[i];
                 bars.push({
-                    time: time * 1000, timeSecond: time, low, high, open, close, volume,
+                    time: time * 1000,
+                    timeSecond: time,
+                    low,
+                    high,
+                    open,
+                    close,
+                    volume,
                 });
             }
             if (first) {
@@ -49,11 +58,14 @@ export default {
         }
         return [];
     },
-    async getSymbolInfo(symbol) {
+    async getSymbolInfo(symbol, mode = ChartMode.SPOT) {
         const url = `${PRICE_URL}/api/v1/chart/symbol_info`;
         const { data } = await axios.get(url, {
-            params: { broker: 'NAMI_SPOT', symbol },
-        },
+                params: {
+                    broker: mode === ChartMode.SPOT ? 'NAMI_SPOT' : 'NAMI_FUTURES',
+                    symbol
+                },
+            },
         );
         return data;
     },
