@@ -1,6 +1,6 @@
-import { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { customTableStyles } from '../../TradeRecord/index'
-import { ChevronDown } from 'react-feather'
+import {ChevronDown, Share2} from 'react-feather'
 
 import DataTable from 'react-data-table-component'
 import fetchApi from 'utils/fetch-api'
@@ -12,22 +12,23 @@ import { FUTURES_RECORD_CODE } from '../../TradeRecord/RecordTableTab'
 import { formatTime, formatNumber, getPriceColor } from 'redux/actions/utils'
 import { VndcFutureOrderType } from './VndcFutureOrderType';
 import { useTranslation } from 'next-i18next'
+import ShareFuturesOrder from "components/screens/Futures/ShareFuturesOrder";
 
 const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker, pickedTime, isAuth, onLogin }) => {
     const { t } = useTranslation()
-    const [dataSource, setDataSource] = useState([])
-    const [loading, setLoading] = useState(true)
 
     const columns = useMemo(() => [
         {
             name: 'ID',
             cell: (row) => loading ? <Skeletor width={65} /> : row?.displaying_id,
             sortable: true,
+            selector: (row) => row?.displaying_id,
         },
         {
             name: 'Symbol',
             cell: (row) => loading ? <Skeletor width={65} /> : row?.symbol,
             sortable: true,
+            selector: (row) => row?.symbol,
         },
         {
             name: 'Open at',
@@ -52,6 +53,7 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
         {
             name: 'Type',
             cell: (row) => loading ? <Skeletor width={65} /> : row?.type,
+            selector: (row) => row?.type,
             sortable: true,
         },
         {
@@ -105,7 +107,9 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
         },
     ], [loading]
     )
-
+    const [dataSource, setDataSource] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [shareOrder, setShareOrder] = useState(null)
 
     useEffect(() => {
         getOrders();
@@ -142,12 +146,17 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
         const profit = formatNumber(String(row?.profit).replace(',', ''), 0, 0, true)
         const percent = formatNumber((row?.profit / row?.margin), 2, 0, true);
         if (!row?.profit) return '-'
-        return <div className={getPriceColor(Number(row?.profit)) + ' flex'}>
-            {profit}
-            <div>
-                ({percent > 0 ? '+' : ''}
-                {percent + '%'})
+        return<div className='flex flex-row'>
+            <div className={getPriceColor(Number(row?.profit))}>
+                <div>
+                    {profit} {pairConfig.quoteAsset}
+                </div>
+                <div>
+                    ({percent > 0 ? '+' : ''}
+                    {percent + '%'})
+                </div>
             </div>
+            <Share2 size={16} onClick={() => setShareOrder(row)} className='ml-1 cursor-pointer hover:opacity-60'/>
         </div>
     }
 
@@ -162,6 +171,7 @@ const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker
 
     return (
         <>
+            <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)}/>
             <FuturesTimeFilter
                 currentTimeRange={pickedTime}
                 onChange={(pickedTime) =>
