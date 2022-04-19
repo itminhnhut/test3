@@ -90,7 +90,7 @@ const FuturesCalculatorPML = () => {
 
                 {/* Input Group */}
                 <div className='mt-5'>
-                    <div className='px-3 h-[36px] mb-2 flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
+                    <div className='px-3 h-[36px] mb-2 flex items-center font-medium text-sm bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
                         <input
                             placeholder={t('futures:order_table:open_price')}
                             className='flex-grow text-xs pr-3'
@@ -99,7 +99,7 @@ const FuturesCalculatorPML = () => {
                             USDT
                         </span>
                     </div>
-                    <div className='px-3 h-[36px] mb-2 flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
+                    <div className='px-3 h-[36px] mb-2 flex items-center font-medium text-sm bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
                         <input
                             placeholder={t('futures:calulator:exit_price')}
                             className='flex-grow text-xs pr-3'
@@ -108,7 +108,7 @@ const FuturesCalculatorPML = () => {
                             USDT
                         </span>
                     </div>
-                    <div className='px-3 h-[36px] flex items-center font-medium text-sm bg-gray-5 rounded-[4px]'>
+                    <div className='px-3 h-[36px] flex items-center font-medium text-sm bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
                         <input
                             placeholder={t('futures:order_table:quantity')}
                             className='flex-grow text-xs pr-3'

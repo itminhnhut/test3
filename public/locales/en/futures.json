@@ -69,7 +69,44 @@
         "hedge_mode": "Hedge Mode"
     },
     "leverage": {
-        "title": "Adjust Leverage"
+        "title": "Adjust Leverage",
+        "check_leverage": "Check on Leverage & Margin table",
+        "position_limit_enlarge": "Position Limit Enlarge",
+        "description": "Selecting higher leverage such as [10x] increases your liquidation risk. Always manage your risk levels. See help articles for more information.",
+        "confirm": "Confirm",
+        "leverage": "Leverage"
+    },
+    "tp_sl": {
+        "modify_tpsl": "Modify TP/SL",
+        "perpetual": "Perpetual",
+        "when": "When",
+        "reaches": "reaches",
+        "is_will": ", it will trigger Take Profit Market order to clos this position. Estimate PNL will be",
+        "this_setting": "This setting applies to the entire position.",
+        "take_profit_stop_loss": "Take-profit and stop-loss",
+        "automaticcally_cancel": "automaticcally cancel after closing the position. A market order is triggerd when the stop price is reached. The order will be rejected if the position size exceeds the Max Market Order by Qty limit."
+    },
+    "balance": "Balance",
+    "unrealized_pnl": "Unrealized PNL",
+    "preferences": {
+        "preferences": "Preferences",
+        "order_confirm": "Order Confirmation",
+        "position_mode": "Position Mode",
+        "notification": "Notification",
+        "limit_order": "Limit Order",
+        "market_order": "Market Order",
+        "stop_limit_order": "Stop Limit Order",
+        "stop_market_order": "Stop Market Order",
+        "trailing_stop_order": "Trailing Stop Order",
+        "order_confirmation_will_be": "Order Confirmation will be required every time an order is submitted if this function is enabled. This setting only applies to USD-M-Futures",
+        "in_the_one_way_mode": "In the One-way Mode, one contract can only hold positions in one direction.",
+        "in_the_hedge_way_mode": "In the Hedge-way Mode, one contract can only hold positions in both long and short directions at the same time, and hedge positions in different directions under the same contract.",
+        "if_there_are_open_positions": " If there are open positions or open orders in the contract, you are not allowed to adjust the position mode. Position mode adjustments are effective for all contracts. This setting only applies to USD-M Futures",
+        "tp_sl_trigger": "TP/SL Trigger",
+        "notification_limit_is_up": "Notification limit is up to 25 per day per user. This includes 5 order types. Take Profit/Stop Lost Limit, Take Profit/Stop Loss Market, and Trailing Stop.",
+        "funding_fee_trigger": "Funding Fee Trigger",
+        "you_will_be_notified_when": "You will be notified when expected funding rate charged reaches.",
+        "you_will_be_notified_of":"You will be notifed of the following events via Email / SMS/ Inmail. You can turn the notification on/off. This setting applies to both USD-M Futures and COIN-M Futures"
     },
     "close_order_success": "Order #{{orderId}} was closed successfully.",
     "close_order_failed": "Order #{{orderId}} was failed to close."

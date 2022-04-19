@@ -71,7 +71,7 @@ const FuturesOrderModule = ({
         }
     }
 
-    const inputValidator = (type) => {
+    const inputValidator = (type, isStop) => {
         let isValid = true,
             msg = null
 
@@ -122,12 +122,12 @@ const FuturesOrderModule = ({
                 const _maxPrice = priceFilter?.maxPrice
                 const _minPrice = priceFilter?.minPrice
 
-                if (+price < _minPrice) {
+                if (+(isStop ? stopPrice : price) < _minPrice) {
                     isValid = false
                     msg = `Minium Price is ${_minPrice}`
                 }
 
-                if (+price > _maxPrice) {
+                if (+(isStop ? stopPrice : price) > _maxPrice) {
                     isValid = false
                     msg = `Maxium Price is ${_maxPrice}`
                 }
@@ -187,10 +187,20 @@ const FuturesOrderModule = ({
     }, [pairConfig?.baseAssetId, usdRate])
 
     const isError = useMemo(() => {
-        const obj = inputValidator('price') || inputValidator('quantity');
-        return (!isVndcFutures || currentType === FuturesOrderTypes.Market || currentType === FuturesOrderTypes.StopMarket) ?
+        const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
+        const obj = inputValidator('price', ArrStop.includes(currentType)) || inputValidator('quantity');
+        return (!isVndcFutures || currentType === FuturesOrderTypes.Market) ?
             false : Object.keys(obj)?.length && !obj?.isValid
-    }, [price, size, currentType])
+    }, [price, size, currentType, stopPrice])
+
+    const countDecimals = (value) => {
+        if (Math.floor(value) === value || !value) return 0;
+        return value.toString().split(".")[1]?.length || 0;
+    }
+
+    const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
+    const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
+    const decimalScaleQtyMarket = pairConfig?.filters.find(rs => rs.filterType === 'MARKET_LOT_SIZE');
 
     return (
         <div className='pt-5 pb-[18px]'>
@@ -221,6 +231,8 @@ const FuturesOrderModule = ({
                                 currentType === FuturesOrderTypes.StopMarket
                             }
                             isVndcFutures={isVndcFutures}
+                            decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
+                            decimalScaleQty={countDecimals(decimalScaleQtyMarket?.stepSize)}
                         />
                     )}
                 {(currentType === FuturesOrderTypes.Limit ||
@@ -244,6 +256,8 @@ const FuturesOrderModule = ({
                                 currentType === FuturesOrderTypes.StopLimit
                             }
                             isVndcFutures={isVndcFutures}
+                            decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
+                            decimalScaleQty={countDecimals(decimalScaleQtyLimit?.stepSize)}
                         />
                     )}
             </div>
@@ -268,6 +282,7 @@ const FuturesOrderModule = ({
                 isVndcFutures={isVndcFutures}
                 orderSlTp={orderSlTp}
                 setOrderSlTp={setOrderSlTp}
+                decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
             />
 
             <Divider className='my-5' />

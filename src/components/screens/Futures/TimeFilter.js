@@ -156,14 +156,14 @@ const FuturesTimeFilter = memo(({ currentTimeRange, onChange, onFilter, onReset,
             {onFilter &&
                 <div
                     onClick={_onFilter}
-                    className="px-[8px] flex items-center py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    className="px-[8px] flex items-center py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark dark:text-white cursor-pointer hover:opacity-80 rounded-md">
                     <img className='w-[12px] h-[12px]' src={getS3Url("/images/icon/ic_search.png")} />&nbsp; Search
                 </div>
             }
             {onReset &&
                 <div
                     onClick={_onReset}
-                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark dark:text-white cursor-pointer hover:opacity-80 rounded-md">
                     Reset
                 </div>
             }

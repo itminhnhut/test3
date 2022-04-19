@@ -9,8 +9,11 @@ import { formatNumber, getSymbolObject } from 'redux/actions/utils';
 import classNames from 'classnames';
 import useMakePrice from 'hooks/useMakePrice';
 import { BINANCE_LEVERAGE_MARGIN } from 'constants/constants';
+import { useTranslation } from 'next-i18next'
+
 
 const FuturesMarginRatio = ({ pairConfig }) => {
+    const { t } = useTranslation()
     const [positionOrder, setPositionOrder] = useState([]);
     const [currentPositionOrder, setCurrentPositionOrder] = useState({});
 
@@ -172,22 +175,20 @@ const FuturesMarginRatio = ({ pairConfig }) => {
                         />
                     </span>
                 </div>
-                <div className="mt-4 flex items-center">
-                    <div
-                        className="px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]">
-                        Buy Crypto
+                <div className='mt-4 flex items-center'>
+                    <div className='px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                        {t('futures:buy_crypto')}
                     </div>
-                    <div
-                        className="px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]">
-                        Convert
+                    <div className='px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                        {t('futures:convert')}
                     </div>
-                    <div className="px-[14px] py-1 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]">
-                        Transfer
+                    <div className='px-[14px] py-1 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                        {t('common:transfer')}
                     </div>
                 </div>
-                <div className="mt-3.5 flex items-center justify-between">
-                    <span className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                        Balance
+                <div className='mt-3.5 flex items-center justify-between'>
+                    <span className='font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
+                        {t('futures:balance')}
                     </span>
                     <span className="flex items-center">
                         106.301{' '}
@@ -196,9 +197,9 @@ const FuturesMarginRatio = ({ pairConfig }) => {
                         </span>
                     </span>
                 </div>
-                <div className="mt-3.5 flex items-center justify-between">
-                    <span className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                        Unrealized PNL
+                <div className='mt-3.5 flex items-center justify-between'>
+                    <span className='font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
+                        {t('futures:unrealized_pnl')}
                     </span>
                     <span className="flex items-center">
                         106.301{' '}

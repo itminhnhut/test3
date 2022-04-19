@@ -125,6 +125,12 @@ const FuturesOrderCostAndMaxVndc = ({
                     <div className="text-teal underline cursor-pointer float-right mt-[8px] font-medium">{t('futures:fee_level')}</div>
                 </a>
             </Link>
+            {/* <div className="text-teal underline cursor-pointer float-right mt-[8px] font-medium group">
+                <div className="">{t('futures:fee_level')}</div>
+                <div className="hidden group-hover:block absolute right-0 min-w-[200px] bg-white p-[10px]">
+                    123123123
+                </div>
+            </div> */}
         </div>
     )
 }

@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SET_FUTURES_PREFERENCES } from 'redux/actions/types';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import ToggleItem from './ToggleItem';
+import { useTranslation } from 'next-i18next'
 
 const FuturesPreferencesOrderConfirmation = () => {
+    const { t } = useTranslation()
     const preferences = useSelector(
         (state) => state.futures.preferences.orderConfirmation
     )
@@ -14,15 +16,15 @@ const FuturesPreferencesOrderConfirmation = () => {
     const getLabel = (value) => {
         switch (value) {
             case FuturesOrderTypes.Limit:
-                return 'Limit Order'
+                return t('futures:preferences:limit_order')
             case FuturesOrderTypes.Market:
-                return 'Market Order'
+                return t('futures:preferences:market_order')
             case FuturesOrderTypes.StopLimit:
-                return 'Stop Limit Order'
+                return t('futures:preferences:stop_limit_order')
             case FuturesOrderTypes.StopMarket:
-                return 'Stop Market Order'
+                return t('futures:preferences:stop_market_order')
             case FuturesOrderTypes.TrailingStopMarket:
-                return 'Trailing Stop Order'
+                return t('futures:preferences:trailing_stop_order')
             default:
                 return null
         }
@@ -68,7 +70,7 @@ const FuturesPreferencesOrderConfirmation = () => {
         <div>
             {renderPreferencesToggle()}
             <div className='mt-4 text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                Order Confirmation will be required every time an order is submitted if this function is enabled. This setting only applies to USD-M-Futures
+                {t('futures:preferences:order_confirmation_will_be')}
             </div>
         </div>
     )

@@ -17,7 +17,9 @@ const FuturesOrderMarket = ({
     stopOrderMode,
     setStopOrderMode,
     getOrderStopModeLabel,
-    isVndcFutures
+    isVndcFutures,
+    decimalScalePrice,
+    decimalScaleQty
 }) => {
     const { t } = useTranslation()
     const onReverseAsset = (current, asset) => {
@@ -34,7 +36,9 @@ const FuturesOrderMarket = ({
                     label={'Stop Price'}
                     value={stopPrice}
                     onValueChange={({ value }) => setStopPrice(value)}
-                    decimalScale={pairConfig?.pricePrecision}
+                    allowNegative={false}
+                    decimalScale={decimalScalePrice}
+                    validator={getValidator('price', true)}
                     tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                     renderTail={() => (
                         <div className='relative group select-none'>
@@ -81,9 +85,10 @@ const FuturesOrderMarket = ({
                 label={t('futures:size')}
                 labelClassName='whitespace-nowrap'
                 value={size}
+                allowNegative={false}
                 suffix={size?.includes('%') ? '%' : ''}
                 onChange={({ target: { value } }) => handleQuantity(value)}
-                decimalScale={pairConfig?.quantityPrecision}
+                decimalScale={decimalScaleQty}
                 validator={getValidator('quantity')}
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (

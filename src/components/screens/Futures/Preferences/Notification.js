@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { SET_FUTURES_PREFERENCES } from 'redux/actions/types';
-
+import { useTranslation } from 'next-i18next'
 import ToggleItem from './ToggleItem';
 
 const NOTI = {
@@ -9,6 +9,7 @@ const NOTI = {
 }
 
 const FuturesPreferencesNotification = () => {
+    const { t } = useTranslation()
     const preferences = useSelector(
         (state) => state.futures.preferences?.notification
     )
@@ -30,21 +31,19 @@ const FuturesPreferencesNotification = () => {
         <>
             <div className='mb-3'>
                 <ToggleItem
-                    label='TP/SL Trigger'
+                    label={t('futures:preferences:tp_sl_trigger')}
                     active={!!preferences?.[NOTI.TPSL]}
                     onChange={() =>
                         setNotification(NOTI.TPSL, !preferences?.[NOTI.TPSL])
                     }
                 />
                 <div className='mt-1 text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                    Notification limit is up to 25 per day per user. This
-                    includes 5 order types. Take Profit/Stop Lost Limit, Take
-                    Profit/Stop Loss Market, and Trailing Stop.
+                    {t('futures:preferences:notification_limit_is_up')}
                 </div>
             </div>
             <div>
                 <ToggleItem
-                    label='Funding Fee Trigger'
+                    label={t('futures:preferences:funding_fee_trigger')}
                     active={!!preferences?.[NOTI.FundingFee]}
                     onChange={() =>
                         setNotification(
@@ -54,14 +53,11 @@ const FuturesPreferencesNotification = () => {
                     }
                 />
                 <div className='mt-1 text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                    You will be notified when expected funding rate charged
-                    reaches.
+                    {t('futures:preferences:you_will_be_notified_when')}
                 </div>
             </div>
             <div className='mt-4 text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                You will be notifed of the following events via Email / SMS/
-                Inmail. You can turn the notification on/off. This setting
-                applies to both USD-M Futures and COIN-M Futures
+                {t('futures:preferences:you_will_be_notified_of')}
             </div>
         </>
     )

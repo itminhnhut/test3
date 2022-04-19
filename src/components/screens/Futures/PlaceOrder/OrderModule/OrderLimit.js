@@ -20,7 +20,9 @@ const FuturesOrderLimit = ({
     stopOrderMode,
     setStopOrderMode,
     getOrderStopModeLabel,
-    isVndcFutures
+    isVndcFutures,
+    decimalScalePrice,
+    decimalScaleQty
 }) => {
     const { t } = useTranslation()
 
@@ -30,6 +32,7 @@ const FuturesOrderLimit = ({
         handleQuantity('')
     }
 
+   
     return (
         <div>
             {isStopLimit && (
@@ -37,8 +40,9 @@ const FuturesOrderLimit = ({
                     containerClassName='mb-[12px]'
                     label={'Stop Price'}
                     value={stopPrice}
+                    allowNegative={false}
                     onValueChange={({ value }) => setStopPrice(value)}
-                    decimalScale={pairConfig?.pricePrecision}
+                    decimalScale={decimalScalePrice}
                     tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                     renderTail={() => (
                         <div className='relative group select-none'>
@@ -84,8 +88,9 @@ const FuturesOrderLimit = ({
                 containerClassName='mb-[12px]'
                 label={t('common:price')}
                 value={price}
+                allowNegative={false}
                 onValueChange={({ value }) => handlePrice(value)}
-                decimalScale={pairConfig?.pricePrecision}
+                decimalScale={decimalScalePrice}
                 validator={getValidator('price')}
                 tailContainerClassName='relative flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
@@ -110,11 +115,12 @@ const FuturesOrderLimit = ({
                 thousandSeparator={size?.includes('%') ? false : true}
                 label={t('futures:size')}
                 value={size}
+                allowNegative={false}
                 suffix={size?.includes('%') ? '%' : ''}
                 onChange={({ target: { value } }) => handleQuantity(value)}
                 // onValueChange={({ value }) => handleQuantity(value)}
                 validator={getValidator('quantity')}
-                decimalScale={pairConfig?.quantityPrecision}
+                decimalScale={decimalScaleQty}
                 labelClassName='whitespace-nowrap'
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (

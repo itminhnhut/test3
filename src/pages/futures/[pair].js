@@ -157,12 +157,12 @@ const Futures = () => {
                         }
                         if (layout === 'xl') {
                             if (item.i === futuresGridKey.placeOrder) {
-                                item.h = 34;
+                                item.h = 36;
                             }
                         }
                         if (layout === '2xl') {
                             if (item.i === futuresGridKey.placeOrder) {
-                                item.h = 30;
+                                item.h = 32;
                             }
                         }
                         if (!auth) {
@@ -179,7 +179,17 @@ const Futures = () => {
                     return oldLayouts[layout].map(item => {
                         if (item.i === futuresGridKey.favoritePair) {
                             item.h = 2;
-                            item.w = layout === 'lg' ? 14 : layout === 'xl' ? 8 : item.w;
+                            item.w = layout === 'lg' ? 14 : layout === 'xl' ? 8 : 16;
+                        }
+                        if (layout === '2xl') {
+                            if (item.i === futuresGridKey.placeOrder) {
+                                item.h = 30;
+                            }
+                        }
+                        if (layout === 'xl') {
+                            if (item.i === futuresGridKey.marginRatio) {
+                                item.h = 13;
+                            }
                         }
                         return item;
                     });

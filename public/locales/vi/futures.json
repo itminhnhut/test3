@@ -7,8 +7,8 @@
     "24h_low": "Thấp nhất 24h",
     "24h_volume": "KL 24h",
     "size": "Số lượng",
-    "take_profit": "Take Profit",
-    "stop_loss": "Stop Loss",
+    "take_profit": "Chốt lời",
+    "stop_loss": "Dừng lỗ",
     "last_price": "Gần nhất",
     "last_price_tooltip": "Đặt giá gần nhất",
     "close_order_success": "Lệnh #{{orderId}} đã được đóng thành công.",
@@ -71,6 +71,43 @@
         "hedge_mode": "Chế độ phòng hộ"
     },
     "leverage": {
-        "title": "Điều chỉnh đòn bẩy"
+        "title": "Điều chỉnh đòn bẩy",
+        "check_leverage": "Kiểm tra bảng tỷ lệ Đòn bẩy & số tiền Ký quỹ",
+        "position_limit_enlarge": "Tăng hạn mức vị thế",
+        "description": "Việc chọn đòn bẩy cao hơn, chẳng hạn như [10x] sẽ làm tăng rủi ro thanh lý. Hãy luôn kiểm soát mức độ rủi ro của bạn. Xem bài viết trợ giúp của chúng tôi để biết thêm thông tin.",
+        "confirm": "Xác nhận",
+        "leverage": "Đòn bẩy"
+    },
+    "tp_sl": {
+        "modify_tpsl": "Điều chỉnh TP/SL",
+        "perpetual": "Vĩnh cửu",
+        "when": "Khi",
+        "reaches": "đạt đến",
+        "is_will": ", lệnh Take Profit Market sẽ được kích hoạt để đóng vị thế này. PnL ước tính sẽ là",
+        "this_setting": "Cài đặt này áp dụng cho toàn bộ vị thế.",
+        "take_profit_stop_loss": "Chốt lời và cắt lỗ",
+        "automaticcally_cancel": "sẽ tự động hủy sau khi đóng vị thế. Lệnh market sẽ được kích hoạt khi đạt đến giá stop. Lệnh sẽ bị từ chối nếu số lượng vị thế vượt quá hạn mức Số lượng lệnh market tối đa."
+    },
+    "balance": "Số dư ví",
+    "unrealized_pnl": "PNL chưa được ghi nhận",
+    "preferences": {
+        "preferences": "Tùy chọn",
+        "order_confirm": "Xác nhận đặt lệnh",
+        "position_mode": "Chế độ vị thế",
+        "notification": "Thông báo",
+        "limit_order": "Giới hạn Lệnh",
+        "market_order": "Thị trường Lệnh",
+        "stop_limit_order": "Stop Limit Lệnh",
+        "stop_market_order": "Stop Market Lệnh",
+        "trailing_stop_order": "Trailing Stop Lệnh",
+        "order_confirmation_will_be": "Xác nhận đặt lệnh sẽ luôn được yêu cầu bất cứ khi nào một lệnh được gửi khi chức năng này đang bật.&nbsp;Cài đặt này chỉ áp dụng cho Hợp đồng Tương lai USD-M-Futures",
+        "in_the_one_way_mode": "Trong Chế độ Một chiều, một ký hiệu chỉ hỗ trợ giữ một vị thế theo một hướng.",
+        "in_the_hedge_way_mode": "Trong Chế độ Phòng hộ, một ký hiệu sẽ cùng lúc hỗ trợ giữ cả vị thế long và vị thế short và hai vị thế của ký hiệu này sẽ bù đắp Lãi lỗ chưa ghi nhận cho nhau.",
+        "if_there_are_open_positions": "Không thể điều chỉnh chế độ vị thế khi có vị thế đang mở hoặc lệnh đang mở trong Hợp đồng tương lai COIN-M. Điều chỉnh chế độ vị thế có hiệu lực đối với tất cả các ký hiệu. Cài đặt này chỉ áp dụng cho Hợp đồng Tương lai USD-M-Futures",
+        "tp_sl_trigger": "Kích hoạt TP/SL",
+        "notification_limit_is_up": "Giới hạn thông báo là 25 tin mỗi ngày/mỗi người dùng. Bao gồm 5 loại lệnh: Take Profit/Stop Loss Limit, Take Profit/Stop Loss Market và Trailing Stop.",
+        "funding_fee_trigger": "Kích hoạt phí Funding",
+        "you_will_be_notified_when": "Bạn sẽ được thông báo khi phí funding dự kiến đạt.",
+        "you_will_be_notified_of":"Bạn sẽ được thông báo về những sự kiện sau thông qua Email/SMS/Inmail. Bạn có thể bật/tắt thông báo. Cài đặt này áp dụng cho cả Hợp đồng USD-M Futures and COIN-M Futures."
     }
 }

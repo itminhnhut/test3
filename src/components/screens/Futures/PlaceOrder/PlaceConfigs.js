@@ -34,7 +34,7 @@ const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcF
                         {leverage}x
                     </div>
                 </div>
-                {isAuth &&
+                {isAuth && !isVndcFutures &&
                     <div
                         onClick={() => openPopup('preferences')}
                         className='-mr-1.5 w-8 h-7 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-4 dark:hover:bg-darkBlue-3'
@@ -43,7 +43,7 @@ const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcF
                     </div>
                 }
             </div>
-            {isAuth &&
+            {isAuth && !isVndcFutures &&
                 <FuturesPreferences
                     isVisible={!!isActive?.preferences}
                     positionMode={positionMode}

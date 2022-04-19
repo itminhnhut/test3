@@ -89,11 +89,11 @@ const FuturesLeverageSettings = ({
                             height={12}
                         />
                     ) : (
-                        'Confirm'
+                        t('futures:leverage:confirm')
                     )
                 }
                 componentType='button'
-                className='!h-[36px]'
+                className={`!h-[36px] ${getValidator?.isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : ''}`}
                 type='primary'
                 disabled={loading || getValidator?.isError}
                 onClick={() => !loading && onSetLeverage(pair, _leverage)}
@@ -132,7 +132,7 @@ const FuturesLeverageSettings = ({
                 </div>
             </div>
             <div className='mb-1.5 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-                Leverage
+                {t('futures:leverage:leverage')}
             </div>
             <div className='px-2 mb-4 h-[36px] flex items-center bg-gray-4 dark:bg-darkBlue-3 rounded-[4px]'>
                 <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
@@ -186,24 +186,25 @@ const FuturesLeverageSettings = ({
                 />
             </div>
             <div className='mb-1 text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark select-none'>
-                *Maximum position at current leverage: {renderNotionalCap()}
+                *{t('futures:calulator:max_position_leverage')}: {renderNotionalCap()}
             </div>
             <span className='block mb-1 font-medium text-xs text-dominant'>
-                Check on Leverage & Margin table
+                {t('futures:leverage:check_leverage')}
             </span>
-            <span className='block mb-1 font-medium text-xs text-dominant'>
-                Position Limit Enlarge
-            </span>
-            <div className='mt-2.5 flex items-start'>
-                <div className='pt-1'>
-                    <SvgWarning size={12} fill={colors.red2} />
+            {isAuth && <>
+                <span className='block mb-1 font-medium text-xs text-dominant'>
+                    {t('futures:leverage:position_limit_enlarge')}
+                </span>
+                <div className='mt-2.5 flex items-start'>
+                    <div className='pt-1'>
+                        <SvgWarning size={12} fill={colors.red2} />
+                    </div>
+                    <div className='pl-2.5 font-medium text-xs text-red'>
+                        {t('futures:leverage:description')}
+                    </div>
                 </div>
-                <div className='pl-2.5 font-medium text-xs text-red'>
-                    Selecting higher leverage such as [10x] increases your
-                    liquidation risk. Always manage your risk levels. See help
-                    articles for more information.
-                </div>
-            </div>
+            </>
+            }
             {isAuth ?
                 <div className='mt-5 mb-2'>{renderConfirmButton()}</div>
                 :

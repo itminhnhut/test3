@@ -106,15 +106,13 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                             {t('futures:convert')}
                         </a>
                     </Link>
-                    {auth &&
-                        <div onClick={onOpenTransfer} className='cursor-pointer px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
-                            {t('common:transfer')}
-                        </div>
-                    }
+                    <div onClick={onOpenTransfer} className='cursor-pointer px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                        {t('common:transfer')}
+                    </div>
                 </div>
                 <div className='mt-3.5 flex items-center justify-between'>
                     <span className='font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-                        Balance
+                        {t('futures:balance')}
                     </span>
                     <span className='flex items-center font-medium'>
                         {balance?.wallet?.value ? formatNumber(balance?.wallet?.value, balance?.assetCode === 'USDT' ? 2 : balance?.assetDigit) : '0.0000'}
@@ -125,10 +123,10 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                 </div>
                 <div className='mt-3.5 flex items-center justify-between'>
                     <span className='font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-                        Unrealized PNL
+                        {t('futures:unrealized_pnl')}
                     </span>
                     <span className='flex items-center font-medium'>
-                        <span className={totalProfit < 0 ? 'text-red' : 'text-teal'}>{formatNumber(totalProfit, 0, 0, true)}</span>
+                        <span className={totalProfit === 0 ? '' : totalProfit < 0 ? 'text-red' : 'text-teal'}>{totalProfit === 0 ? '' : totalProfit > 0 ? '+' : '-'}{formatNumber(totalProfit, 0, 0, true)}</span>
                         <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
                             {pairConfig?.quoteAsset}
                         </span>

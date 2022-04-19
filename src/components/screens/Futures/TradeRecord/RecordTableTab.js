@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures }) => {
+const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrders }) => {
     return (
         <div className='flex items-center flex-grow font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
             {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((tab) => (
@@ -12,7 +12,7 @@ const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures }) => {
                         { 'text-dominant': tabActive === tab.code }
                     )}
                 >
-                    {tab.title}
+                    {tab.title}&nbsp;{isVndcFutures && tab.code === FUTURES_RECORD_CODE.openOrders && ' (' + countOrders + ')'}
                 </div>
             ))}
             <div className='h-full flex-grow dragHandleArea opacity-0 select-none'>

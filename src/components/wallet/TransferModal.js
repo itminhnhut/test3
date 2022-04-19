@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatWallet, setTransferModal } from 'redux/actions/utils';
+import { formatWallet, setTransferModal, getLoginUrl } from 'redux/actions/utils';
 import { WalletType } from 'redux/actions/const';
 import { Trans, useTranslation } from 'next-i18next';
 import { Check, ChevronDown, X } from 'react-feather';
@@ -19,6 +19,7 @@ import AssetName from 'components/wallet/AssetName';
 import showNotification from 'utils/notificationService';
 import colors from '../../styles/colors';
 import { PATHS } from 'constants/paths';
+import { useRouter } from 'next/router';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -65,6 +66,7 @@ const INITIAL_STATE = {
 
 const TransferModal = () => {
     // Init State
+    const router = useRouter();
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({ ...prevState, ...state }))
 
@@ -87,7 +89,7 @@ const TransferModal = () => {
         toWallet,
         asset
     } = useSelector(state => state.utils.transferModal) || {}
-
+    const auth = useSelector((state) => state.auth?.user);
     const allExchangeWallet = useSelector(state => state.wallet?.SPOT) || null
     const allFuturesWallet = useSelector(state => state.wallet?.FUTURES) || null
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null
@@ -334,7 +336,14 @@ const TransferModal = () => {
         const isErrors = !Object.values(state.errors)?.findIndex(item => item?.length)
         const isAmountEmpty = !(state.amount?.length && typeof +state.amount === 'number')
         const isInsufficient = currentWallet?.available < +state.amount
-
+        if (!auth) return <div className="cursor-pointer flex items-center justify-center h-full">
+        <div
+            className='w-full bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
+                onClick={() => router.push(getLoginUrl('sso'))}
+        >
+            {t('futures:order_table:login_to_continue')}
+        </div>
+    </div>
         return (
             <div className={isErrors || isAmountEmpty || isInsufficient ?
                 'mt-6 py-3.5 font-bold text-center text-sm bg-gray-3 dark:bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed rounded-xl'
@@ -354,7 +363,7 @@ const TransferModal = () => {
                 {state.isPlacingOrder ? <PulseLoader color={colors.white} size={3}/> : t('common:transfer')}
             </div>
         )
-    }, [state.errors, state.amount, state.fromWallet, state.toWallet, state.isPlacingOrder, state.asset, currentWallet])
+    }, [state.errors, state.amount, state.fromWallet, state.toWallet, state.isPlacingOrder, state.asset, currentWallet, auth])
 
     const renderIssues = useCallback(() => {
         const errorItems = []

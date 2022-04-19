@@ -3,9 +3,11 @@ import { getFuturesUserSettings, setFuturesPositionMode, } from 'redux/actions/f
 import { FuturesPositionMode } from 'redux/reducers/futures';
 
 import RadioBox from 'components/common/RadioBox';
+import { useTranslation } from 'next-i18next'
 
 const FuturesPreferencesPositionMode = ({ positionMode }) => {
     const dispatch = useDispatch()
+    const { t } = useTranslation()
 
     const onSetPositionMode = (mode) => {
         setFuturesPositionMode(mode)
@@ -17,27 +19,23 @@ const FuturesPreferencesPositionMode = ({ positionMode }) => {
             <div className='mb-3'>
                 <RadioBox
                     id={FuturesPositionMode.OneWay}
-                    label='One-way Mode'
+                    label={t('futures:calulator:one_way')}
                     checked={!positionMode}
-                    description='In the One-way Mode, one contract can only hold positions in
-                    one direction.'
+                    description={t('futures:preferences:in_the_one_way_mode')}
                     onChange={() => onSetPositionMode(false)}
                 />
             </div>
             <div>
                 <RadioBox
                     id={FuturesPositionMode.Hedge}
-                    label='Hedge Mode'
+                    label={t('futures:calulator:hedge_mode')}
                     checked={positionMode}
-                    description='In the Hedge-way Mode, one contract can only hold positions in both long and short directions at the same time, and hedge positions in different directions under the same contract.'
+                    description={t('futures:preferences:in_the_hedge_way_mode')}
                     onChange={() => onSetPositionMode(true)}
                 />
             </div>
             <div className='mt-5 text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                If there are open positions or open orders in the contract, you
-                are not allowed to adjust the position mode. Position mode
-                adjustments are effective for all contracts. This setting only
-                applies to USD-M Futures
+                {t('futures:preferences:if_there_are_open_positions')}
             </div>
         </>
     )

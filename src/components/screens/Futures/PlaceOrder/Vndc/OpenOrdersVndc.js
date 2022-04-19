@@ -19,7 +19,7 @@ import Big from 'big.js';
 import FuturesEditSLTPVndc from './EditSLTPVndc';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin }) => {
+const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin, setCountOrders }) => {
     const { t } = useTranslation()
     const columns = useMemo(
         () => [
@@ -124,6 +124,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             status: 0,
         }
         getOrders('GET', params, (data) => {
+            setCountOrders(data.length);
             setDataSource(data);
         });
     }
@@ -291,7 +292,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     </div>
                 </div>
             </Modal>
-            <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)}/>
+            <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
             {showModalEdit &&
                 <FuturesEditSLTPVndc
                     isVisible={showModalEdit}

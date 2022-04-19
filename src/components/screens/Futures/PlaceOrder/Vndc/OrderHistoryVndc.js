@@ -16,7 +16,9 @@ import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChangeTimePicker, pickedTime, isAuth, onLogin }) => {
     const { t } = useTranslation()
-
+    const [dataSource, setDataSource] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [shareOrder, setShareOrder] = useState(null)
     const columns = useMemo(() => [
         {
             name: 'ID',
@@ -107,9 +109,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChang
         },
     ], [loading]
     )
-    const [dataSource, setDataSource] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [shareOrder, setShareOrder] = useState(null)
+    
 
     useEffect(() => {
         getOrders();
@@ -146,7 +146,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChang
         const profit = formatNumber(String(row?.profit).replace(',', ''), 0, 0, true)
         const percent = formatNumber((row?.profit / row?.margin), 2, 0, true);
         if (!row?.profit) return '-'
-        return<div className='flex flex-row'>
+        return <div className='flex flex-row'>
             <div className={getPriceColor(Number(row?.profit))}>
                 <div>
                     {profit} {pairConfig.quoteAsset}
@@ -156,7 +156,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChang
                     {percent + '%'})
                 </div>
             </div>
-            <Share2 size={16} onClick={() => setShareOrder(row)} className='ml-1 cursor-pointer hover:opacity-60'/>
+            <Share2 size={16} onClick={() => setShareOrder(row)} className='ml-1 cursor-pointer hover:opacity-60' />
         </div>
     }
 
@@ -171,7 +171,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChang
 
     return (
         <>
-            <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)}/>
+            <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
             <FuturesTimeFilter
                 currentTimeRange={pickedTime}
                 onChange={(pickedTime) =>
