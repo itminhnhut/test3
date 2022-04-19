@@ -24,7 +24,7 @@ export default class {
 
     constructor(mode = ChartMode.SPOT) {
         this.mode = mode;
-        this.stream = new Stream();
+        this.stream = new Stream(mode);
     }
 
     onReady = cb => {

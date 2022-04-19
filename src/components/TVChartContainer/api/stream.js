@@ -70,7 +70,7 @@ export default class {
 
     subscribeBars(symbolInfo, resolution, updateCb, uid, resetCache) {
         socket.emit(
-            this.mode === ChartMode.SPOT
+            symbolInfo.exchange === 'NAMI_SPOT'
                 ? 'subscribe:recent_trade'
                 : 'subscribe:futures:ticker',
             symbolInfo.symbol);
@@ -105,9 +105,9 @@ socket.on('connect', () => {
     if (isDisconnected) {
         if (_subs.length) {
             _subs.map(sub => {
-                const emitAction = this.mode === ChartMode.SPOT
-                    ? 'subscribe:recent_trade'
-                    : 'subscribe:futures:ticker'
+                const emitAction = sub.exchange === 'NAMI_SPOT'
+                        ? 'subscribe:recent_trade'
+                        : 'subscribe:futures:ticker'
                 return socket.emit(emitAction, lastSymbol);
             });
         }
@@ -127,11 +127,12 @@ socket.on('futures:ticker:update', (update) => {
         s: symbol,
         t: time,
         p: price,
+        c: closePrice
     } = update;
-    const sub = _subs.find(e => e.symbol === symbol);
+    const sub = _subs.find(e => e.symbol === symbol && e.exchange === 'NAMI_FUTURES');
     const data = {
         ts: Math.floor(time / 1000),
-        price: +price,
+        price: symbol.indexOf('VNDC') >= 0 ?  +price : +closePrice,
     };
     if (sub) {
         if (!sub?.lastBar?.time) return;
@@ -153,7 +154,7 @@ socket.on('spot:recent_trade:add', (update) => {
         p: price,
         q: volume
     } = update;
-    const sub = _subs.find(e => e.symbol === symbol);
+    const sub = _subs.find(e => e.symbol === symbol && e.exchange === 'NAMI_SPOT');
     const data = {
         ts: Math.floor(time / 1000),
         volume: +volume,
