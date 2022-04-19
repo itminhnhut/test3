@@ -421,18 +421,18 @@ const SCREEN_TAB_SERIES = [
         title: 'Futures',
         localized: null
     },
-    {
-        key: 3,
-        code: WALLET_SCREENS.STAKING,
-        title: 'Staking',
-        localized: null
-    },
-    {
-        key: 4,
-        code: WALLET_SCREENS.FARMING,
-        title: 'Farming',
-        localized: null
-    },
+    // {
+    //     key: 3,
+    //     code: WALLET_SCREENS.STAKING,
+    //     title: 'Staking',
+    //     localized: null
+    // },
+    // {
+    //     key: 4,
+    //     code: WALLET_SCREENS.FARMING,
+    //     title: 'Farming',
+    //     localized: null
+    // },
     // { key: 5, code: WALLET_SCREENS.TRANSACTION_HISTORY, title: 'Transaction History', localized: 'common:transaction_history' },
 ];
 

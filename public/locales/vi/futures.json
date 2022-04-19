@@ -11,6 +11,8 @@
     "stop_loss": "Stop Loss",
     "last_price": "Gần nhất",
     "last_price_tooltip": "Đặt giá gần nhất",
+    "close_order_success": "Lệnh #{{orderId}} đã được đóng thành công.",
+    "close_order_failed": "Đóng lệnh #{{orderId}} thất bại.",
     "fee_level": "Mức phí",
     "order_table": {
         "opening_title": "Đang mở",

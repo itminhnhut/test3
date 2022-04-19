@@ -464,7 +464,7 @@ const RewardCenter = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'reward-center'])
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'reward-center', 'identification'])
     }
 })
 

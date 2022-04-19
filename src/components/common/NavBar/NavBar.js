@@ -527,7 +527,7 @@ const NavBar = ({
                             </span>
                         </a>
                     </Link>
-                    <Link href={PATHS.WALLET.STAKING}>
+                    {/* <Link href={PATHS.WALLET.STAKING}>
                         <a className='mal-navbar__dropdown___item'>
                             <img
                                 src={getS3Url('/images/icon/ic_staking.png')}
@@ -554,7 +554,7 @@ const NavBar = ({
                                 {t('navbar:menu.wallet')} Farming
                             </span>
                         </a>
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
         )

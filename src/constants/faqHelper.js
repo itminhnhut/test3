@@ -15,7 +15,8 @@ export const CatsKey = {
     NewTokenListing: 'new_token_listing',
     NamiNews: 'nami_news',
     Announcement: 'announcements',
-    Event: 'events'
+    Event: 'events',
+    DailyStaking: 'daily_staking',
 }
 
 export const SupportCategories = {
@@ -102,8 +103,8 @@ export const SupportCategories = {
                     {
                         id: 'how_to_dep_wdl',
                         title: 'Hướng dẫn nạp/rút chung',
-                        slug: 'faq-vi-huong-dan-nap-rut',
-                        displaySlug: 'huong-dan-nap-rut'
+                        slug: 'faq-vi-huong-dan-nap-rut-chung',
+                        displaySlug: 'huong-dan-nap-rut-chung'
                     },
                     {
                         id: 'how_to_dep',
@@ -167,33 +168,41 @@ export const SupportCategories = {
                     },
                 ]
             },
+            // {
+            //     id: CatsKey.Finance,
+            //     title: 'Sản phẩm tài chính',
+            //     slug: 'faq-vi-san-pham-tai-chinh',
+            //     displaySlug: 'san-pham-tai-chinh',
+            //     description: 'Các thông tin về nhóm sản phẩm tài chính trên Nami Exchange',
+            //     iconUrl: '',
+            //     subCats: [
+            //         {
+            //             id: 'nami_farming',
+            //             title: 'Nami Farming',
+            //             slug: 'faq-vi-nami-farming',
+            //             displaySlug: 'nami-farming'
+            //         },
+            //         {
+            //             id: 'nami_staking',
+            //             title: 'Nami Staking',
+            //             slug: 'faq-vi-nami-staking',
+            //             displaySlug: 'nami-staking'
+            //         },
+            //         {
+            //             id: 'nami_launchpad',
+            //             title: 'Nami Launchpad',
+            //             slug: 'faq-vi-nami-launchpad',
+            //             displaySlug: 'nami-launchpad'
+            //         }
+            //     ]
+            // },
             {
-                id: CatsKey.Finance,
-                title: 'Sản phẩm tài chính',
-                slug: 'faq-vi-san-pham-tai-chinh',
-                displaySlug: 'san-pham-tai-chinh',
-                description: 'Các thông tin về nhóm sản phẩm tài chính trên Nami Exchange',
-                iconUrl: '',
-                subCats: [
-                    {
-                        id: 'nami_farming',
-                        title: 'Nami Farming',
-                        slug: 'faq-vi-nami-farming',
-                        displaySlug: 'nami-farming'
-                    },
-                    {
-                        id: 'nami_staking',
-                        title: 'Nami Staking',
-                        slug: 'faq-vi-nami-staking',
-                        displaySlug: 'nami-staking'
-                    },
-                    {
-                        id: 'nami_launchpad',
-                        title: 'Nami Launchpad',
-                        slug: 'faq-vi-nami-launchpad',
-                        displaySlug: 'nami-launchpad'
-                    }
-                ]
+                id: CatsKey.DailyStaking,
+                title: 'Nhận lãi ngày (Daily Staking)',
+                slug: 'faq-vi-nhan-lai-ngay-daily-staking',
+                displaySlug: 'nhan-lai-ngay-daily-staking',
+                description: 'Nhận lãi ngày (Daily Staking)',
+                iconUrl: ''
             },
             {
                 id: CatsKey.Others,
@@ -363,33 +372,41 @@ export const SupportCategories = {
                     },
                 ]
             },
+            // {
+            //     id: CatsKey.Finance,
+            //     title: 'Finance',
+            //     slug: 'faq-en-finance',
+            //     displaySlug: 'finance',
+            //     description: 'Information about financial products on Nami Exchange',
+            //     iconUrl: '',
+            //     subCats: [
+            //         {
+            //             id: 'nami_farming',
+            //             title: 'Nami Farming',
+            //             slug: 'faq-en-nami-farming',
+            //             displaySlug: 'nami-farming'
+            //         },
+            //         {
+            //             id: 'nami_staking',
+            //             title: 'Nami Staking',
+            //             slug: 'faq-en-nami-staking',
+            //             displaySlug: 'nami-staking'
+            //         },
+            //         {
+            //             id: 'nami_launchpad',
+            //             title: 'Nami Launchpad',
+            //             slug: 'faq-en-nami-launchpad',
+            //             displaySlug: 'nami-launchpad'
+            //         }
+            //     ]
+            // },
             {
-                id: CatsKey.Finance,
-                title: 'Finance',
-                slug: 'faq-en-finance',
-                displaySlug: 'finance',
-                description: 'Information about financial products on Nami Exchange',
-                iconUrl: '',
-                subCats: [
-                    {
-                        id: 'nami_farming',
-                        title: 'Nami Farming',
-                        slug: 'faq-en-nami-farming',
-                        displaySlug: 'nami-farming'
-                    },
-                    {
-                        id: 'nami_staking',
-                        title: 'Nami Staking',
-                        slug: 'faq-en-nami-staking',
-                        displaySlug: 'nami-staking'
-                    },
-                    {
-                        id: 'nami_launchpad',
-                        title: 'Nami Launchpad',
-                        slug: 'faq-en-nami-launchpad',
-                        displaySlug: 'nami-launchpad'
-                    }
-                ]
+                id: CatsKey.DailyStaking,
+                title: 'Daily Staking',
+                slug: 'faq-en-daily-staking',
+                displaySlug: 'daily-staking',
+                description: 'Daily Staking',
+                iconUrl: ''
             },
             {
                 id: CatsKey.Others,
@@ -511,6 +528,7 @@ export const getSupportCategoryIcons = (id) => {
         case CatsKey.NewTokenListing:
             return '/images/screen/support/ic_duo_dollar.png'
         case CatsKey.Finance:
+        case CatsKey.DailyStaking:
             return '/images/screen/support/ic_wallet.png'
         case CatsKey.Others:
             return '/images/screen/support/ic_other.png'
