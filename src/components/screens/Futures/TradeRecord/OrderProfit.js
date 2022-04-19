@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
-import {VndcFutureOrderType, getProfitVndc} from '../PlaceOrder/Vndc/VndcFutureOrderType'
-import {formatNumber, getPriceColor} from 'redux/actions/utils'
-import {Share2} from 'react-feather'
+import React from 'react';
+import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutureOrderType';
+import { formatNumber, getPriceColor } from 'redux/actions/utils';
+import { Share2 } from 'react-feather';
 
 const OrderProfit = ({order, pairPrice, setShareOrderModal}) => {
     const profit = getProfitVndc(order, pairPrice?.lastPrice);

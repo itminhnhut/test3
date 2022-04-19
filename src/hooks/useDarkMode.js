@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react'
-import { LOCAL_STORAGE_KEY } from 'redux/actions/const'
-import { useSelector, useDispatch } from 'react-redux'
-import { SET_THEME } from 'redux/actions/types'
-
+import { LOCAL_STORAGE_KEY } from 'redux/actions/const';
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_THEME } from 'redux/actions/types';
 
 export const THEME_MODE = {
     LIGHT: 'light',

@@ -1,13 +1,9 @@
-import { memo, useEffect, useState } from 'react'
-import { PublicSocketEvent } from 'redux/actions/const'
-import { formatNumber } from 'redux/actions/utils'
-import { useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
-import { roundTo } from 'round-to'
-import { PATHS } from 'constants/paths'
-
-import FuturesMiniTicker from 'models/FuturesMiniTicker'
-import classNames from 'classnames'
+import { memo } from 'react';
+import { formatNumber } from 'redux/actions/utils';
+import { useRouter } from 'next/router';
+import { roundTo } from 'round-to';
+import { PATHS } from 'constants/paths';
+import classNames from 'classnames';
 
 const FuturesFavoritePairItem = memo(({ pair }) => {
     const router = useRouter()

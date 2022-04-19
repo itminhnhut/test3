@@ -1,19 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Trans, useTranslation } from 'next-i18next'
-import { useSelector } from 'react-redux'
-import { useAsync } from 'react-use'
-import { useRouter } from 'next/router'
-import {
-    ApiStatus,
-    DepWdlStatus,
-    TokenConfigV1 as TokenConfig,
-} from 'redux/actions/const'
-import {
-    API_GET_ASSET_CONFIG,
-    API_GET_DEPWDL_HISTORY,
-} from 'redux/actions/apis'
-import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather'
-import { find, get, isNumber } from 'lodash'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
+import { useAsync } from 'react-use';
+import { useRouter } from 'next/router';
+import { ApiStatus, DepWdlStatus, TokenConfigV1 as TokenConfig, } from 'redux/actions/const';
+import { API_GET_ASSET_CONFIG, API_GET_DEPWDL_HISTORY, } from 'redux/actions/apis';
+import { Check, ChevronLeft, ChevronRight, Search, X } from 'react-feather';
+import { find, get, isNumber } from 'lodash';
 import {
     countDecimals,
     eToNumber,
@@ -22,36 +15,36 @@ import {
     formatWallet,
     getS3Url,
     shortHashAddress,
-} from 'redux/actions/utils'
-import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { PATHS } from 'constants/paths'
-import { log } from 'utils'
+} from 'redux/actions/utils';
+import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { PATHS } from 'constants/paths';
+import { log } from 'utils';
 
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import useOutsideClick from 'hooks/useOutsideClick'
-import ScaleThinLoader from 'components/loader/ScaleThinLoader'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import NumberFormat from 'react-number-format'
-import ChevronDown from 'components/svg/ChevronDown'
-import AssetLogo from 'components/wallet/AssetLogo'
-import Skeletor from 'components/common/Skeletor'
-import OtpInput from 'react-otp-input'
-import MCard from 'components/common/MCard'
-import Empty from 'components/common/Empty'
-import Modal from 'components/common/Modal'
-import ReModal from 'components/common/ReModal'
-import Link from 'next/link'
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import useOutsideClick from 'hooks/useOutsideClick';
+import ScaleThinLoader from 'components/loader/ScaleThinLoader';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import NumberFormat from 'react-number-format';
+import ChevronDown from 'components/svg/ChevronDown';
+import AssetLogo from 'components/wallet/AssetLogo';
+import Skeletor from 'components/common/Skeletor';
+import OtpInput from 'react-otp-input';
+import MCard from 'components/common/MCard';
+import Empty from 'components/common/Empty';
+import Modal from 'components/common/Modal';
+import ReModal from 'components/common/ReModal';
+import Link from 'next/link';
 
-import styled from 'styled-components'
-import colors from 'styles/colors'
-import Axios from 'axios'
-import ReTable from 'components/common/ReTable'
-import useWindowSize from 'hooks/useWindowSize'
-import AssetName from 'components/wallet/AssetName'
-import useWindowFocus from 'hooks/useWindowFocus'
-import Button from 'components/common/Button'
-import classNames from 'classnames'
+import styled from 'styled-components';
+import colors from 'styles/colors';
+import Axios from 'axios';
+import ReTable from 'components/common/ReTable';
+import useWindowSize from 'hooks/useWindowSize';
+import AssetName from 'components/wallet/AssetName';
+import useWindowFocus from 'hooks/useWindowFocus';
+import Button from 'components/common/Button';
+import classNames from 'classnames';
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {

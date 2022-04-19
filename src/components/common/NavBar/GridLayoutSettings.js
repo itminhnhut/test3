@@ -1,7 +1,7 @@
-import classNames from 'classnames'
-import Setting from 'components/svg/Setting'
-import useDarkMode from 'hooks/useDarkMode'
-import colors from 'styles/colors'
+import classNames from 'classnames';
+import Setting from 'components/svg/Setting';
+import useDarkMode from 'hooks/useDarkMode';
+import colors from 'styles/colors';
 
 const GridLayoutSettings = ({ className }) => {
     const [currentTheme, onThemeSwitch] = useDarkMode()

@@ -1,5 +1,5 @@
-import classNames from 'classnames'
-import { Check } from 'react-feather'
+import classNames from 'classnames';
+import { Check } from 'react-feather';
 
 const CheckBox = ({
     active,

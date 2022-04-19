@@ -1,22 +1,22 @@
-import { useCallback, useMemo, useState } from 'react'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { BREAK_POINTS } from 'constants/constants'
-import { PATHS } from 'constants/paths'
+import { useCallback, useMemo, useState } from 'react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { BREAK_POINTS } from 'constants/constants';
+import { PATHS } from 'constants/paths';
 
-import SupportSectionItem from 'components/screens/Support/SupportSectionItem'
-import SupportSearchBar from 'components/screens/Support/SupportSearchBar'
-import SupportSection from 'components/screens/Support/SupportSection'
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import useWindowSize from 'hooks/useWindowSize'
-import Image from 'next/image'
-import { useAsync } from 'react-use'
-import { getLastedArticles, ghost } from 'utils'
-import { useTranslation } from 'next-i18next'
-import { formatTime } from 'redux/actions/utils'
-import classNames from 'classnames'
-import Skeletor from 'components/common/Skeletor'
-import useApp from 'hooks/useApp'
-import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
+import SupportSectionItem from 'components/screens/Support/SupportSectionItem';
+import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
+import SupportSection from 'components/screens/Support/SupportSection';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import useWindowSize from 'hooks/useWindowSize';
+import Image from 'next/image';
+import { useAsync } from 'react-use';
+import { getLastedArticles } from 'utils';
+import { useTranslation } from 'next-i18next';
+import { formatTime } from 'redux/actions/utils';
+import classNames from 'classnames';
+import Skeletor from 'components/common/Skeletor';
+import useApp from 'hooks/useApp';
+import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 
 const Support = () => {
     // ? State

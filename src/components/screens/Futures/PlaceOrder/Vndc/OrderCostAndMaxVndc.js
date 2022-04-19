@@ -1,13 +1,9 @@
-import { memo, useCallback, useEffect, useState } from 'react'
-import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures'
-import { FuturesOrderTypes } from 'redux/reducers/futures'
-import { useTranslation } from 'next-i18next'
-import { formatNumber } from 'redux/actions/utils'
-import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react';
+import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
+import { useTranslation } from 'next-i18next';
+import { formatNumber } from 'redux/actions/utils';
 
-import TradingLabel from 'components/trade/TradingLabel'
-import min from 'lodash/min'
-import max from 'lodash/max'
+import TradingLabel from 'components/trade/TradingLabel';
 import Link from 'next/link';
 
 const FuturesOrderCostAndMaxVndc = ({

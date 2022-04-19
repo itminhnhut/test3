@@ -6,8 +6,8 @@ import { useAsync } from 'react-use';
 import { getSymbolString } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/actions/market';
 import { useRouter } from 'next/router';
-import { PulseLoader } from 'react-spinners'
-import colors from '../../styles/colors'
+import { PulseLoader } from 'react-spinners';
+import colors from '../../styles/colors';
 
 const LastPrice = (props) => {
     const { symbol, colored, exchangeConfig } = props;

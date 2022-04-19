@@ -1,28 +1,27 @@
-import { memo, useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'next-i18next'
-import { ApiStatus, EarnOrder_Status } from 'redux/actions/const'
-import { Eye, EyeOff } from 'react-feather'
-import { API_FARMING_CANCEL_EARNING, API_GET_FARMING_ORDER } from 'redux/actions/apis'
+import { memo, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { ApiStatus, EarnOrder_Status } from 'redux/actions/const';
+import { Eye, EyeOff } from 'react-feather';
+import { API_FARMING_CANCEL_EARNING, API_GET_FARMING_ORDER } from 'redux/actions/apis';
 
-import Axios from 'axios'
-import useWindowSize from 'hooks/useWindowSize'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import MCard from 'components/common/MCard'
-import ReTable from 'components/common/ReTable'
-import Empty from 'components/common/Empty'
-import AssetName from 'components/wallet/AssetName'
-import AssetLogo from 'components/wallet/AssetLogo'
-import { formatTime, formatNumber as formatWallet, getS3Url } from 'redux/actions/utils'
-import AssetValue from 'components/common/AssetValue'
-import Skeletor from 'components/common/Skeletor'
-import { BREAK_POINTS } from 'constants/constants'
-import RePagination from 'components/common/ReTable/RePagination'
-import Modal from 'components/common/ReModal'
-import { SECRET_STRING, wait } from 'utils'
-import Button from 'components/common/Button'
-import { PulseLoader } from 'react-spinners'
-import colors from 'styles/colors'
-
+import Axios from 'axios';
+import useWindowSize from 'hooks/useWindowSize';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import MCard from 'components/common/MCard';
+import ReTable from 'components/common/ReTable';
+import Empty from 'components/common/Empty';
+import AssetName from 'components/wallet/AssetName';
+import AssetLogo from 'components/wallet/AssetLogo';
+import { formatNumber as formatWallet, formatTime, getS3Url } from 'redux/actions/utils';
+import AssetValue from 'components/common/AssetValue';
+import Skeletor from 'components/common/Skeletor';
+import { BREAK_POINTS } from 'constants/constants';
+import RePagination from 'components/common/ReTable/RePagination';
+import Modal from 'components/common/ReModal';
+import { SECRET_STRING, wait } from 'utils';
+import Button from 'components/common/Button';
+import { PulseLoader } from 'react-spinners';
+import colors from 'styles/colors';
 
 const INITIAL_STATE = {
     hideAsset: false,

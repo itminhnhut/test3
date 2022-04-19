@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import * as fbq from 'src/utils/fpixel';
 import * as gtm from 'src/utils/gtm';
-import { getSymbolString } from 'redux/actions/utils'
 
 const handleRouteChange = (url) => {
     fbq.pageview();

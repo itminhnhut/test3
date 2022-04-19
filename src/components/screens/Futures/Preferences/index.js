@@ -1,14 +1,12 @@
-import { useState } from 'react'
-import { X } from 'react-feather'
+import { useState } from 'react';
+import { X } from 'react-feather';
 
-import classNames from 'classnames'
-import Button from 'components/common/Button'
-import Modal from 'components/common/ReModal'
-import FuturesPreferencesOrderConfirmation from './OrderConfirmation'
-import FuturesPreferencesPositionMode from './PositionMode'
-import FuturesPreferencesNotification from './Notification'
-import { useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import classNames from 'classnames';
+import Modal from 'components/common/ReModal';
+import FuturesPreferencesOrderConfirmation from './OrderConfirmation';
+import FuturesPreferencesPositionMode from './PositionMode';
+import FuturesPreferencesNotification from './Notification';
+import { useSelector } from 'react-redux';
 
 const PREFERENCES = {
     ORDER_CONFIRMATION: 'ORDER_CONFIRMATION',

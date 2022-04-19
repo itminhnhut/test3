@@ -1,16 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { NAMI_FUTURES_EARNED_SHARE } from 'constants/constants'
-import { useScreenshot } from 'use-react-screenshot'
-import { useSelector } from 'react-redux'
-import { formatTime } from 'redux/actions/utils'
-import { toBlob } from 'dom-to-image-more'
-import { QRCode } from 'react-qrcode-logo'
-import { saveAs } from 'file-saver'
+import { useCallback, useRef, useState } from 'react';
+import { NAMI_FUTURES_EARNED_SHARE } from 'constants/constants';
+import { useScreenshot } from 'use-react-screenshot';
+import { useSelector } from 'react-redux';
+import { formatTime } from 'redux/actions/utils';
+import { QRCode } from 'react-qrcode-logo';
+import { saveAs } from 'file-saver';
 
-import classNames from 'classnames'
-import CheckBox from 'components/common/CheckBox'
-import Button from 'components/common/Button'
-import Modal from 'components/common/ReModal'
+import classNames from 'classnames';
+import CheckBox from 'components/common/CheckBox';
+import Button from 'components/common/Button';
+import Modal from 'components/common/ReModal';
 
 const FuturesProfitEarned = ({ isVisible }) => {
     const [inforToShare, setInforToShare] = useState({

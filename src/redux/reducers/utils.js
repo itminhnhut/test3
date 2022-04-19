@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-case-declarations */
 
-import * as types from '../actions/types'
+import * as types from '../actions/types';
 
 export const initialState = {
     assetConfig: [],

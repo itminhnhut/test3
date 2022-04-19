@@ -1,9 +1,9 @@
-import CheckBox from 'components/common/CheckBox'
-import TradingInput from 'components/trade/TradingInput'
-import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types'
-import { useDispatch, useSelector } from 'react-redux'
-import { useTranslation } from 'next-i18next'
-import { ChevronDown } from 'react-feather'
+import CheckBox from 'components/common/CheckBox';
+import TradingInput from 'components/trade/TradingInput';
+import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'next-i18next';
+import { ChevronDown } from 'react-feather';
 
 const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp }) => {
     const useSltp =

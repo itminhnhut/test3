@@ -1,11 +1,7 @@
 import fetchAPI from 'utils/fetch-api';
 import * as types from 'src/redux/actions/types';
 import { ApiStatus } from './const';
-import {
-    API_MEMBERSHIP_STAKE_ATS,
-    API_MEMBERSHIP_TRADING_HISTORY,
-    API_MEMBERSHIP_UNSTAKE_ATS,
-} from './apis';
+import { API_MEMBERSHIP_STAKE_ATS, API_MEMBERSHIP_TRADING_HISTORY, API_MEMBERSHIP_UNSTAKE_ATS, } from './apis';
 
 export const stakeATS = ({ amount, autoStake }) => async (dispatch) => {
     try {

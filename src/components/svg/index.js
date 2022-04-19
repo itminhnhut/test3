@@ -1,19 +1,19 @@
-import { memo } from 'react'
+import { memo } from 'react';
 
-import SvgActivity from 'src/components/svg/Activity'
-import SvgChevronDown from 'src/components/svg/ChevronDown'
-import SvgContract from 'src/components/svg/Contract'
-import SvgCreditCard from 'src/components/svg/CreditCard'
-import SvgCross from 'src/components/svg/Cross'
-import SvgExchange from 'src/components/svg/Exchange'
-import SvgGlobe from 'src/components/svg/Globe'
-import SvgHexagon from 'src/components/svg/Hexagon'
-import SvgMenu from 'src/components/svg/Menu'
-import SvgMoon from 'src/components/svg/Moon'
-import SvgNami from 'src/components/svg/Nami'
-import SvgRefresh from 'src/components/svg/Refresh'
-import SvgShare from 'src/components/svg/Share'
-import SvgSun from 'src/components/svg/Sun'
+import SvgActivity from 'src/components/svg/Activity';
+import SvgChevronDown from 'src/components/svg/ChevronDown';
+import SvgContract from 'src/components/svg/Contract';
+import SvgCreditCard from 'src/components/svg/CreditCard';
+import SvgCross from 'src/components/svg/Cross';
+import SvgExchange from 'src/components/svg/Exchange';
+import SvgGlobe from 'src/components/svg/Globe';
+import SvgHexagon from 'src/components/svg/Hexagon';
+import SvgMenu from 'src/components/svg/Menu';
+import SvgMoon from 'src/components/svg/Moon';
+import SvgNami from 'src/components/svg/Nami';
+import SvgRefresh from 'src/components/svg/Refresh';
+import SvgShare from 'src/components/svg/Share';
+import SvgSun from 'src/components/svg/Sun';
 
 const SvgIcon = memo((props) => {
     const { name } = props

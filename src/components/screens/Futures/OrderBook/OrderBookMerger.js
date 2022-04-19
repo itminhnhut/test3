@@ -1,7 +1,7 @@
-import classNames from 'classnames'
-import useOutsideClick from 'hooks/useOutsideClick'
-import { memo, useRef, useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import classNames from 'classnames';
+import useOutsideClick from 'hooks/useOutsideClick';
+import { memo, useRef, useState } from 'react';
+import { ChevronDown, ChevronUp } from 'react-feather';
 
 const FuturesOrderBookMerger = memo(
     ({ tickSize, tickSizeList, onSetTickSize }) => {

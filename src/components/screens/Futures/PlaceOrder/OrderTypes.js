@@ -1,12 +1,11 @@
-import { memo } from 'react'
-import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures'
-import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types'
-import { useDispatch, useSelector } from 'react-redux'
-import { setFuturesOrderTypes } from 'redux/actions/futures'
-import { useTranslation } from 'next-i18next'
-import { ChevronDown } from 'react-feather'
+import { memo } from 'react';
+import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
+import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'next-i18next';
+import { ChevronDown } from 'react-feather';
 
-import classNames from 'classnames'
+import classNames from 'classnames';
 
 const FuturesOrderTypes = memo(({ currentType, orderTypes, isVndcFutures }) => {
     const { t } = useTranslation()

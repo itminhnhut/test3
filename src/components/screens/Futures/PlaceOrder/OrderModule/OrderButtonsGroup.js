@@ -1,9 +1,9 @@
-import { useCallback, useEffect } from 'react'
-import { placeFuturesOrder } from 'redux/actions/futures'
-import { useTranslation } from 'next-i18next'
-import { FuturesOrderTypes } from 'redux/reducers/futures'
+import { useCallback } from 'react';
+import { placeFuturesOrder } from 'redux/actions/futures';
+import { useTranslation } from 'next-i18next';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { getLoginUrl } from 'src/redux/actions/utils';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 
 const FuturesOrderButtonsGroup = ({
     pairConfig,

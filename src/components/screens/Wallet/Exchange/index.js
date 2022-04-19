@@ -1,33 +1,32 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import {
     formatNumber as formatWallet,
     getS3Url,
     getV1Url,
     setTransferModal,
     walletLinkBuilder,
-} from 'redux/actions/utils'
-import { Check, Eye, EyeOff, Search, X } from 'react-feather'
-import { EXCHANGE_ACTION } from 'pages/wallet'
-import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils'
-import { WalletType } from 'redux/actions/const'
-import { useDispatch } from 'react-redux'
-import { PATHS } from 'constants/paths'
-import { Menu, useContextMenu } from 'react-contexify'
-import { router } from 'next/client'
+} from 'redux/actions/utils';
+import { Check, Eye, EyeOff, Search, X } from 'react-feather';
+import { EXCHANGE_ACTION } from 'pages/wallet';
+import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
+import { WalletType } from 'redux/actions/const';
+import { useDispatch } from 'react-redux';
+import { PATHS } from 'constants/paths';
+import { Menu, useContextMenu } from 'react-contexify';
 
-import useWindowSize from 'hooks/useWindowSize'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import MCard from 'components/common/MCard'
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
-import Empty from 'components/common/Empty'
-import Skeletor from 'components/common/Skeletor'
-import RePagination from 'components/common/ReTable/RePagination'
-import Link from 'next/link'
-import AssetLogo from 'components/wallet/AssetLogo'
+import useWindowSize from 'hooks/useWindowSize';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import MCard from 'components/common/MCard';
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import Empty from 'components/common/Empty';
+import Skeletor from 'components/common/Skeletor';
+import RePagination from 'components/common/ReTable/RePagination';
+import Link from 'next/link';
+import AssetLogo from 'components/wallet/AssetLogo';
 
-import 'react-contexify/dist/ReactContexify.css'
+import 'react-contexify/dist/ReactContexify.css';
 
 const INITIAL_STATE = {
     hideAsset: false,

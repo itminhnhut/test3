@@ -1,17 +1,16 @@
-import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity'
-import Button from 'src/components/common/Button'
-import Image from 'next/image'
-import Link from 'next/link'
-import colors from '../../../styles/colors'
+import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity';
+import Button from 'src/components/common/Button';
+import Link from 'next/link';
+import colors from '../../../styles/colors';
 
-import { Eye, Lock, Mail } from 'react-feather'
-import { useWindowSize } from 'utils/customHooks'
-import { useSelector } from 'react-redux'
-import { THEME_MODE } from 'hooks/useDarkMode'
-import { useTranslation, Trans } from 'next-i18next'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { useEffect, useState } from 'react'
-import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils'
+import { Eye, Lock, Mail } from 'react-feather';
+import { useWindowSize } from 'utils/customHooks';
+import { useSelector } from 'react-redux';
+import { THEME_MODE } from 'hooks/useDarkMode';
+import { Trans, useTranslation } from 'next-i18next';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { useEffect, useState } from 'react';
+import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
 
 const HomeAdditional = ({ parentState }) => {
     // * Initial State

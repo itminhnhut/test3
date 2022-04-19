@@ -1,8 +1,8 @@
-import { useWindowSize } from 'utils/customHooks'
-import { memo, useState } from 'react'
+import { useWindowSize } from 'utils/customHooks';
+import { memo, useState } from 'react';
 
-import PocketFooter from 'src/components/common/Footer/PocketFooter'
-import useApp from 'hooks/useApp'
+import PocketFooter from 'src/components/common/Footer/PocketFooter';
+import useApp from 'hooks/useApp';
 
 const Footer = memo(() => {
     // * Initial State

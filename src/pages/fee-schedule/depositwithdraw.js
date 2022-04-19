@@ -1,26 +1,24 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'next-i18next'
-import { API_GET_WALLET_CONFIG } from 'redux/actions/apis'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { formatNumber, walletLinkBuilder } from 'redux/actions/utils'
-import { ASSET_IGNORE, BREAK_POINTS } from 'constants/constants'
-import { ApiStatus, WalletType } from 'redux/actions/const'
-import { useRouter } from 'next/router'
-import { EXCHANGE_ACTION } from 'pages/wallet'
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { API_GET_WALLET_CONFIG } from 'redux/actions/apis';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { formatNumber, walletLinkBuilder } from 'redux/actions/utils';
+import { BREAK_POINTS } from 'constants/constants';
+import { ApiStatus, WalletType } from 'redux/actions/const';
+import { useRouter } from 'next/router';
+import { EXCHANGE_ACTION } from 'pages/wallet';
 
-import withTabLayout, {
-    TAB_ROUTES,
-} from 'components/common/layouts/withTabLayout'
-import useWindowSize from 'hooks/useWindowSize'
-import SearchBox from 'components/common/SearchBox'
-import Skeletor from 'components/common/Skeletor'
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
-import MCard from 'components/common/MCard'
-import Empty from 'components/common/Empty'
-import Axios from 'axios'
-import AssetLogo from 'components/wallet/AssetLogo'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { useSelector } from 'react-redux'
+import withTabLayout, { TAB_ROUTES, } from 'components/common/layouts/withTabLayout';
+import useWindowSize from 'hooks/useWindowSize';
+import SearchBox from 'components/common/SearchBox';
+import Skeletor from 'components/common/Skeletor';
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import MCard from 'components/common/MCard';
+import Empty from 'components/common/Empty';
+import Axios from 'axios';
+import AssetLogo from 'components/wallet/AssetLogo';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { useSelector } from 'react-redux';
 
 const INITIAL_STATE = {
     search: '',

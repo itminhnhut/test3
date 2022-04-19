@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { getUsdRate } from 'redux/actions/market'
+import { useEffect, useState } from 'react';
+import { getUsdRate } from 'redux/actions/market';
 
 const INITIAL_STATE = {
 

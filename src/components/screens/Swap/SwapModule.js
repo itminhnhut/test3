@@ -1,29 +1,37 @@
-import showNotification from 'utils/notificationService'
-import SwapReverse from 'src/components/svg/SwapReverse'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import NumberFormat from 'react-number-format'
-import AssetLogo from 'src/components/wallet/AssetLogo'
-import fetchAPI from 'utils/fetch-api'
-import SvgIcon from 'src/components/svg'
-import colors from 'styles/colors'
-import Link from 'next/link'
-import * as Error from '../../../redux/actions/apiError'
-import Skeletor from 'src/components/common/Skeletor'
-import useOutsideClick from 'hooks/useOutsideClick'
-import Modal from 'src/components/common/ReModal'
+import showNotification from 'utils/notificationService';
+import SwapReverse from 'src/components/svg/SwapReverse';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import NumberFormat from 'react-number-format';
+import AssetLogo from 'src/components/wallet/AssetLogo';
+import fetchAPI from 'utils/fetch-api';
+import SvgIcon from 'src/components/svg';
+import colors from 'styles/colors';
+import Link from 'next/link';
+import * as Error from '../../../redux/actions/apiError';
+import Skeletor from 'src/components/common/Skeletor';
+import useOutsideClick from 'hooks/useOutsideClick';
+import Modal from 'src/components/common/ReModal';
 
-import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useAsync, useDebounce } from 'react-use'
-import { Trans, useTranslation } from 'next-i18next'
-import { find, orderBy, uniqBy } from 'lodash'
-import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, getV1Url, safeToFixed } from 'redux/actions/utils'
-import { useSelector } from 'react-redux'
-import { RefreshCw, Search, X, XCircle } from 'react-feather'
-import { ApiStatus } from 'redux/actions/const'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { PATHS } from 'constants/paths'
-import { roundToDown } from 'round-to'
-import Button from 'components/common/Button'
+import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useAsync, useDebounce } from 'react-use';
+import { Trans, useTranslation } from 'next-i18next';
+import { find, orderBy, uniqBy } from 'lodash';
+import {
+    formatPrice,
+    formatSwapRate,
+    formatWallet,
+    getDecimalScale,
+    getLoginUrl,
+    getV1Url,
+    safeToFixed
+} from 'redux/actions/utils';
+import { useSelector } from 'react-redux';
+import { RefreshCw, Search, X, XCircle } from 'react-feather';
+import { ApiStatus } from 'redux/actions/const';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { PATHS } from 'constants/paths';
+import { roundToDown } from 'round-to';
+import Button from 'components/common/Button';
 
 const FEE_RATE = 0 / 100
 const DEBOUNCE_TIMEOUT = 500

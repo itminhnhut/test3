@@ -1,4 +1,4 @@
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const SvgLookup = ({ size, className = '' }) => {
     const [currentTheme, ] = useDarkMode()

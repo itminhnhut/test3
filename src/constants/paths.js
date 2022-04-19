@@ -1,5 +1,5 @@
-import { getV1Url } from 'redux/actions/utils'
-import { TRADING_MODE } from 'redux/actions/const'
+import { getV1Url } from 'redux/actions/utils';
+import { TRADING_MODE } from 'redux/actions/const';
 
 const DEFAULT_BASE_ASSET = 'BTC'
 const DEFAULT_QUOTE_ASSET = 'USDT'

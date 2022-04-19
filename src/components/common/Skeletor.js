@@ -1,10 +1,10 @@
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 
-import Skeleton from 'react-loading-skeleton'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import colors from 'styles/colors'
+import Skeleton from 'react-loading-skeleton';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from 'styles/colors';
 
-import 'react-loading-skeleton/dist/skeleton.css'
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const Skeletor = (props) => {
     const [currentTheme, ] = useDarkMode()

@@ -1,23 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import {
-    ApiStatus,
-    ORDER_BOOK_MODE,
-    PublicSocketEvent,
-} from 'redux/actions/const'
-import { FUTURES_ORDER_BOOK_ITEMS_HEIGHT } from './OrderBookItem'
-import { formatNumber, getDecimalScale } from 'redux/actions/utils'
-import { API_GET_FUTURES_DEPTH } from 'redux/actions/apis'
-import { useAsync, usePrevious } from 'react-use'
-import { isNumber, orderBy } from 'lodash'
-import { handleTickSize } from 'utils/MarketDepthMerger'
-import { roundTo } from 'round-to'
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ApiStatus, ORDER_BOOK_MODE, PublicSocketEvent, } from 'redux/actions/const';
+import { FUTURES_ORDER_BOOK_ITEMS_HEIGHT } from './OrderBookItem';
+import { formatNumber } from 'redux/actions/utils';
+import { API_GET_FUTURES_DEPTH } from 'redux/actions/apis';
+import { useAsync, usePrevious } from 'react-use';
+import { isNumber, orderBy } from 'lodash';
+import { handleTickSize } from 'utils/MarketDepthMerger';
+import { roundTo } from 'round-to';
 
-import FuturesOrderBookFilter from './OrderBookFilter'
-import FuturesOrderBookMerger from './OrderBookMerger'
-import FuturesOrdersList from './OrdersList'
-import classNames from 'classnames'
-import Emitter from 'redux/actions/emitter'
-import Axios from 'axios'
+import FuturesOrderBookFilter from './OrderBookFilter';
+import FuturesOrderBookMerger from './OrderBookMerger';
+import FuturesOrdersList from './OrdersList';
+import classNames from 'classnames';
+import Emitter from 'redux/actions/emitter';
+import Axios from 'axios';
 
 const INITIAL_STATE = {
     loading: false,

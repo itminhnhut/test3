@@ -1,15 +1,15 @@
-import TopicsLayout from 'components/screens/Support/TopicsLayout'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getArticle, getLastedArticles } from 'utils'
-import { formatTime } from 'redux/actions/utils'
-import GhostContent from 'components/screens/Support/GhostContent'
-import { ChevronLeft } from 'react-feather'
-import useApp from 'hooks/useApp'
-import { useRouter } from 'next/router'
-import { SupportCategories } from 'constants/faqHelper'
-import { useTranslation } from 'next-i18next'
-import SupportCenterHead from 'components/common/SupportCenterHead'
-import { useEffect } from 'react'
+import TopicsLayout from 'components/screens/Support/TopicsLayout';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { getArticle, getLastedArticles } from 'utils';
+import { formatTime } from 'redux/actions/utils';
+import GhostContent from 'components/screens/Support/GhostContent';
+import { ChevronLeft } from 'react-feather';
+import useApp from 'hooks/useApp';
+import { useRouter } from 'next/router';
+import { SupportCategories } from 'constants/faqHelper';
+import { useTranslation } from 'next-i18next';
+import SupportCenterHead from 'components/common/SupportCenterHead';
+import { useEffect } from 'react';
 
 const FaqArticle = (props) => {
     const router = useRouter()

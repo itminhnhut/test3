@@ -1,13 +1,18 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import DataTable from 'react-data-table-component';
-import { IconSearch, IconSort, IconStar, IconStarFilled, IconTooltip } from 'src/components/common/Icons';
+import { IconSort, IconStar, IconStarFilled, IconTooltip } from 'src/components/common/Icons';
 import TableNoData from 'src/components/common/table.old/TableNoData';
 import TableLoader from 'src/components/loader/TableLoader';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { tableStyle } from 'config/tables';
 
-import { formatBalance, getChangePercentage, getExchange24hPercentageChange, render24hChange } from 'src/redux/actions/utils';
+import {
+    formatBalance,
+    getChangePercentage,
+    getExchange24hPercentageChange,
+    render24hChange
+} from 'src/redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { Info } from 'react-feather';
 import Image from 'next/image';

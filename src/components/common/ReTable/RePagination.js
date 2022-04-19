@@ -4,14 +4,14 @@
 // Updated: 09/11/2021
 // **********************************
 
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
-import Pagination from 'rc-pagination'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import styled from 'styled-components'
-import colors from 'styles/colors'
+import Pagination from 'rc-pagination';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import styled from 'styled-components';
+import colors from 'styles/colors';
 
-import 'rc-pagination/assets/index.css'
+import 'rc-pagination/assets/index.css';
 
 const RePagination = ({ name, total, current, pageSize, onChange, fromZero, ...restProps }) => {
 

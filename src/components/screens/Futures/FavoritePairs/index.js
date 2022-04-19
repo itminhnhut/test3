@@ -1,15 +1,15 @@
-import { memo, useCallback, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { mergeFuturesFavoritePairs } from 'redux/actions/futures'
-import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis'
-import { ApiStatus } from 'redux/actions/const'
+import { memo, useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { mergeFuturesFavoritePairs } from 'redux/actions/futures';
+import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
 
-import FuturesFavoritePairItem from './FavoritePairItem'
-import FuturesMarketWatch from 'models/FuturesMarketWatch'
-import InfoSlider from 'components/markets/InfoSlider'
-import colors from 'styles/colors'
-import axios from 'axios'
-import Star from 'components/svg/Star'
+import FuturesFavoritePairItem from './FavoritePairItem';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import InfoSlider from 'components/markets/InfoSlider';
+import colors from 'styles/colors';
+import axios from 'axios';
+import Star from 'components/svg/Star';
 
 const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
     const [loading, setLoading] = useState(false)

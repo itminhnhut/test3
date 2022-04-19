@@ -1,25 +1,25 @@
-import qs from 'qs'
-import format from 'date-fns/format'
-import numeral from 'numeral'
-import isArray from 'lodash/isArray'
-import isNumber from 'lodash/isNumber'
-import isNil from 'lodash/isNil'
-import memoize from 'lodash/memoize'
-import defaults from 'lodash/defaults'
-import find from 'lodash/find'
-import { useStore as store } from 'src/redux/store'
-import { TokenConfigV1 as TokenConfig, WalletType } from './const'
-import { UPDATE_DEPOSIT_HISTORY, SET_TRANSFER_MODAL } from 'redux/actions/types'
-
-import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import qs from 'qs';
+import format from 'date-fns/format';
+import numeral from 'numeral';
+import isArray from 'lodash/isArray';
+import isNumber from 'lodash/isNumber';
+import isNil from 'lodash/isNil';
+import memoize from 'lodash/memoize';
+import defaults from 'lodash/defaults';
+import find from 'lodash/find';
+import { useStore as store } from 'src/redux/store';
 import {
     ExchangeFilterDefault,
     LoginButtonPosition,
+    TokenConfigV1 as TokenConfig,
     TradingViewSupportTimezone,
-} from './const'
-import { ___DEV___, log } from 'src/utils'
-import { EXCHANGE_ACTION } from 'pages/wallet'
-import { PATHS } from 'constants/paths'
+    WalletType
+} from './const';
+import { SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
+
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { EXCHANGE_ACTION } from 'pages/wallet';
+import { PATHS } from 'constants/paths';
 
 const WAValidator = require('multicoin-address-validator')
 const EthereumAddress = require('ethereum-address')

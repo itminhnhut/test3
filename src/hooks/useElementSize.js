@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
-import useObservedRef from './useObservedRef'
+import { useCallback, useState } from 'react';
+import useObservedRef from './useObservedRef';
 
 const defaultSize = {
     width: 0,

@@ -1,13 +1,13 @@
 // !NOTE: Not recommend to use 11/01/2022
-import { useCallback, useEffect, useMemo } from 'react'
-import { useTranslation } from 'next-i18next'
-import { PulseLoader } from 'react-spinners'
-import { log } from 'utils'
-import { X } from 'react-feather'
+import { useCallback, useEffect, useMemo } from 'react';
+import { useTranslation } from 'next-i18next';
+import { PulseLoader } from 'react-spinners';
+import { log } from 'utils';
+import { X } from 'react-feather';
 
-import Button from 'components/common/Button'
-import colors from 'styles/colors'
-import Deprecated from 'components/hoc/Deprecated'
+import Button from 'components/common/Button';
+import colors from 'styles/colors';
+import Deprecated from 'components/hoc/Deprecated';
 
 const ReModalOld = (
     {

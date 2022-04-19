@@ -1,6 +1,6 @@
-import { memo, useMemo } from 'react'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import colors from 'styles/colors'
+import { memo, useMemo } from 'react';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from 'styles/colors';
 
 const Switcher = memo(({ active, loading = false, onChange, wrapperClass = '', addClass }) => {
 

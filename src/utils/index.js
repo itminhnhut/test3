@@ -1,9 +1,9 @@
-import qs from 'qs'
-import { get } from 'lodash'
-import { TRADING_MODE } from 'redux/actions/const'
-import GhostContentAPI from '@tryghost/content-api'
-import { slugify } from '@tryghost/string'
-import algoliasearch from 'algoliasearch'
+import qs from 'qs';
+import { get } from 'lodash';
+import { TRADING_MODE } from 'redux/actions/const';
+import GhostContentAPI from '@tryghost/content-api';
+import { slugify } from '@tryghost/string';
+import algoliasearch from 'algoliasearch';
 
 export const ___DEV___ = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev'
 

@@ -1,11 +1,11 @@
-import { Search } from 'react-feather'
-import classNames from 'classnames'
-import { useTranslation } from 'next-i18next'
-import { useEffect, useState } from 'react'
-import { PATHS } from 'constants/paths'
-import useApp from 'hooks/useApp'
-import { useRouter } from 'next/router'
-import { appUrlHandler } from 'constants/faqHelper'
+import { Search } from 'react-feather';
+import classNames from 'classnames';
+import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
+import { PATHS } from 'constants/paths';
+import useApp from 'hooks/useApp';
+import { useRouter } from 'next/router';
+import { appUrlHandler } from 'constants/faqHelper';
 
 const SupportSearchBar = ({
                               containerClassNames = '',

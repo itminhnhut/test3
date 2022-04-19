@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import useDarkMode from 'hooks/useDarkMode'
+import useDarkMode from 'hooks/useDarkMode';
 import { ChartMode } from 'redux/actions/const';
 
 const SpotChart = dynamic(

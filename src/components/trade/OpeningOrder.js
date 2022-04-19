@@ -15,7 +15,6 @@ import showNotification from 'utils/notificationService';
 import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
 
-
 const SpotOrderList = (props) => {
     const { t } = useTranslation(['common', 'spot']);
     const { toggle } = props;

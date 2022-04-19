@@ -1,21 +1,21 @@
-import ScreenPresentation from 'src/components/screens/LandingPage/ScreenPresentation'
-import AttractiveFeatures from 'src/components/screens/LandingPage/AttractiveFeatures'
-import PaymentAndKYC from 'src/components/screens/LandingPage/PaymentAndKYC'
-import ThemingSystem from 'src/components/screens/LandingPage/ThemingSystem'
-import MadivesLayout from 'src/components/common/layouts/MaldivesLayout'
-import Modal from 'src/components/common/ReModal'
-import {default as MobileScreenPresent } from 'src/components/screens/LandingPage/ScreenPresent'
+import ScreenPresentation from 'src/components/screens/LandingPage/ScreenPresentation';
+import AttractiveFeatures from 'src/components/screens/LandingPage/AttractiveFeatures';
+import PaymentAndKYC from 'src/components/screens/LandingPage/PaymentAndKYC';
+import ThemingSystem from 'src/components/screens/LandingPage/ThemingSystem';
+import MadivesLayout from 'src/components/common/layouts/MaldivesLayout';
+import Modal from 'src/components/common/ReModal';
+import { default as MobileScreenPresent } from 'src/components/screens/LandingPage/ScreenPresent';
 
-import colors from 'styles/colors'
-import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar'
-import { useWindowSize } from 'utils/customHooks'
-import { useTranslation } from 'next-i18next'
-import { useCallback, useState } from 'react'
-import { getS3Url } from 'redux/actions/utils'
-import { QRCode } from 'react-qrcode-logo'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import Button from 'components/common/Button'
+import colors from 'styles/colors';
+import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar';
+import { useWindowSize } from 'utils/customHooks';
+import { useTranslation } from 'next-i18next';
+import { useCallback, useState } from 'react';
+import { getS3Url } from 'redux/actions/utils';
+import { QRCode } from 'react-qrcode-logo';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Button from 'components/common/Button';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://nami.exchange'
 

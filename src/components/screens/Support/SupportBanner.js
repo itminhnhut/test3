@@ -1,8 +1,8 @@
-import { useTranslation } from 'next-i18next'
-import SupportSearchBar from 'components/screens/Support/SupportSearchBar'
-import classNames from 'classnames'
-import Link from 'next/link'
-import useApp from 'hooks/useApp'
+import { useTranslation } from 'next-i18next';
+import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
+import classNames from 'classnames';
+import Link from 'next/link';
+import useApp from 'hooks/useApp';
 
 const SupportBanner = ({ title, href = '#', containerClassNames = '', innerClassNames = '', resetPage = undefined }) => {
     const { t } = useTranslation()

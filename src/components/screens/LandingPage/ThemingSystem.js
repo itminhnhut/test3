@@ -1,8 +1,7 @@
-import { useWindowSize } from 'utils/customHooks'
-import { useCallback } from 'react'
-import { useTranslation, Trans } from 'next-i18next'
-import { getS3Url } from 'redux/actions/utils'
-
+import { useWindowSize } from 'utils/customHooks';
+import { useCallback } from 'react';
+import { Trans, useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
 
 const ThemingSystem = () => {
     // Use Hooks

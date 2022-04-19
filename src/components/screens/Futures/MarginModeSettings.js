@@ -1,17 +1,14 @@
-import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { FuturesMarginMode as MarginModes } from 'redux/reducers/futures'
-import {
-    getFuturesUserSettings,
-    setFuturesMarginMode,
-} from 'redux/actions/futures'
-import { X } from 'react-feather'
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { FuturesMarginMode as MarginModes } from 'redux/reducers/futures';
+import { getFuturesUserSettings, setFuturesMarginMode, } from 'redux/actions/futures';
+import { X } from 'react-feather';
 
-import classNames from 'classnames'
-import Modal from 'components/common/ReModal'
-import Button from 'components/common/Button'
-import { ScaleLoader } from 'react-spinners'
-import colors from 'styles/colors'
+import classNames from 'classnames';
+import Modal from 'components/common/ReModal';
+import Button from 'components/common/Button';
+import { ScaleLoader } from 'react-spinners';
+import colors from 'styles/colors';
 
 const FuturesMarginModeSettings = ({
     isVisible,

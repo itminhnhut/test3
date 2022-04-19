@@ -1,21 +1,20 @@
-import { memo, useCallback, useMemo } from 'react'
-import { useTranslation } from 'next-i18next'
-import { formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils'
-import { useSelector } from 'react-redux'
-import { ChevronRight } from 'react-feather'
-import { REWARD_STATUS } from 'components/screens/Account/_reward_data'
-import { BREAK_POINTS } from 'constants/constants'
-import { REWARD_ROW_ID_KEY } from 'pages/account/reward-center'
-import { REWARD_BUTTON_STATUS } from 'components/screens/Account/RewardButton'
+import { memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'next-i18next';
+import { formatTime, getLoginUrl } from 'redux/actions/utils';
+import { useSelector } from 'react-redux';
+import { ChevronRight } from 'react-feather';
+import { REWARD_STATUS } from 'components/screens/Account/_reward_data';
+import { BREAK_POINTS } from 'constants/constants';
+import { REWARD_ROW_ID_KEY } from 'pages/account/reward-center';
+import RewardButton, { REWARD_BUTTON_STATUS } from 'components/screens/Account/RewardButton';
 
-import useWindowSize from 'hooks/useWindowSize'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import RewardListItem from 'components/screens/Account/RewardListItem'
-import AssetName from 'components/wallet/AssetName'
-import Skeletor from 'components/common/Skeletor'
-import RewardButton from 'components/screens/Account/RewardButton'
-import Types from 'components/screens/Account/types'
-import parse from 'html-react-parser'
+import useWindowSize from 'hooks/useWindowSize';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import RewardListItem from 'components/screens/Account/RewardListItem';
+import AssetName from 'components/wallet/AssetName';
+import Skeletor from 'components/common/Skeletor';
+import Types from 'components/screens/Account/types';
+import parse from 'html-react-parser';
 
 const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, claim, claiming, onClaim }) => {
     // Rdx

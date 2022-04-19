@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
-import Link from 'next/link'
+import { useCallback } from 'react';
+import Link from 'next/link';
 
 const TabItem = ({ title, href = '/', target = '_self', active, onClick, addClass = '', indicatorStyle = '', component = TabItemComponent.Link }) => {
 

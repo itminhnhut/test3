@@ -12,7 +12,7 @@ import { DOWNLOAD_APP_LINK, LS_KEYS } from 'src/redux/actions/const';
 import { actionLogout } from 'src/redux/actions/user';
 import NotificationList from '../notification/NotificationList';
 import { IconLogout, IconProfile, } from './Icons';
-import { PATHS } from 'constants/paths'
+import { PATHS } from 'constants/paths';
 
 const { NEXT_PUBLIC_API_URL } = process.env;
 

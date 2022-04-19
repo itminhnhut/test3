@@ -1,6 +1,6 @@
-import { memo, useRef, useState } from 'react'
-import classNames from 'classnames'
-import NumberFormat from 'react-number-format'
+import { useRef, useState } from 'react';
+import classNames from 'classnames';
+import NumberFormat from 'react-number-format';
 
 const INITIAL_STATE = {
     isFocus: false,

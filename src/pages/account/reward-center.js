@@ -1,29 +1,29 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import RewardItem from 'components/screens/Account/RewardItem'
-import useApp from 'hooks/useApp'
-import SegmentTabs from 'components/common/SegmentTabs'
+import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import RewardItem from 'components/screens/Account/RewardItem';
+import useApp from 'hooks/useApp';
+import SegmentTabs from 'components/common/SegmentTabs';
 
-import { REWARD_STATUS, REWARD_TYPE } from 'components/screens/Account/_reward_data'
-import Empty from 'components/common/Empty'
-import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModalOld'
-import useInView from 'react-cool-inview'
-import { PATHS } from 'constants/paths'
-import Axios from 'axios'
-import { API_CLAIM_MISSION_REWARD, API_GET_MISSION } from 'redux/actions/apis'
-import { ApiStatus } from 'redux/actions/const'
-import Types from 'components/screens/Account/types'
-import { formatNumber, getS3Url } from 'redux/actions/utils'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import Button from 'components/common/Button'
-import { orderBy } from 'lodash'
-import PortalPopup from 'components/common/Modal'
-import { FacebookShareButton } from 'react-share'
+import { REWARD_STATUS, REWARD_TYPE } from 'components/screens/Account/_reward_data';
+import Empty from 'components/common/Empty';
+import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModalOld';
+import useInView from 'react-cool-inview';
+import { PATHS } from 'constants/paths';
+import Axios from 'axios';
+import { API_CLAIM_MISSION_REWARD, API_GET_MISSION } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import Types from 'components/screens/Account/types';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import Button from 'components/common/Button';
+import { orderBy } from 'lodash';
+import PortalPopup from 'components/common/Modal';
+import { FacebookShareButton } from 'react-share';
 
 export const REWARD_ROW_ID_KEY = 'reward_item_id_' // for identify reward will scrollTo after init
 const REWARD_ID_QUERY_KEY = 'reward_id' // for query url

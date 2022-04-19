@@ -1,17 +1,16 @@
-import React, {useState, useEffect, useRef, useMemo} from 'react'
+import React, { useMemo, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import html2canvas from "html2canvas";
+import html2canvas from 'html2canvas';
 
-import Modal from 'components/common/ReModal'
-import {useSelector} from 'react-redux'
-import CheckBox from "components/common/CheckBox";
+import Modal from 'components/common/ReModal';
+import { useSelector } from 'react-redux';
+import CheckBox from 'components/common/CheckBox';
 import Image from 'next/image';
 import QRCode from 'qrcode.react';
-import classNames from 'classnames'
-import {getProfitVndc, VndcFutureOrderType} from "components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType";
-import {formatNumber, formatTime} from "redux/actions/utils";
-import Big from "big.js";
-import {IconLoading} from "components/common/Icons";
+import classNames from 'classnames';
+import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { formatNumber, formatTime } from 'redux/actions/utils';
+import { IconLoading } from 'components/common/Icons';
 
 const {PENDING, ACTIVE, CLOSED} = VndcFutureOrderType.Status
 const APP_URL = process.env.APP_URL || 'https://nami.exchange'

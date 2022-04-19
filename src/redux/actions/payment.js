@@ -1,7 +1,7 @@
-import axios from 'axios'
-import { API_GET_PAYMENT_CONFIG } from './apis'
-import { SET_PAYMENT_CONFIG } from './types'
-import { ApiStatus } from './const'
+import axios from 'axios';
+import { API_GET_PAYMENT_CONFIG } from './apis';
+import { SET_PAYMENT_CONFIG } from './types';
+import { ApiStatus } from './const';
 
 export function getPaymentConfigs() {
     return async (dispatch) => {

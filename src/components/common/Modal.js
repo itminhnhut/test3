@@ -1,8 +1,8 @@
-import Button from 'src/components/common/Button'
+import Button from 'src/components/common/Button';
 
-import { useCallback } from 'react'
-import { useTranslation } from 'next-i18next'
-import classNames from 'classnames'
+import { useCallback } from 'react';
+import { useTranslation } from 'next-i18next';
+import classNames from 'classnames';
 
 const Modal = ({
                    isVisible,

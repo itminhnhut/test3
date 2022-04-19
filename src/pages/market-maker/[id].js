@@ -1,26 +1,19 @@
-import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Menu, Transition } from "@headlessui/react";
-import { IconArrowDownSlim } from "components/common/Icons";
-import {
-    endOfDay,
-    getUnixTime,
-    startOfDay,
-    startOfMonth,
-    startOfWeek,
-    startOfYesterday,
-} from "date-fns";
-import _ from "lodash";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useAsync } from "react-use";
-import LayoutWithHeader from "src/components/common/layouts/layoutWithHeader";
-import { ApiStatus, ExchangeOrderEnum } from "src/redux/actions/const";
-import { formatWallet, getSymbolString } from "src/redux/actions/utils";
-import fetchAPI from "utils/fetch-api";
-import showNotification from "utils/notificationService";
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Menu, Transition } from '@headlessui/react';
+import { IconArrowDownSlim } from 'components/common/Icons';
+import { endOfDay, getUnixTime, startOfDay, startOfMonth, startOfWeek, startOfYesterday, } from 'date-fns';
+import _ from 'lodash';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useAsync } from 'react-use';
+import LayoutWithHeader from 'src/components/common/layouts/layoutWithHeader';
+import { ApiStatus, ExchangeOrderEnum } from 'src/redux/actions/const';
+import { formatWallet, getSymbolString } from 'src/redux/actions/utils';
+import fetchAPI from 'utils/fetch-api';
+import showNotification from 'utils/notificationService';
 
 /*eslint-disable */
 

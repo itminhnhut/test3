@@ -1,13 +1,10 @@
-import { useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
-import { FuturesMarginMode as MarginModes } from 'redux/reducers/futures'
-import { getMarginModeLabel } from 'redux/actions/futures'
+import { useState } from 'react';
+import { getMarginModeLabel } from 'redux/actions/futures';
 
-import FuturesMarginModeSettings from '../MarginModeSettings'
-import FuturesLeverageSettings from '../LeverageSettings'
-import FuturesPreferences from '../Preferences'
-import TradeSetings from 'components/svg/TradeSettings'
-import axios from 'axios'
+import FuturesMarginModeSettings from '../MarginModeSettings';
+import FuturesLeverageSettings from '../LeverageSettings';
+import FuturesPreferences from '../Preferences';
+import TradeSetings from 'components/svg/TradeSettings';
 
 const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcFutures, isAuth }) => {
     const pair = pairConfig?.pair

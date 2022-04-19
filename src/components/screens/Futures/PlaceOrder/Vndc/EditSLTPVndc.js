@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Button from 'components/common/Button'
-import Modal from 'components/common/ReModal'
-import { ChevronDown, X } from 'react-feather'
-import { formatNumber } from 'redux/actions/utils'
-import { VndcFutureOrderType } from './VndcFutureOrderType'
-import NumberFormat from 'react-number-format'
+import Button from 'components/common/Button';
+import Modal from 'components/common/ReModal';
+import { X } from 'react-feather';
+import { formatNumber } from 'redux/actions/utils';
+import { VndcFutureOrderType } from './VndcFutureOrderType';
+import NumberFormat from 'react-number-format';
 
 const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onConfirm }) => {
     const [data, setData] = useState({

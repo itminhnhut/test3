@@ -1,9 +1,8 @@
-import { memo } from 'react'
-import { useTranslation } from 'next-i18next'
-import { ChevronDown } from 'react-feather'
+import { useTranslation } from 'next-i18next';
+import { ChevronDown } from 'react-feather';
 
-import TradingInput from 'components/trade/TradingInput'
-import { FuturesStopOrderMode } from 'redux/reducers/futures'
+import TradingInput from 'components/trade/TradingInput';
+import { FuturesStopOrderMode } from 'redux/reducers/futures';
 
 const FuturesOrderMarket = ({
     isStopMarket,

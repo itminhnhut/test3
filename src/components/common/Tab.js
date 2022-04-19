@@ -9,10 +9,10 @@
 // ...
 // ]
 
-import { memo, useCallback } from 'react'
-import { useTranslation } from 'next-i18next'
-import { log } from 'utils'
-import styled from 'styled-components'
+import { memo, useCallback } from 'react';
+import { useTranslation } from 'next-i18next';
+import { log } from 'utils';
+import styled from 'styled-components';
 
 export const TAB_TYPE = {
     TYPE1: 'type1',

@@ -1,27 +1,23 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis'
-import { FUTURES_NUMBER_OF_CONTRACT } from 'constants/constants'
-import { FuturesOrderTypes, FuturesStopOrderMode } from 'redux/reducers/futures'
-import { useTranslation } from 'next-i18next'
-import { countDecimals, formatNumber } from 'redux/actions/utils'
-import { ApiStatus } from 'redux/actions/const'
-import { log } from 'utils'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
+import { FuturesOrderTypes, FuturesStopOrderMode } from 'redux/reducers/futures';
+import { useTranslation } from 'next-i18next';
+import { formatNumber } from 'redux/actions/utils';
+import { ApiStatus } from 'redux/actions/const';
+import { log } from 'utils';
 
-import FuturesOrderButtonsGroup from './OrderButtonsGroup'
-import FuturesOrderUtilities from './OrderUtilities'
-import FuturesOrderSlider from './OrderSlider'
-import FuturesOrderMarket from './OrderMarket'
-import FuturesMarketWatch from 'models/FuturesMarketWatch'
-import FuturesOrderLimit from './OrderLimit'
-import FuturesOrderSLTP from './OrderSLTP'
-import TradingLabel from 'components/trade/TradingLabel'
-import SvgExchange from 'components/svg/Exchange'
-import Divider from 'components/common/Divider'
-import axios from 'axios'
-import min from 'lodash/min'
-import { useSelector } from 'react-redux'
-import { roundToDown } from 'round-to'
-import FuturesOrderButtonsGroupVndc from '../Vndc/OrderButtonsGroupVndc'
+import FuturesOrderButtonsGroup from './OrderButtonsGroup';
+import FuturesOrderUtilities from './OrderUtilities';
+import FuturesOrderSlider from './OrderSlider';
+import FuturesOrderMarket from './OrderMarket';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import FuturesOrderLimit from './OrderLimit';
+import FuturesOrderSLTP from './OrderSLTP';
+import TradingLabel from 'components/trade/TradingLabel';
+import Divider from 'components/common/Divider';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import FuturesOrderButtonsGroupVndc from '../Vndc/OrderButtonsGroupVndc';
 
 const FuturesOrderModule = ({
     markPrice,

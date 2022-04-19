@@ -1,9 +1,9 @@
-import io from 'socket.io-client'
-import * as types from 'src/redux/actions/types'
+import io from 'socket.io-client';
+import * as types from 'src/redux/actions/types';
 
-import Emitter from 'src/redux/actions/emitter'
-import { PublicSocketEvent } from 'src/redux/actions/const'
-import throttle from 'lodash/throttle'
+import Emitter from 'src/redux/actions/emitter';
+import { PublicSocketEvent } from 'src/redux/actions/const';
+import throttle from 'lodash/throttle';
 
 let WS
 let lastPrice = 0

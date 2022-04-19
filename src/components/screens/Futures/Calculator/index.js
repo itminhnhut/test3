@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { X } from 'react-feather'
+import { useState } from 'react';
+import { X } from 'react-feather';
 
-import classNames from 'classnames'
-import Modal from 'components/common/ReModal'
-import FuturesCalculatorPML from './PML'
-import FuturesCalculatorTargetPrice from './TargetPrice'
-import FuturesCalculatorLiqPrice from './LiqPrice'
-import { useTranslation } from 'next-i18next'
+import classNames from 'classnames';
+import Modal from 'components/common/ReModal';
+import FuturesCalculatorPML from './PML';
+import FuturesCalculatorTargetPrice from './TargetPrice';
+import FuturesCalculatorLiqPrice from './LiqPrice';
+import { useTranslation } from 'next-i18next';
 
 const FuturesCalculator = ({ isVisible, onClose }) => {
     const [tabIndex, setTabIndex] = useState(0)

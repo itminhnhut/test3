@@ -1,8 +1,8 @@
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import { useRef } from 'react'
-import ReactTooltip from 'react-tooltip'
-import styled from 'styled-components'
-import colors from 'styles/colors'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useRef } from 'react';
+import ReactTooltip from 'react-tooltip';
+import styled from 'styled-components';
+import colors from 'styles/colors';
 
 const Tooltip = ({ children, ...restProps }) => {
     const [currentTheme] = useDarkMode()

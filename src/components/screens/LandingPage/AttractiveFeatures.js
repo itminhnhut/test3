@@ -1,7 +1,7 @@
-import { useWindowSize } from 'utils/customHooks'
-import { useCallback } from 'react'
-import { useTranslation } from 'next-i18next'
-import { getS3Url } from 'redux/actions/utils'
+import { useWindowSize } from 'utils/customHooks';
+import { useCallback } from 'react';
+import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
 
 const AttractiveFeatures = () => {
     // Use Hooks

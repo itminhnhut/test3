@@ -1,12 +1,10 @@
-import { useKeenSlider } from "keen-slider/react"
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { useWindowSize } from 'utils/customHooks'
-import { useTranslation } from 'next-i18next'
+import { useKeenSlider } from 'keen-slider/react';
+import { useEffect, useRef, useState } from 'react';
+import { useWindowSize } from 'utils/customHooks';
+import { useTranslation } from 'next-i18next';
 
-import "keen-slider/keen-slider.min.css"
-import { dep, wdl } from 'src/components/common/NavBar/constants'
-import { formatPrice, formatTime, formatWallet } from 'redux/actions/utils'
-import { log } from 'src/utils'
+import 'keen-slider/keen-slider.min.css';
+import { formatTime, formatWallet } from 'redux/actions/utils';
 
 const HomeCurrentActivity = () => {
     // Initial State

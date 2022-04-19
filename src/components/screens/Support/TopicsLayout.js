@@ -1,21 +1,17 @@
-import { useRouter } from 'next/router'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import SupportBanner from 'components/screens/Support/SupportBanner'
-import SupportSearchBar from 'components/screens/Support/SupportSearchBar'
-import { PATHS } from 'constants/paths'
-import Link from 'next/link'
-import classNames from 'classnames'
-import { useTranslation } from 'next-i18next'
-import Image from 'next/image'
-import useApp from 'hooks/useApp'
-import {
-    appUrlHandler,
-    getSupportCategoryIcons,
-    SupportCategories,
-} from 'constants/faqHelper'
-import { ChevronUp, ChevronDown } from 'react-feather'
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import SupportBanner from 'components/screens/Support/SupportBanner';
+import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
+import { PATHS } from 'constants/paths';
+import Link from 'next/link';
+import classNames from 'classnames';
+import { useTranslation } from 'next-i18next';
+import Image from 'next/image';
+import useApp from 'hooks/useApp';
+import { appUrlHandler, getSupportCategoryIcons, SupportCategories, } from 'constants/faqHelper';
+import { ChevronDown, ChevronUp } from 'react-feather';
+import { useEffect, useState } from 'react';
 
 const COL_WIDTH = 304
 

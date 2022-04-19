@@ -1,7 +1,6 @@
-import { useRef, useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight } from 'react-feather'
-import classNames from 'classnames'
-import colors from 'styles/colors'
+import { useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'react-feather';
+import classNames from 'classnames';
 
 const DIRECTION = {
     PREV: 'prev',

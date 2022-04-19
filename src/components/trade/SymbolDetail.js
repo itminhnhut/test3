@@ -1,7 +1,6 @@
 import { Popover, Transition } from '@headlessui/react';
 import ChevronDown from 'src/components/svg/ChevronDown';
 import AssetLogo from 'src/components/wallet/AssetLogo';
-import AssetName from 'src/components/wallet/AssetName';
 import useDarkMode from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
@@ -14,8 +13,6 @@ import { setUserSymbolList } from 'src/redux/actions/market';
 import { formatPrice, render24hChange } from 'src/redux/actions/utils';
 import { IconLoading } from '../common/Icons';
 import SymbolList from './SymbolList';
-
-
 
 const SymbolDetail = (props) => {
     const { symbol, favorite, changeSymbolList, watchList, fullScreen, layoutConfig, publicSocket, layoutMode } = props;

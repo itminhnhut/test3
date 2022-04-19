@@ -1,17 +1,15 @@
 // import { widget } from 'public/library_maldives/trading_view/charting_library';
-import * as React from "react";
-import { IconLoading } from "src/components/common/Icons";
-import NamiExchangeSvg from "src/components/svg/NamiExchangeSvg";
-import { getTradingViewTimezone } from "src/redux/actions/utils";
-import colors from "../../styles/colors";
-import { widget } from "../TradingView/charting_library/charting_library.min";
-import Datafeed from "./api";
-import DepthChart from "./depth";
-import TimeFrame from "./timeFrame";
-import styles from "./tradingview.module.scss";
+import * as React from 'react';
+import { IconLoading } from 'src/components/common/Icons';
+import NamiExchangeSvg from 'src/components/svg/NamiExchangeSvg';
+import { getTradingViewTimezone } from 'src/redux/actions/utils';
+import colors from '../../styles/colors';
+import { widget } from '../TradingView/charting_library/charting_library.min';
+import Datafeed from './api';
+import DepthChart from './depth';
+import TimeFrame from './timeFrame';
+import styles from './tradingview.module.scss';
 import { ChartMode } from 'redux/actions/const';
-
-
 
 const CONTAINER_ID = "nami-tv";
 const CHART_VERSION = "1.0.6";

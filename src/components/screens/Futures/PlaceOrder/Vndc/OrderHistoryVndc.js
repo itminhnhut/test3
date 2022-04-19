@@ -1,20 +1,20 @@
-import React, { useMemo, useState, useEffect } from 'react'
-import { customTableStyles } from '../../TradeRecord/index'
-import {ChevronDown, Share2} from 'react-feather'
+import React, { useEffect, useMemo, useState } from 'react';
+import { customTableStyles } from '../../TradeRecord/index';
+import { ChevronDown, Share2 } from 'react-feather';
 
-import DataTable from 'react-data-table-component'
-import fetchApi from 'utils/fetch-api'
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
-import { ApiStatus } from 'redux/actions/const'
-import Skeletor from 'src/components/common/Skeletor'
-import FuturesTimeFilter from '../../TimeFilter'
-import { FUTURES_RECORD_CODE } from '../../TradeRecord/RecordTableTab'
-import { formatTime, formatNumber, getPriceColor } from 'redux/actions/utils'
+import DataTable from 'react-data-table-component';
+import fetchApi from 'utils/fetch-api';
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import Skeletor from 'src/components/common/Skeletor';
+import FuturesTimeFilter from '../../TimeFilter';
+import { FUTURES_RECORD_CODE } from '../../TradeRecord/RecordTableTab';
+import { formatNumber, formatTime, getPriceColor } from 'redux/actions/utils';
 import { VndcFutureOrderType } from './VndcFutureOrderType';
-import { useTranslation } from 'next-i18next'
-import ShareFuturesOrder from "components/screens/Futures/ShareFuturesOrder";
+import { useTranslation } from 'next-i18next';
+import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 
-const FuturesOrderHistoryVndc = ({ pairConfig, onForceUpdate, onChangeTimePicker, pickedTime, isAuth, onLogin }) => {
+const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChangeTimePicker, pickedTime, isAuth, onLogin }) => {
     const { t } = useTranslation()
 
     const columns = useMemo(() => [

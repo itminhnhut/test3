@@ -9,10 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
 import useLanguage from 'hooks/useLanguage';
-import Image from 'next/image';
 import Toggle from 'src/components/common/input/Toggle';
 import { getS3Url } from 'redux/actions/utils';
-
 
 const SpotSetting = (props) => {
     const {

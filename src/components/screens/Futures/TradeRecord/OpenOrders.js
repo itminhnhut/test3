@@ -1,10 +1,10 @@
-import { useMemo } from 'react'
-import { customTableStyles } from './index'
-import { ChevronDown, X } from 'react-feather'
-import { formatNumber, formatTime } from 'redux/actions/utils'
+import { useMemo } from 'react';
+import { customTableStyles } from './index';
+import { ChevronDown, X } from 'react-feather';
+import { formatNumber, formatTime } from 'redux/actions/utils';
 
-import FuturesRecordSymbolItem from './SymbolItem'
-import DataTable from 'react-data-table-component'
+import FuturesRecordSymbolItem from './SymbolItem';
+import DataTable from 'react-data-table-component';
 
 const FuturesOpenOrders = ({ pairConfig }) => {
     const columns = useMemo(

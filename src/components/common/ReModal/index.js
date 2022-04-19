@@ -1,10 +1,10 @@
-import { PORTAL_MODAL_ID } from '../../../constants/constants'
-import { X } from 'react-feather'
+import { PORTAL_MODAL_ID } from '../../../constants/constants';
+import { X } from 'react-feather';
 
-import classNames from 'classnames'
-import Portal from 'components/hoc/Portal'
-import hexRgb from 'utils/hexRgb'
-import colors from '../../../styles/colors'
+import classNames from 'classnames';
+import Portal from 'components/hoc/Portal';
+import hexRgb from 'utils/hexRgb';
+import colors from '../../../styles/colors';
 
 const Modal = ({
     isVisible,

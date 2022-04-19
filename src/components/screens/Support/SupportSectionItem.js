@@ -1,6 +1,6 @@
-import Buttonz from 'components/common/Buttonz'
-import cN from 'classnames'
-import useWindowSize from 'hooks/useWindowSize'
+import Buttonz from 'components/common/Buttonz';
+import cN from 'classnames';
+import useWindowSize from 'hooks/useWindowSize';
 
 const SupportSectionItem = ({ title, icon, containerClassNames = '', classNames = '', titleClassNames = '', href = "/" }) => {
     const { width } = useWindowSize()

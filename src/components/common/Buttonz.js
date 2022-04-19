@@ -1,6 +1,6 @@
-import { memo, useCallback, useMemo } from 'react'
-import classNames from 'classnames'
-import Link from 'next/link'
+import { memo, useCallback, useMemo } from 'react';
+import classNames from 'classnames';
+import Link from 'next/link';
 
 const Buttonz = memo(({ children, title, as, href, className = '', onClick, ...restProps }) => {
                          // ? Memmoized classNames

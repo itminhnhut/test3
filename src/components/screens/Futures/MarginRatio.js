@@ -1,5 +1,5 @@
-import SpeedMeter from 'components/svg/SpeedMeter'
-import { ChevronDown, X } from 'react-feather'
+import SpeedMeter from 'components/svg/SpeedMeter';
+import { ChevronDown } from 'react-feather';
 
 const FuturesMarginRatio = ({ pairConfig }) => {
     return (

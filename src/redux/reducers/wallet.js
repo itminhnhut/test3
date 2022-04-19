@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-case-declarations */
 
-import * as types from '../actions/types'
+import * as types from '../actions/types';
 
-import { WalletType } from '../actions/const'
+import { WalletType } from '../actions/const';
 
 export const initialState = {
     SPOT: {},

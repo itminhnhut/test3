@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'next-i18next'
-import { ChevronRight } from 'react-feather'
-import { useSelector } from 'react-redux'
-import { formatNumber } from 'redux/actions/utils'
-import { BREAK_POINTS } from 'constants/constants'
-import AssetName from 'components/wallet/AssetName'
-import RewardButton, { REWARD_BUTTON_STATUS } from 'components/screens/Account/RewardButton'
-import RewardType from 'components/screens/Account/RewardType'
-import DashedProgressLine from 'components/screens/Account/DashedProgressLine'
-import useWindowSize from 'hooks/useWindowSize'
-import Types from './types'
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { ChevronRight } from 'react-feather';
+import { useSelector } from 'react-redux';
+import { formatNumber } from 'redux/actions/utils';
+import { BREAK_POINTS } from 'constants/constants';
+import AssetName from 'components/wallet/AssetName';
+import RewardType from 'components/screens/Account/RewardType';
+import DashedProgressLine from 'components/screens/Account/DashedProgressLine';
+import useWindowSize from 'hooks/useWindowSize';
+import Types from './types';
 
 const INITIAL_STATE = {
     rewardItemExpand: {},

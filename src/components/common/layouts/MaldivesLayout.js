@@ -1,16 +1,13 @@
-import Footer from 'src/components/common/Footer/Footer'
-import {
-    DESKTOP_NAV_HEIGHT,
-    MOBILE_NAV_HEIGHT,
-} from 'src/components/common/NavBar/constants'
-import NavBar from 'src/components/common/NavBar/NavBar'
-import { useState } from 'react'
-import ReactNotification from 'react-notifications-component'
-import { useWindowSize } from 'utils/customHooks'
-import TransferModal from 'components/wallet/TransferModal'
-import useApp from 'hooks/useApp'
-import { PORTAL_MODAL_ID } from 'constants/constants'
-import { NavBarBottomShadow } from '../NavBar/NavBar'
+import Footer from 'src/components/common/Footer/Footer';
+import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT, } from 'src/components/common/NavBar/constants';
+import NavBar from 'src/components/common/NavBar/NavBar';
+import { useState } from 'react';
+import ReactNotification from 'react-notifications-component';
+import { useWindowSize } from 'utils/customHooks';
+import TransferModal from 'components/wallet/TransferModal';
+import useApp from 'hooks/useApp';
+import { PORTAL_MODAL_ID } from 'constants/constants';
+import { NavBarBottomShadow } from '../NavBar/NavBar';
 
 const MadivesLayout = ({
     navOverComponent,

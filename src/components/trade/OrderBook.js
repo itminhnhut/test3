@@ -1,36 +1,27 @@
-import { IconLoading } from 'src/components/common/Icons'
-import { reverse } from 'lodash'
-import { Popover, Transition } from '@headlessui/react'
-import groupBy from 'lodash/groupBy'
-import map from 'lodash/map'
-import maxBy from 'lodash/maxBy'
-import orderBy from 'lodash/orderBy'
-import sumBy from 'lodash/sumBy'
-import ceil from 'lodash/ceil'
-import floor from 'lodash/floor'
-import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
-import { useEffect, useMemo, useRef, useState, Fragment } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useAsync } from 'react-use'
-import { ExchangeOrderEnum, PublicSocketEvent } from 'src/redux/actions/const'
-import Emitter from 'src/redux/actions/emitter'
-import { getOrderBook } from 'src/redux/actions/market'
-import { SET_SPOT_SELECTED_ORDER } from 'src/redux/actions/types'
-import {
-    formatPrice,
-    getFilter,
-    getSymbolString,
-} from 'src/redux/actions/utils'
-import LastPrice from '../markets/LastPrice'
-import OrderBookAll from 'src/components/svg/OrderBookAll'
-import OrderBookBids from 'src/components/svg/OrderBookBids'
-import OrderBookAsks from 'src/components/svg/OrderBookAsks'
-import { ORDER_BOOK_MODE } from 'redux/actions/const'
-import SvgChevronDown from 'src/components/svg/ChevronDown'
-import { getDecimalScale } from 'redux/actions/utils'
-import { handleTickSize } from 'utils/MarketDepthMerger'
-import classNames from 'classnames'
+import { IconLoading } from 'src/components/common/Icons';
+import { reverse } from 'lodash';
+import { Popover, Transition } from '@headlessui/react';
+import maxBy from 'lodash/maxBy';
+import orderBy from 'lodash/orderBy';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAsync } from 'react-use';
+import { ExchangeOrderEnum, PublicSocketEvent } from 'src/redux/actions/const';
+import Emitter from 'src/redux/actions/emitter';
+import { getOrderBook } from 'src/redux/actions/market';
+import { SET_SPOT_SELECTED_ORDER } from 'src/redux/actions/types';
+import { formatPrice, getFilter, getSymbolString, } from 'src/redux/actions/utils';
+import LastPrice from '../markets/LastPrice';
+import OrderBookAll from 'src/components/svg/OrderBookAll';
+import OrderBookBids from 'src/components/svg/OrderBookBids';
+import OrderBookAsks from 'src/components/svg/OrderBookAsks';
+import { ORDER_BOOK_MODE } from 'redux/actions/const';
+import SvgChevronDown from 'src/components/svg/ChevronDown';
+import { getDecimalScale } from 'redux/actions/utils';
+import { handleTickSize } from 'utils/MarketDepthMerger';
+import classNames from 'classnames';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot'])

@@ -1,4 +1,4 @@
-import { Search, X } from 'react-feather'
+import { Search, X } from 'react-feather';
 
 const SearchBox = ({ wrapperStyles = '', inputStyles = '', useClearBtn = false, onClear, inputProps }) => {
 

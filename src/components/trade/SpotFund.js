@@ -5,10 +5,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useSelector } from 'react-redux';
 import AuthSelector from 'redux/selectors/authSelectors';
-import { formatTime, formatWallet } from 'src/redux/actions/utils';
+import { formatWallet } from 'src/redux/actions/utils';
 import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
-
 
 const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);

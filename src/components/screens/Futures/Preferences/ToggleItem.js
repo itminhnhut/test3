@@ -1,6 +1,6 @@
-import { memo, useEffect } from 'react'
-import Switcher from 'components/common/Switcher'
-import classNames from 'classnames'
+import { memo } from 'react';
+import Switcher from 'components/common/Switcher';
+import classNames from 'classnames';
 
 const ToggleItem = memo(({ label, active, onChange, className }) => {
     return (

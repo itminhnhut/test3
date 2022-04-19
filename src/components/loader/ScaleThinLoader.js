@@ -1,7 +1,7 @@
-import { ScaleLoader } from 'react-spinners'
+import { ScaleLoader } from 'react-spinners';
 
-import styled from 'styled-components'
-import colors from '../../styles/colors'
+import styled from 'styled-components';
+import colors from '../../styles/colors';
 
 const ScaleThinLoader = ({ size, thin, height, color }) => {
     return (

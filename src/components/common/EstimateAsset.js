@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { getUsdRate } from 'redux/actions/market'
-import { find } from 'lodash'
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getUsdRate } from 'redux/actions/market';
+import { find } from 'lodash';
 
 const ASSET_MODE = {
     EXCHANGE: 'EXCHANGE',

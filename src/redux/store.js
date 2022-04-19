@@ -5,7 +5,6 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 // import apiMiddleware from 'src/redux/thunk/middleware';
 import reducers from './reducers';
-import { SET_SPOT_SYMBOL_TICKER } from './actions/types';
 
 let store;
 

@@ -1,33 +1,29 @@
-import Axios from 'axios'
-import FuturesMarketWatch from 'models/FuturesMarketWatch'
-import numeral from 'numeral'
-
-import isNil from 'lodash/isNil'
+import Axios from 'axios';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
 import {
     API_GET_FUTURES_CONFIGS,
-    API_SET_FUTURES_MARGIN_MODE,
     API_GET_FUTURES_MARKET_WATCH,
-    API_GET_FUTURES_USER_SETTINGS,
-    API_SET_FUTURES_POSITION_MODE,
-    API_FUTURES_PLACE_ORDER,
     API_GET_FUTURES_ORDER,
-} from './apis'
-import { ApiStatus, TRADING_MODE } from './const'
+    API_GET_FUTURES_USER_SETTINGS,
+    API_SET_FUTURES_MARGIN_MODE,
+    API_SET_FUTURES_POSITION_MODE,
+} from './apis';
+import { ApiStatus, TRADING_MODE } from './const';
 import {
-    SET_FUTURES_ORDER_ADVANCE_TYPES,
-    SET_FUTURES_ORDER_TYPES,
-    SET_FUTURES_USE_SLTP,
     GET_FUTURES_FAVORITE_PAIRS,
-    SET_FUTURES_PAIR_CONFIGS,
     GET_FUTURES_MARKET_WATCH,
     GET_FUTURES_USER_SETTINGS,
-} from './types'
-import { favoriteAction } from './user'
-import { FuturesMarginMode } from 'redux/reducers/futures'
-import { log } from 'utils'
-import showNotification from 'utils/notificationService'
-import { roundToDown } from 'round-to'
+    SET_FUTURES_ORDER_ADVANCE_TYPES,
+    SET_FUTURES_ORDER_TYPES,
+    SET_FUTURES_PAIR_CONFIGS,
+    SET_FUTURES_USE_SLTP,
+} from './types';
+import { favoriteAction } from './user';
+import { FuturesMarginMode } from 'redux/reducers/futures';
+import { log } from 'utils';
+import showNotification from 'utils/notificationService';
+import { roundToDown } from 'round-to';
 
 export const setUsingSltp = (payload) => (dispatch) =>
     dispatch({

@@ -1,28 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Listbox, Transition } from '@headlessui/react';
-import axios from 'axios';
 import { IconLock } from 'src/components/common/Icons';
-import SvgOrderSide from 'src/components/svg/OrderSide';
 import ceil from 'lodash/ceil';
 import defaults from 'lodash/defaults';
 import find from 'lodash/find';
 import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
 import { useAsync, useDebounce } from 'react-use';
 import { getMarketWatch } from 'redux/actions/market';
 import InputSlider from 'src/components/trade/InputSlider';
 import * as Error from 'src/redux/actions/apiError';
-import {
-    ApiStatus,
-    EPS,
-    ExchangeOrderEnum,
-    PublicSocketEvent,
-    SpotMarketPriceBias,
-} from 'src/redux/actions/const';
+import { ApiStatus, EPS, ExchangeOrderEnum, PublicSocketEvent, } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import {
     formatBalance,
@@ -33,7 +24,6 @@ import {
     getLoginUrl,
     getSymbolString,
 } from 'src/redux/actions/utils';
-import { colors } from 'tailwindcss/defaultTheme';
 import fetchAPI from 'utils/fetch-api';
 import showNotification from 'utils/notificationService';
 

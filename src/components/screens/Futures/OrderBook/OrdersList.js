@@ -1,9 +1,9 @@
-import { maxBy } from 'lodash'
-import { useCallback, useRef, useEffect } from 'react'
-import { ORDER_BOOK_MODE } from 'redux/actions/const'
+import { maxBy } from 'lodash';
+import { useCallback, useEffect, useRef } from 'react';
+import { ORDER_BOOK_MODE } from 'redux/actions/const';
 
-import FuturesOrderBookItem from './OrderBookItem'
-import classNames from 'classnames'
+import FuturesOrderBookItem from './OrderBookItem';
+import classNames from 'classnames';
 
 const FuturesOrdersList = ({ side, orders, isOnly, pairConfig }) => {
     const ref = useRef()

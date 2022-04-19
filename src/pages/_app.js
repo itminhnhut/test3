@@ -1,36 +1,32 @@
 /* eslint-disable no-alert, no-console */
 
-import { appWithTranslation, useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
-import NProgress from 'nprogress'
-import 'public/css/font.css'
-import { useEffect } from 'react'
-import { Provider } from 'react-redux'
-import { useAsync } from 'react-use'
+import { appWithTranslation, useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import NProgress from 'nprogress';
+import 'public/css/font.css';
+import { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import { useAsync } from 'react-use';
 import {
     getFuturesConfigs,
     getFuturesFavoritePairs,
     getFuturesMarketWatch,
     getFuturesUserSettings,
-} from 'redux/actions/futures'
-import {
-    getAssetConfig,
-    getExchangeConfig,
-    getUsdRate,
-} from 'redux/actions/market'
-import { getPaymentConfigs } from 'redux/actions/payment'
+} from 'redux/actions/futures';
+import { getAssetConfig, getExchangeConfig, getUsdRate, } from 'redux/actions/market';
+import { getPaymentConfigs } from 'redux/actions/payment';
 import { SET_LOADING_USER, SET_USD_RATE } from 'redux/actions/types';
-import { getWallet, setTheme } from 'redux/actions/user'
-import Head from 'src/components/common/Head'
-import Tracking from 'src/components/common/Tracking'
-import initPublicSocket from 'src/redux/actions/publicSocket'
-import { getMe, getUserFuturesBalance } from 'src/redux/actions/user'
-import initUserSocket from 'src/redux/actions/userSocket'
-import { useStore } from 'src/redux/store'
+import { getWallet, setTheme } from 'redux/actions/user';
+import Head from 'src/components/common/Head';
+import Tracking from 'src/components/common/Tracking';
+import initPublicSocket from 'src/redux/actions/publicSocket';
+import { getMe, getUserFuturesBalance } from 'src/redux/actions/user';
+import initUserSocket from 'src/redux/actions/userSocket';
+import { useStore } from 'src/redux/store';
 // import * as fpixel from 'src/utils/fpixel';
-import 'src/styles/app.scss'
-import * as ga from 'src/utils/ga'
-import { indexingArticles } from 'utils'
+import 'src/styles/app.scss';
+import * as ga from 'src/utils/ga';
+import { indexingArticles } from 'utils';
 
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {

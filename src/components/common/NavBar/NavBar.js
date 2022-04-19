@@ -1,45 +1,40 @@
-import Axios from 'axios'
-import {
-    NAV_DATA,
-    SPOTLIGHT,
-    USER_CP,
-} from 'src/components/common/NavBar/constants'
-import PocketNavDrawer from 'src/components/common/NavBar/PocketNavDrawer'
-import NotificationList from 'src/components/notification/NotificationList'
-import SvgIcon from 'src/components/svg'
-import SvgCheckSuccess from 'src/components/svg/CheckSuccess'
-import SvgMenu from 'src/components/svg/Menu'
-import SvgMoon from 'src/components/svg/Moon'
-import SvgSun from 'src/components/svg/Sun'
-import SvgDocument from 'src/components/svg/SvgDocument'
-import SvgExit from 'src/components/svg/SvgExit'
-import SvgIdentifyCard from 'src/components/svg/SvgIdentifyCard'
-import SvgLayout from 'src/components/svg/SvgLayout'
-import SvgLock from 'src/components/svg/SvgLock'
-import SvgReward from 'src/components/svg/SvgReward'
-import SvgUser from 'src/components/svg/SvgUser'
-import SvgUserPlus from 'src/components/svg/SvgUserPlus'
-import SvgWallet from 'src/components/svg/Wallet'
-import SpotSetting from 'src/components/trade/SpotSetting'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import useLanguage from 'hooks/useLanguage'
-import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { PulseLoader } from 'react-spinners'
-import { useAsync } from 'react-use'
-import { API_GET_VIP } from 'redux/actions/apis'
-import { getMarketWatch } from 'redux/actions/market'
-import { getLoginUrl, getS3Url } from 'redux/actions/utils'
-import colors from 'styles/colors'
-import { buildLogoutUrl } from 'src/utils'
-import { useWindowSize } from 'utils/customHooks'
-import { PATHS } from 'constants/paths'
-import { useRouter } from 'next/router'
-import useApp from 'hooks/useApp'
-import classNames from 'classnames'
-import GridLayoutSettings from './GridLayoutSettings'
+import Axios from 'axios';
+import { NAV_DATA, SPOTLIGHT, USER_CP, } from 'src/components/common/NavBar/constants';
+import PocketNavDrawer from 'src/components/common/NavBar/PocketNavDrawer';
+import NotificationList from 'src/components/notification/NotificationList';
+import SvgIcon from 'src/components/svg';
+import SvgCheckSuccess from 'src/components/svg/CheckSuccess';
+import SvgMenu from 'src/components/svg/Menu';
+import SvgMoon from 'src/components/svg/Moon';
+import SvgSun from 'src/components/svg/Sun';
+import SvgDocument from 'src/components/svg/SvgDocument';
+import SvgExit from 'src/components/svg/SvgExit';
+import SvgIdentifyCard from 'src/components/svg/SvgIdentifyCard';
+import SvgLayout from 'src/components/svg/SvgLayout';
+import SvgLock from 'src/components/svg/SvgLock';
+import SvgReward from 'src/components/svg/SvgReward';
+import SvgUser from 'src/components/svg/SvgUser';
+import SvgUserPlus from 'src/components/svg/SvgUserPlus';
+import SvgWallet from 'src/components/svg/Wallet';
+import SpotSetting from 'src/components/trade/SpotSetting';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useLanguage from 'hooks/useLanguage';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
+import { useAsync } from 'react-use';
+import { API_GET_VIP } from 'redux/actions/apis';
+import { getMarketWatch } from 'redux/actions/market';
+import { getLoginUrl, getS3Url } from 'redux/actions/utils';
+import colors from 'styles/colors';
+import { buildLogoutUrl } from 'src/utils';
+import { useWindowSize } from 'utils/customHooks';
+import { PATHS } from 'constants/paths';
+import { useRouter } from 'next/router';
+import classNames from 'classnames';
+import GridLayoutSettings from './GridLayoutSettings';
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',

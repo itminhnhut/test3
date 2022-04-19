@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout'
-import SwapIntroduce from 'src/components/screens/Swap/SwapIntroduce'
-import SwapModule from 'src/components/screens/Swap/SwapModule'
-import useWindowSize from 'hooks/useWindowSize'
-import SwapHistory from 'src/components/screens/Swap/SwapHistory'
+import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
+import SwapIntroduce from 'src/components/screens/Swap/SwapIntroduce';
+import SwapModule from 'src/components/screens/Swap/SwapModule';
+import useWindowSize from 'hooks/useWindowSize';
+import SwapHistory from 'src/components/screens/Swap/SwapHistory';
 
 const Swap = () => {
     const [pair, setPair] = useState({})

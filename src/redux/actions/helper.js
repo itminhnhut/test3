@@ -1,7 +1,7 @@
-import Axios from 'axios'
+import Axios from 'axios';
 
-import { API_WITHDRAW_v3 } from 'redux/actions/apis'
-import { ApiStatus } from 'redux/actions/const'
+import { API_WITHDRAW_v3 } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
 
 export const withdrawHelper = async (
     assetId,

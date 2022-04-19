@@ -1,16 +1,16 @@
-import { useMemo, useState, useEffect } from 'react'
-import { formatNumber, formatTime } from 'redux/actions/utils'
-import { FUTURES_RECORD_CODE } from './RecordTableTab'
-import { customTableStyles } from './index'
-import { ChevronDown } from 'react-feather'
+import { useEffect, useMemo, useState } from 'react';
+import { formatNumber, formatTime } from 'redux/actions/utils';
+import { FUTURES_RECORD_CODE } from './RecordTableTab';
+import { customTableStyles } from './index';
+import { ChevronDown } from 'react-feather';
 
-import FuturesRecordSymbolItem from './SymbolItem'
-import FuturesTimeFilter from '../TimeFilter'
-import DataTable from 'react-data-table-component'
-import fetchApi from 'utils/fetch-api'
-import { API_GET_TRADE_HISTORY } from 'redux/actions/apis'
-import { ApiStatus } from 'redux/actions/const'
-import Skeletor from 'src/components/common/Skeletor'
+import FuturesRecordSymbolItem from './SymbolItem';
+import FuturesTimeFilter from '../TimeFilter';
+import DataTable from 'react-data-table-component';
+import fetchApi from 'utils/fetch-api';
+import { API_GET_TRADE_HISTORY } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import Skeletor from 'src/components/common/Skeletor';
 
 const FuturesTradeHistory = ({
     pickedTime,

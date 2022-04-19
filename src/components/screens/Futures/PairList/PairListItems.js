@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
-import { PublicSocketEvent } from 'redux/actions/const'
-import { debounce } from 'lodash'
-import { PATHS } from 'constants/paths'
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { PublicSocketEvent } from 'redux/actions/const';
+import { debounce } from 'lodash';
+import { PATHS } from 'constants/paths';
 
-import FuturesMarketWatch from 'models/FuturesMarketWatch'
-import classNames from 'classnames'
-import Emitter from 'redux/actions/emitter'
-import { usePrevious } from 'react-use'
-import { formatNumber } from 'redux/actions/utils'
-import { roundTo } from 'round-to'
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import classNames from 'classnames';
+import Emitter from 'redux/actions/emitter';
+import { usePrevious } from 'react-use';
+import { formatNumber } from 'redux/actions/utils';
+import { roundTo } from 'round-to';
 
 const FuturesPairListItems = ({ pairConfig, changePercent24h }) => {
     const [pairTicker, setPairTicker] = useState(null)

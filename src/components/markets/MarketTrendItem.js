@@ -1,16 +1,16 @@
-import AssetLogo from 'src/components/wallet/AssetLogo'
-import MCard from 'src/components/common/MCard'
-import colors from 'styles/colors'
-import Link from 'next/link'
+import AssetLogo from 'src/components/wallet/AssetLogo';
+import MCard from 'src/components/common/MCard';
+import colors from 'styles/colors';
+import Link from 'next/link';
 
-import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
-import { memo, useState } from 'react'
-import { formatPrice, render24hChange } from 'redux/actions/utils'
-import { useTranslation } from 'next-i18next'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
+import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
+import { memo, useState } from 'react';
+import { formatPrice, render24hChange } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
-import 'react-loading-skeleton/dist/skeleton.css'
-import Skeletor from 'components/common/Skeletor'
+import 'react-loading-skeleton/dist/skeleton.css';
+import Skeletor from 'components/common/Skeletor';
 
 const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
     // Init State

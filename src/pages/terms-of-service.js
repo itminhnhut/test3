@@ -1,8 +1,7 @@
 /* eslint-disable */
-import { useRouter } from 'next/router'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import Footer from 'src/components/common/Footer'
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Footer from 'src/components/common/Footer';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 const Terms = () => {
     return (

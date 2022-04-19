@@ -1,21 +1,21 @@
-import Button from 'src/components/common/Button'
-import { MOBILE_NAV_DATA } from 'src/components/common/NavBar/constants'
-import SvgIcon from 'src/components/svg'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { useTranslation } from 'next-i18next'
-import Link from 'next/link'
-import { memo, useCallback, useState } from 'react'
-import Div100vh from 'react-div-100vh'
-import { ChevronDown } from 'react-feather'
-import { useSelector } from 'react-redux'
-import { getLoginUrl, getS3Url } from 'redux/actions/utils'
-import colors from 'styles/colors'
-import { useWindowSize } from 'utils/customHooks'
-import SvgCheckSuccess from 'components/svg/CheckSuccess'
-import { PulseLoader } from 'react-spinners'
-import { PATHS } from 'constants/paths'
-import { buildLogoutUrl } from 'utils'
+import Button from 'src/components/common/Button';
+import { MOBILE_NAV_DATA } from 'src/components/common/NavBar/constants';
+import SvgIcon from 'src/components/svg';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import { memo, useCallback, useState } from 'react';
+import Div100vh from 'react-div-100vh';
+import { ChevronDown } from 'react-feather';
+import { useSelector } from 'react-redux';
+import { getLoginUrl, getS3Url } from 'redux/actions/utils';
+import colors from 'styles/colors';
+import { useWindowSize } from 'utils/customHooks';
+import SvgCheckSuccess from 'components/svg/CheckSuccess';
+import { PulseLoader } from 'react-spinners';
+import { PATHS } from 'constants/paths';
+import { buildLogoutUrl } from 'utils';
 
 const PocketNavDrawer = memo(
     ({ isActive, onClose, loadingVipLevel, vipLevel }) => {

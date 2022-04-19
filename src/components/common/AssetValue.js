@@ -1,7 +1,7 @@
-import { useSelector } from 'react-redux'
-import find from 'lodash/find'
-import { useMemo } from 'react'
-import { formatNumber } from 'redux/actions/utils'
+import { useSelector } from 'react-redux';
+import find from 'lodash/find';
+import { useMemo } from 'react';
+import { formatNumber } from 'redux/actions/utils';
 
 const AssetValue = (props) => {
     const { assetCode, assetId, value, assetDigit } = props

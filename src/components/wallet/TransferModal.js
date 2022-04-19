@@ -1,25 +1,24 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { formatWallet, setTransferModal } from 'redux/actions/utils'
-import { WalletType } from 'redux/actions/const'
-import { Trans, useTranslation } from 'next-i18next'
-import { Check, ChevronDown, X } from 'react-feather'
-import { POST_WALLET_TRANSFER } from 'redux/actions/apis'
-import { TERM_OF_SERVICE } from 'constants/constants'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { PulseLoader } from 'react-spinners'
-import { getUserFuturesBalance, getWallet } from 'redux/actions/user'
-import { orderBy, sortBy } from 'lodash'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { formatWallet, setTransferModal } from 'redux/actions/utils';
+import { WalletType } from 'redux/actions/const';
+import { Trans, useTranslation } from 'next-i18next';
+import { Check, ChevronDown, X } from 'react-feather';
+import { POST_WALLET_TRANSFER } from 'redux/actions/apis';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { PulseLoader } from 'react-spinners';
+import { getUserFuturesBalance, getWallet } from 'redux/actions/user';
+import { orderBy } from 'lodash';
 
-import Axios from 'axios'
-import Modal from 'components/common/ReModal'
-import useOutsideClick from 'hooks/useOutsideClick'
-import NumberFormat from 'react-number-format'
-import AssetLogo from 'components/wallet/AssetLogo'
-import AssetName from 'components/wallet/AssetName'
-import showNotification from 'utils/notificationService'
-import colors from '../../styles/colors'
-import { PATHS } from 'constants/paths'
+import Axios from 'axios';
+import Modal from 'components/common/ReModal';
+import useOutsideClick from 'hooks/useOutsideClick';
+import NumberFormat from 'react-number-format';
+import AssetLogo from 'components/wallet/AssetLogo';
+import AssetName from 'components/wallet/AssetName';
+import showNotification from 'utils/notificationService';
+import colors from '../../styles/colors';
+import { PATHS } from 'constants/paths';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,

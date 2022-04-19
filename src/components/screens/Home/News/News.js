@@ -1,8 +1,8 @@
-import { useKeenSlider } from 'keen-slider/react'
-import { useWindowSize } from 'utils/customHooks'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import "keen-slider/keen-slider.min.css"
-import { ChevronLeft, ChevronRight } from 'react-feather'
+import { useKeenSlider } from 'keen-slider/react';
+import { useWindowSize } from 'utils/customHooks';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import 'keen-slider/keen-slider.min.css';
+import { ChevronLeft, ChevronRight } from 'react-feather';
 
 const News = ({ data }) => {
     const [state, set] = useState({

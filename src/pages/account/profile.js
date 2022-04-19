@@ -1,39 +1,37 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'next-i18next'
-import { useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
-import { formatNumber, formatTime } from 'redux/actions/utils'
-import { API_GET_VIP, API_SET_ASSET_AS_FEE, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis'
-import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN, USER_DEVICE_STATUS } from 'constants/constants'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ChevronRight, Edit, MoreVertical } from 'react-feather'
-import { Menu, useContextMenu } from "react-contexify"
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
-import { ApiStatus } from 'redux/actions/const'
-import { isMobile } from 'react-device-detect'
-import { orderBy } from 'lodash'
-import { PATHS } from 'constants/paths'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { formatNumber, formatTime } from 'redux/actions/utils';
+import { API_GET_VIP, API_SET_ASSET_AS_FEE, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis';
+import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN, USER_DEVICE_STATUS } from 'constants/constants';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { ChevronRight, Edit, MoreVertical } from 'react-feather';
+import { Menu, useContextMenu } from 'react-contexify';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
+import { ApiStatus } from 'redux/actions/const';
+import { isMobile } from 'react-device-detect';
+import { orderBy } from 'lodash';
+import { PATHS } from 'constants/paths';
+import useWindowSize from 'hooks/useWindowSize';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import SvgCheckSuccess from 'components/svg/CheckSuccess';
+import CheckSuccess from 'components/svg/CheckSuccess';
+import SvgGooglePlus from 'components/svg/SvgGooglePlus';
+import SvgFacebook from 'components/svg/SvgFacebook';
+import SvgTwitter from 'components/svg/SvgTwitter';
+import NeedLogin from 'components/common/NeedLogin';
+import SvgApple from 'components/svg/SvgApple';
+import Skeletor from 'components/common/Skeletor';
+import ReModal from 'components/common/ReModalOld';
+import MCard from 'components/common/MCard';
+import Link from 'next/link';
+import Axios from 'axios';
+import Switcher from 'components/common/Switcher';
 
-import withTabLayout from 'components/common/layouts/withTabLayout'
-import useWindowSize from 'hooks/useWindowSize'
-import useDarkMode, { THEME_MODE }  from 'hooks/useDarkMode'
-import SvgCheckSuccess from 'components/svg/CheckSuccess'
-import SvgGooglePlus from 'components/svg/SvgGooglePlus'
-import CheckSuccess from 'components/svg/CheckSuccess'
-import SvgFacebook from 'components/svg/SvgFacebook'
-import SvgTwitter from 'components/svg/SvgTwitter'
-import NeedLogin from 'components/common/NeedLogin'
-import SvgApple from 'components/svg/SvgApple'
-import Skeletor from 'components/common/Skeletor'
-import ReModal from 'components/common/ReModalOld'
-import MCard from 'components/common/MCard'
-import Link from 'next/link'
-import Axios from 'axios'
-import Switcher from 'components/common/Switcher'
-
-import "react-contexify/dist/ReactContexify.css"
-import AvatarModal from 'components/screens/Account/AvatarModal'
+import 'react-contexify/dist/ReactContexify.css';
+import AvatarModal from 'components/screens/Account/AvatarModal';
 
 const DEFAULT_USER = {
     name: '',

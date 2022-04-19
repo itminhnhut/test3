@@ -1,7 +1,7 @@
-import classNames from 'classnames'
-import { ORDER_BOOK_MODE } from 'redux/actions/const'
-import { memo } from 'react'
-import { formatNumber } from 'redux/actions/utils'
+import classNames from 'classnames';
+import { ORDER_BOOK_MODE } from 'redux/actions/const';
+import { memo } from 'react';
+import { formatNumber } from 'redux/actions/utils';
 
 const FuturesOrderBookItem = memo(
     ({ side, rate, amount, pairConfig, progress }) => {

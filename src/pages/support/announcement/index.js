@@ -1,18 +1,18 @@
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import SupportBanner from 'components/screens/Support/SupportBanner'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import TopicItem from 'components/screens/Support/TopicItem'
-import Image from 'next/image'
-import Link from 'next/link'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { PATHS } from 'constants/paths'
-import { useCallback, useEffect, useState } from 'react'
-import { getLastedArticles, getSupportCategories } from 'utils'
-import { useTranslation } from 'next-i18next'
-import { formatTime } from 'redux/actions/utils'
-import Skeletor from 'components/common/Skeletor'
-import useApp from 'hooks/useApp'
-import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import SupportBanner from 'components/screens/Support/SupportBanner';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import TopicItem from 'components/screens/Support/TopicItem';
+import Image from 'next/image';
+import Link from 'next/link';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { PATHS } from 'constants/paths';
+import { useCallback, useEffect, useState } from 'react';
+import { getLastedArticles, getSupportCategories } from 'utils';
+import { useTranslation } from 'next-i18next';
+import { formatTime } from 'redux/actions/utils';
+import Skeletor from 'components/common/Skeletor';
+import useApp from 'hooks/useApp';
+import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 
 const SupportAnnouncement = () => {
     const [theme] = useDarkMode()

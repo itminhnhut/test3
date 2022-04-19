@@ -1,5 +1,5 @@
-import { memo, useMemo } from 'react'
-import { useTranslation } from 'next-i18next'
+import { memo, useMemo } from 'react';
+import { useTranslation } from 'next-i18next';
 
 const RewardButton = memo(({ title, status, buttonStyles = '', href, target = "_self", onClick, componentType = 'div' }) => {
 

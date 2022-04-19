@@ -1,6 +1,6 @@
-import Button from 'components/common/Button'
-import Modal from 'components/common/ReModal'
-import { ChevronDown, X } from 'react-feather'
+import Button from 'components/common/Button';
+import Modal from 'components/common/ReModal';
+import { ChevronDown, X } from 'react-feather';
 
 const FuturesEditSLTP = ({ isVisible, order, onClose }) => {
     return (

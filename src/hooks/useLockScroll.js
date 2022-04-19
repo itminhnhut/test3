@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 function useLockedBody(initialLocked) {
     const [locked, setLocked] = useState(initialLocked)

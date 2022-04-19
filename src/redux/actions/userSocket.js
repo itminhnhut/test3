@@ -4,7 +4,7 @@ import { ADD_NOTIFICATION_UNREAD_COUNT, SET_NOTIFICATION_UNREAD_COUNT } from 'sr
 import debounce from 'lodash/debounce';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_SOCKETIO_AUTH_KEY } from './apis';
-import { ApiStatus, UserSocketEvent, WalletType } from './const';
+import { ApiStatus, UserSocketEvent } from './const';
 import Emitter from 'redux/actions/emitter';
 
 let WS;

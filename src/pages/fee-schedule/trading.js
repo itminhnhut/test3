@@ -1,29 +1,27 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'next-i18next'
-import { useSelector } from 'react-redux'
-import { formatNumber, getS3Url } from 'redux/actions/utils'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { API_GET_FUTURE_FEE_CONFIGS, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis'
-import { BREAK_POINTS, FEE_STRUCTURES, FEE_TABLE, ROOT_TOKEN } from 'constants/constants'
-import { TRADING_MODE } from 'redux/actions/const'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { TrendingUp } from 'react-feather'
-import { ApiStatus } from 'redux/actions/const'
-import { orderBy } from 'lodash'
-import { PATHS } from 'constants/paths'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { API_GET_FUTURE_FEE_CONFIGS, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis';
+import { BREAK_POINTS, FEE_STRUCTURES, FEE_TABLE, ROOT_TOKEN } from 'constants/constants';
+import { ApiStatus, TRADING_MODE } from 'redux/actions/const';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { TrendingUp } from 'react-feather';
+import { orderBy } from 'lodash';
+import { PATHS } from 'constants/paths';
 
-import Axios from 'axios'
-import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout'
-import useWindowSize from 'hooks/useWindowSize'
-import MCard from 'components/common/MCard'
-import Link from 'next/link'
-import Switcher from 'components/common/Switcher'
-import TabItem, { TabItemComponent } from 'components/common/TabItem'
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable'
-import Skeletor from 'components/common/Skeletor'
-import SvgCrown from 'components/svg/SvgCrown'
-import Empty from 'components/common/Empty'
-
+import Axios from 'axios';
+import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
+import useWindowSize from 'hooks/useWindowSize';
+import MCard from 'components/common/MCard';
+import Link from 'next/link';
+import Switcher from 'components/common/Switcher';
+import TabItem, { TabItemComponent } from 'components/common/TabItem';
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import Skeletor from 'components/common/Skeletor';
+import SvgCrown from 'components/svg/SvgCrown';
+import Empty from 'components/common/Empty';
 
 const INITIAL_STATE = {
     tabIndex: 0,

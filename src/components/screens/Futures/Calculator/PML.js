@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
-import classNames from 'classnames'
-import Button from 'components/common/Button'
-import Slider from 'components/trade/InputSlider'
-import colors from 'styles/colors'
-import { useTranslation } from 'next-i18next'
+import classNames from 'classnames';
+import Button from 'components/common/Button';
+import Slider from 'components/trade/InputSlider';
+import colors from 'styles/colors';
+import { useTranslation } from 'next-i18next';
 
 const FuturesCalculatorPML = () => {
     const { t } = useTranslation();

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo } from 'react';
 
 const SegmentTabs = memo(({ active, tabSeries, onChange, callback }) => {
     return (

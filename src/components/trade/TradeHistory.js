@@ -11,7 +11,6 @@ import fetchAPI from 'utils/fetch-api';
 import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
 
-
 const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);

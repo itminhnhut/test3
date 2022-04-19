@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
-import { PATHS } from 'constants/paths'
+import { useRouter } from 'next/router';
+import { PATHS } from 'constants/paths';
 
 const Account = () => {
     const router = useRouter()

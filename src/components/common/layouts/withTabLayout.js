@@ -1,17 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
-import { getLastestSourcePath } from 'redux/actions/utils'
-import { PATHS } from 'constants/paths'
-import { log } from 'utils'
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { getLastestSourcePath } from 'redux/actions/utils';
+import { PATHS } from 'constants/paths';
+import { log } from 'utils';
 
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import TabItem, { TabItemComponent } from 'components/common/TabItem'
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import TabItem, { TabItemComponent } from 'components/common/TabItem';
 
-import styled from 'styled-components'
-import colors from 'styles/colors'
-import useApp from 'hooks/useApp'
+import styled from 'styled-components';
+import colors from 'styles/colors';
+import useApp from 'hooks/useApp';
 
 const INITIAL_STATE = {
     currentLastestPath: null,

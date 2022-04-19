@@ -1,8 +1,8 @@
-import { useMemo } from 'react'
-import { useTranslation } from 'next-i18next'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { getLoginUrl } from 'redux/actions/utils'
-import { UserDeleteOutlined } from '@ant-design/icons'
+import { useMemo } from 'react';
+import { useTranslation } from 'next-i18next';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { getLoginUrl } from 'redux/actions/utils';
+import { UserDeleteOutlined } from '@ant-design/icons';
 
 const NeedLogin = ({ message, addClass }) => {
     const { i18n: { language } } = useTranslation()

@@ -1,12 +1,12 @@
-import { memo, useCallback } from 'react'
+import { memo, useCallback } from 'react';
 
-import MarketTrendItem from 'src/components/markets/MarketTrendItem'
-import useWindowSize from 'hooks/useWindowSize'
+import MarketTrendItem from 'src/components/markets/MarketTrendItem';
+import useWindowSize from 'hooks/useWindowSize';
 
-import SwiperCore, { Autoplay } from 'swiper'
+import SwiperCore, { Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import "swiper/swiper.min.css"
+import 'swiper/swiper.min.css';
 
 SwiperCore.use([Autoplay])
 

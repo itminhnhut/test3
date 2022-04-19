@@ -1,4 +1,4 @@
-import { ghost } from 'utils'
+import { ghost } from 'utils';
 
 export const CatsKey = {
     AccountFunctions: 'acc_func',

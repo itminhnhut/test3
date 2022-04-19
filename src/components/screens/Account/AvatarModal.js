@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'next-i18next'
-import { useSelector, useDispatch } from 'react-redux'
-import { PulseLoader } from 'react-spinners'
-import { SET_USER_AVATAR, USER_AVATAR_PRESET } from 'redux/actions/apis'
-import { BREAK_POINTS } from 'constants/constants'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { ApiStatus } from 'redux/actions/const'
-import { isMobile } from 'react-device-detect'
-import { Share } from 'react-feather'
-import { getMe } from 'redux/actions/user'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
+import { SET_USER_AVATAR, USER_AVATAR_PRESET } from 'redux/actions/apis';
+import { BREAK_POINTS } from 'constants/constants';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { ApiStatus } from 'redux/actions/const';
+import { isMobile } from 'react-device-detect';
+import { Share } from 'react-feather';
+import { getMe } from 'redux/actions/user';
 
-import useWindowSize from 'hooks/useWindowSize'
-import CheckSuccess from 'components/svg/CheckSuccess'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import Dropzone from 'react-dropzone'
-import Skeletor from 'components/common/Skeletor'
-import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModalOld'
-import colors from 'styles/colors'
-import Axios from 'axios'
+import useWindowSize from 'hooks/useWindowSize';
+import CheckSuccess from 'components/svg/CheckSuccess';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import Dropzone from 'react-dropzone';
+import Skeletor from 'components/common/Skeletor';
+import ReModal, { REMODAL_BUTTON_GROUP, REMODAL_POSITION } from 'components/common/ReModalOld';
+import colors from 'styles/colors';
+import Axios from 'axios';
 
 const UPLOAD_TIMEOUT = 4000
 

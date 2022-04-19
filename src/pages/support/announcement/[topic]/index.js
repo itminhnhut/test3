@@ -1,18 +1,13 @@
-import { useRouter } from 'next/router'
-import TopicsLayout from 'components/screens/Support/TopicsLayout'
-import { PATHS } from 'constants/paths'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import Link from 'next/link'
-import {
-    getLastedArticles,
-    getSupportArticles,
-    getSupportCategories,
-    ghost,
-} from 'utils'
-import { formatTime } from 'redux/actions/utils'
-import useApp from 'hooks/useApp'
-import { ChevronLeft } from 'react-feather'
-import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router';
+import TopicsLayout from 'components/screens/Support/TopicsLayout';
+import { PATHS } from 'constants/paths';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
+import { getLastedArticles, } from 'utils';
+import { formatTime } from 'redux/actions/utils';
+import useApp from 'hooks/useApp';
+import { ChevronLeft } from 'react-feather';
+import { useTranslation } from 'next-i18next';
 
 const AnnouncementTopics = (props) => {
     const router = useRouter()

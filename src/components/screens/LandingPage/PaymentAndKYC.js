@@ -1,8 +1,8 @@
-import { useWindowSize } from 'utils/customHooks'
-import { useTranslation } from 'next-i18next'
-import { getS3Url } from 'redux/actions/utils'
-import Image from 'next/image'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
+import { useWindowSize } from 'utils/customHooks';
+import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
+import Image from 'next/image';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const PaymentAndKYC = () => {
     const { width } = useWindowSize()

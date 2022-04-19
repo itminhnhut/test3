@@ -1,4 +1,4 @@
-import FlexSearch from 'flexsearch'
+import FlexSearch from 'flexsearch';
 
 export default class SearchinGhost {
     /**

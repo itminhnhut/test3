@@ -1,6 +1,5 @@
-
-import ExchangeWithdraw from 'components/screens/Wallet/Exchange/ExchangeWithdraw'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import ExchangeWithdraw from 'components/screens/Wallet/Exchange/ExchangeWithdraw';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Withdraw = () => <ExchangeWithdraw/>
 

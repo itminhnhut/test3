@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { formatNumber, getS3Url } from 'redux/actions/utils'
-import { useTranslation, Trans } from 'next-i18next'
-import { getMarketWatch } from 'redux/actions/market'
-import { useWindowSize } from 'utils/customHooks'
-import { PulseLoader } from 'react-spinners'
-import { useAsync } from 'react-use'
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
+import { Trans, useTranslation } from 'next-i18next';
+import { getMarketWatch } from 'redux/actions/market';
+import { useWindowSize } from 'utils/customHooks';
+import { PulseLoader } from 'react-spinners';
+import { useAsync } from 'react-use';
 
-
-import colors from 'styles/colors'
-import CountUp from 'react-countup'
-import Link from 'next/link'
+import colors from 'styles/colors';
+import CountUp from 'react-countup';
+import Link from 'next/link';
 
 const HomeIntroduce = ({ parentState }) => {
     const [state, set] = useState({

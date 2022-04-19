@@ -1,20 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { API_FUTURES_LEVERAGE } from 'redux/actions/apis'
-import {
-    FuturesOrderTypes as OrderTypes,
-    FuturesStopOrderMode,
-} from 'redux/reducers/futures'
-import { roundToDown } from 'round-to'
-import { useSelector } from 'react-redux'
-import { ApiStatus } from 'redux/actions/const'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
+import { FuturesOrderTypes as OrderTypes, FuturesStopOrderMode, } from 'redux/reducers/futures';
+import { roundToDown } from 'round-to';
+import { useSelector } from 'react-redux';
+import { ApiStatus } from 'redux/actions/const';
 
-import FuturesOrderCostAndMax from './OrderCostAndMax'
-import FuturesOrderModule from './OrderModule'
-import FuturesOrderTypes from './OrderTypes'
-import PlaceConfigs from './PlaceConfigs'
-import axios from 'axios'
-import max from 'lodash/max'
-import { log } from 'utils'
+import FuturesOrderCostAndMax from './OrderCostAndMax';
+import FuturesOrderModule from './OrderModule';
+import FuturesOrderTypes from './OrderTypes';
+import PlaceConfigs from './PlaceConfigs';
+import axios from 'axios';
+import { log } from 'utils';
 
 const FuturesPlaceOrder = ({
     pairConfig,

@@ -1,4 +1,4 @@
-import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants'
+import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
 
 export const futuresGridKey = {
     favoritePair: 'favoritePair',

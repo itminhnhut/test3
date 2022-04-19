@@ -1,11 +1,11 @@
-import SvgSpeaker from 'src/components/svg/SvgSpeaker'
+import SvgSpeaker from 'src/components/svg/SvgSpeaker';
 
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useKeenSlider } from 'keen-slider/react'
-import { useWindowSize } from 'utils/customHooks'
-import { useTranslation } from 'next-i18next'
-import "keen-slider/keen-slider.min.css"
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useKeenSlider } from 'keen-slider/react';
+import { useWindowSize } from 'utils/customHooks';
+import { useTranslation } from 'next-i18next';
+import 'keen-slider/keen-slider.min.css';
 
 const LastedNews = ({ data }) => {
     const [state, set] = useState({

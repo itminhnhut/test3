@@ -1,12 +1,11 @@
-import { useState } from 'react'
-import { setTransferModal } from 'redux/actions/utils'
-import { useTranslation } from 'next-i18next'
-import { useDispatch } from 'react-redux'
-import { File } from 'react-feather'
+import { useState } from 'react';
+import { setTransferModal } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
+import { useDispatch } from 'react-redux';
 
-import TradingLabel from 'components/trade/TradingLabel'
-import AvblAsset from 'components/trade/AvblAsset'
-import FuturesCalculator from '../../Calculator'
+import TradingLabel from 'components/trade/TradingLabel';
+import AvblAsset from 'components/trade/AvblAsset';
+import FuturesCalculator from '../../Calculator';
 
 const FuturesOrderUtilities = ({ quoteAssetId, quoteAsset, isAuth }) => {
     const [openCalculator, setCalculator] = useState(false)

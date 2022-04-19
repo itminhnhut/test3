@@ -1,14 +1,18 @@
 import * as types from 'src/redux/actions/types';
 import fetchAPI from 'utils/fetch-api';
 import AuthStorage from 'utils/auth-storage';
-import { ApiStatus, LOCAL_STORAGE_KEY, TRADING_MODE, WalletType } from './const'
+import { ApiStatus, LOCAL_STORAGE_KEY, TRADING_MODE, WalletType } from './const';
 import {
+    API_2FA_CHECK_PASS,
+    API_2FA_GENERATE_SECRET,
     API_CHECK_PASS,
     API_CHECK_PASS_AUTH,
-    API_GET_ALL_USER_WALLET,
     API_GET_ASSET_CONFIG,
+    API_GET_AVATAR_LIST,
+    API_GET_FAVORITE,
     API_GET_ME,
-    API_GET_USER_WALLET,
+    API_GET_USER_BALANCE,
+    API_GET_USER_BALANCE_V2,
     API_KYC_BANK_INFORMATION,
     API_KYC_COUNTRY_LIST,
     API_KYC_IMAGES,
@@ -16,26 +20,20 @@ import {
     API_KYC_STATUS,
     API_KYC_SUBMIT,
     API_LOG_OUT,
-    API_PROFILE_NAME,
-    API_PROFILE_PHONE,
-    API_REFRESH_TOKEN,
-    API_PROFILE_PASSWORD,
-    API_GET_AVATAR_LIST,
     API_PROFILE_AVATAR,
-    API_2FA_GENERATE_SECRET,
-    API_2FA_CHECK_PASS,
     API_PROFILE_EMAIL,
+    API_PROFILE_NAME,
+    API_PROFILE_PASSWORD,
+    API_PROFILE_PHONE,
     API_PROFILE_USERNAME,
+    API_REFRESH_TOKEN,
     API_USER_REFERRAL,
-    API_WITHDRAW_ONCHAIN,
-    API_GET_USER_BALANCE, API_GET_FAVORITE,
-    API_GET_USER_BALANCE_V2
-} from './apis'
-import ApiError from './apiError';
-import Axios from 'axios'
-import { SET_USER, SET_THEME } from './types';
-import { THEME_MODE } from 'hooks/useDarkMode'
-import { find } from 'lodash'
+    API_WITHDRAW_ONCHAIN
+} from './apis';
+import Axios from 'axios';
+import { SET_THEME, SET_USER } from './types';
+import { THEME_MODE } from 'hooks/useDarkMode';
+import { find } from 'lodash';
 
 export const setTheme = () => {
     let theme = THEME_MODE.LIGHT

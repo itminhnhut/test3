@@ -2,8 +2,8 @@ import { ChevronDown, ChevronUp } from 'react-feather';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { getS3Url, getV1Url } from 'redux/actions/utils'
-import { PATHS } from 'constants/paths'
+import { getS3Url, getV1Url } from 'redux/actions/utils';
+import { PATHS } from 'constants/paths';
 
 const PocketFooter = ({ active, parentState }) => {
     const { t, i18n: { language } } = useTranslation(['navbar']);

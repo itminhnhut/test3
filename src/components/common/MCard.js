@@ -3,7 +3,7 @@
 // Author:
 // ---------------------------------
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 
 const MCard = ({ children, getRef, addClass, style }) => {
     const ref = useRef()

@@ -1,7 +1,7 @@
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { log } from 'utils'
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { log } from 'utils';
 
 const ExchangeTransfer = () => {
 

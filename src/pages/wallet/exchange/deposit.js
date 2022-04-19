@@ -1,6 +1,6 @@
-import ExchangeDeposit from 'components/screens/Wallet/Exchange/ExchangeDeposit'
+import ExchangeDeposit from 'components/screens/Wallet/Exchange/ExchangeDeposit';
 
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Deposit = () => <ExchangeDeposit/>
 

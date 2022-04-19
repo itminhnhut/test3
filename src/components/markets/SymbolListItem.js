@@ -3,10 +3,10 @@ import Link from 'next/link';
 import debounce from 'lodash/debounce';
 import { formatPrice, render24hChange } from 'src/redux/actions/utils';
 import { IconStar, IconStarFilled } from '../common/Icons';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import colors from '../../styles/colors'
-import { TRADING_MODE } from 'redux/actions/const'
-import { favoriteAction } from 'redux/actions/user'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from '../../styles/colors';
+import { TRADING_MODE } from 'redux/actions/const';
+import { favoriteAction } from 'redux/actions/user';
 
 const SymbolListItem = (props) => {
     const { symbolString, publicSocket, exchangeConfig, originTicker, currentId, favorite, watchList, pairKey, isFavoriteTab = false, reFetchFavorite } = props;

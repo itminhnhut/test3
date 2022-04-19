@@ -7,9 +7,8 @@ import debounce from 'lodash/debounce';
 import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo } from 'src/redux/actions/utils';
-import { IconBell, Notification, NotificationDown, NotificationUp } from '../common/Icons';
-import colors from 'styles/colors'
-import { getS3Url } from 'redux/actions/utils';
+import { IconBell, Notification } from '../common/Icons';
+import colors from 'styles/colors';
 
 const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const { t } = useTranslation(['navbar']);

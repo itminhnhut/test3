@@ -1,7 +1,5 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import useElementSize from 'hooks/useElementSize'
-import colors from 'styles/colors'
-import useDarkMode from 'hooks/useDarkMode'
+import { memo, useCallback, useEffect, useState } from 'react';
+import useElementSize from 'hooks/useElementSize';
 
 const DashedProgressLine = memo(({
     containerClass = '',

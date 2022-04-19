@@ -1,10 +1,11 @@
 import fetchAPI from 'utils/fetch-api';
 import * as types from 'src/redux/actions/types';
-import { ApiStatus } from './const'; import {
+import { ApiStatus } from './const';
+import {
     API_ONBOARDING_OPEN_BOX,
+    API_ONBOARDING_PROMOTION_STATUS,
     API_ONBOARDING_QUESTION,
     API_ONBOARDING_QUESTION_SUBMIT,
-    API_ONBOARDING_PROMOTION_STATUS,
 } from './apis';
 
 export const getOnboardingQuestions = () => async (dispatch) => {

@@ -1,5 +1,5 @@
-import { ceil, floor, groupBy, map, sumBy, orderBy } from 'lodash'
-import { getDecimalScale } from 'redux/actions/utils'
+import { groupBy, map, orderBy, sumBy } from 'lodash';
+import { getDecimalScale } from 'redux/actions/utils';
 
 export const handleTickSize = (data, tickSize, type = null) => {
     let _exp = -2

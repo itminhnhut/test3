@@ -1,15 +1,12 @@
-import { useEffect } from 'react'
-import { memo, useCallback, useState } from 'react'
-import { Search, X } from 'react-feather'
-import { useSelector } from 'react-redux'
+import { memo, useCallback, useState } from 'react';
+import { Search, X } from 'react-feather';
+import { useSelector } from 'react-redux';
 
-import FuturesPairListItems from './PairListItems'
-import Star from 'components/svg/Star'
-import colors from 'styles/colors'
-import classNames from 'classnames'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import { mergeFuturesFavoritePairs } from 'redux/actions/futures'
-
+import FuturesPairListItems from './PairListItems';
+import Star from 'components/svg/Star';
+import colors from 'styles/colors';
+import classNames from 'classnames';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
     const [keyword, setKeyWord] = useState('')

@@ -1,5 +1,4 @@
 import { IconLoading } from 'src/components/common/Icons';
-import ContentLoader from 'react-content-loader';
 
 const TableLoader = (props) => {
     return (

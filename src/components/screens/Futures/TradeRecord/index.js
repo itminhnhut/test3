@@ -1,18 +1,16 @@
-import { useEffect, useState, useRef } from 'react'
-import FuturesRecordTableTab, { FUTURES_RECORD_CODE } from './RecordTableTab'
-import FuturesOrderHistory from './OrderHistory'
-import FuturesTradeHistory from './TradeHistory'
-import FuturesPosition from './Position'
-import classNames from 'classnames'
-import CheckBox from 'components/common/CheckBox'
-import FuturesOpenOrders from './OpenOrders'
-import FuturesTxHistory from './TxHistory'
-import FuturesAssets from './Assets'
-import FuturesOpenOrdersVndc from '../PlaceOrder/Vndc/OpenOrdersVndc'
-import FuturesOrderHistoryVndc from '../PlaceOrder/Vndc/OrderHistoryVndc'
-import { useRouter } from 'next/router'
-import { getLoginUrl } from 'redux/actions/utils'
-
+import { useEffect, useRef, useState } from 'react';
+import FuturesRecordTableTab, { FUTURES_RECORD_CODE } from './RecordTableTab';
+import FuturesOrderHistory from './OrderHistory';
+import FuturesTradeHistory from './TradeHistory';
+import FuturesPosition from './Position';
+import CheckBox from 'components/common/CheckBox';
+import FuturesOpenOrders from './OpenOrders';
+import FuturesTxHistory from './TxHistory';
+import FuturesAssets from './Assets';
+import FuturesOpenOrdersVndc from '../PlaceOrder/Vndc/OpenOrdersVndc';
+import FuturesOrderHistoryVndc from '../PlaceOrder/Vndc/OrderHistoryVndc';
+import { useRouter } from 'next/router';
+import { getLoginUrl } from 'redux/actions/utils';
 
 const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, isAuth }) => {
     const router = useRouter();

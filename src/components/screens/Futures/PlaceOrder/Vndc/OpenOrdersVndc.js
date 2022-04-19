@@ -1,24 +1,23 @@
-import { useMemo, useState, useEffect, useRef } from 'react'
-import { formatNumber, formatTime, getPriceColor } from 'redux/actions/utils'
-import { customTableStyles } from '../../TradeRecord/index'
-import { ChevronDown, Edit, Share2 } from 'react-feather'
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { formatNumber, formatTime } from 'redux/actions/utils';
+import { customTableStyles } from '../../TradeRecord/index';
+import { ChevronDown, Edit } from 'react-feather';
 
-import FuturesRecordSymbolItem from '../../TradeRecord/SymbolItem'
-import DataTable from 'react-data-table-component'
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
-import { ApiStatus, UserSocketEvent } from 'redux/actions/const'
-import Skeletor from 'src/components/common/Skeletor'
-import fetchApi from 'utils/fetch-api'
-import { useTranslation } from 'next-i18next'
-import Modal from 'components/common/ReModal'
-import Button from 'components/common/Button'
-import showNotification from 'utils/notificationService'
-import { useSelector } from 'react-redux'
-import { VndcFutureOrderType } from './VndcFutureOrderType'
+import FuturesRecordSymbolItem from '../../TradeRecord/SymbolItem';
+import DataTable from 'react-data-table-component';
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
+import fetchApi from 'utils/fetch-api';
+import { useTranslation } from 'next-i18next';
+import Modal from 'components/common/ReModal';
+import Button from 'components/common/Button';
+import showNotification from 'utils/notificationService';
+import { useSelector } from 'react-redux';
+import { VndcFutureOrderType } from './VndcFutureOrderType';
 import OrderProfit from '../../TradeRecord/OrderProfit';
-import Big from "big.js";
-import FuturesEditSLTPVndc from './EditSLTPVndc'
-import ShareFuturesOrder from "components/screens/Futures/ShareFuturesOrder";
+import Big from 'big.js';
+import FuturesEditSLTPVndc from './EditSLTPVndc';
+import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin }) => {
     const { t } = useTranslation()

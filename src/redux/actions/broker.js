@@ -1,10 +1,5 @@
 import FetchApi from 'src/utils/fetch-api';
-import {
-    API_BROKER_USER_ANALYTICS,
-    API_BROKER_CHART_DATA,
-    API_BROKER_INCOME,
-    API_BROKER_USER,
-} from './apis';
+import { API_BROKER_CHART_DATA, API_BROKER_INCOME, API_BROKER_USER, API_BROKER_USER_ANALYTICS, } from './apis';
 import { ApiStatus } from './const';
 
 export async function getBrokerIncome({ page = 1, pageSize = 10 }) {

@@ -1,15 +1,14 @@
-import AssetLogo from 'src/components/wallet/AssetLogo'
-import Skeletor from 'src/components/common/Skeletor'
-import Link from 'next/link'
-import colors from 'styles/colors'
+import AssetLogo from 'src/components/wallet/AssetLogo';
+import Skeletor from 'src/components/common/Skeletor';
+import Link from 'next/link';
+import colors from 'styles/colors';
 
-import { useCallback, useEffect, useState } from 'react'
-import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
-import { formatPrice, render24hChange } from 'redux/actions/utils'
-import { getMarketWatch } from 'redux/actions/market'
-import { orderBy } from 'lodash'
-import { Trans, useTranslation } from 'next-i18next'
-
+import { useCallback, useEffect, useState } from 'react';
+import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
+import { formatPrice, render24hChange } from 'redux/actions/utils';
+import { getMarketWatch } from 'redux/actions/market';
+import { orderBy } from 'lodash';
+import { Trans, useTranslation } from 'next-i18next';
 
 const SwapIntroduce = () => {
     const [state, set] = useState({

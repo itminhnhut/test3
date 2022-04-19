@@ -1,17 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
-import { useAsync } from 'react-use'
-import { FUTURES_ORDER_BOOK_ITEMS_HEIGHT } from './OrderBook/OrderBookItem'
-import { API_GET_FUTURES_RECENT_TRADES } from 'redux/actions/apis'
-import { ApiStatus, PublicSocketEvent } from 'redux/actions/const'
-import { formatNumber, formatTime } from 'redux/actions/utils'
-import { BREAK_POINTS } from 'constants/constants'
-import { debounce } from 'lodash'
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { useAsync } from 'react-use';
+import { FUTURES_ORDER_BOOK_ITEMS_HEIGHT } from './OrderBook/OrderBookItem';
+import { API_GET_FUTURES_RECENT_TRADES } from 'redux/actions/apis';
+import { ApiStatus, PublicSocketEvent } from 'redux/actions/const';
+import { formatNumber, formatTime } from 'redux/actions/utils';
+import { BREAK_POINTS } from 'constants/constants';
+import { debounce } from 'lodash';
 
-import classNames from 'classnames'
-import axios from 'axios'
-import useWindowSize from 'hooks/useWindowSize'
+import classNames from 'classnames';
+import axios from 'axios';
+import useWindowSize from 'hooks/useWindowSize';
 
 let temp = []
 const MAX_LENGTH = 200

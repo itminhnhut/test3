@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { log } from 'utils'
+import { useEffect } from 'react';
+import { log } from 'utils';
 
 const Deprecated = (Component) => (props) => {
     useEffect(() => {

@@ -1,12 +1,6 @@
 /* eslint-disable react/button-has-type */
 import { useTranslation } from 'next-i18next';
-import {
-    formatPercentage,
-    formatWallet,
-    getExchange24hPercentageChange,
-    getS3Url,
-    render24hChange,
-} from 'src/redux/actions/utils';
+import { formatPercentage, getExchange24hPercentageChange, getS3Url, render24hChange, } from 'src/redux/actions/utils';
 import {
     IconAddAction,
     IconArrowDownSlim,
@@ -26,7 +20,13 @@ import DataTable from 'react-data-table-component';
 import { deleteCategory, updateCategory } from 'src/redux/actions/market';
 import { tableStyle } from 'config/tables';
 import Link from 'next/link';
-import { formatAbbreviateNumber, formatBalance, getAssetName, getChangePercentage, getSparkLine } from 'redux/actions/utils';
+import {
+    formatAbbreviateNumber,
+    formatBalance,
+    getAssetName,
+    getChangePercentage,
+    getSparkLine
+} from 'redux/actions/utils';
 import { Info } from 'react-feather';
 import Image from 'next/image';
 import AssetLogo from 'src/components/wallet/AssetLogo';

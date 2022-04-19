@@ -1,17 +1,17 @@
-import { useRouter } from 'next/router'
-import { PATHS } from 'constants/paths'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ChevronLeft } from 'react-feather'
+import { useRouter } from 'next/router';
+import { PATHS } from 'constants/paths';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { ChevronLeft } from 'react-feather';
 
-import TopicsLayout from 'components/screens/Support/TopicsLayout'
-import Link from 'next/link'
-import useApp from 'hooks/useApp'
-import { appUrlHandler, SupportCategories } from 'constants/faqHelper'
-import { useTranslation } from 'next-i18next'
-import { useCallback, useEffect, useState } from 'react'
-import { ghost } from 'utils'
-import { formatTime } from 'redux/actions/utils'
-import classNames from 'classnames'
+import TopicsLayout from 'components/screens/Support/TopicsLayout';
+import Link from 'next/link';
+import useApp from 'hooks/useApp';
+import { appUrlHandler, SupportCategories } from 'constants/faqHelper';
+import { useTranslation } from 'next-i18next';
+import { useCallback, useEffect, useState } from 'react';
+import { ghost } from 'utils';
+import { formatTime } from 'redux/actions/utils';
+import classNames from 'classnames';
 
 const FaqTopics = (props) => {
     const [currentGroup, setCurrentGroup] = useState(null)

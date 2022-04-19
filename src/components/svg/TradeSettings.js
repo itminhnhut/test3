@@ -1,5 +1,5 @@
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import colors from 'styles/colors'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from 'styles/colors';
 
 const TradeSetings = ({ color, size, fill, className, onClick }) => {
     const [theme] = useDarkMode()

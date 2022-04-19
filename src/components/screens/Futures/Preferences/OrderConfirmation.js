@@ -1,10 +1,8 @@
-import { useCallback } from 'react'
-import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
-import { SET_FUTURES_PREFERENCES } from 'redux/actions/types'
-import { FuturesOrderTypes } from 'redux/reducers/futures'
-import ToggleItem from './ToggleItem'
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_FUTURES_PREFERENCES } from 'redux/actions/types';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
+import ToggleItem from './ToggleItem';
 
 const FuturesPreferencesOrderConfirmation = () => {
     const preferences = useSelector(

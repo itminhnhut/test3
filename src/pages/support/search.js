@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import { ChevronRight, Slash } from 'react-feather'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { PATHS } from '../../constants/paths'
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
-import SupportBanner from 'components/screens/Support/SupportBanner'
-import classNames from 'classnames'
-import Link from 'next/link'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import useApp from 'hooks/useApp'
-import SearchResultItem from 'components/screens/Support/SearchResultItem'
-import useWindowSize from 'hooks/useWindowSize'
-import { BREAK_POINTS } from 'constants/constants'
-import { algoliaIndex, getLastedArticles, querySupportArticles } from 'utils'
-import { useAsync } from 'react-use'
-import { useTranslation } from 'next-i18next'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import RePagination from 'components/common/ReTable/RePagination'
-import { appUrlHandler } from 'constants/faqHelper'
+import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { ChevronRight, Slash } from 'react-feather';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { PATHS } from '../../constants/paths';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import SupportBanner from 'components/screens/Support/SupportBanner';
+import classNames from 'classnames';
+import Link from 'next/link';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useApp from 'hooks/useApp';
+import SearchResultItem from 'components/screens/Support/SearchResultItem';
+import useWindowSize from 'hooks/useWindowSize';
+import { BREAK_POINTS } from 'constants/constants';
+import { algoliaIndex } from 'utils';
+import { useAsync } from 'react-use';
+import { useTranslation } from 'next-i18next';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import RePagination from 'components/common/ReTable/RePagination';
+import { appUrlHandler } from 'constants/faqHelper';
 
 const PAGE_SIZE = 15
 

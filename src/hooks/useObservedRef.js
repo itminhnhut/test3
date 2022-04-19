@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react';
 
 function useObservedRef({ createObserver, reset, disabled }) {
     const currentNodeRef = useRef(null)

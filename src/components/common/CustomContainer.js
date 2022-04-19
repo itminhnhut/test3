@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const CustomContainer = ({ children, dimension =  { test: 'red'} }) => {
     return (

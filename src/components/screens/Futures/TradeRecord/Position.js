@@ -1,13 +1,12 @@
-import { useMemo, useEffect, useState } from 'react'
-import { formatNumber, getPriceColor } from 'redux/actions/utils'
-import { customTableStyles } from './index'
-import { ChevronDown, Edit } from 'react-feather'
+import { useMemo, useState } from 'react';
+import { formatNumber, getPriceColor } from 'redux/actions/utils';
+import { customTableStyles } from './index';
+import { ChevronDown, Edit } from 'react-feather';
 
-import FuturesRecordSymbolItem from './SymbolItem'
-import DataTable from 'react-data-table-component'
-import classNames from 'classnames'
-import colors from 'styles/colors'
-import FuturesEditSLTP from './EditSLTP'
+import FuturesRecordSymbolItem from './SymbolItem';
+import DataTable from 'react-data-table-component';
+import classNames from 'classnames';
+import FuturesEditSLTP from './EditSLTP';
 
 const FuturesPosition = ({ pairConfig }) => {
     const [isEdit, setIsEdit] = useState(false)

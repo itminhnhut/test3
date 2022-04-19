@@ -1,12 +1,8 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { SET_FUTURES_PREFERENCES } from 'redux/actions/types'
-import {
-    getFuturesUserSettings,
-    setFuturesPositionMode,
-} from 'redux/actions/futures'
-import { FuturesPositionMode } from 'redux/reducers/futures'
+import { useDispatch } from 'react-redux';
+import { getFuturesUserSettings, setFuturesPositionMode, } from 'redux/actions/futures';
+import { FuturesPositionMode } from 'redux/reducers/futures';
 
-import RadioBox from 'components/common/RadioBox'
+import RadioBox from 'components/common/RadioBox';
 
 const FuturesPreferencesPositionMode = ({ positionMode }) => {
     const dispatch = useDispatch()

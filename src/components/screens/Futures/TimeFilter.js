@@ -1,14 +1,13 @@
-import { memo, Fragment, useState, useMemo } from 'react'
-import { DatePicker } from 'antd'
-import { formatTime } from 'redux/actions/utils'
+import { Fragment, memo, useMemo, useState } from 'react';
+import { DatePicker } from 'antd';
+import { getS3Url } from 'redux/actions/utils';
 
-import classNames from 'classnames'
+import classNames from 'classnames';
 
-import 'antd/dist/antd.css'
-import { startOfDay, startOfWeek, startOfMonth, endOfDay, endOfWeek, endOfMonth, format } from 'date-fns';
+import 'antd/dist/antd.css';
+import { endOfDay, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
 import { Popover, Transition } from '@headlessui/react';
 import ChevronDown from 'src/components/svg/ChevronDown';
-import { getS3Url } from "redux/actions/utils";
 
 const { RangePicker } = DatePicker
 

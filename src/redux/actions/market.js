@@ -4,12 +4,16 @@ import { ApiStatus } from './const';
 import {
     API_CATEGORY_AVATAR_LIST,
     API_GET_ASSET_CONFIG,
-    API_GET_EXCHANGE_CONFIG, API_GET_FUTURES_MARKET_WATCH,
+    API_GET_EXCHANGE_CONFIG,
+    API_GET_FUTURES_MARKET_WATCH,
     API_GET_MARKET_WATCH,
     API_GET_ORDER_BOOK,
-    API_GET_RECENT_TRADE, API_GET_USD_RATE, API_METRIC_VIEW,
-    API_WATCH_LIST, SWAP_ESTIMATE_PRICE
-} from './apis'
+    API_GET_RECENT_TRADE,
+    API_GET_USD_RATE,
+    API_METRIC_VIEW,
+    API_WATCH_LIST,
+    SWAP_ESTIMATE_PRICE
+} from './apis';
 
 export const setUser = (user) => (dispatch) => dispatch({ type: types.SET_USER, payload: user });
 

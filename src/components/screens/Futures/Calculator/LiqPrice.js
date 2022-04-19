@@ -1,12 +1,12 @@
-import { useRef, useState } from 'react'
-import { ChevronDown } from 'react-feather'
+import { useRef, useState } from 'react';
+import { ChevronDown } from 'react-feather';
 
-import useOutsideClick from 'hooks/useOutsideClick'
-import classNames from 'classnames'
-import Slider from 'components/trade/InputSlider'
-import colors from 'styles/colors'
-import Button from 'components/common/Button'
-import { useTranslation } from 'next-i18next'
+import useOutsideClick from 'hooks/useOutsideClick';
+import classNames from 'classnames';
+import Slider from 'components/trade/InputSlider';
+import colors from 'styles/colors';
+import Button from 'components/common/Button';
+import { useTranslation } from 'next-i18next';
 
 const FuturesCalculatorLiqPrice = () => {
     const [positionMode, setPositionMode] = useState('One-way')

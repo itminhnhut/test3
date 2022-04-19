@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 import { IconSearch } from 'src/components/common/Icons';
-import { log } from 'src/utils';
 
 const SearchInput = ({
     placeholder,

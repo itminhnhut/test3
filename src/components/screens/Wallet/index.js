@@ -16,10 +16,10 @@ import Axios from 'axios';
 import Tab from 'components/common/Tab';
 import colors from 'styles/colors';
 import styled from 'styled-components';
-import { API_FARMING_SUMMARY, API_STAKING_SUMMARY, GET_FARMING_CONFIG, GET_STAKING_CONFIG } from 'redux/actions/apis';
+import { API_FARMING_SUMMARY, API_STAKING_SUMMARY } from 'redux/actions/apis';
 import { ApiStatus, WalletType } from 'redux/actions/const';
 import { useAsync } from 'react-use';
-import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market'
+import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market';
 import useWindowFocus from 'hooks/useWindowFocus';
 import { PATHS } from 'constants/paths';
 import NeedLogin from 'components/common/NeedLogin';

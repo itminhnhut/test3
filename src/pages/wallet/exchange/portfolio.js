@@ -1,5 +1,5 @@
-import ExchangePortfolio from 'components/screens/Wallet/Exchange/ExchangePortfolio'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import ExchangePortfolio from 'components/screens/Wallet/Exchange/ExchangePortfolio';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Portfolio = () => <ExchangePortfolio/>
 

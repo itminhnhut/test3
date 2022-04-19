@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
-import Slider from 'components/trade/InputSlider'
-import { faBullseye } from '@fortawesome/free-solid-svg-icons'
+import { useEffect, useState } from 'react';
+import Slider from 'components/trade/InputSlider';
 
 const FuturesOrderSlider = ({ size, onChange }) => {
     const [percent, setPercent] = useState(0)

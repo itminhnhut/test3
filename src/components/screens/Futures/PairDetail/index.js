@@ -1,29 +1,15 @@
-import {
-    memo,
-    useCallback,
-    useMemo,
-    useState,
-    useEffect,
-    useRef,
-    createRef,
-} from 'react'
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
-import {
-    formatNumber,
-    formatTime,
-    getDecimalScale,
-    secondToMinutesAndSeconds,
-} from 'redux/actions/utils'
-import { usePrevious } from 'react-use'
-import { ChevronDown } from 'react-feather'
-import { roundTo } from 'round-to'
+import { useCallback, useEffect, useMemo, useRef, useState, } from 'react';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { formatNumber, getDecimalScale, secondToMinutesAndSeconds, } from 'redux/actions/utils';
+import { usePrevious } from 'react-use';
+import { ChevronDown } from 'react-feather';
+import { roundTo } from 'round-to';
 
-import FuturesPairDetailItem from './PairDetailItem'
-import FuturesPairList from '../PairList'
-import InfoSlider from 'components/markets/InfoSlider'
-import classNames from 'classnames'
-import Countdown from 'react-countdown'
+import FuturesPairDetailItem from './PairDetailItem';
+import FuturesPairList from '../PairList';
+import InfoSlider from 'components/markets/InfoSlider';
+import classNames from 'classnames';
 
 const FuturesPairDetail = ({
     pairPrice,

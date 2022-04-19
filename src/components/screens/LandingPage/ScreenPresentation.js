@@ -1,10 +1,10 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
-import { useCallback } from 'react'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { useTranslation } from 'next-i18next'
-import { useWindowSize } from 'utils/customHooks'
-import { getS3Url } from 'redux/actions/utils'
+import { useCallback } from 'react';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { useTranslation } from 'next-i18next';
+import { useWindowSize } from 'utils/customHooks';
+import { getS3Url } from 'redux/actions/utils';
 
 const ScreenPresentation = ({ parentState }) => {
     // Use Hooks

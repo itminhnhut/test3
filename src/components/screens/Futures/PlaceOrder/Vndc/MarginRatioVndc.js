@@ -1,18 +1,13 @@
-import SpeedMeter from 'components/svg/SpeedMeter'
-import { ChevronDown, X } from 'react-feather'
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    setTransferModal,
-} from 'redux/actions/utils';
+import { formatNumber, setTransferModal, } from 'redux/actions/utils';
 import { useEffect, useState } from 'react';
-import { orderBy } from 'lodash'
-import { formatNumber } from 'redux/actions/utils'
-import { ApiStatus, UserSocketEvent } from 'redux/actions/const'
-import fetchApi from 'utils/fetch-api'
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
+import { orderBy } from 'lodash';
+import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
+import fetchApi from 'utils/fetch-api';
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { getProfitVndc } from './VndcFutureOrderType';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 
 const AVAILBLE_KEY = 'futures_available'
 

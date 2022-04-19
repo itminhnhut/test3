@@ -1,7 +1,7 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { SET_FUTURES_PREFERENCES } from 'redux/actions/types'
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_FUTURES_PREFERENCES } from 'redux/actions/types';
 
-import ToggleItem from './ToggleItem'
+import ToggleItem from './ToggleItem';
 
 const NOTI = {
     TPSL: 'TPSL',

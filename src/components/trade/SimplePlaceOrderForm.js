@@ -8,32 +8,28 @@ import find from 'lodash/find';
 import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
 import { useAsync, useDebounce, useLocalStorage } from 'react-use';
-import { getMarketWatch, getOrderBook } from 'redux/actions/market'
+import { getMarketWatch } from 'redux/actions/market';
 import InputSlider from 'src/components/trade/InputSlider';
 import * as Error from 'src/redux/actions/apiError';
-import {
-    ApiStatus,
-    EPS,
-    ExchangeOrderEnum,
-    PublicSocketEvent, SpotMarketPriceBias,
-} from 'src/redux/actions/const';
+import { ApiStatus, EPS, ExchangeOrderEnum, PublicSocketEvent, SpotMarketPriceBias, } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import {
     formatBalance,
-    formatPrice, getDecimalScale,
+    formatPrice,
+    getDecimalScale,
     getFilter,
     getLoginUrl,
     getSymbolString,
 } from 'src/redux/actions/utils';
 import fetchAPI from 'utils/fetch-api';
 import showNotification from 'utils/notificationService';
-import { GET_SPOT_FEE_CONFIG } from 'redux/actions/apis'
-import { max, min } from 'lodash/math'
-import { isNumber } from 'lodash'
+import { GET_SPOT_FEE_CONFIG } from 'redux/actions/apis';
+import { max, min } from 'lodash/math';
+import { isNumber } from 'lodash';
 
 let initPrice = '';
 

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import useDarkMode from 'hooks/useDarkMode'
+import { useEffect, useState } from 'react';
+import useDarkMode from 'hooks/useDarkMode';
 
 const useApp = () => {
     const [isApp, setApp] = useState(false)

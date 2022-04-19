@@ -1,18 +1,18 @@
-import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout'
-import MarketTrend from 'src/components/screens/Market/MarketTrend'
-import MarketTable, { favSubTab, subTab, tab } from 'src/components/screens/Market/MarketTable'
-import Axios from 'axios'
-import styled from 'styled-components'
-import useWindowFocus from 'hooks/useWindowFocus'
+import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
+import MarketTrend from 'src/components/screens/Market/MarketTrend';
+import MarketTable, { favSubTab, subTab, tab } from 'src/components/screens/Market/MarketTable';
+import Axios from 'axios';
+import styled from 'styled-components';
+import useWindowFocus from 'hooks/useWindowFocus';
 
-import { useCallback, useEffect, useState } from 'react'
-import { API_GET_TRENDING } from 'redux/actions/apis'
-import { getFuturesMarketWatch, getMarketWatch } from 'redux/actions/market'
-import { favoriteAction } from 'redux/actions/user'
-import { TRADING_MODE } from 'redux/actions/const'
-import { marketWatchToFavorite } from 'src/utils'
-import { useSelector } from 'react-redux'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useCallback, useEffect, useState } from 'react';
+import { API_GET_TRENDING } from 'redux/actions/apis';
+import { getFuturesMarketWatch, getMarketWatch } from 'redux/actions/market';
+import { favoriteAction } from 'redux/actions/user';
+import { TRADING_MODE } from 'redux/actions/const';
+import { marketWatchToFavorite } from 'src/utils';
+import { useSelector } from 'react-redux';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Market = () => {
     // * Initial State

@@ -2,9 +2,7 @@
 import fetchAPI from 'utils/fetch-api';
 import * as types from 'src/redux/actions/types';
 import { ApiStatus } from './const';
-import {
-    API_EARNING_POOLS, API_EARNING_POOL_DEPOSIT, API_EARNING_POOL_WITHDRAW,
-} from './apis';
+import { API_EARNING_POOL_DEPOSIT, API_EARNING_POOL_WITHDRAW, API_EARNING_POOLS, } from './apis';
 
 export const getEarningPools = ({ page, filterStatus, keyword, lastId }) => async (dispatch) => {
     try {

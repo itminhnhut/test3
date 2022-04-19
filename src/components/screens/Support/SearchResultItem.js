@@ -1,13 +1,12 @@
-import { ChevronRight } from 'react-feather'
-import Link from 'next/link'
-import { PATHS } from 'constants/paths'
-import useWindowSize from 'hooks/useWindowSize'
-import { memo, useMemo } from 'react'
-import { BREAK_POINTS } from 'constants/constants'
-import Skeletor from 'components/common/Skeletor'
-import { useTranslation } from 'next-i18next'
-import { formatTime } from 'redux/actions/utils'
-import Parse from 'html-react-parser'
+import Link from 'next/link';
+import { PATHS } from 'constants/paths';
+import useWindowSize from 'hooks/useWindowSize';
+import { memo, useMemo } from 'react';
+import { BREAK_POINTS } from 'constants/constants';
+import Skeletor from 'components/common/Skeletor';
+import { useTranslation } from 'next-i18next';
+import { formatTime } from 'redux/actions/utils';
+import Parse from 'html-react-parser';
 
 const SearchResultItem = memo(({ article, loading = false }) => {
     const { width } = useWindowSize()

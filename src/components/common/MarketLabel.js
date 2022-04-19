@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
-import SvgFlame from 'src/components/svg/SvgFlame'
+import { useCallback } from 'react';
+import SvgFlame from 'src/components/svg/SvgFlame';
 
 const MarketLabel = ({ labelType }) => {
 

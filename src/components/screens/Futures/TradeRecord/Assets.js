@@ -1,10 +1,10 @@
-import { useMemo } from 'react'
-import { formatNumber } from 'redux/actions/utils'
-import { ChevronDown } from 'react-feather'
-import { customTableStyles } from './index'
+import { useMemo } from 'react';
+import { formatNumber } from 'redux/actions/utils';
+import { ChevronDown } from 'react-feather';
+import { customTableStyles } from './index';
 
-import DataTable from 'react-data-table-component'
-import AssetLogo from '../../../wallet/AssetLogo'
+import DataTable from 'react-data-table-component';
+import AssetLogo from '../../../wallet/AssetLogo';
 
 const FuturesAssets = ({ pairConfig }) => {
     const columns = useMemo(

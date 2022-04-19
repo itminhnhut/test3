@@ -28,21 +28,20 @@
 // !USAGE: Support display list, sorting, pagination, resize column, custom style, ...
 // !EXAMPLE: => MarketTable.js => renderTable
 
-import RcTable from 'rc-table'
-import styled from 'styled-components'
-import colors from 'styles/colors'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import RePagination from 'src/components/common/ReTable/RePagination'
+import RcTable from 'rc-table';
+import styled from 'styled-components';
+import colors from 'styles/colors';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import RePagination from 'src/components/common/ReTable/RePagination';
 
-import { useState, memo, useEffect, useCallback } from 'react'
-import { CaretUpFilled, CaretDownFilled } from '@ant-design/icons'
-import { useTranslation } from 'next-i18next'
-import { Resizable } from 'react-resizable'
-import { castArray, orderBy } from 'lodash'
-import { ScaleLoader } from 'react-spinners'
+import { memo, useCallback, useEffect, useState } from 'react';
+import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
+import { useTranslation } from 'next-i18next';
+import { Resizable } from 'react-resizable';
+import { castArray, orderBy } from 'lodash';
 
-import 'rc-table/assets/index.css'
-import 'react-resizable/css/styles.css'
+import 'rc-table/assets/index.css';
+import 'react-resizable/css/styles.css';
 
 const HIDE_SORTER = ['star', 'operation']
 

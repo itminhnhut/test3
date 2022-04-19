@@ -1,6 +1,6 @@
-import { useTranslation } from "next-i18next";
-import { getS3Url } from "redux/actions/utils";
-import { DOWNLOAD_APP_LINK } from "src/redux/actions/const";
+import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
+import { DOWNLOAD_APP_LINK } from 'src/redux/actions/const';
 
 const DefaultMobileView = (props, ref) => {
     const { t } = useTranslation();

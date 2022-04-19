@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
-import { useTranslation } from 'next-i18next'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import SvgLookup from 'src/components/svg/SvgLookup'
+import { useMemo } from 'react';
+import { useTranslation } from 'next-i18next';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import SvgLookup from 'src/components/svg/SvgLookup';
 
 const Empty = ({ message, messageStyle, addClass, grpSize }) => {
     const { i18n: { language } } = useTranslation()

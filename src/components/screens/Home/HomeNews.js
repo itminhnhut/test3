@@ -1,12 +1,11 @@
-import Axios from 'axios'
+import Axios from 'axios';
 
-import { useEffect, useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'react-feather'
+import { useEffect, useState } from 'react';
 
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 
-import LastedNews from 'src/components/screens/Home/News/LastedNews'
-import News from 'src/components/screens/Home/News/News'
+import LastedNews from 'src/components/screens/Home/News/LastedNews';
+import News from 'src/components/screens/Home/News/News';
 
 const HomeNews = () => {
     // Initial State

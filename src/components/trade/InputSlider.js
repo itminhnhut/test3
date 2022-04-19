@@ -1,16 +1,8 @@
-import { useRef } from 'react'
-import ceil from 'lodash/ceil'
-import {
-    Active,
-    Dot,
-    DotContainer,
-    SliderBackground,
-    Thumb,
-    ThumbLabel,
-    Track,
-} from './StyleInputSlider'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import classNames from 'classnames'
+import { useRef } from 'react';
+import ceil from 'lodash/ceil';
+import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track, } from './StyleInputSlider';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import classNames from 'classnames';
 
 function getClientPosition(e) {
     const { touches } = e

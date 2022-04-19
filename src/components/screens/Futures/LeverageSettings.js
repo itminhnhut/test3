@@ -1,22 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { SET_FUTURES_PRELOADED_LEVERAGE } from 'redux/actions/types'
-import { API_FUTURES_LEVERAGE } from 'redux/actions/apis'
-import { Minus, Plus, X } from 'react-feather'
-import { ScaleLoader } from 'react-spinners'
-
-import classNames from 'classnames'
-import SvgWarning from 'components/svg/SvgWarning'
-import Button from 'components/common/Button'
-import Slider from 'components/trade/InputSlider'
-import colors from 'styles/colors'
-import Modal from 'components/common/ReModal'
-import axios from 'axios'
-import { formatNumber, getLoginUrl } from 'redux/actions/utils'
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
-import TradingInput from 'components/trade/TradingInput'
-
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
+import { Minus, Plus, X } from 'react-feather';
+import { ScaleLoader } from 'react-spinners';
+import SvgWarning from 'components/svg/SvgWarning';
+import Button from 'components/common/Button';
+import Slider from 'components/trade/InputSlider';
+import colors from 'styles/colors';
+import Modal from 'components/common/ReModal';
+import axios from 'axios';
+import { formatNumber, getLoginUrl } from 'redux/actions/utils';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import TradingInput from 'components/trade/TradingInput';
 
 const FuturesLeverageSettings = ({
     pair,

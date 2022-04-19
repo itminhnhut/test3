@@ -1,34 +1,34 @@
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import MCard from 'src/components/common/MCard'
-import colors from 'styles/colors'
-import Link from 'next/link'
-import AssetLogo from 'src/components/wallet/AssetLogo'
-import MarketLabel from 'src/components/common/MarketLabel'
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable'
-import RePagination from 'src/components/common/ReTable/RePagination'
-import showNotification from 'utils/notificationService'
-import Empty from 'src/components/common/Empty'
-import NeedLogin from 'src/components/common/NeedLogin'
-import Skeletor from 'components/common/Skeletor'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import MCard from 'src/components/common/MCard';
+import colors from 'styles/colors';
+import Link from 'next/link';
+import AssetLogo from 'src/components/wallet/AssetLogo';
+import MarketLabel from 'src/components/common/MarketLabel';
+import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
+import RePagination from 'src/components/common/ReTable/RePagination';
+import showNotification from 'utils/notificationService';
+import Empty from 'src/components/common/Empty';
+import NeedLogin from 'src/components/common/NeedLogin';
+import Skeletor from 'components/common/Skeletor';
 
-import { useCallback, useEffect, useState } from 'react'
-import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils'
-import { StarOutlined } from '@ant-design/icons'
-import { initMarketWatchItem, sparkLineBuilder } from 'src/utils'
-import { useTranslation } from 'next-i18next'
-import { IconStarFilled } from 'src/components/common/Icons'
-import { Search, X } from 'react-feather'
-import { useWindowSize } from 'utils/customHooks'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { EMPTY_VALUE } from 'constants/constants'
-import { remove } from 'lodash'
-import { TRADING_MODE } from 'redux/actions/const'
-import { favoriteAction } from 'redux/actions/user'
-import { useSelector } from 'react-redux'
-import { PATHS } from 'constants/paths'
+import { useCallback, useEffect, useState } from 'react';
+import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
+import { StarOutlined } from '@ant-design/icons';
+import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
+import { useTranslation } from 'next-i18next';
+import { IconStarFilled } from 'src/components/common/Icons';
+import { Search, X } from 'react-feather';
+import { useWindowSize } from 'utils/customHooks';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { EMPTY_VALUE } from 'constants/constants';
+import { remove } from 'lodash';
+import { TRADING_MODE } from 'redux/actions/const';
+import { favoriteAction } from 'redux/actions/user';
+import { useSelector } from 'react-redux';
+import { PATHS } from 'constants/paths';
 
-import 'react-loading-skeleton/dist/skeleton.css'
-import { useRouter } from 'next/router'
+import 'react-loading-skeleton/dist/skeleton.css';
+import { useRouter } from 'next/router';
 
 const MARKET_ROW_LIMIT = 20
 

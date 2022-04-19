@@ -1,7 +1,7 @@
-import classNames from 'classnames'
-import { PATHS } from 'constants/paths'
-import Link from 'next/link'
-import useApp from 'hooks/useApp'
+import classNames from 'classnames';
+import { PATHS } from 'constants/paths';
+import Link from 'next/link';
+import useApp from 'hooks/useApp';
 
 const SupportSection = ({
                             mode,

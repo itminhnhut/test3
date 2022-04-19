@@ -1,7 +1,7 @@
-import { memo, useCallback } from 'react'
-import { useSelector } from 'react-redux'
-import { TRADING_MODE } from 'redux/actions/const'
-import { formatNumber } from 'redux/actions/utils'
+import { memo, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { TRADING_MODE } from 'redux/actions/const';
+import { formatNumber } from 'redux/actions/utils';
 
 // mode = 'all' | 'avbl' | 'locked'
 

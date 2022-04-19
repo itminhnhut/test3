@@ -1,10 +1,10 @@
-import { memo } from 'react'
-import { ORDER_BOOK_MODE } from 'redux/actions/const'
+import { memo } from 'react';
+import { ORDER_BOOK_MODE } from 'redux/actions/const';
 
-import OrderBookAll from 'src/components/svg/OrderBookAll'
-import OrderBookBids from 'src/components/svg/OrderBookBids'
-import OrderBookAsks from 'src/components/svg/OrderBookAsks'
-import classNames from 'classnames'
+import OrderBookAll from 'src/components/svg/OrderBookAll';
+import OrderBookBids from 'src/components/svg/OrderBookBids';
+import OrderBookAsks from 'src/components/svg/OrderBookAsks';
+import classNames from 'classnames';
 
 const FuturesOrderBookFilter = memo(({ filterMode, onFilter }) => {
     return (

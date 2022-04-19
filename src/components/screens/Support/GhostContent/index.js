@@ -1,4 +1,4 @@
-import Parser from 'html-react-parser'
+import Parser from 'html-react-parser';
 
 const GhostContent = ({ content }) => {
     return (
