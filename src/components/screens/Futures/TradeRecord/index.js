@@ -95,7 +95,11 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
             <div className='flex-grow'>
                 <div className='custom_trading_record h-full overflow-auto'>
                     {tabActive === FUTURES_RECORD_CODE.position && !isVndcFutures && (
-                        <FuturesPosition pairConfig={pairConfig} />
+                        <FuturesPosition
+                            pairConfig={pairConfig}
+                            isHideOthers={hideOther}
+                            onForceUpdate={onForceUpdate}
+                        />
                     )}
 
                     {tabActive === FUTURES_RECORD_CODE.openOrders &&

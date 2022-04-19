@@ -70,5 +70,7 @@
     },
     "leverage": {
         "title": "Adjust Leverage"
-    }
+    },
+    "close_order_success": "Order #{{orderId}} was closed successfully.",
+    "close_order_failed": "Order #{{orderId}} was failed to close."
 }

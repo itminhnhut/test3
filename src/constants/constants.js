@@ -163,3 +163,96 @@ export const PRODUCT = {
     SPOT: 'Nami Spot',
     FUTURES: 'Nami Futures',
 }
+
+export const BINANCE_LEVERAGE_MARGIN = [
+    {
+        positionBracket: [
+            0,
+            50000
+        ],
+        maxLeverage: 125,
+        rate: 125,
+        amount: 0
+    },
+    {
+        positionBracket: [
+            50000,
+            250000
+        ],
+        maxLeverage: 100,
+        rate: 100,
+        amount: 50
+    },
+    {
+        positionBracket: [
+            250000,
+            1000000
+        ],
+        maxLeverage: 50,
+        rate: 50,
+        amount: 1300
+    },
+    {
+        positionBracket: [
+            1000000,
+            7500000
+        ],
+        maxLeverage: 20,
+        rate: 20,
+        amount: 16300
+    },
+    {
+        positionBracket: [
+            7500000,
+            40000000
+        ],
+        maxLeverage: 10,
+        rate: 10,
+        amount: 203800
+    },
+    {
+        positionBracket: [
+            40000000,
+            100000000
+        ],
+        maxLeverage: 5,
+        rate: 5,
+        amount: 2203
+    },
+    {
+        positionBracket: [
+            100000000,
+            200000000
+        ],
+        maxLeverage: 4,
+        rate: 4,
+        amount: 4703
+    },
+    {
+        positionBracket: [
+            200000000,
+            400000000
+        ],
+        maxLeverage: 3,
+        rate: 3,
+        amount: 9703
+    },
+    {
+        positionBracket: [
+            400000000,
+            600000000
+        ],
+        maxLeverage: 2,
+        rate: 2,
+        amount: 49703
+    },
+    {
+        positionBracket: [
+            600000000,
+            1000000000
+        ],
+        maxLeverage: 1,
+        rate: 1,
+        amount: 199703
+    }
+]
