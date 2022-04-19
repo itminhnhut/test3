@@ -16,6 +16,7 @@ import {
 } from "redux/actions/apis";
 import TableNoData from "components/common/table.old/TableNoData";
 import Skeletor from "components/common/Skeletor";
+import TableLoader from "components/loader/TableLoader";
 
 const FuturesOpenOrders = ({pairConfig}) => {
     const {t} = useTranslation(['common', 'futures']);
@@ -174,11 +175,7 @@ const FuturesOpenOrders = ({pairConfig}) => {
             customStyles={customTableStyles}
             noDataComponent={<TableNoData/>}
             progressPending={loading}
-            progressComponent={
-                <div style={{width: '100%'}} className="p-4">
-                    <Skeletor width={'100%'} count={10} height={10}/>
-                </div>
-            }
+            progressComponent={<TableLoader/>}
         />
     )
 }

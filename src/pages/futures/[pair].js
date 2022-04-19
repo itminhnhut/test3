@@ -1,19 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
-import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants'
-import { ApiStatus, PublicSocketEvent } from 'redux/actions/const'
-import { WidthProvider, Responsive } from 'react-grid-layout'
-import { useSelector, useDispatch } from 'react-redux'
+import {useEffect, useMemo, useState} from 'react'
+import {BREAK_POINTS, LOCAL_STORAGE_KEY} from 'constants/constants'
+import {ApiStatus, PublicSocketEvent} from 'redux/actions/const'
+import {WidthProvider, Responsive} from 'react-grid-layout'
+import {useSelector, useDispatch} from 'react-redux'
 import {
     API_GET_FUTURES_CONFIGS,
     API_GET_FUTURES_MARKET_WATCH,
     API_GET_FUTURES_MARK_PRICE,
 } from 'redux/actions/apis'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { FUTURES_DEFAULT_SYMBOL } from './index'
-import { NavBarBottomShadow } from 'components/common/NavBar/NavBar'
-import { useRouter } from 'next/router'
-import { useAsync } from 'react-use'
-import { roundTo } from 'round-to'
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
+import {FUTURES_DEFAULT_SYMBOL} from './index'
+import {NavBarBottomShadow} from 'components/common/NavBar/NavBar'
+import {useRouter} from 'next/router'
+import {useAsync} from 'react-use'
+import {roundTo} from 'round-to'
 
 import FuturesMarketWatch from '../../models/FuturesMarketWatch'
 import FuturesMarkPrice from '../../models/FuturesMarkPrice'
@@ -39,7 +39,7 @@ import Emitter from 'redux/actions/emitter'
 import Axios from 'axios'
 
 import 'react-grid-layout/css/styles.css'
-import { log } from 'utils'
+import {log} from 'utils'
 import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
 import FuturesMarginRatioVndc from 'components/screens/Futures/PlaceOrder/Vndc/MarginRatioVndc';
 
@@ -48,7 +48,7 @@ const GridLayout = WidthProvider(Responsive)
 
 const FuturesProfitEarned = dynamic(
     () => import('components/screens/Futures/TakedProfit'),
-    { ssr: false }
+    {ssr: false}
 )
 
 const INITIAL_STATE = {
@@ -69,7 +69,7 @@ const INITIAL_STATE = {
 
 const Futures = () => {
     const [state, set] = useState(INITIAL_STATE)
-    const setState = (state) => set((prevState) => ({ ...prevState, ...state }))
+    const setState = (state) => set((prevState) => ({...prevState, ...state}))
 
     const publicSocket = useSelector((state) => state.socket.publicSocket)
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs)
@@ -78,7 +78,7 @@ const Futures = () => {
     const userSettings = useSelector((state) => state.futures.userSettings)
 
     const router = useRouter()
-    const { width } = useWindowSize()
+    const {width} = useWindowSize()
     const isMediumDevices = width >= BREAK_POINTS.lg
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
 
@@ -92,10 +92,10 @@ const Futures = () => {
     // Helper
     const getPairMarkPrice = async (symbol) => {
         if (!symbol) return
-        setState({ loading: true })
+        setState({loading: true})
         try {
-            const { data } = await Axios.get(API_GET_FUTURES_MARK_PRICE, {
-                params: { symbol },
+            const {data} = await Axios.get(API_GET_FUTURES_MARK_PRICE, {
+                params: {symbol},
             })
             if (data?.status === ApiStatus.SUCCESS) {
                 setState({
@@ -109,7 +109,7 @@ const Futures = () => {
 
     const subscribeFuturesSocket = (pair) => {
         if (!publicSocket) {
-            setState({ socketStatus: !!publicSocket })
+            setState({socketStatus: !!publicSocket})
         } else {
             if (
                 !state.prevPair ||
@@ -123,7 +123,7 @@ const Futures = () => {
                 publicSocket.emit('subscribe:futures:ticker', pair)
                 // publicSocket.emit('subscribe:futures:mini_ticker', 'all')
 
-                setState({ socketStatus: !!publicSocket, prevPair: pair })
+                setState({socketStatus: !!publicSocket, prevPair: pair})
             }
         }
     }
@@ -165,7 +165,8 @@ const Futures = () => {
                     return item;
                 })
             })
-        };
+        }
+        ;
         setLayoutToLS(isVndcFutures ? 'VNDC' : 'USDT', oldLayouts)
         return oldLayouts;
     }
@@ -187,13 +188,13 @@ const Futures = () => {
         })
     }
 
-    const setOrderInput = (depth = { rate: 0, amount: 0 }) => {
+    const setOrderInput = (depth = {rate: 0, amount: 0}) => {
         console.log('Set Input ', depth)
     }
 
     // ? Init Price and MarkPrice
     useEffect(() => {
-        setState({ pairPrice: null })
+        setState({pairPrice: null})
         if (Array.isArray(marketWatch) && marketWatch?.length) {
             setState({
                 pairPrice: marketWatch.find((o) => o.symbol === state.pair),
@@ -203,7 +204,7 @@ const Futures = () => {
     }, [marketWatch, state.pair])
 
     useEffect(() => {
-        setState({ markPrice: null })
+        setState({markPrice: null})
         getPairMarkPrice(state.pair)
     }, [state.pair])
 
@@ -233,7 +234,7 @@ const Futures = () => {
     // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
-            setState({ pair: router.query.pair })
+            setState({pair: router.query.pair})
             localStorage.setItem(
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,
                 router.query.pair
@@ -251,7 +252,7 @@ const Futures = () => {
         Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
             const pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset)
             if (state.pair === pairPrice?.symbol) {
-                setState({ pairPrice })
+                setState({pairPrice})
             }
         })
 
@@ -264,7 +265,7 @@ const Futures = () => {
                     state.pair === markPrice?.symbol &&
                     !!markPrice?.markPrice
                 ) {
-                    setState({ markPrice })
+                    setState({markPrice})
                 }
             }
         )
@@ -279,16 +280,11 @@ const Futures = () => {
 
     useEffect(() => {
         log.i('pairConfig => ', pairConfig, userSettings, state.layouts)
-        setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' })
+        setState({isVndcFutures: pairConfig?.quoteAsset === 'VNDC'})
     }, [pairConfig, userSettings, state.layouts])
 
     return (
         <>
-            <FuturesPageTitle
-                pair={state.pair}
-                price={state.pairPrice?.lastPrice}
-                pricePrecision={pairConfig?.pricePrecision}
-            />
             <DynamicNoSsr>
                 <MaldivesLayout
                     // useGridSettings
@@ -366,7 +362,7 @@ const Futures = () => {
                                         orderBookLayout={state.orderBookLayout}
                                         setOrderInput={setOrderInput}
                                         setAssumingPrice={(assumingPrice) =>
-                                            setState({ assumingPrice })
+                                            setState({assumingPrice})
                                         }
                                     />
                                 </div>
@@ -438,12 +434,13 @@ const Futures = () => {
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>
-            <FuturesProfitEarned isVisible={false} />
+
+            <FuturesProfitEarned isVisible={false}/>
         </>
     )
 }
 
-export const getStaticProps = async ({ locale }) => {
+export const getStaticProps = async ({locale}) => {
     return {
         props: {
             ...(await serverSideTranslations(locale, [
@@ -459,7 +456,7 @@ export const getStaticProps = async ({ locale }) => {
 
 export const getStaticPaths = async () => {
     return {
-        paths: [{ params: { pair: FUTURES_DEFAULT_SYMBOL } }],
+        paths: [{params: {pair: FUTURES_DEFAULT_SYMBOL}}],
         fallback: true,
     }
 }

@@ -1,27 +1,32 @@
-import { useMemo, useState, useEffect, useRef } from 'react'
-import { formatNumber, formatTime, getPriceColor } from 'redux/actions/utils'
-import { customTableStyles } from '../../TradeRecord/index'
-import { ChevronDown, Edit, Share2 } from 'react-feather'
+import React, {useMemo, useState, useEffect, useRef} from 'react'
+import {formatNumber, formatTime} from 'redux/actions/utils'
 
 import FuturesRecordSymbolItem from '../../TradeRecord/SymbolItem'
 import DataTable from 'react-data-table-component'
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
-import { ApiStatus, UserSocketEvent } from 'redux/actions/const'
-import Skeletor from 'src/components/common/Skeletor'
-import fetchApi from 'utils/fetch-api'
-import { useTranslation } from 'next-i18next'
 import Modal from 'components/common/ReModal'
 import Button from 'components/common/Button'
 import showNotification from 'utils/notificationService'
-import { useSelector } from 'react-redux'
-import { VndcFutureOrderType } from './VndcFutureOrderType'
+import {VndcFutureOrderType} from './VndcFutureOrderType'
 import OrderProfit from '../../TradeRecord/OrderProfit';
-import Big from "big.js";
 import FuturesEditSLTPVndc from './EditSLTPVndc'
+import FuturesTimeFilter2 from "components/screens/Futures/TradeRecord/FuturesTimeFilter2";
+import {FilterTradeOrder} from "components/screens/Futures/FilterTradeOrder";
+import {ChevronDown, Edit} from 'react-feather'
+
+import {useSelector} from 'react-redux'
+import {API_GET_FUTURES_ORDER} from 'redux/actions/apis'
+import {ApiStatus, UserSocketEvent} from 'redux/actions/const'
+
+import {useTranslation} from 'next-i18next'
+import fetchApi from 'utils/fetch-api'
+import Big from "big.js";
+import {isArray, isString} from "lodash";
 
 
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, auth }) => {
-    const { t } = useTranslation()
+import {customTableStyles} from '../../TradeRecord/index'
+
+const FuturesOpenOrdersVndc = ({pairConfig, onForceUpdate, hideOther, pairPrice, auth}) => {
+    const {t} = useTranslation()
     const columns = useMemo(
         () => [
             {
@@ -38,7 +43,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 name: t('futures:order_table:symbol'),
                 selector: (row) => row?.symbol,
                 cell: (row) => (
-                    <FuturesRecordSymbolItem symbol={row?.symbol} />
+                    <FuturesRecordSymbolItem symbol={row?.symbol}/>
                 ),
                 sortable: true,
             },
@@ -50,7 +55,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             {
                 name: t('futures:order_table:side'),
                 selector: (row) => row?.type,
-                cell: (row) => <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{row?.side}</span>,
+                cell: (row) => <span
+                    className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{row?.side}</span>,
                 sortable: true,
             },
             {
@@ -74,7 +80,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             {
                 name: 'PNL (ROE%)',
                 selector: (row) => row?.pnl?.value,
-                cell: (row) => <OrderProfit order={row} pairPrice={pairPrice} />,
+                cell: (row) => <OrderProfit order={row} pairPrice={pairPrice}/>,
                 minWidth: '150px',
                 sortable: true,
             },
@@ -87,7 +93,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                             <div>{formatNumber(row?.sl, 0, 0, true)}</div>
                         </div>
                         {row.status !== VndcFutureOrderType.Status.CLOSED &&
-                            <Edit onClick={() => onOpenModify(row)} className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
+                        <Edit onClick={() => onOpenModify(row)}
+                              className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60'/>
                         }
                     </div>
                 ),
@@ -97,7 +104,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             {
                 name: '',
                 cell: (row) => (
-                    <div onClick={() => onDelete(row)} className='cursor-pointer hover:opacity-80 px-[28px] py-1 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                    <div onClick={() => onDelete(row)}
+                         className='cursor-pointer hover:opacity-80 px-[28px] py-1 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
                         Close
                     </div>
                 ),
@@ -110,7 +118,18 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     const [showModalDelete, setShowModalDelete] = useState(false)
     const rowData = useRef(null);
     const userSocket = useSelector((state) => state.socket.userSocket);
+    const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const [showModalEdit, setShowModalEdit] = useState(false)
+    const [filters, setFilters] = useState({
+        timeRange: [],
+        symbol: '',
+        status: '',
+        side: '',
+    })
+
+    const symbolOptions = useMemo(() => {
+        return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({value: e.symbol}))
+    }, [allPairConfigs])
 
     useEffect(() => {
         getDataSource();
@@ -121,7 +140,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
         const params = {
             status: 0,
         }
-        getOrders('GET', params, (data) => {
+        fetchOrder('GET', params, (data) => {
             setDataSource(data);
         });
     }
@@ -138,11 +157,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
         };
     }, [userSocket]);
 
-    const getOrders = async (method = 'GET', params, cb) => {
+    const fetchOrder = async (method = 'GET', params, cb) => {
         try {
-            const { status, data, message } = await fetchApi({
+            const {status, data, message} = await fetchApi({
                 url: API_GET_FUTURES_ORDER,
-                options: { method },
+                options: {method},
                 params: params,
             })
             if (status === ApiStatus.SUCCESS) {
@@ -178,11 +197,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             displaying_id: rowData.current.displaying_id,
             special_mode: 1
         }
-        getOrders('DELETE', params, () => {
+        fetchOrder('DELETE', params, () => {
             setShowModalDelete(false);
             showNotification(
                 {
-                    message: t('futures:close_order:close_successfully', { value: rowData.current?.displaying_id }),
+                    message: t('futures:close_order:close_successfully', {value: rowData.current?.displaying_id}),
                     title: `Chúc mừng bạn`,
                     type: 'success'
                 },
@@ -217,8 +236,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 }
                 text = row.price ? (formatNumber(row.price, 8)) : '';
                 return <div className="flex items-center ">
-                    <div>{text}<br />{bias}</div>
-                    <Edit onClick={() => onOpenModify(row)} className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
+                    <div>{text}<br/>{bias}</div>
+                    <Edit onClick={() => onOpenModify(row)} className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60'/>
                 </div>;
             case VndcFutureOrderType.Status.ACTIVE:
                 text = row.open_price ? formatNumber(row.open_price, 8) : '';
@@ -237,7 +256,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     }
 
     const onConfirmEdit = (params) => {
-        getOrders('PUT', params, () => {
+        fetchOrder('PUT', params, () => {
             setShowModalEdit(false);
             showNotification(
                 {
@@ -253,10 +272,31 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     }
 
     const _dataSource = useMemo(() => {
-        return !hideOther ? dataSource : dataSource.filter(i => i.symbol === pairConfig?.symbol);
-    }, [hideOther, dataSource])
+        return dataSource.filter(o => {
+            const conditions = []
+            if (hideOther) {
+                conditions.push(o.symbol === pairConfig?.symbol)
+            }
+            if (filters.side) {
+                conditions.push(o.side === filters.side)
+            }
+            if (Object.values(VndcFutureOrderType.Status).includes(filters.status)) {
+                conditions.push(parseInt(o.status) === filters.status)
+            }
 
-    if (!auth) return <div className="flex items-center justify-center h-full">{t('futures:order_table:login_to_continue')}</div>;
+            const createdAt = new Date(o.created_at).valueOf()
+
+            if (isArray(filters.timeRange) && filters.timeRange.length > 0) {
+                conditions.push(createdAt > filters.timeRange[0].valueOf() && createdAt < filters.timeRange[1].valueOf())
+            }
+
+            return conditions.every(e => e)
+        });
+
+    }, [hideOther, dataSource, filters])
+
+    if (!auth) return <div
+        className="flex items-center justify-center h-full">{t('futures:order_table:login_to_continue')}</div>;
     return (
         <>
             <Modal
@@ -265,37 +305,93 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             >
                 <div className="w-[390px]">
                     <div className="text-center text-xl font-bold capitalize">
-                        {t('futures:close_order:modal_title', { value: rowData.current?.displaying_id })}
+                        {t('futures:close_order:modal_title', {value: rowData.current?.displaying_id})}
                     </div>
-                    <div className="mt-3 text-center text-lg" dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: rowData.current?.displaying_id }) }} >
+                    <div className="mt-3 text-center text-lg"
+                         dangerouslySetInnerHTML={{__html: t('futures:close_order:confirm_message', {value: rowData.current?.displaying_id})}}>
                     </div>
                     <div className="mt-4 w-full flex flex-row items-center justify-center">
-                        <Button title={t('common:cancel')} type="default"
+                        <Button
+                            title={t('common:cancel')} type="default"
                             componentType="button"
-                            style={{ width: '48%' }}
+                            style={{width: '48%'}}
                             className="mr-[10px]"
-                            onClick={() => setShowModalDelete(false)} />
-                        <Button title={t('common:confirm')} type="primary"
+                            onClick={() => setShowModalDelete(false)}/>
+                        <Button
+                            title={t('common:confirm')} type="primary"
                             componentType="button"
-                            style={{ width: '48%' }}
-                            onClick={onConfirm} />
+                            style={{width: '48%'}}
+                            onClick={onConfirm}/>
                     </div>
                 </div>
             </Modal>
             {showModalEdit &&
-                <FuturesEditSLTPVndc
-                    isVisible={showModalEdit}
-                    order={rowData.current}
-                    onClose={() => setShowModalEdit(false)}
-                    status={rowData.current.status}
-                    pairPrice={pairPrice}
-                    onConfirm={onConfirmEdit}
-                />
+            <FuturesEditSLTPVndc
+                isVisible={showModalEdit}
+                order={rowData.current}
+                onClose={() => setShowModalEdit(false)}
+                status={rowData.current.status}
+                pairPrice={pairPrice}
+                onConfirm={onConfirmEdit}
+            />
             }
+            <div className='flex flex-row items-center'>
+                <FuturesTimeFilter2
+                    currentTimeRange={filters.timeRange}
+                    onChange={(value) => {
+                        setFilters({...filters, timeRange: value})
+                    }}
+                />
+                <FilterTradeOrder
+                    label='Symbol'
+                    options={symbolOptions}
+                    value={filters.symbol}
+                    onChange={(value) => {
+                        setFilters({...filters, symbol: value})
+                    }}
+                />
+                <FilterTradeOrder
+                    label='Side'
+                    options={[{value: 'Buy'}, {value: 'Sell'}]}
+                    value={filters.side}
+                    onChange={(value) => {
+                        setFilters({...filters, side: value})
+                    }}
+                />
+                <FilterTradeOrder
+                    label='Status'
+                    options={[
+                        {
+                            value: VndcFutureOrderType.Status.PENDING,
+                            label: 'Pending'
+                        },
+                        {
+                            value: VndcFutureOrderType.Status.ACTIVE,
+                            label: 'Opening'
+                        }
+                    ]}
+                    value={filters.status}
+                    onChange={(value) => {
+                        setFilters({...filters, status: value})
+                    }}
+                />
+                <div
+                    onClick={() => {
+                        setFilters({
+                            timeRange: [],
+                            symbol: '',
+                            status: '',
+                            side: '',
+                        })
+                    }}
+                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    Reset
+                </div>
+            </div>
             <DataTable
                 responsive
                 fixedHeader
-                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
+                sortIcon={<ChevronDown size={8} strokeWidth={1.5}/>}
                 data={_dataSource}
                 columns={columns}
                 customStyles={customTableStyles}
@@ -303,41 +399,5 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
         </>
     )
 }
-
-const data = [
-    {
-        key: 1,
-        created_at: 1646607132000,
-        symbol: { pair: 'ETHUSDT', baseAsset: 'ETH', quoteAsset: 'USDT' },
-        type: 'Limit',
-        side: 'Buy',
-        entryPrice: 100000,
-        lastPrice: 121000,
-        pnl: { value: 0.32, roe: 5.57 },
-        tpsl: [44000.0, 41900.0],
-    },
-    {
-        key: 2,
-        created_at: 1646607132000,
-        symbol: { pair: 'ETHUSDT', baseAsset: 'ETH', quoteAsset: 'USDT' },
-        type: 'Limit',
-        side: 'Buy',
-        entryPrice: 100000,
-        lastPrice: 121000,
-        pnl: { value: 0.32, roe: 5.57 },
-        tpsl: [44000.0, 41900.0],
-    },
-    {
-        key: 3,
-        created_at: 1646607132000,
-        symbol: { pair: 'ETHUSDT', baseAsset: 'ETH', quoteAsset: 'USDT' },
-        type: 'Limit',
-        side: 'Buy',
-        entryPrice: 100000,
-        lastPrice: 121000,
-        pnl: { value: 0.32, roe: 5.57 },
-        tpsl: [44000.0, 41900.0],
-    },
-]
 
 export default FuturesOpenOrdersVndc
