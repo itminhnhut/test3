@@ -296,7 +296,6 @@ export class TVChartContainer extends React.PureComponent {
                 "paneProperties.horzGridProperties.color": isDark ? colors.darkBlue2 : colors.grey4,
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
-
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(() => this.saveChart(), 5000);
         });

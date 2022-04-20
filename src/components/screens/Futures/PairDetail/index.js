@@ -112,7 +112,7 @@ const FuturesPairDetail = ({
                                 })}
                             >
                                 {formatNumber(
-                                    markPrice?.fundingRate,
+                                    markPrice?.fundingRate * 100,
                                     4,
                                     4,
                                     true

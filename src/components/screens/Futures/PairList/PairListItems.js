@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { PublicSocketEvent } from 'redux/actions/const';
@@ -11,8 +11,13 @@ import Emitter from 'redux/actions/emitter';
 import { usePrevious } from 'react-use';
 import { formatNumber } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
+import Star from 'components/svg/Star';
+import colors from 'styles/colors';
+import { favoriteAction } from 'redux/actions/user';
+import { TRADING_MODE } from 'src/redux/actions/const';
 
-const FuturesPairListItems = ({ pairConfig, changePercent24h }) => {
+
+const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite }) => {
     const [pairTicker, setPairTicker] = useState(null)
 
     const publicSocket = useSelector((state) => state.futures.publicSocket)
@@ -24,10 +29,29 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h }) => {
     const router = useRouter()
 
     const onReceiveTicker = debounce((ticker) => setPairTicker(ticker), 1000)
+    const isClickFavorite = useRef(false);
+
+    const handleSetFavorite = async () => {
+        isClickFavorite.current = true;
+        console.log('wating for api')
+        // await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.EXCHANGE, pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset)
+        // await favoriteAction('get', TRADING_MODE.EXCHANGE)
+    }
 
     const renderContract = useCallback(() => {
         return (
             <div style={{ flex: '1 1 0%' }} className='flex items-center'>
+                <Star
+                    onClick={handleSetFavorite}
+                    size={14}
+                    fill={isFavorite
+                        ? colors.yellow
+                        : isDark
+                            ? colors.darkBlue5
+                            : colors.grey2
+                    }
+                    className='cursor-pointer mr-[10px]'
+                />
                 <div></div> {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
             </div>
         )
@@ -115,7 +139,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h }) => {
         <div
             className='px-4 py-0.5 flex items-center justify-between font-medium text-xs rounded-[2px] hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer select-none'
             onClick={() =>
-                router.push(PATHS.FUTURES_V2.DEFAULT + `/${pairConfig?.pair}`)
+                !isClickFavorite.current && router.push(PATHS.FUTURES_V2.DEFAULT + `/${pairConfig?.pair}`)
             }
         >
             {renderContract()}

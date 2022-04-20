@@ -20,7 +20,7 @@ import { getWallet, setTheme } from 'redux/actions/user';
 import Head from 'src/components/common/Head';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
-import { getMe, getUserFuturesBalance } from 'src/redux/actions/user';
+import { getMe, getUserFuturesBalance, getVip } from 'src/redux/actions/user';
 import initUserSocket from 'src/redux/actions/userSocket';
 import { useStore } from 'src/redux/store';
 // import * as fpixel from 'src/utils/fpixel';
@@ -83,6 +83,7 @@ const App = ({ Component, pageProps }) => {
     // Khởi tạo access token
     useAsync(async () => {
         await store.dispatch(getMe())
+        await store.dispatch(getVip())
         store.dispatch({
             type: SET_LOADING_USER,
             payload: false,

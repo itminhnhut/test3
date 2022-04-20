@@ -108,6 +108,9 @@
         "notification_limit_is_up": "Giới hạn thông báo là 25 tin mỗi ngày/mỗi người dùng. Bao gồm 5 loại lệnh: Take Profit/Stop Loss Limit, Take Profit/Stop Loss Market và Trailing Stop.",
         "funding_fee_trigger": "Kích hoạt phí Funding",
         "you_will_be_notified_when": "Bạn sẽ được thông báo khi phí funding dự kiến đạt.",
-        "you_will_be_notified_of":"Bạn sẽ được thông báo về những sự kiện sau thông qua Email/SMS/Inmail. Bạn có thể bật/tắt thông báo. Cài đặt này áp dụng cho cả Hợp đồng USD-M Futures and COIN-M Futures."
-    }
+        "you_will_be_notified_of": "Bạn sẽ được thông báo về những sự kiện sau thông qua Email/SMS/Inmail. Bạn có thể bật/tắt thông báo. Cài đặt này áp dụng cho cả Hợp đồng USD-M Futures and COIN-M Futures."
+    },
+    "fee_tier": "Mức phí",
+    "maker": "Maker",
+    "taker": "Taker"
 }

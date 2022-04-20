@@ -46,7 +46,6 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
         if (tableRef?.current?.clientHeight) {
             // console.log('Re-calculate height ')
             const tableHeight = tableRef.current.clientHeight - 42
-            const pagingVndc = isVndcFutures ? 50 : 0;
             const tableHeaderElement =
                 document.getElementsByClassName('rdt_TableHead')?.[0]
             const tableBodyElement =
@@ -58,7 +57,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                     tabActive === FUTURES_RECORD_CODE.tradingHistory ||
                     tabActive === FUTURES_RECORD_CODE.txHistory
                 ) {
-                    tableBodyElement.style.height = `${tableHeight - tableHeaderElement?.clientHeight - 15 - 32 - pagingVndc
+                    tableBodyElement.style.height = `${tableHeight - tableHeaderElement?.clientHeight - 15 - 32
                         }px`
                 } else {
                     tableBodyElement.style.maxHeight = `${tableHeight - tableHeaderElement?.clientHeight - 15
