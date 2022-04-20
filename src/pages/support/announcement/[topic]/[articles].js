@@ -39,7 +39,6 @@ const AnnouncementArticle = (props) => {
 
     return (
         <>
-            {/*<SupportCenterHead article={props?.data?.article}/>*/}
             <SEO
                 title={article?.title}
                 url={router.asPath}
