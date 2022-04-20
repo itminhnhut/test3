@@ -1,4 +1,5 @@
 import Head from 'next/head';
+
 const APP_URL = process.env.APP_URL
 
 const socialTags = (props) => {
@@ -32,6 +33,7 @@ const SEO = (props) => {
     const {
         title,
         description,
+        keywords,
         image
     } = props;
     return <Head>
@@ -39,7 +41,7 @@ const SEO = (props) => {
         <meta key="name" itemprop="name" content={title}/>
         <meta key="description" name="description" content={description}/>
         <meta key="image" itemprop="image" content={image}/>
-        <meta key="keywords" name="keywords" content={description}/>
+        {keywords && <meta key="keywords" name="keywords" content={keywords}/>}
         {socialTags(props).map(({name, content}) => {
             return <meta key={name} name={name} content={content}/>;
         })}
