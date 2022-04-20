@@ -1,12 +1,12 @@
 import NextHead from 'next/head';
-import { config as configFont } from '@fortawesome/fontawesome-svg-core';
-import { useRouter } from 'next/router';
+import {config as configFont} from '@fortawesome/fontawesome-svg-core';
+import {useRouter} from 'next/router';
 
 configFont.autoAddCss = false;
 
-const SupportCenterHead = ({ article }) => {
+const SupportCenterHead = ({article}) => {
     const router = useRouter();
-    const { route } = router;
+    const {route} = router;
     const articleUrl = `${process.env.NEXT_PUBLIC_APP_URL}${router.asPath}`;
     return (
         <>
