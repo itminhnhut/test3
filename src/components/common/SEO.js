@@ -21,6 +21,7 @@ const socialTags = (props) => {
         {name: 'og:title', content: title},
         {name: 'og:url', content: APP_URL + url},
         {name: 'og:image', content: image},
+        {name: 'og:site_name', content: 'Nami Exchange'},
         {name: 'og:description', content: description},
         {name: 'og:published_time', content: createdAt},
         {name: 'og:modified_time', content: updatedAt},
