@@ -35,6 +35,7 @@ import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import GridLayoutSettings from './GridLayoutSettings';
+import FuturesSetting from '../../screens/Futures/FuturesSetting'
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -260,9 +261,9 @@ const NavBar = ({
                                             `navbar:submenu.${child.localized}_description`,
                                             child.localized === 'spot'
                                                 ? {
-                                                      pairsLength:
-                                                          state.pairsLength,
-                                                  }
+                                                    pairsLength:
+                                                        state.pairsLength,
+                                                }
                                                 : undefined
                                         )}
                                     </div>
@@ -304,9 +305,9 @@ const NavBar = ({
                                                 `navbar:submenu.${child.localized}_description`,
                                                 child.localized === 'spot'
                                                     ? {
-                                                          pairsLength:
-                                                              state.pairsLength,
-                                                      }
+                                                        pairsLength:
+                                                            state.pairsLength,
+                                                    }
                                                     : undefined
                                             )}
                                         </div>
@@ -338,16 +339,14 @@ const NavBar = ({
                             />
                             <div
                                 className={`mal-navbar__link__group___item___childen__lv1
-                                           ${
-                                               useDropdownWithIcon
-                                                   ? 'mal-navbar__link__group___item___childen__lv1__w__icon'
-                                                   : ''
-                                           }
-                                           ${
-                                               useOneCol && useDropdownWithIcon
-                                                   ? 'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0'
-                                                   : ''
-                                           }`}
+                                           ${useDropdownWithIcon
+                                        ? 'mal-navbar__link__group___item___childen__lv1__w__icon'
+                                        : ''
+                                    }
+                                           ${useOneCol && useDropdownWithIcon
+                                        ? 'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0'
+                                        : ''
+                                    }`}
                             >
                                 {useDropdownWithIcon
                                     ? itemsLevel1withIcon
@@ -581,20 +580,17 @@ const NavBar = ({
             <div
                 style={style || {}}
                 className={`mal-navbar__wrapper
-                            // ${
-                                useOnly === NAVBAR_USE_TYPE.FLUENT
-                                    ? 'mal-navbar__visible__blur'
-                                    : ''
-                            }
-                            // ${
-                                state.hideOnScroll
-                                    ? `mal-navbar__visible ${
-                                          useOnly === NAVBAR_USE_TYPE.FLUENT
-                                              ? 'mal-navbar__visible__blur'
-                                              : ''
-                                      }`
-                                    : 'mal-navbar__hidden'
-                            }
+                            // ${useOnly === NAVBAR_USE_TYPE.FLUENT
+                        ? 'mal-navbar__visible__blur'
+                        : ''
+                    }
+                            // ${state.hideOnScroll
+                        ? `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT
+                            ? 'mal-navbar__visible__blur'
+                            : ''
+                        }`
+                        : 'mal-navbar__hidden'
+                    }
                             ${navTheme.wrapper}
                  `}
             >
@@ -708,9 +704,16 @@ const NavBar = ({
                                     resetDefault={resetDefault}
                                     onChangeSpotState={onChangeSpotState}
                                 />
-                            ) : (
-                                renderThemeButton()
-                            )}
+                            ) : page === 'futures' ?
+                                <FuturesSetting
+                                    changeLayoutCb={changeLayoutCb}
+                                    spotState={spotState}
+                                    resetDefault={resetDefault}
+                                    onChangeSpotState={onChangeSpotState}
+                                />
+                                : (
+                                    renderThemeButton()
+                                )}
                         </div>
                     )}
 
@@ -725,11 +728,10 @@ const NavBar = ({
                         >
                             <SvgMenu
                                 size={25}
-                                className={`${
-                                    width >= 768
-                                        ? 'mal-navbar__hamburger__spacing'
-                                        : 'ml-3'
-                                } cursor-pointer`}
+                                className={`${width >= 768
+                                    ? 'mal-navbar__hamburger__spacing'
+                                    : 'ml-3'
+                                    } cursor-pointer`}
                                 color={navTheme.color}
                             />
                         </div>

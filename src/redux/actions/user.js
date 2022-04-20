@@ -28,7 +28,8 @@ import {
     API_PROFILE_USERNAME,
     API_REFRESH_TOKEN,
     API_USER_REFERRAL,
-    API_WITHDRAW_ONCHAIN
+    API_WITHDRAW_ONCHAIN,
+    API_GET_VIP
 } from './apis';
 import Axios from 'axios';
 import { SET_THEME, SET_USER } from './types';
@@ -1082,5 +1083,27 @@ export const withdrawOnchain = ({ assetId, amount, network, withdrawTo, tag, che
         dispatch({
             type: types.WITHDRAW_ONCHAIN_FAILURE,
         });
+    }
+};
+
+
+export const getVip = () => async (dispatch) => {
+    try {
+        const res = await fetchAPI({
+            url: API_GET_VIP,
+            options: {
+                method: 'GET',
+            },
+
+        });
+        const { status, data, message, code } = res;
+        if (status === ApiStatus.SUCCESS) {
+            dispatch({
+                type: types.SET_VIP,
+                payload: data,
+            });
+            return null;
+        }
+    } catch (error) {
     }
 };

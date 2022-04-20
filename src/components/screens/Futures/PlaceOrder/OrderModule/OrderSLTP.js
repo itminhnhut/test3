@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { ChevronDown } from 'react-feather';
 
-const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScalePrice }) => {
+const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScalePrice, getValidator }) => {
     const useSltp =
         useSelector((state) => state.futures.preloadedState?.useSltp) || false
 
@@ -36,6 +36,7 @@ const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScale
                         allowNegative={false}
                         value={orderSlTp.tp}
                         decimalScale={decimalScalePrice}
+                        validator={getValidator('take_profit')}
                         onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, tp: Number(value) })}
                         labelClassName='whitespace-nowrap'
                         tailContainerClassName='flex items-center font-medium text-xs select-none'
@@ -68,6 +69,7 @@ const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScale
                         allowNegative={false}
                         value={orderSlTp.sl}
                         decimalScale={decimalScalePrice}
+                        validator={getValidator('stop_loss')}
                         onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: Number(value) })}
                         labelClassName='whitespace-nowrap'
                         tailContainerClassName='flex items-center font-medium text-xs select-none'

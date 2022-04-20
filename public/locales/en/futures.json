@@ -106,8 +106,11 @@
         "notification_limit_is_up": "Notification limit is up to 25 per day per user. This includes 5 order types. Take Profit/Stop Lost Limit, Take Profit/Stop Loss Market, and Trailing Stop.",
         "funding_fee_trigger": "Funding Fee Trigger",
         "you_will_be_notified_when": "You will be notified when expected funding rate charged reaches.",
-        "you_will_be_notified_of":"You will be notifed of the following events via Email / SMS/ Inmail. You can turn the notification on/off. This setting applies to both USD-M Futures and COIN-M Futures"
+        "you_will_be_notified_of": "You will be notifed of the following events via Email / SMS/ Inmail. You can turn the notification on/off. This setting applies to both USD-M Futures and COIN-M Futures"
     },
     "close_order_success": "Order #{{orderId}} was closed successfully.",
-    "close_order_failed": "Order #{{orderId}} was failed to close."
+    "close_order_failed": "Order #{{orderId}} was failed to close.",
+    "fee_tier": "Fee Tier",
+    "maker": "Maker",
+    "taker": "Taker"
 }

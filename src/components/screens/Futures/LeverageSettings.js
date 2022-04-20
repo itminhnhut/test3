@@ -21,7 +21,8 @@ const FuturesLeverageSettings = ({
     setLeverage,
     pairConfig,
     leverageBracket,
-    isAuth
+    isAuth,
+    isVndcFutures
 }) => {
     const [loading, setLoading] = useState(false)
     const router = useRouter();
@@ -185,16 +186,20 @@ const FuturesLeverageSettings = ({
                     }
                 />
             </div>
-            <div className='mb-1 text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark select-none'>
-                *{t('futures:calulator:max_position_leverage')}: {renderNotionalCap()}
-            </div>
-            <span className='block mb-1 font-medium text-xs text-dominant'>
-                {t('futures:leverage:check_leverage')}
-            </span>
-            {isAuth && <>
+            {!isVndcFutures && <>
+                <div className='mb-1 text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark select-none'>
+                    *{t('futures:calulator:max_position_leverage')}: {renderNotionalCap()}
+                </div>
                 <span className='block mb-1 font-medium text-xs text-dominant'>
-                    {t('futures:leverage:position_limit_enlarge')}
+                    {t('futures:leverage:check_leverage')}
                 </span>
+            </>}
+            {isAuth && <>
+                {!isVndcFutures &&
+                    <span className='block mb-1 font-medium text-xs text-dominant'>
+                        {t('futures:leverage:position_limit_enlarge')}
+                    </span>
+                }
                 <div className='mt-2.5 flex items-start'>
                     <div className='pt-1'>
                         <SvgWarning size={12} fill={colors.red2} />

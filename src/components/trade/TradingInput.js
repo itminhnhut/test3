@@ -26,9 +26,7 @@ const TradingInput = ({
     const focusInput = () => inputRef?.current?.focus()
     const onFocus = () => setState({ isFocus: true })
     const onInputBlur = () => setState({ isFocus: false })
-
-    const isError = inputProps?.value && Object.keys(validator)?.length && !validator?.isValid;
-
+    const isError = (isNaN(inputProps?.value) ? inputProps?.value : inputProps?.value >= 0) && Object.keys(validator)?.length && !validator?.isValid;
     return (
         <div
             className={classNames(

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
 import { FuturesOrderTypes, FuturesStopOrderMode } from 'redux/reducers/futures';
 import { useTranslation } from 'next-i18next';
@@ -48,13 +48,24 @@ const FuturesOrderModule = ({
 }) => {
     // ? Use hooks
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
+    const firstTime = useRef(true);
 
     const { t } = useTranslation()
     const usdRate = useSelector((state) => state.utils.usdRate)
     const [orderSlTp, setOrderSlTp] = useState({
-        sl: 0,
-        tp: 0
+        sl: lastPrice,
+        tp: lastPrice
     })
+
+    useEffect(() => {
+        if (firstTime.current && lastPrice) {
+            firstTime.current = false;
+            setOrderSlTp({
+                sl: lastPrice,
+                tp: lastPrice
+            })
+        }
+    }, [currentType, lastPrice])
 
     // ? Data helper
     const getLastedLastPrice = async (symbol) => {
@@ -119,15 +130,17 @@ const FuturesOrderModule = ({
                 return { isValid, msg }
 
             case 'price':
+            case 'stop_loss':
+            case 'take_profit':
                 const _maxPrice = priceFilter?.maxPrice
                 const _minPrice = priceFilter?.minPrice
-
-                if (+(isStop ? stopPrice : price) < _minPrice) {
+                const _price = isStop ? stopPrice : type === 'price' ? price : type === 'stop_loss' ? orderSlTp.sl : orderSlTp.tp
+                if (+_price < +_minPrice) {
                     isValid = false
                     msg = `Minium Price is ${_minPrice}`
                 }
 
-                if (+(isStop ? stopPrice : price) > _maxPrice) {
+                if (+_price > +_maxPrice) {
                     isValid = false
                     msg = `Maxium Price is ${_maxPrice}`
                 }
@@ -188,11 +201,11 @@ const FuturesOrderModule = ({
 
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
-        const obj = inputValidator('price', ArrStop.includes(currentType)) || inputValidator('quantity');
+        const not_valid = !inputValidator('price', ArrStop.includes(currentType)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
         return (!isVndcFutures || currentType === FuturesOrderTypes.Market) ?
-            false : Object.keys(obj)?.length && !obj?.isValid
-    }, [price, size, currentType, stopPrice])
-
+            false : not_valid
+    }, [price, size, currentType, stopPrice, orderSlTp])
+    
     const countDecimals = (value) => {
         if (Math.floor(value) === value || !value) return 0;
         return value.toString().split(".")[1]?.length || 0;
@@ -209,6 +222,7 @@ const FuturesOrderModule = ({
                 quoteAsset={pairConfig?.quoteAsset}
                 quoteAssetId={pairConfig?.quoteAssetId}
                 isAuth={isAuth}
+                isVndcFutures={isVndcFutures}
             />
 
             {/* Order Input Scenario */}
@@ -283,6 +297,7 @@ const FuturesOrderModule = ({
                 orderSlTp={orderSlTp}
                 setOrderSlTp={setOrderSlTp}
                 decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
+                getValidator={inputValidator}
             />
 
             <Divider className='my-5' />

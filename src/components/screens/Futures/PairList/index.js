@@ -35,12 +35,17 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
             )
         }
 
-        return data?.map((pair) => (
-            <FuturesPairListItems
-                key={`futures_pairListItems_${pair?.pair}`}
-                pairConfig={pair}
-            />
-        ))
+        return data?.map((pair) => {
+            const isFavorite = favoritePairs.find(rs => rs.replace('_', '') === pair.symbol);
+            return (
+                <FuturesPairListItems
+                    key={`futures_pairListItems_${pair?.pair}`}
+                    pairConfig={pair}
+                    isDark={isDark}
+                    isFavorite={isFavorite}
+                />
+            )
+        })
     }, [pairConfigs, sortBy, keyword, mode])
 
     const onHandleMode = (key) => {

@@ -195,7 +195,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Futures',
                 localized: 'futures',
                 isNew: false,
-                url: 'https://nami.exchange/futures',
+                url: '/futures',
                 child_lv1: [],
             },
             {

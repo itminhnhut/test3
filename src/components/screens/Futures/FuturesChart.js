@@ -3,14 +3,15 @@ import { useTranslation } from 'next-i18next';
 
 const FuturesChart = ({
     pair,
-    initTimeFrame
+    initTimeFrame,
+    isVndcFutures
 }) => {
     const { t } = useTranslation();
     if (!pair) return null;
     return (
         <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark h-full dragHandleArea">
             <div className="spot-chart h-full flex flex-col">
-                <Chart t={t} symbol={pair} initTimeFrame={initTimeFrame}/>
+                <Chart t={t} symbol={pair} initTimeFrame={initTimeFrame} isVndcFutures={isVndcFutures}/>
             </div>
         </div>
     );

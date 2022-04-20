@@ -59,6 +59,17 @@ const INITIAL_STATE = {
     assumingPrice: null,
 };
 
+const initFuturesComponent = {
+    isShowFavorites: true,
+    isShowPairDetail: true,
+    isShowChart: true,
+    isShowOpenOrders: true,
+    isShowPlaceOrder: true,
+    isShowAssets: true,
+    isShowOrderBook: true,
+    isShowTrades: true
+};
+
 const Futures = () => {
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -71,8 +82,9 @@ const Futures = () => {
 
     const router = useRouter();
     const { width } = useWindowSize();
-    const isMediumDevices = width >= BREAK_POINTS.lg;
+    const isMediumDevices = width >= BREAK_POINTS.md;
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
+    const [filterLayout, setFilterLayout] = useState({ ...initFuturesComponent })
 
     // Memmoized Variable
     const pairConfig = useMemo(
@@ -144,7 +156,15 @@ const Futures = () => {
                             item.h = 2;
                         }
                         if (item.i === futuresGridKey.chart || item.i === futuresGridKey.favoritePair || item.i === futuresGridKey.pairDetail) {
-                            item.w = layout === 'lg' ? 10 : layout === 'xl' ? 12 : layout === '2xl' ? 15 : item.w;
+                            item.w = layout === 'md' ? 9 : layout === 'lg' ? 10 : layout === 'xl' ? 12 : layout === '2xl' ? 15 : item.w;
+                        }
+                        if (layout === 'md') {
+                            if (item.i === futuresGridKey.chart) {
+                                item.h = 29;
+                            }
+                            if (item.i === futuresGridKey.marginRatio) {
+                                item.h = 13;
+                            }
                         }
 
                         if (layout === 'lg') {
@@ -309,9 +329,12 @@ const Futures = () => {
     }, [publicSocket, state.pair]);
 
     useEffect(() => {
-        log.i('pairConfig => ', pairConfig, userSettings, state.layouts);
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
     }, [pairConfig, userSettings, state.layouts]);
+
+    const resetDefault = () => {
+        setFilterLayout({ ...initFuturesComponent })
+    }
 
     return (
         <>
@@ -327,6 +350,10 @@ const Futures = () => {
                         boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)',
                     }}
                     hideFooter
+                    page="futures"
+                    spotState={filterLayout}
+                    onChangeSpotState={setFilterLayout}
+                    resetDefault={resetDefault}
                 >
                     <div className="w-full">
                         {isMediumDevices && (
@@ -353,7 +380,7 @@ const Futures = () => {
                                 {auth && (
                                     <div
                                         key={futuresGridKey.favoritePair}
-                                        className="border border-divider dark:border-divider-dark"
+                                        className={`border border-divider dark:border-divider-dark ${!filterLayout.isShowFavorites ? 'hidden' : ''}`}
                                     >
                                         <FuturesFavoritePairs
                                             favoritePairLayout={
@@ -365,7 +392,7 @@ const Futures = () => {
                                 )}
                                 <div
                                     key={futuresGridKey.pairDetail}
-                                    className="relative z-20 border border-divider dark:border-divider-dark"
+                                    className={`relative z-20 border border-divider dark:border-divider-dark ${!filterLayout.isShowPairDetail ? 'hidden' : ''}`}
                                 >
                                     <FuturesPairDetail
                                         pairPrice={state.pairPrice}
@@ -380,16 +407,17 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.chart}
-                                    className="border border-divider dark:border-divider-dark"
+                                    className={`border border-divider dark:border-divider-dark ${!filterLayout.isShowChart ? 'hidden' : ''}`}
                                 >
                                     <FuturesChart
                                         pair={pairConfig?.pair}
                                         initTimeFrame="1D"
+                                        isVndcFutures={state.isVndcFutures}
                                     />
                                 </div>
                                 <div
                                     key={futuresGridKey.orderBook}
-                                    className={`border z-20 border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
+                                    className={`border z-20 border-divider dark:border-divider-dark ${isVndcFutures || !filterLayout.isShowOrderBook ? 'hidden' : ''}`}
                                 >
                                     <FuturesOrderBook
                                         pairConfig={pairConfig}
@@ -404,7 +432,7 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.recentTrades}
-                                    className={`border border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
+                                    className={`border border-divider dark:border-divider-dark ${isVndcFutures || !filterLayout.isShowTrades ? 'hidden' : ''}`}
                                 >
                                     <FuturesRecentTrades
                                         pairConfig={pairConfig}
@@ -412,7 +440,7 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.tradeRecord}
-                                    className="border border-divider dark:border-divider-dark"
+                                    className={`border border-divider dark:border-divider-dark ${!filterLayout.isShowOpenOrders ? 'hidden' : ''}`}
                                 >
                                     <FuturesTradeRecord
                                         isVndcFutures={state.isVndcFutures}
@@ -424,7 +452,7 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.placeOrder}
-                                    className="border border-divider dark:border-divider-dark"
+                                    className={`border border-divider dark:border-divider-dark ${!filterLayout.isShowPlaceOrder ? 'hidden' : ''}`}
                                 >
                                     {state.isVndcFutures ?
                                         <FuturesPlaceOrderVndc
@@ -451,7 +479,7 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.marginRatio}
-                                    className="border border-divider dark:border-divider-dark"
+                                    className={`border border-divider dark:border-divider-dark ${!filterLayout.isShowAssets ? 'hidden' : ''}`}
                                 >
                                     {state.isVndcFutures ?
                                         <FuturesMarginRatioVndc
@@ -470,7 +498,7 @@ const Futures = () => {
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>
-            <FuturesProfitEarned isVisible={false}/>
+            <FuturesProfitEarned isVisible={false} />
         </>
     );
 };
@@ -484,6 +512,7 @@ export const getStaticProps = async ({ locale }) => {
                 'trade',
                 'futures',
                 'wallet',
+                'spot',
             ])),
         },
     };

@@ -53,6 +53,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 sortable: true,
             },
             {
+                name: t('futures:leverage:leverage'),
+                cell: (row) => row?.leverage,
+                sortable: true,
+            },
+            {
                 name: t('futures:order_table:amount'),
                 cell: (row) => row?.quantity,
                 sortable: true,
@@ -301,6 +306,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     status={rowData.current.status}
                     pairPrice={pairPrice}
                     onConfirm={onConfirmEdit}
+                    pairConfig={pairConfig}
                 />
             }
             <DataTable

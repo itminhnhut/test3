@@ -126,7 +126,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                         {t('futures:unrealized_pnl')}
                     </span>
                     <span className='flex items-center font-medium'>
-                        <span className={totalProfit === 0 ? '' : totalProfit < 0 ? 'text-red' : 'text-teal'}>{totalProfit === 0 ? '' : totalProfit > 0 ? '+' : '-'}{formatNumber(totalProfit, 0, 0, true)}</span>
+                        <span className={totalProfit === 0 ? '' : totalProfit < 0 ? 'text-red' : 'text-teal'}>{totalProfit === 0 ? '' : totalProfit > 0 ? '+' : ''}{formatNumber(totalProfit, 0, 0, true)}</span>
                         <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
                             {pairConfig?.quoteAsset}
                         </span>

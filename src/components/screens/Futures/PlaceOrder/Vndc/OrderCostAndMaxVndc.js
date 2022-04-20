@@ -5,6 +5,8 @@ import { formatNumber } from 'redux/actions/utils';
 
 import TradingLabel from 'components/trade/TradingLabel';
 import Link from 'next/link';
+import ChevronDown from 'src/components/svg/ChevronDown';
+import { useSelector } from 'react-redux';
 
 const FuturesOrderCostAndMaxVndc = ({
     selectedAsset,
@@ -25,7 +27,7 @@ const FuturesOrderCostAndMaxVndc = ({
 }) => {
     const [shortOrderOpenLoss, setShortOrderOpenLoss] = useState(0)
     const [longOrderOpenLoss, setLongOrderOpenLoss] = useState(0)
-
+    const vip = useSelector((state => state?.user?.vip))
     const { t } = useTranslation()
 
     const isMarket =
@@ -120,17 +122,34 @@ const FuturesOrderCostAndMaxVndc = ({
             <div className='mt-2 flex items-center justify-between'>
                 {renderMax()}
             </div>
-            <Link href={'https://nami.exchange/fee-schedule/trading'}>
-                <a target='_blank'>
-                    <div className="text-teal underline cursor-pointer float-right mt-[8px] font-medium">{t('futures:fee_level')}</div>
-                </a>
-            </Link>
-            {/* <div className="text-teal underline cursor-pointer float-right mt-[8px] font-medium group">
-                <div className="">{t('futures:fee_level')}</div>
-                <div className="hidden group-hover:block absolute right-0 min-w-[200px] bg-white p-[10px]">
-                    123123123
+
+            <div className="float-right mt-[8px] group relative">
+                <div className="text-teal underline cursor-pointer font-medium ">{t('futures:fee_level')}</div>
+                <div className="hidden group-hover:block absolute right-0 min-w-[200px] bg-white shadow-onlyLight rounded-[8px]">
+                    <Link href={'/fee-schedule/trading'}>
+                        <a target='_blank'>
+                            <div className="flex items-center justify-between h-[44px] bg-gray-5 p-[10px] rounded-t-[8px]">
+                                <div>
+                                    <span className="text-darkBlue font-medium pr-[10px]">{t('futures:fee_tier')}</span>
+                                    <label className="text-teal font-semibold">VIP {vip?.level ?? 0}</label>
+                                </div>
+                                <div className="rotate-[270deg]"><ChevronDown /></div>
+                            </div>
+                        </a>
+                    </Link>
+                    <div className="p-[10px]">
+                        <div className="flex items-center justify-between">
+                            <label className="text-gray-1 font-medium">{t('futures:taker')}:</label>
+                            <span className="font-medium">0.1%</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <label className="text-gray-1 font-medium">{t('futures:maker')}:</label>
+                            <span className="font-medium">0.1%</span>
+                        </div>
+                    </div>
                 </div>
-            </div> */}
+            </div>
+
         </div>
     )
 }
