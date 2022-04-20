@@ -138,7 +138,7 @@ const App = ({ Component, pageProps }) => {
 
     return (
         <>
-            <Head />
+            <Head language={language}/>
             <Provider store={store}>
                 <Tracking>
                     <Component {...pageProps} />
