@@ -99,44 +99,21 @@ const SupportSearchResult = () => {
     }, [router])
 
     useAsync(async () => {
-        setState({ loading: true })
-
-        if (state.query) {
-            let tag
-            if (state.tab === 0) {
-                tag = 'faq'
-            } else if (state.tab === 1) {
-                tag = 'noti'
-            } else {
-                tag = undefined
-            }
-
-            // const allPosts = await getLastedArticles(tag, 'all', language, false)
-            // if (allPosts?.length) {
-            //     setState(
-            //         {
-            //             searchResult: allPosts.filter(o => o?.title?.toLowerCase().includes(state.query?.toLowerCase()))
-            //         }
-            //     )
-            // }
+        const tagFilters = [language === 'en' ? language : `-${language}`]
+        const tab = {
+            0: "faq",
+            1: "noti",
+        }[state.tab]
+        if (tab) {
+            tagFilters.push(tab)
         }
-        setState({ loading: false })
-    }, [state.query, state.tab, language])
-
-    useAsync(async () => {
-        console.log('namidev ', `${language === 'vi' ? 'NOT ': ''}tags.slug:en`);
         const algoSearch = await algoliaIndex.search(state.query, {
             page: state.currentPage - 1,
             hitsPerPage: 15,
-            // filters: `${language === 'vi' ? 'NOT ': ''}tags.slug:en`
+            facetFilters: tagFilters.map(t => `tags.slug:${t}`)
         })
-        console.log('namidev ', algoSearch);
         setState({ totalArticle: algoSearch?.nbHits, searchResult: algoSearch?.hits })
-    }, [state.query, state.currentPage, language])
-
-    // useEffect(() => {
-    //     console.log('namidev ', state)
-    // }, [state])
+    }, [state.query, state.currentPage, language, state.tab])
 
     return (
         <MaldivesLayout>
