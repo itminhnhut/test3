@@ -1,20 +1,24 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { customTableStyles } from '../../TradeRecord/index';
-import { ChevronDown, Share2 } from 'react-feather';
+import React, {useMemo, useState, useEffect} from 'react'
+import {customTableStyles} from '../../TradeRecord/index'
+import {ChevronDown, Share2} from 'react-feather'
 
-import DataTable from 'react-data-table-component';
-import fetchApi from 'utils/fetch-api';
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
-import Skeletor from 'src/components/common/Skeletor';
-import FuturesTimeFilter from '../../TimeFilter';
+import DataTable from 'react-data-table-component'
+import fetchApi from 'utils/fetch-api'
+import {API_GET_VNDC_FUTURES_HISTORY_ORDERS} from 'redux/actions/apis'
+import {ApiStatus} from 'redux/actions/const'
+import Skeletor from 'src/components/common/Skeletor'
+import {formatTime, formatNumber, getPriceColor, getS3Url} from 'redux/actions/utils'
+import {VndcFutureOrderType} from './VndcFutureOrderType';
+import FuturesTimeFilter2 from "components/screens/Futures/TradeRecord/FuturesTimeFilter2";
+import {FilterTradeOrder} from "components/screens/Futures/FilterTradeOrder";
+import {tableStyle} from "config/tables";
+import {useSelector} from "react-redux";
+import TableLoader from "components/loader/TableLoader";
 import { FUTURES_RECORD_CODE } from '../../TradeRecord/RecordTableTab';
-import { formatNumber, formatTime, getPriceColor } from 'redux/actions/utils';
-import { VndcFutureOrderType } from './VndcFutureOrderType';
 import { useTranslation } from 'next-i18next';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 
-const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChangeTimePicker, pickedTime, isAuth, onLogin }) => {
+const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin }) => {
     const { t } = useTranslation()
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false)
@@ -109,28 +113,54 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChang
         },
     ], [loading]
     )
-    
+
+    const [filters, setFilters] = useState({
+        timeFrom: null,
+        timeTo: null,
+        symbol: '',
+        side: '',
+    })
+
+    const [pagination, setPagination] = useState({
+        total: 0,
+        page: 1,
+        pageSize: 10
+    })
+
+    const darkMode = useSelector(state => state.user.theme === 'dark');
+    const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
+
+    const symbolOptions = useMemo(() => {
+        return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({value: e.symbol}))
+    }, [allPairConfigs])
+
+    useEffect(() => {
+        setFilters({...filters, symbol: hideOther ? pairConfig?.symbol : ''})
+    }, [hideOther])
+
 
     useEffect(() => {
         getOrders();
-    }, [])
+    }, [pagination.page, pagination.pageSize])
 
-    const getOrders = async (filter) => {
+    const getOrders = async () => {
         setLoading(true)
         try {
-            const { status, data } = await fetchApi({
-                url: API_GET_FUTURES_ORDER,
-                options: { method: 'GET' },
+            const {status, data} = await fetchApi({
+                url: API_GET_VNDC_FUTURES_HISTORY_ORDERS,
+                options: {method: 'GET'},
                 params: {
-                    status: 1,
-                    pageSize: 20,
-                    page: 0,
-                    ...filter
+                    pageSize: pagination.pageSize,
+                    page: pagination.page,
+                    ...filters,
+                    timeFrom: filters.timeFrom?.valueOf(),
+                    timeTo: filters.timeTo?.valueOf(),
                 },
             })
 
             if (status === ApiStatus.SUCCESS) {
                 setDataSource(data.orders)
+                setPagination({...pagination, total: data.total})
             } else {
                 setDataSource([])
             }
@@ -169,25 +199,107 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, onChang
         </div>
     </div>
 
+    const customStyles = {
+        headCells: {
+            style: {
+                whiteSpace: 'nowrap',
+            },
+        },
+        rows: {
+            style: {
+                marginBottom: '8px',
+            },
+        },
+        pagination: {
+            style: {
+                ...tableStyle.pagination?.style,
+                color: darkMode ? '#DBE3E6' : '#8B8C9B',
+                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
+            },
+            pageButtonsStyle: {
+                color: darkMode ? '#DBE3E6' : '#8B8C9B',
+                fill: darkMode ? '#DBE3E6' : '#8B8C9B',
+                '&:hover:not(:disabled)': {
+                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
+                },
+                '&:focus': {
+                    outline: 'none',
+                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
+                },
+                '&:disabled': {
+                    cursor: 'unset',
+                    color: darkMode ? '#8B8C9B' : '#d1d1d1',
+                    fill: darkMode ? '#8B8C9B' : '#d1d1d1',
+                },
+            },
+        },
+    }
+
     return (
         <>
             <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
-            <FuturesTimeFilter
-                currentTimeRange={pickedTime}
-                onChange={(pickedTime) =>
-                    onChangeTimePicker(
-                        FUTURES_RECORD_CODE.orderHistoryVndc,
-                        pickedTime
-                    )}
-                onFilter={getOrders}
-            />
+            <div className='flex flex-row items-center'>
+                <FuturesTimeFilter2
+                    currentTimeRange={[filters.timeFrom, filters.timeTo]}
+                    onChange={(value = []) => {
+                        setFilters({...filters, timeFrom: value[0], timeTo: value[1]})
+                    }}
+                />
+                <FilterTradeOrder
+                    label='Symbol'
+                    options={symbolOptions}
+                    value={filters.symbol}
+                    onChange={(value) => {
+                        setFilters({...filters, symbol: value})
+                    }}
+                />
+                <FilterTradeOrder
+                    label='Side'
+                    options={[{value: 'Buy'}, {value: 'Sell'}]}
+                    value={filters.side}
+                    onChange={(value) => {
+                        setFilters({...filters, side: value})
+                    }}
+                />
+                <div
+                    onClick={() => getOrders()}
+                    className="px-[8px] flex items-center py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    <img className='w-[12px] h-[12px]' src={getS3Url("/images/icon/ic_search.png")}/>&nbsp; Search
+                </div>
+                <div
+                    onClick={() => {
+                        setFilters({
+                            timeFrom: null,
+                            timeTo: null,
+                            symbol: '',
+                            side: '',
+                        })
+                        getOrders()
+                    }}
+                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    Reset
+                </div>
+            </div>
             <DataTable
                 responsive
                 fixedHeader
-                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-                data={loading ? data : dataSource}
+                expandableRows
+                sortIcon={<ChevronDown size={8} strokeWidth={1.5}/>}
+                data={dataSource}
                 columns={columns}
-                customStyles={customTableStyles}
+                customStyles={customStyles}
+                pagination
+                paginationServer
+                paginationTotalRows={pagination.total}
+                onChangeRowsPerPage={(pageSize) => {
+                    setPagination({...pagination, pageSize})
+                }}
+                onChangePage={(page) => {
+                    setPagination({...pagination, page})
+                }}
+                currentPage={pagination.page}
+                progressPending={loading}
+                progressComponent={<TableLoader/>}
             />
         </>
     )

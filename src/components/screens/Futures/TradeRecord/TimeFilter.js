@@ -7,7 +7,8 @@ import classNames from 'classnames';
 import 'antd/dist/antd.css';
 import { endOfDay, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
 import { Popover, Transition } from '@headlessui/react';
-import ChevronDown from 'src/components/svg/ChevronDown';
+import ChevronDown from 'components/svg/ChevronDown';
+import { getS3Url } from "redux/actions/utils";
 
 const { RangePicker } = DatePicker
 

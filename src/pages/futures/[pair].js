@@ -259,12 +259,9 @@ const Futures = () => {
         });
     };
 
-    const setOrderInput = (depth = {
-        rate: 0,
-        amount: 0
-    }) => {
-        console.log('Set Input ', depth);
-    };
+    const setOrderInput = (depth = {rate: 0, amount: 0}) => {
+        console.log('Set Input ', depth)
+    }
 
     // ? Init Price and MarkPrice
     useEffect(() => {
@@ -361,11 +358,6 @@ const Futures = () => {
 
     return (
         <>
-            <FuturesPageTitle
-                pair={state.pair}
-                price={state.pairPrice?.lastPrice}
-                pricePrecision={pairConfig?.pricePrecision}
-            />
             <DynamicNoSsr>
                 <MaldivesLayout
                     // useGridSettings
@@ -450,7 +442,7 @@ const Futures = () => {
                                         orderBookLayout={state.orderBookLayout}
                                         setOrderInput={setOrderInput}
                                         setAssumingPrice={(assumingPrice) =>
-                                            setState({ assumingPrice })
+                                            setState({assumingPrice})
                                         }
                                     />
                                 </div>
@@ -522,12 +514,13 @@ const Futures = () => {
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>
-            <FuturesProfitEarned isVisible={false} />
+
+            <FuturesProfitEarned isVisible={false}/>
         </>
     );
 };
 
-export const getStaticProps = async ({ locale }) => {
+export const getStaticProps = async ({locale}) => {
     return {
         props: {
             ...(await serverSideTranslations(locale, [
@@ -544,7 +537,7 @@ export const getStaticProps = async ({ locale }) => {
 
 export const getStaticPaths = async () => {
     return {
-        paths: [{ params: { pair: FUTURES_DEFAULT_SYMBOL } }],
+        paths: [{params: {pair: FUTURES_DEFAULT_SYMBOL}}],
         fallback: true,
     };
 };
