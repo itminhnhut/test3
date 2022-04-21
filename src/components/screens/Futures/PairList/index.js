@@ -46,7 +46,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
                 />
             )
         })
-    }, [pairConfigs, sortBy, keyword, mode])
+    }, [pairConfigs, sortBy, keyword, mode, favoritePairs])
 
     const onHandleMode = (key) => {
         setMode(key !== mode ? key : '')

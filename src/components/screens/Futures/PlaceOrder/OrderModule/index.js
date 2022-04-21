@@ -53,19 +53,18 @@ const FuturesOrderModule = ({
     const { t } = useTranslation()
     const usdRate = useSelector((state) => state.utils.usdRate)
     const [orderSlTp, setOrderSlTp] = useState({
-        sl: lastPrice,
-        tp: lastPrice
+        sl: '',
+        tp: ''
     })
-
-    useEffect(() => {
-        if (firstTime.current && lastPrice) {
-            firstTime.current = false;
-            setOrderSlTp({
-                sl: lastPrice,
-                tp: lastPrice
-            })
-        }
-    }, [currentType, lastPrice])
+    // useEffect(() => {
+    //     if (firstTime.current && lastPrice) {
+    //         firstTime.current = false;
+    //         setOrderSlTp({
+    //             sl: lastPrice,
+    //             tp: lastPrice
+    //         })
+    //     }
+    // }, [currentType, lastPrice])
 
     // ? Data helper
     const getLastedLastPrice = async (symbol) => {

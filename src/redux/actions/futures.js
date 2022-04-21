@@ -18,6 +18,7 @@ import {
     SET_FUTURES_ORDER_TYPES,
     SET_FUTURES_PAIR_CONFIGS,
     SET_FUTURES_USE_SLTP,
+    SET_FUTURES_ORDERS_LIST
 } from './types';
 import { favoriteAction } from './user';
 import { FuturesMarginMode } from 'redux/reducers/futures';
@@ -33,17 +34,17 @@ export const setUsingSltp = (payload) => (dispatch) =>
 
 export const setFuturesOrderTypes =
     (payload, isAdvance = false) =>
-    (dispatch) => {
-        dispatch({
-            type: SET_FUTURES_ORDER_TYPES,
-            payload,
-        })
-        isAdvance &&
+        (dispatch) => {
             dispatch({
-                type: SET_FUTURES_ORDER_ADVANCE_TYPES,
+                type: SET_FUTURES_ORDER_TYPES,
                 payload,
             })
-    }
+            isAdvance &&
+                dispatch({
+                    type: SET_FUTURES_ORDER_ADVANCE_TYPES,
+                    payload,
+                })
+        }
 
 export const getFuturesFavoritePairs = () => async (dispatch) => {
     const favoritePairs = await favoriteAction('get', TRADING_MODE.FUTURES)
@@ -84,7 +85,7 @@ export const getFuturesConfigs = () => async (dispatch) => {
                 payload: data?.data || [],
             })
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
 export const getFuturesUserSettings = () => async (dispatch) => {
@@ -249,7 +250,7 @@ const placeFuturesOrderValidator = (params, utils) => {
             _percentPriceDiff,
             `Is price diff between ${percentPrice?.multiplierDown} and ${percentPrice?.multiplierUp}`,
             _percentPriceDiff >= +percentPrice?.multiplierDown &&
-                _percentPriceDiff <= +percentPrice?.multiplierUp
+            _percentPriceDiff <= +percentPrice?.multiplierUp
         )
         _validator.percentPrice =
             _percentPriceDiff >= +percentPrice?.multiplierDown &&
@@ -258,4 +259,16 @@ const placeFuturesOrderValidator = (params, utils) => {
 
     log.d('Place Pre-Validator ', _validator)
     return _validator
+}
+
+export const getOrdersList = () => async (dispatch) => {
+    const { data } = await Axios.get(API_GET_FUTURES_ORDER, {
+        params: { status: 0 }
+    })
+    if (data?.status === ApiStatus.SUCCESS) {
+        dispatch({
+            type: SET_FUTURES_ORDERS_LIST,
+            payload: data?.data?.orders || [],
+        })
+    }
 }

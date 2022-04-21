@@ -10,6 +10,8 @@ import DepthChart from './depth';
 import TimeFrame from './timeFrame';
 import styles from './tradingview.module.scss';
 import { ChartMode } from 'redux/actions/const';
+import { VndcFutureOrderType } from '../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import { isMobile } from 'react-device-detect';
 
 const CONTAINER_ID = "nami-tv";
 const CHART_VERSION = "1.0.6";
@@ -20,7 +22,7 @@ const ChartStatus = {
     UNABLE_TO_CONNECT: 4,
 };
 // eslint-disable-next-line func-names
-
+const SignalSupportTimeframes = ['1', '5', '15', '60']
 export class TVChartContainer extends React.PureComponent {
     containerId = `${CONTAINER_ID}-${this.props.symbol}`;
 
@@ -35,6 +37,13 @@ export class TVChartContainer extends React.PureComponent {
     };
 
     tvWidget = null;
+    drawnOrder = {};
+    drawnSl = {};
+    drawnTp = {};
+    intervalSaveChart = null;
+    timer = null;
+    firstTime = true;
+    oldOrdersList = [];
 
     constructor(props) {
         super(props);
@@ -85,6 +94,9 @@ export class TVChartContainer extends React.PureComponent {
                 });
                 this.theme = newTheme;
             }
+        }
+        if ((prevProps.ordersList !== this.props.ordersList) && this.props.isVndcFutures && !this.firstTime) {
+            this.rawOrders();
         }
     }
 
@@ -158,19 +170,19 @@ export class TVChartContainer extends React.PureComponent {
     }
 
     loadSavedChart = () => {
-         // Load saved chart
-         let savedChart = localStorage.getItem(this.getChartKey);
-         if (savedChart) {
-             try {
-                 const symbol = this.props.symbol
-                 const data = JSON.parse(savedChart);
-                 if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
-                     this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
-                 }
-             } catch (err) {
-                 console.error('Load chart error', err);
-             }
-         }
+        // Load saved chart
+        let savedChart = localStorage.getItem(this.getChartKey);
+        if (savedChart) {
+            try {
+                const symbol = this.props.symbol
+                const data = JSON.parse(savedChart);
+                if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
+                    this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
+                }
+            } catch (err) {
+                console.error('Load chart error', err);
+            }
+        }
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -209,6 +221,113 @@ export class TVChartContainer extends React.PureComponent {
         } catch (err) {
             console.error("Save chart error", err);
         }
+    };
+
+    getOrderType = (order) => {
+        const orderType = order.status === VndcFutureOrderType.ACTIVE ? '' : order.type;
+        return `${order.side} ${orderType}`.toUpperCase();
+    };
+
+    getTicket = ({ displaying_id: displayingId }) => {
+        return displayingId;
+    }
+
+    toNormalText(line) {
+        if (!line) return null;
+        const font = line.getBodyFont();
+        const rex = /(.+)(\s+)(\dpt)(\s+)(.+)/;
+        return font.replace(rex, 'normal$2$3$4$5');
+    }
+
+    async newOrder(displayingId, order) {
+        try {
+            const color = this.getOrderType(order).startsWith('BUY') ? colors.teal : colors.red2;
+            const colorSl = colors.red2;
+            const colorTp = colors.teal;
+            const line = this.widget.chart().
+                createOrderLine().
+                onModify(() => { }).
+                setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} ${this.getOrderType(order)} ${order?.quantity}`).
+                setPrice(order?.open_price || order?.price).
+                setQuantity(null).
+                setTooltip(
+                    `${this.getOrderType(order)} ${order?.quantity} ${order?.symbol} at price ${order?.open_price}`).
+                setEditable(false).
+                setLineColor(color).
+                setBodyBorderColor(color).
+                setBodyTextColor(color).
+                setQuantityBackgroundColor(color).
+                setQuantityBorderColor(color).
+                setLineLength(120).
+                setBodyBackgroundColor('rgba(0,0,0,0)').
+                setBodyBorderColor('rgba(0,0,0,0)').
+                setCancelButtonBorderColor('rgb(255,0,0)').
+                setCancelButtonBackgroundColor('rgb(0,255,0)').
+                setCancelButtonIconColor('rgb(0,0,255)');
+            line.setBodyFont(this.toNormalText(line));
+            this.drawnOrder[displayingId] = line;
+            if (order.sl > 0) {
+                const lineSl = this.widget.chart().
+                    createOrderLine().
+                    setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} sl ${order.sl}`).
+                    setPrice(order.sl).
+                    setQuantity(null).
+                    setEditable(false).
+                    setLineColor(colorSl).
+                    setBodyTextColor(colorSl).
+                    setBodyBackgroundColor('rgba(0,0,0,0)').
+                    setBodyBorderColor('rgba(0,0,0,0)').
+                    setLineLength(100).
+                    setLineStyle(1);
+                lineSl.setBodyFont(this.toNormalText(lineSl));
+                this.drawnSl[displayingId] = lineSl;
+            }
+            if (order.tp > 0) {
+                const lineTp = this.widget.chart().
+                    createOrderLine().
+                    setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} tp ${order.tp}`).
+                    setPrice(order.tp).
+                    setQuantity(null).
+                    setEditable(false).
+                    setLineColor(colorTp).
+                    setBodyTextColor(colorTp).
+                    setBodyBackgroundColor('rgba(0,0,0,0)').
+                    setBodyBorderColor('rgba(0,0,0,0)').
+                    setLineLength(100).
+                    setLineStyle(1);
+                lineTp.setBodyFont(this.toNormalText(lineTp));
+                this.drawnTp[displayingId] = lineTp;
+            }
+            return line;
+        } catch (err) {
+            // console.error('__ err', err);
+        }
+    }
+
+    rawOrders = async () => {
+        const newDataOrders = this.props.ordersList.filter(order => order.status !== 3 && !this.oldOrdersList.find(id => order.displaying_id === id));
+        if (newDataOrders.length > 0) {
+            newDataOrders.forEach((order) => {
+                this.newOrder(order.displaying_id, order);
+            })
+        } else {
+            const removeOrders = this.oldOrdersList.filter(id => !this.props.ordersList.find(order => order.displaying_id === id));
+            removeOrders.forEach((id) => {
+                if (this.drawnOrder.hasOwnProperty(id)) {
+                    this.drawnOrder[id].remove();
+                    delete this.drawnOrder[id];
+                }
+                if (this.drawnSl.hasOwnProperty(id)) {
+                    this.drawnSl[id].remove();
+                    delete this.drawnSl[id];
+                }
+                if (this.drawnTp.hasOwnProperty(id)) {
+                    this.drawnTp[id].remove();
+                    delete this.drawnTp[id];
+                }
+            })
+        }
+        this.oldOrdersList = this.props?.ordersList.map(order => order.status !== 3 && order.displaying_id)
     };
 
     initWidget = (symbol, interval) => {
@@ -251,7 +370,7 @@ export class TVChartContainer extends React.PureComponent {
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            loading_screen: { backgroundColor: this.props.theme === "dark" ? "#00091F" : "#fff",},
+            loading_screen: { backgroundColor: this.props.theme === "dark" ? "#00091F" : "#fff", },
             studies_overrides: {
                 "volume.volume.color.0": colors.teal,
                 "volume.volume.color.1": colors.red2,
@@ -296,6 +415,12 @@ export class TVChartContainer extends React.PureComponent {
                 "paneProperties.horzGridProperties.color": isDark ? colors.darkBlue2 : colors.grey4,
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
+            if (this.props.isVndcFutures) {
+                setTimeout(() => {
+                    this.rawOrders();
+                    this.firstTime = false;
+                }, 2000);
+            }
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(() => this.saveChart(), 5000);
         });
@@ -319,11 +444,10 @@ export class TVChartContainer extends React.PureComponent {
                     id="chart-container"
                 >
                     <div
-                        className={`absolute w-full h-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark flex justify-center items-center ${
-                            this.state.chartStatus === ChartStatus.LOADED
-                                ? "hidden"
-                                : ""
-                        }`}
+                        className={`absolute w-full h-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark flex justify-center items-center ${this.state.chartStatus === ChartStatus.LOADED
+                            ? "hidden"
+                            : ""
+                            }`}
                     >
                         <IconLoading color="#00C8BC" />
                     </div>
@@ -365,11 +489,9 @@ export class TVChartContainer extends React.PureComponent {
 
                     <div
                         id={this.containerId}
-                        className={`${
-                            styles.TVChartContainer
-                        } flex-grow h-full w-full  ${
-                            chartType === "depth" && "hidden"
-                        }`}
+                        className={`${styles.TVChartContainer
+                            } flex-grow h-full w-full  ${chartType === "depth" && "hidden"
+                            }`}
                     />
                     {chartType === "depth" && (
                         <DepthChart

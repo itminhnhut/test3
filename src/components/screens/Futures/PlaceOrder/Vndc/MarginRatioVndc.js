@@ -14,7 +14,7 @@ const AVAILBLE_KEY = 'futures_available'
 const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     const dispatch = useDispatch();
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null
-    const userSocket = useSelector((state) => state.socket.userSocket);
+    const ordersList = useSelector(state => state?.futures?.ordersList)
     const wallets = useSelector(state => state.wallet.FUTURES)
     const [balance, setBalance] = useState({});
     const [totalProfit, setTotalProfit] = useState(0);
@@ -46,44 +46,13 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     }, [wallets, assetConfig])
 
     useEffect(() => {
-        getOrders();
-    }, [])
-
-    useEffect(() => {
-        if (userSocket) {
-            userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
-            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
-        }
-        return () => {
-            if (userSocket) {
-                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
-            }
-        };
-    }, [userSocket]);
-
-    useEffect(() => {
         let _totalProfit = 0;
-        listOrders.forEach((item) => {
+        ordersList.forEach((item) => {
             _totalProfit += getProfitVndc(item, lastPrice);
         });
         setTotalProfit(_totalProfit);
-    }, [lastPrice, listOrders])
+    }, [lastPrice, ordersList])
 
-    const getOrders = async () => {
-        try {
-            const { status, data, message } = await fetchApi({
-                url: API_GET_FUTURES_ORDER,
-                options: { method: 'GET' },
-                params: { status: 0 },
-            })
-            if (status === ApiStatus.SUCCESS && Array.isArray(data?.orders)) {
-                setListOrders(data?.orders)
-            }
-        } catch (e) {
-            console.log(e)
-        } finally {
-        }
-    }
 
     const onOpenTransfer = () => {
         dispatch(setTransferModal({ isVisible: true }))
