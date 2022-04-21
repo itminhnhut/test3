@@ -33,7 +33,7 @@ const FuturesOrderMarket = ({
             {isStopMarket && (
                 <TradingInput
                     containerClassName='mb-[12px]'
-                    label={'Stop Price'}
+                    label={t('common:stop_price')}
                     value={stopPrice}
                     onValueChange={({ value }) => setStopPrice(value)}
                     allowNegative={false}

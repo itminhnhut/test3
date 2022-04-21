@@ -12,10 +12,10 @@ import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/P
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { IconLoading } from 'components/common/Icons';
 
-const {PENDING, ACTIVE, CLOSED} = VndcFutureOrderType.Status
+const { PENDING, ACTIVE, CLOSED } = VndcFutureOrderType.Status
 const APP_URL = process.env.APP_URL || 'https://nami.exchange'
 
-const ShareFuturesOrder = ({isVisible, onClose, pairPrice, order = {}, isClosePrice}) => {
+const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isClosePrice }) => {
     const [hide, setHide] = useState({
         leverage: false,
         pnl: false,
@@ -47,8 +47,8 @@ const ShareFuturesOrder = ({isVisible, onClose, pairPrice, order = {}, isClosePr
 
         return {
             leverage: order?.leverage,
-            profit: formatNumber(profit, 0, 0, true),
-            percent: formatNumber((profit / order?.margin), 2, 0, true) + '%',
+            profit: formatNumber(order?.profit, 0, 0, true),
+            percent: formatNumber((order?.profit / order?.margin) * 100, 2, 0, true) + '%',
             price: formatNumber(price, 8),
             markPrice: formatNumber(pairPrice?.lastPrice, 8),
             closePrice: formatNumber(order?.close_price, 8),
@@ -64,11 +64,11 @@ const ShareFuturesOrder = ({isVisible, onClose, pairPrice, order = {}, isClosePr
         return html2canvas(element, {
             useCORS: true,
         }).then(canvas => {
-            const uri = canvas.toDataURL('svg', 1.0)
+            const uri = canvas.toDataURL('png', 1.0)
             const link = document.createElement('a');
 
             link.href = uri;
-            link.download = codeRefer + '.svg';
+            link.download = codeRefer + '.png';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -84,9 +84,9 @@ const ShareFuturesOrder = ({isVisible, onClose, pairPrice, order = {}, isClosePr
         >
             <div className='flex flex-col h-full rounded'>
                 <div ref={refNodeInfoOrder}
-                     className='flex flex-col flex-1 rounded bg-gradient-to-r from-teal to-[#00BEB3] my-[-10px] px-8 pt-8 py-5'>
+                    className='flex flex-col flex-1 rounded bg-gradient-to-r from-teal to-[#00BEB3] my-[-10px] px-8 pt-8 py-5'>
                     <div>
-                        <Image src="/images_v2/share-order-logo.svg" width={120} height={30}/>
+                        <Image src="/images_v2/share-order-logo.svg" width={120} height={30} />
                     </div>
                     <div className='flex flex-row flex-1 mt-6'>
                         <div className='flex flex-col w-2/3 text-white'>
@@ -122,7 +122,7 @@ const ShareFuturesOrder = ({isVisible, onClose, pairPrice, order = {}, isClosePr
                         </div>
                         <div>
                             <div className='p-3 bg-white rounded-xl'>
-                                <QRCode value={uriReferral} size={116} eyeRadius={1}/>
+                                <QRCode value={uriReferral} size={116} eyeRadius={1} />
                             </div>
                             <div className='flex flex-col items-center text-white mt-3'>
                                 <div className='text-sm font-medium'>Referral Code</div>
@@ -139,18 +139,18 @@ const ShareFuturesOrder = ({isVisible, onClose, pairPrice, order = {}, isClosePr
                                 label='Leverage'
                                 className='mr-6'
                                 active={!hide.leverage}
-                                onChange={() => setHide({...hide, leverage: !hide.leverage})}
+                                onChange={() => setHide({ ...hide, leverage: !hide.leverage })}
                             />
                             <CheckBox
                                 label='PNL Amount'
                                 className='mr-6'
                                 active={!hide.pnl}
-                                onChange={() => setHide({...hide, pnl: !hide.pnl})}
+                                onChange={() => setHide({ ...hide, pnl: !hide.pnl })}
                             />
                             <CheckBox
                                 label='Price'
                                 active={!hide.price}
-                                onChange={() => setHide({...hide, price: !hide.price})}
+                                onChange={() => setHide({ ...hide, price: !hide.price })}
                             />
                         </div>
                     </div>
@@ -164,12 +164,12 @@ const ShareFuturesOrder = ({isVisible, onClose, pairPrice, order = {}, isClosePr
                         <div
                             className={classNames(
                                 'flex justify-center items-center cursor-pointer w-full h-[50px] rounded-xl font-semibold bg-bgBtnPrimary text-txtBtnPrimary hover:opacity-80',
-                                {'!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3': downloading}
+                                { '!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3': downloading }
                             )}
                             onClick={() => downloadImage()}
                         >
                             <span>Download </span>
-                            {downloading && <span> <IconLoading color='#FFFFFF'/> </span>}
+                            {downloading && <span> <IconLoading color='#FFFFFF' /> </span>}
                         </div>
                     </div>
                 </div>

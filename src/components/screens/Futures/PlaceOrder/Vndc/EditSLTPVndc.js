@@ -90,7 +90,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
             <div className='px-5 pt-4 pb-6 text-sm'>
                 <div className='mb-3 font-medium flex items-center justify-between'>
                     <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                        {t('futures:symbol')}
+                        {t('futures:order_table:symbol')}
                     </span>
                     <span className='text-dominant'>{order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x</span>
                 </div>

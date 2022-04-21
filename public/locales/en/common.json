@@ -196,5 +196,6 @@
     "incomplete": "Incomplete",
     "view_manual": "View Manual",
     "search_articles": "Search articles",
-    "cost": "Cost"
+    "cost": "Cost",
+    "stop_price": "Stop Price"
 }

@@ -22,7 +22,7 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
                     'text-dominant': pair?.priceChangePercent >= 0,
                 })}
             >
-                {formatNumber(roundTo(pair?.priceChangePercent, 2), 2, 2, true)}
+                {formatNumber(roundTo(pair?.priceChangePercent * (pair?.quoteAsset === 'VNDC' ? 100 : 1), 2), 2, 2, true)}
                 %
             </div>
         </div>

@@ -1,6 +1,8 @@
 import classNames from 'classnames';
+import { useTranslation } from 'next-i18next'
 
 const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrders }) => {
+    const { t } = useTranslation()
     return (
         <div className='flex items-center flex-grow font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
             {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((tab) => (
@@ -12,7 +14,7 @@ const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrd
                         { 'text-dominant': tabActive === tab.code }
                     )}
                 >
-                    {tab.title}&nbsp;{isVndcFutures && tab.code === FUTURES_RECORD_CODE.openOrders && ' (' + countOrders + ')'}
+                    {isVndcFutures ? t(tab.title) : tab.title}&nbsp;{isVndcFutures && tab.code === FUTURES_RECORD_CODE.openOrders && ' (' + countOrders + ')'}
                 </div>
             ))}
             <div className='h-full flex-grow dragHandleArea opacity-0 select-none'>
@@ -37,13 +39,13 @@ const RECORD_TAB_VNDC = [
     {
         key: 1,
         code: FUTURES_RECORD_CODE.openOrders,
-        title: 'Open Orders',
+        title: 'spot:open_orders',
         localized: null,
     },
     {
         key: 2,
         code: FUTURES_RECORD_CODE.orderHistory,
-        title: 'Order History',
+        title: 'spot:order_history',
         localized: null,
     },
 ]

@@ -18,7 +18,7 @@ import { TRADING_MODE } from 'src/redux/actions/const';
 import { getFuturesFavoritePairs } from '../../../../redux/actions/futures'
 import { useDispatch } from 'react-redux';
 
-const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite }) => {
+const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite, isAuth }) => {
     const [pairTicker, setPairTicker] = useState(null)
     const dispatch = useDispatch();
     const publicSocket = useSelector((state) => state.futures.publicSocket)
@@ -41,17 +41,19 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
     const renderContract = useCallback(() => {
         return (
             <div style={{ flex: '1 1 0%' }} className='flex items-center'>
-                <Star
-                    onClick={handleSetFavorite}
-                    size={14}
-                    fill={isFavorite
-                        ? colors.yellow
-                        : isDark
-                            ? colors.darkBlue5
-                            : colors.grey2
-                    }
-                    className='cursor-pointer mr-[10px]'
-                />
+                {isAuth &&
+                    <Star
+                        onClick={handleSetFavorite}
+                        size={14}
+                        fill={isFavorite
+                            ? colors.yellow
+                            : isDark
+                                ? colors.darkBlue5
+                                : colors.grey2
+                        }
+                        className='cursor-pointer mr-[10px]'
+                    />
+                }
                 <div></div> {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
             </div>
         )
@@ -88,7 +90,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
             >
                 {pairTicker?.priceChangePercent
                     ? formatNumber(
-                        roundTo(pairTicker.priceChangePercent, 2),
+                        roundTo(pairTicker.priceChangePercent * (pairTicker?.quoteAsset === 'VNDC' ? 100 : 1), 2),
                         2,
                         2,
                         true

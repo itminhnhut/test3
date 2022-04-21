@@ -14,6 +14,7 @@ import {tableStyle} from "config/tables";
 import { useRouter } from 'next/router';
 import { getLoginUrl } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'next-i18next';
 
 const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, isAuth, ...check }) => {
     const ordersList = useSelector(state => state?.futures?.ordersList)
@@ -29,6 +30,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
     })
     const [forceUpdateState, setForceUpdateState] = useState(0)
     const tableRef = useRef(null)
+    const {t}=useTranslation();
 
     // ? Helper
     const onChangeTab = (tab) => tab !== tabActive && setTabActive(tab)
@@ -58,12 +60,17 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                 if (
                     tabActive === FUTURES_RECORD_CODE.orderHistory ||
                     tabActive === FUTURES_RECORD_CODE.tradingHistory ||
-                    tabActive === FUTURES_RECORD_CODE.txHistory
+                    tabActive === FUTURES_RECORD_CODE.txHistory ||
+                    tabActive === FUTURES_RECORD_CODE.openOrders
                 ) {
                     let offsetH = 32;
                     if (tabActive === FUTURES_RECORD_CODE.orderHistory && isVndcFutures) {
                         offsetH += 56
                     }
+                    if (tabActive === FUTURES_RECORD_CODE.openOrders && isVndcFutures) {
+                        offsetH += 22
+                    }
+                    console.log('offsetH',offsetH)
                     tableBodyElement.style.height = `${tableHeight - tableHeaderElement?.clientHeight - 15 - offsetH}px`
 
                 } else {
@@ -93,7 +100,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                 >
                     <CheckBox active={hideOther}/>{' '}
                     <span className='ml-1 whitespace-nowrap'>
-                        Hide Other Symbols
+                        {t('futures:hide_other_symbols')}
                     </span>
                 </div>
             </div>

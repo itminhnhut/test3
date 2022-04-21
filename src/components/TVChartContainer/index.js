@@ -305,7 +305,7 @@ export class TVChartContainer extends React.PureComponent {
     }
 
     rawOrders = async () => {
-        const newDataOrders = this.props.ordersList.filter(order => order.status !== 3 && !this.oldOrdersList.find(id => order.displaying_id === id));
+        const newDataOrders = this.props.ordersList.filter(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && !this.oldOrdersList.find(id => order.displaying_id === id));
         if (newDataOrders.length > 0) {
             newDataOrders.forEach((order) => {
                 this.newOrder(order.displaying_id, order);
@@ -327,7 +327,7 @@ export class TVChartContainer extends React.PureComponent {
                 }
             })
         }
-        this.oldOrdersList = this.props?.ordersList.map(order => order.status !== 3 && order.displaying_id)
+        this.oldOrdersList = this.props?.ordersList.map(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && order.displaying_id)
     };
 
     initWidget = (symbol, interval) => {

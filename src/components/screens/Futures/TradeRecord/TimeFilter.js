@@ -1,7 +1,5 @@
 import { Fragment, memo, useMemo, useState } from 'react';
 import { DatePicker } from 'antd';
-import { getS3Url } from 'redux/actions/utils';
-
 import classNames from 'classnames';
 
 import 'antd/dist/antd.css';

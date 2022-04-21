@@ -201,10 +201,9 @@ const FuturesOrderModule = ({
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
         const not_valid = !inputValidator('price', ArrStop.includes(currentType)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
-        return (!isVndcFutures || currentType === FuturesOrderTypes.Market) ?
-            false : not_valid
+        return !isVndcFutures ? false : not_valid
     }, [price, size, currentType, stopPrice, orderSlTp])
-    
+
     const countDecimals = (value) => {
         if (Math.floor(value) === value || !value) return 0;
         return value.toString().split(".")[1]?.length || 0;

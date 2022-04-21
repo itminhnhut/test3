@@ -7,8 +7,10 @@ import Star from 'components/svg/Star';
 import colors from 'styles/colors';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useTranslation } from 'next-i18next';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
+    const { t } = useTranslation()
     const [keyword, setKeyWord] = useState('')
     const [sortBy, setSortBy] = useState({}) // null = default, 1 => desc, 2 => asc
     const favoritePairs = useSelector((state) => state.futures.favoritePairs)
@@ -43,6 +45,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
                     pairConfig={pair}
                     isDark={isDark}
                     isFavorite={isFavorite}
+                    isAuth={isAuth}
                 />
             )
         })
@@ -136,13 +139,13 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
                         style={{ flex: '1 1 0%' }}
                         className='justify-end text-right'
                     >
-                        Last Price
+                        {t('commom:last_price')}
                     </div>
                     <div
                         style={{ flex: '1 1 0%' }}
                         className='justify-end text-right'
                     >
-                        24h Change
+                        {t('futures:24h_change')}
                     </div>
                 </div>
 

@@ -117,11 +117,12 @@ const FuturesPlaceOrderVndc = ({
 
     useEffect(() => {
         const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
-        if (availableAsset) {
+        const _price = currentType === OrderTypes.Limit ? price : stopPrice;
+        if ((availableAsset)) {
             let maxBuy = 0;
             let maxSell = 0;
-            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType)) {
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / price;
+            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType) && _price) {
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / _price;
                 maxSell = maxBuy;
             } else if ([OrderTypes.Market].includes(currentType)) {
                 maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / ask;
@@ -141,7 +142,8 @@ const FuturesPlaceOrderVndc = ({
         currentType,
         assetReversed,
         ask,
-        bid
+        bid,
+        stopPrice
     ])
 
     return (

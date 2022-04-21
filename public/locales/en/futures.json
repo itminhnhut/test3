@@ -26,7 +26,7 @@
         "open_price": "Entry Price",
         "mark_price": "Market Price",
         "liquidation_price": "Liq. Price",
-        "close_price": "Close",
+        "close_price": "Close Price",
         "last_price": "Last Price",
         "sl": "Stop-loss",
         "tp": "Take-profit",
@@ -112,5 +112,29 @@
     "close_order_failed": "Order #{{orderId}} was failed to close.",
     "fee_tier": "Fee Tier",
     "maker": "Maker",
-    "taker": "Taker"
+    "taker": "Taker",
+    "close_all": {
+        "close_all_title": "Close all orders",
+        "close_all_modal": "Do you want to close all your orders?",
+        "close_loss_modal": "Do you want to close all your loss orders?",
+        "close_profit_modal": "Do you want to close all your profit orders?",
+        "close_pending_modal": "Do you want to close all your pending orders?",
+        "close_active_modal": "Do you want to close all your active orders?",
+        "close_all": "Close all",
+        "close_loss": "Close loss",
+        "close_profit": "Close profit",
+        "close_pending": "Close pending",
+        "close_active": "Close active",
+        "close_all_success": "Close orders successfully",
+        "close_all_failed": "Close Orders failed"
+    },
+    "order_history": {
+        "open_at": "Open at",
+        "close_at": "Close at",
+        "revenue": "Revenue",
+        "adjustment_detail": "Adjustment Details",
+        "view_detail": "View details"
+    },
+    "hide_other_symbols": "Hide Other Symbols",
+    "stop_price": "Stop Price"
 }

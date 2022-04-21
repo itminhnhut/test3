@@ -177,7 +177,7 @@ const FuturesPairDetail = ({
                     const _priceChangeVndc = pairPrice?.lastPrice - pairPrice?.priceChange;
                     value = (
                         <div className='flex items-center'>
-                            <div
+                            {/* <div
                                 style={{
                                     minWidth: changeWidth,
                                 }}
@@ -201,7 +201,7 @@ const FuturesPairDetail = ({
                                             0,
                                             true
                                         )}
-                            </div>
+                            </div> */}
                             <div
                                 className={classNames('pl-2 text-dominant', {
                                     '!text-red':
@@ -210,7 +210,7 @@ const FuturesPairDetail = ({
                             >
                                 {formatNumber(
                                     roundTo(
-                                        pairPrice?.priceChangePercent || 0,
+                                        pairPrice?.priceChangePercent * (isVndcFutures ? 100 : 1) || 0,
                                         2
                                     ),
                                     2,
@@ -330,7 +330,7 @@ const FuturesPairDetail = ({
                     />
                 </div>
                 <div className='relative z-10 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                    Perpetual
+                    {t('futures:tp_sl:perpetual')}
                 </div>
                 {/* { && ( */}
                 <div
