@@ -29,7 +29,7 @@
         "close_price": "Giá đóng",
         "mark_price": "Giá Market",
         "liquidation_price": "Giá Liq.",
-        "last_price": "Giá đóng",
+        "last_price": "Giá Gần nhất",
         "sl": "Stop-loss",
         "tp": "Take-profit",
         "profit": "Lợi nhuận",
@@ -52,8 +52,8 @@
     },
     "buy_crypto": "Mua tiền điện tử",
     "convert": "Quy đổi",
-    "best_bid": "Best bid",
-    "best_ask": "Best ask",
+    "best_bid": "Giá bán tốt nhất",
+    "best_ask": "Giá mua tốt nhất",
     "calulator": {
         "futures_calculator": "Bộ tính hợp đồng tương lai",
         "target_price": "Giá mục tiêu",
@@ -112,5 +112,29 @@
     },
     "fee_tier": "Mức phí",
     "maker": "Maker",
-    "taker": "Taker"
+    "taker": "Taker",
+    "close_all": {
+        "close_all_title": "Đóng tất cả các lệnh",
+        "close_all_modal": "Bạn có muốn đóng tất cả các lệnh không?",
+        "close_loss_modal": "Bạn có muốn đóng tất cả các lệnh đang thua lỗ không?",
+        "close_profit_modal": "Bạn có muốn đóng tất cả các lệnh đang có lợi nhuận không?",
+        "close_pending_modal": "Bạn có muốn đóng tất cả các lệnh đang chờ xử lý không?",
+        "close_active_modal": "Bạn có muốn đóng tất cả các lệnh đã kích hoạt không?",
+        "close_all": "Đóng hết lệnh",
+        "close_loss": "Đóng lệnh đang lỗ",
+        "close_profit": "Đóng lệnh đang có lợi nhuận",
+        "close_pending": "Đóng lệnh đang chờ xử lý",
+        "close_active": "Đóng lệnh đã kích hoạt",
+        "close_all_success": "Đóng lệnh thành công",
+        "close_all_failed": "Đóng lệnh thất bại"
+    },
+    "order_history": {
+        "open_at": "Ngày mở",
+        "close_at": "Ngày đóng",
+        "revenue": "Lợi nhuận",
+        "adjustment_detail": "Chi tiết điều chỉnh",
+        "view_detail": "Xem chi tiết"
+    },
+    "hide_other_symbols": "Ẩn các cặp tiền khác",
+    "stop_price": "Giá stop"
 }

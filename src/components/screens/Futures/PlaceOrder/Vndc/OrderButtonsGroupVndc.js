@@ -75,7 +75,7 @@ const FuturesOrderButtonsGroupVndc = ({
         router.push(getLoginUrl('sso'))
     }
 
-    const classNameError = isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
+    const classNameError = isAuth && isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
 
     return (
         <div className='flex items-center justify-between font-bold text-sm text-white select-none'>

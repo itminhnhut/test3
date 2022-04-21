@@ -3,16 +3,20 @@ import { customTableStyles } from './index';
 import { ChevronDown, X } from 'react-feather';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 
-import FuturesRecordSymbolItem from './SymbolItem';
-import DataTable from 'react-data-table-component';
-import fetchAPI from 'utils/fetch-api';
-import fetchApi from 'utils/fetch-api';
-import { ApiStatus } from 'redux/actions/const';
-import showNotification from 'utils/notificationService';
-import { useTranslation } from 'next-i18next';
-import { API_FUTURES_CANCEL_OPEN_ORDERS, API_GET_FUTURES_OPEN_ORDERS, } from 'redux/actions/apis';
-import TableNoData from 'components/common/table.old/TableNoData';
-import Skeletor from 'components/common/Skeletor';
+import FuturesRecordSymbolItem from './SymbolItem'
+import DataTable from 'react-data-table-component'
+import fetchAPI from "utils/fetch-api";
+import {ApiStatus} from "redux/actions/const";
+import showNotification from "utils/notificationService";
+import fetchApi from "utils/fetch-api";
+import {useTranslation} from "next-i18next";
+import {
+    API_FUTURES_CANCEL_OPEN_ORDERS,
+    API_GET_FUTURES_OPEN_ORDERS,
+} from "redux/actions/apis";
+import TableNoData from "components/common/table.old/TableNoData";
+import Skeletor from "components/common/Skeletor";
+import TableLoader from "components/loader/TableLoader";
 
 const FuturesOpenOrders = ({ pairConfig }) => {
     const { t } = useTranslation(['common', 'futures']);
@@ -183,11 +187,7 @@ const FuturesOpenOrders = ({ pairConfig }) => {
             customStyles={customTableStyles}
             noDataComponent={<TableNoData/>}
             progressPending={loading}
-            progressComponent={
-                <div style={{ width: '100%' }} className="p-4">
-                    <Skeletor width={'100%'} count={10} height={10}/>
-                </div>
-            }
+            progressComponent={<TableLoader/>}
         />
     );
 };

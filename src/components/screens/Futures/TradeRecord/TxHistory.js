@@ -4,12 +4,12 @@ import { FUTURES_RECORD_CODE } from './RecordTableTab';
 import { customTableStyles } from './index';
 import { ChevronDown } from 'react-feather';
 
-import DataTable from 'react-data-table-component';
-import FuturesTimeFilter from '../TimeFilter';
-import fetchApi from 'utils/fetch-api';
-import { API_GET_TRANSACTION_HISTORY } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
-import Skeletor from 'src/components/common/Skeletor';
+import DataTable from 'react-data-table-component'
+import FuturesTimeFilter from './TimeFilter'
+import fetchApi from 'utils/fetch-api'
+import { API_GET_TRANSACTION_HISTORY } from 'redux/actions/apis'
+import { ApiStatus } from 'redux/actions/const'
+import Skeletor from 'src/components/common/Skeletor'
 
 const FuturesTxHistory = ({
     pickedTime,

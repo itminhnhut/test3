@@ -189,7 +189,6 @@ const Futures = () => {
                                 item.h = 13;
                             }
                         }
-
                         if (layout === 'lg') {
                             if (item.i === futuresGridKey.pairDetail) {
                                 item.h = 3;
@@ -210,7 +209,7 @@ const Futures = () => {
                         }
                         if (!auth) {
                             if (item.i === futuresGridKey.chart) {
-                                item.h = layout === 'lg' ? 26 : layout === 'xl' ? 31 : layout === '2xl' ? 28 : item.w;
+                                item.h = layout === 'md' ? 29 : layout === 'lg' ? 26 : layout === 'xl' ? 31 : layout === '2xl' ? 28 : item.w;
                             }
                         }
                         return item;
@@ -238,6 +237,7 @@ const Futures = () => {
                     });
                 });
         }
+        console.log(oldLayouts)
         setLayoutToLS(isVndcFutures ? 'VNDC' : 'USDT', oldLayouts);
         return oldLayouts;
     };
@@ -259,12 +259,9 @@ const Futures = () => {
         });
     };
 
-    const setOrderInput = (depth = {
-        rate: 0,
-        amount: 0
-    }) => {
-        console.log('Set Input ', depth);
-    };
+    const setOrderInput = (depth = { rate: 0, amount: 0 }) => {
+        console.log('Set Input ', depth)
+    }
 
     // ? Init Price and MarkPrice
     useEffect(() => {
@@ -522,6 +519,7 @@ const Futures = () => {
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>
+
             <FuturesProfitEarned isVisible={false} />
         </>
     );

@@ -111,7 +111,8 @@ const FuturesOrderCostAndMaxVndc = ({
         price,
         isAssetReversed,
         ask,
-        bid
+        bid,
+        stopPrice
     ])
 
     return (

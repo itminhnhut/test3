@@ -196,5 +196,6 @@
     "incomplete": "Chưa hoàn thành",
     "view_manual": "Xem hướng dẫn",
     "search_articles": "Tìm kiếm bài viết",
-    "cost": "Chi phí"
+    "cost": "Chi phí",
+    "stop_price": "Giá Stop"
 }
