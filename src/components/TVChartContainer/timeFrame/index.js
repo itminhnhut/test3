@@ -450,12 +450,12 @@ export default class TimeFrame extends Component {
         } = this.props;
 
         const { selectedTime } = this.state;
-        const studiesList = widget?.getStudiesList() || [];
-        const language = 'en';
-        const indicators = studiesList.map((e) => ({
-            id: e,
-            label: language === 'vi' ? locale_vi[`${e}_study`] || e : e,
-        }));
+        // const studiesList = widget?.getStudiesList() || [];
+        // const language = 'en';
+        // const indicators = studiesList.map((e) => ({
+        //     id: e,
+        //     label: language === 'vi' ? locale_vi[`${e}_study`] || e : e,
+        // }));
 
         return (
             <div className="flex items-center justify-between w-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark">

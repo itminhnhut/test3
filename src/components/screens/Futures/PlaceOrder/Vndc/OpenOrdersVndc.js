@@ -18,8 +18,10 @@ import OrderProfit from '../../TradeRecord/OrderProfit';
 import Big from 'big.js';
 import FuturesEditSLTPVndc from './EditSLTPVndc';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
+import CloseAllOrders from './CloseAllOrders';
 
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin, setCountOrders }) => {
+const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin }) => {
+    const ordersList = useSelector(state => state?.futures?.ordersList)
     const { t } = useTranslation()
     const columns = useMemo(
         () => [
@@ -116,35 +118,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     const userSocket = useSelector((state) => state.socket.userSocket);
     const [showModalEdit, setShowModalEdit] = useState(false)
     const [shareOrder, setShareOrder] = useState(null)
-
-    // console.log(pairConfig)
-
-    useEffect(() => {
-        getDataSource();
-    }, [])
-
-    const getDataSource = () => {
-        if (!isAuth) return;
-        const params = {
-            status: 0,
-        }
-        getOrders('GET', params, (data) => {
-            setCountOrders(data.length);
-            setDataSource(data);
-        });
-    }
-
-    useEffect(() => {
-        if (userSocket) {
-            userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getDataSource);
-            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getDataSource);
-        }
-        return () => {
-            if (userSocket) {
-                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getDataSource);
-            }
-        };
-    }, [userSocket]);
 
     const getOrders = async (method = 'GET', params, cb) => {
         try {
@@ -259,10 +232,9 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             )
         });
     }
-
     const _dataSource = useMemo(() => {
-        return !hideOther ? dataSource : dataSource.filter(i => i.symbol === pairConfig?.symbol);
-    }, [hideOther, dataSource])
+        return !hideOther ? ordersList : ordersList.filter(i => i.symbol === pairConfig?.symbol);
+    }, [hideOther, ordersList])
 
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
         <div className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
@@ -309,6 +281,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     pairConfig={pairConfig}
                 />
             }
+            <CloseAllOrders />
             <DataTable
                 responsive
                 fixedHeader

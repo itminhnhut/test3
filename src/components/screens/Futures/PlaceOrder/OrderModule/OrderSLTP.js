@@ -37,7 +37,7 @@ const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScale
                         value={orderSlTp.tp}
                         decimalScale={decimalScalePrice}
                         validator={getValidator('take_profit')}
-                        onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, tp: Number(value) })}
+                        onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, tp: value })}
                         labelClassName='whitespace-nowrap'
                         tailContainerClassName='flex items-center font-medium text-xs select-none'
                         renderTail={() => (
@@ -70,7 +70,7 @@ const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScale
                         value={orderSlTp.sl}
                         decimalScale={decimalScalePrice}
                         validator={getValidator('stop_loss')}
-                        onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: Number(value) })}
+                        onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: value })}
                         labelClassName='whitespace-nowrap'
                         tailContainerClassName='flex items-center font-medium text-xs select-none'
                         renderTail={() => (

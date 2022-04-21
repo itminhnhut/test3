@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
-import { ApiStatus, PublicSocketEvent } from 'redux/actions/const';
+import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { useSelector } from 'react-redux';
-import { API_GET_FUTURES_MARK_PRICE, } from 'redux/actions/apis';
+import { useSelector, useDispatch } from 'react-redux';
+import { API_GET_FUTURES_MARK_PRICE, API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { FUTURES_DEFAULT_SYMBOL } from './index';
 import { useRouter } from 'next/router';
-
 import FuturesMarketWatch from '../../models/FuturesMarketWatch';
 import FuturesMarkPrice from '../../models/FuturesMarkPrice';
 import FuturesFavoritePairs from 'components/screens/Futures/FavoritePairs';
@@ -35,6 +34,8 @@ import 'react-grid-layout/css/styles.css';
 import { log } from 'utils';
 import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
 import FuturesMarginRatioVndc from 'components/screens/Futures/PlaceOrder/Vndc/MarginRatioVndc';
+import { useStore } from 'src/redux/store';
+import { getOrdersList } from '../../redux/actions/futures'
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -72,13 +73,16 @@ const initFuturesComponent = {
 
 const Futures = () => {
     const [state, set] = useState(INITIAL_STATE);
+    const dispatch = useDispatch();
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-
+    const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
+    const ordersList = useSelector(state => state?.futures?.ordersList)
+
 
     const router = useRouter();
     const { width } = useWindowSize();
@@ -141,6 +145,25 @@ const Futures = () => {
         publicSocket?.emit('unsubscribe:futures:mark_price', pair);
         // publicSocket?.emit('unsubscribe:futures:mini_ticker', 'all')
     };
+
+    useEffect(() => {
+        if (auth) getOrders()
+    }, [auth])
+
+    const getOrders = () => {
+        if (auth) dispatch(getOrdersList())
+    }
+
+    useEffect(() => {
+        if (userSocket) {
+            userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
+        }
+        return () => {
+            if (userSocket) {
+                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
+            }
+        };
+    }, [userSocket]);
 
     const getLayoutsVndc = (layouts) => {
         const oldLayouts = JSON.parse(JSON.stringify(layouts));
@@ -413,6 +436,7 @@ const Futures = () => {
                                         pair={pairConfig?.pair}
                                         initTimeFrame="1D"
                                         isVndcFutures={state.isVndcFutures}
+                                        ordersList={ordersList}
                                     />
                                 </div>
                                 <div

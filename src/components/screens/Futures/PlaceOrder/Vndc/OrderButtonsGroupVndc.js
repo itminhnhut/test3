@@ -54,7 +54,8 @@ const FuturesOrderButtonsGroupVndc = ({
                 quantity: isNaN(size) ? side === VndcFutureOrderType.Side.BUY ? +quantity?.buy : +quantity?.sell : Number(size),
                 price: getPrice(getType(type), side, price, ask, bid, stopPrice),
                 leverage,
-                ...orderSlTp
+                sl: +orderSlTp.sl,
+                tp: +orderSlTp.tp,
             }
             return params
         },

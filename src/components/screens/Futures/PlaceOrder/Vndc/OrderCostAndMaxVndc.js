@@ -23,7 +23,7 @@ const FuturesOrderCostAndMaxVndc = ({
     maxSell,
     ask,
     bid,
-    stopPrice
+    stopPrice,
 }) => {
     const [shortOrderOpenLoss, setShortOrderOpenLoss] = useState(0)
     const [longOrderOpenLoss, setLongOrderOpenLoss] = useState(0)
@@ -82,7 +82,7 @@ const FuturesOrderCostAndMaxVndc = ({
 
     useEffect(() => {
         // Limit initial margin
-        const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
+        const _size = isNaN(size) ? quantity?.buy : size;
         if (leverage) {
             let costBuy = 0;
             let costSell = 0;

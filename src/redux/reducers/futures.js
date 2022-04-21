@@ -8,6 +8,7 @@ import {
     SET_FUTURES_PREFERENCES,
     SET_FUTURES_PRELOADED_FORM,
     SET_FUTURES_USE_SLTP,
+    SET_FUTURES_ORDERS_LIST
 } from 'redux/actions/types';
 
 export const FuturesOrderTypes = {
@@ -54,6 +55,7 @@ export const initialState = {
         positionMode: {},
         notification: {},
     },
+    ordersList: []
 }
 
 export default (state = initialState, { payload, type }) => {
@@ -81,6 +83,11 @@ export default (state = initialState, { payload, type }) => {
             return {
                 ...state,
                 preferences: { ...state.preferences, ...payload },
+            }
+        case SET_FUTURES_ORDERS_LIST:
+            return {
+                ...state,
+                ordersList: payload,
             }
         default:
             return state

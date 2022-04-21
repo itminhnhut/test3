@@ -181,5 +181,5 @@ export const API_GET_TRANSACTION_HISTORY = API_V3_PREFIX + 'futures/income'
 
 
 
-export const API_GET_FUTURES_ORDER = API_PREFIX + 'future/order'
+export const API_GET_FUTURES_ORDER = API_V3_PREFIX + 'futures/vndc/order'
 

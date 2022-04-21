@@ -11,8 +11,10 @@ import FuturesOpenOrdersVndc from '../PlaceOrder/Vndc/OpenOrdersVndc';
 import FuturesOrderHistoryVndc from '../PlaceOrder/Vndc/OrderHistoryVndc';
 import { useRouter } from 'next/router';
 import { getLoginUrl } from 'redux/actions/utils';
+import { useSelector } from 'react-redux';
 
 const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, isAuth }) => {
+    const ordersList = useSelector(state => state?.futures?.ordersList)
     const router = useRouter();
     const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.position)
     const [hideOther, setHideOther] = useState(false)
@@ -24,7 +26,6 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
         [FUTURES_RECORD_CODE.orderHistoryVndc]: null,
     })
     const [forceUpdateState, setForceUpdateState] = useState(0)
-    const [countOrders, setCountOrders] = useState(0);
     const tableRef = useRef(null)
 
     // ? Helper
@@ -78,7 +79,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                     tabActive={tabActive}
                     onChangeTab={onChangeTab}
                     isVndcFutures={isVndcFutures}
-                    countOrders={countOrders}
+                    countOrders={ordersList.length}
                 />
                 <div
                     className='flex items-center text-sm font-medium select-none cursor-pointer'
@@ -109,7 +110,6 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                                 pairPrice={pairPrice}
                                 isAuth={isAuth}
                                 onLogin={onLogin}
-                                setCountOrders={setCountOrders}
                             />
                         ) : (
                             <FuturesOpenOrders pairConfig={pairConfig} />

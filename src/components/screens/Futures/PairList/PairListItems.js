@@ -15,11 +15,12 @@ import Star from 'components/svg/Star';
 import colors from 'styles/colors';
 import { favoriteAction } from 'redux/actions/user';
 import { TRADING_MODE } from 'src/redux/actions/const';
-
+import { getFuturesFavoritePairs } from '../../../../redux/actions/futures'
+import { useDispatch } from 'react-redux';
 
 const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite }) => {
     const [pairTicker, setPairTicker] = useState(null)
-
+    const dispatch = useDispatch();
     const publicSocket = useSelector((state) => state.futures.publicSocket)
     const marketWatch = useSelector((state) => state.futures.marketWatch)
 
@@ -33,9 +34,8 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
 
     const handleSetFavorite = async () => {
         isClickFavorite.current = true;
-        console.log('wating for api')
-        // await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.EXCHANGE, pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset)
-        // await favoriteAction('get', TRADING_MODE.EXCHANGE)
+        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset)
+        dispatch(getFuturesFavoritePairs())
     }
 
     const renderContract = useCallback(() => {
@@ -55,7 +55,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
                 <div></div> {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
             </div>
         )
-    }, [pairConfig?.pair])
+    }, [pairConfig?.pair, isFavorite])
 
     const renderLastPrice = useCallback(() => {
         return (

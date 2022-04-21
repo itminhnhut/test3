@@ -26,7 +26,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
 
     const onHandleChange = (key, e) => {
         const value = e.value;
-        setData({ ...data, [key]: +value })
+        setData({ ...data, [key]: value })
     }
 
     const inputValidator = (type, price) => {
@@ -96,7 +96,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                 </div>
                 <div className='mb-3 font-medium flex items-center justify-between'>
                     {!status ?
-                        <div className='px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
+                        <div className='px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px] justify-between'>
                             {/* <span className='font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap'>
                                 {t('futures:order_table:open_price')}
                             </span> */}
@@ -106,7 +106,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                                 className='flex-grow text-right font-medium h-[21px]'
                                 containerClassName='!py-0 !px-0 border-none'
                                 value={data.price}
-                                label={t('futures:open_price')}
+                                label={t('futures:order_table:open_price')}
                                 validator={inputValidator('price')}
                                 decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                                 onValueChange={(e) => onHandleChange('price', e)}
