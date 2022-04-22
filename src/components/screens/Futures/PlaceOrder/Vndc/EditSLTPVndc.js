@@ -8,7 +8,10 @@ import NumberFormat from 'react-number-format';
 import { useTranslation } from 'next-i18next'
 import TradingInput from 'components/trade/TradingInput';
 
-const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onConfirm, pairConfig }) => {
+const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pairConfig, pairTicker }) => {
+    const lastPrice = pairTicker[order?.symbol]?.lastPrice ?? 0;
+    const quoteAsset = pairTicker[order?.symbol]?.quoteAsset ?? '';
+
     const { t } = useTranslation();
     const [data, setData] = useState({
         displaying_id: order?.displaying_id,
@@ -113,7 +116,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                             />
                             {/* <input className='flex-grow px-2 text-right font-medium' onChange={(e) => onHandleChange('price', e)} value={data.price} /> */}
                             <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark pl-2'>
-                                {pairPrice?.quoteAsset}
+                                {quoteAsset}
                             </span>
                         </div>
                         :
@@ -121,7 +124,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                             <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                                 {t('futures:order_table:open_price')}
                             </span>
-                            <span className=''>{formatNumber(data.price, 2, 0, true) + ' ' + pairPrice?.quoteAsset}</span>
+                            <span className=''>{formatNumber(data.price, 2, 0, true) + ' ' + quoteAsset}</span>
                         </>
                     }
                 </div>
@@ -129,11 +132,11 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                     <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                         {t('futures:order_table:mark_price')}
                     </span>
-                    <span className=''>{formatNumber(pairPrice?.lastPrice, 2, 0, true) + ' ' + pairPrice?.quoteAsset}</span>
+                    <span className=''>{formatNumber(lastPrice, 2, 0, true) + ' ' + quoteAsset}</span>
                 </div>
 
                 <div className='mt-5 flex items-center'>
-                    <div className='px-3 flex items-center max-w-[266px] h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
+                    <div className='px-3 flex items-center w-full max-w-[266px] h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
                         {/* <span className='font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap'>
                             {t('futures:take_profit')}
                         </span> */}
@@ -151,11 +154,11 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                         />
                         {/* <input className='flex-grow px-2 text-right font-medium' onChange={(e) => onHandleChange('tp', e)} value={data.tp} /> */}
                         <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark pl-2'>
-                            {pairPrice?.quoteAsset}
+                            {quoteAsset}
                         </span>
                     </div>
                     <div className='relative ml-3 px-2 min-w-[72px] h-[36px] flex items-center justify-center bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
-                        <span className=''>Last</span>
+                        <span className=''>{t('futures:last_price')}</span>
                     </div>
                 </div>
                 <div className='mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>
@@ -168,7 +171,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                         {formatNumber(data.tp, 0, 0, true)}
                     </span>
                     {t('futures:tp_sl:is_will')}&nbsp;
-                    <span className='text-dominant'>{getProfitSLTP(data.tp) + ' ' + pairPrice?.quoteAsset}</span>.
+                    <span className='text-dominant'>{getProfitSLTP(data.tp) + ' ' + quoteAsset}</span>.
                 </div>
 
                 <div className='my-4 w-full h-[1px] bg-divider dark:bg-divider-dark' />
@@ -192,11 +195,11 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                         />
                         {/* <input className='flex-grow px-2 text-right font-medium' onChange={(e) => onHandleChange('sl', e)} value={data.sl} /> */}
                         <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark pl-2'>
-                            {pairPrice?.quoteAsset}
+                            {quoteAsset}
                         </span>
                     </div>
                     <div className='ml-3 px-2 min-w-[72px] h-[36px] flex items-center justify-center bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
-                        <span className=''>Last</span>
+                        <span className=''>{t('futures:last_price')}</span>
                     </div>
                 </div>
                 <div className='mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>
@@ -209,7 +212,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, pairPrice, onC
                         {formatNumber(data.sl, 0, 0, true)}
                     </span>
                     {t('futures:tp_sl:is_will')}&nbsp;
-                    <span className='text-red'>{getProfitSLTP(data.sl) + ' ' + pairPrice?.quoteAsset}</span>.
+                    <span className='text-red'>{getProfitSLTP(data.sl) + ' ' + quoteAsset}</span>.
                 </div>
 
                 <div className='mt-4 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark'>

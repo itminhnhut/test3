@@ -20,6 +20,7 @@ const FuturesSetting = (props) => {
         spotState,
         onChangeSpotState,
         resetDefault,
+        className
     } = props;
 
     const [currentTheme, onThemeSwitch] = useDarkMode();
@@ -30,28 +31,28 @@ const FuturesSetting = (props) => {
 
     const FuturesComponents = [
         {
-            value: 'Favorites', key: 'isShowFavorites', visible: true
+            value: t('futures:setting:favorites'), key: 'isShowFavorites', visible: true
         },
         {
-            value: 'Pair Detail', key: 'isShowPairDetail', visible: true
+            value: t('futures:setting:pair_detail'), key: 'isShowPairDetail', visible: true
         },
         {
-            value: "Chart", key: 'isShowChart', visible: true
+            value: t('futures:setting:chart'), key: 'isShowChart', visible: true
         },
         {
-            value: "Order Book", key: 'isShowOrderBook', visible: !isVndcFutures
+            value: t('common:orderbook'), key: 'isShowOrderBook', visible: !isVndcFutures
         },
         {
-            value: "Trades", key: 'isShowTrades', visible: !isVndcFutures
+            value: t('common:trades'), key: 'isShowTrades', visible: !isVndcFutures
         },
         {
-            value: 'Open Orders & Order History', key: 'isShowOpenOrders', visible: true
+            value: t('futures:setting:orders_history'), key: 'isShowOpenOrders', visible: true
         },
         {
-            value: 'Place Order', key: 'isShowPlaceOrder', visible: true
+            value: t('futures:setting:place_order'), key: 'isShowPlaceOrder', visible: true
         },
         {
-            value: 'Assets', key: 'isShowAssets', visible: true
+            value: t('common:assets'), key: 'isShowAssets', visible: true
         },
     ];
     const {
@@ -86,7 +87,7 @@ const FuturesSetting = (props) => {
                 <>
                     <Popover.Button
                         className={`h-full flex items-center ml-2 ${open ? '' : 'text-opacity-90'
-                            } text-white group px-2`}
+                            } text-white group px-2 ${className}`}
                     >
                         <Setting
                             size={20}

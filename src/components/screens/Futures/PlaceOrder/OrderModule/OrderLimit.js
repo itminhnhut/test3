@@ -32,7 +32,7 @@ const FuturesOrderLimit = ({
         handleQuantity('')
     }
 
-   
+
     return (
         <div>
             {isStopLimit && (

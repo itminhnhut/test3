@@ -16,7 +16,7 @@ import { getLoginUrl } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 
-const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, isAuth, ...check }) => {
+const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, isAuth, pair, ...check }) => {
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const router = useRouter();
     const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.position)
@@ -70,7 +70,6 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                     if (tabActive === FUTURES_RECORD_CODE.openOrders && isVndcFutures) {
                         offsetH += 22
                     }
-                    console.log('offsetH',offsetH)
                     tableBodyElement.style.height = `${tableHeight - tableHeaderElement?.clientHeight - 15 - offsetH}px`
 
                 } else {
@@ -123,6 +122,8 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                                 pairPrice={pairPrice}
                                 isAuth={isAuth}
                                 onLogin={onLogin}
+                                pair={pair}
+
                             />
                         ) : (
                             <FuturesOpenOrders pairConfig={pairConfig} />

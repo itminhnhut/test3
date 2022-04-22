@@ -136,5 +136,22 @@
         "view_detail": "View details"
     },
     "hide_other_symbols": "Hide Other Symbols",
-    "stop_price": "Stop Price"
+    "stop_price": "Stop Price",
+    "limit_price": "Limit price",
+    "to": "To",
+    "setting": {
+        "favorites": "Favorites",
+        "pair_detail": "Pair Detail",
+        "chart": "Chart",
+        "orders_history": "Open Orders & Order History",
+        "place_order": "Place Order",
+        "assets": "Assets"
+    },
+    "time_stamp": "Time Stamp",
+    "referral_code": "Referral code",
+    "optional_information": "Optional Information to share",
+    "download": "Download",
+    "pnl_amount": "PNL Amount",
+    "price": "Price",
+    "requesting": "Requesting"
 }

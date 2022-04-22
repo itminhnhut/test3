@@ -15,7 +15,7 @@ import { FilterTradeOrder } from "components/screens/Futures/FilterTradeOrder";
 
 import { useSelector } from 'react-redux'
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
-import { ApiStatus, UserSocketEvent } from 'redux/actions/const'
+import { ApiStatus, UserSocketEvent, PublicSocketEvent } from 'redux/actions/const'
 
 import { useTranslation } from 'next-i18next'
 import fetchApi from 'utils/fetch-api'
@@ -24,12 +24,24 @@ import { isArray, isString } from "lodash";
 import FuturesEditSLTPVndc from './EditSLTPVndc';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 import CloseAllOrders from './CloseAllOrders';
+import TableNoData from '../../../../common/table.old/TableNoData';
+import Emitter from 'redux/actions/emitter';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import { uniq } from 'lodash';
 
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin }) => {
+const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin, pair }) => {
     const { t } = useTranslation()
     const ordersList = useSelector(state => state?.futures?.ordersList)
+    const publicSocket = useSelector((state) => state.futures.publicSocket)
+    const pairTicker = useRef({})
+
     const columns = useMemo(
         () => [
+            {
+                name: t('futures:order_table:id'),
+                cell: (row) => row?.status !== 3 ? row?.displaying_id : t('futures:requesting'),
+                sortable: true,
+            },
             {
                 name: t('futures:order_table:created_time'),
                 selector: (row) => row?.created_at,
@@ -79,14 +91,14 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             },
             {
                 name: t('futures:order_table:last_price'),
-                selector: (row) => formatNumber(pairPrice?.lastPrice, 0, 0, true),
+                selector: (row) => pairTicker.current[row?.symbol] && formatNumber(pairTicker.current[row?.symbol]?.lastPrice, 0, 0, true),
                 minWidth: '150px',
                 sortable: true,
             },
             {
                 name: 'PNL (ROE%)',
                 selector: (row) => row?.pnl?.value,
-                cell: (row) => <OrderProfit order={row} pairPrice={pairPrice} setShareOrderModal={() => setShareOrder(row)} />,
+                cell: (row) => <OrderProfit order={row} pairPrice={pairTicker.current[row?.symbol]} setShareOrderModal={() => setShareOrder(row)} />,
                 minWidth: '150px',
                 sortable: true,
             },
@@ -116,7 +128,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 ),
             },
         ],
-        [pairPrice]
+        [pairTicker.current]
     )
     const [loading, setLoading] = useState(false)
     const [showModalDelete, setShowModalDelete] = useState(false)
@@ -136,6 +148,25 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
         return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol }))
     }, [allPairConfigs])
 
+
+    useEffect(() => {
+        const symbolsList = uniq(ordersList.map(order => order?.symbol))
+        Array.isArray(symbolsList) && symbolsList.forEach(symbol => {
+            Emitter.on(
+                PublicSocketEvent.FUTURES_TICKER_UPDATE,
+                async (data) => {
+                    if (data) {
+                        const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset)
+                        if (_pairTicker?.symbol === symbol) {
+                            if (!_pairTicker[symbol]?.lastPrice) {
+                                pairTicker.current = { ...pairTicker.current, [symbol]: _pairTicker }
+                            }
+                        }
+                    }
+                }
+            )
+        })
+    }, [ordersList, publicSocket, pair])
 
     const fetchOrder = async (method = 'GET', params, cb) => {
         try {
@@ -241,7 +272,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             showNotification(
                 {
                     message: 'Modify order successfully',
-                    title: 'Chúc mừng bạn',
+                    title: t('commom:success'),
                     type: 'success'
                 },
                 1800,
@@ -315,9 +346,9 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     order={rowData.current}
                     onClose={() => setShowModalEdit(false)}
                     status={rowData.current.status}
-                    pairPrice={pairPrice}
                     onConfirm={onConfirmEdit}
                     pairConfig={pairConfig}
+                    pairTicker={pairTicker.current}
                 />
             }
             <div className='flex flex-row items-center flex-wrap'>
@@ -348,11 +379,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     options={[
                         {
                             value: VndcFutureOrderType.Status.PENDING,
-                            label: 'Pending'
+                            label: t('common:pending')
                         },
                         {
                             value: VndcFutureOrderType.Status.ACTIVE,
-                            label: 'Opening'
+                            label: t('futures:order_table:opening_title')
                         }
                     ]}
                     value={filters.status}
@@ -381,6 +412,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 data={_dataSource}
                 columns={columns}
                 customStyles={customTableStyles}
+                noDataComponent={<TableNoData />}
             />
         </>
     )

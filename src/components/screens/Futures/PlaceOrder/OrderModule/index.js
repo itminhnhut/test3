@@ -200,7 +200,7 @@ const FuturesOrderModule = ({
 
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
-        const not_valid = !inputValidator('price', ArrStop.includes(currentType)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
+        const not_valid = !size || !inputValidator('price', ArrStop.includes(currentType)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
         return !isVndcFutures ? false : not_valid
     }, [price, size, currentType, stopPrice, orderSlTp])
 

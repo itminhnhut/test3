@@ -81,7 +81,7 @@ const TransferModal = () => {
     useOutsideClick(fromWalletRef, () => state.openList?.fromWalletList && setState({}))
     useOutsideClick(toWalletRef, () => state.openList?.toWalletList && setState({}))
     useOutsideClick(assetListRef, () => state.openList?.assetList && setState({}))
-
+    const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
     // Rdx
     const {
         isVisible,
@@ -310,8 +310,9 @@ const TransferModal = () => {
         return (
             <NumberFormat
                 thousandSeparator
+                decimalScale={state.asset === 'VNDC' ? 0 : 4}
                 allowNegative={false}
-                placeholder="0.0000"
+                placeholder={state.asset === 'VNDC' ? "0" : "0.0000"}
                 className="w-full text-right sm:text-[20px] font-medium"
                 value={state.amount}
                 onValueChange={({ value }) => setState({ amount: value })}
@@ -319,7 +320,7 @@ const TransferModal = () => {
                 onBlur={onBlur}
             />
         )
-    }, [state.amount, state.focus])
+    }, [state.amount, state.focus, state.asset])
 
     const renderAvailableWallet = useCallback(() => {
         const available = currentWallet?.available

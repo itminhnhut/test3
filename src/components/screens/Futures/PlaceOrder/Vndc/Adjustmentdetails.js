@@ -7,8 +7,10 @@ import { X, ArrowRight } from 'react-feather';
 import { formatTime, formatNumber } from 'redux/actions/utils';
 import Skeletor from 'src/components/common/Skeletor'
 import TableNoData from '../../../../common/table.old/TableNoData';
+import { useTranslation } from 'next-i18next';
 
 const Adjustmentdetails = memo(({ onClose, rowData }) => {
+    const { t } = useTranslation();
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
 
@@ -75,7 +77,7 @@ const Adjustmentdetails = memo(({ onClose, rowData }) => {
         >
             <div className="w-[390px]">
                 <div className="flex items-center justify-between text-xl font-bold capitalize">
-                    Adjustment Details
+                    {t('futures:order_history:adjustment_detail')}
                     <X
                         size={20}
                         strokeWidth={1}
@@ -104,23 +106,23 @@ const Adjustmentdetails = memo(({ onClose, rowData }) => {
                                 return (
                                     <div className="text-sm py-[10px]">
                                         <div className="flex items-center justify-between ">
-                                            <label className="text-gray-1">Time</label>
-                                            <div className="font-medium">{formatTime(item?.createdAt, 'yyyy-MM-dd')} to {formatTime(item?.updatedAt, 'yyyy-MM-dd')}</div>
+                                            <label className="text-gray-1">{t('common:time')}</label>
+                                            <div className="font-medium">{formatTime(item?.createdAt, 'yyyy-MM-dd')} {t('futures:to')} {formatTime(item?.updatedAt, 'yyyy-MM-dd')}</div>
                                         </div>
                                         {item?.metadata?.modify_tp &&
                                             <div className="flex items-center justify-between ">
-                                                <label className="text-gray-1">Take Profit</label>
+                                                <label className="text-gray-1">{t('futures:take_profit')}</label>
                                                 <div className="font-medium">{renderModify(item?.metadata, 'take_profit')}</div>
                                             </div>
                                         }
                                         {item?.metadata?.modify_sl &&
                                             <div className="flex items-center justify-between ">
-                                                <label className="text-gray-1">Stop Loss</label>
+                                                <label className="text-gray-1">{t('futures:stop_loss')}</label>
                                                 <div className="font-medium">{renderModify(item?.metadata, 'stop_loss')}</div>
                                             </div>
                                         }
                                         <div className="flex items-center justify-between ">
-                                            <label className="text-gray-1">Limit Price</label>
+                                            <label className="text-gray-1">{t('futures:limit_price')}</label>
                                             <div className="font-medium">{renderModify(item?.metadata, 'price')}</div>
                                         </div>
                                     </div>
