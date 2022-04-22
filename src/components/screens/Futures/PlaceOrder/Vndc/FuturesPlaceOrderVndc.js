@@ -122,7 +122,13 @@ const FuturesPlaceOrderVndc = ({
         }
     }, [avlbAsset, pairConfig])
 
+    const countDecimals = (value) => {
+        if (Math.floor(value) === value || !value) return 0;
+        return value.toString().split(".")[1]?.length || 0;
+    }
+
     useEffect(() => {
+        const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
         const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
         const _price = currentType === OrderTypes.Limit ? price : stopPrice;
         if ((availableAsset)) {
@@ -135,8 +141,8 @@ const FuturesPlaceOrderVndc = ({
                 maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / ask;
                 maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / bid;
             }
-            setMaxBuy(maxBuy)
-            setMaxSell(maxSell)
+            setMaxBuy(maxBuy.toFixed(countDecimals(decimalScaleQtyLimit?.stepSize)))
+            setMaxSell(maxSell.toFixed(countDecimals(decimalScaleQtyLimit?.stepSize)))
         } else {
             setMaxBuy(0)
             setMaxSell(0)

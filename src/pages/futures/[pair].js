@@ -36,6 +36,7 @@ import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/Fu
 import FuturesMarginRatioVndc from 'components/screens/Futures/PlaceOrder/Vndc/MarginRatioVndc';
 import { useStore } from 'src/redux/store';
 import { getOrdersList } from '../../redux/actions/futures'
+import { PATHS } from 'constants/paths';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -304,6 +305,14 @@ const Futures = () => {
     // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
+            if (router.query.pair.indexOf('USDT') !== -1) {
+                router.push(
+                    `${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
+                    undefined,
+                    { shallow: true }
+                )
+                return;
+            }
             setState({ pair: router.query.pair });
             localStorage.setItem(
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,

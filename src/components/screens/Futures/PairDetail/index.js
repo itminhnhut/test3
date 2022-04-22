@@ -337,13 +337,12 @@ const FuturesPairDetail = ({
                     className='hidden group-hover:block absolute z-30 left-0 top-full'
                     ref={pairListRef}
                 >
-                    {activePairList && (
-                        <FuturesPairList
-                            mode={pairListMode}
-                            setMode={setPairListMode}
-                            isAuth={isAuth}
-                        />
-                    )}
+                    <FuturesPairList
+                        mode={pairListMode}
+                        setMode={setPairListMode}
+                        isAuth={isAuth}
+                        activePairList={activePairList}
+                    />
                 </div>
                 {/* )} */}
             </div>

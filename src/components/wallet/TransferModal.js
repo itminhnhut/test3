@@ -101,6 +101,8 @@ const TransferModal = () => {
         return { ..._, available }
     }, [state.asset, state.allWallets, isVisible])
 
+    const [isError, setIsError] = useState(false);
+
     // Helper
     const onTransfer = async (currency, from_wallet, to_wallet, amount, utils) => {
         setState({ isPlacingOrder: true })
@@ -305,14 +307,18 @@ const TransferModal = () => {
         )
     }, [state.allWallets, state.openList, state.asset])
 
+    useEffect(() =>{
+        const _isError = state.asset === 'VNDC' ? state.amount < 500000 : state.asset === 'USDT' ? state.amount < 25 : false
+        setIsError(_isError)
+    }, [state.amount, state.asset])
+
     const renderAmountInput = useCallback(() => {
 
         return (
             <NumberFormat
                 thousandSeparator
-                decimalScale={state.asset === 'VNDC' ? 0 : 4}
                 allowNegative={false}
-                placeholder={state.asset === 'VNDC' ? "0" : "0.0000"}
+                placeholder={"0.0000"}
                 className="w-full text-right sm:text-[20px] font-medium"
                 value={state.amount}
                 onValueChange={({ value }) => setState({ amount: value })}
@@ -334,7 +340,7 @@ const TransferModal = () => {
     }, [state.asset, currentWallet])
 
     const renderTransferButton = useCallback(() => {
-        const isErrors = !Object.values(state.errors)?.findIndex(item => item?.length)
+        const isErrors = !Object.values(state.errors)?.findIndex(item => item?.length) || isError
         const isAmountEmpty = !(state.amount?.length && typeof +state.amount === 'number')
         const isInsufficient = currentWallet?.available < +state.amount
         if (!auth) return <div className="cursor-pointer flex items-center justify-center h-full">
@@ -364,7 +370,7 @@ const TransferModal = () => {
                 {state.isPlacingOrder ? <PulseLoader color={colors.white} size={3}/> : t('common:transfer')}
             </div>
         )
-    }, [state.errors, state.amount, state.fromWallet, state.toWallet, state.isPlacingOrder, state.asset, currentWallet, auth])
+    }, [state.errors, state.amount, state.fromWallet, state.toWallet, state.isPlacingOrder, state.asset, currentWallet, auth, isError])
 
     const renderIssues = useCallback(() => {
         const errorItems = []
@@ -474,9 +480,11 @@ const TransferModal = () => {
                 <X size={16} className="cursor-pointer hover:text-dominant" onClick={onClose}/>
             </div>
             {renderWalletSelect()}
-            <div className={state.focus?.amount ?
+            <div className={`${state.focus?.amount ?
                 'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-dominant'
-                : 'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-divider dark:border-divider-dark hover:!border-dominant'}>
+                : 'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-divider dark:border-divider-dark hover:!border-dominant'}
+                ${isError ? 'border-red ' : ''}
+                `}>
                 <div className="flex items-center justify-between">
                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:amount')}</div>
                     <div className="font-bold text-dominant text-sm cursor-pointer"

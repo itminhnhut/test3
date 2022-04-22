@@ -41,6 +41,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 name: t('futures:order_table:id'),
                 cell: (row) => row?.status !== 3 ? row?.displaying_id : t('futures:requesting'),
                 sortable: true,
+                minWidth: '50px',
             },
             {
                 name: t('futures:order_table:created_time'),
@@ -92,6 +93,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             {
                 name: t('futures:order_table:last_price'),
                 selector: (row) => pairTicker.current[row?.symbol] && formatNumber(pairTicker.current[row?.symbol]?.lastPrice, 0, 0, true),
+                minWidth: '150px',
+                sortable: true,
+            },
+            {
+                name: t('futures:calulator:liq_price'),
+                selector: (row) => renderLiqPrice(row),
                 minWidth: '150px',
                 sortable: true,
             },
@@ -153,7 +160,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
         const symbolsList = uniq(ordersList.map(order => order?.symbol))
         Array.isArray(symbolsList) && symbolsList.forEach(symbol => {
             Emitter.on(
-                PublicSocketEvent.FUTURES_TICKER_UPDATE,
+                PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + symbol,
                 async (data) => {
                     if (data) {
                         const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset)
@@ -166,6 +173,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 }
             )
         })
+        return () => {
+            Array.isArray(symbolsList) && symbolsList.forEach(symbol => {
+                Emitter.off(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + symbol)
+            })
+        }
+
     }, [ordersList, publicSocket, pair])
 
     const fetchOrder = async (method = 'GET', params, cb) => {
@@ -221,6 +234,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 'bottom-right'
             )
         });
+    }
+
+    const renderLiqPrice = (row) => {
+        const liqPrice = (row?.quantity * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (1 - 0.1 / 100))
+        return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
     }
 
     const renderOpenPrice = (row) => {

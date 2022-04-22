@@ -31,7 +31,7 @@ const FuturesMarginRatio = ({ pairConfig }) => {
             console.log(`Can't get position orders: `);
         }
         const data = [];
-        rawData.forEach((item) => {
+        rawData?.forEach((item) => {
             if (item.marginType !== toLower(MarginModes.Isolated) || +item.positionAmt <= 0) {
                 return;
             }

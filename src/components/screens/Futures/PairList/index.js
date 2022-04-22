@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 
-const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
+const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
     const { t } = useTranslation()
     const [keyword, setKeyWord] = useState('')
     const [sortBy, setSortBy] = useState({}) // null = default, 1 => desc, 2 => asc
@@ -38,6 +38,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
         }
 
         return data?.map((pair) => {
+            if (pair?.quoteAsset === 'USDT') return;
             const isFavorite = favoritePairs.find(rs => rs.replace('_', '') === pair.symbol);
             return (
                 <FuturesPairListItems
@@ -49,7 +50,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
                 />
             )
         })
-    }, [pairConfigs, sortBy, keyword, mode, favoritePairs])
+    }, [pairConfigs, sortBy, keyword, mode, favoritePairs, isAuth])
 
     const onHandleMode = (key) => {
         setMode(key !== mode ? key : '')
@@ -72,7 +73,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
                         className='cursor-pointer'
                     />
                 }
-                <div
+                {/* <div
                     onClick={() => onHandleMode('USDT')}
                     className={classNames(
                         'ml-3 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant',
@@ -80,7 +81,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
                     )}
                 >
                     USDT
-                </div>
+                </div> */}
                 <div
                     onClick={() => onHandleMode('VNDC')}
                     className={classNames(
@@ -92,11 +93,10 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
                 </div>
             </div>
         ),
-        [mode, isDark]
+        [mode, isDark, isAuth]
     )
-
     return (
-        <div className='py-4 min-w-[380px] bg-bgPrimary dark:bg-bgPrimary-dark dark:border dark:border-darkBlue-4 drop-shadow-onlyLight rounded-md'>
+        <div className={`${!activePairList?'hidden':''} py-4 min-w-[380px] bg-bgPrimary dark:bg-bgPrimary-dark dark:border dark:border-darkBlue-4 drop-shadow-onlyLight rounded-md`}>
             <div className='max-h-[300px] flex flex-col'>
                 <div className='px-4 mb-3'>
                     <div className='px-2.5 py-1.5 rounded-md flex items-center bg-gray-5 dark:bg-darkBlue-3'>
@@ -139,7 +139,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth }) => {
                         style={{ flex: '1 1 0%' }}
                         className='justify-end text-right'
                     >
-                        {t('commom:last_price')}
+                        {t('common:last_price')}
                     </div>
                     <div
                         style={{ flex: '1 1 0%' }}

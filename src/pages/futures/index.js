@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import { LOCAL_STORAGE_KEY } from 'constants/constants';
 
-export const FUTURES_DEFAULT_SYMBOL = 'BTCUSDT'
+export const FUTURES_DEFAULT_SYMBOL = 'BTCVNDC'
 
 const FuturesIndex = () => {
     const router = useRouter()
