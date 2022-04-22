@@ -126,7 +126,7 @@ const FuturesOrderCostAndMaxVndc = ({
 
             <div className="float-right mt-[8px] group relative">
                 <div className="text-teal underline cursor-pointer font-medium ">{t('futures:fee_level')}</div>
-                <div className="hidden group-hover:block absolute right-0 min-w-[200px] bg-white shadow-onlyLight rounded-[8px]">
+                <div className="hidden group-hover:block absolute right-0 min-w-[200px] dark:bg-darkBlue-3 shadow-onlyLight rounded-[8px]">
                     <Link href={'/fee-schedule/trading'}>
                         <a target='_blank'>
                             <div className="flex items-center justify-between h-[44px] bg-gray-5 p-[10px] rounded-t-[8px]">

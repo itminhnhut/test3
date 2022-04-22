@@ -19,8 +19,10 @@ const FuturesPlaceOrderVndc = ({
     isAuth,
     isVndcFutures,
     ask,
-    bid
+    bid,
+    pair
 }) => {
+
     const [leverage, setLeverage] = useState(1)
     const [percentage, setPercentage] = useState(null)
     const [price, setPrice] = useState(lastPrice)
@@ -84,7 +86,12 @@ const FuturesPlaceOrderVndc = ({
             setPrice(lastPrice)
             setStopPrice(lastPrice)
         }
+
     }, [currentType])
+
+    useEffect(() => {
+        firstTime.current = true;
+    }, [pair])
 
     useEffect(() => {
         if (firstTime.current && lastPrice) {

@@ -575,6 +575,10 @@ const NavBar = ({
                 onClose={() => onDrawerAction(false)}
                 loadingVipLevel={state.loadingVipLevel}
                 vipLevel={state.vipLevel}
+                page={page}
+                spotState={spotState}
+                resetDefault={resetDefault}
+                onChangeSpotState={onChangeSpotState}
             />
 
             <div

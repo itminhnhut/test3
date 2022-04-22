@@ -469,6 +469,7 @@ const Futures = () => {
                                         pairConfig={pairConfig}
                                         pairPrice={state.pairPrice}
                                         isAuth={!!auth}
+                                        pair={state.pair}
                                     />
                                 </div>
                                 <div
@@ -486,6 +487,7 @@ const Futures = () => {
                                             isVndcFutures={state.isVndcFutures}
                                             ask={state.pairPrice?.ask}
                                             bid={state.pairPrice?.bid}
+                                            pair={state.pair}
                                         />
                                         :
                                         <FuturesPlaceOrder

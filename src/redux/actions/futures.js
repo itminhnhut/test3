@@ -157,27 +157,26 @@ export const getMarginModeLabel = (mode) => {
 }
 
 export const placeFuturesOrder = async (params = {}, utils = {}) => {
-    const validator = placeFuturesOrderValidator(params, utils)
-    log.d('placeFuturesOrder Pre-processing...')
-    const isValid = Object.values(validator)?.filter((e) => !e)
-    if (isValid.length) {
-        // log.d(`placeFuturesOrder Pre-Process detect mistake `, validator)
-        // showNotification(
-        //     {
-        //         message: `TEST NOTI`,
-        //         title: 'Error',
-        //         type: 'failure',
-        //     },
-        //     1800,
-        //     'bottom',
-        //     'bottom-right'
-        // )
+    // const validator = placeFuturesOrderValidator(params, utils)
+    // log.d('placeFuturesOrder Pre-processing...')
+    // const isValid = Object.values(validator)?.filter((e) => !e)
+    // if (isValid.length) {
+    //     log.d(`placeFuturesOrder Pre-Process detect mistake `, validator)
+    //     showNotification(
+    //         {
+    //             message: `TEST NOTI`,
+    //             title: 'Error',
+    //             type: 'failure',
+    //         },
+    //         1800,
+    //         'bottom',
+    //         'bottom-right'
+    //     )
 
-        return
-    } else {
-        log.d('placeFuturesOrder All params passed...', params)
-        // return
-    }
+    //     return
+    // } else {
+    //     log.d('placeFuturesOrder All params passed...', params)
+    // }
     // API_FUTURES_PLACE_ORDER
     try {
         const { data } = await Axios.post(API_GET_FUTURES_ORDER, {

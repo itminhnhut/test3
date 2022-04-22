@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { IconLoading } from 'components/common/Icons';
+import { useTranslation } from 'next-i18next';
 
 const { PENDING, ACTIVE, CLOSED } = VndcFutureOrderType.Status
 const APP_URL = process.env.APP_URL || 'https://nami.exchange'
@@ -25,7 +26,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
     const refNodeInfoOrder = useRef(null)
     const codeRefer = useSelector((state) => state.auth?.user?.code_refer)
     const uriReferral = APP_URL + '/referral?ref=' + codeRefer
-
+    const { t } = useTranslation()
     const {
         leverage = '',
         profit = '',
@@ -96,7 +97,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                                     <span className='px-3'>|</span>
                                     <span>{hide.leverage ? '***' : `${leverage}x`}</span>
                                     <span className='px-3'>|</span>
-                                    <span>{pairPrice?.symbol} Perpetual</span>
+                                    <span>{pairPrice?.symbol} {t('futures:tp_sl:perpetual')}</span>
                                 </div>
                                 <div>
                                     <span className='text-5xl font-semibold'>{percent}</span>
@@ -105,8 +106,8 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                                 </div>
                                 <div className='flex flex-row'>
                                     <div className='font-medium'>
-                                        <div className='pb-1'>Entry Price</div>
-                                        <div> {isClosePrice ? <div>Close Price</div> : <div>Mark Price</div>} </div>
+                                        <div className='pb-1'>{t('futures:order_table:open_price')}</div>
+                                        <div> {isClosePrice ? <div>{t('futures:order_table:close_price')}</div> : <div> {t('futures:order_table:mark_price')}</div>} </div>
                                     </div>
                                     <div className='font-semibold ml-6'>
                                         <div
@@ -117,7 +118,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                                 </div>
                             </div>
                             <div className='mt-auto text-xs font-semibold'>
-                                Time Stamp: {time}
+                                {t('futures:time_stamp')}: {time}
                             </div>
                         </div>
                         <div>
@@ -125,7 +126,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                                 <QRCode value={uriReferral} size={116} eyeRadius={1} />
                             </div>
                             <div className='flex flex-col items-center text-white mt-3'>
-                                <div className='text-sm font-medium'>Referral Code</div>
+                                <div className='text-sm font-medium capitalize'>{t('futures:referral_code')}</div>
                                 <div className='text-xl font-semibold'>{codeRefer}</div>
                             </div>
                         </div>
@@ -133,22 +134,22 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                 </div>
                 <div className='flex flex-col justify-between h-[142px] px-8 py-6 bg-white rounded-md'>
                     <div className='flex flex-row justify-between'>
-                        <span className='text-gray-1'>Optional Information to share</span>
+                        <span className='text-gray-1'>{t('futures:optional_information')}</span>
                         <div className='flex flex-row justify-between'>
                             <CheckBox
-                                label='Leverage'
+                                label={t('futures:leverage:leverage')}
                                 className='mr-6'
                                 active={!hide.leverage}
                                 onChange={() => setHide({ ...hide, leverage: !hide.leverage })}
                             />
                             <CheckBox
-                                label='PNL Amount'
+                                label={t('futures:pnl_amount')}
                                 className='mr-6'
                                 active={!hide.pnl}
                                 onChange={() => setHide({ ...hide, pnl: !hide.pnl })}
                             />
                             <CheckBox
-                                label='Price'
+                                label={t('futures:price')}
                                 active={!hide.price}
                                 onChange={() => setHide({ ...hide, price: !hide.price })}
                             />
@@ -159,7 +160,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                             className='flex justify-center items-center cursor-pointer w-full h-[50px] rounded-xl font-semibold bg-bgBtnSecondary text-txtBtnSecondary hover:opacity-80'
                             onClick={onClose}
                         >
-                            Cancel
+                            {t('common:cancel')}
                         </div>
                         <div
                             className={classNames(
@@ -168,7 +169,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                             )}
                             onClick={() => downloadImage()}
                         >
-                            <span>Download </span>
+                            <span>{t('futures:download')} </span>
                             {downloading && <span> <IconLoading color='#FFFFFF' /> </span>}
                         </div>
                     </div>

@@ -136,5 +136,21 @@
         "view_detail": "Xem chi tiết"
     },
     "hide_other_symbols": "Ẩn các cặp tiền khác",
-    "stop_price": "Giá stop"
+    "stop_price": "Giá stop",
+    "limit_price": "Giá limit",
+    "to": "Đến",
+    "setting": {
+        "favorites": "Mục Yêu Thích",
+        "pair_detail": "Chi Tiết Cặp Lệnh",
+        "chart": "Biểu Đồ",
+        "orders_history": "Lệnh Đang Mở & Lịch Sử Lệnh",
+        "place_order": "Đặt Lệnh"
+    },
+    "time_stamp": "Mốc thời gian",
+    "referral_code": "Mã giới thiệu",
+    "optional_information": "Chia sẻ thông tin",
+    "download": "Tải về",
+    "pnl_amount": "Số lượng PNL",
+    "price": "Giá",
+    "requesting": "Đang yêu cầu"
 }

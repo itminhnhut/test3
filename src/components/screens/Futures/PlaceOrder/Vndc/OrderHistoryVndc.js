@@ -18,6 +18,7 @@ import { FUTURES_RECORD_CODE } from '../../TradeRecord/RecordTableTab';
 import { useTranslation } from 'next-i18next';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 import Adjustmentdetails from './Adjustmentdetails';
+import TableNoData from '../../../../common/table.old/TableNoData'
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin }) => {
     const { t } = useTranslation()
@@ -107,7 +108,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             name: t('futures:order_history:adjustment_detail'),
             cell: (row) => loading ? <Skeletor width={65} /> : (
                 <div onClick={() => onShowDetail(row)} className='cursor-pointer px-[12px] py-1 bg-bgPrimary dark:bg-bgPrimary-dark text-xs text-dominant border border-dominant rounded-[4px]'>
-                    {t('utures:order_history:view_detail')}
+                    {t('futures:order_history:view_detail')}
                 </div>
             ),
             sortable: true,
@@ -306,6 +307,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     setPagination({ ...pagination, page })
                 }}
                 currentPage={pagination.page}
+                noDataComponent={<TableNoData />}
             // progressPending={loading}
             // progressComponent={<TableLoader/>}
             />

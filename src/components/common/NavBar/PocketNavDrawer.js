@@ -16,9 +16,10 @@ import SvgCheckSuccess from 'components/svg/CheckSuccess';
 import { PulseLoader } from 'react-spinners';
 import { PATHS } from 'constants/paths';
 import { buildLogoutUrl } from 'utils';
+import FuturesSetting from '../../screens/Futures/FuturesSetting';
 
 const PocketNavDrawer = memo(
-    ({ isActive, onClose, loadingVipLevel, vipLevel }) => {
+    ({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
         const [state, set] = useState({
             navActiveLv1: {},
         })
@@ -261,21 +262,35 @@ const PocketNavDrawer = memo(
                             </div>
                         )}
                         <div>
-                            <a
-                                className='mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant'
-                                onClick={themeToggle}
-                            >
-                                <div className='flex flex-row items-center'>
-                                    {t('navbar:menu.mode')}
+                            {page === 'futures' ?
+                                <div className='mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant'>
+                                    <div >
+                                        {t('navbar:menu.mode')}
+                                    </div>
+                                    <FuturesSetting
+                                        spotState={spotState}
+                                        resetDefault={resetDefault}
+                                        onChangeSpotState={onChangeSpotState}
+                                        className="px-0"
+                                    />
                                 </div>
-                                <div>
-                                    {currentTheme !== 'dark' ? (
-                                        <SvgIcon name='sun' size={18} />
-                                    ) : (
-                                        <SvgIcon name='moon' size={18} />
-                                    )}
-                                </div>
-                            </a>
+                                :
+                                <a
+                                    className='mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant'
+                                    onClick={themeToggle}
+                                >
+                                    <div className='flex flex-row items-center'>
+                                        {t('navbar:menu.mode')}
+                                    </div>
+                                    <div>
+                                        {currentTheme !== 'dark' ? (
+                                            <SvgIcon name='sun' size={18} />
+                                        ) : (
+                                            <SvgIcon name='moon' size={18} />
+                                        )}
+                                    </div>
+                                </a>
+                            }
                             <a
                                 className='mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant'
                                 onClick={onChangeLang}
