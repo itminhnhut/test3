@@ -99,7 +99,7 @@ const SupportSearchResult = () => {
     }, [router])
 
     useAsync(async () => {
-        const tagFilters = [language === 'en' ? language : `-${language}`]
+        const tagFilters = [language === 'en' ? language : `-en`]
         const tab = {
             0: "faq",
             1: "noti",
