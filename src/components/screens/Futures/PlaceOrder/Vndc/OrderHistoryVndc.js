@@ -162,8 +162,8 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             })
 
             if (status === ApiStatus.SUCCESS) {
-                setDataSource(data)
-                setPagination({ ...pagination, total: data.total })
+                setDataSource(data?.orders)
+                setPagination({ ...pagination, total: data?.total })
             } else {
                 setDataSource([])
             }
