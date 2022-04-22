@@ -128,7 +128,7 @@ const Futures = () => {
                 // publicSocket.emit('subscribe:futures:ticker', pair)
                 publicSocket.emit('subscribe:futures:mark_price', pair);
                 publicSocket.emit('subscribe:futures:ticker', pair);
-                // publicSocket.emit('subscribe:futures:mini_ticker', 'all')
+                publicSocket.emit('subscribe:futures:mini_ticker', 'all')
 
                 setState({
                     socketStatus: !!publicSocket,

@@ -120,7 +120,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
     useEffect(() => {
         if (pairConfig?.pair) {
             Emitter.on(
-                PublicSocketEvent.FUTURES_TICKER_UPDATE,
+                PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair,
                 async (data) => {
                     if (data) {
                         const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset)
@@ -132,7 +132,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
             )
         }
 
-        return () => Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE)
+        return () => Emitter.off(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair)
     }, [publicSocket, pairConfig?.pair])
 
     // useEffect(() => console.log('MinTicker => ', pairTicker), [pairTicker])

@@ -66,12 +66,12 @@ function initPublicSocket() {
 
             });
 
-            // WS.on(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE, (data) => {
-            //     Emitter.emit(
-            //         PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + data.s,
-            //         data
-            //     )
-            // })
+            WS.on(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE, (data) => {
+                Emitter.emit(
+                    PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + data.s,
+                    data
+                )
+            })
 
             WS.on(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE, (data) => {
                 Emitter.emit(
