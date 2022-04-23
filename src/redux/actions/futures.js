@@ -11,9 +11,9 @@ import {
 } from './apis';
 import { ApiStatus, TRADING_MODE } from './const';
 import {
-    GET_FUTURES_FAVORITE_PAIRS,
-    GET_FUTURES_MARKET_WATCH,
-    GET_FUTURES_USER_SETTINGS,
+    SET_FUTURES_FAVORITE_PAIRS,
+    SET_FUTURES_MARKET_WATCH,
+    SET_FUTURES_USER_SETTINGS,
     SET_FUTURES_ORDER_ADVANCE_TYPES,
     SET_FUTURES_ORDER_TYPES,
     SET_FUTURES_PAIR_CONFIGS,
@@ -50,7 +50,7 @@ export const getFuturesFavoritePairs = () => async (dispatch) => {
     const favoritePairs = await favoriteAction('get', TRADING_MODE.FUTURES)
     if (Array.isArray(favoritePairs) && favoritePairs.length) {
         dispatch({
-            type: GET_FUTURES_FAVORITE_PAIRS,
+            type: SET_FUTURES_FAVORITE_PAIRS,
             payload: favoritePairs,
         })
     }
@@ -61,12 +61,12 @@ export const getFuturesMarketWatch = () => async (dispatch) => {
         const { data } = await Axios.get(API_GET_FUTURES_MARKET_WATCH)
         if (data?.status === ApiStatus.SUCCESS) {
             // ? Futures MarketWatch
-            const marketWatch = data?.data?.map((o) =>
-                FuturesMarketWatch.create(o)
+            const marketWatch = {}
+            data?.data?.map((o) =>
+                marketWatch[o.s] = FuturesMarketWatch.create(o)
             )
-
             dispatch({
-                type: GET_FUTURES_MARKET_WATCH,
+                type: SET_FUTURES_MARKET_WATCH,
                 payload: marketWatch,
             })
         }
@@ -93,7 +93,7 @@ export const getFuturesUserSettings = () => async (dispatch) => {
         const { data } = await Axios.get(API_GET_FUTURES_USER_SETTINGS)
         if (data?.status === ApiStatus.SUCCESS) {
             dispatch({
-                type: GET_FUTURES_USER_SETTINGS,
+                type: SET_FUTURES_USER_SETTINGS,
                 payload: data?.data?.value,
             })
         }

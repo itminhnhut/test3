@@ -89,7 +89,7 @@
         "automaticcally_cancel": "sẽ tự động hủy sau khi đóng vị thế. Lệnh market sẽ được kích hoạt khi đạt đến giá stop. Lệnh sẽ bị từ chối nếu số lượng vị thế vượt quá hạn mức Số lượng lệnh market tối đa."
     },
     "balance": "Số dư ví",
-    "unrealized_pnl": "PNL chưa được ghi nhận",
+    "unrealized_pnl": "PNL chưa ghi nhận",
     "preferences": {
         "preferences": "Tùy chọn",
         "order_confirm": "Xác nhận đặt lệnh",

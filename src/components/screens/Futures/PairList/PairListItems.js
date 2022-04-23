@@ -113,7 +113,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
 
     useEffect(() => {
         if (pairConfig?.pair && !pairTicker && marketWatch) {
-            setPairTicker(marketWatch.find((o) => o.symbol === pairConfig.pair))
+            setPairTicker(marketWatch[pairConfig?.pair])
         }
     }, [pairTicker, marketWatch, pairConfig?.pair])
 

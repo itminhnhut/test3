@@ -5,6 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 // import apiMiddleware from 'src/redux/thunk/middleware';
 import reducers from './reducers';
+import { SET_MULTI_FUTURES_MARKET_WATCH } from 'redux/actions/types';
 
 let store;
 
@@ -17,8 +18,7 @@ const bindMiddleware = middleware => {
 
         const logger = createLogger({
             predicate: (getState, action) => {
-                // return action.type !== SET_SPOT_SYMBOL_TICKER;
-                return true;
+                return action.type !== SET_MULTI_FUTURES_MARKET_WATCH;
             },
             collapsed: (getState, action, logEntry) => !logEntry.error,
         });

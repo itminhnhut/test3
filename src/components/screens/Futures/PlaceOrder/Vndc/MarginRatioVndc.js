@@ -14,6 +14,7 @@ const AVAILBLE_KEY = 'futures_available'
 const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     const dispatch = useDispatch();
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null
+    const futuresMarketWatch = useSelector((state) => state?.futures?.marketWatch) || null
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const wallets = useSelector(state => state.wallet.FUTURES)
     const [balance, setBalance] = useState({});
@@ -48,10 +49,13 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     useEffect(() => {
         let _totalProfit = 0;
         ordersList.forEach((item) => {
+
+            const lastPrice = futuresMarketWatch?.[item.symbol]?.lastPrice || 0
+            console.log('__ check symbol', item.symbol, futuresMarketWatch?.[item.symbol], futuresMarketWatch);
             _totalProfit += getProfitVndc(item, lastPrice);
         });
         setTotalProfit(_totalProfit);
-    }, [lastPrice, ordersList])
+    }, [ordersList, futuresMarketWatch])
 
 
     const onOpenTransfer = () => {
