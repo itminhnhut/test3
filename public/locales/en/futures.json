@@ -50,8 +50,8 @@
     },
     "buy_crypto": "Buy Crypto",
     "convert": "Convert",
-    "best_bid": "Best bid",
-    "best_ask": "Best ask",
+    "best_bid": "Best Bid",
+    "best_ask": "Best Ask",
     "calulator": {
         "futures_calculator": "Futures Calculator",
         "target_price": "Target Price",

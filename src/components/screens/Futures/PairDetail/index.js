@@ -13,8 +13,8 @@ import classNames from 'classnames';
 
 const FuturesPairDetail = ({
     pairPrice,
-    pairConfig,
     markPrice,
+    pairConfig,
     forceUpdateState,
     isVndcFutures,
     isAuth

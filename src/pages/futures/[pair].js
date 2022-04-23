@@ -268,10 +268,9 @@ const Futures = () => {
 
     // ? Init Price and MarkPrice
     useEffect(() => {
-        setState({ pairPrice: null });
-        if (Array.isArray(marketWatch) && marketWatch?.length) {
+        if (marketWatch?.[state.pair]) {
             setState({
-                pairPrice: marketWatch.find((o) => o.symbol === state.pair),
+                pairPrice: marketWatch[state.pair],
                 forceUpdateState: state.forceUpdateState + 1,
             });
         }
@@ -332,7 +331,8 @@ const Futures = () => {
         // ? Get Pair Ticker
         Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
             const pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-            if (state.pair === pairPrice?.symbol) {
+            // console.log('__ check pairPrice', pairPrice.symbol, state.pair, pairPrice);
+            if (state.pair === pairPrice?.symbol && pairPrice?.lastPrice > 0) {
                 setState({ pairPrice });
             }
         });
