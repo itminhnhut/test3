@@ -69,11 +69,11 @@ const FuturesLeverageSettings = ({
         const min = pairConfig?.leverageConfig?.min ?? 0;
         const max = pairConfig?.leverageConfig?.max ?? 0;
         if (min > _leverage) {
-            msg = `Minium Qty is ${min}`
+            msg = `Minimum Qty is ${min}`
             isValid = false
         }
         if (max < _leverage) {
-            msg = `Maxium Qty is ${max}`
+            msg = `Maximum Qty is ${max}`
             isValid = false
         }
         return { isValid, msg, isError: !isValid }

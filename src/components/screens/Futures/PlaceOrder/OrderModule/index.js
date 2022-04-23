@@ -117,12 +117,12 @@ const FuturesOrderModule = ({
                     : `${lotSize?.minQty} ${pairConfig?.baseAsset}`
 
                 if (quantity?.both < _min) {
-                    msg = `Minium Qty is ${_displayingMin}`
+                    msg = `Minimum Qty is ${_displayingMin}`
                     isValid = false
                 }
 
                 if (quantity?.both > _max) {
-                    msg = `Maxium Qty is ${_displayingMax}`
+                    msg = `Maximum Qty is ${_displayingMax}`
                     isValid = false
                 }
 
@@ -136,12 +136,12 @@ const FuturesOrderModule = ({
                 const _price = isStop ? stopPrice : type === 'price' ? price : type === 'stop_loss' ? orderSlTp.sl : orderSlTp.tp
                 if (+_price < +_minPrice) {
                     isValid = false
-                    msg = `Minium Price is ${_minPrice}`
+                    msg = `Minimum Price is ${_minPrice}`
                 }
 
                 if (+_price > +_maxPrice) {
                     isValid = false
-                    msg = `Maxium Price is ${_maxPrice}`
+                    msg = `Maximum Price is ${_maxPrice}`
                 }
 
                 return { isValid, msg }

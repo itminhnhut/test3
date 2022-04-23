@@ -263,7 +263,7 @@ const SwapModule = ({ width, pair }) => {
         })
     }
 
-    const onMaxiumQty = (mode = 'from', availableAsset) => {
+    const onMaximumQty = (mode = 'from', availableAsset) => {
         if (!availableAsset) return
         const _qty = availableAsset
         // const limitMaxQty = config.filters?.[0].maxQty
@@ -330,7 +330,7 @@ const SwapModule = ({ width, pair }) => {
                         decimalScale={getDecimalScale(+config.filters?.[0].stepSize)}
                     />
                     <div className="uppercase text-dominant cursor-pointer font-bold hover:opacity-50"
-                         onClick={() => onMaxiumQty('from', availabelAsset?.fromAsset)}>
+                         onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}>
                         max
                     </div>
                 </div>
@@ -415,7 +415,7 @@ const SwapModule = ({ width, pair }) => {
                         placeholder="0.0000"
                     />
                     {/*<div className="uppercase text-dominant cursor-pointer font-bold hover:opacity-50"*/}
-                    {/*     onClick={() => onMaxiumQty('to', availabelAsset?.toAsset)}>*/}
+                    {/*     onClick={() => onMaximumQty('to', availabelAsset?.toAsset)}>*/}
                     {/*    max*/}
                     {/*</div>*/}
                 </div>

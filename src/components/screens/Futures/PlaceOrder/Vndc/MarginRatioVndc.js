@@ -49,9 +49,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     useEffect(() => {
         let _totalProfit = 0;
         ordersList.forEach((item) => {
-
             const lastPrice = futuresMarketWatch?.[item.symbol]?.lastPrice || 0
-            console.log('__ check symbol', item.symbol, futuresMarketWatch?.[item.symbol], futuresMarketWatch);
             _totalProfit += getProfitVndc(item, lastPrice);
         });
         setTotalProfit(_totalProfit);
