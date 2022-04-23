@@ -29,11 +29,11 @@ import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { uniq } from 'lodash';
 
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice, isAuth, onLogin, pair }) => {
+const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t } = useTranslation()
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const publicSocket = useSelector((state) => state.futures.publicSocket)
-    const pairTicker = useRef({})
+    const marketWatch = useSelector((state) => state.futures.marketWatch)
 
     const columns = useMemo(
         () => [
@@ -92,7 +92,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             },
             {
                 name: t('futures:order_table:last_price'),
-                selector: (row) => pairTicker.current[row?.symbol] && formatNumber(pairTicker.current[row?.symbol]?.lastPrice, 0, 0, true),
+                selector: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, 0, 0, true),
                 minWidth: '150px',
                 sortable: true,
             },
@@ -105,7 +105,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             {
                 name: 'PNL (ROE%)',
                 selector: (row) => row?.pnl?.value,
-                cell: (row) => <OrderProfit order={row} pairPrice={pairTicker.current[row?.symbol]} setShareOrderModal={() => setShareOrder(row)} />,
+                cell: (row) => <OrderProfit order={row} pairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)} />,
                 minWidth: '150px',
                 sortable: true,
             },
@@ -135,7 +135,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                 ),
             },
         ],
-        [pairTicker.current]
+        [marketWatch]
     )
     const [loading, setLoading] = useState(false)
     const [showModalDelete, setShowModalDelete] = useState(false)
@@ -154,32 +154,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
     const symbolOptions = useMemo(() => {
         return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol }))
     }, [allPairConfigs])
-
-
-    useEffect(() => {
-        const symbolsList = uniq(ordersList.map(order => order?.symbol))
-        Array.isArray(symbolsList) && symbolsList.forEach(symbol => {
-            Emitter.on(
-                PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + symbol,
-                async (data) => {
-                    if (data) {
-                        const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset)
-                        if (_pairTicker?.symbol === symbol) {
-                            if (!_pairTicker[symbol]?.lastPrice) {
-                                pairTicker.current = { ...pairTicker.current, [symbol]: _pairTicker }
-                            }
-                        }
-                    }
-                }
-            )
-        })
-        return () => {
-            Array.isArray(symbolsList) && symbolsList.forEach(symbol => {
-                Emitter.off(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + symbol)
-            })
-        }
-
-    }, [ordersList, publicSocket, pair])
 
     const fetchOrder = async (method = 'GET', params, cb) => {
         try {
@@ -247,6 +221,9 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             case VndcFutureOrderType.Status.PENDING:
                 let bias = null;
                 const value = row['price'];
+
+                const pairPrice = marketWatch?.[row.symbol]
+                if(!pairPrice) return null
                 const openPrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
                 const closePrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask;
                 if (pairPrice?.lastPrice > 0 && value > 0) {
@@ -357,7 +334,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     </div>
                 </div>
             </Modal>
-            <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
+            {/*<ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />*/}
             {showModalEdit &&
                 <FuturesEditSLTPVndc
                     isVisible={showModalEdit}
@@ -366,7 +343,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     status={rowData.current.status}
                     onConfirm={onConfirmEdit}
                     pairConfig={pairConfig}
-                    pairTicker={pairTicker.current}
+                    pairTicker={marketWatch[rowData?.current?.symbol]}
                 />
             }
             <div className='flex flex-row items-center flex-wrap'>

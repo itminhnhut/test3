@@ -92,7 +92,6 @@ export default (state = initialState, { payload, type }) => {
             ;
 
             const newMarketWatch = {...state.marketWatch, ...data}
-            console.log('__ check data', newMarketWatch)
             return { ...state, marketWatch: newMarketWatch }
         }
         case SET_FUTURES_USER_SETTINGS:

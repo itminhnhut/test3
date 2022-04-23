@@ -120,7 +120,6 @@ const Futures = () => {
         if (!publicSocket) {
             setState({ socketStatus: !!publicSocket });
         } else {
-            console.log('__ check publis socket', publicSocket, state.prevPair, pair, state.socketStatus);
             if (
                 !state.prevPair ||
                 state.prevPair !== pair ||
@@ -132,7 +131,6 @@ const Futures = () => {
                 publicSocket.emit('subscribe:futures:mark_price', pair);
                 publicSocket.emit('subscribe:futures:ticker', pair);
                 // emit socket all
-                console.log('__ emit subscrible mini_ticker all');
                 publicSocket.emit('subscribe:futures:mini_ticker', 'all')
 
                 setState({
@@ -326,7 +324,6 @@ const Futures = () => {
     }, [router]);
 
     useEffect(() => {
-        console.log('__ check pair', state.pair);
         if (!state.pair) return;
 
         // ? Subscribe publicSocket

@@ -30,7 +30,6 @@ const updateMultipleMarkPrice = (() => {
 let bunchUpdateFuturesMarketPrice = {}
 
 const updateMultipleMiniTicker = throttle((dispatch) => {
-    console.log('__ check price ', bunchUpdateFuturesMarketPrice);
     dispatch({
         type: SET_MULTI_FUTURES_MARKET_WATCH,
         payload: bunchUpdateFuturesMarketPrice,

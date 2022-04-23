@@ -119,7 +119,6 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                                 pairConfig={pairConfig}
                                 onForceUpdate={onForceUpdate}
                                 hideOther={hideOther}
-                                pairPrice={pairPrice}
                                 isAuth={isAuth}
                                 onLogin={onLogin}
                                 pair={pair}
