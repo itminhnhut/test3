@@ -22,8 +22,8 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal }) => {
                 '-'
             }
         </div>
-        {/*{order?.status !== VndcFutureOrderType.Status.PENDING &&*/}
-        {/*    <Share2 size={16} onClick={setShareOrderModal} className='ml-1 cursor-pointer hover:opacity-60' />}*/}
+        {order?.status !== VndcFutureOrderType.Status.PENDING &&
+           <Share2 size={16} onClick={setShareOrderModal} className='ml-1 cursor-pointer hover:opacity-60' />}
     </div>
 };
 

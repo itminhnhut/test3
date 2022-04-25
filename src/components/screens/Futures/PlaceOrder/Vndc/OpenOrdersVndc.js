@@ -343,7 +343,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                     status={rowData.current.status}
                     onConfirm={onConfirmEdit}
                     pairConfig={pairConfig}
-                    pairTicker={marketWatch[rowData?.current?.symbol]}
+                    pairTicker={marketWatch}
                 />
             }
             <div className='flex flex-row items-center flex-wrap'>
