@@ -4,6 +4,7 @@ import { formatNumber, getPriceColor } from 'redux/actions/utils';
 import { Share2 } from 'react-feather';
 
 const OrderProfit = ({ order, pairPrice, setShareOrderModal }) => {
+    if(!pairPrice?.lastPrice) return '-';
     const profit = getProfitVndc(order, pairPrice?.lastPrice);
     const percent = formatNumber(((profit / order.margin) * 100), 2, 0, true);
     return <div className='flex items-center justify-between w-full'>
