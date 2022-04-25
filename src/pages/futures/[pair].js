@@ -222,7 +222,10 @@ const Futures = () => {
                         }
                         if (layout === '2xl') {
                             if (item.i === futuresGridKey.placeOrder) {
-                                item.h = 32;
+                                item.h = 34;
+                            }
+                            if (item.i === futuresGridKey.chart) {
+                                item.h = 30;
                             }
                         }
                         if (!auth) {
@@ -255,7 +258,6 @@ const Futures = () => {
                     });
                 });
         }
-        console.log(oldLayouts)
         setLayoutToLS(isVndcFutures ? 'VNDC' : 'USDT', oldLayouts);
         return oldLayouts;
     };

@@ -156,11 +156,11 @@ const FuturesSetting = (props) => {
 
                                     <div className="flex justify-around">
 
-                                        <div className="flex flex-col justify-center">
+                                        <div className="flex flex-col justify-center items-center">
                                             <div className="mb-[10px]">
                                                 <RadioBox
                                                     id='pro'
-                                                    label={'Order Mode'}
+                                                    label={t('futures:order_mode')}
                                                     checked={true}
                                                 />
                                             </div>
@@ -180,11 +180,11 @@ const FuturesSetting = (props) => {
                                                 {t('spot:setting.pro')}
                                             </span>
                                         </div>
-                                        <div className="text-center">
+                                        <div className="text-center justify-center items-center">
                                             <div className="mb-[10px]">
                                                 <RadioBox
                                                     id='full-screen'
-                                                    label={'Coming soon'}
+                                                    label={t('futures:comming_soon')}
                                                     checked={false}
                                                 />
                                             </div>
@@ -198,7 +198,7 @@ const FuturesSetting = (props) => {
                                                 height={55}
                                             />
                                             <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium">
-                                                Fullscreen
+                                                {t('futures:fullscreen')}
                                             </span>
                                         </div>
                                     </div>
