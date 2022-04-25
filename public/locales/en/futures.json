@@ -161,5 +161,8 @@
     "market": "Market",
     "place_order_success": "Place Order Success",
     "minimun_price": "Minimum Price is",
-    "maximun_price": "Maximum Price is"
+    "maximun_price": "Maximum Price is",
+    "fullscreen": "Fullscreen",
+    "order_mode": "Order Mode",
+    "comming_soon": "Coming soon"
 }
