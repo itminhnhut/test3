@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 export const VndcFutureOrderType = {
     GroupStatus: {
         OPENING: 0,
@@ -51,7 +52,7 @@ export const getProfitVndc = (order, lastPrice = 0) => {
         closePrice = lastPrice;
     } else if (status === VndcFutureOrderType.Status.CLOSED) {
         closePrice = close_price
-    }else{
+    } else {
         return 0
     }
     try {
@@ -65,3 +66,16 @@ export const getProfitVndc = (order, lastPrice = 0) => {
     return profitVNDC;
 }
 
+export const renderCellTable = (key, rowData) => {
+    const { t, i18n: { language } } = useTranslation()
+    switch (key) {
+        case 'side':
+            return language === 'vi' ? rowData[key] === 'Sell' ? t('common:sell') : t('common:buy') : rowData[key];
+            return;
+        case 'type':
+            return language === 'vi' ?
+                (rowData[key] === 'Market' ? t('futures:market') : rowData[key] === 'Limit' ? t('futures:limit') : rowData[key]) : rowData[key];
+        default:
+            return;
+    }
+}

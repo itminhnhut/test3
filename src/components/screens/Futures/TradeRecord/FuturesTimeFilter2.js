@@ -3,10 +3,12 @@ import {isArray, isDate, isString} from 'lodash'
 import {DatePicker} from "antd";
 import {useMemo, useState} from "react";
 import {add} from "date-fns";
+import { useTranslation } from 'next-i18next'
 
 const {RangePicker} = DatePicker
 
 const FuturesTimeFilter2 = ({currentTimeRange, onChange}) => {
+    const { t } = useTranslation();
     const [customRange, setCustomRange] = useState(isString(currentTimeRange) ? currentTimeRange : '')
     const currentTime = new Date()
 
@@ -38,7 +40,7 @@ const FuturesTimeFilter2 = ({currentTimeRange, onChange}) => {
                     'px-2 h-[20px] rounded-md mr-2 cursor-pointer',
                     {'bg-gray-5 dark:bg-darkBlue-4': customRange === '1_day'}
                 )}
-            >1 Day
+            >1 {t('futures:day')}
             </div>
             <div
                 onClick={handleCustomRangeChange('1_week')}
@@ -46,7 +48,7 @@ const FuturesTimeFilter2 = ({currentTimeRange, onChange}) => {
                     'px-2 h-[20px] rounded-md mr-2 cursor-pointer',
                     {'bg-gray-5 dark:bg-darkBlue-4': customRange === '1_week'}
                 )}
-            >1 Week
+            >1 {t('futures:week')}
             </div>
             <div
                 onClick={handleCustomRangeChange('1_month')}
@@ -54,7 +56,7 @@ const FuturesTimeFilter2 = ({currentTimeRange, onChange}) => {
                     'px-2 h-[20px] rounded-md mr-2 cursor-pointer',
                     {'bg-gray-5 dark:bg-darkBlue-4': customRange === '1_month'}
                 )}
-            >1 Month
+            >1 {t('futures:month')}
             </div>
             <div
                 onClick={handleCustomRangeChange('3_month')}
@@ -62,13 +64,13 @@ const FuturesTimeFilter2 = ({currentTimeRange, onChange}) => {
                     'px-2 h-[20px] rounded-md cursor-pointer',
                     {'bg-gray-5 dark:bg-darkBlue-4': customRange === '3_month'}
                 )}
-            >3 Month
+            >3 {t('futures:month')}
             </div>
             <div className='flex items-center ml-5 custom_ant_datepicker mr-2'>
-                <span className='mr-1.5'>Time</span>
+                <span className='mr-1.5'>{t('common:time')}</span>
                 <RangePicker
                     bordered={false}
-                    separator='to'
+                    separator={t('futures:to')}
                     placeholder={['DD-MM-YYYY', 'DD-MM-YYYY']}
                     format='DD-MM-YYYY'
                     value={value}

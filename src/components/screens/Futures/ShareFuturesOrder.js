@@ -48,8 +48,8 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
 
         return {
             leverage: order?.leverage,
-            profit: formatNumber(order?.profit, 0, 0, true),
-            percent: formatNumber((order?.profit / order?.margin) * 100, 2, 0, true) + '%',
+            profit: formatNumber(isClosePrice ? order?.profit : profit, 0, 0, true),
+            percent: formatNumber(((isClosePrice ? order?.profit : profit) / order?.margin) * 100, 2, 0, true) + '%',
             price: formatNumber(price, 8),
             markPrice: formatNumber(pairPrice?.lastPrice, 8),
             closePrice: formatNumber(order?.close_price, 8),

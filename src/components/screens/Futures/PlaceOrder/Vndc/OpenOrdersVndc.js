@@ -8,7 +8,7 @@ import DataTable from 'react-data-table-component'
 import Modal from 'components/common/ReModal'
 import Button from 'components/common/Button'
 import showNotification from 'utils/notificationService'
-import { VndcFutureOrderType } from './VndcFutureOrderType'
+import { VndcFutureOrderType, renderCellTable } from './VndcFutureOrderType'
 import OrderProfit from '../../TradeRecord/OrderProfit';
 import FuturesTimeFilter2 from "components/screens/Futures/TradeRecord/FuturesTimeFilter2";
 import { FilterTradeOrder } from "components/screens/Futures/FilterTradeOrder";
@@ -63,14 +63,14 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
             },
             {
                 name: t('futures:order_table:type'),
-                selector: (row) => row?.type,
+                selector: (row) => renderCellTable('type', row),
                 sortable: true,
             },
             {
                 name: t('futures:order_table:side'),
                 selector: (row) => row?.type,
                 cell: (row) => <span
-                    className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{row?.side}</span>,
+                    className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row)}</span>,
                 sortable: true,
             },
             {
@@ -357,7 +357,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, pairPrice
                     </div>
                 </div>
             </Modal>
-            <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
+            <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={pairTicker.current[shareOrder?.symbol]} onClose={() => setShareOrder(null)} />
             {showModalEdit &&
                 <FuturesEditSLTPVndc
                     isVisible={showModalEdit}

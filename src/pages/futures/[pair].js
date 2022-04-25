@@ -186,8 +186,11 @@ const Futures = () => {
                             if (item.i === futuresGridKey.chart) {
                                 item.h = 29;
                             }
+                            if (item.i === futuresGridKey.placeOrder) {
+                                item.h = 36;
+                            }
                             if (item.i === futuresGridKey.marginRatio) {
-                                item.h = 13;
+                                item.h = 11;
                             }
                         }
                         if (layout === 'lg') {
@@ -195,12 +198,24 @@ const Futures = () => {
                                 item.h = 3;
                             }
                             if (item.i === futuresGridKey.chart) {
-                                item.h = 24;
+                                item.h = 27;
+                            }
+                            if (item.i === futuresGridKey.placeOrder) {
+                                item.h = 34;
+                            }
+                            if (item.i === futuresGridKey.marginRatio) {
+                                item.h = 12;
+                            }
+                            if(item.i ===futuresGridKey.tradeRecord){
+                                item.h = 14;
                             }
                         }
                         if (layout === 'xl') {
                             if (item.i === futuresGridKey.placeOrder) {
-                                item.h = 36;
+                                item.h = 38;
+                            }
+                            if (item.i === futuresGridKey.marginRatio) {
+                                item.h = 12;
                             }
                         }
                         if (layout === '2xl') {

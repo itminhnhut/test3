@@ -49,12 +49,12 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
 
                 if (+_price < +_minPrice) {
                     isValid = false
-                    msg = `Minium Price is ${_minPrice}`
+                    msg = `Minium Price is ${formatNumber(_minPrice, 0, 0, true)}`
                 }
 
                 if (+_price > +_maxPrice) {
                     isValid = false
-                    msg = `Maxium Price is ${_maxPrice}`
+                    msg = `Maxium Price is ${formatNumber(_maxPrice, 0, 0, true)}`
                 }
 
                 return { isValid, msg }

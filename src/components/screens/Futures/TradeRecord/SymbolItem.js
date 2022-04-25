@@ -1,10 +1,12 @@
+import { useTranslation } from 'next-i18next'
 const FuturesRecordSymbolItem = ({ symbol, leverage }) => {
+    const { t } = useTranslation()
     return (
         <div className='flex items-center whitespace-nowrap'>
             <div className='font-medium text-xs'>
                 <div>{symbol}</div>
                 <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                    Perpetual
+                    {t('futures:tp_sl:perpetual')}
                 </div>
             </div>
             {leverage && (

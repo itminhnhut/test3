@@ -91,7 +91,7 @@ const FuturesOrderButtonsGroupVndc = ({
                                 FuturesOrderTypes.Market,
                                 FuturesOrderTypes.StopMarket,
                             ].includes(type),
-                        })
+                        }, t)
                 }
             >
                 {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
@@ -108,7 +108,7 @@ const FuturesOrderButtonsGroupVndc = ({
                                 FuturesOrderTypes.Market,
                                 FuturesOrderTypes.StopMarket,
                             ].includes(type),
-                        })
+                        }, t)
                 }
             >
                 {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}

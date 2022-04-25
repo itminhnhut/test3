@@ -68,7 +68,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                         offsetH += 56
                     }
                     if (tabActive === FUTURES_RECORD_CODE.openOrders && isVndcFutures) {
-                        offsetH += 22
+                        offsetH += 10
                     }
                     tableBodyElement.style.height = `${tableHeight - tableHeaderElement?.clientHeight - 15 - offsetH}px`
 

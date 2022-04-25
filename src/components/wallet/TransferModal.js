@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatWallet, setTransferModal, getLoginUrl } from 'redux/actions/utils';
+import { formatWallet, setTransferModal, getLoginUrl, formatNumber } from 'redux/actions/utils';
 import { WalletType } from 'redux/actions/const';
 import { Trans, useTranslation } from 'next-i18next';
 import { Check, ChevronDown, X } from 'react-feather';
@@ -483,7 +483,7 @@ const TransferModal = () => {
             <div className={`${state.focus?.amount ?
                 'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-dominant'
                 : 'relative mt-4 py-2.5 px-4 sm:py-3.5 sm:px-5 rounded-xl border border-divider dark:border-divider-dark hover:!border-dominant'}
-                ${isError ? 'border-red ' : ''}
+                ${isError && state.amount ? '!border-red ' : ''}
                 `}>
                 <div className="flex items-center justify-between">
                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:amount')}</div>
@@ -492,6 +492,19 @@ const TransferModal = () => {
                         {t('common:max')}
                     </div>
                 </div>
+                {isError && state.amount &&
+                    <div className='absolute right-0 top-0 -translate-y-full z-50 flex flex-col items-center'>
+                        <div className='px-3 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4'>
+                            {t('futures:minimun_price') + ' ' + (state.asset === 'VNDC' ? formatNumber(500000, 0, 0, true) : 25)}
+                        </div>
+                        <div
+                            className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'
+                            style={{
+                                clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
+                            }}
+                        />
+                    </div>
+                }
                 <div className="mt-2 flex items-center">
                     {renderAssetSelect()}
                     {renderAmountInput()}

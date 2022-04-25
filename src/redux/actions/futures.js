@@ -156,7 +156,7 @@ export const getMarginModeLabel = (mode) => {
     }
 }
 
-export const placeFuturesOrder = async (params = {}, utils = {}) => {
+export const placeFuturesOrder = async (params = {}, utils = {}, t) => {
     // const validator = placeFuturesOrderValidator(params, utils)
     // log.d('placeFuturesOrder Pre-processing...')
     // const isValid = Object.values(validator)?.filter((e) => !e)
@@ -186,8 +186,8 @@ export const placeFuturesOrder = async (params = {}, utils = {}) => {
             log.i('placeFuturesOrder result: ', data)
             showNotification(
                 {
-                    message: `Place Order Success`,
-                    title: 'Success',
+                    message: t('futures:place_order_success'),
+                    title: t('common:success'),
                     type: 'success',
                 },
                 1800,
@@ -199,7 +199,7 @@ export const placeFuturesOrder = async (params = {}, utils = {}) => {
             showNotification(
                 {
                     message: `${data?.message}`,
-                    title: 'Error',
+                    title: t('common:failed'),
                     type: 'failure',
                 },
                 1800,

@@ -136,12 +136,12 @@ const FuturesOrderModule = ({
                 const _price = isStop ? stopPrice : type === 'price' ? price : type === 'stop_loss' ? orderSlTp.sl : orderSlTp.tp
                 if (+_price < +_minPrice) {
                     isValid = false
-                    msg = `Minium Price is ${_minPrice}`
+                    msg = `${t('futures:minimun_price')} ${!isVndcFutures ? _minPrice : formatNumber(_minPrice, 0, 0, true)}`
                 }
 
                 if (+_price > +_maxPrice) {
                     isValid = false
-                    msg = `Maxium Price is ${_maxPrice}`
+                    msg = `${t('futures:maximun_price')} ${!isVndcFutures ? _maxPrice : formatNumber(_maxPrice, 0, 0, true)}`
                 }
 
                 return { isValid, msg }

@@ -152,5 +152,13 @@
     "download": "Tải về",
     "pnl_amount": "Số lượng PNL",
     "price": "Giá",
-    "requesting": "Đang yêu cầu"
+    "requesting": "Đang yêu cầu",
+    "day": "Ngày",
+    "week": "Tuần",
+    "month": "Tháng",
+    "limit": "Giới hạn",
+    "market": "Thị trường",
+    "place_order_success": "Đặt lệnh thành công",
+    "minimun_price": "Giá tối thiểu",
+    "maximun_price": "Giá tối đa"
 }

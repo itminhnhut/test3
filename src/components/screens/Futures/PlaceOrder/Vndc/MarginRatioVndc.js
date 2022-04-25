@@ -66,12 +66,12 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                 </div>
                 <div className='mt-4 flex items-center'>
                     <Link href="/trade">
-                        <a className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                        <a target="_blank" className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
                             {t('futures:buy_crypto')}
                         </a>
                     </Link>
                     <Link href="/swap">
-                        <a className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                        <a target="_blank" className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
                             {t('futures:convert')}
                         </a>
                     </Link>

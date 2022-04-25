@@ -153,5 +153,13 @@
     "download": "Download",
     "pnl_amount": "PNL Amount",
     "price": "Price",
-    "requesting": "Requesting"
+    "requesting": "Requesting",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "limit": "Limit",
+    "market": "Market",
+    "place_order_success": "Place Order Success",
+    "minimun_price": "Minium Price is",
+    "maximun_price": "Maxium Price is"
 }

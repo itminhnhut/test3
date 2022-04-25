@@ -8,7 +8,7 @@ import { API_GET_VNDC_FUTURES_HISTORY_ORDERS } from 'redux/actions/apis'
 import { ApiStatus } from 'redux/actions/const'
 import Skeletor from 'src/components/common/Skeletor'
 import { formatTime, formatNumber, getPriceColor, getS3Url } from 'redux/actions/utils'
-import { VndcFutureOrderType } from './VndcFutureOrderType';
+import { VndcFutureOrderType, renderCellTable } from './VndcFutureOrderType';
 import FuturesTimeFilter2 from "components/screens/Futures/TradeRecord/FuturesTimeFilter2";
 import { FilterTradeOrder } from "components/screens/Futures/FilterTradeOrder";
 import { tableStyle } from "config/tables";
@@ -60,14 +60,14 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         },
         {
             name: t('futures:order_table:type'),
-            cell: (row) => loading ? <Skeletor width={65} /> : row?.type,
+            cell: (row) => loading ? <Skeletor width={65} /> : renderCellTable('type', row),
             selector: (row) => row?.type,
             sortable: true,
         },
         {
             name: t('futures:order_table:side'),
             selector: (row) => row?.sdie,
-            cell: (row) => loading ? <Skeletor width={65} /> : <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{row?.side}</span>,
+            cell: (row) => loading ? <Skeletor width={65} /> : <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row)}</span>,
             sortable: true,
         },
         {
