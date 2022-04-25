@@ -96,12 +96,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 minWidth: '150px',
                 sortable: true,
             },
-            {
-                name: t('futures:calulator:liq_price'),
-                selector: (row) => renderLiqPrice(row),
-                minWidth: '150px',
-                sortable: true,
-            },
+            // {
+            //     name: t('futures:calulator:liq_price'),
+            //     selector: (row) => renderLiqPrice(row),
+            //     minWidth: '150px',
+            //     sortable: true,
+            // },
             {
                 name: 'PNL (ROE%)',
                 selector: (row) => row?.pnl?.value,
