@@ -33,8 +33,7 @@ const FuturesOrderUtilities = ({ quoteAssetId, quoteAsset, isAuth, isVndcFutures
                             className='flex flex-col text-txtSecondary dark:text-txtSecondary-dark'
                             onClick={openTransferModal}
                         >
-                            <i className='block translate-y-1/3 ci-small_long_left' />
-                            <i className='block -translate-y-1/3 ci-small_long_right' />
+                           <img src={("/images/icon/ic_exchange2.png")} height="16" width="16" />
                         </div>
                     </div>
                 }
