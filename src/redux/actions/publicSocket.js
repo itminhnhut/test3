@@ -4,6 +4,7 @@ import * as types from 'src/redux/actions/types';
 import Emitter from 'src/redux/actions/emitter';
 import { PublicSocketEvent } from 'src/redux/actions/const';
 import throttle from 'lodash/throttle';
+import { SET_MULTI_FUTURES_MARKET_WATCH } from 'src/redux/actions/types';
 
 let WS;
 let lastPrice = 0;
@@ -25,6 +26,18 @@ const updateMultipleMarkPrice = (() => {
         update(data);
     };
 })();
+
+let bunchUpdateFuturesMarketPrice = {}
+
+const updateMultipleMiniTicker = throttle((dispatch) => {
+    dispatch({
+        type: SET_MULTI_FUTURES_MARKET_WATCH,
+        payload: bunchUpdateFuturesMarketPrice,
+    });
+
+}, 5000, {leading: true, trailing: true});
+
+
 
 function initPublicSocket() {
     return (dispatch) => {
@@ -71,6 +84,8 @@ function initPublicSocket() {
                     PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + data.s,
                     data
                 )
+                bunchUpdateFuturesMarketPrice[data.s] = data
+                updateMultipleMiniTicker(dispatch);
             })
 
             WS.on(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE, (data) => {

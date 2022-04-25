@@ -1,15 +1,17 @@
 import {
-    GET_FUTURES_FAVORITE_PAIRS,
-    GET_FUTURES_MARKET_WATCH,
-    GET_FUTURES_USER_SETTINGS,
+    SET_FUTURES_FAVORITE_PAIRS,
+    SET_FUTURES_MARKET_WATCH,
+    SET_FUTURES_USER_SETTINGS,
     SET_FUTURES_ORDER_ADVANCE_TYPES,
     SET_FUTURES_ORDER_TYPES,
     SET_FUTURES_PAIR_CONFIGS,
     SET_FUTURES_PREFERENCES,
     SET_FUTURES_PRELOADED_FORM,
     SET_FUTURES_USE_SLTP,
-    SET_FUTURES_ORDERS_LIST
+    SET_FUTURES_ORDERS_LIST,
+    SET_MULTI_FUTURES_MARKET_WATCH
 } from 'redux/actions/types';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
 export const FuturesOrderTypes = {
     Limit: 'LIMIT',
@@ -68,11 +70,31 @@ export default (state = initialState, { payload, type }) => {
             return { ...state, orderAdvanceType: payload }
         case SET_FUTURES_USE_SLTP:
             return { ...state, useSltp: payload }
-        case GET_FUTURES_FAVORITE_PAIRS:
+        case SET_FUTURES_FAVORITE_PAIRS:
             return { ...state, favoritePairs: payload }
-        case GET_FUTURES_MARKET_WATCH:
+        case SET_FUTURES_MARKET_WATCH:
             return { ...state, marketWatch: payload }
-        case GET_FUTURES_USER_SETTINGS:
+
+        case SET_MULTI_FUTURES_MARKET_WATCH: {
+            const data = payload || {};
+            if (!state.marketWatch) {
+                return state;
+            }
+            for (const pairKey in data) {
+                if (data.hasOwnProperty(pairKey)) {
+                    try {
+                        data[pairKey] = FuturesMarketWatch.create(data[pairKey], 'VNDC')
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+            }
+            ;
+
+            const newMarketWatch = {...state.marketWatch, ...data}
+            return { ...state, marketWatch: newMarketWatch }
+        }
+        case SET_FUTURES_USER_SETTINGS:
             return { ...state, userSettings: payload }
         case SET_FUTURES_PRELOADED_FORM:
             return {

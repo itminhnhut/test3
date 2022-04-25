@@ -117,12 +117,12 @@ const FuturesOrderModule = ({
                     : `${lotSize?.minQty} ${pairConfig?.baseAsset}`
 
                 if (quantity?.both < _min) {
-                    msg = `Minium Qty is ${_displayingMin}`
+                    msg = `Minimum Qty is ${_displayingMin}`
                     isValid = false
                 }
 
                 if (quantity?.both > _max) {
-                    msg = `Maxium Qty is ${_displayingMax}`
+                    msg = `Maximum Qty is ${_displayingMax}`
                     isValid = false
                 }
 
