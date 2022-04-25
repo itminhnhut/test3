@@ -334,7 +334,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                     </div>
                 </div>
             </Modal>
-            <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={pairTicker.current[shareOrder?.symbol]} onClose={() => setShareOrder(null)} />
+            <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={marketWatch[shareOrder?.symbol]} onClose={() => setShareOrder(null)} />
             {showModalEdit &&
                 <FuturesEditSLTPVndc
                     isVisible={showModalEdit}
