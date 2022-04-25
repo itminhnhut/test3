@@ -122,6 +122,9 @@ export default class TimeFrame extends Component {
         if (initTimeFrame && initTimeFrame !== prevProps.initTimeFrame) {
             this.updateTimeFrame(this.props.initTimeFrame);
         }
+        if(prevProps?.symbol!==this.props.symbol){
+            this.setState({ selectedTime: '60' });
+        }
     }
 
     updateTimeFrame = (initTimeFrame) => {

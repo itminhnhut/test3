@@ -397,15 +397,15 @@ export class TVChartContainer extends React.PureComponent {
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
                 volumePaneSize: "small",
             },
-            time_frames: [{ text: "1m", resolution: "1", description: "1m" }],
+            time_frames: [{ text: "1h", resolution: "60", description: "1h" }],
         };
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
-
         this.widget.onChartReady(() => {
 
             // Load saved chart
             this.loadSavedChart()
+            this.handleActiveTime(60);
             const isDark = this.props.theme === 'dark'
             this.widget.applyOverrides({
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
@@ -528,7 +528,7 @@ TVChartContainer.defaultProps = {
     userId: "public_user_id",
     fullscreen: false,
     autosize: true,
-    time_frames: [{ text: "1m", resolution: "1", description: "1m" }],
+    time_frames: [{ text: "1h", resolution: "60", description: "1h" }],
     studies_overrides: {
         "volume.volume.color.0": "#03BBCC",
         "volume.volume.color.1": "#ff0065",
