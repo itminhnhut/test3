@@ -96,12 +96,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 minWidth: '150px',
                 sortable: true,
             },
-            // {
-            //     name: t('futures:calulator:liq_price'),
-            //     selector: (row) => renderLiqPrice(row),
-            //     minWidth: '150px',
-            //     sortable: true,
-            // },
+            {
+                name: t('futures:calulator:liq_price'),
+                selector: (row) => renderLiqPrice(row),
+                minWidth: '150px',
+                sortable: true,
+            },
             {
                 name: 'PNL (ROE%)',
                 selector: (row) => row?.pnl?.value,
@@ -185,6 +185,10 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         }
     }
 
+    useEffect(() => {
+        onForceUpdate()
+    },[ordersList])
+
     const onDelete = (item) => {
         rowData.current = item;
         setShowModalDelete(true)
@@ -211,7 +215,9 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
     }
 
     const renderLiqPrice = (row) => {
-        const liqPrice = (row?.quantity * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (1 - 0.1 / 100))
+        const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
+        const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
+        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - 0.1 / 100))
         return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
     }
 
@@ -223,7 +229,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 const value = row['price'];
 
                 const pairPrice = marketWatch?.[row.symbol]
-                if(!pairPrice) return null
+                if (!pairPrice) return null
                 const openPrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
                 const closePrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask;
                 if (pairPrice?.lastPrice > 0 && value > 0) {
@@ -277,7 +283,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         });
     }
     const _dataSource = useMemo(() => {
-        return ordersList.filter(o => {
+        const items = ordersList.filter(o => {
             const conditions = []
             if (hideOther) {
                 conditions.push(o.symbol === pairConfig?.symbol)
@@ -297,6 +303,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
 
             return conditions.every(e => e)
         });
+
+        return filters.symbol ? items.filter(item => item?.symbol === filters.symbol) : items;
     }, [hideOther, ordersList, filters])
 
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
