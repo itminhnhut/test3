@@ -1,17 +1,20 @@
 import classNames from 'classnames'
 import {isArray, isDate, isString} from 'lodash'
 import {DatePicker} from "antd";
-import {useMemo, useState} from "react";
+import { useMemo, useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import {add} from "date-fns";
 import { useTranslation } from 'next-i18next'
 
 const {RangePicker} = DatePicker
 
-const FuturesTimeFilter2 = ({currentTimeRange, onChange}) => {
+const FuturesTimeFilter2 = forwardRef(({currentTimeRange, onChange},ref) => {
     const { t } = useTranslation();
     const [customRange, setCustomRange] = useState(isString(currentTimeRange) ? currentTimeRange : '')
     const currentTime = new Date()
 
+    useImperativeHandle(ref, () => ({
+        onReset: (params) => setCustomRange(params)
+    }));
     const timeRanges = {
         '1_day': [add(currentTime, {days: -1}), currentTime],
         '1_week': [add(currentTime, {weeks: -1}), currentTime],
@@ -23,7 +26,7 @@ const FuturesTimeFilter2 = ({currentTimeRange, onChange}) => {
         setCustomRange(time)
         onChange(timeRanges[time])
     }
-
+  
     const value = useMemo(() => {
         // TOTO: improve check is moment object
         if (isArray(currentTimeRange) && currentTimeRange.every(e => !isDate(e))) {
@@ -83,6 +86,6 @@ const FuturesTimeFilter2 = ({currentTimeRange, onChange}) => {
             </div>
         </div>
     )
-}
+})
 
 export default FuturesTimeFilter2

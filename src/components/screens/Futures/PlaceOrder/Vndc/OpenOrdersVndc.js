@@ -28,18 +28,18 @@ import TableNoData from '../../../../common/table.old/TableNoData';
 import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { uniq } from 'lodash';
+import Link from 'next/link';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t } = useTranslation()
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const publicSocket = useSelector((state) => state.futures.publicSocket)
     const marketWatch = useSelector((state) => state.futures.marketWatch)
-
     const columns = useMemo(
         () => [
             {
                 name: t('futures:order_table:id'),
-                cell: (row) => row?.status !== 3 ? row?.displaying_id : t('futures:requesting'),
+                selector: (row) => row?.status !== 3 ? row?.displaying_id : t('futures:requesting'),
                 sortable: true,
                 minWidth: '50px',
             },
@@ -57,30 +57,38 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 name: t('futures:order_table:symbol'),
                 selector: (row) => row?.symbol,
                 cell: (row) => (
-                    <FuturesRecordSymbolItem symbol={row?.symbol} />
+                    pairConfig?.pair !== row?.symbol ?
+                        <Link href={`/futures/${row?.symbol}`}>
+                            <a target='_blank' className='dark:text-white text-darkBlue'>
+                                <FuturesRecordSymbolItem symbol={row?.symbol} />
+                            </a>
+                        </Link>
+                        : <FuturesRecordSymbolItem symbol={row?.symbol} />
                 ),
                 sortable: true,
             },
             {
                 name: t('futures:order_table:type'),
-                selector: (row) => renderCellTable('type', row),
-                sortable: true,
+                selector: (row) => row?.type,
+                cell: (row) => renderCellTable('type', row),
+                sortable: false,
             },
             {
                 name: t('futures:order_table:side'),
-                selector: (row) => row?.type,
+                selector: (row) => row?.side,
                 cell: (row) => <span
                     className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row)}</span>,
-                sortable: true,
+                sortable: false,
             },
             {
                 name: t('futures:leverage:leverage'),
+                selector: (row) => row?.leverage,
                 cell: (row) => row?.leverage + 'x',
                 sortable: true,
             },
             {
                 name: t('futures:order_table:amount'),
-                cell: (row) => row?.quantity,
+                selector: (row) => row?.quantity,
                 sortable: true,
             },
             {
@@ -98,7 +106,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             },
             {
                 name: t('futures:calulator:liq_price'),
-                selector: (row) => renderLiqPrice(row),
+                selector: (row) => row?.open_price,
+                cell: (row) => renderLiqPrice(row),
                 minWidth: '150px',
                 sortable: true,
             },
@@ -107,7 +116,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 selector: (row) => row?.pnl?.value,
                 cell: (row) => <OrderProfit order={row} pairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)} />,
                 minWidth: '150px',
-                sortable: true,
+                sortable: false,
             },
             {
                 name: 'TP/SL',
@@ -124,7 +133,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                     </div>
                 ),
                 minWidth: '150px',
-                sortable: true,
+                sortable: false,
             },
             {
                 name: '',
@@ -150,6 +159,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         status: '',
         side: '',
     })
+
+    const TimeFilterRef = useRef(null)
 
     const symbolOptions = useMemo(() => {
         return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol }))
@@ -187,7 +198,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
 
     useEffect(() => {
         onForceUpdate()
-    },[ordersList])
+    }, [ordersList])
 
     const onDelete = (item) => {
         rowData.current = item;
@@ -269,6 +280,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
 
     const onConfirmEdit = (params) => {
         fetchOrder('PUT', params, () => {
+            localStorage.setItem('edited_id', params.displaying_id);
             setShowModalEdit(false);
             showNotification(
                 {
@@ -360,6 +372,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                     onChange={(value) => {
                         setFilters({ ...filters, timeRange: value })
                     }}
+                    ref={TimeFilterRef}
                 />
                 <FilterTradeOrder
                     label={t('futures:order_table:symbol')}
@@ -371,7 +384,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 />
                 <FilterTradeOrder
                     label={t('common:side')}
-                    options={[{ value: 'Buy' }, { value: 'Sell' }]}
+                    options={[{ value: 'Buy', label: t('common:buy') }, { value: 'Sell', label: t('common:sell') }]}
                     value={filters.side}
                     onChange={(value) => {
                         setFilters({ ...filters, side: value })
@@ -402,6 +415,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                             status: '',
                             side: '',
                         })
+                        TimeFilterRef.current.onReset([]);
                     }}
                     className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
                     {t('common:reset')}

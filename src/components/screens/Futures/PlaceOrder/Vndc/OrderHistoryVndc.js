@@ -19,12 +19,14 @@ import { useTranslation } from 'next-i18next';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 import Adjustmentdetails from './Adjustmentdetails';
 import TableNoData from '../../../../common/table.old/TableNoData'
+import Link from 'next/link';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin }) => {
     const { t } = useTranslation()
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false)
     const [shareOrder, setShareOrder] = useState(null)
+    const [isReset, setIsReset] = useState(false)
     const columns = useMemo(() => [
         {
             name: t('futures:order_table:id'),
@@ -34,7 +36,13 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         },
         {
             name: t('futures:order_table:symbol'),
-            cell: (row) => loading ? <Skeletor width={65} /> : row?.symbol,
+            cell: (row) => loading ? <Skeletor width={65} /> : pairConfig?.pair !== row?.symbol ?
+                <Link href={`/futures/${row?.symbol}`}>
+                    <a target='_blank' className='dark:text-white text-darkBlue'>
+                        {row?.symbol}
+                    </a>
+                </Link>
+                : row?.symbol,
             sortable: true,
             selector: (row) => row?.symbol,
         },
@@ -62,26 +70,29 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             name: t('futures:order_table:type'),
             cell: (row) => loading ? <Skeletor width={65} /> : renderCellTable('type', row),
             selector: (row) => row?.type,
-            sortable: true,
+            sortable: false,
         },
         {
             name: t('futures:order_table:side'),
             selector: (row) => row?.sdie,
             cell: (row) => loading ? <Skeletor width={65} /> : <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row)}</span>,
-            sortable: true,
+            sortable: false,
         },
         {
             name: t('futures:order_table:amount'),
+            selector: (row) => row?.quantity,
             cell: (row) => loading ? <Skeletor width={65} /> : row?.quantity ? formatNumber(row?.quantity, 8, 0, true) : '-',
             sortable: true,
         },
         {
             name: t('futures:order_table:open_price'),
+            selector: (row) => row?.open_price,
             cell: (row) => loading ? <Skeletor width={100} /> : row?.open_price ? formatNumber(row?.open_price, 0, 0, true) : '-',
             sortable: true,
         },
         {
             name: t('futures:order_table:close_price'),
+            selector: (row) => row?.close_price,
             cell: (row) => loading ? <Skeletor width={100} /> : row?.close_price ? formatNumber(row?.close_price, 0, 0, true) : '-',
             sortable: true,
         },
@@ -96,10 +107,11 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 </div>
             ),
             minWidth: '150px',
-            sortable: true,
+            sortable: false,
         },
         {
             name: t('futures:order_history:revenue'),
+            selector: (row) => row?.profit,
             cell: (row) => loading ? <Skeletor width={100} /> : cellRenderRevenue(row),
             minWidth: '150px',
             sortable: true,
@@ -111,7 +123,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     {t('futures:order_history:view_detail')}
                 </div>
             ),
-            sortable: true,
+            sortable: false,
         },
     ], [loading]
     )
@@ -133,6 +145,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const [showDetail, setShowDetail] = useState(false);
     const rowData = useRef(null);
+    const TimeFilterRef = useRef(null);
 
     const symbolOptions = useMemo(() => {
         return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol }))
@@ -173,6 +186,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         } finally {
             setLoading(false)
             onForceUpdate()
+            setIsReset(false);
         }
     }
 
@@ -244,6 +258,12 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         setShowDetail(!showDetail);
     }
 
+    useEffect(() => {
+        if (isReset) {
+            getOrders();
+        }
+    }, [isReset])
+
     return (
         <>
             {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />}
@@ -254,6 +274,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     onChange={(value = []) => {
                         setFilters({ ...filters, timeFrom: value[0], timeTo: value[1] })
                     }}
+                    ref={TimeFilterRef}
                 />
                 <FilterTradeOrder
                     label={t('futures:order_table:symbol')}
@@ -284,7 +305,8 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                             symbol: '',
                             side: '',
                         })
-                        getOrders()
+                        TimeFilterRef.current.onReset([]);
+                        setIsReset(true)
                     }}
                     className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
                     {t('common:reset')}
@@ -301,7 +323,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 paginationServer
                 paginationTotalRows={pagination.total}
                 onChangeRowsPerPage={(pageSize) => {
-                    setPagination({ ...pagination, pageSize })
+                    setPagination({ ...pagination, page: 1, pageSize })
                 }}
                 onChangePage={(page) => {
                     setPagination({ ...pagination, page })
