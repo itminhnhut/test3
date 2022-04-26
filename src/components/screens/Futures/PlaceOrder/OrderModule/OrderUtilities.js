@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { setTransferModal } from 'redux/actions/utils';
+import { setTransferModal, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch } from 'react-redux';
 
@@ -33,7 +33,7 @@ const FuturesOrderUtilities = ({ quoteAssetId, quoteAsset, isAuth, isVndcFutures
                             className='flex flex-col text-txtSecondary dark:text-txtSecondary-dark'
                             onClick={openTransferModal}
                         >
-                           <img src={("/images/icon/ic_exchange2.png")} height="16" width="16" />
+                           <img src={getS3Url("/images/icon/ic_exchange2.png")} height="16" width="16" />
                         </div>
                     </div>
                 }

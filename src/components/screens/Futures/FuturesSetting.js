@@ -189,10 +189,10 @@ const FuturesSetting = (props) => {
                                                 />
                                             </div>
                                             <img
-                                                src={`/images/icon/mode-fullscreen${currentTheme === "dark"
+                                                src={getS3Url(`/images/icon/mode-fullscreen${currentTheme === "dark"
                                                     ? "-dark"
                                                     : ""
-                                                    }.jpg`}
+                                                    }.jpg`)}
                                                 alt="Spot Full Screen"
                                                 width={82}
                                                 height={55}
