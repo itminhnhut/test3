@@ -41,18 +41,20 @@ const FuturesOrderButtonsGroupVndc = ({
     isError,
     ask,
     bid,
-    isAuth
+    isAuth,
+    decimalScaleQty
 }) => {
     const { t } = useTranslation()
     const router = useRouter();
     const [disabled, setDisabled] = useState(false);
     const handleParams = useCallback(
         (side) => {
+            const _size = isNaN(size) ? side === VndcFutureOrderType.Side.BUY ? +quantity?.buy : +quantity?.sell : Number(size)
             const params = {
                 symbol: pairConfig?.symbol,
                 type: getType(type),
                 side: side,
-                quantity: isNaN(size) ? side === VndcFutureOrderType.Side.BUY ? +quantity?.buy : +quantity?.sell : Number(size),
+                quantity: Number(_size.toFixed(decimalScaleQty)),
                 price: getPrice(getType(type), side, price, ask, bid, stopPrice),
                 leverage,
                 sl: +orderSlTp.sl,

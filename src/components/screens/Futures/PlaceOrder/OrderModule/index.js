@@ -164,11 +164,11 @@ const FuturesOrderModule = ({
     const renderBuySellByPercent = useCallback(() => {
         const _buy =
             size?.includes('%')
-                ? formatNumber(quantity?.buy, pairConfig?.quantityPrecision || 4)
+                ? formatNumber(quantity?.buy, countDecimals(decimalScaleQtyMarket?.stepSize))
                 : '0.0000'
         const _sell =
             size?.includes('%')
-                ? formatNumber(quantity?.sell, pairConfig?.quantityPrecision || 4)
+                ? formatNumber(quantity?.sell, countDecimals(decimalScaleQtyMarket?.stepSize))
                 : '0.0000'
 
         return (
@@ -317,6 +317,7 @@ const FuturesOrderModule = ({
                     ask={ask}
                     bid={bid}
                     isAuth={isAuth}
+                    decimalScaleQty={countDecimals(decimalScaleQtyMarket?.stepSize)}
                 />
                 :
                 <FuturesOrderButtonsGroup
