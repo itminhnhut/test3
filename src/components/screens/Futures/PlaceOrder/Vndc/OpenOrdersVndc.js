@@ -59,7 +59,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 cell: (row) => (
                     pairConfig?.pair !== row?.symbol ?
                         <Link href={`/futures/${row?.symbol}`}>
-                            <a target='_blank' className='dark:text-white text-darkBlue'>
+                            <a className='dark:text-white text-darkBlue'>
                                 <FuturesRecordSymbolItem symbol={row?.symbol} />
                             </a>
                         </Link>
@@ -93,21 +93,22 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             },
             {
                 name: t('futures:order_table:open_price'),
-                selector: (row) => row?.open_price,
+                selector: (row) => getSelectorOpenPrice(row),
                 cell: (row) => renderOpenPrice(row),
                 minWidth: '150px',
                 sortable: true,
             },
             {
                 name: t('futures:order_table:last_price'),
-                selector: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, 0, 0, true),
+                selector: (row) => marketWatch[row?.symbol]?.lastPrice ?? 0,
+                cell: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, 0, 0, true),
                 minWidth: '150px',
                 sortable: true,
             },
             {
                 name: t('futures:calulator:liq_price'),
-                selector: (row) => row?.open_price,
-                cell: (row) => renderLiqPrice(row),
+                selector: (row) => renderLiqPrice(row, true),
+                cell: (row) => renderLiqPrice(row, false),
                 minWidth: '150px',
                 sortable: true,
             },
@@ -225,11 +226,25 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         });
     }
 
-    const renderLiqPrice = (row) => {
+    const renderLiqPrice = (row,returnNumber) => {
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - 0.1 / 100))
+        if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
         return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
+    }
+
+    const getSelectorOpenPrice = (row) => {
+        switch (row.status) {
+            case VndcFutureOrderType.Status.PENDING:
+                return row?.price;
+            case VndcFutureOrderType.Status.ACTIVE:
+                return row?.open_price;
+            case VndcFutureOrderType.Status.CLOSED:
+                return row?.close_price;
+            default:
+                return 0
+        }
     }
 
     const renderOpenPrice = (row) => {
@@ -257,7 +272,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                             </span>
                         );
                 }
-                text = row.price ? (formatNumber(row.price, 8) + ' ' + pairPrice?.quoteAsset) : '';
+                text = row.price ? formatNumber(row.price, 8) : '';
                 return <div className="flex items-center ">
                     <div>{text}<br />{bias}</div>
                     <Edit onClick={() => onOpenModify(row)} className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
@@ -284,8 +299,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             setShowModalEdit(false);
             showNotification(
                 {
-                    message: 'Modify order successfully',
-                    title: t('commom:success'),
+                    message: t('futures:modify_order_success'),
+                    title: t('common:success'),
                     type: 'success'
                 },
                 1800,
@@ -381,6 +396,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                     onChange={(value) => {
                         setFilters({ ...filters, symbol: value })
                     }}
+                    allowSearch
                 />
                 <FilterTradeOrder
                     label={t('common:side')}
