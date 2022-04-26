@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { placeFuturesOrder } from 'redux/actions/futures';
 import { useTranslation } from 'next-i18next';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
@@ -45,6 +45,7 @@ const FuturesOrderButtonsGroupVndc = ({
 }) => {
     const { t } = useTranslation()
     const router = useRouter();
+    const [disabled, setDisabled] = useState(false);
     const handleParams = useCallback(
         (side) => {
             const params = {
@@ -75,41 +76,38 @@ const FuturesOrderButtonsGroupVndc = ({
         router.push(getLoginUrl('sso'))
     }
 
-    const classNameError = isAuth && isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
+    const onHandleClick = (side) => {
+        if (isError) return;
+        if (!isAuth) {
+            onLogin();
+            return;
+        }
+        setDisabled(true)
+        placeFuturesOrder(handleParams(side), {
+            filters: pairConfig?.filters,
+            lastPrice,
+            isMarket: [
+                FuturesOrderTypes.Market,
+                FuturesOrderTypes.StopMarket,
+            ].includes(type),
+        }, t, () => {
+            setDisabled(false)
+        })
+    }
+
+    const classNameError = disabled || (isAuth && isError) ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
 
     return (
         <div className='flex items-center justify-between font-bold text-sm text-white select-none'>
             <div
                 className={`w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
-                onClick={() =>
-                    !isAuth ? onLogin() :
-                        !isError &&
-                        placeFuturesOrder(handleParams(VndcFutureOrderType.Side.BUY), {
-                            filters: pairConfig?.filters,
-                            lastPrice,
-                            isMarket: [
-                                FuturesOrderTypes.Market,
-                                FuturesOrderTypes.StopMarket,
-                            ].includes(type),
-                        }, t)
-                }
+                onClick={() => onHandleClick(VndcFutureOrderType.Side.BUY)}
             >
                 {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
             </div>
             <div
                 className={`w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
-                onClick={() =>
-                    !isAuth ? onLogin() :
-                        !isError &&
-                        placeFuturesOrder(handleParams(VndcFutureOrderType.Side.SELL), {
-                            filters: pairConfig?.filters,
-                            lastPrice,
-                            isMarket: [
-                                FuturesOrderTypes.Market,
-                                FuturesOrderTypes.StopMarket,
-                            ].includes(type),
-                        }, t)
-                }
+                onClick={() => onHandleClick(VndcFutureOrderType.Side.SELL)}
             >
                 {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
             </div>
