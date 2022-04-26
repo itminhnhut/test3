@@ -164,5 +164,6 @@
     "maximun_price": "Maximum Price is",
     "fullscreen": "Fullscreen",
     "order_mode": "Order Mode",
-    "comming_soon": "Coming soon"
+    "comming_soon": "Coming soon",
+    "modify_order_success": "Modify order successfully"
 }

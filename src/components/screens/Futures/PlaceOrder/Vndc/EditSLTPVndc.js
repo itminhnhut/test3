@@ -196,7 +196,7 @@ const FuturesEditSLTPVndc = ({
                 <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {t('futures:mark_price')}&nbsp;
+                       {t('futures:order_table:last_price')}&nbsp;
                     </span>
                     {t('futures:tp_sl:reaches')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
@@ -239,7 +239,7 @@ const FuturesEditSLTPVndc = ({
                 <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {t('futures:mark_price')}&nbsp;
+                       {t('futures:order_table:last_price')}&nbsp;
                     </span>
                     {t('futures:tp_sl:reaches')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
