@@ -74,7 +74,14 @@ export class TVChartContainer extends React.PureComponent {
             // } else {
             //     this.initWidget(this.props.symbol, this.state.interval);
             // }
+            this.widget.remove();
+            this.oldOrdersList = [];
             this.initWidget(this.props.symbol, this.state.interval);
+            if (this.props.isVndcFutures) {
+                setTimeout(() => {
+                    this.rawOrders();
+                }, 2000);
+            }
         }
 
         if (prevProps.theme !== this.props.theme) {
@@ -305,13 +312,34 @@ export class TVChartContainer extends React.PureComponent {
     }
 
     rawOrders = async () => {
-        const newDataOrders = this.props.ordersList.filter(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && !this.oldOrdersList.find(id => order.displaying_id === id));
+        const _ordersList = this.props.ordersList.filter(order => order?.symbol === this.props.symbol);
+        const edited = localStorage.getItem('edited_id');
+        if (edited) {
+            const itemEdited = _ordersList.find(order => String(order?.displaying_id) === edited)
+            if (itemEdited) {
+                if (this.drawnOrder.hasOwnProperty(itemEdited?.displaying_id)) {
+                    this.drawnOrder[itemEdited?.displaying_id].remove();
+                    delete this.drawnOrder[itemEdited?.displaying_id];
+                }
+                if (this.drawnSl.hasOwnProperty(itemEdited?.displaying_id)) {
+                    this.drawnSl[itemEdited?.displaying_id].remove();
+                    delete this.drawnSl[itemEdited?.displaying_id];
+                }
+                if (this.drawnTp.hasOwnProperty(itemEdited?.displaying_id)) {
+                    this.drawnTp[itemEdited?.displaying_id].remove();
+                    delete this.drawnTp[itemEdited?.displaying_id];
+                }
+                this.newOrder(itemEdited.displaying_id, itemEdited);
+                localStorage.removeItem('edited_id');
+            }
+        }
+        const newDataOrders = _ordersList.filter(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && !this.oldOrdersList.find(id => order.displaying_id === id));
         if (newDataOrders.length > 0) {
             newDataOrders.forEach((order) => {
                 this.newOrder(order.displaying_id, order);
             })
         } else {
-            const removeOrders = this.oldOrdersList.filter(id => !this.props.ordersList.find(order => order.displaying_id === id));
+            const removeOrders = this.oldOrdersList.filter(id => !_ordersList.find(order => order.displaying_id === id));
             removeOrders.forEach((id) => {
                 if (this.drawnOrder.hasOwnProperty(id)) {
                     this.drawnOrder[id].remove();
