@@ -121,10 +121,12 @@ const Adjustmentdetails = memo(({ onClose, rowData }) => {
                                                 <div className="font-medium">{renderModify(item?.metadata, 'stop_loss')}</div>
                                             </div>
                                         }
-                                        <div className="flex items-center justify-between ">
-                                            <label className="text-gray-1">{t('futures:limit_price')}</label>
-                                            <div className="font-medium">{renderModify(item?.metadata, 'price')}</div>
-                                        </div>
+                                        {item?.metadata?.modify_price &&
+                                            <div className="flex items-center justify-between ">
+                                                <label className="text-gray-1">{t('futures:limit_price')}</label>
+                                                <div className="font-medium">{renderModify(item?.metadata, 'price')}</div>
+                                            </div>
+                                        }
                                     </div>
                                 )
                             })

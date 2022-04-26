@@ -164,7 +164,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
     const TimeFilterRef = useRef(null)
 
     const symbolOptions = useMemo(() => {
-        return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol }))
+        return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }))
     }, [allPairConfigs])
 
     const fetchOrder = async (method = 'GET', params, cb) => {

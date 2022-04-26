@@ -511,6 +511,7 @@ export class TVChartContainer extends React.PureComponent {
                                     this.props.customChartFullscreen
                                 }
                                 fullScreen={this.props.fullScreen}
+                                isVndcFutures={this.props.isVndcFutures}
                             />
                         )}
                     </div>
