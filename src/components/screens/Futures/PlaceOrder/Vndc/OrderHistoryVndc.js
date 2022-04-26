@@ -26,7 +26,8 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false)
     const [shareOrder, setShareOrder] = useState(null)
-    const [isReset, setIsReset] = useState(false)
+    const [resetPage, setResetPage] = useState(false);
+
     const columns = useMemo(() => [
         {
             name: t('futures:order_table:id'),
@@ -38,7 +39,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             name: t('futures:order_table:symbol'),
             cell: (row) => loading ? <Skeletor width={65} /> : pairConfig?.pair !== row?.symbol ?
                 <Link href={`/futures/${row?.symbol}`}>
-                    <a target='_blank' className='dark:text-white text-darkBlue'>
+                    <a className='dark:text-white text-darkBlue'>
                         {row?.symbol}
                     </a>
                 </Link>
@@ -186,7 +187,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         } finally {
             setLoading(false)
             onForceUpdate()
-            setIsReset(false);
+            setResetPage(false);
         }
     }
 
@@ -258,12 +259,6 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         setShowDetail(!showDetail);
     }
 
-    useEffect(() => {
-        if (isReset) {
-            getOrders();
-        }
-    }, [isReset])
-
     return (
         <>
             {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />}
@@ -293,7 +288,10 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     }}
                 />
                 <div
-                    onClick={() => getOrders()}
+                    onClick={() => {
+                        setResetPage(true);
+                        setPagination({ ...pagination, page: 1 })
+                    }}
                     className="px-[8px] flex items-center py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
                     <img className='w-[12px] h-[12px]' src={getS3Url("/images/icon/ic_search.png")} />&nbsp; {t('common:search')}
                 </div>
@@ -306,7 +304,8 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                             side: '',
                         })
                         TimeFilterRef.current.onReset([]);
-                        setIsReset(true)
+                        setResetPage(true);
+                        setPagination({ ...pagination, page: 1 })
                     }}
                     className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
                     {t('common:reset')}
@@ -324,12 +323,14 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 paginationTotalRows={pagination.total}
                 onChangeRowsPerPage={(pageSize) => {
                     setPagination({ ...pagination, page: 1, pageSize })
+                    setResetPage(true);
                 }}
                 onChangePage={(page) => {
-                    setPagination({ ...pagination, page })
+                    if (!loading) setPagination({ ...pagination, page })
                 }}
                 currentPage={pagination.page}
                 noDataComponent={<TableNoData />}
+                paginationResetDefaultPage={resetPage}
             // progressPending={loading}
             // progressComponent={<TableLoader/>}
             />
