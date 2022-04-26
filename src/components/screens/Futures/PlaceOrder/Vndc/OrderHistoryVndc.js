@@ -149,7 +149,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const TimeFilterRef = useRef(null);
 
     const symbolOptions = useMemo(() => {
-        return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol }))
+        return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }))
     }, [allPairConfigs])
 
     useEffect(() => {
@@ -278,6 +278,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     onChange={(value) => {
                         setFilters({ ...filters, symbol: value })
                     }}
+                    allowSearch
                 />
                 <FilterTradeOrder
                     label={t('futures:order_table:side')}
@@ -290,7 +291,11 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 <div
                     onClick={() => {
                         setResetPage(true);
-                        setPagination({ ...pagination, page: 1 })
+                        if (pagination.page > 1) {
+                            setPagination({ ...pagination, page: 1 })
+                        } else {
+                            getOrders()
+                        }
                     }}
                     className="px-[8px] flex items-center py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
                     <img className='w-[12px] h-[12px]' src={getS3Url("/images/icon/ic_search.png")} />&nbsp; {t('common:search')}

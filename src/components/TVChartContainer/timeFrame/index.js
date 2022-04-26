@@ -426,7 +426,7 @@ export default class TimeFrame extends Component {
             <div className="flex items-center">
                 {/* <span className={`${itemClass} ${activeClass}`}>Original</span> */}
                 <span onClick={chartType !== 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'price' ? activeClass : inactiveClass}`}>{this.t('common:price')}</span>
-                <span onClick={chartType === 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'depth' ? activeClass : inactiveClass}`}>{this.t('common:depth')}</span>
+                {!this.props.isVndcFutures && <span onClick={chartType === 'price' ? handleChartType : null} className={`${itemClass} ${chartType === 'depth' ? activeClass : inactiveClass}`}>{this.t('common:depth')}</span>}
                 {/* <button
                     type="button"
                     onClick={customChartFullscreen}
