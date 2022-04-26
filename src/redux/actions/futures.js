@@ -156,7 +156,7 @@ export const getMarginModeLabel = (mode) => {
     }
 }
 
-export const placeFuturesOrder = async (params = {}, utils = {}, t) => {
+export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
     // const validator = placeFuturesOrderValidator(params, utils)
     // log.d('placeFuturesOrder Pre-processing...')
     // const isValid = Object.values(validator)?.filter((e) => !e)
@@ -209,6 +209,8 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t) => {
         }
     } catch (e) {
         console.log(`Can't place order `, e)
+    } finally {
+        if (cb) cb()
     }
 }
 
