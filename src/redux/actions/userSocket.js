@@ -17,9 +17,15 @@ export const authUserSocket = debounce(async (dispatch) => {
                 method: 'GET',
             },
         });
-        const { status, data } = res;
+        const {
+            status,
+            data
+        } = res;
         if (status === ApiStatus.SUCCESS) {
-            const { userId, key } = data;
+            const {
+                userId,
+                key
+            } = data;
             WS.emit('authorize', userId, key, user => {
                 if (!user || !user.id || user.id !== userId) {
                     // console.error('SocketIO unauthorized!');
@@ -44,14 +50,36 @@ export const authUserSocket = debounce(async (dispatch) => {
 
 function onChangeWallet(socket, dispatch) {
     const event = `user:update_balance`;
-        socket.on(event, data => {
-            const {type: walletType} = data
-            dispatch({
-                type: types.UPDATE_WALLET,
-                payload: data,
-                walletType,
+    const WalletType = {
+        SPOT: 0,
+        MARGIN: 1,
+        FUTURES: 2,
+        P2P: 3,
+        POOL: 4,
+        EARN: 5
+    };
+
+    const WalletMap = [
+        'SPOT',
+        'MARGIN',
+        'FUTURES',
+        'P2P',
+        'POOL',
+        'EARN',
+    ];
+
+    Object.values(WalletType)
+        .forEach(_type => {
+            const eventKey = event + (_type > 0 ? `:${_type}` : '');
+            socket.on(eventKey, data => {
+                dispatch({
+                    type: types.UPDATE_WALLET,
+                    payload: data,
+                    walletType: WalletMap[_type],
+                });
             });
         });
+
 }
 
 function initNotification(socket, dispatch) {
@@ -89,7 +117,7 @@ function initUserSocket() {
         });
 
         WS.on('connect', () => {
-            // console.log('>> User socket connected');
+            console.log('>> User socket connected');
             dispatch({
                 type: types.SET_USER_SOCKET,
                 payload: WS,
