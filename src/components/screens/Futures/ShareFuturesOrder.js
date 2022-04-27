@@ -112,7 +112,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                                     <div className='font-semibold ml-6'>
                                         <div
                                             className='pb-1'>{hide.price ? '*****' : price} {pairPrice?.quoteAsset}</div>
-                                        {isClosePrice ? <div>{closePrice} {pairPrice?.quoteAsset}</div> :
+                                        {isClosePrice ? <div>{hide.price ? '*****' : closePrice} {pairPrice?.quoteAsset}</div> :
                                             <div>{hide.price ? '*****' : markPrice} {pairPrice?.quoteAsset}</div>}
                                     </div>
                                 </div>
