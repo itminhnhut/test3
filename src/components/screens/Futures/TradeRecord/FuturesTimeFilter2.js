@@ -77,6 +77,7 @@ const FuturesTimeFilter2 = forwardRef(({currentTimeRange, onChange},ref) => {
                     placeholder={['DD-MM-YYYY', 'DD-MM-YYYY']}
                     format='DD-MM-YYYY'
                     value={value}
+                    allowClear={false}
                     onChange={(date) => {
                         if (!date) return onChange(null)
                         onChange([date[0].startOf('day'), date[1].endOf('day')])

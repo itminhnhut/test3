@@ -77,11 +77,13 @@ export class TVChartContainer extends React.PureComponent {
             this.widget.remove();
             this.oldOrdersList = [];
             this.initWidget(this.props.symbol, this.state.interval);
-            if (this.props.isVndcFutures) {
-                setTimeout(() => {
-                    this.rawOrders();
-                }, 2000);
-            }
+            // if (this.props.isVndcFutures) {
+            //     if (this.timer) clearTimeout(this.timer)
+            //     console.log(2222222222)
+            //     this.timer = setTimeout(() => {
+            //         this.rawOrders();
+            //     }, 2000);
+            // }
         }
 
         if (prevProps.theme !== this.props.theme) {
@@ -444,7 +446,8 @@ export class TVChartContainer extends React.PureComponent {
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
             if (this.props.isVndcFutures) {
-                setTimeout(() => {
+                if (this.timer) clearTimeout(this.timer)
+                this.timer = setTimeout(() => {
                     this.rawOrders();
                     this.firstTime = false;
                 }, 2000);

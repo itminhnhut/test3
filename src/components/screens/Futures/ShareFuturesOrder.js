@@ -55,7 +55,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
             closePrice: formatNumber(order?.close_price, 8),
             time: formatTime(order?.created_at)
         }
-    }, [order?.displayingId, pairPrice])
+    }, [order?.displaying_id, pairPrice])
 
     const downloadImage = () => {
         const node = refNodeInfoOrder.current;
@@ -97,7 +97,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                                     <span className='px-3'>|</span>
                                     <span>{hide.leverage ? '***' : `${leverage}x`}</span>
                                     <span className='px-3'>|</span>
-                                    <span>{pairPrice?.symbol} {t('futures:tp_sl:perpetual')}</span>
+                                    <span>{order?.symbol} {t('futures:tp_sl:perpetual')}</span>
                                 </div>
                                 <div>
                                     <span className='text-5xl font-semibold'>{percent}</span>

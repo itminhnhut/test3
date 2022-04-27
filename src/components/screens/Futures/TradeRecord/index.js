@@ -143,6 +143,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                                 onChangeTimePicker={onChangeTimePicker}
                             isAuth={isAuth}
                             onLogin={onLogin}
+                            pair={pair}
                         />
                         ) : (
                             <FuturesOrderHistory

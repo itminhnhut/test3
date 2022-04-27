@@ -36,6 +36,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
         isClickFavorite.current = true;
         await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset)
         dispatch(getFuturesFavoritePairs())
+        isClickFavorite.current = false;
     }
 
     const renderContract = useCallback(() => {

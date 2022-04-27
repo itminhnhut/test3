@@ -589,3 +589,22 @@ input[type='number'] {
         @apply rounded-[12px];
     }
 }
+
+.ant-picker-range-wrapper {
+    .ant-picker-panels{
+        @apply bg-bgPrimary dark:bg-bgPrimary-dark;
+        .ant-picker-header, button ,thead th{
+                @apply dark:text-white;
+        }
+        .ant-picker-cell{
+            @apply  dark:text-txtSecondary-dark;
+        }
+        .ant-picker-cell-in-range{
+            @apply  dark:text-txtSecondary-dark #{!important};
+        }
+        .ant-picker-cell-in-view:not(:hover){
+                @apply  dark:text-white;
+        }
+     
+    }
+}

@@ -145,7 +145,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 ),
             },
         ],
-        [marketWatch]
+        [marketWatch, pair]
     )
     const [loading, setLoading] = useState(false)
     const [showModalDelete, setShowModalDelete] = useState(false)
@@ -248,7 +248,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
     }
 
     const renderOpenPrice = (row) => {
-        let text = '';
+        let text = row?.price ? formatNumber(row?.price, 8, 0, true) : 0;
         switch (row.status) {
             case VndcFutureOrderType.Status.PENDING:
                 let bias = null;
