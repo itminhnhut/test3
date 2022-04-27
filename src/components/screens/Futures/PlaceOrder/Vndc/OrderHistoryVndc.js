@@ -21,7 +21,7 @@ import Adjustmentdetails from './Adjustmentdetails';
 import TableNoData from '../../../../common/table.old/TableNoData'
 import Link from 'next/link';
 
-const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin }) => {
+const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t } = useTranslation()
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false)
@@ -126,7 +126,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             ),
             sortable: false,
         },
-    ], [loading]
+    ], [loading, pair]
     )
 
     const [filters, setFilters] = useState({
