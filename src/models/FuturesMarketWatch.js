@@ -40,7 +40,7 @@ class FuturesMarketWatch {
         this.bid = options.bid
     }
 
-    static create(source, mode) {
+    static create(source, mode = 'VNDC') {
         const pairKey = getPairKey(source?.s)
         return new FuturesMarketWatch({
             symbol: source?.s,

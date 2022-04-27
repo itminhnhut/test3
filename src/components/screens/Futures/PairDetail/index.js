@@ -44,9 +44,6 @@ const FuturesPairDetail = ({
 
     // ? Render lastPrice
     const renderLastPrice = useCallback(() => {
-        // console.log(
-        //     pairPrice?.lastPrice < prevLastPrice ? 'text-red' : 'text-dominant'
-        // )
         return (
             <div
                 ref={lastPriceRef}
