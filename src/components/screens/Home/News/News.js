@@ -4,13 +4,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 
-const News = ({ data }) => {
+const News = ({ data, lang }) => {
     const [state, set] = useState({
         autoplay: true,
         slideStep: 1,
         currentSlide: 0
     })
-    const setState = (state) => set(prevState => ({...prevState, ...state}))
+    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
     const { width } = useWindowSize()
 
     // slider
@@ -37,11 +37,15 @@ const News = ({ data }) => {
         if (!data) return null
 
         return data.map(news => {
-            const { feature_img, guid, post_title } = news
+            const { title } = news
+            const primary_tags = news.primary_tag?.slug.split('-');
+            const tag = primary_tags[1] === 'faq' ? 'faq' : 'announcement';
+            const refId = `https://nami.exchange/${lang}/support/${tag}/${primary_tags.slice(2, primary_tags.length).join('-')}/${news.slug}?source=app`;
+            const img = news?.feature_image || 'https://static.namifutures.com/nami.exchange/images/nami_announcement.jpeg';
             return (
-                <div key={`news___${news.ID}`} className="keen-slider__slide number-slide1" title={post_title}>
-                    <a href={guid} target="_blank">
-                        <img src={feature_img} alt="" />
+                <div key={`news___${news.id}`} className="keen-slider__slide number-slide1" title={title}>
+                    <a href={refId} target="_blank">
+                        <img src={img} alt="" />
                     </a>
                 </div>
             )
@@ -53,12 +57,12 @@ const News = ({ data }) => {
         return (
             <div className="keen-slider__slide__control__wrapper mal-container">
                 <div className="keen-slider__slide__control__item keen-slider__slide__control__prev"
-                     onClick={() => slider.prev()}>
-                    <ChevronLeft size={width >= 1024 ? 26 : 18}/>
+                    onClick={() => slider.prev()}>
+                    <ChevronLeft size={width >= 1024 ? 26 : 18} />
                 </div>
                 <div className="keen-slider__slide__control__item keen-slider__slide__control__next"
-                     onClick={() => slider.next()}>
-                    <ChevronRight size={width >= 1024 ? 26 : 18}/>
+                    onClick={() => slider.next()}>
+                    <ChevronRight size={width >= 1024 ? 26 : 18} />
                 </div>
             </div>
         )
@@ -70,7 +74,7 @@ const News = ({ data }) => {
             <div className="dots">
                 {[...Array(slider.details().size).keys()].map((idx) => {
                     return <button key={idx} onClick={() => slider.moveToSlideRelative(idx)}
-                                   className={"dot" + (state.currentSlide === idx ? " active" : "")} />
+                        className={"dot" + (state.currentSlide === idx ? " active" : "")} />
                 })}
             </div>
         )

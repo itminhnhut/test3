@@ -7,12 +7,12 @@ import { useWindowSize } from 'utils/customHooks';
 import { useTranslation } from 'next-i18next';
 import 'keen-slider/keen-slider.min.css';
 
-const LastedNews = ({ data }) => {
+const LastedNews = ({ data, lang }) => {
     const [state, set] = useState({
         loadingNews: false,
         lastedNewsAutoplay: true,
     })
-    const setState = (state) => set(prevState => ({...prevState, ...state}))
+    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
     const { width } = useWindowSize()
     const { i18n: { language } } = useTranslation()
@@ -31,11 +31,16 @@ const LastedNews = ({ data }) => {
 
     const renderLastestNews = useCallback(() => {
         if (!data) return null
-        return data.map(item => (
-            <div className="keen-slider__slide" key={`home_news_${item.ID}__alt`}>
-                <a href={item.guid} target="_blank" title={item.post_title}>{item.post_title}</a>
-            </div>
-        ))
+        return data.map(item => {
+            const primary_tags = item.primary_tag?.slug.split('-');
+            const tag = primary_tags[1] === 'faq' ? 'faq' : 'announcement';
+            const refId = `https://nami.exchange/${lang}/support/${tag}/${primary_tags.slice(2, primary_tags.length).join('-')}/${item.slug}?source=app`;
+            return (
+                <div className="keen-slider__slide" key={`home_news_${item.id}__alt`}>
+                    <a href={refId} target="_blank" title={item.title}>{item.title}</a>
+                </div>
+            )
+        })
     }, [data])
 
 
@@ -60,14 +65,16 @@ const LastedNews = ({ data }) => {
 
     useEffect(() => {
         setTimeout(() => {
-            setState({options: {
+            setState({
+                options: {
                     slidesPerView: 1,
                     centered: true,
                     vertical: true,
                     loop: true,
                     dragStart: () => setState({ lastedNewsAutoplay: false }),
                     dragEnd: () => setState({ lastedNewsAutoplay: true }),
-                }})
+                }
+            })
         }, 10)
     }, []);
 
@@ -75,7 +82,7 @@ const LastedNews = ({ data }) => {
         <div className="homepage-news___lastest_news_wrapper">
             <div className="homepage-news___lastest___news">
                 <div className="homepage-news___lastest___news____left">
-                    <SvgSpeaker/>
+                    <SvgSpeaker />
                     <div className="homepage-news___lasted_slider">
                         <div ref={lastedNewsRef} className="keen-slider">
                             {renderLastestNews()}
