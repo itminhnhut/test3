@@ -123,7 +123,7 @@ const Adjustmentdetails = memo(({ onClose, rowData }) => {
                                         }
                                         {item?.metadata?.modify_price &&
                                             <div className="flex items-center justify-between ">
-                                                <label className="text-gray-1">{t('futures:limit_price')}</label>
+                                                <label className="text-gray-1">{t('futures:price')}</label>
                                                 <div className="font-medium">{renderModify(item?.metadata, 'price')}</div>
                                             </div>
                                         }
