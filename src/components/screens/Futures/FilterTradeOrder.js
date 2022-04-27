@@ -53,14 +53,14 @@ export const FilterTradeOrder = ({ label = '', options = [], value = '', onChang
                     leaveFrom="opacity-100 translate-y-0"
                     leaveTo="opacity-0 translate-y-1"
                 >
-                    <Popover.Panel className="absolute right-0 z-50 bg-white dark:bg-bgPrimary-dark">
+                    <Popover.Panel className="absolute z-50 bg-white dark:bg-bgPrimary-dark">
                         <div
-                            className="min-w-[134px] max-h-[204px] overflow-y-auto pl-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
+                            className="max-h-[204px] overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
                             {allowSearch &&
-                                <div className="mr-[10px] max-h-[104px] relative flex items-center py-1 rounded-md bg-gray-5 dark:bg-darkBlue-3 border border-transparent hover:border-dominant mt-[12px]">
+                                <div className="relative flex items-center py-1 rounded-md bg-gray-5 dark:bg-darkBlue-3 border border-transparent hover:border-dominant mt-[12px]">
                                     <input
                                         onChange={e => setStrSearch(e.target.value)}
-                                        className="ml-2 flex-grow text-sm w-full font-medium text-right mr-2 "
+                                        className="px-[10px] flex-grow text-sm w-full font-medium text-left "
                                         placeholder={t('common:search')}
                                     />
                                 </div>
