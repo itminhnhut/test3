@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 
 import LastedNews from 'src/components/screens/Home/News/LastedNews';
 import News from 'src/components/screens/Home/News/News';
+import { ghost } from 'utils';
 
 const HomeNews = () => {
     // Initial State
@@ -14,9 +15,26 @@ const HomeNews = () => {
         news: null,
         lastedNewsAutoplay: true
     })
-    const setState = (state) => set(prevState => ({...prevState, ...state}))
+    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
     const { i18n: { language } } = useTranslation()
+
+    const getNewPostsBanner = async (lang = 'vi') => {
+        try {
+            const en = lang === 'en' ? 'en' : '-en';
+            const result = await ghost.posts.browse(
+                {
+                    limit: 10,
+                    filter: `featured:true+tags:${en}`,
+                    include: 'tags',
+                }   
+            )
+            if (result) {
+                setState({ news: result })
+            }
+        } catch (e) {
+        }
+    }
 
     // Helper
     const getNews = async (lang = 'vi') => {
@@ -34,15 +52,15 @@ const HomeNews = () => {
     }
 
     useEffect(() => {
-        getNews(language);
+        getNewPostsBanner(language)
     }, [language])
 
 
     return (
         <section className="homepage-news">
             <div className="homepage-news___wrapper mal-container">
-                {state.news && <News data={state.news} />}
-                {state.news && <LastedNews data={state.news}/>}
+                {state.news && <News data={state.news} lang={language} />}
+                {state.news && <LastedNews data={state.news} lang={language} />}
             </div>
         </section>
     )
