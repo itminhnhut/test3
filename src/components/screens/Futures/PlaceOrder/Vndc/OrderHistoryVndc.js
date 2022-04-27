@@ -4,7 +4,7 @@ import { ChevronDown, Share2 } from 'react-feather'
 
 import DataTable from 'react-data-table-component'
 import fetchApi from 'utils/fetch-api'
-import { API_GET_VNDC_FUTURES_HISTORY_ORDERS } from 'redux/actions/apis'
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { ApiStatus } from 'redux/actions/const'
 import Skeletor from 'src/components/common/Skeletor'
 import { formatTime, formatNumber, getPriceColor, getS3Url } from 'redux/actions/utils'
@@ -165,11 +165,12 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         setLoading(true)
         try {
             const { status, data } = await fetchApi({
-                url: API_GET_VNDC_FUTURES_HISTORY_ORDERS,
+                url: API_GET_FUTURES_ORDER,
                 options: { method: 'GET' },
                 params: {
+                    status: 1,
                     pageSize: pagination.pageSize,
-                    page: pagination.page,
+                    page: pagination.page - 1,
                     ...filters,
                     timeFrom: filters.timeFrom?.valueOf(),
                     timeTo: filters.timeTo?.valueOf(),
@@ -178,7 +179,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
 
             if (status === ApiStatus.SUCCESS) {
                 setDataSource(data?.orders)
-                setPagination({ ...pagination, total: data?.total })
+                setPagination({ ...pagination, total: data?.pagesCount })
             } else {
                 setDataSource([])
             }
