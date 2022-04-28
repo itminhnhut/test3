@@ -79,11 +79,11 @@ const FuturesOrderButtonsGroupVndc = ({
     }
 
     const onHandleClick = (side) => {
-        if (isError) return;
         if (!isAuth) {
             onLogin();
             return;
         }
+        if (isError) return;
         setDisabled(true)
         placeFuturesOrder(handleParams(side), {
             filters: pairConfig?.filters,
