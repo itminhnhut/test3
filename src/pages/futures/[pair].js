@@ -208,7 +208,7 @@ const Futures = () => {
                             if (item.i === futuresGridKey.marginRatio) {
                                 item.h = 12;
                             }
-                            if(item.i ===futuresGridKey.tradeRecord){
+                            if (item.i === futuresGridKey.tradeRecord) {
                                 item.h = 14;
                             }
                         }
@@ -218,6 +218,9 @@ const Futures = () => {
                             }
                             if (item.i === futuresGridKey.marginRatio) {
                                 item.h = 12;
+                            }
+                            if (item.i === futuresGridKey.chart) {
+                                item.h = 34;
                             }
                         }
                         if (layout === '2xl') {
@@ -230,7 +233,7 @@ const Futures = () => {
                         }
                         if (!auth) {
                             if (item.i === futuresGridKey.chart) {
-                                item.h = layout === 'md' ? 29 : layout === 'lg' ? 26 : layout === 'xl' ? 31 : layout === '2xl' ? 28 : item.w;
+                                item.h = layout === 'md' ? 31 : layout === 'lg' ? 29 : layout === 'xl' ? 36 : layout === '2xl' ? 32 : item.w;
                             }
                         }
                         return item;
