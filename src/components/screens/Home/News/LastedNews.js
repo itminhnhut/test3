@@ -6,6 +6,7 @@ import { useKeenSlider } from 'keen-slider/react';
 import { useWindowSize } from 'utils/customHooks';
 import { useTranslation } from 'next-i18next';
 import 'keen-slider/keen-slider.min.css';
+import Link from 'next/link';
 
 const LastedNews = ({ data, lang }) => {
     const [state, set] = useState({
@@ -90,7 +91,11 @@ const LastedNews = ({ data, lang }) => {
                     </div>
                 </div>
                 <div className="homepage-news___lastest___news____right">
-                    {language === LANGUAGE_TAG.VI ? 'Thêm' : 'More'}
+                    <Link href={`/${language}/support/announcement`}>
+                        <a target='_blank' className='!text-teal'>
+                            {language === LANGUAGE_TAG.VI ? 'Thêm' : 'More'}
+                        </a>
+                    </Link>
                 </div>
             </div>
         </div>
