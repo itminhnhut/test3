@@ -27,7 +27,7 @@ export const SupportCategories = {
                 title: 'Chức năng tài khoản',
                 slug: 'faq-vi-chuc-nang-tai-khoan',
                 displaySlug: 'chuc-nang-tai-khoan',
-                description: 'Các câu hỏi về tài khoản và cài đặt thông tin khoản',
+                description: 'Các câu hỏi về tài khoản và cài đặt thông tin tài khoản',
                 iconUrl: '',
                 subCats: [
                     {
@@ -97,7 +97,7 @@ export const SupportCategories = {
                 title: 'Nạp/Rút tiền mã hoá',
                 slug: 'faq-vi-nap-rut-tien-ma-hoa',
                 displaySlug: 'nap-rut-tien-ma-hoa',
-                description: 'Hướng dẫn chi tiết nạp rút tiền mã hóa',
+                description: 'Hướng dẫn chi tiết về nạp rút tiền mã hóa',
                 iconUrl: '',
                 subCats: [
                     {
@@ -125,8 +125,8 @@ export const SupportCategories = {
                 title: 'Giao dịch Spot',
                 slug: 'faq-vi-giao-dich-spot',
                 displaySlug: 'giao-dich-spot',
-                description: 'Hướng dẫn về giao dịch spot trên Nami Exchange',
-                iconUrl: 'Hướng dẫn về giao dịch spot trên Nami Exchange',
+                description: 'Hướng dẫn về giao dịch Spot trên Nami Exchange',
+                iconUrl: '',
                 subCats: []
             },
             {
@@ -143,7 +143,7 @@ export const SupportCategories = {
                 title: 'Token dự đoán',
                 slug: 'faq-vi-token-prediction',
                 displaySlug: 'token-prediction',
-                description: 'Token Prediction là mô hình đầu tư mới do Nami.Exchange nghiên cứu và phát triển để giúp người dùng Crypto đa dạng hóa các sản phẩm đầu tư và công cụ kiểm soát rủi ro. Bên cạnh các sản phẩm giao dịch truyền thống như Spot, Futures, Margin…',
+                description: 'Các thông tin liên quan đến Token Dự đoán - sản phẩm đột phá mới của Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -158,13 +158,15 @@ export const SupportCategories = {
                         id: 'vndc_futures',
                         title: 'VNDC Futures',
                         slug: 'faq-vi-vndc-futures',
-                        displaySlug: 'vndc-futures'
+                        displaySlug: 'vndc-futures',
+                        description: 'Hướng dẫn về giao dịch Futures trên Nami Exchange',
                     },
                     {
                         id: 'usdt_futures',
                         title: 'USDT Futures',
                         slug: 'faq-vi-usdt-futures',
-                        displaySlug: 'usdt-futures'
+                        displaySlug: 'usdt-futures',
+                        description: 'Hướng dẫn về giao dịch USDT Futures',
                     },
                 ]
             },
@@ -199,9 +201,9 @@ export const SupportCategories = {
             {
                 id: CatsKey.DailyStaking,
                 title: 'Nhận lãi ngày (Daily Staking)',
-                slug: 'faq-vi-nhan-lai-ngay-daily-staking',
-                displaySlug: 'nhan-lai-ngay-daily-staking',
-                description: 'Nhận lãi ngày (Daily Staking)',
+                slug: 'faq-vi-daily-staking',
+                displaySlug: 'daily-staking',
+                description: 'Chương trình trả lãi ngày với lãi suất năm 12.79% với VNDC và 6% với USDT',
                 iconUrl: ''
             },
             {
@@ -235,7 +237,7 @@ export const SupportCategories = {
                 title: 'Account Functions',
                 slug: 'faq-en-account-functions',
                 displaySlug: 'account-functions',
-                description: 'Questions about accounts and account settings account information',
+                description: 'Information about accounts and account settings',
                 iconUrl: '',
                 subCats: [
                     {
@@ -284,9 +286,9 @@ export const SupportCategories = {
             },
             {
                 id: CatsKey.Tutorial,
-                title: 'Tutorial',
-                slug: 'faq-en-tutorial',
-                displaySlug: 'tutorial',
+                title: 'Tutorials',
+                slug: 'faq-en-tutorials',
+                displaySlug: 'tutorials',
                 description: 'General questions',
                 iconUrl: ''
             },
@@ -339,7 +341,7 @@ export const SupportCategories = {
                 title: 'Swap',
                 slug: 'faq-en-swap',
                 displaySlug: 'swap',
-                description: 'Swaps is the process of transferring digital tokens between two blockchains',
+                description: 'Information about Swap product on Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -347,7 +349,7 @@ export const SupportCategories = {
                 title: 'Token Prediction',
                 slug: 'faq-en-token-prediction',
                 displaySlug: 'token-prediction',
-                description: 'Token Prediction is a new investment model researched and developed by Nami.Exchange to help Crypto users diversify investment products and risk control tools. Besides traditional trading products such as Spot, Futures, Margin…',
+                description: "Information about Token Prediction - Nami Exchange's new breakthrough product",
                 iconUrl: ''
             },
             {
@@ -405,7 +407,7 @@ export const SupportCategories = {
                 title: 'Daily Staking',
                 slug: 'faq-en-daily-staking',
                 displaySlug: 'daily-staking',
-                description: 'Daily Staking',
+                description: 'Information about Daily Staking program with APY 12.79% for VNDC and 6% for USDT',
                 iconUrl: ''
             },
             {
@@ -413,7 +415,7 @@ export const SupportCategories = {
                 title: 'Other topics',
                 slug: 'faq-en-other-topics',
                 displaySlug: 'other-topics',
-                description: 'Information about terms of use of products and services',
+                description: 'Information about Terms of use of products and services',
                 iconUrl: '',
                 subCats: [
                     {
@@ -426,10 +428,10 @@ export const SupportCategories = {
             },
             {
                 id: CatsKey.BusinessPartner,
-                title: 'Business Corperation',
-                slug: 'faq-en-business-corperation',
-                displaySlug: 'business-corperation',
-                description: 'Contact information and ways to cooperate for business development',
+                title: 'Business Cooperation',
+                slug: 'faq-en-business-cooperation',
+                displaySlug: 'business-cooperation',
+                description: 'Contact information and methods to cooperate for business development',
                 iconUrl: ''
             }
         ]
@@ -441,7 +443,7 @@ export const SupportCategories = {
                 title: 'Token mới Niêm yết ',
                 slug: 'noti-vi-token-moi-niem-yet',
                 displaySlug: 'token-moi-niem-yet',
-                description: 'Các bài thông báo niêm yết',
+                description: 'Thông báo niêm yết các cặp giao dịch mới trên Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -449,7 +451,7 @@ export const SupportCategories = {
                 title: 'Tin tức về Nami',
                 slug: 'noti-vi-tin-tuc-ve-nami',
                 displaySlug: 'tin-tuc-ve-nami',
-                description: 'Nhóm các bài viết liên quan đến các thông tin hợp tác giữa Nami Corp / Nami Exchange và đối tác... ', //Các bài viết liên quan đến các sản phẩm cũ (NAC và các sản phẩm liên quan tới NAC hoặc các sản phẩm không còn chạy) thì cần rà soát loại và ẩn đi.
+                description: 'Các thông tin cập nhật về Nami Corp. và Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -457,7 +459,7 @@ export const SupportCategories = {
                 title: 'Thông báo',
                 slug: 'noti-vi-thong-bao',
                 displaySlug: 'thong-bao',
-                description: 'Mục này sẽ bao gồm các bài thông báo về hệ thống, trạng thái giao dịch, bảo trì, lịch làm việc dịp nghỉ lễ tết…',
+                description: 'Các thông báo bảo trì, cập nhật trạng thái giao dịch',
                 iconUrl: ''
             },
             {
@@ -465,14 +467,14 @@ export const SupportCategories = {
                 title: 'Sự kiện',
                 slug: 'noti-vi-su-kien',
                 displaySlug: 'su-kien',
-                description: 'Cũng như các bài viết liên quan đến các chương trình promotion, marketing... ',
+                description: 'Thông tin về các chương trình khuyến mại, airdrop, các chương trình tặng thưởng người dùng',
                 iconUrl: ''
             }
         ],
         en: [
             {
                 id: CatsKey.NewTokenListing,
-                title: 'New Token Listing',
+                title: 'New Listings',
                 slug: 'noti-en-new-cryptocurrency-listing',
                 displaySlug: 'new-cryptocurrency-listing',
                 description: 'Listing announcements',
@@ -480,25 +482,25 @@ export const SupportCategories = {
             },
             {
                 id: CatsKey.NamiNews,
-                title: 'Nami news',
+                title: 'Nami News',
                 slug: 'noti-en-nami-news',
                 displaySlug: 'nami-news',
-                description: 'Group of articles related to information on cooperation between Nami Corp / Nami Exchange and partners...', // Posts related to legacy products (NAC and NAC-related products, or products that are no longer running) should be re-categorized and hidden.
+                description: 'Latest news about Nami Corp. and Nami Exchange',
                 iconUrl: ''
             },
             {
                 id: CatsKey.Announcement,
-                title: 'Annoucement',
-                slug: 'noti-en-annoucement',
-                displaySlug: 'annoucement',
-                description: 'This section will include announcements about the system, transaction status, maintenance, working schedule during Tet holidays...',
+                title: 'Announcement',
+                slug: 'noti-en-announcement',
+                displaySlug: 'announcement',
+                description: 'Announcement about maintenance, update of trading status...',
                 iconUrl: ''
             },
             {
                 id: CatsKey.Event,
-                title: 'Event',
-                slug: 'noti-en-event',
-                displaySlug: 'event',
+                title: 'Events',
+                slug: 'noti-en-events',
+                displaySlug: 'events',
                 description: 'Articles related to promotions, marketing.',
                 iconUrl: ''
             }
