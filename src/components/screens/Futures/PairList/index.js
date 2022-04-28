@@ -38,7 +38,6 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
         }
 
         return data?.map((pair) => {
-            if (pair?.quoteAsset === 'USDT') return;
             const isFavorite = favoritePairs.find(rs => rs.replace('_', '') === pair.symbol);
             return (
                 <FuturesPairListItems
@@ -73,7 +72,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
                         className='cursor-pointer'
                     />
                 }
-                {/* <div
+                <div
                     onClick={() => onHandleMode('USDT')}
                     className={classNames(
                         'ml-3 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant',
@@ -81,7 +80,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
                     )}
                 >
                     USDT
-                </div> */}
+                </div>
                 <div
                     onClick={() => onHandleMode('VNDC')}
                     className={classNames(
