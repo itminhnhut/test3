@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react'
-import { formatNumber, formatTime } from 'redux/actions/utils'
+import { formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils'
 import { customTableStyles } from '../../TradeRecord/index';
 import { ChevronDown, Edit } from 'react-feather';
 
@@ -226,7 +226,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         });
     }
 
-    const renderLiqPrice = (row,returnNumber) => {
+    const renderLiqPrice = (row, returnNumber) => {
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - 0.1 / 100))
@@ -335,11 +335,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
     }, [hideOther, ordersList, filters])
 
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
-        <div className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
-            onClick={onLogin}
-        >
-            {t('futures:order_table:login_to_continue')}
-        </div>
+        <Link href={getLoginUrl('sso')}>
+            <a className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
+                {t('futures:order_table:login_to_continue')}
+            </a>
+        </Link>
     </div>
     return (
         <>

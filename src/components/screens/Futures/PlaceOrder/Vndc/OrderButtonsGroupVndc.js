@@ -5,6 +5,7 @@ import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { VndcFutureOrderType } from './VndcFutureOrderType';
 import { getLoginUrl } from 'src/redux/actions/utils';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const getType = (type) => {
     switch (type) {
@@ -79,10 +80,10 @@ const FuturesOrderButtonsGroupVndc = ({
     }
 
     const onHandleClick = (side) => {
-        if (!isAuth) {
-            onLogin();
-            return;
-        }
+        // if (!isAuth) {
+        //     onLogin();
+        //     return;
+        // }
         if (isError) return;
         setDisabled(true)
         placeFuturesOrder(handleParams(side), {
@@ -101,18 +102,34 @@ const FuturesOrderButtonsGroupVndc = ({
 
     return (
         <div className='flex items-center justify-between font-bold text-sm text-white select-none'>
-            <div
-                className={`w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
-                onClick={() => onHandleClick(VndcFutureOrderType.Side.BUY)}
-            >
-                {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
-            </div>
-            <div
-                className={`w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
-                onClick={() => onHandleClick(VndcFutureOrderType.Side.SELL)}
-            >
-                {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
-            </div>
+            {isAuth ?
+                <div
+                    className={`w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
+                    onClick={() => onHandleClick(VndcFutureOrderType.Side.BUY)}
+                >
+                    {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
+                </div>
+                :
+                <Link href={getLoginUrl('sso')}>
+                    <a className={`w-[48%] bg-dominant !text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}>
+                        {t('futures:order_table:login_to_continue')}
+                    </a>
+                </Link>
+            }
+            {isAuth ?
+                <div
+                    className={`w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
+                    onClick={() => onHandleClick(VndcFutureOrderType.Side.SELL)}
+                >
+                    {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
+                </div>
+                :
+                <Link href={getLoginUrl('sso')}>
+                    <a className={`w-[48%] bg-red !text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}>
+                        {t('futures:order_table:login_to_continue')}
+                    </a>
+                </Link>
+            }
         </div>
     )
 }
