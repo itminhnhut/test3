@@ -5,6 +5,7 @@ import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { VndcFutureOrderType } from './VndcFutureOrderType';
 import { getLoginUrl } from 'src/redux/actions/utils';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const getType = (type) => {
     switch (type) {
@@ -80,7 +81,10 @@ const FuturesOrderButtonsGroupVndc = ({
 
     const onHandleClick = (side) => {
         if (!isAuth) {
-            onLogin();
+            window.open(
+                getLoginUrl('sso', 'login'),
+                '_self'
+            )
             return;
         }
         if (isError) return;

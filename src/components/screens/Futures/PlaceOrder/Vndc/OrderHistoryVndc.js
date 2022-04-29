@@ -7,7 +7,7 @@ import fetchApi from 'utils/fetch-api'
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { ApiStatus } from 'redux/actions/const'
 import Skeletor from 'src/components/common/Skeletor'
-import { formatTime, formatNumber, getPriceColor, getS3Url } from 'redux/actions/utils'
+import { formatTime, formatNumber, getPriceColor, getS3Url, getLoginUrl } from 'redux/actions/utils'
 import { VndcFutureOrderType, renderCellTable } from './VndcFutureOrderType';
 import FuturesTimeFilter2 from "components/screens/Futures/TradeRecord/FuturesTimeFilter2";
 import { FilterTradeOrder } from "components/screens/Futures/FilterTradeOrder";
@@ -211,12 +211,11 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     }
 
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
-        <div
-            className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
-            onClick={onLogin}
-        >
-            {t('futures:order_table:login_to_continue')}
-        </div>
+        <Link href={getLoginUrl('sso', 'login')} locale={false}>
+            <a className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
+                {t('futures:order_table:login_to_continue')}
+            </a>
+        </Link>
     </div>
 
     const customStyles = {
