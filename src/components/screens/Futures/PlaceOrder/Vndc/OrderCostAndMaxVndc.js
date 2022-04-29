@@ -38,7 +38,7 @@ const FuturesOrderCostAndMaxVndc = ({
         return (
             <>
                 <TradingLabel
-                    label={t('common:cost')}
+                    label={t('futures:margin')}
                     value={`${formatNumber(
                         longOrderOpenLoss,
                         pairConfig?.pricePrecision || 2
@@ -46,7 +46,7 @@ const FuturesOrderCostAndMaxVndc = ({
                     containerClassName='text-md'
                 />
                 <TradingLabel
-                    label={t('common:cost')}
+                    label={t('futures:margin')}
                     value={`${formatNumber(
                         shortOrderOpenLoss,
                         pairConfig?.pricePrecision || 2
@@ -125,7 +125,7 @@ const FuturesOrderCostAndMaxVndc = ({
             </div>
 
             <div className="float-right mt-[8px] group relative">
-                <div className="text-teal underline cursor-pointer font-medium ">{t('futures:fee_level')}</div>
+                <div className="text-teal underline cursor-pointer font-medium ">{t('futures:fee_tier')}</div>
                 <div className="hidden group-hover:block absolute right-0 min-w-[200px] dark:bg-darkBlue-3 shadow-onlyLight rounded-[8px]">
                     <Link href={'/fee-schedule/trading'}>
                         <a target='_blank'>

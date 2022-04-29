@@ -17,7 +17,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     const futuresMarketWatch = useSelector((state) => state?.futures?.marketWatch) || null
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const wallets = useSelector(state => state.wallet.FUTURES)
-    const [balance, setBalance] = useState({});
+    const [balance, setBalance] = useState([]);
     const [totalProfit, setTotalProfit] = useState(0);
     const { t } = useTranslation()
     const [listOrders, setListOrders] = useState([]);
@@ -25,7 +25,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     const walletMapper = (allWallet, assetConfig) => {
         if (!allWallet || !assetConfig) return
         const mapper = []
-        const FUTURES_ASSET = ['VNDC']
+        const FUTURES_ASSET = ['VNDC', 'NAMI']
         if (Array.isArray(assetConfig) && assetConfig?.length) {
             const futures = assetConfig.filter(o => FUTURES_ASSET.includes(o?.assetCode))
             futures && futures.forEach(item => allWallet?.[item.id]
@@ -38,7 +38,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
         }
         const dataFilter = orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']);
         if (Array.isArray(dataFilter) && dataFilter.length > 0) {
-            setBalance(dataFilter[0])
+            setBalance(dataFilter)
         }
     }
 
@@ -69,7 +69,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                 <div className='mt-4 flex items-center'>
                     <Link href="/trade">
                         <a target="_blank" className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
-                            {t('futures:buy_crypto')}
+                            {t('futures:spot_trading')}
                         </a>
                     </Link>
                     <Link href="/swap">
@@ -83,17 +83,6 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                 </div>
                 <div className='mt-3.5 flex items-center justify-between'>
                     <span className='font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-                        {t('futures:balance')}
-                    </span>
-                    <span className='flex items-center font-medium'>
-                        {balance?.wallet?.value ? formatNumber(balance?.wallet?.value, balance?.assetCode === 'USDT' ? 2 : balance?.assetDigit) : '0.0000'}
-                        <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
-                            {pairConfig?.quoteAsset}
-                        </span>
-                    </span>
-                </div>
-                <div className='mt-3.5 flex items-center justify-between'>
-                    <span className='font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
                         {t('futures:unrealized_pnl')}
                     </span>
                     <span className='flex items-center font-medium'>
@@ -102,6 +91,21 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                             {pairConfig?.quoteAsset}
                         </span>
                     </span>
+                </div>
+                <div className='mt-3.5 flex justify-between'>
+                    <span className='font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
+                        {t('futures:balance')}
+                    </span>
+                    <div className="flex flex-col items-end">
+                        {balance?.map((item, i) => (
+                            <span key={i} className='flex font-medium'>
+                                {item?.wallet?.value ? formatNumber(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                                <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
+                                    {item?.assetCode}
+                                </span>
+                            </span>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

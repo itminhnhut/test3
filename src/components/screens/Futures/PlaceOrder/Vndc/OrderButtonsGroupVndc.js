@@ -105,13 +105,13 @@ const FuturesOrderButtonsGroupVndc = ({
                 className={`w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
                 onClick={() => onHandleClick(VndcFutureOrderType.Side.BUY)}
             >
-                {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
+                {isAuth ? t('futures:buy_order') : t('futures:order_table:login_to_continue')}
             </div>
             <div
                 className={`w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
                 onClick={() => onHandleClick(VndcFutureOrderType.Side.SELL)}
             >
-                {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
+                {isAuth ? t('futures:sell_order') : t('futures:order_table:login_to_continue')}
             </div>
         </div>
     )

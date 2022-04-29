@@ -44,14 +44,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 minWidth: '50px',
             },
             {
-                name: t('futures:order_table:created_time'),
+                name: t('futures:order_table:open_at'),
                 selector: (row) => row?.created_at,
                 cell: (row) => (
                     <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                        {formatTime(row?.created_at)}
+                        {formatTime(row?.created_at, 'yyyy-MM-dd HH:mm:ss')}
                     </span>
                 ),
                 sortable: true,
+                minWidth: '150px',
             },
             {
                 name: t('futures:order_table:symbol'),
@@ -87,8 +88,9 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 sortable: true,
             },
             {
-                name: t('futures:order_table:amount'),
+                name: t('futures:order_table:volume'),
                 selector: (row) => row?.quantity,
+                cell: (row) => row?.quantity ? formatNumber(row?.quantity, 8, 0, true) : '-',
                 sortable: true,
             },
             {
@@ -226,7 +228,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         });
     }
 
-    const renderLiqPrice = (row,returnNumber) => {
+    const renderLiqPrice = (row, returnNumber) => {
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - 0.1 / 100))
