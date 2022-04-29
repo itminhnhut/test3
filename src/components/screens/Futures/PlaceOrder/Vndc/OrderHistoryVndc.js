@@ -48,7 +48,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             selector: (row) => row?.symbol,
         },
         {
-            name: t('futures:order_history:open_at'),
+            name: t('futures:order_table:created_time'),
             selector: (row) => row?.opened_at,
             cell: (row) => loading ? <Skeletor width={65} /> : (
                 <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -59,7 +59,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             minWidth: '150px',
         },
         {
-            name: t('futures:order_history:close_at'),
+            name: t('futures:order_table:closed_time'),
             selector: (row) => row?.closed_at,
             cell: (row) => loading ? <Skeletor width={65} /> : (
                 <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -76,7 +76,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             sortable: false,
         },
         {
-            name: t('futures:order_table:side'),
+            name: t('futures:side'),
             selector: (row) => row?.sdie,
             cell: (row) => loading ? <Skeletor width={65} /> : <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row)}</span>,
             sortable: false,
@@ -118,6 +118,13 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             cell: (row) => loading ? <Skeletor width={100} /> : cellRenderRevenue(row),
             minWidth: '150px',
             sortable: true,
+        },
+        {
+            name: t('futures:order_table:reason_close'),
+            selector: (row) => row?.reason_close_code,
+            cell: (row) => renderReasonClose(row),
+            minWidth: '150px',
+            sortable: false,
         },
         {
             name: t('futures:order_history:adjustment_detail'),
@@ -212,6 +219,21 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         </div>
     }
 
+    const renderReasonClose = (row) => {
+        switch (row?.reason_close_code) {
+            case 0:
+                return t('futures:order_history:normal')
+            case 1:
+                return t('futures:order_history:hit_sl')
+            case 2:
+                return t('futures:order_history:hit_tp')
+            case 3:
+                return t('futures:order_history:liquidate')
+            default:
+                return '';
+        }
+    }
+
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
         <div
             className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
@@ -284,7 +306,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     allowSearch
                 />
                 <FilterTradeOrder
-                    label={t('futures:order_table:side')}
+                    label={t('futures:side')}
                     options={[{ value: 'Buy', label: t('common:buy') }, { value: 'Sell', label: t('common:sell') }]}
                     value={filters.side}
                     onChange={(value) => {
@@ -339,6 +361,13 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 currentPage={pagination.page}
                 noDataComponent={<TableNoData />}
                 paginationResetDefaultPage={resetPage}
+                paginationComponentOptions={{
+                    rowsPerPageText: t('futures:rows_per_page'),
+                    rangeSeparatorText: t('common:of'),
+                    noRowsPerPage: false,
+                    selectAllRowsItem: false,
+                    selectAllRowsItemText: t('common:all'),
+                }}
             // progressPending={loading}
             // progressComponent={<TableLoader/>}
             />

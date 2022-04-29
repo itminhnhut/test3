@@ -42,7 +42,9 @@
             "order": "Lệnh"
         },
         "open_at": "Thời gian mở",
-        "volume": "Khối lượng"
+        "volume": "Khối lượng",
+        "last_price2": "Giá thị trường",
+        "reason_close": "Nguyên nhân"
     },
     "close_order": {
         "modal_title": "Đóng Lệnh #{{value}}",
@@ -135,9 +137,13 @@
         "close_at": "Thời gian đóng",
         "revenue": "Lợi nhuận",
         "adjustment_detail": "Chi tiết điều chỉnh",
-        "view_detail": "Xem chi tiết"
+        "view_detail": "Xem chi tiết",
+        "normal": "Thủ công",
+        "hit_sl": "Chạm SL",
+        "hit_tp": "chạm TP",
+        "liquidate": "Thanh lý"
     },
-    "hide_other_symbols": "Ẩn các cặp tiền khác",
+    "hide_other_symbols": "Ẩn các cặp khác",
     "stop_price": "Giá stop",
     "limit_price": "Giá limit",
     "to": "Đến",
@@ -172,5 +178,7 @@
     "buy_order": "Mua",
     "sell_order": "Bán",
     "margin": "Ký quỹ",
-    "spot_trading": "Giao dịch spot"
+    "spot_trading": "Giao dịch spot",
+    "side": "Mua/Bán",
+    "rows_per_page": "Số dòng/trang"
 }

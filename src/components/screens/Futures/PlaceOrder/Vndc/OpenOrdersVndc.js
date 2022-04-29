@@ -44,7 +44,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 minWidth: '50px',
             },
             {
-                name: t('futures:order_table:open_at'),
+                name: t('futures:order_table:created_time'),
                 selector: (row) => row?.created_at,
                 cell: (row) => (
                     <span className='text-txtSecondary dark:text-txtSecondary-dark'>
@@ -75,7 +75,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 sortable: false,
             },
             {
-                name: t('futures:order_table:side'),
+                name: t('futures:side'),
                 selector: (row) => row?.side,
                 cell: (row) => <span
                     className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row)}</span>,
@@ -101,7 +101,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 sortable: true,
             },
             {
-                name: t('futures:order_table:last_price'),
+                name: t('futures:order_table:last_price2'),
                 selector: (row) => marketWatch[row?.symbol]?.lastPrice ?? 0,
                 cell: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, 0, 0, true),
                 minWidth: '150px',
@@ -401,7 +401,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                     allowSearch
                 />
                 <FilterTradeOrder
-                    label={t('common:side')}
+                    label={t('futures:side')}
                     options={[{ value: 'Buy', label: t('common:buy') }, { value: 'Sell', label: t('common:sell') }]}
                     value={filters.side}
                     onChange={(value) => {

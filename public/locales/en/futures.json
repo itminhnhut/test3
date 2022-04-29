@@ -40,7 +40,9 @@
             "order": "Order"
         },
         "open_at": "Open at",
-        "volume": "Volume"
+        "volume": "Volume",
+        "last_price2": "Last Price",
+        "reason_close": "Reason close"
     },
     "close_order": {
         "modal_title": "Close Order #{{value}}",
@@ -135,7 +137,11 @@
         "close_at": "Close at",
         "revenue": "Profit",
         "adjustment_detail": "Adjustment Details",
-        "view_detail": "View details"
+        "view_detail": "View details",
+        "normal": "Normal",
+        "hit_sl": "Hit SL",
+        "hit_tp": "Hit TP",
+        "liquidate": "Liquidate"
     },
     "hide_other_symbols": "Hide Other Symbols",
     "stop_price": "Stop Price",
@@ -173,5 +179,7 @@
     "buy_order": "Buy",
     "sell_order": "Short",
     "margin": "Margin",
-    "spot_trading": "Spot Trading"
+    "spot_trading": "Spot Trading",
+    "side": "Side",
+    "rows_per_page": "Rows per page"
 }
