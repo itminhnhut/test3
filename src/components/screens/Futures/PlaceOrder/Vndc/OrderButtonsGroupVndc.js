@@ -111,21 +111,12 @@ const FuturesOrderButtonsGroupVndc = ({
             >
                 {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
             </div>
-
-            {isAuth ?
-                <div
-                    className={`w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
-                    onClick={() => onHandleClick(VndcFutureOrderType.Side.SELL)}
-                >
-                    {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
-                </div>
-                :
-                <Link href={getLoginUrl('sso', 'login')} locale={false}>
-                    <a className={`w-[48%] bg-red !text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}>
-                        {t('futures:order_table:login_to_continue')}
-                    </a>
-                </Link>
-            }
+            <div
+                className={`w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
+                onClick={() => onHandleClick(VndcFutureOrderType.Side.SELL)}
+            >
+                {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
+            </div>
         </div>
     )
 }
