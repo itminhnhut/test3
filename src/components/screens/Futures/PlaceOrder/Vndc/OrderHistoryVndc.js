@@ -52,20 +52,22 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             selector: (row) => row?.opened_at,
             cell: (row) => loading ? <Skeletor width={65} /> : (
                 <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(row?.opened_at)}
+                    {formatTime(row?.opened_at, 'yyyy-MM-dd HH:mm:ss')}
                 </span>
             ),
             sortable: true,
+            minWidth: '150px',
         },
         {
             name: t('futures:order_history:close_at'),
             selector: (row) => row?.closed_at,
             cell: (row) => loading ? <Skeletor width={65} /> : (
                 <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(row?.closed_at)}
+                    {formatTime(row?.closed_at, 'yyyy-MM-dd HH:mm:ss')}
                 </span>
             ),
             sortable: true,
+            minWidth: '150px',
         },
         {
             name: t('futures:order_table:type'),
@@ -80,7 +82,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             sortable: false,
         },
         {
-            name: t('futures:order_table:amount'),
+            name: t('futures:order_table:volume'),
             selector: (row) => row?.quantity,
             cell: (row) => loading ? <Skeletor width={65} /> : row?.quantity ? formatNumber(row?.quantity, 8, 0, true) : '-',
             sortable: true,

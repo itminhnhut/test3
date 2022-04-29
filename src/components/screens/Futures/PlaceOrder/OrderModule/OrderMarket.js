@@ -83,7 +83,7 @@ const FuturesOrderMarket = ({
             <TradingInput
                 thousandSeparator={size?.includes('%') ? false : true}
                 label={t('futures:size')}
-                labelClassName='whitespace-nowrap'
+                labelClassName='whitespace-nowrap capitalize'
                 value={size}
                 allowNegative={false}
                 suffix={size?.includes('%') ? '%' : ''}

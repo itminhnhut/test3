@@ -38,7 +38,9 @@
         "loading": "Loading...",
         "mobile": {
             "order": "Order"
-        }
+        },
+        "open_at": "Open at",
+        "volume": "Volume"
     },
     "close_order": {
         "modal_title": "Close Order #{{value}}",
@@ -110,7 +112,7 @@
     },
     "close_order_success": "Order #{{orderId}} was closed successfully.",
     "close_order_failed": "Order #{{orderId}} was failed to close.",
-    "fee_tier": "Fee Tier",
+    "fee_tier": "Fee",
     "maker": "Maker",
     "taker": "Taker",
     "close_all": {
@@ -131,7 +133,7 @@
     "order_history": {
         "open_at": "Open at",
         "close_at": "Close at",
-        "revenue": "Revenue",
+        "revenue": "Profit",
         "adjustment_detail": "Adjustment Details",
         "view_detail": "View details"
     },
@@ -165,5 +167,11 @@
     "fullscreen": "Fullscreen",
     "order_mode": "Order Mode",
     "comming_soon": "Coming soon",
-    "modify_order_success": "Modify order successfully"
+    "modify_order_success": "Modify order successfully",
+    "buy": "Buy",
+    "sell": "Sell",
+    "buy_order": "Buy",
+    "sell_order": "Short",
+    "margin": "Margin",
+    "spot_trading": "Spot Trading"
 }

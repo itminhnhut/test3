@@ -121,7 +121,7 @@ const FuturesOrderLimit = ({
                 // onValueChange={({ value }) => handleQuantity(value)}
                 validator={getValidator('quantity')}
                 decimalScale={decimalScaleQty}
-                labelClassName='whitespace-nowrap'
+                labelClassName='whitespace-nowrap capitalize'
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
                     <div className='relative group select-none'>

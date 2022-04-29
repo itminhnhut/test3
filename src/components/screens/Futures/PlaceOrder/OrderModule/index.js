@@ -174,12 +174,12 @@ const FuturesOrderModule = ({
         return (
             <>
                 <TradingLabel
-                    label={t('common:buy')}
+                    label={t('futures:buy') + ':'}
                     value={`${_buy} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
                 <TradingLabel
-                    label={t('common:sell')}
+                    label={t('futures:sell') + ':'}
                     value={`${_sell} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
