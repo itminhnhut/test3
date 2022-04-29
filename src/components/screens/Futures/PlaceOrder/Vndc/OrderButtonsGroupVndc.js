@@ -80,10 +80,13 @@ const FuturesOrderButtonsGroupVndc = ({
     }
 
     const onHandleClick = (side) => {
-        // if (!isAuth) {
-        //     onLogin();
-        //     return;
-        // }
+        if (!isAuth) {
+            window.open(
+                getLoginUrl('sso', 'login'),
+                '_self'
+            )
+            return;
+        }
         if (isError) return;
         setDisabled(true)
         placeFuturesOrder(handleParams(side), {
@@ -102,20 +105,13 @@ const FuturesOrderButtonsGroupVndc = ({
 
     return (
         <div className='flex items-center justify-between font-bold text-sm text-white select-none'>
-            {isAuth ?
-                <div
-                    className={`w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
-                    onClick={() => onHandleClick(VndcFutureOrderType.Side.BUY)}
-                >
-                    {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
-                </div>
-                :
-                <Link href={getLoginUrl('sso')}>
-                    <a className={`w-[48%] bg-dominant !text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}>
-                        {t('futures:order_table:login_to_continue')}
-                    </a>
-                </Link>
-            }
+            <div
+                className={`w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
+                onClick={() => onHandleClick(VndcFutureOrderType.Side.BUY)}
+            >
+                {isAuth ? t('common:buy') + '/Long' : t('futures:order_table:login_to_continue')}
+            </div>
+
             {isAuth ?
                 <div
                     className={`w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
@@ -124,7 +120,7 @@ const FuturesOrderButtonsGroupVndc = ({
                     {isAuth ? t('common:sell') + '/Short' : t('futures:order_table:login_to_continue')}
                 </div>
                 :
-                <Link href={getLoginUrl('sso')}>
+                <Link href={getLoginUrl('sso', 'login')} locale={false}>
                     <a className={`w-[48%] bg-red !text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}>
                         {t('futures:order_table:login_to_continue')}
                     </a>
