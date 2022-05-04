@@ -18,6 +18,7 @@ import Divider from 'components/common/Divider';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import FuturesOrderButtonsGroupVndc from '../Vndc/OrderButtonsGroupVndc';
+import { VndcFutureOrderType } from '../Vndc/VndcFutureOrderType';
 
 const FuturesOrderModule = ({
     markPrice,
@@ -45,6 +46,7 @@ const FuturesOrderModule = ({
     ask,
     bid,
     isAuth,
+    side
 }) => {
     // ? Use hooks
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
@@ -56,15 +58,12 @@ const FuturesOrderModule = ({
         sl: '',
         tp: ''
     })
-    // useEffect(() => {
-    //     if (firstTime.current && lastPrice) {
-    //         firstTime.current = false;
-    //         setOrderSlTp({
-    //             sl: lastPrice,
-    //             tp: lastPrice
-    //         })
-    //     }
-    // }, [currentType, lastPrice])
+    useEffect(() => {
+        setOrderSlTp({
+            sl: lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05),
+            tp: lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05),
+        })
+    }, [currentType, side])
 
     // ? Data helper
     const getLastedLastPrice = async (symbol) => {
@@ -76,7 +75,6 @@ const FuturesOrderModule = ({
             const lastedLastPrice = FuturesMarketWatch.create(
                 data?.data?.[0]
             )?.lastPrice
-            log.d('Setted lasted lastPrice ', lastedLastPrice)
             handlePrice(lastedLastPrice)
         }
     }
@@ -163,29 +161,32 @@ const FuturesOrderModule = ({
 
     const renderBuySellByPercent = useCallback(() => {
         const _buy =
-            size?.includes('%')
+            String(size)?.includes('%')
                 ? formatNumber(quantity?.buy, countDecimals(decimalScaleQtyMarket?.stepSize))
                 : '0.0000'
         const _sell =
-            size?.includes('%')
+            String(size)?.includes('%')
                 ? formatNumber(quantity?.sell, countDecimals(decimalScaleQtyMarket?.stepSize))
                 : '0.0000'
+
+        const volume = formatNumber(size, countDecimals(decimalScaleQtyMarket?.stepSize));
+        const maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
 
         return (
             <>
                 <TradingLabel
-                    label={t('futures:buy') + ':'}
-                    value={`${_buy} ${selectedAsset}`}
+                    label={t(isVndcFutures ? 'futures:volume' : 'common:buy')}
+                    value={`${isVndcFutures ? volume : _buy} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
                 <TradingLabel
-                    label={t('futures:sell') + ':'}
-                    value={`${_sell} ${selectedAsset}`}
+                    label={t(isVndcFutures ? 'common:max' : 'common:sell')}
+                    value={`${isVndcFutures ? maxQty : _sell} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
             </>
         )
-    }, [size, pairConfig, selectedAsset, quantity])
+    }, [size, pairConfig, selectedAsset, quantity, side])
 
     // ? Init lastPrice
     useEffect(() => {
@@ -280,6 +281,10 @@ const FuturesOrderModule = ({
                     size={size}
                     available={availableAsset}
                     onChange={(size) => handleQuantity(size, !isVndcFutures)}
+                    isVndcFutures={isVndcFutures}
+                    maxBuy={maxBuy}
+                    maxSell={maxSell}
+                    side={side}
                 />
             </div>
 
@@ -296,6 +301,7 @@ const FuturesOrderModule = ({
                 setOrderSlTp={setOrderSlTp}
                 decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
                 getValidator={inputValidator}
+                side={side}
             />
 
             <Divider className='my-5' />
@@ -318,6 +324,8 @@ const FuturesOrderModule = ({
                     bid={bid}
                     isAuth={isAuth}
                     decimalScaleQty={countDecimals(decimalScaleQtyMarket?.stepSize)}
+                    decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
+                    side={side}
                 />
                 :
                 <FuturesOrderButtonsGroup

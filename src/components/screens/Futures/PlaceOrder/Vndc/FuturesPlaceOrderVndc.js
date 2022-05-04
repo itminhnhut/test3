@@ -9,6 +9,8 @@ import FuturesOrderTypes from '../OrderTypes';
 import PlaceConfigs from '../PlaceConfigs';
 import axios from 'axios';
 import FuturesOrderCostAndMaxVndc from './OrderCostAndMaxVndc';
+import TabOrderVndc from './TabOrderVndc';
+import { VndcFutureOrderType } from './VndcFutureOrderType';
 
 const FuturesPlaceOrderVndc = ({
     pairConfig,
@@ -37,6 +39,8 @@ const FuturesPlaceOrderVndc = ({
     const [availableAsset, setAvailableAsset] = useState(null)
     const [maxBuy, setMaxBuy] = useState(0)
     const [maxSell, setMaxSell] = useState(0)
+    const [side, setSide] = useState(VndcFutureOrderType.Side.BUY);
+
 
     // ? get rdx state
     const preloadedForm = useSelector((state) => state.futures.preloadedState)
@@ -66,7 +70,7 @@ const FuturesPlaceOrderVndc = ({
     )
 
     useEffect(() => {
-        const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : Number(size);
+        const _size = isNaN(size) ? Number(String(size).substring(0, String(size).indexOf('%'))) / 100 : Number(size);
         const buy = _size * maxBuy;
         const sell = _size * maxSell;
         setQuantity({
@@ -129,7 +133,7 @@ const FuturesPlaceOrderVndc = ({
 
     useEffect(() => {
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
-        const _size = isNaN(size) ? Number(size.substring(0, size.indexOf('%'))) / 100 : size;
+        const _size = isNaN(size) ? Number(String(size).substring(0, String(size).indexOf('%'))) / 100 : size;
         const _price = currentType === OrderTypes.Limit ? price : stopPrice;
         if ((availableAsset)) {
             let maxBuy = 0;
@@ -173,6 +177,8 @@ const FuturesPlaceOrderVndc = ({
                 <div className='absolute left-0 -bottom-5 w-full h-5 dragHandleArea' />
             </div>
 
+            <TabOrderVndc side={side} setSide={setSide} />
+
             <div className='mt-5'>
                 <FuturesOrderTypes
                     currentType={currentType}
@@ -205,6 +211,9 @@ const FuturesPlaceOrderVndc = ({
                 ask={ask}
                 bid={bid}
                 isAuth={isAuth}
+                side={side}
+                maxBuy={maxBuy}
+                maxSell={maxSell}
             />
 
             <FuturesOrderCostAndMaxVndc
@@ -225,6 +234,8 @@ const FuturesPlaceOrderVndc = ({
                 ask={ask}
                 bid={bid}
                 stopPrice={stopPrice}
+                side={side}
+                countDecimals={countDecimals}
             />
         </div>
     )

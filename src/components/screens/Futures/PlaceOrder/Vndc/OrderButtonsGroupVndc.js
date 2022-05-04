@@ -43,23 +43,25 @@ const FuturesOrderButtonsGroupVndc = ({
     ask,
     bid,
     isAuth,
-    decimalScaleQty
+    decimalScaleQty,
+    decimalScalePrice,
+    side
 }) => {
     const { t } = useTranslation()
     const router = useRouter();
     const [disabled, setDisabled] = useState(false);
     const handleParams = useCallback(
         (side) => {
-            const _size = isNaN(size) ? side === VndcFutureOrderType.Side.BUY ? +quantity?.buy : +quantity?.sell : Number(size)
+            // const _size = isNaN(size) ? side === VndcFutureOrderType.Side.BUY ? +quantity?.buy : +quantity?.sell : Number(size)
             const params = {
                 symbol: pairConfig?.symbol,
                 type: getType(type),
                 side: side,
-                quantity: Number(_size.toFixed(decimalScaleQty)),
+                quantity: +Number(String(size).replaceAll(',', '')).toFixed(decimalScaleQty),
                 price: getPrice(getType(type), side, price, ask, bid, stopPrice),
                 leverage,
-                sl: +orderSlTp.sl,
-                tp: +orderSlTp.tp,
+                sl: +Number(orderSlTp.sl).toFixed(decimalScalePrice),
+                tp: +Number(orderSlTp.tp).toFixed(decimalScalePrice),
             }
             return params
         },
@@ -105,18 +107,21 @@ const FuturesOrderButtonsGroupVndc = ({
 
     return (
         <div className='flex items-center justify-between font-bold text-sm text-white select-none'>
-            <div
-                className={`w-[48%] bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
-                onClick={() => onHandleClick(VndcFutureOrderType.Side.BUY)}
-            >
-                {isAuth ? t('futures:buy_order') : t('futures:order_table:login_to_continue')}
-            </div>
-            <div
-                className={`w-[48%] bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
-                onClick={() => onHandleClick(VndcFutureOrderType.Side.SELL)}
-            >
-                {isAuth ? t('futures:sell_order') : t('futures:order_table:login_to_continue')}
-            </div>
+            {side === VndcFutureOrderType.Side.BUY ?
+                <div
+                    className={`w-full bg-dominant text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
+                    onClick={() => onHandleClick(VndcFutureOrderType.Side.BUY)}
+                >
+                    {isAuth ? t('futures:buy_order') : t('futures:order_table:login_to_continue')}
+                </div>
+                :
+                <div
+                    className={`w-full bg-red text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80 ${classNameError}`}
+                    onClick={() => onHandleClick(VndcFutureOrderType.Side.SELL)}
+                >
+                    {isAuth ? t('futures:sell_order') : t('futures:order_table:login_to_continue')}
+                </div>
+            }
         </div>
     )
 }

@@ -6,7 +6,7 @@ import Setting from 'src/components/svg/Setting';
 import SvgSun from 'src/components/svg/Sun';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
@@ -75,11 +75,17 @@ const FuturesSetting = (props) => {
     const onChangeFuturesComponent = (key, value) => {
         const _newSpotState = spotState;
         spotState[key] = value;
+        localStorage.setItem('settingLayoutFutures', JSON.stringify(spotState));
         onChangeSpotState({
             ...spotState,
             ..._newSpotState,
         });
     };
+
+    const settingLayout = useMemo(() => {
+        const settings = localStorage.getItem('settingLayoutFutures');
+        return settings ? JSON.parse(settings) : {}
+    }, [spotState])
 
     return (
         <Popover className="relative">
@@ -212,6 +218,7 @@ const FuturesSetting = (props) => {
                                             key,
                                             visible
                                         } = item;
+
                                         if (!visible) return null;
                                         return (
                                             <div className="h-6 my-1 flex justify-between" key={key + index}>
@@ -220,7 +227,7 @@ const FuturesSetting = (props) => {
                                                 >{value}
                                                 </span>
                                                 <Toggle
-                                                    checked={spotState?.[key]}
+                                                    checked={settingLayout?.[key]}
                                                     onChange={(value) => onChangeFuturesComponent(key, value)}
                                                 />
                                             </div>

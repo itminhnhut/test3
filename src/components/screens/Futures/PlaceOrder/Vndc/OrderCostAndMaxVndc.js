@@ -7,6 +7,7 @@ import TradingLabel from 'components/trade/TradingLabel';
 import Link from 'next/link';
 import ChevronDown from 'src/components/svg/ChevronDown';
 import { useSelector } from 'react-redux';
+import { VndcFutureOrderType } from './VndcFutureOrderType';
 
 const FuturesOrderCostAndMaxVndc = ({
     selectedAsset,
@@ -24,23 +25,33 @@ const FuturesOrderCostAndMaxVndc = ({
     ask,
     bid,
     stopPrice,
+    side,
+    countDecimals
 }) => {
     const [shortOrderOpenLoss, setShortOrderOpenLoss] = useState(0)
     const [longOrderOpenLoss, setLongOrderOpenLoss] = useState(0)
     const vip = useSelector((state => state?.user?.vip))
     const { t } = useTranslation()
+    const [cost, setCost] = useState(0);
 
     const isMarket =
         currentType === FuturesOrderTypes.Market ||
         currentType === FuturesOrderTypes.StopMarket
 
     const renderCost = () => {
+        const _price = currentType === FuturesOrderTypes.Market ?
+            (VndcFutureOrderType.Side.BUY === side ? ask : bid) :
+            price;
+        const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
+        const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(decimalScaleQtyLimit?.stepSize));
+        const margin = _size * _price;
+
         return (
             <>
                 <TradingLabel
-                    label={t('futures:margin')}
+                    label={t('common:cost')}
                     value={`${formatNumber(
-                        longOrderOpenLoss,
+                        cost,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
                     containerClassName='text-md'
@@ -48,7 +59,7 @@ const FuturesOrderCostAndMaxVndc = ({
                 <TradingLabel
                     label={t('futures:margin')}
                     value={`${formatNumber(
-                        shortOrderOpenLoss,
+                        margin,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
                     containerClassName='text-md'
@@ -82,25 +93,23 @@ const FuturesOrderCostAndMaxVndc = ({
 
     useEffect(() => {
         // Limit initial margin
-        const _size = isNaN(size) ? quantity?.buy : size;
+        const _size = +String(size).replaceAll(',', '')
         if (leverage) {
-            let costBuy = 0;
-            let costSell = 0;
+            let cost = 0;
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType)) {
                 const _price = currentType === OrderTypes.Limit ? price : stopPrice;
                 const notional = +_price * _size;
                 const fee = notional * (0.1 / 100);
-                costBuy = (notional / leverage) + fee;
-                costSell = costBuy;
+                cost = (notional / leverage) + fee;
             } else if ([OrderTypes.Market].includes(currentType)) {
-                costBuy = ((ask * _size) / leverage) + (_size * ask * (0.1 / 100));
-                costSell = ((bid * _size) / leverage) + (_size * bid * (0.1 / 100));;
+                cost = VndcFutureOrderType.Side.BUY === side ? ((ask * _size) / leverage) + (_size * ask * (0.1 / 100)) :
+                    ((bid * _size) / leverage) + (_size * bid * (0.1 / 100));
             }
-            setShortOrderOpenLoss(costBuy)
-            setLongOrderOpenLoss(costSell)
+            // setShortOrderOpenLoss(cost)
+            setCost(cost)
         } else {
-            setShortOrderOpenLoss(0)
-            setLongOrderOpenLoss(0)
+            // setShortOrderOpenLoss(0)
+            setCost(0)
         }
     }, [
         currentType,
@@ -120,9 +129,9 @@ const FuturesOrderCostAndMaxVndc = ({
             <div className='flex items-center justify-between'>
                 {renderCost()}
             </div>
-            <div className='mt-2 flex items-center justify-between'>
+            {/* <div className='mt-2 flex items-center justify-between'>
                 {renderMax()}
-            </div>
+            </div> */}
 
             <div className="float-right mt-[8px] group relative">
                 <div className="text-teal underline cursor-pointer font-medium ">{t('futures:fee_tier')}</div>

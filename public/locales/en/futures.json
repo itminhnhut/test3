@@ -181,5 +181,6 @@
     "margin": "Margin",
     "spot_trading": "Spot Trading",
     "side": "Side",
-    "rows_per_page": "Rows per page"
+    "rows_per_page": "Rows per page",
+    "volume": "Volume"
 }

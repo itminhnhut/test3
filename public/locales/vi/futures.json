@@ -180,5 +180,6 @@
     "margin": "Ký quỹ",
     "spot_trading": "Giao dịch spot",
     "side": "Mua/Bán",
-    "rows_per_page": "Số dòng/trang"
+    "rows_per_page": "Số dòng/trang",
+    "volume": "KL"
 }

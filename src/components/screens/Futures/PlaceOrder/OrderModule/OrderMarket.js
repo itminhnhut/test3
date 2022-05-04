@@ -81,12 +81,12 @@ const FuturesOrderMarket = ({
                 />
             )}
             <TradingInput
-                thousandSeparator={size?.includes('%') ? false : true}
+                thousandSeparator={String(size)?.includes('%') ? false : true}
                 label={t('futures:size')}
                 labelClassName='whitespace-nowrap capitalize'
                 value={size}
                 allowNegative={false}
-                suffix={size?.includes('%') ? '%' : ''}
+                suffix={String(size)?.includes('%') ? '%' : ''}
                 onChange={({ target: { value } }) => handleQuantity(value)}
                 decimalScale={decimalScaleQty}
                 validator={getValidator('quantity')}

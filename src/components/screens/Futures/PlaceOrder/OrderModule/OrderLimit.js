@@ -112,11 +112,11 @@ const FuturesOrderLimit = ({
                 )}
             />
             <TradingInput
-                thousandSeparator={size?.includes('%') ? false : true}
+                thousandSeparator={String(size)?.includes('%') ? false : true}
                 label={t('futures:size')}
                 value={size}
                 allowNegative={false}
-                suffix={size?.includes('%') ? '%' : ''}
+                suffix={String(size)?.includes('%') ? '%' : ''}
                 onChange={({ target: { value } }) => handleQuantity(value)}
                 // onValueChange={({ value }) => handleQuantity(value)}
                 validator={getValidator('quantity')}

@@ -4,8 +4,10 @@ import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { ChevronDown } from 'react-feather';
+import { VndcFutureOrderType } from '../Vndc/VndcFutureOrderType';
+import { getS3Url } from 'redux/actions/utils';
 
-const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScalePrice, getValidator }) => {
+const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScalePrice, getValidator, side }) => {
     const useSltp =
         useSelector((state) => state.futures.preloadedState?.useSltp) || false
 
@@ -17,6 +19,17 @@ const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScale
             type: SET_FUTURES_PRELOADED_FORM,
             payload: { useSltp: !status },
         })
+    }
+
+    const onChangeTpSL = (key) => {
+        if (!isVndcFutures) return;
+        if (key === 'tp') {
+            const tp = +orderSlTp.tp
+            setOrderSlTp({ ...orderSlTp, tp: tp + (tp * 0.05) })
+        } else {
+            const sl = +orderSlTp.sl
+            setOrderSlTp({ ...orderSlTp, sl: sl + (sl * 0.05) })
+        }
     }
 
     return (
@@ -42,8 +55,8 @@ const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScale
                         tailContainerClassName='flex items-center font-medium text-xs select-none'
                         renderTail={() => (
                             <div className='relative group select-none'>
-                                <div className='flex items-center'>
-                                    {isVndcFutures ? 'VNDC' : 'Mark'}
+                                <div className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('tp')} >
+                                    {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} /> : 'Mark'}
                                     {!isVndcFutures && <ChevronDown
                                         size={12}
                                         className='ml-1 group-hover:rotate-180'
@@ -75,8 +88,8 @@ const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScale
                         tailContainerClassName='flex items-center font-medium text-xs select-none'
                         renderTail={() => (
                             <div className='relative group select-none'>
-                                <div className='flex items-center'>
-                                    {isVndcFutures ? 'VNDC' : 'Mark'}
+                                <div className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('sl')} >
+                                    {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} /> : 'Mark'}
                                     {!isVndcFutures && <ChevronDown
                                         size={12}
                                         className='ml-1 group-hover:rotate-180'
