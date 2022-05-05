@@ -274,14 +274,6 @@ const Futures = () => {
     // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
-            if (router.query.pair.indexOf('USDT') !== -1) {
-                router.push(
-                    `${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
-                    undefined,
-                    { shallow: true }
-                )
-                return;
-            }
             setState({ pair: router.query.pair });
             localStorage.setItem(
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,
