@@ -41,6 +41,9 @@ const Slider = ({
     leverage = false,
     useLabel = false,
     labelSuffix = '',
+    customDotAndLabel,
+    bgColorSlide,
+    bgColorActive,
     ...props
 }) => {
     const container = useRef(null)
@@ -277,15 +280,16 @@ const Slider = ({
                 onTouchStart={handleTrackMouseDown}
                 onMouseDown={handleTrackMouseDown}
             >
-                <Active style={valueStyle} />
+                <Active style={valueStyle} bgColorSlide={bgColorSlide} />
                 <SliderBackground isDark={currentTheme === THEME_MODE.DARK} />
                 <DotContainer>
                     <Dot
                         active={pos.left >= 0}
                         percentage={0}
                         isDark={currentTheme === THEME_MODE.DARK}
+                        bgColorActive={bgColorActive}
                     />
-                    {renderDotAndLabel()?.dot}
+                    {customDotAndLabel ? customDotAndLabel(xmax, pos)?.dot : renderDotAndLabel()?.dot}
                 </DotContainer>
                 <div
                     ref={handle}
@@ -300,6 +304,7 @@ const Slider = ({
                     <Thumb
                         isZero={pos.left === 0}
                         isDark={currentTheme === THEME_MODE.DARK}
+                        bgColorActive={bgColorActive}
                     >
                         <ThumbLabel
                             isZero={pos.left === 0}
@@ -313,7 +318,7 @@ const Slider = ({
             {useLabel && (
                 <>
                     <div className='relative w-full flex items-center justify-between'>
-                        {renderDotAndLabel()?.label}
+                        {customDotAndLabel ? customDotAndLabel(xmax, pos)?.label : renderDotAndLabel()?.label}
                     </div>
                     <div className='h-[12px] w-full' />
                 </>

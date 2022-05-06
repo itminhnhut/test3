@@ -17,7 +17,8 @@ export const Track = styled.div`
 
 export const Active = styled.div`
     position: absolute;
-    background-color: ${colors.teal};
+    background-color:${({ bgColorSlide }) =>
+        bgColorSlide ? bgColorSlide : colors.teal};
     border-radius: 4px;
     user-select: none;
     box-sizing: border-box;
@@ -54,13 +55,13 @@ export const Dot = styled.span`
     width: 9px;
     height: 8px;
     box-sizing: content-box;
-    background-color: ${({ active, isDark }) =>
-        active ? colors.teal : isDark ? colors.darkBlue4 : colors.grey5};
+    background-color: ${({ active, isDark, bgColorActive }) =>
+        active ? bgColorActive ? bgColorActive : colors.teal : isDark ? colors.darkBlue4 : colors.grey5};
     z-index: 30;
     transition: transform 0.2s; /* Animation */
 
     &:hover {
-        background-color: ${colors.teal};
+        background-color:${({ bgColorActive }) => bgColorActive ? bgColorActive : colors.teal};
         transform: scale(1.4);
     }
 `
@@ -72,8 +73,8 @@ export const Thumb = styled.div`
     width: 14px;
     height: 12px;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    background-color: ${({ isZero, isDark }) =>
-        isZero ? (isDark ? colors.darkBlue4 : colors.grey5) : colors.teal};
+    background-color: ${({ isZero, isDark, bgColorActive }) =>
+        isZero ? (isDark ? colors.darkBlue4 : colors.grey5) : bgColorActive ? bgColorActive : colors.teal};
 
     user-select: none;
     cursor: pointer;

@@ -358,7 +358,7 @@ const Futures = () => {
                     <div className="w-full">
                         {isMediumDevices && (
                             <GridLayout
-                                className="layout !h-full"
+                                className="layout"
                                 layouts={state.layouts}
                                 breakpoints={futuresGridConfig.breakpoints}
                                 cols={futuresGridConfig.cols}

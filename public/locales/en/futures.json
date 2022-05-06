@@ -88,7 +88,8 @@
         "is_will": ", it will trigger Take Profit Market order to clos this position. Estimate PNL will be",
         "this_setting": "This setting applies to the entire position.",
         "take_profit_stop_loss": "Take-profit and stop-loss",
-        "automaticcally_cancel": "automaticcally cancel after closing the position. A market order is triggerd when the stop price is reached. The order will be rejected if the position size exceeds the Max Market Order by Qty limit."
+        "automaticcally_cancel": "automaticcally cancel after closing the position. A market order is triggerd when the stop price is reached. The order will be rejected if the position size exceeds the Max Market Order by Qty limit.",
+        "setting": "Setting"
     },
     "balance": "Balance",
     "unrealized_pnl": "Unrealized PNL",
