@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Slider from 'components/trade/InputSlider';
 import { VndcFutureOrderType } from '../Vndc/VndcFutureOrderType';
+import { FuturesOrderTypes as OrderTypes, } from 'redux/reducers/futures';
 
-const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side }) => {
-    const [percent, setPercent] = useState(0)
+const initPercent = 25;
+
+const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType }) => {
+    const [percent, setPercent] = useState(isVndcFutures ? initPercent : 0)
     const quantity = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
 
     const onPercentChange = ({ x }) => {
@@ -22,8 +25,28 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
         }
     }, [size, isVndcFutures])
 
+    const timer = useRef(null);
+    const firstTime = useRef(true);
+
     useEffect(() => {
-        onChange(+quantity * percent / 100);
+        firstTime.current = true;
+    }, [currentType])
+
+    useEffect(() => {
+        if (firstTime.current) {
+            clearTimeout(timer.current)
+            timer.current = setTimeout(() => {
+                firstTime.current = false;
+                onChange(+quantity * initPercent / 100);
+                setPercent(initPercent)
+            }, 200);
+        }
+
+    }, [currentType, quantity])
+
+    useEffect(() => {
+        onChange(+quantity * initPercent / 100);
+        setPercent(initPercent)
     }, [side])
 
     return <Slider axis='x' x={percent} xmax={100} onChange={onPercentChange} />

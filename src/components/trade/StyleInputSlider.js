@@ -74,7 +74,7 @@ export const Thumb = styled.div`
     height: 12px;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     background-color: ${({ isZero, isDark, bgColorActive }) =>
-        isZero ? (isDark ? colors.darkBlue4 : colors.grey5) : bgColorActive ? bgColorActive : colors.teal};
+        isZero ? (isDark ? colors.darkBlue4 : bgColorActive ? bgColorActive : colors.grey5) : bgColorActive ? bgColorActive : colors.teal};
 
     user-select: none;
     cursor: pointer;

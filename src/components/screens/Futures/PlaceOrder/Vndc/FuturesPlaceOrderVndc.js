@@ -84,7 +84,6 @@ const FuturesPlaceOrderVndc = ({
     }
 
     useEffect(() => {
-        handleQuantity('')
         setStopOrderMode(FuturesStopOrderMode.markPrice)
         if (currentType === OrderTypes.Limit || currentType === OrderTypes.StopMarket) {
             setPrice(lastPrice)

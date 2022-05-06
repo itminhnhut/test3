@@ -285,6 +285,7 @@ const FuturesOrderModule = ({
                     maxBuy={maxBuy}
                     maxSell={maxSell}
                     side={side}
+                    currentType={currentType}
                 />
             </div>
 
