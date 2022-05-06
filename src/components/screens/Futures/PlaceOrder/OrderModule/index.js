@@ -60,8 +60,8 @@ const FuturesOrderModule = ({
     })
     useEffect(() => {
         setOrderSlTp({
-            sl: lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05),
-            tp: lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05),
+            sl: +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05)),
+            tp: +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05)),
         })
     }, [currentType, side])
 
@@ -302,6 +302,11 @@ const FuturesOrderModule = ({
                 decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
                 getValidator={inputValidator}
                 side={side}
+                size={size}
+                pairConfig={pairConfig}
+                price={price}
+                stopPrice={stopPrice}
+                lastPrice={lastPrice}
             />
 
             <Divider className='my-5' />

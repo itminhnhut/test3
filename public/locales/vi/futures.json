@@ -90,7 +90,8 @@
         "is_will": ", lệnh Take Profit Market sẽ được kích hoạt để đóng vị thế này. PnL ước tính sẽ là",
         "this_setting": "Cài đặt này áp dụng cho toàn bộ vị thế.",
         "take_profit_stop_loss": "Chốt lời và cắt lỗ",
-        "automaticcally_cancel": "sẽ tự động hủy sau khi đóng vị thế. Lệnh market sẽ được kích hoạt khi đạt đến giá stop. Lệnh sẽ bị từ chối nếu số lượng vị thế vượt quá hạn mức Số lượng lệnh market tối đa."
+        "automaticcally_cancel": "sẽ tự động hủy sau khi đóng vị thế. Lệnh market sẽ được kích hoạt khi đạt đến giá stop. Lệnh sẽ bị từ chối nếu số lượng vị thế vượt quá hạn mức Số lượng lệnh market tối đa.",
+        "setting": "Cài đặt"
     },
     "balance": "Số dư",
     "unrealized_pnl": "Lợi nhuận ước tính",

@@ -6,13 +6,22 @@ import { useTranslation } from 'next-i18next';
 import { ChevronDown } from 'react-feather';
 import { VndcFutureOrderType } from '../Vndc/VndcFutureOrderType';
 import { getS3Url } from 'redux/actions/utils';
+import { useState, useRef } from 'react';
+import FuturesEditSLTPVndc from '../Vndc/EditSLTPVndc';
 
-const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScalePrice, getValidator, side }) => {
+const FuturesOrderSLTP = ({
+    isVndcFutures, orderSlTp,
+    setOrderSlTp, decimalScalePrice,
+    getValidator, side, pairConfig,
+    size, price, stopPrice, lastPrice
+}) => {
     const useSltp =
         useSelector((state) => state.futures.preloadedState?.useSltp) || false
 
     const dispatch = useDispatch()
     const { t } = useTranslation()
+    const [showEditSLTP, setShowEditSLTP] = useState(false);
+    const rowData = useRef(null);
 
     const setSLTP = (status) => {
         dispatch({
@@ -22,18 +31,40 @@ const FuturesOrderSLTP = ({ isVndcFutures, orderSlTp, setOrderSlTp, decimalScale
     }
 
     const onChangeTpSL = (key) => {
-        if (!isVndcFutures) return;
-        if (key === 'tp') {
-            const tp = +orderSlTp.tp
-            setOrderSlTp({ ...orderSlTp, tp: tp + (tp * 0.05) })
-        } else {
-            const sl = +orderSlTp.sl
-            setOrderSlTp({ ...orderSlTp, sl: sl + (sl * 0.05) })
+        if (!isVndcFutures || !size) return;
+        rowData.current = {
+            fee: 0,
+            side: side,
+            quantity: +Number(String(size).replaceAll(',', '')),
+            status: 0,
+            price: price,
+            quoteAsset: pairConfig.quoteAsset,
+            symbol: pairConfig.symbol,
+            ...orderSlTp
         }
+        setShowEditSLTP(true);
+    }
+
+    const onConfirm = (data) => {
+        setOrderSlTp({
+            tp: data.tp,
+            sl: data.sl,
+        })
+        setShowEditSLTP(false);
     }
 
     return (
         <>
+            {showEditSLTP &&
+                <FuturesEditSLTPVndc
+                    isVisible={showEditSLTP}
+                    order={rowData.current}
+                    onClose={() => setShowEditSLTP(false)}
+                    status={rowData.current.status}
+                    onConfirm={onConfirm}
+                    lastPrice={lastPrice}
+                />
+            }
             {!isVndcFutures &&
                 <CheckBox
                     label='TP-SL'
