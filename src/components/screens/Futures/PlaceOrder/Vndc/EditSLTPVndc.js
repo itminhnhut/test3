@@ -286,12 +286,19 @@ const FuturesEditSLTPVndc = ({
         const dot = []
         const label = []
         const size = 100 / dotStep.current
-
+        const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
         for (let i = 0; i <= dotStep.current; ++i) {
+            const index = postion * dotStep.current / 100;
+            const a = index / 2;
+            const b = i - 3;
+            let active = false;
+            if (a >= b && b >= 0 || a <= b && b <= 0) {
+                active = true;
+            }
             dot.push(
                 <Dot
                     key={`inputSlider_dot_${i}`}
-                    active={pos.left >= i * size}
+                    active={active}
                     percentage={i * size}
                     isDark={currentTheme === THEME_MODE.DARK}
                     bgColorActive={key === 'sl' ? colors.red : colors.teal}
@@ -388,9 +395,9 @@ const FuturesEditSLTPVndc = ({
                     <span className="">{formatNumber(_lastPrice, 2, 0, true) + ' ' + quoteAsset}</span>
                 </div>
                 <div className='px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] bg-[#F2FCFC] dark:bg-white w-[calc(100% + 40px)] mt-5 font-semibold'>
-                    <TabItem active={tab === 0} onClick={() => setTab(0)}>Số tiền</TabItem>
-                    <TabItem active={tab === 1} onClick={() => setTab(1)}>Giá</TabItem>
-                    <TabItem active={tab === 2} onClick={() => setTab(2)}>Phần trăm</TabItem>
+                    <TabItem active={tab === 1} onClick={() => setTab(1)}>{t('futures:price')}</TabItem>
+                    <TabItem active={tab === 0} onClick={() => setTab(0)}>{t('futures:order_table:profit')}</TabItem>
+                    <TabItem active={tab === 2} onClick={() => setTab(2)}>{t('futures:profit_margin')}</TabItem>
                 </div>
                 <div className="mt-5 flex items-center">
                     <div
@@ -417,6 +424,9 @@ const FuturesEditSLTPVndc = ({
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
                         bgColorSlide={'transparent'}
+                        xStart={50}
+                        reload={tab}
+                        bgColorActive={colors.teal}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')} />
                 </div>
                 <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
@@ -460,6 +470,8 @@ const FuturesEditSLTPVndc = ({
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
                         bgColorSlide={'transparent'}
                         bgColorActive={colors.red}
+                        xStart={50}
+                        reload={tab}
                         onChange={({ x }) => onChangePercent(x, 100, 'sl')} />
                 </div>
                 <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">

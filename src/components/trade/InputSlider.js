@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ceil from 'lodash/ceil';
 import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track, } from './StyleInputSlider';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -44,6 +44,8 @@ const Slider = ({
     customDotAndLabel,
     bgColorSlide,
     bgColorActive,
+    xStart = 0,
+    reload,
     ...props
 }) => {
     const container = useRef(null)
@@ -51,13 +53,14 @@ const Slider = ({
     const start = useRef({})
     const offset = useRef({})
     const BIAS = 8
+    const _xStart = useRef(xStart);
 
     const [currentTheme] = useDarkMode()
 
     function getPosition() {
         let top = ((y - ymin) / (ymax - ymin)) * 100
-        let left = ((x - xmin) / (xmax - xmin)) * 100
-
+        let left = ((x - xmin) / (xmax - xmin)) * 100 + _xStart.current;
+        _xStart.current = 0;
         if (top > 100) top = 100
         if (top < 0) top = 0
         if (axis === 'x') top = 0
@@ -203,13 +206,22 @@ const Slider = ({
         }
     }
 
-    const pos = getPosition()
+    const [flag, setFlag] = useState(false);
+
+    useEffect(() => {
+        _xStart.current = xStart;
+        setFlag(!flag)
+    }, [reload])
+
+    const pos = useMemo(() => {
+        return getPosition()
+    }, [x, flag])
+
     const valueStyle = {}
     if (axis === 'x') valueStyle.width = pos.left + '%'
     if (axis === 'y') valueStyle.height = pos.top + '%'
     if (xreverse) valueStyle.left = 100 - pos.left + '%'
     if (yreverse) valueStyle.top = 100 - pos.top + '%'
-
     const handleStyle = {
         borderRadius: '50%',
         zIndex: 20,

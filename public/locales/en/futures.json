@@ -183,5 +183,6 @@
     "spot_trading": "Spot Trading",
     "side": "Side",
     "rows_per_page": "Rows per page",
-    "volume": "Volume"
+    "volume": "Volume",
+    "profit_margin":"% Profit"
 }

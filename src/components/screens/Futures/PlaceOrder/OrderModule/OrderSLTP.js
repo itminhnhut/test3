@@ -8,6 +8,7 @@ import { VndcFutureOrderType } from '../Vndc/VndcFutureOrderType';
 import { getS3Url } from 'redux/actions/utils';
 import { useState, useRef } from 'react';
 import FuturesEditSLTPVndc from '../Vndc/EditSLTPVndc';
+import Tooltip from 'components/common/Tooltip';
 
 const FuturesOrderSLTP = ({
     isVndcFutures, orderSlTp,
@@ -55,6 +56,10 @@ const FuturesOrderSLTP = ({
 
     return (
         <>
+
+            {/* <Tooltip id="tooltipTPSL" place="left" effect="solid">
+                232323
+            </Tooltip> */}
             {showEditSLTP &&
                 <FuturesEditSLTPVndc
                     isVisible={showEditSLTP}
@@ -86,7 +91,7 @@ const FuturesOrderSLTP = ({
                         tailContainerClassName='flex items-center font-medium text-xs select-none'
                         renderTail={() => (
                             <div className='relative group select-none'>
-                                <div className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('tp')} >
+                                <div data-for="tooltipTPSL" className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('tp')} >
                                     {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} /> : 'Mark'}
                                     {!isVndcFutures && <ChevronDown
                                         size={12}
@@ -107,6 +112,7 @@ const FuturesOrderSLTP = ({
                             </div>
                         )}
                     />
+
                     <TradingInput
                         containerClassName='mt-[12px]'
                         label={t('futures:stop_loss')}

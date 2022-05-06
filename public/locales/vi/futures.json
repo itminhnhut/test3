@@ -182,5 +182,6 @@
     "spot_trading": "Giao dịch spot",
     "side": "Mua/Bán",
     "rows_per_page": "Số dòng/trang",
-    "volume": "KL"
+    "volume": "KL",
+    "profit_margin":"% Lợi nhuận"
 }
