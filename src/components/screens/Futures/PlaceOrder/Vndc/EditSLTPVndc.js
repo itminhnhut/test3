@@ -247,7 +247,7 @@ const FuturesEditSLTPVndc = ({
         if (tab === 0) {
             const negative = -(50 - index) < 0
             const formatX = index === 50 ? 0 : index > 50 ? (index - 50) / 5 : (50 - index) / 5;
-            result = (negative ? '-' : '+') + formatCash(balance * (formatX / 100));
+            result = index === 50 ? 0 : (negative ? '-' : '+') + formatCash(balance * (formatX / 100));
         }
         if (tab === 1) {
             const negative = -(50 - index) < 0
@@ -273,7 +273,11 @@ const FuturesEditSLTPVndc = ({
             sl: 0,
         }
         setPercent({ tp: 0, sl: 0 });
-        setData({ ...data, tp: tab === 1 ? Number(order?.tp) : 0, sl: tab === 1 ? Number(order?.sl) : 0 });
+        setData({
+            ...data,
+            tp: tab === 1 ? Number(order?.tp) : calculateSLTP(0),
+            sl: tab === 1 ? Number(order?.sl) : calculateSLTP(0)
+        });
 
     }, [tab])
 
