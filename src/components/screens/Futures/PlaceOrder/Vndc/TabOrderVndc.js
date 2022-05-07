@@ -13,7 +13,7 @@ const TabOrderVndc = ({ side, setSide }) => {
                     className={
                         'spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--left' +
                         (side === VndcFutureOrderType.Side.BUY
-                            ? ' active'
+                            ? ' active '
                             : '')
                     }
                     onClick={() => setSide(VndcFutureOrderType.Side.BUY)}
@@ -21,7 +21,7 @@ const TabOrderVndc = ({ side, setSide }) => {
                     {t('common:buy')}
                 </div>
                 <svg
-                    className={`spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark arrow  ${side === VndcFutureOrderType.Side.SELL
+                    className={`!w-[34px] spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark arrow  ${side === VndcFutureOrderType.Side.SELL
                         ? 'sell'
                         : 'buy'
                         }`}

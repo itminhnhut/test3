@@ -89,7 +89,13 @@
         "this_setting": "This setting applies to the entire position.",
         "take_profit_stop_loss": "Take-profit and stop-loss",
         "automaticcally_cancel": "automaticcally cancel after closing the position. A market order is triggerd when the stop price is reached. The order will be rejected if the position size exceeds the Max Market Order by Qty limit.",
-        "setting": "Setting"
+        "setting": "Setting",
+        "mark_price": "Mark Price",
+        "estimate": "estimate PNL will be",
+        "error_price": "Price cannot be blank",
+        "error_qty": "Size cannot be blank",
+        "error_tp": "Take profit cannot be blank",
+        "error_sl": "Stop loss cannot be blank"
     },
     "balance": "Balance",
     "unrealized_pnl": "Unrealized PNL",
@@ -184,5 +190,8 @@
     "side": "Side",
     "rows_per_page": "Rows per page",
     "volume": "Volume",
-    "profit_margin":"% Profit"
+    "profit_margin": "% Profit",
+    "minimun_qty": "Minimum Qty is",
+    "maximun_qty": "Maximum Qty is",
+    "invalid_amount": "Invalid amount"
 }
