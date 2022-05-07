@@ -5,7 +5,7 @@ import { FuturesOrderTypes as OrderTypes, } from 'redux/reducers/futures';
 
 const initPercent = 25;
 
-const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType }) => {
+const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType, pair }) => {
     const [percent, setPercent] = useState(isVndcFutures ? initPercent : 0)
     const quantity = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
 
@@ -29,20 +29,23 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
     const firstTime = useRef(true);
 
     useEffect(() => {
-        firstTime.current = true;
-    }, [currentType])
+        clearTimeout(timer.current)
+        timer.current = setTimeout(() => {
+            firstTime.current = true;
+        }, 200);
+    }, [currentType, pair])
 
     useEffect(() => {
-        if (firstTime.current) {
-            clearTimeout(timer.current)
-            timer.current = setTimeout(() => {
-                firstTime.current = false;
-                onChange(+quantity * initPercent / 100);
-                setPercent(initPercent)
-            }, 200);
+        if (firstTime.current && +quantity) {
+            firstTime.current = false;
+            onChange(+quantity * initPercent / 100);
+            setPercent(initPercent)
+        } else if (!+quantity) {
+            onChange(0);
+            setPercent(0)
         }
 
-    }, [currentType, quantity])
+    }, [currentType, quantity, firstTime.current])
 
     useEffect(() => {
         onChange(+quantity * initPercent / 100);
