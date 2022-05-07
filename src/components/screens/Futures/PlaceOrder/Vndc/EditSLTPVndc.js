@@ -214,16 +214,17 @@ const FuturesEditSLTPVndc = ({
     }
 
     const formatCash = n => {
-        if (n < 1e3) return n;
-        if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(0) + "K";
-        if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(0) + "M";
-        if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(0) + "B";
-        if (n >= 1e12) return +(n / 1e12).toFixed(0) + "T";
+        const length = +String(Number(n).toFixed(0)).length;
+        if (n < 1e3) return n.toFixed(2);
+        if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(length > 4 ? 1 : 2) + "K";
+        if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(length > 8 ? 1 : 2) + "M";
+        if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(2) + "B";
+        if (n >= 1e12) return +(n / 1e12).toFixed(2) + "T";
     };
 
     const getValuePercent = (x, key) => {
         const _avlb = wallets?.[pairConfig?.quoteAssetId];
-        const balance = _avlb?.value - _avlb?.locked_value;
+        const balance = _avlb?.value;
         const result = 0;
         if (tab === 0) {
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 : -(50 - x) / 5;
@@ -242,7 +243,7 @@ const FuturesEditSLTPVndc = ({
 
     const getLabelPercent = (index, isString = false, key) => {
         const _avlb = wallets?.[pairConfig?.quoteAssetId];
-        const balance = _avlb?.value - _avlb?.locked_value;
+        const balance = _avlb?.value;
         const result = 0;
         if (tab === 0) {
             const negative = -(50 - index) < 0
@@ -332,7 +333,7 @@ const FuturesEditSLTPVndc = ({
     const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
 
     const isError = useMemo(() => {
-        const not_valid = !inputValidator('price').isValid || !data.tp || !data.sl
+        const not_valid = !inputValidator('price').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid || !data.tp || !data.sl
         return not_valid;
     }, [data]);
 
@@ -394,10 +395,13 @@ const FuturesEditSLTPVndc = ({
                     </span>
                     <span className="">{formatNumber(_lastPrice, 2, 0, true) + ' ' + quoteAsset}</span>
                 </div>
-                <div className='px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] bg-[#F2FCFC] dark:bg-white w-[calc(100% + 40px)] mt-5 font-semibold'>
-                    <TabItem active={tab === 1} onClick={() => setTab(1)}>{t('futures:price')}</TabItem>
-                    <TabItem active={tab === 0} onClick={() => setTab(0)}>{t('futures:order_table:profit')}</TabItem>
-                    <TabItem active={tab === 2} onClick={() => setTab(2)}>{t('futures:profit_margin')}</TabItem>
+                <div className='px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] bg-[#F2FCFC] dark:bg-darkBlue-4 w-[calc(100% + 40px)] mt-5 font-semibold'>
+                    <TabItem active={tab === 1} onClick={() => setTab(1)}
+                        isDark={currentTheme === THEME_MODE.DARK}>{t('futures:price')}</TabItem>
+                    <TabItem active={tab === 0} onClick={() => setTab(0)}
+                        isDark={currentTheme === THEME_MODE.DARK}>{t('futures:order_table:profit')}</TabItem>
+                    <TabItem active={tab === 2} onClick={() => setTab(2)}
+                        isDark={currentTheme === THEME_MODE.DARK}>{t('futures:profit_margin')}</TabItem>
                 </div>
                 <div className="mt-5 flex items-center">
                     <div
@@ -409,7 +413,7 @@ const FuturesEditSLTPVndc = ({
                             className="flex-grow text-right font-medium h-[21px] text-teal"
                             containerClassName="w-full !py-0 !px-0 border-none"
                             value={tab === 0 ? profit.current.tp : tab === 1 ? data.tp : tabPercent.current.tp}
-                            // validator={inputValidator('take_profit')}
+                            validator={tab === 1 && inputValidator('take_profit')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
                         />
@@ -432,13 +436,13 @@ const FuturesEditSLTPVndc = ({
                 <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {t('futures:order_table:last_price')}&nbsp;
+                        {t('futures:tp_sl:mark_price')}&nbsp;
                     </span>
                     {t('futures:tp_sl:reaches')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {formatNumber(data.tp, 0, 0, true)}
+                        {formatNumber(data.tp, 0, 0, true)}&nbsp;
                     </span>
-                    {t('futures:tp_sl:is_will')}&nbsp;
+                    {t('futures:tp_sl:estimate')}&nbsp;
                     <span className="text-dominant">{profit.current.tp + ' ' + quoteAsset}</span>.
                 </div>
 
@@ -454,7 +458,7 @@ const FuturesEditSLTPVndc = ({
                             containerClassName="w-full !py-0 !px-0 border-none"
                             value={tab === 0 ? profit.current.sl : tab === 1 ? data.sl : tabPercent.current.sl}
                             label={t('futures:stop_loss')}
-                            // validator={inputValidator('stop_loss')}
+                            validator={tab === 1 && inputValidator('stop_loss')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('sl', e)}
                         />
@@ -481,16 +485,16 @@ const FuturesEditSLTPVndc = ({
                     </span>
                     {t('futures:tp_sl:reaches')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {formatNumber(data.sl, 0, 0, true)}
+                        {formatNumber(data.sl, 0, 0, true)}&nbsp;
                     </span>
-                    {t('futures:tp_sl:is_will')}&nbsp;
+                    {t('futures:tp_sl:estimate')}&nbsp;
                     <span className="text-red">{profit.current.sl + ' ' + quoteAsset}</span>.
                 </div>
 
                 <div className="mt-4 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
-                    {t('futures:tp_sl:this_setting')}&nbsp;
-                    <span className="font-bold">{t('futures:tp_sl:take_profit_stop_loss')}</span>&nbsp;
-                    {t('futures:tp_sl:automaticcally_cancel')}
+                    {/* {t('futures:tp_sl:this_setting')}&nbsp; */}
+                    {/* <span className="font-bold">{t('futures:tp_sl:take_profit_stop_loss')}</span>&nbsp; */}
+                    {/* {t('futures:tp_sl:automaticcally_cancel')} */}
                 </div>
 
                 <Button
@@ -516,7 +520,7 @@ const FuturesEditSLTPVndc = ({
 
 const TabItem = styled.div`
     cursor:pointer;
-    color: ${({ active }) => active ? colors.darkBlue : colors.grey1};
+    color: ${({ active, isDark }) => active ? (isDark ? colors.teal : colors.darkBlue) : isDark ? colors.darkBlue5 : colors.grey1};
     font-weight: 600;
     position:relative;
     height:45px;
