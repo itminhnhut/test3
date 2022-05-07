@@ -44,22 +44,22 @@ const FuturesOrderCostAndMaxVndc = ({
             price;
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
         const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(decimalScaleQtyLimit?.stepSize));
-        const margin = _size * _price;
+        const volume = _size * _price;
 
         return (
             <>
                 <TradingLabel
-                    label={t('common:cost')}
+                    label={t('futures:margin')}
                     value={`${formatNumber(
-                        cost,
+                        volume/leverage,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
                     containerClassName='text-md'
                 />
                 <TradingLabel
-                    label={t('futures:margin')}
+                    label={t('common:volume')}
                     value={`${formatNumber(
-                        margin,
+                        volume,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
                     containerClassName='text-md'
