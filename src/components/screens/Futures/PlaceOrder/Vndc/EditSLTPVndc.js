@@ -73,9 +73,9 @@ const FuturesEditSLTPVndc = ({
             status,
             price
         } = order;
-        const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price
+        const openPrice = +(status === VndcFutureOrderType.Status.PENDING ? price : open_price)
         let _profit = side === VndcFutureOrderType.Side.BUY ? profit + fee : -profit + fee;
-        const sltp = _profit / quantity + openPrice;
+        const sltp = (_profit / quantity) + openPrice;
         const decimals = countDecimals(decimalScalePrice?.tickSize)
         return Number(sltp).toFixed(decimals);
     };
@@ -227,8 +227,9 @@ const FuturesEditSLTPVndc = ({
         const balance = _avlb?.value;
         const result = 0;
         if (tab === 0) {
+            const negative = -(50 - x) < 0
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 : -(50 - x) / 5;
-            result = balance * (formatX / 100)
+            result = balance + (balance * (formatX / 100))
         }
         if (tab === 1) {
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 / 2 : -(50 - x) / 5 / 2;
@@ -248,7 +249,7 @@ const FuturesEditSLTPVndc = ({
         if (tab === 0) {
             const negative = -(50 - index) < 0
             const formatX = index === 50 ? 0 : index > 50 ? (index - 50) / 5 : (50 - index) / 5;
-            result = index === 50 ? 0 : (negative ? '-' : '+') + formatCash(balance * (formatX / 100));
+            result = index === 50 ? 0 : formatCash(balance + (negative ? -balance : balance) * (formatX / 100));
         }
         if (tab === 1) {
             const negative = -(50 - index) < 0
@@ -315,7 +316,7 @@ const FuturesEditSLTPVndc = ({
                             'block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
                             {
                                 'left-1/2 -translate-x-1/2':
-                                    i > 0 && i !== xmax / dotStep.current,
+                                    i >= 0 && i !== xmax / dotStep.current,
                                 '-left-1/2 translate-x-[-80%]':
                                     i === xmax / dotStep.current,
                             }
@@ -333,18 +334,18 @@ const FuturesEditSLTPVndc = ({
     const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
 
     const isError = useMemo(() => {
-        const not_valid = !inputValidator('price').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid || !data.tp || !data.sl
+        const not_valid = !inputValidator('price').isValid || !data.tp || !data.sl
         return not_valid;
     }, [data]);
 
     const classNameError = isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
 
     return (
-        <Modal isVisible={isVisible} containerClassName="w-[390px] p-0 top-[50%]">
+        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName="w-[390px] p-0 top-[50%]">
             <div
                 className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark">
                 <span className="font-bold text-[16px]">
-                    {t('futures:tp_sl:setting')}
+                    {t('futures:tp_sl:modify_tpsl')}
                 </span>{' '}
                 <X
                     size={20}
@@ -391,7 +392,7 @@ const FuturesEditSLTPVndc = ({
                 </div>
                 <div className="font-medium flex items-center justify-between">
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                        {t('futures:order_table:mark_price')}
+                        {t('futures:tp_sl:mark_price')}
                     </span>
                     <span className="">{formatNumber(_lastPrice, 2, 0, true) + ' ' + quoteAsset}</span>
                 </div>
@@ -481,7 +482,7 @@ const FuturesEditSLTPVndc = ({
                 <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {t('futures:order_table:last_price')}&nbsp;
+                        {t('futures:order_table:mark_price')}&nbsp;
                     </span>
                     {t('futures:tp_sl:reaches')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
