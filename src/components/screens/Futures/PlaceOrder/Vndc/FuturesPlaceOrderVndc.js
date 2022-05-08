@@ -107,6 +107,7 @@ const FuturesPlaceOrderVndc = ({
         if (firstTime.current && lastPrice) {
             firstTime.current = false;
             setPrice(lastPrice);
+            setStopPrice(lastPrice)
         }
     }, [firstTime.current, lastPrice])
 
