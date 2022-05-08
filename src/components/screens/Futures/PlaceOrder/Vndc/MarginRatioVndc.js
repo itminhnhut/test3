@@ -36,9 +36,9 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                         wallet: allWallet?.[item?.id]
                     }))
         }
-        const dataFilter = orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']);
-        if (Array.isArray(dataFilter) && dataFilter.length > 0) {
-            setBalance(dataFilter)
+        // const dataFilter = orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']);
+        if (Array.isArray(mapper) && mapper.length > 0) {
+            setBalance(mapper)
         }
     }
 
