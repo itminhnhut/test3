@@ -474,6 +474,7 @@ const TransferModal = () => {
                onBackdropCb={onClose}
                className="w-[300px] px-4 py-5 sm:w-[453px] sm:px-8 sm:py-9"
                noButton
+               containerClassName="!top-[50%]"
         >
             <div className="flex items-center justify-between">
                 <span className="capitalize font-bold">{t('common:transfer')}</span>

@@ -17,7 +17,7 @@ const FuturesOrderSLTP = ({
     getValidator, side, pairConfig,
     size, price, stopPrice, lastPrice,
     ask, bid, currentType, leverage,
-    isError
+    isError, isAuth
 }) => {
     const useSltp =
         useSelector((state) => state.futures.preloadedState?.useSltp) || false
@@ -28,7 +28,7 @@ const FuturesOrderSLTP = ({
     const rowData = useRef(null);
     const _price = currentType === FuturesOrderTypes.Market ? (VndcFutureOrderType.Side.BUY === side ? ask : bid) :
         price;
-    const isDisabled = !+size || !_price || !orderSlTp.tp || !orderSlTp.sl || isError;
+    const isDisabled = !+size || !_price || isError || !isAuth;
 
     const setSLTP = (status) => {
         dispatch({
@@ -66,11 +66,9 @@ const FuturesOrderSLTP = ({
             return t('futures:tp_sl:error_qty')
         } else if (!_price) {
             return t('futures:tp_sl:error_price')
-        } else if (!orderSlTp.tp) {
-            return t('futures:tp_sl:error_tp')
-        } else if (!orderSlTp.sl){
-            return t('futures:tp_sl:error_sl')
-        }else{
+        } if (!isAuth) {
+            return t('futures:order_table:login_to_continue')
+        } else {
             return t('futures:invalid_amount')
         }
     }
