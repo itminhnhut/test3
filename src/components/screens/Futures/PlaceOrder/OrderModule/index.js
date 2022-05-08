@@ -73,7 +73,7 @@ const FuturesOrderModule = ({
         setTimeout(() => {
             firstTime.current = true;
         }, 100);
-    }, [pair])
+    }, [pair, side])
 
     useEffect(() => {
         if (firstTime.current && lastPrice) {
@@ -298,6 +298,7 @@ const FuturesOrderModule = ({
                     side={side}
                     currentType={currentType}
                     pair={pair}
+                    isAuth={isAuth}
                 />
             </div>
 
@@ -325,6 +326,7 @@ const FuturesOrderModule = ({
                 currentType={currentType}
                 leverage={currentLeverage}
                 isError={isError}
+                isAuth={isAuth}
             />
 
             <Divider className='my-5' />
