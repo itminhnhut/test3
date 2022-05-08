@@ -83,7 +83,7 @@
         "leverage": "Đòn bẩy"
     },
     "tp_sl": {
-        "modify_tpsl": "Điều chỉnh TP/SL",
+        "modify_tpsl": "Chỉnh sửa SL-TP",
         "perpetual": "Vĩnh cửu",
         "when": "Khi",
         "reaches": "chạm đến",

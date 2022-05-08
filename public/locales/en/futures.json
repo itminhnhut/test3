@@ -81,7 +81,7 @@
         "leverage": "Leverage"
     },
     "tp_sl": {
-        "modify_tpsl": "Modify TP/SL",
+        "modify_tpsl": "Modify SL-TP",
         "perpetual": "Perpetual",
         "when": "When",
         "reaches": "reaches",
@@ -92,10 +92,10 @@
         "setting": "Setting",
         "mark_price": "Mark Price",
         "estimate": "estimate PNL will be",
-        "error_price": "Price cannot be blank",
-        "error_qty": "Size cannot be blank",
-        "error_tp": "Take profit cannot be blank",
-        "error_sl": "Stop loss cannot be blank"
+        "error_price": "Price cannot be empty",
+        "error_qty": "Size cannot be empty",
+        "error_tp": "Take profit cannot be empty",
+        "error_sl": "Stop loss cannot be empty"
     },
     "balance": "Balance",
     "unrealized_pnl": "Unrealized PNL",
@@ -189,7 +189,7 @@
     "spot_trading": "Spot Trading",
     "side": "Side",
     "rows_per_page": "Rows per page",
-    "volume": "Volume",
+    "volume": "Value",
     "profit_margin": "% Profit",
     "minimun_qty": "Minimum Qty is",
     "maximun_qty": "Maximum Qty is",

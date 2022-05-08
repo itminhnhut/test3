@@ -38,6 +38,13 @@ const FuturesOrderCostAndMaxVndc = ({
         currentType === FuturesOrderTypes.Market ||
         currentType === FuturesOrderTypes.StopMarket
 
+    const formatCash = n => {
+        if (n < 1e3) return n;
+        if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(4) + "M";
+        if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(4) + "B";
+        if (n >= 1e12) return +(n / 1e12).toFixed(4) + "T";
+    };
+
     const renderCost = () => {
         const _price = currentType === FuturesOrderTypes.Market ?
             (VndcFutureOrderType.Side.BUY === side ? ask : bid) :
@@ -45,20 +52,22 @@ const FuturesOrderCostAndMaxVndc = ({
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
         const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(decimalScaleQtyLimit?.stepSize));
         const volume = _size * _price;
-
+        const volumeLength = volume.toFixed(0).length;
+        const margin = volume / leverage;
+        const marginLength = margin.toFixed(0).length;
         return (
             <>
                 <TradingLabel
                     label={t('futures:margin')}
-                    value={`${formatNumber(
-                        volume/leverage,
+                    value={`${marginLength > 7 ? formatCash(margin) : formatNumber(
+                        margin,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
                     containerClassName='text-md'
                 />
                 <TradingLabel
                     label={t('common:volume')}
-                    value={`${formatNumber(
+                    value={`${volumeLength > 7 ? formatCash(volume) : formatNumber(
                         volume,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
