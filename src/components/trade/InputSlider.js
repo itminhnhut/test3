@@ -218,7 +218,19 @@ const Slider = ({
     }, [x, flag])
 
     const valueStyle = {}
-    if (axis === 'x') valueStyle.width = pos.left + '%'
+    if (axis === 'x') {
+        if (customDotAndLabel) {
+            if (pos.left < 50) {
+                valueStyle.width = 50 - pos.left + '%';
+                valueStyle.right = 50 + '%';
+            } else {
+                valueStyle.width = pos.left - 50 + '%';
+                valueStyle.left = 50 + '%';
+            }
+        } else {
+            valueStyle.width = pos.left + '%';
+        }
+    }
     if (axis === 'y') valueStyle.height = pos.top + '%'
     if (xreverse) valueStyle.left = 100 - pos.left + '%'
     if (yreverse) valueStyle.top = 100 - pos.top + '%'

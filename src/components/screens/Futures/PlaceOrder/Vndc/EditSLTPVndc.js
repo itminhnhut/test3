@@ -286,7 +286,7 @@ const FuturesEditSLTPVndc = ({
         if (tab === 1) {
             perTP = getValuePercent(0, 'tp', Number(order?.tp));
             perSL = getValuePercent(0, 'sl', Number(order?.sl));
-        } 
+        }
         setPercent({ tp: perTP, sl: perSL });
         setData({
             ...data,
@@ -441,7 +441,7 @@ const FuturesEditSLTPVndc = ({
                         useLabel axis='x' x={percent.tp} xmax={100}
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
-                        bgColorSlide={'transparent'}
+                        // bgColorSlide={'transparent'}
                         xStart={50}
                         reload={tab}
                         bgColorActive={colors.teal}
@@ -486,7 +486,7 @@ const FuturesEditSLTPVndc = ({
                         useLabel axis='x' x={percent.sl} xmax={100}
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
-                        bgColorSlide={'transparent'}
+                        bgColorSlide={colors.red}
                         bgColorActive={colors.red}
                         xStart={50}
                         reload={tab}
