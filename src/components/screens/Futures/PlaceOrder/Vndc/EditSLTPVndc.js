@@ -229,7 +229,7 @@ const FuturesEditSLTPVndc = ({
         if (tab === 0) {
             const negative = -(50 - x) < 0
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 : -(50 - x) / 5;
-            result = balance + (balance * (formatX / 100))
+            result = balance * (formatX / 100)
         }
         if (tab === 1) {
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 / 2 : -(50 - x) / 5 / 2;
@@ -249,7 +249,7 @@ const FuturesEditSLTPVndc = ({
         if (tab === 0) {
             const negative = -(50 - index) < 0
             const formatX = index === 50 ? 0 : index > 50 ? (index - 50) / 5 : (50 - index) / 5;
-            result = index === 50 ? 0 : formatCash(balance + (negative ? -balance : balance) * (formatX / 100));
+            result = index === 50 ? 0 : (negative ? '-' : '') + formatCash(balance * (formatX / 100));
         }
         if (tab === 1) {
             const negative = -(50 - index) < 0

@@ -463,7 +463,7 @@ export default {
             },
             {
                 w: 9,
-                h: 13,
+                h: 15,
                 x: 0,
                 y: 5,
                 i: futuresGridKey.tradeRecord,
@@ -486,7 +486,7 @@ export default {
             },
             {
                 w: 3,
-                h: 11,
+                h: 13,
                 x: 9,
                 y: 32,
                 i: futuresGridKey.marginRatio,
@@ -601,7 +601,7 @@ export default {
             },
             {
                 w: 12,
-                h: 11,
+                h: 13,
                 x: 0,
                 y: 5,
                 i: futuresGridKey.tradeRecord,
@@ -623,7 +623,7 @@ export default {
             },
             {
                 w: 4,
-                h: 11,
+                h: 13,
                 x: 15,
                 y: 32,
                 i: futuresGridKey.marginRatio,
