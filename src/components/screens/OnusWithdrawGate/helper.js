@@ -1,3 +1,4 @@
+import qs from 'qs';
 export const WalletCurrency = {
     ATS: 148,
     NAC: 1,

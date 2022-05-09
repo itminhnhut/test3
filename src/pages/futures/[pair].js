@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
 import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { useSelector, useDispatch } from 'react-redux';
-import { API_GET_FUTURES_MARK_PRICE, API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { useDispatch, useSelector } from 'react-redux';
+import { API_GET_FUTURES_MARK_PRICE } from 'redux/actions/apis';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { FUTURES_DEFAULT_SYMBOL } from './index';
 import { useRouter } from 'next/router';
@@ -31,12 +31,9 @@ import Emitter from 'redux/actions/emitter';
 import Axios from 'axios';
 
 import 'react-grid-layout/css/styles.css';
-import { log } from 'utils';
 import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
 import FuturesMarginRatioVndc from 'components/screens/Futures/PlaceOrder/Vndc/MarginRatioVndc';
-import { useStore } from 'src/redux/store';
-import { getOrdersList } from '../../redux/actions/futures'
-import { PATHS } from 'constants/paths';
+import { getOrdersList } from 'redux/actions/futures';
 
 const GridLayout = WidthProvider(Responsive);
 

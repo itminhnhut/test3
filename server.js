@@ -19,7 +19,6 @@ app.prepare().then(() => {
             '/register/',
             '/logout/',
             '/referral/',
-
         ], createProxyMiddleware({
             target: process.env.NEXT_PUBLIC_API_URL,
             changeOrigin: true,
