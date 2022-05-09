@@ -161,7 +161,7 @@ export function getSymbolString(symbol = {}) {
     }
 }
 
-export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
+export function formatTime(value, f = 'yyyy-MM-dd HH:mm:ss') {
     if (value) {
         const date = value instanceof Date ? value : new Date(value)
         return format(date, f)

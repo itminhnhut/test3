@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { mergeFuturesFavoritePairs } from 'redux/actions/futures';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFuturesFavoritePairs, mergeFuturesFavoritePairs } from 'redux/actions/futures';
 import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 
@@ -14,7 +14,7 @@ import Star from 'components/svg/Star';
 const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
     const [loading, setLoading] = useState(false)
     const [refreshMarketWatch, setRefreshMarketWatch] = useState(null)
-
+    const dispatch = useDispatch();
     const favoritePairs = useSelector((state) => state.futures.favoritePairs)
     const publicSocket = useSelector((state) => state.socket.publicSocket)
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs)
@@ -47,14 +47,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
     useEffect(() => {
         // Init
         fetchMarketWatch()
-
-        // Refresh per 1.5s
-        // let interval = setInterval(() => fetchMarketWatch(true), 1500)
-        // return () => {
-        //     if (interval) {
-        //         clearInterval(interval)
-        //     }
-        // }
+        dispatch(getFuturesFavoritePairs())
     }, [])
 
     if (!favoritePairs) return null
