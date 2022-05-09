@@ -5,19 +5,18 @@ import { FuturesOrderTypes as OrderTypes, } from 'redux/reducers/futures';
 
 const initPercent = 25;
 
-const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType, pair, isAuth }) => {
+const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType, pair, isAuth, maxSize }) => {
     const [percent, setPercent] = useState(isAuth && isVndcFutures ? initPercent : 0)
-    const quantity = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
 
     const onPercentChange = ({ x }) => {
-        onChange(isVndcFutures ? (+quantity * x / 100) : `${x}%`)
+        onChange(isVndcFutures ? (+maxSize * x / 100) : `${x}%`)
         setPercent(x)
     }
 
     useEffect(() => {
         if (isVndcFutures) {
             const _size = +String(size).replaceAll(',', '')
-            setPercent(_size * 100 / quantity);
+            setPercent(_size * 100 / maxSize);
             return;
         }
         if (!size || !size?.includes('%')) {
@@ -36,23 +35,21 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
     }, [currentType, pair])
 
     useEffect(() => {
-        if (!isAuth) return;
-        if (firstTime.current && +quantity) {
+        if (firstTime.current && +maxSize) {
             firstTime.current = false;
-            onChange(+quantity * initPercent / 100);
+            onChange(+maxSize * initPercent / 100);
             setPercent(initPercent)
-        } else if (!+quantity) {
+        } else if (!+maxSize) {
             onChange(0);
             setPercent(0)
         }
 
-    }, [currentType, quantity, firstTime.current, isAuth])
+    }, [currentType, maxSize, firstTime.current])
 
     useEffect(() => {
-        if (!isAuth) return;
-        onChange(+quantity * initPercent / 100);
+        onChange(+maxSize * initPercent / 100);
         setPercent(initPercent)
-    }, [side, isAuth])
+    }, [side])
 
     return <Slider axis='x' x={percent} xmax={100} onChange={onPercentChange} />
 }
