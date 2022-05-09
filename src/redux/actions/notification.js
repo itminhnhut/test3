@@ -19,7 +19,7 @@ export function getNotifications(prevId, cb) {
     return async (dispatch) => {
         try {
             const params = {};
-            if (prevId !== undefined) params.prevId = prevId;
+            if (prevId !== undefined) params.lastId = prevId;
             const { status, data } = await fetchAPI({
                 url: API_GET_NOTIFICATIONS,
                 options: {
@@ -31,13 +31,13 @@ export function getNotifications(prevId, cb) {
                 if (!prevId) {
                     dispatch({
                         type: SET_NOTIFICATION,
-                        mix: data?.result,
+                        mix: data?.results,
                         hasNext: data?.hasNext,
                     });
                 } else {
                     dispatch({
                         type: ADD_NOTIFICATION,
-                        mix: data?.result,
+                        mix: data?.results,
                         hasNext: data?.hasNext > 0,
                     });
                 }
@@ -132,7 +132,7 @@ export async function markAllAsRead(ids) {
         const { status } = await fetchAPI({
             url: API_MARK_NOTIFICATIONS_READ,
             options: {
-                method: 'PUT',
+                method: 'POST',
             },
             params: {
                 ids,
