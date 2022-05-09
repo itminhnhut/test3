@@ -47,7 +47,7 @@ const FuturesEditSLTPVndc = ({
     const profit = useRef({ tp: 0, sl: 0 })
     const tabPercent = useRef({ tp: 0, sl: 0 })
     const [currentTheme] = useDarkMode()
-    const dotStep = useRef(6)
+    const dotStep = useRef(6);
 
     const getProfitSLTP = (sltp) => {
         const {
@@ -83,6 +83,7 @@ const FuturesEditSLTPVndc = ({
     const onHandleChange = (key, e) => {
         const value = +e.value;
         const decimals = countDecimals(decimalScalePrice?.tickSize)
+        const per = value === 0 ? tab === 1 ? 0 : 50 : getValuePercent(0, key, value) + 50;
         if (tab === 1) {
             profit.current[key] = getProfitSLTP(value)
             setData({
@@ -97,7 +98,6 @@ const FuturesEditSLTPVndc = ({
                     [key]: calculateSLTP(value)
                 });
             }
-
         } else {
             const {
                 quantity,
@@ -115,6 +115,10 @@ const FuturesEditSLTPVndc = ({
                 [key]: calculateSLTP(_profit)
             })
         }
+        setPercent({
+            ...percent,
+            [key]: per
+        })
     };
 
     const inputValidator = (type, price) => {
@@ -222,20 +226,23 @@ const FuturesEditSLTPVndc = ({
         if (n >= 1e12) return +(n / 1e12).toFixed(2) + "T";
     };
 
-    const getValuePercent = (x, key) => {
+    const getValuePercent = (x, key, getX) => {
         const _avlb = wallets?.[pairConfig?.quoteAssetId];
         const balance = _avlb?.value;
         const result = 0;
         if (tab === 0) {
+            if (getX) return (getX / balance) * 100 * 5;
             const negative = -(50 - x) < 0
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 : -(50 - x) / 5;
-            result = balance * (formatX / 100)
+            result = balance * (formatX / 100);
         }
         if (tab === 1) {
+            if (getX) return ((getX - data.price) / data.price) * 100 * 5 * 2;
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 / 2 : -(50 - x) / 5 / 2;
             result = data.price + (data.price * (formatX / 100))
         }
         if (tab === 2) {
+            if (getX) return getX / 2;
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) * 2 : -(50 - x) * 2;
             result = formatX.toFixed(0)
         }
@@ -274,7 +281,13 @@ const FuturesEditSLTPVndc = ({
             tp: 0,
             sl: 0,
         }
-        setPercent({ tp: 0, sl: 0 });
+        const perTP = 0;
+        const perSL = 0
+        if (tab === 1) {
+            perTP = getValuePercent(0, 'tp', Number(order?.tp));
+            perSL = getValuePercent(0, 'sl', Number(order?.sl));
+        } 
+        setPercent({ tp: perTP, sl: perSL });
         setData({
             ...data,
             tp: tab === 1 ? Number(order?.tp) : calculateSLTP(0),
@@ -414,7 +427,7 @@ const FuturesEditSLTPVndc = ({
                             className="flex-grow text-right font-medium h-[21px] text-teal"
                             containerClassName="w-full !py-0 !px-0 border-none"
                             value={tab === 0 ? profit.current.tp : tab === 1 ? data.tp : tabPercent.current.tp}
-                            validator={tab === 1 && inputValidator('take_profit')}
+                            // validator={tab === 1 && inputValidator('take_profit')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
                         />
@@ -459,7 +472,7 @@ const FuturesEditSLTPVndc = ({
                             containerClassName="w-full !py-0 !px-0 border-none"
                             value={tab === 0 ? profit.current.sl : tab === 1 ? data.sl : tabPercent.current.sl}
                             label={t('futures:stop_loss')}
-                            validator={tab === 1 && inputValidator('stop_loss')}
+                            // validator={tab === 1 && inputValidator('stop_loss')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('sl', e)}
                         />
@@ -482,7 +495,7 @@ const FuturesEditSLTPVndc = ({
                 <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {t('futures:order_table:mark_price')}&nbsp;
+                        {t('futures:tp_sl:mark_price')}&nbsp;
                     </span>
                     {t('futures:tp_sl:reaches')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
