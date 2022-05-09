@@ -46,7 +46,8 @@ const FuturesOrderModule = ({
     ask,
     bid,
     isAuth,
-    side
+    side,
+    pair
 }) => {
     // ? Use hooks
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
@@ -58,12 +59,31 @@ const FuturesOrderModule = ({
         sl: '',
         tp: ''
     })
+
+    const countDecimals = (value) => {
+        if (Math.floor(value) === value || !value) return 0;
+        return value.toString().split(".")[1]?.length || 0;
+    }
+
+    const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
+    const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
+    const decimalScaleQtyMarket = pairConfig?.filters.find(rs => rs.filterType === 'MARKET_LOT_SIZE');
+
     useEffect(() => {
-        setOrderSlTp({
-            sl: +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05)),
-            tp: +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05)),
-        })
-    }, [currentType, side])
+        setTimeout(() => {
+            firstTime.current = true;
+        }, 100);
+    }, [pair, side, currentType])
+
+    useEffect(() => {
+        if (firstTime.current && lastPrice) {
+            firstTime.current = false;
+            setOrderSlTp({
+                sl: +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05)),
+                tp: +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05)),
+            })
+        }
+    }, [currentType, side, pair, lastPrice, firstTime.current])
 
     // ? Data helper
     const getLastedLastPrice = async (symbol) => {
@@ -106,21 +126,21 @@ const FuturesOrderModule = ({
                 const _min = isReversedAsset
                     ? lotSize?.minQty * baseAssetUsdValue
                     : lotSize?.minQty
-
+                const decimals = countDecimals(decimalScaleQtyLimit?.stepSize)
                 const _displayingMax = isReversedAsset
-                    ? `${_max} ${pairConfig?.quoteAsset} ≈ ${lotSize?.maxQty} ${pairConfig?.baseAsset}`
-                    : `${lotSize?.maxQty} ${pairConfig?.baseAsset}`
+                    ? `${formatNumber(_max, decimals, 0, true)} ${pairConfig?.quoteAsset} ≈ ${formatNumber(lotSize?.maxQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
+                    : `${formatNumber(lotSize?.maxQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
                 const _displayingMin = isReversedAsset
-                    ? `${_min} ${pairConfig?.quoteAsset} ≈ ${lotSize?.minQty} ${pairConfig?.baseAsset}`
-                    : `${lotSize?.minQty} ${pairConfig?.baseAsset}`
+                    ? `${formatNumber(_min, decimals, 0, true)} ${pairConfig?.quoteAsset} ≈ ${formatNumber(lotSize?.minQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
+                    : `${formatNumber(lotSize?.minQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
 
-                if (quantity?.both < _min) {
-                    msg = `Minimum Qty is ${_displayingMin}`
+                if (quantity?.both < +_min) {
+                    msg = `${t('futures:minimun_qty')} ${_displayingMin} `
                     isValid = false
                 }
 
-                if (quantity?.both > _max) {
-                    msg = `Maximum Qty is ${_displayingMax}`
+                if (quantity?.both > +_max) {
+                    msg = `${t('futures:maximun_qty')} ${_displayingMax}`
                     isValid = false
                 }
 
@@ -159,6 +179,23 @@ const FuturesOrderModule = ({
         }
     }
 
+    const maxSize = useMemo(() => {
+        const lotSize =
+            pairConfig?.filters?.find((o) =>
+                [
+                    FuturesOrderTypes.Market,
+                    FuturesOrderTypes.StopMarket,
+                ].includes(currentType)
+                    ? o?.filterType === 'MARKET_LOT_SIZE'
+                    : o?.filterType === 'LOT_SIZE'
+            ) || {}
+        const _maxConfig = isReversedAsset
+            ? lotSize?.maxQty * baseAssetUsdValue
+            : lotSize?.maxQty
+        const maxAvl = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
+        return isAuth ? Math.min(_maxConfig, maxAvl) : _maxConfig;
+    }, [side, pairConfig, pair, isAuth, isReversedAsset, maxBuy, maxSell])
+
     const renderBuySellByPercent = useCallback(() => {
         const _buy =
             String(size)?.includes('%')
@@ -168,10 +205,8 @@ const FuturesOrderModule = ({
             String(size)?.includes('%')
                 ? formatNumber(quantity?.sell, countDecimals(decimalScaleQtyMarket?.stepSize))
                 : '0.0000'
-
         const volume = formatNumber(size, countDecimals(decimalScaleQtyMarket?.stepSize));
-        const maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
-
+        const _maxSize = formatNumber(maxSize, countDecimals(decimalScaleQtyMarket?.stepSize))
         return (
             <>
                 <TradingLabel
@@ -181,7 +216,7 @@ const FuturesOrderModule = ({
                 />
                 <TradingLabel
                     label={t(isVndcFutures ? 'common:max' : 'common:sell')}
-                    value={`${isVndcFutures ? maxQty : _sell} ${selectedAsset}`}
+                    value={`${isVndcFutures ? _maxSize : _sell} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
             </>
@@ -204,15 +239,6 @@ const FuturesOrderModule = ({
         const not_valid = !size || !inputValidator('price', ArrStop.includes(currentType)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
         return !isVndcFutures ? false : not_valid
     }, [price, size, currentType, stopPrice, orderSlTp])
-
-    const countDecimals = (value) => {
-        if (Math.floor(value) === value || !value) return 0;
-        return value.toString().split(".")[1]?.length || 0;
-    }
-
-    const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
-    const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
-    const decimalScaleQtyMarket = pairConfig?.filters.find(rs => rs.filterType === 'MARKET_LOT_SIZE');
 
     return (
         <div className='pt-5 pb-[18px]'>
@@ -286,6 +312,9 @@ const FuturesOrderModule = ({
                     maxSell={maxSell}
                     side={side}
                     currentType={currentType}
+                    pair={pair}
+                    isAuth={isAuth}
+                    maxSize={maxSize}
                 />
             </div>
 
@@ -308,6 +337,11 @@ const FuturesOrderModule = ({
                 price={price}
                 stopPrice={stopPrice}
                 lastPrice={lastPrice}
+                ask={ask}
+                bid={bid}
+                currentType={currentType}
+                leverage={currentLeverage}
+                isAuth={isAuth}
             />
 
             <Divider className='my-5' />

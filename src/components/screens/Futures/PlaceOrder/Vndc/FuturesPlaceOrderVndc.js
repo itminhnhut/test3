@@ -64,16 +64,23 @@ const FuturesPlaceOrderVndc = ({
 
     const handleQuantity = useCallback(
         (size, isPercent = false) => {
-            setSize(size)
+            const sizeFormat = String(size).replaceAll(',', '')
+            setSize(sizeFormat)
+            const _size = sizeFormat
+                ? assetReversed
+                    ? +sizeFormat * lastPrice
+                    : +sizeFormat
+                : 0
+            setQuantity({ ...quantity, both: _size })
         },
-        [maxBuy, maxSell, assetReversed]
+        [maxBuy, maxSell, assetReversed, lastPrice]
     )
 
     useEffect(() => {
-        const _size = isNaN(size) ? Number(String(size).substring(0, String(size).indexOf('%'))) / 100 : Number(size);
-        const buy = _size * maxBuy;
-        const sell = _size * maxSell;
+        const buy = size * maxBuy;
+        const sell = size * maxSell;
         setQuantity({
+            ...quantity,
             buy: roundToDown(buy, pairConfig?.quantityPrecision || 2),
             sell: roundToDown(sell, pairConfig?.quantityPrecision || 2),
         })
@@ -100,6 +107,7 @@ const FuturesPlaceOrderVndc = ({
         if (firstTime.current && lastPrice) {
             firstTime.current = false;
             setPrice(lastPrice);
+            setStopPrice(lastPrice)
         }
     }, [firstTime.current, lastPrice])
 
@@ -213,6 +221,7 @@ const FuturesPlaceOrderVndc = ({
                 side={side}
                 maxBuy={maxBuy}
                 maxSell={maxSell}
+                pair={pair}
             />
 
             <FuturesOrderCostAndMaxVndc

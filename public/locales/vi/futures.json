@@ -83,15 +83,21 @@
         "leverage": "Đòn bẩy"
     },
     "tp_sl": {
-        "modify_tpsl": "Điều chỉnh TP/SL",
+        "modify_tpsl": "Chỉnh sửa SL-TP",
         "perpetual": "Vĩnh cửu",
         "when": "Khi",
-        "reaches": "đạt đến",
+        "reaches": "chạm đến",
         "is_will": ", lệnh Take Profit Market sẽ được kích hoạt để đóng vị thế này. PnL ước tính sẽ là",
         "this_setting": "Cài đặt này áp dụng cho toàn bộ vị thế.",
         "take_profit_stop_loss": "Chốt lời và cắt lỗ",
         "automaticcally_cancel": "sẽ tự động hủy sau khi đóng vị thế. Lệnh market sẽ được kích hoạt khi đạt đến giá stop. Lệnh sẽ bị từ chối nếu số lượng vị thế vượt quá hạn mức Số lượng lệnh market tối đa.",
-        "setting": "Cài đặt"
+        "setting": "Cài đặt",
+        "mark_price": "Giá thị trường",
+        "estimate": "Lợi nhuận ước tính sẽ là",
+        "error_price": "Giá không được để trống",
+        "error_qty": "Khối lượng không được để trống",
+        "error_tp": "Chốt lời không được để trống",
+        "error_sl": "Dừng lỗ không được để trống"
     },
     "balance": "Số dư",
     "unrealized_pnl": "Lợi nhuận ước tính",
@@ -183,5 +189,9 @@
     "side": "Mua/Bán",
     "rows_per_page": "Số dòng/trang",
     "volume": "KL",
-    "profit_margin":"% Lợi nhuận"
+    "profit_margin": "% Lợi nhuận",
+    "minimun_qty": "Khối lượng tối thiểu",
+    "maximun_qty": "Khối lượng tối đa",
+    "invalid_amount": "Giá trị không hợp lệ",
+    "value": "Khối lượng"
 }

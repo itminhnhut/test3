@@ -6,15 +6,18 @@ import { useTranslation } from 'next-i18next';
 import { ChevronDown } from 'react-feather';
 import { VndcFutureOrderType } from '../Vndc/VndcFutureOrderType';
 import { getS3Url } from 'redux/actions/utils';
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import FuturesEditSLTPVndc from '../Vndc/EditSLTPVndc';
 import Tooltip from 'components/common/Tooltip';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
 
 const FuturesOrderSLTP = ({
     isVndcFutures, orderSlTp,
     setOrderSlTp, decimalScalePrice,
     getValidator, side, pairConfig,
-    size, price, stopPrice, lastPrice
+    size, price, stopPrice, lastPrice,
+    ask, bid, currentType, leverage,
+    isAuth
 }) => {
     const useSltp =
         useSelector((state) => state.futures.preloadedState?.useSltp) || false
@@ -23,6 +26,16 @@ const FuturesOrderSLTP = ({
     const { t } = useTranslation()
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const rowData = useRef(null);
+    const _price = currentType === FuturesOrderTypes.Market ? (VndcFutureOrderType.Side.BUY === side ? ask : bid) :
+        price;
+
+    const isError = useMemo(() => {
+        const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
+        const not_valid = !size || !getValidator('price', ArrStop.includes(currentType)).isValid || !getValidator('quantity').isValid;
+        return !isVndcFutures ? false : not_valid
+    }, [price, size, currentType, stopPrice, orderSlTp])
+
+    const isDisabled = !+size || !_price || isError || !isAuth;
 
     const setSLTP = (status) => {
         dispatch({
@@ -32,14 +45,15 @@ const FuturesOrderSLTP = ({
     }
 
     const onChangeTpSL = (key) => {
-        if (!isVndcFutures || !size) return;
+        if (!isVndcFutures || isDisabled) return;
         rowData.current = {
             fee: 0,
             side: side,
             quantity: +Number(String(size).replaceAll(',', '')),
             status: 0,
-            price: price,
+            price: _price,
             quoteAsset: pairConfig.quoteAsset,
+            leverage: leverage,
             symbol: pairConfig.symbol,
             ...orderSlTp
         }
@@ -54,12 +68,26 @@ const FuturesOrderSLTP = ({
         setShowEditSLTP(false);
     }
 
+    const renderError = () => {
+        if (!+size) {
+            return t('futures:tp_sl:error_qty')
+        } else if (!_price) {
+            return t('futures:tp_sl:error_price')
+        } if (!isAuth) {
+            return t('futures:order_table:login_to_continue')
+        } else {
+            return t('futures:invalid_amount')
+        }
+    }
+
     return (
         <>
+            {(isDisabled) &&
+                <Tooltip id="tooltipTPSL" place="top" effect="solid">
+                    {renderError()}
+                </Tooltip>
+            }
 
-            {/* <Tooltip id="tooltipTPSL" place="left" effect="solid">
-                232323
-            </Tooltip> */}
             {showEditSLTP &&
                 <FuturesEditSLTPVndc
                     isVisible={showEditSLTP}
@@ -85,14 +113,14 @@ const FuturesOrderSLTP = ({
                         allowNegative={false}
                         value={orderSlTp.tp}
                         decimalScale={decimalScalePrice}
-                        validator={getValidator('take_profit')}
+                        // validator={getValidator('take_profit')}
                         onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, tp: value })}
                         labelClassName='whitespace-nowrap capitalize'
                         tailContainerClassName='flex items-center font-medium text-xs select-none'
                         renderTail={() => (
-                            <div className='relative group select-none'>
-                                <div data-for="tooltipTPSL" className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('tp')} >
-                                    {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} /> : 'Mark'}
+                            <div className='relative group select-none ' >
+                                <div data-tip="" data-for="tooltipTPSL" className=' flex items-center cursor-pointer' onClick={() => onChangeTpSL('tp')} >
+                                    {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' /> : 'Mark'}
                                     {!isVndcFutures && <ChevronDown
                                         size={12}
                                         className='ml-1 group-hover:rotate-180'
@@ -119,14 +147,14 @@ const FuturesOrderSLTP = ({
                         allowNegative={false}
                         value={orderSlTp.sl}
                         decimalScale={decimalScalePrice}
-                        validator={getValidator('stop_loss')}
+                        // validator={getValidator('stop_loss')}
                         onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: value })}
                         labelClassName='whitespace-nowrap capitalize'
                         tailContainerClassName='flex items-center font-medium text-xs select-none'
                         renderTail={() => (
                             <div className='relative group select-none'>
-                                <div className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('sl')} >
-                                    {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} /> : 'Mark'}
+                                <div data-tip="" data-for="tooltipTPSL" className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('sl')} >
+                                    {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' /> : 'Mark'}
                                     {!isVndcFutures && <ChevronDown
                                         size={12}
                                         className='ml-1 group-hover:rotate-180'

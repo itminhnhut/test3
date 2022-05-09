@@ -38,31 +38,40 @@ const FuturesOrderCostAndMaxVndc = ({
         currentType === FuturesOrderTypes.Market ||
         currentType === FuturesOrderTypes.StopMarket
 
+    const formatCash = n => {
+        if (n < 1e3) return formatNumber(n, 0, 0, true);
+        if (n >= 1e6 && n < 1e9) return formatNumber(+(n / 1e6).toFixed(4), 4, 0, true) + "M";
+        if (n >= 1e9 && n < 1e12) return formatNumber(+(n / 1e9).toFixed(4), 4, 0, true) + "B";
+        if (n >= 1e12) return formatNumber(+(n / 1e12).toFixed(4), 4, 0, true) + "T";
+    };
+
     const renderCost = () => {
         const _price = currentType === FuturesOrderTypes.Market ?
             (VndcFutureOrderType.Side.BUY === side ? ask : bid) :
             price;
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
         const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(decimalScaleQtyLimit?.stepSize));
-        const margin = _size * _price;
-
+        const volume = _size * _price;
+        const volumeLength = volume.toFixed(0).length;
+        const margin = volume / leverage;
+        const marginLength = margin.toFixed(0).length;
         return (
             <>
                 <TradingLabel
-                    label={t('common:cost')}
-                    value={`${formatNumber(
-                        cost,
-                        pairConfig?.pricePrecision || 2
-                    )} ${pairConfig?.quoteAsset}`}
-                    containerClassName='text-md'
-                />
-                <TradingLabel
                     label={t('futures:margin')}
-                    value={`${formatNumber(
+                    value={`${marginLength > 7 ? formatCash(margin) : formatNumber(
                         margin,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
-                    containerClassName='text-md'
+                    containerClassName='text-md flex flex-wrap mr-[10px]'
+                />
+                <TradingLabel
+                    label={t('futures:value')}
+                    value={`${volumeLength > 7 ? formatCash(volume) : formatNumber(
+                        volume,
+                        pairConfig?.pricePrecision || 2
+                    )} ${pairConfig?.quoteAsset}`}
+                    containerClassName='text-md flex flex-wrap justify-end'
                 />
             </>
         )
