@@ -73,7 +73,7 @@ const FuturesOrderModule = ({
         setTimeout(() => {
             firstTime.current = true;
         }, 100);
-    }, [pair, side])
+    }, [pair, side, currentType])
 
     useEffect(() => {
         if (firstTime.current && lastPrice) {
@@ -179,6 +179,23 @@ const FuturesOrderModule = ({
         }
     }
 
+    const maxSize = useMemo(() => {
+        const lotSize =
+            pairConfig?.filters?.find((o) =>
+                [
+                    FuturesOrderTypes.Market,
+                    FuturesOrderTypes.StopMarket,
+                ].includes(currentType)
+                    ? o?.filterType === 'MARKET_LOT_SIZE'
+                    : o?.filterType === 'LOT_SIZE'
+            ) || {}
+        const _maxConfig = isReversedAsset
+            ? lotSize?.maxQty * baseAssetUsdValue
+            : lotSize?.maxQty
+        const maxAvl = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
+        return isAuth ? Math.min(_maxConfig, maxAvl) : _maxConfig;
+    }, [side, pairConfig, pair, isAuth, isReversedAsset, maxBuy, maxSell])
+
     const renderBuySellByPercent = useCallback(() => {
         const _buy =
             String(size)?.includes('%')
@@ -188,10 +205,8 @@ const FuturesOrderModule = ({
             String(size)?.includes('%')
                 ? formatNumber(quantity?.sell, countDecimals(decimalScaleQtyMarket?.stepSize))
                 : '0.0000'
-
         const volume = formatNumber(size, countDecimals(decimalScaleQtyMarket?.stepSize));
-        const maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
-
+        const _maxSize = formatNumber(maxSize, countDecimals(decimalScaleQtyMarket?.stepSize))
         return (
             <>
                 <TradingLabel
@@ -201,7 +216,7 @@ const FuturesOrderModule = ({
                 />
                 <TradingLabel
                     label={t(isVndcFutures ? 'common:max' : 'common:sell')}
-                    value={`${isVndcFutures ? maxQty : _sell} ${selectedAsset}`}
+                    value={`${isVndcFutures ? _maxSize : _sell} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
             </>
@@ -299,6 +314,7 @@ const FuturesOrderModule = ({
                     currentType={currentType}
                     pair={pair}
                     isAuth={isAuth}
+                    maxSize={maxSize}
                 />
             </div>
 
@@ -325,7 +341,6 @@ const FuturesOrderModule = ({
                 bid={bid}
                 currentType={currentType}
                 leverage={currentLeverage}
-                isError={isError}
                 isAuth={isAuth}
             />
 
