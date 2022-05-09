@@ -71,7 +71,7 @@ const FuturesOrderCostAndMaxVndc = ({
                         volume,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
-                    containerClassName='text-md flex flex-wrap'
+                    containerClassName='text-md flex flex-wrap justify-end'
                 />
             </>
         )

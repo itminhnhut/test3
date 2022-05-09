@@ -32,7 +32,7 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
         timer.current = setTimeout(() => {
             firstTime.current = true;
         }, 200);
-    }, [currentType, pair])
+    }, [currentType, pair, maxSize])
 
     useEffect(() => {
         if (firstTime.current && +maxSize) {
