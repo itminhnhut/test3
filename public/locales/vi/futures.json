@@ -192,5 +192,6 @@
     "profit_margin": "% Lợi nhuận",
     "minimun_qty": "Khối lượng tối thiểu",
     "maximun_qty": "Khối lượng tối đa",
-    "invalid_amount": "Giá trị không hợp lệ"
+    "invalid_amount": "Giá trị không hợp lệ",
+    "value": "Khối lượng"
 }

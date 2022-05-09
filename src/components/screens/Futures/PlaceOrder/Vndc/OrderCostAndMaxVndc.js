@@ -39,10 +39,10 @@ const FuturesOrderCostAndMaxVndc = ({
         currentType === FuturesOrderTypes.StopMarket
 
     const formatCash = n => {
-        if (n < 1e3) return n;
-        if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(4) + "M";
-        if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(4) + "B";
-        if (n >= 1e12) return +(n / 1e12).toFixed(4) + "T";
+        if (n < 1e3) return formatNumber(n, 0, 0, true);
+        if (n >= 1e6 && n < 1e9) return formatNumber(+(n / 1e6).toFixed(4), 4, 0, true) + "M";
+        if (n >= 1e9 && n < 1e12) return formatNumber(+(n / 1e9).toFixed(4), 4, 0, true) + "B";
+        if (n >= 1e12) return formatNumber(+(n / 1e12).toFixed(4), 4, 0, true) + "T";
     };
 
     const renderCost = () => {
@@ -63,15 +63,15 @@ const FuturesOrderCostAndMaxVndc = ({
                         margin,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
-                    containerClassName='text-md'
+                    containerClassName='text-md flex flex-wrap mr-[10px]'
                 />
                 <TradingLabel
-                    label={t('common:volume')}
+                    label={t('futures:value')}
                     value={`${volumeLength > 7 ? formatCash(volume) : formatNumber(
                         volume,
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
-                    containerClassName='text-md'
+                    containerClassName='text-md flex flex-wrap'
                 />
             </>
         )

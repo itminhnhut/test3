@@ -189,9 +189,10 @@
     "spot_trading": "Spot Trading",
     "side": "Side",
     "rows_per_page": "Rows per page",
-    "volume": "Value",
+    "volume": "Volume",
     "profit_margin": "% Profit",
     "minimun_qty": "Minimum Qty is",
     "maximun_qty": "Maximum Qty is",
-    "invalid_amount": "Invalid amount"
+    "invalid_amount": "Invalid amount",
+    "value": "Value"
 }
