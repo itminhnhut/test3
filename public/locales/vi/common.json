@@ -115,6 +115,8 @@
     "feedback_sent_success": "Cảm ơn phản hồi của bạn!",
     "feedback_sent_failed": "Có lỗi xảy ra. Vui lòng thử lại sau.",
     "feedback_send_contact": "Nếu bạn gặp phải những vấn đề khác, vui lòng liên hệ với chúng tôi qua support@nami.exchange hoặc hotline: 19003098. Xem thêm <1>những câu hỏi thường gặp</1>.",
+    "otp_verify": "Nhập khóa bí mật và OTP của Google Authenticator hoặc Authy",
+    "otp_verify_expired": "Khóa bí mật đã hết hạn, vui lòng thử lại",
     "published_at": "Đăng vào",
     "category": "Chủ đề",
     "share": "Chia sẻ",

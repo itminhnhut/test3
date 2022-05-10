@@ -13,10 +13,15 @@ import { useTranslation } from 'next-i18next';
 
 const INITIAL_STATE = {
     redirectTo: null,
-    value: null
+    value: null,
+    message: null
 };
 const ExternalWithdrawal = (props) => {
     const router = useRouter();
+    const {
+        t,
+        i18n: { language },
+    } = useTranslation()
     const {
         service,
     } = router.query;
@@ -82,12 +87,15 @@ const ExternalWithdrawal = (props) => {
             } else {
                 pathnameAndSearch = redirectTo;
             }
-            setState({ redirectTo: pathnameAndSearch });
+            window.location.href = pathnameAndSearch;
+        }else{
+
+            setState({message: t('common:guide_verify_expired')})
         }
     };
 
     const onChange = (value) => {
-        setState({ value });
+        setState({ value, message: null });
         if (value && value.length === 6) {
             doLoginWithOtp(value);
         }
@@ -96,15 +104,19 @@ const ExternalWithdrawal = (props) => {
 
     return (
         <>
-            <div
-                className={`mal-layouts mal-layouts___light`}
-            >
+            <div className={`mal-layouts mal-layouts___light`}>
                 <div className="flex flex-1 justify-center items-center h-full">
                     <div id={`${PORTAL_MODAL_ID}`}/>
                     <OtpModal
-                        label={'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.'}
+                        label={t('common:otp_verify')}
                         isVisible={true} placeholder={'-'} value={state.value} onChange={onChange}
-                        renderUpper={() => <div className="font-bold text-lg">Authentication</div>}
+                        renderUpper={() => <div className="font-bold text-lg"> {t('common:tfa_authentication')}</div>}
+                        renderLower={() => state.message
+
+
+                            ? <div className="text-red text-center text-sm">{state.message}</div>
+                            : <div className="text-red text-center text-sm">&nbsp;</div>
+                    }
                     />
                 </div>
             </div>
