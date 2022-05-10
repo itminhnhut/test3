@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import {useDispatch, useSelector} from 'react-redux';
-import {formatNumber, setTransferModal,} from 'redux/actions/utils';
-import {useEffect, useState} from 'react';
-import {getProfitVndc} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import {useTranslation} from 'next-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { formatNumber, setTransferModal, } from 'redux/actions/utils';
+import { useEffect, useState } from 'react';
+import { getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { useTranslation } from 'next-i18next';
 import orderBy from 'lodash/orderBy';
+import isNil from 'lodash/isNil';
 
 const AVAILBLE_KEY = 'futures_available'
 
@@ -94,14 +95,18 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                         {t('futures:balance')}
                     </span>
                     <div className="flex flex-col items-end">
-                        {balance?.map((item, i) => (
-                            <span key={i} className='flex font-medium'>
-                                {item?.wallet?.value ? formatNumber(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
-                                <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
-                                    {item?.assetCode}
+                        {balance?.map((item, i) => {
+                            let value = item?.wallet?.value;
+                            if (+value < 0 || Math.abs(+value) < 1e-4 || isNil(value) || !value) value = 0;
+                            return (
+                                <span key={i} className='flex font-medium'>
+                                    {value ? formatNumber(value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : Number(0).toPrecision((item?.assetDigit ?? 0) + 1)}
+                                    <span className='ml-1 text-txtSecondary dark:text-txtSecondary-dark'>
+                                        {item?.assetCode}
+                                    </span>
                                 </span>
-                            </span>
-                        ))}
+                            )
+                        })}
                     </div>
                 </div>
             </div>
