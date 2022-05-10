@@ -20,6 +20,7 @@ import showNotification from 'utils/notificationService';
 import colors from '../../styles/colors';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
+import isNil from 'lodash/isNil';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -187,9 +188,10 @@ const TransferModal = () => {
     }
 
     const onSetMax = useMemo(() => () => {
-        setState({ amount: currentWallet?.available })
+        const format = formatNumber(currentWallet?.available, assetDigit, 0, true).replaceAll(',', '')
+        setState({ amount: format });
         return null
-    }, [currentWallet])
+    }, [currentWallet, assetDigit])
 
     const getWalletType = (walletType) => {
         switch (walletType) {
@@ -278,6 +280,11 @@ const TransferModal = () => {
         )
     }, [state.asset, state.openList])
 
+    const formatAvl = (value, decimal) => {
+        if (+value < 0 || Math.abs(+value) < 1e-8 || isNil(value) || !value) return '0'
+        return formatNumber(value, decimal, 0, true)
+    }
+
     const renderAssetList = useCallback(() => {
         if (!state.openList?.assetList) return null
 
@@ -286,6 +293,7 @@ const TransferModal = () => {
                  className="absolute z-20 mt-2 rounded-lg border border-divider dark:border-divider-dark left-0 top-full w-full bg-gray-4 dark:bg-darkBlue-3 overflow-hidden">
                 {state.allWallets?.map((wallet, index) => {
                     const available = wallet?.wallet?.value - wallet?.wallet?.locked_value
+                    const _assetDigit = assetConfig.find(i => i.assetCode === wallet?.assetCode)?.assetDigit ?? 0;
 
                     return (
                         <div key={`transfer_asset__list_${wallet?.assetCode}`}
@@ -296,7 +304,8 @@ const TransferModal = () => {
                             <span className="font-bold">{wallet?.assetCode}</span>
                             <div className="flex items-center">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                                    {available && available > 0 ? formatWallet(available, wallet?.assetDigit) : '0.0000'}
+                                    {formatAvl(available, _assetDigit)}
+                                    {/* {available && available > 0 ? formatWallet(available, wallet?.assetDigit) : '0.0000'} */}
                                 </span>
                                 <Check size={16} className={state.asset === wallet?.assetCode ? 'ml-2 dark:text-dominant' : 'ml-2 dark:text-dominant invisible'}/>
                             </div>
@@ -305,39 +314,44 @@ const TransferModal = () => {
                 })}
             </div>
         )
-    }, [state.allWallets, state.openList, state.asset])
-
+    }, [state.allWallets, state.openList, state.asset, assetConfig])
+  
     useEffect(() =>{
         const _isError = state.asset === 'VNDC' ? state.amount < 500000 : state.asset === 'USDT' ? state.amount < 25 : false
         setIsError(_isError)
     }, [state.amount, state.asset])
 
-    const renderAmountInput = useCallback(() => {
+    const assetDigit = useMemo(() => {
+        return assetConfig.find(i => i.assetCode === state.asset)?.assetDigit ?? 0;
+    }, [state.asset, assetConfig])
 
+    const renderAmountInput = useCallback(() => {
         return (
             <NumberFormat
                 thousandSeparator
                 allowNegative={false}
-                placeholder={"0.0000"}
+                placeholder={Number(0).toPrecision(assetDigit + 1)}
                 className="w-full text-right sm:text-[20px] font-medium"
                 value={state.amount}
                 onValueChange={({ value }) => setState({ amount: value })}
                 onFocus={onFocus}
                 onBlur={onBlur}
+                decimalScale={assetDigit}
             />
         )
-    }, [state.amount, state.focus, state.asset])
+    }, [state.amount, state.focus, state.asset, assetDigit])
 
     const renderAvailableWallet = useCallback(() => {
         const available = currentWallet?.available
 
         return (
             <span className="ml-2 font-bold">
-                {available && available > 0 ? formatWallet(available, currentWallet?.assetDigit) : '0.0000'}
+                {formatAvl(available, assetDigit)}
+                {/* {available && available > 0 ? formatWallet(available, currentWallet?.assetDigit) : '0.0000'} */}
                 <span className="ml-2">{currentWallet?.assetCode}</span>
             </span>
         )
-    }, [state.asset, currentWallet])
+    }, [state.asset, currentWallet, assetDigit])
 
     const renderTransferButton = useCallback(() => {
         const isErrors = !Object.values(state.errors)?.findIndex(item => item?.length) || isError

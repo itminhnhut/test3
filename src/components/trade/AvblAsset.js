@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { TRADING_MODE } from 'redux/actions/const';
 import { formatNumber } from 'redux/actions/utils';
-
+import isNil from 'lodash/isNil';
 // mode = 'all' | 'avbl' | 'locked'
 
 const AvblAsset = memo(
@@ -45,8 +45,8 @@ const AvblAsset = memo(
                     break
                 }
             }
-
-            return `${value === 0 ? '0.00' : formatNumber(value, decimals)} ${
+            if ((value < 0 || Math.abs(value) < 1e-4 || isNil(value) || !value) && assetConfig?.assetCode === 'VNDC') value = 0;
+            return `${value === 0 ? Number(0).toPrecision(decimals + 1) : formatNumber(value, decimals)} ${
                 useSuffix ? assetConfig?.assetCode : ''
             }`
         }, [wallets, assetConfig])
