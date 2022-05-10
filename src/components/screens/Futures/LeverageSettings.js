@@ -9,7 +9,6 @@ import colors from 'styles/colors';
 import Modal from 'components/common/ReModal';
 import axios from 'axios';
 import { formatNumber, getLoginUrl } from 'redux/actions/utils';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 
@@ -25,7 +24,6 @@ const FuturesLeverageSettings = ({
     isVndcFutures
 }) => {
     const [loading, setLoading] = useState(false)
-    const router = useRouter();
     const { t } = useTranslation();
     const [_leverage, _setLeverage] = useState(leverage)
     const [_leverageBracket, _setLeverageBracket] = useState(
@@ -114,7 +112,10 @@ const FuturesLeverageSettings = ({
     }, [_leverage, pairConfig])
 
     const onLogin = () => {
-        router.push(getLoginUrl('sso'))
+        window.open(
+            getLoginUrl('sso', 'login'),
+            '_self'
+        )
     }
 
     return (
