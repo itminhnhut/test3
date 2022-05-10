@@ -58,9 +58,9 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
     }
 
     return (
-        <div className='pt-5 h-full !overflow-x-hidden overflow-y-auto'>
+        <div className='pt-5 h-full !overflow-x-hidden overflow-y-auto '>
             <div className='pt-4 pb-5 px-[10px]'>
-                <div className='flex items-center justify-between'>
+                <div className='flex items-center justify-between dragHandleArea'>
                     <span className='futures-component-title'>{t('common:assets')}</span>
                 </div>
                 <div className='mt-4 flex items-center'>
