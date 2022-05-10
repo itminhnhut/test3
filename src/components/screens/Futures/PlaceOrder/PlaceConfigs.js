@@ -23,7 +23,7 @@ const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcF
                 <div className='flex-grow flex items-center w-full'>
                     <div
                         onClick={() => !isVndcFutures && openPopup('marginMode')}
-                        className={`${isVndcFutures?'cursor-auto text-gray':''} px-[16px] py-1 mr-2.5 text-xs font-bold bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md`}
+                        className={`${isVndcFutures?'cursor-auto text-gray':''} px-[16px] py-1 mr-2.5 text-xs font-bold bg-bgSecondary dark:bg-bgSecondary-dark dark:text-white cursor-pointer hover:opacity-80 rounded-md`}
                     >
                         {isVndcFutures ? 'Isolated' : getMarginModeLabel(marginMode) || '--'}
                     </div>

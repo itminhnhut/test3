@@ -143,10 +143,10 @@ const FuturesOrderCostAndMaxVndc = ({
                 <div className="hidden group-hover:block absolute right-0 min-w-[200px] dark:bg-darkBlue-3 shadow-onlyLight rounded-[8px]">
                     <Link href={'/fee-schedule/trading'}>
                         <a target='_blank'>
-                            <div className="flex items-center justify-between h-[44px] bg-gray-5 p-[10px] rounded-t-[8px]">
+                            <div className="flex items-center justify-between h-[44px] bg-gray-5 p-[10px] dark:bg-darkBlue-4 rounded-t-[8px]">
                                 <div>
-                                    <span className="text-darkBlue font-medium pr-[10px]">{t('futures:fee_tier')}</span>
-                                    <label className="text-teal font-semibold">VIP {vip?.level ?? 0}</label>
+                                    <span className="text-darkBlue font-medium pr-[10px] dark:text-white">{t('futures:fee_tier')}</span>
+                                    <label className="text-teal font-semibold ">VIP {vip?.level ?? 0}</label>
                                 </div>
                                 <div className="rotate-[270deg]"><ChevronDown /></div>
                             </div>
