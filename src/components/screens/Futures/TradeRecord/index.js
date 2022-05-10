@@ -1,16 +1,17 @@
-import {useEffect, useState, useRef} from 'react'
-import FuturesRecordTableTab, {FUTURES_RECORD_CODE} from './RecordTableTab'
-import FuturesOrderHistory from './OrderHistory'
-import FuturesTradeHistory from './TradeHistory'
-import FuturesPosition from './Position'
+import { useEffect, useState, useRef } from 'react'
+import dynamic from 'next/dynamic';
+import FuturesRecordTableTab, { FUTURES_RECORD_CODE } from 'components/screens/Futures/TradeRecord/RecordTableTab'
+import FuturesOrderHistory from 'components/screens/Futures/TradeRecord/OrderHistory'
+import FuturesTradeHistory from 'components/screens/Futures/TradeRecord/TradeHistory'
+import FuturesPosition from 'components/screens/Futures/TradeRecord/Position'
 import classNames from 'classnames'
 import CheckBox from 'components/common/CheckBox'
-import FuturesOpenOrders from './OpenOrders'
-import FuturesTxHistory from './TxHistory'
-import FuturesAssets from './Assets'
-import FuturesOpenOrdersVndc from '../PlaceOrder/Vndc/OpenOrdersVndc'
-import FuturesOrderHistoryVndc from '../PlaceOrder/Vndc/OrderHistoryVndc'
-import {tableStyle} from "config/tables";
+import FuturesOpenOrders from 'components/screens/Futures/TradeRecord/OpenOrders'
+import FuturesTxHistory from 'components/screens/Futures/TradeRecord/TxHistory'
+import FuturesAssets from 'components/screens/Futures/TradeRecord/Assets'
+import FuturesOpenOrdersVndc from 'components/screens/Futures/PlaceOrder/Vndc/OpenOrdersVndc'
+import FuturesOrderHistoryVndc from 'components/screens/Futures/PlaceOrder/Vndc/OrderHistoryVndc'
+import { tableStyle } from "config/tables";
 import { useRouter } from 'next/router';
 import { getLoginUrl } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
@@ -30,7 +31,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
     })
     const [forceUpdateState, setForceUpdateState] = useState(0)
     const tableRef = useRef(null)
-    const {t}=useTranslation();
+    const { t } = useTranslation();
 
     // ? Helper
     const onChangeTab = (tab) => tab !== tabActive && setTabActive(tab)
@@ -41,7 +42,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
         setForceUpdateState((prevState) => (prevState > 15 ? 0 : prevState + 1))
 
     const onChangeTimePicker = (field, nextPickedTime) =>
-        setPickedTime({...pickedTime, [field]: nextPickedTime})
+        setPickedTime({ ...pickedTime, [field]: nextPickedTime })
 
     useEffect(() => {
         setTabActive(FUTURES_RECORD_CODE.openOrders)
@@ -74,7 +75,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
 
                 } else {
                     tableBodyElement.style.maxHeight = `${tableHeight - tableHeaderElement?.clientHeight - 15
-                    }px`
+                        }px`
                 }
             }
         }
@@ -97,7 +98,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                     className='flex items-center text-sm font-medium select-none cursor-pointer'
                     onClick={hideOtherToggle}
                 >
-                    <CheckBox active={hideOther}/>{' '}
+                    <CheckBox active={hideOther} />{' '}
                     <span className='ml-1 whitespace-nowrap text-gray font-medium capitalize'>
                         {t('futures:hide_other_symbols')}
                     </span>
@@ -129,22 +130,22 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                         ))}
 
                     {tabActive === FUTURES_RECORD_CODE.orderHistory &&
-                    (isVndcFutures ? (
-                        <FuturesOrderHistoryVndc
-                            onForceUpdate={onForceUpdate}
-                            pairConfig={pairConfig}
-                            hideOther={hideOther}
-                            pairPrice={pairPrice}
-                            pickedTime={
-                                pickedTime?.[
+                        (isVndcFutures ? (
+                            <FuturesOrderHistoryVndc
+                                onForceUpdate={onForceUpdate}
+                                pairConfig={pairConfig}
+                                hideOther={hideOther}
+                                pairPrice={pairPrice}
+                                pickedTime={
+                                    pickedTime?.[
                                     FUTURES_RECORD_CODE.orderHistoryVndc
                                     ]
                                 }
                                 onChangeTimePicker={onChangeTimePicker}
-                            isAuth={isAuth}
-                            onLogin={onLogin}
-                            pair={pair}
-                        />
+                                isAuth={isAuth}
+                                onLogin={onLogin}
+                                pair={pair}
+                            />
                         ) : (
                             <FuturesOrderHistory
                                 pairConfig={pairConfig}
@@ -152,10 +153,10 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                                     pickedTime?.[
                                     FUTURES_RECORD_CODE.orderHistory
                                     ]
-                            }
-                            onChangeTimePicker={onChangeTimePicker}
-                        />
-                    ))}
+                                }
+                                onChangeTimePicker={onChangeTimePicker}
+                            />
+                        ))}
                     {tabActive === FUTURES_RECORD_CODE.tradingHistory && !isVndcFutures && (
                         <FuturesTradeHistory
                             pairConfig={pairConfig}
@@ -177,7 +178,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                         />
                     )}
                     {tabActive === FUTURES_RECORD_CODE.assets && !isVndcFutures && (
-                        <FuturesAssets pairConfig={pairConfig}/>
+                        <FuturesAssets pairConfig={pairConfig} />
                     )}
                 </div>
             </div>

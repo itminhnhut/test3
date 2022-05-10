@@ -1,10 +1,9 @@
-import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Button from 'components/common/Button';
 import Modal from 'components/common/ReModal';
 import { X } from 'react-feather';
 import { formatNumber } from 'redux/actions/utils';
 import { VndcFutureOrderType } from './VndcFutureOrderType';
-import NumberFormat from 'react-number-format';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import { useSelector } from 'react-redux';
@@ -12,7 +11,7 @@ import { find } from 'lodash';
 import styled from "styled-components";
 import colors from 'styles/colors';
 import Slider from 'components/trade/InputSlider';
-import { Dot } from '../../../../trade/StyleInputSlider';
+import { Dot } from 'components/trade/StyleInputSlider';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 

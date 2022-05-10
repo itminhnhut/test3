@@ -1,6 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
-import { Popover, Transition } from '@headlessui/react';
-import { ChevronDown, Edit } from 'react-feather';
+import React, { useRef, useState } from 'react';
 import Modal from 'components/common/ReModal'
 import Button from 'components/common/Button'
 import { useTranslation } from 'next-i18next'

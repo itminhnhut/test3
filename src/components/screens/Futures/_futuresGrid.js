@@ -181,7 +181,7 @@ export default {
             },
             {
                 w: 10,
-                h: 16,
+                h: 20,
                 x: 0,
                 y: 3,
                 i: futuresGridKey.chart,
@@ -225,7 +225,7 @@ export default {
             },
             {
                 w: 4,
-                h: 29,
+                h: 33,
                 x: 10,
                 y: 3,
                 i: futuresGridKey.placeOrder,
@@ -249,7 +249,7 @@ export default {
         ],
         xl: [
             {
-                w: 14,
+                w: 8,
                 h: 2,
                 x: 0,
                 y: 0,

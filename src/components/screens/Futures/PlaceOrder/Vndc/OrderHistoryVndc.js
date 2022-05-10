@@ -1,24 +1,21 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react'
-import { customTableStyles } from '../../TradeRecord/index'
-import { ChevronDown, Share2 } from 'react-feather'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
+import {ChevronDown, Share2} from 'react-feather'
 
 import DataTable from 'react-data-table-component'
 import fetchApi from 'utils/fetch-api'
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
-import { ApiStatus } from 'redux/actions/const'
+import {API_GET_FUTURES_ORDER} from 'redux/actions/apis'
+import {ApiStatus} from 'redux/actions/const'
 import Skeletor from 'src/components/common/Skeletor'
-import { formatTime, formatNumber, getPriceColor, getS3Url, getLoginUrl } from 'redux/actions/utils'
-import { VndcFutureOrderType, renderCellTable } from './VndcFutureOrderType';
+import {formatNumber, formatTime, getLoginUrl, getPriceColor, getS3Url} from 'redux/actions/utils'
+import {renderCellTable, VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import FuturesTimeFilter2 from "components/screens/Futures/TradeRecord/FuturesTimeFilter2";
-import { FilterTradeOrder } from "components/screens/Futures/FilterTradeOrder";
-import { tableStyle } from "config/tables";
-import { useSelector } from "react-redux";
-import TableLoader from "components/loader/TableLoader";
-import { FUTURES_RECORD_CODE } from '../../TradeRecord/RecordTableTab';
-import { useTranslation } from 'next-i18next';
+import {FilterTradeOrder} from "components/screens/Futures/FilterTradeOrder";
+import {tableStyle} from "config/tables";
+import {useSelector} from "react-redux";
+import {useTranslation} from 'next-i18next';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
-import Adjustmentdetails from './Adjustmentdetails';
-import TableNoData from '../../../../common/table.old/TableNoData'
+import Adjustmentdetails from 'components/screens/Futures/PlaceOrder/Vndc/Adjustmentdetails';
+import TableNoData from 'components/common/table.old/TableNoData'
 import Link from 'next/link';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {

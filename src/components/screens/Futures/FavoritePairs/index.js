@@ -4,7 +4,7 @@ import { mergeFuturesFavoritePairs } from 'redux/actions/futures';
 import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 
-import FuturesFavoritePairItem from './FavoritePairItem';
+import FuturesFavoritePairItem from 'components/screens/Futures/FavoritePairs/FavoritePairItem';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import InfoSlider from 'components/markets/InfoSlider';
 import colors from 'styles/colors';

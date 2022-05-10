@@ -5,20 +5,19 @@ import { useTranslation } from 'next-i18next';
 import { formatNumber } from 'redux/actions/utils';
 import { ApiStatus } from 'redux/actions/const';
 import { log } from 'utils';
-
-import FuturesOrderButtonsGroup from './OrderButtonsGroup';
-import FuturesOrderUtilities from './OrderUtilities';
-import FuturesOrderSlider from './OrderSlider';
-import FuturesOrderMarket from './OrderMarket';
+import FuturesOrderButtonsGroup from 'components/screens/Futures/PlaceOrder/OrderModule/OrderButtonsGroup';
+import FuturesOrderUtilities from 'components/screens/Futures/PlaceOrder/OrderModule/OrderUtilities';
+import FuturesOrderSlider from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSlider';
+import FuturesOrderMarket from 'components/screens/Futures/PlaceOrder/OrderModule/OrderMarket';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import FuturesOrderLimit from './OrderLimit';
-import FuturesOrderSLTP from './OrderSLTP';
+import FuturesOrderLimit from 'components/screens/Futures/PlaceOrder/OrderModule/OrderLimit';
+import FuturesOrderSLTP from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSLTP';
 import TradingLabel from 'components/trade/TradingLabel';
 import Divider from 'components/common/Divider';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import FuturesOrderButtonsGroupVndc from '../Vndc/OrderButtonsGroupVndc';
-import { VndcFutureOrderType } from '../Vndc/VndcFutureOrderType';
+import FuturesOrderButtonsGroupVndc from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 
 const FuturesOrderModule = ({
     markPrice,

@@ -1,6 +1,5 @@
 import React from 'react';
-import { VndcFutureOrderType } from './VndcFutureOrderType';
-import colors from 'styles/colors';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useTranslation } from 'next-i18next'
 
 const TabOrderVndc = ({ side, setSide }) => {
