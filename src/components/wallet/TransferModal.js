@@ -104,6 +104,10 @@ const TransferModal = () => {
 
     const [isError, setIsError] = useState(false);
 
+    const assetDigit = useMemo(() => {
+        return assetConfig.find(i => i.assetCode === state.asset)?.assetDigit ?? 0;
+    }, [state.asset, assetConfig])
+
     // Helper
     const onTransfer = async (currency, from_wallet, to_wallet, amount, utils) => {
         setState({ isPlacingOrder: true })
@@ -320,10 +324,6 @@ const TransferModal = () => {
         const _isError = state.asset === 'VNDC' ? state.amount < 500000 : state.asset === 'USDT' ? state.amount < 25 : false
         setIsError(_isError)
     }, [state.amount, state.asset])
-
-    const assetDigit = useMemo(() => {
-        return assetConfig.find(i => i.assetCode === state.asset)?.assetDigit ?? 0;
-    }, [state.asset, assetConfig])
 
     const renderAmountInput = useCallback(() => {
         return (
