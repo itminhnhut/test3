@@ -23,7 +23,7 @@ const ExternalWithdrawal = (props) => {
     const [state, set] = useState(INITIAL_STATE)
     const setState = state => set(prevState => ({...prevState, ...state}))
     const doLoginWithOtp =  async (otp)=> {
-        const SERVICE = this.props.match.params.service
+        const SERVICE = service
         const {data} = await axios.get(API_AUTH_USER_OTP(SERVICE) + window.location.search, {
             params: {
                 otp,
