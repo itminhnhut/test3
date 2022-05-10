@@ -1,23 +1,21 @@
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'next-i18next';
-import {createPopper} from '@popperjs/core';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'next-i18next';
+import { createPopper } from '@popperjs/core';
 import debounce from 'lodash/debounce';
-import {getNotifications, markAllAsRead, truncateNotifications} from 'src/redux/actions/notification';
-import {NotificationStatus} from 'src/redux/actions/const';
-import {getTimeAgo} from 'src/redux/actions/utils';
-import {IconBell, Notification} from '../common/Icons';
+import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
+import { NotificationStatus } from 'src/redux/actions/const';
+import { getTimeAgo } from 'src/redux/actions/utils';
+import { IconBell, Notification } from '../common/Icons';
 import colors from 'styles/colors';
-import useLanguage from "hooks/useLanguage";
 
-const NotificationList = ({btnClass = '', navTheme = null}) => {
-    const {t} = useTranslation(['navbar']);
+const NotificationList = ({ btnClass = '', navTheme = null }) => {
+    const { t } = useTranslation(['navbar']);
     const dispatch = useDispatch();
     const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
     const btnDropdownRef = React.createRef();
     const popoverDropdownRef = React.createRef();
-    const [currentLang] = useLanguage()
 
     const truncateNotificationsDebounce = debounce(() => {
         dispatch(truncateNotifications());
@@ -35,13 +33,11 @@ const NotificationList = ({btnClass = '', navTheme = null}) => {
             const ids = notificationsMix.reduce((prev, curr) => {
                 if (curr.status === NotificationStatus.READ) return prev;
 
-                prev.push(curr._id);
+                prev.push(curr.id);
                 return prev;
             }, []);
 
-            if (ids.length > 0) {
-                dispatch(await markAllAsRead(ids));
-            }
+            dispatch(await markAllAsRead(ids));
         } catch (er) {
             // console.error(er);
         }
@@ -52,7 +48,7 @@ const NotificationList = ({btnClass = '', navTheme = null}) => {
     const loadMoreNotification = () => {
         let prevId;
         if (notificationsMix && notificationsMix.length) {
-            prevId = notificationsMix[notificationsMix.length - 1]._id;
+            prevId = notificationsMix[notificationsMix.length - 1].id;
         }
         setNotificationLoading(true);
         dispatch(getNotifications(prevId, () => setNotificationLoading(false)));
@@ -102,17 +98,17 @@ const NotificationList = ({btnClass = '', navTheme = null}) => {
                     {mix.map(notification => (
                         <div
                             className={`py-2.5 flex justify-between group hover:bg-teal-5 cursor-pointer ${notification?.status === NotificationStatus.READ ? '' : 'bg-black-5'}`}
-                            key={notification?._id || notification?.createdAt}
+                            key={notification?.id || notification?.created_at}
                         >
                             <div className="mr-3">
-                                <Notification/>
+                                <Notification />
                             </div>
                             <div className="flex-grow">
                                 <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-1.5 line-clamp-2">
-                                    {_.get(notification.content, currentLang)}
+                                    {notification.content}
                                 </div>
                                 <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                                    {getTimeAgo(notification.createdAt)}
+                                    {getTimeAgo(notification.created_at)}
                                 </div>
                             </div>
                         </div>
@@ -159,10 +155,8 @@ const NotificationList = ({btnClass = '', navTheme = null}) => {
                 >
                     <div className="p-8">
                         <div className="flex items-center justify-between mb-4">
-                            <div
-                                className="text-sm font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
-                            {unreadCount > 0 && <div
-                                className="text-sm font-medium text-teal dark:text-teal">{unreadCount} {t('navbar:unread_noti')}</div>}
+                            <div className="text-sm font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
+                            {unreadCount > 0 && <div className="text-sm font-medium text-teal dark:text-teal">{unreadCount} {t('navbar:unread_noti')}</div>}
                         </div>
                         <div className="max-h-[488px]  min-h-[400px] overflow-y-auto">
                             {content}
@@ -178,8 +172,7 @@ const NotificationList = ({btnClass = '', navTheme = null}) => {
                                             <>
                                                 {
                                                     notificationLoading ?
-                                                        <span
-                                                            className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
+                                                        <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
                                                             {t('loading')}
                                                         </span>
                                                         : (
@@ -195,8 +188,7 @@ const NotificationList = ({btnClass = '', navTheme = null}) => {
                                         )
                                         :
                                         (
-                                            <span
-                                                className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
+                                            <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
                                                 {t('navbar:read_all_noti')}
                                             </span>
                                         )

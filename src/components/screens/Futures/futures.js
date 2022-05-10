@@ -170,9 +170,9 @@ const Futures = () => {
         const _item = futuresGridConfig.layoutsVndc[layout].find(i => i.i === item.i);
         if (_item) {
             item.w = _item.w;
-            item.h = _item.h;
+            item.h = item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades ? 0 : _item.h;
             item.x = _item.x;
-            item.y = _item.y;
+            item.y = item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades ? 0 : _item.y;
         }
         if (!auth) {
             if (item.i === futuresGridKey.chart) {
@@ -201,7 +201,7 @@ const Futures = () => {
 
     useEffect(() => {
         if (!reloadLayouts.current) return;
-        const _layouts = getLayouts(state.layouts);
+        const _layouts = getLayouts(isVndcFutures ? futuresGridConfig.layoutsVndc : futuresGridConfig.layouts);
         reloadLayouts.current = false;
         setState({
             layouts: _layouts,
@@ -216,6 +216,9 @@ const Futures = () => {
                 return oldLayouts[layout].map(item => {
                     if (reloadLayouts.current) {
                         return isVndcFutures ? setItemLayoutVndc(item, layout) : setItemLayoutUsdt(item, layout);
+                    }
+                    if (isVndcFutures) {
+                        item.h = item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades ? 0 : item.h;
                     }
                     return item;
                 });
@@ -291,14 +294,14 @@ const Futures = () => {
     // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
-            // if (router.query.pair.indexOf('USDT') !== -1) {
-            //     router.push(
-            //         `${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
-            //         undefined,
-            //         { shallow: true }
-            //     )
-            //     return;
-            // }
+            if (router.query.pair.indexOf('USDT') !== -1) {
+                router.push(
+                    `${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
+                    undefined,
+                    { shallow: true }
+                )
+                return;
+            }
             setState({ pair: router.query.pair });
             localStorage.setItem(
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,
