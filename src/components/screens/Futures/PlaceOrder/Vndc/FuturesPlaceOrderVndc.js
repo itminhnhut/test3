@@ -4,13 +4,13 @@ import { FuturesOrderTypes as OrderTypes, FuturesStopOrderMode, } from 'redux/re
 import { roundToDown } from 'round-to';
 import { useSelector } from 'react-redux';
 import { ApiStatus } from 'redux/actions/const';
-import FuturesOrderModule from '../OrderModule';
-import FuturesOrderTypes from '../OrderTypes';
-import PlaceConfigs from '../PlaceConfigs';
+import FuturesOrderModule from 'components/screens/Futures/PlaceOrder/OrderModule';
+import FuturesOrderTypes from 'components/screens/Futures/PlaceOrder/OrderTypes';
+import PlaceConfigs from 'components/screens/Futures/PlaceOrder/PlaceConfigs';
 import axios from 'axios';
 import FuturesOrderCostAndMaxVndc from './OrderCostAndMaxVndc';
-import TabOrderVndc from './TabOrderVndc';
-import { VndcFutureOrderType } from './VndcFutureOrderType';
+import TabOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/TabOrderVndc';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 
 const FuturesPlaceOrderVndc = ({
     pairConfig,

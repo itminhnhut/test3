@@ -346,7 +346,10 @@ const TransferModal = () => {
         if (!auth) return <div className="cursor-pointer flex items-center justify-center h-full">
         <div
             className='w-full bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
-                onClick={() => router.push(getLoginUrl('sso'))}
+                onClick={() => window.open(
+                    getLoginUrl('sso', 'login'),
+                    '_self'
+                )}
         >
             {t('futures:order_table:login_to_continue')}
         </div>

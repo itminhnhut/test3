@@ -6,7 +6,7 @@ import { ApiStatus } from 'redux/actions/const'
 import { X, ArrowRight } from 'react-feather';
 import { formatTime, formatNumber } from 'redux/actions/utils';
 import Skeletor from 'src/components/common/Skeletor'
-import TableNoData from '../../../../common/table.old/TableNoData';
+import TableNoData from 'components/common/table.old/TableNoData';
 import { useTranslation } from 'next-i18next';
 
 const Adjustmentdetails = memo(({ onClose, rowData }) => {

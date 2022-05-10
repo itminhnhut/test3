@@ -1,13 +1,10 @@
 import Link from 'next/link';
-import { useDispatch, useSelector } from 'react-redux';
-import { formatNumber, setTransferModal, } from 'redux/actions/utils';
-import { useEffect, useState } from 'react';
-import { orderBy } from 'lodash';
-import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
-import fetchApi from 'utils/fetch-api';
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
-import { getProfitVndc } from './VndcFutureOrderType';
-import { useTranslation } from 'next-i18next';
+import {useDispatch, useSelector} from 'react-redux';
+import {formatNumber, setTransferModal,} from 'redux/actions/utils';
+import {useEffect, useState} from 'react';
+import {getProfitVndc} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import {useTranslation} from 'next-i18next';
+import orderBy from 'lodash/orderBy';
 
 const AVAILBLE_KEY = 'futures_available'
 
@@ -36,9 +33,9 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                         wallet: allWallet?.[item?.id]
                     }))
         }
-        // const dataFilter = orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']);
-        if (Array.isArray(mapper) && mapper.length > 0) {
-            setBalance(mapper)
+        const dataFilter = orderBy(mapper, ['assetCode', 'VNDC'], ['desc']);
+        if (Array.isArray(dataFilter) && dataFilter.length > 0) {
+            setBalance(dataFilter)
         }
     }
 

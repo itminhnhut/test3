@@ -7,7 +7,7 @@ import TradingLabel from 'components/trade/TradingLabel';
 import Link from 'next/link';
 import ChevronDown from 'src/components/svg/ChevronDown';
 import { useSelector } from 'react-redux';
-import { VndcFutureOrderType } from './VndcFutureOrderType';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 
 const FuturesOrderCostAndMaxVndc = ({
     selectedAsset,
@@ -28,8 +28,6 @@ const FuturesOrderCostAndMaxVndc = ({
     side,
     countDecimals
 }) => {
-    const [shortOrderOpenLoss, setShortOrderOpenLoss] = useState(0)
-    const [longOrderOpenLoss, setLongOrderOpenLoss] = useState(0)
     const vip = useSelector((state => state?.user?.vip))
     const { t } = useTranslation()
     const [cost, setCost] = useState(0);
@@ -114,10 +112,8 @@ const FuturesOrderCostAndMaxVndc = ({
                 cost = VndcFutureOrderType.Side.BUY === side ? ((ask * _size) / leverage) + (_size * ask * (0.1 / 100)) :
                     ((bid * _size) / leverage) + (_size * bid * (0.1 / 100));
             }
-            // setShortOrderOpenLoss(cost)
             setCost(cost)
         } else {
-            // setShortOrderOpenLoss(0)
             setCost(0)
         }
     }, [

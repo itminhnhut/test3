@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'components/trade/InputSlider';
-import { VndcFutureOrderType } from '../Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { FuturesOrderTypes as OrderTypes, } from 'redux/reducers/futures';
 
 const initPercent = 25;
@@ -19,7 +19,7 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
             setPercent(_size * 100 / maxSize);
             return;
         }
-        if (!size || !size?.includes('%')) {
+        if (!size || !String(size)?.includes('%')) {
             setPercent(0)
         }
     }, [size, isVndcFutures])

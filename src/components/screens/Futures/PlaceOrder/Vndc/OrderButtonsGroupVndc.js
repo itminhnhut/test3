@@ -2,10 +2,9 @@ import { useCallback, useState } from 'react';
 import { placeFuturesOrder } from 'redux/actions/futures';
 import { useTranslation } from 'next-i18next';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
-import { VndcFutureOrderType } from './VndcFutureOrderType';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { getLoginUrl } from 'src/redux/actions/utils';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 const getType = (type) => {
     switch (type) {

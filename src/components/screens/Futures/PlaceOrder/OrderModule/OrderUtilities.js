@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import TradingLabel from 'components/trade/TradingLabel';
 import AvblAsset from 'components/trade/AvblAsset';
-import FuturesCalculator from '../../Calculator';
+import FuturesCalculator from 'components/screens/Futures/Calculator';
 
 const FuturesOrderUtilities = ({ quoteAssetId, quoteAsset, isAuth, isVndcFutures }) => {
     const [openCalculator, setCalculator] = useState(false)
