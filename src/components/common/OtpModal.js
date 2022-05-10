@@ -24,10 +24,6 @@ const OtpModal = ({
             isVisible={isVisible}
             containerClassName={classNames(
                 'p-[32px] !translate-y-0 sm:min-w-[0px] rounded-[12px]',
-                {
-                    'w-full top-unset !bottom-0 !rounded-t-[20px] !rounded-b-none':
-                        width < BREAK_POINTS.sm,
-                },
                 className
             )}
         >
@@ -36,7 +32,7 @@ const OtpModal = ({
                     ? renderUpper()
                     : renderUpper}
             </div>
-            {label && <div className='font-medium text-sm'>{label}</div>}
+            {label && <div className='font-medium text-sm max-w-lg'>{label}</div>}
             <OtpInput
                 value={value}
                 onChange={(otp) => onChange(otp)}
