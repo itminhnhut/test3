@@ -89,8 +89,7 @@ const ExternalWithdrawal = (props) => {
             }
             window.location.href = pathnameAndSearch;
         }else{
-
-            setState({message: t('common:guide_verify_expired')})
+            setState({message: t('common:otp_verify_expired')})
         }
     };
 
