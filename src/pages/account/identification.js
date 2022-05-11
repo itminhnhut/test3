@@ -2,9 +2,9 @@ import React from 'react';
 import withTabLayout from 'components/common/layouts/withTabLayout';
 import { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
 import { useSelector } from 'react-redux';
-import NeedLogin from '../../components/common/NeedLogin';
+import NeedLogin from 'components/common/NeedLogin';
 import { useTranslation } from 'next-i18next'
-import MCard from '../../components/common/MCard';
+import MCard from 'components/common/MCard';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getS3Url } from 'redux/actions/utils';
 import Link from 'next/link';

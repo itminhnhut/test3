@@ -5,7 +5,7 @@ import { theme } from 'tailwind.config'
 
 export const ExternalWdlRoot = styled(Div100vh)`
     padding: 0 18px 15px;
-    color: ${({ isDark }) => (isDark ? colors.gray5 : colors.darkBlue)};
+    color: ${colors.darkBlue};
     position: fixed;
     top: 0;
     left: 0;
@@ -28,8 +28,7 @@ export const EWHeader = styled.div`
     margin-right: -18px;
     margin-left: -18px;
     padding: 20px 18px;
-    // background: ${({ isDark }) =>
-        !isDark ? colors.white : colors.darkBlue2};
+    // background: ${colors.darkBlue2};
     @media (min-width: 375px) {
         margin-left: -20px;
         margin-right: -20px;
@@ -62,7 +61,7 @@ export const EWHeaderUserInfo = styled.div`
 
 export const EWHeaderUserName = styled.div`
     font-weight: 600;
-
+    color: ${colors.grey3};
     @media (min-width: 375px) {
         font-size: 16px;
     }
@@ -70,13 +69,13 @@ export const EWHeaderUserName = styled.div`
 
 export const EWHeaderUserId = styled.div`
     font-size: 12px;
-    color: ${({ isDark }) => (isDark ? colors.darkBlue5 : colors.grey2)};
+    color: ${colors.grey2};
 `
 
 export const EWHeaderTool = styled.div`
     display: flex;
     align-items: center;
-
+    color: ${colors.grey3};
     span {
         display: inline-block;
         padding: 4px 6px;
@@ -103,18 +102,17 @@ export const EWSectionTitle = styled.div`
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-
+    color: ${colors.white};
     span {
         display: flex;
         align-items: center;
         font-weight: 600;
         font-size: 12px;
         padding: 6px 8px;
-        background: ${({ isDark }) =>
-            !isDark ? colors.white : colors.darkBlue2};
+        background: ${colors.darkBlue2};
         border-radius: 4px;
-        border: 1px solid ${({ isDark }) => colors.teal};
-        color: ${({ isDark }) => colors.teal};
+        border: 1px solid ${colors.teal};
+        color: ${colors.teal};
 
         :hover {
             background: ${colors.lightTeal};
@@ -132,7 +130,7 @@ export const EWSectionSubTitle = styled.div`
     width: 100%;
     font-weight: 500;
     font-size: 14px;
-    color: ${({ isDark }) => (isDark ? colors.darkBlue5 : colors.grey2)};
+    color: ${({ isDark }) => ( colors.grey2)};
     margin-bottom: 1rem;
     span {
         font-weight: 500;
@@ -143,7 +141,8 @@ export const EWWalletWrapper = styled.div``
 
 export const EWWalletItem = styled.div`
     border-radius: 3px;
-    background: ${({ isDark }) => (!isDark ? colors.white : colors.darkBlue2)};
+    background: ${colors.darkBlue2};
+    color: ${colors.grey4};
     box-shadow: '0px 15px 30px rgba(0, 0, 0, 0.03)';
     padding: 12px;
     display: flex;
@@ -191,7 +190,7 @@ export const EWWalletTokenAlias = styled.div`
 
 export const EWWalletTokenDescription = styled.div`
     font-size: 10px;
-    color: ${({ isDark }) => (isDark ? colors.darkBlue5 : colors.grey2)};
+    color: ${({ isDark }) => ( colors.grey2)};
     max-width: ${({ ellipsis }) => (ellipsis ? '55%' : '30%')};
     text-overflow: ellipsis;
     overflow: hidden;
@@ -204,7 +203,7 @@ export const EWWalletTokenDescription = styled.div`
 
 export const EWWalletTokenLabel = styled.div`
     font-size: 12px;
-    color: ${({ isDark }) => (isDark ? colors.darkBlue5 : colors.grey2)};
+    color: ${colors.grey2};
     font-weight: 600;
     color: ${({ isDark }) => colors.teal};
     display: flex;
@@ -235,13 +234,11 @@ export const EWModal = styled(Div100vh)`
     top: 0;
     left: 0;
     width: 100%;
-    background: ${({ isDark }) => (isDark ? colors.darkBlue2 : colors.white)};
+    background: ${colors.darkBlue2};
     z-index: ${({ isSuccess }) => (isSuccess ? 1001 : 1000)};
-    //transform: translate(${({ active, isSuccess }) =>
-        active ? '0' : isSuccess ? '100%' : '-100%'});
     transform: translateX(${({ active }) => (active ? '0' : '120%')});
     transition: transform 0.2s ease;
-    color: ${({ isDark }) => (isDark ? colors.grey5 : colors.darkBlue)};
+    color: ${colors.darkBlue};
     overflow: hidden auto;
     -webkit-overflow-scrolling: touch;
     padding: 24px 18px;
@@ -261,7 +258,7 @@ export const EWModal = styled(Div100vh)`
             display: block;
             width: 20px;
             height: 20px;
-            color: ${({ isDark }) => (isDark ? colors.gray5 : colors.darkBlue)};
+            color: ${colors.grey5};
         }
     }
 
@@ -292,6 +289,7 @@ export const EWModal = styled(Div100vh)`
             font-weight: bold;
             display: flex;
             align-items: center;
+            color: ${colors.grey4};
             img {
                 display: block;
                 margin-left: 8px;
@@ -305,8 +303,7 @@ export const EWModal = styled(Div100vh)`
             margin-bottom: 8px;
             font-size: 12px;
             font-weight: 600;
-            color: ${({ isDark }) =>
-                isDark ? colors.darkBlue5 : colors.grey2};
+            color: ${colors.grey2};
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -327,11 +324,10 @@ export const EWModal = styled(Div100vh)`
             justify-content: space-between;
             align-items: baseline;
             flex-wrap: wrap;
-
+          color: ${colors.grey4};
             span:last-child {
                 font-size: 14px;
-                color: ${({ isDark }) =>
-                    isDark ? colors.darkBlue5 : colors.grey2};
+                color: ${colors.grey2};
             }
         }
 
@@ -347,8 +343,7 @@ export const EWModal = styled(Div100vh)`
             input {
                 border: none;
                 outline: none;
-                color: ${({ isDark }) =>
-                    isDark ? colors.gray5 : colors.darkBlue};
+                color: ${colors.grey5};
                 font-size: 18px;
                 font-family: Barlow, serif;
                 font-weight: 600;
@@ -376,8 +371,8 @@ export const EWModal = styled(Div100vh)`
             .Token__unit {
                 font-size: 12px;
                 padding-left: 6px;
-                border-left: 2px solid
-                    ${({ isDark }) => (isDark ? '#202C4C' : colors.grey4)};
+                border-left: 2px solid #202C4C;
+                color: ${colors.grey4};
                 font-weight: 600;
             }
         }
@@ -390,8 +385,7 @@ export const EWModal = styled(Div100vh)`
             .input-range__slider {
                 transform: scale(1.3);
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-                border-color: ${({ isDark }) =>
-                    isDark ? 'rgba(0, 0, 0, .8)' : 'rgba(255, 255, 255, .8)'};
+                border-color: ${'rgba(0, 0, 0, .8)'};
                 background: ${colors.teal};
                 border-width: 3px;
             }
@@ -459,10 +453,9 @@ export const EWModal = styled(Div100vh)`
             align-items: baseline;
             justify-content: space-between;
             margin: 8px 0;
-
+            color: ${colors.grey5};
             span:first-child {
-                color: ${({ isDark }) =>
-                    isDark ? colors.darkBlue5 : colors.grey2};
+                color: ${colors.grey4};
                 font-size: 12px;
             }
 
@@ -483,7 +476,7 @@ export const EWModal = styled(Div100vh)`
 
             .backward {
                 position: absolute;
-                width: 73%;
+                width: 150px;
                 height: 150px;
                 top: 52%;
                 left: 50%;
@@ -510,8 +503,7 @@ export const EWModal = styled(Div100vh)`
             text-align: center;
             margin: 24px 0 16px;
             font-family: Barlow, serif;
-            color: ${({ isDark }) =>
-                isDark ? colors.darkBlue5 : colors.grey5};
+            color: ${colors.grey5};
         }
 
         .Content__WithdrawVal {
@@ -523,13 +515,12 @@ export const EWModal = styled(Div100vh)`
             align-items: baseline;
             flex-wrap: wrap;
             justify-content: center;
-
+            color: ${colors.grey5};
             span:last-child {
                 font-weight: 600;
                 margin-left: 4px;
                 font-size: 18px;
-                color: ${({ isDark }) =>
-                    isDark ? colors.darkBlue5 : colors.grey5};
+                color: ${colors.grey5};
             }
         }
 
@@ -545,14 +536,13 @@ export const EWModal = styled(Div100vh)`
                 font-weight: 500;
                 font-size: 12px;
                 margin-bottom: 8px;
-
+                color: ${colors.grey5};
                 :last-child {
                     margin-bottom: 0;
                 }
 
                 span:first-child {
-                    color: ${({ isDark }) =>
-                        isDark ? colors.darkBlue5 : colors.grey5};
+                    color: ${colors.grey5};
                 }
                 span:last-child {
                     font-weight: bold;
@@ -621,12 +611,10 @@ export const EWModal = styled(Div100vh)`
             border-radius: 4px;
             color: #fff;
             transition: all 0.4s ease;
-            // background: ${({ theme, shouldDisableWdl, isDark }) =>
+           background: ${({ theme, shouldDisableWdl, isDark }) =>
                 shouldDisableWdl
-                    ? isDark
-                        ? colors.darkBlue2
-                        : 'rgb(22, 22, 22, 17%)'
-                    : 'linear-gradient(180deg, #00D3E7 0%, #00B5C6 100%)'};
+                    ? colors.darkBlue2
+                    : colors.teal};
             pointer-events: ${({ shouldDisableWdl }) =>
                 shouldDisableWdl ? 'none' : 'auto'};
 
@@ -657,7 +645,7 @@ export const EWModal = styled(Div100vh)`
 export const DIM = styled(Div100vh)`
     width: 100%;
     background: ${({ isDark }) =>
-        isDark ? 'rgba(0, 0, 0, .8)' : 'rgba(255, 255, 255, .88)'};
+        true ?  'rgba(0, 0, 0, .8)' : 'rgba(255, 255, 255, .88)'};
     visibility: ${({ active }) => (active ? 'visible' : 'hidden')};
     opacity: ${({ active }) => (active ? 1 : 0)};
     transition: all 0.3s ease;
@@ -679,8 +667,8 @@ export const NoticePopup = styled.div`
     min-height: 60px;
     z-index: 1001;
     border-radius: 4px;
-    background: ${({ isDark }) => (!isDark ? colors.white : colors.darkBlue2)};
-    color: ${({ isDark }) => (isDark ? colors.gray5 : colors.darkBlue)};
+    background: ${({ isDark }) => (!true ?  colors.white : colors.darkBlue2)};
+    color: ${({ isDark }) => (true ?  colors.grey5 : colors.darkBlue)};
     box-shadow: '0px 15px 30px rgba(0, 0, 0, 0.03)';
 
     .NoticePopup__Header {
@@ -691,7 +679,7 @@ export const NoticePopup = styled.div`
         font-size: 13px;
         font-weight: bold;
         border-bottom: 1px solid
-            ${({ isDark }) => (isDark ? '#202C4C' : colors.grey4)};
+            ${({ isDark }) => (true ?  '#202C4C' : colors.grey4)};
         letter-spacing: 1px;
     }
 

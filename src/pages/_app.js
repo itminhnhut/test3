@@ -50,91 +50,115 @@ import { indexingArticles } from 'utils';
 //     }
 // }
 
-const ignoreAuthUrls = ['/authenticated']
+const ignoreAuthUrls = ['/authenticated'];
 
-const ignoreConfigUrls = ['/authenticated', '/blog', '/blog/[slug]']
-let lastUserId = null
-const lastToken = null
-let initConfig = false
-const App = ({ Component, pageProps }) => {
-    const store = useStore(pageProps.initialReduxState)
-    const router = useRouter()
+const ignoreConfigUrls = [
+    '/authenticated',
+    '/support',
+    '/blog/[slug]',
+    '/404',
+    '/500',
+    '/authenticated_tfa',
+    '/authenticated_tfa/[service]',
+    '/maldives',
+    '/privacy',
+    '/support',
+    '/support/announcement',
+    '/support/announcement/[topic]',
+    '/support/announcement/[topic]/[articles]',
+    '/support/faq',
+    '/support/faq/[topic]',
+    '/support/faq/[topic]/[articles]',
+    '/support/search',
+    '/terms-of-service',
+];
+let lastUserId = null;
+const lastToken = null;
+let initConfig = false;
+const App = ({
+    Component,
+    pageProps
+}) => {
+    const store = useStore(pageProps.initialReduxState);
+    const router = useRouter();
     const {
         i18n: { language },
-    } = useTranslation()
+    } = useTranslation();
 
     useEffect(() => {
         router.events.on('routeChangeStart', (url) => {
-            NProgress.start()
-        })
-        router.events.on('routeChangeComplete', () => NProgress.done())
-        router.events.on('routeChangeError', () => NProgress.done())
+            NProgress.start();
+        });
+        router.events.on('routeChangeComplete', () => NProgress.done());
+        router.events.on('routeChangeError', () => NProgress.done());
 
         const handleRouteChange = (url) => {
-            ga.pageview(url)
-        }
+            ga.pageview(url);
+        };
 
-        router.events.on('routeChangeComplete', handleRouteChange)
+        router.events.on('routeChangeComplete', handleRouteChange);
         return () => {
-            router.events.off('routeChangeComplete', handleRouteChange)
-        }
-    }, [router.events])
+            router.events.off('routeChangeComplete', handleRouteChange);
+        };
+    }, [router.events]);
 
     // Khởi tạo access token
     useAsync(async () => {
-        await store.dispatch(getMe())
-        await store.dispatch(getVip())
+        await store.dispatch(getMe());
+        await store.dispatch(getVip());
         store.dispatch({
             type: SET_LOADING_USER,
             payload: false,
-        })
+        });
 
-        store.dispatch({
-            type: SET_USD_RATE,
-            payload: await getUsdRate(),
-        })
-    }, [])
 
-    useEffect(() => {
+    }, []);
+
+    useEffect(async() => {
         if (!initConfig && !ignoreConfigUrls.includes(router.pathname)) {
-            console.log('Init all configs')
-            store.dispatch(initPublicSocket())
+            console.log('Init all configs');
+            store.dispatch(initPublicSocket());
             // Get config
-            store.dispatch(getAssetConfig())
-            store.dispatch(getExchangeConfig())
-            store.dispatch(getFuturesConfigs())
-            store.dispatch(getFuturesFavoritePairs())
-            store.dispatch(getFuturesMarketWatch())
-            store.dispatch(getFuturesUserSettings())
-            store.dispatch(getPaymentConfigs())
-            initConfig = true
-            // Get common data
+            store.dispatch(getAssetConfig());
+            store.dispatch(getExchangeConfig());
+            store.dispatch(getFuturesConfigs());
 
+            store.dispatch(getPaymentConfigs());
+
+            // store.dispatch(getFuturesFavoritePairs());
+            // store.dispatch(getFuturesMarketWatch());
+            // store.dispatch(getFuturesUserSettings());
+            initConfig = true;
+            store.dispatch({
+                type: SET_USD_RATE,
+                payload: await getUsdRate(),
+            });
+            // Get common data
             // Init theme
-            store.dispatch(setTheme())
+            store.dispatch(setTheme());
 
             //
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
-        indexingArticles(language)
-    }, [language])
+        indexingArticles(language);
+    }, [language]);
 
     store.subscribe(() => {
         if (!ignoreAuthUrls.includes(router.pathname)) {
-            const newUserId = store.getState()?.auth?.user?.code
+            const newUserId = store.getState()?.auth?.user?.code;
             // console.log('__ chekc new user', newUserId);
             if (!!newUserId && newUserId !== lastUserId) {
-                lastUserId = newUserId
-                store.dispatch(initUserSocket())
-                store.dispatch(getWallet())
-                store.dispatch(getUserFuturesBalance())
+                lastUserId = newUserId;
+                store.dispatch(initUserSocket());
+                store.dispatch(getWallet());
+                store.dispatch(getUserFuturesBalance());
                 // store.dispatch(getUserEarnedBalance(EarnWalletType.STAKING))
                 // store.dispatch(getUserEarnedBalance(EarnWalletType.FARMING))
             }
         }
-    })
+    });
 
     return (
         <>
@@ -145,7 +169,7 @@ const App = ({ Component, pageProps }) => {
                 </Tracking>
             </Provider>
         </>
-    )
-}
+    );
+};
 
-export default appWithTranslation(App)
+export default appWithTranslation(App);

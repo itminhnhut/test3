@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
 import {
     DIM,
     EWHeader,
@@ -23,86 +23,100 @@ import {
     ExternalWdlRoot,
     MoreToken,
     NoticePopup,
-} from '../../components/screens/OnusWithdrawGate/styledExternalWdl'
-import { useDispatch, useSelector } from 'react-redux'
-import { Sun, Moon, Check, Download, X, Coffee, Key } from 'react-feather'
+} from 'components/screens/OnusWithdrawGate/styledExternalWdl';
+import { useDispatch, useSelector } from 'react-redux';
+import { Check, Coffee, Download, Key, Moon, Sun, X } from 'react-feather';
 
-import { sortBy } from 'lodash'
-import { PulseLoader, ScaleLoader } from 'react-spinners'
-import NumberFormat from 'react-number-format'
-import { roundToDown } from 'round-to'
-import Axios from 'axios'
-import InputRange from 'react-input-range'
-import WithdrawSuccessIMG from '../../components/screens/OnusWithdrawGate/wdl_success.png'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import useLanguage from 'hooks/useLanguage'
+import { sortBy } from 'lodash';
+import { PulseLoader, ScaleLoader } from 'react-spinners';
+import NumberFormat from 'react-number-format';
+import { roundToDown } from 'round-to';
+import Axios from 'axios';
+import InputRange from 'react-input-range';
+// import WithdrawSuccessIMG from '../../../public/images/icon/wdl_success.png';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useLanguage from 'hooks/useLanguage';
 import {
-    WalletCurrency,
-    getTokenIcon,
-    getTimeStampRange,
+    buildNamiExchangeAppLink,
+    currencyToText,
     getAvailableToken,
     getCurrencyDescription,
-    currencyToText,
-    buildNamiExchangeAppLink,
+    getTimeStampRange,
     handleLogin,
-} from '../../components/screens/OnusWithdrawGate/helper'
-import { DIRECT_WITHDRAW_VNDC } from 'redux/actions/apis'
-import { formatNumber, formatTime } from 'redux/actions/utils'
-import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import AssetLogo from 'components/wallet/AssetLogo'
+    WalletCurrency,
+} from 'components/screens/OnusWithdrawGate/helper';
+import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import AssetLogo from 'components/wallet/AssetLogo';
 
-import 'react-input-range/lib/css/index.css'
-import classNames from 'classnames'
+import 'react-input-range/lib/css/index.css';
+import classNames from 'classnames';
 
 const WDL_LIST = [
+    // WalletCurrency.USDT,
     WalletCurrency.ATS,
+    // WalletCurrency.BAMI,
     WalletCurrency.KAI,
     WalletCurrency.VIDB,
+    // WalletCurrency.BTC,
+    // WalletCurrency.ETH,
     WalletCurrency.WHC,
-    WalletCurrency.SFO,
-]
+    // WalletCurrency.SFO
+];
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 300e3,
+    [WalletCurrency.OLC]: 5000,
+    [WalletCurrency.USDT]: 5,
+
     [WalletCurrency.VIDB]: 0.1,
     [WalletCurrency.KAI]: 200,
     [WalletCurrency.NAC]: 1000,
     [WalletCurrency.ATS]: 125,
+    [WalletCurrency.BTC]: 1e-5,
+    [WalletCurrency.ETH]: 1e-4,
     [WalletCurrency.WHC]: 0.1,
-    [WalletCurrency.SFO]: 2e5,
-}
-
+    [WalletCurrency.BAMI]: 30,
+    [WalletCurrency.SFO]: 2e5
+};
 const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.VNDC]: 1e3,
+    [WalletCurrency.OLC]: 12.5,
+    [WalletCurrency.USDT]: 0.1,
     [WalletCurrency.VIDB]: 0.1,
     [WalletCurrency.KAI]: 1,
     [WalletCurrency.NAC]: 1,
     [WalletCurrency.ATS]: 1,
+    [WalletCurrency.BTC]: 1e-5,
+    [WalletCurrency.ETH]: 1e-4,
     [WalletCurrency.WHC]: 0.1,
-    [WalletCurrency.SFO]: 2e3,
-}
-
+    [WalletCurrency.BAMI]: 0.5,
+    [WalletCurrency.SFO]: 2e3
+};
 const DECIMAL_SCALES = {
     [WalletCurrency.VNDC]: 0,
+    [WalletCurrency.OLC]: 1,
+    [WalletCurrency.USDT]: 2,
     [WalletCurrency.VIDB]: 1,
     [WalletCurrency.KAI]: 1,
     [WalletCurrency.NAC]: 2,
     [WalletCurrency.ATS]: 2,
+    [WalletCurrency.BTC]: 5,
+    [WalletCurrency.ETH]: 5,
     [WalletCurrency.WHC]: 2,
-    [WalletCurrency.SFO]: 8,
-}
-
+    [WalletCurrency.BAMI]: 1,
+    [WalletCurrency.SFO]: 8
+};
 const WDL_STATUS = {
-    UNKNOWN: 'UNKNOWN',
-    MINIMUM_WITHDRAW_NOT_MET: 'MINIMUM_WITHDRAW_NOT_MET',
-    LOGGED_OUT: 'LOGGED_OUT',
-    INVALID_INPUT: 'INVALID_INPUT',
-    NOT_ENOUGH_BASE_CURRENCY: 'NOT_ENOUGH_BASE_CURRENCY',
-    NOT_ENOUGH_EXCHANGE_CURRENCY: 'NOT_ENOUGH_EXCHANGE_CURRENCY',
-    not_in_range: 'not_in_range',
-}
-
+    UNKNOWN: "UNKNOWN",
+    MINIMUM_WITHDRAW_NOT_MET: "MINIMUM_WITHDRAW_NOT_MET",
+    LOGGED_OUT: "LOGGED_OUT",
+    INVALID_INPUT: "INVALID_INPUT",
+    NOT_ENOUGH_BASE_CURRENCY: "NOT_ENOUGH_BASE_CURRENCY",
+    NOT_ENOUGH_EXCHANGE_CURRENCY: "NOT_ENOUGH_EXCHANGE_CURRENCY",
+    not_in_range: "not_in_range"
+};
 const VNDC_MAINTAINANCE = false
 const MAINTAIN = true
 
@@ -219,14 +233,14 @@ const ExternalWithdrawal = (props) => {
         try {
             setOnSubmit(true)
             setError(null)
-            const { data } = await Axios.post(DIRECT_WITHDRAW_VNDC, {
-                amount,
-                currency,
-            })
-            // let data = { status: 'ok', message: 'PHA_KE_DATA' }
+            // const { data } = await Axios.post(DIRECT_WITHDRAW_VNDC, {
+            //     amount,
+            //     currency,
+            // })
+            let data = { status: 'ok', message: 'PHA_KE_DATA' }
             if (data && data.status === 'ok') {
                 const res = (data.hasOwnProperty('data') && data.data) || {}
-                setWdlResult(res) // get withdraw result
+                setWdlResult(data) // get withdraw result
                 handleModal('isSuccessModal', true)
             } else {
                 // console.log('namidev-DEBUG: ERROR_OCCURED____ ', data)
@@ -549,21 +563,23 @@ const ExternalWithdrawal = (props) => {
 
         const rmnBalance = amountLeft ? roundToDown(amountLeft, scale) : 0
 
+        console.log('__ check render success modal', 111);
         return (
             <EWModal active={modal.isSuccessModal} isSuccess={true}>
+            {/*<EWModal active={true} isSuccess={true}>*/}
+            {/*<EWModal active={true} isSuccess={true}>*/}
                 <div className='Tool'>
                     <X onClick={onAllDone} />
                 </div>
-                {wdlResult && (
-                    <div className='Content'>
-                        <div className='Content__Success_Graphic'>
-                            <div className='backward' />
-                            <img src={WithdrawSuccessIMG} alt='SUCCESS' />
-                        </div>
-                        <div className='Content__Success_Notice'>
-                            {t('ext_gate:wdl_success')}
-                        </div>
-                        <div className='Content__WithdrawVal'>
+                {/*{wdlResult && (*/}
+                <div className='Content'>
+                    <div className='Content__Success_Graphic'>
+                        <img src={getS3Url("/images/icon/wdl_success.png")} alt="" />
+                    </div>
+                    <div className='Content__Success_Notice'>
+                        {t('ext_gate:wdl_success')}
+                    </div>
+                    <div className='Content__WithdrawVal'>
                             <span>
                                 -
                                 {formatNumber(
@@ -571,33 +587,32 @@ const ExternalWithdrawal = (props) => {
                                     DECIMAL_SCALES[currentCurr]
                                 )}
                             </span>
-                            <span>{currencyToText(currentCurr)}</span>
-                        </div>
-                        <div className='Content__AfterWdl'>
-                            <div className='AfterWdl__Info'>
-                                <span>{t('ext_gate:remain_balance')}</span>
-                                <span>
+                        <span>{currencyToText(currentCurr)}</span>
+                    </div>
+                    <div className='Content__AfterWdl'>
+                        <div className='AfterWdl__Info'>
+                            <span>{t('ext_gate:remain_balance')}</span>
+                            <span>
                                     {rmnBalance
                                         ? formatNumber(rmnBalance)
                                         : '0.0000'}
                                 </span>
-                            </div>
-                            <div className='AfterWdl__Info'>
-                                <span>{t('ext_gate:time')}</span>
-                                <span>
-                                    {formatTime(Date.now(), 'HH:mm DD/MM/YYYY')}
-                                </span>
-                            </div>
                         </div>
-                        <div className='Content__SuccessTips'>
-                            <Coffee size={17} color='#03BBCC' />
-                            <span>{t('ext_gate:tips')}</span>
+                        <div className='AfterWdl__Info'>
+                            <span>{t('ext_gate:time')}</span>
+                            <span>
+                                    {formatTime(Date.now())}
+                                </span>
                         </div>
                     </div>
-                )}
+                    <div className='Content__SuccessTips'>
+                        <Coffee size={17} color='#03BBCC' />
+                        <span>{t('ext_gate:tips')}</span>
+                    </div>
+                </div>
                 <div className='Wdl__Button'>
                     <a href='#' onClick={onAllDone}>
-                        {t('global_btn.confirm')}
+                        {t('common:global_btn.confirm')}
                     </a>
                 </div>
             </EWModal>
@@ -628,19 +643,19 @@ const ExternalWithdrawal = (props) => {
                     </div>
                     <br />
                     <div className='Content__Success_Notice'>
-                        {t('global_label.system_maintenance')}
+                        {t('common:global_label.system_maintenance')}
                     </div>
                     <div className='Content__Maintainance'>
                         {t('global_notice.launchpad_maintain')}
                     </div>
 
                     <div className='Content__Success_Notice'>
-                        {t('global_label.maintain_time_suggest')}
+                        {t('common:global_label.maintain_time_suggest')}
                     </div>
 
                     <div className='Content__Maintainance'>
                         <div className='additional_content__timeline'>
-                            {t('global_label.from_time_to_time', {
+                            {t('common:global_label.from_time_to_time', {
                                 start: <span>{formatTime(start)}</span>,
                                 end: <span>{formatTime(end)}</span>,
                             })}
@@ -678,9 +693,7 @@ const ExternalWithdrawal = (props) => {
                     {t('ext_gate:description')}
                 </EWSectionSubTitle>
                 <EWWalletWrapper>{renderWallet()}</EWWalletWrapper>
-                <MoreToken
-                // onClick={() => setLimit(prevState => !prevState)}
-                >
+                <MoreToken>
                     {/*<span>*/}
                     {/*    <Translate id={`ext_gate:see_${isLimit ? 'less' : 'more'}`}/>*/}
                     {/*    <i className={`ci-unfold_${isLimit ? 'less' : 'more'}`}/>*/}
