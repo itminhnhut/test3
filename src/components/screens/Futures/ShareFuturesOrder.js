@@ -87,7 +87,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                 <div ref={refNodeInfoOrder}
                     className='flex flex-col flex-1 rounded bg-gradient-to-r from-teal to-[#00BEB3] my-[-10px] px-8 pt-8 py-5'>
                     <div>
-                        <Image src="/images_v2/share-order-logo.svg" width={120} height={30} />
+                        <Image src="/images/share-order-logo.svg" width={120} height={30} />
                     </div>
                     <div className='flex flex-row flex-1 mt-6'>
                         <div className='flex flex-col w-2/3 text-white'>
