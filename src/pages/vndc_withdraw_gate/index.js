@@ -52,6 +52,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 
 import 'react-input-range/lib/css/index.css';
 import classNames from 'classnames';
+import { DIRECT_WITHDRAW_VNDC } from 'redux/actions/apis';
 
 const WDL_LIST = [
     // WalletCurrency.USDT,
