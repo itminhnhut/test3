@@ -225,7 +225,7 @@ const ExternalWithdrawal = (props) => {
             // let data = { status: 'ok', message: 'PHA_KE_DATA' }
             if (data && data.status === 'ok') {
                 const res = (data.hasOwnProperty('data') && data.data) || {}
-                setWdlResult(data) // get withdraw result
+                setWdlResult(res) // get withdraw result
                 handleModal('isSuccessModal', true)
             } else {
                 // console.log('namidev-DEBUG: ERROR_OCCURED____ ', data)
@@ -544,6 +544,8 @@ const ExternalWithdrawal = (props) => {
         const scale = DECIMAL_SCALES[currentCurr]
 
         const rmnBalance = amountLeft ? roundToDown(amountLeft, scale) : 0
+
+
 
         return (
             <EWModal active={modal.isSuccessModal} isSuccess={true}>
