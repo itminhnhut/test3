@@ -59,7 +59,7 @@ const WDL_LIST = [
     WalletCurrency.ATS,
     // WalletCurrency.BAMI,
     WalletCurrency.KAI,
-    WalletCurrency.VIDB,
+    WalletCurrency.ONUS,
     // WalletCurrency.BTC,
     // WalletCurrency.ETH,
     WalletCurrency.WHC,
@@ -69,7 +69,7 @@ const WDL_LIST = [
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 300e3,
 
-    [WalletCurrency.VIDB]: 0.1,
+    [WalletCurrency.ONUS]: 0.1,
     [WalletCurrency.KAI]: 200,
     [WalletCurrency.NAC]: 1000,
     [WalletCurrency.ATS]: 125,
@@ -78,7 +78,7 @@ const MIN_WITHDRAWAL = {
 };
 const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.VNDC]: 1e3,
-    [WalletCurrency.VIDB]: 0.1,
+    [WalletCurrency.ONUS]: 0.1,
     [WalletCurrency.KAI]: 1,
     [WalletCurrency.NAC]: 1,
     [WalletCurrency.ATS]: 1,
@@ -87,7 +87,7 @@ const VNDC_WITHDRAWAL_FEE = {
 };
 const DECIMAL_SCALES = {
     [WalletCurrency.VNDC]: 0,
-    [WalletCurrency.VIDB]: 1,
+    [WalletCurrency.ONUS]: 1,
     [WalletCurrency.KAI]: 1,
     [WalletCurrency.NAC]: 2,
     [WalletCurrency.ATS]: 2,
@@ -665,7 +665,7 @@ const ExternalWithdrawal = (props) => {
                         }
                     >
                         {activeLanguage === 'vi' ? 'Tải App' : 'Download App'}
-                        <img src='/images/logo/nami_maldives.png' alt='' />
+                        <img src={getS3Url('/images/logo/nami_maldives.png')} alt='' />
                     </span>
                 </EWSectionTitle>
                 <EWSectionSubTitle isDark={isDark}>
