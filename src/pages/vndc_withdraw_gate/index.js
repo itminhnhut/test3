@@ -67,45 +67,30 @@ const WDL_LIST = [
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 300e3,
-    [WalletCurrency.OLC]: 5000,
-    [WalletCurrency.USDT]: 5,
 
     [WalletCurrency.VIDB]: 0.1,
     [WalletCurrency.KAI]: 200,
     [WalletCurrency.NAC]: 1000,
     [WalletCurrency.ATS]: 125,
-    [WalletCurrency.BTC]: 1e-5,
-    [WalletCurrency.ETH]: 1e-4,
     [WalletCurrency.WHC]: 0.1,
-    [WalletCurrency.BAMI]: 30,
     [WalletCurrency.SFO]: 2e5
 };
 const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.VNDC]: 1e3,
-    [WalletCurrency.OLC]: 12.5,
-    [WalletCurrency.USDT]: 0.1,
     [WalletCurrency.VIDB]: 0.1,
     [WalletCurrency.KAI]: 1,
     [WalletCurrency.NAC]: 1,
     [WalletCurrency.ATS]: 1,
-    [WalletCurrency.BTC]: 1e-5,
-    [WalletCurrency.ETH]: 1e-4,
     [WalletCurrency.WHC]: 0.1,
-    [WalletCurrency.BAMI]: 0.5,
     [WalletCurrency.SFO]: 2e3
 };
 const DECIMAL_SCALES = {
     [WalletCurrency.VNDC]: 0,
-    [WalletCurrency.OLC]: 1,
-    [WalletCurrency.USDT]: 2,
     [WalletCurrency.VIDB]: 1,
     [WalletCurrency.KAI]: 1,
     [WalletCurrency.NAC]: 2,
     [WalletCurrency.ATS]: 2,
-    [WalletCurrency.BTC]: 5,
-    [WalletCurrency.ETH]: 5,
     [WalletCurrency.WHC]: 2,
-    [WalletCurrency.BAMI]: 1,
     [WalletCurrency.SFO]: 8
 };
 const WDL_STATUS = {
@@ -145,13 +130,12 @@ const ExternalWithdrawal = (props) => {
     // map state from redux
     const user = useSelector((state) => state.auth.user) || null
     const balance = useSelector((state) => state.wallet.SPOT) || null
-    const dispatch = useDispatch()
 
     // use hooks
     const [activeLanguage, onChangeLanguage] = useLanguage()
     const { t } = useTranslation()
-    const [theme, themeToggler] = useDarkMode()
-    const isDark = theme === THEME_MODE.DARK
+    const [theme] = useDarkMode()
+    const isDark = true
 
     // helper
     const handleModal = (key, value = null) =>
@@ -233,11 +217,11 @@ const ExternalWithdrawal = (props) => {
         try {
             setOnSubmit(true)
             setError(null)
-            // const { data } = await Axios.post(DIRECT_WITHDRAW_VNDC, {
-            //     amount,
-            //     currency,
-            // })
-            let data = { status: 'ok', message: 'PHA_KE_DATA' }
+            const { data } = await Axios.post(DIRECT_WITHDRAW_VNDC, {
+                amount,
+                currency,
+            })
+            // let data = { status: 'ok', message: 'PHA_KE_DATA' }
             if (data && data.status === 'ok') {
                 const res = (data.hasOwnProperty('data') && data.data) || {}
                 setWdlResult(data) // get withdraw result
@@ -307,16 +291,13 @@ const ExternalWithdrawal = (props) => {
                     </EWHeaderUserInfo>
                 </EWHeaderUser>
                 <EWHeaderTool>
-                    <span onClick={themeToggler}>
-                        {theme === 'light' ? <Sun /> : <Moon />}
-                    </span>
                     <span onClick={onChangeLanguage}>
                         {activeLanguage === 'vi' ? 'VI' : 'EN'}
                     </span>
                 </EWHeaderTool>
             </EWHeader>
         )
-    }, [user, theme, activeLanguage, isDark])
+    }, [user, activeLanguage, isDark])
 
     const renderWallet = useCallback(() => {
         if (!walletArr) return null
@@ -563,11 +544,8 @@ const ExternalWithdrawal = (props) => {
 
         const rmnBalance = amountLeft ? roundToDown(amountLeft, scale) : 0
 
-        console.log('__ check render success modal', 111);
         return (
             <EWModal active={modal.isSuccessModal} isSuccess={true}>
-            {/*<EWModal active={true} isSuccess={true}>*/}
-            {/*<EWModal active={true} isSuccess={true}>*/}
                 <div className='Tool'>
                     <X onClick={onAllDone} />
                 </div>

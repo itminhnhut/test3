@@ -87,6 +87,12 @@ export const API_FUTURES_CANCEL_OPEN_ORDERS = API_V3_PREFIX + 'futures/order'
 
 export const API_GET_VNDC_FUTURES_HISTORY_ORDERS = API_V3_PREFIX + 'futures/vndc-order-histories'
 
+// VNDC
+export const DIRECT_DEPOSIT = API_PREFIX + "vndc/direct_deposit";
+export const DIRECT_DEPOSIT_TO_VNDC = API_PREFIX + "vndc/direct_deposit_to_vndc";
+export const DIRECT_WITHDRAW_VNDC = API_PREFIX + "vndc/direct_withdraw_vndc";
+export const GET_VNDC_BALANCE_AVBL = API_PREFIX + "vndc/account_balance_avbl";
+
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price'
 export const API_GET_SWAP_HISTORY = API_V3_PREFIX + 'swap/history'
