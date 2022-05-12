@@ -64,6 +64,7 @@
     "html2canvas": "^1.4.1",
     "http-proxy-middleware": "^2.0.1",
     "keen-slider": "^5.5.1",
+    "klinecharts": "^8.3.6",
     "lodash": "^4.17.21",
     "ms": "^2.1.3",
     "multicoin-address-validator": "^0.5.5",
