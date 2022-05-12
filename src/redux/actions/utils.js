@@ -15,7 +15,7 @@ import {
     TradingViewSupportTimezone,
     WalletType
 } from './const';
-import { SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
+import { SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY, SET_BOTTOM_NAVIGATION } from 'redux/actions/types';
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
@@ -900,4 +900,11 @@ export const getSymbolObject = (symbol) => {
     }
 
     return {}
+}
+
+export const setBottomTab = (tab) => async (dispatch) => {
+    dispatch({
+        type: SET_BOTTOM_NAVIGATION,
+        payload: tab,
+    })
 }
