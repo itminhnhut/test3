@@ -10,14 +10,14 @@ export default function KlineChartPage() {
     const [resolution, setResolution] = useState(ms('1m'))
     const [mainIndicator, setMainIndicator] = useState()
     const [subIndicator, setSubIndicator] = useState()
-    const [themeMode, switchTheme] = useDarkMode()
+    // const [themeMode, switchTheme] = useDarkMode()
 
     // mainI: MA, EMA, BOLL
     // subI: VOL, MACD, RSI, KDJ
 
     return (
         <div className="">
-            <button onClick={() => switchTheme()}>{themeMode}</button>
+            {/*<button onClick={() => switchTheme()}>{themeMode}</button>*/}
             <div>{ms(resolution)}</div>
             <div className='space-x-2'>
                 {listTimeFrame.map(t => {
@@ -42,8 +42,12 @@ export default function KlineChartPage() {
                 })}
             </div>
             <div className='flex flex-col w-full h-[40vh]'>
-                <KlineChart symbolInfo={{exchange: 'NAMI_FUTURES', symbol: 'BTCVNDC', pricePrecision: 2 }} resolution={resolution}
-                            mainIndicator={mainIndicator} subIndicator={subIndicator}/>
+                <KlineChart
+                    symbolInfo={{exchange: 'NAMI_FUTURES', symbol: 'BTCVNDC', pricePrecision: 2}}
+                    resolution={resolution}
+                    mainIndicator={mainIndicator}
+                    subIndicator={subIndicator}
+                />
             </div>
         </div>
     )

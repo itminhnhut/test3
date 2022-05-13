@@ -7,7 +7,7 @@ import useDarkMode, {THEME_MODE} from "hooks/useDarkMode";
 import {getData, calculateUpSizeBarData, socket} from "components/KlineChart/kline.service";
 import NamiExchangeSvg from "components/svg/NamiExchangeSvg";
 import colors from "styles/colors";
-import {last} from "lodash";
+import {clone, last} from "lodash";
 
 const CHART_ID = 'k-line-chart'
 
@@ -21,16 +21,21 @@ function usePrevious(value) {
 
 let _lastBar;
 
-function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator}) {
-    // Chart
-    let chartRef = useRef(null);
-    const chart = useMemo(() => chartRef.current, [chartRef.current])
+// Chart instance
+let chart;
 
+function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator}) {
     const prevSymbolInfo = usePrevious(symbolInfo)
     const prevMainIndicator = usePrevious(mainIndicator)
     const prevSubIndicator = usePrevious(subIndicator)
     // Hooks
+
+    // TODO: check default theme not show x,y axis
     const [themeMode] = useDarkMode()
+
+    const handleChartRef = useCallback((node) => {
+        chart = init(node, getDefaultOptions(THEME_MODE.DARK))
+    }, [])
 
     const _getData = useCallback(async (to, from) => {
         if (!from) {
@@ -43,12 +48,10 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
             to,
             resolution
         }).then(data => calculateUpSizeBarData(data, resolution))
-    }, [resolution, chart])
+    }, [resolution])
 
     // Init setup
     useEffect(() => {
-        chartRef.current = init(CHART_ID, getDefaultOptions())
-
         return () => {
             dispose(CHART_ID)
         }
@@ -101,24 +104,24 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
                     open: _lastBar.close,
                     high: _lastBar.close,
                     low: _lastBar.close,
-                    close: data.price,
+                    close: price,
                     volume: data.volume,
                 };
             }
-            _lastBar = data
+            _lastBar = clone(data) // Need clone
             chart.updateData(data)
         })
         return () => {
             socket.removeListener(action)
         }
-    }, [chart, symbolInfo, resolution])
+    }, [symbolInfo, resolution])
 
     // Update theme mode
     useEffect(() => {
-        if (themeMode && chart) {
+        if (themeMode) {
             chart.setStyleOptions(getDefaultOptions(themeMode))
         }
-    }, [themeMode, chart])
+    }, [themeMode])
 
     // Resolution
     useEffect(() => {
@@ -138,40 +141,39 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
                 }
             })
         })
-
-    }, [resolution, chart])
+    }, [resolution])
 
     // Indicator
     useEffect(() => {
-        if (!chart) return
-
-        if (mainIndicator) {
-            chart.createTechnicalIndicator(mainIndicator, false, {id: 'candle_pane'})
+        if (prevMainIndicator !== mainIndicator) {
+            if (prevMainIndicator) {
+                chart.removeTechnicalIndicator('candle_pane', prevMainIndicator)
+            }
+            if (mainIndicator) {
+                chart.createTechnicalIndicator(mainIndicator, false, {id: 'candle_pane'})
+            }
         }
 
-        if (prevMainIndicator && prevMainIndicator !== mainIndicator) {
-            chart.removeTechnicalIndicator('candle_pane', prevMainIndicator)
-        }
-
-    }, [chart, mainIndicator])
+    }, [mainIndicator])
 
     useEffect(() => {
         if (!chart) return
+        if (prevSubIndicator !== subIndicator) {
+            if (prevSubIndicator) {
+                chart.removeTechnicalIndicator('pane_' + prevSubIndicator, prevSubIndicator)
+            }
 
-        if (subIndicator) {
-            chart.createTechnicalIndicator(subIndicator, false, {
-                id: 'pane_' + subIndicator,
-                height: chart.getHeight().candle_pane / 4
-            })
+            if (subIndicator) {
+                chart.createTechnicalIndicator(subIndicator, false, {
+                    id: 'pane_' + subIndicator,
+                    height: chart.getHeight().candle_pane / 4
+                })
+            }
         }
-
-        if (prevSubIndicator && prevSubIndicator !== subIndicator) {
-            chart.removeTechnicalIndicator('pane_' + prevSubIndicator, prevSubIndicator)
-        }
-    }, [chart, subIndicator])
+    }, [subIndicator])
 
     return (
-        <div id={CHART_ID} className="kline-chart flex flex-1">
+        <div id={CHART_ID} ref={handleChartRef} className="kline-chart flex flex-1">
             <div className="cheat-watermark">
                 <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4}/>
             </div>

@@ -8,7 +8,7 @@ const _theme = {
 };
 
 // Read more: https://klinecharts.com/guide/style
-export default (themeMode = THEME_MODE.LIGHT) => {
+export default (themeMode = THEME_MODE.DARK) => {
     const theme = {
         ..._theme,
         textColor: {
