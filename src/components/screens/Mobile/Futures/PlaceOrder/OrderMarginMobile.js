@@ -20,13 +20,13 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
         <div className="flex flex-col h-full justify-around">
             <div className="flex items-center justify-between">
                 <TradingLabel
-                    label={t('futures:avlb')}
+                    label={t('futures:avlb') + ' ' + pairConfig?.quoteAsset}
                     value={`${formatNumber(
                         availableAsset,
                         0
-                    )} ${pairConfig?.quoteAsset}`}
-                    containerClassName='text-xs flex flex-wrap justify-between w-full mr-[10px]'
-                />
+                    )}`}
+                    containerClassName='text-xs flex flex-wrap justify-between w-full'
+                />&nbsp;
                 <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
             </div>
             <TradingLabel
