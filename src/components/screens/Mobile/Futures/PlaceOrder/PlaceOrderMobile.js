@@ -154,7 +154,12 @@ const PlaceOrder = ({
                 <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig} availableAsset={availableAsset} />
             </OrderInput>
             <OrderInput>
-                <OrderButtonMobile size={size} price={price} stopPrice={stopPrice} side={side} />
+                <OrderButtonMobile
+                    tp={tp} sl={sl} type={type} size={size} price={price}
+                    stopPrice={stopPrice} side={side} decimals={decimals}
+                    pairConfig={pairConfig} pairPrice={pairPrice}
+                    leverage={leverage}
+                />
             </OrderInput>
         </div>
     );
