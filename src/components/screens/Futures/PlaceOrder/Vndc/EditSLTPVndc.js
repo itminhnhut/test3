@@ -102,11 +102,12 @@ const FuturesEditSLTPVndc = ({
                 quantity,
                 open_price,
                 status,
-                price
+                price,
+                leverage,
             } = order;
             const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
             const margin = openPrice * quantity;
-            const _profit = (value / 100) * margin;
+            const _profit = (value / 100) * margin / leverage;
             profit.current[key] = formatNumber(_profit, decimals, 0, true)
             tabPercent.current[key] = value;
             setData({
@@ -201,11 +202,12 @@ const FuturesEditSLTPVndc = ({
                 quantity,
                 open_price,
                 status,
-                price
+                price,
+                leverage
             } = order;
             const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
             const margin = openPrice * quantity;
-            const _profit = (getValuePercent(x, key) / 100) * margin;
+            const _profit = (getValuePercent(x, key) / 100) * margin / leverage;
             profit.current[key] = formatNumber(_profit, decimals, 0, true)
             tabPercent.current[key] = getLabelPercent(x, false, key);
             setData({
