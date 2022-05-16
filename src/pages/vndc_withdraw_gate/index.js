@@ -76,6 +76,15 @@ const MIN_WITHDRAWAL = {
     [WalletCurrency.WHC]: 0.1,
     [WalletCurrency.SFO]: 2e5
 };
+const MAX_WITHDRAWAL = {
+    [WalletCurrency.VNDC]: 500e6,
+    [WalletCurrency.ONUS]: 5000,
+    [WalletCurrency.KAI]: 10000,
+    [WalletCurrency.NAC]: 100000,
+    [WalletCurrency.ATS]: 100000,
+    [WalletCurrency.WHC]: 100000,
+    [WalletCurrency.SFO]: 100e6
+};
 const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.VNDC]: 1e3,
     [WalletCurrency.ONUS]: 0.1,
@@ -370,8 +379,8 @@ const ExternalWithdrawal = (props) => {
             VNDC_WITHDRAWAL_FEE[currentCurr],
             DECIMAL_SCALES[currentCurr]
         )
-        const minWdl =
-            MIN_WITHDRAWAL[currentCurr] + VNDC_WITHDRAWAL_FEE[currentCurr]
+        const minWdl = MIN_WITHDRAWAL[currentCurr] + VNDC_WITHDRAWAL_FEE[currentCurr]
+        const maxWdl = MAX_WITHDRAWAL[currentCurr]
         const scale = DECIMAL_SCALES[currentCurr]
         const maxVal = tokenAvailable ? roundToDown(tokenAvailable, scale) : 0
         const shouldDisableWdl =
@@ -379,6 +388,7 @@ const ExternalWithdrawal = (props) => {
             !amount ||
             amount === '' ||
             +amount < minWdl ||
+            +amount > maxWdl ||
             +amount > tokenAvailable ||
             onSubmit ||
             amount === '.' ||
@@ -386,12 +396,20 @@ const ExternalWithdrawal = (props) => {
 
         let msg
         if (amount === 'init') msg = null
-        if (amount !== 'init' && +amount < minWdl)
+        if (amount !== 'init' && +amount < minWdl){
             msg = t('ext_gate:min_notice', {
                 minVal: formatNumber(minWdl, 7, 0, false),
             })
-        if (amount !== 'init' && +amount > tokenAvailable)
-            msg = t('ext_gate:insufficient')
+        }
+        if (amount !== 'init'){
+            if(tokenAvailable < maxWdl){
+                if (+amount > tokenAvailable) msg = t('ext_gate:insufficient')
+            }else {
+                if (+amount > tokenAvailable)  msg = t('ext_gate:max_notice', {
+                    maxVal: formatNumber(maxWdl, 7, 0, false),
+                })
+            }
+        }
         if (amount !== 'init' && +amount >= minWdl && +amount <= tokenAvailable)
             msg = <Check size={14} color='#03BBCC' />
 
