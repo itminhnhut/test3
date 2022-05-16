@@ -465,7 +465,7 @@ const ExternalWithdrawal = (props) => {
                         />
                         <div
                             className='Max_otp bg-lightTeal dark:bg-teal-opacity'
-                            onClick={() => setAmount(maxVal)}
+                            onClick={() => setAmount(Math.min(maxVal, maxWdl))}
                         >
                             {t('ext_gate:max_opt')}
                         </div>
