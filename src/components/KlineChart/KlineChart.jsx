@@ -8,16 +8,9 @@ import {getData, calculateUpSizeBarData, socket} from "components/KlineChart/kli
 import NamiExchangeSvg from "components/svg/NamiExchangeSvg";
 import colors from "styles/colors";
 import {clone, last} from "lodash";
+import usePrevious from "hooks/usePrevious";
 
 const CHART_ID = 'k-line-chart'
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    }, [value]);
-    return ref.current;
-}
 
 let _lastBar;
 

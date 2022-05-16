@@ -42,6 +42,7 @@ export default function KlineChartPage() {
                 })}
             </div>
             <div className='flex flex-col w-full h-[40vh]'>
+
                 <KlineChart
                     symbolInfo={{exchange: 'NAMI_FUTURES', symbol: 'BTCVNDC', pricePrecision: 2}}
                     resolution={resolution}
