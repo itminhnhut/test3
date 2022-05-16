@@ -4,7 +4,7 @@ export const WalletCurrency = {
     NAC: 1,
     VNDC: 72,
     KAI: 84,
-    VIDB: 86,
+    ONUS: 86,
     WHC: 88,
     SFO: 187,
     NAMI: 1,
@@ -29,8 +29,8 @@ export function getCurrencyDescription(currency) {
             return 'NAMI Coin'
         case WalletCurrency.ATS:
             return 'Attlas Exchange'
-        case WalletCurrency.VIDB:
-            return 'VNDC International Digital Banking'
+        case WalletCurrency.ONUS:
+            return 'ONUS'
         case WalletCurrency.WHC:
             return 'WhiteHub'
         case WalletCurrency.SFO:

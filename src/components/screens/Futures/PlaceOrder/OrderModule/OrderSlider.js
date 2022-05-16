@@ -24,19 +24,18 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
         }
     }, [size, isVndcFutures])
 
-    const timer = useRef(null);
-    const firstTime = useRef(true);
+    const refresh = useRef(false);
 
     useEffect(() => {
-        clearTimeout(timer.current)
-        timer.current = setTimeout(() => {
-            firstTime.current = true;
-        }, 200);
-    }, [currentType, pair, maxSize])
+        if (!refresh.current) refresh.current = true;
+    }, [maxSize])
 
     useEffect(() => {
-        if (firstTime.current && +maxSize) {
-            firstTime.current = false;
+        refresh.current = !refresh.current;
+    }, [pair])
+
+    useEffect(() => {
+        if (+maxSize) {
             onChange(+maxSize * initPercent / 100);
             setPercent(initPercent)
         } else if (!+maxSize) {
@@ -44,7 +43,7 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
             setPercent(0)
         }
 
-    }, [currentType, maxSize, firstTime.current])
+    }, [currentType, refresh.current])
 
     useEffect(() => {
         onChange(+maxSize * initPercent / 100);

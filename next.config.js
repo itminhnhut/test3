@@ -41,6 +41,15 @@ module.exports = withPlugins([
                     },
                 ],
             },
+            {
+                source: '/.well-known/assetlinks.json',
+                headers: [
+                    {
+                        key: 'Content-Type',
+                        value: 'application/json; charset=utf-8',
+                    },
+                ],
+            },
         ];
     },
     eslint: {

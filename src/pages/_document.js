@@ -25,14 +25,14 @@ class MyDocument extends Document {
                         href='/css/coolicons/coolicons.css'
                         rel='stylesheet'
                     />
-                    <script src='/library_maldives/trading_view/tv.js' />
+                    <script src='/library/trading_view/tv.js' />
                     <script
                         type='text/javascript'
-                        src='/library_maldives/trading_view/datafeeds/udf/dist/polyfills.js'
+                        src='/library/trading_view/datafeeds/udf/dist/polyfills.js'
                     />
                     <script
                         type='text/javascript'
-                        src='/library_maldives/trading_view/datafeeds/udf/dist/bundle.js'
+                        src='/library/trading_view/datafeeds/udf/dist/bundle.js'
                     />
 
                     <script

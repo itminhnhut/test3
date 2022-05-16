@@ -1,4 +1,3 @@
-// import { widget } from 'public/library_maldives/trading_view/charting_library';
 import * as React from 'react';
 import { IconLoading } from 'src/components/common/Icons';
 import NamiExchangeSvg from 'src/components/svg/NamiExchangeSvg';
@@ -552,8 +551,7 @@ TVChartContainer.defaultProps = {
     interval: "1",
     containerId: "tv_chart_container",
     datafeedUrl: "https://demo_feed.tradingview.com",
-    // libraryPath: '/library_maldives/trading_view/charting_library/',
-    libraryPath: "/library_maldives/trading_view/charting_library/",
+    libraryPath: "/library/trading_view/charting_library/",
     chartsStorageUrl: "https://saveload.tradingview.com",
     chartsStorageApiVersion: "1.1",
     clientId: "tradingview.com",

@@ -13,7 +13,7 @@ export const ExternalWdlRoot = styled(Div100vh)`
     -webkit-overflow-scrolling: touch;
     overflow: hidden auto;
     user-select: none;
-
+    background: ${colors.darkBlue2};
     @media (min-width: 375px) {
         padding-left: 20px;
         padding-right: 20px;
@@ -28,7 +28,7 @@ export const EWHeader = styled.div`
     margin-right: -18px;
     margin-left: -18px;
     padding: 20px 18px;
-    // background: ${colors.darkBlue2};
+     background: ${colors.darkBlue2};
     @media (min-width: 375px) {
         margin-left: -20px;
         margin-right: -20px;
