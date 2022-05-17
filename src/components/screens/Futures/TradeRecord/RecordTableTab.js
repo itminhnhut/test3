@@ -35,7 +35,7 @@ export const FUTURES_RECORD_CODE = {
     assets: 'assets',
 }
 
-const RECORD_TAB_VNDC = [
+export const RECORD_TAB_VNDC = [
     {
         key: 1,
         code: FUTURES_RECORD_CODE.openOrders,
@@ -50,7 +50,7 @@ const RECORD_TAB_VNDC = [
     },
 ]
 
-const RECORD_TAB = [
+export const RECORD_TAB = [
     {
         key: 0,
         code: FUTURES_RECORD_CODE.position,

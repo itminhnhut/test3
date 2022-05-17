@@ -61,11 +61,11 @@ export default {
     async getSymbolInfo(symbol, mode = ChartMode.SPOT) {
         const url = `${PRICE_URL}/api/v1/chart/symbol_info`;
         const { data } = await axios.get(url, {
-                params: {
-                    broker: mode === ChartMode.SPOT ? 'NAMI_SPOT' : 'NAMI_FUTURES',
-                    symbol
-                },
+            params: {
+                broker: mode === ChartMode.SPOT ? 'NAMI_SPOT' : 'NAMI_FUTURES',
+                symbol,
             },
+        },
         );
         return data;
     },

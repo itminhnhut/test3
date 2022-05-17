@@ -16,6 +16,7 @@ const colors = {
     priceDown: '#E5544B',
     eco: '#baff6f',
     teal: '#00C8BC',
+    teal2: '#C2F2EF',
     lightTeal: '#E2F6F5',
     exchange: '#00DCC9',
     ecoShade: {
@@ -29,6 +30,7 @@ const colors = {
     iceberg: '#E2F6F5',
     listItemTapColor: '#d8d7dc',
     red2: '#E5544B',
+    red3: '#F9D6D4',
     lightRed2: 'rgba(229, 84, 75, 0.1)',
 
     transparent: 'transparent',
@@ -56,6 +58,6 @@ const colors = {
     overlayLight: 'rgba(0, 0, 0, 0.45)',
     overlayDark: 'rgba(0, 0, 0, 0.45)',
 
-}
+};
 
-export default colors
+export default colors;

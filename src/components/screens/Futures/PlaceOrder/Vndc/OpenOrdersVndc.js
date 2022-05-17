@@ -5,8 +5,6 @@ import { ChevronDown, Edit } from 'react-feather';
 
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem'
 import DataTable from 'react-data-table-component'
-import Modal from 'components/common/ReModal'
-import Button from 'components/common/Button'
 import showNotification from 'utils/notificationService'
 import { renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType'
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
@@ -26,6 +24,7 @@ import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 import CloseAllOrders from 'components/screens/Futures/PlaceOrder/Vndc/CloseAllOrders';
 import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
+import OrderClose from './OrderClose';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t } = useTranslation()
@@ -342,32 +341,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
     </div>
     return (
         <>
-            <Modal
-                isVisible={showModalDelete}
-                onBackdropCb={() => setShowModalDelete(false)}
-            >
-                <div className="w-[390px]">
-                    <div className="text-center text-xl font-bold capitalize">
-                        {t('futures:close_order:modal_title', { value: rowData.current?.displaying_id })}
-                    </div>
-                    <div className="mt-3 text-center text-lg"
-                        dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: rowData.current?.displaying_id }) }}>
-                    </div>
-                    <div className="mt-4 w-full flex flex-row items-center justify-center">
-                        <Button
-                            title={t('common:cancel')} type="default"
-                            componentType="button"
-                            style={{ width: '48%' }}
-                            className="mr-[10px]"
-                            onClick={() => setShowModalDelete(false)} />
-                        <Button
-                            title={t('common:confirm')} type="primary"
-                            componentType="button"
-                            style={{ width: '48%' }}
-                            onClick={onConfirm} />
-                    </div>
-                </div>
-            </Modal>
+            <OrderClose open={showModalDelete} onClose={() => setShowModalDelete(false)} onConfirm={onConfirm} data={rowData.current} />
             <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={marketWatch[shareOrder?.symbol]} onClose={() => setShareOrder(null)} />
             {showModalEdit &&
                 <FuturesEditSLTPVndc

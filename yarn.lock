@@ -4042,6 +4042,11 @@ klaw-sync@^6.0.0:
   dependencies:
     graceful-fs "^4.1.11"
 
+klinecharts@^8.3.6:
+  version "8.3.6"
+  resolved "https://registry.yarnpkg.com/klinecharts/-/klinecharts-8.3.6.tgz#42f4e08b2627caf5855be133a537b1135b675221"
+  integrity sha512-HH8ToVEwP9n+S6BtTI9cjVa/JWsjsbN5x9P7ts0l+BVFeK3OOcfL+R9oym9SQJ1fjG1LJ5E+sMNL6xj8dl4RPA==
+
 language-subtag-registry@~0.3.2:
   version "0.3.21"
   resolved "https://registry.npmjs.org/language-subtag-registry/-/language-subtag-registry-0.3.21.tgz"
@@ -5221,6 +5226,15 @@ prop-types@15, prop-types@15.x, prop-types@^15.0.0, prop-types@^15.5.4, prop-typ
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.8.1"
+
+prop-types@^15.8.1:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
 
 proxy-addr@~2.0.5:
   version "2.0.7"

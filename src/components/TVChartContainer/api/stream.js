@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import historyProvider from './historyProvider';
 import { ChartMode } from 'redux/actions/const';
+import historyProvider from './historyProvider';
 
 const io = require('socket.io-client');
 
@@ -14,7 +14,6 @@ const socket = io(socket_url, {
     reconnectionDelay: 500,
     reconnectionDelayMax: 500,
     reconnectionAttempts: Infinity,
-
 });
 const _subs = [];
 let isDisconnected = false;
@@ -100,14 +99,14 @@ export default class {
         // socket.emit('unsubscribe:recent_trade', lastSymbol);
         _subs.splice(subIndex, 1);
     }
-};
+}
 socket.on('connect', () => {
     if (isDisconnected) {
         if (_subs.length) {
             _subs.map(sub => {
                 const emitAction = sub.exchange === 'NAMI_SPOT'
-                        ? 'subscribe:recent_trade'
-                        : 'subscribe:futures:ticker'
+                    ? 'subscribe:recent_trade'
+                    : 'subscribe:futures:ticker';
                 return socket.emit(emitAction, lastSymbol);
             });
         }
@@ -127,12 +126,12 @@ socket.on('futures:ticker:update', (update) => {
         s: symbol,
         t: time,
         p: price,
-        c: closePrice
+        c: closePrice,
     } = update;
     const sub = _subs.find(e => e.symbol === symbol && e.exchange === 'NAMI_FUTURES');
     const data = {
         ts: Math.floor(time / 1000),
-        price: symbol.indexOf('VNDC') >= 0 ?  +price : +closePrice,
+        price: symbol.indexOf('VNDC') >= 0 ? +price : +closePrice,
     };
     if (sub) {
         if (!sub?.lastBar?.time) return;
@@ -146,13 +145,12 @@ socket.on('futures:ticker:update', (update) => {
     }
 });
 
-
 socket.on('spot:recent_trade:add', (update) => {
     const {
         s: symbol,
         t: time,
         p: price,
-        q: volume
+        q: volume,
     } = update;
     const sub = _subs.find(e => e.symbol === symbol && e.exchange === 'NAMI_SPOT');
     const data = {
@@ -160,6 +158,7 @@ socket.on('spot:recent_trade:add', (update) => {
         volume: +volume,
         price: +price,
     };
+
     if (sub) {
         if (!sub?.lastBar?.time) return;
         if (data.ts < sub?.lastBar?.time / 1000) {

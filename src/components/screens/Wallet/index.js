@@ -169,16 +169,16 @@ const Wallet = () => {
     const renderScreenTab = useCallback(() => {
         return (
             <Tab series={SCREEN_TAB_SERIES}
-                 currentIndex={state.screenIndex}
-                 onChangeTab={(screenIndex) => {
-                     const current = SCREEN_TAB_SERIES.find(o => o?.key === screenIndex);
-                     // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
-                     //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
-                     // } else {
-                     r.push(`${PATHS.WALLET.DEFAULT}/${current?.code}`);
-                     // }
-                 }}
-                 tArr={['common']}
+                currentIndex={state.screenIndex}
+                onChangeTab={(screenIndex) => {
+                    const current = SCREEN_TAB_SERIES.find(o => o?.key === screenIndex);
+                    // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
+                    //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
+                    // } else {
+                    r.push(`${PATHS.WALLET.DEFAULT}/${current?.code}`);
+                    // }
+                }}
+                tArr={['common']}
             />
         );
     }, [state.screenIndex]);
@@ -189,7 +189,7 @@ const Wallet = () => {
     }, []);
 
     useEffect(() => {
-         auth && reNewUsdRate()
+        auth && reNewUsdRate()
     }, [auth])
 
 
@@ -351,13 +351,12 @@ const Wallet = () => {
     }, [state.screen])
 
     return (
-        <MaldivesLayout>
-            <Background isDark={currentTheme === THEME_MODE.DARK}>
-                {auth ?
-                    <CustomContainer>
-                        {renderScreenTab()}
-                        <div className="mt-7">
-                            {state.screen === WALLET_SCREENS.OVERVIEW &&
+        <Background isDark={currentTheme === THEME_MODE.DARK}>
+            {auth ?
+                <CustomContainer>
+                    {renderScreenTab()}
+                    <div className="mt-7">
+                        {state.screen === WALLET_SCREENS.OVERVIEW &&
                             <OverviewWallet
                                 allAssets={state.allAssets}
                                 exchangeEstBtc={state.exchangeEstBtc}
@@ -371,7 +370,7 @@ const Wallet = () => {
                                 farmingEstBtc={state.farmingEstBtc}
                                 farmingRefPrice={state.farmingRefPrice}
                             />}
-                            {state.screen === WALLET_SCREENS.EXCHANGE &&
+                        {state.screen === WALLET_SCREENS.EXCHANGE &&
                             <ExchangeWallet
                                 allAssets={state.allAssets}
                                 estBtc={state.exchangeEstBtc}
@@ -379,26 +378,25 @@ const Wallet = () => {
                                 usdRate={state.usdRate}
                                 marketWatch={state.exchangeMarketWatch}
                             />}
-                            {state.screen === WALLET_SCREENS.FUTURES &&
+                        {state.screen === WALLET_SCREENS.FUTURES &&
                             <FuturesWallet
                                 estBtc={state.futuresEstBtc}
                                 estUsd={state.futuresRefPrice}
                                 usdRate={state.usdRate}
                                 marketWatch={state.futuresMarketWatch}
                             />}
-                            {state.screen === WALLET_SCREENS.STAKING &&
-                            <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary}/>}
-                            {state.screen === WALLET_SCREENS.FARMING &&
-                            <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary}/>}
-                            {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory/>}
-                        </div>
-                    </CustomContainer>
-                    : <div className="h-[480px] flex items-center justify-center">
-                        <NeedLogin addClass="flex items-center justify-center"/>
+                        {state.screen === WALLET_SCREENS.STAKING &&
+                            <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary} />}
+                        {state.screen === WALLET_SCREENS.FARMING &&
+                            <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary} />}
+                        {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory />}
                     </div>
-                }
-            </Background>
-        </MaldivesLayout>
+                </CustomContainer>
+                : <div className="h-[480px] flex items-center justify-center">
+                    <NeedLogin addClass="flex items-center justify-center" />
+                </div>
+            }
+        </Background>
     );
 };
 

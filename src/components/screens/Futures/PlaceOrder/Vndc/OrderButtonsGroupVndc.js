@@ -6,7 +6,7 @@ import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/
 import { getLoginUrl } from 'src/redux/actions/utils';
 import { useRouter } from 'next/router';
 
-const getType = (type) => {
+export const getType = (type) => {
     switch (type) {
         case FuturesOrderTypes.Limit:
             return VndcFutureOrderType.Type.LIMIT;
@@ -20,7 +20,7 @@ const getType = (type) => {
     }
 }
 
-const getPrice = (type, side, price, ask, bid, stopPrice) => {
+export const getPrice = (type, side, price, ask, bid, stopPrice) => {
     if (type === VndcFutureOrderType.Type.MARKET) return VndcFutureOrderType.Side.BUY === side ? ask : bid;
     if (type === VndcFutureOrderType.Type.STOP) return Number(stopPrice);
     return Number(price);

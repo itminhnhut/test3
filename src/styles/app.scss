@@ -605,9 +605,9 @@ input[type='number'] {
         .ant-picker-cell-in-view:not(:hover){
                 @apply  dark:text-white;
         }
-
     }
 }
+
 .top-unset {
     top: unset;
 }
@@ -623,3 +623,4 @@ input[type='number'] {
 .bottom-unset {
     bottom: unset;
 }
+
