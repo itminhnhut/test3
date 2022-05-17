@@ -193,5 +193,14 @@
     "minimun_qty": "Khối lượng tối thiểu",
     "maximun_qty": "Khối lượng tối đa",
     "invalid_amount": "Giá trị không hợp lệ",
-    "value": "Khối lượng"
+    "value": "Khối lượng",
+    "price_market": "Giá thị trường",
+    "cancel": "Hủy",
+    "place_order_success_message": "Chúc mừng bạn đã mua thành công",
+    "place_order_failed": "Đặt lệnh không thành công",
+    "mobile": {
+        "balance": "Tài khoản",
+        "pnl": "Lợi nhuận",
+        "equity": "Số dư"
+    }
 }

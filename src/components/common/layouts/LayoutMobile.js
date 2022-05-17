@@ -1,7 +1,7 @@
 import Footer from 'src/components/common/Footer/Footer';
 import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT, } from 'src/components/common/NavBar/constants';
 import NavBar from 'src/components/common/NavBar/NavBar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, createContext } from 'react';
 import ReactNotification from 'react-notifications-component';
 import { useWindowSize } from 'utils/customHooks';
 import TransferModal from 'components/wallet/TransferModal';
@@ -9,6 +9,8 @@ import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
 import BottomNavBar from 'components/screens/Mobile/BottomNavBar'
+import AlertModal from 'components/screens/Mobile/AlertModal';
+export const AlertContext = createContext(null);
 
 const LayoutMobile = ({
     navOverComponent,
@@ -39,12 +41,19 @@ const LayoutMobile = ({
     const { width, height } = useWindowSize()
 
     const isApp = useApp()
+    const alert = useRef(null);
 
     useEffect(() => {
-        const frame = document.querySelector('#fc_frame')
-        if (frame) {
-            frame.style.display = 'none';
+        if (window.fcWidget) {
+            window.fcWidget.hide()
+            window.fcWidget.close()
         }
+    })
+
+    useEffect(() => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
     }, [])
 
     return (
@@ -65,11 +74,14 @@ const LayoutMobile = ({
                 <div
                     className='relative flex-1 bg-white dark:bg-darkBlue-1 mb-[80px]'
                 >
-                    {children}
+                    <AlertContext.Provider value={{ alert: alert.current }}>
+                        {children}
+                    </AlertContext.Provider>
                 </div>
                 <TransferModal />
                 <div id={`${PORTAL_MODAL_ID}`} />
                 <BottomNavBar />
+                <AlertModal ref={alert} />
             </div>
         </>
     )

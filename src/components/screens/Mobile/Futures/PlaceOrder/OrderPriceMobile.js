@@ -2,20 +2,24 @@ import React from 'react';
 import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next'
 import { getS3Url } from 'redux/actions/utils';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
 
-const OrderPriceMobile = ({ price, setPrice, decimals, disabled }) => {
+const OrderPriceMobile = ({ price, setPrice, decimals, type }) => {
     const { t } = useTranslation();
+    const disabled = OrderTypes.Market === type;
+    const getLabelName = OrderTypes.Market === type ? t('futures:price_market') : t('futures:price')
+
     return (
         <TradingInput
             thousandSeparator={true}
-            label={t('futures:price')}
+            label={getLabelName}
             value={disabled ? '' : price}
             allowNegative={false}
             disabled={disabled}
             // onChange={({ target: { value } }) => setPrice(value)}
             // validator={getValidator('quantity')}
-            onValueChange={({ floatValue }) => setPrice(floatValue)}
+            onValueChange={({ floatValue = 0 }) => setPrice(floatValue)}
             decimalScale={decimals.decimalScalePrice}
             labelClassName='whitespace-nowrap capitalize'
             tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'

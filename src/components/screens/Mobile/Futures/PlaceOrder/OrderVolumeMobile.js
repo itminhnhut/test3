@@ -13,7 +13,11 @@ const OrderVolumeMobile = memo(({ size, setSize, decimals, maxSize, type, side }
             setSize(maxSize * initPercent / 100);
         }
     }, [maxSize])
-   
+
+    useEffect(() => {
+        refresh.current = false;
+    }, [type])
+
     useEffect(() => {
         setSize(maxSize * initPercent / 100);
     }, [side, type])
@@ -24,7 +28,7 @@ const OrderVolumeMobile = memo(({ size, setSize, decimals, maxSize, type, side }
             label={t('futures:volume')}
             value={size}
             allowNegative={false}
-            onValueChange={({ floatValue }) => setSize(floatValue)}
+            onValueChange={({ floatValue = 0 }) => setSize(floatValue)}
             // validator={getValidator('quantity')}
             decimalScale={decimals.decimalScaleQtyLimit}
             labelClassName='whitespace-nowrap capitalize'

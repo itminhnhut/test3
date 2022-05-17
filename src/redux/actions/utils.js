@@ -62,6 +62,13 @@ export const formatSwapRate = (value, scaleMore = 2) => {
     return x
 }
 
+export const formatCurrency = (n) => {
+    if (n < 1e3) return formatNumber(n, 0, 0, true);
+    if (n >= 1e6 && n < 1e9) return formatNumber(+(n / 1e6).toFixed(4), 4, 0, true) + "M";
+    if (n >= 1e9 && n < 1e12) return formatNumber(+(n / 1e9).toFixed(4), 4, 0, true) + "B";
+    if (n >= 1e12) return formatNumber(+(n / 1e12).toFixed(4), 4, 0, true) + "T";
+}
+
 export function eToNumber(value) {
     let sign = ''
 

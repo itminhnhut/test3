@@ -33,7 +33,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
         <Popover className="relative">
             {({ open, close }) => (
                 <>
-                    <Popover.Button className='w-full h-[43px] border-b-2'>
+                    <Popover.Button className='w-full h-[43px] border-b-2 dark:border-divider-dark'>
                         <div className="flex items-center justify-between text-xs font-medium">
                             <div className="w-full">
                                 {getTypesLabel(type)}

@@ -11,7 +11,7 @@ const OrderSLMobile = ({ sl, setSl, decimals }) => {
             label={'SL'}
             value={sl}
             allowNegative={false}
-            onValueChange={({ floatValue }) => setSl(floatValue)}
+            onValueChange={({ floatValue = 0 }) => setSl(floatValue)}
             decimalScale={decimals.decimalScalePrice}
             labelClassName='whitespace-nowrap capitalize'
             tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'

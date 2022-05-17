@@ -194,5 +194,12 @@
     "minimun_qty": "Minimum Qty is",
     "maximun_qty": "Maximum Qty is",
     "invalid_amount": "Invalid amount",
-    "value": "Value"
+    "value": "Value",
+    "price_market": "Price market",
+    "cancel": "Cancel",
+    "mobile": {
+        "balance": "Balance",
+        "pnl": "PnL",
+        "equity": "Equity"
+    }
 }
