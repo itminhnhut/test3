@@ -17,10 +17,11 @@ let _lastBar;
 // Chart instance
 let chart;
 
-function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator}) {
+function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator, candle }) {
     const prevSymbolInfo = usePrevious(symbolInfo)
     const prevMainIndicator = usePrevious(mainIndicator)
     const prevSubIndicator = usePrevious(subIndicator)
+    const prevCandle = usePrevious(candle)
     // Hooks
 
     // TODO: check default theme not show x,y axis
@@ -112,7 +113,8 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
     // Update theme mode
     useEffect(() => {
         if (themeMode) {
-            chart.setStyleOptions(getDefaultOptions(themeMode))
+            const el = document.querySelector('#' + CHART_ID);
+            chart = init(el, getDefaultOptions(themeMode))
         }
     }, [themeMode])
 
@@ -165,8 +167,19 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
         }
     }, [subIndicator])
 
+    useEffect(() => {
+        if (!chart) return
+        if (prevCandle !== candle) {
+            chart.setStyleOptions({
+                candle: {
+                    type: candle,
+                },
+            });
+        }
+    }, [candle])
+
     return (
-        <div id={CHART_ID} ref={handleChartRef} className="kline-chart flex flex-1">
+        <div id={CHART_ID} ref={handleChartRef} className="kline-chart flex flex-1 h-full">
             <div className="cheat-watermark">
                 <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4}/>
             </div>
@@ -178,5 +191,6 @@ export default React.memo(KLineChart, (prevProps, nextProps) => {
     return (prevProps?.symbolInfo?.symbol === nextProps?.symbolInfo?.symbol) &&
         (prevProps.mainIndicator === nextProps.mainIndicator) &&
         (prevProps.subIndicator === nextProps.subIndicator) &&
-        (prevProps.resolution === nextProps.resolution)
+        (prevProps.resolution === nextProps.resolution)&&
+        (prevProps.candle === nextProps.candle)
 })

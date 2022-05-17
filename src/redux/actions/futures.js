@@ -184,28 +184,36 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
         })
         if (data?.status === ApiStatus.SUCCESS) {
             log.i('placeFuturesOrder result: ', data)
-            showNotification(
-                {
-                    message: t('futures:place_order_success'),
-                    title: t('common:success'),
-                    type: 'success',
-                },
-                1800,
-                'bottom',
-                'bottom-right'
-            )
+            if (utils?.alert) {
+                utils.alert.show('success', t('futures:place_order_success'), t('futures:place_order_success_message'))
+            } else {
+                showNotification(
+                    {
+                        message: t('futures:place_order_success'),
+                        title: t('common:success'),
+                        type: 'success',
+                    },
+                    1800,
+                    'bottom',
+                    'bottom-right'
+                )
+            }
         } else {
             log.i('placeFuturesOrder result: ', data)
-            showNotification(
-                {
-                    message: `${data?.message}`,
-                    title: t('common:failed'),
-                    type: 'failure',
-                },
-                1800,
-                'bottom',
-                'bottom-right'
-            )
+            if (utils?.alert) {
+                utils.alert.show('error', t('futures:place_order_failed'), 'Chúc mừng bạn đã mua thành công 6,666 NAMI từ Nami Exchange.')
+            } else {
+                showNotification(
+                    {
+                        message: `${data?.message}`,
+                        title: t('common:failed'),
+                        type: 'failure',
+                    },
+                    1800,
+                    'bottom',
+                    'bottom-right'
+                )
+            }
         }
     } catch (e) {
         console.log(`Can't place order `, e)

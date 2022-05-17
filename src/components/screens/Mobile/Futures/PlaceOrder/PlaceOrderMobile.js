@@ -11,14 +11,18 @@ import OrderLeverage from './OrderLeverage';
 import OrderTypeMobile from './OrderTypeMobile'
 import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
+import { formatNumber } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next'
 
 const initPercent = 25;
 
 const PlaceOrder = ({
     decimals, side, pairPrice, pair, isAuth, availableAsset,
-    pairConfig, isVndcFutures, getPairPrice,
+    pairConfig, isVndcFutures,
 }) => {
+    const lastPrice = pairPrice?.lastPrice;
     const usdRate = useSelector((state) => state.utils.usdRate)
+    const { t } = useTranslation();
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
     const [maxQty, setMaxQty] = useState(0);
 
@@ -85,26 +89,23 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _lastPrice = getPairPrice()?.lastPrice;
-        setPrice(_lastPrice);
-        setStopPrice(_lastPrice)
+        setPrice(lastPrice);
+        setStopPrice(lastPrice)
     }, [pair, type])
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _lastPrice = getPairPrice()?.lastPrice;
-        const _sl = +(_lastPrice - ((side === VndcFutureOrderType.Side.BUY ? _lastPrice : -_lastPrice) * 0.05))
-        const _tp = +(_lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -_lastPrice : _lastPrice) * 0.05))
+        const _sl = +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05))
+        const _tp = +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05))
         setTp(_tp)
         setSl(_sl)
     }, [side, type, pair])
 
     useEffect(() => {
-        const _lastPrice = pairPrice?.lastPrice;
-        setPrice(_lastPrice);
-        setStopPrice(_lastPrice);
-        const _sl = +(_lastPrice - ((side === VndcFutureOrderType.Side.BUY ? _lastPrice : -_lastPrice) * 0.05))
-        const _tp = +(_lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -_lastPrice : _lastPrice) * 0.05))
+        setPrice(lastPrice);
+        setStopPrice(lastPrice);
+        const _sl = +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05))
+        const _tp = +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05))
         setTp(_tp)
         setSl(_sl)
     }, [firstTime.current])
@@ -120,6 +121,74 @@ const PlaceOrder = ({
         const marginLength = margin.toFixed(0).length;
         return { volume, margin, volumeLength, marginLength }
     }, [pairPrice, side, type])
+
+    const inputValidator = (mode, isStop) => {
+        let isValid = true,
+            msg = null
+
+        const lotSize =
+            pairConfig?.filters?.find((o) =>
+                [
+                    FuturesOrderTypes.Market,
+                    FuturesOrderTypes.StopMarket,
+                ].includes(type)
+                    ? o?.filterType === 'MARKET_LOT_SIZE'
+                    : o?.filterType === 'LOT_SIZE'
+            ) || {}
+
+        const priceFilter =
+            pairConfig?.filters?.find((o) => o.filterType === 'PRICE_FILTER') ||
+            {}
+
+        switch (mode) {
+            // input check
+            case 'quantity':
+                const _max = lotSize?.maxQty
+                const _min = lotSize?.minQty
+                const _decimals = decimals.decimalScaleQtyLimit
+                const _displayingMax = `${formatNumber(lotSize?.maxQty, _decimals, 0, true)} ${pairConfig?.baseAsset}`
+                const _displayingMin = `${formatNumber(lotSize?.minQty, _decimals, 0, true)} ${pairConfig?.baseAsset}`
+
+                if (size < +_min) {
+                    msg = `${t('futures:minimun_qty')} ${_displayingMin} `
+                    isValid = false
+                }
+
+                if (size > +_max) {
+                    msg = `${t('futures:maximun_qty')} ${_displayingMax}`
+                    isValid = false
+                }
+
+                return { isValid, msg }
+
+            case 'price':
+            case 'stop_loss':
+            case 'take_profit':
+                const _maxPrice = priceFilter?.maxPrice
+                const _minPrice = priceFilter?.minPrice
+                const _price = isStop ? stopPrice : mode === 'price' ? price : mode === 'stop_loss' ? sl : tp;
+                if (+_price < +_minPrice) {
+                    isValid = false
+                    msg = `${t('futures:minimun_price')} ${!isVndcFutures ? _minPrice : formatNumber(_minPrice, 0, 0, true)}`
+                }
+
+                if (+_price > +_maxPrice) {
+                    isValid = false
+                    msg = `${t('futures:maximun_price')} ${!isVndcFutures ? _maxPrice : formatNumber(_maxPrice, 0, 0, true)}`
+                }
+
+                return { isValid, msg }
+            default:
+                return {}
+        }
+    }
+
+
+    const isError = useMemo(() => {
+        const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
+        const not_valid = !size || !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
+        return !isVndcFutures ? false : not_valid
+    }, [price, size, type, stopPrice, sl, tp, isVndcFutures])
 
     return (
         <div className="flex flex-wrap justify-between px-[16px] py-[10px]">
@@ -142,7 +211,10 @@ const PlaceOrder = ({
                 />
             </OrderInput>
             <OrderInput>
-                <OrderPriceMobile disabled={OrderTypes.Market === type} price={price} setPrice={setPrice} decimals={decimals} />
+                <OrderPriceMobile
+                    type={type}
+                    price={price} setPrice={setPrice} decimals={decimals}
+                />
             </OrderInput>
             <OrderInput>
                 <OrderTPMobile tp={tp} setTp={setTp} decimals={decimals} />
@@ -158,7 +230,8 @@ const PlaceOrder = ({
                     tp={tp} sl={sl} type={type} size={size} price={price}
                     stopPrice={stopPrice} side={side} decimals={decimals}
                     pairConfig={pairConfig} pairPrice={pairPrice}
-                    leverage={leverage}
+                    leverage={leverage} isAuth={isAuth} isError={isError}
+                    isAuth={isAuth}
                 />
             </OrderInput>
         </div>

@@ -11,10 +11,11 @@ import SortIcon from 'components/screens/Mobile/SortIcon'
 import fetchAPI from 'utils/fetch-api'
 import {
     API_GET_FAVORITE,
-    API_GET_FUTURES_MARKET_WATCH,
+    API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY,
 } from 'redux/actions/apis'
 import AssetLogo from 'components/wallet/AssetLogo'
 import {
+    formatCurrency,
     formatNumber,
     formatPercentage,
     formatPrice,
@@ -59,6 +60,8 @@ const Market = () => {
 
     const [search, setSearch] = useState('')
 
+    const [referencePrice, setReferencePrice] = useState()
+
     const changeSearch = useCallback(
         debounce(({target: {value}}) => {
             setSearch(value)
@@ -66,7 +69,7 @@ const Market = () => {
         []
     )
 
-    const [themeMode, setThemeMode] = useDarkMode()
+    const [themeMode] = useDarkMode()
 
     const {t} = useTranslation(['common'])
 
@@ -93,17 +96,6 @@ const Market = () => {
         }
     }
 
-    // TODO: move to utils
-    const formatCash = (n, digits = 4) => {
-        if (n < 1e3) return formatNumber(n, 0, 0, true)
-        if (n >= 1e6 && n < 1e9)
-            return formatNumber(+(n / 1e6).toFixed(4), digits, 0, true) + 'M'
-        if (n >= 1e9 && n < 1e12)
-            return formatNumber(+(n / 1e9).toFixed(4), digits, 0, true) + 'B'
-        if (n >= 1e12)
-            return formatNumber(+(n / 1e12).toFixed(4), digits, 0, true) + 'T'
-    }
-
     useEffect(() => {
         fetchAPI({
             url: API_GET_FAVORITE,
@@ -113,6 +105,16 @@ const Market = () => {
                 setFavoriteSymbols(data.map((s) => s.replace('_', '')))
             })
             .catch((err) => console.error(err))
+
+        // TODO: move this logic to redux store
+        fetchAPI({
+            url: API_GET_REFERENCE_CURRENCY,
+            params: {base: 'VNDC,USDT', quote: 'USD'}
+        }).then(({data = []}) => {
+            setReferencePrice(data.reduce((acm, current) => {
+                return {...acm, [`${current.base}/${current.quote}`]: current.price}
+            }, {}))
+        }).catch(err => console.error(err))
     }, [])
 
     useEffect(() => {
@@ -186,16 +188,16 @@ const Market = () => {
                                 </span>
                             </div>
                             <p className='text-xs font-medium text-txtSecondary leading-4'>
-                                Vol {formatCash(item.volume24h, 1)}
+                                Vol {formatCurrency(item.volume24h, 1)}
                             </p>
                         </div>
                     </div>
                     <div className='flex items-center justify-end'>
                         <div className='font-medium text-right'>
                             <LastPrice price={item.lastPrice}/>
-                            {/*<p className='text-xs text-gray-1 leading-4'>*/}
-                            {/*    $ 2,796.66*/}
-                            {/*</p>*/}
+                            <p className='text-xs text-gray-1 leading-4'>
+                                $ {formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice)}
+                            </p>
                         </div>
                         <div className='flex justify-end w-24'>
                             <div
@@ -239,7 +241,6 @@ const Market = () => {
                         />
                     </div>
                     <DollarCoin
-                        onClick={setThemeMode}
                         color={
                             themeMode === THEME_MODE.LIGHT
                                 ? colors.grey1

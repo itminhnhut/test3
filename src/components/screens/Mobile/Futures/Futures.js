@@ -13,27 +13,20 @@ import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/con
 import { API_GET_FUTURES_MARK_PRICE, API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
-import TabOrders from './TabOrders/TabOrders'
+import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders'
 import { getOrdersList } from 'redux/actions/futures'
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import SideOrder from './SideOrder';
-import PlaceOrderMobile from './PlaceOrder/PlaceOrderMobile'
+import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
+import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile'
 import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
-
+import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
+import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
+import styled from 'styled-components';
 
 const INITIAL_STATE = {
     loading: false,
     pair: null,
-    prevPair: null,
-    socketStatus: false,
-    pairPrice: null,
-    markPrice: null,
-    forceUpdateState: 1,
-    favoritePairLayout: null,
-    orderBookLayout: null,
-    tradeRecordLayout: null,
     isVndcFutures: false,
-    assumingPrice: null,
 };
 
 const FuturesMobile = () => {
@@ -43,13 +36,13 @@ const FuturesMobile = () => {
     const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
-    const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
     const router = useRouter();
     const [side, setSide] = useState(VndcFutureOrderType.Side.BUY)
     const avlbAsset = useSelector((state) => state.wallet?.FUTURES)
     const [availableAsset, setAvailableAsset] = useState(null)
+    const [collapse, setCollapse] = useState(false);
 
     const pairConfig = useMemo(
         () => allPairConfigs?.find((o) => o.pair === state.pair),
@@ -57,72 +50,6 @@ const FuturesMobile = () => {
     );
 
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
-
-    const getPairMarkPrice = async (symbol) => {
-        if (!symbol) return;
-        setState({ loading: true });
-        try {
-            const { data } = await Axios.get(API_GET_FUTURES_MARK_PRICE, {
-                params: { symbol },
-            });
-            if (data?.status === ApiStatus.SUCCESS) {
-                setState({
-                    markPrice: FuturesMarkPrice.create(data?.data?.[0]),
-                });
-            }
-        } catch (e) {
-            console.log(`Can't get ${symbol} marketWatch `, e);
-        }
-    };
-
-    const subscribeFuturesSocket = (pair) => {
-
-        if (!publicSocket) {
-            setState({ socketStatus: !!publicSocket });
-        } else {
-            if (
-                !state.prevPair ||
-                state.prevPair !== pair ||
-                !!publicSocket !== state.socketStatus
-            ) {
-                publicSocket.emit('subscribe:futures:depth', pair);
-                publicSocket.emit('subscribe:futures:recent_trade', pair);
-                // publicSocket.emit('subscribe:futures:ticker', pair)
-                publicSocket.emit('subscribe:futures:mark_price', pair);
-                publicSocket.emit('subscribe:futures:ticker', pair);
-                // emit socket all
-                publicSocket.emit('subscribe:futures:mini_ticker', 'all')
-
-                setState({
-                    socketStatus: !!publicSocket,
-                    prevPair: pair
-                });
-            }
-        }
-    };
-
-    const unsubscribeFuturesSocket = (pair) => {
-        publicSocket?.emit('unsubscribe:futures:depth', pair);
-        publicSocket?.emit('unsubscribe:futures:recent_trade', pair);
-        publicSocket?.emit('unsubscribe:futures:ticker', 'all');
-        publicSocket?.emit('unsubscribe:futures:mark_price', pair);
-        // publicSocket?.emit('unsubscribe:futures:mini_ticker', 'all')
-    };
-
-    useEffect(() => {
-        if (marketWatch?.[state.pair]) {
-            setState({
-                pairPrice: marketWatch[state.pair],
-                forceUpdateState: state.forceUpdateState + 1,
-            });
-        }
-    }, [marketWatch, state.pair]);
-
-    useEffect(() => {
-        setState({ markPrice: null });
-        getPairMarkPrice(state.pair);
-    }, [state.pair]);
-
 
     // Re-load Previous Pair
     useEffect(() => {
@@ -142,43 +69,6 @@ const FuturesMobile = () => {
             );
         }
     }, [router]);
-
-    useEffect(() => {
-        if (!state.pair) return;
-
-        // ? Subscribe publicSocket
-        subscribeFuturesSocket(state.pair);
-
-        // ? Get Pair Ticker
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
-            const pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-            // console.log('__ check pairPrice', pairPrice.symbol, state.pair, pairPrice);
-            if (state.pair === pairPrice?.symbol && pairPrice?.lastPrice > 0) {
-                setState({ pairPrice });
-            }
-        });
-
-        // ? Get Mark Price
-        Emitter.on(
-            PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE + state.pair,
-            async (data) => {
-                const markPrice = FuturesMarkPrice.create(data);
-                if (
-                    state.pair === markPrice?.symbol &&
-                    !!markPrice?.markPrice
-                ) {
-                    setState({ markPrice });
-                }
-            }
-        );
-
-        // ? Unsubscribe publicSocket
-        return () => {
-            publicSocket && unsubscribeFuturesSocket(state.pair);
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
-            Emitter.off(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE);
-        };
-    }, [publicSocket, state.pair]);
 
     useEffect(() => {
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
@@ -226,37 +116,52 @@ const FuturesMobile = () => {
         }
     }, [avlbAsset, pairConfig])
 
-    const pairPriceTemp = useRef(null);
-    const mount = useRef(false);
-
-    useEffect(() => {
-        pairPriceTemp.current = state.pairPrice;
-    }, [state.pairPrice])
-
-    const getPairPrice = useCallback(() => {
-        return pairPriceTemp.current
-    }, [])
-
     return (
         <>
-            <FuturesPageTitle
-                pair={state.pair}
-                price={state.pairPrice?.lastPrice}
-                pricePrecision={pairConfig?.pricePrecision}
-            />
+            <SocketLayout pair={state.pair} pairConfig={pairConfig}>
+                <FuturesPageTitle
+                    pair={state.pair}
+                    pricePrecision={pairConfig?.pricePrecision}
+                    pairConfig={pairConfig}
+                />
+            </SocketLayout>
             <DynamicNoSsr>
                 <LayoutMobile>
-                    <SideOrder side={side} setSide={setSide} />
-                    <PlaceOrderMobile
-                        decimals={decimals} side={side} pairPrice={state.pairPrice}
-                        pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
-                        pairConfig={pairConfig} isVndcFutures={isVndcFutures} getPairPrice={getPairPrice}
-                    />
-                    <TabOrders isVndcFutures={isVndcFutures} pair={state.pair} />
+                    <Container>
+                        <Section>
+                            <ChartMobile
+                                pair={state.pair} pairConfig={pairConfig}
+                                isVndcFutures={isVndcFutures}
+                                setCollapse={setCollapse} collapse={collapse}
+                            />
+                            <SideOrder side={side} setSide={setSide} />
+                            <SocketLayout pair={state.pair} pairConfig={pairConfig}>
+                                <PlaceOrderMobile
+                                    decimals={decimals} side={side}
+                                    pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
+                                    pairConfig={pairConfig} isVndcFutures={isVndcFutures}
+                                />
+                            </SocketLayout>
+                        </Section>
+                        <Section style={{ overflow: 'hidden' }}>
+                            <TabOrders isVndcFutures={isVndcFutures} pair={state.pair} pairConfig={pairConfig} isAuth={!!auth} />
+                        </Section>
+                    </Container>
                 </LayoutMobile>
             </DynamicNoSsr>
         </>
     );
 };
+const Container = styled.div`
+scroll-snap-type:y mandatory;
+overflow-y:scroll;
+height:calc(var(--vh, 1vh) * 100 - 80px);
+`
+
+const Section = styled.div`
+width: 100%;
+height:calc(var(--vh, 1vh) * 100 - 80px);
+scroll-snap-align:start
+`
 
 export default FuturesMobile;

@@ -11,7 +11,7 @@ const OrderTPMobile = ({ tp, setTp, decimals }) => {
             label={'TP'}
             value={tp}
             allowNegative={false}
-            onValueChange={({ floatValue }) => setTp(floatValue)}
+            onValueChange={({ floatValue = 0 }) => setTp(floatValue)}
             decimalScale={decimals.decimalScalePrice}
             labelClassName='whitespace-nowrap capitalize'
             tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
