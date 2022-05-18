@@ -1,34 +1,47 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
-import { formatNumber, getS3Url } from 'redux/actions/utils';
-import { roundTo } from 'round-to';
+import {formatNumber, getS3Url} from 'redux/actions/utils';
+import {roundTo} from 'round-to';
 import classNames from 'classnames';
 import ms from "ms";
-import { listTimeFrame } from "components/KlineChart/kline.service";
-import { Popover, Transition } from "@headlessui/react";
+import {listTimeFrame} from "components/KlineChart/kline.service";
+import {Popover, Transition} from "@headlessui/react";
 import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
+import {IconStar, IconStarFilled} from "components/common/Icons";
+import colors from "styles/colors";
+import fetchAPI from "utils/fetch-api";
+import {API_GET_FAVORITE} from "redux/actions/apis";
+import {TRADING_MODE} from "redux/actions/const";
+import {favoriteAction} from "redux/actions/user";
+import {LANGUAGE_TAG} from "hooks/useLanguage";
+import showNotification from "utils/notificationService";
+import {useTranslation} from "next-i18next";
+import {getFuturesFavoritePairs} from "redux/actions/futures";
+import {useDispatch, useSelector} from "react-redux";
 
 const candleList = [
-    { value: 'candle_solid', text: 'Solid' },
-    { value: 'candle_stroke', text: 'Stroke' },
-    { value: 'candle_up_stroke', text: 'Up Stroke' },
-    { value: 'candle_down_stroke', text: 'Down Stroke' },
-    { value: 'ohlc', text: 'OHLC' },
-    { value: 'area', text: 'Area Chart' }
+    {value: 'candle_solid', text: 'Solid'},
+    {value: 'candle_stroke', text: 'Stroke'},
+    {value: 'candle_up_stroke', text: 'Up Stroke'},
+    {value: 'candle_down_stroke', text: 'Down Stroke'},
+    {value: 'ohlc', text: 'OHLC'},
+    {value: 'area', text: 'Area Chart'}
 ]
 const ChartTimer = ({
-    pairConfig, pair, isVndcFutures, resolution, setResolution,
-    candle, setCandle
-}) => {
+                        pairConfig, pair, isVndcFutures, resolution, setResolution,
+                        candle, setCandle
+                    }) => {
     if (!pairConfig) return null;
+    console.log(pairConfig)
     const [showModelMarket, setShowModelMarket] = useState(false)
     return (
         <div className="min-h-[64px] chart-timer flex items-center justify-between px-[10px]">
             <div className="flex items-center cursor-pointer" onClick={() => setShowModelMarket(true)}>
-                <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
-                <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
-                <SocketLayout pairConfig={pairConfig} pair={pair} >
-                    <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
+                <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16}/>
+                <div
+                    className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                <SocketLayout pairConfig={pairConfig} pair={pair}>
+                    <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures}/>
                 </SocketLayout>
             </div>
             <div className="flex items-center">
@@ -39,7 +52,8 @@ const ChartTimer = ({
                     displayValue="text"
                     options={listTimeFrame}
                     classNameButton="px-[10px]"
-                    icon={<div className="uppercase text-sm text-gray dark:text-txtSecondary-dark font-medium">{ms(resolution)}</div>}
+                    icon={<div
+                        className="uppercase text-sm text-gray dark:text-txtSecondary-dark font-medium">{ms(resolution)}</div>}
                 />
                 <MenuTime
                     value={candle}
@@ -49,9 +63,9 @@ const ChartTimer = ({
                     options={candleList}
                     classNameButton="pl-[10px]"
                     classNamePanel="right-[-10px]"
-                    icon={<img src={getS3Url('/images/icon/ic_menu_chart.png')} height={24} width={24} />}
+                    icon={<img src={getS3Url('/images/icon/ic_menu_chart.png')} height={24} width={24}/>}
                 />
-
+                <FavouriteButton pair={pair} pairConfig={pairConfig}/>
             </div>
             <ModelMarketMobile
                 visible={showModelMarket}
@@ -61,7 +75,7 @@ const ChartTimer = ({
     );
 };
 
-const Change24h = ({ pairConfig, pair, pairPrice, isVndcFutures }) => {
+const Change24h = ({pairPrice, isVndcFutures}) => {
 
     return (
         <div className='flex items-center'>
@@ -89,12 +103,10 @@ const Change24h = ({ pairConfig, pair, pairPrice, isVndcFutures }) => {
 
 }
 
-
-
-const MenuTime = ({ value, onChange, options, icon, keyValue, displayValue, classNameButton, classNamePanel }) => {
+const MenuTime = ({value, onChange, options, icon, keyValue, displayValue, classNameButton, classNamePanel}) => {
     return (
         <Popover className="relative">
-            {({ open, close }) => (
+            {({open, close}) => (
                 <>
                     <Popover.Button className={`flex ${classNameButton}`}>
                         {icon}
@@ -109,20 +121,21 @@ const MenuTime = ({ value, onChange, options, icon, keyValue, displayValue, clas
                         leaveTo="opacity-0 translate-y-1"
                     >
                         <Popover.Panel className={`absolute z-50 bg-white dark:bg-bgPrimary-dark ${classNamePanel}`}>
-                            <div className="overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
+                            <div
+                                className="overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
                                 {options?.map(item => {
                                     return (
                                         <div onClick={() => {
                                             onChange(item[keyValue])
                                             close()
                                         }}
-                                            className={classNames(
-                                                'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer ',
-                                                {
-                                                    '!text-txtPrimary dark:!text-txtPrimary-dark':
-                                                        item[keyValue] === value,
-                                                }
-                                            )}
+                                             className={classNames(
+                                                 'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer ',
+                                                 {
+                                                     '!text-txtPrimary dark:!text-txtPrimary-dark':
+                                                         item[keyValue] === value,
+                                                 }
+                                             )}
                                         >
                                             {item[displayValue]}
                                         </div>
@@ -135,6 +148,23 @@ const MenuTime = ({ value, onChange, options, icon, keyValue, displayValue, clas
             )}
         </Popover>
     )
+}
+
+const FavouriteButton = ({pairConfig}) => {
+    const favoritePairs = useSelector((state) => state.futures.favoritePairs)
+    const dispatch = useDispatch();
+
+    const pair = pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset
+    const isFavorite = useMemo(() => favoritePairs.includes(pair),[favoritePairs, pairConfig])
+
+    const handleSetFavorite = async () => {
+        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pair)
+        dispatch(getFuturesFavoritePairs())
+    }
+
+    return <div className='ml-4 cursor-pointer' onClick={handleSetFavorite}>
+        {isFavorite ? <IconStarFilled size={16} color={colors.yellow}/> : <IconStar size={16}/>}
+    </div>
 }
 
 export default ChartTimer;
