@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, {Fragment, useState} from 'react';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import ms from "ms";
 import { listTimeFrame } from "components/KlineChart/kline.service";
 import { Popover, Transition } from "@headlessui/react";
+import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
 
 const candleList = [
     { value: 'candle_solid', text: 'Solid' },
@@ -20,9 +21,10 @@ const ChartTimer = ({
     candle, setCandle
 }) => {
     if (!pairConfig) return null;
+    const [showModelMarket, setShowModelMarket] = useState(false)
     return (
         <div className="min-h-[64px] chart-timer flex items-center justify-between px-[10px]">
-            <div className="flex items-center">
+            <div className="flex items-center cursor-pointer" onClick={() => setShowModelMarket(true)}>
                 <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
                 <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
                 <SocketLayout pairConfig={pairConfig} pair={pair} >
@@ -51,6 +53,10 @@ const ChartTimer = ({
                 />
 
             </div>
+            <ModelMarketMobile
+                visible={showModelMarket}
+                onClose={() => setShowModelMarket(false)}
+            />
         </div>
     );
 };

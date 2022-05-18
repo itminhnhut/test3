@@ -1,5 +1,5 @@
 // Maldives 0.1 NavBar
-@import "../helpers/contants";
+@import '../helpers/contants';
 
 .mal-navbar__wrapper__no__blur {
   @apply bg-bgPrimary dark:bg-bgPrimary-dark #{!important};
@@ -31,7 +31,6 @@
 
   // Re-used simple dropdown
   .mal-navbar__with__dropdown {
-
     .mal-navbar__dropdown {
       .mal-navbar__dropdown__wrapper {
         @apply bg-bgContainer dark:bg-darkBlue-2 dark:shadow-none
@@ -56,7 +55,7 @@
       .mal-navbar__dropdown__user__info {
         .mal-navbar__dropdown__user__info__summary {
           .mal-navbar__dropdown__user__info__username {
-              @apply text-txtPrimary dark:text-txtPrimary-dark #{!important};
+            @apply text-txtPrimary dark:text-txtPrimary-dark #{!important};
           }
         }
       }
@@ -93,13 +92,11 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1___item2 {
-
     &:hover {
       @apply bg-darkBlue-3 #{!important};
     }
 
     .mal-navbar__link__group___item___childen__lv1___item2___c {
-
       .mal-navbar__link__group___item___childen__lv1___item2___c__title {
         @apply text-txtPrimary-dark #{!important};
       }
@@ -112,7 +109,6 @@
 
   // Re-used simple dropdown
   .mal-navbar__with__dropdown {
-
     .mal-navbar__dropdown {
       .mal-navbar__dropdown__wrapper {
         @apply bg-darkBlue-2 shadow-none border-l border-r border-b border-divider-dark #{!important};
@@ -171,13 +167,11 @@
   }
 
   .mal-navbar__link__group___item___childen__lv1___item2 {
-
     &:hover {
       @apply bg-teal-50 #{!important};
     }
 
     .mal-navbar__link__group___item___childen__lv1___item2___c {
-
       .mal-navbar__link__group___item___childen__lv1___item2___c__title {
         @apply text-txtPrimary #{!important};
       }
@@ -188,10 +182,8 @@
     }
   }
 
-
   // Re-used simple dropdown
   .mal-navbar__with__dropdown {
-
     .mal-navbar__dropdown {
       .mal-navbar__dropdown__wrapper {
         @apply bg-bgContainer border-0 #{!important};
@@ -240,7 +232,7 @@
 
   height: $MOBILE_NAV_HEIGHT;
   padding: 0 16px;
-  transition: all .2s ease;
+  transition: all 0.2s ease;
   //box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.03);
 
   @media (min-width: 992px) {
@@ -263,7 +255,6 @@
     }
 
     .mal-navbar__right_function___dropdown {
-
     }
   }
 
@@ -344,10 +335,9 @@
 
     &:hover {
       > div.user__svg svg path {
-          stroke: #00C8BC;
+        stroke: #00c8bc;
       }
     }
-
   }
 
   .mal-navbar__link__group {
@@ -375,7 +365,7 @@
           transform: rotate(180deg);
 
           path {
-            stroke: #00C8BC !important;
+            stroke: #00c8bc !important;
           }
         }
       }
@@ -455,7 +445,7 @@
       border-bottom-right-radius: 12px;
       border-bottom-left-radius: 12px;
       overflow: hidden;
-      transition: max-height .3s ease;
+      transition: max-height 0.3s ease;
       padding-right: 16px;
       padding-left: 16px;
       border-color: transparent;
@@ -482,7 +472,6 @@
         @apply bg-listItemSelected dark:bg-darkBlue-4;
       }
     }
-
 
     .mal-navbar__link__spotlight {
       @apply text-sm font-medium text-txtPrimary-dark ml-8 pl-8 border-l border-divider-dark;
@@ -516,12 +505,13 @@
     &:hover {
       @apply text-dominant #{!important};
 
-      a, span {
+      a,
+      span {
         @apply text-dominant #{!important};
       }
 
       svg path {
-        stroke: #00C8BC;
+        stroke: #00c8bc;
       }
     }
   }
@@ -535,7 +525,7 @@
         transform: rotate(180deg);
 
         path {
-          stroke: #00C8BC;
+          stroke: #00c8bc;
         }
       }
     }
@@ -577,7 +567,8 @@
           font-size: 14px;
           font-weight: 500;
 
-          a, span {
+          a,
+          span {
             @apply text-txtPrimary dark:text-txtPrimary-dark #{!important};
           }
 
@@ -589,12 +580,10 @@
             @apply bg-teal-50 dark:bg-darkBlue-3;
           }
         }
-
       }
     }
   }
 }
-
 
 .mal-pocket-navbar__drawer {
   @apply absolute top-0 right-0 bg-bgPrimary dark:bg-bgPrimary-dark;
@@ -602,13 +591,13 @@
   width: 100%;
   max-width: 375px;
   height: 100%;
-  transition: all .1s ease;
+  transition: all 0.1s ease;
   transform: translateX(100%);
   padding-top: 13px;
   padding-bottom: 76px;
   overflow-y: scroll;
   user-select: none;
-  z-index: 9999999999;
+  z-index: 20;
 
   .mal-pocket-navbar__drawer__content___wrapper {
     .user__button {
@@ -671,7 +660,6 @@
   transform: translateX(0);
 }
 
-
 .navbar {
   .navbar-item {
     @apply text-sm leading-6 font-semibold text-black-700 hover:text-teal px-4;
@@ -679,7 +667,6 @@
     &.active {
       @apply text-teal-700;
     }
-
   }
 
   .navbar-item-link {
@@ -691,4 +678,3 @@
     }
   }
 }
-
