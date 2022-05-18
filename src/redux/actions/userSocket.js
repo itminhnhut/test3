@@ -82,6 +82,16 @@ function onChangeWallet(socket, dispatch) {
 
 }
 
+function onFuturesUpdate(socket, dispatch) {
+    socket.on('future:update_order', data => {
+        console.log('__ future:update_order', data);
+    });
+
+    socket.on('future:update_balance_position', data => {
+        console.log('__ future:update_balance_position', data);
+    });
+}
+
 function initNotification(socket, dispatch) {
     if (socket) {
         socket.removeListener('new_notification');
@@ -124,6 +134,7 @@ function initUserSocket() {
             });
             authUserSocket(dispatch);
             onChangeWallet(WS, dispatch);
+            onFuturesUpdate(WS, dispatch);
             initNotification(WS, dispatch);
             initNotificationRepatch(WS, dispatch);
             WS.on(UserSocketEvent.EXCHANGE_UPDATE_ORDER, (data) => {
