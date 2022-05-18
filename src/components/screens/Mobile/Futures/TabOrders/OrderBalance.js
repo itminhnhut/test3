@@ -38,7 +38,7 @@ const OrderBalance = ({ ordersList, visible }) => {
     );
 };
 
-const Balance = ({ ordersList = [], mode }) => {
+export const Balance = ({ ordersList = [], mode }) => {
     const wallets = useSelector(state => state.wallet.FUTURES)
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null
     const futuresMarketWatch = useSelector((state) => state?.futures?.marketWatch) || null;

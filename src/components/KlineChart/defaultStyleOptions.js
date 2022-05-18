@@ -44,9 +44,9 @@ export default (themeMode = THEME_MODE.DARK) => {
             // 'candle_solid'|'candle_stroke'|'candle_up_stroke'|'candle_down_stroke'|'ohlc'|'area'
             type: 'candle_solid',
             bar: {
-                upColor: '#26A69A',
-                downColor: '#EF5350',
-                noChangeColor: '#888888',
+                upColor: colors.teal,
+                downColor: colors.red,
+                noChangeColor: colors.teal,
             },
             area: {
                 lineSize: 2,
@@ -80,9 +80,9 @@ export default (themeMode = THEME_MODE.DARK) => {
                 },
                 last: {
                     show: true,
-                    upColor: '#26A69A',
-                    downColor: '#EF5350',
-                    noChangeColor: '#888888',
+                    upColor: colors.teal,
+                    downColor: colors.red,
+                    noChangeColor: colors.teal,
                     line: {
                         show: true,
                         // 'solid'|'dash'
@@ -143,9 +143,9 @@ export default (themeMode = THEME_MODE.DARK) => {
                 bottom: 0.1,
             },
             bar: {
-                upColor: 'rgba(0,200,188,0.6)',
-                downColor: 'rgba(229,84,75,0.6)',
-                noChangeColor: '#888888',
+                upColor: colors.teal,
+                downColor: colors.red,
+                noChangeColor: colors.teal,
             },
             line: {
                 size: 1,
@@ -153,9 +153,9 @@ export default (themeMode = THEME_MODE.DARK) => {
                 colors: ['rgba(255,150,0,0.6)', 'rgba(157,101,201,0.6)', 'rgba(33,150,243,0.6)', 'rgba(225,29,116,0.6)', 'rgba(1,197,196,0.6)'],
             },
             circle: {
-                upColor: '#26A69A',
-                downColor: '#EF5350',
-                noChangeColor: '#888888',
+                upColor: colors.teal,
+                downColor: colors.red,
+                noChangeColor: colors.teal,
             },
             lastValueMark: {
                 show: false,

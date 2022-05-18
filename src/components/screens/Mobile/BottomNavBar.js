@@ -13,9 +13,9 @@ import SvgFutures from 'components/svg/SvgFutures';
 import SvgMarket from 'components/svg/SvgMarket';
 
 const listNav = [
-    { title: 'Markets', prefix: '/mobile/', nav: 'market', icon: <SvgMarket /> },
-    { title: 'Futures', prefix: '/mobile/', nav: 'futures', icon: <SvgFutures /> },
-    { title: 'Wallets', prefix: '/mobile/', nav: 'wallet', icon: <SvgWallet /> },
+    { title: 'Markets', prefix: 'mobile', nav: 'market', icon: <SvgMarket /> },
+    { title: 'Futures', prefix: 'mobile', nav: 'futures', icon: <SvgFutures /> },
+    { title: 'Wallets', prefix: 'mobile', nav: 'wallet', icon: <SvgWallet /> },
 ]
 
 const BottomNavBar = memo(() => {
@@ -37,6 +37,13 @@ const BottomNavBar = memo(() => {
             dispatch(setBottomTab(listNav[0].nav))
         }
     }, [])
+
+    useEffect(() => {
+        const _tab = listNav.find(rs => router.pathname.indexOf(rs.nav) !== -1);
+        if (_tab) {
+            setTab(_tab.nav);
+        }
+    }, [router])
 
     return (
         <Tabs isDark={isDark}>
@@ -60,7 +67,7 @@ const Tabs = styled.div.attrs({
     width:100%;
     position:fixed;
     bottom:0;
-    z-index:10;
+    z-index:9999999999;
     border-radius:12px 12px 0 0;
     padding:10px;
     display:flex;

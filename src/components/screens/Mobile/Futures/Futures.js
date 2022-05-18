@@ -22,6 +22,7 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
+import Guideline from './Guideline';
 
 const INITIAL_STATE = {
     loading: false,
@@ -118,6 +119,7 @@ const FuturesMobile = () => {
 
     return (
         <>
+            <Guideline pair={state.pair} />
             <SocketLayout pair={state.pair} pairConfig={pairConfig}>
                 <FuturesPageTitle
                     pair={state.pair}
@@ -134,12 +136,13 @@ const FuturesMobile = () => {
                                 isVndcFutures={isVndcFutures}
                                 setCollapse={setCollapse} collapse={collapse}
                             />
-                            <SideOrder side={side} setSide={setSide} />
+                            {!collapse && <SideOrder side={side} setSide={setSide} />}
                             <SocketLayout pair={state.pair} pairConfig={pairConfig}>
                                 <PlaceOrderMobile
                                     decimals={decimals} side={side}
                                     pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
                                     pairConfig={pairConfig} isVndcFutures={isVndcFutures}
+                                    collapse={collapse}
                                 />
                             </SocketLayout>
                         </Section>

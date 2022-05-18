@@ -44,16 +44,14 @@ const LayoutMobile = ({
     const alert = useRef(null);
 
     useEffect(() => {
-        if (window.fcWidget) {
-            window.fcWidget.hide()
-            window.fcWidget.close()
-        }
-    })
-
-    useEffect(() => {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
+        setTimeout(() => {
+            if (window.fcWidget) {
+                window.fcWidget.hide()
+                window.fcWidget.close()
+            }
+        }, 500);
     }, [])
 
     return (

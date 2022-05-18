@@ -1,15 +1,15 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {init, dispose} from 'klinecharts'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { init, dispose } from 'klinecharts'
 import ms from 'ms';
 
 import getDefaultOptions from './defaultStyleOptions'
-import useDarkMode, {THEME_MODE} from "hooks/useDarkMode";
-import {getData, calculateUpSizeBarData, socket} from "components/KlineChart/kline.service";
+import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
+import { getData, calculateUpSizeBarData, socket } from "components/KlineChart/kline.service";
 import NamiExchangeSvg from "components/svg/NamiExchangeSvg";
 import colors from "styles/colors";
-import {clone, last} from "lodash";
+import { clone, last } from "lodash";
 import usePrevious from "hooks/usePrevious";
-
+import { useSelector } from 'react-redux';
 const CHART_ID = 'k-line-chart'
 
 let _lastBar;
@@ -17,11 +17,12 @@ let _lastBar;
 // Chart instance
 let chart;
 
-function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator, candle }) {
+function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator, candle, collapse }) {
     const prevSymbolInfo = usePrevious(symbolInfo)
     const prevMainIndicator = usePrevious(mainIndicator)
     const prevSubIndicator = usePrevious(subIndicator)
     const prevCandle = usePrevious(candle)
+    const ordersList = useSelector(state => state?.futures?.ordersList)
     // Hooks
 
     // TODO: check default theme not show x,y axis
@@ -32,6 +33,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
     }, [])
 
     const _getData = useCallback(async (to, from) => {
+        if (!symbolInfo?.symbol) return;
         if (!from) {
             from = to - (chart.getWidth().content / chart.getDataSpace()) * resolution * 2
         }
@@ -42,7 +44,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
             to,
             resolution
         }).then(data => calculateUpSizeBarData(data, resolution))
-    }, [resolution])
+    }, [resolution, symbolInfo])
 
     // Init setup
     useEffect(() => {
@@ -81,7 +83,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
 
         const action = symbolInfo.exchange === 'NAMI_SPOT' ? 'spot:recent_trade:add' : 'futures:ticker:update';
 
-        socket.on(action, ({t: time, p: price, q: volume}) => {
+        socket.on(action, ({ t: time, p: price, q: volume }) => {
             if (!_lastBar) return
             const timeRounded = Math.floor(time / resolution) * resolution
             let data = {
@@ -130,7 +132,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
         chart.loadMore(function (timestamp) {
             _getData(timestamp).then(data => {
                 chart.applyMoreData(data, true)
-                if (!data.length) {
+                if (Array.isArray(data) && !data.length) {
                     chart.loadMore(function () {
                     })
                 }
@@ -145,7 +147,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
                 chart.removeTechnicalIndicator('candle_pane', prevMainIndicator)
             }
             if (mainIndicator) {
-                chart.createTechnicalIndicator(mainIndicator, false, {id: 'candle_pane'})
+                chart.createTechnicalIndicator(mainIndicator, false, { id: 'candle_pane' })
             }
         }
 
@@ -178,10 +180,15 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
         }
     }, [candle])
 
+    useEffect(() => {
+        if (!chart) return
+        chart.resize();
+    }, [collapse])
+
     return (
         <div id={CHART_ID} ref={handleChartRef} className="kline-chart flex flex-1 h-full">
             <div className="cheat-watermark">
-                <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4}/>
+                <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4} />
             </div>
         </div>
     )
@@ -191,6 +198,7 @@ export default React.memo(KLineChart, (prevProps, nextProps) => {
     return (prevProps?.symbolInfo?.symbol === nextProps?.symbolInfo?.symbol) &&
         (prevProps.mainIndicator === nextProps.mainIndicator) &&
         (prevProps.subIndicator === nextProps.subIndicator) &&
-        (prevProps.resolution === nextProps.resolution)&&
-        (prevProps.candle === nextProps.candle)
+        (prevProps.resolution === nextProps.resolution) &&
+        (prevProps.candle === nextProps.candle) &&
+        (prevProps.collapse === nextProps.collapse)
 })

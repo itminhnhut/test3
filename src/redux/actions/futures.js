@@ -201,7 +201,7 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
         } else {
             log.i('placeFuturesOrder result: ', data)
             if (utils?.alert) {
-                utils.alert.show('error', t('futures:place_order_failed'), 'Chúc mừng bạn đã mua thành công 6,666 NAMI từ Nami Exchange.')
+                utils.alert.show('error', t('futures:place_order_failed'), data?.message)
             } else {
                 showNotification(
                     {
