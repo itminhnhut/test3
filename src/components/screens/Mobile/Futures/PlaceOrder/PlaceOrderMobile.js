@@ -13,18 +13,24 @@ import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
 import { formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next'
+import OrderCollapse from './OrderCollapse';
+import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
+import { getType, getPrice } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc'
 
 const initPercent = 25;
 
 const PlaceOrder = ({
     decimals, side, pairPrice, pair, isAuth, availableAsset,
-    pairConfig, isVndcFutures,
+    pairConfig, isVndcFutures, collapse
 }) => {
     const lastPrice = pairPrice?.lastPrice;
     const usdRate = useSelector((state) => state.utils.usdRate)
     const { t } = useTranslation();
-    const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
-    const [maxQty, setMaxQty] = useState(0);
+    const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0);
+    const [maxQty, setMaxQty] = useState({
+        buy: 0,
+        sell: 0
+    });
 
     const [type, setType] = useState(OrderTypes.Limit);
     const [leverage, setLeverage] = useState(50)
@@ -33,33 +39,9 @@ const PlaceOrder = ({
     const [stopPrice, setStopPrice] = useState(0)
     const [tp, setTp] = useState(0);
     const [sl, setSl] = useState(0);
-
-    useEffect(() => {
-        const _price = type === OrderTypes.Limit ? price : stopPrice;
-        if ((availableAsset)) {
-            let _maxQty = 0;
-            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(type) && _price) {
-                _maxQty = availableAsset / ((1 / leverage) + (0.1 / 100)) / _price;
-            } else if ([OrderTypes.Market].includes(type)) {
-                if (side === VndcFutureOrderType.Side.BUY) {
-                    _maxQty = availableAsset / ((1 / leverage) + (0.1 / 100)) / pairPrice?.ask;
-                } else {
-                    _maxQty = availableAsset / ((1 / leverage) + (0.1 / 100)) / pairPrice?.bid;
-                }
-            }
-            setMaxQty(_maxQty.toFixed(decimals.decimalScaleQtyLimit))
-        } else {
-            setMaxQty(0)
-        }
-    }, [
-        availableAsset,
-        price,
-        size,
-        leverage,
-        type,
-        pairPrice,
-        stopPrice
-    ])
+    const rowData = useRef(null);
+    const [showEditSLTP, setShowEditSLTP] = useState(false);
+    const firstTime = useRef(true);
 
     useEffect(() => {
         if (usdRate) {
@@ -67,7 +49,19 @@ const PlaceOrder = ({
         }
     }, [pairConfig?.baseAssetId, usdRate])
 
-    const maxSize = useMemo(() => {
+    const getMaxSize = (price, type, side, leverage, availableAsset, pairPrice, pairConfig) => {
+        let maxBuy = 0;
+        let maxSell = 0;
+        // const _price = type === OrderTypes.Limit ? price : stopPrice;
+        if ((availableAsset)) {
+            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(type) && price) {
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / price;
+                maxSell = maxBuy;
+            } else if ([OrderTypes.Market].includes(type)) {
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / pairPrice?.ask;
+                maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / pairPrice?.bid;
+            }
+        }
         const lotSize =
             pairConfig?.filters?.find((o) =>
                 [
@@ -78,14 +72,18 @@ const PlaceOrder = ({
                     : o?.filterType === 'LOT_SIZE'
             ) || {}
         const _maxConfig = lotSize?.maxQty
-        return isAuth ? Math.min(_maxConfig, maxQty) : _maxConfig;
-    }, [side, pairConfig, pair, isAuth, maxQty, type])
-
-    const firstTime = useRef(true);
+        const _maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
+        return isAuth ? Math.min(_maxConfig, _maxQty) : _maxConfig;
+    }
+    const initPercent = 25;
 
     useEffect(() => {
         if (firstTime.current && pairPrice) firstTime.current = false;
     }, [pairPrice])
+
+    useEffect(() => {
+        firstTime.current = true;
+    }, [pair])
 
     useEffect(() => {
         if (firstTime.current) return;
@@ -99,15 +97,24 @@ const PlaceOrder = ({
         const _tp = +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05))
         setTp(_tp)
         setSl(_sl)
-    }, [side, type, pair])
+        if (type === OrderTypes.Market) {
+            const _maxSize = getMaxSize(lastPrice, type, side, leverage, availableAsset, pairPrice, pairConfig);
+            const _size = _maxSize * initPercent / 100;
+            setSize(+_size.toFixed(decimals.decimalScaleQtyLimit));
+        }
+    }, [side, type])
 
     useEffect(() => {
+        if (firstTime.current) return;
         setPrice(lastPrice);
         setStopPrice(lastPrice);
         const _sl = +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05))
         const _tp = +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05))
         setTp(_tp)
         setSl(_sl)
+        const _maxSize = getMaxSize(lastPrice, type, side, leverage, availableAsset, pairPrice, pairConfig);
+        const _size = _maxSize * initPercent / 100;
+        setSize(+_size.toFixed(decimals.decimalScaleQtyLimit));
     }, [firstTime.current])
 
     const marginAndValue = useMemo(() => {
@@ -183,57 +190,96 @@ const PlaceOrder = ({
         }
     }
 
-
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
         const not_valid = !size || !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
         return !isVndcFutures ? false : not_valid
     }, [price, size, type, stopPrice, sl, tp, isVndcFutures])
 
+    const onChangeTpSL = () => {
+        if (!isVndcFutures || isError) return;
+        const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
+        rowData.current = {
+            fee: 0,
+            quantity: size,
+            status: 0,
+            price: _price,
+            quoteAsset: pairConfig.quoteAsset,
+            symbol: pairConfig.symbol,
+            sl: +sl.toFixed(decimals.decimalScalePrice),
+            tp: +tp.toFixed(decimals.decimalScalePrice),
+            leverage, side,
+        }
+        setShowEditSLTP(true);
+    }
+
+    const onConfirmSLTP = (data) => {
+        setSl(data.sl);
+        setTp(data.tp)
+        setShowEditSLTP(false);
+    }
+
     return (
         <div className="flex flex-wrap justify-between px-[16px] py-[10px]">
-            <OrderInput>
-                <OrderTypeMobile type={type} setType={setType}
-                    orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
-            </OrderInput>
-            <OrderInput>
-                <OrderLeverage
-                    leverage={leverage} setLeverage={setLeverage}
-                    isAuth={isAuth} pair={pair}
-                    pairConfig={pairConfig}
+            {showEditSLTP &&
+                <FuturesEditSLTPVndc
+                    isVisible={showEditSLTP}
+                    order={rowData.current}
+                    onClose={() => setShowEditSLTP(false)}
+                    status={rowData.current.status}
+                    onConfirm={onConfirmSLTP}
+                    lastPrice={lastPrice}
+                    isMobile
                 />
-            </OrderInput>
-            <OrderInput>
-                <OrderVolumeMobile
-                    size={size} setSize={setSize} decimals={decimals}
-                    maxSize={maxSize}
-                    type={type} side={side}
-                />
-            </OrderInput>
-            <OrderInput>
-                <OrderPriceMobile
-                    type={type}
-                    price={price} setPrice={setPrice} decimals={decimals}
-                />
-            </OrderInput>
-            <OrderInput>
-                <OrderTPMobile tp={tp} setTp={setTp} decimals={decimals} />
-            </OrderInput>
-            <OrderInput>
-                <OrderSLMobile sl={sl} setSl={setSl} decimals={decimals} />
-            </OrderInput>
-            <OrderInput>
-                <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig} availableAsset={availableAsset} />
-            </OrderInput>
-            <OrderInput>
-                <OrderButtonMobile
-                    tp={tp} sl={sl} type={type} size={size} price={price}
-                    stopPrice={stopPrice} side={side} decimals={decimals}
-                    pairConfig={pairConfig} pairPrice={pairPrice}
-                    leverage={leverage} isAuth={isAuth} isError={isError}
-                    isAuth={isAuth}
-                />
-            </OrderInput>
+            }
+            {collapse ?
+                <OrderCollapse
+                    side={side} pairPrice={pairPrice} type={type} size={size}
+                    price={price} stopPrice={stopPrice} pairConfig={pairConfig}
+                    decimals={decimals} leverage={leverage} isAuth={isAuth} />
+                : <>
+                    <OrderInput>
+                        <OrderTypeMobile type={type} setType={setType}
+                            orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
+                    </OrderInput>
+                    <OrderInput>
+                        <OrderLeverage
+                            leverage={leverage} setLeverage={setLeverage}
+                            isAuth={isAuth} pair={pair}
+                            pairConfig={pairConfig}
+                        />
+                    </OrderInput>
+                    <OrderInput data-tut="order-volume">
+                        <OrderVolumeMobile
+                            size={size} setSize={setSize} decimals={decimals}
+                        />
+                    </OrderInput>
+                    <OrderInput>
+                        <OrderPriceMobile
+                            type={type}
+                            price={price} setPrice={setPrice} decimals={decimals}
+                        />
+                    </OrderInput>
+                    <OrderInput data-tut="order-sl">
+                        <OrderSLMobile sl={sl} setSl={setSl} decimals={decimals} onChangeTpSL={onChangeTpSL} />
+                    </OrderInput>
+                    <OrderInput data-tut="order-tp">
+                        <OrderTPMobile tp={tp} setTp={setTp} decimals={decimals} onChangeTpSL={onChangeTpSL} />
+                    </OrderInput>
+                    <OrderInput>
+                        <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig} availableAsset={availableAsset} />
+                    </OrderInput>
+                    <OrderInput data-tut="order-button">
+                        <OrderButtonMobile
+                            tp={tp} sl={sl} type={type} size={size} price={price}
+                            stopPrice={stopPrice} side={side} decimals={decimals}
+                            pairConfig={pairConfig} pairPrice={pairPrice}
+                            leverage={leverage} isAuth={isAuth} isError={isError}
+                            isAuth={isAuth}
+                        />
+                    </OrderInput>
+                </>
+            }
         </div>
     );
 };

@@ -6,6 +6,7 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import OrderItemMobile from './OrderItemMobile'
 import { useSelector } from 'react-redux'
 import InfiniteScroll from "react-infinite-scroll-component";
+import Adjustmentdetails from 'components/screens/Futures/PlaceOrder/Vndc/Adjustmentdetails';
 
 const TabOrdersHistory = ({ isDark }) => {
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
@@ -16,6 +17,8 @@ const TabOrdersHistory = ({ isDark }) => {
         page: 0
     })
     const hasMore = useRef(true);
+    const rowData = useRef(null);
+    const [showDetail, setShowDetail] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -54,28 +57,36 @@ const TabOrdersHistory = ({ isDark }) => {
         getOrders();
     }
 
+    const onShowDetail = (row) => {
+        rowData.current = row;
+        setShowDetail(!showDetail);
+    }
+
     if (loading) return null;
-    if (dataSource.length <= 0) return <TableNoData />
+    if (dataSource.length <= 0) return <TableNoData className="h-full"/>
 
     return (
-        <InfiniteScroll
-            dataLength={dataSource.length}
-            next={onNext}
-            hasMore={hasMore.current}
-            height={'calc(100vh - 122px)'}
-        // loader={loading ? loader() : null}
-        >
-            <div className="px-[16px]">
-                {dataSource?.map((order, i) => {
-                    const dataMarketWatch = allPairConfigs.find(rs => rs.symbol === order.symbol)
-                    return (
-                        <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch} mode="history"
-                            isDark={isDark}
-                        />
-                    )
-                })}
-            </div>
-        </InfiniteScroll>
+        <>
+            {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} isMobile />}
+            <InfiniteScroll
+                dataLength={dataSource.length}
+                next={onNext}
+                hasMore={hasMore.current}
+                height={'calc(100vh - 122px)'}
+            // loader={loading ? loader() : null}
+            >
+                <div className="px-[16px]">
+                    {dataSource?.map((order, i) => {
+                        const dataMarketWatch = allPairConfigs.find(rs => rs.symbol === order.symbol)
+                        return (
+                            <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch} mode="history"
+                                isDark={isDark} onShowDetail={onShowDetail}
+                            />
+                        )
+                    })}
+                </div>
+            </InfiniteScroll>
+        </>
     );
 };
 

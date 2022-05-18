@@ -9,7 +9,7 @@ import Skeletor from 'src/components/common/Skeletor'
 import TableNoData from 'components/common/table.old/TableNoData';
 import { useTranslation } from 'next-i18next';
 
-const Adjustmentdetails = memo(({ onClose, rowData }) => {
+const Adjustmentdetails = memo(({ onClose, rowData, isMobile }) => {
     const { t } = useTranslation();
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
@@ -75,7 +75,7 @@ const Adjustmentdetails = memo(({ onClose, rowData }) => {
             onBackdropCb={() => onClose()}
             containerClassName="top-[50%]"
         >
-            <div className="w-[390px]">
+            <div className={isMobile ? 'w-[340px]' : 'w-[390px]'}>
                 <div className="flex items-center justify-between text-xl font-bold capitalize">
                     {t('futures:order_history:adjustment_detail')}
                     <X
@@ -104,7 +104,7 @@ const Adjustmentdetails = memo(({ onClose, rowData }) => {
                         : dataSource.length > 0 ?
                             dataSource.map((item, index) => {
                                 return (
-                                    <div className="text-sm py-[10px]">
+                                    <div key={index} className="text-sm py-[10px]">
                                         <div className="flex items-center justify-between ">
                                             <label className="text-gray-1">{t('common:time')}</label>
                                             <div className="font-medium">{formatTime(item?.createdAt, 'yyyy-MM-dd')} {t('futures:to')} {formatTime(item?.updatedAt, 'yyyy-MM-dd')}</div>

@@ -624,3 +624,29 @@ input[type='number'] {
     bottom: unset;
 }
 
+.reactour__helper--is-open{
+    padding: 0 !important;
+    border-radius: 8px !important; 
+}
+
+.reactour__helper{
+    margin-left: 10px;
+}
+
+.guideline{
+    rect:not(.reactour__mask--disable-interaction){
+        fill: #263459;
+        opacity: 0.8;
+    }
+    .reactour__mask--disable-interaction{
+        stroke-width:1;
+        stroke:#00C8BC
+    }
+}
+
+.reactour__helper--is-open{
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%,-50%) !important;
+}

@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import Big from "big.js";
 
-const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDark }) => {
+const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDark, onShowEdit, onShowDetail }) => {
     const { t } = useTranslation();
     const isTabHistory = mode === 'history';
 
@@ -74,7 +74,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
     return (
         <div className="flex flex-col mx-[-16px] p-[16px] border-b-[1px] border-b-gray-4 dark:border-divider-dark">
             <div className="flex items-center justify-between mb-[10px]">
-                <div className="w-full flex">
+                <div className="w-full flex" onClick={() => onShowDetail && onShowDetail(order)}>
                     <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{order.side}</SideComponent>
                     <div>
                         <div className="flex items-center">
@@ -87,8 +87,8 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
                         </div>
                     </div>
                 </div>
-                <div>
-                    2
+                <div className="border-[1px] border-teal p-[5px] rounded-[2px]">
+                    <img src="/images/icon/ic_share.png" height={16} width={16} />
                 </div>
             </div>
             <div>
@@ -129,8 +129,8 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
             </div>
             {openModal &&
                 <div className="flex items-center justify-between ">
-                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark">Adjust TP and SL</Button>
-                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => openModal(order)}>Close Position</Button>
+                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => onShowEdit(order)}> {t('futures:tp_sl:modify_tpsl')}</Button>
+                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => openModal(order)}>{t('common:close')}</Button>
                 </div>
             }
         </div>

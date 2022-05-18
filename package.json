@@ -124,6 +124,7 @@
     "react-tooltip": "^4.2.21",
     "react-use": "^15.3.4",
     "react-virtualized": "^9.22.3",
+    "reactour": "^1.18.7",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",

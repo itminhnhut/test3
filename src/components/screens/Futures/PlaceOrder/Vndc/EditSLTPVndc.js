@@ -23,7 +23,8 @@ const FuturesEditSLTPVndc = ({
     status,
     onConfirm,
     pairTicker,
-    lastPrice = 0
+    lastPrice = 0,
+    isMobile
 }) => {
     const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
     const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
@@ -46,7 +47,7 @@ const FuturesEditSLTPVndc = ({
     const profit = useRef({ tp: 0, sl: 0 })
     const tabPercent = useRef({ tp: 0, sl: 0 })
     const [currentTheme] = useDarkMode()
-    const dotStep = useRef(6);
+    const dotStep = useRef(isMobile ? 4 : 6);
 
     const getProfitSLTP = (sltp) => {
         const {
@@ -306,7 +307,7 @@ const FuturesEditSLTPVndc = ({
         for (let i = 0; i <= dotStep.current; ++i) {
             const index = postion * dotStep.current / 100;
             const a = index / 2;
-            const b = i - 3;
+            const b = i - (dotStep.current / 2);
             let active = false;
             if (a >= b && b >= 0 || a <= b && b <= 0) {
                 active = true;
@@ -355,7 +356,7 @@ const FuturesEditSLTPVndc = ({
     const classNameError = isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
 
     return (
-        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName="w-[390px] p-0 top-[50%]">
+        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? 'w-[340px]' : 'w-[390px]'} p-0 top-[50%]`}>
             <div
                 className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark">
                 <span className="font-bold text-[16px]">

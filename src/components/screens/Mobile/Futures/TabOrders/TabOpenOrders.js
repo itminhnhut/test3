@@ -11,8 +11,9 @@ import { ApiStatus } from 'redux/actions/const'
 import fetchApi from 'utils/fetch-api'
 import { AlertContext } from 'components/common/layouts/LayoutMobile'
 import OrderItemMobile from './OrderItemMobile'
+import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
 
-const TabOpenOrders = ({ ordersList, pair, isAuth, isDark }) => {
+const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
     const [hideOther, setHideOther] = useState(false)
@@ -23,40 +24,72 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark }) => {
 
     const [openModalClose, setOpenModalClose] = useState(false);
     const rowData = useRef(null);
+    const [showModalEdit, setShowModalEdit] = useState(false);
 
     const openModal = (item) => {
         rowData.current = item
         setOpenModalClose(!openModalClose);
     }
 
-    const onConfirm = async () => {
-        const params = {
-            displaying_id: rowData.current.displaying_id,
-            special_mode: 1
-        }
+    const fetchOrder = async (method = 'DELETE', params, cb) => {
         try {
             const { status, data, message } = await fetchApi({
                 url: API_GET_FUTURES_ORDER,
-                options: { method: 'DELETE' },
+                options: { method },
                 params: params,
             })
             if (status === ApiStatus.SUCCESS) {
-                context.alert.show('success', t('commom:success'), t('futures:close_order:close_successfully', { value: rowData.current?.displaying_id }))
+                if (cb) cb(data?.orders);
             } else {
                 context.alert.show('error', t('commom:failed'), message)
             }
         } catch (e) {
             console.log(e)
         } finally {
-            setOpenModalClose(!openModalClose);
+            setOpenModalClose(false);
+            setShowModalEdit(false);
         }
     }
 
-    if (ordersList.length <= 0) return <TableNoData />
+    const onConfirmDelete = async () => {
+        const params = {
+            displaying_id: rowData.current.displaying_id,
+            special_mode: 1
+        }
+        fetchOrder('DELETE', params, () => {
+            context.alert.show('success', t('commom:success'), t('futures:close_order:close_successfully', { value: rowData.current?.displaying_id }))
+        });
+    }
+
+    const onShowEdit = (item) => {
+        rowData.current = item;
+        setShowModalEdit(!showModalEdit);
+    }
+
+    const onConfirmEdit = (params) => {
+        fetchOrder('PUT', params, () => {
+            localStorage.setItem('edited_id', params.displaying_id);
+            context.alert.show('success', t('commom:success'), t('futures:modify_order_success'))
+        });
+    }
+
+    if (ordersList.length <= 0) return <TableNoData className="h-full" />
 
     return (
         <div className="px-[16px] pt-[10px] overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
-            <OrderClose open={openModalClose} onClose={openModal} data={rowData.current} onConfirm={onConfirm} isMobile />
+            {showModalEdit &&
+                <FuturesEditSLTPVndc
+                    isVisible={showModalEdit}
+                    order={rowData.current}
+                    onClose={() => setShowModalEdit(false)}
+                    status={rowData.current.status}
+                    onConfirm={onConfirmEdit}
+                    pairConfig={pairConfig}
+                    pairTicker={marketWatch}
+                    isMobile
+                />
+            }
+            <OrderClose open={openModalClose} onClose={openModal} data={rowData.current} onConfirm={onConfirmDelete} isMobile />
             <div
                 className='flex items-center text-sm font-medium select-none cursor-pointer'
                 onClick={() => setHideOther(!hideOther)}
@@ -71,7 +104,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark }) => {
                     const dataMarketWatch = marketWatch[order?.symbol];
                     return (
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
-                            openModal={openModal} isDark={isDark}
+                            openModal={openModal} isDark={isDark} onShowEdit={onShowEdit}
                         />
                     )
                 })}

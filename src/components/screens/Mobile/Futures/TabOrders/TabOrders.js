@@ -34,7 +34,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth }) => {
     }, [tab, ordersList, pair, pairConfig])
 
     return (
-        <React.Fragment>
+        <div data-tut="order-tab" className="h-full">
             <TabMobile isDark={currentTheme === THEME_MODE.DARK}>
                 {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((item) => (
                     <TabItem key={item.code} active={tab === item.code} onClick={() => setTab(item.code)}>
@@ -45,10 +45,8 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth }) => {
             </TabMobile>
             {isAuth &&
                 <OrderBalance ordersList={ordersList} visible={tab === FUTURES_RECORD_CODE.openOrders} />}
-            {/* <div className="px-[16px]"> */}
-                {isAuth ? renderTabContent() : <LoginOrder />}
-            {/* </div> */}
-        </React.Fragment>
+            {isAuth ? renderTabContent() : <LoginOrder />}
+        </div>
     );
 });
 
@@ -71,7 +69,7 @@ const TabMobile = styled.div.attrs({
 `
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-md font-medium mr-[32px] text-gray h-full flex items-center justify-center `,
+        `text-md font-medium mr-[32px] text-gray h-full flex items-center justify-center dark:text-txtSecondary-dark`,
         {
             'active font-semibold text-darkBlue dark:text-white': active
         }

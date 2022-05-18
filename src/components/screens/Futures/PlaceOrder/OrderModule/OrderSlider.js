@@ -7,7 +7,7 @@ const initPercent = 25;
 
 const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType, pair, isAuth, maxSize }) => {
     const [percent, setPercent] = useState(isAuth && isVndcFutures ? initPercent : 0)
-
+    const timer = useRef(null);
     const onPercentChange = ({ x }) => {
         onChange(isVndcFutures ? (+maxSize * x / 100) : `${x}%`)
         setPercent(x)
@@ -31,7 +31,10 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
     }, [maxSize])
 
     useEffect(() => {
-        refresh.current = !refresh.current;
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => {
+            refresh.current = !refresh.current;
+        }, 500);
     }, [pair])
 
     useEffect(() => {

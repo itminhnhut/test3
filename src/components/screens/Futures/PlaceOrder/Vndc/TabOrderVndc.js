@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next'
 import classNames from 'classnames';
 
 
-const TabOrderVndc = ({ side, setSide, className = '' }) => {
+const TabOrderVndc = ({ side, setSide, className = '', isMobile }) => {
     const { t } = useTranslation()
 
     return (
@@ -20,7 +20,7 @@ const TabOrderVndc = ({ side, setSide, className = '' }) => {
                     )}
                     onClick={() => setSide(VndcFutureOrderType.Side.BUY)}
                 >
-                    {t('common:buy')}
+                    {t('common:buy')}{isMobile ? '/Long' : ''}
                 </div>
                 <svg
                     className={`!w-[34px] spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark arrow z-[1] ${side === VndcFutureOrderType.Side.SELL
@@ -44,7 +44,7 @@ const TabOrderVndc = ({ side, setSide, className = '' }) => {
                     )}
                     onClick={() => setSide(VndcFutureOrderType.Side.SELL)}
                 >
-                    {t('common:sell')}
+                    {t('common:sell')}{isMobile ? '/Short' : ''}
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ import ms from "ms";
 import {listTimeFrame} from "components/KlineChart/kline.service";
 import {Popover, Transition} from "@headlessui/react";
 import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
+import { AreaChart, CandleChart, LineChart } from '../../../../TVChartContainer/timeFrame'
 import {IconStar, IconStarFilled} from "components/common/Icons";
 import colors from "styles/colors";
 import fetchAPI from "utils/fetch-api";
@@ -20,31 +21,35 @@ import {getFuturesFavoritePairs} from "redux/actions/futures";
 import {useDispatch, useSelector} from "react-redux";
 
 const candleList = [
-    {value: 'candle_solid', text: 'Solid'},
-    {value: 'candle_stroke', text: 'Stroke'},
-    {value: 'candle_up_stroke', text: 'Up Stroke'},
-    {value: 'candle_down_stroke', text: 'Down Stroke'},
-    {value: 'ohlc', text: 'OHLC'},
-    {value: 'area', text: 'Area Chart'}
+    { value: 'candle_solid', text: 'Candle', icon: CandleChart },
+    // { value: 'candle_stroke', text: 'Stroke', icon: AreaChart },
+    // { value: 'candle_up_stroke', text: 'Up Stroke', icon: AreaChart },
+    // { value: 'candle_down_stroke', text: 'Down Stroke', icon: AreaChart },
+    { value: 'ohlc', text: 'Bar', icon: LineChart },
+    { value: 'area', text: 'Area', icon: AreaChart }
 ]
 const ChartTimer = ({
-                        pairConfig, pair, isVndcFutures, resolution, setResolution,
-                        candle, setCandle
-                    }) => {
+    pairConfig, pair, isVndcFutures, resolution, setResolution,
+    candle, setCandle
+}) => {
+
     if (!pairConfig) return null;
     console.log(pairConfig)
     const [showModelMarket, setShowModelMarket] = useState(false)
+
+    const labelCandle = candleList.find(item => item.value === candle);
     return (
         <div className="min-h-[64px] chart-timer flex items-center justify-between px-[10px]">
-            <div className="flex items-center cursor-pointer" onClick={() => setShowModelMarket(true)}>
-                <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16}/>
-                <div
-                    className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
-                <SocketLayout pairConfig={pairConfig} pair={pair}>
-                    <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures}/>
+            <div className="flex items-center cursor-pointer" onClick={() => setShowModelMarket(true)} >
+                <div className="flex items-center " data-tut="order-symbol">
+                    <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
+                    <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                </div>
+                <SocketLayout pairConfig={pairConfig} pair={pair} >
+                    <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
                 </SocketLayout>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center" >
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
@@ -52,8 +57,7 @@ const ChartTimer = ({
                     displayValue="text"
                     options={listTimeFrame}
                     classNameButton="px-[10px]"
-                    icon={<div
-                        className="uppercase text-sm text-gray dark:text-txtSecondary-dark font-medium">{ms(resolution)}</div>}
+                    label={<div className="uppercase text-sm text-gray font-medium">{ms(resolution)}</div>}
                 />
                 <MenuTime
                     value={candle}
@@ -63,7 +67,7 @@ const ChartTimer = ({
                     options={candleList}
                     classNameButton="pl-[10px]"
                     classNamePanel="right-[-10px]"
-                    icon={<img src={getS3Url('/images/icon/ic_menu_chart.png')} height={24} width={24}/>}
+                    label={labelCandle.icon}
                 />
                 <FavouriteButton pair={pair} pairConfig={pairConfig}/>
             </div>
@@ -103,13 +107,15 @@ const Change24h = ({pairPrice, isVndcFutures}) => {
 
 }
 
-const MenuTime = ({value, onChange, options, icon, keyValue, displayValue, classNameButton, classNamePanel}) => {
+
+
+const MenuTime = ({ value, onChange, options, label, keyValue, displayValue, classNameButton, classNamePanel }) => {
     return (
         <Popover className="relative">
             {({open, close}) => (
                 <>
-                    <Popover.Button className={`flex ${classNameButton}`}>
-                        {icon}
+                    <Popover.Button className={`flex ${classNameButton} dark:text-txtSecondary-dark`}>
+                        {label}
                     </Popover.Button>
                     <Transition
                         as={Fragment}
@@ -129,14 +135,15 @@ const MenuTime = ({value, onChange, options, icon, keyValue, displayValue, class
                                             onChange(item[keyValue])
                                             close()
                                         }}
-                                             className={classNames(
-                                                 'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer ',
-                                                 {
-                                                     '!text-txtPrimary dark:!text-txtPrimary-dark':
-                                                         item[keyValue] === value,
-                                                 }
-                                             )}
+                                            className={classNames(
+                                                'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
+                                                {
+                                                    '!text-txtPrimary dark:!text-txtPrimary-dark':
+                                                        item[keyValue] === value,
+                                                }
+                                            )}
                                         >
+                                            {item?.icon}
                                             {item[displayValue]}
                                         </div>
                                     )
