@@ -9,14 +9,14 @@ import React, {useCallback, useEffect, useState} from "react";
 import {debounce} from "lodash/function";
 import {useTranslation} from "next-i18next";
 import fetchAPI from "utils/fetch-api";
-import {API_GET_FAVORITE, API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY} from "redux/actions/apis";
+import {API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY} from "redux/actions/apis";
 import {formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange} from "redux/actions/utils";
 import AssetLogo from "components/wallet/AssetLogo";
 import usePrevious from "hooks/usePrevious";
 import SortIcon from "components/screens/Mobile/SortIcon";
-import {PATHS} from "constants/paths";
 import {useRouter} from "next/router";
-import {TRADING_MODE} from "redux/actions/const";
+import {useDispatch, useSelector} from "react-redux";
+import {getFuturesFavoritePairs} from "redux/actions/futures";
 
 const TABS = {
     FAVOURITE: 'FAVOURITE',
@@ -35,24 +35,24 @@ const TAGS = {
     },
 }
 
+let loading = false;
+
 export default ({isRealtime = true}) => {
     // * Initial State
     const [tab, setTab] = useState({
         active: TABS.FAVOURITE,
         tagActive: TAGS[TABS.FAVOURITE].FUTURES,
     })
-
-    const [favoriteSymbols, setFavoriteSymbols] = useState([])
     const [data, setData] = useState([])
-
     const [sort, setSort] = useState({
         field: 'change24hRaw',
         direction: 'desc',
     })
-
     const [search, setSearch] = useState('')
+    const [referencePrice, setReferencePrice] = useState([])
 
-    const [referencePrice, setReferencePrice] = useState()
+    const dispatch = useDispatch();
+    const favoritePairs = useSelector((state) => state.futures.favoritePairs)
 
     const changeSearch = useCallback(
         debounce(({target: {value}}) => {
@@ -89,15 +89,7 @@ export default ({isRealtime = true}) => {
     }
 
     useEffect(() => {
-        fetchAPI({
-            url: API_GET_FAVORITE,
-            params: {tradingMode: tab.tagActive},
-        })
-            .then(({data = []}) => {
-                setFavoriteSymbols(data.map((s) => s.replace('_', '')))
-            })
-            .catch((err) => console.error(err))
-
+        dispatch(getFuturesFavoritePairs())
         // TODO: move this logic to redux store
         fetchAPI({
             url: API_GET_REFERENCE_CURRENCY,
@@ -122,8 +114,10 @@ export default ({isRealtime = true}) => {
         }
     }, [isRealtime])
 
-    const getData = () => {
-        fetchAPI({
+    const getData = async () => {
+        if (loading) return;
+        loading = true;
+        await fetchAPI({
             url: API_GET_FUTURES_MARKET_WATCH,
         })
             .then(({data = []}) => {
@@ -151,13 +145,16 @@ export default ({isRealtime = true}) => {
                 setData(newData)
             })
             .catch((err) => console.error(err))
+        loading = false;
     }
+
+    console.log(favoritePairs)
 
     const listItem = data
         .filter((item) => {
             const cond = []
             if (tab.active === TABS.FAVOURITE) {
-                cond.push(favoriteSymbols.includes(item.symbol))
+                cond.push(favoritePairs.includes(item.baseAsset + '_' + item.quoteAsset))
             }
             cond.push(item.baseAsset.includes(search?.toUpperCase() || ''))
 
@@ -350,7 +347,7 @@ export default ({isRealtime = true}) => {
                     />
                 </div>
             </div>
-            <div className='flex-1 overflow-y-auto'>
+            <div className='flex-1 overflow-y-auto p-1'>
                 {listItem}
             </div>
         </div>
