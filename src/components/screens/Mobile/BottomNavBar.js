@@ -13,7 +13,7 @@ import SvgFutures from 'components/svg/SvgFutures';
 import SvgMarket from 'components/svg/SvgMarket';
 
 const listNav = [
-    { title: 'Markets', prefix: '/', nav: 'market', icon: <SvgMarket /> },
+    { title: 'Markets', prefix: '/mobile/', nav: 'market', icon: <SvgMarket /> },
     { title: 'Futures', prefix: '/mobile/', nav: 'futures', icon: <SvgFutures /> },
     { title: 'Swap', prefix: '/', nav: 'swap', icon: <SvgSwap /> },
     { title: 'Wallets', prefix: '/', nav: 'wallet/overview', icon: <SvgWallet /> },
@@ -61,7 +61,7 @@ const Tabs = styled.div.attrs({
     width:100%;
     position:fixed;
     bottom:0;
-    z-index:9999999999;
+    z-index:10;
     border-radius:12px 12px 0 0;
     padding:10px;
     display:flex;
