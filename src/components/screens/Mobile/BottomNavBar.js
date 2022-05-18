@@ -15,8 +15,7 @@ import SvgMarket from 'components/svg/SvgMarket';
 const listNav = [
     { title: 'Markets', prefix: '/mobile/', nav: 'market', icon: <SvgMarket /> },
     { title: 'Futures', prefix: '/mobile/', nav: 'futures', icon: <SvgFutures /> },
-    { title: 'Swap', prefix: '/', nav: 'swap', icon: <SvgSwap /> },
-    { title: 'Wallets', prefix: '/', nav: 'wallet/overview', icon: <SvgWallet /> },
+    { title: 'Wallets', prefix: '/mobile/', nav: 'wallet', icon: <SvgWallet /> },
 ]
 
 const BottomNavBar = memo(() => {
