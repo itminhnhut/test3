@@ -34,7 +34,6 @@ const ChartTimer = ({
 }) => {
 
     if (!pairConfig) return null;
-    console.log(pairConfig)
     const [showModelMarket, setShowModelMarket] = useState(false)
 
     const labelCandle = candleList.find(item => item.value === candle);
