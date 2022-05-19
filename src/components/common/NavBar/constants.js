@@ -222,14 +222,14 @@ export const MOBILE_NAV_DATA = [
                 url: '/',
                 child_lv2: [],
             },
-            // {
-            //     key: 4,
-            //     title: 'Staking',
-            //     localized: 'staking',
-            //     isNew: false,
-            //     url: 'https://nami.exchange/staking',
-            //     child_lv2: [],
-            // },
+            {
+                key: 5,
+                title: 'Futures Mobile',
+                localized: 'mobile_futures',
+                isNew: false,
+                url: 'https://test.nami.exchange/mobile/futures',
+                child_lv2: [],
+            },
             // {
             //     key: 5,
             //     title: 'Farming',
