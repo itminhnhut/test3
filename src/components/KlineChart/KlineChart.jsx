@@ -9,7 +9,6 @@ import NamiExchangeSvg from "components/svg/NamiExchangeSvg";
 import colors from "styles/colors";
 import { clone, last } from "lodash";
 import usePrevious from "hooks/usePrevious";
-import { useSelector } from 'react-redux';
 const CHART_ID = 'k-line-chart'
 
 let _lastBar;
@@ -22,18 +21,18 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
     const prevMainIndicator = usePrevious(mainIndicator)
     const prevSubIndicator = usePrevious(subIndicator)
     const prevCandle = usePrevious(candle)
-    const ordersList = useSelector(state => state?.futures?.ordersList)
+    // const ordersList = useSelector(state => state?.futures?.ordersList)
     // Hooks
 
     // TODO: check default theme not show x,y axis
     const [themeMode] = useDarkMode()
 
-    const handleChartRef = useCallback((node) => {
-        chart = init(node, getDefaultOptions(THEME_MODE.DARK))
+    useEffect(() => {
+        chart = init(CHART_ID, getDefaultOptions(THEME_MODE.DARK))
     }, [])
 
     const _getData = useCallback(async (to, from) => {
-        if (!symbolInfo?.symbol) return;
+        if (!symbolInfo?.symbol) return [];
         if (!from) {
             from = to - (chart.getWidth().content / chart.getDataSpace()) * resolution * 2
         }
@@ -43,7 +42,10 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
             from,
             to,
             resolution
-        }).then(data => calculateUpSizeBarData(data, resolution))
+        }).then(data => calculateUpSizeBarData(data, resolution)).catch(err => {
+            console.error(err)
+            return []
+        })
     }, [resolution, symbolInfo])
 
     // Init setup
@@ -115,8 +117,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
     // Update theme mode
     useEffect(() => {
         if (themeMode) {
-            const el = document.querySelector('#' + CHART_ID);
-            chart = init(el, getDefaultOptions(themeMode))
+            chart.setStyleOptions(getDefaultOptions(themeMode))
         }
     }, [themeMode])
 
@@ -186,7 +187,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
     }, [collapse])
 
     return (
-        <div id={CHART_ID} ref={handleChartRef} className="kline-chart flex flex-1 h-full">
+        <div id={CHART_ID} className="kline-chart flex flex-1 h-full">
             <div className="cheat-watermark">
                 <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4} />
             </div>
