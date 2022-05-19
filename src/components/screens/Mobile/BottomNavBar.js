@@ -67,7 +67,7 @@ const Tabs = styled.div.attrs({
     width:100%;
     position:fixed;
     bottom:0;
-    z-index:9999999999;
+    z-index:10;
     border-radius:12px 12px 0 0;
     padding:10px;
     display:flex;
@@ -87,7 +87,7 @@ const Tabs = styled.div.attrs({
 `
 const Tab = styled.div.attrs(({ active }) => ({
     className: classNames(
-        'text-sm text-gray h-full flex items-center flex-col px-[10px]',
+        'text-xs text-gray-1 h-full flex items-center flex-col px-[10px]',
         {
             'active': active
         }

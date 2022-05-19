@@ -39,7 +39,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
     return (
         <div className="w-full">
             <div className="relative flex w-full h-[56px] text-sm">
-                <Side className={`bg-teal rounded-l-[6px] ${className}`}
+                <Side className={`bg-teal rounded-l-[6px] text-white ${className}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.BUY, pairPrice?.ask)}>
                     <div>{t('common:buy')}&nbsp;{formatNumber(size)}&nbsp;{pairConfig?.baseAsset}</div>
                     <span>{formatNumber(pairPrice?.ask, decimals.decimalScalePrice, 0, true)}</span>
@@ -47,7 +47,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
                 <Text>
                     {formatNumber(pairPrice?.ask - pairPrice?.bid, decimals.decimalScalePrice, 0, true)}
                 </Text>
-                <Side className={`bg-red rounded-r-[6px] items-end ${className}`}
+                <Side className={`bg-red rounded-r-[6px] text-white items-end ${className}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.SELL, pairPrice?.bid)}>
                     <div>{t('common:sell')}&nbsp;{formatNumber(size)}&nbsp;{pairConfig?.baseAsset}</div>
                     <span>{formatNumber(pairPrice?.bid, decimals.decimalScalePrice, 0, true)}</span>

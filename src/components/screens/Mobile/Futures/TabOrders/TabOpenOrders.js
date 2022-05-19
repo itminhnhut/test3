@@ -21,6 +21,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
     const dataFilter = useMemo(() => {
         return hideOther ? ordersList.filter(order => order?.symbol === pair) : ordersList;
     }, [hideOther, ordersList, pair])
+    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
 
     const [openModalClose, setOpenModalClose] = useState(false);
     const rowData = useRef(null);
@@ -95,16 +96,17 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
                 onClick={() => setHideOther(!hideOther)}
             >
                 <CheckBox active={hideOther} />{' '}
-                <span className='ml-1 whitespace-nowrap text-gray font-medium capitalize dark:text-txtSecondary-dark'>
+                <span className='ml-1 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-txtSecondary-dark'>
                     {t('futures:hide_other_symbols')}
                 </span>
             </div>
             <div>
                 {dataFilter?.map((order, i) => {
                     const dataMarketWatch = marketWatch[order?.symbol];
+                    const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
                     return (
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
-                            openModal={openModal} isDark={isDark} onShowEdit={onShowEdit}
+                            openModal={openModal} isDark={isDark} onShowEdit={onShowEdit} symbol={symbol}
                         />
                     )
                 })}

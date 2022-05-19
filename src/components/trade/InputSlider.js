@@ -46,6 +46,7 @@ const Slider = ({
     bgColorActive,
     xStart = 0,
     reload,
+    dots,
     ...props
 }) => {
     const container = useRef(null)
@@ -250,18 +251,21 @@ const Slider = ({
     }
 
     const renderDotAndLabel = () => {
-        let dotStep = 15
+        let dotStep = dots ?? 15
         const dot = []
         const label = []
+        if (!dots) {
+            if (xmax % 5 === 0) dotStep = 5
+            if (xmax > 10 && xmax % 10 === 0) dotStep = 10
+            if (xmax > 15 && xmax % 15 === 0) dotStep = 15
+            if (xmax > 25 && xmax % 25 === 0) dotStep = 25
+        }
+        const _dots = dots ?? (xmax / dotStep);
+        const size = 100 / _dots
 
-        if (xmax % 5 === 0) dotStep = 5
-        if (xmax > 10 && xmax % 10 === 0) dotStep = 10
-        if (xmax > 15 && xmax % 15 === 0) dotStep = 15
-        if (xmax > 25 && xmax % 25 === 0) dotStep = 25
-
-        const size = 100 / (xmax / dotStep)
-
-        for (let i = 0; i <= xmax / dotStep; ++i) {
+        for (let i = 0; i <= _dots; ++i) {
+            const labelX = (i === 0 ? 1 : i * (dots ? (xmax / dots) : dotStep)).toFixed(0)
+            const valueX = (i * (dots ? (xmax / dots) : dotStep)).toFixed(0)
             dot.push(
                 <Dot
                     key={`inputSlider_dot_${i}`}
@@ -274,19 +278,19 @@ const Slider = ({
                 <div className='relative' key={`inputSlider_label_${i}`}>
                     <span
                         onClick={() => {
-                            onChange && onChange({ x: i * dotStep })
+                            onChange && onChange({ x: valueX })
                         }}
                         className={classNames(
                             'block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
                             {
                                 'left-1/2 -translate-x-1/2':
-                                    i > 0 && i !== xmax / dotStep,
+                                    i > 0 && i !== _dots,
                                 '-left-1/2 translate-x-[-80%]':
-                                    i === xmax / dotStep,
+                                    i === _dots,
                             }
                         )}
                     >
-                        {i === 0 ? 1 : i * dotStep}
+                        {labelX}
                         {labelSuffix}
                     </span>
                 </div>

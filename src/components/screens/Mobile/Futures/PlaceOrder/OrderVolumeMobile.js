@@ -15,6 +15,7 @@ const OrderVolumeMobile = memo(({ size, setSize, decimals, }) => {
             // validator={getValidator('quantity')}
             decimalScale={decimals.decimalScaleQtyLimit}
             labelClassName='whitespace-nowrap capitalize'
+            containerClassName="h-[36px]"
             tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
             // renderTail={() => (
             //     <div className='relative group select-none'>

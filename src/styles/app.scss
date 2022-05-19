@@ -629,10 +629,6 @@ input[type='number'] {
     border-radius: 8px !important; 
 }
 
-.reactour__helper{
-    margin-left: 10px;
-}
-
 .guideline{
     rect:not(.reactour__mask--disable-interaction){
         fill: #263459;
@@ -642,11 +638,26 @@ input[type='number'] {
         stroke-width:1;
         stroke:#00C8BC
     }
+    #mask-main{
+        circle{
+            display: none;
+        }
+    }
 }
 
 .reactour__helper--is-open{
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%,-50%) !important;
+    // position: absolute !important;
+    // // left: 50% !important;
+    // // top: 50% !important;
+    // // transform: translate(-50%,-50%) !important;
+    background:transparent !important;
+    box-shadow: none !important;
+    width: calc(100% - 25px);
+    max-width:  calc(100% - 25px) !important;
+    // &::before{
+    //     content:url('/images/icon/ic_guide_arrow.png');
+    //     position:relative;
+    //     z-index:100000;
+    //     left:50%;
+    // }
 }

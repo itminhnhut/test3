@@ -14,6 +14,7 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL }) => {
             onValueChange={({ floatValue = 0 }) => setSl(floatValue)}
             decimalScale={decimals.decimalScalePrice}
             labelClassName='whitespace-nowrap capitalize'
+            containerClassName="h-[36px]"
             tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
             renderTail={() => (
                 <div className='relative group select-none'>
