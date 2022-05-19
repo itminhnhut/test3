@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next'
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import Big from "big.js";
 
-const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDark, onShowEdit, onShowDetail }) => {
+const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDark, onShowEdit, onShowDetail, symbol }) => {
     const { t } = useTranslation();
     const isTabHistory = mode === 'history';
 
@@ -78,10 +78,10 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
                     <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{order.side}</SideComponent>
                     <div>
                         <div className="flex items-center">
-                            <div className="font-semibold text-sm mr-[10px]">{(dataMarketWatch?.baseAsset ?? '-') + '/' + (dataMarketWatch?.quoteAsset ?? '-')}</div>
+                            <div className="font-semibold text-sm mr-[10px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
                             <div className="text-teal border-teal border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
                         </div>
-                        <div className="text-xs font-medium text-gray dark:text-txtSecondary-dark">
+                        <div className="text-xs font-medium text-gray-1 dark:text-txtSecondary-dark">
                             <span className="mr-[12px]">{'#' + order?.displaying_id}</span>
                             <span>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</span>
                         </div>
@@ -93,7 +93,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
             </div>
             <div>
                 <Row className="w-1/2 ">
-                    <div className="text-gray text-xs dark:text-txtSecondary-dark">PnL</div>
+                    <div className="text-gray-1 text-xs dark:text-txtSecondary-dark">PnL</div>
                     <span className="text-xs font-medium text-teal"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} /></span>
                 </Row>
                 <div className="flex">
@@ -152,11 +152,11 @@ const Row = styled.div.attrs({
 })``
 
 const Label = styled.div.attrs({
-    className: `text-gray text-xs dark:text-txtSecondary-dark`
+    className: `text-gray-1 text-xs dark:text-txtSecondary-dark`
 })``
 
 const Button = styled.div.attrs({
-    className: `text-gray bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-medium`
+    className: `text-gray-1 bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-medium`
 })`
 width:calc(50% - 4px)
 `

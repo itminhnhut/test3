@@ -1,22 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Tour from "reactour";
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 import { X } from 'react-feather'
-
-const Guideline = ({ pair }) => {
+const Guideline = ({ pair, start, setStart }) => {
     const { t } = useTranslation();
-    const [isStart, setIsStart] = useState(false);
     const [showClose, setShowClose] = useState(false);
     const step = useRef(0);
 
     const onClose = (e) => {
-        if (e) setIsStart(false);
+        if (e) setStart(false);
     }
 
     useEffect(() => {
-        // if (pair) setIsStart(true);
+        // if (pair) setStart(true);
     }, [pair])
 
     const getCurrentStep = (e) => {
@@ -55,49 +53,66 @@ const Guideline = ({ pair }) => {
         <Tour
             onRequestClose={() => onClose()}
             steps={tourConfig}
-            isOpen={isStart}
+            isOpen={start}
             showCloseButton={false}
             maskClassName="guideline"
             rounded={5}
+            startAt={0}
             disableInteraction
             disableKeyboardNavigation
             accentColor={colors.teal}
             getCurrentStep={getCurrentStep}
-            // highlightedMaskClassName="bg-teal"
             showNavigation={false}
             showButtons={false}
             showNumber={false}
+            scrollOffset={100}
         />
     );
 };
 
 const Content = ({ title, text, step, onClose, goTo, ...props }) => {
-    console.log(props)
+    const { t } = useTranslation();
+    const [bottom, setBottom] = useState(false);
+
+    useEffect(() => {
+        const el = document.querySelector('#guideline-step-' + step);
+        let result = false;
+        if (el) {
+            const ref = el.getBoundingClientRect();
+            result = ref.bottom + (window.innerHeight * 0.2 ) > window.innerHeight / 2;
+        }
+        setBottom(result)
+    }, [step])
+
     return (
-        <View>
-            <div className="flex items-center justify-between">
-                <label className="text-teal font-semibold text-sm">Bước {step}</label>
-                <div className='cursor-pointer' onClick={() => onClose(true)}>
-                    <X width={20} />
+        <div className="flex flex-col items-center justify-center" >
+            {!bottom && <img className="m-auto" src="/images/icon/ic_guide_arrow.png" width={10} />}
+            <View id={`guideline-step-${step}`}>
+                <div className="flex items-center justify-between">
+                    <label className="text-teal font-semibold text-sm">{t('futures:mobile:guide:step')} {step}</label>
+                    <div className='cursor-pointer text-white' onClick={() => onClose(true)}>
+                        <X width={20} />
+                    </div>
                 </div>
-            </div>
-            <div className="mt-[8px] mb-[16px]">{text}</div>
-            <div className="flex items-center justify-between font-medium">
-                <div className='text-sm'>Bước {step + '/'}<span className="text-xs">6</span></div>
-                <div className='px-[19px] py-[3px] bg-dominant rounded-[4px]' onClick={() => goTo(step)}>Next</div>
-            </div>
-        </View>
+                <div className="mt-[8px] mb-[16px] text-white">{text}</div>
+                <div className="flex items-center justify-between font-medium text-white">
+                    <div className='text-sm'>{t('futures:mobile:guide:step')} {step + '/'}<span className="text-xs">6</span></div>
+                    <div className='px-[19px] py-[3px] bg-dominant rounded-[4px]' onClick={() => step === 6 ? onClose(true) : goTo(step)}>{t(step === 6 ? 'common:close' : 'common:global_btn:next')}</div>
+                </div>
+            </View>
+            {bottom && <img className="m-auto rotate-180" src="/images/icon/ic_guide_arrow.png" width={10} />}
+        </div>
     )
 }
 
 const View = styled.div.attrs({
-    className: 'text-xs'
+    className: 'text-xs my-[10px] bg-darkBlue dark:bg-darkBlue-1 flex flex-col justify-between'
 })`
     height:144px;
     width:294px;
-    background-color:${colors.darkBlue1};
+    ${'' /* background-color:${colors.darkBlue1}; */}
     border:1px solid ${colors.teal};
-    ${'' /* opacity:0.8; */}
+    opacity:0.8;
     border-radius: 8px;
     padding:16px;
 `

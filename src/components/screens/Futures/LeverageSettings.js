@@ -21,7 +21,8 @@ const FuturesLeverageSettings = ({
     pairConfig,
     leverageBracket,
     isAuth,
-    isVndcFutures
+    isVndcFutures,
+    dots
 }) => {
     const [loading, setLoading] = useState(false)
     const { t } = useTranslation();
@@ -185,6 +186,7 @@ const FuturesLeverageSettings = ({
                     onChange={({ x }) =>
                         x === 0 ? _setLeverage(1) : _setLeverage(x)
                     }
+                    dots={dots}
                 />
             </div>
             {!isVndcFutures && <>

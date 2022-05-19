@@ -12,7 +12,7 @@ import { getLoginUrl } from 'redux/actions/utils'
 import OrderBalance from './OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
-const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth }) => {
+const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap }) => {
     const { t } = useTranslation();
     const [currentTheme] = useDarkMode()
     const ordersList = useSelector(state => state?.futures?.ordersList)
@@ -27,11 +27,11 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth }) => {
             case FUTURES_RECORD_CODE.openOrders:
                 return <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK} ordersList={ordersList} pair={pair} pairConfig={pairConfig} />;
             case FUTURES_RECORD_CODE.orderHistory:
-                return <TabOrdersHistory isDark={currentTheme === THEME_MODE.DARK} />;
+                return <TabOrdersHistory scrollSnap={scrollSnap} isDark={currentTheme === THEME_MODE.DARK} />;
             default:
                 return null
         }
-    }, [tab, ordersList, pair, pairConfig])
+    }, [tab, ordersList, pair, pairConfig, scrollSnap])
 
     return (
         <div data-tut="order-tab" className="h-full">
@@ -51,13 +51,14 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth }) => {
 });
 
 const TabMobile = styled.div.attrs({
-    className: "flex items-center px-[16px] bg-white dark:bg-transparent dark:border-divider-dark"
+    className: "flex items-center px-[16px] bg-white dark:bg-darkBlue-1 dark:border-divider-dark"
 })`
     height:42px;
     width:100%;
     border-bottom:1px solid ${colors.grey4};
     border-top:${({ isDark }) => isDark ? '0' : '1px solid ' + colors.grey4};
-    position:relative;
+    position:sticky;
+    top:0;
     .active::after {
         content:'';
         position:absolute;
@@ -69,7 +70,7 @@ const TabMobile = styled.div.attrs({
 `
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-md font-medium mr-[32px] text-gray h-full flex items-center justify-center dark:text-txtSecondary-dark`,
+        `text-sm font-medium mr-[32px] text-gray-1 h-full flex items-center justify-center dark:text-txtSecondary-dark`,
         {
             'active font-semibold text-darkBlue dark:text-white': active
         }

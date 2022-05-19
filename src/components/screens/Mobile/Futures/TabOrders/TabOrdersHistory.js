@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import InfiniteScroll from "react-infinite-scroll-component";
 import Adjustmentdetails from 'components/screens/Futures/PlaceOrder/Vndc/Adjustmentdetails';
 
-const TabOrdersHistory = ({ isDark }) => {
+const TabOrdersHistory = ({ isDark, scrollSnap }) => {
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const [dataSource, setDataSource] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -63,7 +63,7 @@ const TabOrdersHistory = ({ isDark }) => {
     }
 
     if (loading) return null;
-    if (dataSource.length <= 0) return <TableNoData className="h-full"/>
+    if (dataSource.length <= 0) return <TableNoData className="h-full" />
 
     return (
         <>
@@ -72,15 +72,15 @@ const TabOrdersHistory = ({ isDark }) => {
                 dataLength={dataSource.length}
                 next={onNext}
                 hasMore={hasMore.current}
-                height={'calc(100vh - 122px)'}
+                {...scrollSnap ? { height: 'calc(100vh - 122px)' } : { scrollableTarget: "futures-mobile" }}
             // loader={loading ? loader() : null}
             >
                 <div className="px-[16px]">
                     {dataSource?.map((order, i) => {
-                        const dataMarketWatch = allPairConfigs.find(rs => rs.symbol === order.symbol)
+                        const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
                         return (
-                            <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch} mode="history"
-                                isDark={isDark} onShowDetail={onShowDetail}
+                            <OrderItemMobile key={i} order={order} mode="history"
+                                isDark={isDark} onShowDetail={onShowDetail} symbol={symbol}
                             />
                         )
                     })}

@@ -51,7 +51,7 @@ const LayoutMobile = ({
                 window.fcWidget.hide()
                 window.fcWidget.close()
             }
-        }, 500);
+        }, 1000);
     }, [])
 
     return (
@@ -70,7 +70,7 @@ const LayoutMobile = ({
             >
                 <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' />
                 <div
-                    className='relative flex-1 bg-white dark:bg-darkBlue-1 mb-[80px]'
+                    className='relative flex-1 bg-white dark:bg-darkBlue-1'
                 >
                     <AlertContext.Provider value={{ alert: alert.current }}>
                         {children}

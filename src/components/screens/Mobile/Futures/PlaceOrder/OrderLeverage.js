@@ -37,6 +37,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig }) => {
                 decimalScale={0}
                 // isAllowed={({ floatValue }) => floatValue <= 125}
                 labelClassName='whitespace-nowrap capitalize'
+                containerClassName="h-[36px]"
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
                     <div className='relative group select-none'>
@@ -57,6 +58,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig }) => {
                     isAuth={isAuth}
                     onClose={() => setOpenModal(false)}
                     isVndcFutures={true}
+                    dots={6}
                 />
             }
         </>
