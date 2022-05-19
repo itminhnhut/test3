@@ -143,7 +143,7 @@ const FuturesMobile = () => {
             </SocketLayout>
             <DynamicNoSsr>
                 <LayoutMobile>
-                    <Container id="futures-mobile">
+                    <Container id="futures-mobile" >
                         <Section className="form-order"
                             style={styleContent}>
                             <ChartMobile

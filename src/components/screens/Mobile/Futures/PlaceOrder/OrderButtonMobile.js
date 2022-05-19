@@ -50,7 +50,7 @@ const OrderButtonMobile = ({
 
     return (
         <div onClick={onHandleSave} className={`${isBuy ? 'bg-dominant' : 'bg-red'} text-white text-sm h-[67px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
-            <div className='font-semibold text-center'>{!isAuth ? t('futures:order_table:login_to_continue') : isBuy ? t('common:buy') + '/Long' : t('common:sell') + '/Short'}</div>
+            <div className='font-semibold text-center'>{!isAuth ? t('futures:mobile:login_short') : isBuy ? t('common:buy') + '/Long' : t('common:sell') + '/Short'}</div>
             <div className='font-medium'>{formatNumber(_price, decimals.decimalScalePrice, 0, true)}</div>
         </div>
     );

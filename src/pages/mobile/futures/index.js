@@ -9,9 +9,9 @@ const FuturesIndex = () => {
     const router = useRouter()
 
     const params = useMemo(() => {
-        return router.asPath.substring(router.asPath.indexOf('?'))
+        return router.asPath.indexOf('?') !== -1 ? router.asPath.substring(router.asPath.indexOf('?')) : ''
     }, [router])
-
+    
     if (typeof window !== 'undefined') {
         // Find previous symbol
         const prevSymbol = localStorage.getItem(

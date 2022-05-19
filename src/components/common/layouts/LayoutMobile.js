@@ -10,6 +10,7 @@ import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
 import BottomNavBar from 'components/screens/Mobile/BottomNavBar'
 import AlertModal from 'components/screens/Mobile/AlertModal';
+import Head from 'next/head'
 export const AlertContext = createContext(null);
 
 const LayoutMobile = ({
@@ -56,6 +57,9 @@ const LayoutMobile = ({
 
     return (
         <>
+            <Head>
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
+            </Head>
             <div
                 className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''
                     } ${dark ? 'mal-layouts___dark' : ''}`}

@@ -210,6 +210,7 @@
             "order": "Xác nhận giao dịch dễ dàng",
             "tab": "Chi tiết tài khoản và danh sách lệnh giao dịch của bạn sẽ hiển thị ở đây",
             "step": "Bước"
-        }
+        },
+        "login_short": "Đăng nhập ngay"
     }
 }
