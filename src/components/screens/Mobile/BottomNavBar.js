@@ -61,7 +61,7 @@ const BottomNavBar = memo(() => {
 
 
 const Tabs = styled.div.attrs({
-    className: "bg-white dark:bg-darkBlue-3"
+    className: "bg-white dark:bg-darkBlue-3 bottom-navigation"
 })`
     height:80px;
     width:100%;

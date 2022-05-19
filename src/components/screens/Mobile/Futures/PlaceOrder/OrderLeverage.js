@@ -58,7 +58,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig }) => {
                     isAuth={isAuth}
                     onClose={() => setOpenModal(false)}
                     isVndcFutures={true}
-                    dots={6}
+                    dots={5}
                 />
             }
         </>
