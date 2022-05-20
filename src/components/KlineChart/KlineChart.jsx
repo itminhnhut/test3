@@ -1,15 +1,14 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {init, dispose, extension} from 'klinecharts'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { init, dispose } from 'klinecharts'
 import ms from 'ms';
 
 import getDefaultOptions from './defaultStyleOptions'
-import useDarkMode, {THEME_MODE} from "hooks/useDarkMode";
-import {getData, calculateUpSizeBarData, socket} from "components/KlineChart/kline.service";
+import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
+import { getData, calculateUpSizeBarData, socket } from "components/KlineChart/kline.service";
 import NamiExchangeSvg from "components/svg/NamiExchangeSvg";
 import colors from "styles/colors";
-import {clone, last} from "lodash";
+import { clone, last } from "lodash";
 import usePrevious from "hooks/usePrevious";
-
 const CHART_ID = 'k-line-chart'
 
 let _lastBar;
@@ -17,52 +16,8 @@ let _lastBar;
 // Chart instance
 let chart;
 
-const shapeTemplateT = ({
-    name: 'test_123',
-    totalStep: 2,
-    checkEventCoordinateOnShape: ({key, type, dataSource, eventCoordinate}) => {
-    },
-    createShapeDataSource: ({step, points, coordinates, viewport, precision, styles, xAxis, yAxis, data}) => {
-        return [
-            {
-                type: 'line',
-                isDraw: true,
-                isCheck: false,
-                dataSource: [
-                    [
-                        {
-                            x: 0,
-                            y: coordinates[0].y
-                        },
-                        {
-                            x: viewport.width,
-                            y: coordinates[0].y
-                        },
-                    ],
-                ]
-            },
-            {
-                type: 'text',
-                isDraw: true,
-                isCheck: false,
-                styles: {
-                    color: '#718096',
-                    offset: [-2, 2],
-                    size: 16, weight: 600
-                },
-                dataSource: [{
-                    x: 0,
-                    y: coordinates[0].y,
-                    text: 'Alo123'
-                }]
-            },
-        ]
-    },
-})
-
-extension.addShapeTemplate(shapeTemplateT)
-
-function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator, candle, collapse}) {
+function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator, candle, isResize }) {
+    const prevSymbolInfo = usePrevious(symbolInfo)
     const prevMainIndicator = usePrevious(mainIndicator)
     const prevSubIndicator = usePrevious(subIndicator)
     const prevCandle = usePrevious(candle)
@@ -74,17 +29,6 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
 
     useEffect(() => {
         chart = init(CHART_ID, getDefaultOptions(THEME_MODE.DARK))
-        chart.addShapeTemplate(shapeTemplateT)
-
-        chart.createShape({
-            name: 'test_123',
-            lock: true,
-            points: [
-                {
-                    value: 685263862
-                }
-            ]
-        })
     }, [])
 
     const _getData = useCallback(async (to, from) => {
@@ -141,8 +85,8 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
 
         const action = symbolInfo.exchange === 'NAMI_SPOT' ? 'spot:recent_trade:add' : 'futures:ticker:update';
 
-        socket.on(action, ({t: time, p: price, q: volume}) => {
-            if (!_lastBar || _lastBar.s !== symbolInfo.symbol) return
+        socket.on(action, ({ t: time, p: price, q: volume }) => {
+            if (!_lastBar) return
             const timeRounded = Math.floor(time / resolution) * resolution
             let data = {
                 ..._lastBar,
@@ -204,7 +148,7 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
                 chart.removeTechnicalIndicator('candle_pane', prevMainIndicator)
             }
             if (mainIndicator) {
-                chart.createTechnicalIndicator(mainIndicator, false, {id: 'candle_pane'})
+                chart.createTechnicalIndicator(mainIndicator, false, { id: 'candle_pane' })
             }
         }
 
@@ -240,12 +184,12 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
     useEffect(() => {
         if (!chart) return
         chart.resize();
-    }, [collapse])
+    }, [isResize])
 
     return (
-        <div id={CHART_ID} className="kline-chart flex flex-1 h-full">
+        <div id={CHART_ID} className="kline-chart flex flex-1 h-full" style={{ minHeight: 270 }}>
             <div className="cheat-watermark">
-                <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4}/>
+                <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4} />
             </div>
         </div>
     )
@@ -257,5 +201,5 @@ export default React.memo(KLineChart, (prevProps, nextProps) => {
         (prevProps.subIndicator === nextProps.subIndicator) &&
         (prevProps.resolution === nextProps.resolution) &&
         (prevProps.candle === nextProps.candle) &&
-        (prevProps.collapse === nextProps.collapse)
+        (prevProps.isResize === nextProps.isResize)
 })
