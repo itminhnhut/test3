@@ -76,7 +76,7 @@ const LayoutMobile = ({
                         : {}
                 }
             >
-                <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' />
+                {/* <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' /> */}
                 <div
                     className='relative flex-1 bg-white dark:bg-darkBlue-1'
                 >

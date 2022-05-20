@@ -25,6 +25,7 @@ const Guideline = ({ pair, start, setStart }) => {
         const vh = window.innerHeight * 0.01;
         const el = document.querySelector('.bottom-navigation')
         const order = document.querySelector('#futures-mobile')
+        if (!el || !order) return;
         if (start) {
             order.style.height = window.innerHeight + 'px';
             el.style.display = 'none'
