@@ -211,6 +211,9 @@
             "tab": "Chi tiết tài khoản và danh sách lệnh giao dịch của bạn sẽ hiển thị ở đây",
             "step": "Bước"
         },
-        "login_short": "Đăng nhập ngay"
-    }
+        "login_short": "Đăng nhập ngay",
+        "available": "Số dư k.dụng",
+        "liq_price": "Giá thanh lý"
+    },
+    "orders_history": "Lịch sử lệnh"
 }

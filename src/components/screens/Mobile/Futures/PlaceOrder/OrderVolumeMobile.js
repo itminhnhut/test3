@@ -14,7 +14,7 @@ const OrderVolumeMobile = memo(({ size, setSize, decimals, }) => {
             onValueChange={({ floatValue = 0 }) => setSize(floatValue)}
             // validator={getValidator('quantity')}
             decimalScale={decimals.decimalScaleQtyLimit}
-            labelClassName='whitespace-nowrap capitalize'
+            labelClassName='whitespace-nowrap'
             containerClassName="h-[36px]"
             tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
             // renderTail={() => (

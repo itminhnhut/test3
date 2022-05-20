@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Modal from 'components/common/ReModal'
 import Button from 'components/common/Button'
 import { useTranslation } from 'next-i18next'
 
 const OrderClose = ({ open, onClose, onConfirm, data, isMobile }) => {
     const { t } = useTranslation();
+
+    const width = useMemo(() => {
+        return window.innerWidth > 330 ? 'w-[340px]' : 'w-[300px]'
+    }, [open])
+    
     return (
         <Modal
             isVisible={open}
             onBackdropCb={onClose}
-            containerClassName={!isMobile ? '' : 'w-[370px]'}
+            containerClassName={!isMobile ? 'w-[390px]' : width + ' top-[50%]'}
         >
-            <div className={!isMobile ? 'w-[390px]' : 'w-[340px]'}>
+            <div>
                 <div className="text-center text-xl font-bold capitalize">
                     {t('futures:close_order:modal_title', { value: data?.displaying_id })}
                 </div>

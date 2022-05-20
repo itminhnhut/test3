@@ -236,7 +236,10 @@ const PlaceOrder = ({
                 <OrderCollapse
                     side={side} pairPrice={pairPrice} type={type} size={size}
                     price={price} stopPrice={stopPrice} pairConfig={pairConfig}
-                    decimals={decimals} leverage={leverage} isAuth={isAuth} />
+                    decimals={decimals} leverage={leverage} isAuth={isAuth}
+                    marginAndValue={marginAndValue} availableAsset={availableAsset}
+                />
+
                 : <>
                     <OrderInput>
                         <OrderTypeMobile type={type} setType={setType}

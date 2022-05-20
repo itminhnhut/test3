@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect } from 'react';
+import React, { useState, memo, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -11,21 +11,24 @@ import SvgWallet from 'components/svg/SvgWallet';
 import SvgSwap from 'components/svg/SvgSwap';
 import SvgFutures from 'components/svg/SvgFutures';
 import SvgMarket from 'components/svg/SvgMarket';
+import { useTranslation } from 'next-i18next'
 
-const listNav = [
-    { title: 'Markets', prefix: 'mobile', nav: 'market', icon: <SvgMarket /> },
-    { title: 'Futures', prefix: 'mobile', nav: 'futures', icon: <SvgFutures /> },
-    { title: 'Wallets', prefix: 'mobile', nav: 'wallet', icon: <SvgWallet /> },
-]
+
 
 const BottomNavBar = memo(() => {
     const router = useRouter();
+    const { t } = useTranslation();
+    const listNav = [
+        { title: t('common:mobile:markets'), prefix: 'mobile', nav: 'market', icon: <SvgMarket /> },
+        { title: 'Futures', prefix: 'mobile', nav: 'futures', icon: <SvgFutures /> },
+        { title: t('common:mobile:wallets'), prefix: 'mobile', nav: 'wallet', icon: <SvgWallet /> },
+    ]
     const [currentTheme] = useDarkMode()
     const dispatch = useDispatch();
     const isDark = currentTheme === THEME_MODE.DARK;
     const bottomNav = useSelector(state => state.utils.bottomNav)
     const [tab, setTab] = useState(bottomNav ?? listNav[0].nav);
-
+  
     const onChangeTab = (e) => {
         router.push(`/${e.prefix}/${e.nav}`)
         dispatch(setBottomTab(e.nav))

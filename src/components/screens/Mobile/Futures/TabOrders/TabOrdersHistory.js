@@ -7,6 +7,7 @@ import OrderItemMobile from './OrderItemMobile'
 import { useSelector } from 'react-redux'
 import InfiniteScroll from "react-infinite-scroll-component";
 import Adjustmentdetails from 'components/screens/Futures/PlaceOrder/Vndc/Adjustmentdetails';
+import ShareFutureMobile from './ShareFutureMobile';
 
 const TabOrdersHistory = ({ isDark, scrollSnap }) => {
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
@@ -19,11 +20,17 @@ const TabOrdersHistory = ({ isDark, scrollSnap }) => {
     const hasMore = useRef(true);
     const rowData = useRef(null);
     const [showDetail, setShowDetail] = useState(false);
+    const [openShareModal, setOpenShareModal] = useState(false);
 
     useEffect(() => {
         setLoading(true);
         getOrders();
     }, [])
+
+    const onShowModal = (item, key) => {
+        rowData.current = item;
+        setOpenShareModal(!openShareModal)
+    }
 
     const getOrders = async () => {
         try {
@@ -63,10 +70,16 @@ const TabOrdersHistory = ({ isDark, scrollSnap }) => {
     }
 
     if (loading) return null;
-    if (dataSource.length <= 0) return <TableNoData className="h-full" />
+    if (dataSource.length <= 0) return <TableNoData title={t('futures:order_table:no_history_order')} className="h-full min-h-[300px]" />
 
     return (
         <>
+            {openShareModal && <ShareFutureMobile
+                isVisible={openShareModal} order={rowData.current}
+                onClose={() => setOpenShareModal(false)}
+                isClosePrice
+            // pairPrice={marketWatch[rowData.current?.symbol]}
+            />}
             {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} isMobile />}
             <InfiniteScroll
                 dataLength={dataSource.length}
@@ -81,6 +94,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap }) => {
                         return (
                             <OrderItemMobile key={i} order={order} mode="history"
                                 isDark={isDark} onShowDetail={onShowDetail} symbol={symbol}
+                                onShowModal={onShowModal}
                             />
                         )
                     })}

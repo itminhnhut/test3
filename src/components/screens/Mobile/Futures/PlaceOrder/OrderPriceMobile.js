@@ -21,7 +21,7 @@ const OrderPriceMobile = ({ price, setPrice, decimals, type }) => {
             // validator={getValidator('quantity')}
             onValueChange={({ floatValue = 0 }) => setPrice(floatValue)}
             decimalScale={decimals.decimalScalePrice}
-            labelClassName='whitespace-nowrap capitalize'
+            labelClassName='whitespace-nowrap'
             containerClassName="h-[36px]"
             tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
             // renderTail={() => (

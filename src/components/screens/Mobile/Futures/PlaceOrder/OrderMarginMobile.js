@@ -12,7 +12,7 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
         <div className="flex flex-col h-full justify-around">
             <div className="flex items-center justify-between">
                 <TradingLabel
-                    label={t('futures:avlb') + ' ' + quoteAsset}
+                    label={t('futures:mobile:available')}
                     value={`${formatNumber(
                         availableAsset ?? 0,
                         0

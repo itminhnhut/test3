@@ -197,6 +197,8 @@
     "value": "Value",
     "price_market": "Price market",
     "cancel": "Cancel",
+    "place_order_success_message": "Congratulation! Your purchase was successful",
+    "place_order_failed": "Place order failed",
     "mobile": {
         "balance": "Balance",
         "pnl": "PnL",
@@ -208,8 +210,11 @@
             "sl": "Lựa chọn Chốt lỗ và cắt lời để quản lý lợi nhuận của lệnh",
             "order": "Xác nhận giao dịch dễ dàng",
             "tab": "Chi tiết tài khoản và danh sách lệnh giao dịch của bạn sẽ hiển thị ở đây",
-            "step": "Step",
-            "login_short": "Login"
-        }
-    }
+            "step": "Step"
+        },
+        "login_short": "Login",
+        "available": "Available",
+        "liq_price": "Liq. Price"
+    },
+    "orders_history": "Orders History"
 }

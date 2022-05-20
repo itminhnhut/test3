@@ -12,6 +12,7 @@ import fetchApi from 'utils/fetch-api'
 import { AlertContext } from 'components/common/layouts/LayoutMobile'
 import OrderItemMobile from './OrderItemMobile'
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
+import ShareFutureMobile from './ShareFutureMobile';
 
 const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
     const { t } = useTranslation();
@@ -22,14 +23,24 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
         return hideOther ? ordersList.filter(order => order?.symbol === pair) : ordersList;
     }, [hideOther, ordersList, pair])
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
-
-    const [openModalClose, setOpenModalClose] = useState(false);
     const rowData = useRef(null);
-    const [showModalEdit, setShowModalEdit] = useState(false);
+    const [openCloseModal, setOpenCloseModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [openShareModal, setOpenShareModal] = useState(false);
 
-    const openModal = (item) => {
-        rowData.current = item
-        setOpenModalClose(!openModalClose);
+    const onShowModal = (item, key) => {
+        rowData.current = item;
+        switch (key) {
+            case 'delete':
+                setOpenCloseModal(!openCloseModal);
+                break;
+            case 'edit':
+                setOpenEditModal(!openEditModal);
+                break;
+            default:
+                setOpenShareModal(!openShareModal)
+                break;
+        }
     }
 
     const fetchOrder = async (method = 'DELETE', params, cb) => {
@@ -47,8 +58,8 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
         } catch (e) {
             console.log(e)
         } finally {
-            setOpenModalClose(false);
-            setShowModalEdit(false);
+            setOpenCloseModal(false);
+            setOpenEditModal(false);
         }
     }
 
@@ -62,27 +73,22 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
         });
     }
 
-    const onShowEdit = (item) => {
-        rowData.current = item;
-        setShowModalEdit(!showModalEdit);
-    }
-
     const onConfirmEdit = (params) => {
         fetchOrder('PUT', params, () => {
             localStorage.setItem('edited_id', params.displaying_id);
-            context.alert.show('success', t('commom:success'), t('futures:modify_order_success'))
+            context.alert.show('success', t('common:success'), t('futures:modify_order_success'))
         });
     }
 
-    if (ordersList.length <= 0) return <TableNoData className="h-full" />
+    if (ordersList.length <= 0) return <TableNoData title={t('futures:order_table:no_opening_order')} className="h-full min-h-[300px]" />
 
     return (
         <div className="px-[16px] pt-[10px] overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
-            {showModalEdit &&
+            {openEditModal &&
                 <FuturesEditSLTPVndc
-                    isVisible={showModalEdit}
+                    isVisible={openEditModal}
                     order={rowData.current}
-                    onClose={() => setShowModalEdit(false)}
+                    onClose={() => setOpenEditModal(false)}
                     status={rowData.current.status}
                     onConfirm={onConfirmEdit}
                     pairConfig={pairConfig}
@@ -90,7 +96,12 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
                     isMobile
                 />
             }
-            <OrderClose open={openModalClose} onClose={openModal} data={rowData.current} onConfirm={onConfirmDelete} isMobile />
+            {openShareModal && <ShareFutureMobile
+                isVisible={openShareModal} order={rowData.current}
+                onClose={() => setOpenShareModal(false)}
+                pairPrice={marketWatch[rowData.current?.symbol]}
+            />}
+            <OrderClose open={openCloseModal} onClose={setOpenCloseModal} data={rowData.current} onConfirm={onConfirmDelete} isMobile />
             <div
                 className='flex items-center text-sm font-medium select-none cursor-pointer'
                 onClick={() => setHideOther(!hideOther)}
@@ -106,7 +117,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
                     const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
                     return (
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
-                            openModal={openModal} isDark={isDark} onShowEdit={onShowEdit} symbol={symbol}
+                            onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
                         />
                     )
                 })}

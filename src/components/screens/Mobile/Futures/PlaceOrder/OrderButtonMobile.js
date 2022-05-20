@@ -19,7 +19,8 @@ const OrderButtonMobile = ({
     const { t } = useTranslation();
     const isBuy = VndcFutureOrderType.Side.BUY === side
     const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
-
+    
+    
     const onHandleSave = () => {
         if (!isAuth) {
             window.open(

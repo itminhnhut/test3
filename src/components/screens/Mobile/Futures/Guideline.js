@@ -35,17 +35,15 @@ const Guideline = ({ pair, start, setStart }) => {
     }, [start])
 
     const tourConfig = useMemo(() => {
-        const small = window.innerHeight < 650;
-        const positionButton = small ? [10, 0] : 'bottom';
         return [
             {
                 selector: '[data-tut="order-symbol"]',
-                content: (props) => <Content {...props} onClose={onClose} text={t('futures:mobile:guide:symbol')} />,
+                content: (props) => <Content {...props} top onClose={onClose} text={t('futures:mobile:guide:symbol')} />,
+                position: 'bottom'
             },
             {
                 selector: '[data-tut="order-side"]',
                 content: (props) => <Content {...props} onClose={onClose} text={t('futures:mobile:guide:side')} />,
-                position: small ? 'bottom' : 'top'
             },
             {
                 selector: '[data-tut="order-volume"]',
@@ -59,7 +57,6 @@ const Guideline = ({ pair, start, setStart }) => {
             {
                 selector: '[data-tut="order-button"]',
                 content: (props) => <Content {...props} onClose={onClose} text={t('futures:mobile:guide:order')} />,
-                position: positionButton,
             },
             {
                 selector: '[data-tut="order-tab"]',
@@ -85,33 +82,16 @@ const Guideline = ({ pair, start, setStart }) => {
             showButtons={false}
             showNumber={false}
             scrollDuration="300"
-            inViewThreshold={100}
+        // inViewThreshold={100}
         />
     );
 };
 
-const Content = ({ title, text, step, onClose, goTo, ...props }) => {
+const Content = ({ title, text, step, onClose, top, goTo, ...props }) => {
     const { t } = useTranslation();
-    const [bottom, setBottom] = useState(false);
-    const timer = useRef(null);
-
-    useEffect(() => {
-        clearTimeout(timer.current);
-        timer.current = setTimeout(() => {
-            const el = document.querySelector('#guideline-step-' + step);
-            let result = false;
-            if (el) {
-                const ref = el.getBoundingClientRect();
-                const clientHeight = window.innerHeight > 600 ? window.innerHeight / 2 : window.innerHeight - 100
-                result = ref.bottom > clientHeight;
-            }
-            setBottom(result)
-        }, 500);
-    }, [step])
-
     return (
         <div className="flex flex-col items-center justify-center" >
-            {!bottom && <img className="m-auto" src="/images/icon/ic_guide_arrow.png" width={10} />}
+            {top && <img className="m-auto" src="/images/icon/ic_guide_arrow.png" width={10} />}
             <View id={`guideline-step-${step}`}>
                 <div className="flex items-center justify-between">
                     <label className="text-teal font-semibold text-sm">{t('futures:mobile:guide:step')} {step}</label>
@@ -125,7 +105,7 @@ const Content = ({ title, text, step, onClose, goTo, ...props }) => {
                     <div className='min-w-[60px] px-[10px] bg-dominant rounded-[4.33333px] text-center text-[10px]' onClick={() => step === 6 ? onClose(true) : goTo(step)}>{t(step === 6 ? 'common:close' : 'common:global_btn:next')}</div>
                 </div>
             </View>
-            {bottom && <img className="m-auto rotate-180" src="/images/icon/ic_guide_arrow.png" width={10} />}
+            {!top && <img className="m-auto rotate-180" src="/images/icon/ic_guide_arrow.png" width={10} />}
         </div>
     )
 }
