@@ -1,21 +1,21 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import React, {useEffect, useMemo, useState} from 'react'
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
 import LayoutMobile from 'components/common/layouts/LayoutMobile'
 import cn from 'classnames'
-import { useSelector } from 'react-redux'
-import { useTranslation } from 'next-i18next'
-import { formatCurrency, formatWallet, getS3Url } from 'redux/actions/utils'
+import {useSelector} from 'react-redux'
+import {useTranslation} from 'next-i18next'
+import {formatCurrency, formatWallet, getS3Url} from 'redux/actions/utils'
 import AssetLogo from 'components/wallet/AssetLogo'
-import { values } from 'lodash/object'
-import { keyBy, map, reduce } from 'lodash'
-import { getUsdRate } from 'redux/actions/market'
-import { sumBy } from 'lodash/math'
+import {values} from 'lodash/object'
+import {keyBy, map, reduce} from 'lodash'
+import {getUsdRate} from 'redux/actions/market'
+import {sumBy} from 'lodash/math'
 import SortIcon from 'components/screens/Mobile/SortIcon'
 import SvgLock from 'components/svg/SvgLock'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import useDarkMode, {THEME_MODE} from 'hooks/useDarkMode'
 import colors from 'styles/colors'
-import { MIN_WALLET } from 'constants/constants'
-import { getDownloadAppLinkForWebView } from 'utils/helpers'
+import {MIN_WALLET} from 'constants/constants'
+import {getDownloadAppLinkForWebView} from 'utils/helpers'
 
 const TABS = {
     SPOT: 'SPOT',
@@ -42,7 +42,7 @@ const MarketScreen = () => {
     const walletFutures = useSelector((state) => state.wallet?.FUTURES) || {}
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || []
 
-    const { t } = useTranslation(['common'])
+    const {t} = useTranslation(['common'])
     const [themeMode] = useDarkMode()
 
     const tabTitles = {
@@ -52,17 +52,17 @@ const MarketScreen = () => {
 
     const changeSort = (field) => () => {
         if (field !== sort.field) {
-            setSort({ field, direction: 'asc' })
+            setSort({field, direction: 'asc'})
         } else {
             switch (sort.direction) {
                 case 'asc':
-                    setSort({ field, direction: 'desc' })
+                    setSort({field, direction: 'desc'})
                     break
                 case 'desc':
-                    setSort({ field: '', direction: '' })
+                    setSort({field: '', direction: ''})
                     break
                 default:
-                    setSort({ field, direction: 'asc' })
+                    setSort({field, direction: 'asc'})
                     break
             }
         }
@@ -78,7 +78,7 @@ const MarketScreen = () => {
         return keyBy(assetConfigs, 'id')
     }, [assetConfigs])
 
-    const { listWallet, totalUsdValue, totalBtcValue } = useMemo(() => {
+    const {listWallet, totalUsdValue, totalBtcValue} = useMemo(() => {
         const allWallets = tabActive === TABS.SPOT ? walletSpots : walletFutures
 
         const toUsdValue = (assetId, value) => (usdRates[assetId] || 0) * value
@@ -128,28 +128,26 @@ const MarketScreen = () => {
 
     return (
         <LayoutMobile>
-            <div className='h-[calc(100vh-80px)]'>
+            <div className='h-[calc(100vh-70px)]'>
                 <div className='market-mobile'>
-                    <div className='p-4'>
-                        <div className='flex items-center'>
-                            <div className='flex items-center flex-1'>
-                                <div className='w-[3.75rem] h-[3.75rem] rounded-full'>
-                                    <img
-                                        className='w-full h-full'
-                                        src={user.avatar}
-                                        alt={user.name}
-                                    />
-                                </div>
-                                <div className='flex-1 ml-3'>
-                                    <p className='text-txtPrimary dark:text-txtPrimary-dark font-semibold whitespace-nowrap'>
-                                        {t('common:ext_gate:hi_user', {
-                                            who: user.username,
-                                        })}
-                                    </p>
-                                    <span className='text-txtSecondary dark:text-txtSecondary-dark font-medium'>
+                    <div className='flex p-4'>
+                        <div className='w-[3.75rem] h-[3.75rem] rounded-full'>
+                            <img
+                                className='w-full h-full'
+                                src={user.avatar}
+                                alt={user.name}
+                            />
+                        </div>
+                        <div className='flex flex-wrap flex-1 items-center justify-between space-y-1 ml-3'>
+                            <div>
+                                <p className='text-txtPrimary dark:text-txtPrimary-dark font-semibold whitespace-nowrap min-w-0 text-ellipsis'>
+                                    {t('common:ext_gate:hi_user', {
+                                        who: user.name,
+                                    })}
+                                </p>
+                                <span className='text-txtSecondary dark:text-txtSecondary-dark font-medium'>
                                         {user.code}
                                     </span>
-                                </div>
                             </div>
                             <div
                                 className='flex rounded p-2 border border-teal cursor-pointer'
@@ -195,7 +193,7 @@ const MarketScreen = () => {
                             })}
                         </div>
                     </div>
-                    <div className='market-list flex flex-col flex-1 min-h-0 px-4 pt-6 bg-white dark:bg-darkBlue-2'>
+                    <div className='market-list flex flex-col flex-1 min-h-0 px-4 pt-6 pb-3 bg-white dark:bg-darkBlue-2'>
                         <div className='pb-4'>
                             <p className='text-txtSecondary dark:text-txtSecondary-dark'>
                                 {t('wallet:total_balance')}
@@ -210,7 +208,8 @@ const MarketScreen = () => {
                             </div>
                         </div>
                         <div className='flex flex-col flex-1 min-h-0'>
-                            <div className='flex justify-between border-t border-gray-4 pt-5 pb-2 dark:border-darkBlue-3'>
+                            <div
+                                className='flex justify-between border-t border-gray-4 pt-5 pb-2 dark:border-darkBlue-3'>
                                 <TitleHeadList
                                     onClick={changeSort('assetCode')}
                                     sortDirection={
@@ -233,7 +232,8 @@ const MarketScreen = () => {
                             <div className='flex flex-col flex-1 min-h-0 overflow-y-auto mx-[-0.125rem] px-1'>
                                 {listWallet.map((asset = {}) => {
                                     return (
-                                        <div className='flex justify-between items-center py-2 border-b border-gray-4 dark:border-darkBlue-3'>
+                                        <div
+                                            className='flex justify-between items-center py-2 border-b border-gray-4 dark:border-darkBlue-3'>
                                             <div className='flex items-center'>
                                                 <AssetLogo
                                                     assetCode={asset.assetCode}
@@ -251,7 +251,8 @@ const MarketScreen = () => {
                                                 <div className='flex items-center space-x-1'>
                                                     {asset.lockedValue > 0 && (
                                                         <>
-                                                            <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs'>
+                                                            <span
+                                                                className='text-txtSecondary dark:text-txtSecondary-dark text-xs'>
                                                                 {formatCurrency(
                                                                     +asset.lockedValue,
                                                                     1
@@ -294,7 +295,7 @@ const MarketScreen = () => {
     )
 }
 
-const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
+const TitleHeadList = ({title, className = '', onClick, sortDirection}) => {
     return (
         <div
             className={
@@ -305,12 +306,12 @@ const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
             <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs leading-4'>
                 {title}
             </span>
-            <SortIcon direction={sortDirection} />
+            <SortIcon direction={sortDirection}/>
         </div>
     )
 }
 
-export async function getStaticProps({ locale }) {
+export async function getStaticProps({locale}) {
     return {
         props: {
             ...(await serverSideTranslations(locale, [

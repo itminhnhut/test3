@@ -106,7 +106,7 @@ export default (themeMode = THEME_MODE.DARK) => {
             },
             tooltip: {
                 // 'always' | 'follow_cross' | 'none'
-                showRule: 'always',
+                showRule: 'follow_cross',
                 // 'standard' | 'rect'
                 showType: 'rect',
                 labels: ['T: ', 'O: ', 'C: ', 'H: ', 'L: ', 'V: '],
