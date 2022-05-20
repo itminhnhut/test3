@@ -30,7 +30,6 @@ const FUTURES_WALLET_TOKENS = ['NAMI', 'USDT', 'VNDC']
 const MarketScreen = () => {
     // * Initial State
     const [tabActive, setTabActive] = useState(TABS.SPOT)
-    const [data, setData] = useState([])
 
     const [usdRates, setUsdRates] = useState([])
     const [sort, setSort] = useState({
@@ -39,7 +38,6 @@ const MarketScreen = () => {
     })
 
     const user = useSelector((state) => state.auth.user) || {}
-    // const favoritePairs = useSelector((state) => state.futures.favoritePairs)
     const walletSpots = useSelector((state) => state.wallet?.SPOT) || {}
     const walletFutures = useSelector((state) => state.wallet?.FUTURES) || {}
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || []
@@ -126,7 +124,7 @@ const MarketScreen = () => {
             totalUsdValue,
             totalBtcValue,
         }
-    }, [walletSpots, walletFutures, assetConfigs, tabActive, sort])
+    }, [walletSpots, walletFutures, assetConfigs, tabActive, sort, usdRates])
 
     return (
         <LayoutMobile>
