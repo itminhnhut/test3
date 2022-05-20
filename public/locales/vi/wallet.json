@@ -161,5 +161,7 @@
         "memo_wdl_tips": "Trong một số trường hợp, cần có thêm trường thông tin Memo để có thể rút tiền thành công. Nami sẽ không chịu bất kỳ trách nhiệm nào nếu như việc rút tiền của bạn không thành công do thiếu thông tin Memo, vui lòng kiểm tra kỹ trước khi xác nhận rút."
     },
     "convert_small": "Chuyển số dư nhỏ sang {{ asset }}",
-    "convert_small_mobile": "Chuyển đổi sang {{ asset }}"
+    "convert_small_mobile": "Chuyển đổi sang {{ asset }}",
+    "asset": "Tài sản",
+    "value": "Giá trị"
 }

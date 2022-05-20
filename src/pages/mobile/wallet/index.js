@@ -1,46 +1,132 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import LayoutMobile from 'components/common/layouts/LayoutMobile'
-import CoinPairs from 'components/svg/CoinPairs'
+import cn from 'classnames'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'next-i18next'
+import { formatCurrency, formatWallet, getS3Url } from 'redux/actions/utils'
+import AssetLogo from 'components/wallet/AssetLogo'
+import { values } from 'lodash/object'
+import { keyBy, map, reduce } from 'lodash'
+import { getUsdRate } from 'redux/actions/market'
+import { sumBy } from 'lodash/math'
+import SortIcon from 'components/screens/Mobile/SortIcon'
+import SvgLock from 'components/svg/SvgLock'
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
 import colors from 'styles/colors'
-import DollarCoin from 'components/svg/DollarCoin'
-import cn from 'classnames'
-import { useDispatch, useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
-import { getS3Url } from 'redux/actions/utils'
-import AssetLogo from 'components/wallet/AssetLogo'
-import {values} from "lodash/object";
+import { MIN_WALLET } from 'constants/constants'
+import { getDownloadAppLinkForWebView } from 'utils/helpers'
 
 const TABS = {
     SPOT: 'SPOT',
     FUTURES: 'FUTURES',
 }
+
+const btcRateId = 9
+
+const SPOT_WALLET_TOKENS = ['NAMI', 'USDT', 'VNDC', 'KAI', 'ONUS', 'ATS', 'WHC']
+const FUTURES_WALLET_TOKENS = ['NAMI', 'USDT', 'VNDC']
+
 const MarketScreen = () => {
     // * Initial State
     const [tabActive, setTabActive] = useState(TABS.SPOT)
     const [data, setData] = useState([])
 
-    const [search, setSearch] = useState('')
-    const [referencePrice, setReferencePrice] = useState([])
+    const [usdRates, setUsdRates] = useState([])
+    const [sort, setSort] = useState({
+        field: 'usdValue',
+        direction: 'desc',
+    })
 
-    const dispatch = useDispatch()
     const user = useSelector((state) => state.auth.user) || {}
-    const favoritePairs = useSelector((state) => state.futures.favoritePairs)
-    const walletSpots = useSelector(state => values(state.wallet?.SPOT)) || [];
-    const walletFutures = useSelector(state => state.wallet?.FUTURES) || [];
+    // const favoritePairs = useSelector((state) => state.futures.favoritePairs)
+    const walletSpots = useSelector((state) => state.wallet?.SPOT) || {}
+    const walletFutures = useSelector((state) => state.wallet?.FUTURES) || {}
+    const assetConfigs = useSelector((state) => state.utils.assetConfig) || []
 
-    const [themeMode] = useDarkMode()
-    const router = useRouter()
     const { t } = useTranslation(['common'])
+    const [themeMode] = useDarkMode()
 
     const tabTitles = {
         [TABS.SPOT]: t('wallet:spot'),
         [TABS.FUTURES]: t('wallet:futures'),
     }
 
-    console.log(walletSpots, '0000000000000')
+    const changeSort = (field) => () => {
+        if (field !== sort.field) {
+            setSort({ field, direction: 'asc' })
+        } else {
+            switch (sort.direction) {
+                case 'asc':
+                    setSort({ field, direction: 'desc' })
+                    break
+                case 'desc':
+                    setSort({ field: '', direction: '' })
+                    break
+                default:
+                    setSort({ field, direction: 'asc' })
+                    break
+            }
+        }
+    }
+
+    useEffect(() => {
+        getUsdRate().then((usdRates) => {
+            setUsdRates(usdRates)
+        })
+    }, [])
+
+    const assetConfigMap = useMemo(() => {
+        return keyBy(assetConfigs, 'id')
+    }, [assetConfigs])
+
+    const { listWallet, totalUsdValue, totalBtcValue } = useMemo(() => {
+        const allWallets = tabActive === TABS.SPOT ? walletSpots : walletFutures
+
+        const toUsdValue = (assetId, value) => (usdRates[assetId] || 0) * value
+
+        const listAllWallet = map(allWallets, (v, k) => {
+            const assetConfig = assetConfigMap[k]
+            if (!assetConfig) return
+
+            const value = v?.value < MIN_WALLET ? 0 : v?.value
+            const lockedValue = v?.value < MIN_WALLET ? 0 : v?.locked_value
+            const available = value - lockedValue
+
+            return {
+                value,
+                lockedValue,
+                available,
+                usdAvailableValue: toUsdValue(assetConfig.id, available),
+                usdValue: toUsdValue(assetConfig.id, value),
+                ...assetConfig,
+            }
+        }).filter((e) => !!e)
+
+        const totalUsdValue = sumBy(listAllWallet, 'usdValue')
+        const totalBtcValue = totalUsdValue / usdRates[btcRateId]
+
+        return {
+            listWallet: listAllWallet
+                .filter((w) => {
+                    return (
+                        tabActive === TABS.SPOT
+                            ? SPOT_WALLET_TOKENS
+                            : FUTURES_WALLET_TOKENS
+                    ).includes(w.assetCode)
+                })
+                .sort((a, b) => {
+                    if (!sort.field || !sort.direction) return 0
+                    if (a[sort.field] > b[sort.field]) {
+                        return sort.direction === 'asc' ? 1 : -1
+                    } else {
+                        return sort.direction === 'asc' ? -1 : 1
+                    }
+                }),
+            totalUsdValue,
+            totalBtcValue,
+        }
+    }, [walletSpots, walletFutures, assetConfigs, tabActive, sort])
 
     return (
         <LayoutMobile>
@@ -58,23 +144,30 @@ const MarketScreen = () => {
                                 </div>
                                 <div className='flex-1 ml-3'>
                                     <p className='text-txtPrimary dark:text-txtPrimary-dark font-semibold whitespace-nowrap'>
-                                        Xin chào, {user.username}
+                                        {t('common:ext_gate:hi_user', {
+                                            who: user.username,
+                                        })}
                                     </p>
                                     <span className='text-txtSecondary dark:text-txtSecondary-dark font-medium'>
                                         {user.code}
                                     </span>
                                 </div>
                             </div>
-                            <div className='flex rounded p-2 border border-teal cursor-pointer'>
+                            <div
+                                className='flex rounded p-2 border border-teal cursor-pointer'
+                                onClick={() => {
+                                    window.open(getDownloadAppLinkForWebView())
+                                }}
+                            >
                                 <img
                                     src={getS3Url(
                                         '/images/logo/nami_maldives.png'
                                     )}
-                                    width='16'
+                                    className='w-4 h-4'
                                     alt=''
                                 />
                                 <span className='text-xs font-medium text-teal ml-2'>
-                                    Tải App
+                                    {t('common:global_btn:download_app')}
                                 </span>
                             </div>
                         </div>
@@ -105,50 +198,117 @@ const MarketScreen = () => {
                         </div>
                     </div>
                     <div className='market-list flex flex-col flex-1 min-h-0 px-4 pt-6 bg-white dark:bg-darkBlue-2'>
-                        <div>
+                        <div className='pb-4'>
                             <p className='text-txtSecondary dark:text-txtSecondary-dark'>
-                                Total Balance
+                                {t('wallet:total_balance')}
                             </p>
-                            <div>
+                            <div className='flex flex-wrap'>
                                 <span className='text-teal font-medium mr-1'>
-                                    1.2345554 BTC
+                                    {formatWallet(totalBtcValue, 6)} BTC
                                 </span>
                                 <span className='font-medium'>
-                                    (33,850.29 USDT)
+                                    ($ {formatWallet(totalUsdValue, 0)})
                                 </span>
                             </div>
                         </div>
-                        <div>
-                            {[].map(asset => {
-                                return <div className='flex justify-between my-4'>
-                                    <div className='flex items-center'>
-                                        <AssetLogo assetCode='ETH' />
-                                        <div className='flex flex-col ml-3'>
-                                        <span className='font-bold text-sm leading-5'>
-                                            ETH
-                                        </span>
-                                            <span className='text-xs leading-4'>
-                                            Ethereum
-                                        </span>
+                        <div className='flex flex-col flex-1 min-h-0'>
+                            <div className='flex justify-between border-t border-gray-4 pt-5 pb-2 dark:border-darkBlue-3'>
+                                <TitleHeadList
+                                    onClick={changeSort('assetCode')}
+                                    sortDirection={
+                                        sort.field === 'assetCode'
+                                            ? sort.direction
+                                            : ''
+                                    }
+                                    title={t('wallet:asset')}
+                                />
+                                <TitleHeadList
+                                    onClick={changeSort('usdValue')}
+                                    sortDirection={
+                                        sort.field === 'usdValue'
+                                            ? sort.direction
+                                            : ''
+                                    }
+                                    title={t('wallet:value')}
+                                />
+                            </div>
+                            <div className='flex flex-col flex-1 min-h-0 overflow-y-auto mx-[-0.125rem] px-1'>
+                                {listWallet.map((asset = {}) => {
+                                    return (
+                                        <div className='flex justify-between items-center py-2 border-b border-gray-4 dark:border-darkBlue-3'>
+                                            <div className='flex items-center'>
+                                                <AssetLogo
+                                                    assetCode={asset.assetCode}
+                                                />
+                                                <div className='flex flex-col ml-3'>
+                                                    <span className='font-bold text-sm leading-5'>
+                                                        {asset.assetCode}
+                                                    </span>
+                                                    <span className='text-xs leading-4'>
+                                                        {asset.assetName}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className='flex flex-col items-end'>
+                                                <div className='flex items-center space-x-1'>
+                                                    {asset.lockedValue > 0 && (
+                                                        <>
+                                                            <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs'>
+                                                                {formatCurrency(
+                                                                    +asset.lockedValue,
+                                                                    1
+                                                                )}
+                                                            </span>
+                                                            <SvgLock
+                                                                size={14}
+                                                                color={
+                                                                    themeMode ===
+                                                                    THEME_MODE.DARK
+                                                                        ? colors.darkBlue5
+                                                                        : colors.grey1
+                                                                }
+                                                            />
+                                                        </>
+                                                    )}
+                                                    <span className='font-medium text-sm'>
+                                                        {formatWallet(
+                                                            asset.value,
+                                                            asset.assetDigit
+                                                        )}
+                                                    </span>
+                                                </div>
+                                                <span className='text-xs text-txtSecondary dark:text-txtSecondary-dark'>
+                                                    ${' '}
+                                                    {formatWallet(
+                                                        asset.usdValue
+                                                    )}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className='flex flex-col items-end'>
-                                        <img
-                                            width={10}
-                                            src='/images/icon/ic_exchange_mobile.png'
-                                            alt='Exchange icon'
-                                        />
-                                        <span className='font-medium text-sm'>
-                                        1,1235.123
-                                    </span>
-                                    </div>
-                                </div>
-                            })}
+                                    )
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </LayoutMobile>
+    )
+}
+
+const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
+    return (
+        <div
+            className={
+                'flex items-center justify-end cursor-pointer ' + className
+            }
+            onClick={onClick}
+        >
+            <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs leading-4'>
+                {title}
+            </span>
+            <SortIcon direction={sortDirection} />
+        </div>
     )
 }
 

@@ -287,7 +287,7 @@
         "of": "of"
     },
     "ext_gate": {
-        "hi_user": "Hi, ${who}",
+        "hi_user": "Hi, {{who}}",
         "guest": "Guest",
         "suggest_nami": "Use the NamiExchange application for the best experience",
         "nami_wallet": "Nami Wallet",

@@ -160,5 +160,7 @@
         "memo_wdl_tips": "In some case, Memo is needed and Nami will not take any responsibility if you withdraw without Memo information and the withdrawal does not reach to your wallet."
     },
     "convert_small": "Convert small balance to {{ asset }}",
-    "convert_small_mobile": "Convert to {{ asset }}"
+    "convert_small_mobile": "Convert to {{ asset }}",
+    "asset": "Asset",
+    "value": "Value"
 }

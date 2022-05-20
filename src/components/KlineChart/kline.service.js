@@ -32,9 +32,6 @@ const getInternalTimeFrame = (timeMs) => {
     return '1d';
 };
 
-// Keep store last data to update
-let _lastBar = null;
-
 export async function getData({ broker, symbol, from, to, resolution }) {
     const url = `${PRICE_URL}/api/v1/chart/history`;
     const { data } = await axios.get(url, {
@@ -53,7 +50,7 @@ export async function getData({ broker, symbol, from, to, resolution }) {
     if (!data) return [];
 
     // [ time, open, high, low, close, volume]
-    const mappedData = data.map(i => ({
+    return data.map(i => ({
         timestamp: i[0] * 1000,
         open: i[1],
         high: i[2],
@@ -61,10 +58,6 @@ export async function getData({ broker, symbol, from, to, resolution }) {
         close: i[4],
         volume: i[5],
     }));
-    if (!_lastBar) {
-        _lastBar = mappedData[mappedData.length - 1];
-    }
-    return mappedData;
 }
 
 export function calculateUpSizeBarData(data, resolution) {
