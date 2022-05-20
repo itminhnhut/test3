@@ -18,7 +18,7 @@ const Indicators = ({ setCollapse, collapse, setMainIndicator, mainIndicator, se
 
     return (
         <div className='min-h-[38px] flex items-center justify-between px-[10px] border-b border-t border-gray-4 dark:border-divider-dark'>
-            <div className='flex items-center text-xs text-gray dark:text-txtSecondary-dark font-medium justify-around w-full mr-[10px]'>
+            <div className='flex items-center text-xs text-gray-1 dark:text-txtSecondary-dark font-medium justify-around w-full mr-[10px]'>
                 {mainIndicators.map(item => (
                     <div
                         className={mainIndicator === item ? 'text-teal' : ''}

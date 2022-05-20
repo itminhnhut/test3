@@ -1,10 +1,10 @@
 import KlineChart from 'components/KlineChart/KlineChart'
 import ms from 'ms'
-import React, {useState, memo} from 'react'
+import React, { useState, memo } from 'react'
 import useDarkMode from 'hooks/useDarkMode'
 import ChartTimer from './ChartTimer'
 import Indicators from './Indicators'
-import {IconStarFilled} from "components/common/Icons";
+import { IconStarFilled } from "components/common/Icons";
 import colors from "styles/colors";
 
 const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collapse }) => {
@@ -14,7 +14,7 @@ const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collap
     const [themeMode, switchTheme] = useDarkMode()
     const [candle, setCandle] = useState('candle_solid');
     return (
-        <div style={{ height: `calc(100% - ${collapse ? 109 : 290}px)`, minHeight: 300 }}>
+        <div style={{ height: `calc(100% - ${collapse ? 100 : 270}px)`, minHeight: 300 }}>
             <div className='flex flex-col w-full h-full' >
                 <ChartTimer pair={pair} pairConfig={pairConfig}
                     isVndcFutures={isVndcFutures} resolution={resolution}
@@ -29,7 +29,7 @@ const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collap
                         mainIndicator={mainIndicator}
                         subIndicator={subIndicator}
                         candle={candle}
-                        collapse={collapse}
+                        isResize={collapse}
                     />
                 </div>
                 <Indicators

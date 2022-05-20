@@ -355,8 +355,14 @@ const FuturesEditSLTPVndc = ({
 
     const classNameError = isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
 
+    const classMobile = useMemo(() => {
+        const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
+        const widht = window.innerWidth < 330 ? 'w-[300px]' : '!w-[340px]';
+        return height + widht
+    }, [isMobile])
+
     return (
-        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? 'w-[340px]' : 'w-[390px]'} p-0 top-[50%]`}>
+        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%]`}>
             <div
                 className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark">
                 <span className="font-bold text-[16px]">

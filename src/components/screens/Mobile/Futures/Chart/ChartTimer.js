@@ -1,24 +1,27 @@
-import React, {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
-import {formatNumber, getS3Url} from 'redux/actions/utils';
-import {roundTo} from 'round-to';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
+import { roundTo } from 'round-to';
 import classNames from 'classnames';
 import ms from "ms";
-import {listTimeFrame} from "components/KlineChart/kline.service";
-import {Popover, Transition} from "@headlessui/react";
+import { listTimeFrame } from "components/KlineChart/kline.service";
+import { Popover, Transition } from "@headlessui/react";
 import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
 import { AreaChart, CandleChart, LineChart } from '../../../../TVChartContainer/timeFrame'
-import {IconStar, IconStarFilled} from "components/common/Icons";
+import { IconStar, IconStarFilled } from "components/common/Icons";
 import colors from "styles/colors";
 import fetchAPI from "utils/fetch-api";
-import {API_GET_FAVORITE} from "redux/actions/apis";
-import {TRADING_MODE} from "redux/actions/const";
-import {favoriteAction} from "redux/actions/user";
-import {LANGUAGE_TAG} from "hooks/useLanguage";
+import { API_GET_FAVORITE } from "redux/actions/apis";
+import { TRADING_MODE } from "redux/actions/const";
+import { favoriteAction } from "redux/actions/user";
+import { LANGUAGE_TAG } from "hooks/useLanguage";
 import showNotification from "utils/notificationService";
-import {useTranslation} from "next-i18next";
-import {getFuturesFavoritePairs} from "redux/actions/futures";
-import {useDispatch, useSelector} from "react-redux";
+import { useTranslation } from "next-i18next";
+import { getFuturesFavoritePairs } from "redux/actions/futures";
+import { useDispatch, useSelector } from "react-redux";
+import Guideline from 'components/screens/Mobile/Futures/Guideline';
+import styled from 'styled-components';
+
 
 const candleList = [
     { value: 'candle_solid', text: 'Candle', icon: CandleChart },
@@ -35,19 +38,25 @@ const ChartTimer = ({
 
     if (!pairConfig) return null;
     const [showModelMarket, setShowModelMarket] = useState(false)
+    const [start, setStart] = useState(false);
 
     const labelCandle = candleList.find(item => item.value === candle);
     return (
         <div className="min-h-[64px] chart-timer flex items-center justify-between px-[10px]">
-            <div className="flex items-center cursor-pointer" onClick={() => setShowModelMarket(true)} >
-                <div className="flex items-center " data-tut="order-symbol">
+            <Guideline pair={pair} start={start} setStart={setStart} />
+            <div className="flex items-center"  >
+                <div className="flex items-center cursor-pointer" data-tut="order-symbol" onClick={() => setShowModelMarket(true)}>
                     <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
                     <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
                 </div>
                 <SocketLayout pairConfig={pairConfig} pair={pair} >
                     <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
                 </SocketLayout>
+                <div className="pl-[10px]" onClick={() => setStart(true)}>
+                    <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                </div>
             </div>
+
             <div className="flex items-center" >
                 <MenuTime
                     value={resolution}
@@ -56,7 +65,7 @@ const ChartTimer = ({
                     displayValue="text"
                     options={listTimeFrame}
                     classNameButton="px-[10px]"
-                    label={<div className="uppercase text-sm text-gray font-medium">{ms(resolution)}</div>}
+                    label={<div className="uppercase text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{ms(resolution)}</div>}
                 />
                 <MenuTime
                     value={candle}
@@ -66,9 +75,9 @@ const ChartTimer = ({
                     options={candleList}
                     classNameButton="pl-[10px]"
                     classNamePanel="right-[-10px]"
-                    label={labelCandle.icon}
+                    label={<Svg>{labelCandle.icon}</Svg>}
                 />
-                <FavouriteButton pair={pair} pairConfig={pairConfig}/>
+                <FavouriteButton pair={pair} pairConfig={pairConfig} />
             </div>
             <ModelMarketMobile
                 visible={showModelMarket}
@@ -78,12 +87,12 @@ const ChartTimer = ({
     );
 };
 
-const Change24h = ({pairPrice, isVndcFutures}) => {
+const Change24h = ({ pairPrice, isVndcFutures }) => {
 
     return (
         <div className='flex items-center'>
             <div
-                className={classNames('pl-2 text-dominant font-medium',
+                className={classNames('pl-2 text-dominant font-medium text-sm',
                     {
                         '!text-red':
                             pairPrice?.priceChangePercent < 0,
@@ -111,9 +120,9 @@ const Change24h = ({pairPrice, isVndcFutures}) => {
 const MenuTime = ({ value, onChange, options, label, keyValue, displayValue, classNameButton, classNamePanel }) => {
     return (
         <Popover className="relative">
-            {({open, close}) => (
+            {({ open, close }) => (
                 <>
-                    <Popover.Button className={`flex ${classNameButton} dark:text-txtSecondary-dark`}>
+                    <Popover.Button className={`flex ${classNameButton} text-gray-1 dark:text-txtSecondary-dark`}>
                         {label}
                     </Popover.Button>
                     <Transition
@@ -142,7 +151,7 @@ const MenuTime = ({ value, onChange, options, label, keyValue, displayValue, cla
                                                 }
                                             )}
                                         >
-                                            {item?.icon}
+                                            <Svg>{item?.icon}</Svg>
                                             {item[displayValue]}
                                         </div>
                                     )
@@ -156,12 +165,21 @@ const MenuTime = ({ value, onChange, options, label, keyValue, displayValue, cla
     )
 }
 
-const FavouriteButton = ({pairConfig}) => {
+const Svg = styled.div.attrs({
+    className:''
+})`
+    svg{
+        height:24px;
+        width:24px
+    }
+`
+
+const FavouriteButton = ({ pairConfig }) => {
     const favoritePairs = useSelector((state) => state.futures.favoritePairs)
     const dispatch = useDispatch();
 
     const pair = pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset
-    const isFavorite = useMemo(() => favoritePairs.includes(pair),[favoritePairs, pairConfig])
+    const isFavorite = useMemo(() => favoritePairs.includes(pair), [favoritePairs, pairConfig])
 
     const handleSetFavorite = async () => {
         await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pair)
@@ -169,7 +187,7 @@ const FavouriteButton = ({pairConfig}) => {
     }
 
     return <div className='ml-4 cursor-pointer' onClick={handleSetFavorite}>
-        {isFavorite ? <IconStarFilled size={16} color={colors.yellow}/> : <IconStar size={16}/>}
+        {isFavorite ? <IconStarFilled size={16} color={colors.yellow} /> : <IconStar color="#718096" strokeWidth={0.5} size={18} />}
     </div>
 }
 

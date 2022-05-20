@@ -208,7 +208,9 @@
             "volume": "Nhập số lượng bạn muốn giao dịch",
             "sl": "Lựa chọn Chốt lỗ và cắt lời để quản lý lợi nhuận của lệnh",
             "order": "Xác nhận giao dịch dễ dàng",
-            "tab": "Chi tiết tài khoản và danh sách lệnh giao dịch của bạn sẽ hiển thị ở đây"
-        }
+            "tab": "Chi tiết tài khoản và danh sách lệnh giao dịch của bạn sẽ hiển thị ở đây",
+            "step": "Bước"
+        },
+        "login_short": "Đăng nhập ngay"
     }
 }

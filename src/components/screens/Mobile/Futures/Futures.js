@@ -22,7 +22,6 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
-import Guideline from './Guideline';
 
 const INITIAL_STATE = {
     loading: false,
@@ -44,6 +43,7 @@ const FuturesMobile = () => {
     const avlbAsset = useSelector((state) => state.wallet?.FUTURES)
     const [availableAsset, setAvailableAsset] = useState(null)
     const [collapse, setCollapse] = useState(false);
+    const [scrollSnap, setScrollSnap] = useState(false);
 
     const pairConfig = useMemo(
         () => allPairConfigs?.find((o) => o.pair === state.pair),
@@ -117,9 +117,23 @@ const FuturesMobile = () => {
         }
     }, [avlbAsset, pairConfig])
 
+    const styleContent = useMemo(() => {
+        setScrollSnap(false)
+        const vh = window.innerHeight * 0.01;
+        const el = document.querySelector('.form-order')
+        if (el) {
+            const scrollSnap = el.clientHeight <= vh * 100 - 80;
+            if (scrollSnap) {
+                setScrollSnap(true)
+                return { height: vh * 100 - 80, scrollSnapAlign: 'start' }
+            }
+            return { height: 'max-content' }
+        }
+        return { height: 'max-content' }
+    }, [state.pair])
+
     return (
         <>
-            <Guideline pair={state.pair} />
             <SocketLayout pair={state.pair} pairConfig={pairConfig}>
                 <FuturesPageTitle
                     pair={state.pair}
@@ -129,8 +143,9 @@ const FuturesMobile = () => {
             </SocketLayout>
             <DynamicNoSsr>
                 <LayoutMobile>
-                    <Container>
-                        <Section>
+                    <Container id="futures-mobile" >
+                        <Section className="form-order"
+                            style={styleContent}>
                             <ChartMobile
                                 pair={state.pair} pairConfig={pairConfig}
                                 isVndcFutures={isVndcFutures}
@@ -146,8 +161,8 @@ const FuturesMobile = () => {
                                 />
                             </SocketLayout>
                         </Section>
-                        <Section style={{ overflow: 'hidden' }}>
-                            <TabOrders isVndcFutures={isVndcFutures} pair={state.pair} pairConfig={pairConfig} isAuth={!!auth} />
+                        <Section style={{ ...styleContent }}>
+                            <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures} pair={state.pair} pairConfig={pairConfig} isAuth={!!auth} />
                         </Section>
                     </Container>
                 </LayoutMobile>
@@ -163,8 +178,9 @@ height:calc(var(--vh, 1vh) * 100 - 80px);
 
 const Section = styled.div`
 width: 100%;
-height:calc(var(--vh, 1vh) * 100 - 80px);
-scroll-snap-align:start
+height:unset;
+${'' /* height:calc(var(--vh, 1vh) * 100 - 80px); */}
+${'' /* scroll-snap-align:start */}
 `
 
 export default FuturesMobile;

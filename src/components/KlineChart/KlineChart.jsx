@@ -16,7 +16,7 @@ let _lastBar;
 // Chart instance
 let chart;
 
-function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator, candle, collapse }) {
+function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', subIndicator, candle, isResize }) {
     const prevSymbolInfo = usePrevious(symbolInfo)
     const prevMainIndicator = usePrevious(mainIndicator)
     const prevSubIndicator = usePrevious(subIndicator)
@@ -109,6 +109,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
             _lastBar = clone(data) // Need clone
             chart.updateData(data)
         })
+        chart.resize();
         return () => {
             socket.removeListener(action)
         }
@@ -184,10 +185,10 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '', sub
     useEffect(() => {
         if (!chart) return
         chart.resize();
-    }, [collapse])
+    }, [isResize])
 
     return (
-        <div id={CHART_ID} className="kline-chart flex flex-1 h-full">
+        <div id={CHART_ID} className="kline-chart flex flex-1 h-full" style={{ minHeight: 300 }}>
             <div className="cheat-watermark">
                 <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4} />
             </div>
@@ -201,5 +202,5 @@ export default React.memo(KLineChart, (prevProps, nextProps) => {
         (prevProps.subIndicator === nextProps.subIndicator) &&
         (prevProps.resolution === nextProps.resolution) &&
         (prevProps.candle === nextProps.candle) &&
-        (prevProps.collapse === nextProps.collapse)
+        (prevProps.isResize === nextProps.isResize)
 })

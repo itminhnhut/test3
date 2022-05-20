@@ -287,7 +287,7 @@ const PlaceOrder = ({
 
 const OrderInput = styled.div`
 width:calc(50% - 8px);
-margin-bottom:10px
+margin-bottom:8px
 `
 
 export default PlaceOrder;

@@ -10,6 +10,7 @@ import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
 import BottomNavBar from 'components/screens/Mobile/BottomNavBar'
 import AlertModal from 'components/screens/Mobile/AlertModal';
+import Head from 'next/head'
 export const AlertContext = createContext(null);
 
 const LayoutMobile = ({
@@ -51,11 +52,14 @@ const LayoutMobile = ({
                 window.fcWidget.hide()
                 window.fcWidget.close()
             }
-        }, 500);
+        }, 1000);
     }, [])
 
     return (
         <>
+            <Head>
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
+            </Head>
             <div
                 className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''
                     } ${dark ? 'mal-layouts___dark' : ''}`}
@@ -70,7 +74,7 @@ const LayoutMobile = ({
             >
                 <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' />
                 <div
-                    className='relative flex-1 bg-white dark:bg-darkBlue-1 mb-[80px]'
+                    className='relative flex-1 bg-white dark:bg-darkBlue-1'
                 >
                     <AlertContext.Provider value={{ alert: alert.current }}>
                         {children}
