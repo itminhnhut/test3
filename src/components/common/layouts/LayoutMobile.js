@@ -9,8 +9,12 @@ import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
 import BottomNavBar from 'components/screens/Mobile/BottomNavBar'
-import AlertModal from 'components/screens/Mobile/AlertModal';
 import Head from 'next/head'
+import dynamic from 'next/dynamic';
+const AlertModal = dynamic(
+    () => import('components/screens/Mobile/AlertModal'),
+    { ssr: false }
+);
 export const AlertContext = createContext(null);
 
 const LayoutMobile = ({
