@@ -12,7 +12,7 @@ const LayoutBlog = ({ children, loaded = false }) => {
     }, []);
     return (
         <>
-            <ReactNotification />
+            {/* <ReactNotification /> */}
             <div className="md:h-screen flex flex-col">
                 {!query.mobile && loaded && _renderNav }
                 <>{children}</>

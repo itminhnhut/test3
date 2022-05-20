@@ -61,7 +61,7 @@ const MadivesLayout = ({
                         : {}
                 }
             >
-                <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' />
+                {/* <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' /> */}
                 {!hideNavBar && !hideInApp && !isApp && (
                     <NavBar
                         name={navName}
