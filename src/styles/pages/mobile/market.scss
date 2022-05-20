@@ -13,6 +13,10 @@
   }
 
   .placeholder-text-center::placeholder {
+    -webkit-text-align: center;
+    -moz-text-align: center;
+    -ms-text-align: center;
+    -o-text-align: center;
     text-align: center;
   }
 }

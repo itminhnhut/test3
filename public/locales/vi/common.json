@@ -283,7 +283,7 @@
         "your_portfolio": "Danh mục đầu tư"
     },
     "ext_gate": {
-        "hi_user": "Xin chào, ${who}",
+        "hi_user": "Xin chào, {{who}}",
         "guest": "Khách",
         "suggest_nami": "Hãy sử dụng app NamiExchange để có trải nghiệm tốt nhất",
         "nami_wallet": "Ví Nami",

@@ -255,7 +255,7 @@ export default ({ isRealtime = true }) => {
                         className='text-txtSecondary dark:text-txtSecondary-dark'
                     />
                     <input
-                        className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-semibold placeholder:text-center'
+                        className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-semibold placeholder-text-center'
                         onChange={changeSearch}
                         placeholder={t('markets:search_placeholder')}
                         type='text'

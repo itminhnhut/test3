@@ -1,4 +1,5 @@
 import DOMPurify from 'dompurify';
+import { DOWNLOAD_APP_LINK } from 'redux/actions/const';
 
 export const truncate = (fullStr, strLen, separator) => {
     if (fullStr.length <= strLen) return fullStr;
@@ -18,4 +19,11 @@ export const truncate = (fullStr, strLen, separator) => {
 
 export const sanitize = (content) => {
     return typeof window === 'undefined' ? content : DOMPurify.sanitize(content);
+};
+
+// Correct for webview only
+export const getDownloadAppLinkForWebView = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const ios = /iphone|ipod|ipad/.test(userAgent);
+    return ios ? DOWNLOAD_APP_LINK.IOS : DOWNLOAD_APP_LINK.ANDROID;
 };
