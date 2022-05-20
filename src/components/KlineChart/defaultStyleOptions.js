@@ -119,7 +119,7 @@ export default (themeMode = THEME_MODE.DARK) => {
                     paddingBottom: 6,
                     offsetLeft: 8,
                     offsetTop: 8,
-                    offsetRight: 8,
+                    offsetRight: 70,
                     borderRadius: 4,
                     borderSize: 1,
                     borderColor: '#3f4254',

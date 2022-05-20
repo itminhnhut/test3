@@ -2,12 +2,10 @@ import KlineChart from "components/KlineChart/KlineChart";
 import ms from "ms";
 import {listTimeFrame} from "components/KlineChart/kline.service";
 import React, {useState} from "react";
-import useDarkMode from "hooks/useDarkMode";
 import classNames from "classnames";
-import {concat, without} from "lodash";
 
 export default function KlineChartPage() {
-    const [resolution, setResolution] = useState(ms('1m'))
+    const [resolution, setResolution] = useState(ms('30m'))
     const [mainIndicator, setMainIndicator] = useState()
     const [subIndicator, setSubIndicator] = useState()
     // const [themeMode, switchTheme] = useDarkMode()
