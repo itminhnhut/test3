@@ -82,7 +82,7 @@ const TabItem = styled.div.attrs(({ active }) => ({
 export const LoginOrder = () => {
     const { t } = useTranslation();
     return (
-        <div className="cursor-pointer flex items-center justify-center h-full text-sm py-[10px]">
+        <div className="cursor-pointer flex items-center justify-center h-full text-sm py-[10px] min-h-[300px]">
             <Link href={getLoginUrl('sso', 'login')} locale={false}>
                 <a className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
                     {t('futures:mobile:login_short')}

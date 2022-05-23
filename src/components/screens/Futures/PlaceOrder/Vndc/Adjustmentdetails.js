@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { useEffect, useState, memo, useMemo } from 'react';
 import Modal from 'components/common/ReModal'
 import { API_ORDER_DETAIL } from 'redux/actions/apis'
 import fetchApi from 'utils/fetch-api'
@@ -69,14 +69,18 @@ const Adjustmentdetails = memo(({ onClose, rowData, isMobile }) => {
         }
     }
 
+    const classMobile = useMemo(() => {
+        return window.innerWidth < 330 ? 'w-[300px]' : 'w-[340px]';
+    }, [])
+
     return (
         <Modal
             isVisible={true}
             onBackdropCb={() => onClose()}
-            containerClassName="top-[50%]"
+            containerClassName={`top-[50%] ${isMobile ? classMobile : 'w-[390px]'}`}
         >
-            <div className={isMobile ? 'w-[340px]' : 'w-[390px]'}>
-                <div className="flex items-center justify-between text-xl font-bold capitalize">
+            <div>
+                <div className="flex items-center justify-between font-bold capitalize">
                     {t('futures:order_history:adjustment_detail')}
                     <X
                         size={20}
