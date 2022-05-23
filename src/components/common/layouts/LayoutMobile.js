@@ -11,10 +11,7 @@ import { NavBarBottomShadow } from '../NavBar/NavBar';
 import BottomNavBar from 'components/screens/Mobile/BottomNavBar'
 import Head from 'next/head'
 import dynamic from 'next/dynamic';
-const AlertModal = dynamic(
-    () => import('components/screens/Mobile/AlertModal'),
-    { ssr: false }
-);
+import AlertModal from 'components/screens/Mobile/AlertModal'
 export const AlertContext = createContext(null);
 
 const LayoutMobile = ({
@@ -84,7 +81,7 @@ const LayoutMobile = ({
                         {children}
                     </AlertContext.Provider>
                 </div>
-                <TransferModal />
+                <TransferModal isMobile />
                 <div id={`${PORTAL_MODAL_ID}`} />
                 <BottomNavBar />
                 <AlertModal ref={alert} />
