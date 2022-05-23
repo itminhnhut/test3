@@ -15,7 +15,7 @@ const AlertModal = forwardRef((props, ref) => {
     const actions = useRef({
         onConfirm: null, onCancel: null
     })
-
+    
     useImperativeHandle(ref, () => ({
         show: onShow
     }))

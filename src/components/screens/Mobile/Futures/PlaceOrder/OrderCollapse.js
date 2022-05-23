@@ -42,7 +42,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
             <div className="relative flex w-full h-[56px] text-sm">
                 <Side className={`bg-teal rounded-l-[6px] text-white ${className}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.BUY, pairPrice?.ask)}>
-                    <div>{t('common:buy')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
+                    <div className="truncate max-w-[120px]">{t('common:buy')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
                     <span>{formatNumber(pairPrice?.ask, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
                 <Text>
@@ -50,7 +50,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
                 </Text>
                 <Side className={`bg-red rounded-r-[6px] text-white items-end ${className}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.SELL, pairPrice?.bid)}>
-                    <div>{t('common:sell')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
+                    <div className="truncate max-w-[120px]">{t('common:sell')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
                     <span>{formatNumber(pairPrice?.bid, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
             </div>

@@ -9,7 +9,7 @@ const OrderClose = ({ open, onClose, onConfirm, data, isMobile }) => {
     const width = useMemo(() => {
         return window.innerWidth > 330 ? 'w-[340px]' : 'w-[300px]'
     }, [open])
-    
+
     return (
         <Modal
             isVisible={open}

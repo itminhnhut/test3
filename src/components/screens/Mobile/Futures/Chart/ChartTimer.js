@@ -45,13 +45,15 @@ const ChartTimer = ({
         <div className="min-h-[64px] chart-timer flex items-center justify-between px-[10px]">
             <Guideline pair={pair} start={start} setStart={setStart} />
             <div className="flex items-center"  >
-                <div className="flex items-center cursor-pointer" data-tut="order-symbol" onClick={() => setShowModelMarket(true)}>
-                    <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
-                    <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                <div className="flex items-center flex-wrap">
+                    <div className="flex items-center cursor-pointer" data-tut="order-symbol" onClick={() => setShowModelMarket(true)}>
+                        <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
+                        <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                    </div>
+                    <SocketLayout pairConfig={pairConfig} pair={pair} >
+                        <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
+                    </SocketLayout>
                 </div>
-                <SocketLayout pairConfig={pairConfig} pair={pair} >
-                    <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
-                </SocketLayout>
                 <div className="pl-[10px]" onClick={() => setStart(true)}>
                     <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
                 </div>
@@ -166,7 +168,7 @@ const MenuTime = ({ value, onChange, options, label, keyValue, displayValue, cla
 }
 
 const Svg = styled.div.attrs({
-    className:''
+    className: ''
 })`
     svg{
         height:24px;
