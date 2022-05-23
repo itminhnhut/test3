@@ -215,5 +215,7 @@
         "available": "Số dư k.dụng",
         "liq_price": "Giá thanh lý"
     },
-    "orders_history": "Lịch sử lệnh"
+    "orders_history": "Lịch sử lệnh",
+    "minimun_leverage": "Đòn bẩy tối thiểu",
+    "maximun_leverage": "Đòn bẩy tối đa"
 }
