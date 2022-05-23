@@ -185,6 +185,20 @@ const PlaceOrder = ({
                 }
 
                 return { isValid, msg }
+            case 'leverage':
+                let isValid = true;
+                let msg = null;
+                const min = pairConfig?.leverageConfig?.min ?? 0;
+                const max = pairConfig?.leverageConfig?.max ?? 0;
+                if (min > leverage) {
+                    msg = `${t('futures:minimun_leverage')} ${_displayingMin} `
+                    isValid = false
+                }
+                if (max < leverage) {
+                    msg = `${t('futures:maximun_leverage')} ${_displayingMax}`
+                    isValid = false
+                }
+                return { isValid, msg, isError: !isValid }
             default:
                 return {}
         }
@@ -192,12 +206,15 @@ const PlaceOrder = ({
 
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
-        const not_valid = !size || !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
+        const not_valid = !size || !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quantity').isValid ||
+            !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid || !inputValidator('leverage').isValid;
         return !isVndcFutures ? false : not_valid
-    }, [price, size, type, stopPrice, sl, tp, isVndcFutures])
+    }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage])
 
     const onChangeTpSL = () => {
-        if (!isVndcFutures || isError) return;
+        const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
+        if (!isVndcFutures || !size || !inputValidator('price', ArrStop.includes(type)).isValid ||
+            !inputValidator('quantity').isValid || !inputValidator('leverage').isValid) return;
         const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
         rowData.current = {
             fee: 0,
@@ -236,7 +253,10 @@ const PlaceOrder = ({
                 <OrderCollapse
                     side={side} pairPrice={pairPrice} type={type} size={size}
                     price={price} stopPrice={stopPrice} pairConfig={pairConfig}
-                    decimals={decimals} leverage={leverage} isAuth={isAuth} />
+                    decimals={decimals} leverage={leverage} isAuth={isAuth}
+                    marginAndValue={marginAndValue} availableAsset={availableAsset}
+                />
+
                 : <>
                     <OrderInput>
                         <OrderTypeMobile type={type} setType={setType}
@@ -247,6 +267,7 @@ const PlaceOrder = ({
                             leverage={leverage} setLeverage={setLeverage}
                             isAuth={isAuth} pair={pair}
                             pairConfig={pairConfig}
+                            inputValidator={inputValidator}
                         />
                     </OrderInput>
                     <OrderInput data-tut="order-volume">

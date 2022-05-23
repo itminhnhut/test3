@@ -309,7 +309,7 @@ export default ({ isRealtime = true }) => {
                     })}
                 </div>
             </div>
-            <div className='market-list flex flex-col flex-1 min-h-0 px-4 pt-6 bg-white dark:bg-darkBlue-2'>
+            <div className='market-list flex flex-col flex-1 min-h-0 px-4 pt-6 pb-3 bg-white dark:bg-darkBlue-2'>
                 {/*<div className='flex space-x-4'>*/}
                 {/*    {Object.keys(TAGS[tab.active]).map((tag) => {*/}
                 {/*        return (*/}

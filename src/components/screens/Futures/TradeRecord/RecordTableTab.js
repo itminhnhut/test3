@@ -45,7 +45,7 @@ export const RECORD_TAB_VNDC = [
     {
         key: 2,
         code: FUTURES_RECORD_CODE.orderHistory,
-        title: 'spot:order_history',
+        title: 'futures:orders_history',
         localized: null,
     },
 ]

@@ -65,7 +65,7 @@ const INITIAL_STATE = {
     // ...
 }
 
-const TransferModal = () => {
+const TransferModal = ({isMobile}) => {
     // Init State
     const router = useRouter();
     const [state, set] = useState(INITIAL_STATE)
@@ -486,12 +486,17 @@ const TransferModal = () => {
     //     console.log('namidev-DEBUG: Transfer Modal => ', state)
     // }, [state])
 
+
+    const classMobile = useMemo(() => {
+        return typeof window !== 'undefined' ? window.innerWidth < 330 ? 'w-[300px]' : 'w-[340px]' : 'w-[340px]';
+    }, [isMobile])
+
     return (
         <Modal isVisible={!!isVisible}
                onBackdropCb={onClose}
                className="w-[300px] px-4 py-5 sm:w-[453px] sm:px-8 sm:py-9"
                noButton
-               containerClassName="!top-[50%]"
+               containerClassName={`!top-[50%] ${isMobile?classMobile:''}`} 
         >
             <div className="flex items-center justify-between">
                 <span className="capitalize font-bold">{t('common:transfer')}</span>

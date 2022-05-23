@@ -36,7 +36,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig }) => {
                 onValueChange={({ floatValue }) => setLeverage(floatValue ?? 1)}
                 decimalScale={0}
                 // isAllowed={({ floatValue }) => floatValue <= 125}
-                labelClassName='whitespace-nowrap capitalize'
+                labelClassName='whitespace-nowrap'
                 containerClassName="h-[36px]"
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
@@ -59,6 +59,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig }) => {
                     onClose={() => setOpenModal(false)}
                     isVndcFutures={true}
                     dots={5}
+                    className="top-[50%]"
                 />
             }
         </>

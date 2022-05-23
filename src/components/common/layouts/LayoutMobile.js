@@ -9,8 +9,9 @@ import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
 import BottomNavBar from 'components/screens/Mobile/BottomNavBar'
-import AlertModal from 'components/screens/Mobile/AlertModal';
 import Head from 'next/head'
+import dynamic from 'next/dynamic';
+import AlertModal from 'components/screens/Mobile/AlertModal'
 export const AlertContext = createContext(null);
 
 const LayoutMobile = ({
@@ -72,7 +73,7 @@ const LayoutMobile = ({
                         : {}
                 }
             >
-                <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' />
+                {/* <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' /> */}
                 <div
                     className='relative flex-1 bg-white dark:bg-darkBlue-1'
                 >
@@ -80,7 +81,7 @@ const LayoutMobile = ({
                         {children}
                     </AlertContext.Provider>
                 </div>
-                <TransferModal />
+                <TransferModal isMobile />
                 <div id={`${PORTAL_MODAL_ID}`} />
                 <BottomNavBar />
                 <AlertModal ref={alert} />

@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
 
-const internalTimeFrame = {
+export const internalTimeFrame = {
     '1m': ms('1m'),
     '1h': ms('1h'),
     '1d': ms('1d'),
@@ -60,6 +60,7 @@ export async function getData({ broker, symbol, from, to, resolution }) {
     }));
 }
 
+// Correct for upsize only (not equal case)!
 export function calculateUpSizeBarData(data, resolution) {
     if (!data || !data.length) return [];
     let last;

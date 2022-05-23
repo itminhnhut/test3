@@ -13,7 +13,7 @@ const LayoutWithHeader = ({ showBanner, children, hidden }) => {
 
     return (
         <div className="md:h-screen flex flex-col">
-            <ReactNotification />
+            {/* <ReactNotification /> */}
             { !hidden && _renderNav }
             <>{children}</>
         </div>

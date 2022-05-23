@@ -197,19 +197,26 @@
     "value": "Value",
     "price_market": "Price market",
     "cancel": "Cancel",
+    "place_order_success_message": "Congratulation! Your purchase was successful",
+    "place_order_failed": "Place order failed",
     "mobile": {
         "balance": "Balance",
         "pnl": "PnL",
         "equity": "Equity",
         "guide": {
-            "symbol": "Để bắt đầu giao dịch lựa chọn cặp tiền muốn giao dịch tại đây",
-            "side": "Lựa chọn Mua/Bán để dự đoán giá sẽ tăng/giảm",
-            "volume": "Nhập số lượng bạn muốn giao dịch",
-            "sl": "Lựa chọn Chốt lỗ và cắt lời để quản lý lợi nhuận của lệnh",
-            "order": "Xác nhận giao dịch dễ dàng",
-            "tab": "Chi tiết tài khoản và danh sách lệnh giao dịch của bạn sẽ hiển thị ở đây",
-            "step": "Step",
-            "login_short": "Login"
-        }
-    }
+            "symbol": "To start trading select the currency pair you want to trade here",
+            "side": "Buy/Sell option to predict the price will increase/decrease",
+            "volume": "Input amount you want to trade",
+            "sl": "Choose Take Profit and Stop Loss to manage the profit of the order",
+            "order": "Easy transaction confirmation",
+            "tab": "Your account details and order list will be displayed here",
+            "step": "Step"
+        },
+        "login_short": "Login",
+        "available": "Available",
+        "liq_price": "Liq. Price"
+    },
+    "orders_history": "Orders History",
+    "minimun_leverage": "Minimum Leverage is",
+    "maximun_leverage": "Maximum Leverage is"
 }

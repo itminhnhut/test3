@@ -20,7 +20,7 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
                     )}
                     onClick={() => setSide(VndcFutureOrderType.Side.BUY)}
                 >
-                    {t('common:buy')}{isMobile ? '/Long' : ''}
+                    {t('common:buy')}
                 </div>
                 <svg
                     style={{ height: height }}
@@ -46,7 +46,7 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
                     )}
                     onClick={() => setSide(VndcFutureOrderType.Side.SELL)}
                 >
-                    {t('common:sell')}{isMobile ? '/Short' : ''}
+                    {t('common:sell')}
                 </div>
             </div>
         </div>

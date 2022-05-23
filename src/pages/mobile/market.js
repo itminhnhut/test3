@@ -6,7 +6,7 @@ import Market from "components/screens/Mobile/Market/Market";
 const MarketScreen = () => {
     return (
         <LayoutMobile>
-            <div className='h-[calc(100vh-80px)]'>
+            <div className='h-[calc(100vh-70px)]'>
                 <Market/>
             </div>
         </LayoutMobile>

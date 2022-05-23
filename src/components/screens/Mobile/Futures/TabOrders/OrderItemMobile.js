@@ -4,10 +4,10 @@ import colors from 'styles/colors';
 import { formatNumber, formatTime } from 'redux/actions/utils'
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { useTranslation } from 'next-i18next'
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import { getProfitVndc, VndcFutureOrderType, renderCellTable } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import Big from "big.js";
 
-const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDark, onShowEdit, onShowDetail, symbol }) => {
+const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isDark, onShowDetail, symbol, allowButton }) => {
     const { t } = useTranslation();
     const isTabHistory = mode === 'history';
 
@@ -71,11 +71,13 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
         }
     }
 
+    const profit = isTabHistory ? order?.profit : dataMarketWatch && getProfitVndc(order, dataMarketWatch?.lastPrice)
+
     return (
         <div className="flex flex-col mx-[-16px] p-[16px] border-b-[1px] border-b-gray-4 dark:border-divider-dark">
             <div className="flex items-center justify-between mb-[10px]">
                 <div className="w-full flex" onClick={() => onShowDetail && onShowDetail(order)}>
-                    <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{order.side}</SideComponent>
+                    <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent>
                     <div>
                         <div className="flex items-center">
                             <div className="font-semibold text-sm mr-[10px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
@@ -87,13 +89,16 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
                         </div>
                     </div>
                 </div>
-                <div className="border-[1px] border-teal p-[5px] rounded-[2px]">
-                    <img src="/images/icon/ic_share.png" height={16} width={16} />
-                </div>
+                {profit ?
+                    <div className="border-[1px] border-teal p-[5px] rounded-[2px]" onClick={() => onShowModal(order, 'share')}>
+                        <img src="/images/icon/ic_share.png" height={16} width={16} />
+                    </div>
+                    : null
+                }
             </div>
             <div>
-                <Row className="w-1/2 ">
-                    <div className="text-gray-1 text-xs dark:text-txtSecondary-dark">PnL</div>
+                <Row className="!justify-start">
+                    <div className="text-gray-1 text-xs dark:text-txtSecondary-dark min-w-[70px]">{t('futures:mobile:pnl')}</div>
                     <span className="text-xs font-medium text-teal"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} /></span>
                 </Row>
                 <div className="flex">
@@ -117,7 +122,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
                             <span className="text-xs font-medium ">{formatNumber(order?.quantity, 8, 0, true)}</span>
                         </Row>
                         <Row>
-                            <Label>{t(`futures:order_table:${isTabHistory ? 'reason_close' : 'liquidation_price'}`)}</Label>
+                            <Label>{t(isTabHistory ? 'futures:order_table:reason_close' : `futures:mobile:liq_price`)}</Label>
                             <span className="text-xs font-medium ">{isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}</span>
                         </Row>
                         <Row>
@@ -127,10 +132,10 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, openModal, mode, isDar
                     </div>
                 </div>
             </div>
-            {openModal &&
+            {allowButton &&
                 <div className="flex items-center justify-between ">
-                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => onShowEdit(order)}> {t('futures:tp_sl:modify_tpsl')}</Button>
-                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => openModal(order)}>{t('common:close')}</Button>
+                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => onShowModal(order, 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
+                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => onShowModal(order, 'delete')}>{t('common:close')}</Button>
                 </div>
             }
         </div>

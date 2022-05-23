@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState, useRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useState, useRef, useMemo } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
@@ -15,7 +15,7 @@ const AlertModal = forwardRef((props, ref) => {
     const actions = useRef({
         onConfirm: null, onCancel: null
     })
-
+    
     useImperativeHandle(ref, () => ({
         show: onShow
     }))
@@ -52,11 +52,16 @@ const AlertModal = forwardRef((props, ref) => {
         }
     }
 
+    const className = useMemo(() => {
+        return window.innerWidth > 330 ? 'w-[340px]' : 'w-[300px]'
+    }, [isVisible])
+
     if (!options.current.title) return null;
+
 
     return (
         <Modal isVisible={isVisible} onBackdropCb={onCancel}
-            containerClassName="w-[340px] px-[24px] py-[34px] top-[50%] flex flex-col items-center">
+            containerClassName={`px-[24px] py-[34px] top-[50%] flex flex-col items-center ${className}`}>
             <div className='mb-[30px]'>
                 <img src={getS3Url(getImage(options.current.type))} width={66} height={66} />
             </div>
@@ -66,15 +71,15 @@ const AlertModal = forwardRef((props, ref) => {
             <div className='text-sm mb-[30px] text-center'>
                 {options.current.messages}
             </div>
-            <Button
+            {/* <Button
                 title={t('futures:leverage:confirm')}
                 type="primary"
                 className={`!h-[44px] !text-sm !font-semibold`}
                 componentType="button"
                 onClick={onConfirm}
-            />
+            /> */}
             <Button
-                title={t('futures:cancel')}
+                title={t('common:close')}
                 className={`mt-[8px] !h-[44px] !text-sm !font-semibold`}
                 componentType="button"
                 onClick={onCancel}
