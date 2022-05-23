@@ -15,7 +15,7 @@ const AlertModal = forwardRef((props, ref) => {
     const actions = useRef({
         onConfirm: null, onCancel: null
     })
-    
+
     useImperativeHandle(ref, () => ({
         show: onShow
     }))
@@ -53,7 +53,7 @@ const AlertModal = forwardRef((props, ref) => {
     }
 
     const className = useMemo(() => {
-        return window.innerWidth > 330 ? 'w-[340px]' : 'w-[300px]'
+        return typeof window !== 'undefined' ? window.innerWidth > 330 ? 'w-[340px]' : 'w-[300px]' : 'w-[340px]';
     }, [isVisible])
 
     if (!options.current.title) return null;
