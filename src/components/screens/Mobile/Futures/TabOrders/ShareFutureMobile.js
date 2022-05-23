@@ -1,4 +1,4 @@
-import React, { useState, useMemo, memo, useRef } from 'react';
+import React, { useState, useMemo, memo, useRef, useEffect } from 'react';
 import Modal from 'components/common/ReModal';
 import QRCode from 'qrcode.react';
 import { useSelector } from 'react-redux';
@@ -60,29 +60,38 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
     const downloadImage = () => {
         const node = refNodeInfoOrder.current;
         if (downloading || !node) return;
-        // setDownloading(true)
-        return html2canvas(refNodeInfoOrder.current, {
-            allowTaint: true,
-            useCORS: true,
-        }).then(canvas => {
-            const uri = canvas.toDataURL("image/png", 1)
-            console.log(uri)
-            // const link = document.createElement('a');
-
-            // link.href = uri;
-            // link.download = codeRefer + '.png';
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
-            // setDownloading(false)
-        });
+        setDownloading(true)
     };
+
+    useEffect(() => {
+        if (downloading) {
+            html2canvas(refNodeInfoOrder.current, {
+                allowTaint: true,
+                useCORS: true,
+            }).then(canvas => {
+                const uri = canvas.toDataURL("image/png", 1)
+                const link = document.createElement('a');
+                link.href = uri;
+                link.download = codeRefer + '.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setDownloading(false)
+            });
+        }
+    }, [downloading])
+
+    const classMobile = useMemo(() => {
+        const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
+        const widht = window.innerWidth < 330 ? 'w-[300px]' : '!w-[340px]';
+        return height + widht
+    }, [isVisible])
 
     return (
         <Modal
             isVisible={isVisible}
             onBackdropCb={onClose}
-            containerClassName='p-0 w-[330px] min-h-[600px] top-[50%] rounded-[12px] !bg-dominant !border-0 '
+            containerClassName={`${classMobile} p-0 top-[50%] rounded-[12px] !bg-dominant !border-0`}
         >
             <div className='flex flex-col h-full rounded-[12px]' >
                 <div ref={refNodeInfoOrder} className='flex flex-col rounded-t-[12px] flex-1  items-center text-white'
@@ -90,9 +99,10 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                     <div className='p-[23px]'>
                         <img src="/images/share-order-logo.svg" width={120} height={30} />
                     </div>
-                    <div className="flex w-full px-[50px] mb-[12px]" style={{ backgroundColor: 'rgb(255 255 255 / 20%)' }}>
-                        <div className="flex justify-evenly w-full text-white text-xs font-medium p-[5px] ">
-                            <span>Long</span>|
+                    <div className="flex w-full mb-[12px] relative h-[28px]"
+                        style={{ backgroundColor: 'rgb(255 255 255 / 20%)' }}>
+                        <div className={`px-[50px] flex justify-evenly w-full text-white text-xs font-medium p-[5px] ${downloading ? 'absolute left-0 top-[-10px]' : ''}`}>
+                            <span>{order?.side === VndcFutureOrderType.Side.BUY ? 'Long' : 'Short'}</span>|
                             <span>{hide.leverage ? '***' : `${leverage}x`}</span>|
                             <span>{order?.symbol} {t('futures:tp_sl:perpetual')}</span>
                         </div>
