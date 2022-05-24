@@ -23,6 +23,8 @@ import SliderAmount from 'components/screens/Mobile/Wallet/SliderAmount'
 import {WalletTypeV1} from 'components/wallet/TransferModal'
 import {format} from 'date-fns'
 import classNames from 'classnames'
+import {PulseLoader} from "react-spinners";
+import colors from "styles/colors";
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 300e3,
@@ -385,14 +387,14 @@ export default function Wallet() {
                             )}
                             onClick={handleTransfer}
                         >
-                            {t('common:ext_gate:wdl_btn')}
+                            {isPlacingOrder ? <PulseLoader color={colors.white} size={3}/> : t('common:ext_gate:wdl_btn')}
                         </div>
                     </div>
                 </div>
             </div>
             <Modal
                 isVisible={visibleSuccessModel}
-                containerClassName='px-6 py-8 !top-[50%]'
+                containerClassName='px-6 py-8 !min-w-[18rem] !top-[50%]'
                 noButton
             >
                 <div className='absolute right-0 top-0 p-3'>
