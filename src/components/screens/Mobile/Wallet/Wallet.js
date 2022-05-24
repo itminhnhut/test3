@@ -75,22 +75,22 @@ const DECIMAL_SCALES = {
 }
 
 const walletConfigs = {
-    [`${WalletType.SPOT}_${WalletType.ONUS}`]: [
-        'NAMI',
-        'USDT',
-        'VNDC',
-        'KAI',
-        'ONUS',
-        'ATS',
-        'WHC',
-    ],
+    // [`${WalletType.SPOT}_${WalletType.ONUS}`]: [
+    //     'NAMI',
+    //     'USDT',
+    //     'VNDC',
+    //     'KAI',
+    //     'ONUS',
+    //     'ATS',
+    //     'WHC',
+    // ],
     [`${WalletType.SPOT}_${WalletType.FUTURES}`]: ['NAMI', 'USDT', 'VNDC'],
     [`${WalletType.FUTURES}_${WalletType.SPOT}`]: ['NAMI', 'USDT', 'VNDC'],
-    [`${WalletType.FUTURES}_${WalletType.ONUS}`]: ['NAMI', 'USDT', 'VNDC'],
+    // [`${WalletType.FUTURES}_${WalletType.ONUS}`]: ['NAMI', 'USDT', 'VNDC'],
 }
 
 const allFromWallet = [WalletType.SPOT, WalletType.FUTURES]
-const allToWallet = [WalletType.SPOT, WalletType.FUTURES, WalletType.ONUS]
+const allToWallet = [WalletType.SPOT, WalletType.FUTURES]
 
 const TransferWalletResult = {
     INVALID_AMOUNT: 'INVALID_AMOUNT',
