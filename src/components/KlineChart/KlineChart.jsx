@@ -135,7 +135,7 @@ function KLineChart({symbolInfo, resolution = ms('1m'), mainIndicator = '', subI
         })
 
         chart.loadMore(function (timestamp) {
-            _getData(timestamp).then(data => {
+            _getData(timestamp - resolution).then(data => {
                 chart.applyMoreData(data, true)
                 if (Array.isArray(data) && !data.length) {
                     chart.loadMore(function () {
