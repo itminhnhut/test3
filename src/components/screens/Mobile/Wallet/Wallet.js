@@ -145,7 +145,7 @@ export default function Wallet() {
     const dispatch = useDispatch()
     const alertContext = useContext(AlertContext)
 
-    const [fromWallet, setFromWallet] = useState()
+    const [fromWallet, setFromWallet] = useState(WalletType.SPOT)
     const [toWallet, setToWallet] = useState()
     const [amount, setAmount] = useState()
     const [visibleSuccessModel, setVisibleSuccessModel] = useState(false)
