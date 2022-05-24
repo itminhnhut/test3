@@ -51,12 +51,11 @@ const FuturesOrderButtonsGroupVndc = ({
     const [disabled, setDisabled] = useState(false);
     const handleParams = useCallback(
         (side) => {
-            // const _size = isNaN(size) ? side === VndcFutureOrderType.Side.BUY ? +quantity?.buy : +quantity?.sell : Number(size)
             const params = {
                 symbol: pairConfig?.symbol,
                 type: getType(type),
                 side: side,
-                quantity: +Number(String(size).replaceAll(',', '')).toFixed(decimalScaleQty),
+                quantity: +size,
                 price: getPrice(getType(type), side, price, ask, bid, stopPrice),
                 leverage,
                 sl: +Number(orderSlTp.sl).toFixed(decimalScalePrice),

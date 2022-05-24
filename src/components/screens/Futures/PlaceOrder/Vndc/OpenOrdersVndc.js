@@ -178,7 +178,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 showNotification(
                     {
                         message: message,
-                        title: t('commom:failed'),
+                        title: t('common:failed'),
                         type: 'failure'
                     },
                     1800,
@@ -214,7 +214,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             showNotification(
                 {
                     message: t('futures:close_order:close_successfully', { value: rowData.current?.displaying_id }),
-                    title: t('commom:success'),
+                    title: t('common:success'),
                     type: 'success'
                 },
                 1800,
@@ -406,7 +406,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                         })
                         TimeFilterRef.current.onReset([]);
                     }}
-                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-darkBlue-3 dark:text-txtSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
                     {t('common:reset')}
                 </div>
                 <CloseAllOrders />

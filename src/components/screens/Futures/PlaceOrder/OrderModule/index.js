@@ -314,6 +314,7 @@ const FuturesOrderModule = ({
                     pair={pair}
                     isAuth={isAuth}
                     maxSize={maxSize}
+                    decimalScaleQty={countDecimals(currentType === FuturesOrderTypes.StopMarket ? decimalScaleQtyMarket?.stepSize : decimalScaleQtyLimit?.stepSize)}
                 />
             </div>
 
