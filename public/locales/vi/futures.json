@@ -209,11 +209,13 @@
             "sl": "Lựa chọn Chốt lỗ và cắt lời để quản lý lợi nhuận của lệnh",
             "order": "Xác nhận giao dịch dễ dàng",
             "tab": "Chi tiết tài khoản và danh sách lệnh giao dịch của bạn sẽ hiển thị ở đây",
-            "step": "Bước"
+            "step": "Bước",
+            "next": "Tiếp tục"
         },
         "login_short": "Đăng nhập ngay",
         "available": "Số dư k.dụng",
-        "liq_price": "Giá thanh lý"
+        "liq_price": "Giá thanh lý",
+        "share": "Chia sẻ"
     },
     "orders_history": "Lịch sử lệnh",
     "minimun_leverage": "Đòn bẩy tối thiểu",

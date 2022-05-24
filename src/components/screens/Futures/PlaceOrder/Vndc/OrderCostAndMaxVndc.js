@@ -48,7 +48,10 @@ const FuturesOrderCostAndMaxVndc = ({
             (VndcFutureOrderType.Side.BUY === side ? ask : bid) :
             price;
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
-        const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(decimalScaleQtyLimit?.stepSize));
+        const decimalScaleQtyMarket = pairConfig?.filters.find(rs => rs.filterType === 'MARKET_LOT_SIZE');
+        const stepSize = currentType === FuturesOrderTypes.Market ? decimalScaleQtyLimit?.stepSize : decimalScaleQtyMarket?.stepSize;
+        const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(stepSize));
+        // console.log(_size, size)
         const volume = _size * _price;
         const volumeLength = volume.toFixed(0).length;
         const margin = volume / leverage;
@@ -154,11 +157,11 @@ const FuturesOrderCostAndMaxVndc = ({
                     </Link>
                     <div className="p-[10px]">
                         <div className="flex items-center justify-between">
-                            <label className="text-gray-1 font-medium">{t('futures:taker')}:</label>
+                            <label className="text-gray-1 font-medium dark:text-txtSecondary-dark">{t('futures:taker')}:</label>
                             <span className="font-medium">0.1%</span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <label className="text-gray-1 font-medium">{t('futures:maker')}:</label>
+                            <label className="text-gray-1 font-medium dark:text-txtSecondary-dark">{t('futures:maker')}:</label>
                             <span className="font-medium">0.1%</span>
                         </div>
                     </div>

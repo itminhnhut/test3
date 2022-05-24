@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useContext } from 'react';
 import Tour from "reactour";
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
-import { X } from 'react-feather'
+import { X } from 'react-feather';
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
+
 const Guideline = ({ pair, start, setStart }) => {
     const { t } = useTranslation();
+    const context = useContext(AlertContext);
     const [showClose, setShowClose] = useState(false);
     const step = useRef(0);
-
-    const onClose = (e) => {
-        if (e) setStart(false);
-    }
+    const refGuide = useRef(null)
 
     useEffect(() => {
         // if (pair) setStart(true);
@@ -23,15 +23,14 @@ const Guideline = ({ pair, start, setStart }) => {
 
     useEffect(() => {
         const vh = window.innerHeight * 0.01;
-        const el = document.querySelector('.bottom-navigation')
         const order = document.querySelector('#futures-mobile')
-        if (!el || !order) return;
+        if (!order) return;
         if (start) {
             order.style.height = window.innerHeight + 'px';
-            el.style.display = 'none'
+            context.onHiddenBottomNavigation(true)
         } else {
             order.style.height = vh * 100 - 80 + 'px'
-            el.style.display = 'flex'
+            context.onHiddenBottomNavigation(false)
         }
     }, [start])
 
@@ -66,9 +65,21 @@ const Guideline = ({ pair, start, setStart }) => {
         ]
     }, [])
 
+    const onClose = (e) => {
+        if (!e) {
+            if (refGuide.current.state.current === tourConfig.length - 1) {
+                setStart(false);
+            } else {
+                refGuide.current.nextStep()
+            }
+        } else {
+            setStart(false);
+        }
+    }
+
     return (
         <Tour
-            onRequestClose={() => onClose()}
+            onRequestClose={() => onClose(false)}
             steps={tourConfig}
             isOpen={start}
             showCloseButton={false}
@@ -83,6 +94,7 @@ const Guideline = ({ pair, start, setStart }) => {
             showButtons={false}
             showNumber={false}
             scrollDuration="300"
+            ref={refGuide}
         // inViewThreshold={100}
         />
     );
@@ -91,7 +103,7 @@ const Guideline = ({ pair, start, setStart }) => {
 const Content = ({ title, text, step, onClose, top, goTo, ...props }) => {
     const { t } = useTranslation();
     return (
-        <div className="flex flex-col items-center justify-center" >
+        <div className="flex flex-col items-center justify-center" onClick={() => onClose(false)}>
             {top && <img className="m-auto" src="/images/icon/ic_guide_arrow.png" width={10} />}
             <View id={`guideline-step-${step}`}>
                 <div className="flex items-center justify-between">
@@ -103,7 +115,7 @@ const Content = ({ title, text, step, onClose, top, goTo, ...props }) => {
                 <div className="mt-[8px] mb-[16px] text-white text-xs">{text}</div>
                 <div className="flex items-center justify-between font-medium text-white">
                     <div className='text-sm'>{t('futures:mobile:guide:step')} {step + '/'}<span className="text-[10px]">6</span></div>
-                    <div className='min-w-[60px] px-[10px] bg-dominant rounded-[4.33333px] text-center text-[10px]' onClick={() => step === 6 ? onClose(true) : goTo(step)}>{t(step === 6 ? 'common:close' : 'common:global_btn:next')}</div>
+                    <div className='min-w-[60px] px-[10px] bg-dominant rounded-[4.33333px] text-center text-[10px]' onClick={() => step === 6 ? onClose(true) : goTo(step)}>{t(step === 6 ? 'common:close' : 'futures:mobile:guide:next')}</div>
                 </div>
             </View>
             {!top && <img className="m-auto rotate-180" src="/images/icon/ic_guide_arrow.png" width={10} />}

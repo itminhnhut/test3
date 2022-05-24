@@ -3,7 +3,7 @@ import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next'
 import { getS3Url } from 'redux/actions/utils';
 
-const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL }) => {
+const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, context }) => {
     const { t } = useTranslation();
     return (
         <TradingInput
@@ -11,7 +11,7 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL }) => {
             label={'TP'}
             value={tp}
             allowNegative={false}
-            onValueChange={({ floatValue = 0 }) => setTp(floatValue)}
+            onValueChange={({ floatValue = '' }) => setTp(floatValue)}
             decimalScale={decimals.decimalScalePrice}
             labelClassName='whitespace-nowrap capitalize'
             containerClassName="h-[36px]"
@@ -24,6 +24,8 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL }) => {
                 </div>
             )}
             inputClassName="text-xs !text-center"
+            onFocus={() => context.onHiddenBottomNavigation(true)}
+            onBlur={() => context.onHiddenBottomNavigation(false)}
         />
     );
 };
