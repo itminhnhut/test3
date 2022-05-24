@@ -7,7 +7,7 @@ import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import axios from 'axios';
 import { ApiStatus } from 'redux/actions/const';
 
-const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig }) => {
+const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, context }) => {
     const { t } = useTranslation();
     const [openModal, setOpenModal] = useState(false);
 
@@ -33,7 +33,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig }) => {
                 label={t('futures:leverage:leverage')}
                 value={leverage}
                 allowNegative={false}
-                onValueChange={({ floatValue }) => setLeverage(floatValue ?? 1)}
+                onValueChange={({ floatValue = '' }) => setLeverage(floatValue)}
                 decimalScale={0}
                 // isAllowed={({ floatValue }) => floatValue <= 125}
                 labelClassName='whitespace-nowrap'
@@ -47,6 +47,8 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig }) => {
                     </div>
                 )}
                 inputClassName="text-xs"
+                onFocus={() => context.onHiddenBottomNavigation(true)}
+                onBlur={() => context.onHiddenBottomNavigation(false)}
             />
             {openModal &&
                 <FuturesLeverageSettings

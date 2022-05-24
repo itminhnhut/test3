@@ -3,7 +3,7 @@ import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next'
 import { getS3Url } from 'redux/actions/utils';
 const initPercent = 25;
-const OrderVolumeMobile = memo(({ size, setSize, decimals, }) => {
+const OrderVolumeMobile = memo(({ size, setSize, decimals, context }) => {
     const { t } = useTranslation();
     return (
         <TradingInput
@@ -11,7 +11,7 @@ const OrderVolumeMobile = memo(({ size, setSize, decimals, }) => {
             label={t('futures:order_table:volume')}
             value={size}
             allowNegative={false}
-            onValueChange={({ floatValue = 0 }) => setSize(floatValue)}
+            onValueChange={({ floatValue = '' }) => setSize(floatValue)}
             // validator={getValidator('quantity')}
             decimalScale={decimals.decimalScaleQtyLimit}
             labelClassName='whitespace-nowrap'
@@ -25,6 +25,8 @@ const OrderVolumeMobile = memo(({ size, setSize, decimals, }) => {
             //     </div>
             // )}
             inputClassName="text-xs"
+            onFocus={() => context.onHiddenBottomNavigation(true)}
+            onBlur={() => context.onHiddenBottomNavigation(false)}
         />
     );
 });
