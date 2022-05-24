@@ -1,9 +1,9 @@
 import AssetLogo from 'components/wallet/AssetLogo'
-import { formatNumber } from 'redux/actions/utils'
+import {formatNumber} from 'redux/actions/utils'
 import NumberFormat from 'react-number-format'
 import Button from 'components/common/Button'
 import Modal from 'components/common/ReModal'
-import { X } from 'react-feather'
+import {X} from 'react-feather'
 import React, {
     useCallback,
     useContext,
@@ -11,25 +11,25 @@ import React, {
     useMemo,
     useState,
 } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
-import { AlertContext } from 'components/common/layouts/LayoutMobile'
-import { WalletType } from 'redux/actions/const'
-import { isNumeric } from 'utils'
+import {useDispatch, useSelector} from 'react-redux'
+import {useRouter} from 'next/router'
+import {useTranslation} from 'next-i18next'
+import {AlertContext} from 'components/common/layouts/LayoutMobile'
+import {WalletType} from 'redux/actions/const'
+import {isNumeric} from 'utils'
 import axios from 'axios'
-import { POST_WALLET_TRANSFER } from 'redux/actions/apis'
-import { getUserFuturesBalance, getWallet } from 'redux/actions/user'
-import { LANGUAGE_TAG } from 'hooks/useLanguage'
-import { WalletCurrency } from 'components/screens/OnusWithdrawGate/helper'
-import { reduce } from 'lodash/collection'
-import { isNil, union } from 'lodash'
+import {POST_WALLET_TRANSFER} from 'redux/actions/apis'
+import {getUserFuturesBalance, getWallet} from 'redux/actions/user'
+import {LANGUAGE_TAG} from 'hooks/useLanguage'
+import {WalletCurrency} from 'components/screens/OnusWithdrawGate/helper'
+import {reduce} from 'lodash/collection'
+import {isNil, union} from 'lodash'
 import SelectWalletType from 'components/screens/Mobile/Wallet/SelectWalletType'
 import SliderAmount from 'components/screens/Mobile/Wallet/SliderAmount'
-import { WalletTypeV1 } from 'components/wallet/TransferModal'
-import { format } from 'date-fns'
+import {WalletTypeV1} from 'components/wallet/TransferModal'
+import {format} from 'date-fns'
 import classNames from 'classnames'
-import { PulseLoader } from 'react-spinners'
+import {PulseLoader} from 'react-spinners'
 import colors from 'styles/colors'
 
 const MIN_WITHDRAWAL = {
@@ -110,7 +110,7 @@ function getWalletsAllowedAsset(asset) {
             }
             return acm
         },
-        { fromWallets: [], toWallets: [] }
+        {fromWallets: [], toWallets: []}
     )
 }
 
@@ -137,10 +137,10 @@ export default function Wallet() {
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || []
 
     const router = useRouter()
-    const { asset } = router.query
+    const {asset} = router.query
     const {
         t,
-        i18n: { language },
+        i18n: {language},
     } = useTranslation(['common', 'wallet', 'error'])
     const dispatch = useDispatch()
     const alertContext = useContext(AlertContext)
@@ -173,7 +173,7 @@ export default function Wallet() {
         const min = MIN_WITHDRAWAL[assetConfig.id] + fee
         const max = MAX_WITHDRAWAL[assetConfig.id]
 
-        return { currentWallet, assetConfig, fee, min, max }
+        return {currentWallet, assetConfig, fee, min, max}
     }, [assetConfigs, allExchangeWallet, allFuturesWallet, fromWallet, asset])
 
     const walletTypeOptionLabels = {
@@ -182,8 +182,8 @@ export default function Wallet() {
         [WalletType.ONUS]: t('wallet:onus'),
     }
 
-    const { walletFromOptions, walletToOptions } = useMemo(() => {
-        const { fromWallets = [], toWallets = [] } =
+    const {walletFromOptions, walletToOptions} = useMemo(() => {
+        const {fromWallets = [], toWallets = []} =
             getWalletsAllowedAsset(asset)
         return {
             walletFromOptions: allFromWallet.map((o) => ({
@@ -218,7 +218,7 @@ export default function Wallet() {
 
     const handleTransfer = useCallback(async () => {
         setIsPlacingOrder(true)
-        const { data } = await axios.post(POST_WALLET_TRANSFER, {
+        const {data} = await axios.post(POST_WALLET_TRANSFER, {
             from_wallet: convertToWalletV1Type(fromWallet),
             to_wallet: convertToWalletV1Type(toWallet),
             currency: assetConfig.id,
@@ -263,11 +263,10 @@ export default function Wallet() {
                 <div className='market-mobile px-4 py-6'>
                     <div className='flex items-center'>
                         <span className='mr-2 text-xl font-semibold'>
-                            {t('wallet:transfer_asset', { asset })}
+                            {t('wallet:transfer_asset', {asset})}
                         </span>
-                        <AssetLogo size={30} assetCode={asset} />
+                        <AssetLogo size={30} assetCode={asset}/>
                     </div>
-                    {/*<pre className='text-xs'>{JSON.stringify({min, max, fee, currentWallet}, null, 2)}</pre>*/}
                     <div className='grid grid-cols-2 gap-4 my-4'>
                         <div>
                             <div className='mb-2 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark'>
@@ -321,7 +320,7 @@ export default function Wallet() {
                                 className='outline-none text-xs font-medium flex-1'
                                 placeholder={t('wallet:input_amount')}
                                 value={amount}
-                                onValueChange={({ value }) => setAmount(value)}
+                                onValueChange={({value}) => setAmount(value)}
                                 decimalScale={DECIMAL_SCALES[assetConfig.id]}
                                 min={min}
                                 max={max}
@@ -330,7 +329,7 @@ export default function Wallet() {
                                 <span className='text-teal'>
                                     {t('common:max')}
                                 </span>
-                                <div className='h-7 w-[1px] bg-gray-5 dark:bg-darkBlue-5 mx-2' />
+                                <div className='h-7 w-[1px] bg-gray-5 dark:bg-darkBlue-5 mx-2'/>
                                 <span>{asset}</span>
                             </div>
                         </div>
@@ -395,7 +394,7 @@ export default function Wallet() {
                             onClick={handleTransfer}
                         >
                             {isPlacingOrder ? (
-                                <PulseLoader color={colors.white} size={3} />
+                                <PulseLoader color={colors.white} size={3}/>
                             ) : (
                                 t('common:ext_gate:wdl_btn')
                             )}
@@ -446,7 +445,8 @@ export default function Wallet() {
                         </span>
                     </div>
                     <div className='flex justify-between text-xs'>
-                        <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-1'>
+                        <span
+                            className='font-medium text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-1'>
                             {t('wallet:transfer_from_to')}
                         </span>
                         <span className='font-semibold whitespace-nowrap'>
