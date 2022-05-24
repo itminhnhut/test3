@@ -2,6 +2,7 @@ import qs from 'qs';
 export const WalletCurrency = {
     ATS: 148,
     NAC: 1,
+    USDT: 22,
     VNDC: 72,
     KAI: 84,
     ONUS: 86,
