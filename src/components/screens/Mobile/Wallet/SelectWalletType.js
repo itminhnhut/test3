@@ -33,7 +33,7 @@ export default function SelectWalletType({options = [], value, onChange}) {
                         leaveFrom='opacity-100 translate-y-0'
                         leaveTo='opacity-0 translate-y-1'
                     >
-                        <Popover.Panel className='absolute left-0 right-0 z-20 mt-3'>
+                        <Popover.Panel className='absolute left-0 right-0 z-30 mt-3'>
                             <div className='overflow-hidden rounded-lg shadow-lg bg-gray-4 dark:bg-darkBlue-3'>
                                 {options.map((op) => {
                                     return (
