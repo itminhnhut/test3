@@ -1,9 +1,9 @@
-import ReactNotification from 'react-notifications-component';
+import { ReactNotifications } from 'react-notifications-component';
 
 const LayoutNoHeader = ({ showBanner, children }) => {
     return (
         <div className="h-screen flex flex-col flex-grow">
-            <ReactNotification />
+            <ReactNotifications />
             <>{children}</>
         </div>
     );

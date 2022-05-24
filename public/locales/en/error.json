@@ -88,6 +88,7 @@
     "INVALID_ADDRESS": "Invalid wallet address",
     "INVALID_MEMO": "Memo is too long or invalid",
     "INVALID_AMOUNT": "Invalid amount",
+    "INVALID_WALLET_TYPE": "Invalid wallet type, please try again",
     "INVALID_CURRENCY": "Invalid asset",
     "NOT_ENOUGH_FEE": "Not enough balance to make fees",
     "WITHDRAW_AMOUNT_NOT_REACH_MAX": "Amount of withdrawal over limit",

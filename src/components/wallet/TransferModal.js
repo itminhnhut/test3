@@ -31,7 +31,6 @@ const DEFAULT_STATE = {
 const ALLOWED_WALLET = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
-
 }
 
 const TransferWalletResult = {
@@ -319,7 +318,7 @@ const TransferModal = ({isMobile}) => {
             </div>
         )
     }, [state.allWallets, state.openList, state.asset, assetConfig])
-  
+
     useEffect(() =>{
         const _isError = state.asset === 'VNDC' ? state.amount < 500000 : state.asset === 'USDT' ? state.amount < 25 : false
         setIsError(_isError)

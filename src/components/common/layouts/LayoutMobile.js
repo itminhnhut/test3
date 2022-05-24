@@ -2,7 +2,7 @@ import Footer from 'src/components/common/Footer/Footer';
 import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT, } from 'src/components/common/NavBar/constants';
 import NavBar from 'src/components/common/NavBar/NavBar';
 import { useState, useEffect, useRef, createContext } from 'react';
-import ReactNotification from 'react-notifications-component';
+import { ReactNotifications } from 'react-notifications-component'
 import { useWindowSize } from 'utils/customHooks';
 import TransferModal from 'components/wallet/TransferModal';
 import useApp from 'hooks/useApp';
@@ -56,6 +56,13 @@ const LayoutMobile = ({
         }, 1000);
     }, [])
 
+    const onHiddenBottomNavigation = (ishidden) => {
+        const el = document.querySelector('.bottom-navigation');
+        if (el) {
+            el.style.display = ishidden ? 'none' : 'flex';
+        }
+    }
+
     return (
         <>
             <Head>
@@ -73,11 +80,11 @@ const LayoutMobile = ({
                         : {}
                 }
             >
-                {/* <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' /> */}
+                <ReactNotifications className='fixed z-[9000] pointer-events-none w-full h-full' />
                 <div
                     className='relative flex-1 bg-white dark:bg-darkBlue-1'
                 >
-                    <AlertContext.Provider value={{ alert: alert.current }}>
+                    <AlertContext.Provider value={{ alert: alert.current, onHiddenBottomNavigation }}>
                         {children}
                     </AlertContext.Provider>
                 </div>

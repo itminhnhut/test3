@@ -214,16 +214,16 @@ export default ({ isRealtime = true }) => {
                             </p>
                         </div>
                     </div>
-                    <div className='flex items-center justify-end'>
-                        <div className='font-medium text-right'>
+                    <div className='flex items-start justify-end'>
+                        <div className='flex flex-col font-medium text-right'>
                             <LastPrice price={item.lastPrice} />
-                            <p className='text-xs text-gray-1 leading-4'>
-                                ${' '}
+                            <span className='text-xs text-gray-1 leading-4 whitespace-nowrap'>
+                                <span className='mr-1'>$</span>
                                 {formatPrice(
                                     referencePrice[`${item.quoteAsset}/USD`] *
                                         item.lastPrice
                                 )}
-                            </p>
+                            </span>
                         </div>
                         <div className='flex justify-end w-24'>
                             <div

@@ -6,8 +6,7 @@ import {useSelector} from 'react-redux'
 import {useTranslation} from 'next-i18next'
 import {formatCurrency, formatWallet, getS3Url} from 'redux/actions/utils'
 import AssetLogo from 'components/wallet/AssetLogo'
-import {values} from 'lodash/object'
-import {keyBy, map, reduce} from 'lodash'
+import {keyBy, map} from 'lodash'
 import {getUsdRate} from 'redux/actions/market'
 import {sumBy} from 'lodash/math'
 import SortIcon from 'components/screens/Mobile/SortIcon'
@@ -16,6 +15,7 @@ import useDarkMode, {THEME_MODE} from 'hooks/useDarkMode'
 import colors from 'styles/colors'
 import {MIN_WALLET} from 'constants/constants'
 import {getDownloadAppLinkForWebView} from 'utils/helpers'
+import {useRouter} from "next/router";
 
 const TABS = {
     SPOT: 'SPOT',
@@ -42,6 +42,8 @@ const MarketScreen = () => {
     const walletFutures = useSelector((state) => state.wallet?.FUTURES) || {}
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || []
 
+
+    const router = useRouter()
     const {t} = useTranslation(['common'])
     const [themeMode] = useDarkMode()
 
@@ -193,7 +195,8 @@ const MarketScreen = () => {
                             })}
                         </div>
                     </div>
-                    <div className='market-list flex flex-col flex-1 min-h-0 px-4 pt-6 pb-3 bg-white dark:bg-darkBlue-2'>
+                    <div
+                        className='market-list flex flex-col flex-1 min-h-0 px-4 pt-6 pb-3 bg-white dark:bg-darkBlue-2'>
                         <div className='pb-4'>
                             <p className='text-txtSecondary dark:text-txtSecondary-dark'>
                                 {t('wallet:total_balance')}
@@ -233,7 +236,11 @@ const MarketScreen = () => {
                                 {listWallet.map((asset = {}) => {
                                     return (
                                         <div
-                                            className='flex justify-between items-center py-2 border-b border-gray-4 dark:border-darkBlue-3'>
+                                            className='flex justify-between items-center py-2 border-b border-gray-4 dark:border-darkBlue-3'
+                                            onClick={() => {
+                                                router.push('/mobile/wallet/' + asset.assetCode)
+                                            }}
+                                        >
                                             <div className='flex items-center'>
                                                 <AssetLogo
                                                     assetCode={asset.assetCode}
@@ -298,9 +305,7 @@ const MarketScreen = () => {
 const TitleHeadList = ({title, className = '', onClick, sortDirection}) => {
     return (
         <div
-            className={
-                'flex items-center justify-end cursor-pointer ' + className
-            }
+            className={'flex items-center justify-end cursor-pointer ' + className}
             onClick={onClick}
         >
             <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs leading-4'>
