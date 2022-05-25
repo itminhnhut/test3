@@ -51,7 +51,7 @@ const MarketScreen = () => {
             if (user?.avatar?.includes?.('https://') || user?.avatar?.includes?.('http://')) return user?.avatar;
             return getS3Url(user?.avatar);
         }
-        return '/images/avatar.png';
+        return '/images/default_avatar.png';
     };
 
     const tabTitles = {
