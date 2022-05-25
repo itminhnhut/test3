@@ -407,7 +407,7 @@ export default function Transfer() {
                             {isPlacingOrder ? (
                                 <PulseLoader color={colors.white} size={3}/>
                             ) : (
-                                t('common:ext_gate:wdl_btn')
+                                t('wallet:mobile:btn_confirm_transfer')
                             )}
                         </div>
                     </div>
@@ -445,7 +445,7 @@ export default function Transfer() {
                     </div>
                     <div className='flex justify-between text-xs'>
                         <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                            {t('common:amount')}
+                            {t('wallet:mobile:amount')}
                         </span>
                         <span className='font-semibold'>
                             {formatNumber(

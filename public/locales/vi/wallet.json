@@ -179,6 +179,7 @@
         "time": "Thời gian giao dịch",
         "amount": "Số lượng tiền rút",
         "transfer_from_to": "Chuyển từ đến",
-        "unsupported_asset": "Tài sản hiện chưa hỗ trợ chuyển giữa 2 ví"
+        "unsupported_asset": "Tài sản hiện chưa hỗ trợ chuyển giữa 2 ví",
+        "btn_confirm_transfer": "Xác nhận chuyển"
     }
 }

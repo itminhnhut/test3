@@ -178,6 +178,7 @@
         "time": "Time",
         "amount": "Amount",
         "transfer_from_to": "From - to",
-        "unsupported_asset": "The asset currently does not support transferring"
+        "unsupported_asset": "The asset currently does not support transferring",
+        "btn_confirm_transfer": "Confirm Transfer"
     }
 }
