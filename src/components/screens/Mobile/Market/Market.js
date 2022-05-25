@@ -209,7 +209,7 @@ export default ({ isRealtime = true }) => {
                                 </span>
                             </div>
                             <p className='text-xs font-medium text-txtSecondary leading-4'>
-                                {t('markets:vol')}{' '}
+                                {t('markets:vol')}
                                 {formatCurrency(item.volume24h, 1)}
                             </p>
                         </div>
@@ -248,8 +248,8 @@ export default ({ isRealtime = true }) => {
 
     return (
         <div className='market-mobile'>
-            <div className='flex items-center pt-6 px-4'>
-                <div className='flex flex-1 items-center bg-gray-4 dark:bg-darkBlue-3 rounded-md py-2 px-3 mr-4'>
+            <div className='flex items-center mt-6 px-4'>
+                <div className='flex flex-1 items-center bg-gray-4 dark:bg-darkBlue-3 rounded-md py-2 px-3'>
                     <Search
                         size={16}
                         className='text-txtSecondary dark:text-txtSecondary-dark'
@@ -261,13 +261,6 @@ export default ({ isRealtime = true }) => {
                         type='text'
                     />
                 </div>
-                <DollarCoin
-                    color={
-                        themeMode === THEME_MODE.LIGHT
-                            ? colors.grey1
-                            : colors.darkBlue5
-                    }
-                />
             </div>
             <div>
                 <div className='flex space-x-8 px-4 mt-6'>
@@ -309,7 +302,7 @@ export default ({ isRealtime = true }) => {
                     })}
                 </div>
             </div>
-            <div className='market-list flex flex-col flex-1 min-h-0 px-4 pt-6 pb-3 bg-white dark:bg-darkBlue-2'>
+            <div className='market-list flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3 bg-white dark:bg-darkBlue-2'>
                 {/*<div className='flex space-x-4'>*/}
                 {/*    {Object.keys(TAGS[tab.active]).map((tag) => {*/}
                 {/*        return (*/}
@@ -332,7 +325,7 @@ export default ({ isRealtime = true }) => {
                 {/*        )*/}
                 {/*    })}*/}
                 {/*</div>*/}
-                <div className='flex justify-between mb-4'>
+                <div className='flex justify-between mb-4 px-3'>
                     <div className='flex flex-1 space-x-1'>
                         <TitleHeadList
                             title={t('markets:pair')}
@@ -368,7 +361,7 @@ export default ({ isRealtime = true }) => {
                         />
                     </div>
                 </div>
-                <div className='flex-1 overflow-y-auto p-1'>{listItem}</div>
+                <div className='flex-1 overflow-y-auto pt-1 px-3'>{listItem}</div>
             </div>
         </div>
     )
