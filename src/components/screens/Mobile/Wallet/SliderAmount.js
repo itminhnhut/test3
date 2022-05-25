@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {debounce} from "lodash/function";
-import Slider from "components/trade/InputSlider";
+import Slider from "./InputSlider";
 
 export default function SliderAmount({value = 0, onChange}) {
     const [internalPercent, setInternalPercent] = useState(0)
@@ -19,5 +19,5 @@ export default function SliderAmount({value = 0, onChange}) {
             setInternalPercent(value)
         }
     }, [value])
-    return <Slider axis='x' useLabel x={internalPercent} xmax={100} onChange={handleChange}/>
+    return <Slider axis='x' x={internalPercent} labelSuffix="%" onChange={handleChange}/>
 }

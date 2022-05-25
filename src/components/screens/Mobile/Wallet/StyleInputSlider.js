@@ -44,15 +44,13 @@ export const DotContainer = styled.div`
     width: 100%;
 `;
 
-export const Dot = styled.span`
+export const Dot = styled.div`
     position: absolute;
-    top: -4px;
-    //top: 10px;
-    left: ${({ percentage }) => `calc(${percentage}% - 4.5px)`};
     width: 9px;
-    height: 8px;
+    height: 10px;
+    top: -5px;
+    left: ${({ percentage }) => `calc(${percentage}% - 4.5px)`};
     box-sizing: content-box;
-    background-color: ${({ active, isDark, bgColorActive }) => (active ? bgColorActive || colors.teal : isDark ? colors.darkBlue4 : colors.grey5)};
     z-index: 30;
     transition: transform 0.2s; /* Animation */
 
@@ -66,10 +64,8 @@ export const Thumb = styled.div`
     position: relative;
     display: block;
     content: '';
-    width: 14px;
-    height: 12px;
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    background-color: ${({ isZero, isDark, bgColorActive }) => (isZero ? (isDark ? colors.darkBlue4 : bgColorActive || colors.grey5) : bgColorActive || colors.teal)};
+    width: 18px;
+    height: 18px;
 
     user-select: none;
     cursor: pointer;
