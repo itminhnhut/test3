@@ -318,8 +318,8 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                             getOrders()
                         }
                     }}
-                    className="px-[8px] flex items-center py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
-                    <img className='w-[12px] h-[12px]' src={getS3Url("/images/icon/ic_search.png")} />&nbsp; {t('common:search')}
+                    className="px-[8px] flex items-center py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-darkBlue-3 dark:text-txtSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    <img className='w-[12px] h-[12px] ' src={getS3Url("/images/icon/ic_search.png")} />&nbsp; {t('common:search')}
                 </div>
                 <div
                     onClick={() => {
@@ -333,7 +333,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                         setResetPage(true);
                         setPagination({ ...pagination, page: 1 })
                     }}
-                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-bgSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-darkBlue-3 dark:text-txtSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
                     {t('common:reset')}
                 </div>
             </div>

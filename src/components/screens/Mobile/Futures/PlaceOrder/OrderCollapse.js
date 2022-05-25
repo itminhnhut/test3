@@ -1,4 +1,4 @@
-import React, { memo, useContext, useState } from 'react';
+import React, { memo, useContext, useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components'
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
@@ -35,22 +35,26 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
         })
     }
 
+    const style = () => {
+        const el = document.querySelector('.order-collapse .diff-price')
+        return { width: el && el?.clientWidth ? `calc(100% - ${el.clientWidth / 2}px)` : '100%' }
+    }
     const className = disabled || !isAuth ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
 
     return (
         <div className="w-full">
-            <div className="relative flex w-full h-[56px] text-sm">
+            <div className="relative flex w-full h-[56px] text-sm order-collapse">
                 <Side className={`bg-teal rounded-l-[6px] text-white ${className}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.BUY, pairPrice?.ask)}>
-                    <div className="truncate max-w-[120px]">{t('common:buy')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
+                    <div className={`truncate`} style={style()}>{t('common:buy')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
                     <span>{formatNumber(pairPrice?.ask, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
-                <Text>
+                <Text className="diff-price">
                     {formatNumber(pairPrice?.ask - pairPrice?.bid, decimals.decimalScalePrice, 0, true)}
                 </Text>
                 <Side className={`bg-red rounded-r-[6px] text-white items-end ${className}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.SELL, pairPrice?.bid)}>
-                    <div className="truncate max-w-[120px]">{t('common:sell')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
+                    <div className={`truncate text-right`} style={style()}>{t('common:sell')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
                     <span>{formatNumber(pairPrice?.bid, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect, useMemo, useRef } from 'react';
+import React, { useState, memo, useEffect, useMemo, useRef, useContext } from 'react';
 import OrderVolumeMobile from './OrderVolumeMobile';
 import OrderPriceMobile from './OrderPriceMobile';
 import OrderTPMobile from './OrderTPMobile';
@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next'
 import OrderCollapse from './OrderCollapse';
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
 import { getType, getPrice } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc'
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
 
 const initPercent = 25;
 
@@ -42,6 +43,7 @@ const PlaceOrder = ({
     const rowData = useRef(null);
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const firstTime = useRef(true);
+    const context = useContext(AlertContext);
 
     useEffect(() => {
         if (usdRate) {
@@ -214,7 +216,7 @@ const PlaceOrder = ({
     const onChangeTpSL = () => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
         if (!isVndcFutures || !size || !inputValidator('price', ArrStop.includes(type)).isValid ||
-            !inputValidator('quantity').isValid || !inputValidator('leverage').isValid) return;
+            !inputValidator('quantity').isValid) return;
         const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
         rowData.current = {
             fee: 0,
@@ -268,24 +270,31 @@ const PlaceOrder = ({
                             isAuth={isAuth} pair={pair}
                             pairConfig={pairConfig}
                             inputValidator={inputValidator}
+                            context={context}
                         />
                     </OrderInput>
                     <OrderInput data-tut="order-volume">
                         <OrderVolumeMobile
                             size={size} setSize={setSize} decimals={decimals}
+                            context={context}
                         />
                     </OrderInput>
                     <OrderInput>
                         <OrderPriceMobile
                             type={type}
                             price={price} setPrice={setPrice} decimals={decimals}
+                            context={context} stopPrice={stopPrice} setStopPrice={setStopPrice}
                         />
                     </OrderInput>
                     <OrderInput data-tut="order-sl">
-                        <OrderSLMobile sl={sl} setSl={setSl} decimals={decimals} onChangeTpSL={onChangeTpSL} />
+                        <OrderSLMobile
+                            sl={sl} setSl={setSl} decimals={decimals}
+                            onChangeTpSL={onChangeTpSL} context={context} />
                     </OrderInput>
                     <OrderInput data-tut="order-tp">
-                        <OrderTPMobile tp={tp} setTp={setTp} decimals={decimals} onChangeTpSL={onChangeTpSL} />
+                        <OrderTPMobile
+                            tp={tp} setTp={setTp} decimals={decimals}
+                            onChangeTpSL={onChangeTpSL} context={context} />
                     </OrderInput>
                     <OrderInput>
                         <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig} availableAsset={availableAsset} />

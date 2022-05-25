@@ -57,28 +57,42 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
         }
     }, [order, pairPrice])
 
-    const downloadImage = () => {
+    const downloadImage = async () => {
         const node = refNodeInfoOrder.current;
         if (downloading || !node) return;
         setDownloading(true)
     };
 
     useEffect(() => {
-        if (downloading) {
-            html2canvas(refNodeInfoOrder.current, {
-                allowTaint: true,
-                useCORS: true,
-            }).then(canvas => {
-                const uri = canvas.toDataURL("image/png", 1)
-                const link = document.createElement('a');
-                link.href = uri;
-                link.download = codeRefer + '.png';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                setDownloading(false)
-            });
-        }
+        if (!downloading) return;
+        html2canvas(refNodeInfoOrder.current, {
+            allowTaint: true,
+            useCORS: true,
+        }).then(async (canvas) => {
+            const dataUrl = canvas.toDataURL();
+            setDownloading(false)
+            const blob = await (await fetch(dataUrl)).blob();
+            const filesArray = [
+                new File(
+                    [blob],
+                    'share.png',
+                    {
+                        type: blob.type,
+                        lastModified: new Date().getTime()
+                    }
+                )
+            ];
+            const shareData = {
+                files: filesArray
+            }
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData).then(() => { });
+                } catch (error) {
+                    alert(error)
+                }
+            }
+        });
     }, [downloading])
 
     const classMobile = useMemo(() => {
@@ -91,20 +105,22 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
         <Modal
             isVisible={isVisible}
             onBackdropCb={onClose}
-            containerClassName={`${classMobile} p-0 top-[50%] rounded-[12px] !bg-dominant !border-0`}
+            containerClassName={`${classMobile} p-0 top-[50%] rounded-[12px] !border-0`}
         >
             <div className='flex flex-col h-full rounded-[12px]' >
-                <div ref={refNodeInfoOrder} className='flex flex-col rounded-t-[12px] flex-1  items-center text-white'
+                <div ref={refNodeInfoOrder} className='flex flex-col rounded-t-[12px] flex-1  items-center text-white pb-[10px]'
                     style={{ background: 'linear-gradient(157.98deg, rgba(0, 220, 194, 0.9) 15.55%, #00B6C7 72.38%)' }}>
                     <div className='p-[23px]'>
                         <img src="/images/share-order-logo.svg" width={120} height={30} />
                     </div>
                     <div className="flex w-full mb-[12px] relative h-[28px]"
                         style={{ backgroundColor: 'rgb(255 255 255 / 20%)' }}>
-                        <div className={`px-[50px] flex justify-evenly w-full text-white text-xs font-medium p-[5px] ${downloading ? 'absolute left-0 top-[-10px]' : ''}`}>
-                            <span>{order?.side === VndcFutureOrderType.Side.BUY ? 'Long' : 'Short'}</span>|
-                            <span>{hide.leverage ? '***' : `${leverage}x`}</span>|
-                            <span>{order?.symbol} {t('futures:tp_sl:perpetual')}</span>
+                        <div className={`px-[50px] flex justify-evenly w-full text-white text-xs font-medium p-[5px] ${downloading ? 'absolute top-[-10px]' : ''}`}>
+                            <span>{order?.side === VndcFutureOrderType.Side.BUY ? 'Long' : 'Short'}</span>
+                            <span>|</span>
+                            <span>{hide.leverage ? '***' : `${leverage}x`}</span>
+                            <span>|</span>
+                            <div className="flex flex-nowrap"><span>{order?.symbol}</span>&nbsp;<span>{t('futures:tp_sl:perpetual')}</span></div>
                         </div>
                     </div>
                     <div className="text-[46px] font-semibold py-[14px] h-[52px]">
@@ -140,7 +156,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                         </div>
                     </div>
                 </div>
-                <div className="bg-white rounded-[12px] h-[212px] p-[23px]">
+                <div className="bg-white rounded-[12px] h-[212px] p-[23px] mt-[-10px]">
                     <div className="text-teal text-center font-medium text-sm">{t('futures:optional_information')}</div>
                     <div className="flex justify-between py-[12px]">
                         <CheckBox
@@ -166,10 +182,10 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                         />
                     </div>
                     <div
-                        className={classNames('bg-dominant rounded-[6px] text-sm font-semibold text-center py-[12px] my-[8px]',
+                        className={classNames('bg-dominant rounded-[6px] text-white text-sm font-semibold text-center py-[12px] my-[8px]',
                             { '!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3': downloading }
                         )}
-                        onClick={() => downloadImage()}>{t('futures:download')}</div>
+                        onClick={() => downloadImage()}>{t('futures:mobile:share')}</div>
                     <div className="bg-[#F5F5F5] text-teal rounded-[6px] text-sm font-semibold text-center py-[12px]" onClick={onClose}>{t('common:cancel')}</div>
                 </div>
             </div>

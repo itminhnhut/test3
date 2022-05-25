@@ -67,16 +67,16 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                 </div>
                 <div className='mt-4 flex items-center'>
                     <Link href="/trade">
-                        <a target="_blank" className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                        <a target="_blank" className='!text-darkBlue dark:!text-txtSecondary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
                             {t('futures:spot_trading')}
                         </a>
                     </Link>
                     <Link href="/swap">
-                        <a target="_blank" className='!text-darkBlue dark:!text-txtPrimary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                        <a target="_blank" className='!text-darkBlue dark:!text-txtSecondary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]'>
                             {t('futures:convert')}
                         </a>
                     </Link>
-                    <div onClick={onOpenTransfer} className='cursor-pointer px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                    <div onClick={onOpenTransfer} className='cursor-pointer px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 dark:!text-txtSecondary-dark rounded-[4px]'>
                         {t('common:transfer')}
                     </div>
                 </div>

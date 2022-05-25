@@ -5,11 +5,12 @@ import { FuturesOrderTypes as OrderTypes, } from 'redux/reducers/futures';
 
 const initPercent = 25;
 
-const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType, pair, isAuth, maxSize }) => {
+const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType, pair, isAuth, maxSize, decimalScaleQty }) => {
     const [percent, setPercent] = useState(isAuth && isVndcFutures ? initPercent : 0)
     const timer = useRef(null);
     const onPercentChange = ({ x }) => {
-        onChange(isVndcFutures ? (+maxSize * x / 100) : `${x}%`)
+        const _size = (+maxSize * x / 100).toFixed(decimalScaleQty);
+        onChange(isVndcFutures ? _size : `${x}%`)
         setPercent(x)
     }
 
@@ -39,7 +40,8 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
 
     useEffect(() => {
         if (+maxSize) {
-            onChange(+maxSize * initPercent / 100);
+            const _size = (+maxSize * initPercent / 100).toFixed(decimalScaleQty);
+            onChange(_size);
             setPercent(initPercent)
         } else if (!+maxSize) {
             onChange(0);
@@ -49,7 +51,8 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
     }, [currentType, refresh.current])
 
     useEffect(() => {
-        onChange(+maxSize * initPercent / 100);
+        const _size = (+maxSize * initPercent / 100).toFixed(decimalScaleQty);
+        onChange(_size);
         setPercent(initPercent)
     }, [side])
 

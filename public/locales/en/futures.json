@@ -210,11 +210,13 @@
             "sl": "Choose Take Profit and Stop Loss to manage the profit of the order",
             "order": "Easy transaction confirmation",
             "tab": "Your account details and order list will be displayed here",
-            "step": "Step"
+            "step": "Step",
+            "next": "Next"
         },
         "login_short": "Login",
         "available": "Available",
-        "liq_price": "Liq. Price"
+        "liq_price": "Liq. Price",
+        "share": "Share"
     },
     "orders_history": "Orders History",
     "minimun_leverage": "Minimum Leverage is",

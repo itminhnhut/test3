@@ -59,6 +59,7 @@ const TabMobile = styled.div.attrs({
     border-top:${({ isDark }) => isDark ? '0' : '1px solid ' + colors.grey4};
     position:sticky;
     top:0;
+    z-index:10;
     .active::after {
         content:'';
         position:absolute;
