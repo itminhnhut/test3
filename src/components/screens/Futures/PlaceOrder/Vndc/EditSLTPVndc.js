@@ -364,7 +364,7 @@ const FuturesEditSLTPVndc = ({
     return (
         <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%]`}>
             <div
-                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark">
+                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark sticky top-0 z-[10px] bg-white dark:bg-darkBlue-2 ">
                 <span className="font-bold text-[16px]">
                     {t('futures:tp_sl:modify_tpsl')}
                 </span>{' '}

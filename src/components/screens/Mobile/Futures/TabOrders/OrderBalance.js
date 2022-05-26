@@ -11,7 +11,7 @@ const OrderBalance = ({ ordersList, visible }) => {
     const { t } = useTranslation();
     if (!visible) return null;
     return (
-        <div className="flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] mt-[10px] dark:border-divider-dark">
+        <div className="sticky top-[42px] bg-white dark:bg-darkBlue-1 z-[10px] flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] pt-[10px] dark:border-divider-dark">
             <TradingLabel
                 label={t('futures:mobile:balance')}
                 value={<Balance />}
