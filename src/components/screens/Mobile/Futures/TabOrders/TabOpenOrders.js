@@ -69,7 +69,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
             special_mode: 1
         }
         fetchOrder('DELETE', params, () => {
-            context.alert.show('success', t('commom:success'), t('futures:close_order:close_successfully', { value: rowData.current?.displaying_id }))
+            context.alert.show('success', t('common:success'), t('futures:close_order:close_successfully', { value: rowData.current?.displaying_id }))
         });
     }
 

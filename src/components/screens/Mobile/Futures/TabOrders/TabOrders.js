@@ -12,7 +12,7 @@ import { getLoginUrl } from 'redux/actions/utils'
 import OrderBalance from './OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
-const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap }) => {
+const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender }) => {
     const { t } = useTranslation();
     const [currentTheme] = useDarkMode()
     const ordersList = useSelector(state => state?.futures?.ordersList)
@@ -21,17 +21,6 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap })
     useEffect(() => {
         setTab(FUTURES_RECORD_CODE.openOrders)
     }, [isVndcFutures])
-
-    const renderTabContent = useCallback(() => {
-        switch (tab) {
-            case FUTURES_RECORD_CODE.openOrders:
-                return <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK} ordersList={ordersList} pair={pair} pairConfig={pairConfig} />;
-            case FUTURES_RECORD_CODE.orderHistory:
-                return <TabOrdersHistory scrollSnap={scrollSnap} isDark={currentTheme === THEME_MODE.DARK} />;
-            default:
-                return null
-        }
-    }, [tab, ordersList, pair, pairConfig, scrollSnap])
 
     return (
         <div className="h-full">
@@ -45,7 +34,21 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap })
             </TabMobile>
             {isAuth &&
                 <OrderBalance ordersList={ordersList} visible={tab === FUTURES_RECORD_CODE.openOrders} />}
-            {isAuth ? renderTabContent() : <LoginOrder />}
+            {isAuth ?
+                <div>
+                    <TabContent active={tab === FUTURES_RECORD_CODE.openOrders} >
+                        <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK} ordersList={ordersList} pair={pair} pairConfig={pairConfig} />
+                    </TabContent>
+                    <TabContent active={tab === FUTURES_RECORD_CODE.orderHistory} >
+                        <TabOrdersHistory
+                            forceRender={forceRender} setForceRender={setForceRender} scrollSnap={scrollSnap}
+                            isDark={currentTheme === THEME_MODE.DARK} pair={pair}
+                            isVndcFutures={isVndcFutures}
+                            active={tab === FUTURES_RECORD_CODE.orderHistory}
+                        />
+                    </TabContent>
+                </div>
+                : <LoginOrder />}
         </div>
     );
 });
@@ -78,7 +81,15 @@ const TabItem = styled.div.attrs(({ active }) => ({
     )
 }))`
 `
-
+const TabContent = styled.div.attrs(({ active }) => ({
+    className: classNames(
+        ``,
+        {
+            'hidden': !active
+        }
+    )
+}))`
+`
 
 export const LoginOrder = () => {
     const { t } = useTranslation();
