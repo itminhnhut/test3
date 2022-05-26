@@ -1,10 +1,13 @@
-import styled from 'styled-components'
-import Div100vh from 'react-div-100vh'
-import colors from 'styles/colors'
-import { theme } from 'tailwind.config'
+import styled from 'styled-components';
+import Div100vh from 'react-div-100vh';
+import colors from 'styles/colors';
+
+const c = {
+    bg: '#243042',
+};
 
 export const ExternalWdlRoot = styled(Div100vh)`
-    padding: 0 18px 15px;
+    padding: 1.5rem 1rem;
     color: ${colors.darkBlue};
     position: fixed;
     top: 0;
@@ -18,7 +21,28 @@ export const ExternalWdlRoot = styled(Div100vh)`
         padding-left: 20px;
         padding-right: 20px;
     }
-`
+`;
+
+export const BoxInput = styled.div`
+    height: 2.75rem;
+    border-radius: 0.375rem;
+    background-color: ${c.bg};
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+    color: #F6F6F6;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    > img {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+
+    > span {
+        margin-left: 0.375rem;
+    }
+`;
 
 export const EWHeader = styled.div`
     display: flex;
@@ -28,17 +52,17 @@ export const EWHeader = styled.div`
     margin-right: -18px;
     margin-left: -18px;
     padding: 20px 18px;
-     background: ${colors.darkBlue2};
+    background: ${colors.darkBlue2};
     @media (min-width: 375px) {
         margin-left: -20px;
         margin-right: -20px;
     }
-`
+`;
 
 export const EWHeaderUser = styled.div`
     display: flex;
     align-items: center;
-`
+`;
 
 export const EWHeaderUserAvatar = styled.img`
     display: block;
@@ -52,12 +76,12 @@ export const EWHeaderUserAvatar = styled.img`
         width: 40px;
         height: 40px;
     }
-`
+`;
 
 export const EWHeaderUserInfo = styled.div`
     padding-left: 8px;
     line-height: 18px;
-`
+`;
 
 export const EWHeaderUserName = styled.div`
     font-weight: 600;
@@ -65,17 +89,18 @@ export const EWHeaderUserName = styled.div`
     @media (min-width: 375px) {
         font-size: 16px;
     }
-`
+`;
 
 export const EWHeaderUserId = styled.div`
     font-size: 12px;
     color: ${colors.grey2};
-`
+`;
 
 export const EWHeaderTool = styled.div`
     display: flex;
     align-items: center;
     color: ${colors.grey3};
+
     span {
         display: inline-block;
         padding: 4px 6px;
@@ -91,7 +116,7 @@ export const EWHeaderTool = styled.div`
         width: 18px;
         height: 18px;
     }
-`
+`;
 
 export const EWSectionTitle = styled.div`
     width: 100%;
@@ -103,6 +128,7 @@ export const EWSectionTitle = styled.div`
     align-items: center;
     flex-wrap: wrap;
     color: ${colors.white};
+
     span {
         display: flex;
         align-items: center;
@@ -124,20 +150,21 @@ export const EWSectionTitle = styled.div`
             height: auto;
         }
     }
-`
+`;
 
 export const EWSectionSubTitle = styled.div`
     width: 100%;
     font-weight: 500;
     font-size: 14px;
-    color: ${({ isDark }) => ( colors.grey2)};
+    color: ${({ isDark }) => (colors.grey2)};
     margin-bottom: 1rem;
+
     span {
         font-weight: 500;
     }
-`
+`;
 
-export const EWWalletWrapper = styled.div``
+export const EWWalletWrapper = styled.div``;
 
 export const EWWalletItem = styled.div`
     border-radius: 3px;
@@ -153,7 +180,7 @@ export const EWWalletItem = styled.div`
     :last-child {
         margin-bottom: 0;
     }
-`
+`;
 
 export const EWWalletTokenIcon = styled.div`
     width: 28px;
@@ -168,11 +195,11 @@ export const EWWalletTokenIcon = styled.div`
         width: 32px;
         height: 32px;
     }
-`
+`;
 
 export const EWWalletTokenInfo = styled.div`
     width: 100%;
-`
+`;
 
 export const EWWalletTokenInner = styled.div`
     display: flex;
@@ -182,15 +209,15 @@ export const EWWalletTokenInner = styled.div`
     padding-left: 8px;
     line-height: 18px;
     width: 100%;
-`
+`;
 
 export const EWWalletTokenAlias = styled.div`
     font-weight: 600;
-`
+`;
 
 export const EWWalletTokenDescription = styled.div`
     font-size: 10px;
-    color: ${({ isDark }) => ( colors.grey2)};
+    color: ${({ isDark }) => (colors.grey2)};
     max-width: ${({ ellipsis }) => (ellipsis ? '55%' : '30%')};
     text-overflow: ellipsis;
     overflow: hidden;
@@ -199,7 +226,7 @@ export const EWWalletTokenDescription = styled.div`
     @media (min-width: 375px) {
         font-size: 12px;
     }
-`
+`;
 
 export const EWWalletTokenLabel = styled.div`
     font-size: 12px;
@@ -217,7 +244,7 @@ export const EWWalletTokenLabel = styled.div`
         height: 12px;
         margin-right: 5px;
     }
-`
+`;
 
 export const EWWalletTokenBalance = styled.div`
     font-size: 14px;
@@ -227,7 +254,7 @@ export const EWWalletTokenBalance = styled.div`
     @media (min-width: 375px) {
         font-size: 16px;
     }
-`
+`;
 
 export const EWModal = styled(Div100vh)`
     position: fixed;
@@ -290,6 +317,7 @@ export const EWModal = styled(Div100vh)`
             display: flex;
             align-items: center;
             color: ${colors.grey4};
+
             img {
                 display: block;
                 margin-left: 8px;
@@ -324,7 +352,8 @@ export const EWModal = styled(Div100vh)`
             justify-content: space-between;
             align-items: baseline;
             flex-wrap: wrap;
-          color: ${colors.grey4};
+            color: ${colors.grey4};
+
             span:last-child {
                 font-size: 14px;
                 color: ${colors.grey2};
@@ -391,8 +420,7 @@ export const EWModal = styled(Div100vh)`
             }
 
             .input-range__label--value {
-                display: ${({ shouldHideSliderLabel }) =>
-                    shouldHideSliderLabel ? 'none' : 'block'};
+                display: ${({ shouldHideSliderLabel }) => (shouldHideSliderLabel ? 'none' : 'block')};
             }
 
             .input-range__label-container {
@@ -428,10 +456,9 @@ export const EWModal = styled(Div100vh)`
             }
 
             .input-range__track {
-                background: ${({ isDark }) =>
-                    isDark
-                        ? 'rgba(255, 255, 255, 0.09)'
-                        : 'rgba(0, 0, 0, 0.09)'};
+                background: ${({ isDark }) => (isDark
+        ? 'rgba(255, 255, 255, 0.09)'
+        : 'rgba(0, 0, 0, 0.09)')};
             }
 
             .input-range__track--active {
@@ -454,6 +481,7 @@ export const EWModal = styled(Div100vh)`
             justify-content: space-between;
             margin: 8px 0;
             color: ${colors.grey5};
+
             span:first-child {
                 color: ${colors.grey4};
                 font-size: 12px;
@@ -489,8 +517,7 @@ export const EWModal = styled(Div100vh)`
             img {
                 display: block;
                 margin: auto;
-                max-height: ${({ isMaintain }) =>
-                    isMaintain ? '140px' : '120px'};
+                max-height: ${({ isMaintain }) => (isMaintain ? '140px' : '120px')};
                 width: auto;
                 z-index: 2;
             }
@@ -516,6 +543,7 @@ export const EWModal = styled(Div100vh)`
             flex-wrap: wrap;
             justify-content: center;
             color: ${colors.grey5};
+
             span:last-child {
                 font-weight: 600;
                 margin-left: 4px;
@@ -537,6 +565,7 @@ export const EWModal = styled(Div100vh)`
                 font-size: 12px;
                 margin-bottom: 8px;
                 color: ${colors.grey5};
+
                 :last-child {
                     margin-bottom: 0;
                 }
@@ -544,6 +573,7 @@ export const EWModal = styled(Div100vh)`
                 span:first-child {
                     color: ${colors.grey5};
                 }
+
                 span:last-child {
                     font-weight: bold;
                     font-size: 14px;
@@ -611,12 +641,10 @@ export const EWModal = styled(Div100vh)`
             border-radius: 4px;
             color: #fff;
             transition: all 0.4s ease;
-           background: ${({ theme, shouldDisableWdl, isDark }) =>
-                shouldDisableWdl
-                    ? colors.darkBlue2
-                    : colors.teal};
-            pointer-events: ${({ shouldDisableWdl }) =>
-                shouldDisableWdl ? 'none' : 'auto'};
+            background: ${({ theme, shouldDisableWdl, isDark }) => (shouldDisableWdl
+        ? colors.darkBlue2
+        : colors.teal)};
+            pointer-events: ${({ shouldDisableWdl }) => (shouldDisableWdl ? 'none' : 'auto')};
 
             .css-0 {
                 height: 80%;
@@ -640,12 +668,11 @@ export const EWModal = styled(Div100vh)`
             }
         }
     }
-`
+`;
 
 export const DIM = styled(Div100vh)`
     width: 100%;
-    background: ${({ isDark }) =>
-        true ?  'rgba(0, 0, 0, .8)' : 'rgba(255, 255, 255, .88)'};
+    background: ${({ isDark }) => (true ? 'rgba(0, 0, 0, .8)' : 'rgba(255, 255, 255, .88)')};
     visibility: ${({ active }) => (active ? 'visible' : 'hidden')};
     opacity: ${({ active }) => (active ? 1 : 0)};
     transition: all 0.3s ease;
@@ -653,7 +680,7 @@ export const DIM = styled(Div100vh)`
     top: 0;
     left: 0;
     position: absolute;
-`
+`;
 
 export const NoticePopup = styled.div`
     position: absolute;
@@ -667,8 +694,8 @@ export const NoticePopup = styled.div`
     min-height: 60px;
     z-index: 1001;
     border-radius: 4px;
-    background: ${({ isDark }) => (!true ?  colors.white : colors.darkBlue2)};
-    color: ${({ isDark }) => (true ?  colors.grey5 : colors.darkBlue)};
+    background: ${({ isDark }) => (!true ? colors.white : colors.darkBlue2)};
+    color: ${({ isDark }) => (true ? colors.grey5 : colors.darkBlue)};
     box-shadow: '0px 15px 30px rgba(0, 0, 0, 0.03)';
 
     .NoticePopup__Header {
@@ -678,8 +705,7 @@ export const NoticePopup = styled.div`
         line-height: 38px;
         font-size: 13px;
         font-weight: bold;
-        border-bottom: 1px solid
-            ${({ isDark }) => (true ?  '#202C4C' : colors.grey4)};
+        border-bottom: 1px solid ${({ isDark }) => (true ? '#202C4C' : colors.grey4)};
         letter-spacing: 1px;
     }
 
@@ -713,7 +739,7 @@ export const NoticePopup = styled.div`
             }
         }
     }
-`
+`;
 
 export const MoreToken = styled.div`
     margin: 15px auto 25px;
@@ -729,4 +755,4 @@ export const MoreToken = styled.div`
         justify-content: center;
         margin-right: 3px;
     }
-`
+`;
