@@ -17,7 +17,7 @@ const Indicators = ({ setCollapse, collapse, setMainIndicator, mainIndicator, se
     }
 
     return (
-        <div className='min-h-[38px] flex items-center justify-between px-[10px] border-b border-t border-gray-4 dark:border-divider-dark'>
+        <div className='h-[38px] flex items-center justify-between px-[10px] border-b border-t border-gray-4 dark:border-divider-dark'>
             <div className='flex items-center text-xs text-gray-1 dark:text-txtSecondary-dark font-medium justify-around w-full mr-[10px]'>
                 {mainIndicators.map(item => (
                     <div
@@ -30,11 +30,13 @@ const Indicators = ({ setCollapse, collapse, setMainIndicator, mainIndicator, se
                         onClick={() => setIndicator(item, 'sub')}>{item}</div>
                 ))}
             </div>
-            <img
-                onClick={() => setCollapse(!collapse)}
-                src={getS3Url(`/images/icon/ic_maximun${collapse ? '_active' : ''}.png`)}
-                height={24} width={24}
-            />
+            {setCollapse &&
+                <img
+                    onClick={() => setCollapse(!collapse)}
+                    src={getS3Url(`/images/icon/ic_maximun${collapse ? '_active' : ''}.png`)}
+                    height={24} width={24}
+                />
+            }
         </div>
     );
 };

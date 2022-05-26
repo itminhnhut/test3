@@ -33,7 +33,7 @@ const candleList = [
 ]
 const ChartTimer = ({
     pairConfig, pair, isVndcFutures, resolution, setResolution,
-    candle, setCandle
+    candle, setCandle, className = '', isFullScreen
 }) => {
 
     if (!pairConfig) return null;
@@ -42,8 +42,8 @@ const ChartTimer = ({
 
     const labelCandle = candleList.find(item => item.value === candle);
     return (
-        <div className="min-h-[64px] chart-timer flex items-center justify-between px-[10px]">
-            <Guideline pair={pair} start={start} setStart={setStart} />
+        <div className={`${className} chart-timer flex items-center justify-between px-[10px]`}>
+            <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen} />
             <div className="flex items-center"  >
                 <div className="flex items-center flex-wrap">
                     <div className="flex items-center cursor-pointer" data-tut="order-symbol" onClick={() => setShowModelMarket(true)}>
