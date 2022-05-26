@@ -13,18 +13,24 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
     const openTransferModal = () => {
         dispatch(setTransferModal({ isVisible: true, asset: quoteAsset }))
     }
+
+    const Available = () => {
+        return (
+            <div className="flex items-center flex-wrap">
+                {formatNumber(availableAsset * 100000000 ?? 0, 0)}&nbsp;
+                <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />
+            </div>
+        )
+    }
+
     return (
         <div className="flex flex-col h-full justify-around">
-            <div className="flex items-center justify-between">
-                <TradingLabel
-                    label={t('futures:mobile:available')}
-                    value={`${formatNumber(
-                        availableAsset ?? 0,
-                        0
-                    )}`}
-                    containerClassName='text-xs flex flex-wrap justify-between w-full'
-                />&nbsp;
-                <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />
+            <div className="flex justify-between text-xs font-medium ">
+                <div className="mr-1 text-txtSecondary dark:text-txtSecondary-dark ">{t('futures:mobile:available')}</div>
+                <div className="flex items-center flex-wrap justify-end">
+                    {formatNumber(availableAsset ?? 0, 0)}&nbsp;&nbsp;
+                    <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />
+                </div>
             </div>
             <TradingLabel
                 label={t('futures:margin')}

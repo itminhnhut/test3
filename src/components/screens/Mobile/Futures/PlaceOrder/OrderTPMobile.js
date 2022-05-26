@@ -24,8 +24,8 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, context }) => {
                 </div>
             )}
             inputClassName="text-xs !text-center"
-            onFocus={() => context.onHiddenBottomNavigation(true)}
-            onBlur={() => context.onHiddenBottomNavigation(false)}
+            // onFocus={() => context.onHiddenBottomNavigation(true)}
+            // onBlur={() => context.onHiddenBottomNavigation(false)}
         />
     );
 };

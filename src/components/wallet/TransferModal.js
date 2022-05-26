@@ -64,7 +64,7 @@ const INITIAL_STATE = {
     // ...
 }
 
-const TransferModal = ({isMobile}) => {
+const TransferModal = ({ isMobile, alert }) => {
     // Init State
     const router = useRouter();
     const [state, set] = useState(INITIAL_STATE)
@@ -135,11 +135,16 @@ const TransferModal = ({isMobile}) => {
 
                 setTimeout(() => {
                     onClose()
-                    showNotification({
-                        message,
-                        title: t('common:success'),
-                        type: 'success'
-                    })
+                    if (isMobile && alert) {
+                        alert.show('success', t('common:success'), message)
+                    } else {
+                        showNotification({
+                            message,
+                            title: t('common:success'),
+                            type: 'success'
+                        })
+                    }
+                   
                 }, 300)
             } else {
                 // Process error
@@ -158,12 +163,15 @@ const TransferModal = ({isMobile}) => {
                         break
                     }
                 }
-
-                showNotification({
-                    message,
-                    title: t('common:failure'),
-                    type: 'failure'
-                })
+                if (isMobile && alert) {
+                    alert.show('error', t('common:failure'), message)
+                } else {
+                    showNotification({
+                        message,
+                        title: t('common:failure'),
+                        type: 'failure'
+                    })
+                }
             }
         } catch (e) {
             console.error('Swap error: ', e)
