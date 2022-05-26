@@ -216,7 +216,9 @@
         "login_short": "Login",
         "available": "Available",
         "liq_price": "Liq. Price",
-        "share": "Share"
+        "share": "Share",
+        "order_detail": "Order detail",
+        "limit": "limit"
     },
     "orders_history": "Orders History",
     "minimun_leverage": "Minimum Leverage is",

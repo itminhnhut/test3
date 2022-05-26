@@ -213,9 +213,11 @@
             "next": "Tiếp tục"
         },
         "login_short": "Đăng nhập ngay",
-        "available": "Số dư k.dụng",
+        "available": "Khả dụng",
         "liq_price": "Giá thanh lý",
-        "share": "Chia sẻ"
+        "share": "Chia sẻ",
+        "order_detail": "Chi tiết lệnh",
+        "limit": "giới hạn"
     },
     "orders_history": "Lịch sử lệnh",
     "minimun_leverage": "Đòn bẩy tối thiểu",

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback, useContext } from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import DynamicNoSsr from 'components/DynamicNoSsr';
 import { useSelector, useDispatch } from 'react-redux';
@@ -44,6 +44,7 @@ const FuturesMobile = () => {
     const [availableAsset, setAvailableAsset] = useState(null)
     const [collapse, setCollapse] = useState(false);
     const [scrollSnap, setScrollSnap] = useState(false);
+    const [forceRender, setForceRender] = useState(false);
 
     const pairConfig = useMemo(
         () => allPairConfigs?.find((o) => o.pair === state.pair),
@@ -117,19 +118,20 @@ const FuturesMobile = () => {
         }
     }, [avlbAsset, pairConfig])
 
-    const styleContent = useMemo(() => {
+
+    const futuresScreen = useMemo(() => {
         setScrollSnap(false)
         const vh = window.innerHeight * 0.01;
-        const el = document.querySelector('.form-order')
+        const el = document.querySelector('#futures-mobile .form-order')
         if (el) {
-            const scrollSnap = el.clientHeight <= vh * 100 - 80;
+            const scrollSnap = el.clientHeight <= vh * 100;
             if (scrollSnap) {
                 setScrollSnap(true)
-                return { height: vh * 100 - 80, scrollSnapAlign: 'start' }
+                return { isFullScreen: true, style: { height: vh * 100, scrollSnapAlign: 'start' } }
             }
-            return { height: 'max-content' }
+            return { isFullScreen: false, style: { height: 'max-content' } }
         }
-        return { height: 'max-content' }
+        return { isFullScreen: false, style: { height: 'max-content' } }
     }, [state.pair])
 
     return (
@@ -145,11 +147,13 @@ const FuturesMobile = () => {
                 <LayoutMobile>
                     <Container id="futures-mobile" >
                         <Section className="form-order"
-                            style={styleContent}>
+                            style={{ ...futuresScreen.style }}>
                             <ChartMobile
                                 pair={state.pair} pairConfig={pairConfig}
                                 isVndcFutures={isVndcFutures}
                                 setCollapse={setCollapse} collapse={collapse}
+                                forceRender={forceRender}
+                                isFullScreen={futuresScreen.isFullScreen}
                             />
                             {!collapse && <SideOrder side={side} setSide={setSide} />}
                             <SocketLayout pair={state.pair} pairConfig={pairConfig}>
@@ -161,8 +165,11 @@ const FuturesMobile = () => {
                                 />
                             </SocketLayout>
                         </Section>
-                        <Section style={{ ...styleContent }}>
-                            <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures} pair={state.pair} pairConfig={pairConfig} isAuth={!!auth} />
+                        <Section style={{ ...futuresScreen.style }}>
+                            <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
+                                pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
+                                setForceRender={setForceRender} forceRender={forceRender}
+                            />
                         </Section>
                     </Container>
                 </LayoutMobile>
@@ -173,13 +180,13 @@ const FuturesMobile = () => {
 const Container = styled.div`
 scroll-snap-type:y mandatory;
 overflow-y:scroll;
-height:calc(var(--vh, 1vh) * 100 - 80px);
+height:calc(var(--vh, 1vh) * 100);
 `
 
 const Section = styled.div`
 width: 100%;
 height:unset;
-${'' /* height:calc(var(--vh, 1vh) * 100 - 80px); */}
+${'' /* height:calc(var(--vh, 1vh) * 100); */}
 ${'' /* scroll-snap-align:start */}
 `
 

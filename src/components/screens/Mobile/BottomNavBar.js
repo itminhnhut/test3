@@ -19,16 +19,16 @@ const BottomNavBar = memo(() => {
     const router = useRouter();
     const { t } = useTranslation();
     const listNav = [
-        { title: t('common:mobile:markets'), prefix: 'mobile', nav: 'market', icon: <SvgMarket /> },
-        { title: 'Futures', prefix: 'mobile', nav: 'futures', icon: <SvgFutures /> },
-        { title: t('common:mobile:wallets'), prefix: 'mobile', nav: 'wallet', icon: <SvgWallet /> },
+        { title: t('common:mobile:markets'), prefix: 'mobile', nav: 'market', icon: 'ic_mobile_markets' },
+        { title: 'Futures', prefix: 'mobile', nav: 'futures', icon: 'ic_mobile_futures' },
+        { title: t('common:mobile:wallets'), prefix: 'mobile', nav: 'wallet', icon: 'ic_mobile_wallets' },
     ]
     const [currentTheme] = useDarkMode()
     const dispatch = useDispatch();
     const isDark = currentTheme === THEME_MODE.DARK;
     const bottomNav = useSelector(state => state.utils.bottomNav)
     const [tab, setTab] = useState(bottomNav ?? listNav[0].nav);
-  
+
     const onChangeTab = (e) => {
         router.push(`/${e.prefix}/${e.nav}`)
         dispatch(setBottomTab(e.nav))
@@ -53,7 +53,7 @@ const BottomNavBar = memo(() => {
             {listNav.map((item) => {
                 return (
                     <Tab key={item.nav} active={tab === item.nav} onClick={() => onChangeTab(item)}>
-                        {item.icon}
+                        <img src={`/images/icon/${item.icon}${tab === item.nav ? '_act' : ''}.png`} height="30" width="30" />
                         {item.title}
                     </Tab>
                 )
@@ -90,7 +90,7 @@ const Tabs = styled.div.attrs({
 `
 const Tab = styled.div.attrs(({ active }) => ({
     className: classNames(
-        'text-xs text-gray-1 h-full flex items-center flex-col px-[10px]',
+        'text-xs text-gray-1 dark:text-txtSecondary-dark h-full flex items-center flex-col px-[10px]',
         {
             'active': active
         }
