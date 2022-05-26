@@ -88,9 +88,9 @@ const LayoutMobile = ({
                         {children}
                     </AlertContext.Provider>
                 </div>
-                <TransferModal isMobile />
+                <TransferModal isMobile alert={alert.current} />
                 <div id={`${PORTAL_MODAL_ID}`} />
-                <BottomNavBar />
+                {/* <BottomNavBar /> */}
                 <AlertModal ref={alert} />
             </div>
         </>

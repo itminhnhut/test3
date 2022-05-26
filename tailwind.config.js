@@ -338,7 +338,8 @@ module.exports = {
             boxShadow: {
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
                 'features': '0px 10px 30px rgba(89, 111, 153, 0.05)',
-                mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)'
+                mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
+                order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)'
             },
         },
     },
