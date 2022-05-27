@@ -4,7 +4,7 @@ import { PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch'
 import { useSelector } from 'react-redux';
 
-const SocketLayout = ({ pair, children, pairConfig }) => {
+const SocketLayout = ({ pair, children, pairConfig, pairParent }) => {
     const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const [pairPrice, setPairPrice] = useState(null);
@@ -35,6 +35,7 @@ const SocketLayout = ({ pair, children, pairConfig }) => {
 
         // ? Unsubscribe publicSocket
         return () => {
+            if (pairParent) return;
             publicSocket && unsubscribeFuturesSocket(pair);
             Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
         };

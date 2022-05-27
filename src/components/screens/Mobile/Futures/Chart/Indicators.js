@@ -16,6 +16,12 @@ const Indicators = ({ setCollapse, collapse, setMainIndicator, mainIndicator, se
         }
     }
 
+    const onCollapse = () => {
+        setTimeout(() => {
+            setCollapse(!collapse)
+        }, 300);
+    }
+
     return (
         <div className='h-[38px] flex items-center justify-between px-[10px] border-b border-t border-gray-4 dark:border-divider-dark'>
             <div className='flex items-center text-xs text-gray-1 dark:text-txtSecondary-dark font-medium justify-around w-full mr-[10px]'>
@@ -32,7 +38,7 @@ const Indicators = ({ setCollapse, collapse, setMainIndicator, mainIndicator, se
             </div>
             {setCollapse &&
                 <img
-                    onClick={() => setCollapse(!collapse)}
+                    onClick={onCollapse}
                     src={getS3Url(`/images/icon/ic_maximun${collapse ? '_active' : ''}.png`)}
                     height={24} width={24}
                 />

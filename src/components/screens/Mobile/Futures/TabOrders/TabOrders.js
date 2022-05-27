@@ -12,7 +12,7 @@ import { getLoginUrl } from 'redux/actions/utils'
 import OrderBalance from './OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
-const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender }) => {
+const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender, isFullScreen }) => {
     const { t } = useTranslation();
     const [currentTheme] = useDarkMode()
     const ordersList = useSelector(state => state?.futures?.ordersList)
@@ -23,7 +23,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
     }, [isVndcFutures])
 
     return (
-        <div className="h-full">
+        <div className={`h-full ${isFullScreen ? 'overflow-hidden' : ''}`}>
             <TabMobile isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
                 {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((item) => (
                     <TabItem key={item.code} active={tab === item.code} onClick={() => setTab(item.code)}>
@@ -35,7 +35,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
             {isAuth &&
                 <OrderBalance ordersList={ordersList} visible={tab === FUTURES_RECORD_CODE.openOrders} />}
             {isAuth ?
-                <div>
+                <div className="h-full">
                     <TabContent active={tab === FUTURES_RECORD_CODE.openOrders} >
                         <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK} ordersList={ordersList} pair={pair} pairConfig={pairConfig} />
                     </TabContent>
@@ -83,7 +83,7 @@ const TabItem = styled.div.attrs(({ active }) => ({
 `
 const TabContent = styled.div.attrs(({ active }) => ({
     className: classNames(
-        ``,
+        `h-full`,
         {
             'hidden': !active
         }

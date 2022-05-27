@@ -20,8 +20,6 @@ import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { createSelector } from 'reselect';
 import { useRouter } from 'next/router'
 
-const selectMarketWatch = state => state.futures.marketWatch
-
 const getPairPrice = createSelector(
     [
         state => state.futures,

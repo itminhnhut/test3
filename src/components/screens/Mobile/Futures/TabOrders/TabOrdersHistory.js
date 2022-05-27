@@ -77,12 +77,14 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, setForceRender, forceRende
     }
 
     const onShowDetail = (row) => {
-        // rowData.current = row;
-        // if (showDetail) {
-        //     socket.emit('subscribe:futures:ticker', pair)
-        //     setForceRender(!forceRender)
-        // }
-        // setShowDetail(!showDetail);
+        if (showDetail) {
+            if (rowData.current.symbol !== pair) {
+                socket.emit('subscribe:futures:ticker', pair)
+            }
+            setForceRender(!forceRender)
+        }
+        rowData.current = row;
+        setShowDetail(!showDetail);
     }
 
     const pairConfigDetail = useMemo(() => {
@@ -96,11 +98,10 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, setForceRender, forceRende
                     <Skeletor containerClassName="mr-[12px]" width={38} height={38} />
                     <div className="flex flex-col">
                         <div className="flex">
-                            <Skeletor width={80} height={21} />&nbsp;&nbsp;
-                            <Skeletor width={20} height={20} /></div>
+                            <Skeletor width={100} height={21} />
+                        </div>
                         <div className="flex">
-                            <Skeletor width={30} height={10} />&nbsp;&nbsp;
-                            <Skeletor width={50} height={10} />
+                            <Skeletor width={80} height={10} />
                         </div>
                     </div>
                 </div>
@@ -137,7 +138,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, setForceRender, forceRende
                 isVisible={openShareModal} order={rowData.current}
                 onClose={() => setOpenShareModal(false)}
                 isClosePrice
-            // pairPrice={marketWatch[rowData.current?.symbol]}
+                pairPrice={pairConfigDetail}
             />}
             {showDetail &&
                 <OrderDetail order={rowData.current} onClose={onShowDetail} isMobile
@@ -149,7 +150,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, setForceRender, forceRende
                 dataLength={dataSource.length}
                 next={onNext}
                 hasMore={active && hasMore.current}
-                {...scrollSnap ? { height: 'calc(100vh - 122px)' } : { scrollableTarget: "futures-mobile" }}
+                {...scrollSnap ? { height: 'calc(100vh - 42px)' } : { scrollableTarget: "futures-mobile" }}
             // loader={loading ? loader() : null}
             >
                 <div className="px-[16px]">

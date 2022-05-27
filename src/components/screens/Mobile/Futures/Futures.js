@@ -22,6 +22,7 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
+import { countDecimals } from 'redux/actions/utils'
 
 const INITIAL_STATE = {
     loading: false,
@@ -95,11 +96,6 @@ const FuturesMobile = () => {
         };
     }, [userSocket]);
 
-    const countDecimals = (value) => {
-        if (Math.floor(value) === value || !value) return 0;
-        return value.toString().split(".")[1]?.length || 0;
-    }
-
     const decimals = useMemo(() => {
         const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
@@ -154,6 +150,7 @@ const FuturesMobile = () => {
                                 setCollapse={setCollapse} collapse={collapse}
                                 forceRender={forceRender}
                                 isFullScreen={futuresScreen.isFullScreen}
+                                decimals={decimals}
                             />
                             {!collapse && <SideOrder side={side} setSide={setSide} />}
                             <SocketLayout pair={state.pair} pairConfig={pairConfig}>
@@ -169,6 +166,7 @@ const FuturesMobile = () => {
                             <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
                                 pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
                                 setForceRender={setForceRender} forceRender={forceRender}
+                                isFullScreen={futuresScreen.isFullScreen}
                             />
                         </Section>
                     </Container>

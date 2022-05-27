@@ -7,7 +7,7 @@ import Indicators from './Indicators'
 import { IconStarFilled } from "components/common/Icons";
 import colors from "styles/colors";
 
-const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collapse, forceRender, isFullScreen }) => {
+const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collapse, forceRender, isFullScreen, decimals }) => {
     const [resolution, setResolution] = useState(ms('1h'))
     const [mainIndicator, setMainIndicator] = useState()
     const [subIndicator, setSubIndicator] = useState()
@@ -31,7 +31,7 @@ const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collap
                 />
                 <div style={{ height: 'calc(100% - 102px)' }}>
                     <KlineChart
-                        symbolInfo={{ exchange: 'NAMI_FUTURES', symbol: pair, pricePrecision: pairConfig?.pricePrecision ?? 0 }}
+                        symbolInfo={{ exchange: 'NAMI_FUTURES', symbol: pair, pricePrecision: decimals?.decimalScalePrice ?? 0 }}
                         resolution={resolution}
                         mainIndicator={mainIndicator}
                         subIndicator={subIndicator}

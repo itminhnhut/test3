@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { init, dispose } from 'klinecharts'
+import { init, dispose, extension } from 'klinecharts'
 import ms from 'ms';
 
 import getDefaultOptions from './defaultStyleOptions'
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
-import { getData, calculateUpSizeBarData, socket, internalTimeFrame } from "components/KlineChart/kline.service";
+import { getData, calculateUpSizeBarData, socket, internalTimeFrame, shapeTemplateSL, shapeTemplateTP } from "components/KlineChart/kline.service";
 import NamiExchangeSvg from "components/svg/NamiExchangeSvg";
 import colors from "styles/colors";
 import { clone, last } from "lodash";
@@ -17,14 +17,17 @@ let _lastBar;
 
 // Chart instance
 // let chart;
+extension.addShapeTemplate(shapeTemplateTP)
+extension.addShapeTemplate(shapeTemplateSL)
 
 function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '',
-    subIndicator, candle, isResize, chartId = CHART_ID, pairParent, className = '', forceRender }) {
+    subIndicator, candle, isResize, chartId = CHART_ID, pairParent, className = '', forceRender,
+    shapeTemplate
+}) {
     const prevMainIndicator = usePrevious(mainIndicator)
     const prevSubIndicator = usePrevious(subIndicator)
     const prevCandle = usePrevious(candle)
     const chart = useRef(null)
-    // const ordersList = useSelector(state => state?.futures?.ordersList)
     // Hooks
 
     // TODO: check default theme not show x,y axis
@@ -66,18 +69,43 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '',
         if (symbolInfo.exchange && symbolInfo.symbol) {
             const removeAction = symbolInfo.exchange === 'NAMI_SPOT' ? 'unsubscribe:recent_trade' : 'unsubscribe:futures:ticker';
             const action = symbolInfo.exchange === 'NAMI_SPOT' ? 'subscribe:recent_trade' : 'subscribe:futures:ticker';
-            if (pairParent) socket.emit(removeAction, pairParent)
-            socket.emit(action, symbolInfo.symbol)
+            if (pairParent !== symbolInfo.symbol) {
+                socket.emit(removeAction, pairParent)
+                socket.emit(action, symbolInfo.symbol)
+            }
         }
 
         return () => {
-            if (symbolInfo) {
+            if (symbolInfo?.symbol !== pairParent) {
                 const action = symbolInfo.exchange === 'NAMI_SPOT' ? 'unsubscribe:recent_trade' : 'unsubscribe:futures:ticker';
                 socket.emit(action, symbolInfo.symbol)
             }
         }
 
     }, [symbolInfo.exchange, symbolInfo.symbol])
+
+    const drawOrder = (order, key) => {
+        chart.current.createShape({
+            name: key,
+            lock: true,
+            points: [
+                {
+                    value: order[key],
+                    text: `#${order?.displaying_id} ${key} ${order[key]}`,
+                }
+            ]
+        })
+    }
+
+    useEffect(() => {
+        if (Array.isArray(shapeTemplate) && shapeTemplate.length > 0) {
+            shapeTemplate.map(item => {
+                drawOrder(item, 'tp')
+                drawOrder(item, 'sl')
+            })
+        }
+
+    }, [shapeTemplate])
 
     useEffect(() => {
         if (!chart.current || !symbolInfo) return
@@ -211,5 +239,6 @@ export default React.memo(KLineChart, (prevProps, nextProps) => {
         (prevProps.chartId === nextProps.chartId) &&
         (prevProps.pairParent === nextProps.pairParent) &&
         (prevProps.className === nextProps.className) &&
-        (prevProps.forceRender === nextProps.forceRender)
+        (prevProps.forceRender === nextProps.forceRender) &&
+        (prevProps.shapeTemplate === nextProps.shapeTemplate)
 })

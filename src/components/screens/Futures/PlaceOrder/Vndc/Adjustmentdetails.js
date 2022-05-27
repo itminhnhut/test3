@@ -108,10 +108,10 @@ const Adjustmentdetails = memo(({ onClose, rowData, isMobile }) => {
                         : dataSource.length > 0 ?
                             dataSource.map((item, index) => {
                                 return (
-                                    <div key={index} className="text-sm py-[10px]">
-                                        <div className="flex items-center justify-between ">
+                                    <div key={index} className="text-sm py-[10px] border-b border-divider dark:border-divider-dark last:border-0">
+                                        <div className="flex items-center justify-between">
                                             <label className="text-gray-1">{t('common:time')}</label>
-                                            <div className="font-medium">{formatTime(item?.createdAt, 'yyyy-MM-dd')} {t('futures:to')} {formatTime(item?.updatedAt, 'yyyy-MM-dd')}</div>
+                                            <div className="font-medium">{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</div>
                                         </div>
                                         {item?.metadata?.modify_tp &&
                                             <div className="flex items-center justify-between ">

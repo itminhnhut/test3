@@ -217,7 +217,17 @@
         "liq_price": "Giá thanh lý",
         "share": "Chia sẻ",
         "order_detail": "Chi tiết lệnh",
-        "limit": "giới hạn"
+        "limit": "giới hạn",
+        "order_details": "Chi tiết các lệnh",
+        "open_fee": "Phí mở",
+        "close_fee": "Phí đóng",
+        "liquidate_fee": "Phí thanh lý",
+        "swap_fee": "Phí swap",
+        "open_time": "Thời gian mở",
+        "close_time": "Thời gian đóng",
+        "realized_pnl": "PNL được thực thi",
+        "reason_close": "Lý do đóng",
+        "stop_loss": "Cắt lỗ"
     },
     "orders_history": "Lịch sử lệnh",
     "minimun_leverage": "Đòn bẩy tối thiểu",
