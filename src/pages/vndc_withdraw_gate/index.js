@@ -1,237 +1,149 @@
-import { useCallback, useEffect, useState } from 'react';
-import {
-    DIM,
-    EWHeader,
-    EWHeaderTool,
-    EWHeaderUser,
-    EWHeaderUserAvatar,
-    EWHeaderUserId,
-    EWHeaderUserInfo,
-    EWHeaderUserName,
-    EWModal,
-    EWSectionSubTitle,
-    EWSectionTitle,
-    EWWalletItem,
-    EWWalletTokenAlias,
-    EWWalletTokenBalance,
-    EWWalletTokenDescription,
-    EWWalletTokenIcon,
-    EWWalletTokenInfo,
-    EWWalletTokenInner,
-    EWWalletTokenLabel,
-    EWWalletWrapper,
-    ExternalWdlRoot,
-    MoreToken,
-    NoticePopup,
-} from 'components/screens/OnusWithdrawGate/styledExternalWdl';
-import { useDispatch, useSelector } from 'react-redux';
-import { Check, Coffee, Download, Key, Moon, Sun, X } from 'react-feather';
+import React, {useEffect, useMemo, useState} from 'react'
+import {NoticePopup} from 'components/screens/OnusWithdrawGate/styledExternalWdl'
+import {useSelector} from 'react-redux'
+import {Key, X} from 'react-feather'
 
-import { sortBy } from 'lodash';
-import { PulseLoader, ScaleLoader } from 'react-spinners';
-import NumberFormat from 'react-number-format';
-import { roundToDown } from 'round-to';
-import Axios from 'axios';
-import InputRange from 'react-input-range';
-// import WithdrawSuccessIMG from '../../../public/images/icon/wdl_success.png';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import useLanguage from 'hooks/useLanguage';
+import {PulseLoader} from 'react-spinners'
+import Axios from 'axios'
 import {
-    buildNamiExchangeAppLink,
-    currencyToText,
-    getAvailableToken,
-    getCurrencyDescription,
-    getTimeStampRange,
     handleLogin,
     WalletCurrency,
-} from 'components/screens/OnusWithdrawGate/helper';
-import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import AssetLogo from 'components/wallet/AssetLogo';
+} from 'components/screens/OnusWithdrawGate/helper'
+import {formatNumber, getS3Url} from 'redux/actions/utils'
+import {useTranslation} from 'next-i18next'
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
+import AssetLogo from 'components/wallet/AssetLogo'
+import NumberFormat from 'react-number-format'
 
-import 'react-input-range/lib/css/index.css';
-import classNames from 'classnames';
-import { DIRECT_WITHDRAW_VNDC } from 'redux/actions/apis';
+import 'react-input-range/lib/css/index.css'
+import classNames from 'classnames'
+import SortIcon from 'components/screens/Mobile/SortIcon'
+import Div100vh from 'react-div-100vh'
+import CheckSuccess from 'components/svg/CheckSuccess'
+import {isNumeric} from 'utils'
+import {format} from 'date-fns'
+import Button from 'components/common/Button'
+import Modal from 'components/common/ReModal'
+import {PORTAL_MODAL_ID} from 'constants/constants'
+import colors from 'styles/colors'
 
-const WDL_LIST = [
-    // WalletCurrency.USDT,
-    WalletCurrency.ATS,
-    // WalletCurrency.BAMI,
-    WalletCurrency.KAI,
-    WalletCurrency.ONUS,
-    // WalletCurrency.BTC,
-    // WalletCurrency.ETH,
-    WalletCurrency.WHC,
-    // WalletCurrency.SFO
-];
+const ASSET_LIST = [WalletCurrency.NAMI, WalletCurrency.VNDC]
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 300e3,
+    [WalletCurrency.NAMI]: 1000,
+}
 
-    [WalletCurrency.ONUS]: 0.1,
-    [WalletCurrency.KAI]: 200,
-    [WalletCurrency.NAC]: 1000,
-    [WalletCurrency.ATS]: 125,
-    [WalletCurrency.WHC]: 0.1,
-    [WalletCurrency.SFO]: 2e5
-};
 const MAX_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 500e6,
-    [WalletCurrency.ONUS]: 5000,
-    [WalletCurrency.KAI]: 10000,
-    [WalletCurrency.NAC]: 100000,
-    [WalletCurrency.ATS]: 100000,
-    [WalletCurrency.WHC]: 100000,
-    [WalletCurrency.SFO]: 100e6
-};
+    [WalletCurrency.NAMI]: 100000,
+}
+
 const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.VNDC]: 1e3,
-    [WalletCurrency.ONUS]: 0.1,
-    [WalletCurrency.KAI]: 1,
-    [WalletCurrency.NAC]: 1,
-    [WalletCurrency.ATS]: 1,
-    [WalletCurrency.WHC]: 0.1,
-    [WalletCurrency.SFO]: 2e3
-};
+    [WalletCurrency.NAMI]: 1,
+}
+
 const DECIMAL_SCALES = {
     [WalletCurrency.VNDC]: 0,
-    [WalletCurrency.ONUS]: 1,
-    [WalletCurrency.KAI]: 1,
-    [WalletCurrency.NAC]: 2,
-    [WalletCurrency.ATS]: 2,
-    [WalletCurrency.WHC]: 2,
-    [WalletCurrency.SFO]: 8
-};
+    [WalletCurrency.SFO]: 8,
+    [WalletCurrency.NAMI]: 1,
+}
+
 const WDL_STATUS = {
-    UNKNOWN: "UNKNOWN",
-    MINIMUM_WITHDRAW_NOT_MET: "MINIMUM_WITHDRAW_NOT_MET",
-    LOGGED_OUT: "LOGGED_OUT",
-    INVALID_INPUT: "INVALID_INPUT",
-    NOT_ENOUGH_BASE_CURRENCY: "NOT_ENOUGH_BASE_CURRENCY",
-    NOT_ENOUGH_EXCHANGE_CURRENCY: "NOT_ENOUGH_EXCHANGE_CURRENCY",
-    not_in_range: "not_in_range"
-};
-const VNDC_MAINTAINANCE = false
+    UNKNOWN: 'UNKNOWN',
+    MINIMUM_WITHDRAW_NOT_MET: 'MINIMUM_WITHDRAW_NOT_MET',
+    LOGGED_OUT: 'LOGGED_OUT',
+    INVALID_INPUT: 'INVALID_INPUT',
+    NOT_ENOUGH_BASE_CURRENCY: 'NOT_ENOUGH_BASE_CURRENCY',
+    NOT_ENOUGH_EXCHANGE_CURRENCY: 'NOT_ENOUGH_EXCHANGE_CURRENCY',
+    not_in_range: 'not_in_range',
+}
+
 const MAINTAIN = true
 
 const ExternalWithdrawal = (props) => {
     // initial state
     const [currentCurr, setCurrentCurr] = useState(null)
-    const [tokenAvailable, setTokenAvailable] = useState(null)
-    const [isLimit] = useState(true)
-    const [walletArr, setWalletArr] = useState(null)
     const [amount, setAmount] = useState('init')
     const [modal, setModal] = useState({
-        isWithdrawModal: false,
+        isListAssetModal: false,
         isSuccessModal: false,
         isNotice: false,
     })
-    const [state, setState] = useState({
-        onFocusAmountInput: false,
-        onSlidingRate: false,
-    })
-    const [sliderRate, setSliderRate] = useState(null)
     const [loading, setLoading] = useState(false)
-    const [onSubmit, setOnSubmit] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const [wdlResult, setWdlResult] = useState(null)
     const [error, setError] = useState(null)
 
     // map state from redux
-    const user = useSelector((state) => state.auth.user) || null
-    const balance = useSelector((state) => state.wallet.SPOT) || null
+    const assetConfigs = useSelector((state) => state.utils.assetConfig) || []
+    const futuresBalances = useSelector((state) => state.wallet.FUTURES) || {}
 
     // use hooks
-    const [activeLanguage, onChangeLanguage] = useLanguage()
-    const { t } = useTranslation()
-    const [theme] = useDarkMode()
+    const {t} = useTranslation()
     const isDark = true
+
+    const assets = useMemo(() => {
+        return assetConfigs
+            .filter((a) => ASSET_LIST.includes(a.id))
+            .map((a) => {
+                const balance = futuresBalances[a.id] || {
+                    value: 0,
+                    value_locked: 0,
+                }
+                return {
+                    ...a,
+                    ...balance,
+                    available: balance?.value - balance?.locked_value,
+                }
+            })
+    }, [assetConfigs, futuresBalances])
+
+    useEffect(() => {
+        setCurrentCurr(assets[0])
+    }, [assets])
+
+    useEffect(() => {
+        setAmount('')
+    }, [currentCurr])
+
+    const {
+        min = 0,
+        max = 0,
+        fee = 0,
+        decimalScale = 0,
+    } = useMemo(() => {
+        return {
+            min: MIN_WITHDRAWAL[currentCurr?.id],
+            max: MAX_WITHDRAWAL[currentCurr?.id],
+            fee: VNDC_WITHDRAWAL_FEE[currentCurr?.id],
+            decimalScale: DECIMAL_SCALES[currentCurr?.id],
+        }
+    }, [currentCurr])
 
     // helper
     const handleModal = (key, value = null) =>
-        setModal({ ...modal, [key]: value })
-
-    const handleTool = (key, value = false) =>
-        setState({ ...state, [key]: value })
-
-    const cookingWallet = (balance) => {
-        if (!balance) return null
-        let arr = []
-        let cloner = []
-        WDL_LIST.forEach((item) => {
-            arr.push({
-                currency: item,
-                alias: currencyToText(item),
-                des: getCurrencyDescription(item),
-                available: getAvailableToken(item, balance),
-            })
-        })
-
-        cloner = sortBy(arr, 'available', 'currency')
-        cloner.push({
-            currency: WalletCurrency.VNDC,
-            alias: currencyToText(WalletCurrency.VNDC),
-            des: getCurrencyDescription(WalletCurrency.VNDC),
-            available: getAvailableToken(WalletCurrency.VNDC, balance),
-        })
-        cloner.push({
-            currency: WalletCurrency.NAC,
-            alias: currencyToText(WalletCurrency.NAC),
-            des: getCurrencyDescription(WalletCurrency.NAC),
-            available: getAvailableToken(WalletCurrency.NAC, balance),
-        })
-
-        // console.log('>>> setWalletArr ', cloner)
-
-        setWalletArr(cloner.reverse())
-    }
-
-    const openWdlModal = (currency, balance, user) => {
-        if (!user) {
-            handleModal('isNotice', true)
-        } else {
-            handleModal('isWithdrawModal', true)
-            setTokenAvailable(balance)
-            setCurrentCurr(currency)
-        }
-    }
-
-    const onCloseWdlModal = (key, value) => {
-        setAmount('init')
-        setError(null)
-        setSliderRate(null)
-        handleModal(key, value)
-    }
+        setModal({...modal, [key]: value})
 
     const onAllDone = () => {
-        setState({ onFocusAmountInput: false, onSlidingRate: false })
-        setModal({ isWithdrawModal: false, isSuccessModal: false })
-        setAmount('init')
-        setCurrentCurr(null)
+        setModal({isSuccessModal: false})
+        setAmount('')
         setWdlResult(null)
         setError(null)
-        setTokenAvailable(null)
-        setSliderRate(null)
-    }
-
-    const getAmountByRate = (rate, tokenAvailable, currency) => {
-        setSliderRate(rate)
-        setAmount(
-            (rate / 100) * roundToDown(tokenAvailable, DECIMAL_SCALES[currency])
-        )
     }
 
     const onWdl = async (amount, currency, balance) => {
         // console.log('namidev-DEBUG: RE-CHECK__ ', amount, currency)
 
         try {
-            setOnSubmit(true)
+            setIsSubmitting(true)
             setError(null)
-            const { data } = await Axios.post(DIRECT_WITHDRAW_VNDC, {
-                amount,
-                currency,
-            })
-            // let data = { status: 'ok', message: 'PHA_KE_DATA' }
+            // const {data} = await Axios.post(DIRECT_WITHDRAW_VNDC, {
+            //     amount,
+            //     currency,
+            // })
+            let data = {status: 'ok', message: 'PHA_KE_DATA'}
             if (data && data.status === 'ok') {
                 const res = (data.hasOwnProperty('data') && data.data) || {}
                 setWdlResult(res) // get withdraw result
@@ -240,7 +152,7 @@ const ExternalWithdrawal = (props) => {
                 // console.log('namidev-DEBUG: ERROR_OCCURED____ ', data)
                 const status = data ? data.status : WDL_STATUS.UNKNOWN
                 // console.log('namidev-DEBUG: STATUS__ ', status)
-                Axios.post(
+                await Axios.post(
                     'https://webhook.site/85a6b4da-96b2-41d4-95cb-f20684503ce4',
                     {
                         name: 'onWithdraw Result',
@@ -274,447 +186,261 @@ const ExternalWithdrawal = (props) => {
         } catch (e) {
             console.log('Notice: ', e)
         } finally {
-            setOnSubmit(false)
+            setIsSubmitting(false)
         }
     }
 
-    // render handler
-    const renderUserPanel = useCallback(() => {
-        const { avatar, username, code, email } = user || {}
-        const alt_username = (email && email.split('@')) || []
-        const who = username || alt_username[0] || t('ext_gate:guest')
-
-        return (
-            <EWHeader className='bg-gray-4 dark:bg-darkBlue'>
-                <EWHeaderUser>
-                    <EWHeaderUserAvatar
-                        src={avatar || '/images/default-user-avatar.png'}
-                        alt=''
-                    />
-                    <EWHeaderUserInfo>
-                        <EWHeaderUserName>
-                            {t('ext_gate:hi_user', { who })}
-                        </EWHeaderUserName>
-                        <EWHeaderUserId isDark={isDark}>
-                            {code || t('ext_gate:suggest_nami')}
-                        </EWHeaderUserId>
-                    </EWHeaderUserInfo>
-                </EWHeaderUser>
-                <EWHeaderTool>
-                    <span onClick={onChangeLanguage}>
-                        {activeLanguage === 'vi' ? 'VI' : 'EN'}
-                    </span>
-                </EWHeaderTool>
-            </EWHeader>
-        )
-    }, [user, activeLanguage, isDark])
-
-    const renderWallet = useCallback(() => {
-        if (!walletArr) return null
-        const range = !isLimit ? 5 : walletArr.length
-
-        // console.log('>> walletArr ', walletArr)
-        return walletArr.slice(0, range).map((item) => {
-            const { currency, alias, des, available } = item
-            // console.log('>>> ', item)
-            const availableRounded = roundToDown(
-                available,
-                DECIMAL_SCALES[currency]
-            )
-            // console.log('>>> ', availableRounded, DECIMAL_SCALES[currency])
-            const converted = formatNumber(availableRounded)
-
-            // handle loading
-            let bridgeValue = converted === '0' ? '0.0000' : converted
-            if (converted === '0') bridgeValue = '0.0000'
-            if (loading) bridgeValue = <PulseLoader size={3} color='#03BBCC' />
-
+    const errorMessage = useMemo(() => {
+        if (!isNumeric(+amount) || !amount) return
+        if (+amount < min) {
             return (
-                <EWWalletItem
-                    key={currency}
-                    onClick={() => openWdlModal(currency, available, user)}
-                    isDark={isDark}
-                >
-                    <EWWalletTokenIcon>
-                        <AssetLogo assetCode={currencyToText(currency)} />
-                    </EWWalletTokenIcon>
-                    <EWWalletTokenInfo>
-                        <EWWalletTokenInner>
-                            <EWWalletTokenAlias>{alias}</EWWalletTokenAlias>
-                            <EWWalletTokenLabel isDark={isDark}>
-                                <svg
-                                    width='18'
-                                    height='18'
-                                    viewBox='0 0 18 18'
-                                    fill='none'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                >
-                                    <path
-                                        d='M6.75 15L3 12L6.75 9V11.25H16.5V12.75H6.75V15ZM11.25 9V6.75H1.5V5.25H11.25V3L15 6L11.25 9Z'
-                                        fill='#00B6C7'
-                                    />
-                                </svg>
-                                <span>{t('ext_gate:wdl')}</span>
-                            </EWWalletTokenLabel>
-                        </EWWalletTokenInner>
-                        <EWWalletTokenInner>
-                            <EWWalletTokenDescription
-                                isDark={isDark}
-                                ellipsis={converted.length < 10}
-                            >
-                                {des}
-                            </EWWalletTokenDescription>
-                            <EWWalletTokenBalance>
-                                {!user ? '---' : bridgeValue}
-                            </EWWalletTokenBalance>
-                        </EWWalletTokenInner>
-                    </EWWalletTokenInfo>
-                </EWWalletItem>
+                <div className='text-xs'>
+                    <span className='text-onus-secondary mr-1'>
+                        {t('ext_gate:min_notice')}:
+                    </span>
+                    <span>
+                        {formatNumber(min, decimalScale)}{' '}
+                        {currentCurr?.assetCode}
+                    </span>
+                </div>
             )
-        })
-    }, [currentCurr, balance, isLimit, walletArr, loading, user, isDark])
-
-    const renderWithdrawModal = useCallback(() => {
-        const fee = formatNumber(
-            VNDC_WITHDRAWAL_FEE[currentCurr],
-            DECIMAL_SCALES[currentCurr]
-        )
-        const minWdl = MIN_WITHDRAWAL[currentCurr] + VNDC_WITHDRAWAL_FEE[currentCurr]
-        const maxWdl = MAX_WITHDRAWAL[currentCurr]
-        const scale = DECIMAL_SCALES[currentCurr]
-        const maxVal = tokenAvailable ? roundToDown(tokenAvailable, scale) : 0
-        const shouldDisableWdl =
-            amount === 'init' ||
-            !amount ||
-            amount === '' ||
-            +amount < minWdl ||
-            +amount > maxWdl ||
-            +amount > tokenAvailable ||
-            onSubmit ||
-            amount === '.' ||
-            (currentCurr === WalletCurrency.VNDC && VNDC_MAINTAINANCE)
-
-        let msg
-        if (amount === 'init') msg = null
-        if (amount !== 'init' && +amount < minWdl){
-            msg = t('ext_gate:min_notice', {
-                minVal: formatNumber(minWdl, 7, 0, false),
-            })
         }
-        if (amount !== 'init'){
-            if(tokenAvailable < maxWdl){
-                if (+amount > tokenAvailable) msg = t('ext_gate:insufficient')
-            }else {
-                if (+amount > tokenAvailable)  msg = t('ext_gate:max_notice', {
-                    maxVal: formatNumber(maxWdl, 7, 0, false),
-                })
-            }
+        if (+amount > currentCurr?.available) {
+            return (
+                <div className='text-xs'>
+                    <span className='text-onus-secondary mr-1'>
+                        {t('ext_gate:insufficient')}
+                    </span>
+                </div>
+            )
         }
-        if (amount !== 'init' && +amount >= minWdl && +amount <= tokenAvailable)
-            msg = <Check size={14} color='#03BBCC' />
-
-        return (
-            <EWModal
-                active={modal.isWithdrawModal}
-                onFocus={state.onFocusAmountInput}
-                isError={error}
-                shouldHideSliderLabel={!state.onSlidingRate}
-                shouldDisableWdl={shouldDisableWdl}
-                isDark={isDark}
-            >
-                <div className='Tool'>
-                    <X
-                        onClick={() =>
-                            onCloseWdlModal('isWithdrawModal', false)
-                        }
-                    />
+        if (+amount > max) {
+            return (
+                <div className='text-xs'>
+                    <span className='text-onus-secondary mr-1'>
+                        {t('ext_gate:max_notice')}
+                    </span>
+                    <span>
+                        {formatNumber(max, decimalScale)}{' '}
+                        {currentCurr?.assetCode}
+                    </span>
                 </div>
-                <div className='Content'>
-                    <div className='Content__Title'>
-                        {t('ext_gate:wdl')} {currencyToText(currentCurr)}{' '}
-                        <AssetLogo assetCode={currencyToText(currentCurr)} />
-                    </div>
-                    <div className='Content__subtitle'>
-                        {t('ext_gate:available')}
-                    </div>
-                    <div className='Content__TokenAvailable'>
-                        <span>
-                            {!tokenAvailable ? '0.0000' : formatNumber(maxVal)}
-                        </span>
-                        <span>{currencyToText(currentCurr)}</span>
-                    </div>
-                    <div className='Content__subtitle'>
-                        <span>{t('ext_gate:amount')}</span>
-                        <span>{msg}</span>
-                    </div>
-                    <div className='Input__wrapper border border-divider dark:border-divider-dark'>
-                        <NumberFormat
-                            allowNegative={false}
-                            thousandSeparator
-                            type={scale === 0 ? 'tel' : 'text'}
-                            decimalScale={scale}
-                            placeholder={t('ext_gate:amount_hint')}
-                            value={amount}
-                            onValueChange={({ value }) =>
-                                setAmount(value.trim())
-                            }
-                            // onFocus={() =>
-                            //     handleTool('onFocusAmountInput', true)
-                            // }
-                            // onBlur={() => handleTool('onFocusAmountInput')}
-                        />
-                        <div
-                            className='Max_otp bg-lightTeal dark:bg-teal-opacity'
-                            onClick={() => setAmount(Math.min(maxVal, maxWdl))}
-                        >
-                            {t('ext_gate:max_opt')}
-                        </div>
-                        <div className='Token__unit'>
-                            {currencyToText(currentCurr)}
-                        </div>
-                    </div>
-                    <div className='Content__SliderAmount'>
-                        <InputRange
-                            onChange={(value) =>
-                                getAmountByRate(
-                                    value,
-                                    tokenAvailable,
-                                    currentCurr
-                                )
-                            }
-                            onChangeStart={() =>
-                                handleTool('onSlidingRate', true)
-                            }
-                            onChangeComplete={() =>
-                                handleTool('onSlidingRate', false)
-                            }
-                            maxValue={100}
-                            minValue={0}
-                            name={`Ext_WDL__${currentCurr}`}
-                            value={sliderRate ? sliderRate : 0}
-                        />
-                    </div>
-                    <div className='Content__AdditionalInfo'>
-                        <span>{t('ext_gate:trans_fee')}</span>
-                        <span>
-                            {fee} {currencyToText(currentCurr)}
-                        </span>
-                    </div>
-                    {currentCurr === WalletCurrency.VNDC && VNDC_MAINTAINANCE && (
-                        <div
-                            className='Error__'
-                            style={{
-                                height: 50,
-                                visibility: 'visible',
-                                opacity: 1,
-                            }}
-                        >
-                            {t('ext_gate:err.vndc_maintain')}
-                        </div>
-                    )}
-                    <div className='Error__'>{error}</div>
-                </div>
-                <div
-                    className='Wdl__Button'
-                    onClick={() =>
-                        !shouldDisableWdl &&
-                        onWdl(+amount, currentCurr, balance)
-                    }
-                >
-                    <a
-                        href='#'
-                        className={classNames('!bg-dominant', {
-                            '!bg-gray-1 dark:!bg-darkBlue-4': shouldDisableWdl,
-                        })}
-                    >
-                        {onSubmit ? (
-                            <ScaleLoader color='#FFF' size={8} />
-                        ) : (
-                            <>
-                                {t('ext_gate:wdl_btn')}{' '}
-                                <Download size={15} color='#FFF' />
-                            </>
-                        )}
-                    </a>
-                </div>
-            </EWModal>
-        )
-    }, [
-        currentCurr,
-        amount,
-        tokenAvailable,
-        sliderRate,
-        onSubmit,
-        error,
-        balance,
-        modal.isWithdrawModal,
-        state.onFocusAmountInput,
-        state.onSlidingRate,
-        isDark,
-    ])
+            )
+        }
+    }, [min, max, decimalScale, amount, currentCurr])
 
-    const renderSuccessModal = useCallback(() => {
-        const amountLeft =
-            (wdlResult &&
-                wdlResult.hasOwnProperty('amountLeft') &&
-                wdlResult.amountLeft) ||
-            0
-        const scale = DECIMAL_SCALES[currentCurr]
-
-        const rmnBalance = amountLeft ? roundToDown(amountLeft, scale) : 0
-
-
-
-        return (
-            <EWModal active={modal.isSuccessModal} isSuccess={true}>
-                <div className='Tool'>
-                    <X onClick={onAllDone} />
-                </div>
-                {/*{wdlResult && (*/}
-                <div className='Content'>
-                    <div className='Content__Success_Graphic'>
-                        <img src={getS3Url("/images/icon/wdl_success.png")} alt="" />
-                    </div>
-                    <div className='Content__Success_Notice'>
-                        {t('ext_gate:wdl_success')}
-                    </div>
-                    <div className='Content__WithdrawVal'>
-                            <span>
-                                -
-                                {formatNumber(
-                                    +amount,
-                                    DECIMAL_SCALES[currentCurr]
-                                )}
-                            </span>
-                        <span>{currencyToText(currentCurr)}</span>
-                    </div>
-                    <div className='Content__AfterWdl'>
-                        <div className='AfterWdl__Info'>
-                            <span>{t('ext_gate:remain_balance')}</span>
-                            <span>
-                                    {rmnBalance
-                                        ? formatNumber(rmnBalance)
-                                        : '0.0000'}
-                                </span>
-                        </div>
-                        <div className='AfterWdl__Info'>
-                            <span>{t('ext_gate:time')}</span>
-                            <span>
-                                    {formatTime(Date.now())}
-                                </span>
-                        </div>
-                    </div>
-                    <div className='Content__SuccessTips'>
-                        <Coffee size={17} color='#03BBCC' />
-                        <span>{t('ext_gate:tips')}</span>
-                    </div>
-                </div>
-                <div className='Wdl__Button'>
-                    <a href='#' onClick={onAllDone}>
-                        {t('common:global_btn.confirm')}
-                    </a>
-                </div>
-            </EWModal>
-        )
-    }, [wdlResult, amount, currentCurr, tokenAvailable, modal.isSuccessModal])
-
-    const renderMaintainModal = () => {
-        const start = 1630065600000 // 19:00:00 27/08/2021
-        const end = 1630072800000 // 21:00:00 27/08/2021
-        const shouldShow = getTimeStampRange(start, end)
-
-        if (!shouldShow) return null
-
-        document.addEventListener(
-            'contextmenu',
-            (e) => e.preventDefault(),
-            false
-        )
-        return (
-            <EWModal active={MAINTAIN} isMaintain={true}>
-                <div className='Tool' />
-                <div className='Content'>
-                    <div className='Content__Success_Graphic'>
-                        <img
-                            src='/images/vndc_maintain.png'
-                            alt='MAINTAINANCE'
-                        />
-                    </div>
-                    <br />
-                    <div className='Content__Success_Notice'>
-                        {t('common:global_label.system_maintenance')}
-                    </div>
-                    <div className='Content__Maintainance'>
-                        {t('global_notice.launchpad_maintain')}
-                    </div>
-
-                    <div className='Content__Success_Notice'>
-                        {t('common:global_label.maintain_time_suggest')}
-                    </div>
-
-                    <div className='Content__Maintainance'>
-                        <div className='additional_content__timeline'>
-                            {t('common:global_label.from_time_to_time', {
-                                start: <span>{formatTime(start)}</span>,
-                                end: <span>{formatTime(end)}</span>,
-                            })}
-                        </div>
-                    </div>
-                </div>
-                <div className='Wdl__Button'></div>
-            </EWModal>
-        )
-    }
-
-    useEffect(() => {
-        cookingWallet(balance)
-        balance && Object.entries(balance).length
-            ? setLoading(false)
-            : setLoading(true)
-    }, [balance])
+    const isDisableBtn = !amount || !!errorMessage
 
     return (
         <>
-            <ExternalWdlRoot isDark={isDark}>
-                {renderUserPanel()}
-                <EWSectionTitle isDark={isDark}>
-                    {t('ext_gate:nami_wallet')}
-                    <span
-                        onClick={() =>
-                            (window.location.href = buildNamiExchangeAppLink())
-                        }
-                    >
-                        {activeLanguage === 'vi' ? 'Tải App' : 'Download App'}
-                        <img src={getS3Url('/images/logo/nami_maldives.png')} alt='' />
+            <Div100vh className='px-4 py-6 flex flex-col bg-[#1B222D]'>
+                <div className='flex-1 text-onus font-medium text-sm'>
+                    <div className='flex items-center px-4 bg-[#243042] rounded-md h-11 mb-6'>
+                        <AssetLogo assetCode="ONUS" size={28}/>
+                        <span className='ml-1'>
+                            {t('ext_gate:onus_wallet')}
+                        </span>
+                    </div>
+
+                    <span className='text-onus-secondary text-xs uppercase'>
+                        {t('ext_gate:chose_asset')}
                     </span>
-                </EWSectionTitle>
-                <EWSectionSubTitle isDark={isDark}>
-                    {t('ext_gate:description')}
-                </EWSectionSubTitle>
-                <EWWalletWrapper>{renderWallet()}</EWWalletWrapper>
-                <MoreToken>
-                    {/*<span>*/}
-                    {/*    <Translate id={`ext_gate:see_${isLimit ? 'less' : 'more'}`}/>*/}
-                    {/*    <i className={`ci-unfold_${isLimit ? 'less' : 'more'}`}/>*/}
-                    {/*</span>*/}
-                </MoreToken>
-            </ExternalWdlRoot>
+                    <div
+                        className='flex justify-between items-center px-4 bg-[#243042] rounded-md h-11 mb-6 mt-2'
+                        onClick={() => handleModal('isListAssetModal', true)}
+                    >
+                        <div className='flex items-center font-medium'>
+                            <AssetLogo
+                                size={28}
+                                assetCode={currentCurr?.assetCode}
+                            />
+                            <span className='ml-1'>
+                                {currentCurr?.assetName}
+                            </span>
+                        </div>
+                        <SortIcon size={14}/>
+                    </div>
+                    <div className='flex justify-between'>
+                        <span className='text-onus-secondary text-xs uppercase'>
+                            {t('ext_gate:amount')}
+                        </span>
+                        {errorMessage}
+                    </div>
+                    <div className='flex justify-between items-center pl-4 bg-[#243042] rounded-md h-11 mb-2 mt-2'>
+                        <NumberFormat
+                            thousandSeparator
+                            allowNegative={false}
+                            className='outline-none text-xs font-medium flex-1'
+                            value={amount}
+                            onValueChange={({value}) => setAmount(value)}
+                            decimalScale={decimalScale}
+                        />
+                        <div
+                            className='flex items-center'
+                            onClick={() =>
+                                setAmount(formatNumber(Math.min(currentCurr?.available || 0, max), decimalScale))
+                            }
+                        >
+                            <span className='px-4 py-2 text-[#418FFF] font-semibold'>
+                                {t('ext_gate:max_opt')}
+                            </span>
+                            <div
+                                className='h-full leading-[2.75rem] bg-[#36445A] w-16 text-[#8492A7] rounded-r-md text-center'>
+                                {currentCurr?.assetCode}
+                            </div>
+                        </div>
+                    </div>
+                    <div className='text-xs mb-6'>
+                        <span className='text-onus-secondary mr-1'>
+                            {t('ext_gate:available')}:
+                        </span>
+                        <span>
+                            {formatNumber(currentCurr?.available, decimalScale)}{' '}
+                            {currentCurr?.assetName}
+                        </span>
+                    </div>
 
-            {/*Modal section*/}
-            {renderWithdrawModal()}
-            {renderSuccessModal()}
+                    <span className='text-onus-secondary text-xs uppercase'>
+                        {t('ext_gate:trans_fee')}
+                    </span>
+                    <div className='flex justify-between items-center pl-4 bg-[#243042] rounded-md h-11 mb-6 mt-2'>
+                        <span>{formatNumber(fee, decimalScale)}</span>
+                        <div
+                            className='h-full leading-[2.75rem] bg-[#36445A] w-16 text-[#8492A7] rounded-r-md text-center'>
+                            {currentCurr?.assetName}
+                        </div>
+                    </div>
+                </div>
+                <div className='text-center mb-2'>
+                    {error && <span className='text-sm text-red'>{error}</span>}
+                </div>
+                <div
+                    className={classNames(
+                        'bg-[#0068FF] h-12 w-full rounded-md text-center leading-[3rem] text-onus font-semibold',
+                        {
+                            '!bg-darkBlue-4 text-txtSecondary-dark': isDisableBtn
+                        }
+                    )}
+                    onClick={() => !isDisableBtn && onWdl(+amount, currentCurr?.id)}
+                >
+                    {isSubmitting ? (
+                        <PulseLoader color={colors.white} size={3}/>
+                    ) : (
+                        t('ext_gate:wdl_btn')
+                    )}
+                </div>
+            </Div100vh>
 
-            {renderMaintainModal()}
+            <Div100vh
+                className={classNames(
+                    'fixed top-0 left-0 right-0 z-30 p-6 bg-[#1B222D] text-onus',
+                    'translate-x-full transition-transform',
+                    {
+                        'translate-x-0': modal.isListAssetModal,
+                    }
+                )}
+            >
+                <div className='relative w-full flex justify-center items-center mb-12'>
+                    <span className='font-semibold'>Chọn loại tài sản</span>
+                    <div
+                        className='absolute top-0 right-0 p-1 cursor-pointer'
+                        onClick={() => handleModal('isListAssetModal', false)}
+                    >
+                        <X size={16}/>
+                    </div>
+                </div>
+                {assets.map((a) => {
+                    return (
+                        <div
+                            key={a.id}
+                            className='flex justify-between items-center mt-8'
+                            onClick={() => {
+                                handleModal('isListAssetModal', false)
+                                setCurrentCurr(a)
+                            }}
+                        >
+                            <div className='flex items-center'>
+                                <AssetLogo size={40} assetCode={a.assetCode}/>
+                                <div className='ml-3'>
+                                    <div className='font-bold'>
+                                        {a.assetCode}
+                                    </div>
+                                    <div className='text-onus-secondary text-sm'>
+                                        {a.assetName}
+                                    </div>
+                                </div>
+                            </div>
+                            {a.id === currentCurr?.id && (
+                                <CheckSuccess size={24}/>
+                            )}
+                        </div>
+                    )
+                })}
+            </Div100vh>
 
-            <DIM
-                active={modal.isNotice}
-                isDark={isDark}
-                onClick={() => handleModal('isNotice', false)}
-            />
+            <div id={`${PORTAL_MODAL_ID}`}/>
+            <Modal
+                isVisible={modal.isSuccessModal}
+                containerClassName='px-6 py-8 !min-w-[18rem] !top-[50%]'
+            >
+                <div className='absolute right-0 top-0 p-3'>
+                    <X
+                        size={16}
+                        className='cursor-pointer hover:text-dominant'
+                        onClick={onAllDone}
+                    />
+                </div>
+                <img
+                    className='mx-auto'
+                    src={'/images/screen/wallet/coins_pana.png'}
+                    width={150}
+                    height={150}
+                />
+                <p className='text-center font-semibold text-lg mt-5'>
+                    {t('wallet:mobile:transfer_asset_success', {
+                        asset: currentCurr?.assetCode,
+                    })}
+                </p>
+                <div className='mt-7 mb-8 space-y-4'>
+                    <div className='flex justify-between text-xs'>
+                        <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                            {t('wallet:mobile:time')}
+                        </span>
+                        <span className='font-semibold'>
+                            {format(Date.now(), 'yyyy-M-d hh:mm:ss')}
+                        </span>
+                    </div>
+                    <div className='flex justify-between text-xs'>
+                        <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                            {t('wallet:mobile:amount')}
+                        </span>
+                        <span className='font-semibold'>
+                            {formatNumber(+amount, decimalScale)}&nbsp;
+                            {currentCurr?.assetCode}
+                        </span>
+                    </div>
+                    <div className='flex justify-between text-xs'>
+                        <span
+                            className='font-medium text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-3'>
+                            {t('wallet:mobile:transfer_from_to')}
+                        </span>
+                        <span className='font-semibold whitespace-nowrap'>
+                            {t('ext_gate:onus_wallet')}&nbsp;-&nbsp;
+                            {t('ext_gate:nami_futures_wallet')}
+                        </span>
+                    </div>
+                </div>
+                <Button
+                    componentType='button'
+                    title={t('common:cancel')}
+                    onClick={() => handleModal('isSuccessModal', false)}
+                />
+            </Modal>
+
             <NoticePopup active={modal.isNotice} isDark={isDark}>
                 <div className='NoticePopup__Header'>{t('modal:notice')}</div>
                 <div className='NoticePopup__Content'>
-                    <Key size={24} color='#03BBCC' />
+                    <Key size={24} color='#03BBCC'/>
                     {t('common:sign_in_to_continue')}
                     <a href='#' onClick={() => handleLogin(false)}>
                         {t('common:sign_in')}
@@ -725,13 +451,14 @@ const ExternalWithdrawal = (props) => {
     )
 }
 
-export const getStaticProps = async ({ locale }) => ({
+export const getStaticProps = async ({locale}) => ({
     props: {
         ...(await serverSideTranslations(locale, [
             'common',
             'navbar',
             'modal',
             'ext_gate',
+            'wallet',
         ])),
     },
 })
