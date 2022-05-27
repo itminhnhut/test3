@@ -1,0 +1,12 @@
+image: atlassian/default-image:2
+
+pipelines:
+  default:
+    - step:
+        script:
+          - pipe: atlassian/ssh-run:0.4.0
+            variables:
+              SSH_USER: '<ssh_username>'
+              SERVER: '<ssh_server>'
+              MODE: 'command'
+              COMMAND: 'pwd'
