@@ -8,7 +8,7 @@
     "description": "Transfer assets from Nami Wallet to ONUS Wallet",
     "deposit_btn": "Deposit",
     "wdl": "Withdraw",
-    "wdl_btn": "Confirm Withdraw",
+    "wdl_btn": "Withdraw",
     "amount": "Amount",
     "insufficient": "Your balance is not enough",
     "amount_hint": "Input amount to withdraw",

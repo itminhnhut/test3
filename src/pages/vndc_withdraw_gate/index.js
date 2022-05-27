@@ -236,13 +236,9 @@ const ExternalWithdrawal = (props) => {
             <Div100vh className='px-4 py-6 flex flex-col bg-[#1B222D]'>
                 <div className='flex-1 text-onus font-medium text-sm'>
                     <div className='flex items-center px-4 bg-[#243042] rounded-md h-11 mb-6'>
-                        <img
-                            className='w-5 h-5'
-                            src={getS3Url('/images/logo/nami_maldives.png')}
-                            alt=''
-                        />
+                        <AssetLogo assetCode="ONUS" size={28}/>
                         <span className='ml-1'>
-                            {t('ext_gate:nami_futures_wallet')}
+                            {t('ext_gate:onus_wallet')}
                         </span>
                     </div>
 
@@ -282,9 +278,7 @@ const ExternalWithdrawal = (props) => {
                         <div
                             className='flex items-center'
                             onClick={() =>
-                                setAmount(
-                                    Math.min(currentCurr?.available || 0, max)
-                                )
+                                setAmount(formatNumber(Math.min(currentCurr?.available || 0, max), decimalScale))
                             }
                         >
                             <span className='px-4 py-2 text-[#418FFF] font-semibold'>
@@ -332,7 +326,7 @@ const ExternalWithdrawal = (props) => {
                     {isSubmitting ? (
                         <PulseLoader color={colors.white} size={3}/>
                     ) : (
-                        t('ext_gate:deposit_btn')
+                        t('ext_gate:wdl_btn')
                     )}
                 </div>
             </Div100vh>
@@ -431,8 +425,8 @@ const ExternalWithdrawal = (props) => {
                             {t('wallet:mobile:transfer_from_to')}
                         </span>
                         <span className='font-semibold whitespace-nowrap'>
-                            {t('ext_gate:nami_futures_wallet')}&nbsp;-&nbsp;
-                            {t('ext_gate:onus_wallet')}
+                            {t('ext_gate:onus_wallet')}&nbsp;-&nbsp;
+                            {t('ext_gate:nami_futures_wallet')}
                         </span>
                     </div>
                 </div>

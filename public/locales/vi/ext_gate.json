@@ -8,7 +8,7 @@
     "description": "Chuyển tài sản từ Ví Nami đến Ví ONUS",
     "deposit_btn": "Rút",
     "wdl": "Rút",
-    "wdl_btn": "Xác nhận rút",
+    "wdl_btn": "Rút",
     "amount": "Số lượng rút",
     "amount_hint": "Nhập số lượng rút",
     "insufficient": "Số dư của bạn không đủ",
