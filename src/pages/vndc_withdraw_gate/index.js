@@ -282,9 +282,7 @@ const ExternalWithdrawal = (props) => {
                         <div
                             className='flex items-center'
                             onClick={() =>
-                                setAmount(
-                                    Math.min(currentCurr?.available || 0, max)
-                                )
+                                setAmount(formatNumber(Math.min(currentCurr?.available || 0, max), decimalScale))
                             }
                         >
                             <span className='px-4 py-2 text-[#418FFF] font-semibold'>
