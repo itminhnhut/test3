@@ -26,21 +26,21 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
     return (
         <div className="flex flex-col h-full justify-around">
             <div className="flex justify-between text-xs font-medium ">
-                <div className="mr-1 text-txtSecondary dark:text-txtSecondary-dark ">{t('futures:mobile:available')}</div>
-                <div className="flex items-center flex-wrap justify-end">
+                <div className="mr-1 text-txtSecondary dark:text-txtSecondary-dark min-w-[50px]">{t('futures:mobile:available')}</div>
+                <div className="flex items-end justify-end text-right" style={{ wordBreak: 'break-word' }}>
                     {formatNumber(availableAsset ?? 0, 0)}&nbsp;&nbsp;
                     <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />
                 </div>
             </div>
-            <TradingLabel
-                label={t('futures:margin')}
-                value={`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
-                    marginAndValue?.margin,
-                    pairConfig?.pricePrecision || 2
-                )} ${quoteAsset}`}
-                containerClassName='text-xs flex flex-wrap justify-between'
-            />
-
+            <div className="flex justify-between text-xs font-medium ">
+                <div className="mr-1 text-txtSecondary dark:text-txtSecondary-dark min-w-[50px]">{t('futures:margin')}</div>
+                <div className="flex items-center flex-wrap justify-end	text-right" style={{ wordBreak: 'break-word' }}>
+                    {`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
+                        marginAndValue?.margin,
+                        pairConfig?.pricePrecision || 2
+                    )} ${quoteAsset}`}
+                </div>
+            </div>
         </div>
     );
 };

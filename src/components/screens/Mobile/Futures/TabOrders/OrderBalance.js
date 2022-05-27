@@ -70,12 +70,13 @@ export const Balance = ({ ordersList = [], mode }) => {
 
     const volume = useMemo(() => {
         const total = ordersList.reduce((a, b) => a + b?.quantity, 0);
-        return total;
+        return parseFloat(total).toFixed(10);
     }, [ordersList])
 
     switch (mode) {
         case 'pnl':
-            return formatNumber(totalProfit, 0, 0, true);
+            const className = totalProfit === 0 ? '' : totalProfit > 0 ? 'text-teal' : 'text-red'
+            return <div className={className}>{formatNumber(totalProfit, 0, 0, true)}</div>;
         case 'equity':
             const total = balance.value + totalProfit;
             const lengthEquity = formatNumber(total, balance?.item?.assetDigit).replaceAll(',', '');
