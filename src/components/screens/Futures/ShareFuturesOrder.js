@@ -93,7 +93,7 @@ const ShareFuturesOrder = ({ isVisible, onClose, pairPrice, order = {}, isCloseP
                         <div className='flex flex-col w-2/3 text-white'>
                             <div className='grow'>
                                 <div className='font-medium'>
-                                    <span>{order?.side}</span>
+                                    <span className="capitalize">{order?.side}</span>
                                     <span className='px-3'>|</span>
                                     <span>{hide.leverage ? '***' : `${leverage}x`}</span>
                                     <span className='px-3'>|</span>
