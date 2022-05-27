@@ -358,13 +358,13 @@ const FuturesEditSLTPVndc = ({
     const classMobile = useMemo(() => {
         const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
         const widht = window.innerWidth < 330 ? 'w-[300px]' : '!w-[340px]';
-        return height + widht
+        return height + widht + ' overflow-x-hidden'
     }, [isMobile])
 
     return (
         <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%]`}>
             <div
-                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark sticky top-0 z-[10px] bg-white dark:bg-darkBlue-2 ">
+                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark sticky top-0 z-[10px] bg-white dark:bg-darkBlue-2 rounded-t-lg">
                 <span className="font-bold text-[16px]">
                     {t('futures:tp_sl:modify_tpsl')}
                 </span>{' '}
@@ -438,10 +438,12 @@ const FuturesEditSLTPVndc = ({
                             // validator={tab === 1 && inputValidator('take_profit')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
+                            renderTail={() => (
+                                <span className="font-medium text-teal pl-2">
+                                    {tab === 2 ? '%' : quoteAsset}
+                                </span>
+                            )}
                         />
-                        <span className="font-medium text-teal dark:text-txtSecondary-dark pl-2">
-                            {tab === 2 ? '%' : quoteAsset}
-                        </span>
                     </div>
                 </div>
                 <div className="mt-2 mb-3">
@@ -472,21 +474,23 @@ const FuturesEditSLTPVndc = ({
 
                 <div className="flex items-center">
                     <div
-                        className="px-3 flex flex-grow items-center h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
+                        className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
                         <TradingInput
                             thousandSeparator
                             type="text"
-                            className="text-red flex-grow text-right font-medium h-[21px]"
+                            label={t('futures:stop_loss')}
+                            className="flex-grow text-right font-medium h-[21px] text-red"
                             containerClassName="w-full !py-0 !px-0 border-none"
                             value={tab === 0 ? profit.current.sl : tab === 1 ? data.sl : tabPercent.current.sl}
-                            label={t('futures:stop_loss')}
                             // validator={tab === 1 && inputValidator('stop_loss')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('sl', e)}
+                            renderTail={() => (
+                                <span className="font-medium text-red pl-2">
+                                    {tab === 2 ? '%' : quoteAsset}
+                                </span>
+                            )}
                         />
-                        <span className="font-medium text-red dark:text-txtSecondary-dark pl-2">
-                            {tab === 2 ? '%' : quoteAsset}
-                        </span>
                     </div>
                 </div>
                 <div className="mt-2 mb-3">

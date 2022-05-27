@@ -311,12 +311,14 @@ const Slider = ({
                 <Active style={valueStyle} bgColorSlide={bgColorSlide} />
                 <SliderBackground isDark={currentTheme === THEME_MODE.DARK} />
                 <DotContainer>
-                    <Dot
-                        active={pos.left >= 0}
-                        percentage={0}
-                        isDark={currentTheme === THEME_MODE.DARK}
-                        bgColorActive={bgColorActive}
-                    />
+                    {!customDotAndLabel &&
+                        <Dot
+                            active={pos.left >= 0}
+                            percentage={0}
+                            isDark={currentTheme === THEME_MODE.DARK}
+                            bgColorActive={bgColorActive}
+                        />
+                    }
                     {customDotAndLabel ? customDotAndLabel(xmax, pos)?.dot : renderDotAndLabel()?.dot}
                 </DotContainer>
                 <div
@@ -330,7 +332,7 @@ const Slider = ({
                     }}
                 >
                     <Thumb
-                        isZero={pos.left === 0}
+                        isZero={customDotAndLabel ? false : pos.left === 0}
                         isDark={currentTheme === THEME_MODE.DARK}
                         bgColorActive={bgColorActive}
                     >
