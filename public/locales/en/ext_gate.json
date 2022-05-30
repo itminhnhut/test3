@@ -15,7 +15,7 @@
     "min_notice": "The minimum amount is",
     "max_notice": "The maximum amount is",
     "available": "Available",
-    "trans_fee": "Fee",
+    "trans_fee": "Transaction fee",
     "see_more": "See more",
     "see_less": "See less",
     "max_opt": "Max",
@@ -23,7 +23,7 @@
     "time": "Trading hours",
     "remain_balance": "Remaining balance",
     "tips": "Assets will be withdrawn to your VNDC wallet in a short time.",
-    "chose_asset": "Chose asset",
+    "choose_asset": "Choose asset",
     "err": {
         "min_wdl_not_met": "The amount withdrawn has not reached the minimum value, please try again.",
         "invalid_input": "Invalid withdrawal amount, please try again.",
