@@ -26,6 +26,7 @@ import Button from 'components/common/Button'
 import Modal from 'components/common/ReModal'
 import {PORTAL_MODAL_ID} from 'constants/constants'
 import colors from 'styles/colors'
+import Head from "next/head";
 
 const ASSET_LIST = [WalletCurrency.NAMI, WalletCurrency.VNDC]
 
@@ -233,6 +234,9 @@ const ExternalWithdrawal = (props) => {
 
     return (
         <>
+            <Head>
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
+            </Head>
             <Div100vh className='px-4 py-6 flex flex-col bg-[#1B222D]'>
                 <div className='flex-1 text-onus font-medium text-sm'>
                     <div className='flex items-center px-4 bg-[#243042] rounded-md h-11 mb-6'>
@@ -243,7 +247,7 @@ const ExternalWithdrawal = (props) => {
                     </div>
 
                     <span className='text-onus-secondary text-xs uppercase'>
-                        {t('ext_gate:chose_asset')}
+                        {t('ext_gate:choose_asset')}
                     </span>
                     <div
                         className='flex justify-between items-center px-4 bg-[#243042] rounded-md h-11 mb-6 mt-2'
@@ -270,7 +274,7 @@ const ExternalWithdrawal = (props) => {
                         <NumberFormat
                             thousandSeparator
                             allowNegative={false}
-                            className='outline-none text-xs font-medium flex-1'
+                            className='outline-none text-sm font-medium flex-1 py-2'
                             value={amount}
                             onValueChange={({value}) => setAmount(value)}
                             decimalScale={decimalScale}
@@ -341,7 +345,7 @@ const ExternalWithdrawal = (props) => {
                 )}
             >
                 <div className='relative w-full flex justify-center items-center mb-12'>
-                    <span className='font-semibold'>Chọn loại tài sản</span>
+                    <span className='font-semibold'>{t('ext_gate:choose_asset')}</span>
                     <div
                         className='absolute top-0 right-0 p-1 cursor-pointer'
                         onClick={() => handleModal('isListAssetModal', false)}
