@@ -29,28 +29,31 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
 
     return (
         <>
-            <TradingInput
-                thousandSeparator={true}
-                label={t('futures:leverage:leverage')}
-                value={leverage}
-                allowNegative={false}
-                onValueChange={({ floatValue = '' }) => setLeverage(floatValue)}
-                decimalScale={0}
-                // isAllowed={({ floatValue }) => floatValue <= 125}
-                labelClassName='whitespace-nowrap'
-                containerClassName="h-[36px]"
-                tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
-                renderTail={() => (
-                    <div className='relative group select-none'>
-                        <div className='flex items-center' onClick={() => setOpenModal(true)}>
-                            <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
+            <div onClick={() => setOpenModal(true)}>
+                <TradingInput
+                    thousandSeparator={true}
+                    label={t('futures:leverage:leverage')}
+                    value={leverage}
+                    allowNegative={false}
+                    onValueChange={({ floatValue = '' }) => setLeverage(floatValue)}
+                    decimalScale={0}
+                    disabled
+                    // isAllowed={({ floatValue }) => floatValue <= 125}
+                    labelClassName='whitespace-nowrap'
+                    containerClassName="h-[36px]"
+                    tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
+                    renderTail={() => (
+                        <div className='relative group select-none'>
+                            <div className='flex items-center'>
+                                <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
+                            </div>
                         </div>
-                    </div>
-                )}
-                inputClassName="text-xs"
-            // onFocus={() => context.onHiddenBottomNavigation(true)}
-            // onBlur={() => context.onHiddenBottomNavigation(false)}
-            />
+                    )}
+                    inputClassName="text-xs"
+                // onFocus={() => context.onHiddenBottomNavigation(true)}
+                // onBlur={() => context.onHiddenBottomNavigation(false)}
+                />
+            </div>
             {openModal &&
                 <FuturesLeverageSettings
                     pair={pair}
