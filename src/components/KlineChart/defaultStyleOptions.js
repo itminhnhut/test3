@@ -1,7 +1,7 @@
 import { THEME_MODE } from 'hooks/useDarkMode';
 import colors from '../../styles/colors';
 
-const _theme = {
+export const _theme = {
     fontSize: 10,
     fontFamily: 'Barlow, sans-serif',
     textColor: colors.white,

@@ -2,6 +2,7 @@ import axios from 'axios';
 import ms from 'ms';
 import io from 'socket.io-client';
 import colors from '../../styles/colors';
+import { _theme } from './defaultStyleOptions'
 
 const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
 
@@ -231,7 +232,7 @@ const labelLine = (ctx, position, color) => {
     const width = getWidthText(position.text)
     const height = 12;
     roundRect(ctx, position.x, position.y - 6, width, height, 2, color)
-    ctx.font = '9px sans-serif';
+    ctx.font = `${_theme.fontSize}px ${_theme.fontFamily}`;
     ctx.fillStyle = colors.white;
     ctx.textBaseline = "middle";
     ctx.fillText(position.text, position.x + 3, position.y)
