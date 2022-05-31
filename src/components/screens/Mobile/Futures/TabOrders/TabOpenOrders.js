@@ -111,7 +111,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
                     {t('futures:hide_other_symbols')}
                 </span>
             </div>
-            <div>
+            <div className='min-h-[100px]'>
                 {dataFilter?.map((order, i) => {
                     const dataMarketWatch = marketWatch[order?.symbol];
                     const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);

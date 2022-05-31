@@ -91,7 +91,8 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '',
             points: [
                 {
                     value: order[key],
-                    text: `#${order?.displaying_id} ${key} ${order[key]}`,
+                    text: `#${order?.displaying_id} ${key}`,
+                    id: order?.displaying_id
                 }
             ]
         })

@@ -97,6 +97,15 @@ export const socket = io(socket_url, {
     reconnectionAttempts: Infinity,
 });
 
+const getWidthText = (text) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext("2d");
+    const width = ctx.measureText(text).width;
+    canvas.remove();
+    return width;
+}
+
+
 
 export const shapeTemplateTP = ({
     name: 'tp',
@@ -104,20 +113,22 @@ export const shapeTemplateTP = ({
     checkEventCoordinateOnShape: ({ key, type, dataSource, eventCoordinate }) => {
     },
     createShapeDataSource: ({ step, points, coordinates, viewport, precision, styles, xAxis, yAxis, data }) => {
+        const startWidth = getWidthText(String(points[0].text))
+        const endWidth = getWidthText(String(points[0].value) + '0')
         return [
             {
                 type: 'polygon',
                 isDraw: true,
                 isCheck: false,
-                styles: { stroke: { color: colors.teal, style: 'dashed' } },
+                styles: { stroke: { color: colors.teal, style: 'dash', dashValue: [2, 2] } },
                 dataSource: [
                     [
                         {
-                            x: 0,
-                            y: coordinates[0].y
+                            x: startWidth,
+                            y: coordinates[0].y,
                         },
                         {
-                            x: viewport.width,
+                            x: viewport.width - endWidth,
                             y: coordinates[0].y
                         },
                     ],
@@ -129,17 +140,30 @@ export const shapeTemplateTP = ({
                 isCheck: false,
                 styles: {
                     color: colors.teal,
-                    offset: [-2, 2],
-                    size: 16, weight: 600
+                    offset: [4, 0],
+                    size: 16, weight: 600,
                 },
-                dataSource: [{
-                    x: 0,
-                    y: coordinates[0].y,
-                    text: points[0].text
-                }]
+                dataSource: [
+                    {
+                        x: 0,
+                        y: coordinates[0].y,
+                        text: points[0].text,
+                    },
+                    {
+                        x: viewport.width - endWidth + 2,
+                        y: coordinates[0].y,
+                        text: points[0].value
+                    }
+                ]
             },
         ]
     },
+    drawExtend: ({ ctx, dataSource, styles, viewport, precision, xAxis, yAxis, data }) => {
+        const positionId = dataSource[1].dataSource[0];
+        const positionValue = dataSource[1].dataSource[1];
+        labelLine(ctx, positionId, colors.teal)
+        labelLine(ctx, positionValue, colors.teal)
+    }
 })
 
 export const shapeTemplateSL = ({
@@ -148,20 +172,23 @@ export const shapeTemplateSL = ({
     checkEventCoordinateOnShape: ({ key, type, dataSource, eventCoordinate }) => {
     },
     createShapeDataSource: ({ step, points, coordinates, viewport, precision, styles, xAxis, yAxis, data }) => {
+        const startWidth = getWidthText(String(points[0].text))
+        const endWidth = getWidthText(String(points[0].value) + '0')
+
         return [
             {
-                type: 'line',
+                type: 'polygon',
                 isDraw: true,
                 isCheck: false,
-                styles: { style: 'fill', color: colors.red },
+                styles: { stroke: { color: colors.red, style: 'dash', dashValue: [2, 2] } },
                 dataSource: [
                     [
                         {
-                            x: 0,
-                            y: coordinates[0].y
+                            x: startWidth,
+                            y: coordinates[0].y,
                         },
                         {
-                            x: viewport.width,
+                            x: viewport.width - endWidth,
                             y: coordinates[0].y
                         },
                     ],
@@ -173,15 +200,60 @@ export const shapeTemplateSL = ({
                 isCheck: false,
                 styles: {
                     color: colors.red,
-                    offset: [-2, 2],
+                    offset: [4, 0],
                     size: 16, weight: 600
                 },
-                dataSource: [{
-                    x: 0,
-                    y: coordinates[0].y,
-                    text: points[0].text
-                }]
+                dataSource: [
+                    {
+                        x: 0,
+                        y: coordinates[0].y,
+                        text: points[0].text,
+                    },
+                    {
+                        x: viewport.width - endWidth + 2,
+                        y: coordinates[0].y,
+                        text: points[0].value,
+                    }
+                ]
             },
         ]
     },
+    drawExtend: ({ ctx, dataSource, styles, viewport, precision, xAxis, yAxis, data }) => {
+        const positionId = dataSource[1].dataSource[0];
+        const positionValue = dataSource[1].dataSource[1];
+        labelLine(ctx, positionId, colors.red)
+        labelLine(ctx, positionValue, colors.red)
+
+    }
 })
+
+const labelLine = (ctx, position, color) => {
+    const width = getWidthText(position.text)
+    const height = 12;
+    roundRect(ctx, position.x, position.y - 6, width, height, 2, color)
+    ctx.font = '9px sans-serif';
+    ctx.fillStyle = colors.white;
+    ctx.textBaseline = "middle";
+    ctx.fillText(position.text, position.x + 3, position.y)
+    ctx.canvas.style.zIndex = 5;
+}
+
+const roundRect = (ctx, x, y, w, h, radius, color) => {
+    const r = x + w;
+    const b = y + h;
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = "1";
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(r - radius, y);
+    ctx.quadraticCurveTo(r, y, r, y + radius);
+    ctx.lineTo(r, y + h - radius);
+    ctx.quadraticCurveTo(r, b, r - radius, b);
+    ctx.lineTo(x + radius, b);
+    ctx.quadraticCurveTo(x, b, x, b - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, w, h);
+}
