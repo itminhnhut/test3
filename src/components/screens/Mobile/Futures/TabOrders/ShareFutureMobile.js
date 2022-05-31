@@ -134,7 +134,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                         </div>
                         <div className='bg-[#E2E8F0] w-[1px] opacity-[0.5]'></div>
                         <div className='flex flex-col items-center w-1/2 justify-center'>
-                            <div className='text-xs font-medium'>{t(isClosePrice ? 'futures:order_table:close_price' : 'futures:order_table:mark_price')}</div>
+                            <div className='text-xs font-medium'>{t(isClosePrice ? 'futures:order_table:close_price' : 'futures:mobile:market_price')}</div>
                             <div className='text-sm font-semibold'>{hide.price ? '*****' : isClosePrice ? closePrice : markPrice} {quoteAsset}</div>
                         </div>
                     </div>

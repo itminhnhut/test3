@@ -377,7 +377,7 @@ const TransferModal = ({ isMobile, alert }) => {
     </div>
         return (
             <div className={isErrors || isAmountEmpty || isInsufficient ?
-                'mt-6 py-3.5 font-bold text-center text-sm bg-gray-3 dark:bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed rounded-xl'
+                'mt-6 py-3.5 font-bold text-center text-sm bg-gray-3 text-gray-1 dark:bg-darkBlue-3 dark:text-darkBlue-4 cursor-not-allowed rounded-xl'
                 : 'mt-6 py-3.5 font-bold text-center text-sm bg-dominant text-white cursor-pointer rounded-xl hover:opacity-80'}
                 onClick={() => !isErrors && !isAmountEmpty && !isInsufficient
                     && !state.isPlacingOrder && onTransfer(

@@ -353,7 +353,7 @@ const FuturesEditSLTPVndc = ({
         return not_valid;
     }, [data]);
 
-    const classNameError = isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
+    const classNameError = isError ? '!bg-gray-3 dark:!bg-darkBlue-3 dark:!text-darkBlue-4 text-gray-1 cursor-not-allowed' : '';
 
     const classMobile = useMemo(() => {
         const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
