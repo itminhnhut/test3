@@ -33,7 +33,8 @@ const candleList = [
 ]
 const ChartTimer = ({
     pairConfig, pair, isVndcFutures, resolution, setResolution,
-    candle, setCandle
+    candle, setCandle, className = '', isFullScreen, showSymbol = true, showIconGuide = true,
+    pairParent
 }) => {
 
     if (!pairConfig) return null;
@@ -41,22 +42,31 @@ const ChartTimer = ({
     const [start, setStart] = useState(false);
 
     const labelCandle = candleList.find(item => item.value === candle);
+
+    const resolutionLabel = useMemo(() => {
+        return listTimeFrame.find(item => item.value === resolution)?.text
+    }, [resolution])
+
     return (
-        <div className="min-h-[64px] chart-timer flex items-center justify-between px-[10px]">
-            <Guideline pair={pair} start={start} setStart={setStart} />
+        <div className={`${className} chart-timer flex items-center justify-between px-[10px]`}>
+            <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen} />
             <div className="flex items-center"  >
-                <div className="flex items-center flex-wrap">
-                    <div className="flex items-center cursor-pointer" data-tut="order-symbol" onClick={() => setShowModelMarket(true)}>
-                        <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
-                        <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                {showSymbol &&
+                    <div className="flex items-center flex-wrap">
+                        <div className="flex items-center cursor-pointer" data-tut="order-symbol" onClick={() => setShowModelMarket(true)}>
+                            <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
+                            <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                        </div>
+                        <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent} >
+                            <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
+                        </SocketLayout>
                     </div>
-                    <SocketLayout pairConfig={pairConfig} pair={pair} >
-                        <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
-                    </SocketLayout>
-                </div>
-                <div className="pl-[10px]" onClick={() => setStart(true)}>
-                    <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
-                </div>
+                }
+                {showIconGuide &&
+                    <div className="pl-[10px]" onClick={() => setStart(true)}>
+                        <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                    </div>
+                }
             </div>
 
             <div className="flex items-center" >
@@ -67,7 +77,7 @@ const ChartTimer = ({
                     displayValue="text"
                     options={listTimeFrame}
                     classNameButton="px-[10px]"
-                    label={<div className="uppercase text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{ms(resolution)}</div>}
+                    label={<div className="text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={candle}

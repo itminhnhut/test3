@@ -1,11 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import ceil from 'lodash/ceil';
-import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track, } from './StyleInputSlider';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import classNames from 'classnames';
+import {useEffect, useMemo, useRef, useState} from 'react'
+import {
+    Active,
+    Dot,
+    DotContainer,
+    SliderBackground,
+    Thumb,
+    ThumbLabel,
+    Track,
+} from './StyleInputSlider'
+import useDarkMode, {THEME_MODE} from 'hooks/useDarkMode'
+import classNames from 'classnames'
+import colors from 'styles/colors'
+import Hexagon from "components/screens/Mobile/Wallet/Hexagon";
 
 function getClientPosition(e) {
-    const { touches } = e
+    const {touches} = e
 
     if (touches && touches.length) {
         const finger = touches[0]
@@ -22,46 +31,37 @@ function getClientPosition(e) {
 }
 
 const Slider = ({
-    disabled,
-    axis,
-    x,
-    y,
-    xmin,
-    xmax,
-    ymin,
-    ymax,
-    xstep,
-    ystep,
-    onChange,
-    onDragStart,
-    onDragEnd,
-    xreverse,
-    yreverse,
-    styles: customStyles,
-    leverage = false,
-    useLabel = false,
-    labelSuffix = '',
-    customDotAndLabel,
-    bgColorSlide,
-    bgColorActive,
-    xStart = 0,
-    reload,
-    dots,
-    ...props
-}) => {
+                    disabled,
+                    axis,
+                    x,
+                    y,
+                    xmin,
+                    xmax,
+                    ymin,
+                    ymax,
+                    xstep,
+                    ystep,
+                    onChange,
+                    onDragStart,
+                    onDragEnd,
+                    leverage = false,
+                    labelSuffix = '',
+                    xStart = 0,
+                }) => {
     const container = useRef(null)
     const handle = useRef(null)
     const start = useRef({})
     const offset = useRef({})
     const BIAS = 8
-    const _xStart = useRef(xStart);
+    const _xStart = useRef(xStart)
 
     const [currentTheme] = useDarkMode()
+    const isDark = currentTheme === THEME_MODE.DARK
 
     function getPosition() {
         let top = ((y - ymin) / (ymax - ymin)) * 100
-        let left = ((x - xmin) / (xmax - xmin)) * 100 + _xStart.current;
-        _xStart.current = 0;
+        let left = ((x - xmin) / (xmax - xmin)) * 100 + _xStart.current
+        _xStart.current = 0
         if (top > 100) top = 100
         if (top < 0) top = 0
         if (axis === 'x') top = 0
@@ -70,13 +70,13 @@ const Slider = ({
         if (left < 0) left = 0
         if (axis === 'y') left = 0
 
-        return { top, left }
+        return {top, left}
     }
 
-    function change({ top, left }) {
+    function change({top, left}) {
         if (!onChange) return
 
-        const { width, height } = container.current.getBoundingClientRect()
+        const {width, height} = container.current.getBoundingClientRect()
         let dx = 0
         let dy = 0
 
@@ -105,10 +105,7 @@ const Slider = ({
             x = largeStep * 25
         }
 
-        onChange({
-            x: xreverse ? xmax - x + xmin : x,
-            y: yreverse ? ymax - y + ymin : y,
-        })
+        onChange({x, y})
     }
 
     function handleMouseDown(e) {
@@ -132,7 +129,7 @@ const Slider = ({
 
         document.addEventListener('mousemove', handleDrag)
         document.addEventListener('mouseup', handleDragEnd)
-        document.addEventListener('touchmove', handleDrag, { passive: false })
+        document.addEventListener('touchmove', handleDrag, {passive: false})
         document.addEventListener('touchend', handleDragEnd)
         document.addEventListener('touchcancel', handleDragEnd)
 
@@ -146,7 +143,7 @@ const Slider = ({
         const left = clientPos.x + start.current.x - offset.current.x
         const top = clientPos.y + start.current.y - offset.current.y
 
-        return { left, top }
+        return {left, top}
     }
 
     function handleDrag(e) {
@@ -193,7 +190,7 @@ const Slider = ({
 
         document.addEventListener('mousemove', handleDrag)
         document.addEventListener('mouseup', handleDragEnd)
-        document.addEventListener('touchmove', handleDrag, { passive: false })
+        document.addEventListener('touchmove', handleDrag, {passive: false})
         document.addEventListener('touchend', handleDragEnd)
         document.addEventListener('touchcancel', handleDragEnd)
 
@@ -207,41 +204,26 @@ const Slider = ({
         }
     }
 
-    const [flag, setFlag] = useState(false);
-
     useEffect(() => {
-        _xStart.current = xStart;
-        setFlag(!flag)
-    }, [reload])
+        _xStart.current = xStart
+    }, [])
 
     const pos = useMemo(() => {
         return getPosition()
-    }, [x, flag])
+    }, [x])
 
     const valueStyle = {}
     if (axis === 'x') {
-        if (customDotAndLabel) {
-            if (pos.left < 50) {
-                valueStyle.width = 50 - pos.left + '%';
-                valueStyle.right = 50 + '%';
-            } else {
-                valueStyle.width = pos.left - 50 + '%';
-                valueStyle.left = 50 + '%';
-            }
-        } else {
-            valueStyle.width = pos.left + '%';
-        }
+        valueStyle.width = pos.left + '%'
     }
     if (axis === 'y') valueStyle.height = pos.top + '%'
-    if (xreverse) valueStyle.left = 100 - pos.left + '%'
-    if (yreverse) valueStyle.top = 100 - pos.top + '%'
     const handleStyle = {
         borderRadius: '50%',
         zIndex: 20,
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
-        left: xreverse ? 100 - pos.left + '%' : pos.left + '%',
-        top: yreverse ? 100 - pos.top + '%' : pos.top + '%',
+        left: pos.left + '%',
+        top: pos.top + '%',
     }
 
     if (axis === 'x') {
@@ -251,42 +233,43 @@ const Slider = ({
     }
 
     const renderDotAndLabel = () => {
-        let dotStep = dots ?? 15
+        let dotStep = 15
         const dot = []
         const label = []
-        if (!dots) {
-            if (xmax % 5 === 0) dotStep = 5
-            if (xmax > 10 && xmax % 10 === 0) dotStep = 10
-            if (xmax > 15 && xmax % 15 === 0) dotStep = 15
-            if (xmax > 25 && xmax % 25 === 0) dotStep = 25
-        }
-        const _dots = dots ?? (xmax / dotStep);
+        if (xmax % 5 === 0) dotStep = 5
+        if (xmax > 10 && xmax % 10 === 0) dotStep = 10
+        if (xmax > 15 && xmax % 15 === 0) dotStep = 15
+        if (xmax > 25 && xmax % 25 === 0) dotStep = 25
+        const _dots = xmax / dotStep
         const size = 100 / _dots
 
         for (let i = 0; i <= _dots; ++i) {
-            const labelX = (i === 0 ? 1 : i * (dots ? (xmax / dots) : dotStep)).toFixed(0)
-            const valueX = (i * (dots ? (xmax / dots) : dotStep)).toFixed(0)
+            const labelX = (i * dotStep).toFixed(0)
+            const valueX = (i * dotStep).toFixed(0)
+            const active = pos.left >= i * size
             dot.push(
-                <Dot
-                    key={`inputSlider_dot_${i}`}
-                    active={pos.left >= i * size}
-                    percentage={i * size}
-                    isDark={currentTheme === THEME_MODE.DARK}
-                />
+                <Dot key={`inputSlider_dot_${i}`} percentage={i * size}>
+                    <Hexagon
+                        size={10}
+                        fill={isDark ? colors.darkBlue1 : colors.white}
+                        stroke={active ? colors.teal : isDark ? colors.darkBlue4 : colors.grey3}
+                        strokeWidth={2}
+                    />
+                </Dot>
             )
+
             label.push(
                 <div className='relative' key={`inputSlider_label_${i}`}>
                     <span
                         onClick={() => {
-                            onChange && onChange({ x: valueX })
+                            onChange && onChange({x: valueX})
                         }}
                         className={classNames(
                             'block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
                             {
                                 'left-1/2 -translate-x-1/2':
                                     i > 0 && i !== _dots,
-                                '-left-1/2 translate-x-[-80%]':
-                                    i === _dots,
+                                '-left-1/2 translate-x-[-80%]': i === _dots,
                             }
                         )}
                     >
@@ -297,30 +280,19 @@ const Slider = ({
             )
         }
 
-        return { dot, label }
+        return {dot, label}
     }
 
     return (
         <>
             <Track
-                {...props}
                 ref={container}
                 onTouchStart={handleTrackMouseDown}
                 onMouseDown={handleTrackMouseDown}
             >
-                <Active style={valueStyle} bgColorSlide={bgColorSlide} />
-                <SliderBackground isDark={currentTheme === THEME_MODE.DARK} />
-                <DotContainer>
-                    {!customDotAndLabel &&
-                        <Dot
-                            active={pos.left >= 0}
-                            percentage={0}
-                            isDark={currentTheme === THEME_MODE.DARK}
-                            bgColorActive={bgColorActive}
-                        />
-                    }
-                    {customDotAndLabel ? customDotAndLabel(xmax, pos)?.dot : renderDotAndLabel()?.dot}
-                </DotContainer>
+                <Active style={valueStyle}/>
+                <SliderBackground isDark={currentTheme === THEME_MODE.DARK}/>
+                <DotContainer>{renderDotAndLabel()?.dot}</DotContainer>
                 <div
                     ref={handle}
                     style={handleStyle}
@@ -332,27 +304,23 @@ const Slider = ({
                     }}
                 >
                     <Thumb
-                        isZero={customDotAndLabel ? false : pos.left === 0}
+                        isZero={pos.left === 0}
                         isDark={currentTheme === THEME_MODE.DARK}
-                        bgColorActive={bgColorActive}
                     >
-                        <ThumbLabel
-                            isZero={pos.left === 0}
-                            isDark={currentTheme === THEME_MODE.DARK}
-                        >
-                            {ceil(pos.left, 0)}%
-                        </ThumbLabel>
+                        <Hexagon
+                            className='absolute'
+                            size={18}
+                            fill={isDark ? colors.darkBlue1 : colors.white}
+                            stroke={colors.teal}
+                            strokeWidth={2}
+                        />
                     </Thumb>
                 </div>
             </Track>
-            {useLabel && (
-                <>
-                    <div className='relative w-full flex items-center justify-between'>
-                        {customDotAndLabel ? customDotAndLabel(xmax, pos)?.label : renderDotAndLabel()?.label}
-                    </div>
-                    <div className='h-[12px] w-full' />
-                </>
-            )}
+            <div className='relative w-full flex items-center justify-between'>
+                {renderDotAndLabel()?.label}
+            </div>
+            <div className='h-[12px] w-full'/>
         </>
     )
 }
@@ -368,8 +336,6 @@ Slider.defaultProps = {
     ymax: 100,
     xstep: 1,
     ystep: 1,
-    xreverse: false,
-    yreverse: false,
     styles: {},
 }
 

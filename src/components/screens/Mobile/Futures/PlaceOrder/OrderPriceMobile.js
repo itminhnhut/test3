@@ -33,8 +33,8 @@ const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice,
             //     </div>
             // )}
             inputClassName="text-xs"
-            onFocus={() => context.onHiddenBottomNavigation(true)}
-            onBlur={() => context.onHiddenBottomNavigation(false)}
+            // onFocus={() => context.onHiddenBottomNavigation(true)}
+            // onBlur={() => context.onHiddenBottomNavigation(false)}
         />
     );
 };

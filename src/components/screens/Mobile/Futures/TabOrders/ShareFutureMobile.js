@@ -53,7 +53,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
             markPrice: formatNumber(pairPrice?.lastPrice, 8),
             closePrice: formatNumber(order?.close_price, 8),
             time: formatTime(order?.created_at),
-            quoteAsset: pairPrice?.quoteAsset ?? order?.symbol
+            quoteAsset: pairPrice?.quoteAsset ?? ''
         }
     }, [order, pairPrice])
 
@@ -134,7 +134,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                         </div>
                         <div className='bg-[#E2E8F0] w-[1px] opacity-[0.5]'></div>
                         <div className='flex flex-col items-center w-1/2 justify-center'>
-                            <div className='text-xs font-medium'>{t(isClosePrice ? 'futures:order_table:close_price' : 'futures:order_table:mark_price')}</div>
+                            <div className='text-xs font-medium'>{t(isClosePrice ? 'futures:order_table:close_price' : 'futures:mobile:market_price')}</div>
                             <div className='text-sm font-semibold'>{hide.price ? '*****' : isClosePrice ? closePrice : markPrice} {quoteAsset}</div>
                         </div>
                     </div>
@@ -156,7 +156,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                         </div>
                     </div>
                 </div>
-                <div className="bg-white rounded-[12px] h-[212px] p-[23px] mt-[-10px]">
+                <div className="bg-white rounded-[12px] p-[23px] mt-[-10px]">
                     <div className="text-teal text-center font-medium text-sm">{t('futures:optional_information')}</div>
                     <div className="flex justify-between py-[12px]">
                         <CheckBox
@@ -181,11 +181,11 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                             onChange={() => setHide({ ...hide, price: !hide.price })}
                         />
                     </div>
-                    <div
+                    {/* <div
                         className={classNames('bg-dominant rounded-[6px] text-white text-sm font-semibold text-center py-[12px] my-[8px]',
                             { '!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3': downloading }
                         )}
-                        onClick={() => downloadImage()}>{t('futures:mobile:share')}</div>
+                        onClick={() => downloadImage()}>{t('futures:mobile:share')}</div> */}
                     <div className="bg-[#F5F5F5] text-teal rounded-[6px] text-sm font-semibold text-center py-[12px]" onClick={onClose}>{t('common:cancel')}</div>
                 </div>
             </div>

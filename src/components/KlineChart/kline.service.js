@@ -1,6 +1,7 @@
 import axios from 'axios';
 import ms from 'ms';
 import io from 'socket.io-client';
+import colors from '../../styles/colors';
 
 const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
 
@@ -95,3 +96,92 @@ export const socket = io(socket_url, {
     reconnectionDelayMax: 500,
     reconnectionAttempts: Infinity,
 });
+
+
+export const shapeTemplateTP = ({
+    name: 'tp',
+    totalStep: 2,
+    checkEventCoordinateOnShape: ({ key, type, dataSource, eventCoordinate }) => {
+    },
+    createShapeDataSource: ({ step, points, coordinates, viewport, precision, styles, xAxis, yAxis, data }) => {
+        return [
+            {
+                type: 'polygon',
+                isDraw: true,
+                isCheck: false,
+                styles: { stroke: { color: colors.teal, style: 'dashed' } },
+                dataSource: [
+                    [
+                        {
+                            x: 0,
+                            y: coordinates[0].y
+                        },
+                        {
+                            x: viewport.width,
+                            y: coordinates[0].y
+                        },
+                    ],
+                ]
+            },
+            {
+                type: 'text',
+                isDraw: true,
+                isCheck: false,
+                styles: {
+                    color: colors.teal,
+                    offset: [-2, 2],
+                    size: 16, weight: 600
+                },
+                dataSource: [{
+                    x: 0,
+                    y: coordinates[0].y,
+                    text: points[0].text
+                }]
+            },
+        ]
+    },
+})
+
+export const shapeTemplateSL = ({
+    name: 'sl',
+    totalStep: 2,
+    checkEventCoordinateOnShape: ({ key, type, dataSource, eventCoordinate }) => {
+    },
+    createShapeDataSource: ({ step, points, coordinates, viewport, precision, styles, xAxis, yAxis, data }) => {
+        return [
+            {
+                type: 'line',
+                isDraw: true,
+                isCheck: false,
+                styles: { style: 'fill', color: colors.red },
+                dataSource: [
+                    [
+                        {
+                            x: 0,
+                            y: coordinates[0].y
+                        },
+                        {
+                            x: viewport.width,
+                            y: coordinates[0].y
+                        },
+                    ],
+                ]
+            },
+            {
+                type: 'text',
+                isDraw: true,
+                isCheck: false,
+                styles: {
+                    color: colors.red,
+                    offset: [-2, 2],
+                    size: 16, weight: 600
+                },
+                dataSource: [{
+                    x: 0,
+                    y: coordinates[0].y,
+                    text: points[0].text
+                }]
+            },
+        ]
+    },
+})

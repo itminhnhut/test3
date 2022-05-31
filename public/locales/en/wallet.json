@@ -101,8 +101,8 @@
         "invalid_kyc_status": "Please verify your account to perform this action.",
         "decimal_scale_limit": "Please enter amount with no more than {{ value }} decimal places",
         "withdraw_disabled": "Withdrawal is currently under maintenance, please try again later.",
-        "minimun_amount": "Minimum amount is",
-        "maximun_amount": "Maximum amount is"
+        "minimun_amount": "Minimum amount is {{min}}",
+        "maximun_amount": "Maximum amount is {{max}}"
     },
     "est_balance": "Estimated Balance",
     "hide_asset": "Hide Asset",
@@ -168,5 +168,17 @@
     "convert_small": "Convert small balance to {{ asset }}",
     "convert_small_mobile": "Convert to {{ asset }}",
     "asset": "Asset",
-    "value": "Value"
+    "value": "Value",
+    "mobile":{
+        "spot": "Nami Spot",
+        "futures": "Nami Futures",
+        "input_amount_placeholder": "Enter amount",
+        "transfer_asset_success": "Transfer {{asset}} successfully",
+        "fee": "Fee",
+        "time": "Time",
+        "amount": "Amount",
+        "transfer_from_to": "From - to",
+        "unsupported_asset": "The asset currently does not support transferring",
+        "btn_confirm_transfer": "Confirm Transfer"
+    }
 }

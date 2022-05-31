@@ -128,7 +128,7 @@ const FuturesOrderModule = ({
                 const decimals = countDecimals(decimalScaleQtyLimit?.stepSize)
                 const _displayingMax = isReversedAsset
                     ? `${formatNumber(_max, decimals, 0, true)} ${pairConfig?.quoteAsset} ≈ ${formatNumber(lotSize?.maxQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
-                    : `${formatNumber(lotSize?.maxQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
+                    : `${formatNumber(maxSize, decimals, 0, true)} ${pairConfig?.baseAsset}`
                 const _displayingMin = isReversedAsset
                     ? `${formatNumber(_min, decimals, 0, true)} ${pairConfig?.quoteAsset} ≈ ${formatNumber(lotSize?.minQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
                     : `${formatNumber(lotSize?.minQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
@@ -138,7 +138,7 @@ const FuturesOrderModule = ({
                     isValid = false
                 }
 
-                if (quantity?.both > +_max) {
+                if (quantity?.both > +maxSize) {
                     msg = `${t('futures:maximun_qty')} ${_displayingMax}`
                     isValid = false
                 }

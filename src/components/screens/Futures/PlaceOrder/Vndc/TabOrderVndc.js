@@ -12,9 +12,9 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
             <div className="spot-place-orders-tabs w-full">
                 <div style={{ height: height }}
                     className={classNames(
-                        'spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--left',
+                        'mr-[-1px] spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--left',
                         {
-                            ' active z-[2] mr-[-1px]': side === VndcFutureOrderType.Side.BUY
+                            ' active z-[2]': side === VndcFutureOrderType.Side.BUY
                         },
                         className
                     )}
@@ -38,9 +38,9 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
                 <div
                     style={{ height: height }}
                     className={classNames(
-                        'spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--right',
+                        'ml-[-1px] spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--right',
                         {
-                            ' active z-[2] ml-[-1px]': side === VndcFutureOrderType.Side.SELL
+                            ' active z-[2]': side === VndcFutureOrderType.Side.SELL
                         },
                         className
                     )}

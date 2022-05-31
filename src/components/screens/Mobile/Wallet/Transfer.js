@@ -131,7 +131,7 @@ const convertToWalletV1Type = (walletType) => {
     }
 }
 
-export default function Wallet() {
+export default function Transfer() {
     const allExchangeWallet = useSelector((state) => state.wallet?.SPOT) || []
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || []
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || []
@@ -146,7 +146,7 @@ export default function Wallet() {
     const alertContext = useContext(AlertContext)
 
     const [fromWallet, setFromWallet] = useState(WalletType.SPOT)
-    const [toWallet, setToWallet] = useState()
+    const [toWallet, setToWallet] = useState(WalletType.FUTURES)
     const [amount, setAmount] = useState()
     const [visibleSuccessModel, setVisibleSuccessModel] = useState(false)
     const [isPlacingOrder, setIsPlacingOrder] = useState(false)
@@ -177,9 +177,9 @@ export default function Wallet() {
     }, [assetConfigs, allExchangeWallet, allFuturesWallet, fromWallet, asset])
 
     const walletTypeOptionLabels = {
-        [WalletType.SPOT]: t('wallet:spot'),
-        [WalletType.FUTURES]: t('wallet:futures'),
-        [WalletType.ONUS]: t('wallet:onus'),
+        [WalletType.SPOT]: t('wallet:mobile:spot'),
+        [WalletType.FUTURES]: t('wallet:mobile:futures'),
+        [WalletType.ONUS]: t('wallet:mobile:onus'),
     }
 
     const {walletFromOptions, walletToOptions} = useMemo(() => {
@@ -200,6 +200,10 @@ export default function Wallet() {
     }, [asset])
 
     const error = useMemo(() => {
+        if (walletToOptions.every((w) => w.disabled)) {
+            return t('wallet:mobile:unsupported_asset')
+        }
+
         if (!isNumeric(+amount) || !amount) return
         if (+amount < min) {
             return t('wallet:errors:minimun_amount', {
@@ -214,7 +218,7 @@ export default function Wallet() {
                 max: formatNumber(max, DECIMAL_SCALES[assetConfig.id]),
             })
         }
-    }, [amount, min, max, currentWallet.available])
+    }, [amount, min, max, currentWallet.available, walletToOptions])
 
     const handleTransfer = useCallback(async () => {
         setIsPlacingOrder(true)
@@ -257,6 +261,20 @@ export default function Wallet() {
         alertContext.alert.show('error', message)
     }, [fromWallet, toWallet, amount, asset, alertContext])
 
+    const handleFillMaxAmount = useCallback(() => {
+        setAmount(Math.min(currentWallet.available, max))
+    }, [currentWallet.available, max])
+
+    useEffect(() => {
+        if (fromWallet === toWallet) {
+        }
+    }, [fromWallet, walletToOptions, walletFromOptions])
+
+    useEffect(() => {
+        if (toWallet === fromWallet) {
+        }
+    }, [fromWallet, walletToOptions, walletFromOptions])
+
     return (
         <>
             <div className='h-[calc(100vh-70px)]'>
@@ -276,10 +294,8 @@ export default function Wallet() {
                                 options={walletFromOptions}
                                 value={fromWallet}
                                 onChange={(wallet) => {
-                                    if (wallet === toWallet) {
-                                        setToWallet('')
-                                    }
                                     setFromWallet(wallet)
+                                    setToWallet(walletToOptions.find(w => !w.disabled && w.value !== wallet)?.value)
                                 }}
                             />
                         </div>
@@ -291,34 +307,31 @@ export default function Wallet() {
                                 options={walletToOptions}
                                 value={toWallet}
                                 onChange={(wallet) => {
-                                    if (wallet === fromWallet) {
-                                        setFromWallet('')
-                                    }
                                     setToWallet(wallet)
+                                    setFromWallet(walletFromOptions.find(w => !w.disabled && w.value !== wallet)?.value)
                                 }}
                             />
                         </div>
                     </div>
                     <div>
-                        <div className='flex justify-between items-end mb-2'>
+                        <div className='flex justify-between items-start mb-2'>
                             <span className='text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium'>
                                 {t('common:ext_gate:amount')}
                             </span>
-                            <span className='text-yellow text-xs font-medium italic'>
-                                {t('common:ext_gate:min_notice', {
-                                    minVal: formatNumber(
-                                        min,
-                                        DECIMAL_SCALES[assetConfig.id]
-                                    ),
-                                })}
-                            </span>
+                            {error && (
+                                <span className='text-yellow text-xs font-medium italic text-right'>
+                                    {error}
+                                </span>
+                            )}
                         </div>
                         <div className='flex bg-gray-5 dark:bg-darkBlue-3 rounded py-2 px-3'>
                             <NumberFormat
                                 thousandSeparator
                                 allowNegative={false}
                                 className='outline-none text-xs font-medium flex-1'
-                                placeholder={t('wallet:input_amount')}
+                                placeholder={t(
+                                    'wallet:mobile:input_amount_placeholder'
+                                )}
                                 value={amount}
                                 onValueChange={({value}) => setAmount(value)}
                                 decimalScale={DECIMAL_SCALES[assetConfig.id]}
@@ -326,7 +339,10 @@ export default function Wallet() {
                                 max={max}
                             />
                             <div className='flex items-center text-xs font-medium'>
-                                <span className='text-teal'>
+                                <span
+                                    className='text-teal'
+                                    onClick={handleFillMaxAmount}
+                                >
                                     {t('common:max')}
                                 </span>
                                 <div className='h-7 w-[1px] bg-gray-5 dark:bg-darkBlue-5 mx-2'/>
@@ -338,7 +354,7 @@ export default function Wallet() {
                         <SliderAmount
                             value={(amount / currentWallet.available) * 100}
                             onChange={(v) => {
-                                setAmount((v / 100) * currentWallet.available)
+                                setAmount(formatNumber((v / 100) * currentWallet.available, DECIMAL_SCALES[assetConfig.id]))
                             }}
                         />
                     </div>
@@ -350,14 +366,14 @@ export default function Wallet() {
                             <span className='font-semibold'>
                                 {formatAvl(
                                     currentWallet.available,
-                                    assetConfig.assetDigit || 0
+                                    DECIMAL_SCALES[assetConfig.id]
                                 )}
                                 &nbsp;{asset}
                             </span>
                         </div>
                         <div className='flex justify-between whitespace-nowrap'>
                             <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                                {t('common:ext_gate:trans_fee')}
+                                {t('wallet:mobile:fee')}
                             </span>
                             <span className='font-semibold whitespace-nowrap'>
                                 {formatNumber(
@@ -368,11 +384,6 @@ export default function Wallet() {
                             </span>
                         </div>
                     </div>
-                    <div className='py-3 text-center'>
-                        {error && (
-                            <span className='text-sm text-red'>{error}</span>
-                        )}
-                    </div>
                     <div className='mt-auto grid grid-cols-2 gap-2'>
                         <Button
                             componentType='button'
@@ -382,7 +393,7 @@ export default function Wallet() {
                         />
                         <div
                             className={classNames(
-                                'h-11 bg-teal rounded-md flex items-center justify-center font-semibold text-sm',
+                                'h-11 bg-teal rounded-md flex items-center justify-center font-semibold text-sm text-white',
                                 {
                                     '!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3':
                                         !fromWallet ||
@@ -396,7 +407,7 @@ export default function Wallet() {
                             {isPlacingOrder ? (
                                 <PulseLoader color={colors.white} size={3}/>
                             ) : (
-                                t('common:ext_gate:wdl_btn')
+                                t('wallet:mobile:btn_confirm_transfer')
                             )}
                         </div>
                     </div>
@@ -421,12 +432,12 @@ export default function Wallet() {
                     height={150}
                 />
                 <p className='text-center font-semibold text-lg mt-5'>
-                    {t('wallet:transfer_asset_success')}
+                    {t('wallet:mobile:transfer_asset_success', {asset})}
                 </p>
                 <div className='mt-7 mb-8 space-y-4'>
                     <div className='flex justify-between text-xs'>
                         <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                            {t('common:time')}
+                            {t('wallet:mobile:time')}
                         </span>
                         <span className='font-semibold'>
                             {format(Date.now(), 'yyyy-M-d hh:mm:ss')}
@@ -434,7 +445,7 @@ export default function Wallet() {
                     </div>
                     <div className='flex justify-between text-xs'>
                         <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                            {t('common:amount')}
+                            {t('wallet:mobile:amount')}
                         </span>
                         <span className='font-semibold'>
                             {formatNumber(
@@ -446,8 +457,8 @@ export default function Wallet() {
                     </div>
                     <div className='flex justify-between text-xs'>
                         <span
-                            className='font-medium text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-1'>
-                            {t('wallet:transfer_from_to')}
+                            className='font-medium text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-3'>
+                            {t('wallet:mobile:transfer_from_to')}
                         </span>
                         <span className='font-semibold whitespace-nowrap'>
                             {walletTypeOptionLabels[fromWallet]}&nbsp;-&nbsp;

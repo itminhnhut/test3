@@ -19,7 +19,7 @@ const OrderButtonMobile = ({
     const { t } = useTranslation();
     const isBuy = VndcFutureOrderType.Side.BUY === side
     const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
-    
+
 
     const onHandleSave = () => {
         if (!isAuth) {
@@ -48,10 +48,10 @@ const OrderButtonMobile = ({
     }
 
     const classNameError = disabled || (isAuth && isError) ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
-
+    const title = type === FuturesOrderTypes.Limit ? t('futures:mobile:limit') : type === FuturesOrderTypes.StopMarket ? 'stop market' : ''
     return (
         <div onClick={onHandleSave} className={`${isBuy ? 'bg-dominant' : 'bg-red'} text-white text-sm h-[67px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
-            <div className='font-semibold text-center'>{!isAuth ? t('futures:mobile:login_short') : isBuy ? t('common:buy') : t('common:sell')}</div>
+            <div className='font-semibold text-center'>{!isAuth ? t('futures:mobile:login_short') : (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</div>
             <div className='font-medium'>{formatNumber(_price, decimals.decimalScalePrice, 0, true)}</div>
         </div>
     );

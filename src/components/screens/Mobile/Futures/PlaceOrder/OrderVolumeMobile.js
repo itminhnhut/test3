@@ -25,8 +25,8 @@ const OrderVolumeMobile = memo(({ size, setSize, decimals, context }) => {
             //     </div>
             // )}
             inputClassName="text-xs"
-            onFocus={() => context.onHiddenBottomNavigation(true)}
-            onBlur={() => context.onHiddenBottomNavigation(false)}
+            // onFocus={() => context.onHiddenBottomNavigation(true)}
+            // onBlur={() => context.onHiddenBottomNavigation(false)}
         />
     );
 });

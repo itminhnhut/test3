@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import { formatNumber, formatTime } from 'redux/actions/utils'
@@ -35,7 +35,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                         );
                 }
                 text = row.price ? formatNumber(row.price, 8) : '';
-                return <div className="flex items-center ">
+                return <div className="flex items-center text-right ">
                     <div>{text} {bias}</div>
                 </div>;
             case VndcFutureOrderType.Status.ACTIVE:
@@ -71,12 +71,31 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
         }
     }
 
+    const isModal = useRef(false);
+
+    const actions = (action) => {
+        if (action === 'modal') {
+            isModal.current = true;
+            onShowModal(order, 'share')
+        }
+        if (action === 'detail') {
+            if (isModal.current) {
+                isModal.current = false;
+                return;
+            }
+            onShowDetail(order)
+        }
+
+    }
+
     const profit = isTabHistory ? order?.profit : dataMarketWatch && getProfitVndc(order, dataMarketWatch?.lastPrice)
 
     return (
-        <div className="flex flex-col mx-[-16px] p-[16px] border-b-[1px] border-b-gray-4 dark:border-divider-dark">
+        <div className="flex flex-col mx-[-16px] p-[16px] border-b-[1px] border-b-gray-4 dark:border-divider-dark"
+            onClick={() => onShowDetail && actions('detail')}
+        >
             <div className="flex items-center justify-between mb-[10px]">
-                <div className="w-full flex" onClick={() => onShowDetail && onShowDetail(order)}>
+                <div className="w-full flex" >
                     <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent>
                     <div>
                         <div className="flex items-center">
@@ -90,7 +109,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     </div>
                 </div>
                 {profit ?
-                    <div className="border-[1px] border-teal p-[5px] rounded-[2px]" onClick={() => onShowModal(order, 'share')}>
+                    <div className="border-[1px] border-teal p-[5px] rounded-[2px]" onClick={() => actions('modal')}>
                         <img src="/images/icon/ic_share.png" height={16} width={16} />
                     </div>
                     : null
@@ -157,7 +176,7 @@ const Row = styled.div.attrs({
 })``
 
 const Label = styled.div.attrs({
-    className: `text-gray-1 text-xs dark:text-txtSecondary-dark`
+    className: `text-gray-1 text-xs dark:text-txtSecondary-dark min-w-[50px]`
 })``
 
 const Button = styled.div.attrs({

@@ -11,7 +11,7 @@ const OrderBalance = ({ ordersList, visible }) => {
     const { t } = useTranslation();
     if (!visible) return null;
     return (
-        <div className="flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] mt-[10px] dark:border-divider-dark">
+        <div className="sticky top-[42px] bg-white dark:bg-darkBlue-1 z-[10px] flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] pt-[10px] dark:border-divider-dark">
             <TradingLabel
                 label={t('futures:mobile:balance')}
                 value={<Balance />}
@@ -70,12 +70,13 @@ export const Balance = ({ ordersList = [], mode }) => {
 
     const volume = useMemo(() => {
         const total = ordersList.reduce((a, b) => a + b?.quantity, 0);
-        return total;
+        return parseFloat(total).toFixed(10);
     }, [ordersList])
 
     switch (mode) {
         case 'pnl':
-            return formatNumber(totalProfit, 0, 0, true);
+            const className = totalProfit === 0 ? '' : totalProfit > 0 ? 'text-teal' : 'text-red'
+            return <div className={className}>{formatNumber(totalProfit, 0, 0, true)}</div>;
         case 'equity':
             const total = balance.value + totalProfit;
             const lengthEquity = formatNumber(total, balance?.item?.assetDigit).replaceAll(',', '');

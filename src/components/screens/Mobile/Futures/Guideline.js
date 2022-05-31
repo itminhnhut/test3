@@ -5,8 +5,8 @@ import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 import { X } from 'react-feather';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
-
-const Guideline = ({ pair, start, setStart }) => {
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+const Guideline = ({ pair, start, setStart, isFullScreen }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
     const [showClose, setShowClose] = useState(false);
@@ -27,10 +27,10 @@ const Guideline = ({ pair, start, setStart }) => {
         if (!order) return;
         if (start) {
             order.style.height = window.innerHeight + 'px';
-            context.onHiddenBottomNavigation(true)
+            // context.onHiddenBottomNavigation(true)
         } else {
-            order.style.height = vh * 100 - 80 + 'px'
-            context.onHiddenBottomNavigation(false)
+            order.style.height = vh * 100 + 'px'
+            // context.onHiddenBottomNavigation(false)
         }
     }, [start])
 
@@ -57,10 +57,11 @@ const Guideline = ({ pair, start, setStart }) => {
             {
                 selector: '[data-tut="order-button"]',
                 content: (props) => <Content {...props} onClose={onClose} text={t('futures:mobile:guide:order')} />,
+                position: !isFullScreen ? [15, 0] : 'top'
             },
             {
                 selector: '[data-tut="order-tab"]',
-                content: (props) => <Content {...props} onClose={onClose} text={t('futures:mobile:guide:tab')} />,
+                content: (props) => <Content {...props} top={isFullScreen} onClose={onClose} text={t('futures:mobile:guide:tab')} />,
             }
         ]
     }, [])
@@ -95,6 +96,8 @@ const Guideline = ({ pair, start, setStart }) => {
             showNumber={false}
             scrollDuration="300"
             ref={refGuide}
+            onAfterOpen={disableBodyScroll}
+            onBeforeClose={enableBodyScroll}
         // inViewThreshold={100}
         />
     );
@@ -115,7 +118,10 @@ const Content = ({ title, text, step, onClose, top, goTo, ...props }) => {
                 <div className="mt-[8px] mb-[16px] text-white text-xs">{text}</div>
                 <div className="flex items-center justify-between font-medium text-white">
                     <div className='text-sm'>{t('futures:mobile:guide:step')} {step + '/'}<span className="text-[10px]">6</span></div>
-                    <div className='min-w-[60px] px-[10px] bg-dominant rounded-[4.33333px] text-center text-[10px]' onClick={() => step === 6 ? onClose(true) : goTo(step)}>{t(step === 6 ? 'common:close' : 'futures:mobile:guide:next')}</div>
+                    <div className='min-w-[60px] px-[10px] bg-dominant rounded-[4.33333px] text-center text-[10px]'
+                        onClick={() => step === 6 && onClose(true)}>
+                        {t(step === 6 ? 'common:close' : 'futures:mobile:guide:next')}
+                    </div>
                 </div>
             </View>
             {!top && <img className="m-auto rotate-180" src="/images/icon/ic_guide_arrow.png" width={10} />}
