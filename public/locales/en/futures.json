@@ -228,7 +228,8 @@
         "close_time": "Close Time",
         "realized_pnl": "Realized PNL",
         "reason_close": "Reason Close",
-        "stop_loss": "Stop loss"
+        "stop_loss": "Stop loss",
+        "market_price": "Market Price"
     },
     "orders_history": "Orders History",
     "minimun_leverage": "Minimum Leverage is",

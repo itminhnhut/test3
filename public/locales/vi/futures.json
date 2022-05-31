@@ -145,10 +145,10 @@
         "revenue": "Lợi nhuận",
         "adjustment_detail": "Chi tiết điều chỉnh",
         "view_detail": "Xem chi tiết",
-        "normal": "Thủ công",
-        "hit_sl": "Chạm SL",
-        "hit_tp": "chạm TP",
-        "liquidate": "Thanh lý"
+        "normal": "Đóng thủ công",
+        "hit_sl": "Chạm điểm cắt lỗ",
+        "hit_tp": "chạm chốt lời",
+        "liquidate": "Bị thanh lý"
     },
     "hide_other_symbols": "Ẩn các cặp khác",
     "stop_price": "Giá stop",
@@ -227,7 +227,8 @@
         "close_time": "Thời gian đóng",
         "realized_pnl": "PNL được thực thi",
         "reason_close": "Lý do đóng",
-        "stop_loss": "Cắt lỗ"
+        "stop_loss": "Cắt lỗ",
+        "market_price": "Giá thị trường"
     },
     "orders_history": "Lịch sử lệnh",
     "minimun_leverage": "Đòn bẩy tối thiểu",
