@@ -64,7 +64,11 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
     const [mainIndicator, setMainIndicator] = useState()
     const [subIndicator, setSubIndicator] = useState()
     const [candle, setCandle] = useState('candle_solid');
-    const assetConfig = useSelector(state => getAssets(state, { ...order?.fee_metadata, swap: { currency: order?.margin_currency } }))
+    const assetConfig = useSelector(state => getAssets(state, {
+        ...order?.fee_metadata,
+        swap: { currency: order?.margin_currency },
+        order_value: { currency: order?.order_value_currency }
+    }))
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
 
@@ -211,7 +215,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                             </Row>
                             <Row>
                                 <Label>{t('futures:order_table:volume')}</Label>
-                                <Span>{order?.quantity}</Span>
+                                <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${order?.quantity} ${pairConfig?.baseAsset})`}</Span>
                             </Row>
                             <Row>
                                 <Label>{t('futures:margin')}</Label>

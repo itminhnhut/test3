@@ -418,7 +418,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 data={_dataSource}
                 columns={columns}
                 customStyles={customTableStyles}
-                noDataComponent={<TableNoData />}
+                noDataComponent={<TableNoData title={t('futures:order_table:no_opening_order')} />}
             />
         </>
     )
