@@ -1,6 +1,6 @@
 import 'animate.css/animate.min.css';
 import defaults from 'lodash/defaults';
-import { store } from 'react-notifications-component';
+import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 
 const NotificationContent = (props) => {
@@ -28,7 +28,7 @@ const showNotification = (options = {}, dismiss = undefined, position = 'top', c
         type: 'success',
     });
 
-    store.addNotification({
+    Store.addNotification({
         title,
         message,
         type: 'success',

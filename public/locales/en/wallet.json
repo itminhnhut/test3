@@ -5,6 +5,7 @@
     "futures": "Futures Wallet",
     "broker": "Broker Wallet",
     "earn": "Earn Wallet",
+    "onus": "Onus Wallet",
     "pnl_analytic": "PNL",
     "pnl_24h": "PNL 24h",
     "total_balance": "Total Balance",
@@ -48,6 +49,9 @@
     "deposit_note": "Sending coin or token other than {{asset}} to this address may result in the loss of your deposit.",
     "get_address": "Get blockchain address",
     "transfer": "Transfer",
+    "transfer_asset": "Transfer {{asset}}",
+    "transfer_asset_success": "Transfer {{asset}} success",
+    "transfer_from_to": "Transfer from - to",
     "trade": "Trade",
     "no_wallets": "No supported wallets",
     "withdraw_success_title": "Withdraw successfully",
@@ -96,7 +100,9 @@
         "invalid_amount": "Invalid amount",
         "invalid_kyc_status": "Please verify your account to perform this action.",
         "decimal_scale_limit": "Please enter amount with no more than {{ value }} decimal places",
-        "withdraw_disabled": "Withdrawal is currently under maintenance, please try again later."
+        "withdraw_disabled": "Withdrawal is currently under maintenance, please try again later.",
+        "minimun_amount": "Minimum amount is {{min}}",
+        "maximun_amount": "Maximum amount is {{max}}"
     },
     "est_balance": "Estimated Balance",
     "hide_asset": "Hide Asset",
@@ -160,5 +166,19 @@
         "memo_wdl_tips": "In some case, Memo is needed and Nami will not take any responsibility if you withdraw without Memo information and the withdrawal does not reach to your wallet."
     },
     "convert_small": "Convert small balance to {{ asset }}",
-    "convert_small_mobile": "Convert to {{ asset }}"
+    "convert_small_mobile": "Convert to {{ asset }}",
+    "asset": "Asset",
+    "value": "Value",
+    "mobile":{
+        "spot": "Nami Spot",
+        "futures": "Nami Futures",
+        "input_amount_placeholder": "Enter amount",
+        "transfer_asset_success": "Transfer {{asset}} successfully",
+        "fee": "Fee",
+        "time": "Time",
+        "amount": "Amount",
+        "transfer_from_to": "From - to",
+        "unsupported_asset": "The asset currently does not support transferring",
+        "btn_confirm_transfer": "Confirm Transfer"
+    }
 }

@@ -6,7 +6,7 @@ import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/
 import { getLoginUrl } from 'src/redux/actions/utils';
 import { useRouter } from 'next/router';
 
-const getType = (type) => {
+export const getType = (type) => {
     switch (type) {
         case FuturesOrderTypes.Limit:
             return VndcFutureOrderType.Type.LIMIT;
@@ -20,7 +20,7 @@ const getType = (type) => {
     }
 }
 
-const getPrice = (type, side, price, ask, bid, stopPrice) => {
+export const getPrice = (type, side, price, ask, bid, stopPrice) => {
     if (type === VndcFutureOrderType.Type.MARKET) return VndcFutureOrderType.Side.BUY === side ? ask : bid;
     if (type === VndcFutureOrderType.Type.STOP) return Number(stopPrice);
     return Number(price);
@@ -51,12 +51,11 @@ const FuturesOrderButtonsGroupVndc = ({
     const [disabled, setDisabled] = useState(false);
     const handleParams = useCallback(
         (side) => {
-            // const _size = isNaN(size) ? side === VndcFutureOrderType.Side.BUY ? +quantity?.buy : +quantity?.sell : Number(size)
             const params = {
                 symbol: pairConfig?.symbol,
                 type: getType(type),
                 side: side,
-                quantity: +Number(String(size).replaceAll(',', '')).toFixed(decimalScaleQty),
+                quantity: +size,
                 price: getPrice(getType(type), side, price, ask, bid, stopPrice),
                 leverage,
                 sl: +Number(orderSlTp.sl).toFixed(decimalScalePrice),
@@ -102,7 +101,7 @@ const FuturesOrderButtonsGroupVndc = ({
         })
     }
 
-    const classNameError = disabled || (isAuth && isError) ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
+    const classNameError = disabled || (isAuth && isError) ? '!bg-gray-3 dark:!bg-darkBlue-3 dark:!text-darkBlue-4 text-gray-1 cursor-not-allowed' : '';
 
     return (
         <div className='flex items-center justify-between font-bold text-sm text-white select-none'>

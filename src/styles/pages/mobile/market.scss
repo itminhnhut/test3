@@ -1,0 +1,22 @@
+.market-mobile {
+  @apply flex flex-col flex h-full bg-white dark:bg-darkBlue-1;
+  .tab-active {
+    &:before {
+      content: '';
+      @apply absolute w-8 h-1 bg-teal bottom-0 left-1/2 -translate-x-1/2;
+    }
+  }
+
+  .market-list {
+    box-shadow: 0px -4px 30px 0px #00000014;
+    @apply flex-1 rounded-t-[1.25rem];
+  }
+
+  .placeholder-text-center::placeholder {
+    -webkit-text-align: center;
+    -moz-text-align: center;
+    -ms-text-align: center;
+    -o-text-align: center;
+    text-align: center;
+  }
+}

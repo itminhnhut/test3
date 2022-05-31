@@ -34,6 +34,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, auth, lastPrice }) => {
                         wallet: allWallet?.[item?.id]
                     }))
         }
+        console.log(mapper)
         const dataFilter = orderBy(mapper, ['assetCode', 'VNDC'], ['desc']);
         if (Array.isArray(dataFilter) && dataFilter.length > 0) {
             setBalance(dataFilter)

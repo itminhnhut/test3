@@ -27,17 +27,14 @@ const updateMultipleMarkPrice = (() => {
     };
 })();
 
-let bunchUpdateFuturesMarketPrice = {}
+const bunchUpdateFuturesMarketPrice = {};
 
 const updateMultipleMiniTicker = throttle((dispatch) => {
     dispatch({
         type: SET_MULTI_FUTURES_MARKET_WATCH,
         payload: bunchUpdateFuturesMarketPrice,
     });
-
-}, 5000, {leading: true, trailing: true});
-
-
+}, 5000, { leading: true, trailing: true });
 
 function initPublicSocket() {
     return (dispatch) => {
@@ -60,7 +57,7 @@ function initPublicSocket() {
             WS.on(PublicSocketEvent.SPOT_DEPTH_UPDATE, (data) => {
                 Emitter.emit(
                     PublicSocketEvent.SPOT_DEPTH_UPDATE + 'order_book',
-                    data
+                    data,
                 );
                 updateDepthChart(data);
             });
@@ -76,22 +73,21 @@ function initPublicSocket() {
                 futuresLastPrice = data?.c;
                 Emitter.emit(PublicSocketEvent.FUTURES_TICKER_UPDATE, data);
                 updateMultipleMarkPrice(data);
-
             });
 
             WS.on(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE, (data) => {
                 Emitter.emit(
                     PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + data.s,
-                    data
-                )
-                bunchUpdateFuturesMarketPrice[data.s] = data
+                    data,
+                );
+                bunchUpdateFuturesMarketPrice[data.s] = data;
                 updateMultipleMiniTicker(dispatch);
-            })
+            });
 
             WS.on(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE, (data) => {
                 Emitter.emit(
                     PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE + data.s,
-                    data
+                    data,
                 );
             });
 

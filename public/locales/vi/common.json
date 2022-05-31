@@ -283,7 +283,7 @@
         "your_portfolio": "Danh mục đầu tư"
     },
     "ext_gate": {
-        "hi_user": "Xin chào, ${who}",
+        "hi_user": "Xin chào, {{who}}",
         "guest": "Khách",
         "suggest_nami": "Hãy sử dụng app NamiExchange để có trải nghiệm tốt nhất",
         "nami_wallet": "Ví Nami",
@@ -293,8 +293,8 @@
         "amount": "Số lượng",
         "amount_hint": "Nhập số lượng rút",
         "insufficient": "Số dư của bạn không đủ",
-        "min_notice": "Giá trị tối thiểu là ${minVal}",
-        "max_notice": "Quyền rút tối đa là ${maxVal}",
+        "min_notice": "Giá trị tối thiểu là {{minVal}}",
+        "max_notice": "Quyền rút tối đa là {{maxVal}}",
         "available": "Số dư khả dụng",
         "trans_fee": "Phí giao dịch",
         "see_more": "Xem thêm",
@@ -313,5 +313,9 @@
             "unknown": "Có vấn đề xảy ra trong quá trình rút, vui lòng liên hệ support để biết thêm chi tiết.",
             "vndc_maintain": "VNDC đang bảo trì tính năng rút off-chain đồng VNDC từ Nami, quý khách vẫn có thể rút on-chain từ app Nami"
         }
+    },
+    "mobile": {
+        "markets": "Thị trường",
+        "wallets": "Ví"
     }
 }

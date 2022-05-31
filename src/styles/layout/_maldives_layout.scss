@@ -16,9 +16,9 @@
 }
 
 .mal-layouts-fix_navbar {
-  height: calc(100% - 74);
+  height: calc(100% - 74px);
 
   @media (min-width: 992px) {
-    height: calc(100% - 64);
+    height: calc(100% - 64px);
   }
 }

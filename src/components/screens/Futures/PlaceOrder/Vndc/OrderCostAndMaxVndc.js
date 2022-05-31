@@ -48,7 +48,10 @@ const FuturesOrderCostAndMaxVndc = ({
             (VndcFutureOrderType.Side.BUY === side ? ask : bid) :
             price;
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
-        const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(decimalScaleQtyLimit?.stepSize));
+        const decimalScaleQtyMarket = pairConfig?.filters.find(rs => rs.filterType === 'MARKET_LOT_SIZE');
+        const stepSize = currentType === FuturesOrderTypes.Market ? decimalScaleQtyLimit?.stepSize : decimalScaleQtyMarket?.stepSize;
+        const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(stepSize));
+        // console.log(_size, size)
         const volume = _size * _price;
         const volumeLength = volume.toFixed(0).length;
         const margin = volume / leverage;
@@ -143,10 +146,10 @@ const FuturesOrderCostAndMaxVndc = ({
                 <div className="hidden group-hover:block absolute right-0 min-w-[200px] dark:bg-darkBlue-3 shadow-onlyLight rounded-[8px]">
                     <Link href={'/fee-schedule/trading'}>
                         <a target='_blank'>
-                            <div className="flex items-center justify-between h-[44px] bg-gray-5 p-[10px] rounded-t-[8px]">
+                            <div className="flex items-center justify-between h-[44px] bg-gray-5 p-[10px] dark:bg-darkBlue-4 rounded-t-[8px]">
                                 <div>
-                                    <span className="text-darkBlue font-medium pr-[10px]">{t('futures:fee_tier')}</span>
-                                    <label className="text-teal font-semibold">VIP {vip?.level ?? 0}</label>
+                                    <span className="text-darkBlue font-medium pr-[10px] dark:text-white">{t('futures:fee_tier')}</span>
+                                    <label className="text-teal font-semibold ">VIP {vip?.level ?? 0}</label>
                                 </div>
                                 <div className="rotate-[270deg]"><ChevronDown /></div>
                             </div>

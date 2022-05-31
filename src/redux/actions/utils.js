@@ -15,7 +15,7 @@ import {
     TradingViewSupportTimezone,
     WalletType
 } from './const';
-import { SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
+import { SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY, SET_BOTTOM_NAVIGATION } from 'redux/actions/types';
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
@@ -60,6 +60,14 @@ export const formatSwapRate = (value, scaleMore = 2) => {
     }
 
     return x
+}
+
+export const formatCurrency = (n, digits = 4) => {
+    if (n < 1e3) return formatNumber(n, 0, 0, true);
+    if (n >= 1e3 && n < 1e6) return formatNumber(+(n / 1e3).toFixed(4), digits, 0, true) + "K";
+    if (n >= 1e6 && n < 1e9) return formatNumber(+(n / 1e6).toFixed(4), digits, 0, true) + "M";
+    if (n >= 1e9 && n < 1e12) return formatNumber(+(n / 1e9).toFixed(4), digits, 0, true) + "B";
+    if (n >= 1e12) return formatNumber(+(n / 1e12).toFixed(4), digits, 0, true) + "T";
 }
 
 export function eToNumber(value) {
@@ -161,7 +169,7 @@ export function getSymbolString(symbol = {}) {
     }
 }
 
-export function formatTime(value, f = 'yyyy-MM-dd HH:mm:ss') {
+export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
     if (value) {
         const date = value instanceof Date ? value : new Date(value)
         return format(date, f)
@@ -900,4 +908,11 @@ export const getSymbolObject = (symbol) => {
     }
 
     return {}
+}
+
+export const setBottomTab = (tab) => async (dispatch) => {
+    dispatch({
+        type: SET_BOTTOM_NAVIGATION,
+        payload: tab,
+    })
 }

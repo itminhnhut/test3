@@ -88,6 +88,7 @@
   "INVALID_ADDRESS": "Địa chỉ ví không hợp lệ",
   "INVALID_MEMO": "Memo quá dài hoặc không hợp lệ",
   "INVALID_AMOUNT": "Số lượng không hợp lệ",
+  "INVALID_WALLET_TYPE": "Kiểu ví không hợp lệ, vui lòng thử lại",
   "INVALID_CURRENCY": "Mã token không hợp lệ",
   "NOT_ENOUGH_FEE": "Số dư để làm phí không đủ",
   "WITHDRAW_AMOUNT_NOT_REACH_MAX": "Giá trị rút vượt hạn mức",

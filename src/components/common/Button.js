@@ -16,10 +16,10 @@ const Button = memo((props) => {
     } = props
 
     const disabledStyle = useMemo(() => {
-        if (type === 'disabled')
+        if (type === 'disabled' || disabled)
             return '!pointer-events-none !bg-gray-2 !dark:bg-darkBlue-3'
         return ''
-    }, [type])
+    }, [type, disabled])
 
     const render = useCallback(() => {
         if (componentType === 'link') {

@@ -13,7 +13,7 @@
   "create_category_default": "Đặt làm danh mục mặc định",
   "category_label_is_default": "Mặc định",
   "category_disc_volume": "KL 24h",
-  "category_disc_change": "Thay đổi 24h", 
+  "category_disc_change": "Thay đổi 24h",
   "category_disc_table_assets": "Tài sản",
   "category_disc_table_latest": "Giá mới nhất",
   "category_disc_table_change": "Thay đổi 24h",
@@ -37,5 +37,9 @@
   "price_low": "Giá thấp nhất",
   "price_high": "Giá cao nhất",
   "trending": "Xu hướng",
-  "views_hint": "Số lượt xem trong vòng 7 ngày gần nhất."
+  "views_hint": "Số lượt xem trong vòng 7 ngày gần nhất.",
+  "pair": "Cặp",
+  "vol": "KL",
+  "favourite": "Cặp yêu thích",
+  "search_placeholder": "Tìm cặp giao dịch"
 }

@@ -8,6 +8,7 @@ export const initialState = {
     exchangeConfig: [],
     transferModal: false,
     usdRate: null,
+    bottomNav: null
 }
 
 export default (state = initialState, action) => {
@@ -20,6 +21,11 @@ export default (state = initialState, action) => {
             return { ...state, transferModal: action.payload }
         case types.SET_USD_RATE:
             return { ...state, usdRate: action.payload }
+        case types.SET_BOTTOM_NAVIGATION:
+            return {
+                ...state,
+                bottomNav: action.payload,
+            }
         default:
             return state
     }

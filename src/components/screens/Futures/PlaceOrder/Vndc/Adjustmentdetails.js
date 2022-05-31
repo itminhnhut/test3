@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { useEffect, useState, memo, useMemo } from 'react';
 import Modal from 'components/common/ReModal'
 import { API_ORDER_DETAIL } from 'redux/actions/apis'
 import fetchApi from 'utils/fetch-api'
@@ -9,7 +9,7 @@ import Skeletor from 'src/components/common/Skeletor'
 import TableNoData from 'components/common/table.old/TableNoData';
 import { useTranslation } from 'next-i18next';
 
-const Adjustmentdetails = memo(({ onClose, rowData }) => {
+const Adjustmentdetails = memo(({ onClose, rowData, isMobile }) => {
     const { t } = useTranslation();
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
@@ -69,14 +69,18 @@ const Adjustmentdetails = memo(({ onClose, rowData }) => {
         }
     }
 
+    const classMobile = useMemo(() => {
+        return window.innerWidth < 330 ? 'w-[300px]' : 'w-[340px]';
+    }, [])
+
     return (
         <Modal
             isVisible={true}
             onBackdropCb={() => onClose()}
-            containerClassName="top-[50%]"
+            containerClassName={`top-[50%] ${isMobile ? classMobile : 'w-[390px]'}`}
         >
-            <div className="w-[390px]">
-                <div className="flex items-center justify-between text-xl font-bold capitalize">
+            <div>
+                <div className="flex items-center justify-between font-bold capitalize">
                     {t('futures:order_history:adjustment_detail')}
                     <X
                         size={20}
@@ -104,10 +108,10 @@ const Adjustmentdetails = memo(({ onClose, rowData }) => {
                         : dataSource.length > 0 ?
                             dataSource.map((item, index) => {
                                 return (
-                                    <div className="text-sm py-[10px]">
-                                        <div className="flex items-center justify-between ">
+                                    <div key={index} className="text-sm py-[10px] border-b border-divider dark:border-divider-dark last:border-0">
+                                        <div className="flex items-center justify-between">
                                             <label className="text-gray-1">{t('common:time')}</label>
-                                            <div className="font-medium">{formatTime(item?.createdAt, 'yyyy-MM-dd')} {t('futures:to')} {formatTime(item?.updatedAt, 'yyyy-MM-dd')}</div>
+                                            <div className="font-medium">{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</div>
                                         </div>
                                         {item?.metadata?.modify_tp &&
                                             <div className="flex items-center justify-between ">

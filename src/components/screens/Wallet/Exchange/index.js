@@ -351,7 +351,6 @@ const ExchangeWallet = ({
                             {t('common:deposit')}
                         </a>
                     </Link>
-
                     <div className='w-full h-[8px] sm:hidden' />
                     <Link
                         href={walletLinkBuilder(

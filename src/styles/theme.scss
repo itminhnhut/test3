@@ -16,6 +16,7 @@
 @import "pages/campaign.scss";
 @import "pages/earning.scss";
 @import "pages/markets.scss";
+@import "pages/mobile/market";
 
 
 @import "components/button";
@@ -32,6 +33,7 @@
 @import "components/onboarding";
 @import "components/modal";
 @import "components/retable";
+@import "components/kline_chart";
 
 @import "helpers/custom";
 @import "helpers/contants";

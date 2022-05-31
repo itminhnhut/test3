@@ -2,7 +2,7 @@ import Footer from 'src/components/common/Footer/Footer';
 import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT, } from 'src/components/common/NavBar/constants';
 import NavBar from 'src/components/common/NavBar/NavBar';
 import { useState } from 'react';
-import ReactNotification from 'react-notifications-component';
+import { ReactNotifications } from 'react-notifications-component'
 import { useWindowSize } from 'utils/customHooks';
 import TransferModal from 'components/wallet/TransferModal';
 import useApp from 'hooks/useApp';
@@ -49,19 +49,18 @@ const MadivesLayout = ({
     return (
         <>
             <div
-                className={`mal-layouts flex flex-col ${
-                    light ? 'mal-layouts___light' : ''
-                } ${dark ? 'mal-layouts___dark' : ''}`}
+                className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''
+                    } ${dark ? 'mal-layouts___dark' : ''}`}
                 style={
                     state.isDrawer
                         ? {
-                              height,
-                              overflow: 'hidden',
-                          }
+                            height,
+                            overflow: 'hidden',
+                        }
                         : {}
                 }
             >
-                <ReactNotification className='fixed z-[9000] pointer-events-none w-full h-full' />
+                <ReactNotifications className='fixed z-[9000] pointer-events-none w-full h-full' />
                 {!hideNavBar && !hideInApp && !isApp && (
                     <NavBar
                         name={navName}

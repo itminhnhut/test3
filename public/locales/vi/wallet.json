@@ -5,6 +5,7 @@
     "futures": "Ví Futures",
     "broker": "Ví Broker",
     "earn": "Ví Earn",
+    "onus": "Ví Onus",
     "pnl_analytic": "Lời/lỗ",
     "pnl_24h": "PNL 24h",
     "total_balance": "Tổng tài sản",
@@ -48,6 +49,9 @@
     "deposit_note": "Chỉ gửi {{asset}} đến địa chỉ này, Nami không thể hỗ trợ nếu bạn gửi các loại Token khác mà Nami chưa niêm yết hoặc chưa hỗ trợ mạng lưới (Blockchain Network)",
     "get_address": "Lấy địa chỉ",
     "transfer": "Chuyển ví",
+    "transfer_asset": "Chuyển {{asset}}",
+    "transfer_asset_success": "Chuyển {{asset}} thành công",
+    "transfer_from_to": "Chuyển từ - đến",
     "trade": "Giao dịch",
     "no_wallets": "Không có ví hỗ trợ",
     "withdraw_success_title": "Giao dịch thành công",
@@ -96,7 +100,9 @@
         "invalid_amount": "Giá trị không hợp lệ",
         "invalid_kyc_status": "Vui lòng xác minh tài khoản để thực hiện hành động này",
         "decimal_scale_limit": "Số lượng rút có phần thập phân tối đa 8 chữ số",
-        "withdraw_disabled": "Chức năng Rút hiện đang bảo trì, vui lòng thử lại sau."
+        "withdraw_disabled": "Chức năng Rút hiện đang bảo trì, vui lòng thử lại sau.",
+        "minimun_amount": "Số lượng tối thiểu {{min}}",
+        "maximun_amount": "Số lượng tối đa {{max}}"
     },
     "est_balance": "Tài sản ước lượng",
     "hide_asset": "Ẩn số dư",
@@ -161,5 +167,19 @@
         "memo_wdl_tips": "Trong một số trường hợp, cần có thêm trường thông tin Memo để có thể rút tiền thành công. Nami sẽ không chịu bất kỳ trách nhiệm nào nếu như việc rút tiền của bạn không thành công do thiếu thông tin Memo, vui lòng kiểm tra kỹ trước khi xác nhận rút."
     },
     "convert_small": "Chuyển số dư nhỏ sang {{ asset }}",
-    "convert_small_mobile": "Chuyển đổi sang {{ asset }}"
+    "convert_small_mobile": "Chuyển đổi sang {{ asset }}",
+    "asset": "Tài sản",
+    "value": "Giá trị",
+    "mobile": {
+        "spot": "Nami Spot",
+        "futures": "Nami Futures",
+        "input_amount_placeholder": "Nhập vào số lượng muốn chuyển",
+        "transfer_asset_success": "Chuyển {{asset}} thành công",
+        "fee": "Phí",
+        "time": "Thời gian giao dịch",
+        "amount": "Số lượng tiền rút",
+        "transfer_from_to": "Chuyển từ đến",
+        "unsupported_asset": "Tài sản hiện chưa hỗ trợ chuyển giữa 2 ví",
+        "btn_confirm_transfer": "Xác nhận chuyển"
+    }
 }

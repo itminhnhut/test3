@@ -216,7 +216,7 @@
         "join_now": "Tham gia ngay",
         "explore_now": "Khám phá ngay",
         "coming_soon": "Sắp diễn ra",
-        "download_app": "Tải App",
+        "download_app": "Download App",
         "transfer": "Chuyển",
         "stake": "Stake",
         "farm": "Farm",
@@ -287,7 +287,7 @@
         "of": "of"
     },
     "ext_gate": {
-        "hi_user": "Hi, ${who}",
+        "hi_user": "Hi, {{who}}",
         "guest": "Guest",
         "suggest_nami": "Use the NamiExchange application for the best experience",
         "nami_wallet": "Nami Wallet",
@@ -297,8 +297,8 @@
         "amount": "Amount",
         "insufficient": "Your balance is not enough",
         "amount_hint": "Input amount to withdraw",
-        "min_notice": "The minimum amount is ${minVal}",
-        "max_notice": "The maximum amount is ${maxVal}",
+        "min_notice": "The minimum amount is {{minVal}}",
+        "max_notice": "The maximum amount is {{maxVal}}",
         "available": "Available",
         "trans_fee": "Transaction fee",
         "see_more": "See more",
@@ -317,5 +317,9 @@
             "unknown": "There is a problem during the withdrawal process, please contact support for more details.",
             "vndc_maintain": "VNDC is maintaining the off-chain withdrawal of VNDC from Nami, you can still withdraw on-chain from Nami app."
         }
+    },
+    "mobile": {
+        "markets": "Markets",
+        "wallets": "Wallets"
     }
 }

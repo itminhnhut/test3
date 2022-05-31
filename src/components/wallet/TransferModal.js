@@ -31,7 +31,6 @@ const DEFAULT_STATE = {
 const ALLOWED_WALLET = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
-
 }
 
 const TransferWalletResult = {
@@ -65,7 +64,7 @@ const INITIAL_STATE = {
     // ...
 }
 
-const TransferModal = () => {
+const TransferModal = ({ isMobile, alert }) => {
     // Init State
     const router = useRouter();
     const [state, set] = useState(INITIAL_STATE)
@@ -136,11 +135,16 @@ const TransferModal = () => {
 
                 setTimeout(() => {
                     onClose()
-                    showNotification({
-                        message,
-                        title: t('common:success'),
-                        type: 'success'
-                    })
+                    if (isMobile && alert) {
+                        alert.show('success', t('common:success'), message)
+                    } else {
+                        showNotification({
+                            message,
+                            title: t('common:success'),
+                            type: 'success'
+                        })
+                    }
+                   
                 }, 300)
             } else {
                 // Process error
@@ -159,12 +163,15 @@ const TransferModal = () => {
                         break
                     }
                 }
-
-                showNotification({
-                    message,
-                    title: t('common:failure'),
-                    type: 'failure'
-                })
+                if (isMobile && alert) {
+                    alert.show('error', t('common:failure'), message)
+                } else {
+                    showNotification({
+                        message,
+                        title: t('common:failure'),
+                        type: 'failure'
+                    })
+                }
             }
         } catch (e) {
             console.error('Swap error: ', e)
@@ -319,7 +326,7 @@ const TransferModal = () => {
             </div>
         )
     }, [state.allWallets, state.openList, state.asset, assetConfig])
-  
+
     useEffect(() =>{
         const _isError = state.asset === 'VNDC' ? state.amount < 500000 : state.asset === 'USDT' ? state.amount < 25 : false
         setIsError(_isError)
@@ -370,7 +377,7 @@ const TransferModal = () => {
     </div>
         return (
             <div className={isErrors || isAmountEmpty || isInsufficient ?
-                'mt-6 py-3.5 font-bold text-center text-sm bg-gray-3 dark:bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed rounded-xl'
+                'mt-6 py-3.5 font-bold text-center text-sm bg-gray-3 text-gray-1 dark:bg-darkBlue-3 dark:text-darkBlue-4 cursor-not-allowed rounded-xl'
                 : 'mt-6 py-3.5 font-bold text-center text-sm bg-dominant text-white cursor-pointer rounded-xl hover:opacity-80'}
                 onClick={() => !isErrors && !isAmountEmpty && !isInsufficient
                     && !state.isPlacingOrder && onTransfer(
@@ -486,12 +493,17 @@ const TransferModal = () => {
     //     console.log('namidev-DEBUG: Transfer Modal => ', state)
     // }, [state])
 
+
+    const classMobile = useMemo(() => {
+        return typeof window !== 'undefined' ? window.innerWidth < 330 ? 'w-[300px]' : 'w-[340px]' : 'w-[340px]';
+    }, [isMobile])
+
     return (
         <Modal isVisible={!!isVisible}
                onBackdropCb={onClose}
                className="w-[300px] px-4 py-5 sm:w-[453px] sm:px-8 sm:py-9"
                noButton
-               containerClassName="!top-[50%]"
+               containerClassName={`!top-[50%] ${isMobile?classMobile:''}`} 
         >
             <div className="flex items-center justify-between">
                 <span className="capitalize font-bold">{t('common:transfer')}</span>

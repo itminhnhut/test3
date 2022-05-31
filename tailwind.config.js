@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 
 // Common colors
 const commonColors = {
@@ -21,7 +21,9 @@ const commonColors = {
     white: 'white',
     teal: '#00C8BC',
     lightTeal: '#E2F6F5',
-}
+
+    red2: '#E5544B',
+};
 
 module.exports = {
     // future: {
@@ -279,6 +281,10 @@ module.exports = {
                     DEFAULT: commonColors.white,
                     dark: commonColors.white,
                 },
+                onus: {
+                    DEFAULT: commonColors.white,
+                    secondary: '#8492A7',
+                },
             },
             backgroundColor: {
                 bgTabInactive: {
@@ -331,12 +337,14 @@ module.exports = {
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
-                onlyDark: '0px 7px 23px rgba(245, 245, 245, 0.05)'
+                onlyDark: '0px 7px 23px rgba(245, 245, 245, 0.05)',
             },
-            boxShadow:{
+            boxShadow: {
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
                 'features': '0px 10px 30px rgba(89, 111, 153, 0.05)',
-            }
+                mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
+                order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
+            },
         },
     },
     variants: {
@@ -353,4 +361,4 @@ module.exports = {
         }),
         require('@tailwindcss/line-clamp'),
     ],
-}
+};

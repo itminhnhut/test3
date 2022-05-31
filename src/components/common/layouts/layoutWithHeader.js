@@ -1,4 +1,4 @@
-import ReactNotification from 'react-notifications-component';
+import { ReactNotifications } from 'react-notifications-component'
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import NavBar from '../NavBar';
@@ -13,7 +13,7 @@ const LayoutWithHeader = ({ showBanner, children, hidden }) => {
 
     return (
         <div className="md:h-screen flex flex-col">
-            <ReactNotification />
+            <ReactNotifications />
             { !hidden && _renderNav }
             <>{children}</>
         </div>

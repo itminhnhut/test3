@@ -21,7 +21,9 @@ const FuturesLeverageSettings = ({
     pairConfig,
     leverageBracket,
     isAuth,
-    isVndcFutures
+    isVndcFutures,
+    dots,
+    className
 }) => {
     const [loading, setLoading] = useState(false)
     const { t } = useTranslation();
@@ -122,7 +124,7 @@ const FuturesLeverageSettings = ({
         <Modal
             isVisible={isVisible}
             onBackdropCb={onClose}
-            containerClassName='max-w-[306px] select-none'
+            containerClassName={`max-w-[306px] select-none ${className}`}
         >
             <div className='-mt-1 mb-3 flex items-center justify-between font-bold text-sm'>
                 {t('futures:leverage:title')}
@@ -185,6 +187,7 @@ const FuturesLeverageSettings = ({
                     onChange={({ x }) =>
                         x === 0 ? _setLeverage(1) : _setLeverage(x)
                     }
+                    dots={dots}
                 />
             </div>
             {!isVndcFutures && <>
