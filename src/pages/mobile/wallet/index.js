@@ -27,6 +27,7 @@ import Modal from 'components/common/ReModal'
 import {PORTAL_MODAL_ID} from 'constants/constants'
 import colors from 'styles/colors'
 import Head from "next/head";
+import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
 
 const ASSET_LIST = [WalletCurrency.NAMI, WalletCurrency.VNDC]
 
@@ -140,11 +141,11 @@ const ExternalWithdrawal = (props) => {
         try {
             setIsSubmitting(true)
             setError(null)
-            // const {data} = await Axios.post(DIRECT_WITHDRAW_VNDC, {
-            //     amount,
-            //     currency,
-            // })
-            let data = {status: 'ok', message: 'PHA_KE_DATA'}
+            const {data} = await Axios.post(DIRECT_WITHDRAW_ONUS, {
+                amount,
+                currency,
+            })
+            // let data = {status: 'ok', message: 'PHA_KE_DATA'}
             if (data && data.status === 'ok') {
                 const res = (data.hasOwnProperty('data') && data.data) || {}
                 setWdlResult(res) // get withdraw result

@@ -186,4 +186,5 @@ export const API_CLOSE_ALL_ORDER = API_V3_PREFIX + 'futures/vndc/close-all-by-co
 export const API_ORDER_DETAIL = API_V3_PREFIX + 'futures/vndc/order-detail';
 
 export const DIRECT_WITHDRAW_VNDC = API_PREFIX + 'vndc/direct_withdraw_vndc'
+export const DIRECT_WITHDRAW_ONUS = API_PREFIX + 'vndc/direct_withdraw_onus'
 export const API_AUTH_USER_OTP = service => `${API_PREFIX}authenticated/${service}`;
