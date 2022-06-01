@@ -28,6 +28,8 @@ import {PORTAL_MODAL_ID} from 'constants/constants'
 import colors from 'styles/colors'
 import Head from "next/head";
 import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
+import { roundToDown } from 'round-to';
+import AssetName from 'components/wallet/AssetName';
 
 const ASSET_LIST = [WalletCurrency.NAMI, WalletCurrency.VNDC]
 
@@ -145,7 +147,7 @@ const ExternalWithdrawal = (props) => {
                 amount,
                 currency,
             })
-            // let data = {status: 'ok', message: 'PHA_KE_DATA'}
+            // let data = {status: 'ok', message: 'PHA_KE_DATA', data: {currency: 72, amount: 40000, amountLeft: 32000}}
             if (data && data.status === 'ok') {
                 const res = (data.hasOwnProperty('data') && data.data) || {}
                 setWdlResult(res) // get withdraw result
@@ -233,6 +235,9 @@ const ExternalWithdrawal = (props) => {
 
     const isDisableBtn = !amount || !!errorMessage
 
+    const amountLeft = wdlResult?.amountLeft || 0
+    const wdlAmount = wdlResult?.amount || 0
+    const wdlCurrency = wdlResult?.currency || 0
     return (
         <>
             <Head>
@@ -406,13 +411,16 @@ const ExternalWithdrawal = (props) => {
                         asset: currentCurr?.assetCode,
                     })}
                 </p>
+                <p className='text-center text-sm text-txtSecondary dark:text-txtSecondary-dark'>
+                    {t('wallet:mobile:tips')}
+                </p>
                 <div className='mt-7 mb-8 space-y-4'>
                     <div className='flex justify-between text-xs'>
                         <span className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
                             {t('wallet:mobile:time')}
                         </span>
                         <span className='font-semibold'>
-                            {format(Date.now(), 'yyyy-M-d hh:mm:ss')}
+                            {format(Date.now(), 'yyyy-MM-dd hh:mm:ss')}
                         </span>
                     </div>
                     <div className='flex justify-between text-xs'>
@@ -420,8 +428,8 @@ const ExternalWithdrawal = (props) => {
                             {t('wallet:mobile:amount')}
                         </span>
                         <span className='font-semibold'>
-                            {formatNumber(+amount, decimalScale)}&nbsp;
-                            {currentCurr?.assetCode}
+                            {formatNumber(+wdlAmount, decimalScale)}&nbsp;
+                            <AssetName assetId={wdlCurrency}/>
                         </span>
                     </div>
                     <div className='flex justify-between text-xs'>
@@ -430,8 +438,9 @@ const ExternalWithdrawal = (props) => {
                             {t('wallet:mobile:transfer_from_to')}
                         </span>
                         <span className='font-semibold whitespace-nowrap'>
-                            {t('ext_gate:onus_wallet')}&nbsp;-&nbsp;
                             {t('ext_gate:nami_futures_wallet')}
+                            &nbsp;-&nbsp;
+                            {t('ext_gate:onus_wallet')}
                         </span>
                     </div>
                 </div>

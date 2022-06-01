@@ -175,6 +175,7 @@
         "futures": "Nami Futures",
         "input_amount_placeholder": "Nhập vào số lượng muốn chuyển",
         "transfer_asset_success": "Chuyển {{asset}} thành công",
+        "tips": "Tài sản sẽ được chuyển về ví VNDC của bạn trong một thời gian ngắn.",
         "fee": "Phí",
         "time": "Thời gian giao dịch",
         "amount": "Số lượng tiền rút",
