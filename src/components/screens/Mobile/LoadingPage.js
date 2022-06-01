@@ -5,9 +5,9 @@ import colors from '../../../styles/colors'
 
 const LoadingPage = () => {
     return (
-        <div className="h-[100vh] w-full bg-white text-darkBlue-1 flex flex-col items-center justify-center">
-            <img src={getS3Url('/images/logo/nami_maldives.png')} width="70" height="70" />
-            <div className="font-medium text-sm pt-[50px] pb-[20px]">Change mindset, make giant steps</div>
+        <div className="h-[100vh] w-full bg-darkBlue-1 text-white flex flex-col items-center justify-center">
+            <img src={getS3Url('/images/logo/nami_maldives.png')} width="100" height="100" />
+            <div className="font-medium text-sm pt-[60px] pb-[20px]">Change mindset, make giant steps</div>
             <Loader>
                 <div class="progress-bar" ></div>
             </Loader>
@@ -31,7 +31,7 @@ const Loader = styled.div.attrs({
   width: 100%;
   width: 200px;
   height: 3px;
-  background: ${colors.grey4};
+  background: #333C54;
   border-radius: 18px;
   overflow: hidden;
   .progress-bar{
