@@ -1,32 +1,34 @@
 /* eslint-disable no-alert, no-console */
 
-import {appWithTranslation, useTranslation} from 'next-i18next';
-import {useRouter} from 'next/router';
+import { appWithTranslation, useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import 'public/css/font.css';
-import {useEffect} from 'react';
-import {Provider} from 'react-redux';
-import {useAsync} from 'react-use';
+import { useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
+import { useAsync } from 'react-use';
 import {
     getFuturesConfigs,
     getFuturesFavoritePairs,
     getFuturesMarketWatch,
     getFuturesUserSettings,
 } from 'redux/actions/futures';
-import {getAssetConfig, getExchangeConfig, getUsdRate,} from 'redux/actions/market';
-import {getPaymentConfigs} from 'redux/actions/payment';
-import {SET_LOADING_USER, SET_USD_RATE} from 'redux/actions/types';
-import {getWallet, setTheme} from 'redux/actions/user';
+import { getAssetConfig, getExchangeConfig, getUsdRate, } from 'redux/actions/market';
+import { getPaymentConfigs } from 'redux/actions/payment';
+import { SET_LOADING_USER, SET_USD_RATE } from 'redux/actions/types';
+import { getWallet, setTheme } from 'redux/actions/user';
 import Head from 'src/components/common/Head';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
-import {getMe, getUserFuturesBalance, getVip} from 'src/redux/actions/user';
+import { getMe, getUserFuturesBalance, getVip } from 'src/redux/actions/user';
 import initUserSocket from 'src/redux/actions/userSocket';
-import {useStore} from 'src/redux/store';
+import { useStore } from 'src/redux/store';
 // import * as fpixel from 'src/utils/fpixel';
 import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
-import {indexingArticles} from 'utils';
+import { indexingArticles } from 'utils';
+import { isMobile } from 'react-device-detect';
+import LoadingPage from 'components/screens/Mobile/LoadingPage';
 
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
@@ -85,17 +87,23 @@ const App = ({
         i18n: { language },
     } = useTranslation();
 
+    const [mount, setMount] = useState(false);
+
     useEffect(() => {
+        setMount(true);
         router.events.on('routeChangeStart', (url) => {
             NProgress.start();
         });
-        router.events.on('routeChangeComplete', () => NProgress.done());
-        router.events.on('routeChangeError', () => NProgress.done());
+        router.events.on('routeChangeComplete', () => {
+            NProgress.done()
+        });
+        router.events.on('routeChangeError', () => {
+            NProgress.done()
+        });
 
         const handleRouteChange = (url) => {
             ga.pageview(url);
         };
-
         router.events.on('routeChangeComplete', handleRouteChange);
         return () => {
             router.events.off('routeChangeComplete', handleRouteChange);
@@ -114,7 +122,7 @@ const App = ({
 
     }, []);
 
-    useEffect(async() => {
+    useEffect(async () => {
         if (!initConfig && !ignoreConfigUrls.includes(router.pathname)) {
             console.log('Init all configs');
             store.dispatch(initPublicSocket());
@@ -159,10 +167,10 @@ const App = ({
             }
         }
     });
-
+    if (!mount && isMobile) return <LoadingPage />
     return (
         <>
-            <Head language={language}/>
+            <Head language={language} />
             <Provider store={store}>
                 <Tracking>
                     <Component {...pageProps} />

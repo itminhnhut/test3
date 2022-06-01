@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback, useContext } from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
-import DynamicNoSsr from 'components/DynamicNoSsr';
 import { useSelector, useDispatch } from 'react-redux';
 import { FUTURES_DEFAULT_SYMBOL } from 'pages/futures';
 import { PATHS } from 'constants/paths';
@@ -139,39 +138,37 @@ const FuturesMobile = () => {
                     pairConfig={pairConfig}
                 />
             </SocketLayout>
-            <DynamicNoSsr>
-                <LayoutMobile>
-                    <Container id="futures-mobile" >
-                        <Section className="form-order"
-                            style={{ ...futuresScreen.style }}>
-                            <ChartMobile
-                                pair={state.pair} pairConfig={pairConfig}
-                                isVndcFutures={isVndcFutures}
-                                setCollapse={setCollapse} collapse={collapse}
-                                forceRender={forceRender}
-                                isFullScreen={futuresScreen.isFullScreen}
-                                decimals={decimals}
+            <LayoutMobile>
+                <Container id="futures-mobile" >
+                    <Section className="form-order"
+                        style={{ ...futuresScreen.style }}>
+                        <ChartMobile
+                            pair={state.pair} pairConfig={pairConfig}
+                            isVndcFutures={isVndcFutures}
+                            setCollapse={setCollapse} collapse={collapse}
+                            forceRender={forceRender}
+                            isFullScreen={futuresScreen.isFullScreen}
+                            decimals={decimals}
+                        />
+                        {!collapse && <SideOrder side={side} setSide={setSide} />}
+                        <SocketLayout pair={state.pair} pairConfig={pairConfig}>
+                            <PlaceOrderMobile
+                                decimals={decimals} side={side}
+                                pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
+                                pairConfig={pairConfig} isVndcFutures={isVndcFutures}
+                                collapse={collapse}
                             />
-                            {!collapse && <SideOrder side={side} setSide={setSide} />}
-                            <SocketLayout pair={state.pair} pairConfig={pairConfig}>
-                                <PlaceOrderMobile
-                                    decimals={decimals} side={side}
-                                    pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
-                                    pairConfig={pairConfig} isVndcFutures={isVndcFutures}
-                                    collapse={collapse}
-                                />
-                            </SocketLayout>
-                        </Section>
-                        <Section style={{ ...futuresScreen.style }}>
-                            <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
-                                pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
-                                setForceRender={setForceRender} forceRender={forceRender}
-                                isFullScreen={futuresScreen.isFullScreen}
-                            />
-                        </Section>
-                    </Container>
-                </LayoutMobile>
-            </DynamicNoSsr>
+                        </SocketLayout>
+                    </Section>
+                    <Section style={{ ...futuresScreen.style }}>
+                        <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
+                            pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
+                            setForceRender={setForceRender} forceRender={forceRender}
+                            isFullScreen={futuresScreen.isFullScreen}
+                        />
+                    </Section>
+                </Container>
+            </LayoutMobile>
         </>
     );
 };
