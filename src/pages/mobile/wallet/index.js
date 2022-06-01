@@ -31,7 +31,7 @@ import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
 import { roundToDown } from 'round-to';
 import AssetName from 'components/wallet/AssetName';
 
-const ASSET_LIST = [WalletCurrency.NAMI, WalletCurrency.VNDC]
+const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI]
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 300e3,
@@ -408,7 +408,6 @@ const ExternalWithdrawal = (props) => {
                 />
                 <p className='text-center font-semibold text-lg mt-5'>
                     {t('wallet:mobile:transfer_asset_success', {
-                        asset: currentCurr?.assetCode,
                     })}
                 </p>
                 <p className='text-center text-sm text-txtSecondary dark:text-txtSecondary-dark'>
