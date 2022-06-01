@@ -397,7 +397,7 @@ const ExternalWithdrawal = (props) => {
                 </div>
                 <img
                     className='mx-auto'
-                    src={'/images/screen/wallet/coins_pana.png'}
+                    src={getS3Url('/images/screen/wallet/coins_pana.png')}
                     width={150}
                     height={150}
                 />
