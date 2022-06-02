@@ -6,7 +6,7 @@ import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
 
 
-const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice, setStopPrice }) => {
+const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice, setStopPrice, pairConfig }) => {
     const { t } = useTranslation();
     const disabled = OrderTypes.Market === type;
     const getLabelName = OrderTypes.Market === type ? t('futures:price_market') : t('futures:price')
@@ -25,16 +25,16 @@ const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice,
             labelClassName='whitespace-nowrap'
             containerClassName="h-[36px]"
             tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
-            // renderTail={() => (
-            //     <div className='relative group select-none'>
-            //         <div className='flex items-center'>
-            //             <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
-            //         </div>
-            //     </div>
-            // )}
-            inputClassName="text-xs"
-            // onFocus={() => context.onHiddenBottomNavigation(true)}
-            // onBlur={() => context.onHiddenBottomNavigation(false)}
+            renderTail={() => (
+                <div className='relative group select-none'>
+                    <div className='flex items-center'>
+                        {pairConfig?.quoteAsset ?? ''}
+                    </div>
+                </div>
+            )}
+            inputClassName="text-xs !text-center"
+        // onFocus={() => context.onHiddenBottomNavigation(true)}
+        // onBlur={() => context.onHiddenBottomNavigation(false)}
         />
     );
 };

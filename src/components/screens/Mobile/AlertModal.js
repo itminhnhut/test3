@@ -71,13 +71,15 @@ const AlertModal = forwardRef((props, ref) => {
             <div className='text-sm mb-[30px] text-center'>
                 {options.current.messages}
             </div>
-            {/* <Button
-                title={t('futures:leverage:confirm')}
-                type="primary"
-                className={`!h-[44px] !text-sm !font-semibold`}
-                componentType="button"
-                onClick={onConfirm}
-            /> */}
+            {actions.current.onConfirm &&
+                <Button
+                    title={t('futures:leverage:confirm')}
+                    type="primary"
+                    className={`!h-[44px] !text-sm !font-semibold`}
+                    componentType="button"
+                    onClick={onConfirm}
+                />
+            }
             <Button
                 title={t('common:close')}
                 className={`mt-[8px] !h-[44px] !text-sm !font-semibold`}
