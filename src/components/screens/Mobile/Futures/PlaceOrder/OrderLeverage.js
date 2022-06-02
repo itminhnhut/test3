@@ -49,7 +49,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
                             </div>
                         </div>
                     )}
-                    inputClassName="text-xs"
+                    inputClassName="text-xs !text-center"
                 // onFocus={() => context.onHiddenBottomNavigation(true)}
                 // onBlur={() => context.onHiddenBottomNavigation(false)}
                 />

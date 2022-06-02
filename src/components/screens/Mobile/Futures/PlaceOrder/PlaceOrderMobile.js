@@ -303,6 +303,7 @@ const PlaceOrder = ({
                     <OrderVolumeMobile
                         size={size} setSize={setSize} decimals={decimals}
                         context={context}
+                        pairConfig={pairConfig}
                     />
                 </OrderInput>
                 <OrderInput>
@@ -310,6 +311,7 @@ const PlaceOrder = ({
                         type={type}
                         price={price} setPrice={setPrice} decimals={decimals}
                         context={context} stopPrice={stopPrice} setStopPrice={setStopPrice}
+                        pairConfig={pairConfig}
                     />
                 </OrderInput>
                 <OrderInput data-tut="order-sl">
