@@ -28,6 +28,7 @@ import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
 import AssetName from 'components/wallet/AssetName';
 import find from 'lodash/find';
 import Divider from "components/common/Divider";
+import LayoutMobile from "components/common/layouts/LayoutMobile";
 
 const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI];
 
@@ -237,7 +238,7 @@ const ExternalWithdrawal = (props) => {
     const wdlAmount = wdlResult?.amount || 0;
     const wdlCurrency = wdlResult?.currency || 0;
     return (
-        <>
+        <LayoutMobile>
             <Head>
                 <meta name="viewport"
                       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
@@ -389,7 +390,6 @@ const ExternalWithdrawal = (props) => {
                 })}
             </Div100vh>
 
-            <div id={`${PORTAL_MODAL_ID}`}/>
             <Modal
                 isVisible={modal.isSuccessModal}
                 containerClassName="px-6 py-8 !min-w-[18rem] !top-[50%]"
@@ -463,7 +463,7 @@ const ExternalWithdrawal = (props) => {
                     </a>
                 </div>
             </NoticePopup>
-        </>
+        </LayoutMobile>
     );
 };
 
