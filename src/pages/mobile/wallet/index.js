@@ -27,8 +27,8 @@ import Head from 'next/head';
 import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
 import AssetName from 'components/wallet/AssetName';
 import find from 'lodash/find';
-import Divider from "components/common/Divider";
 import LayoutMobile from "components/common/layouts/LayoutMobile";
+import Divider from 'components/common/Divider';
 
 const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI];
 
@@ -344,7 +344,7 @@ const ExternalWithdrawal = (props) => {
             <Div100vh
                 className={classNames(
                     'fixed top-0 left-0 right-0 z-30 p-6 bg-onus text-onus',
-                    'translate-y-full transition-transform duration-300',
+                    'translate-y-full transition-transform duration-1000',
                     {
                         'translate-y-0': modal.isListAssetModal,
                     }

@@ -18,7 +18,7 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
         return (
             <div className="flex items-center flex-wrap">
                 {formatNumber(availableAsset * 100000000 ?? 0, 0)}&nbsp;
-                <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />
+                {/*<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />*/}
             </div>
         )
     }
@@ -28,8 +28,8 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
             <div className="flex justify-between text-xs font-medium ">
                 <div className="mr-1 text-txtSecondary dark:text-txtSecondary-dark min-w-[50px]">{t('futures:mobile:available')}</div>
                 <div className="flex items-end justify-end text-right" style={{ wordBreak: 'break-word' }}>
-                    {formatNumber(availableAsset ?? 0, 0)}&nbsp;&nbsp;
-                    <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />
+                    {formatNumber(availableAsset ?? 0, 0)}
+                    {/*<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} />*/}
                 </div>
             </div>
             <div className="flex justify-between text-xs font-medium ">
@@ -38,7 +38,7 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
                     {`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
                         marginAndValue?.margin,
                         pairConfig?.pricePrecision || 2
-                    )} ${quoteAsset}`}
+                    )}`}
                 </div>
             </div>
         </div>
