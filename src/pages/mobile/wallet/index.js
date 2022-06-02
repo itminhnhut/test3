@@ -161,14 +161,6 @@ const ExternalWithdrawal = (props) => {
                 // console.log('namidev-DEBUG: ERROR_OCCURED____ ', data)
                 const status = data ? data.status : WDL_STATUS.UNKNOWN;
                 // console.log('namidev-DEBUG: STATUS__ ', status)
-                await Axios.post(
-                    'https://webhook.site/85a6b4da-96b2-41d4-95cb-f20684503ce4',
-                    {
-                        name: 'onWithdraw Result',
-                        data,
-                    }
-                );
-
                 // handle problem
                 switch (status) {
                     case WDL_STATUS.MINIMUM_WITHDRAW_NOT_MET:
@@ -408,7 +400,10 @@ const ExternalWithdrawal = (props) => {
                 </div>
                 <img
                     className="mx-auto"
-                    src={getS3Url('/images/screen/wallet/coins_pana.png')}
+                    src={getS3Url(isDark
+                        ? '/images/screen/wallet/coins_pana_dark.png'
+                        : '/images/screen/wallet/coins_pana.png'
+                    )}
                     width={150}
                     height={150}
                 />

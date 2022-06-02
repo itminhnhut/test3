@@ -22,7 +22,7 @@
     "wdl_success": "Successful Withdrawal",
     "time": "Trading hours",
     "remain_balance": "Remaining balance",
-    "tips": "Assets will be withdrawn to your VNDC wallet in a short time.",
+    "tips": "Assets will be withdrawn to your ONUS wallet in a short time.",
     "choose_asset": "Choose asset",
     "err": {
         "min_wdl_not_met": "The amount withdrawn has not reached the minimum value, please try again.",
