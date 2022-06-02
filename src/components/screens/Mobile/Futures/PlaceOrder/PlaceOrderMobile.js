@@ -156,7 +156,7 @@ const PlaceOrder = ({
         const margin = volume / leverage;
         const marginLength = margin.toFixed(0).length;
         return { volume, margin, volumeLength, marginLength }
-    }, [pairPrice, side, type])
+    }, [pairPrice, side, type, size])
 
     const inputValidator = (mode, isStop) => {
         let isValid = true,
