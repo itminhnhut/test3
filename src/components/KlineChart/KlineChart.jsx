@@ -35,6 +35,11 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '',
 
     useEffect(() => {
         chart.current = init(chartId, getDefaultOptions(THEME_MODE.DARK))
+        if (chart.current) {
+            setTimeout(() => {
+                chart.current.resize();
+            }, 1000);
+        }
     }, [])
 
     const _getData = useCallback(async (to, from) => {

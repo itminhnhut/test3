@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import TradingInput from 'components/trade/TradingInput';
 import { useTranslation } from 'next-i18next'
 import { getS3Url } from 'redux/actions/utils';
@@ -26,6 +26,11 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
             setLeverage(data?.data?.[pairConfig?.pair])
         }
     }
+
+    const classMobile = useMemo(() => {
+        const widht = window.innerWidth < 330 ? 'w-[300px]' : '!w-[340px]';
+        return widht + ' overflow-x-hidden !max-w-[500px]'
+    }, [])
 
     return (
         <>
@@ -65,7 +70,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
                     onClose={() => setOpenModal(false)}
                     isVndcFutures={true}
                     dots={5}
-                    className="top-[50%]"
+                    className={`top-[50%] ${classMobile}`}
                 />
             }
         </>
