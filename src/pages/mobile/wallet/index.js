@@ -43,8 +43,8 @@ const MAX_WITHDRAWAL = {
 };
 
 const VNDC_WITHDRAWAL_FEE = {
-    [WalletCurrency.VNDC]: 1e3,
-    [WalletCurrency.NAMI]: 1,
+    [WalletCurrency.VNDC]: 0,
+    [WalletCurrency.NAMI]: 0,
 };
 
 const DECIMAL_SCALES = {
@@ -314,7 +314,7 @@ const ExternalWithdrawal = (props) => {
                         {t('ext_gate:trans_fee')}
                     </span>
                     <div className="flex justify-between items-center pl-4 bg-onus-1 rounded-md h-11 mb-6 mt-2">
-                        <span>{formatNumber(fee, decimalScale)}</span>
+                        <span>{fee > 0 ? formatNumber(fee, decimalScale): t('common:free')}</span>
                         <div
                             className="h-full leading-[2.75rem] bg-[#36445A] w-16 text-[#8492A7] rounded-r-md text-center">
                             {currentCurr?.assetName}
@@ -344,7 +344,7 @@ const ExternalWithdrawal = (props) => {
             <Div100vh
                 className={classNames(
                     'fixed top-0 left-0 right-0 z-30 p-6 bg-onus text-onus',
-                    'translate-y-full transition-transform duration-1000',
+                    'translate-y-full transition-transform duration-500',
                     {
                         'translate-y-0': modal.isListAssetModal,
                     }
