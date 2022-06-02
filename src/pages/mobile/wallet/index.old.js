@@ -1,21 +1,21 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import LayoutMobile from 'components/common/layouts/LayoutMobile'
-import cn from 'classnames'
-import { useSelector } from 'react-redux'
-import { useTranslation } from 'next-i18next'
-import { formatCurrency, formatWallet, getS3Url } from 'redux/actions/utils'
-import AssetLogo from 'components/wallet/AssetLogo'
-import { keyBy, map } from 'lodash'
-import { getUsdRate } from 'redux/actions/market'
-import { sumBy } from 'lodash/math'
-import SortIcon from 'components/screens/Mobile/SortIcon'
-import SvgLock from 'components/svg/SvgLock'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
-import colors from 'styles/colors'
-import { MIN_WALLET } from 'constants/constants'
-import { getDownloadAppLinkForWebView } from 'utils/helpers'
-import { useRouter } from 'next/router'
+import React, { useEffect, useMemo, useState } from 'react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import LayoutMobile from 'components/common/layouts/LayoutMobile';
+import cn from 'classnames';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'next-i18next';
+import { formatCurrency, formatWallet, getS3Url } from 'redux/actions/utils';
+import AssetLogo from 'components/wallet/AssetLogo';
+import { keyBy, map } from 'lodash';
+import { getUsdRate } from 'redux/actions/market';
+import { sumBy } from 'lodash/math';
+import SortIcon from 'components/screens/Mobile/SortIcon';
+import SvgLock from 'components/svg/SvgLock';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from 'styles/colors';
+import { MIN_WALLET } from 'constants/constants';
+import { getDownloadAppLinkForWebView } from 'utils/helpers';
+import { useRouter } from 'next/router';
 
 const TABS = {
     SPOT: 'SPOT',

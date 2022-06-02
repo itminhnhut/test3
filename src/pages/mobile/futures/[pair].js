@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { FUTURES_DEFAULT_SYMBOL } from './index';
-import LoadingPage from 'components/screens/Mobile/LoadingPage'
+import LoadingPage from 'components/screens/Mobile/LoadingPage';
 
 const FuturesMobileComponent = dynamic(
     () => import('components/screens/Mobile/Futures/Futures'),

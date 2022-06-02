@@ -1,24 +1,23 @@
-import React, { useState, memo, useEffect, useMemo, useRef, useContext, useCallback } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import OrderVolumeMobile from './OrderVolumeMobile';
 import OrderPriceMobile from './OrderPriceMobile';
 import OrderTPMobile from './OrderTPMobile';
 import OrderSLMobile from './OrderSLMobile';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux'
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import { useSelector } from 'react-redux';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
 import OrderLeverage from './OrderLeverage';
-import OrderTypeMobile from './OrderTypeMobile'
+import OrderTypeMobile from './OrderTypeMobile';
 import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
 import { formatNumber } from 'redux/actions/utils';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 import OrderCollapse from './OrderCollapse';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
-import { getType, getPrice } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc'
+import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
+import { getPrice, getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { createSelector } from 'reselect';
-import { useRouter } from 'next/router'
 
 const getPairPrice = createSelector(
     [
