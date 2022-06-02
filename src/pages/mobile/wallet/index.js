@@ -27,6 +27,7 @@ import Head from 'next/head';
 import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
 import AssetName from 'components/wallet/AssetName';
 import find from 'lodash/find';
+import Divider from "components/common/Divider";
 
 const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI];
 
@@ -342,9 +343,9 @@ const ExternalWithdrawal = (props) => {
             <Div100vh
                 className={classNames(
                     'fixed top-0 left-0 right-0 z-30 p-6 bg-[#1B222D] text-onus',
-                    'translate-x-full transition-transform',
+                    'translate-y-full transition-transform duration-300',
                     {
-                        'translate-x-0': modal.isListAssetModal,
+                        'translate-y-0': modal.isListAssetModal,
                     }
                 )}
             >
@@ -357,31 +358,34 @@ const ExternalWithdrawal = (props) => {
                         <X size={16}/>
                     </div>
                 </div>
-                {assets.map((a) => {
+                {assets.map((a, i) => {
                     return (
-                        <div
-                            key={a.id}
-                            className="flex justify-between items-center mt-8"
-                            onClick={() => {
-                                handleModal('isListAssetModal', false);
-                                setCurrentCurr(a);
-                            }}
-                        >
-                            <div className="flex items-center">
-                                <AssetLogo size={40} assetCode={a.assetCode}/>
-                                <div className="ml-3">
-                                    <div className="font-bold">
-                                        {a.assetCode}
-                                    </div>
-                                    <div className="text-onus-secondary text-sm">
-                                        {a.assetName}
+                        <>
+                            {i !== 0 && <Divider/>}
+                            <div
+                                key={a.id}
+                                className="flex justify-between items-center my-4"
+                                onClick={() => {
+                                    handleModal('isListAssetModal', false);
+                                    setCurrentCurr(a);
+                                }}
+                            >
+                                <div className="flex items-center">
+                                    <AssetLogo size={40} assetCode={a.assetCode}/>
+                                    <div className="ml-3">
+                                        <div className="font-bold">
+                                            {a.assetCode}
+                                        </div>
+                                        <div className="text-onus-secondary text-sm">
+                                            {a.assetName}
+                                        </div>
                                     </div>
                                 </div>
+                                {a.id === currentCurr?.id && (
+                                    <CheckSuccess size={24}/>
+                                )}
                             </div>
-                            {a.id === currentCurr?.id && (
-                                <CheckSuccess size={24}/>
-                            )}
-                        </div>
+                        </>
                     );
                 })}
             </Div100vh>
