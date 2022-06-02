@@ -184,3 +184,7 @@ export const API_GET_TRANSACTION_HISTORY = API_V3_PREFIX + 'futures/income';
 export const API_GET_FUTURES_ORDER = API_V3_PREFIX + 'futures/vndc/order';
 export const API_CLOSE_ALL_ORDER = API_V3_PREFIX + 'futures/vndc/close-all-by-condition';
 export const API_ORDER_DETAIL = API_V3_PREFIX + 'futures/vndc/order-detail';
+
+export const DIRECT_WITHDRAW_VNDC = API_PREFIX + 'vndc/direct_withdraw_vndc'
+export const DIRECT_WITHDRAW_ONUS = API_PREFIX + 'vndc/direct_withdraw_onus'
+export const API_AUTH_USER_OTP = service => `${API_PREFIX}authenticated/${service}`;

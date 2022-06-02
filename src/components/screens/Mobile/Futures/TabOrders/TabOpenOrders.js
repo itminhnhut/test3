@@ -5,7 +5,7 @@ import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import TableNoData from 'components/common/table.old/TableNoData';
-import OrderClose from 'components/screens/Futures/PlaceOrder/Vndc/OrderClose';
+// import OrderClose from 'components/screens/Futures/PlaceOrder/Vndc/OrderClose';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { ApiStatus } from 'redux/actions/const'
 import fetchApi from 'utils/fetch-api'
@@ -32,7 +32,14 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
         rowData.current = item;
         switch (key) {
             case 'delete':
-                setOpenCloseModal(!openCloseModal);
+                context.alert.show('warning',
+                    t('futures:close_order:modal_title', { value: item?.displaying_id }),
+                    <div dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: item?.displaying_id }) }}></div>,
+                    () => {
+                        onConfirmDelete(item);
+                    }
+                )
+                // setOpenCloseModal(!openCloseModal);
                 break;
             case 'edit':
                 setOpenEditModal(!openEditModal);
@@ -63,13 +70,14 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
         }
     }
 
-    const onConfirmDelete = async () => {
+    const onConfirmDelete = async (item) => {
+        const id = item ? item.displaying_id : rowData.current.displaying_id;
         const params = {
-            displaying_id: rowData.current.displaying_id,
+            displaying_id: id,
             special_mode: 1
         }
         fetchOrder('DELETE', params, () => {
-            context.alert.show('success', t('common:success'), t('futures:close_order:close_successfully', { value: rowData.current?.displaying_id }))
+            context.alert.show('success', t('common:success'), t('futures:close_order:close_successfully', { value: id }))
         });
     }
 
@@ -101,7 +109,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
                 onClose={() => setOpenShareModal(false)}
                 pairPrice={marketWatch[rowData.current?.symbol]}
             />}
-            <OrderClose open={openCloseModal} onClose={setOpenCloseModal} data={rowData.current} onConfirm={onConfirmDelete} isMobile />
+            {/* <OrderClose open={openCloseModal} onClose={setOpenCloseModal} data={rowData.current} onConfirm={onConfirmDelete} isMobile /> */}
             <div
                 className='flex items-center text-sm font-medium select-none cursor-pointer'
                 onClick={() => setHideOther(!hideOther)}

@@ -23,6 +23,9 @@ const commonColors = {
     lightTeal: '#E2F6F5',
 
     red2: '#E5544B',
+
+    onus: '#1B222D',
+    onus1: '#243042',
 };
 
 module.exports = {
@@ -52,6 +55,7 @@ module.exports = {
         fontFamily: {
             sans: ['Barlow', 'sans-serif'],
             serif: ['serif'],
+            inter: ['Inter', 'sans-serif'],
         },
         fontSize: {
             xxs: [
@@ -234,6 +238,8 @@ module.exports = {
             },
             pink: { DEFAULT: '#E5544B' },
             mint: { DEFAULT: '#00C8BC' },
+
+            onus: { DEFAULT: commonColors.onus, 1: commonColors.onus1 },
         },
         extend: {
             spacing: {

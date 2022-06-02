@@ -1,5 +1,5 @@
 import AssetLogo from 'components/wallet/AssetLogo'
-import {formatNumber} from 'redux/actions/utils'
+import { formatNumber, getS3Url } from 'redux/actions/utils';
 import NumberFormat from 'react-number-format'
 import Button from 'components/common/Button'
 import Modal from 'components/common/ReModal'
@@ -427,7 +427,7 @@ export default function Transfer() {
                 </div>
                 <img
                     className='mx-auto'
-                    src={'/images/screen/wallet/coins_pana.png'}
+                    src={getS3Url('/images/screen/wallet/coins_pana.png')}
                     width={150}
                     height={150}
                 />

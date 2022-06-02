@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import { LOCAL_STORAGE_KEY } from 'constants/constants';
-import { isMobile } from 'react-device-detect';
 import { useMemo } from 'react';
+
 export const FUTURES_DEFAULT_SYMBOL = 'BTCVNDC'
 
 const FuturesIndex = () => {
@@ -11,7 +11,7 @@ const FuturesIndex = () => {
     const params = useMemo(() => {
         return router.asPath.indexOf('?') !== -1 ? router.asPath.substring(router.asPath.indexOf('?')) : ''
     }, [router])
-    
+
     if (typeof window !== 'undefined') {
         // Find previous symbol
         const prevSymbol = localStorage.getItem(

@@ -1,7 +1,7 @@
-import React from 'react'
-import {serverSideTranslations} from 'next-i18next/serverSideTranslations'
-import LayoutMobile from 'components/common/layouts/LayoutMobile'
-import Market from "components/screens/Mobile/Market/Market";
+import React from 'react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import LayoutMobile from 'components/common/layouts/LayoutMobile';
+import Market from 'components/screens/Mobile/Market/Market';
 
 const MarketScreen = () => {
     return (

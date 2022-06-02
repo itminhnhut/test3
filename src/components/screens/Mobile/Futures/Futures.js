@@ -1,27 +1,21 @@
-import React, { useState, useMemo, useEffect, useRef, useCallback, useContext } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FUTURES_DEFAULT_SYMBOL } from 'pages/futures';
 import { PATHS } from 'constants/paths';
-import FuturesMarketWatch from 'models/FuturesMarketWatch'
-import FuturesMarkPrice from 'models/FuturesMarkPrice'
-import Emitter from 'redux/actions/emitter';
-import Axios from 'axios';
 import { useRouter } from 'next/router';
-import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
-import { API_GET_FUTURES_MARK_PRICE, API_GET_FUTURES_ORDER } from 'redux/actions/apis';
-import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
+import { UserSocketEvent } from 'redux/actions/const';
+import { LOCAL_STORAGE_KEY } from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
-import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders'
-import { getOrdersList } from 'redux/actions/futures'
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
+import { getOrdersList } from 'redux/actions/futures';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
-import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile'
-import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
+import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
-import { countDecimals } from 'redux/actions/utils'
+import { countDecimals } from 'redux/actions/utils';
 
 const INITIAL_STATE = {
     loading: false,

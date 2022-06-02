@@ -240,13 +240,13 @@ const ExternalWithdrawal = (props) => {
                 // console.log('namidev-DEBUG: ERROR_OCCURED____ ', data)
                 const status = data ? data.status : WDL_STATUS.UNKNOWN
                 // console.log('namidev-DEBUG: STATUS__ ', status)
-                Axios.post(
-                    'https://webhook.site/85a6b4da-96b2-41d4-95cb-f20684503ce4',
-                    {
-                        name: 'onWithdraw Result',
-                        data,
-                    }
-                )
+                // Axios.post(
+                //     'https://webhook.site/85a6b4da-96b2-41d4-95cb-f20684503ce4',
+                //     {
+                //         name: 'onWithdraw Result',
+                //         data,
+                //     }
+                // )
 
                 // handle problem
                 switch (status) {

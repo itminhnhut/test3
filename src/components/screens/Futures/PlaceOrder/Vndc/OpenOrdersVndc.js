@@ -137,7 +137,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             {
                 name: '',
                 cell: (row) => (
-                    <div onClick={() => onDelete(row)} className='cursor-pointer hover:opacity-80 px-[28px] py-1 font-medium text-xs text-txtSecondary dark:text-white bg-gray-5 dark:bg-darkBlue-4 rounded-[4px]'>
+                    <div onClick={() => onDelete(row)} className='cursor-pointer hover:opacity-80 px-[28px] py-1 font-medium text-xs text-txtSecondary bg-gray-5 dark:text-txtSecondary-dark dark:bg-darkBlue-3 rounded-[4px]'>
                         {t('common:close')}
                     </div>
                 ),
@@ -406,7 +406,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                         })
                         TimeFilterRef.current.onReset([]);
                     }}
-                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:bg-darkBlue-3 dark:text-txtSecondary-dark cursor-pointer hover:opacity-80 rounded-md">
+                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:text-txtSecondary-dark dark:bg-darkBlue-3 cursor-pointer hover:opacity-80 rounded-md">
                     {t('common:reset')}
                 </div>
                 <CloseAllOrders />
