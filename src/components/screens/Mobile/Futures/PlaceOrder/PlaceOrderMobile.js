@@ -18,6 +18,8 @@ import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/Edit
 import { getPrice, getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { createSelector } from 'reselect';
+import { useRouter } from 'next/router'
+import OrderVolumeMobileModal from './OrderVolumeMobileModal'
 
 const getPairPrice = createSelector(
     [
@@ -55,6 +57,7 @@ const PlaceOrder = ({
     const context = useContext(AlertContext);
     const marketWatch = useSelector(state => getPairPrice(state, pair))
     const newDataLeverage = useRef(0)
+    const [showEditVolume, setShowEditVolume] = useState(false);
 
     useEffect(() => {
         if (usdRate) {
@@ -153,7 +156,7 @@ const PlaceOrder = ({
         const margin = volume / leverage;
         const marginLength = margin.toFixed(0).length;
         return { volume, margin, volumeLength, marginLength }
-    }, [pairPrice, side, type])
+    }, [pairPrice, side, type, size])
 
     const inputValidator = (mode, isStop) => {
         let isValid = true,
@@ -179,14 +182,15 @@ const PlaceOrder = ({
                 const _max = lotSize?.maxQty
                 const _min = lotSize?.minQty
                 const _decimals = decimals.decimalScaleQtyLimit
-                const _maxSize = getMaxSize(marketWatch?.lastPrice ?? pairPrice?.lastPrice, type, side, leverage, availableAsset, marketWatch ?? pairPrice, pairConfig);
+                const _priceInput = type === OrderTypes.Limit ? price : stopPrice;
+                const _maxSize = getMaxSize(_priceInput, type, side, leverage, availableAsset, marketWatch ?? pairPrice, pairConfig);
                 const _displayingMax = `${formatNumber(_maxSize, _decimals, 0, true)} ${pairConfig?.baseAsset}`
                 const _displayingMin = `${formatNumber(lotSize?.minQty, _decimals, 0, true)} ${pairConfig?.baseAsset}`
                 if (size < +_min) {
                     msg = `${t('futures:minimun_qty')} ${_displayingMin} `
                     isValid = false
                 }
-                if (size > +_maxSize) {
+                if (size > +Number(_maxSize).toFixed(_decimals)) {
                     msg = `${t('futures:maximun_qty')} ${_displayingMax}`
                     isValid = false
                 }
@@ -262,6 +266,10 @@ const PlaceOrder = ({
         setShowEditSLTP(false);
     }
 
+    const onConfirmEditVolume = (volume) => {
+        setSize(volume);
+        setShowEditVolume(false);
+    }
     return (
         <div className="flex flex-wrap justify-between px-[16px] py-[10px]">
             {showEditSLTP &&
@@ -299,10 +307,25 @@ const PlaceOrder = ({
                     />
                 </OrderInput>
                 <OrderInput data-tut="order-volume">
+                    {showEditVolume && <OrderVolumeMobileModal
+                        size={size}
+                        decimal={decimals.decimalScaleQtyLimit}
+                        onClose={() => setShowEditVolume(false)}
+                        onConfirm={onConfirmEditVolume}
+                        pairConfig={pairConfig}
+                        type={type}
+                        side={side}
+                        price={price}
+                        pairPrice={pairPrice}
+                        leverage={leverage}
+                        availableAsset={availableAsset}
+                        getMaxSize={getMaxSize}
+                    />}
                     <OrderVolumeMobile
                         size={size} setSize={setSize} decimals={decimals}
                         context={context}
                         pairConfig={pairConfig}
+                        setShowEditVolume={setShowEditVolume}
                     />
                 </OrderInput>
                 <OrderInput>
