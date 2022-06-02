@@ -242,9 +242,9 @@ const ExternalWithdrawal = (props) => {
                 <meta name="viewport"
                       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
             </Head>
-            <Div100vh className="px-4 py-6 flex flex-col bg-[#1B222D]">
+            <Div100vh className="px-4 py-6 flex flex-col bg-onus">
                 <div className="flex-1 text-onus font-medium text-sm">
-                    <div className="flex items-center px-4 bg-[#243042] rounded-md h-11 mb-6">
+                    <div className="flex items-center px-4 bg-onus-1 rounded-md h-11 mb-6">
                         <AssetLogo assetCode="ONUS" size={28}/>
                         <span className="ml-1">
                             {t('ext_gate:onus_wallet')}
@@ -255,7 +255,7 @@ const ExternalWithdrawal = (props) => {
                         {t('ext_gate:choose_asset')}
                     </span>
                     <div
-                        className="flex justify-between items-center px-4 bg-[#243042] rounded-md h-11 mb-6 mt-2"
+                        className="flex justify-between items-center px-4 bg-onus-1 rounded-md h-11 mb-6 mt-2"
                         onClick={() => handleModal('isListAssetModal', true)}
                     >
                         <div className="flex items-center font-medium">
@@ -275,7 +275,7 @@ const ExternalWithdrawal = (props) => {
                         </span>
                         {errorMessage}
                     </div>
-                    <div className="flex justify-between items-center pl-4 bg-[#243042] rounded-md h-11 mb-2 mt-2">
+                    <div className="flex justify-between items-center pl-4 bg-onus-1 rounded-md h-11 mb-2 mt-2">
                         <NumberFormat
                             thousandSeparator
                             allowNegative={false}
@@ -312,7 +312,7 @@ const ExternalWithdrawal = (props) => {
                     <span className="text-onus-secondary text-xs uppercase">
                         {t('ext_gate:trans_fee')}
                     </span>
-                    <div className="flex justify-between items-center pl-4 bg-[#243042] rounded-md h-11 mb-6 mt-2">
+                    <div className="flex justify-between items-center pl-4 bg-onus-1 rounded-md h-11 mb-6 mt-2">
                         <span>{formatNumber(fee, decimalScale)}</span>
                         <div
                             className="h-full leading-[2.75rem] bg-[#36445A] w-16 text-[#8492A7] rounded-r-md text-center">
@@ -342,7 +342,7 @@ const ExternalWithdrawal = (props) => {
 
             <Div100vh
                 className={classNames(
-                    'fixed top-0 left-0 right-0 z-30 p-6 bg-[#1B222D] text-onus',
+                    'fixed top-0 left-0 right-0 z-30 p-6 bg-onus text-onus',
                     'translate-y-full transition-transform duration-300',
                     {
                         'translate-y-0': modal.isListAssetModal,

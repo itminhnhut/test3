@@ -69,13 +69,13 @@ const LayoutMobile = ({
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
             </Head>
             <div
-                className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''
+                className={`mal-layouts flex flex-col font-inter ${light ? 'mal-layouts___light' : ''
                     } ${dark ? 'mal-layouts___dark' : ''}`}
                 style={
                     state.isDrawer
                         ? {
                             height,
-                            overflow: 'hidden',
+                            overflow: 'hidden'
                         }
                         : {}
                 }
