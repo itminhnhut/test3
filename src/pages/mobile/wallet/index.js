@@ -360,10 +360,9 @@ const ExternalWithdrawal = (props) => {
                 </div>
                 {assets.map((a, i) => {
                     return (
-                        <>
+                        <div key={a.id} className="">
                             {i !== 0 && <Divider/>}
                             <div
-                                key={a.id}
                                 className="flex justify-between items-center my-4"
                                 onClick={() => {
                                     handleModal('isListAssetModal', false);
@@ -385,7 +384,7 @@ const ExternalWithdrawal = (props) => {
                                     <CheckSuccess size={24}/>
                                 )}
                             </div>
-                        </>
+                        </div>
                     );
                 })}
             </Div100vh>
