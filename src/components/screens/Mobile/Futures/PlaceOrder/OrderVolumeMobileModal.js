@@ -60,7 +60,7 @@ const OrderVolumeMobileModal = (props) => {
 
     const available = maxQuoteQty >= minQuoteQty;
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
-    const initValue = 1000000;
+    const initValue = 100000;
     return (
         <Modal
             isVisible={true}
@@ -82,7 +82,7 @@ const OrderVolumeMobileModal = (props) => {
                     <Minus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
-                        onClick={() => volume > maxQuoteQty && available && setVolume((prevState) => Number(prevState) - initValue)}
+                        onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - initValue)}
                     />
                 </div>
                 <TradingInput
