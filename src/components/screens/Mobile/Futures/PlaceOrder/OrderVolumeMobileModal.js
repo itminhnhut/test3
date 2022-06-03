@@ -32,9 +32,6 @@ const OrderVolumeMobileModal = (props) => {
     }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig])
 
     const marginAndValue = useMemo(() => {
-        const _price = type === FuturesOrderTypes.Market ?
-            (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
-            price;
         const volumeLength = Number(volume).toFixed(0).length;
         const margin = volume / leverage;
         const marginLength = margin.toFixed(0).length;

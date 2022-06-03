@@ -159,12 +159,12 @@ const PlaceOrder = ({
     };
 
     const marginAndValue = useMemo(() => {
-        const _price = type === FuturesOrderTypes.Market ?
-            (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
-            price;
-        const _size = Number(size)
-            .toFixed(decimals.decimalScaleQtyLimit);
-        const volume = _size * _price;
+        // const _price = type === FuturesOrderTypes.Market ?
+        //     (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
+        //     price;
+        // const _size = Number(size)
+        //     .toFixed(decimals.decimalScaleQtyLimit);
+        const volume = quoteQty;
         const volumeLength = volume.toFixed(0).length;
         const margin = volume / leverage;
         const marginLength = margin.toFixed(0).length;
@@ -174,7 +174,7 @@ const PlaceOrder = ({
             volumeLength,
             marginLength
         };
-    }, [pairPrice, side, type, size]);
+    }, [pairPrice, side, type, size, quoteQty]);
 
     const inputValidator = (mode, isStop) => {
         let isValid = true,
