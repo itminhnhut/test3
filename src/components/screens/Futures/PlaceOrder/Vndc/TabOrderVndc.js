@@ -8,7 +8,7 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
     const { t } = useTranslation()
 
     return (
-        <div className="flex items-center mt-[20px] spot-place-orders-container" style={{ height: height }}>
+        <div className="flex items-center spot-place-orders-container" style={{ height: height }}>
             <div className="spot-place-orders-tabs w-full">
                 <div style={{ height: height }}
                     className={classNames(

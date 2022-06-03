@@ -134,7 +134,7 @@ const FuturesMobile = () => {
             </SocketLayout>
             <LayoutMobile>
                 <Container id="futures-mobile" >
-                    <Section className="form-order"
+                    <Section className="form-order bg-onus"
                         style={{ ...futuresScreen.style }}>
                         <ChartMobile
                             pair={state.pair} pairConfig={pairConfig}
@@ -144,9 +144,10 @@ const FuturesMobile = () => {
                             isFullScreen={futuresScreen.isFullScreen}
                             decimals={decimals}
                         />
-                        {!collapse && <SideOrder side={side} setSide={setSide} />}
+
                         <SocketLayout pair={state.pair} pairConfig={pairConfig}>
                             <PlaceOrderMobile
+                                setSide={setSide}
                                 decimals={decimals} side={side}
                                 pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
                                 pairConfig={pairConfig} isVndcFutures={isVndcFutures}
@@ -154,7 +155,7 @@ const FuturesMobile = () => {
                             />
                         </SocketLayout>
                     </Section>
-                    <Section style={{ ...futuresScreen.style }}>
+                    <Section className="bg-onus" style={{ ...futuresScreen.style }}>
                         <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
                             pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
                             setForceRender={setForceRender} forceRender={forceRender}
