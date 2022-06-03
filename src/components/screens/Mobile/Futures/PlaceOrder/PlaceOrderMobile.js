@@ -47,10 +47,6 @@ const PlaceOrder = ({
     const usdRate = useSelector((state) => state.utils.usdRate);
     const { t } = useTranslation();
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0);
-    const [maxQty, setMaxQty] = useState({
-        buy: 0,
-        sell: 0
-    });
     const initPercent = 25;
     const [type, setType] = useState(OrderTypes.Market);
     const [leverage, setLeverage] = useState(50);
@@ -74,7 +70,7 @@ const PlaceOrder = ({
         }
     }, [pairConfig?.baseAssetId, usdRate]);
 
-    const getMaxSize = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
+    const getMaxQuoteQty = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
         let maxBuy = 0;
         let maxSell = 0;
         let _price = price
@@ -125,10 +121,7 @@ const PlaceOrder = ({
         setTp(_tp);
         setSl(_sl);
         if (type === OrderTypes.Market) {
-            const _maxSize = getMaxSize(lastPrice, type, side, leverage, availableAsset, pairPrice, pairConfig);
-            const _size = +(_maxSize * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
-            setSize(_size);
-            setQuoteQty(+(_size * lastPrice).toFixed(decimals.decimalScalePrice))
+            onChangeQuoteQty(lastPrice, leverage)
         }
     }, [side, type]);
 
@@ -143,15 +136,21 @@ const PlaceOrder = ({
         setSl(_sl);
     }, [firstTime.current]);
 
+    const onChangeQuoteQty = (price, leverage) => {
+        const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000;
+        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
+        let _quoteQty = +Number(maxQuoteQty * (initPercent / 100)).toFixed(0)
+        _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
+        const _size = +((_quoteQty / price) * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
+        setSize(_size);
+        setQuoteQty(_quoteQty)
+    }
+
     useEffect(() => {
         if (firstTime.current) return;
         if (newDataLeverage.current) {
             const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
-            const _quoteQty = +Number((availableAsset / (1 / newDataLeverage?.current + (0.1 / 100))) * (initPercent / 100)).toFixed(0)
-            const _size = +((_quoteQty / _lastPrice) * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
-            const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000
-            setSize(_size);
-            setQuoteQty(_quoteQty < minQuoteQty ? minQuoteQty : _quoteQty)
+            onChangeQuoteQty(_lastPrice, newDataLeverage?.current);
         }
     }, [firstTime.current, newDataLeverage.current]);
 
@@ -160,11 +159,6 @@ const PlaceOrder = ({
     };
 
     const marginAndValue = useMemo(() => {
-        // const _price = type === FuturesOrderTypes.Market ?
-        //     (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
-        //     price;
-        // const _size = Number(size)
-        //     .toFixed(decimals.decimalScaleQtyLimit);
         const volume = quoteQty;
         const volumeLength = volume.toFixed(0).length;
         const margin = volume / leverage;
@@ -376,7 +370,7 @@ const PlaceOrder = ({
                             pairPrice={pairPrice}
                             leverage={leverage}
                             availableAsset={availableAsset}
-                            getMaxSize={getMaxSize}
+                            getMaxQuoteQty={getMaxQuoteQty}
                         />}
                         <OrderVolumeMobile
                             size={size} setSize={setSize} decimals={decimals}
