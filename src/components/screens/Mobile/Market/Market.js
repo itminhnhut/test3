@@ -244,9 +244,9 @@ export default ({isRealtime = true}) => {
         })
 
     return (
-        <div className='market-mobile'>
+        <div className='market-mobile dark:bg-onus'>
             <div className='flex items-center mt-6 px-4'>
-                <div className='flex flex-1 items-center bg-gray-4 dark:bg-onus rounded-md py-2 px-3'>
+                <div className='flex flex-1 items-center bg-gray-4 dark:bg-darkBlue-3 rounded-md py-2 px-3'>
                     <Search
                         size={16}
                         className='text-txtSecondary dark:text-txtSecondary-dark'
