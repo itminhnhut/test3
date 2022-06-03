@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { X } from 'react-feather';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { getS3Url } from 'redux/actions/utils';
 const Guideline = ({ pair, start, setStart, isFullScreen }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
@@ -107,7 +108,7 @@ const Content = ({ title, text, step, onClose, top, goTo, ...props }) => {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col items-center justify-center" onClick={() => onClose(false)}>
-            {top && <img className="m-auto" src="/images/icon/ic_guide_arrow.png" width={10} />}
+            {top && <img className="m-auto" src={getS3Url("/images/icon/ic_guide_arrow.png")} width={10} />}
             <View id={`guideline-step-${step}`}>
                 <div className="flex items-center justify-between">
                     <label className="text-teal font-semibold text-sm">{t('futures:mobile:guide:step')} {step}</label>
@@ -124,7 +125,7 @@ const Content = ({ title, text, step, onClose, top, goTo, ...props }) => {
                     </div>
                 </div>
             </View>
-            {!top && <img className="m-auto rotate-180" src="/images/icon/ic_guide_arrow.png" width={10} />}
+            {!top && <img className="m-auto rotate-180" src={getS3Url("/images/icon/ic_guide_arrow.png")} width={10} />}
         </div>
     )
 }
