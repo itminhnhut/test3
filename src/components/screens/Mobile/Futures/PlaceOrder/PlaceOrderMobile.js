@@ -52,7 +52,7 @@ const PlaceOrder = ({
         sell: 0
     });
     const initPercent = 25;
-    const [type, setType] = useState(OrderTypes.Limit);
+    const [type, setType] = useState(OrderTypes.Market);
     const [leverage, setLeverage] = useState(50);
     const [size, setSize] = useState(0);
     const [price, setPrice] = useState(0);
@@ -147,10 +147,11 @@ const PlaceOrder = ({
         if (firstTime.current) return;
         if (newDataLeverage.current) {
             const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
-            const _maxSize = getMaxSize(_lastPrice, type, side, newDataLeverage.current, availableAsset, marketWatch ?? pairPrice, pairConfig);
-            const _size = +(_maxSize * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
+            const _quoteQty = +Number((availableAsset / (1 / newDataLeverage?.current + (0.1 / 100))) * (initPercent / 100)).toFixed(0)
+            const _size = +((_quoteQty / _lastPrice) * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
+            const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000
             setSize(_size);
-            setQuoteQty(+(_size * _lastPrice).toFixed(decimals.decimalScalePrice))
+            setQuoteQty(_quoteQty < minQuoteQty ? minQuoteQty : _quoteQty)
         }
     }, [firstTime.current, newDataLeverage.current]);
 
@@ -197,10 +198,10 @@ const PlaceOrder = ({
         switch (mode) {
             // input check
             case 'quoteQty':
-                const _min = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 0
-                const _decimals = decimals.decimalScalePrice;
+                const _min = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000
+                const _decimals = 0;
                 const _priceInput = type === OrderTypes.Limit ? price : stopPrice;
-                const _max = getMaxSize(_priceInput, type, side, leverage, availableAsset, marketWatch ?? pairPrice, pairConfig, true);
+                const _max = +Number(availableAsset / (1 / leverage + (0.1 / 100))).toFixed(0);
                 const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
                 const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
                 if (quoteQty < +_min) {
@@ -265,7 +266,7 @@ const PlaceOrder = ({
         const not_valid = !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quoteQty').isValid ||
             !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid || !inputValidator('leverage').isValid;
         return !isVndcFutures ? false : not_valid;
-    }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage]);
+    }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage, quoteQty]);
 
     const onChangeTpSL = () => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
@@ -364,7 +365,7 @@ const PlaceOrder = ({
                     <OrderInput data-tut="order-volume">
                         {showEditVolume && <OrderVolumeMobileModal
                             size={size}
-                            decimal={decimals.decimalScalePrice}
+                            decimal={0}
                             onClose={() => setShowEditVolume(false)}
                             onConfirm={onConfirmEditVolume}
                             pairConfig={pairConfig}

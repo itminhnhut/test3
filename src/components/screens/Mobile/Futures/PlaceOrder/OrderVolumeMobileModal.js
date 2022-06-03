@@ -11,7 +11,7 @@ import { VndcFutureOrderType } from '../../../Futures/PlaceOrder/Vndc/VndcFuture
 import TradingLabel from 'components/trade/TradingLabel';
 import SvgWarning from 'components/svg/SvgWarning';
 import colors from '../../../../../styles/colors'
-
+const initValue = 100000;
 const OrderVolumeMobileModal = (props) => {
     const { onClose, size, decimal, getMaxSize, pairConfig,
         type, onConfirm, availableAsset, side, pairPrice, price,
@@ -22,7 +22,7 @@ const OrderVolumeMobileModal = (props) => {
     const [percent, setPercent] = useState(0);
 
     const minQuoteQty = useMemo(() => {
-        return pairConfig ? pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : 0
+        return pairConfig ? pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : initValue
     }, [pairConfig])
 
     const maxQuoteQty = useMemo(() => {
@@ -57,7 +57,6 @@ const OrderVolumeMobileModal = (props) => {
 
     const available = maxQuoteQty >= minQuoteQty;
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
-    const initValue = 100000;
     return (
         <Modal
             isVisible={true}
