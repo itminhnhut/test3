@@ -4,7 +4,7 @@ import colors from 'styles/colors';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'next-i18next'
-import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC } from 'components/screens/Futures/TradeRecord/RecordTableTab'
+import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC, RECORD_TAB } from 'components/screens/Futures/TradeRecord/RecordTableTab'
 import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders'
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
