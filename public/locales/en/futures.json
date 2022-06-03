@@ -229,7 +229,8 @@
         "realized_pnl": "Realized PNL",
         "reason_close": "Reason Close",
         "stop_loss": "Stop loss",
-        "market_price": "Market Price"
+        "market_price": "Market Price",
+        "balance_insufficient": "Your balance is not enough, please deposit."
     },
     "orders_history": "Orders History",
     "minimun_leverage": "Minimum Leverage is",

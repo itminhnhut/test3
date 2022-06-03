@@ -9,6 +9,8 @@ import TradingInput from 'components/trade/TradingInput';
 import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
 import { VndcFutureOrderType } from '../../../Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import TradingLabel from 'components/trade/TradingLabel';
+import SvgWarning from 'components/svg/SvgWarning';
+import colors from '../../../../../styles/colors'
 
 const OrderVolumeMobileModal = (props) => {
     const { onClose, size, decimal, getMaxSize, pairConfig,
@@ -68,8 +70,12 @@ const OrderVolumeMobileModal = (props) => {
         setPercent(volume * 100 / maxSize);
     }, [volume])
 
+    const onRedirect = () => {
+        window.ReactNativeWebView && window.ReactNativeWebView.postMessage('deposit');
+    }
 
-    const isError = volume < +minSize || volume > +maxSize
+    const available = maxSize >= minSize;
+    const isError = available && (volume < +minSize || volume > +maxSize)
     const initValue = decimal === 0 ? 1 : decimal < 2 ? 0.1 : parseFloat((Number(0).toFixed(decimal - 1) + '1'))
     return (
         <Modal
@@ -92,7 +98,7 @@ const OrderVolumeMobileModal = (props) => {
                     <Minus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
-                        onClick={() => volume > minSize && setVolume((prevState) => Number(prevState) - initValue)}
+                        onClick={() => volume > minSize && available && setVolume((prevState) => Number(prevState) - initValue)}
                     />
                 </div>
                 <TradingInput
@@ -105,12 +111,13 @@ const OrderVolumeMobileModal = (props) => {
                     inputClassName="!text-center"
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}
+                    disabled={!available}
                 />
                 <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
                     <Plus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
-                        onClick={() => volume < maxSize && setVolume((prevState) => Number(prevState) + initValue)}
+                        onClick={() => volume < maxSize && available && setVolume((prevState) => Number(prevState) + initValue)}
                     />
                 </div>
             </div>
@@ -121,7 +128,7 @@ const OrderVolumeMobileModal = (props) => {
                     x={percent}
                     axis='x'
                     xmax={100}
-                    onChange={({ x }) => onChangeVolume(x)}
+                    onChange={({ x }) => available && onChangeVolume(x)}
                     dots={4}
                 />
             </div>
@@ -130,11 +137,13 @@ const OrderVolumeMobileModal = (props) => {
                     label={t('common:min') + ':'}
                     value={minSize + ' ' + pairConfig.baseAsset}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px]'
+                    valueClassName="text-right"
                 />
                 <TradingLabel
                     label={t('common:max') + ':'}
                     value={maxSize + ' ' + pairConfig.baseAsset}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px]'
+                    valueClassName="text-right"
                 />
                 <TradingLabel
                     label={t('futures:margin') + ':'}
@@ -143,21 +152,31 @@ const OrderVolumeMobileModal = (props) => {
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig.quoteAsset}`}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px]'
+                    valueClassName="text-right"
                 />
                 <TradingLabel
                     label={t('futures:mobile:available') + ':'}
                     value={formatNumber(availableAsset ?? 0, 0) + ' ' + pairConfig.quoteAsset}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px]'
+                    valueClassName="text-right"
                 />
             </div>
+            {!available &&
+                <div className='mt-2.5 flex items-center'>
+                    <SvgWarning size={12} fill={colors.red2} />
+                    <div className='pl-2.5 font-medium text-xs text-red'>
+                        {t('futures:mobile:balance_insufficient')}
+                    </div>
+                </div>
+            }
             <div className='mt-5 mb-2'>
                 <Button
-                    title={t('futures:leverage:confirm')}
+                    title={t(available ? 'futures:leverage:confirm' : 'wallet:deposit')}
                     componentType='button'
                     className={`!h-[36px] ${isError ? 'dark:!bg-darkBlue-3 dark:!text-darkBlue-4' : ''}`}
                     type='primary'
                     disabled={isError}
-                    onClick={() => onConfirm(+volume)}
+                    onClick={() => available ? onConfirm(+volume) : onRedirect()}
                 />
             </div>
         </Modal>
