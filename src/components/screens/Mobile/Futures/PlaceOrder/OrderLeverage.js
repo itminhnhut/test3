@@ -28,14 +28,13 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
     }
 
     const classMobile = useMemo(() => {
-        const widht = window.innerWidth < 330 ? 'w-[300px]' : '!w-[340px]';
-        return widht + ' overflow-x-hidden !max-w-[500px]'
+        return 'w-[95%] overflow-x-hidden !max-w-[500px]'
     }, [])
 
     return (
         <>
             <div onClick={() => setOpenModal(true)}
-                 className="h-[32px] w-12 text-teal border-teal leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px]">{leverage}x</div>
+                className="h-[32px] w-12 text-teal border-teal leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px]">{leverage}x</div>
             {openModal &&
                 <FuturesLeverageSettings
                     pair={pair}

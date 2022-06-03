@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-import { formatNumber, formatTime } from 'redux/actions/utils'
+import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { useTranslation } from 'next-i18next'
 import { getProfitVndc, VndcFutureOrderType, renderCellTable } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
@@ -110,7 +110,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 </div>
                 {profit ?
                     <div className="border-[1px] border-teal p-[5px] rounded-[2px]" onClick={() => actions('modal')}>
-                        <img src="/images/icon/ic_share.png" height={16} width={16} />
+                        <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
                     </div>
                     : null
                 }

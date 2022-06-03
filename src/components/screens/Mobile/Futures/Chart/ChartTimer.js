@@ -48,14 +48,14 @@ const ChartTimer = ({
     }, [resolution])
 
     return (
-        <div className={`${className} chart-timer flex items-center justify-between px-[10px]`}>
+        <div className={`${className} chart-timer flex items-center justify-between px-4`}>
             <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen} />
             <div className="flex items-center"  >
                 {showSymbol &&
                     <div className="flex items-center flex-wrap">
                         <div className="flex items-center cursor-pointer" data-tut="order-symbol" onClick={() => setShowModelMarket(true)}>
                             <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16} />
-                            <div className="pl-[10px] font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                            <div className="px-2 font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
                         </div>
                         <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent} >
                             <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
@@ -63,7 +63,7 @@ const ChartTimer = ({
                     </div>
                 }
                 {showIconGuide &&
-                    <div className="pl-[10px]" onClick={() => setStart(true)}>
+                    <div className="px-2" onClick={() => setStart(true)}>
                         <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
                     </div>
                 }
@@ -76,7 +76,7 @@ const ChartTimer = ({
                     keyValue="value"
                     displayValue="text"
                     options={listTimeFrame}
-                    classNameButton="px-[10px]"
+                    classNameButton="px-2 py-2"
                     label={<div className="text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}
                 />
                 <MenuTime
@@ -85,8 +85,8 @@ const ChartTimer = ({
                     keyValue="value"
                     displayValue="text"
                     options={candleList}
-                    classNameButton="pl-[10px]"
-                    classNamePanel="right-[-10px]"
+                    classNameButton="px-2 py-2"
+                    // classNamePanel="right-[-10px]"
                     label={<Svg>{labelCandle.icon}</Svg>}
                 />
                 <FavouriteButton pair={pair} pairConfig={pairConfig} />
@@ -198,7 +198,7 @@ const FavouriteButton = ({ pairConfig }) => {
         dispatch(getFuturesFavoritePairs())
     }
 
-    return <div className='ml-4 cursor-pointer' onClick={handleSetFavorite}>
+    return <div className='px-2 py-2 cursor-pointer' onClick={handleSetFavorite}>
         {isFavorite ? <IconStarFilled size={16} color={colors.yellow} /> : <IconStar color="#718096" strokeWidth={0.5} size={18} />}
     </div>
 }

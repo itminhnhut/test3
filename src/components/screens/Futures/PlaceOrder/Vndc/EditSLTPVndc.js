@@ -357,7 +357,7 @@ const FuturesEditSLTPVndc = ({
 
     const classMobile = useMemo(() => {
         const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
-        const widht = window.innerWidth < 330 ? 'w-[300px]' : '!w-[340px]';
+        const widht = 'w-[95%]';
         return height + widht + ' overflow-x-hidden'
     }, [isMobile])
 
