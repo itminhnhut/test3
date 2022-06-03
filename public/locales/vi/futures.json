@@ -196,7 +196,7 @@
     "value": "Khối lượng",
     "price_market": "Giá thị trường",
     "cancel": "Hủy",
-    "place_order_success_message": "Chúc mừng bạn đã mua thành công",
+    "place_order_success_message": "Chúc mừng bạn đã đặt lệnh thành công",
     "place_order_failed": "Đặt lệnh không thành công",
     "mobile": {
         "balance": "Tài khoản",
