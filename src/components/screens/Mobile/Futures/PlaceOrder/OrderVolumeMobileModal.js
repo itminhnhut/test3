@@ -15,73 +15,57 @@ import colors from '../../../../../styles/colors'
 const OrderVolumeMobileModal = (props) => {
     const { onClose, size, decimal, getMaxSize, pairConfig,
         type, onConfirm, availableAsset, side, pairPrice, price,
-        leverage, getValidator
+        leverage, getValidator, quoteQty
     } = props;
     const { t } = useTranslation();
-    const [volume, setVolume] = useState(size)
+    const [volume, setVolume] = useState(quoteQty)
     const [percent, setPercent] = useState(0);
-    const [minSize, setMinSize] = useState(0)
 
-    const classMobile = useMemo(() => {
-        const widht = window.innerWidth < 330 ? 'w-[300px]' : '!w-[340px]';
-        return widht + ' overflow-x-hidden '
-    }, [])
+    const minQuoteQty = useMemo(() => {
+        return pairConfig ? pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : 0
+    }, [pairConfig])
 
-    const maxSize = useMemo(() => {
-        const value = getMaxSize(price, type, side, leverage, availableAsset, pairPrice, pairConfig)
-        return +Number(value).toFixed(decimal);
+    const maxQuoteQty = useMemo(() => {
+        const value = getMaxSize(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true)
+        const max = Math.min(leverage * availableAsset, value)
+        return +Number(max).toFixed(decimal);
     }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig])
-
-    useEffect(() => {
-        const lotSize =
-            pairConfig?.filters?.find((o) =>
-                [
-                    FuturesOrderTypes.Market,
-                    FuturesOrderTypes.StopMarket,
-                ].includes(type)
-                    ? o?.filterType === 'MARKET_LOT_SIZE'
-                    : o?.filterType === 'LOT_SIZE'
-            ) || {}
-        setMinSize(+lotSize.minQty)
-        setPercent(size * 100 / maxSize);
-    }, [])
 
     const marginAndValue = useMemo(() => {
         const _price = type === FuturesOrderTypes.Market ?
             (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
             price;
-        const _volume = volume * _price;
-        const volumeLength = _volume.toFixed(0).length;
-        const margin = _volume / leverage;
+        const volumeLength = Number(volume).toFixed(0).length;
+        const margin = volume / leverage;
         const marginLength = margin.toFixed(0).length;
         return { volume, margin, volumeLength, marginLength }
     }, [pairPrice, side, type, volume])
 
     const onChangeVolume = (x) => {
         if (!x) {
-            setVolume(minSize);
+            setVolume(minQuoteQty);
         } else {
-            const value = (+maxSize * x / 100).toFixed(decimal);
+            const value = (+maxQuoteQty * x / 100).toFixed(decimal);
             setVolume(value);
         }
     }
 
     useEffect(() => {
-        setPercent(volume * 100 / maxSize);
+        setPercent(volume * 100 / maxQuoteQty);
     }, [volume])
 
     const onRedirect = () => {
         window.ReactNativeWebView && window.ReactNativeWebView.postMessage('deposit');
     }
 
-    const available = maxSize >= minSize;
-    const isError = available && (volume < +minSize || volume > +maxSize)
-    const initValue = decimal === 0 ? 1 : decimal < 2 ? 0.1 : parseFloat((Number(0).toFixed(decimal - 1) + '1'))
+    const available = maxQuoteQty >= minQuoteQty;
+    const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
+    const initValue = 100000;
     return (
         <Modal
             isVisible={true}
             onBackdropCb={onClose}
-            containerClassName={`select-none ${classMobile}`}
+            containerClassName={`select-none w-[95%] overflow-x-hidden`}
         >
             <div className='-mt-1 mb-7 pb-4 flex items-center justify-between font-bold text-sm border-b border-divider dark:border-divider-dark'>
                 {t('futures:order_table:volume')}
@@ -98,7 +82,7 @@ const OrderVolumeMobileModal = (props) => {
                     <Minus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
-                        onClick={() => volume > minSize && available && setVolume((prevState) => Number(prevState) - initValue)}
+                        onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - initValue)}
                     />
                 </div>
                 <TradingInput
@@ -112,12 +96,13 @@ const OrderVolumeMobileModal = (props) => {
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}
                     disabled={!available}
+                    autoFocus
                 />
                 <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
                     <Plus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
-                        onClick={() => volume < maxSize && available && setVolume((prevState) => Number(prevState) + initValue)}
+                        onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + initValue)}
                     />
                 </div>
             </div>
@@ -135,13 +120,13 @@ const OrderVolumeMobileModal = (props) => {
             <div className="flex flex-wrap">
                 <TradingLabel
                     label={t('common:min') + ':'}
-                    value={minSize + ' ' + pairConfig.baseAsset}
+                    value={formatNumber(minQuoteQty, decimal)}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px]'
                     valueClassName="text-right"
                 />
                 <TradingLabel
                     label={t('common:max') + ':'}
-                    value={maxSize + ' ' + pairConfig.baseAsset}
+                    value={formatNumber(maxQuoteQty, decimal)}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px]'
                     valueClassName="text-right"
                 />
@@ -150,13 +135,13 @@ const OrderVolumeMobileModal = (props) => {
                     value={`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
                         marginAndValue?.margin,
                         pairConfig?.pricePrecision || 2
-                    )} ${pairConfig.quoteAsset}`}
+                    )}`}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px]'
                     valueClassName="text-right"
                 />
                 <TradingLabel
                     label={t('futures:mobile:available') + ':'}
-                    value={formatNumber(availableAsset ?? 0, 0) + ' ' + pairConfig.quoteAsset}
+                    value={formatNumber(availableAsset ?? 0, 0)}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px]'
                     valueClassName="text-right"
                 />

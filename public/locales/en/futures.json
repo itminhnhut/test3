@@ -239,7 +239,8 @@
         "reason_close": "Reason Close",
         "stop_loss": "Stop loss",
         "market_price": "Market Price",
-        "balance_insufficient": "Your balance is not enough, please deposit."
+        "balance_insufficient": "Your balance is not enough, please deposit.",
+        "volume": "Vol"
     },
     "orders_history": "Orders History",
     "minimun_leverage": "Minimum Leverage is",

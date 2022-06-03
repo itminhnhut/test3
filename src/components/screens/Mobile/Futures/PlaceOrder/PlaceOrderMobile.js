@@ -66,6 +66,7 @@ const PlaceOrder = ({
     const marketWatch = useSelector(state => getPairPrice(state, pair));
     const newDataLeverage = useRef(0);
     const [showEditVolume, setShowEditVolume] = useState(false);
+    const [quoteQty, setQuoteQty] = useState(0)
 
     useEffect(() => {
         if (usdRate) {
@@ -73,17 +74,18 @@ const PlaceOrder = ({
         }
     }, [pairConfig?.baseAssetId, usdRate]);
 
-    const getMaxSize = (price, type, side, leverage, availableAsset, pairPrice, pairConfig) => {
+    const getMaxSize = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
         let maxBuy = 0;
         let maxSell = 0;
-        // const _price = type === OrderTypes.Limit ? price : stopPrice;
+        let _price = price
         if ((availableAsset)) {
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(type) && price) {
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / price;
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : price);
                 maxSell = maxBuy;
             } else if ([OrderTypes.Market].includes(type)) {
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / pairPrice?.ask;
-                maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / pairPrice?.bid;
+                price = side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
+                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : pairPrice?.ask);
+                maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : pairPrice?.bid);
             }
         }
         const lotSize =
@@ -95,7 +97,7 @@ const PlaceOrder = ({
                     ? o?.filterType === 'MARKET_LOT_SIZE'
                     : o?.filterType === 'LOT_SIZE'
             ) || {};
-        const _maxConfig = lotSize?.maxQty;
+        const _maxConfig = lotSize?.maxQty * (isQuoteQty ? price : 1); //maxConfig quoteQty
         const _maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
         return isAuth ? Math.min(_maxConfig, _maxQty) : _maxConfig;
     };
@@ -124,8 +126,9 @@ const PlaceOrder = ({
         setSl(_sl);
         if (type === OrderTypes.Market) {
             const _maxSize = getMaxSize(lastPrice, type, side, leverage, availableAsset, pairPrice, pairConfig);
-            const _size = _maxSize * initPercent / 100;
-            setSize(+_size.toFixed(decimals.decimalScaleQtyLimit));
+            const _size = +(_maxSize * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
+            setSize(_size);
+            setQuoteQty(+(_size * lastPrice).toFixed(decimals.decimalScalePrice))
         }
     }, [side, type]);
 
@@ -145,8 +148,9 @@ const PlaceOrder = ({
         if (newDataLeverage.current) {
             const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
             const _maxSize = getMaxSize(_lastPrice, type, side, newDataLeverage.current, availableAsset, marketWatch ?? pairPrice, pairConfig);
-            const _size = _maxSize * initPercent / 100;
-            setSize(+_size.toFixed(decimals.decimalScaleQtyLimit));
+            const _size = +(_maxSize * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
+            setSize(_size);
+            setQuoteQty(+(_size * _lastPrice).toFixed(decimals.decimalScalePrice))
         }
     }, [firstTime.current, newDataLeverage.current]);
 
@@ -192,24 +196,22 @@ const PlaceOrder = ({
 
         switch (mode) {
             // input check
-            case 'quantity':
-                const _max = lotSize?.maxQty;
-                const _min = lotSize?.minQty;
-                const _decimals = decimals.decimalScaleQtyLimit;
+            case 'quoteQty':
+                const _min = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 0
+                const _decimals = decimals.decimalScalePrice;
                 const _priceInput = type === OrderTypes.Limit ? price : stopPrice;
-                const _maxSize = getMaxSize(_priceInput, type, side, leverage, availableAsset, marketWatch ?? pairPrice, pairConfig);
-                const _displayingMax = `${formatNumber(_maxSize, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
-                const _displayingMin = `${formatNumber(lotSize?.minQty, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
-                if (size < +_min) {
+                const _max = getMaxSize(_priceInput, type, side, leverage, availableAsset, marketWatch ?? pairPrice, pairConfig, true);
+                const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
+                const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
+                if (quoteQty < +_min) {
                     msg = `${t('futures:minimun_qty')} ${_displayingMin} `;
                     isValid = false;
                 }
-                if (size > +Number(_maxSize)
+                if (quoteQty > +Number(_max)
                     .toFixed(_decimals)) {
                     msg = `${t('futures:maximun_qty')} ${_displayingMax}`;
                     isValid = false;
                 }
-
                 return {
                     isValid,
                     msg
@@ -260,15 +262,15 @@ const PlaceOrder = ({
 
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
-        const not_valid = !size || !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quantity').isValid ||
+        const not_valid = !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quoteQty').isValid ||
             !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid || !inputValidator('leverage').isValid;
         return !isVndcFutures ? false : not_valid;
     }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage]);
 
     const onChangeTpSL = () => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
-        if (!isVndcFutures || !size || !inputValidator('price', ArrStop.includes(type)).isValid ||
-            !inputValidator('quantity').isValid) {
+        if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
+            !inputValidator('quoteQty').isValid) {
             return;
         }
         const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
@@ -293,8 +295,13 @@ const PlaceOrder = ({
         setShowEditSLTP(false);
     };
 
-    const onConfirmEditVolume = (volume) => {
-        setSize(volume);
+    const onConfirmEditVolume = (quoteQty) => {
+        const _price = type === FuturesOrderTypes.Market ?
+            (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
+            price;
+        const _size = (quoteQty / _price).toFixed(decimals.decimalScaleQtyLimit)
+        setSize(+_size);
+        setQuoteQty(quoteQty);
         setShowEditVolume(false);
     };
     return (
@@ -319,13 +326,14 @@ const PlaceOrder = ({
                         price={price} stopPrice={stopPrice} pairConfig={pairConfig}
                         decimals={decimals} leverage={leverage} isAuth={isAuth}
                         marginAndValue={marginAndValue} availableAsset={availableAsset}
+                        quoteQty={quoteQty}
                     />
                 }
                 <div className={collapse ? 'hidden' : 'w-full flex flex-wrap justify-between'}>
                     <OrderInput>
                         <div className="flex flex-row justify-between">
                             <OrderTypeMobile type={type} setType={setType}
-                                             orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures}/>
+                                orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
 
                             <OrderLeverage
                                 leverage={leverage} setLeverage={setLeverage}
@@ -340,7 +348,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     {!collapse &&
                         <OrderInput>
-                            <SideOrder side={side} setSide={setSide}/>
+                            <SideOrder side={side} setSide={setSide} />
                         </OrderInput>
                     }
                     {/*<OrderInput>*/}
@@ -356,12 +364,13 @@ const PlaceOrder = ({
                     <OrderInput data-tut="order-volume">
                         {showEditVolume && <OrderVolumeMobileModal
                             size={size}
-                            decimal={decimals.decimalScaleQtyLimit}
+                            decimal={decimals.decimalScalePrice}
                             onClose={() => setShowEditVolume(false)}
                             onConfirm={onConfirmEditVolume}
                             pairConfig={pairConfig}
                             type={type}
                             side={side}
+                            quoteQty={quoteQty}
                             price={price}
                             pairPrice={pairPrice}
                             leverage={leverage}
@@ -372,6 +381,7 @@ const PlaceOrder = ({
                             size={size} setSize={setSize} decimals={decimals}
                             context={context}
                             pairConfig={pairConfig}
+                            quoteQty={quoteQty}
                             setShowEditVolume={setShowEditVolume}
                         />
                     </OrderInput>
@@ -386,16 +396,16 @@ const PlaceOrder = ({
                     <OrderInput data-tut="order-sl">
                         <OrderSLMobile
                             sl={sl} setSl={setSl} decimals={decimals}
-                            onChangeTpSL={onChangeTpSL} context={context}/>
+                            onChangeTpSL={onChangeTpSL} context={context} />
                     </OrderInput>
                     <OrderInput data-tut="order-tp">
                         <OrderTPMobile
                             tp={tp} setTp={setTp} decimals={decimals}
-                            onChangeTpSL={onChangeTpSL} context={context}/>
+                            onChangeTpSL={onChangeTpSL} context={context} />
                     </OrderInput>
                     <OrderInput>
                         <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig}
-                                           availableAsset={availableAsset}/>
+                            availableAsset={availableAsset} />
                     </OrderInput>
                     <OrderInput data-tut="order-button">
                         <OrderButtonMobile
@@ -403,7 +413,7 @@ const PlaceOrder = ({
                             stopPrice={stopPrice} side={side} decimals={decimals}
                             pairConfig={pairConfig} pairPrice={pairPrice}
                             leverage={leverage} isAuth={isAuth} isError={isError}
-                            isAuth={isAuth}
+                            isAuth={isAuth} quoteQty={quoteQty}
                         />
                     </OrderInput>
                 </div>

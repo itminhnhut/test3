@@ -12,7 +12,7 @@ import { AlertContext } from 'components/common/layouts/LayoutMobile'
 const OrderButtonMobile = ({
     side, price, size, stopPrice, type, decimals,
     pairConfig, pairPrice, leverage, sl, tp, isAuth,
-    isError
+    isError, quoteQty
 }) => {
     const context = useContext(AlertContext);
     const [disabled, setDisabled] = useState(false);
@@ -40,7 +40,9 @@ const OrderButtonMobile = ({
             price: _price,
             leverage,
             sl: sl,
-            tp: tp
+            tp: tp,
+            quoteQty,
+            useQuoteQty: true
         };
         placeFuturesOrder(params, { alert: context?.alert }, t, () => {
             setDisabled(false)
