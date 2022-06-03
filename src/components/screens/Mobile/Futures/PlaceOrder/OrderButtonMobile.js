@@ -49,7 +49,7 @@ const OrderButtonMobile = ({
         })
     }
 
-    const classNameError = disabled || (isAuth && isError) ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
+    const classNameError = disabled || (isAuth && isError) ? '!bg-gray-3 dark:!bg-darkBlue-3 text-gray-1 dark:text-darkBlue-4 cursor-not-allowed' : '';
     const title = type === FuturesOrderTypes.Limit ? t('futures:mobile:limit') : type === FuturesOrderTypes.StopMarket ? 'stop market' : ''
     return (
         <div onClick={onHandleSave} className={`${isBuy ? 'bg-dominant' : 'bg-red'} text-white text-sm h-[67px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
