@@ -5,17 +5,17 @@ import { getS3Url } from 'redux/actions/utils';
 import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 
 const initPercent = 25;
-const OrderVolumeMobile = memo(({ size, setSize, decimals, context, pairConfig, setShowEditVolume }) => {
+const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quoteQty }) => {
     const { t } = useTranslation();
 
     return (
         <div onClick={() => setShowEditVolume(true)} >
             <TradingInput
                 thousandSeparator={true}
-                label={t('futures:order_table:volume')}
-                value={size}
+                label={t('futures:mobile:volume')}
+                value={quoteQty}
                 allowNegative={false}
-                onValueChange={({ floatValue = '' }) => setSize(floatValue)}
+                // onValueChange={({ floatValue = '' }) => setSize(floatValue)}
                 // validator={getValidator('quantity')}
                 decimalScale={decimals.decimalScaleQtyLimit}
                 labelClassName='whitespace-nowrap'
@@ -24,7 +24,7 @@ const OrderVolumeMobile = memo(({ size, setSize, decimals, context, pairConfig, 
                 renderTail={() => (
                     <div className='relative group select-none'>
                         <div className='flex items-center'>
-                            {pairConfig?.baseAsset ?? ''}
+                            {pairConfig?.quoteAsset ?? ''}
                         </div>
                     </div>
                 )}

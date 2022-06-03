@@ -229,7 +229,8 @@
         "reason_close": "Lý do đóng",
         "stop_loss": "Cắt lỗ",
         "market_price": "Giá thị trường",
-        "balance_insufficient": "Số dư của bạn không đủ, vui lòng nạp thêm."
+        "balance_insufficient": "Số dư của bạn không đủ, vui lòng nạp thêm.",
+        "volume": "KL"
     },
     "orders_history": "Lịch sử lệnh",
     "minimun_leverage": "Đòn bẩy tối thiểu",

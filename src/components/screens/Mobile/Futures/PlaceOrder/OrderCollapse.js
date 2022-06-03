@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import { placeFuturesOrder } from 'redux/actions/futures';
 import { AlertContext } from 'components/common/layouts/LayoutMobile'
 
-const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth, marginAndValue, availableAsset }) => {
+const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth, marginAndValue, availableAsset, quoteQty }) => {
     const { t } = useTranslation();
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const context = useContext(AlertContext);
@@ -40,13 +40,18 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
         return { width: el && el?.clientWidth ? `calc(100% - ${el.clientWidth / 2}px)` : '100%' }
     }
     const className = disabled || !isAuth ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : '';
-
+    const _quoteQty = String(quoteQty).length > 7 ? formatCurrency(quoteQty) : formatNumber(
+        quoteQty,
+        decimals.decimalScaleQtyLimit
+    )
     return (
         <div className="w-full">
             <div className="relative flex w-full h-[56px] text-sm order-collapse">
                 <Side className={`bg-teal rounded-l-[6px] text-white ${className}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.BUY, pairPrice?.ask)}>
-                    <div className={`truncate`} style={style()}>{t('common:buy')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
+                    <div className={`truncate`} style={style()}>{t('common:buy')}&nbsp;
+                        {_quoteQty}&nbsp;{pairConfig?.quoteAsset ?? ''}
+                    </div>
                     <span>{formatNumber(pairPrice?.ask, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
                 <Text className="diff-price">
@@ -54,7 +59,8 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
                 </Text>
                 <Side className={`bg-red rounded-r-[6px] text-white items-end ${className}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.SELL, pairPrice?.bid)}>
-                    <div className={`truncate text-right`} style={style()}>{t('common:sell')}&nbsp;{formatNumber(size, decimals.decimalScaleQtyLimit)}&nbsp;{pairConfig?.baseAsset}</div>
+                    <div className={`truncate text-right`} style={style()}>{t('common:sell')}&nbsp;
+                        {_quoteQty}&nbsp;{pairConfig?.quoteAsset ?? ''}</div>
                     <span>{formatNumber(pairPrice?.bid, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
             </div>
