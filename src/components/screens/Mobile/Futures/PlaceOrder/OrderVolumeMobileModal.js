@@ -11,9 +11,9 @@ import { VndcFutureOrderType } from '../../../Futures/PlaceOrder/Vndc/VndcFuture
 import TradingLabel from 'components/trade/TradingLabel';
 import SvgWarning from 'components/svg/SvgWarning';
 import colors from '../../../../../styles/colors'
-
+const initValue = 100000;
 const OrderVolumeMobileModal = (props) => {
-    const { onClose, size, decimal, getMaxSize, pairConfig,
+    const { onClose, size, decimal, getMaxQuoteQty, pairConfig,
         type, onConfirm, availableAsset, side, pairPrice, price,
         leverage, getValidator, quoteQty
     } = props;
@@ -22,12 +22,12 @@ const OrderVolumeMobileModal = (props) => {
     const [percent, setPercent] = useState(0);
 
     const minQuoteQty = useMemo(() => {
-        return pairConfig ? pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : 0
+        return pairConfig ? pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : initValue
     }, [pairConfig])
 
     const maxQuoteQty = useMemo(() => {
-        const value = getMaxSize(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true)
-        const max = Math.min(leverage * availableAsset, value)
+        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true)
+        const max = Math.min(leverage * availableAsset, _maxQuoteQty)
         return +Number(max).toFixed(decimal);
     }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig])
 
@@ -57,7 +57,6 @@ const OrderVolumeMobileModal = (props) => {
 
     const available = maxQuoteQty >= minQuoteQty;
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
-    const initValue = 100000;
     return (
         <Modal
             isVisible={true}
@@ -131,7 +130,7 @@ const OrderVolumeMobileModal = (props) => {
                     label={t('futures:margin') + ':'}
                     value={`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
                         marginAndValue?.margin,
-                        pairConfig?.pricePrecision || 2
+                        0
                     )}`}
                     containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px]'
                     valueClassName="text-right"

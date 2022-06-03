@@ -41,7 +41,7 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
                 <div className="flex items-center flex-wrap justify-end	text-right" style={{ wordBreak: 'break-word' }}>
                     {`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
                         marginAndValue?.margin,
-                        pairConfig?.pricePrecision || 2
+                        0
                     )}`}
                 </div>
             </div>

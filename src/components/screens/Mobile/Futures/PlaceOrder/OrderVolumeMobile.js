@@ -17,7 +17,7 @@ const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quote
                 allowNegative={false}
                 // onValueChange={({ floatValue = '' }) => setSize(floatValue)}
                 // validator={getValidator('quantity')}
-                decimalScale={decimals.decimalScaleQtyLimit}
+                decimalScale={0}
                 labelClassName='whitespace-nowrap'
                 containerClassName="h-[36px]"
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
@@ -28,8 +28,8 @@ const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quote
                         </div>
                     </div>
                 )}
-                disabled
-                inputClassName="text-xs !text-center"
+                readOnly
+                inputClassName="text-xs !text-center !text-white"
             // onFocus={() => context.onHiddenBottomNavigation(true)}
             // onBlur={() => context.onHiddenBottomNavigation(false)}
             />
