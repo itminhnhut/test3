@@ -11,7 +11,7 @@ const OrderBalance = ({ ordersList, visible }) => {
     const { t } = useTranslation();
     if (!visible) return null;
     return (
-        <div className="sticky top-[42px] bg-white dark:bg-darkBlue-1 z-[10px] flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] pt-[10px] dark:border-divider-dark">
+        <div className="sticky top-[42px] bg-white dark:bg-onus z-[10px] flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] pt-[10px] dark:border-divider-dark">
             <TradingLabel
                 label={t('futures:mobile:balance')}
                 value={<Balance />}
@@ -69,7 +69,7 @@ export const Balance = ({ ordersList = [], mode }) => {
     }, [ordersList, futuresMarketWatch])
 
     const volume = useMemo(() => {
-        const total = ordersList.reduce((a, b) => a + b?.quantity, 0);
+        const total = ordersList.reduce((a, b) => a + (b?.order_value || 0), 0);
         return parseFloat(total).toFixed(10);
     }, [ordersList])
 
@@ -82,7 +82,7 @@ export const Balance = ({ ordersList = [], mode }) => {
             const lengthEquity = formatNumber(total, balance?.item?.assetDigit).replaceAll(',', '');
             return lengthEquity.length > 7 ? formatCurrency(total) : formatNumber(total, balance?.item?.assetDigit, 0, true);
         case 'volume':
-            return formatNumber(volume, 8, 0, true);
+            return formatCurrency(volume);
         default:
             const length = formatNumber(balance.value, balance?.item?.assetDigit).replaceAll(',', '');
             return length.length > 7 ? formatCurrency(balance.value) : formatNumber(balance.value, balance?.item?.assetDigit);

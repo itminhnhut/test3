@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import TradingInput from 'components/trade/TradingInput';
 import { useTranslation } from 'next-i18next'
 import { getS3Url } from 'redux/actions/utils';
@@ -27,33 +27,14 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
         }
     }
 
+    const classMobile = useMemo(() => {
+        return 'w-[95%] overflow-x-hidden !max-w-[500px]'
+    }, [])
+
     return (
         <>
-            <div onClick={() => setOpenModal(true)}>
-                <TradingInput
-                    thousandSeparator={true}
-                    label={t('futures:leverage:leverage')}
-                    value={leverage}
-                    allowNegative={false}
-                    onValueChange={({ floatValue = '' }) => setLeverage(floatValue)}
-                    decimalScale={0}
-                    disabled
-                    // isAllowed={({ floatValue }) => floatValue <= 125}
-                    labelClassName='whitespace-nowrap'
-                    containerClassName="h-[36px]"
-                    tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
-                    renderTail={() => (
-                        <div className='relative group select-none'>
-                            <div className='flex items-center'>
-                                <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
-                            </div>
-                        </div>
-                    )}
-                    inputClassName="text-xs !text-center"
-                // onFocus={() => context.onHiddenBottomNavigation(true)}
-                // onBlur={() => context.onHiddenBottomNavigation(false)}
-                />
-            </div>
+            <div onClick={() => setOpenModal(true)}
+                className="h-[32px] w-12 text-teal border-teal leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px]">{leverage}x</div>
             {openModal &&
                 <FuturesLeverageSettings
                     pair={pair}
@@ -65,7 +46,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
                     onClose={() => setOpenModal(false)}
                     isVndcFutures={true}
                     dots={5}
-                    className="top-[50%]"
+                    className={`top-[50%] ${classMobile}`}
                 />
             }
         </>

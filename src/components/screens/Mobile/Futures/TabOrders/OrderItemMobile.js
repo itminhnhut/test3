@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-import { formatNumber, formatTime } from 'redux/actions/utils'
+import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { useTranslation } from 'next-i18next'
 import { getProfitVndc, VndcFutureOrderType, renderCellTable } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
@@ -110,7 +110,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 </div>
                 {profit ?
                     <div className="border-[1px] border-teal p-[5px] rounded-[2px]" onClick={() => actions('modal')}>
-                        <img src="/images/icon/ic_share.png" height={16} width={16} />
+                        <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
                     </div>
                     : null
                 }
@@ -124,7 +124,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     <div className="w-1/2 mr-[10px]">
                         <div className="flex mb-[10px] justify-between">
                             <Label>{t('futures:order_table:open_price')}</Label>
-                            <div className="text-xs font-medium text-right">{isTabHistory ? order?.open_price : getOpenPrice(order, dataMarketWatch)}</div>
+                            <div className="text-xs font-medium text-right">{isTabHistory ? formatNumber(order?.open_price, 8, 0, false)  : getOpenPrice(order, dataMarketWatch)}</div>
                         </div>
                         <Row>
                             <Label>{t(`futures:order_table:${isTabHistory ? 'close_price' : 'last_price2'}`)}</Label>
@@ -138,7 +138,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     <div className="w-1/2">
                         <Row>
                             <Label>{t('futures:order_table:volume')}</Label>
-                            <span className="text-xs font-medium text-right">{formatNumber(order?.quantity, 8, 0, true)}</span>
+                            <span className="text-xs font-medium text-right">{formatNumber(order?.order_value, 0, 0, true)}</span>
                         </Row>
                         <Row>
                             <Label>{t(isTabHistory ? 'futures:order_table:reason_close' : `futures:mobile:liq_price`)}</Label>

@@ -4,7 +4,7 @@ import colors from 'styles/colors';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'next-i18next'
-import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC } from 'components/screens/Futures/TradeRecord/RecordTableTab'
+import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC, RECORD_TAB } from 'components/screens/Futures/TradeRecord/RecordTableTab'
 import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders'
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
@@ -54,7 +54,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
 });
 
 const TabMobile = styled.div.attrs({
-    className: "flex items-center px-[16px] bg-white dark:bg-darkBlue-1 dark:border-divider-dark"
+    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-divider-dark"
 })`
     height:42px;
     width:100%;

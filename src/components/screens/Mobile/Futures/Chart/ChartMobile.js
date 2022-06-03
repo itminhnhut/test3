@@ -16,7 +16,7 @@ const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collap
 
     const style = useMemo(() => {
         const vh = window.innerHeight * 0.01;
-        return { height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 100 : 270}px)` }
+        return { height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 100 : 230}px)` }
     }, [isFullScreen, collapse])
 
     return (
@@ -26,10 +26,10 @@ const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collap
                     isVndcFutures={isVndcFutures} resolution={resolution}
                     setResolution={setResolution}
                     candle={candle} setCandle={setCandle}
-                    className="h-[64px]"
+                    className="h-[56px]"
                     isFullScreen={isFullScreen}
                 />
-                <div style={{ height: 'calc(100% - 102px)' }}>
+                <div style={{ height: 'calc(100% - 64px)' }}>
                     <KlineChart
                         symbolInfo={{ exchange: 'NAMI_FUTURES', symbol: pair, pricePrecision: decimals?.decimalScalePrice ?? 0 }}
                         resolution={resolution}
