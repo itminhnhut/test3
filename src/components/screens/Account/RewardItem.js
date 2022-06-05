@@ -48,6 +48,10 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
         return className
     }, [data?.status, active])
 
+    const ruleUrl = useMemo(() => {
+        return typeof data?.cta_button_url === "string" ? data?.cta_button_url : data?.cta_button_url?.url[language]
+    }, [data, language])
+
     // Render Handler
     const renderRewardList = useCallback(() => {
         if (data?.status === REWARD_STATUS.NOT_AVAILABLE) return null
@@ -73,6 +77,8 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
         } else if (current > endAt) {
             time = <span className="text-red">{t('reward-center:expired_promo')}</span>
         }
+
+
         return (
             <div className={className}>
                 <div style={
@@ -89,18 +95,10 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                                 <div className="mt-2 font-medium text-xs md:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                     {parse(data?.description?.[language])}
                                     <div className="lg:hidden mt-1.5">
-                                        {isMobile ?
-                                            <div onClick={() => router.push(data?.cta_button_url)}
-                                                className="font-normal text-xs md:text-sm text-dominant hover:!underline">
-                                                {t('common:view_rules')}
-                                            </div>
-                                            :
-                                            <a href={data?.cta_button_url} target="_blank"
-                                                className="font-normal text-xs md:text-sm text-dominant hover:!underline">
-                                                {t('common:view_rules')}
-                                            </a>
-                                        }
-
+                                        <a href={ruleUrl} target={!isMobile ? '_blank' : '_self'}
+                                            className="font-normal text-xs md:text-sm text-dominant hover:!underline">
+                                            {t('common:view_rules')}
+                                        </a>
                                     </div>
 
                                     {data?.notes?.[language]?.length &&
@@ -249,7 +247,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                                             height={25}
                                             className="rounded-lg mr-3"
                                         />
-                                        : <RewardButton href={data?.cta_button_url} target="_blank"
+                                        : <RewardButton href={ruleUrl} target={!isMobile ? '_blank' : '_self'}
                                             title={t('common:view_rules')}
                                             status={REWARD_BUTTON_STATUS.AVAILABLE}
                                             buttonStyles="mr-3 min-w-[90px]"

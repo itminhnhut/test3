@@ -72,7 +72,7 @@ const RewardType = memo(({ data, active, assetConfig, claim, claiming, onClaim }
                                 <div style={{ width: reachedProgress + '%' }}
                                     className="absolute h-full top-0 left-0 bg-dominant rounded-lg transition-all duration-200 ease-in" />
                             </div>
-                            <div className="flex text-right text-xs md:text-sm xl:text-[16px] xl:pr-0 xl:ml-8">
+                            <div className="flex text-right text-xs md:text-sm xl:text-[16px] xl:pr-0 ml-2">
                                 <span className="text-dominant">
                                     {formatCurrency(reached, 3)}
                                 </span>
