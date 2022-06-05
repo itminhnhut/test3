@@ -95,10 +95,12 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                                 <div className="mt-2 font-medium text-xs md:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                                     {parse(data?.description?.[language])}
                                     <div className="lg:hidden mt-1.5">
-                                        <a href={ruleUrl} target={!isMobile ? '_blank' : '_self'}
-                                            className="font-normal text-xs md:text-sm text-dominant hover:!underline">
-                                            {t('common:view_rules')}
-                                        </a>
+                                        {!isMobile &&
+                                            <a href={ruleUrl} target={'_blank'}
+                                                className="font-normal text-xs md:text-sm text-dominant hover:!underline">
+                                                {t('common:view_rules')}
+                                            </a>
+                                        }
                                     </div>
 
                                     {data?.notes?.[language]?.length &&
