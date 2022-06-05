@@ -203,10 +203,15 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                             : <div className="font-medium text-xs sm:text-sm lg:mt-1.5">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reward-center:reward')}:</span>{' '}
                                 <span className="text-dominant">
-                                    {data?.reward?.value}
+                                    {
+                                        data?.reward?.type === 'multi_language' ?
+                                            (language && data?.reward?.value[language]) ?? ''
+                                            :
+                                            data?.reward?.value ?? ''
+                                    }
                                 </span>{' '}
                                 <span>
-                                    <AssetName assetId={data?.reward?.assetId} />
+                                    {data?.reward?.assetId && <AssetName assetId={data?.reward?.assetId} />}
                                 </span>
                             </div>
                         }
@@ -231,7 +236,7 @@ const RewardItem = memo(({ data, loading, active, onToggleReward, showGuide, cla
                                             className="rounded-lg mr-3"
                                         />
                                         : <RewardButton href={getLoginUrl('sso', 'login')}
-                                            title="Login" buttonStyles="min-w-[90px]"
+                                            title={t('common:sign_in')} buttonStyles="min-w-[90px]"
                                             status={REWARD_BUTTON_STATUS.AVAILABLE}
                                             componentType="a"
                                         />

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { getS3Url } from 'redux/actions/utils';
+import { getS3Url, formatNumber } from 'redux/actions/utils';
 import SwiperCore, { Autoplay, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
@@ -42,7 +42,7 @@ const RewardEventModal = ({ onClose, data }) => {
         return (
             <div className="relative flex justify-center py-[14px] sm:py-[18px]">
                 <ItemLabel>
-                    <span className="relative top-[-5px] sm:top-0">{item.value + ' ' + item.assetCode}</span>
+                    <span className="relative top-[-5px] sm:top-0">{formatNumber(item.value, 3) + ' ' + item.assetCode}</span>
                 </ItemLabel>
                 <div className="relative">
                     <div className="relative w-[53px] sm:w-[65px] sm:h-[65px]">
