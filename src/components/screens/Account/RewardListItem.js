@@ -106,20 +106,12 @@ const RewardListItem = ({ data, loading, showGuide, claim, claiming, onClaim }) 
                                 {(isActive || width >= BREAK_POINTS.lg) &&
                                     <div>
                                         {description?.type === 'url' ?
-                                            isMobile ?
-                                                <div
-                                                    className="text-dominant text-xs md:text-sm !underline hover:!underline hover:opacity-80"
-                                                    onClick={e => router.push(description?.url?.[language])}
-                                                >
-                                                    {t('reward-center:guide')}
-                                                </div>
-                                                :
-                                                <a href={description?.url?.[language]} target="_blank"
-                                                    className="text-dominant text-xs md:text-sm !underline hover:!underline hover:opacity-80"
-                                                    onClick={e => e?.stopPropagation()}
-                                                >
-                                                    {t('reward-center:guide')}
-                                                </a>
+                                            <a href={description?.url?.[language]} target={!isMobile ? '_blank' : '_self'}
+                                                className="text-dominant text-xs md:text-sm !underline hover:!underline hover:opacity-80"
+                                                onClick={e => e?.stopPropagation()}
+                                            >
+                                                {t('reward-center:guide')}
+                                            </a>
                                             : <div className="text-dominant text-xs md:text-sm !underline hover:opacity-80 cursor-pointer"
                                                 onClick={(e) => showGuide(e, description?.data?.[language])}>
                                                 {t('reward-center:guide')}
