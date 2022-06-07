@@ -317,5 +317,6 @@
             "unknown": "There is a problem during the withdrawal process, please contact support for more details.",
             "vndc_maintain": "VNDC is maintaining the off-chain withdrawal of VNDC from Nami, you can still withdraw on-chain from Nami app."
         }
-    }
+    },
+    "collapse":"Collapse"
 }
