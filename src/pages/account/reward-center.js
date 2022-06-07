@@ -24,6 +24,7 @@ import Button from 'components/common/Button';
 import { orderBy } from 'lodash';
 import PortalPopup from 'components/common/Modal';
 import { FacebookShareButton } from 'react-share';
+import RewardEventModal from 'components/screens/Account/RewardEventModal'
 
 export const REWARD_ROW_ID_KEY = 'reward_item_id_' // for identify reward will scrollTo after init
 const REWARD_ID_QUERY_KEY = 'reward_id' // for query url
@@ -54,8 +55,11 @@ const INITIAL_STATE = {
     isQueryDone: false,
     claim: null,
     claiming: false,
-    lunarNewYear: null
+    lunarNewYear: null,
+    event: null
 }
+
+const cateEvent = ['INVITE_FRIEND_KYC', 'LUCKY_ID', 'SPOT_TRADE', 'FUTURES_TRADE']
 
 const RewardCenter = () => {
     // Init State
@@ -85,8 +89,9 @@ const RewardCenter = () => {
                 let msg
                 const { reward, category, assetConfig } = payload
                 // console.log('namidev-DEBUG: reward => ', reward)
-
-                if (category === 'LUCKY_MONEY') {
+                if (cateEvent.includes(category)) {
+                    setState({ event: data?.data })
+                } else if (category === 'LUCKY_MONEY') {
                     setState({ lunarNewYear: data?.data })
                     // console.log('namidev-DEBUG: response => ', data)
                 } else {
@@ -458,6 +463,7 @@ const RewardCenter = () => {
             </div>
             {renderPopup()}
             {renderLunarPopup()}
+            {state.event && <RewardEventModal data={state.event} onClose={() => setState({ event: false })} />}
         </>
     )
 }

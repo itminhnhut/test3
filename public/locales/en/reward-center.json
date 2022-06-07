@@ -18,5 +18,8 @@
     "INVALID_USER": "Please sign in and try again.",
     "INVALID_MISSION": "Mission not found.",
     "INVALID_TIME": "Invalid time or reward expired."
-  }
+  },
+  "congratulation": "Congratulation!",
+  "you_have_received": "You have received",
+  "gifts_boxs": "gifts boxes, containing"
 }

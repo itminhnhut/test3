@@ -19,5 +19,8 @@
     "INVALID_USER": "Vui lòng đăng nhập.",
     "INVALID_MISSION": "Không tìm thấy nhiệm vụ.",
     "INVALID_TIME": "Thời gian để nhận thưởng không hợp lệ hoặc đã quá hạn."
-  }
+  },
+  "congratulation": "Chúc mừng!",
+  "you_have_received": "Bạn đã nhận được",
+  "gifts_boxs": "hộp quà chứa"
 }

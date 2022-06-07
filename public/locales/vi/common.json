@@ -317,5 +317,6 @@
     "mobile": {
         "markets": "Thị trường",
         "wallets": "Ví"
-    }
+    },
+    "collapse":"Thu gọn"
 }
