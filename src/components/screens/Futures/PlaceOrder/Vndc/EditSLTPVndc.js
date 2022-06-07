@@ -397,6 +397,8 @@ const FuturesEditSLTPVndc = ({
                                 validator={inputValidator('price')}
                                 decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                                 onValueChange={(e) => onHandleChange('price', e)}
+                                inputMode="decimal"
+                                allowedDecimalSeparators={[',', '.']}
                             />
                             <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark pl-2">
                                 {quoteAsset}
@@ -443,6 +445,8 @@ const FuturesEditSLTPVndc = ({
                                     {tab === 2 ? '%' : quoteAsset}
                                 </span>
                             )}
+                            inputMode="decimal"
+                            allowedDecimalSeparators={[',', '.']}
                         />
                     </div>
                 </div>
@@ -490,6 +494,8 @@ const FuturesEditSLTPVndc = ({
                                     {tab === 2 ? '%' : quoteAsset}
                                 </span>
                             )}
+                            inputMode="decimal"
+                            allowedDecimalSeparators={[',', '.']}
                         />
                     </div>
                 </div>

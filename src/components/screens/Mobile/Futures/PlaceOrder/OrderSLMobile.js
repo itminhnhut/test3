@@ -24,6 +24,8 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, context }) => {
                 </div>
             )}
             inputClassName="text-xs !text-center"
+            inputMode="decimal"
+            allowedDecimalSeparators={[',', '.']}
             // onFocus={() => context.onHiddenBottomNavigation(true)}
             // onBlur={() => context.onHiddenBottomNavigation(false)}
         />
