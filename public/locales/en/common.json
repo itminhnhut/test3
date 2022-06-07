@@ -321,5 +321,6 @@
     "mobile": {
         "markets": "Markets",
         "wallets": "Wallets"
-    }
+    },
+    "collapse":"Collapse"
 }
