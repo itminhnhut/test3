@@ -8,9 +8,9 @@ import { IconStarFilled } from "components/common/Icons";
 import colors from "styles/colors";
 
 const ChartMobile = memo(({ pairConfig, pair, isVndcFutures, setCollapse, collapse, forceRender, isFullScreen, decimals }) => {
-    const [resolution, setResolution] = useState(ms('1h'))
-    const [mainIndicator, setMainIndicator] = useState()
-    const [subIndicator, setSubIndicator] = useState()
+    const [resolution, setResolution] = useState(ms('1d'))
+    const [mainIndicator, setMainIndicator] = useState('MA')
+    const [subIndicator, setSubIndicator] = useState('VOL')
     const [themeMode, switchTheme] = useDarkMode()
     const [candle, setCandle] = useState('candle_solid');
 
