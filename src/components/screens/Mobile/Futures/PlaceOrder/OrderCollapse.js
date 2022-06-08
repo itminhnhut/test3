@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import { formatNumber, formatCurrency } from 'redux/actions/utils';
-import { Balance } from '../TabOrders/OrderBalance';
+import OrderBalance, { Balance } from '../TabOrders/OrderBalance';
 import TradingLabel from 'components/trade/TradingLabel';
 import { useSelector } from 'react-redux'
 import { placeFuturesOrder } from 'redux/actions/futures';
@@ -67,7 +67,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
                 </Side>
             </div>
             {ordersList.length > 0 ?
-                <Equity ordersList={ordersList} />
+                <OrderBalance mode={'collapse'} ordersList={ordersList} visible={true}/>
                 :
                 <div className="flex pt-[10px]">
                     <TradingLabel
