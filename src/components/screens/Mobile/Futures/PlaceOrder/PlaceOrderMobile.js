@@ -74,7 +74,7 @@ const PlaceOrder = ({
         let maxBuy = 0;
         let maxSell = 0;
         let _price = price
-        if ((availableAsset)) {
+        if (Math.trunc(availableAsset) > 0) {
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(type) && price) {
                 maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : price);
                 maxSell = maxBuy;

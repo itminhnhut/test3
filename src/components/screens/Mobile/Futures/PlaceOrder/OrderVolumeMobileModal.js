@@ -87,7 +87,7 @@ const OrderVolumeMobileModal = (props) => {
                     decimalScale={decimal}
                     allowNegative={false}
                     thousandSeparator={true}
-                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[36px]'
+                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[36px] w-[200px]'
                     inputClassName="!text-center"
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}

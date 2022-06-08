@@ -18,6 +18,7 @@ import { ApiStatus } from 'redux/actions/const'
 import TableNoData from 'components/common/table.old/TableNoData';
 import { listTimeFrame } from "components/KlineChart/kline.service";
 import OrderOpenDetail from './OrderOpenDetail';
+import Tooltip from 'components/common/Tooltip';
 
 const getAssets = createSelector(
     [
@@ -272,8 +273,16 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                                     <Label>{t('futures:mobile:liquidate_fee')}</Label>
                                     <Span>{renderFee(order, 'liquidate_order')}</Span>
                                 </Row>
+                                {/* <Tooltip id="swap-fee" place="top" effect="solid">
+                                    {t('futures:mobile:swap_fee')}
+                                </Tooltip> */}
                                 <Row>
-                                    <Label>{t('futures:mobile:swap_fee')}</Label>
+                                    <Label className="flex"  >
+                                        {t('futures:mobile:swap_fee')}
+                                        <div className="px-2" data-tip="" data-for="swap-fee">
+                                            <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                                        </div>
+                                    </Label>
                                     <Span>{renderFee(order, 'swap')}</Span>
                                 </Row>
                             </div>
@@ -290,25 +299,25 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                                 dataSource.map((item, index) => (
                                     <div key={index} className="border-b border-divider dark:border-divider-dark last:border-0">
                                         <Row>
-                                            <Label>{t('common:time')}</Label>
-                                            <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                                            <Label isTabOpen={!isTabHistory}>{t('common:time')}</Label>
+                                            <Span isTabOpen={!isTabHistory}>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
                                         </Row>
                                         {item?.metadata?.modify_tp &&
                                             <Row>
-                                                <Label>{t('futures:take_profit')}</Label>
-                                                <Span>{renderModify(item?.metadata, 'take_profit')}</Span>
+                                                <Label isTabOpen={!isTabHistory}>{t('futures:take_profit')}</Label>
+                                                <Span isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'take_profit')}</Span>
                                             </Row>
                                         }
                                         {item?.metadata?.modify_sl &&
                                             <Row>
-                                                <Label>{t('futures:stop_loss')}</Label>
-                                                <Span>{renderModify(item?.metadata, 'stop_loss')}</Span>
+                                                <Label isTabOpen={!isTabHistory}>{t('futures:stop_loss')}</Label>
+                                                <Span isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'stop_loss')}</Span>
                                             </Row>
                                         }
                                         {item?.metadata?.modify_price &&
                                             <Row>
-                                                <Label>{t('futures:price')}</Label>
-                                                <Span>{renderModify(item?.metadata, 'price')}</Span>
+                                                <Label isTabOpen={!isTabHistory}>{t('futures:price')}</Label>
+                                                <Span isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'price')}</Span>
                                             </Row>
                                         }
                                     </div>
@@ -327,13 +336,12 @@ const Row = styled.div.attrs({
     className: 'flex items-center justify-between py-[6px]'
 })``
 
+const Label = styled.div.attrs(({ isTabOpen }) => ({
+    className: `text-gray-1 dark:text-txtSecondary-dark ${isTabOpen ? 'text-xs' : 'text-sm'} font-medium`
+}))``
 
-const Label = styled.div.attrs({
-    className: 'text-gray-1 dark:text-txtSecondary-dark text-sm font-medium'
-})``
-
-const Span = styled.div.attrs({
-    className: 'text-sm font-medium'
-})``
+const Span = styled.div.attrs(({ isTabOpen }) => ({
+    className: `text-sm font-medium ${isTabOpen ? 'text-xs' : 'text-sm'}`
+}))``
 
 export default OrderDetail;

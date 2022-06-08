@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { formatNumber, formatCurrency } from 'redux/actions/utils';
 import { useSelector } from 'react-redux'
 import TradingLabel from 'components/trade/TradingLabel';
-import { getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import isNil from 'lodash/isNil';
 
 const AVAILBLE_KEY = 'futures_available'
@@ -69,7 +69,7 @@ export const Balance = ({ ordersList = [], mode }) => {
     }, [ordersList, futuresMarketWatch])
 
     const volume = useMemo(() => {
-        const total = ordersList.reduce((a, b) => a + (b?.order_value || 0), 0);
+        const total = ordersList.reduce((a, b) => a + (b.status !== VndcFutureOrderType.Status.PENDING && b?.order_value || 0), 0);
         return parseFloat(total).toFixed(10);
     }, [ordersList])
 
