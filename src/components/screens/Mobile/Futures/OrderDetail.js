@@ -200,14 +200,14 @@ const OrderDetail = ({
                         className={order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red'}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
                 </div>
                 <div className="shadow-order_detail py-[10px] dark:bg-onus">
-                    <div className="min-h-[300px] max-h-72 spot-chart h-full max-w-full">
+                    <div className="min-h-96 max-h-[420px] spot-chart h-full max-w-full">
                         <MobileTradingView
                             t={t}
                             symbol={order.symbol}
                             pairConfig={pairConfig}
                             initTimeFrame="1D"
                             isVndcFutures={true}
-                            ordersList={[]}
+                            ordersList={[order]}
                             theme={THEME_MODE.DARK}
                             mode={ChartMode.FUTURES}
                         />
