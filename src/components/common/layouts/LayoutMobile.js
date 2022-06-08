@@ -69,15 +69,7 @@ const LayoutMobile = ({
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
             </Head>
             <div
-                className={`flex flex-col font-inter bg-onus`}
-                style={
-                    state.isDrawer
-                        ? {
-                            height,
-                            overflow: 'hidden'
-                        }
-                        : {}
-                }
+                className={`font-inter bg-onus`}
             >
                 <ReactNotifications className='fixed z-[9000] pointer-events-none w-full h-full' />
                 <div

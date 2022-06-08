@@ -4,7 +4,7 @@ import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 
 const NotificationContent = (props) => {
-    const { type, title, message } = props;
+    const { type, title, message, note } = props;
 
     // console.log('__ chek noti', props);
     let bgColor = 'bg-dominant';
@@ -16,6 +16,7 @@ const NotificationContent = (props) => {
             <div className="flex flex-grow flex-col">
                 <div className="text-white font-semibold">{title}</div>
                 <div className="text-white text-sm">{message}</div>
+                <div className="text-gray-1 text-sm">{note}</div>
             </div>
         </div>
     );
@@ -23,8 +24,9 @@ const NotificationContent = (props) => {
 
 const showNotification = (options = {}, dismiss = undefined, position = 'top', container = 'top-right') => {
     const { title, message, type } = defaults(options, {
-        title: 'Place order',
+        title: '',
         message: '',
+        note: '',
         type: 'success',
     });
 
@@ -40,7 +42,7 @@ const showNotification = (options = {}, dismiss = undefined, position = 'top', c
             duration: dismiss || 5000,
             onScreen: false,
         },
-        content: <NotificationContent title={title} message={message} type={type} />
+        content: <NotificationContent title={title} message={message} type={type} note={note}/>
     });
 };
 
