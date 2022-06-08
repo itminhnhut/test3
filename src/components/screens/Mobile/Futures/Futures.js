@@ -178,10 +178,10 @@ const FuturesMobile = () => {
     );
 };
 const Container = styled.div`
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-  height: calc(var(--vh, 1vh) * 100);
-`;
+scroll-snap-type:y mandatory;
+${'' /* overflow-y:scroll; */}
+height:calc(var(--vh, 1vh) * 100);
+`
 
 const Section = styled.div`
   width: 100%;
