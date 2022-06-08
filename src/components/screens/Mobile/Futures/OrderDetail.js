@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Portal from 'components/hoc/Portal'
 import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
@@ -7,9 +7,9 @@ import KlineChart from 'components/KlineChart/KlineChart'
 import ms from 'ms'
 import ChartTimer from './Chart/ChartTimer';
 import Indicators from './Chart/Indicators';
-import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import { renderCellTable, VndcFutureOrderType, getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import styled from 'styled-components';
-import { formatNumber, formatTime, countDecimals } from 'redux/actions/utils'
+import { formatNumber, formatTime, countDecimals, getS3Url } from 'redux/actions/utils'
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { API_ORDER_DETAIL } from 'redux/actions/apis'
@@ -17,6 +17,7 @@ import fetchApi from 'utils/fetch-api'
 import { ApiStatus } from 'redux/actions/const'
 import TableNoData from 'components/common/table.old/TableNoData';
 import { listTimeFrame } from "components/KlineChart/kline.service";
+import OrderOpenDetail from './OrderOpenDetail';
 
 const getAssets = createSelector(
     [
@@ -57,9 +58,8 @@ const getResolution = (order) => {
 }
 
 
-const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent, isVndcFutures }) => {
+const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent, isVndcFutures, isTabHistory, isDark }) => {
     const { t } = useTranslation()
-
     const [resolution, setResolution] = useState(getResolution(order))
     const [mainIndicator, setMainIndicator] = useState()
     const [subIndicator, setSubIndicator] = useState()
@@ -71,8 +71,9 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
     }))
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
+    const shapeTemplateOld = useRef([order])
 
-    useEffect(async () => {
+    const getAdjustmentDetail = async () => {
         try {
             const { status, data, message } = await fetchApi({
                 url: API_ORDER_DETAIL,
@@ -88,6 +89,10 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
             console.log(e)
         } finally {
         }
+    }
+
+    useEffect(() => {
+        getAdjustmentDetail();
     }, [])
 
     const renderReasonClose = (row) => {
@@ -154,6 +159,11 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
         return countDecimals(decimalScalePrice?.tickSize) ?? 0;
     }, [pairConfig])
 
+    const changeSLTP = (data) => {
+        shapeTemplateOld.current = data;
+        getAdjustmentDetail();
+    }
+
     return (
         <Portal portalId='PORTAL_MODAL'>
             <div className={classNames(
@@ -199,75 +209,83 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                             setSubIndicator={setSubIndicator} subIndicator={subIndicator} />
                     </div>
                     <div className="px-[16px]">
-                        <div className="py-[24px]">
-                            <div className="font-semibold mb-[6px]">{t('futures:mobile:order_details')}</div>
-                            <Row>
-                                <Label>ID</Label>
-                                <Span>{order?.displaying_id}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:leverage:leverage')}</Label>
-                                <Span>{order?.leverage}x</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:realized_pnl')}</Label>
-                                <Span>{formatNumber(String(order?.profit).replace(',', ''), 0, 0, true)}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:order_table:volume')}</Label>
-                                <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${order?.quantity} ${pairConfig?.baseAsset})`}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:margin')}</Label>
-                                <Span>{formatNumber(order?.margin, assetConfig?.swap?.assetDigit ?? 0)}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:open_time')}</Label>
-                                <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:order_table:open_price')}</Label>
-                                <Span>{formatNumber(order?.open_price, 0)}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:close_time')}</Label>
-                                <Span>{formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:order_table:close_price')}</Label>
-                                <Span>{formatNumber(order?.close_price, 0)}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:reason_close')}</Label>
-                                <Span>{renderReasonClose(order)}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:take_profit')}</Label>
-                                <Span>{formatNumber(order?.tp)}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:stop_loss')}</Label>
-                                <Span>{formatNumber(order?.sl)}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:open_fee')}</Label>
-                                <Span>{renderFee(order, 'place_order')}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:close_fee')}</Label>
-                                <Span>{renderFee(order, 'close_order')}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:liquidate_fee')}</Label>
-                                <Span>{renderFee(order, 'liquidate_order')}</Span>
-                            </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:swap_fee')}</Label>
-                                <Span>{renderFee(order, 'swap')}</Span>
-                            </Row>
-                        </div>
-                        <div>
-                            <div className="font-semibold mb-[6px]">{t('futures:order_history:adjustment_detail')}</div>
+                        {isTabHistory ?
+                            <div className="py-[24px]">
+                                <div className="font-semibold mb-[6px]">{t('futures:mobile:order_details')}</div>
+                                <Row>
+                                    <Label>ID</Label>
+                                    <Span>{order?.displaying_id}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:leverage:leverage')}</Label>
+                                    <Span>{order?.leverage}x</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:realized_pnl')}</Label>
+                                    <Span>{formatNumber(String(order?.profit).replace(',', ''), 0, 0, true)}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:order_table:volume')}</Label>
+                                    <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${formatNumber(order?.quantity, 8)} ${pairConfig?.baseAsset})`}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:margin')}</Label>
+                                    <Span>{formatNumber(order?.margin, assetConfig?.swap?.assetDigit ?? 0)}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:open_time')}</Label>
+                                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:order_table:open_price')}</Label>
+                                    <Span>{formatNumber(order?.open_price, 0)}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:close_time')}</Label>
+                                    <Span>{formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:order_table:close_price')}</Label>
+                                    <Span>{formatNumber(order?.close_price, 0)}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:reason_close')}</Label>
+                                    <Span>{renderReasonClose(order)}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:take_profit')}</Label>
+                                    <Span>{formatNumber(order?.tp)}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:stop_loss')}</Label>
+                                    <Span>{formatNumber(order?.sl)}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:open_fee')}</Label>
+                                    <Span>{renderFee(order, 'place_order')}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:close_fee')}</Label>
+                                    <Span>{renderFee(order, 'close_order')}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:liquidate_fee')}</Label>
+                                    <Span>{renderFee(order, 'liquidate_order')}</Span>
+                                </Row>
+                                <Row>
+                                    <Label>{t('futures:mobile:swap_fee')}</Label>
+                                    <Span>{renderFee(order, 'swap')}</Span>
+                                </Row>
+                            </div>
+                            :
+                            <OrderOpenDetail order={order} decimal={decimal} isDark={isDark}
+                                pairConfig={pairConfig} onClose={onClose}
+                                getAdjustmentDetail={getAdjustmentDetail}
+                                changeSLTP={changeSLTP}
+                            />
+                        }
+                        <div className="pb-2.5">
+                            <div className="font-semibold mb-[6px]">{t('futures:order_history:adjustment_history')}</div>
                             {dataSource.length > 0 ?
                                 dataSource.map((item, index) => (
                                     <div key={index} className="border-b border-divider dark:border-divider-dark last:border-0">

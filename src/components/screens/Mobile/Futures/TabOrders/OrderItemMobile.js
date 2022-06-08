@@ -78,12 +78,16 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
             isModal.current = true;
             onShowModal(order, 'share')
         }
+        if (action === 'delete') {
+            isModal.current = true;
+            onShowModal(order, 'delete')
+        }
         if (action === 'detail') {
             if (isModal.current) {
                 isModal.current = false;
                 return;
             }
-            onShowDetail(order)
+            onShowDetail(order, isTabHistory)
         }
 
     }
@@ -116,52 +120,45 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 }
             </div>
             <div>
-                <Row className="!justify-start">
+                <Row className="!justify-start !w-full">
                     <div className="text-gray-1 text-xs dark:text-txtSecondary-dark min-w-[70px]">{t('futures:mobile:pnl')}</div>
                     <span className="text-xs font-medium text-teal"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} /></span>
                 </Row>
-                <div className="flex">
-                    <div className="w-1/2 mr-[10px]">
-                        <div className="flex mb-[10px] justify-between">
-                            <Label>{t('futures:order_table:open_price')}</Label>
-                            <div className="text-xs font-medium text-right">{isTabHistory ? formatNumber(order?.open_price, 8, 0, false)  : getOpenPrice(order, dataMarketWatch)}</div>
-                        </div>
-                        <Row>
-                            <Label>{t(`futures:order_table:${isTabHistory ? 'close_price' : 'last_price2'}`)}</Label>
-                            <span className="text-xs font-medium text-right">{formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice)}</span>
-                        </Row>
-                        <Row>
-                            <Label>{t('futures:stop_loss')}</Label>
-                            <span className="text-xs font-medium text-right">{formatNumber(order?.sl)}</span>
-                        </Row>
-                    </div>
-                    <div className="w-1/2">
-                        <Row>
-                            <Label>{t('futures:order_table:volume')}</Label>
-                            <span className="text-xs font-medium text-right">{formatNumber(order?.order_value, 0, 0, true)}</span>
-                        </Row>
-                        <Row>
-                            <Label>{t(isTabHistory ? 'futures:order_table:reason_close' : `futures:mobile:liq_price`)}</Label>
-                            <span className="text-xs font-medium text-right">{isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}</span>
-                        </Row>
-                        <Row>
-                            <Label>{t('futures:take_profit')}</Label>
-                            <span className="text-xs font-medium text-right">{formatNumber(order?.tp)}</span>
-                        </Row>
-                    </div>
+                <div className="flex flex-wrap gap-x-[10px] w-full">
+                    <OrderItem
+                        label={t('futures:order_table:open_price')}
+                        value={isTabHistory ? formatNumber(order?.open_price, 8, 0, false) : getOpenPrice(order, dataMarketWatch)}
+                    />
+                    <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
+                    <OrderItem
+                        label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'last_price2'}`)}
+                        value={formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice)}
+                    />
+                    <OrderItem
+                        label={t(isTabHistory ? 'futures:order_table:reason_close' : `futures:mobile:liq_price`)}
+                        value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
+                    />
+                    <OrderItem
+                        label={t('futures:stop_loss')}
+                        value={formatNumber(order?.sl)}
+                    />
+                    <OrderItem
+                        label={t('futures:take_profit')}
+                        value={formatNumber(order?.tp)}
+                    />
                 </div>
             </div>
             {allowButton &&
                 <div className="flex items-center justify-between ">
-                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => onShowModal(order, 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
-                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => onShowModal(order, 'delete')}>{t('common:close')}</Button>
+                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" > {t('futures:tp_sl:modify_tpsl')}</Button>
+                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => actions('delete')}>{t('common:close')}</Button>
                 </div>
             }
         </div>
     );
 };
 
-const SideComponent = styled.div.attrs(({ isBuy }) => ({
+export const SideComponent = styled.div.attrs(({ isBuy }) => ({
     className: `flex items-center justify-center font-medium mr-[12px]`
 }))`
     width:38px;
@@ -173,7 +170,9 @@ const SideComponent = styled.div.attrs(({ isBuy }) => ({
 `
 const Row = styled.div.attrs({
     className: `flex mb-[10px] justify-between`
-})``
+})`
+width:calc(50% - 5px)
+`
 
 const Label = styled.div.attrs({
     className: `text-gray-1 text-xs dark:text-txtSecondary-dark min-w-[50px]`
@@ -184,4 +183,14 @@ const Button = styled.div.attrs({
 })`
 width:calc(50% - 4px)
 `
+
+export const OrderItem = ({ label, value }) => {
+    return (
+        <Row className="justify-between">
+            <Label>{label}</Label>
+            <div className="text-xs font-medium text-right">{value}</div>
+        </Row>
+    )
+}
+
 export default OrderItemMobile;
