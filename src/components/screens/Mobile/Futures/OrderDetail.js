@@ -127,7 +127,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
         switch (key) {
             case 'price':
                 value = metadata?.modify_price ?
-                    <div className="flex items-center py-[4px] justify-between">
+                    <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_price?.before)}</div>
                         &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right"> {getValue(metadata?.modify_price?.after)}</div>
@@ -135,7 +135,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                 return value;
             case 'take_profit':
                 value = metadata?.modify_tp ?
-                    <div className="flex items-center py-[4px] justify-between">
+                    <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_tp?.before)}</div>
                         &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_tp?.after)}</div>
@@ -143,7 +143,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                 return value;
             case 'stop_loss':
                 value = metadata?.modify_sl ?
-                    <div className="flex items-center py-[4px] justify-between">
+                    <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_sl?.before)}</div>
                         &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_sl?.after)} </div>
@@ -336,7 +336,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
 };
 
 const Row = styled.div.attrs({
-    className: 'flex items-center justify-between py-[6px]'
+    className: 'flex items-center justify-between py-1'
 })``
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
