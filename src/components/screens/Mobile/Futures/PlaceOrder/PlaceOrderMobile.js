@@ -266,6 +266,10 @@ const PlaceOrder = ({
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
         if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
+            const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000;
+            const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
+            const available = maxQuoteQty >= minQuoteQty;
+            context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount') : t('futures:mobile:balance_insufficient'))
             return;
         }
         const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
@@ -321,7 +325,7 @@ const PlaceOrder = ({
                         price={price} stopPrice={stopPrice} pairConfig={pairConfig}
                         decimals={decimals} leverage={leverage} isAuth={isAuth}
                         marginAndValue={marginAndValue} availableAsset={availableAsset}
-                        quoteQty={quoteQty}
+                        quoteQty={quoteQty} isError={isError}
                     />
                 }
                 <div className={collapse ? 'hidden' : 'w-full flex flex-wrap justify-between'}>
