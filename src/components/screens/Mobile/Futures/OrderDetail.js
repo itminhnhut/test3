@@ -182,7 +182,7 @@ const OrderDetail = ({
     return (
         <Portal portalId='PORTAL_MODAL'>
             <div className={classNames(
-                'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-white dark:bg-onus',
+                'flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] bg-white dark:bg-onus',
                 {invisible: !isVisible},
                 {visible: isVisible}
             )}
@@ -191,8 +191,7 @@ const OrderDetail = ({
                     className='fixed top-0 w-full bg-white dark:bg-onus z-[10] flex items-center min-h-[50px] px-[16px]'
                     onClick={() => onClose()}>
                     <ChevronLeft size={24}/>
-                    <span className='font-medium text-sm pl-[10px]'>{t('futures:mobile:order_detail')}  </span>
-
+                    <span className='font-medium text-sm pl-[10px]'>{t('futures:mobile:order_detail')}</span>
                 </div>
                 <div className='flex justify-center items-center pt-[25px] mt-[50px] font-semibold'>
                     <span className="mr-[8px]">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
@@ -212,7 +211,7 @@ const OrderDetail = ({
                             mode={ChartMode.FUTURES}
                         />
                     </div>
-                    <div className="px-[16px]">
+                    <div className="px-[16px] bg-onus">
                         {isTabHistory ?
                             <div className="py-[24px]">
                                 <div className="font-semibold mb-[6px]">{t('futures:mobile:order_details')}</div>

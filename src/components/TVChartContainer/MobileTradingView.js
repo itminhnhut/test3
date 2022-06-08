@@ -232,7 +232,6 @@ export default class MobileTradingView extends React.PureComponent {
 
     rawOrders = async () => {
         const _ordersList = this.props.ordersList.filter(order => order?.symbol === this.props.symbol);
-        console.log(_ordersList, '000000000000000')
         const edited = localStorage.getItem('edited_id');
         if (edited) {
             const itemEdited = _ordersList.find(order => String(order?.displaying_id) === edited)
