@@ -34,7 +34,7 @@ const updateMultipleMiniTicker = throttle((dispatch) => {
         type: SET_MULTI_FUTURES_MARKET_WATCH,
         payload: bunchUpdateFuturesMarketPrice,
     });
-}, 5000, { leading: true, trailing: true });
+}, 1000, { leading: true, trailing: true });
 
 function initPublicSocket() {
     return (dispatch) => {

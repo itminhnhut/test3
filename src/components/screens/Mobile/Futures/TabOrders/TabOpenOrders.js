@@ -14,7 +14,7 @@ import OrderItemMobile from './OrderItemMobile'
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
 import ShareFutureMobile from './ShareFutureMobile';
 
-const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
+const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDetail }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
     const [hideOther, setHideOther] = useState(false)
@@ -35,6 +35,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
                 context.alert.show('warning',
                     t('futures:close_order:modal_title', { value: item?.displaying_id }),
                     <div dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: item?.displaying_id }) }}></div>,
+                    null,
                     () => {
                         onConfirmDelete(item);
                     }
@@ -77,7 +78,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
             special_mode: 1
         }
         fetchOrder('DELETE', params, () => {
-            context.alert.show('success', t('common:success'), t('futures:close_order:close_successfully', { value: id }))
+            context.alert.show('success', t('futures:close_order:modal_title', { value: id }), t('futures:close_order:request_successfully', { value: id }))
         });
     }
 
@@ -126,6 +127,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
                     return (
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
                             onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
+                            onShowDetail={onShowDetail}
                         />
                     )
                 })}

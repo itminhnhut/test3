@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useCallback } from 'react';
+import React, { memo, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import classNames from 'classnames';
@@ -9,21 +9,67 @@ import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOr
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
 import { getLoginUrl } from 'redux/actions/utils'
-import OrderBalance from './OrderBalance';
+import OrderBalance from 'components/screens/Mobile/Futures/TabOrders/OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
+import { socket } from "components/KlineChart/kline.service";
+import { VndcFutureOrderType } from "../../../Futures/PlaceOrder/Vndc/VndcFutureOrderType"
 
 const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender, isFullScreen }) => {
     const { t } = useTranslation();
+    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const [currentTheme] = useDarkMode()
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const [tab, setTab] = useState(FUTURES_RECORD_CODE.position)
+    const [openDetailModal, setOpenDetailModal] = useState(false);
+    const rowData = useRef(null);
 
     useEffect(() => {
         setTab(FUTURES_RECORD_CODE.openOrders)
     }, [isVndcFutures])
 
+    const onShowDetail = (row, isTabHistory) => {
+        if (openDetailModal) {
+            if (rowData.current.symbol !== pair) {
+                socket.emit('subscribe:futures:ticker', pair)
+            }
+            setForceRender(!forceRender)
+        }
+        rowData.current = row;
+        rowData.current?.isTabHistory = isTabHistory;
+        setOpenDetailModal(!openDetailModal);
+    }
+
+    const pairConfigDetail = useMemo(() => {
+        return allPairConfigs.find(rs => rs.symbol === rowData.current?.symbol)
+    }, [rowData.current, openDetailModal])
+
+    const oldDetail = useRef({});
+
+    const orderDetail = useMemo(() => {
+        if (rowData.current?.isTabHistory) return rowData.current
+        const detail = ordersList.find(item => item.displaying_id === rowData.current?.displaying_id);
+        if (detail) {
+            detail.isTabHistory = detail.status === VndcFutureOrderType.Status.CLOSED;
+            oldDetail.current = detail;
+            return detail;
+        } else {
+            oldDetail.current?.isTabHistory = true;
+            return oldDetail.current
+        }
+
+    }, [rowData.current, ordersList])
+
     return (
         <div className={`h-full ${isFullScreen ? 'overflow-hidden' : ''}`}>
+            {openDetailModal &&
+                <OrderDetail order={orderDetail} onClose={onShowDetail} isMobile
+                    pairConfig={pairConfigDetail}
+                    pairParent={pair} isVndcFutures={isVndcFutures}
+                    isTabHistory={orderDetail?.isTabHistory}
+                    isDark={currentTheme === THEME_MODE.DARK}
+                />
+            }
             <TabMobile isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
                 {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((item) => (
                     <TabItem key={item.code} active={tab === item.code} onClick={() => setTab(item.code)}>
@@ -37,7 +83,8 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
             {isAuth ?
                 <div className="h-full">
                     <TabContent active={tab === FUTURES_RECORD_CODE.openOrders} >
-                        <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK} ordersList={ordersList} pair={pair} pairConfig={pairConfig} />
+                        <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK} ordersList={ordersList} pair={pair} pairConfig={pairConfig}
+                            onShowDetail={onShowDetail} />
                     </TabContent>
                     <TabContent active={tab === FUTURES_RECORD_CODE.orderHistory} >
                         <TabOrdersHistory
@@ -45,6 +92,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
                             isDark={currentTheme === THEME_MODE.DARK} pair={pair}
                             isVndcFutures={isVndcFutures}
                             active={tab === FUTURES_RECORD_CODE.orderHistory}
+                            onShowDetail={onShowDetail}
                         />
                     </TabContent>
                 </div>

@@ -10,7 +10,8 @@ const AlertModal = forwardRef((props, ref) => {
     const options = useRef({
         type: '',
         title: '',
-        messages: ''
+        messages: '',
+        note: '',
     })
     const actions = useRef({
         onConfirm: null, onCancel: null
@@ -20,8 +21,8 @@ const AlertModal = forwardRef((props, ref) => {
         show: onShow
     }))
 
-    const onShow = (type, title, messages, onConfirm, onCancel, _options) => {
-        options.current = { type, title, messages, ..._options };
+    const onShow = (type, title, messages, note, onConfirm, onCancel, _options) => {
+        options.current = { type, title, messages, note, ..._options };
         actions.current.onConfirm = onConfirm;
         actions.current.onCancel = onCancel;
         setVisible(true);
@@ -68,8 +69,11 @@ const AlertModal = forwardRef((props, ref) => {
             <div className='text-lg font-semibold mb-[12px]'>
                 {options.current.title}
             </div>
-            <div className='text-sm mb-[30px] text-center'>
+            <div className='text-sm  mb-[10px] text-center'>
                 {options.current.messages}
+            </div>
+            <div className='text-sm text-gray-1 mb-[30px] text-center'>
+                {options.current.note}
             </div>
             {actions.current.onConfirm &&
                 <Button

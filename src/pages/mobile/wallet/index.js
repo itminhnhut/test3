@@ -283,6 +283,8 @@ const ExternalWithdrawal = (props) => {
                             value={amount}
                             onValueChange={({ value }) => setAmount(value)}
                             decimalScale={decimalScale}
+                            inputMode="decimal"
+                            allowedDecimalSeparators={[',', '.']}
                         />
                         <div
                             className="flex items-center"
