@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { formatCurrency, formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import TradingLabel from 'components/trade/TradingLabel';
-import { getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import isNil from 'lodash/isNil';
 
 const OrderBalance = ({
@@ -47,10 +47,9 @@ const OrderBalance = ({
     }, [ordersList, futuresMarketWatch]);
 
     const volume = useMemo(() => {
-        const total = ordersList.reduce((a, b) => a + (b?.order_value || 0), 0);
-        return parseFloat(total)
-            .toFixed(10);
-    }, [ordersList]);
+        const total = ordersList.reduce((a, b) => a + (b.status !== VndcFutureOrderType.Status.PENDING && b?.order_value || 0), 0);
+        return parseFloat(total).toFixed(10);
+    }, [ordersList])
 
     const className = totalProfit === 0 ? '' : totalProfit > 0 ? 'text-teal' : 'text-red';
     const pnl = <div className={className}>{formatNumber(totalProfit, 0, 0, true)}</div>;
