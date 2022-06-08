@@ -130,9 +130,9 @@ const RewardEventModal = ({ onClose, data }) => {
                     }
                     <div className="absolute bottom-0 w-full">
                         {!view &&
-                            <div className="flex flex-col items-center justify-center font-semibold pb-[5px] sm:pb-[20px] sm:text-[17px] text-sm">
+                            <div className="flex flex-col items-center justify-center font-semibold pb-[15px] sm:pb-[25px] sm:text-[17px] text-sm">
                                 <div className=''>{t('reward-center:congratulation')}</div>
-                                <div className="text-center">
+                                <div className="text-center whitespace-nowrap">
                                     {t("reward-center:you_have_received")}&nbsp;
                                     <span className="text-teal">{data?.reward?.num_of_rewards}</span>&nbsp;
                                     {t('reward-center:gifts_boxs')}&nbsp;
@@ -156,7 +156,7 @@ const RewardEventModal = ({ onClose, data }) => {
 };
 
 const Background = styled.div.attrs({
-    className: 'h-full w-full text-white relative p-[24px] sm:px-[20px] sm:py-[35px] !rounded-[18px] select-none'
+    className: 'h-full w-full text-white relative p-[24px] sm:px-[23px] sm:py-[35px] !rounded-[18px] select-none'
 })`
     background-image:${({ language, view }) => view ? `url(${getS3Url(`/images/screen/reward/event_view_${language}.png`)})` : `url(${getS3Url(`/images/screen/reward/event_6_6_${language}.png`)})`};
     background-position: center;
