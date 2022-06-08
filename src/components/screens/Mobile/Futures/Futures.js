@@ -10,7 +10,6 @@ import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
 import { getOrdersList } from 'redux/actions/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
@@ -33,9 +32,9 @@ const FuturesMobile = () => {
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
     const router = useRouter();
-    const [side, setSide] = useState(VndcFutureOrderType.Side.BUY)
-    const avlbAsset = useSelector((state) => state.wallet?.FUTURES)
-    const [availableAsset, setAvailableAsset] = useState(null)
+    const [side, setSide] = useState(VndcFutureOrderType.Side.BUY);
+    const avlbAsset = useSelector((state) => state.wallet?.FUTURES);
+    const [availableAsset, setAvailableAsset] = useState(null);
     const [collapse, setCollapse] = useState(false);
     const [scrollSnap, setScrollSnap] = useState(false);
     const [forceRender, setForceRender] = useState(false);
@@ -55,7 +54,7 @@ const FuturesMobile = () => {
                     `/mobile${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
                     undefined,
                     { shallow: true }
-                )
+                );
                 return;
             }
             setState({ pair: router.query.pair });
@@ -71,12 +70,12 @@ const FuturesMobile = () => {
     }, [pairConfig, userSettings, state.layouts]);
 
     useEffect(() => {
-        if (auth) getOrders()
-    }, [auth])
+        if (auth) getOrders();
+    }, [auth]);
 
     const getOrders = () => {
-        if (auth) dispatch(getOrdersList())
-    }
+        if (auth) dispatch(getOrdersList());
+    };
 
     useEffect(() => {
         if (userSocket) {
@@ -97,31 +96,42 @@ const FuturesMobile = () => {
             decimalScalePrice: countDecimals(decimalScalePrice?.tickSize),
             decimalScaleQtyLimit: countDecimals(decimalScaleQtyLimit?.stepSize),
             decimalScaleQtyMarket: countDecimals(decimalScaleQtyMarket?.stepSize)
-        }
-    }, [pairConfig])
+        };
+    }, [pairConfig]);
 
     useEffect(() => {
         if (avlbAsset) {
-            const _avlb = avlbAsset?.[pairConfig?.quoteAssetId]
-            setAvailableAsset(_avlb?.value - _avlb?.locked_value)
+            const _avlb = avlbAsset?.[pairConfig?.quoteAssetId];
+            setAvailableAsset(_avlb?.value - _avlb?.locked_value);
         }
-    }, [avlbAsset, pairConfig])
-
+    }, [avlbAsset, pairConfig]);
 
     const futuresScreen = useMemo(() => {
-        setScrollSnap(false)
+        setScrollSnap(false);
         const vh = window.innerHeight * 0.01;
-        const el = document.querySelector('#futures-mobile .form-order')
+        const el = document.querySelector('#futures-mobile .form-order');
         if (el) {
             const scrollSnap = el.clientHeight <= vh * 100;
             if (scrollSnap) {
-                setScrollSnap(true)
-                return { isFullScreen: true, style: { height: vh * 100, scrollSnapAlign: 'start' } }
+                setScrollSnap(true);
+                return {
+                    isFullScreen: true,
+                    style: {
+                        height: vh * 100,
+                        scrollSnapAlign: 'start'
+                    }
+                };
             }
-            return { isFullScreen: false, style: { height: 'max-content' } }
+            return {
+                isFullScreen: false,
+                style: { height: 'max-content' }
+            };
         }
-        return { isFullScreen: false, style: { height: 'max-content' } }
-    }, [state.pair])
+        return {
+            isFullScreen: false,
+            style: { height: 'max-content' }
+        };
+    }, [state.pair]);
 
     return (
         <>
@@ -133,9 +143,9 @@ const FuturesMobile = () => {
                 />
             </SocketLayout>
             <LayoutMobile>
-                <Container id="futures-mobile" >
+                <Container id="futures-mobile">
                     <Section className="form-order bg-onus"
-                        style={{ ...futuresScreen.style }}>
+                             style={{ ...futuresScreen.style }}>
                         <ChartMobile
                             pair={state.pair} pairConfig={pairConfig}
                             isVndcFutures={isVndcFutures}
@@ -157,9 +167,9 @@ const FuturesMobile = () => {
                     </Section>
                     <Section className="bg-onus" style={{ ...futuresScreen.style }}>
                         <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
-                            pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
-                            setForceRender={setForceRender} forceRender={forceRender}
-                            isFullScreen={futuresScreen.isFullScreen}
+                                   pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
+                                   setForceRender={setForceRender} forceRender={forceRender}
+                                   isFullScreen={futuresScreen.isFullScreen}
                         />
                     </Section>
                 </Container>
@@ -174,10 +184,10 @@ height:calc(var(--vh, 1vh) * 100);
 `
 
 const Section = styled.div`
-width: 100%;
-height:unset;
+  width: 100%;
+  height: unset;
 ${'' /* height:calc(var(--vh, 1vh) * 100); */}
 ${'' /* scroll-snap-align:start */}
-`
+`;
 
 export default FuturesMobile;

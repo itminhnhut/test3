@@ -51,6 +51,8 @@
         "confirm_message": "Bạn có muốn đóng lệnh <span class='font-medium'>#{{value}}</span> ?",
         "future_note": "* Chế độ Eco Close sẽ đóng lệnh của bạn bằng cách đặt lệnh Limit gần với giá hiện tại và được ưu đãi về phí so với đóng lệnh thường. Xem chi tiết tại ",
         "close_successfully": "Đóng lệnh #{{value}} thành công",
+        "request_successfully": "Gửi yêu cầu thành công",
+        "title": "Đóng lệnh",
         "btn_ok": "Đồng ý",
         "btn_cancel": "Bỏ qua"
     },
@@ -174,7 +176,7 @@
     "month": "Tháng",
     "limit": "Giới hạn",
     "market": "Thị trường",
-    "place_order_success": "Đặt lệnh thành công",
+    "place_order_success": "Đặt lệnh",
     "minimun_price": "Giá tối thiểu",
     "maximun_price": "Giá tối đa",
     "fullscreen": "Toàn màn hình",
@@ -197,8 +199,9 @@
     "value": "Khối lượng",
     "price_market": "Giá thị trường",
     "cancel": "Hủy",
-    "place_order_success_message": "Chúc mừng bạn đã đặt lệnh thành công",
+    "place_order_success_message": "Gửi yêu cầu đặt lệnh thành công",
     "place_order_failed": "Đặt lệnh không thành công",
+    "place_order": "Đặt lệnh",
     "mobile": {
         "balance": "Tài khoản",
         "pnl": "Lợi nhuận",
