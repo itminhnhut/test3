@@ -30,6 +30,7 @@ const ChartMobile = memo(({pairConfig, isVndcFutures, setCollapse, collapse, for
         <div className='spot-chart h-full max-w-full' style={style}>
             <MobileTradingView
                 t={t}
+                symbol={pairConfig.symbol}
                 pairConfig={pairConfig}
                 initTimeFrame="1D"
                 isVndcFutures={true}
