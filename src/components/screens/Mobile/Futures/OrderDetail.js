@@ -1,22 +1,29 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import Portal from 'components/hoc/Portal'
 import classNames from 'classnames'
-import { useTranslation } from 'next-i18next'
-import { ChevronLeft, ArrowRight } from "react-feather";
+import {useTranslation} from 'next-i18next'
+import {ChevronLeft, ArrowRight} from "react-feather";
 import KlineChart from 'components/KlineChart/KlineChart'
 import ms from 'ms'
 import ChartTimer from './Chart/ChartTimer';
 import Indicators from './Chart/Indicators';
-import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import {renderCellTable, VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import styled from 'styled-components';
-import { formatNumber, formatTime, countDecimals } from 'redux/actions/utils'
-import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
-import { API_ORDER_DETAIL } from 'redux/actions/apis'
+import {formatNumber, formatTime, countDecimals} from 'redux/actions/utils'
+import {useSelector} from 'react-redux';
+import {createSelector} from 'reselect';
+import {API_ORDER_DETAIL} from 'redux/actions/apis'
 import fetchApi from 'utils/fetch-api'
-import { ApiStatus } from 'redux/actions/const'
+import {ApiStatus, ChartMode} from 'redux/actions/const'
 import TableNoData from 'components/common/table.old/TableNoData';
-import { listTimeFrame } from "components/KlineChart/kline.service";
+import {listTimeFrame} from "components/KlineChart/kline.service";
+import {THEME_MODE} from "hooks/useDarkMode";
+import dynamic from "next/dynamic";
+
+const MobileTradingView = dynamic(
+    () => import('src/components/TVChartContainer/MobileTradingView'),
+    {ssr: false},
+);
 
 const getAssets = createSelector(
     [
@@ -57,8 +64,8 @@ const getResolution = (order) => {
 }
 
 
-const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent, isVndcFutures }) => {
-    const { t } = useTranslation()
+const OrderDetail = ({isVisible = true, onClose, order, pairConfig, pairParent, isVndcFutures}) => {
+    const {t} = useTranslation()
 
     const [resolution, setResolution] = useState(getResolution(order))
     const [mainIndicator, setMainIndicator] = useState()
@@ -66,17 +73,17 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
     const [candle, setCandle] = useState('candle_solid');
     const assetConfig = useSelector(state => getAssets(state, {
         ...order?.fee_metadata,
-        swap: { currency: order?.margin_currency },
-        order_value: { currency: order?.order_value_currency }
+        swap: {currency: order?.margin_currency},
+        order_value: {currency: order?.order_value_currency}
     }))
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false);
 
     useEffect(async () => {
         try {
-            const { status, data, message } = await fetchApi({
+            const {status, data, message} = await fetchApi({
                 url: API_ORDER_DETAIL,
-                options: { method: 'GET' },
+                options: {method: 'GET'},
                 params: {
                     orderId: order.displaying_id
                 },
@@ -123,7 +130,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                 value = metadata?.modify_price ?
                     <div className="flex items-center py-[4px] justify-between">
                         <div className="text-left">{getValue(metadata?.modify_price?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className="text-right"> {getValue(metadata?.modify_price?.after)}</div>
                     </div> : getValue(metadata?.price)
                 return value;
@@ -131,7 +138,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                 value = metadata?.modify_tp ?
                     <div className="flex items-center py-[4px] justify-between">
                         <div className="text-left">{getValue(metadata?.modify_tp?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_tp?.after)}</div>
                     </div> : null
                 return value;
@@ -139,7 +146,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                 value = metadata?.modify_sl ?
                     <div className="flex items-center py-[4px] justify-between">
                         <div className="text-left">{getValue(metadata?.modify_sl?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_sl?.after)} </div>
                     </div> : null
                 return value;
@@ -158,45 +165,34 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
         <Portal portalId='PORTAL_MODAL'>
             <div className={classNames(
                 'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-white dark:bg-darkBlue-1',
-                { invisible: !isVisible },
-                { visible: isVisible }
+                {invisible: !isVisible},
+                {visible: isVisible}
             )}
             >
-                <div className='fixed top-0 w-full bg-white dark:bg-darkBlue-1 z-[10] flex items-center min-h-[50px] px-[16px]' onClick={() => onClose()}>
-                    <ChevronLeft size={24} />
+                <div
+                    className='fixed top-0 w-full bg-white dark:bg-darkBlue-1 z-[10] flex items-center min-h-[50px] px-[16px]'
+                    onClick={() => onClose()}>
+                    <ChevronLeft size={24}/>
                     <span className='font-medium text-sm pl-[10px]'>{t('futures:mobile:order_detail')}  </span>
 
                 </div>
                 <div className='flex justify-center items-center pt-[25px] mt-[50px] font-semibold'>
                     <span className="mr-[8px]">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
-                    <span className={order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red'}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
+                    <span
+                        className={order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red'}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
                 </div>
                 <div className="shadow-order_detail py-[10px] dark:bg-darkBlue-1 ">
-                    <div className="min-h-[300px]">
-                        <ChartTimer pair={order.symbol} pairConfig={pairConfig}
-                            isVndcFutures={isVndcFutures} resolution={resolution}
-                            setResolution={setResolution}
-                            candle={candle} setCandle={setCandle}
-                            className="py-[10px]"
-                            showSymbol={false}
-                            showIconGuide={false}
-                            pairParent={pairParent}
+                    <div className="min-h-[300px] max-h-72 spot-chart h-full max-w-full">
+                        <MobileTradingView
+                            t={t}
+                            symbol={order.symbol}
+                            pairConfig={pairConfig}
+                            initTimeFrame="1D"
+                            isVndcFutures={true}
+                            ordersList={[]}
+                            theme={THEME_MODE.DARK}
+                            mode={ChartMode.FUTURES}
                         />
-                        <div className="h-[300px]">
-                            <KlineChart
-                                symbolInfo={{ exchange: 'NAMI_FUTURES', symbol: order.symbol, pricePrecision: decimal }}
-                                resolution={resolution}
-                                mainIndicator={mainIndicator}
-                                subIndicator={subIndicator}
-                                chartId={'order-detail'}
-                                pairParent={pairParent}
-                                candle={candle}
-                                shapeTemplate={[order]}
-                            />
-                        </div>
-                        <Indicators
-                            setMainIndicator={setMainIndicator} mainIndicator={mainIndicator}
-                            setSubIndicator={setSubIndicator} subIndicator={subIndicator} />
                     </div>
                     <div className="px-[16px]">
                         <div className="py-[24px]">
@@ -270,32 +266,33 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                             <div className="font-semibold mb-[6px]">{t('futures:order_history:adjustment_detail')}</div>
                             {dataSource.length > 0 ?
                                 dataSource.map((item, index) => (
-                                    <div key={index} className="border-b border-divider dark:border-divider-dark last:border-0">
+                                    <div key={index}
+                                         className="border-b border-divider dark:border-divider-dark last:border-0">
                                         <Row>
                                             <Label>{t('common:time')}</Label>
                                             <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
                                         </Row>
                                         {item?.metadata?.modify_tp &&
-                                            <Row>
-                                                <Label>{t('futures:take_profit')}</Label>
-                                                <Span>{renderModify(item?.metadata, 'take_profit')}</Span>
-                                            </Row>
+                                        <Row>
+                                            <Label>{t('futures:take_profit')}</Label>
+                                            <Span>{renderModify(item?.metadata, 'take_profit')}</Span>
+                                        </Row>
                                         }
                                         {item?.metadata?.modify_sl &&
-                                            <Row>
-                                                <Label>{t('futures:stop_loss')}</Label>
-                                                <Span>{renderModify(item?.metadata, 'stop_loss')}</Span>
-                                            </Row>
+                                        <Row>
+                                            <Label>{t('futures:stop_loss')}</Label>
+                                            <Span>{renderModify(item?.metadata, 'stop_loss')}</Span>
+                                        </Row>
                                         }
                                         {item?.metadata?.modify_price &&
-                                            <Row>
-                                                <Label>{t('futures:price')}</Label>
-                                                <Span>{renderModify(item?.metadata, 'price')}</Span>
-                                            </Row>
+                                        <Row>
+                                            <Label>{t('futures:price')}</Label>
+                                            <Span>{renderModify(item?.metadata, 'price')}</Span>
+                                        </Row>
                                         }
                                     </div>
                                 ))
-                                : <TableNoData className="min-h-[300px]" />
+                                : <TableNoData className="min-h-[300px]"/>
                             }
                         </div>
                     </div>
