@@ -202,6 +202,7 @@ const OrderDetail = ({
                     <div className="min-h-96 max-h-[420px] spot-chart h-full max-w-full">
                         <MobileTradingView
                             t={t}
+                            containerId="nami-mobile-detail-tv"
                             symbol={order.symbol}
                             pairConfig={pairConfig}
                             initTimeFrame="1D"

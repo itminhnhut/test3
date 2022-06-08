@@ -24,8 +24,6 @@ const ChartStatus = {
 };
 
 export default class MobileTradingView extends React.PureComponent {
-    containerId = `${CONTAINER_ID}-${this.props.symbol}`;
-
     state = {
         chartStatus: ChartStatus.NOT_LOADED,
         chartType: "price",
@@ -45,11 +43,15 @@ export default class MobileTradingView extends React.PureComponent {
     firstTime = true;
     oldOrdersList = [];
 
+    containerId = `${this.props.containerId || CONTAINER_ID}-${this.props.symbol}`;
+
     constructor(props) {
         super(props);
         this.timeFrame = React.createRef();
         this.t = props.t;
     }
+
+
 
     componentDidMount() {
         this.initWidget(this.props.symbol);
@@ -386,7 +388,7 @@ export default class MobileTradingView extends React.PureComponent {
                 }, 2000);
             }
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
-            this.intervalSaveChart = setInterval(() => this.saveChart(), 5000);
+            this.intervalSaveChart = setInterval(this.saveChart, 5000);
         });
     };
 
@@ -454,7 +456,7 @@ export default class MobileTradingView extends React.PureComponent {
 MobileTradingView.defaultProps = {
     symbol: "BTCUSDT",
     interval: "1",
-    containerId: "tv_chart_container",
+    containerId: "nami-mobile-tv",
     datafeedUrl: "https://demo_feed.tradingview.com",
     libraryPath: "/library/trading_view/charting_library/",
     chartsStorageUrl: "https://saveload.tradingview.com",
