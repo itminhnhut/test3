@@ -81,7 +81,7 @@ export default (state = initialState, { payload, type }) => {
                 return state;
             }
             for (const pairKey in data) {
-                if (data.hasOwnProperty(pairKey)) {
+                if (data?.[pairKey] && data?.[pairKey]?.q === 'VNDC' && data?.[pairKey]?.p) {
                     try {
                         data[pairKey] = FuturesMarketWatch.create(data[pairKey], 'VNDC')
                     } catch (e) {
