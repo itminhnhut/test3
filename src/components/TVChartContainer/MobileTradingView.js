@@ -215,12 +215,12 @@ export default class MobileTradingView extends React.PureComponent {
             line.setBodyFont(this.toNormalText(line));
             this.drawnOrder[displayingId] = line;
             if (order.sl > 0) {
-                const lineSl = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} SL ${order.sl}`).setPrice(order.sl).setQuantity(null).setEditable(false).setLineColor(colorSl).setBodyTextColor(colorSl).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
+                const lineSl = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} SL`).setPrice(order.sl).setQuantity(null).setEditable(false).setLineColor(colorSl).setBodyTextColor(colorSl).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
                 lineSl.setBodyFont(this.toNormalText(lineSl));
                 this.drawnSl[displayingId] = lineSl;
             }
             if (order.tp > 0) {
-                const lineTp = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} TP ${order.tp}`).setPrice(order.tp).setQuantity(null).setEditable(false).setLineColor(colorTp).setBodyTextColor(colorTp).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
+                const lineTp = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} TP`).setPrice(order.tp).setQuantity(null).setEditable(false).setLineColor(colorTp).setBodyTextColor(colorTp).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
                 lineTp.setBodyFont(this.toNormalText(lineTp));
                 this.drawnTp[displayingId] = lineTp;
             }
