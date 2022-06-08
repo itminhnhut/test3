@@ -330,10 +330,8 @@ const FuturesEditSLTPVndc = ({
                         className={classNames(
                             'block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
                             {
-                                'left-1/2 -translate-x-1/2':
-                                    i >= 0 && i !== xmax / dotStep.current,
-                                '-left-1/2 translate-x-[-80%]':
-                                    i === xmax / dotStep.current,
+                                'left-1/2 -translate-x-1/2': i > 0 && i < dotStep.current,
+                                '-left-1/2 translate-x-[-80%]':  i ===  dotStep.current,
                             }
                         )}
                     >
@@ -427,7 +425,7 @@ const FuturesEditSLTPVndc = ({
                     <TabItem active={tab === 2} onClick={() => setTab(2)}
                         isDark={currentTheme === THEME_MODE.DARK}>{t('futures:profit_margin')}</TabItem>
                 </div>
-                <div className="mt-5 flex items-center">
+                <div className="mt-6 flex items-center">
                     <div
                         className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
                         <TradingInput
@@ -450,7 +448,7 @@ const FuturesEditSLTPVndc = ({
                         />
                     </div>
                 </div>
-                <div className="mt-2 mb-3">
+                <div className="mt-4 mb-3">
                     <Slider
                         useLabel axis='x' x={percent.tp} xmax={100}
                         labelSuffix='%'
@@ -461,7 +459,7 @@ const FuturesEditSLTPVndc = ({
                         bgColorActive={colors.teal}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')} />
                 </div>
-                <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
                         {t('futures:tp_sl:mark_price')}&nbsp;
@@ -499,7 +497,7 @@ const FuturesEditSLTPVndc = ({
                         />
                     </div>
                 </div>
-                <div className="mt-2 mb-3">
+                <div className="mt-4 mb-3">
                     <Slider
                         useLabel axis='x' x={percent.sl} xmax={100}
                         labelSuffix='%'
@@ -510,7 +508,7 @@ const FuturesEditSLTPVndc = ({
                         reload={tab}
                         onChange={({ x }) => onChangePercent(x, 100, 'sl')} />
                 </div>
-                <div className="mt-2 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
                         {t('futures:tp_sl:mark_price')}&nbsp;
@@ -553,7 +551,7 @@ const FuturesEditSLTPVndc = ({
 const TabItem = styled.div`
     cursor:pointer;
     color: ${({ active, isDark }) => active ? (isDark ? colors.teal : colors.darkBlue) : isDark ? colors.darkBlue5 : colors.grey1};
-    font-weight: 600;
+    font-weight: ${({ active }) => active ? 600 : 500};;
     position:relative;
     height:45px;
     display:flex;
