@@ -23,7 +23,7 @@ const ChartMobile = memo(({pairConfig, isVndcFutures, setCollapse, collapse, for
 
     const style = useMemo(() => {
         const vh = window.innerHeight * 0.01;
-        return {height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 100 : 230}px)`}
+        return { height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 120 : 230}px)` }
     }, [isFullScreen, collapse])
 
     return (

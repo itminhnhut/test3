@@ -7,12 +7,10 @@ import OrderItemMobile from './OrderItemMobile'
 import { useSelector } from 'react-redux'
 import InfiniteScroll from "react-infinite-scroll-component";
 import ShareFutureMobile from './ShareFutureMobile';
-import OrderDetail from '../OrderDetail';
-import { socket } from "components/KlineChart/kline.service";
 import { useTranslation } from 'next-i18next';
 import Skeletor from 'components/common/Skeletor'
 
-const TabOrdersHistory = ({ isDark, scrollSnap, pair, setForceRender, forceRender, isVndcFutures, active }) => {
+const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onShowDetail }) => {
     const { t } = useTranslation();
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const [dataSource, setDataSource] = useState([]);
@@ -23,7 +21,6 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, setForceRender, forceRende
     })
     const hasMore = useRef(true);
     const rowData = useRef(null);
-    const [showDetail, setShowDetail] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
     const isLoading = useRef(true);
 
@@ -76,20 +73,10 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, setForceRender, forceRende
         getOrders();
     }
 
-    const onShowDetail = (row) => {
-        if (showDetail) {
-            if (rowData.current.symbol !== pair) {
-                socket.emit('subscribe:futures:ticker', pair)
-            }
-            setForceRender(!forceRender)
-        }
-        rowData.current = row;
-        setShowDetail(!showDetail);
-    }
 
     const pairConfigDetail = useMemo(() => {
         return allPairConfigs.find(rs => rs.symbol === rowData.current?.symbol)
-    }, [rowData.current, showDetail])
+    }, [rowData.current, openShareModal])
 
     const Loading = () => (
         <div className="py-[10px]">
@@ -140,12 +127,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, setForceRender, forceRende
                 isClosePrice
                 pairPrice={pairConfigDetail}
             />}
-            {showDetail &&
-                <OrderDetail order={rowData.current} onClose={onShowDetail} isMobile
-                    pairConfig={pairConfigDetail}
-                    pairParent={pair} isVndcFutures={isVndcFutures}
-                />
-            }
+
             <InfiniteScroll
                 dataLength={dataSource.length}
                 next={onNext}

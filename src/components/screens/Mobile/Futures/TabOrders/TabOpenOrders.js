@@ -14,7 +14,7 @@ import OrderItemMobile from './OrderItemMobile'
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
 import ShareFutureMobile from './ShareFutureMobile';
 
-const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
+const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDetail }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
     const [hideOther, setHideOther] = useState(false)
@@ -126,6 +126,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig }) => {
                     return (
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
                             onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
+                            onShowDetail={onShowDetail}
                         />
                     )
                 })}

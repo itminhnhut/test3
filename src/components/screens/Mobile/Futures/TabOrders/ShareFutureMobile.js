@@ -97,7 +97,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
 
     const classMobile = useMemo(() => {
         const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
-        const widht = window.innerWidth < 330 ? 'w-[300px]' : '!w-[340px]';
+        const widht = '!w-[95%]';
         return height + widht
     }, [isVisible])
 
@@ -116,7 +116,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                     <div className="flex w-full mb-[12px] relative h-[28px]"
                         style={{ backgroundColor: 'rgb(255 255 255 / 20%)' }}>
                         <div className={`px-[50px] flex justify-evenly w-full text-white text-xs font-medium p-[5px] ${downloading ? 'absolute top-[-10px]' : ''}`}>
-                            <span>{order?.side === VndcFutureOrderType.Side.BUY ? 'Long' : 'Short'}</span>
+                            <span className="capitalize">{order?.side}</span>
                             <span>|</span>
                             <span>{hide.leverage ? '***' : `${leverage}x`}</span>
                             <span>|</span>
