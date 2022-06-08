@@ -93,6 +93,8 @@ const OrderVolumeMobileModal = (props) => {
                     validator={getValidator}
                     disabled={!available}
                     autoFocus
+                    inputMode="decimal"
+                    allowedDecimalSeparators={[',', '.']}
                 />
                 <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
                     <Plus

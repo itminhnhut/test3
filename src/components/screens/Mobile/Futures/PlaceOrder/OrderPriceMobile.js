@@ -33,6 +33,8 @@ const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice,
                 </div>
             )}
             inputClassName="text-xs !text-center"
+            inputMode="decimal"
+            allowedDecimalSeparators={[',', '.']}
         // onFocus={() => context.onHiddenBottomNavigation(true)}
         // onBlur={() => context.onHiddenBottomNavigation(false)}
         />

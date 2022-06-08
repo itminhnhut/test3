@@ -1,13 +1,13 @@
 import CoinPairs from 'components/svg/CoinPairs'
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode'
+import useDarkMode, {THEME_MODE} from 'hooks/useDarkMode'
 import colors from 'styles/colors'
 import DollarCoin from 'components/svg/DollarCoin'
 import cn from 'classnames'
-import { IconStarFilled } from 'components/common/Icons'
+import {IconStarFilled} from 'components/common/Icons'
 import Tag from 'components/common/Tag'
-import React, { useCallback, useEffect, useState } from 'react'
-import { debounce } from 'lodash/function'
-import { useTranslation } from 'next-i18next'
+import React, {useCallback, useEffect, useState} from 'react'
+import {debounce} from 'lodash/function'
+import {useTranslation} from 'next-i18next'
 import fetchAPI from 'utils/fetch-api'
 import {
     API_GET_FUTURES_MARKET_WATCH,
@@ -22,10 +22,10 @@ import {
 import AssetLogo from 'components/wallet/AssetLogo'
 import usePrevious from 'hooks/usePrevious'
 import SortIcon from 'components/screens/Mobile/SortIcon'
-import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
-import { getFuturesFavoritePairs } from 'redux/actions/futures'
-import { Search } from 'react-feather'
+import {useRouter} from 'next/router'
+import {useDispatch, useSelector} from 'react-redux'
+import {getFuturesFavoritePairs} from 'redux/actions/futures'
+import {Search} from 'react-feather'
 
 const TABS = {
     FAVOURITE: 'FAVOURITE',
@@ -46,7 +46,7 @@ const TAGS = {
 
 let loading = false
 
-export default ({ isRealtime = true }) => {
+export default ({isRealtime = true}) => {
     // * Initial State
     const [tab, setTab] = useState({
         active: TABS.FAVOURITE,
@@ -65,10 +65,10 @@ export default ({ isRealtime = true }) => {
 
     const [themeMode] = useDarkMode()
     const router = useRouter()
-    const { t } = useTranslation(['common'])
+    const {t} = useTranslation(['common'])
 
     const changeSearch = useCallback(
-        debounce(({ target: { value } }) => {
+        debounce(({target: {value}}) => {
             setSearch(value)
         }, 300),
         []
@@ -81,17 +81,17 @@ export default ({ isRealtime = true }) => {
 
     const changeSort = (field) => () => {
         if (field !== sort.field) {
-            setSort({ field, direction: 'asc' })
+            setSort({field, direction: 'asc'})
         } else {
             switch (sort.direction) {
                 case 'asc':
-                    setSort({ field, direction: 'desc' })
+                    setSort({field, direction: 'desc'})
                     break
                 case 'desc':
-                    setSort({ field: '', direction: '' })
+                    setSort({field: '', direction: ''})
                     break
                 default:
-                    setSort({ field, direction: 'asc' })
+                    setSort({field, direction: 'asc'})
                     break
             }
         }
@@ -102,9 +102,9 @@ export default ({ isRealtime = true }) => {
         // TODO: move this logic to redux store
         fetchAPI({
             url: API_GET_REFERENCE_CURRENCY,
-            params: { base: 'VNDC,USDT', quote: 'USD' },
+            params: {base: 'VNDC,USDT', quote: 'USD'},
         })
-            .then(({ data = [] }) => {
+            .then(({data = []}) => {
                 setReferencePrice(
                     data.reduce((acm, current) => {
                         return {
@@ -136,7 +136,7 @@ export default ({ isRealtime = true }) => {
         await fetchAPI({
             url: API_GET_FUTURES_MARKET_WATCH,
         })
-            .then(({ data = [] }) => {
+            .then(({data = []}) => {
                 const newData = data
                     .filter((item) => {
                         // Add more filter before store if needed
@@ -200,7 +200,7 @@ export default ({ isRealtime = true }) => {
                     }}
                 >
                     <div className='flex flex-1 items-start'>
-                        <AssetLogo assetCode={item.baseAsset} size={30} />
+                        <AssetLogo assetCode={item.baseAsset} size={30}/>
                         <div className='ml-3'>
                             <div className='flex items-center text-sm whitespace-nowrap font-semibold leading-5'>
                                 <span>{item.baseAsset}</span>
@@ -216,13 +216,10 @@ export default ({ isRealtime = true }) => {
                     </div>
                     <div className='flex items-start justify-end'>
                         <div className='flex flex-col font-medium text-right'>
-                            <LastPrice price={item.lastPrice} />
+                            <LastPrice price={item.lastPrice}/>
                             <span className='text-xs text-gray-1 leading-4 whitespace-nowrap'>
                                 <span className='mr-1'>$</span>
-                                {formatPrice(
-                                    referencePrice[`${item.quoteAsset}/USD`] *
-                                        item.lastPrice
-                                )}
+                                {formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
                             </span>
                         </div>
                         <div className='flex justify-end w-24'>
@@ -247,7 +244,7 @@ export default ({ isRealtime = true }) => {
         })
 
     return (
-        <div className='market-mobile'>
+        <div className='market-mobile dark:bg-onus'>
             <div className='flex items-center mt-6 px-4'>
                 <div className='flex flex-1 items-center bg-gray-4 dark:bg-darkBlue-3 rounded-md py-2 px-3'>
                     <Search
@@ -367,7 +364,7 @@ export default ({ isRealtime = true }) => {
     )
 }
 
-const LastPrice = ({ price }) => {
+const LastPrice = ({price}) => {
     const prevPrice = usePrevious(price)
     return (
         <span
@@ -381,7 +378,7 @@ const LastPrice = ({ price }) => {
     )
 }
 
-const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
+const TitleHeadList = ({title, className = '', onClick, sortDirection}) => {
     return (
         <div
             className={
@@ -390,7 +387,7 @@ const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
             onClick={onClick}
         >
             <span className='text-gray-1 text-xs leading-4'>{title}</span>
-            <SortIcon direction={sortDirection} />
+            <SortIcon direction={sortDirection}/>
         </div>
     )
 }

@@ -82,7 +82,7 @@ const LayoutMobile = ({
             >
                 <ReactNotifications className='fixed z-[9000] pointer-events-none w-full h-full' />
                 <div
-                    className='relative flex-1 bg-white dark:bg-darkBlue-1'
+                    className='relative flex-1 bg-white dark:bg-onus'
                 >
                     <AlertContext.Provider value={{ alert: alert.current, onHiddenBottomNavigation }}>
                         {children}

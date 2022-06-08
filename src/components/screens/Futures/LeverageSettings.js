@@ -165,6 +165,8 @@ const FuturesLeverageSettings = ({
                     inputClassName="!text-center"
                     onValueChange={({ value }) => _setLeverage(value)}
                     validator={getValidator}
+                    inputMode="decimal"
+                    allowedDecimalSeparators={[',', '.']}
                 />
                 <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
                     <Plus

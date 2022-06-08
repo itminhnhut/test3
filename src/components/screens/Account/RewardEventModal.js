@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import { X } from 'react-feather';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import SwiperCore, { Autoplay, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -22,7 +23,7 @@ const getAssets = createSelector(
                 assets.push({
                     assetCode: item.assetCode,
                     value: params[item.id],
-                    icon: `/images/coins/64/${item?.id}.png`
+                    icon: `/images/coins/128/${item?.id}.png`
                 });
             }
             return assets;
@@ -96,6 +97,7 @@ const RewardEventModal = ({ onClose, data }) => {
             containerClassName='!min-w-[342px] w-[342px] h-[472px] p-0 sm:h-[581px] sm:w-[421px] !top-[50%] !border-0 !rounded-[18px] '
         >
             <Background language={language} view={view}>
+                <div onClick={onClose} className="absolute right-2 top-2 cursor-pointer"><X /></div>
                 <div className='h-full relative'>
                     {view && data?.reward?.num_of_rewards > 9 &&
                         <Button onClick={() => onNavigate(false)}>
@@ -128,9 +130,9 @@ const RewardEventModal = ({ onClose, data }) => {
                     }
                     <div className="absolute bottom-0 w-full">
                         {!view &&
-                            <div className="flex flex-col items-center justify-center font-semibold pb-[5px] sm:pb-[20px] sm:text-[17px] text-sm">
+                            <div className="flex flex-col items-center justify-center font-semibold pb-[15px] sm:pb-[25px] sm:text-[17px] text-sm">
                                 <div className=''>{t('reward-center:congratulation')}</div>
-                                <div className="text-center">
+                                <div className="text-center whitespace-nowrap">
                                     {t("reward-center:you_have_received")}&nbsp;
                                     <span className="text-teal">{data?.reward?.num_of_rewards}</span>&nbsp;
                                     {t('reward-center:gifts_boxs')}&nbsp;
@@ -143,7 +145,7 @@ const RewardEventModal = ({ onClose, data }) => {
                             onClick={() => setView(!view)}
                             className='bg-dominant text-center rounded-lg cursor-pointer font-semibold h-[44px]' >
                             <div className='hover:opacity-80 text-sm flex items-center justify-center h-full'>
-                                {t(`common:${view ? 'close' : 'view_all'}`)}
+                                {t(`common:${view ? 'collapse' : 'view_all'}`)}
                             </div>
                         </div>
                     </div>
@@ -154,7 +156,7 @@ const RewardEventModal = ({ onClose, data }) => {
 };
 
 const Background = styled.div.attrs({
-    className: 'h-full w-full text-white relative p-[24px] sm:px-[20px] sm:py-[35px] !rounded-[18px] select-none'
+    className: 'h-full w-full text-white relative p-[24px] sm:px-[23px] sm:py-[35px] !rounded-[18px] select-none'
 })`
     background-image:${({ language, view }) => view ? `url(${getS3Url(`/images/screen/reward/event_view_${language}.png`)})` : `url(${getS3Url(`/images/screen/reward/event_6_6_${language}.png`)})`};
     background-position: center;
@@ -178,6 +180,9 @@ const ItemIcon = styled.div.attrs({
     left: 50%;
     top: 49%;
     transform: translate(-50%,-50%);
+    img{
+        border-radius: 50%;
+    }
 `
 
 const Button = styled.div.attrs(({ bottom }) => ({

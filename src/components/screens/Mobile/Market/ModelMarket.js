@@ -18,7 +18,7 @@ const ModelMarketMobile = ({ visible, onClose }) => {
         <Portal portalId='PORTAL_MODAL'>
             <div
                 className={classNames(
-                    'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-white dark:bg-darkBlue-1',
+                    'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-white dark:bg-onus',
                     { visible, invisible: !visible }
                 )}
             >

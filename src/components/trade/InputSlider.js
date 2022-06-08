@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ceil from 'lodash/ceil';
+import throttle from 'lodash/throttle';
 import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track, } from './StyleInputSlider';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import classNames from 'classnames';
@@ -73,6 +74,8 @@ const Slider = ({
         return { top, left }
     }
 
+    // throttle
+    const throttleChange = throttle(change, 50, { 'trailing': false });
     function change({ top, left }) {
         if (!onChange) return
 
@@ -153,7 +156,7 @@ const Slider = ({
         if (disabled) return
 
         e.preventDefault()
-        change(getPos(e))
+        throttleChange(getPos(e))
     }
 
     function handleDragEnd(e) {
@@ -197,7 +200,7 @@ const Slider = ({
         document.addEventListener('touchend', handleDragEnd)
         document.addEventListener('touchcancel', handleDragEnd)
 
-        change({
+        throttleChange({
             left: clientPos.x - rect.left,
             top: clientPos.y - rect.top,
         })

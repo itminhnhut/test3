@@ -197,7 +197,7 @@
     "value": "Value",
     "price_market": "Price market",
     "cancel": "Cancel",
-    "place_order_success_message": "Congratulation! Your purchase was successful",
+    "place_order_success_message": "Congratulation! Your request was successful",
     "place_order_failed": "Place order failed",
     "mobile": {
         "balance": "Balance",
