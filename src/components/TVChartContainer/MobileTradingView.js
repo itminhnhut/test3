@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {IconLoading} from 'components/common/Icons';
 import NamiExchangeSvg from 'components/svg/NamiExchangeSvg';
-import {getTradingViewTimezone} from 'redux/actions/utils';
+import {formatNumber, getTradingViewTimezone} from 'redux/actions/utils';
 import colors from '../../styles/colors';
 import {widget} from '../TradingView/charting_library/charting_library.min';
 import Datafeed from './api';
@@ -210,17 +210,17 @@ export default class MobileTradingView extends React.PureComponent {
             const colorSl = colors.red2;
             const colorTp = colors.teal;
             const line = this.widget.chart().createOrderLine().onModify(() => {
-            }).setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} ${this.getOrderType(order)} ${order?.quantity}`).setPrice(order?.open_price || order?.price).setQuantity(null).setTooltip(
-                `${this.getOrderType(order)} ${order?.quantity} ${order?.symbol} at price ${order?.open_price}`).setEditable(false).setLineColor(color).setBodyBorderColor(color).setBodyTextColor(color).setQuantityBackgroundColor(color).setQuantityBorderColor(color).setLineLength(120).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setCancelButtonBorderColor('rgb(255,0,0)').setCancelButtonBackgroundColor('rgb(0,255,0)').setCancelButtonIconColor('rgb(0,0,255)');
+            }).setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} ${this.getOrderType(order)} ${formatNumber(order?.order_value)} (VNDC)`).setPrice(order?.open_price || order?.price).setQuantity(null).setTooltip(
+                `${this.getOrderType(order)} ${order?.quantity} ${order?.symbol} at price ${order?.order_value} (VNDC)`).setEditable(false).setLineColor(color).setBodyBorderColor(color).setBodyTextColor(color).setQuantityBackgroundColor(color).setQuantityBorderColor(color).setLineLength(120).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setCancelButtonBorderColor('rgb(255,0,0)').setCancelButtonBackgroundColor('rgb(0,255,0)').setCancelButtonIconColor('rgb(0,0,255)');
             line.setBodyFont(this.toNormalText(line));
             this.drawnOrder[displayingId] = line;
             if (order.sl > 0) {
-                const lineSl = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} sl ${order.sl}`).setPrice(order.sl).setQuantity(null).setEditable(false).setLineColor(colorSl).setBodyTextColor(colorSl).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
+                const lineSl = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} SL ${order.sl}`).setPrice(order.sl).setQuantity(null).setEditable(false).setLineColor(colorSl).setBodyTextColor(colorSl).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
                 lineSl.setBodyFont(this.toNormalText(lineSl));
                 this.drawnSl[displayingId] = lineSl;
             }
             if (order.tp > 0) {
-                const lineTp = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} tp ${order.tp}`).setPrice(order.tp).setQuantity(null).setEditable(false).setLineColor(colorTp).setBodyTextColor(colorTp).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
+                const lineTp = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} TP ${order.tp}`).setPrice(order.tp).setQuantity(null).setEditable(false).setLineColor(colorTp).setBodyTextColor(colorTp).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
                 lineTp.setBodyFont(this.toNormalText(lineTp));
                 this.drawnTp[displayingId] = lineTp;
             }
@@ -232,6 +232,7 @@ export default class MobileTradingView extends React.PureComponent {
 
     rawOrders = async () => {
         const _ordersList = this.props.ordersList.filter(order => order?.symbol === this.props.symbol);
+        console.log(_ordersList, '000000000000000')
         const edited = localStorage.getItem('edited_id');
         if (edited) {
             const itemEdited = _ordersList.find(order => String(order?.displaying_id) === edited)
