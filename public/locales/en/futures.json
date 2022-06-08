@@ -211,15 +211,14 @@
             "sl": "Choose Take Profit and Stop Loss to manage the profit of the order",
             "order": "Easy transaction confirmation",
             "tab": "Your account details and order list will be displayed here",
-
-            "step_1":"To start trading, select your desired trading pair here",
-            "step_2":"Choose Long / Short option in prediction of asset price increase or decrease respectively",
-            "step_3":"Select the type of order you want to place (Market / Limit or Stop Market)",
-            "step_4":"Choose the leverage you want to use, high leverage offers higher risk and return, consider carefully",
-            "step_5":"Enter the trading volume of the order, the volume is calculated as the margin multiplied by the leverage of your choice (Vol = Margin * Leverage)",
-            "step_6":"Check the order parameters again and start trading. Wish you a lot of profit from trading Nami Futures!",
-            "step_7":"Enter Stop-Loss and Take-Profit price for better risk management",
-            "step_8":"Adjust parameters more intuitively and in detail with this button",
+            "step_1": "To start trading, select your desired trading pair here",
+            "step_2": "Choose Long / Short option in prediction of asset price increase or decrease respectively",
+            "step_3": "Select the type of order you want to place (Market / Limit or Stop Market)",
+            "step_4": "Choose the leverage you want to use, high leverage offers higher risk and return, consider carefully",
+            "step_5": "Enter the trading volume of the order, the volume is calculated as the margin multiplied by the leverage of your choice (Vol = Margin * Leverage)",
+            "step_6": "Check the order parameters again and start trading. Wish you a lot of profit from trading Nami Futures!",
+            "step_7": "Enter Stop-Loss and Take-Profit price for better risk management",
+            "step_8": "Adjust parameters more intuitively and in detail with this button",
             "step": "Step",
             "next": "Next"
         },
@@ -246,7 +245,8 @@
         "copy_from": "Copy from",
         "close_now": "Close now",
         "back_to_list": "Back to list",
-        "modify": "Modify"
+        "modify": "Modify",
+        "info_swap_fee": "For every opening futures order, Nami Exchange applies a swap fee of 0.002% of order’s volume for every maintaining hour."
     },
     "orders_history": "Orders History",
     "minimun_leverage": "Minimum Leverage is",

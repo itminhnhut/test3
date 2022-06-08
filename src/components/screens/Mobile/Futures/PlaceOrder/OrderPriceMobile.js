@@ -32,7 +32,7 @@ const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice,
                     </div>
                 </div>
             )}
-            inputClassName="text-xs !text-center"
+            inputClassName={`text-xs !text-center ${disabled ? '!mx-0' : ''}`}
             inputMode="decimal"
             allowedDecimalSeparators={[',', '.']}
         // onFocus={() => context.onHiddenBottomNavigation(true)}

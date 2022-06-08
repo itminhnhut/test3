@@ -273,13 +273,16 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                                     <Label>{t('futures:mobile:liquidate_fee')}</Label>
                                     <Span>{renderFee(order, 'liquidate_order')}</Span>
                                 </Row>
-                                {/* <Tooltip id="swap-fee" place="top" effect="solid">
-                                    {t('futures:mobile:swap_fee')}
-                                </Tooltip> */}
+                                <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                    arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
+                                    overridePosition={(e) => ({ left: 0, top: e.top })}
+                                >
+                                    <div>{t('futures:mobile:info_swap_fee')}</div>
+                                </Tooltip>
                                 <Row>
                                     <Label className="flex"  >
                                         {t('futures:mobile:swap_fee')}
-                                        <div className="px-2" data-tip="" data-for="swap-fee">
+                                        <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
                                             <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
                                         </div>
                                     </Label>
