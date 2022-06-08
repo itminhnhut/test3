@@ -168,12 +168,12 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
     return (
         <Portal portalId='PORTAL_MODAL'>
             <div className={classNames(
-                'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-white dark:bg-darkBlue-1',
+                'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-white dark:bg-onus',
                 { invisible: !isVisible },
                 { visible: isVisible }
             )}
             >
-                <div className='fixed top-0 w-full bg-white dark:bg-darkBlue-1 z-[10] flex items-center min-h-[50px] px-[16px]' onClick={() => onClose()}>
+                <div className='fixed top-0 w-full bg-white dark:bg-onus z-[10] flex items-center min-h-[50px] px-[16px]' onClick={() => onClose()}>
                     <ChevronLeft size={24} />
                     <span className='font-medium text-sm pl-[10px]'>{t('futures:mobile:order_detail')}  </span>
 
@@ -182,7 +182,7 @@ const OrderDetail = ({ isVisible = true, onClose, order, pairConfig, pairParent,
                     <span className="mr-[8px]">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
                     <span className={order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red'}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
                 </div>
-                <div className="shadow-order_detail py-[10px] dark:bg-darkBlue-1 ">
+                <div className="shadow-order_detail py-[10px] dark:bg-onus ">
                     <div className="min-h-[300px]">
                         <ChartTimer pair={order.symbol} pairConfig={pairConfig}
                             isVndcFutures={isVndcFutures} resolution={resolution}
