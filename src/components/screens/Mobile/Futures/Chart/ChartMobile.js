@@ -22,9 +22,13 @@ const ChartMobile = memo(({pairConfig, isVndcFutures, setCollapse, collapse, for
     const ordersList = useSelector(state => state?.futures?.ordersList)
 
     const style = useMemo(() => {
-        const vh = window.innerHeight * 0.01;
-        return { height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 120 : 230}px)` }
-    }, [isFullScreen, collapse])
+        if (typeof window !== "undefined") {
+            const vh = window.innerHeight * 0.01;
+            return { height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 120 : 230}px)` }
+        } else {
+            return { height:  `calc(100% - ${collapse ? 120 : 230}px)` }
+        }
+    }, [isFullScreen, collapse, typeof window])
 
     return (
         <div className='spot-chart h-full max-w-full' style={style}>

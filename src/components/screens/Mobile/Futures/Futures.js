@@ -108,19 +108,23 @@ const FuturesMobile = () => {
     }, [avlbAsset, pairConfig]);
 
     const futuresScreen = useMemo(() => {
-        setScrollSnap(false);
-        const vh = window.innerHeight * 0.01;
-        const el = document.querySelector('#futures-mobile .form-order');
-        if (el) {
-            const scrollSnap = el.clientHeight <= vh * 100;
-            if (scrollSnap) {
-                setScrollSnap(true);
-                return { isFullScreen: true, style: { height: vh * 100, scrollSnapAlign: 'start' } }
+        if (typeof window !== "undefined") {
+            setScrollSnap(false);
+            const vh = window.innerHeight * 0.01;
+            const el = document.querySelector('#futures-mobile .form-order');
+            if (el) {
+                const scrollSnap = el.clientHeight <= vh * 100;
+                if (scrollSnap) {
+                    setScrollSnap(true);
+                    return { isFullScreen: true, style: { height: vh * 100, scrollSnapAlign: 'start' } }
+                }
+                return { isFullScreen: false, style: { height: 'max-content' } }
             }
             return { isFullScreen: false, style: { height: 'max-content' } }
+        } else {
+            return { isFullScreen: false, style: { height: 'max-content' } }
         }
-        return { isFullScreen: false, style: { height: 'max-content' } }
-    }, [state.pair])
+    }, [state.pair, typeof window])
 
     return (
         <>
