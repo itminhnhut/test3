@@ -122,13 +122,16 @@ const IndicatorBars = ({setCollapse, collapse, setMainIndicator, mainIndicator, 
                 className='flex items-center text-xs text-gray-1 dark:text-txtSecondary-dark font-medium justify-around w-full mr-[10px]'>
                 {mainIndicators.map(item => (
                     <div
+                        key={item.value}
                         className={mainIndicator === item.value ? 'text-teal' : ''}
                         onClick={() => setIndicator(item.value, 'main')}>{item.label}</div>
                 ))}
                 |
                 {subIndicators.map(item => (
-                    <div className={subIndicator === item.value ? 'text-teal' : ''}
-                         onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
+                    <div
+                        key={item.value}
+                        className={subIndicator === item.value ? 'text-teal' : ''}
+                        onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
                 ))}
             </div>
             {setCollapse &&

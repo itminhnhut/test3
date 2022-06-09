@@ -1,14 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { NoticePopup } from 'components/screens/OnusWithdrawGate/styledExternalWdl';
-import { useSelector } from 'react-redux';
-import { Key, X } from 'react-feather';
+import React, {useEffect, useMemo, useState} from 'react';
+import {NoticePopup} from 'components/screens/OnusWithdrawGate/styledExternalWdl';
+import {useSelector} from 'react-redux';
+import {Key, X} from 'react-feather';
 
-import { PulseLoader } from 'react-spinners';
+import {PulseLoader} from 'react-spinners';
 import Axios from 'axios';
-import { handleLogin, WalletCurrency, } from 'components/screens/OnusWithdrawGate/helper';
-import { formatNumber, getS3Url } from 'redux/actions/utils';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import {handleLogin, WalletCurrency,} from 'components/screens/OnusWithdrawGate/helper';
+import {formatNumber, getS3Url} from 'redux/actions/utils';
+import {useTranslation} from 'next-i18next';
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 import AssetLogo from 'components/wallet/AssetLogo';
 import NumberFormat from 'react-number-format';
 
@@ -17,14 +17,14 @@ import classNames from 'classnames';
 import SortIcon from 'components/screens/Mobile/SortIcon';
 import Div100vh from 'react-div-100vh';
 import CheckSuccess from 'components/svg/CheckSuccess';
-import { isNumeric } from 'utils';
-import { format } from 'date-fns';
+import {isNumeric} from 'utils';
+import {format} from 'date-fns';
 import Button from 'components/common/Button';
 import Modal from 'components/common/ReModal';
-import { PORTAL_MODAL_ID } from 'constants/constants';
+import {PORTAL_MODAL_ID} from 'constants/constants';
 import colors from 'styles/colors';
 import Head from 'next/head';
-import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
+import {DIRECT_WITHDRAW_ONUS} from 'redux/actions/apis';
 import AssetName from 'components/wallet/AssetName';
 import find from 'lodash/find';
 import LayoutMobile from "components/common/layouts/LayoutMobile";
@@ -83,14 +83,14 @@ const ExternalWithdrawal = (props) => {
     const futuresBalances = useSelector((state) => state.wallet.FUTURES) || {};
 
     // use hooks
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const isDark = true;
 
     const assets = useMemo(() => {
         const _assets = [];
 
         ASSET_LIST.forEach(item => {
-            const _config = find(assetConfigs, { id: item });
+            const _config = find(assetConfigs, {id: item});
             if (_config) {
                 const balance = futuresBalances[_config.id] || {
                     value: 0,
@@ -137,7 +137,7 @@ const ExternalWithdrawal = (props) => {
         });
 
     const onAllDone = () => {
-        setModal({ isSuccessModal: false });
+        setModal({isSuccessModal: false});
         setAmount('');
         setWdlResult(null);
         setError(null);
@@ -149,7 +149,7 @@ const ExternalWithdrawal = (props) => {
         try {
             setIsSubmitting(true);
             setError(null);
-            const { data } = await Axios.post(DIRECT_WITHDRAW_ONUS, {
+            const {data} = await Axios.post(DIRECT_WITHDRAW_ONUS, {
                 amount,
                 currency,
             });
@@ -252,12 +252,9 @@ const ExternalWithdrawal = (props) => {
                     </div>
 
                     <span className="text-onus-secondary text-xs uppercase">
-                        {t('ext_gate:choose_asset')}
+                        {t('ext_gate:asset')}
                     </span>
-                    <div
-                        className="flex justify-between items-center px-4 bg-onus-1 rounded-md h-11 mb-6 mt-2"
-                        onClick={() => handleModal('isListAssetModal', true)}
-                    >
+                    <div className="flex justify-between items-center px-4 bg-onus-1 rounded-md h-11 mb-6 mt-2">
                         <div className="flex items-center font-medium">
                             <AssetLogo
                                 size={28}
@@ -267,7 +264,7 @@ const ExternalWithdrawal = (props) => {
                                 {currentCurr?.assetName}
                             </span>
                         </div>
-                        <SortIcon size={14}/>
+                        {/*<SortIcon size={14}/>*/}
                     </div>
                     <div className="flex justify-between">
                         <span className="text-onus-secondary text-xs uppercase">
@@ -281,7 +278,7 @@ const ExternalWithdrawal = (props) => {
                             allowNegative={false}
                             className="outline-none text-sm font-medium flex-1 py-2"
                             value={amount}
-                            onValueChange={({ value }) => setAmount(value)}
+                            onValueChange={({value}) => setAmount(value)}
                             decimalScale={decimalScale}
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
@@ -315,7 +312,7 @@ const ExternalWithdrawal = (props) => {
                         {t('ext_gate:trans_fee')}
                     </span>
                     <div className="flex justify-between items-center pl-4 bg-onus-1 rounded-md h-11 mb-6 mt-2">
-                        <span>{fee > 0 ? formatNumber(fee, decimalScale): t('common:free')}</span>
+                        <span>{fee > 0 ? formatNumber(fee, decimalScale) : t('common:free')}</span>
                         <div
                             className="h-full leading-[2.75rem] bg-[#36445A] w-16 text-[#8492A7] rounded-r-md text-center">
                             {currentCurr?.assetName}
@@ -468,7 +465,7 @@ const ExternalWithdrawal = (props) => {
     );
 };
 
-export const getStaticProps = async ({ locale }) => ({
+export const getStaticProps = async ({locale}) => ({
     props: {
         ...(await serverSideTranslations(locale, [
             'common',

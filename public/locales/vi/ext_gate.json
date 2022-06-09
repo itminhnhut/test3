@@ -24,6 +24,7 @@
     "remain_balance": "Số dư còn lại",
     "tips": "Tài sản sẽ được chuyển về ví VNDC của bạn trong một thời gian ngắn.",
     "choose_asset": "Chọn loại tài sản",
+    "asset": "Tài sản",
     "err": {
         "min_wdl_not_met": "Số lượng rút chưa đạt giá trị tối thiểu, vui lòng kiểm tra lại.",
         "invalid_input": "Số lượng rút không hợp lệ, vui lòng kiểm tra lại.",

@@ -74,7 +74,6 @@ export default ({isRealtime = true}) => {
     const dispatch = useDispatch()
     const favoritePairRaws = useSelector((state) => state.futures.favoritePairs) || []
 
-
     const favoritePairs = useMemo(() => {
         const favoritePairVNDC = favoritePairRaws.filter(f => f.split('_')[1] === 'VNDC')
         if (!favoritePairVNDC || favoritePairVNDC.length <= 0) {
