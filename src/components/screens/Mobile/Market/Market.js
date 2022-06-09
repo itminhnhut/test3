@@ -3,9 +3,9 @@ import useDarkMode, {THEME_MODE} from 'hooks/useDarkMode'
 import colors from 'styles/colors'
 import DollarCoin from 'components/svg/DollarCoin'
 import cn from 'classnames'
-import {IconStarFilled} from 'components/common/Icons'
+import {IconClose, IconStarFilled} from 'components/common/Icons'
 import Tag from 'components/common/Tag'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {debounce} from 'lodash/function'
 import {useTranslation} from 'next-i18next'
 import fetchAPI from 'utils/fetch-api'
@@ -26,6 +26,7 @@ import {useRouter} from 'next/router'
 import {useDispatch, useSelector} from 'react-redux'
 import {getFuturesFavoritePairs} from 'redux/actions/futures'
 import {Search} from 'react-feather'
+import classNames from "classnames";
 
 const TABS = {
     FAVOURITE: 'FAVOURITE',
@@ -44,6 +45,16 @@ const TAGS = {
     },
 }
 
+const defaultFavoritePairs = [
+    'BTC_VNDC',
+    'BCH_VNDC',
+    'ETH_VNDC',
+    'ETC_VNDC',
+    'LTC_VNDC',
+    'BNB_VNDC',
+    'EOS_VNDC',
+]
+
 let loading = false
 
 export default ({isRealtime = true}) => {
@@ -61,14 +72,22 @@ export default ({isRealtime = true}) => {
     const [referencePrice, setReferencePrice] = useState([])
 
     const dispatch = useDispatch()
-    const favoritePairs = useSelector((state) => state.futures.favoritePairs)
+    const favoritePairRaws = useSelector((state) => state.futures.favoritePairs) || []
 
-    const [themeMode] = useDarkMode()
+
+    const favoritePairs = useMemo(() => {
+        const favoritePairVNDC = favoritePairRaws.filter(f => f.split('_')[1] === 'VNDC')
+        if (!favoritePairVNDC || favoritePairVNDC.length <= 0) {
+            return defaultFavoritePairs
+        }
+        return favoritePairRaws
+    })
+
     const router = useRouter()
     const {t} = useTranslation(['common'])
 
     const changeSearch = useCallback(
-        debounce(({target: {value}}) => {
+        debounce((value) => {
             setSearch(value)
         }, 300),
         []
@@ -244,18 +263,7 @@ export default ({isRealtime = true}) => {
     return (
         <div className='market-mobile dark:bg-onus'>
             <div className='flex items-center mt-6 px-4'>
-                <div className='flex flex-1 items-center bg-gray-4 dark:bg-darkBlue-3 rounded-md py-2 px-3'>
-                    <Search
-                        size={16}
-                        className='text-txtSecondary dark:text-txtSecondary-dark'
-                    />
-                    <input
-                        className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-semibold placeholder-text-center'
-                        onChange={changeSearch}
-                        placeholder={t('markets:search_placeholder')}
-                        type='text'
-                    />
-                </div>
+                <InputSearch onChange={changeSearch}/>
             </div>
             <div>
                 <div className='flex space-x-8 px-4 mt-6'>
@@ -360,6 +368,37 @@ export default ({isRealtime = true}) => {
             </div>
         </div>
     )
+}
+
+const InputSearch = ({onChange}) => {
+    const {t} = useTranslation()
+    const [value, setValue] = useState('')
+
+    const handleChange = (_value) => {
+        setValue(_value)
+        onChange(_value)
+    }
+    return <div className='flex flex-1 items-center bg-gray-4 dark:bg-darkBlue-3 rounded-md py-2 px-3'>
+        <Search
+            size={16}
+            className='text-txtSecondary dark:text-txtSecondary-dark'
+        />
+        <input
+            className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-semibold placeholder-text-center'
+            onChange={({target: {value: v}}) => handleChange(v?.replace(/[^\w\s]/gi, ""))}
+            value={value}
+            placeholder={t('markets:search_placeholder')}
+            type='text'
+        />
+        <div
+            className={classNames('py-1 px-2 transition-opacity duration-75 opacity-1', {
+                'opacity-0': !value
+            })}
+            onClick={() => handleChange('')}
+        >
+            <IconClose size={10}/>
+        </div>
+    </div>
 }
 
 const LastPrice = ({price}) => {
