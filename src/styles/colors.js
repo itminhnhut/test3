@@ -58,6 +58,7 @@ const colors = {
     overlayLight: 'rgba(0, 0, 0, 0.45)',
     overlayDark: 'rgba(0, 0, 0, 0.45)',
 
+    onus: '#1B222D',
 };
 
 export default colors;

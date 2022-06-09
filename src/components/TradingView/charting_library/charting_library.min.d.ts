@@ -1207,6 +1207,7 @@ export interface StudyOrDrawingAddedToChartEventParams {
 	value: string;
 }
 export interface StudyOverrides {
+
 	[key: string]: StudyOverrideValueType;
 }
 export interface StudyTemplateData {

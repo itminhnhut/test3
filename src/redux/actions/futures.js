@@ -38,15 +38,15 @@ export const setFuturesOrderTypes =
             payload,
         });
         isAdvance &&
-                dispatch({
-                    type: SET_FUTURES_ORDER_ADVANCE_TYPES,
-                    payload,
-                });
+            dispatch({
+                type: SET_FUTURES_ORDER_ADVANCE_TYPES,
+                payload,
+            });
     };
 
 export const getFuturesFavoritePairs = () => async (dispatch) => {
     const favoritePairs = await favoriteAction('get', TRADING_MODE.FUTURES);
-    if (Array.isArray(favoritePairs) && favoritePairs.length) {
+    if (Array.isArray(favoritePairs)) {
         dispatch({
             type: SET_FUTURES_FAVORITE_PAIRS,
             payload: favoritePairs,
@@ -82,7 +82,8 @@ export const getFuturesConfigs = () => async (dispatch) => {
                 payload: data?.data || [],
             });
         }
-    } catch (e) { }
+    } catch (e) {
+    }
 };
 
 export const getFuturesUserSettings = () => async (dispatch) => {
@@ -176,7 +177,7 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             }
         } else {
             // handle multi language
-            log.i('placeFuturesOrder result: ', data, data?.status);
+            log.i('placeFuturesOrder result: ', data);
             let message = data?.message;
             if (t(`error:futures.${data?.status}`)) {
                 message = t(`error:futures.${data?.status}`);
