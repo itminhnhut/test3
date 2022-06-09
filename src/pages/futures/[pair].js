@@ -20,6 +20,7 @@ export const getStaticProps = async ({ locale }) => {
                 'trade',
                 'futures',
                 'wallet',
+                'error',
                 'spot',
             ])),
         },

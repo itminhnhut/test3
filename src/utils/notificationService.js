@@ -23,7 +23,7 @@ const NotificationContent = (props) => {
 };
 
 const showNotification = (options = {}, dismiss = undefined, position = 'top', container = 'top-right') => {
-    const { title, message, type } = defaults(options, {
+    const { title, message, type, note } = defaults(options, {
         title: '',
         message: '',
         note: '',
