@@ -27,7 +27,7 @@ export default class MobileTradingView extends React.PureComponent {
     state = {
         chartStatus: ChartStatus.NOT_LOADED,
         chartType: "price",
-        interval: "60",
+        interval: this.props.initTimeFrame,
         studies: [],
         priceChartType: 1,
         mainIndicator: null,
@@ -287,7 +287,7 @@ export default class MobileTradingView extends React.PureComponent {
             symbol,
             datafeed,
             theme: 'Dark',
-            interval: this.props.interval,
+            interval,
             container_id: this.containerId,
             library_path: this.props.libraryPath,
             locale: "en",
@@ -361,7 +361,6 @@ export default class MobileTradingView extends React.PureComponent {
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
                 "volumePaneSize": "tiny"
             },
-            time_frames: [{text: "1h", resolution: "60", description: "1h"}],
             custom_css_url: '/library/trading_view/custom_mobile_chart.css'
         };
         // eslint-disable-next-line new-cap
@@ -371,7 +370,6 @@ export default class MobileTradingView extends React.PureComponent {
             // Load saved chart
             this.loadSavedChart()
             this.syncIndicators()
-            this.handleActiveTime(60);
             this.widget.applyOverrides({
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
                 "scalesProperties.lineColor": "#202C4C",
@@ -469,7 +467,6 @@ MobileTradingView.defaultProps = {
     showSymbol: true,
     showIconGuide: true,
     autosize: true,
-    time_frames: [{text: "1h", resolution: "60", description: "1h"}],
     studies_overrides: {
         "volume.volume.color.0": "#03BBCC",
         "volume.volume.color.1": "#ff0065",
