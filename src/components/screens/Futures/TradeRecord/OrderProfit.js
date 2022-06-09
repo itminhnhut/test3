@@ -12,18 +12,12 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
             {profit !== 0 ? <>
                 <div>
                     {profit > 0 ? '+' : ''}
-                    {formatNumber(profit, 0, 0, true)} {pairPrice?.quoteAsset}
+                    {formatNumber(profit, 0, 0, true)} {!isMobile && pairPrice?.quoteAsset}
                 </div>
-                {isMobile ?
-                    <div className='pl-[10px]'>
-                        {percent > 0 ? '+' : ''}
-                        {percent + '%'}
-                    </div> :
-                    <div>
-                        ({percent > 0 ? '+' : ''}
-                        {percent + '%'})
-                    </div>
-                }
+                <div>
+                    ({percent > 0 ? '+' : ''}
+                    {percent + '%'})
+                </div>
             </>
                 :
                 '-'

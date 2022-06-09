@@ -114,30 +114,36 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 pairPrice={marketWatch[oldOrder.current?.symbol]}
             />}
             <div className="flex items-center justify-between mb-[10px]">
-                <div className="w-full flex" >
-                    <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent>
-                    <div>
-                        <div className="flex items-center">
-                            <div className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
-                            <div className="text-teal border-teal border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
-                        </div>
-                        <div className="text-xs font-medium text-gray-1 dark:text-txtSecondary-dark">
-                            <span className="mr-[12px]">{'#' + order?.displaying_id}</span>
-                            <span>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</span>
-                        </div>
+                <div className="flex flex-col" >
+                    {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
+                    <div className="flex items-center">
+                        <div className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                        <div className="text-teal border-teal border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
+                    </div>
+                    <div className="text-xs font-medium text-teal ">
+                        <span>{renderCellTable('type', order)}</span>&nbsp;/&nbsp;
+                        <span>{renderCellTable('side', order)}</span>
                     </div>
                 </div>
-                {profit ?
-                    <div className="border-[1px] border-teal p-[5px] rounded-[2px]" onClick={() => setOpenShareModal(true)}>
-                        <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
+                <div className="flex items-center">
+                    <div className="text-xs ">
+                        <div className="text-gray-1 dark:text-txtSecondary-dark py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
+                        <div className="text-xs font-medium text-teal py-[1px] float-right">
+                            <OrderProfit className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
+                        </div>
                     </div>
-                    : null
-                }
+                    {profit ?
+                        <div className="border-[1px] border-teal p-[5px] rounded-[2px] ml-[16px]" onClick={() => setOpenShareModal(true)}>
+                            <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
+                        </div>
+                        : null
+                    }
+                </div>
             </div>
-            <div className="justify-start w-full flex mb-[10px]">
+            {/* <div className="justify-start w-full flex mb-[10px]">
                 <div className="text-gray-1 text-xs dark:text-txtSecondary-dark min-w-[70px]">{t('futures:mobile:pnl')}</div>
                 <span className="text-xs font-medium text-teal"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
-            </div>
+            </div> */}
             <div className="flex flex-wrap gap-x-[10px] w-full">
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} />

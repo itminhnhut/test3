@@ -23,7 +23,7 @@ const listChartType = [
     {text: 'Base Line', value: 10, icon: BaseLineChart},
 ];
 
-const listTimeFrame = [
+export const listTimeFrame = [
     {value: '1', text: '1m'},
     {value: '5', text: '5m'},
     {value: '15', text: '15m'},
@@ -134,7 +134,7 @@ const Change24h = ({pairPrice, isVndcFutures}) => {
 }
 
 
-const MenuTime = ({value, onChange, options, label, keyValue, displayValue, classNameButton, classNamePanel}) => {
+export const MenuTime = ({value, onChange, options, label, keyValue, displayValue, classNameButton, classNamePanel}) => {
     return (
         <Popover className="relative">
             {({open, close}) => (
