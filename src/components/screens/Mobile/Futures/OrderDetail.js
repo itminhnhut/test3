@@ -210,6 +210,8 @@ const OrderDetail = ({
                             ordersList={[order]}
                             theme={THEME_MODE.DARK}
                             mode={ChartMode.FUTURES}
+                            showSymbol={false}
+                            showIconGuide={false}
                         />
                     </div>
                     <div className="px-[16px] bg-onus">
