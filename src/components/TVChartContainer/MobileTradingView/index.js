@@ -2,16 +2,15 @@ import * as React from 'react';
 import {IconLoading} from 'components/common/Icons';
 import NamiExchangeSvg from 'components/svg/NamiExchangeSvg';
 import {formatNumber, getTradingViewTimezone} from 'redux/actions/utils';
-import colors from '../../styles/colors';
-import {widget} from '../TradingView/charting_library/charting_library.min';
-import Datafeed from './api';
-// import TimeFrame from './timeFrame';
+import colors from '../../../styles/colors';
+import {widget} from '../../TradingView/charting_library/charting_library.min';
+import Datafeed from '../api';
 import {ChartMode} from 'redux/actions/const';
-import {VndcFutureOrderType} from '../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import {VndcFutureOrderType} from '../../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import {isMobile} from 'react-device-detect';
-import ChartOptions from "components/TVChartContainer/ChartOptions";
+import ChartOptions from "components/TVChartContainer/MobileTradingView/ChartOptions";
 import classNames from "classnames";
-import IndicatorBars, {mainIndicators, subIndicators} from "components/TVChartContainer/IndicatorBars";
+import IndicatorBars, {mainIndicators, subIndicators} from "components/TVChartContainer/MobileTradingView/IndicatorBars";
 import {find} from "lodash";
 
 const CONTAINER_ID = "nami-mobile-tv";
@@ -23,7 +22,7 @@ const ChartStatus = {
     UNABLE_TO_CONNECT: 4,
 };
 
-export default class MobileTradingView extends React.PureComponent {
+export class MobileTradingView extends React.PureComponent {
     state = {
         chartStatus: ChartStatus.NOT_LOADED,
         chartType: "price",
@@ -346,7 +345,7 @@ export default class MobileTradingView extends React.PureComponent {
             overrides: {
                 "scalesProperties.fontSize": 10,
 
-                editorFontsList: ["Barlow", "Sans"],
+                editorFontsList: ["Inter", "Sans"],
 
                 "mainSeriesProperties.candleStyle.borderUpColor": colors.teal,
                 "mainSeriesProperties.candleStyle.borderDownColor": colors.red2,
