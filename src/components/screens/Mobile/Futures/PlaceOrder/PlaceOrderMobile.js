@@ -189,7 +189,7 @@ const PlaceOrder = ({
                 if (quoteQty < +_min) {
                     msg = `${t('futures:minimum_qty')} ${_displayingMin} `;
                     isValid = false;
-                }else if (quoteQty > +Number(_max)
+                } else if (quoteQty > +Number(_max)
                     .toFixed(_decimals)) {
                     msg = `${t('futures:maximum_qty')} ${_displayingMax}`;
                     isValid = false;
@@ -351,6 +351,7 @@ const PlaceOrder = ({
             tp: +tp.toFixed(decimals.decimalScalePrice),
             leverage,
             side,
+            type: getType(type)
         };
         setShowEditSLTP(true);
     };
