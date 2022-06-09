@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import CheckBox from 'components/common/CheckBox';
 import { useTranslation } from 'next-i18next';
 import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { formatNumber, formatTime } from 'redux/actions/utils';
+import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import ReactDOM from 'react-dom';
 import html2canvas from 'html2canvas';
 import classNames from 'classnames';
@@ -111,7 +111,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                 <div ref={refNodeInfoOrder} className='flex flex-col rounded-t-[12px] flex-1  items-center text-white pb-[10px]'
                     style={{ background: 'linear-gradient(157.98deg, rgba(0, 220, 194, 0.9) 15.55%, #00B6C7 72.38%)' }}>
                     <div className='p-[23px]'>
-                        <img src="/images/share-order-logo.svg" width={120} height={30} />
+                        <img src={getS3Url("/images/share-order-logo.svg")} width={120} height={30} />
                     </div>
                     <div className="flex w-full mb-[12px] relative h-[28px]"
                         style={{ backgroundColor: 'rgb(255 255 255 / 20%)' }}>
