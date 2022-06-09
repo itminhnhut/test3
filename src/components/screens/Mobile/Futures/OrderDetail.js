@@ -27,7 +27,7 @@ import {THEME_MODE} from "hooks/useDarkMode";
 import dynamic from "next/dynamic";
 
 const MobileTradingView = dynamic(
-    () => import('src/components/TVChartContainer/MobileTradingView'),
+    () => import('components/TVChartContainer/MobileTradingView/').then(mod => mod.MobileTradingView),
     {ssr: false},
 );
 

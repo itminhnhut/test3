@@ -5,7 +5,7 @@ import {roundTo} from 'round-to';
 import classNames from 'classnames';
 import {Popover, Transition} from "@headlessui/react";
 import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
-import {AreaChart, BarsChart, BaseLineChart, CandleChart, LineChart} from './timeFrame'
+import {AreaChart, BarsChart, BaseLineChart, CandleChart, LineChart} from '../timeFrame'
 import {IconStar, IconStarFilled} from "components/common/Icons";
 import colors from "styles/colors";
 import {TRADING_MODE} from "redux/actions/const";

@@ -24,6 +24,7 @@
     "remain_balance": "Remaining balance",
     "tips": "Assets will be withdrawn to your ONUS wallet in a short time.",
     "choose_asset": "Choose asset",
+    "asset": "Asset",
     "err": {
         "min_wdl_not_met": "The amount withdrawn has not reached the minimum value, please try again.",
         "invalid_input": "Invalid withdrawal amount, please try again.",

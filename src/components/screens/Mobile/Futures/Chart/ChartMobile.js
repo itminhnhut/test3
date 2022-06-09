@@ -9,7 +9,7 @@ import {ChartMode} from "redux/actions/const";
 import {useSelector} from "react-redux";
 
 const MobileTradingView = dynamic(
-    () => import('src/components/TVChartContainer/MobileTradingView'),
+    () => import('components/TVChartContainer/MobileTradingView/').then(mod => mod.MobileTradingView),
     {ssr: false},
 );
 
