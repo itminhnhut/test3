@@ -11,8 +11,9 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
     const quoteAsset = pairConfig?.quoteAsset ?? '';
 
     const openTransferModal = () => {
-        // dispatch(setTransferModal({ isVisible: true, asset: quoteAsset }))
-        window.ReactNativeWebView && window.ReactNativeWebView.postMessage('deposit');
+        if(typeof window !== undefined){
+            window.ReactNativeWebView && window.ReactNativeWebView.postMessage('deposit');
+        }
     }
 
     const Available = () => {
@@ -23,8 +24,6 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
             </div>
         )
     }
-
-    const onMobile = !!window?.ReactNativeWebView
 
     return (
         <div className="flex flex-col h-full justify-around">

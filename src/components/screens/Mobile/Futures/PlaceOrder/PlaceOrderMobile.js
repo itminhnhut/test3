@@ -300,8 +300,6 @@ const PlaceOrder = ({
                     msg
                 };
             case 'leverage':
-                let isValid = true;
-                let msg = null;
                 const min = pairConfig?.leverageConfig?.min ?? 0;
                 const max = pairConfig?.leverageConfig?.max ?? 0;
                 if (min > leverage) {

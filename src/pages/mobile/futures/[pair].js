@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import LoadingPage from 'components/screens/Mobile/LoadingPage';
 const FuturesMobileComponent = dynamic(
     () => import('components/screens/Mobile/Futures/Futures'),
-    { ssr: false, loading: () => <LoadingPage /> }
+    { ssr: true, loading: () => <LoadingPage /> }
 );
 const FuturesMobile = () => {
     return <FuturesMobileComponent />
