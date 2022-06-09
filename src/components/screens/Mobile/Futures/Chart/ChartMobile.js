@@ -39,6 +39,8 @@ const ChartMobile = memo(({pairConfig, isVndcFutures, setCollapse, collapse, for
                 mode={ChartMode.FUTURES}
                 setCollapse={setCollapse}
                 collapse={collapse}
+                isFullScreen={isFullScreen}
+                showIconGuide={!collapse}
             />
         </div>
     );
