@@ -179,6 +179,12 @@ const PlaceOrder = ({
         let isValid = true,
             msg = null;
 
+
+        console.log('__ check input', {
+            side, type, leverage, size, price, stopPrice, sl, tp, rowData
+        });
+
+
         const lotSize = pairConfig?.filters?.find((o) =>
             [
                 FuturesOrderTypes.Market,
