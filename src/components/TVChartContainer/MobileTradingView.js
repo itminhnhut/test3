@@ -466,8 +466,8 @@ MobileTradingView.defaultProps = {
     clientId: "tradingview.com",
     userId: "public_user_id",
     fullscreen: false,
-    showSymbol: false,
-    showIconGuide: false,
+    showSymbol: true,
+    showIconGuide: true,
     autosize: true,
     time_frames: [{text: "1h", resolution: "60", description: "1h"}],
     studies_overrides: {
