@@ -5,7 +5,7 @@ import DollarCoin from 'components/svg/DollarCoin'
 import cn from 'classnames'
 import {IconClose, IconStarFilled} from 'components/common/Icons'
 import Tag from 'components/common/Tag'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {debounce} from 'lodash/function'
 import {useTranslation} from 'next-i18next'
 import fetchAPI from 'utils/fetch-api'
@@ -45,6 +45,16 @@ const TAGS = {
     },
 }
 
+const defaultFavoritePairs = [
+    'BTC_VNDC',
+    'BCH_VNDC',
+    'ETH_VNDC',
+    'ETC_VNDC',
+    'LTC_VNDC',
+    'BNB_VNDC',
+    'EOS_VNDC',
+]
+
 let loading = false
 
 export default ({isRealtime = true}) => {
@@ -62,7 +72,14 @@ export default ({isRealtime = true}) => {
     const [referencePrice, setReferencePrice] = useState([])
 
     const dispatch = useDispatch()
-    const favoritePairs = useSelector((state) => state.futures.favoritePairs)
+    const favoritePairRaws = useSelector((state) => state.futures.favoritePairs)
+
+    const favoritePairs = useMemo(() => {
+        if (!favoritePairRaws || favoritePairRaws.length <= 0) {
+            return defaultFavoritePairs
+        }
+        return favoritePairRaws
+    }, [favoritePairRaws])
 
     const router = useRouter()
     const {t} = useTranslation(['common'])
