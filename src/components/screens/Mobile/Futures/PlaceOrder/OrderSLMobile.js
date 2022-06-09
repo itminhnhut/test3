@@ -11,7 +11,9 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, context }) => {
             label={'SL'}
             value={sl}
             allowNegative={false}
-            onValueChange={({ floatValue = '' }) => setSl(floatValue)}
+            onValueChange={({ floatValue = '' , value}) => {
+                setSl(floatValue)
+            }}
             decimalScale={decimals.decimalScalePrice}
             labelClassName='whitespace-nowrap capitalize'
             containerClassName="h-[36px]"

@@ -116,25 +116,25 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _sl = +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05));
-        const _tp = +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05));
+        const _sl = +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05)).toFixed(decimals.decimalScalePrice);
+        const _tp = +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05)).toFixed(decimals.decimalScalePrice);
         setTp(_tp);
         setSl(_sl);
         if (type === OrderTypes.Market) {
             onChangeQuoteQty(lastPrice, leverage)
         }
-    }, [side, type]);
+    }, [side, type, decimals]);
 
     useEffect(() => {
         if (firstTime.current) return;
         const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
         setPrice(_lastPrice);
         setStopPrice(_lastPrice);
-        const _sl = +(_lastPrice - ((side === VndcFutureOrderType.Side.BUY ? _lastPrice : -_lastPrice) * 0.05));
-        const _tp = +(_lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -_lastPrice : _lastPrice) * 0.05));
+        const _sl = +(_lastPrice - ((side === VndcFutureOrderType.Side.BUY ? _lastPrice : -_lastPrice) * 0.05)).toFixed(decimals.decimalScalePrice);
+        const _tp = +(_lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -_lastPrice : _lastPrice) * 0.05)).toFixed(decimals.decimalScalePrice);
         setTp(_tp);
         setSl(_sl);
-    }, [firstTime.current]);
+    }, [firstTime.current, decimals]);
 
     const onChangeQuoteQty = (price, leverage) => {
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000;
