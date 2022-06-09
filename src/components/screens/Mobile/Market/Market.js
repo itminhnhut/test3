@@ -72,8 +72,16 @@ export default ({isRealtime = true}) => {
     const [referencePrice, setReferencePrice] = useState([])
 
     const dispatch = useDispatch()
-    const favoritePairRaws = useSelector((state) => state.futures.favoritePairs)
-    const favoritePairs = !favoritePairRaws || favoritePairRaws.length <= 0 ? defaultFavoritePairs : favoritePairRaws
+    const favoritePairRaws = useSelector((state) => state.futures.favoritePairs) || []
+
+
+    const favoritePairs = useMemo(() => {
+        const favoritePairVNDC = favoritePairRaws.filter(f => f.split('_')[1] === 'VNDC')
+        if (!favoritePairVNDC || favoritePairVNDC.length <= 0) {
+            return defaultFavoritePairs
+        }
+        return favoritePairRaws
+    })
 
     const router = useRouter()
     const {t} = useTranslation(['common'])
