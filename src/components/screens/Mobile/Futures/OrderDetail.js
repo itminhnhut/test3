@@ -205,7 +205,7 @@ const OrderDetail = ({
                     <div className='flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2'>
                         <span className="font-semibold">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
                         <span
-                            className={`text-xs ${classNameSide}`}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
+                            className={`text-xs font-medium ${classNameSide}`}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
                     </div>
                     <MenuTime
                         value={resolution}

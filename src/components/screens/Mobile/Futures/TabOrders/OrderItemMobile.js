@@ -6,6 +6,7 @@ import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { useTranslation } from 'next-i18next'
 import { getProfitVndc, VndcFutureOrderType, renderCellTable } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import Big from "big.js";
+import { FuturesOrderEnum } from 'redux/actions/const';
 
 const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isDark, onShowDetail, symbol, allowButton }) => {
     const { t } = useTranslation();
@@ -105,9 +106,9 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                         <div className="font-semibold mr-[10px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
                         <div className="text-teal border-teal border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
                     </div>
-                    <div className="text-xs font-medium text-teal ">
-                        <span>{renderCellTable('type', order)}</span>&nbsp;/&nbsp;
-                        <span>{renderCellTable('side', order)}</span>
+                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-teal': 'text-red'}`}>
+                        <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
+                        <span>{renderCellTable('type', order)}</span>
                     </div>
                 </div>
                 <div className="flex items-center">
