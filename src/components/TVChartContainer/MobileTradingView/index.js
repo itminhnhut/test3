@@ -10,7 +10,10 @@ import {VndcFutureOrderType} from '../../screens/Futures/PlaceOrder/Vndc/VndcFut
 import {isMobile} from 'react-device-detect';
 import ChartOptions from "components/TVChartContainer/MobileTradingView/ChartOptions";
 import classNames from "classnames";
-import IndicatorBars, {mainIndicators, subIndicators} from "components/TVChartContainer/MobileTradingView/IndicatorBars";
+import IndicatorBars, {
+    mainIndicators,
+    subIndicators
+} from "components/TVChartContainer/MobileTradingView/IndicatorBars";
 import {find} from "lodash";
 
 const CONTAINER_ID = "nami-mobile-tv";
@@ -49,7 +52,6 @@ export class MobileTradingView extends React.PureComponent {
         this.timeFrame = React.createRef();
         this.t = props.t;
     }
-
 
 
     componentDidMount() {
@@ -144,6 +146,11 @@ export class MobileTradingView extends React.PureComponent {
                 const data = JSON.parse(savedChart);
                 if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
                     this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
+                    this.setState({
+                        ...this.state,
+                        interval: this.widget.activeChart().resolution(),
+                        priceChartType: this.widget.activeChart().chartType(),
+                    })
                 }
             } catch (err) {
                 console.error('Load chart error', err);

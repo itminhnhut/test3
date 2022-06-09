@@ -30,9 +30,9 @@ const listTimeFrame = [
     {value: '30', text: '30m'},
     {value: '60', text: '1h'},
     {value: '240', text: '4h'},
-    {value: '1D', text: '1D'},
-    {value: '1W', text: '1W'},
-    {value: '1M', text: '1M'},
+    {value: 'D', text: '1D'},
+    {value: 'W', text: '1W'},
+    {value: 'M', text: '1M'},
 ];
 
 const ChartOptions = ({
