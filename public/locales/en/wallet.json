@@ -101,8 +101,8 @@
         "invalid_kyc_status": "Please verify your account to perform this action.",
         "decimal_scale_limit": "Please enter amount with no more than {{ value }} decimal places",
         "withdraw_disabled": "Withdrawal is currently under maintenance, please try again later.",
-        "minimun_amount": "Minimum amount is {{min}}",
-        "maximun_amount": "Maximum amount is {{max}}"
+        "minimum_amount": "Minimum amount is {{min}}",
+        "maximum_amount": "Maximum amount is {{max}}"
     },
     "est_balance": "Estimated Balance",
     "hide_asset": "Hide Asset",

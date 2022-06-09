@@ -138,12 +138,12 @@ const FuturesEditSLTPVndc = ({
 
                 if (+_price < +_minPrice) {
                     isValid = false
-                    msg = `${t('futures:minimun_price')} ${formatNumber(_minPrice, 0, 0, true)}`
+                    msg = `${t('futures:minimum_price')} ${formatNumber(_minPrice, 0, 0, true)}`
                 }
 
                 if (+_price > +_maxPrice) {
                     isValid = false
-                    msg = `${t('futures:maximun_price')} ${formatNumber(_maxPrice, 0, 0, true)}`
+                    msg = `${t('futures:maximum_price')} ${formatNumber(_maxPrice, 0, 0, true)}`
                 }
 
                 return {

@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
 import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next'
-import { getS3Url } from 'redux/actions/utils';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
 
 
-const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice, setStopPrice, pairConfig }) => {
+const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice, setStopPrice, pairConfig, validator }) => {
     const { t } = useTranslation();
     const disabled = OrderTypes.Market === type;
     const getLabelName = OrderTypes.Market === type ? t('futures:price_market') : t('futures:price')
@@ -18,8 +16,7 @@ const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice,
             value={disabled ? '' : stopMarket ? stopPrice : price}
             allowNegative={false}
             disabled={disabled}
-            // onChange={({ target: { value } }) => setPrice(value)}
-            // validator={getValidator('quantity')}
+            validator={validator}
             onValueChange={({ floatValue = '' }) => stopMarket ? setStopPrice(floatValue) : setPrice(floatValue)}
             decimalScale={decimals.decimalScalePrice}
             labelClassName='whitespace-nowrap'

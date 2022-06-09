@@ -178,8 +178,8 @@
     "limit": "Limit",
     "market": "Market",
     "place_order_success": "Place order",
-    "minimun_price": "Minimum Price is",
-    "maximun_price": "Maximum Price is",
+    "minimum_price": "Minimum price: ",
+    "maximum_price": "Maximum price: ",
     "fullscreen": "Fullscreen",
     "order_mode": "Order Mode",
     "comming_soon": "Coming soon",
@@ -194,8 +194,8 @@
     "rows_per_page": "Rows per page",
     "volume": "Volume",
     "profit_margin": "% Profit",
-    "minimun_qty": "Minimum Qty is",
-    "maximun_qty": "Maximum Qty is",
+    "minimum_qty": "Minimum Qty is",
+    "maximum_qty": "Maximum Qty is",
     "invalid_amount": "Invalid amount",
     "value": "Value",
     "price_market": "Price market",
@@ -252,6 +252,6 @@
         "info_swap_fee": "For every opening futures order, Nami Exchange applies a swap fee of 0.002% of order’s volume for every maintaining hour."
     },
     "orders_history": "Orders History",
-    "minimun_leverage": "Minimum Leverage is",
-    "maximun_leverage": "Maximum Leverage is"
+    "minimum_leverage": "Minimum Leverage is",
+    "maximum_leverage": "Maximum Leverage is"
 }
