@@ -350,16 +350,6 @@ const PlaceOrder = ({
                             <SideOrder side={side} setSide={setSide} />
                         </OrderInput>
                     }
-                    {/*<OrderInput>*/}
-                    {/*    <OrderLeverage*/}
-                    {/*        leverage={leverage} setLeverage={setLeverage}*/}
-                    {/*        isAuth={isAuth} pair={pair}*/}
-                    {/*        pairConfig={pairConfig}*/}
-                    {/*        inputValidator={inputValidator}*/}
-                    {/*        context={context}*/}
-                    {/*        getLeverage={getLeverage}*/}
-                    {/*    />*/}
-                    {/*</OrderInput>*/}
                     <OrderInput data-tut="order-volume">
                         {showEditVolume && <OrderVolumeMobileModal
                             size={size}
