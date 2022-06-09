@@ -49,13 +49,14 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
             context.alert.show('warning',
                 t('futures:close_order:modal_title', { value: order?.displaying_id }),
                 <div dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: order?.displaying_id }) }}></div>,
+                null,
                 () => {
                     const params = {
                         displaying_id: order?.displaying_id,
                         special_mode: 1
                     }
                     fetchOrder('DELETE', params, () => {
-                        context.alert.show('success', t('common:success'), t('futures:close_order:close_successfully', { value: order?.displaying_id }))
+                        context.alert.show('success', t('common:success'), t('futures:close_order:request_successfully', { value: order?.displaying_id }))
                         onClose();
                     });
                 }
@@ -93,7 +94,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     const isDiff = useMemo(() => {
         return oldOrder.current?.sl !== data.sl || oldOrder.current?.tp !== data.tp || (status === VndcFutureOrderType.Status.PENDING && oldOrder.current?.price !== data.price)
     }, [data, oldOrder.current])
-    
+
     return (
         <div className="py-[24px]">
             {showEditSLTP &&

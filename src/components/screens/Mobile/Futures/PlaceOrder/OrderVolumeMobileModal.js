@@ -87,7 +87,7 @@ const OrderVolumeMobileModal = (props) => {
                     decimalScale={decimal}
                     allowNegative={false}
                     thousandSeparator={true}
-                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[36px]'
+                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[36px] w-[200px]'
                     inputClassName="!text-center"
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}
@@ -134,8 +134,8 @@ const OrderVolumeMobileModal = (props) => {
                         marginAndValue?.margin,
                         0
                     )}`}
-                    containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px]'
-                    valueClassName="text-right"
+                    containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px] '
+                    valueClassName="text-right break-all"
                 />
                 <TradingLabel
                     label={t('futures:mobile:available') + ':'}

@@ -382,7 +382,7 @@ const FuturesEditSLTPVndc = ({
                         className="text-dominant">{order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x</span>
                 </div>
                 <div className="mb-3 font-medium flex items-center justify-between">
-                    {!status && pairTicker ?
+                    {status === VndcFutureOrderType.Status.PENDING ?
                         <div
                             className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px] justify-between">
                             <TradingInput

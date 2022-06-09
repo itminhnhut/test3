@@ -11,7 +11,7 @@ import {
     getProfitVndc,
     VndcFutureOrderType,
 } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import { formatNumber, formatTime } from 'redux/actions/utils'
+import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils'
 import { IconLoading } from 'components/common/Icons'
 import { useTranslation } from 'next-i18next'
 
@@ -116,7 +116,7 @@ const ShareFuturesOrder = ({
                 >
                     <div>
                         <img
-                            src='/images/share-order-logo.svg'
+                            src={getS3Url('/images/share-order-logo.svg')}
                             width={120}
                             height={30}
                         />

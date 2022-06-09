@@ -65,7 +65,7 @@ const Guideline = ({ pair, start, setStart, isFullScreen }) => {
                 content: (props) => <Content {...props} top={isFullScreen} onClose={onClose} text={t('futures:mobile:guide:tab')} />,
             }
         ]
-    }, [])
+    }, [isFullScreen])
 
     const onClose = (e) => {
         if (!e) {

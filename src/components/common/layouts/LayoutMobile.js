@@ -48,12 +48,16 @@ const LayoutMobile = ({
     useEffect(() => {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
+        document.body.classList.add('hidden-scrollbar');
         setTimeout(() => {
             if (window.fcWidget) {
                 window.fcWidget.hide()
                 window.fcWidget.close()
             }
         }, 1000);
+        return ()=>{
+            document.body.classList.remove('hidden-scrollbar')
+        }
     }, [])
 
     const onHiddenBottomNavigation = (ishidden) => {
@@ -69,7 +73,7 @@ const LayoutMobile = ({
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
             </Head>
             <div
-                className={`mal-layouts flex flex-col font-inter ${light ? 'mal-layouts___light' : ''
+                className={`mal-layouts flex flex-col font-inter bg-onus ${light ? 'mal-layouts___light' : ''
                     } ${dark ? 'mal-layouts___dark' : ''}`}
                 style={
                     state.isDrawer

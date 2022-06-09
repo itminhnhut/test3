@@ -6,6 +6,7 @@ import {ApiStatus, UserSocketEvent} from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import {useSelector} from 'react-redux';
 import {useEffect, useState} from 'react'
+import {TVChartContainer} from "components/TVChartContainer";
 
 const FuturesChart = dynamic(
     () => import('src/components/TVChartContainer/').then(mod => mod.TVChartContainer),

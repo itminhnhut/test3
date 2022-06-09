@@ -157,27 +157,6 @@ export const getMarginModeLabel = (mode) => {
 }
 
 export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
-    // const validator = placeFuturesOrderValidator(params, utils)
-    // log.d('placeFuturesOrder Pre-processing...')
-    // const isValid = Object.values(validator)?.filter((e) => !e)
-    // if (isValid.length) {
-    //     log.d(`placeFuturesOrder Pre-Process detect mistake `, validator)
-    //     showNotification(
-    //         {
-    //             message: `TEST NOTI`,
-    //             title: 'Error',
-    //             type: 'failure',
-    //         },
-    //         1800,
-    //         'bottom',
-    //         'bottom-right'
-    //     )
-
-    //     return
-    // } else {
-    //     log.d('placeFuturesOrder All params passed...', params)
-    // }
-    // API_FUTURES_PLACE_ORDER
     try {
         const { data } = await Axios.post(API_GET_FUTURES_ORDER, {
             ...params,
@@ -199,13 +178,18 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
                 )
             }
         } else {
+            // handle multi language
             log.i('placeFuturesOrder result: ', data)
+            let message = data?.message
+            if(t(`error:futures.${data?.status}`)){
+                message = t(`error:futures.${data?.status}`)
+            }
             if (utils?.alert) {
-                utils.alert.show('error', t('futures:place_order_failed'), data?.message)
+                utils.alert.show('error', t('futures:place_order'), message, data?.data?.requestId && `(${data?.data?.requestId.substring(0,8)})`)
             } else {
                 showNotification(
                     {
-                        message: `${data?.message}`,
+                        message: message,
                         title: t('common:failed'),
                         type: 'failure',
                     },
@@ -218,7 +202,7 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
     } catch (e) {
         console.log(`Can't place order `, e?.message)
         if (utils?.alert) {
-            utils.alert.show('error', t('futures:place_order_failed'), e?.message)
+            utils.alert.show('error', t('futures:place_order'), e?.message)
         } else {
             showNotification(
                 {
