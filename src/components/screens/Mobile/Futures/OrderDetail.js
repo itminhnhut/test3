@@ -24,10 +24,10 @@ import OrderOpenDetail from './OrderOpenDetail';
 import Tooltip from 'components/common/Tooltip';
 import { THEME_MODE } from "hooks/useDarkMode";
 import dynamic from "next/dynamic";
-import {MenuTime, listTimeFrame} from 'components/TVChartContainer/MobileTradingView/ChartOptions';
+import { MenuTime, listTimeFrame } from 'components/TVChartContainer/MobileTradingView/ChartOptions';
 
 const MobileTradingView = dynamic(
-    () => import('components/TVChartContainer/MobileTradingView').then(mod => mod.MobileTradingView),
+    () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
     { ssr: false },
 );
 
@@ -63,11 +63,11 @@ const getAssets = createSelector(
 
 const getResolution = (order) => {
     const timestamp = new Date(order?.closed_at).getTime() - new Date(order?.opened_at).getTime();
-    if (isNaN(timestamp)) return '1D';
+    if (isNaN(timestamp)) return 'D';
     const item = listTimeFrame.reduce((prev, curr) => {
         return (Math.abs(ms(curr.text) - timestamp) < Math.abs(ms(prev?.text) - timestamp) ? curr : prev);
     });
-    return item?.value ?? '1D'
+    return item?.value ?? 'D'
 }
 
 
@@ -88,7 +88,7 @@ const OrderDetail = ({
     }))
     const [dataSource, setDataSource] = useState([])
     const shapeTemplateOld = useRef([order])
-    const [resolution, setResolution] = useState(getResolution(order) ?? '1D')
+    const [resolution, setResolution] = useState(getResolution(order))
 
     const getAdjustmentDetail = async () => {
         try {
