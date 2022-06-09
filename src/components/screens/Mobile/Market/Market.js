@@ -385,7 +385,7 @@ const InputSearch = ({onChange}) => {
         />
         <input
             className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-semibold placeholder-text-center'
-            onChange={({target: {value: v}}) => handleChange(v)}
+            onChange={({target: {value: v}}) => handleChange(v?.replace(/[^\w\s]/gi, ""))}
             value={value}
             placeholder={t('markets:search_placeholder')}
             type='text'
