@@ -101,8 +101,8 @@
         "invalid_kyc_status": "Vui lòng xác minh tài khoản để thực hiện hành động này",
         "decimal_scale_limit": "Số lượng rút có phần thập phân tối đa 8 chữ số",
         "withdraw_disabled": "Chức năng Rút hiện đang bảo trì, vui lòng thử lại sau.",
-        "minimun_amount": "Số lượng tối thiểu {{min}}",
-        "maximun_amount": "Số lượng tối đa {{max}}"
+        "minimum_amount": "Số lượng tối thiểu {{min}}",
+        "maximum_amount": "Số lượng tối đa {{max}}"
     },
     "est_balance": "Tài sản ước lượng",
     "hide_asset": "Ẩn số dư",

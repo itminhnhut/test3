@@ -206,7 +206,7 @@ export default function Transfer() {
 
         if (!isNumeric(+amount) || !amount) return
         if (+amount < min) {
-            return t('wallet:errors:minimun_amount', {
+            return t('wallet:errors:minimum_amount', {
                 min: formatNumber(min, DECIMAL_SCALES[assetConfig.id]),
             })
         }
@@ -214,7 +214,7 @@ export default function Transfer() {
             return t('wallet:errors:invalid_insufficient_balance')
         }
         if (+amount > max) {
-            return t('wallet:errors:maximun_amount', {
+            return t('wallet:errors:maximum_amount', {
                 max: formatNumber(max, DECIMAL_SCALES[assetConfig.id]),
             })
         }

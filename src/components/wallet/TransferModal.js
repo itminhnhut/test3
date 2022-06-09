@@ -525,7 +525,7 @@ const TransferModal = ({ isMobile, alert }) => {
                 {isError && state.amount &&
                     <div className='absolute right-0 top-0 -translate-y-full z-50 flex flex-col items-center'>
                         <div className='px-3 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4'>
-                            {t('futures:minimun_price') + ' ' + (state.asset === 'VNDC' ? formatNumber(500000, 0, 0, true) : 25)}
+                            {t('futures:minimum_price') + ' ' + (state.asset === 'VNDC' ? formatNumber(500000, 0, 0, true) : 25)}
                         </div>
                         <div
                             className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'

@@ -33,8 +33,8 @@ import Divider from 'components/common/Divider';
 const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI];
 
 const MIN_WITHDRAWAL = {
-    [WalletCurrency.VNDC]: 300e3,
-    [WalletCurrency.NAMI]: 1000,
+    [WalletCurrency.VNDC]: 0,
+    [WalletCurrency.NAMI]: 0,
 };
 
 const MAX_WITHDRAWAL = {
@@ -49,7 +49,6 @@ const VNDC_WITHDRAWAL_FEE = {
 
 const DECIMAL_SCALES = {
     [WalletCurrency.VNDC]: 0,
-    [WalletCurrency.SFO]: 8,
     [WalletCurrency.NAMI]: 1,
 };
 

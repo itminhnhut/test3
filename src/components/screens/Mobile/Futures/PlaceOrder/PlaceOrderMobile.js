@@ -20,6 +20,9 @@ import { createSelector } from 'reselect';
 import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
+import { getFilter, } from 'src/redux/actions/utils';
+
+import { ExchangeOrderEnum, FuturesOrderEnum } from 'src/redux/actions/const';
 
 const getPairPrice = createSelector(
     [
@@ -62,7 +65,7 @@ const PlaceOrder = ({
     const marketWatch = useSelector(state => getPairPrice(state, pair));
     const newDataLeverage = useRef(0);
     const [showEditVolume, setShowEditVolume] = useState(false);
-    const [quoteQty, setQuoteQty] = useState(0)
+    const [quoteQty, setQuoteQty] = useState(0);
 
     useEffect(() => {
         if (usdRate) {
@@ -73,7 +76,7 @@ const PlaceOrder = ({
     const getMaxQuoteQty = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
         let maxBuy = 0;
         let maxSell = 0;
-        let _price = price
+        let _price = price;
         if (Math.trunc(availableAsset) > 0) {
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(type) && price) {
                 maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : price);
@@ -121,7 +124,7 @@ const PlaceOrder = ({
         setTp(_tp);
         setSl(_sl);
         if (type === OrderTypes.Market) {
-            onChangeQuoteQty(lastPrice, leverage)
+            onChangeQuoteQty(lastPrice, leverage);
         }
     }, [side, type]);
 
@@ -137,14 +140,15 @@ const PlaceOrder = ({
     }, [firstTime.current]);
 
     const onChangeQuoteQty = (price, leverage) => {
-        const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000;
+        const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
         const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
-        let _quoteQty = +Number(maxQuoteQty * (initPercent / 100)).toFixed(0)
+        let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
+            .toFixed(0);
         _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
         const _size = +((_quoteQty / price) * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
         setSize(_size);
-        setQuoteQty(_quoteQty)
-    }
+        setQuoteQty(_quoteQty);
+    };
 
     useEffect(() => {
         if (firstTime.current) return;
@@ -171,40 +175,23 @@ const PlaceOrder = ({
         };
     }, [pairPrice, side, type, size, quoteQty]);
 
-    const inputValidator = (mode, isStop) => {
-        let isValid = true,
-            msg = null;
-
-        const lotSize =
-            pairConfig?.filters?.find((o) =>
-                [
-                    FuturesOrderTypes.Market,
-                    FuturesOrderTypes.StopMarket,
-                ].includes(type)
-                    ? o?.filterType === 'MARKET_LOT_SIZE'
-                    : o?.filterType === 'LOT_SIZE'
-            ) || {};
-
-        const priceFilter =
-            pairConfig?.filters?.find((o) => o.filterType === 'PRICE_FILTER') ||
-            {};
-
+    const inputValidator = (mode) => {
+        let isValid = true;
+        let msg = null;
         switch (mode) {
-            // input check
             case 'quoteQty':
-                const _min = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000
+                const _min = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
                 const _decimals = 0;
-                const _priceInput = type === OrderTypes.Limit ? price : stopPrice;
-                const _max = +Number(availableAsset / (1 / leverage + (0.1 / 100))).toFixed(0);
-                const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
-                const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
+                const _max = +Number(availableAsset / (1 / leverage + (0.1 / 100)))
+                    .toFixed(0);
+                const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
+                const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
                 if (quoteQty < +_min) {
-                    msg = `${t('futures:minimun_qty')} ${_displayingMin} `;
+                    msg = `${t('futures:minimum_qty')} ${_displayingMin} `;
                     isValid = false;
-                }
-                if (quoteQty > +Number(_max)
+                }else if (quoteQty > +Number(_max)
                     .toFixed(_decimals)) {
-                    msg = `${t('futures:maximun_qty')} ${_displayingMax}`;
+                    msg = `${t('futures:maximum_qty')} ${_displayingMax}`;
                     isValid = false;
                 }
                 return {
@@ -215,17 +202,97 @@ const PlaceOrder = ({
             case 'price':
             case 'stop_loss':
             case 'take_profit':
+                const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, pairConfig);
+                const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
-                const _price = isStop ? stopPrice : mode === 'price' ? price : mode === 'stop_loss' ? sl : tp;
-                if (+_price < +_minPrice) {
-                    isValid = false;
-                    msg = `${t('futures:minimun_price')} ${!isVndcFutures ? _minPrice : formatNumber(_minPrice, 0, 0, true)}`;
+                let _activePrice = marketWatch?.lastPrice ?? lastPrice;
+                if (mode !== 'price') {
+                    if (type === 'LIMIT') {
+                        _activePrice = price
+                    } else if (type === 'STOP_MARKET') {
+                        _activePrice = stopPrice
+                    }
                 }
 
-                if (+_price > +_maxPrice) {
-                    isValid = false;
-                    msg = `${t('futures:maximun_price')} ${!isVndcFutures ? _maxPrice : formatNumber(_maxPrice, 0, 0, true)}`;
+                // Truong hop dat lenh market
+                const lowerBound = {
+                    min: Math.max(_minPrice, _activePrice * percentPriceFilter?.multiplierDown),
+                    max: Math.min(_activePrice, _activePrice * (1 - percentPriceFilter?.minDifferenceRatio)),
+                }
+
+                const upperBound = {
+                    min: Math.max(_activePrice, _activePrice * (1 + percentPriceFilter?.minDifferenceRatio)),
+                    max: Math.min(_maxPrice, _activePrice * percentPriceFilter?.multiplierUp),
+                }
+
+
+                let bound = lowerBound
+                if (side === FuturesOrderEnum.Side.BUY) {
+                    bound = mode === 'stop_loss' ? lowerBound : upperBound
+                } else {
+                    bound = mode === 'stop_loss' ? upperBound : lowerBound
+                }
+
+                if (mode === 'stop_loss') {
+                    bound = side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound
+                    // Modify bound base on type
+                    if (sl < bound.min) {
+                        isValid = false
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.decimalScalePrice, 0, true)}`;
+                    } else if (sl > bound.max) {
+                        isValid = false
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
+                    }
+                } else if (mode === 'take_profit') {
+                    bound = side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound
+                    if (tp < bound.min) {
+                        isValid = false
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.decimalScalePrice, 0, true)}`;
+                    } else if (tp > bound.max) {
+                        isValid = false
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
+                    }
+                } else if (mode === 'price' && (type === 'STOP_MARKET' || type === 'LIMIT')) {
+                    const _checkPrice = type === 'STOP_MARKET' ? stopPrice : price
+                    if (side === FuturesOrderEnum.Side.BUY) {
+                        // Truong hop la buy thi gia limit phai nho hon gia hien tai
+                        if (type === 'LIMIT') {
+                            if (price < lowerBound.min) {
+                                isValid = false
+                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.decimalScalePrice, 0, true)}`;
+                            } else if (price > lowerBound.max) {
+                                isValid = false
+                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
+                            }
+                        } else if (type === 'STOP_MARKET') {
+                            if (stopPrice < upperBound.min) {
+                                isValid = false
+                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.decimalScalePrice, 0, true)}`;
+                            } else if (stopPrice > upperBound.max) {
+                                isValid = false
+                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.decimalScalePrice, 0, true)}`;
+                            }
+                        }
+                    } else if (side === FuturesOrderEnum.Side.SELL) {
+                        if (type === 'LIMIT') {
+                            if (price < upperBound.min) {
+                                isValid = false
+                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.decimalScalePrice, 0, true)}`;
+                            } else if (price > upperBound.max) {
+                                isValid = false
+                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.decimalScalePrice, 0, true)}`;
+                            }
+                        } else if (type === 'STOP_MARKET') {
+                            if (stopPrice < lowerBound.min) {
+                                isValid = false
+                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.decimalScalePrice, 0, true)}`;
+                            } else if (stopPrice > lowerBound.max) {
+                                isValid = false
+                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
+                            }
+                        }
+                    }
                 }
 
                 return {
@@ -238,11 +305,11 @@ const PlaceOrder = ({
                 const min = pairConfig?.leverageConfig?.min ?? 0;
                 const max = pairConfig?.leverageConfig?.max ?? 0;
                 if (min > leverage) {
-                    msg = `${t('futures:minimun_leverage')} ${_displayingMin} `;
+                    msg = `${t('futures:minimum_leverage')} ${_displayingMin} `;
                     isValid = false;
                 }
                 if (max < leverage) {
-                    msg = `${t('futures:maximun_leverage')} ${_displayingMax}`;
+                    msg = `${t('futures:maximum_leverage')} ${_displayingMax}`;
                     isValid = false;
                 }
                 return {
@@ -266,10 +333,10 @@ const PlaceOrder = ({
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
         if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
-            const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000;
+            const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
             const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
             const available = maxQuoteQty >= minQuoteQty;
-            context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount') : t('futures:mobile:balance_insufficient'))
+            context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount') : t('futures:mobile:balance_insufficient'));
             return;
         }
         const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
@@ -298,7 +365,7 @@ const PlaceOrder = ({
         const _price = type === FuturesOrderTypes.Market ?
             (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
             price;
-        const _size = (quoteQty / _price).toFixed(decimals.decimalScaleQtyLimit)
+        const _size = (quoteQty / _price).toFixed(decimals.decimalScaleQtyLimit);
         setSize(+_size);
         setQuoteQty(quoteQty);
         setShowEditVolume(false);
@@ -376,6 +443,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput>
                         <OrderPriceMobile
+                            validator={inputValidator('price')}
                             type={type}
                             price={price} setPrice={setPrice} decimals={decimals}
                             context={context} stopPrice={stopPrice} setStopPrice={setStopPrice}
@@ -384,11 +452,13 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput data-tut="order-sl">
                         <OrderSLMobile
+                            validator={inputValidator('stop_loss')}
                             sl={sl} setSl={setSl} decimals={decimals}
                             onChangeTpSL={onChangeTpSL} context={context} />
                     </OrderInput>
                     <OrderInput data-tut="order-tp">
                         <OrderTPMobile
+                            validator={inputValidator('take_profit')}
                             tp={tp} setTp={setTp} decimals={decimals}
                             onChangeTpSL={onChangeTpSL} context={context} />
                     </OrderInput>
@@ -398,6 +468,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput data-tut="order-button">
                         <OrderButtonMobile
+
                             tp={tp} sl={sl} type={type} size={size} price={price}
                             stopPrice={stopPrice} side={side} decimals={decimals}
                             pairConfig={pairConfig} pairPrice={pairPrice}

@@ -133,6 +133,6 @@
     "MAX_ALGO_ORDERS": "Tài khoản có quá nhiều lệnh cắt lỗ và/hoặc chốt lời đang mở trên cặp giao dịch.",
     "MAX_NUM_ICEBERG_ORDERS": "Tài khoản có quá nhiều lệnh mở về tảng băng trôi trên cặp giao dịch.",
     "EXCHANGE_MAX_NUM_ORDERS": "Tài khoản có quá nhiều lệnh mở trên sàn giao dịch.",
-    "EXCHANGE_MAX_ALGO_ORDERS": "Tài khoản có quá nhiều lệnh dừng lỗ và/hoặc chốt lời trên sàn giao dịch.",
+    "EXCHANGE_MAX_ALGO_ORDERS": "Tài khoản có quá nhiều lệnh dừng lỗ và/hoặc chốt lời trên sàn giao dịch."
   }
 }

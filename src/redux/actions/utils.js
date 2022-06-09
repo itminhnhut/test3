@@ -25,7 +25,7 @@ const WAValidator = require('multicoin-address-validator')
 const EthereumAddress = require('ethereum-address')
 
 export function getFilter(filterType, config) {
-    const filter = find(config.filters, { filterType })
+    const filter = find(config?.filters, { filterType })
     return filter || ExchangeFilterDefault[filterType]
 }
 

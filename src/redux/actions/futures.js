@@ -38,15 +38,15 @@ export const setFuturesOrderTypes =
             payload,
         });
         isAdvance &&
-            dispatch({
-                type: SET_FUTURES_ORDER_ADVANCE_TYPES,
-                payload,
-            });
+                dispatch({
+                    type: SET_FUTURES_ORDER_ADVANCE_TYPES,
+                    payload,
+                });
     };
 
 export const getFuturesFavoritePairs = () => async (dispatch) => {
     const favoritePairs = await favoriteAction('get', TRADING_MODE.FUTURES);
-    if (Array.isArray(favoritePairs)) {
+    if (Array.isArray(favoritePairs) && favoritePairs.length) {
         dispatch({
             type: SET_FUTURES_FAVORITE_PAIRS,
             payload: favoritePairs,
@@ -82,8 +82,7 @@ export const getFuturesConfigs = () => async (dispatch) => {
                 payload: data?.data || [],
             });
         }
-    } catch (e) {
-    }
+    } catch (e) { }
 };
 
 export const getFuturesUserSettings = () => async (dispatch) => {
