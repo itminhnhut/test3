@@ -134,12 +134,12 @@ const FuturesOrderModule = ({
                     : `${formatNumber(lotSize?.minQty, decimals, 0, true)} ${pairConfig?.baseAsset}`
 
                 if (quantity?.both < +_min) {
-                    msg = `${t('futures:minimun_qty')} ${_displayingMin} `
+                    msg = `${t('futures:minimum_qty')} ${_displayingMin} `
                     isValid = false
                 }
 
                 if (quantity?.both > +maxSize) {
-                    msg = `${t('futures:maximun_qty')} ${_displayingMax}`
+                    msg = `${t('futures:maximum_qty')} ${_displayingMax}`
                     isValid = false
                 }
 
@@ -153,12 +153,12 @@ const FuturesOrderModule = ({
                 const _price = isStop ? stopPrice : type === 'price' ? price : type === 'stop_loss' ? orderSlTp.sl : orderSlTp.tp
                 if (+_price < +_minPrice) {
                     isValid = false
-                    msg = `${t('futures:minimun_price')} ${!isVndcFutures ? _minPrice : formatNumber(_minPrice, 0, 0, true)}`
+                    msg = `${t('futures:minimum_price')} ${!isVndcFutures ? _minPrice : formatNumber(_minPrice, 0, 0, true)}`
                 }
 
                 if (+_price > +_maxPrice) {
                     isValid = false
-                    msg = `${t('futures:maximun_price')} ${!isVndcFutures ? _maxPrice : formatNumber(_maxPrice, 0, 0, true)}`
+                    msg = `${t('futures:maximum_price')} ${!isVndcFutures ? _maxPrice : formatNumber(_maxPrice, 0, 0, true)}`
                 }
 
                 return { isValid, msg }

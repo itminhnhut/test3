@@ -177,8 +177,8 @@
     "limit": "Giới hạn",
     "market": "Thị trường",
     "place_order_success": "Đặt lệnh",
-    "minimun_price": "Giá tối thiểu",
-    "maximun_price": "Giá tối đa",
+    "minimum_price": "Giá tối thiểu: ",
+    "maximum_price": "Giá tối đa: ",
     "fullscreen": "Toàn màn hình",
     "order_mode": "Chế độ đặt lệnh",
     "comming_soon": "Sắp ra mắt",
@@ -193,8 +193,8 @@
     "rows_per_page": "Số dòng/trang",
     "volume": "KL",
     "profit_margin": "% Lợi nhuận",
-    "minimun_qty": "Khối lượng tối thiểu",
-    "maximun_qty": "Khối lượng tối đa",
+    "minimum_qty": "Khối lượng tối thiểu",
+    "maximum_qty": "Khối lượng tối đa",
     "invalid_amount": "Giá trị không hợp lệ",
     "value": "Khối lượng",
     "price_market": "Giá thị trường",
@@ -251,6 +251,6 @@
         "info_swap_fee": "Với mỗi lệnh Futures đang mở, Nami Exchange áp dụng mức phí duy trì lệnh là 0.002% trên khối lượng giao dịch với mỗi giờ duy trì lệnh."
     },
     "orders_history": "Lịch sử lệnh",
-    "minimun_leverage": "Đòn bẩy tối thiểu",
-    "maximun_leverage": "Đòn bẩy tối đa"
+    "minimum_leverage": "Đòn bẩy tối thiểu",
+    "maximum_leverage": "Đòn bẩy tối đa"
 }
