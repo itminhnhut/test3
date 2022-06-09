@@ -76,7 +76,7 @@ const OrderDetail = ({
                          order,
                          pairConfig,
                          pairParent,
-                         isTabHistory,
+                         isTabHistory = false,
                          isDark
                      }) => {
     const {t} = useTranslation()
@@ -126,6 +126,7 @@ const OrderDetail = ({
     }
 
     const renderFee = (order, key) => {
+        if (!order || !isTabHistory) return null;
         const decimal = assetConfig ? assetConfig[key]?.assetDigit : 0
         const assetCode = assetConfig ? assetConfig[key]?.assetCode : '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];

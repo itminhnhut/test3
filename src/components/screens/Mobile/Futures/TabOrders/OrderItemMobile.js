@@ -73,16 +73,16 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
 
     const isModal = useRef(false);
 
-    const actions = (action) => {
+    const actions = (action, key) => {
         if (action === 'modal') {
             isModal.current = true;
-            onShowModal(order, 'share')
+            onShowModal(order, key)
         }
         if (action === 'delete') {
             isModal.current = true;
             onShowModal(order, 'delete')
         }
-        if (action === 'detail') {
+        if (action === 'detail' && order?.status !== VndcFutureOrderType.Status.REQUESTING) {
             if (isModal.current) {
                 isModal.current = false;
                 return;
@@ -113,7 +113,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     </div>
                 </div>
                 {profit ?
-                    <div className="border-[1px] border-teal p-[5px] rounded-[2px]" onClick={() => actions('modal')}>
+                    <div className="border-[1px] border-teal p-[5px] rounded-[2px]" onClick={() => actions('modal', 'share')}>
                         <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
                     </div>
                     : null
@@ -150,7 +150,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
             </div>
             {allowButton &&
                 <div className="flex items-center justify-between ">
-                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" > {t('futures:tp_sl:modify_tpsl')}</Button>
+                    <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => actions('modal', 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
                     <Button className="dark:bg-bgInput-dark dark:text-txtSecondary-dark" onClick={() => actions('delete')}>{t('common:close')}</Button>
                 </div>
             }
