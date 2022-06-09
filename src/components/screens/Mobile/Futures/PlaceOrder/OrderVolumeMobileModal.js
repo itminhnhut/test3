@@ -134,8 +134,8 @@ const OrderVolumeMobileModal = (props) => {
                         marginAndValue?.margin,
                         0
                     )}`}
-                    containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px]'
-                    valueClassName="text-right"
+                    containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px] '
+                    valueClassName="text-right break-all"
                 />
                 <TradingLabel
                     label={t('futures:mobile:available') + ':'}
