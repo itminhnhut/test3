@@ -24,7 +24,7 @@ import OrderOpenDetail from './OrderOpenDetail';
 import Tooltip from 'components/common/Tooltip';
 import { THEME_MODE } from "hooks/useDarkMode";
 import dynamic from "next/dynamic";
-import { MenuTime, listTimeFrame } from '../../../TVChartContainer/ChartOptions'
+import {MenuTime, listTimeFrame} from 'components/TVChartContainer/MobileTradingView/ChartOptions';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView'),
