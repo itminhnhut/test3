@@ -168,9 +168,7 @@ export default ({isRealtime = true}) => {
                         volume24h: item.vq,
                         quoteAsset: item.q,
                         baseAsset: item.b,
-                        change24hRaw: Math.abs(
-                            getExchange24hPercentageChange(item)
-                        ),
+                        change24hRaw: getExchange24hPercentageChange(item),
                         change24h: formatPercentage(
                             getExchange24hPercentageChange(item),
                             2,

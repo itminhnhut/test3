@@ -661,3 +661,22 @@ input[type='number'] {
     //     left:50%;
     // }
 }
+
+.hidden-scrollbar{
+    ::-webkit-scrollbar {
+        width: 0 !important;
+        display: none !important;
+    }
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    
+}
+#futures-mobile .infinite-scroll-component__outerdiv {
+    ::-webkit-scrollbar {
+        width: 4px !important;
+        display: flex !important;
+    }
+}

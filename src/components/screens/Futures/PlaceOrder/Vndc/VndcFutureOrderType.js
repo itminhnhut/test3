@@ -8,6 +8,7 @@ export const VndcFutureOrderType = {
         PENDING: 0,
         ACTIVE: 1,
         CLOSED: 2,
+        REQUESTING:3
     },
     Side: {
         BUY: 'Buy',

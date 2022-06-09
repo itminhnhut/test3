@@ -420,7 +420,7 @@ export default class MobileTradingView extends React.PureComponent {
                             isVndcFutures={true}
                             resolution={this.state.interval}
                             setResolution={this.handleActiveTime}
-                            isFullScreen={this.props.fullScreen}
+                            isFullScreen={this.props.isFullScreen}
                             chartType={this.state.priceChartType}
                             setChartType={this.handleChangeChartType}
                             showSymbol={this.props.showSymbol}
@@ -463,7 +463,7 @@ MobileTradingView.defaultProps = {
     chartsStorageApiVersion: "1.1",
     clientId: "tradingview.com",
     userId: "public_user_id",
-    fullscreen: false,
+    isFullScreen: false,
     showSymbol: true,
     showIconGuide: true,
     autosize: true,

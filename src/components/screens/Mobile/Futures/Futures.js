@@ -10,6 +10,7 @@ import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
 import { getOrdersList } from 'redux/actions/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
@@ -114,24 +115,12 @@ const FuturesMobile = () => {
             const scrollSnap = el.clientHeight <= vh * 100;
             if (scrollSnap) {
                 setScrollSnap(true);
-                return {
-                    isFullScreen: true,
-                    style: {
-                        height: vh * 100,
-                        scrollSnapAlign: 'start'
-                    }
-                };
+                return { isFullScreen: true, style: { height: vh * 100, scrollSnapAlign: 'start' } }
             }
-            return {
-                isFullScreen: false,
-                style: { height: 'max-content' }
-            };
+            return { isFullScreen: false, style: { height: 'max-content' } }
         }
-        return {
-            isFullScreen: false,
-            style: { height: 'max-content' }
-        };
-    }, [state.pair]);
+        return { isFullScreen: false, style: { height: 'max-content' } }
+    }, [state.pair])
 
     return (
         <>
@@ -145,7 +134,7 @@ const FuturesMobile = () => {
             <LayoutMobile>
                 <Container id="futures-mobile">
                     <Section className="form-order bg-onus"
-                             style={{ ...futuresScreen.style }}>
+                        style={{ ...futuresScreen.style }}>
                         <ChartMobile
                             pair={state.pair} pairConfig={pairConfig}
                             isVndcFutures={isVndcFutures}
@@ -167,9 +156,9 @@ const FuturesMobile = () => {
                     </Section>
                     <Section className="bg-onus" style={{ ...futuresScreen.style }}>
                         <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
-                                   pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
-                                   setForceRender={setForceRender} forceRender={forceRender}
-                                   isFullScreen={futuresScreen.isFullScreen}
+                            pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
+                            setForceRender={setForceRender} forceRender={forceRender}
+                            isFullScreen={futuresScreen.isFullScreen}
                         />
                     </Section>
                 </Container>
@@ -179,15 +168,15 @@ const FuturesMobile = () => {
 };
 const Container = styled.div`
 scroll-snap-type:y mandatory;
-${'' /* overflow-y:scroll; */}
+overflow-y:scroll;
 height:calc(var(--vh, 1vh) * 100);
 `
 
 const Section = styled.div`
-  width: 100%;
-  height: unset;
+width: 100%;
+height:unset;
 ${'' /* height:calc(var(--vh, 1vh) * 100); */}
 ${'' /* scroll-snap-align:start */}
-`;
+`
 
 export default FuturesMobile;
