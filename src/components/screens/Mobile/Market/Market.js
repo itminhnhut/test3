@@ -26,9 +26,6 @@ import {useRouter} from 'next/router'
 import {useDispatch, useSelector} from 'react-redux'
 import {getFuturesFavoritePairs} from 'redux/actions/futures'
 import {Search} from 'react-feather'
-import {Close} from "reactour";
-import {CloseOutlined} from "@ant-design/icons";
-import OrderClose from "components/screens/Futures/PlaceOrder/Vndc/OrderClose";
 import classNames from "classnames";
 
 const TABS = {
@@ -371,7 +368,7 @@ const InputSearch = ({onChange}) => {
         />
         <input
             className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-semibold placeholder-text-center'
-            onChange={({target: {value}}) => handleChange(value)}
+            onChange={({target: {value: v}}) => handleChange(v)}
             value={value}
             placeholder={t('markets:search_placeholder')}
             type='text'
