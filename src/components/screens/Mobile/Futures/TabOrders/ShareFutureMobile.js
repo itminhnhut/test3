@@ -4,7 +4,7 @@ import QRCode from 'qrcode.react';
 import { useSelector } from 'react-redux';
 import CheckBox from 'components/common/CheckBox';
 import { useTranslation } from 'next-i18next';
-import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { getProfitVndc, VndcFutureOrderType,renderCellTable } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import ReactDOM from 'react-dom';
 import html2canvas from 'html2canvas';
@@ -116,7 +116,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
                     <div className="flex w-full mb-[12px] relative h-[28px]"
                         style={{ backgroundColor: 'rgb(255 255 255 / 20%)' }}>
                         <div className={`px-[50px] flex justify-evenly w-full text-white text-xs font-medium p-[5px] ${downloading ? 'absolute top-[-10px]' : ''}`}>
-                            <span className="capitalize">{order?.side}</span>
+                            <span className="capitalize">{renderCellTable('side', order)}</span>
                             <span>|</span>
                             <span>{hide.leverage ? '***' : `${leverage}x`}</span>
                             <span>|</span>
