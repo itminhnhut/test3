@@ -27,7 +27,7 @@ import dynamic from "next/dynamic";
 import {MenuTime, listTimeFrame} from 'components/TVChartContainer/MobileTradingView/ChartOptions';
 
 const MobileTradingView = dynamic(
-    () => import('components/TVChartContainer/MobileTradingView'),
+    () => import('components/TVChartContainer/MobileTradingView').then(mod => mod.MobileTradingView),
     { ssr: false },
 );
 
