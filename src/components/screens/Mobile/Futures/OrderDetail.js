@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useMemo, useRef} from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Portal from 'components/hoc/Portal'
 import classNames from 'classnames'
-import {useTranslation} from 'next-i18next'
-import {ChevronLeft, ArrowRight} from "react-feather";
+import { useTranslation } from 'next-i18next'
+import { ChevronLeft, ArrowRight } from "react-feather";
 import KlineChart from 'components/KlineChart/KlineChart'
 import ms from 'ms'
 import ChartTimer from './Chart/ChartTimer';
@@ -13,22 +13,22 @@ import {
     getProfitVndc
 } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import styled from 'styled-components';
-import {formatNumber, formatTime, countDecimals, getS3Url} from 'redux/actions/utils'
-import {useSelector} from 'react-redux';
-import {createSelector} from 'reselect';
-import {API_ORDER_DETAIL} from 'redux/actions/apis'
+import { formatNumber, formatTime, countDecimals, getS3Url } from 'redux/actions/utils'
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+import { API_ORDER_DETAIL } from 'redux/actions/apis'
 import fetchApi from 'utils/fetch-api'
-import {ApiStatus, ChartMode} from 'redux/actions/const'
+import { ApiStatus, ChartMode } from 'redux/actions/const'
 import TableNoData from 'components/common/table.old/TableNoData';
-import {listTimeFrame} from "components/KlineChart/kline.service";
 import OrderOpenDetail from './OrderOpenDetail';
 import Tooltip from 'components/common/Tooltip';
-import {THEME_MODE} from "hooks/useDarkMode";
+import { THEME_MODE } from "hooks/useDarkMode";
 import dynamic from "next/dynamic";
+import { MenuTime, listTimeFrame } from '../../../TVChartContainer/ChartOptions'
 
 const MobileTradingView = dynamic(
-    () => import('src/components/TVChartContainer/MobileTradingView'),
-    {ssr: false},
+    () => import('components/TVChartContainer/MobileTradingView'),
+    { ssr: false },
 );
 
 const getAssets = createSelector(
@@ -63,36 +63,38 @@ const getAssets = createSelector(
 
 const getResolution = (order) => {
     const timestamp = new Date(order?.closed_at).getTime() - new Date(order?.opened_at).getTime();
+    if (isNaN(timestamp)) return '1D';
     const item = listTimeFrame.reduce((prev, curr) => {
-        return (Math.abs(curr.value - timestamp) < Math.abs(prev?.value - timestamp) ? curr : prev);
+        return (Math.abs(ms(curr.text) - timestamp) < Math.abs(ms(prev?.text) - timestamp) ? curr : prev);
     });
-    return item?.value ?? ms('1m')
+    return item?.value ?? '1D'
 }
 
 
 const OrderDetail = ({
-                         isVisible = true,
-                         onClose,
-                         order,
-                         pairConfig,
-                         pairParent,
-                         isTabHistory = false,
-                         isDark
-                     }) => {
-    const {t} = useTranslation()
+    isVisible = true,
+    onClose,
+    order,
+    pairConfig,
+    pairParent,
+    isTabHistory = false,
+    isDark
+}) => {
+    const { t } = useTranslation()
     const assetConfig = useSelector(state => getAssets(state, {
         ...order?.fee_metadata,
-        swap: {currency: order?.margin_currency},
-        order_value: {currency: order?.order_value_currency}
+        swap: { currency: order?.margin_currency },
+        order_value: { currency: order?.order_value_currency }
     }))
     const [dataSource, setDataSource] = useState([])
     const shapeTemplateOld = useRef([order])
+    const [resolution, setResolution] = useState(getResolution(order) ?? '1D')
 
     const getAdjustmentDetail = async () => {
         try {
-            const {status, data, message} = await fetchApi({
+            const { status, data, message } = await fetchApi({
                 url: API_ORDER_DETAIL,
-                options: {method: 'GET'},
+                options: { method: 'GET' },
                 params: {
                     orderId: order.displaying_id
                 },
@@ -144,7 +146,7 @@ const OrderDetail = ({
                 value = metadata?.modify_price ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_price?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right"> {getValue(metadata?.modify_price?.after)}</div>
                     </div> : getValue(metadata?.price)
                 return value;
@@ -152,7 +154,7 @@ const OrderDetail = ({
                 value = metadata?.modify_tp ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_tp?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_tp?.after)}</div>
                     </div> : null
                 return value;
@@ -160,7 +162,7 @@ const OrderDetail = ({
                 value = metadata?.modify_sl ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_sl?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_sl?.after)} </div>
                     </div> : null
                 return value;
@@ -180,39 +182,58 @@ const OrderDetail = ({
         getAdjustmentDetail();
     }
 
+    const resolutionLabel = useMemo(() => {
+        return listTimeFrame.find(item => item.value === resolution)?.text
+    }, [resolution])
+
+    const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red';
+
     return (
         <Portal portalId='PORTAL_MODAL'>
             <div className={classNames(
                 'flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] bg-white dark:bg-onus',
-                {invisible: !isVisible},
-                {visible: isVisible}
+                { invisible: !isVisible },
+                { visible: isVisible }
             )}
             >
-                <div
-                    className='fixed top-0 w-full bg-white dark:bg-onus z-[10] flex items-center min-h-[50px] px-[16px]'
-                    onClick={() => onClose()}>
-                    <ChevronLeft size={24}/>
-                    <span className='font-medium text-sm pl-[10px]'>{t('futures:mobile:order_detail')}</span>
+                <div className='fixed top-0 w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]'
+                >
+                    <div className='flex items-center' onClick={() => onClose()}>
+                        <ChevronLeft size={24} />
+                        <span className='font-medium text-sm'>{t('common:back')}</span>
+                    </div>
+                    <div className='flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2'>
+                        <span className="font-semibold">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
+                        <span
+                            className={`text-xs ${classNameSide}`}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
+                    </div>
+                    <MenuTime
+                        value={resolution}
+                        onChange={setResolution}
+                        keyValue="value"
+                        displayValue="text"
+                        options={listTimeFrame}
+                        classNameButton="px-2 py-2"
+                        label={<div
+                            className="text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}
+                    />
                 </div>
-                <div className='flex justify-center items-center pt-[25px] mt-[50px] font-semibold'>
-                    <span className="mr-[8px]">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
-                    <span
-                        className={order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red'}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
-                </div>
-                <div className="shadow-order_detail py-[10px] dark:bg-onus">
+
+                <div className="shadow-order_detail py-[10px] dark:bg-onus mt-[50px]">
                     <div className="min-h-96 max-h-[420px] spot-chart h-full max-w-full">
                         <MobileTradingView
                             t={t}
                             containerId="nami-mobile-detail-tv"
                             symbol={order.symbol}
                             pairConfig={pairConfig}
-                            initTimeFrame="1D"
+                            initTimeFrame={resolution}
                             isVndcFutures={true}
                             ordersList={[order]}
                             theme={THEME_MODE.DARK}
                             mode={ChartMode.FUTURES}
                             showSymbol={false}
                             showIconGuide={false}
+                            showTimeFrame={false}
                         />
                     </div>
                     <div className="px-[16px] bg-onus">
@@ -280,8 +301,8 @@ const OrderDetail = ({
                                     <Span>{renderFee(order, 'liquidate_order')}</Span>
                                 </Row>
                                 <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                         arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
-                                         overridePosition={(e) => ({left: 0, top: e.top})}
+                                    arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
+                                    overridePosition={(e) => ({ left: 0, top: e.top })}
                                 >
                                     <div>{t('futures:mobile:info_swap_fee')}</div>
                                 </Tooltip>
@@ -289,7 +310,7 @@ const OrderDetail = ({
                                     <Label className="flex">
                                         {t('futures:mobile:swap_fee')}
                                         <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
-                                            <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24}/>
+                                            <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
                                         </div>
                                     </Label>
                                     <Span>{renderFee(order, 'swap')}</Span>
@@ -297,9 +318,9 @@ const OrderDetail = ({
                             </div>
                             :
                             <OrderOpenDetail order={order} decimal={decimal} isDark={isDark}
-                                             pairConfig={pairConfig} onClose={onClose}
-                                             getAdjustmentDetail={getAdjustmentDetail}
-                                             changeSLTP={changeSLTP}
+                                pairConfig={pairConfig} onClose={onClose}
+                                getAdjustmentDetail={getAdjustmentDetail}
+                                changeSLTP={changeSLTP}
                             />
                         }
                         <div className="pb-2.5">
@@ -308,36 +329,36 @@ const OrderDetail = ({
                             {dataSource.length > 0 ?
                                 dataSource.map((item, index) => (
                                     <div key={index}
-                                         className="border-b border-divider dark:border-divider-dark last:border-0">
+                                        className="border-b border-divider dark:border-divider-dark last:border-0">
                                         <Row>
                                             <Label isTabOpen={!isTabHistory}>{t('common:time')}</Label>
                                             <Span
                                                 isTabOpen={!isTabHistory}>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
                                         </Row>
                                         {item?.metadata?.modify_tp &&
-                                        <Row>
-                                            <Label isTabOpen={!isTabHistory}>{t('futures:take_profit')}</Label>
-                                            <Span
-                                                isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'take_profit')}</Span>
-                                        </Row>
+                                            <Row>
+                                                <Label isTabOpen={!isTabHistory}>{t('futures:take_profit')}</Label>
+                                                <Span
+                                                    isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'take_profit')}</Span>
+                                            </Row>
                                         }
                                         {item?.metadata?.modify_sl &&
-                                        <Row>
-                                            <Label isTabOpen={!isTabHistory}>{t('futures:stop_loss')}</Label>
-                                            <Span
-                                                isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'stop_loss')}</Span>
-                                        </Row>
+                                            <Row>
+                                                <Label isTabOpen={!isTabHistory}>{t('futures:stop_loss')}</Label>
+                                                <Span
+                                                    isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'stop_loss')}</Span>
+                                            </Row>
                                         }
                                         {item?.metadata?.modify_price &&
-                                        <Row>
-                                            <Label isTabOpen={!isTabHistory}>{t('futures:price')}</Label>
-                                            <Span
-                                                isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'price')}</Span>
-                                        </Row>
+                                            <Row>
+                                                <Label isTabOpen={!isTabHistory}>{t('futures:price')}</Label>
+                                                <Span
+                                                    isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'price')}</Span>
+                                            </Row>
                                         }
                                     </div>
                                 ))
-                                : <TableNoData className="min-h-[300px]"/>
+                                : <TableNoData className="min-h-[300px]" />
                             }
                         </div>
                     </div>
@@ -351,11 +372,11 @@ const Row = styled.div.attrs({
     className: 'flex items-center justify-between py-1'
 })``
 
-const Label = styled.div.attrs(({isTabOpen}) => ({
+const Label = styled.div.attrs(({ isTabOpen }) => ({
     className: `text-gray-1 dark:text-txtSecondary-dark ${isTabOpen ? 'text-xs' : 'text-sm'} font-medium`
 }))``
 
-const Span = styled.div.attrs(({isTabOpen}) => ({
+const Span = styled.div.attrs(({ isTabOpen }) => ({
     className: `text-sm font-medium ${isTabOpen ? 'text-xs' : 'text-sm'}`
 }))``
 

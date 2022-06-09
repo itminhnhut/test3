@@ -338,7 +338,7 @@ const FuturesEditSLTPVndc = ({
                         )}
                     >
                         {getLabelPercent(i * size, true, key)}
-                        {tab === 2 && i !== 3 && '%'}
+                        {tab === 2 && i !== (dotStep.current / 2) && '%'}
                     </span>
                 </div>
             )
@@ -364,7 +364,7 @@ const FuturesEditSLTPVndc = ({
     return (
         <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%]`}>
             <div
-                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark sticky top-0 z-[10px] bg-white dark:bg-darkBlue-2 rounded-t-lg">
+                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark sticky top-0 z-[10] bg-white dark:bg-darkBlue-2 rounded-t-lg">
                 <span className="font-bold text-[16px]">
                     {t('futures:tp_sl:modify_tpsl')}
                 </span>{' '}
@@ -384,7 +384,7 @@ const FuturesEditSLTPVndc = ({
                         className="text-dominant">{order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x</span>
                 </div>
                 <div className="mb-3 font-medium flex items-center justify-between">
-                    {status === VndcFutureOrderType.Status.PENDING ?
+                    {status === VndcFutureOrderType.Status.PENDING && order?.type !== VndcFutureOrderType.Type.MARKET ?
                         <div
                             className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px] justify-between">
                             <TradingInput
@@ -399,10 +399,12 @@ const FuturesEditSLTPVndc = ({
                                 onValueChange={(e) => onHandleChange('price', e)}
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
+                                renderTail={() => (
+                                    <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark pl-2">
+                                        {quoteAsset}
+                                    </span>
+                                )}
                             />
-                            <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark pl-2">
-                                {quoteAsset}
-                            </span>
                         </div>
                         :
                         <>

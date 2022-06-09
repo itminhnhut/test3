@@ -85,6 +85,9 @@ export default class MobileTradingView extends React.PureComponent {
                 this.theme = newTheme;
             }
         }
+        if (prevProps.initTimeFrame !== this.props.initTimeFrame) {
+            this.handleActiveTime(this.props.initTimeFrame)
+        }
         if ((prevProps.ordersList !== this.props.ordersList) && this.props.isVndcFutures && !this.firstTime) {
             this.rawOrders();
         }
@@ -413,20 +416,22 @@ export default class MobileTradingView extends React.PureComponent {
                     >
                         <IconLoading color="#00C8BC"/>
                     </div>
-                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1 px-1 dragHandleArea">
-                        <ChartOptions
-                            pair={this.props.symbol}
-                            pairConfig={this.props.pairConfig}
-                            isVndcFutures={true}
-                            resolution={this.state.interval}
-                            setResolution={this.handleActiveTime}
-                            isFullScreen={this.props.isFullScreen}
-                            chartType={this.state.priceChartType}
-                            setChartType={this.handleChangeChartType}
-                            showSymbol={this.props.showSymbol}
-                            showIconGuide={this.props.showIconGuide}
-                        />
-                    </div>
+                    {this.props.showTimeFrame &&
+                        <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1 px-1 dragHandleArea">
+                            <ChartOptions
+                                pair={this.props.symbol}
+                                pairConfig={this.props.pairConfig}
+                                isVndcFutures={true}
+                                resolution={this.state.interval}
+                                setResolution={this.handleActiveTime}
+                                isFullScreen={this.props.isFullScreen}
+                                chartType={this.state.priceChartType}
+                                setChartType={this.handleChangeChartType}
+                                showSymbol={this.props.showSymbol}
+                                showIconGuide={this.props.showIconGuide}
+                            />
+                        </div>
+                    }
                     <div
                         id={this.containerId}
                         className={`h-full`}
@@ -467,6 +472,7 @@ MobileTradingView.defaultProps = {
     showSymbol: true,
     showIconGuide: true,
     autosize: true,
+    showTimeFrame: true,
     studies_overrides: {
         "volume.volume.color.0": "#03BBCC",
         "volume.volume.color.1": "#ff0065",
