@@ -73,13 +73,7 @@ export default ({isRealtime = true}) => {
 
     const dispatch = useDispatch()
     const favoritePairRaws = useSelector((state) => state.futures.favoritePairs)
-
-    const favoritePairs = useMemo(() => {
-        if (!favoritePairRaws || favoritePairRaws.length <= 0) {
-            return defaultFavoritePairs
-        }
-        return favoritePairRaws
-    }, [favoritePairRaws])
+    const favoritePairs = !favoritePairRaws || favoritePairRaws.length <= 0 ? defaultFavoritePairs : favoritePairRaws
 
     const router = useRouter()
     const {t} = useTranslation(['common'])
