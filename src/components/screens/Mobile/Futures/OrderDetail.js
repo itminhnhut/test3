@@ -234,6 +234,7 @@ const OrderDetail = ({
                             showSymbol={false}
                             showIconGuide={false}
                             showTimeFrame={false}
+                            autoSave={false}
                         />
                     </div>
                     <div className="px-[16px] bg-onus">

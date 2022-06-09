@@ -143,7 +143,7 @@ export class MobileTradingView extends React.PureComponent {
     loadSavedChart = () => {
         // Load saved chart
         let savedChart = localStorage.getItem(this.getChartKey);
-        if (savedChart) {
+        if (savedChart && this.props.autoSave) {
             try {
                 const symbol = this.props.symbol
                 const data = JSON.parse(savedChart);
@@ -164,7 +164,7 @@ export class MobileTradingView extends React.PureComponent {
     // eslint-disable-next-line class-methods-use-this
     saveChart = () => {
         try {
-            if (this.widget) {
+            if (this.widget && this.props.autoSave) {
                 this.widget.save((data) => {
                     let currentData = localStorage.getItem(this.getChartKey);
                     if (currentData) {
@@ -479,6 +479,7 @@ MobileTradingView.defaultProps = {
     showIconGuide: true,
     autosize: true,
     showTimeFrame: true,
+    autoSave: true,
     studies_overrides: {
         "volume.volume.color.0": "#03BBCC",
         "volume.volume.color.1": "#ff0065",

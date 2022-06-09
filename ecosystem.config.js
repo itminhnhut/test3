@@ -6,7 +6,7 @@ module.exports = {
         interpreter: '/bin/bash',
         instances: 'max',
         exec_mode: 'cluster',
-        autorestart: true,
+        autorestart: false,
         watch: false,
         max_memory_restart: '1G',
         env: {
