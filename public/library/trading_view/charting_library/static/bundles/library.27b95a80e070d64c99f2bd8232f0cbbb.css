@@ -1809,6 +1809,9 @@ html.theme-dark .ui-slider-horizontal{ background-color: #171b29; }
     }
 }
 /* Dialogs */
+html.theme-onus ._tv-dialog {
+    background-color: red;
+}
 ._tv-dialog-shadowbox {
     position: fixed;
     left: 0;
