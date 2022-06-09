@@ -349,7 +349,6 @@ const PlaceOrder = ({
             tp: +tp.toFixed(decimals.decimalScalePrice),
             leverage,
             side,
-            type: getType(type)
         };
         setShowEditSLTP(true);
     };

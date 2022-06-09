@@ -331,7 +331,7 @@ const FuturesEditSLTPVndc = ({
                             'block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
                             {
                                 'left-1/2 -translate-x-1/2': i > 0 && i < dotStep.current,
-                                '-left-1/2 translate-x-[-80%]':  i ===  dotStep.current,
+                                '-left-1/2 translate-x-[-80%]': i === dotStep.current,
                             }
                         )}
                     >
@@ -382,7 +382,7 @@ const FuturesEditSLTPVndc = ({
                         className="text-dominant">{order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x</span>
                 </div>
                 <div className="mb-3 font-medium flex items-center justify-between">
-                    {status === VndcFutureOrderType.Status.PENDING && order?.type !== VndcFutureOrderType.Type.MARKET ?
+                    {status === VndcFutureOrderType.Status.PENDING && order?.type !== VndcFutureOrderType.Type.MARKET && order?.type ?
                         <div
                             className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px] justify-between">
                             <TradingInput
