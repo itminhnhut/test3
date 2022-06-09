@@ -49,7 +49,7 @@ const TradingInput = ({
 
             {isError ? (
                 <div className='absolute right-0 top-0 -translate-y-full z-50 flex flex-col items-center'>
-                    <div className='px-3 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4'>
+                    <div className='px-3 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4 text-xs'>
                         {validator?.msg}
                     </div>
                     <div

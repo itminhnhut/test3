@@ -20,6 +20,9 @@ import { createSelector } from 'reselect';
 import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
+import { getFilter, } from 'src/redux/actions/utils';
+
+import { ExchangeOrderEnum } from 'src/redux/actions/const';
 
 const getPairPrice = createSelector(
     [
@@ -62,7 +65,7 @@ const PlaceOrder = ({
     const marketWatch = useSelector(state => getPairPrice(state, pair));
     const newDataLeverage = useRef(0);
     const [showEditVolume, setShowEditVolume] = useState(false);
-    const [quoteQty, setQuoteQty] = useState(0)
+    const [quoteQty, setQuoteQty] = useState(0);
 
     useEffect(() => {
         if (usdRate) {
@@ -73,7 +76,7 @@ const PlaceOrder = ({
     const getMaxQuoteQty = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
         let maxBuy = 0;
         let maxSell = 0;
-        let _price = price
+        let _price = price;
         if (Math.trunc(availableAsset) > 0) {
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(type) && price) {
                 maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : price);
@@ -121,7 +124,7 @@ const PlaceOrder = ({
         setTp(_tp);
         setSl(_sl);
         if (type === OrderTypes.Market) {
-            onChangeQuoteQty(lastPrice, leverage)
+            onChangeQuoteQty(lastPrice, leverage);
         }
     }, [side, type]);
 
@@ -137,14 +140,15 @@ const PlaceOrder = ({
     }, [firstTime.current]);
 
     const onChangeQuoteQty = (price, leverage) => {
-        const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000;
+        const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
         const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
-        let _quoteQty = +Number(maxQuoteQty * (initPercent / 100)).toFixed(0)
+        let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
+            .toFixed(0);
         _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
         const _size = +((_quoteQty / price) * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
         setSize(_size);
-        setQuoteQty(_quoteQty)
-    }
+        setQuoteQty(_quoteQty);
+    };
 
     useEffect(() => {
         if (firstTime.current) return;
@@ -175,27 +179,23 @@ const PlaceOrder = ({
         let isValid = true,
             msg = null;
 
-        const lotSize =
-            pairConfig?.filters?.find((o) =>
-                [
-                    FuturesOrderTypes.Market,
-                    FuturesOrderTypes.StopMarket,
-                ].includes(type)
-                    ? o?.filterType === 'MARKET_LOT_SIZE'
-                    : o?.filterType === 'LOT_SIZE'
-            ) || {};
-
-        const priceFilter =
-            pairConfig?.filters?.find((o) => o.filterType === 'PRICE_FILTER') ||
-            {};
+        const lotSize = pairConfig?.filters?.find((o) =>
+            [
+                FuturesOrderTypes.Market,
+                FuturesOrderTypes.StopMarket,
+            ].includes(type)
+                ? o?.filterType === 'MARKET_LOT_SIZE'
+                : o?.filterType === 'LOT_SIZE'
+        ) || {};
 
         switch (mode) {
-            // input check
+            // input validator
             case 'quoteQty':
-                const _min = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000
+                const _min = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
                 const _decimals = 0;
                 const _priceInput = type === OrderTypes.Limit ? price : stopPrice;
-                const _max = +Number(availableAsset / (1 / leverage + (0.1 / 100))).toFixed(0);
+                const _max = +Number(availableAsset / (1 / leverage + (0.1 / 100)))
+                    .toFixed(0);
                 const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
                 const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.baseAsset}`;
                 if (quoteQty < +_min) {
@@ -215,6 +215,7 @@ const PlaceOrder = ({
             case 'price':
             case 'stop_loss':
             case 'take_profit':
+                const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, pairConfig);
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
                 const _price = isStop ? stopPrice : mode === 'price' ? price : mode === 'stop_loss' ? sl : tp;
@@ -266,10 +267,10 @@ const PlaceOrder = ({
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
         if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
-            const minQuoteQty = pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional ?? 100000;
+            const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
             const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
             const available = maxQuoteQty >= minQuoteQty;
-            context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount') : t('futures:mobile:balance_insufficient'))
+            context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount') : t('futures:mobile:balance_insufficient'));
             return;
         }
         const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
@@ -298,7 +299,7 @@ const PlaceOrder = ({
         const _price = type === FuturesOrderTypes.Market ?
             (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
             price;
-        const _size = (quoteQty / _price).toFixed(decimals.decimalScaleQtyLimit)
+        const _size = (quoteQty / _price).toFixed(decimals.decimalScaleQtyLimit);
         setSize(+_size);
         setQuoteQty(quoteQty);
         setShowEditVolume(false);
@@ -332,7 +333,7 @@ const PlaceOrder = ({
                     <OrderInput>
                         <div className="flex flex-row justify-between">
                             <OrderTypeMobile type={type} setType={setType}
-                                orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
+                                             orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures}/>
 
                             <OrderLeverage
                                 leverage={leverage} setLeverage={setLeverage}
@@ -347,7 +348,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     {!collapse &&
                         <OrderInput>
-                            <SideOrder side={side} setSide={setSide} />
+                            <SideOrder side={side} setSide={setSide}/>
                         </OrderInput>
                     }
                     <OrderInput data-tut="order-volume">
@@ -384,20 +385,23 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput data-tut="order-sl">
                         <OrderSLMobile
+                            validator={inputValidator('stop_loss')}
                             sl={sl} setSl={setSl} decimals={decimals}
-                            onChangeTpSL={onChangeTpSL} context={context} />
+                            onChangeTpSL={onChangeTpSL} context={context}/>
                     </OrderInput>
                     <OrderInput data-tut="order-tp">
                         <OrderTPMobile
+                            validator={inputValidator('take_profit')}
                             tp={tp} setTp={setTp} decimals={decimals}
-                            onChangeTpSL={onChangeTpSL} context={context} />
+                            onChangeTpSL={onChangeTpSL} context={context}/>
                     </OrderInput>
                     <OrderInput>
                         <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig}
-                            availableAsset={availableAsset} />
+                                           availableAsset={availableAsset}/>
                     </OrderInput>
                     <OrderInput data-tut="order-button">
                         <OrderButtonMobile
+
                             tp={tp} sl={sl} type={type} size={size} price={price}
                             stopPrice={stopPrice} side={side} decimals={decimals}
                             pairConfig={pairConfig} pairPrice={pairPrice}

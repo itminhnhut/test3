@@ -3,11 +3,11 @@ import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next'
 import { getS3Url } from 'redux/actions/utils';
 
-const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, context }) => {
-    const { t } = useTranslation();
+const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context }) => {
     return (
         <TradingInput
             thousandSeparator={true}
+            validator={validator}
             label={'SL'}
             value={sl}
             allowNegative={false}
@@ -26,8 +26,8 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, context }) => {
             inputClassName="text-xs !text-center"
             inputMode="decimal"
             allowedDecimalSeparators={[',', '.']}
-            // onFocus={() => context.onHiddenBottomNavigation(true)}
-            // onBlur={() => context.onHiddenBottomNavigation(false)}
+        // onFocus={() => context.onHiddenBottomNavigation(true)}
+        // onBlur={() => context.onHiddenBottomNavigation(false)}
         />
     );
 };
