@@ -34,7 +34,7 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, 
                 containerClassName="h-[36px]"
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
-                    <div className='relative group select-none'>
+                    <div className='relative group select-none' data-tut="order-adjust-btn">
                         <div className='flex items-center'
                             onMouseDown={() => setIsFocus(true)}
                             onMouseLeave={() => setIsFocus(false)}
