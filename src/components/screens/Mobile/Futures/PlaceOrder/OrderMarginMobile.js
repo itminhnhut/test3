@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import TradingLabel from 'components/trade/TradingLabel';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, formatCurrency } from 'redux/actions/utils';
+import { formatNumber, formatCurrency, emitWebViewEvent } from 'redux/actions/utils';
 import { useSelector, useDispatch } from 'react-redux'
 import { getS3Url, setTransferModal } from 'redux/actions/utils';
 
@@ -11,9 +11,7 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
     const quoteAsset = pairConfig?.quoteAsset ?? '';
 
     const openTransferModal = () => {
-        if(typeof window !== undefined){
-            window.ReactNativeWebView && window.ReactNativeWebView.postMessage('deposit');
-        }
+       emitWebViewEvent('deposit')
     }
 
     const Available = () => {

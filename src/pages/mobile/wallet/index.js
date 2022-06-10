@@ -6,7 +6,7 @@ import {Key, X} from 'react-feather';
 import {PulseLoader} from 'react-spinners';
 import Axios from 'axios';
 import {handleLogin, WalletCurrency,} from 'components/screens/OnusWithdrawGate/helper';
-import {formatNumber, getS3Url} from 'redux/actions/utils';
+import {emitWebViewEvent, formatNumber, getS3Url} from 'redux/actions/utils';
 import {useTranslation} from 'next-i18next';
 import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 import AssetLogo from 'components/wallet/AssetLogo';
@@ -456,7 +456,7 @@ const ExternalWithdrawal = (props) => {
                 <div className="NoticePopup__Content">
                     <Key size={24} color="#03BBCC"/>
                     {t('common:sign_in_to_continue')}
-                    <a href="#" onClick={() => handleLogin(false)}>
+                    <a href="#" onClick={() => emitWebViewEvent('login')}>
                         {t('common:sign_in')}
                     </a>
                 </div>

@@ -8,7 +8,7 @@ import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC, RECORD_TAB } from 'components/scr
 import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders'
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
-import { getLoginUrl } from 'redux/actions/utils'
+import { emitWebViewEvent, getLoginUrl } from 'redux/actions/utils'
 import OrderBalance from 'components/screens/Mobile/Futures/TabOrders/OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
@@ -37,6 +37,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
         }
         rowData.current = row;
         rowData.current?.isTabHistory = isTabHistory;
+        emitWebViewEvent(openDetailModal ? 'nami_futures' : 'order_detail')
         setOpenDetailModal(!openDetailModal);
     }
 

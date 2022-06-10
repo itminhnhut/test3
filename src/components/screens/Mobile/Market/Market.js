@@ -210,7 +210,7 @@ export default ({isRealtime = true}) => {
             return (
                 <div
                     key={item.symbol}
-                    className='flex justify-between mb-4'
+                    className='flex justify-between mb-6'
                     onClick={() => {
                         router.push(`/mobile/futures/${item.symbol}`)
                     }}
@@ -218,14 +218,14 @@ export default ({isRealtime = true}) => {
                     <div className='flex flex-1 items-start'>
                         <AssetLogo assetCode={item.baseAsset} size={30}/>
                         <div className='ml-3'>
-                            <div className='flex items-center text-sm whitespace-nowrap font-semibold leading-5'>
-                                <span>{item.baseAsset}</span>
+                            <div className='flex items-center text-sm whitespace-nowrap  leading-5'>
+                                <span className='font-semibold'>{item.baseAsset}</span>
                                 <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                                     /{item.quoteAsset}
                                 </span>
                             </div>
                             <p className='text-xs font-medium text-txtSecondary leading-4'>
-                                {t('markets:vol')}
+                                {t('markets:vol')}&nbsp;
                                 {formatCurrency(item.volume24h, 1)}
                             </p>
                         </div>
@@ -234,18 +234,17 @@ export default ({isRealtime = true}) => {
                         <div className='flex flex-col font-medium text-right'>
                             <LastPrice price={item.lastPrice}/>
                             <span className='text-xs text-gray-1 leading-4 whitespace-nowrap'>
-                                <span className='mr-1'>$</span>
-                                {formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
+                                ${formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
                             </span>
                         </div>
                         <div className='flex justify-end w-24'>
                             <div
                                 className={cn(
-                                    'h-9 w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium',
+                                    'h-9 w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium border',
                                     {
-                                        'text-red bg-[rgba(229,84,75,0.1)]':
+                                        'text-red border-red':
                                             item.change24h < 0,
-                                        'text-teal bg-[rgba(0,200,188,0.1)]':
+                                        'text-teal border-teal':
                                             item.change24h >= 0,
                                     }
                                 )}
@@ -261,7 +260,7 @@ export default ({isRealtime = true}) => {
 
     return (
         <div className='market-mobile dark:bg-onus'>
-            <div className='flex items-center mt-6 px-4'>
+            <div className='flex items-center mt-12 px-4'>
                 <InputSearch onChange={changeSearch}/>
             </div>
             <div>
@@ -290,7 +289,7 @@ export default ({isRealtime = true}) => {
                                 )}
                                 <span
                                     className={cn(
-                                        'text-sm font-medium ml-2 pb-3 relative',
+                                        `text-sm ml-2 pb-3 relative ${t === tab.active ? 'font-semibold': 'font-medium'}`,
                                         {
                                             'tab-active text-darkBlue dark:text-gray-4':
                                                 t === tab.active,
@@ -304,29 +303,7 @@ export default ({isRealtime = true}) => {
                     })}
                 </div>
             </div>
-            <div className='market-list flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3 bg-white dark:bg-darkBlue-2'>
-                {/*<div className='flex space-x-4'>*/}
-                {/*    {Object.keys(TAGS[tab.active]).map((tag) => {*/}
-                {/*        return (*/}
-                {/*            <Tag*/}
-                {/*                key={tag}*/}
-                {/*                type={*/}
-                {/*                    TAGS[tab.active][tag] === tab.tagActive*/}
-                {/*                        ? 'primary'*/}
-                {/*                        : ''*/}
-                {/*                }*/}
-                {/*                onClick={() => {*/}
-                {/*                    setTab({*/}
-                {/*                        ...tab,*/}
-                {/*                        tagActive: TAGS[tab.active][tag],*/}
-                {/*                    })*/}
-                {/*                }}*/}
-                {/*            >*/}
-                {/*                {tag}*/}
-                {/*            </Tag>*/}
-                {/*        )*/}
-                {/*    })}*/}
-                {/*</div>*/}
+            <div className='market-list flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3 dark:bg-[#192648]'>
                 <div className='flex justify-between mb-4 px-3'>
                     <div className='flex flex-1 space-x-1'>
                         <TitleHeadList
@@ -383,7 +360,7 @@ const InputSearch = ({onChange}) => {
             className='text-txtSecondary dark:text-txtSecondary-dark'
         />
         <input
-            className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-semibold placeholder-text-center'
+            className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-medium placeholder-text-center text-sm'
             onChange={({target: {value: v}}) => handleChange(v?.replace(/[^\w\s]/gi, ""))}
             value={value}
             placeholder={t('markets:search_placeholder')}

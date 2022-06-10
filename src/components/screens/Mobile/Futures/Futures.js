@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import { FUTURES_DEFAULT_SYMBOL } from 'pages/futures';
@@ -6,16 +6,17 @@ import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import { UserSocketEvent } from 'redux/actions/const';
 import { LOCAL_STORAGE_KEY } from 'constants/constants';
-import LayoutMobile from 'components/common/layouts/LayoutMobile';
+import LayoutMobile, { AlertContext } from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
 import { getOrdersList } from 'redux/actions/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
-import { countDecimals } from 'redux/actions/utils';
+import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
+import { useSearchParam } from 'react-use';
+import showNotification from 'utils/notificationService';
 
 const INITIAL_STATE = {
     loading: false,
@@ -39,6 +40,8 @@ const FuturesMobile = () => {
     const [collapse, setCollapse] = useState(false);
     const [scrollSnap, setScrollSnap] = useState(false);
     const [forceRender, setForceRender] = useState(false);
+
+    
 
     const pairConfig = useMemo(
         () => allPairConfigs?.find((o) => o.pair === state.pair),
@@ -65,6 +68,10 @@ const FuturesMobile = () => {
             );
         }
     }, [router]);
+
+   
+
+    
 
     useEffect(() => {
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });

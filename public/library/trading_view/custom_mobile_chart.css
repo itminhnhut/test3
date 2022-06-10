@@ -27,3 +27,8 @@ html ._tv-dialog {
 html ._tv-dialog {
     background: #1c2030;
 }
+
+html .pane-legend-title__details {
+    font-size: 10px!important;
+}
+
