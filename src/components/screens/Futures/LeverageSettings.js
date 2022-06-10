@@ -187,7 +187,7 @@ const FuturesLeverageSettings = ({
                     axis='x'
                     xmax={pairConfig?.leverageConfig?.max}
                     onChange={({ x }) =>
-                        x === 0 ? _setLeverage(1) : _setLeverage(x)
+                        +x === 0 ? _setLeverage(1) : _setLeverage(x)
                     }
                     dots={dots}
                 />

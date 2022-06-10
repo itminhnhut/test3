@@ -191,12 +191,12 @@ const OrderDetail = ({
     return (
         <Portal portalId='PORTAL_MODAL'>
             <div className={classNames(
-                'flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] bg-white dark:bg-onus',
+                'flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] bg-white dark:!bg-onus',
                 { invisible: !isVisible },
                 { visible: isVisible }
             )}
             >
-                <div className='fixed top-0 w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]'
+                <div className='sticky top-0 w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]'
                 >
                     <div className='flex items-center' onClick={() => onClose()}>
                         <ChevronLeft size={24} />
@@ -214,13 +214,14 @@ const OrderDetail = ({
                         displayValue="text"
                         options={listTimeFrame}
                         classNameButton="px-2 py-2"
+                        classNamePanel="rounded-md right-0"
                         label={<div
                             className="text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}
                     />
                 </div>
 
-                <div className="shadow-order_detail py-[10px] dark:bg-onus mt-[50px]">
-                    <div className="min-h-96 max-h-[420px] spot-chart h-full max-w-full">
+                <div className="shadow-order_detail py-[10px] dark:bg-onus ">
+                    <div className="min-h-[350px] max-h-[420px] spot-chart h-full max-w-full">
                         <MobileTradingView
                             t={t}
                             containerId="nami-mobile-detail-tv"
@@ -237,92 +238,91 @@ const OrderDetail = ({
                         />
                     </div>
                     <div className="px-[16px] bg-onus">
-                        {isTabHistory ?
-                            <div className="py-[24px]">
-                                <div className="font-semibold mb-[6px]">{t('futures:mobile:order_details')}</div>
-                                <Row>
-                                    <Label>ID</Label>
-                                    <Span>{order?.displaying_id}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:leverage:leverage')}</Label>
-                                    <Span>{order?.leverage}x</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:realized_pnl')}</Label>
-                                    <Span>{formatNumber(String(order?.profit).replace(',', ''), 0, 0, true)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:order_table:volume')}</Label>
-                                    <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${formatNumber(order?.quantity, 8)} ${pairConfig?.baseAsset})`}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:margin')}</Label>
-                                    <Span>{formatNumber(order?.margin, assetConfig?.swap?.assetDigit ?? 0)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:open_time')}</Label>
-                                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:order_table:open_price')}</Label>
-                                    <Span>{formatNumber(order?.open_price, 0)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:close_time')}</Label>
-                                    <Span>{formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:order_table:close_price')}</Label>
-                                    <Span>{formatNumber(order?.close_price, 0)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:reason_close')}</Label>
-                                    <Span>{renderReasonClose(order)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:take_profit')}</Label>
-                                    <Span>{formatNumber(order?.tp)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:stop_loss')}</Label>
-                                    <Span>{formatNumber(order?.sl)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:open_fee')}</Label>
-                                    <Span>{renderFee(order, 'place_order')}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:close_fee')}</Label>
-                                    <Span>{renderFee(order, 'close_order')}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:liquidate_fee')}</Label>
-                                    <Span>{renderFee(order, 'liquidate_order')}</Span>
-                                </Row>
-                                <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                    arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
-                                    overridePosition={(e) => ({ left: 0, top: e.top })}
-                                >
-                                    <div>{t('futures:mobile:info_swap_fee')}</div>
-                                </Tooltip>
-                                <Row>
-                                    <Label className="flex">
-                                        {t('futures:mobile:swap_fee')}
-                                        <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
-                                            <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
-                                        </div>
-                                    </Label>
-                                    <Span>{renderFee(order, 'swap')}</Span>
-                                </Row>
-                            </div>
-                            :
+                        {!isTabHistory &&
                             <OrderOpenDetail order={order} decimal={decimal} isDark={isDark}
                                 pairConfig={pairConfig} onClose={onClose}
                                 getAdjustmentDetail={getAdjustmentDetail}
                                 changeSLTP={changeSLTP}
                             />
                         }
+                        <div className="py-[24px]">
+                            <div className="font-semibold mb-[6px]">{t('futures:mobile:order_details')}</div>
+                            <Row>
+                                <Label>ID</Label>
+                                <Span>{order?.displaying_id}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:leverage:leverage')}</Label>
+                                <Span>{order?.leverage}x</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:mobile:realized_pnl')}</Label>
+                                <Span>{formatNumber(String(order?.profit).replace(',', ''), 0, 0, true)}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:order_table:volume')}</Label>
+                                <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${formatNumber(order?.quantity, 8)} ${pairConfig?.baseAsset})`}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:margin')}</Label>
+                                <Span>{formatNumber(order?.margin, assetConfig?.swap?.assetDigit ?? 0)}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:mobile:open_time')}</Label>
+                                <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:order_table:open_price')}</Label>
+                                <Span>{formatNumber(order?.open_price, 0)}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:mobile:close_time')}</Label>
+                                <Span>{formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:order_table:close_price')}</Label>
+                                <Span>{formatNumber(order?.close_price, 0)}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:mobile:reason_close')}</Label>
+                                <Span>{renderReasonClose(order)}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:take_profit')}</Label>
+                                <Span>{formatNumber(order?.tp)}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:mobile:stop_loss')}</Label>
+                                <Span>{formatNumber(order?.sl)}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:mobile:open_fee')}</Label>
+                                <Span>{renderFee(order, 'place_order')}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:mobile:close_fee')}</Label>
+                                <Span>{renderFee(order, 'close_order')}</Span>
+                            </Row>
+                            <Row>
+                                <Label>{t('futures:mobile:liquidate_fee')}</Label>
+                                <Span>{renderFee(order, 'liquidate_order')}</Span>
+                            </Row>
+                            <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
+                                overridePosition={(e) => ({ left: 0, top: e.top })}
+                            >
+                                <div>{t('futures:mobile:info_swap_fee')}</div>
+                            </Tooltip>
+                            <Row>
+                                <Label className="flex">
+                                    {t('futures:mobile:swap_fee')}
+                                    <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
+                                        <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                                    </div>
+                                </Label>
+                                <Span>{renderFee(order, 'swap')}</Span>
+                            </Row>
+                        </div>
                         <div className="pb-2.5">
                             <div
                                 className="font-semibold mb-[6px]">{t('futures:order_history:adjustment_history')}</div>
@@ -331,29 +331,25 @@ const OrderDetail = ({
                                     <div key={index}
                                         className="border-b border-divider dark:border-divider-dark last:border-0">
                                         <Row>
-                                            <Label isTabOpen={!isTabHistory}>{t('common:time')}</Label>
-                                            <Span
-                                                isTabOpen={!isTabHistory}>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                                            <Label>{t('common:time')}</Label>
+                                            <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
                                         </Row>
                                         {item?.metadata?.modify_tp &&
                                             <Row>
-                                                <Label isTabOpen={!isTabHistory}>{t('futures:take_profit')}</Label>
-                                                <Span
-                                                    isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'take_profit')}</Span>
+                                                <Label>{t('futures:take_profit')}</Label>
+                                                <Span>{renderModify(item?.metadata, 'take_profit')}</Span>
                                             </Row>
                                         }
                                         {item?.metadata?.modify_sl &&
                                             <Row>
-                                                <Label isTabOpen={!isTabHistory}>{t('futures:stop_loss')}</Label>
-                                                <Span
-                                                    isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'stop_loss')}</Span>
+                                                <Label>{t('futures:stop_loss')}</Label>
+                                                <Span>{renderModify(item?.metadata, 'stop_loss')}</Span>
                                             </Row>
                                         }
                                         {item?.metadata?.modify_price &&
                                             <Row>
-                                                <Label isTabOpen={!isTabHistory}>{t('futures:price')}</Label>
-                                                <Span
-                                                    isTabOpen={!isTabHistory}>{renderModify(item?.metadata, 'price')}</Span>
+                                                <Label>{t('futures:price')}</Label>
+                                                <Span>{renderModify(item?.metadata, 'price')}</Span>
                                             </Row>
                                         }
                                     </div>

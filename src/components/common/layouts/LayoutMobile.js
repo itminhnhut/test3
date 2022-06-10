@@ -11,7 +11,7 @@ import { NavBarBottomShadow } from '../NavBar/NavBar';
 import BottomNavBar from 'components/screens/Mobile/BottomNavBar'
 import Head from 'next/head'
 import dynamic from 'next/dynamic';
-import AlertModal from 'components/screens/Mobile/AlertModal'
+import AlertModal from 'components/screens/Mobile/AlertModal';
 export const AlertContext = createContext(null);
 
 const LayoutMobile = ({
@@ -49,14 +49,16 @@ const LayoutMobile = ({
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
         document.body.classList.add('hidden-scrollbar');
+        document.body.classList.add('!bg-onus');
         setTimeout(() => {
             if (window.fcWidget) {
                 window.fcWidget.hide()
                 window.fcWidget.close()
             }
         }, 1000);
-        return ()=>{
+        return () => {
             document.body.classList.remove('hidden-scrollbar')
+            document.body.classList.remove('bg-onus');
         }
     }, [])
 
@@ -73,7 +75,7 @@ const LayoutMobile = ({
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
             </Head>
             <div
-                className={`mal-layouts flex flex-col font-inter bg-onus ${light ? 'mal-layouts___light' : ''
+                className={`mal-layouts flex flex-col font-inter !bg-onus ${light ? 'mal-layouts___light' : ''
                     } ${dark ? 'mal-layouts___dark' : ''}`}
                 style={
                     state.isDrawer
