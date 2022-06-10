@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import { useTranslation } from 'next-i18next'
-import { formatNumber, getLoginUrl } from 'redux/actions/utils';
+import { emitWebViewEvent, formatNumber, getLoginUrl } from 'redux/actions/utils';
 import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
 import { getType, getPrice } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc'
 import { placeFuturesOrder } from 'redux/actions/futures';
@@ -23,10 +23,7 @@ const OrderButtonMobile = ({
 
     const onHandleSave = () => {
         if (!isAuth) {
-            window.open(
-                getLoginUrl('sso', 'login'),
-                '_self'
-            )
+            emitWebViewEvent('deposit')
             return;
         }
         if (isError) return;

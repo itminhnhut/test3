@@ -248,7 +248,10 @@
         "close_now": "Đóng ngay",
         "back_to_list": "Quay lại",
         "modify": "Chỉnh sửa",
-        "info_swap_fee": "Với mỗi lệnh Futures đang mở, Nami Exchange áp dụng mức phí duy trì lệnh là 0.002% trên khối lượng giao dịch với mỗi giờ duy trì lệnh."
+        "info_swap_fee": "Với mỗi lệnh Futures đang mở, Nami Exchange áp dụng mức phí duy trì lệnh là 0.002% trên khối lượng giao dịch với mỗi giờ duy trì lệnh.",
+        "invalid_session_title": "Phiên làm việc hết hạn",
+        "invalid_session_content": "Phiên làm việc của bạn đã hết hạn, vui lòng đăng nhập lại để sử dụng Nami Exchange",
+        "invalid_session_button": "Đăng nhập ngay"
     },
     "orders_history": "Lịch sử lệnh",
     "minimum_leverage": "Đòn bẩy tối thiểu",

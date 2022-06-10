@@ -14,7 +14,7 @@ const AlertModal = forwardRef((props, ref) => {
         note: '',
     })
     const actions = useRef({
-        onConfirm: null, onCancel: null
+        onConfirm: null, onCancel: null,
     })
 
     useImperativeHandle(ref, () => ({
@@ -22,6 +22,7 @@ const AlertModal = forwardRef((props, ref) => {
     }))
 
     const onShow = (type, title, messages, note, onConfirm, onCancel, _options) => {
+        console.log('__ check arguments', {type, title, messages, note, onConfirm, onCancel, _options} );
         options.current = { type, title, messages, note, ..._options };
         actions.current.onConfirm = onConfirm;
         actions.current.onCancel = onCancel;
@@ -59,6 +60,7 @@ const AlertModal = forwardRef((props, ref) => {
 
     if (!options.current.title) return null;
 
+    console.log('__ chekc options', options);
 
     return (
         <Modal isVisible={isVisible} onBackdropCb={onCancel}
@@ -75,21 +77,22 @@ const AlertModal = forwardRef((props, ref) => {
             <div className='text-sm text-gray-1 mb-[30px] text-center'>
                 {options.current.note}
             </div>
-            {actions.current.onConfirm &&
+            {actions.current?.onConfirm &&
                 <Button
-                    title={t('futures:leverage:confirm')}
+                    title={options.current?.confirmTitle || t('futures:leverage:confirm')}
                     type="primary"
                     className={`!h-[44px] !text-sm !font-semibold`}
                     componentType="button"
                     onClick={onConfirm}
                 />
             }
-            <Button
-                title={t('common:close')}
+            {!options.current?.hideCloseButton && <Button
+                title={options.current.closeTitle || t('common:close')}
                 className={`mt-[8px] !h-[44px] !text-sm !font-semibold`}
                 componentType="button"
                 onClick={onCancel}
             />
+            }
         </Modal>
     );
 });

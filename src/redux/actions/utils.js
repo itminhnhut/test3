@@ -73,8 +73,8 @@ export const formatCurrency = (n, digits = 4) => {
 export function eToNumber(value) {
     let sign = ''
 
-    ;(value += '').charAt(0) === '-' &&
-        ((value = value?.toString().substring(1)), (sign = '-'))
+        ; (value += '').charAt(0) === '-' &&
+            ((value = value?.toString().substring(1)), (sign = '-'))
     let arr = value?.toString().split(/[e]/gi)
     if (arr.length < 2) return sign + value
     let dot = (0.1).toLocaleString().substr(1, 1),
@@ -90,8 +90,8 @@ export function eToNumber(value) {
                 ? s + '0'.repeat(L)
                 : r()
             : pos <= 0
-            ? '0' + dot + '0'.repeat(Math.abs(pos)) + s
-            : r()
+                ? '0' + dot + '0'.repeat(Math.abs(pos)) + s
+                : r()
     L = w.split(dot)
     if ((L[0] === 0 && L[1] === 0) || (+w === 0 && +s === 0)) w = 0 //** added 9/10/2021
     return sign + w
@@ -277,15 +277,13 @@ export function formatNumber(
     forceDigits = 0,
     acceptNegative = false
 ) {
-    const defaultValue = `0${
-        forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''
-    }`
+    const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''
+        }`
     if (isNil(value)) return defaultValue
     if (Math.abs(+value) < 1e-9) return defaultValue
     if (!acceptNegative && +value < 0) return defaultValue
     return numeral(+value).format(
-        `0,0.${'0'.repeat(forceDigits)}${
-            digits > 0 ? `[${'0'.repeat(digits)}]` : ''
+        `0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''
         }`,
         Math.floor
     )
@@ -789,13 +787,11 @@ export function walletLinkBuilder(walletType, action, payload) {
     if (walletType === WalletType.SPOT) {
         switch (action) {
             case EXCHANGE_ACTION.DEPOSIT:
-                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${
-                    payload?.type || 'crypto'
-                }&asset=${payload?.asset || 'USDT'}`
+                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'
+                    }&asset=${payload?.asset || 'USDT'}`
             case EXCHANGE_ACTION.WITHDRAW:
-                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${
-                    payload?.type || 'crypto'
-                }&asset=${payload?.asset || 'USDT'}`
+                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'
+                    }&asset=${payload?.asset || 'USDT'}`
             default:
                 return ''
         }
@@ -915,4 +911,11 @@ export const setBottomTab = (tab) => async (dispatch) => {
         type: SET_BOTTOM_NAVIGATION,
         payload: tab,
     })
+}
+
+
+export const emitWebViewEvent = (event) => {
+    if (typeof window !== undefined) {
+        window.ReactNativeWebView && window.ReactNativeWebView.postMessage(event);
+    }
 }

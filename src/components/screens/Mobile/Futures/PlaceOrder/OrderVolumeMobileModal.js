@@ -3,7 +3,7 @@ import Button from 'components/common/Button';
 import Modal from 'components/common/ReModal';
 import { Minus, Plus, X } from 'react-feather';
 import Slider from 'components/trade/InputSlider';
-import { formatNumber, formatCurrency } from 'redux/actions/utils';
+import { formatNumber, formatCurrency, emitWebViewEvent } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
@@ -52,7 +52,7 @@ const OrderVolumeMobileModal = (props) => {
     }, [volume])
 
     const onRedirect = () => {
-        window.ReactNativeWebView && window.ReactNativeWebView.postMessage('deposit');
+        emitWebViewEvent('deposit')
     }
 
     const available = maxQuoteQty >= minQuoteQty;

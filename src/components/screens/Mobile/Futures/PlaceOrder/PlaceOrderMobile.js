@@ -10,7 +10,7 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import OrderTypeMobile from './OrderTypeMobile';
 import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
-import { formatNumber } from 'redux/actions/utils';
+import { emitWebViewEvent, formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import OrderCollapse from './OrderCollapse';
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
@@ -101,6 +101,29 @@ const PlaceOrder = ({
         return isAuth ? Math.min(_maxConfig, _maxQty) : _maxConfig;
     };
 
+
+    useEffect(() => {
+        if (typeof window !== undefined) {
+            const search = new URLSearchParams(window.location.search)
+            if(search && search.get('need_login') ==='true' && context?.alert){
+                console.log('__ check alert', context.alert);
+                context.alert.show('warning',
+                    t('futures:mobile.invalid_session_title'),
+                    t('futures:mobile.invalid_session_content'),
+                    null,
+                    () => {
+                        emitWebViewEvent('login');
+                    },
+                    null, {
+                        confirmTitle: t('futures:mobile.invalid_session_button'),
+                        hideCloseButton: true
+                    }
+                )
+            }
+        }
+    }, [context.alert]);
+
+    
     useEffect(() => {
         if (firstTime.current && (marketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0)) {
             firstTime.current = false;
