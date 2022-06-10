@@ -186,6 +186,8 @@ const OrderDetail = ({
         return listTimeFrame.find(item => item.value === resolution)?.text
     }, [resolution])
 
+    const orderList = useMemo(() => [order], [order])
+
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red';
     return (
         <Portal portalId='PORTAL_MODAL'>
@@ -227,7 +229,7 @@ const OrderDetail = ({
                             pairConfig={pairConfig}
                             initTimeFrame={resolution}
                             isVndcFutures={true}
-                            ordersList={[order]}
+                            ordersList={orderList}
                             theme={THEME_MODE.DARK}
                             mode={ChartMode.FUTURES}
                             showSymbol={false}

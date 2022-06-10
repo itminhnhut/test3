@@ -7,7 +7,6 @@ import {widget} from '../../TradingView/charting_library/charting_library.min';
 import Datafeed from '../api';
 import {ChartMode} from 'redux/actions/const';
 import {VndcFutureOrderType} from '../../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import {isMobile} from 'react-device-detect';
 import ChartOptions from "components/TVChartContainer/MobileTradingView/ChartOptions";
 import classNames from "classnames";
 import IndicatorBars, {
@@ -91,8 +90,9 @@ export class MobileTradingView extends React.PureComponent {
         if (prevProps.initTimeFrame !== this.props.initTimeFrame) {
             this.handleActiveTime(this.props.initTimeFrame)
         }
+
         if ((prevProps.ordersList !== this.props.ordersList) && this.props.isVndcFutures && !this.firstTime) {
-            // this.rawOrders();
+            this.rawOrders();
         }
     }
 
