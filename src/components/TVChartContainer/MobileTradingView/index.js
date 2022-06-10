@@ -55,7 +55,7 @@ export class MobileTradingView extends React.PureComponent {
 
 
     componentDidMount() {
-        this.initWidget(this.props.symbol);
+        this.initWidget(this.props.symbol, this.props.initTimeFrame);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -65,6 +65,7 @@ export class MobileTradingView extends React.PureComponent {
         ) {
             this.widget.remove();
             this.oldOrdersList = [];
+            console.log(this.state.interval, '11111111111111111')
             this.initWidget(this.props.symbol, this.state.interval);
         }
 
@@ -86,6 +87,7 @@ export class MobileTradingView extends React.PureComponent {
                 this.theme = newTheme;
             }
         }
+
         if (prevProps.initTimeFrame !== this.props.initTimeFrame) {
             this.handleActiveTime(this.props.initTimeFrame)
         }
@@ -291,6 +293,7 @@ export class MobileTradingView extends React.PureComponent {
     initWidget = (symbol, interval) => {
         if (!symbol) return;
 
+        console.log(interval, '22222222222222222')
         const datafeed = new Datafeed(this.props.mode || ChartMode.SPOT)
         const widgetOptions = {
             symbol,
@@ -423,20 +426,20 @@ export class MobileTradingView extends React.PureComponent {
                         <IconLoading color="#00C8BC"/>
                     </div>
                     {this.props.showTimeFrame &&
-                        <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1 px-1 dragHandleArea">
-                            <ChartOptions
-                                pair={this.props.symbol}
-                                pairConfig={this.props.pairConfig}
-                                isVndcFutures={true}
-                                resolution={this.state.interval}
-                                setResolution={this.handleActiveTime}
-                                isFullScreen={this.props.isFullScreen}
-                                chartType={this.state.priceChartType}
-                                setChartType={this.handleChangeChartType}
-                                showSymbol={this.props.showSymbol}
-                                showIconGuide={this.props.showIconGuide}
-                            />
-                        </div>
+                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1 px-1 dragHandleArea">
+                        <ChartOptions
+                            pair={this.props.symbol}
+                            pairConfig={this.props.pairConfig}
+                            isVndcFutures={true}
+                            resolution={this.state.interval}
+                            setResolution={this.handleActiveTime}
+                            isFullScreen={this.props.isFullScreen}
+                            chartType={this.state.priceChartType}
+                            setChartType={this.handleChangeChartType}
+                            showSymbol={this.props.showSymbol}
+                            showIconGuide={this.props.showIconGuide}
+                        />
+                    </div>
                     }
                     <div
                         id={this.containerId}
