@@ -66,7 +66,7 @@ export default ({isRealtime = true}) => {
     const [data, setData] = useState([])
     const [sort, setSort] = useState({
         field: 'change24hRaw',
-        direction: 'desc',
+        direction: 'asc',
     })
     const [search, setSearch] = useState('')
     const [referencePrice, setReferencePrice] = useState([])
