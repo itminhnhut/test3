@@ -44,7 +44,8 @@ const PlaceOrder = ({
     availableAsset,
     pairConfig,
     isVndcFutures,
-    collapse
+    collapse,
+    onBlurInput
 }) => {
     const lastPrice = pairPrice?.lastPrice;
     const usdRate = useSelector((state) => state.utils.usdRate);
@@ -167,7 +168,7 @@ const PlaceOrder = ({
         let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
             .toFixed(0);
         _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
-        const _size = +((_quoteQty / price) * initPercent / 100).toFixed(decimals.decimalScaleQtyLimit);
+        const _size = +((_quoteQty / price) * initPercent / 100);
         setSize(_size);
         setQuoteQty(_quoteQty);
     };
@@ -350,6 +351,7 @@ const PlaceOrder = ({
     }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage, quoteQty]);
 
     const onChangeTpSL = () => {
+        if (!isAuth) return;
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
         if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
@@ -359,6 +361,7 @@ const PlaceOrder = ({
             context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount') : t('futures:mobile:balance_insufficient'));
             return;
         }
+        onBlurInput();
         const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
         rowData.current = {
             fee: 0,
@@ -385,7 +388,7 @@ const PlaceOrder = ({
         const _price = type === FuturesOrderTypes.Market ?
             (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
             price;
-        const _size = (quoteQty / _price).toFixed(decimals.decimalScaleQtyLimit);
+        const _size = (quoteQty / _price);
         setSize(+_size);
         setQuoteQty(quoteQty);
         setShowEditVolume(false);
@@ -474,13 +477,17 @@ const PlaceOrder = ({
                         <OrderSLMobile
                             validator={inputValidator('stop_loss')}
                             sl={sl} setSl={setSl} decimals={decimals}
-                            onChangeTpSL={onChangeTpSL} context={context} />
+                            onChangeTpSL={onChangeTpSL} context={context}
+                            isAuth={isAuth}
+                        />
                     </OrderInput>
                     <OrderInput data-tut="order-tp">
                         <OrderTPMobile
                             validator={inputValidator('take_profit')}
                             tp={tp} setTp={setTp} decimals={decimals}
-                            onChangeTpSL={onChangeTpSL} context={context} />
+                            onChangeTpSL={onChangeTpSL} context={context}
+                            isAuth={isAuth}
+                        />
                     </OrderInput>
                     <OrderInput>
                         <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig}

@@ -83,6 +83,7 @@ const ChartOptions = ({
                     displayValue="text"
                     options={listTimeFrame}
                     classNameButton="px-2 py-2"
+                    classNamePanel="rounded-md"
                     label={<div
                         className="text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}
                 />
@@ -93,6 +94,7 @@ const ChartOptions = ({
                     displayValue="text"
                     options={listChartType}
                     classNameButton="px-2 py-2"
+                    classNamePanel="rounded-md left-[-20px]"
                     label={<Svg>{labelCandle.icon}</Svg>}
                 />
                 <FavouriteButton pair={pair} pairConfig={pairConfig}/>

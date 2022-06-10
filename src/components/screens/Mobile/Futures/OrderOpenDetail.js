@@ -96,7 +96,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     }, [data, oldOrder.current])
 
     return (
-        <div className="py-[24px]">
+        <div className="p-[24px] mx-[-24px] border-b dark:border-divider-dark">
             {showEditSLTP &&
                 <FuturesEditSLTPVndc
                     isVisible={showEditSLTP}

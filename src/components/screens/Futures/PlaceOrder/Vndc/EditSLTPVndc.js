@@ -161,24 +161,24 @@ const FuturesEditSLTPVndc = ({
             .split('.')[1]?.length || 0;
     };
 
-    const onChangePercent = (x, xmax, key) => {
-        const size = 100 / dotStep.current
-        let index = 0;
-        if (x >= 1 && x < 2) {
-            index = 1
-        } else if (x >= 2 && x < 4) {
-            index = 2
-        } else if (x >= 3 && x < 6) {
-            index = 3
-        } else if (x >= 5 && x < 7) {
-            index = 4
-        } else if (x >= 6 && x < 9) {
-            index = 5
-        } else if (x >= 8) {
-            index = 6
+    const arrDot = useMemo(() => {
+        const size = 100 / dotStep.current;
+        const arr = [];
+        for (let i = 0; i <= dotStep.current; i++) {
+            arr.push(i * size)
         }
-        // index * size / xmax
-        onSetValuePercent(x, key)
+        return arr
+    }, [dotStep.current])
+
+    const onChangePercent = (x, xmax, key) => {
+        const _x = arrDot.reduce((prev, curr) => {
+            let i = 0;
+            if (Math.abs(curr - x) < 2 || Math.abs(prev - x) < 2) {
+                i = Math.abs(curr - x) < Math.abs(prev - x) ? curr : prev;
+            }
+            return i;
+        });
+        onSetValuePercent(_x ? _x : x, key)
     }
 
     const onSetValuePercent = (x, key) => {
@@ -233,17 +233,22 @@ const FuturesEditSLTPVndc = ({
         const balance = _avlb?.value;
         const result = 0;
         if (tab === 0) {
+            //+- 10% -> total 20%
             if (getX) return (getX / balance) * 100 * 5;
             const negative = -(50 - x) < 0
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 : -(50 - x) / 5;
             result = balance * (formatX / 100);
         }
         if (tab === 1) {
-            if (getX) return ((getX - data.price) / data.price) * 100 * 5 * 2;
-            const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / 5 / 2 : -(50 - x) / 5 / 2;
+            //+- 40% -> total 80%
+            const percentPrice = 100 / 40 / 2;
+            const maxPrice = (data.price * percent / 100) + data.price;
+            if (getX) return ((getX - data.price) / data.price) * 100 * percentPrice;
+            const formatX = x === 50 ? 0 : x > 50 ? (x - 50) / percentPrice : -(50 - x) / percentPrice;
             result = data.price + (data.price * (formatX / 100))
         }
         if (tab === 2) {
+            //+- 100% -> total 200%
             if (getX) return getX / 2;
             const formatX = x === 50 ? 0 : x > 50 ? (x - 50) * 2 : -(50 - x) * 2;
             result = formatX.toFixed(0)
@@ -256,17 +261,21 @@ const FuturesEditSLTPVndc = ({
         const balance = _avlb?.value;
         const result = 0;
         if (tab === 0) {
+            //+- 10% -> total 20%
             const negative = -(50 - index) < 0
             const formatX = index === 50 ? 0 : index > 50 ? (index - 50) / 5 : (50 - index) / 5;
             result = index === 50 ? 0 : (negative ? '-' : '') + formatCash(balance * (formatX / 100));
         }
         if (tab === 1) {
-            const negative = -(50 - index) < 0
-            const formatX = index === 50 ? 0 : index > 50 ? (index - 50) / 5 / 2 : (50 - index) / 5 / 2;
+            //+- 40% -> total 80%
+            const percent = 100 / 40 / 2;
+            const negative = -(50 - index) < 0;
+            const formatX = index === 50 ? 0 : index > 50 ? (index - 50) / percent : (50 - index) / percent
             const _price = data.price + (negative ? -data.price : data.price) * (formatX / 100);
             result = formatCash(_price)
         }
         if (tab === 2) {
+            //+- 100% -> total 200%
             const negative = -(50 - index) < 0
             const formatX = index === 50 ? 0 : index > 50 ? (index - 50) * 2 : -(50 - index) * 2;
             result = formatX.toFixed(0)

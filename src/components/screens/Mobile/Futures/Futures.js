@@ -133,6 +133,17 @@ const FuturesMobile = () => {
         }
     }, [state.pair, typeof window])
 
+    const onBlurInput = () => {
+        const offset = document.activeElement.getBoundingClientRect()
+        if (offset && offset?.top < 10) {
+            document.activeElement.blur();
+        }
+    }
+
+    const onScroll = (e) => {
+        onBlurInput();
+    }
+
     return (
         <>
             <SocketLayout pair={state.pair} pairConfig={pairConfig}>
@@ -143,7 +154,7 @@ const FuturesMobile = () => {
                 />
             </SocketLayout>
             <LayoutMobile>
-                <Container id="futures-mobile">
+                <Container id="futures-mobile" onScroll={onScroll}>
                     <Section className="form-order bg-onus"
                         style={{ ...futuresScreen.style }}>
                         <ChartMobile
@@ -161,7 +172,7 @@ const FuturesMobile = () => {
                                 decimals={decimals} side={side}
                                 pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
                                 pairConfig={pairConfig} isVndcFutures={isVndcFutures}
-                                collapse={collapse}
+                                collapse={collapse} onBlurInput={onBlurInput}
                             />
                         </SocketLayout>
                     </Section>
