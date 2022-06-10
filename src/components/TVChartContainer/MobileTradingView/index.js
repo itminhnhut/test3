@@ -40,6 +40,7 @@ export class MobileTradingView extends React.PureComponent {
     drawnOrder = {};
     drawnSl = {};
     drawnTp = {};
+    drawnProfit = {};
     intervalSaveChart = null;
     timer = null;
     firstTime = true;
@@ -91,7 +92,7 @@ export class MobileTradingView extends React.PureComponent {
             this.handleActiveTime(this.props.initTimeFrame)
         }
         if ((prevProps.ordersList !== this.props.ordersList) && this.props.isVndcFutures && !this.firstTime) {
-            this.rawOrders();
+            // this.rawOrders();
         }
     }
 
@@ -219,28 +220,102 @@ export class MobileTradingView extends React.PureComponent {
     }
 
     async newOrder(displayingId, order) {
+        const isMatched = !(order.status === 0 || (order.status === 2 && order.openPrice == null))
         try {
             const color = this.getOrderType(order).startsWith('BUY') ? colors.teal : colors.red2;
             const colorSl = colors.red2;
             const colorTp = colors.teal;
-            const line = this.widget.chart().createOrderLine().onModify(() => {
-            }).setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} ${this.getOrderType(order)} ${formatNumber(order?.order_value)} (VNDC)`).setPrice(order?.open_price || order?.price).setQuantity(null).setTooltip(
-                `${this.getOrderType(order)} ${order?.quantity} ${order?.symbol} at price ${order?.order_value} (VNDC)`).setEditable(false).setLineColor(color).setBodyBorderColor(color).setBodyTextColor(color).setQuantityBackgroundColor(color).setQuantityBorderColor(color).setLineLength(120).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setCancelButtonBorderColor('rgb(255,0,0)').setCancelButtonBackgroundColor('rgb(0,255,0)').setCancelButtonIconColor('rgb(0,0,255)');
+            const line = this.widget
+                .chart()
+                .createOrderLine()
+                .setText(`# ${this.getTicket(order)} ${this.getOrderType(order)}`)
+                .setPrice(order?.open_price || order?.price)
+                .setQuantity(null)
+                .setEditable(false)
+                .setLineColor(color)
+                .setBodyTextColor(isMatched ? 'rgb(255,255,255)' : color)
+                .setQuantityBackgroundColor('rgba(0,0,0,0)')
+                .setQuantityBorderColor('rgba(0,0,0,0)')
+                .setQuantityTextColor('rgb(0, 0, 0)')
+                .setLineLength(120)
+                .setLineWidth(2)
+                .setBodyBackgroundColor(isMatched ? color : 'rgb(255,255,255)')
+                .setBodyBorderColor(color)
+                .setCancelButtonBorderColor('rgb(255,0,0)')
+                .setCancelButtonBackgroundColor('rgb(0,255,0)')
+                .setCancelButtonIconColor('rgb(0,0,255)');
             line.setBodyFont(this.toNormalText(line));
             this.drawnOrder[displayingId] = line;
             if (order.sl > 0) {
-                const lineSl = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} SL`).setPrice(order.sl).setQuantity(null).setEditable(false).setLineColor(colorSl).setBodyTextColor(colorSl).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
+                const lineSl = this.widget
+                    .chart()
+                    .createOrderLine()
+                    .setText(`# ${displayingId} SL`)
+                    .setPrice(order.sl)
+                    .setQuantity(null)
+                    .setEditable(false)
+                    .setLineColor(colorSl)
+                    .setBodyTextColor(colorSl)
+                    .setBodyBackgroundColor('rgba(0,0,0,0)')
+                    .setBodyBorderColor('rgba(0,0,0,0)')
+                    .setLineLength(100)
+                    .setLineWidth(1)
+                    .setLineStyle(0);
                 lineSl.setBodyFont(this.toNormalText(lineSl));
                 this.drawnSl[displayingId] = lineSl;
             }
             if (order.tp > 0) {
-                const lineTp = this.widget.chart().createOrderLine().setText(`${!isMobile ? ('#' + this.getTicket(order)) : ''} TP`).setPrice(order.tp).setQuantity(null).setEditable(false).setLineColor(colorTp).setBodyTextColor(colorTp).setBodyBackgroundColor('rgba(0,0,0,0)').setBodyBorderColor('rgba(0,0,0,0)').setLineLength(100).setLineStyle(1);
+                const lineTp = this.widget
+                    .chart()
+                    .createOrderLine()
+                    .setText(`# ${displayingId} TP`)
+                    .setPrice(order.tp)
+                    .setQuantity(null)
+                    .setEditable(false)
+                    .setLineColor(colorTp)
+                    .setBodyTextColor(colorTp)
+                    .setBodyBackgroundColor('rgba(0,0,0,0)')
+                    .setBodyBorderColor('rgba(0,0,0,0)')
+                    .setLineLength(100)
+                    .setLineWidth(1)
+                    .setLineStyle(0);
                 lineTp.setBodyFont(this.toNormalText(lineTp));
                 this.drawnTp[displayingId] = lineTp;
             }
+
+
+            if (this.props.renderProfit) {
+                const color = order.profit > 0 ? colors.teal : colors.red2;
+
+                if (order.close_price != null && (order.profit != null || order.profitToDraw != null)) {
+                    const lineProfit = this.widget
+                        .chart()
+                        .createOrderLine()
+                        .setText(`# ${displayingId} Profit: ${order.profit.toFixed(4)}`)
+                        .setQuantity(null)
+                        .setPrice(order.close_price)
+                        .setEditable(false)
+                        .setLineColor(color)
+                        .setBodyTextColor('rgba(255,255,255,1)')
+                        .setQuantityBackgroundColor('rgba(0,0,0,0)')
+                        .setQuantityBorderColor('rgba(0,0,0,0)')
+                        .setQuantityTextColor('rgb(0, 0, 0)')
+                        .setLineLength(120)
+                        .setBodyBackgroundColor('rgb(187,187,187)')
+                        .setBodyBorderColor('rgb(187,187,187)')
+                        .setCancelButtonBorderColor('rgb(255,0,0)')
+                        .setCancelButtonBackgroundColor('rgb(0,255,0)')
+                        .setLineWidth(2)
+                        .setLineStyle(0)
+                        .setCancelButtonIconColor('rgb(0,0,255)');
+                    this.drawnProfit[displayingId] = lineProfit;
+                    lineProfit.setBodyFont(this.toNormalText(lineProfit));
+                }
+            }
+
             return line;
         } catch (err) {
-            // console.error('__ err', err);
+            console.error('__ err', err);
         }
     }
 
@@ -262,11 +337,18 @@ export class MobileTradingView extends React.PureComponent {
                     this.drawnTp[itemEdited?.displaying_id].remove();
                     delete this.drawnTp[itemEdited?.displaying_id];
                 }
+                if (this.drawnProfit.hasOwnProperty(itemEdited?.displaying_id)) {
+                    this.drawnProfit[itemEdited?.displaying_id].remove();
+                    delete this.drawnProfit[itemEdited?.displaying_id];
+                }
                 this.newOrder(itemEdited.displaying_id, itemEdited);
                 localStorage.removeItem('edited_id');
             }
         }
-        const newDataOrders = _ordersList.filter(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && !this.oldOrdersList.find(id => order.displaying_id === id));
+        const newDataOrders = _ordersList.filter(order => {
+            if (this.props.renderProfit) return true
+            return (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && !this.oldOrdersList.find(id => order.displaying_id === id)
+        })
         if (newDataOrders.length > 0) {
             newDataOrders.forEach((order) => {
                 this.newOrder(order.displaying_id, order);
@@ -285,6 +367,10 @@ export class MobileTradingView extends React.PureComponent {
                 if (this.drawnTp.hasOwnProperty(id)) {
                     this.drawnTp[id].remove();
                     delete this.drawnTp[id];
+                }
+                if (this.drawnProfit.hasOwnProperty(id)) {
+                    this.drawnProfit[id].remove();
+                    delete this.drawnProfit[id];
                 }
             })
         }
@@ -490,6 +576,7 @@ MobileTradingView.defaultProps = {
     autosize: true,
     showTimeFrame: true,
     autoSave: true,
+    renderProfit: false,
     studies_overrides: {
         "volume.volume.color.0": "#03BBCC",
         "volume.volume.color.1": "#ff0065",

@@ -186,8 +186,6 @@ const OrderDetail = ({
         return listTimeFrame.find(item => item.value === resolution)?.text
     }, [resolution])
 
-    // console.log(resolution, '111111000000000000')
-
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red';
     return (
         <Portal portalId='PORTAL_MODAL'>
@@ -236,6 +234,7 @@ const OrderDetail = ({
                             showIconGuide={false}
                             showTimeFrame={false}
                             autoSave={false}
+                            renderProfit={order.status === VndcFutureOrderType.Status.CLOSED}
                         />
                     </div>
                     <div className="px-[16px] bg-onus">
