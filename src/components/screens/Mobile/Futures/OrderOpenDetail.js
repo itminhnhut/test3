@@ -45,7 +45,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     }
 
     const onOpenModify = () => {
-        rowData.current = order;
+        rowData.current = { ...order, quoteAsset: pairConfig?.quoteAsset };
         // rowData.current = { ...oldOrder.current, ...data, quoteAsset: pairConfig?.quoteAsset };
         setShowEditSLTP(!showEditSLTP);
     }
