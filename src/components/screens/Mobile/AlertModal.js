@@ -22,7 +22,6 @@ const AlertModal = forwardRef((props, ref) => {
     }))
 
     const onShow = (type, title, messages, note, onConfirm, onCancel, _options) => {
-        console.log('__ check arguments', {type, title, messages, note, onConfirm, onCancel, _options} );
         options.current = { type, title, messages, note, ..._options };
         actions.current.onConfirm = onConfirm;
         actions.current.onCancel = onCancel;
@@ -60,7 +59,6 @@ const AlertModal = forwardRef((props, ref) => {
 
     if (!options.current.title) return null;
 
-    console.log('__ chekc options', options);
 
     return (
         <Modal isVisible={isVisible} onBackdropCb={onCancel}

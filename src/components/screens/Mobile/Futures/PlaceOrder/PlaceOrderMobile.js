@@ -106,7 +106,6 @@ const PlaceOrder = ({
         if (typeof window !== undefined) {
             const search = new URLSearchParams(window.location.search)
             if(search && search.get('need_login') ==='true' && context?.alert){
-                console.log('__ check alert', context.alert);
                 context.alert.show('warning',
                     t('futures:mobile.invalid_session_title'),
                     t('futures:mobile.invalid_session_content'),

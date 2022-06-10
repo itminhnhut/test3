@@ -23,7 +23,7 @@ const OrderButtonMobile = ({
 
     const onHandleSave = () => {
         if (!isAuth) {
-            emitWebViewEvent('deposit')
+            emitWebViewEvent('login')
             return;
         }
         if (isError) return;
