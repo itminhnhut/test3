@@ -65,7 +65,6 @@ export class MobileTradingView extends React.PureComponent {
         ) {
             this.widget.remove();
             this.oldOrdersList = [];
-            console.log(this.state.interval, '11111111111111111')
             this.initWidget(this.props.symbol, this.state.interval);
         }
 
@@ -119,6 +118,8 @@ export class MobileTradingView extends React.PureComponent {
         }
     };
 
+    createIndicator = (name, cb) => this.widget.activeChart().createStudy(name, false, false, undefined, cb)
+
     handleChangeIndicator = (type) => (value) => {
         const indicatorStateKey = type === 'main' ? 'mainIndicator' : 'subIndicator';
         const studyId = this.state[indicatorStateKey]?.id
@@ -126,7 +127,7 @@ export class MobileTradingView extends React.PureComponent {
             this.widget.activeChart().removeEntity(studyId)
         }
         if (value) {
-            this.widget.activeChart().createStudy(value, false, false, undefined, (id) => {
+            this.createIndicator(value, (id) => {
                 this.setState({
                     ...this.state,
                     [indicatorStateKey]: {id, name: value}
@@ -293,7 +294,6 @@ export class MobileTradingView extends React.PureComponent {
     initWidget = (symbol, interval) => {
         if (!symbol) return;
 
-        console.log(interval, '22222222222222222')
         const datafeed = new Datafeed(this.props.mode || ChartMode.SPOT)
         const widgetOptions = {
             symbol,
@@ -411,6 +411,12 @@ export class MobileTradingView extends React.PureComponent {
         })
     }
 
+    handleOpenIndicatorModal = () => {
+        if (this?.widget) {
+            this.widget.chart().executeActionById("insertIndicator");
+        }
+    };
+
     render() {
         return (
             <>
@@ -449,6 +455,7 @@ export class MobileTradingView extends React.PureComponent {
                         {
                             this.state.chartStatus === ChartStatus.LOADED &&
                             <IndicatorBars
+                                handleOpenIndicatorModal={this.handleOpenIndicatorModal}
                                 setMainIndicator={this.handleChangeIndicator('main')}
                                 setSubIndicator={this.handleChangeIndicator('sub')}
                                 mainIndicator={this.state.mainIndicator?.name}
