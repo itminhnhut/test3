@@ -63,11 +63,11 @@ const getAssets = createSelector(
 
 const getResolution = (order) => {
     const timestamp = new Date(order?.closed_at).getTime() - new Date(order?.opened_at).getTime();
-    if (isNaN(timestamp)) return 'D';
+    if (isNaN(timestamp)) return '1D';
     const item = listTimeFrame.reduce((prev, curr) => {
         return (Math.abs(ms(curr.text) - timestamp) < Math.abs(ms(prev?.text) - timestamp) ? curr : prev);
     });
-    return item?.value ?? 'D'
+    return item?.value ?? '1D'
 }
 
 
@@ -186,8 +186,9 @@ const OrderDetail = ({
         return listTimeFrame.find(item => item.value === resolution)?.text
     }, [resolution])
 
-    const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red';
+    // console.log(resolution, '111111000000000000')
 
+    const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red';
     return (
         <Portal portalId='PORTAL_MODAL'>
             <div className={classNames(
