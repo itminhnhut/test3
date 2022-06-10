@@ -313,7 +313,7 @@
             "invalid_input": "Invalid withdrawal amount, please try again.",
             "logged_out": "Your account has been logged out.",
             "insufficient": "Your balance is not enough, please try again.",
-            "not_in_range": "Input amount is not in range ${min_from_value} - ${max_from_value} XBT, please try again.",
+            "not_in_range": "Input amount is not in range ${min_from_value} - ${max_from_value}, please try again.",
             "unknown": "There is a problem during the withdrawal process, please contact support for more details.",
             "vndc_maintain": "VNDC is maintaining the off-chain withdrawal of VNDC from Nami, you can still withdraw on-chain from Nami app."
         }

@@ -309,7 +309,7 @@
             "invalid_input": "Số lượng rút không hợp lệ, vui lòng kiểm tra lại.",
             "logged_out": "Tài khoản bị đăng xuất.",
             "insufficient": "Không đủ số lượng rút, vui lòng kiểm tra lại.",
-            "not_in_range": "Số lượng bạn nhập không nằm trong ${min_from_value} - ${max_from_value} XBT. Vui lòng nhập lại.",
+            "not_in_range": "Số lượng bạn nhập không nằm trong ${min_from_value} - ${max_from_value}. Vui lòng nhập lại.",
             "unknown": "Có vấn đề xảy ra trong quá trình rút, vui lòng liên hệ support để biết thêm chi tiết.",
             "vndc_maintain": "VNDC đang bảo trì tính năng rút off-chain đồng VNDC từ Nami, quý khách vẫn có thể rút on-chain từ app Nami"
         }
