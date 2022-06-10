@@ -109,7 +109,7 @@ const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isCloseP
         <Modal
             isVisible={isVisible}
             onBackdropCb={onClose}
-            containerClassName={`${classMobile} p-0 top-[50%] rounded-[12px] !border-0`}
+            containerClassName={`${classMobile} p-0 top-[50%] !w-[358px] !border-0`}
         >
             <Background>
                 <div className='relative top-[20%] px-[24px]' >
