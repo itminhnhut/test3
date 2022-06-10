@@ -433,13 +433,13 @@ export class MobileTradingView extends React.PureComponent {
             fullscreen: this.props.fullscreen,
             autosize: true,
             loading_screen: {backgroundColor: this.props.theme === "dark" ? colors.onus : "#fff",},
-            studies_overrides: {
-                "volume.volume.color.0": colors.teal,
-                "volume.volume.color.1": colors.red2,
-                "volume.volume ma.color": colors.red2,
-                "volume.volume ma.linewidth": 5,
-                "volume.volume ma.visible": true,
-            },
+            // studies_overrides: {
+            //     "volume.volume.color.0": colors.teal,
+            //     "volume.volume.color.1": colors.red2,
+            //     "volume.volume ma.color": colors.red2,
+            //     "volume.volume ma.linewidth": 5,
+            //     "volume.volume ma.visible": true,
+            // },
             timezone: getTradingViewTimezone(),
             overrides: {
                 "scalesProperties.fontSize": 10,
@@ -452,10 +452,8 @@ export class MobileTradingView extends React.PureComponent {
                 "mainSeriesProperties.candleStyle.wickDownColor": colors.red2,
                 "mainSeriesProperties.candleStyle.upColor": colors.teal,
                 "mainSeriesProperties.candleStyle.downColor": colors.red2,
-                "mainSeriesProperties.hollowCandleStyle.borderColor":
-                colors.teal,
-                "mainSeriesProperties.hollowCandleStyle.borderDownColor":
-                colors.red2,
+                "mainSeriesProperties.hollowCandleStyle.borderColor": colors.teal,
+                "mainSeriesProperties.hollowCandleStyle.borderDownColor": colors.red2,
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
                 "volumePaneSize": "tiny"
             },
@@ -474,6 +472,7 @@ export class MobileTradingView extends React.PureComponent {
                 'paneProperties.background': colors.onus,
                 "paneProperties.vertGridProperties.color": colors.onus,
                 "paneProperties.horzGridProperties.color": colors.onus,
+                "volumePaneSize": "tiny"
             });
             this.setState({chartStatus: ChartStatus.LOADED});
             if (this.props.isVndcFutures) {
