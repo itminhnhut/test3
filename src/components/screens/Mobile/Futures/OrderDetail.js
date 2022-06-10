@@ -1,30 +1,23 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import Portal from 'components/hoc/Portal'
-import classNames from 'classnames'
-import { useTranslation } from 'next-i18next'
-import { ChevronLeft, ArrowRight } from "react-feather";
-import KlineChart from 'components/KlineChart/KlineChart'
-import ms from 'ms'
-import ChartTimer from './Chart/ChartTimer';
-import Indicators from './Chart/Indicators';
-import {
-    renderCellTable,
-    VndcFutureOrderType,
-    getProfitVndc
-} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import React, { useEffect, useMemo, useState } from 'react';
+import Portal from 'components/hoc/Portal';
+import classNames from 'classnames';
+import { useTranslation } from 'next-i18next';
+import { ArrowRight, ChevronLeft } from 'react-feather';
+import ms from 'ms';
+import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
-import { formatNumber, formatTime, countDecimals, getS3Url } from 'redux/actions/utils'
+import { countDecimals, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { API_ORDER_DETAIL } from 'redux/actions/apis'
-import fetchApi from 'utils/fetch-api'
-import { ApiStatus, ChartMode } from 'redux/actions/const'
+import { API_ORDER_DETAIL } from 'redux/actions/apis';
+import fetchApi from 'utils/fetch-api';
+import { ApiStatus, ChartMode } from 'redux/actions/const';
 import TableNoData from 'components/common/table.old/TableNoData';
 import OrderOpenDetail from './OrderOpenDetail';
 import Tooltip from 'components/common/Tooltip';
-import { THEME_MODE } from "hooks/useDarkMode";
-import dynamic from "next/dynamic";
-import { MenuTime, listTimeFrame } from 'components/TVChartContainer/MobileTradingView/ChartOptions';
+import { THEME_MODE } from 'hooks/useDarkMode';
+import dynamic from 'next/dynamic';
+import { listTimeFrame, MenuTime } from 'components/TVChartContainer/MobileTradingView/ChartOptions';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
@@ -38,16 +31,17 @@ const getAssets = createSelector(
     ],
     (utils, params) => {
         const assets = {};
-        return Object.keys(params).reduce((newItem, item) => {
-            const asset = utils.assetConfig.find(rs => rs.id === params[item].currency);
-            if (asset) {
-                assets[item] = {
-                    assetCode: asset?.assetCode,
-                    assetDigit: asset?.assetDigit
-                };
-            }
-            return assets;
-        }, {})
+        return Object.keys(params)
+            .reduce((newItem, item) => {
+                const asset = utils.assetConfig.find(rs => rs.id === params[item].currency);
+                if (asset) {
+                    assets[item] = {
+                        assetCode: asset?.assetCode,
+                        assetDigit: asset?.assetDigit
+                    };
+                }
+                return assets;
+            }, {});
     }
 );
 
@@ -67,9 +61,8 @@ const getResolution = (order) => {
     const item = listTimeFrame.reduce((prev, curr) => {
         return (Math.abs(ms(curr.text) - timestamp) < Math.abs(ms(prev?.text) - timestamp) ? curr : prev);
     });
-    return item?.value ?? 'D'
-}
-
+    return item?.value ?? 'D';
+};
 
 const OrderDetail = ({
     isVisible = true,
@@ -80,63 +73,67 @@ const OrderDetail = ({
     isTabHistory = false,
     isDark
 }) => {
-    const { t } = useTranslation()
+    const { t } = useTranslation();
     const assetConfig = useSelector(state => getAssets(state, {
         ...order?.fee_metadata,
         swap: { currency: order?.margin_currency },
         order_value: { currency: order?.order_value_currency }
-    }))
-    const [dataSource, setDataSource] = useState([])
-    const [resolution, setResolution] = useState(getResolution(order))
+    }));
+    const [dataSource, setDataSource] = useState([]);
+    const [resolution, setResolution] = useState(getResolution(order));
 
     const getAdjustmentDetail = async () => {
         try {
-            const { status, data, message } = await fetchApi({
+            const {
+                status,
+                data,
+                message
+            } = await fetchApi({
                 url: API_ORDER_DETAIL,
                 options: { method: 'GET' },
                 params: {
                     orderId: order.displaying_id
                 },
-            })
+            });
             if (status === ApiStatus.SUCCESS) {
-                setDataSource(data?.futuresorderlogs ?? [])
+                setDataSource(data?.futuresorderlogs ?? []);
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
         } finally {
         }
-    }
+    };
 
     useEffect(() => {
         getAdjustmentDetail();
-    }, [])
+    }, []);
 
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
             case 0:
-                return t('futures:order_history:normal')
+                return t('futures:order_history:normal');
             case 1:
-                return t('futures:order_history:hit_sl')
+                return t('futures:order_history:hit_sl');
             case 2:
-                return t('futures:order_history:hit_tp')
+                return t('futures:order_history:hit_tp');
             case 3:
-                return t('futures:order_history:liquidate')
+                return t('futures:order_history:liquidate');
             default:
                 return '-';
         }
-    }
+    };
 
     const renderFee = (order, key) => {
         if (!order || !isTabHistory) return '-';
-        const decimal = assetConfig ? assetConfig[key]?.assetDigit : 0
+        const decimal = assetConfig ? assetConfig[key]?.assetDigit : 0;
         const assetCode = assetConfig ? assetConfig[key]?.assetCode : '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];
-        return data ? formatNumber(data, decimal) + ' ' + assetCode : '-'
-    }
+        return data ? formatNumber(data, decimal) + ' ' + assetCode : '-';
+    };
 
     const getValue = (number) => {
         return formatNumber(number, 0, 0, true) + ' VNDC';
-    }
+    };
 
     const renderModify = (metadata, key) => {
         let value = null;
@@ -145,62 +142,64 @@ const OrderDetail = ({
                 value = metadata?.modify_price ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_price?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className="text-right"> {getValue(metadata?.modify_price?.after)}</div>
-                    </div> : getValue(metadata?.price)
+                    </div> : getValue(metadata?.price);
                 return value;
             case 'take_profit':
                 value = metadata?.modify_tp ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_tp?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_tp?.after)}</div>
-                    </div> : null
+                    </div> : null;
                 return value;
             case 'stop_loss':
                 value = metadata?.modify_sl ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_sl?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_sl?.after)} </div>
-                    </div> : null
+                    </div> : null;
                 return value;
 
             default:
                 return value;
         }
-    }
+    };
 
     const decimal = useMemo(() => {
         const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
         return countDecimals(decimalScalePrice?.tickSize) ?? 0;
-    }, [pairConfig])
+    }, [pairConfig]);
 
     const changeSLTP = (data) => {
         getAdjustmentDetail();
-    }
+    };
 
     const resolutionLabel = useMemo(() => {
-        return listTimeFrame.find(item => item.value === resolution)?.text
-    }, [resolution])
+        return listTimeFrame.find(item => item.value === resolution)?.text;
+    }, [resolution]);
 
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red';
 
     return (
-        <Portal portalId='PORTAL_MODAL'>
+        <Portal portalId="PORTAL_MODAL">
             <div className={classNames(
                 'flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] bg-white dark:!bg-onus',
                 { invisible: !isVisible },
                 { visible: isVisible }
             )}
             >
-                <div className='sticky top-0 w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]'
+                <div
+                    className="sticky top-0 w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
                 >
-                    <div className='flex items-center' onClick={() => onClose()}>
-                        <ChevronLeft size={24} />
-                        <span className='font-medium text-sm'>{t('common:back')}</span>
+                    <div className="flex items-center" onClick={() => onClose()}>
+                        <ChevronLeft size={24}/>
+                        <span className="font-medium text-sm">{t('common:back')}</span>
                     </div>
-                    <div className='flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2'>
+                    <div
+                        className="flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2">
                         <span className="font-semibold">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
                         <span
                             className={`text-xs ${classNameSide}`}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
@@ -238,13 +237,13 @@ const OrderDetail = ({
                     <div className="px-[16px] bg-onus">
                         {!isTabHistory &&
                             <OrderOpenDetail order={order} decimal={decimal} isDark={isDark}
-                                pairConfig={pairConfig} onClose={onClose}
-                                getAdjustmentDetail={getAdjustmentDetail}
-                                changeSLTP={changeSLTP}
+                                             pairConfig={pairConfig} onClose={onClose}
+                                             getAdjustmentDetail={getAdjustmentDetail}
+                                             changeSLTP={changeSLTP}
                             />
                         }
                         <div className="py-[24px]">
-                            <div className="font-semibold mb-[6px]">{t('futures:mobile:order_details')}</div>
+                            <div className="font-semibold mb-[6px]">{t('futures:mobile:order_detail')}</div>
                             <Row>
                                 <Label>ID</Label>
                                 <Span>{order?.displaying_id}</Span>
@@ -253,10 +252,14 @@ const OrderDetail = ({
                                 <Label>{t('futures:leverage:leverage')}</Label>
                                 <Span>{order?.leverage}x</Span>
                             </Row>
-                            <Row>
-                                <Label>{t('futures:mobile:realized_pnl')}</Label>
-                                <Span>{formatNumber(String(order?.profit).replace(',', ''), 0, 0, true)}</Span>
-                            </Row>
+                            {
+                                isTabHistory
+                                &&
+                                <Row>
+                                    <Label>{t('futures:mobile:realized_pnl')}</Label>
+                                    <Span>{formatNumber(String(order?.profit)
+                                        .replace(',', ''), 0, 0, true)}</Span>
+                                </Row>}
                             <Row>
                                 <Label>{t('futures:order_table:volume')}</Label>
                                 <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${formatNumber(order?.quantity, 8)} ${pairConfig?.baseAsset})`}</Span>
@@ -279,7 +282,7 @@ const OrderDetail = ({
                             </Row>
                             <Row>
                                 <Label>{t('futures:order_table:close_price')}</Label>
-                                <Span>{formatNumber(order?.close_price, 0)}</Span>
+                                <Span>{order?.close_price ? formatNumber(order?.close_price, 0) : '-'}</Span>
                             </Row>
                             <Row>
                                 <Label>{t('futures:mobile:reason_close')}</Label>
@@ -306,8 +309,11 @@ const OrderDetail = ({
                                 <Span>{renderFee(order, 'liquidate_order')}</Span>
                             </Row>
                             <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
-                                overridePosition={(e) => ({ left: 0, top: e.top })}
+                                     arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
+                                     overridePosition={(e) => ({
+                                         left: 0,
+                                         top: e.top
+                                     })}
                             >
                                 <div>{t('futures:mobile:info_swap_fee')}</div>
                             </Tooltip>
@@ -315,7 +321,7 @@ const OrderDetail = ({
                                 <Label className="flex">
                                     {t('futures:mobile:swap_fee')}
                                     <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
-                                        <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                                        <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24}/>
                                     </div>
                                 </Label>
                                 <Span>{renderFee(order, 'swap')}</Span>
@@ -327,7 +333,7 @@ const OrderDetail = ({
                             {dataSource.length > 0 ?
                                 dataSource.map((item, index) => (
                                     <div key={index}
-                                        className="border-b border-divider dark:border-divider-dark last:border-0">
+                                         className="border-b border-divider dark:border-divider-dark last:border-0">
                                         <Row>
                                             <Label>{t('common:time')}</Label>
                                             <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
@@ -352,7 +358,7 @@ const OrderDetail = ({
                                         }
                                     </div>
                                 ))
-                                : <TableNoData className="min-h-[300px]" />
+                                : <TableNoData className="min-h-[300px]"/>
                             }
                         </div>
                     </div>
@@ -363,15 +369,15 @@ const OrderDetail = ({
 };
 
 const Row = styled.div.attrs({
-    className: 'flex items-center justify-between py-1'
-})``
+    className: 'flex items-center justify-between py-2'
+})``;
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
     className: `text-gray-1 dark:text-txtSecondary-dark ${isTabOpen ? 'text-xs' : 'text-sm'} font-medium`
-}))``
+}))``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({
     className: `text-sm font-medium ${isTabOpen ? 'text-xs' : 'text-sm'}`
-}))``
+}))``;
 
 export default OrderDetail;
