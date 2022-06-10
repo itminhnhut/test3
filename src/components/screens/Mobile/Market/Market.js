@@ -225,7 +225,7 @@ export default ({isRealtime = true}) => {
                                 </span>
                             </div>
                             <p className='text-xs font-medium text-txtSecondary leading-4'>
-                                {t('markets:vol')}&nbsp;
+                                $
                                 {formatCurrency(item.volume24h, 1)}
                             </p>
                         </div>
@@ -259,7 +259,7 @@ export default ({isRealtime = true}) => {
         })
 
     return (
-        <div className='market-mobile dark:bg-onus'>
+        <div className='market-mobile dark:bg-[#001037]'>
             <div className='flex items-center mt-12 px-4'>
                 <InputSearch onChange={changeSearch}/>
             </div>
