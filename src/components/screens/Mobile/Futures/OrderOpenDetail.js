@@ -35,12 +35,18 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     const [openShareModal, setOpenShareModal] = useState(false);
 
     const onConfirmSLTP = (e) => {
-        setData(e);
-        setShowEditSLTP(!showEditSLTP);
+        // setData(e);
+        fetchOrder('PUT', e, () => {
+            localStorage.setItem('edited_id', e.displaying_id);
+            context.alert.show('success', t('common:success'), t('futures:modify_order_success'))
+            setShowEditSLTP(!showEditSLTP);
+            changeSLTP();
+        });
     }
 
     const onOpenModify = () => {
-        rowData.current = { ...oldOrder.current, ...data, quoteAsset: pairConfig?.quoteAsset };
+        rowData.current = { ...order, quoteAsset: pairConfig?.quoteAsset };
+        // rowData.current = { ...oldOrder.current, ...data, quoteAsset: pairConfig?.quoteAsset };
         setShowEditSLTP(!showEditSLTP);
     }
 
@@ -89,6 +95,14 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
         } finally {
             setLoading(false)
         }
+    }
+
+    const renderLiqPrice = (row, returnNumber) => {
+        const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
+        const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
+        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - 0.1 / 100))
+        if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
+        return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
     }
 
     const isDiff = useMemo(() => {
@@ -145,8 +159,6 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <span className="text-xs font-medium text-teal"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
             </div> */}
             <div className="flex flex-wrap gap-x-[10px] w-full">
-                <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
-                <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} />
                 {status === VndcFutureOrderType.Status.PENDING ?
                     <div style={{ width: 'calc(50% - 5px)' }} className="mb-2">
                         <TradingInput
@@ -174,9 +186,14 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     :
                     <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(data?.price, decimal, 0, true)} />
                 }
+                <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
+                <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
+                <OrderItem label={t('futures:stop_loss')} value={formatNumber(order?.sl, 0)} />
+                <OrderItem label={t('futures:take_profit')} value={formatNumber(order?.tp, 0)} />
+                {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
-            <div className="flex gap-x-[10px] w-full">
+            {/* <div className="flex gap-x-[10px] w-full">
                 <div style={{ width: 'calc(50% - 5px)' }}>
                     <TradingInput
                         thousandSeparator={true}
@@ -223,20 +240,22 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         allowedDecimalSeparators={[',', '.']}
                     />
                 </div>
-            </div>
-            <div className="flex gap-x-[10px] w-full mt-5">
+            </div> */}
+
+            <div className="flex gap-x-[10px] w-full mt-2">
                 <div style={{ width: 'calc(50% - 5px)' }}>
                     <Button
-                        title={t('futures:mobile:back_to_list')}
-                        className={`!h-[36px]`}
+                        title={t('futures:tp_sl:modify_tpsl')}
+                        className="!h-[36px] dark:bg-bgInput-dark dark:text-txtSecondary-dark"
                         componentType="button"
-                        onClick={onClose}
+                        type="primary"
+                        onClick={onOpenModify}
                     />
                 </div>
                 <div style={{ width: 'calc(50% - 5px)' }}>
                     <Button
-                        title={t(`futures:mobile:${isDiff ? 'modify' : 'close_now'}`)}
-                        className={`!h-[36px] ${isDiff ? '' : '!bg-red'} !text-white`}
+                        title={t(`common:close`)}
+                        className="!h-[36px] dark:bg-bgInput-dark dark:text-txtSecondary-dark"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions(isDiff)}
