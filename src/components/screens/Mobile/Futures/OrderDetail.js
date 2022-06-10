@@ -87,7 +87,6 @@ const OrderDetail = ({
         order_value: { currency: order?.order_value_currency }
     }))
     const [dataSource, setDataSource] = useState([])
-    const shapeTemplateOld = useRef([order])
     const [resolution, setResolution] = useState(getResolution(order))
 
     const getAdjustmentDetail = async () => {
@@ -123,12 +122,12 @@ const OrderDetail = ({
             case 3:
                 return t('futures:order_history:liquidate')
             default:
-                return '';
+                return '-';
         }
     }
 
     const renderFee = (order, key) => {
-        if (!order || !isTabHistory) return null;
+        if (!order || !isTabHistory) return '-';
         const decimal = assetConfig ? assetConfig[key]?.assetDigit : 0
         const assetCode = assetConfig ? assetConfig[key]?.assetCode : '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];
@@ -178,7 +177,6 @@ const OrderDetail = ({
     }, [pairConfig])
 
     const changeSLTP = (data) => {
-        shapeTemplateOld.current = data;
         getAdjustmentDetail();
     }
 
@@ -277,7 +275,7 @@ const OrderDetail = ({
                             </Row>
                             <Row>
                                 <Label>{t('futures:mobile:close_time')}</Label>
-                                <Span>{formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                                <Span>{order?.closed_at ? formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss') : '-'}</Span>
                             </Row>
                             <Row>
                                 <Label>{t('futures:order_table:close_price')}</Label>
