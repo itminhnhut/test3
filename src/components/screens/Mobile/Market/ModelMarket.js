@@ -59,7 +59,7 @@ const ModelMarketMobile = ({ visible, onClose }) => {
             >
                 <div
                     className={classNames(
-                        'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-onus/80',
+                        'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-darkBlue-1/90',
                     )}
                 >
                     <div ref={wrapperRef} className='flex-1 w-10/12 min-h-0  '>
