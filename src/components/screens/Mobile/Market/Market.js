@@ -65,7 +65,7 @@ export default ({isRealtime = true}) => {
     })
     const [data, setData] = useState([])
     const [sort, setSort] = useState({
-        field: 'symbol',
+        field: 'volume24h',
         direction: 'desc',
     })
     const [search, setSearch] = useState('')
