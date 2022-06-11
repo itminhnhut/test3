@@ -47,8 +47,8 @@ const TradingInput = ({
                 {label || 'Label?'}
             </div>
 
-            {/* {(isError && state?.isFocus) ? ( */}
-            {(isError) ? (
+            {(isError && state?.isFocus) ? (
+            {/* {(isError) ? ( */}
                 <div className='absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center'>
                     <div className='px-2 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4 text-xs'>
                         {validator?.msg}
