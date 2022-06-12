@@ -77,6 +77,8 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
     const actions = (action, key) => {
         if (action === 'modal') {
             isModal.current = true;
+            const shareData = {}
+            console.log('__ share modal data', order)
             onShowModal(order, key)
         }
         if (action === 'delete') {

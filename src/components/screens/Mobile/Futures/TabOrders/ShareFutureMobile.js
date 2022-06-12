@@ -13,6 +13,41 @@ import styled from 'styled-components'
 
 const { PENDING, ACTIVE, CLOSED } = VndcFutureOrderType.Status
 const APP_URL = process.env.APP_URL || 'https://nami.exchange'
+
+export const getShareModalData = ({ order, pairPrice }) => {
+
+    if (!order) return {}
+
+    const profit = getProfitVndc(order, pairPrice?.lastPrice)
+    let price = {
+        [PENDING]: order?.price,
+        [ACTIVE]: order?.open_price,
+        [CLOSED]: order?.close_price,
+    }[order?.status]
+
+    const status = {
+        [PENDING]: 'opening',
+        [ACTIVE]: 'opening',
+        [CLOSED]: 'closed',
+    }[order?.status]
+
+
+    const isClosePrice = order?.status === CLOSED
+    if (isClosePrice) price = order?.open_price
+    const _percent = ((isClosePrice ? order?.profit : profit) / order?.margin) * 100;
+    return {
+        leverage: order?.leverage,
+        profit: formatNumber(isClosePrice ? order?.profit : profit, 0, 0, true),
+        percent: (_percent > 0 ? '+' : '') + formatNumber(_percent, 2, 0, true) + '%',
+        price: formatNumber(price, 8),
+        markPrice: formatNumber(pairPrice?.lastPrice, 8),
+        closePrice: formatNumber(order?.close_price, 8),
+        time: formatTime(order?.created_at),
+        quoteAsset: pairPrice?.quoteAsset ?? '',
+        bg: _percent > 0 ? 'green' : 'red',
+        status
+    }
+}
 const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isClosePrice }) => {
     const { t } = useTranslation()
     const codeRefer = useSelector((state) => state.auth?.user?.code_refer)
