@@ -324,7 +324,7 @@ export default ({isRealtime = true}) => {
                     </div>
                     <div className='flex justify-end'>
                         <TitleHeadList
-                            title={t('common:mark_price')}
+                            title={t('common:price')}
                             onClick={changeSort('lastPrice')}
                             sortDirection={
                                 sort.field === 'lastPrice' && sort.direction
