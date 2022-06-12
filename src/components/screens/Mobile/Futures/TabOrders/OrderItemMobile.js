@@ -37,7 +37,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 }
                 text = row.price ? formatNumber(row.price, 8) : '';
                 return <div className="flex items-center text-right ">
-                    <div>{text} {bias}</div>
+                    <div>{text}</div>
                 </div>;
             case VndcFutureOrderType.Status.ACTIVE:
                 text = row.open_price ? formatNumber(row.open_price, 8) : '';

@@ -48,7 +48,7 @@
     },
     "close_order": {
         "modal_title": "Đóng Lệnh #{{value}}",
-        "confirm_message": "Bạn có muốn đóng lệnh <span class='font-medium'>#{{value}}</span> ?",
+        "confirm_message": "Bạn có muốn đóng lệnh <span class='font-medium'>#{{value}}</span>?",
         "future_note": "* Chế độ Eco Close sẽ đóng lệnh của bạn bằng cách đặt lệnh Limit gần với giá hiện tại và được ưu đãi về phí so với đóng lệnh thường. Xem chi tiết tại ",
         "close_successfully": "Đóng lệnh #{{value}} thành công",
         "request_successfully": "Gửi yêu cầu thành công",
