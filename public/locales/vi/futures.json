@@ -27,7 +27,7 @@
         "side": "Bên",
         "open_price": "Giá mở",
         "close_price": "Giá đóng",
-        "mark_price": "Giá Market",
+        "mark_price": "Giá thị trường",
         "liquidation_price": "Giá Liq.",
         "last_price": "Giá Gần nhất",
         "sl": "Stop-loss",
