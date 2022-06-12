@@ -140,7 +140,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     />
                     <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                     <OrderItem
-                        label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'last_price2'}`)}
+                        label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'mark_price'}`)}
                         value={formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice)}
                     />
                     <OrderItem
