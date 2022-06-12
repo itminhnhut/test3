@@ -38,7 +38,6 @@ const ChartMobile = memo(({pairConfig, isVndcFutures, setCollapse, collapse, for
                 pairConfig={pairConfig}
                 initTimeFrame="1D"
                 isVndcFutures={true}
-                ordersList={ordersList}
                 theme={themeMode}
                 mode={ChartMode.FUTURES}
                 setCollapse={setCollapse}
