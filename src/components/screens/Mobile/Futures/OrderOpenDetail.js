@@ -150,8 +150,8 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         <div className="border-[1px] border-teal p-[5px] rounded-[2px] ml-[16px]" onClick={() => {
                             const emitData = getShareModalData({order, pairPrice:dataMarketWatch})
                             emitWebViewEvent(JSON.stringify(emitData))
-
-                            setOpenShareModal(true)}
+                            // setOpenShareModal(true)
+                            }
                         }>
                             <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
                         </div>

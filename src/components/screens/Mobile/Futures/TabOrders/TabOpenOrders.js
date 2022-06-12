@@ -52,7 +52,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
                     const shareModalData = getShareModalData({order: rowData.current, pairPrice:marketWatch[rowData.current?.symbol]})
                     emitWebViewEvent(JSON.stringify(shareModalData))
                 }
-                setOpenShareModal(!openShareModal)
+                // setOpenShareModal(!openShareModal)
                 break;
         }
     }

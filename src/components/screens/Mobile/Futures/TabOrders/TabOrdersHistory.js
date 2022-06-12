@@ -42,7 +42,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
             const shareModalData = getShareModalData({order: rowData.current, pairPrice: pairConfigDetail})
             emitWebViewEvent(JSON.stringify(shareModalData))
         }
-        setOpenShareModal(!openShareModal)
+        // setOpenShareModal(!openShareModal)
     }
 
     const getOrders = async () => {
