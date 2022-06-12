@@ -45,7 +45,8 @@ export const getShareModalData = ({ order, pairPrice }) => {
         time: formatTime(order?.created_at),
         quoteAsset: pairPrice?.quoteAsset ?? '',
         bg: _percent > 0 ? 'green' : 'red',
-        status
+        status,
+        type: 'share'
     }
 }
 const ShareFutureMobile = memo(({ isVisible, onClose, order, pairPrice, isClosePrice }) => {
