@@ -576,6 +576,7 @@ MobileTradingView.defaultProps = {
     showTimeFrame: true,
     autoSave: true,
     renderProfit: false,
+    ordersList: [],
     studies_overrides: {
         "volume.volume.color.0": "#03BBCC",
         "volume.volume.color.1": "#ff0065",

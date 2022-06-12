@@ -56,6 +56,7 @@ const getAssets = createSelector(
 // }
 
 const getResolution = (order) => {
+    if(order.status !== VndcFutureOrderType.Status.CLOSED) return '60'
     const timestamp = new Date(order?.closed_at).getTime() - new Date(order?.opened_at).getTime();
     if (isNaN(timestamp)) return '1D';
     const item = listTimeFrame.reduce((prev, curr) => {
