@@ -6,9 +6,10 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import OrderItemMobile from './OrderItemMobile'
 import { useSelector } from 'react-redux'
 import InfiniteScroll from "react-infinite-scroll-component";
-import ShareFutureMobile from './ShareFutureMobile';
+import ShareFutureMobile, { getShareModalData } from './ShareFutureMobile';
 import { useTranslation } from 'next-i18next';
 import Skeletor from 'components/common/Skeletor'
+import { emitWebViewEvent } from 'redux/actions/utils';
 
 const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onShowDetail }) => {
     const { t } = useTranslation();
@@ -37,7 +38,11 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
 
     const onShowModal = (item, key) => {
         rowData.current = item;
-        setOpenShareModal(!openShareModal)
+        if(!openShareModal){
+            const shareModalData = getShareModalData({order: rowData.current, pairPrice: pairConfigDetail})
+            emitWebViewEvent(JSON.stringify(shareModalData))
+        }
+        // setOpenShareModal(!openShareModal)
     }
 
     const getOrders = async () => {
