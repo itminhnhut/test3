@@ -520,7 +520,7 @@ export class MobileTradingView extends React.PureComponent {
                     }
                     <div
                         id={this.containerId}
-                        className={`h-full`}
+                        className={`h-full ${this.props.classNameChart}`}
                     />
                     <div>
                         {
