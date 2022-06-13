@@ -83,6 +83,7 @@ const OrderVolumeMobileModal = (props) => {
                     />
                 </div>
                 <TradingInput
+                onusMode={true}
                     label=' '
                     value={volume}
                     decimalScale={decimal}

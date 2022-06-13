@@ -11,6 +11,7 @@ const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quote
     return (
         <div onClick={() => setShowEditVolume(true)} >
             <TradingInput
+            onusMode={true}
                 thousandSeparator={true}
                 label={t('futures:mobile:volume')}
                 value={quoteQty}

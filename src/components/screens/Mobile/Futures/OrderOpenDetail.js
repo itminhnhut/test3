@@ -119,6 +119,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
         <div className="p-[24px] mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
                 <FuturesEditSLTPVndc
+                    onusMode={true}
                     isVisible={showEditSLTP}
                     order={rowData.current}
                     onClose={() => setShowEditSLTP(false)}
@@ -159,7 +160,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                             // setOpenShareModal(true)
                             }
                         }>
-                            <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
+                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={16} width={16} />
                         </div>
                         : null
                     }

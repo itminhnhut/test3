@@ -14,6 +14,7 @@ const TradingInput = ({
     renderTail = null,
     tailContainerClassName,
     validator = {},
+    onusMode = false,
     ...inputProps
 }) => {
     // ? Input state management
@@ -30,9 +31,11 @@ const TradingInput = ({
     return (
         <div
             className={classNames(
-                'relative flex items-center px-[12px] py-2.5 rounded-md bg-gray-5 dark:bg-darkBlue-3 border border-transparent hover:border-dominant',
-                { 'border-dominant': state.isFocus },
-                { '!border-red': isError },
+            `relative flex items-center px-[12px] py-2.5 rounded-md bg-gray-5 dark:bg-darkBlue-3 border border-transparent ${onusMode ? 'hover:border-dominant': 'hover:border-base'}`,
+                { 'border-dominant': !onusMode && state.isFocus },
+                { 'border-onus-green': onusMode && state.isFocus },
+                { '!border-red': !onusMode && isError },
+                { '!border-onus-red': onusMode && isError },
                 containerClassName
             )}
         >

@@ -23,6 +23,7 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, 
                 </div>
             }
             <TradingInput
+            onusMode={true}
                 thousandSeparator={true}
                 label={'TP'}
                 value={tp}

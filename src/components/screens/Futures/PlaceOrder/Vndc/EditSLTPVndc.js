@@ -484,6 +484,7 @@ const FuturesEditSLTPVndc = ({
                         xStart={50}
                         reload={tab}
                         bgColorActive={isMobile ? colors.onus.green : colors.teal}
+                        bgColorSlide={isMobile ? colors.onus.green : colors.teal}
                         BgColorLine={isMobile ? colors.onus.grey : null}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')} />
                 </div>

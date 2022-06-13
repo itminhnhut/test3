@@ -23,6 +23,7 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, 
                 </div>
             }
             <TradingInput
+            onusMode={true}
                 thousandSeparator={true}
                 validator={validator}
                 label={'SL'}
