@@ -13,7 +13,9 @@ const MobileTradingView = dynamic(
     {ssr: false},
 );
 
-const ChartMobile = memo(({pairConfig, setCollapse, collapse, isFullScreen}) => {
+// import {MobileTradingView} from "components/TVChartContainer/MobileTradingView";
+
+const ChartMobile = memo(({pairConfig, isVndcFutures, setCollapse, collapse, forceRender, isFullScreen, decimals}) => {
     const [themeMode] = useDarkMode()
     const {t} = useTranslation();
 
@@ -22,9 +24,9 @@ const ChartMobile = memo(({pairConfig, setCollapse, collapse, isFullScreen}) => 
     const style = useMemo(() => {
         if (typeof window !== "undefined") {
             const vh = window.innerHeight * 0.01;
-            return {height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 120 : 230}px)`}
+            return { height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 120 : 230}px)` }
         } else {
-            return {height: `calc(100% - ${collapse ? 120 : 230}px)`}
+            return { height:  `calc(100% - ${collapse ? 120 : 230}px)` }
         }
     }, [isFullScreen, collapse, typeof window])
 
@@ -34,7 +36,7 @@ const ChartMobile = memo(({pairConfig, setCollapse, collapse, isFullScreen}) => 
                 t={t}
                 symbol={pairConfig?.symbol}
                 pairConfig={pairConfig}
-                initTimeFrame="15"
+                initTimeFrame="1D"
                 isVndcFutures={true}
                 theme={themeMode}
                 mode={ChartMode.FUTURES}

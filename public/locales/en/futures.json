@@ -214,7 +214,6 @@
             "sl": "Choose Take Profit and Stop Loss to manage the profit of the order",
             "order": "Easy transaction confirmation",
             "tab": "Your account details and order list will be displayed here",
-
             "step_title_1": "Choose a trading pair",
             "step_title_2": "Choose buy/sell",
             "step_title_3": "Choose order type",
@@ -223,7 +222,6 @@
             "step_title_6": "SL and TP  Settings",
             "step_title_7": "Adjust detailed parameters",
             "step_title_8": "Start trading",
-
             "step_1": "To start trading, select your desired trading pair here",
             "step_2": "Choose Buy / Sell option in prediction of asset price increase or decrease respectively",
             "step_3": "Select the type of order you want to place (Market / Limit or Stop Market)",
@@ -264,7 +262,9 @@
         "invalid_session_content": "Your session has expired, please login again to use Nami Exchange",
         "invalid_session_button": "Log in now"
     },
-    "orders_history": "Orders History",
+    "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",
-    "maximum_leverage": "Maximum Leverage is"
+    "maximum_leverage": "Maximum Leverage is",
+    "positions": "Positions",
+    "open_orders": "Open Orders"
 }

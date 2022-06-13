@@ -108,7 +108,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                         <div className="font-semibold mr-[10px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
                         <div className="text-teal border-teal border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
                     </div>
-                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-teal': 'text-red'}`}>
+                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-teal' : 'text-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order)}</span>
                     </div>
@@ -193,11 +193,11 @@ const Button = styled.div.attrs({
 width:calc(50% - 4px)
 `
 
-export const OrderItem = ({ label, value }) => {
+export const OrderItem = ({ label, value, valueClassName = '' }) => {
     return (
         <Row className="justify-between">
             <Label>{label}</Label>
-            <div className="text-xs font-medium text-right">{value}</div>
+            <div className={`text-xs font-medium text-right ${valueClassName}`}>{value}</div>
         </Row>
     )
 }
