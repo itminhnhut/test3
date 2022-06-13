@@ -6,7 +6,7 @@ import { ArrowRight, ChevronLeft } from 'react-feather';
 import ms from 'ms';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
-import { countDecimals, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import { countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { API_ORDER_DETAIL } from 'redux/actions/apis';
@@ -156,6 +156,10 @@ const OrderDetail = ({
     const onClose = () => {
         router.back()
     }
+
+    useEffect(()=>{
+        emitWebViewEvent('order_detail')
+    }, [])
 
     const resolutionLabel = useMemo(() => {
         return listTimeFrame.find(item => item.value === resolution)?.text;
