@@ -14,6 +14,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
 import { socket } from "components/KlineChart/kline.service";
 import { VndcFutureOrderType } from "../../../Futures/PlaceOrder/Vndc/VndcFutureOrderType"
+import { useRouter } from 'next/router';
 
 const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender, isFullScreen }) => {
     const { t } = useTranslation();
@@ -23,22 +24,24 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
     const [tab, setTab] = useState(FUTURES_RECORD_CODE.position)
     const [openDetailModal, setOpenDetailModal] = useState(false);
     const rowData = useRef(null);
+    const router = useRouter();
 
     useEffect(() => {
         setTab(FUTURES_RECORD_CODE.openOrders)
     }, [isVndcFutures])
 
     const onShowDetail = (row, isTabHistory) => {
-        if (openDetailModal) {
-            if (rowData.current.symbol !== pair) {
-                socket.emit('subscribe:futures:ticker', pair)
-            }
-            setForceRender(!forceRender)
-        }
-        rowData.current = row;
-        rowData.current?.isTabHistory = isTabHistory;
-        emitWebViewEvent(openDetailModal ? 'nami_futures' : 'order_detail')
-        setOpenDetailModal(!openDetailModal);
+        // if (openDetailModal) {
+        //     if (rowData.current.symbol !== pair) {
+        //         socket.emit('subscribe:futures:ticker', pair)
+        //     }
+        //     setForceRender(!forceRender)
+        // }
+        // rowData.current = row;
+        // rowData.current?.isTabHistory = isTabHistory;
+        // emitWebViewEvent(openDetailModal ? 'nami_futures' : 'order_detail')
+        // setOpenDetailModal(!openDetailModal);
+        router.push(`/mobile/futures/order/${row.displaying_id}`)
     }
 
     const pairConfigDetail = useMemo(() => {

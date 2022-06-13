@@ -106,7 +106,7 @@ const PlaceOrder = ({
     useEffect(() => {
         if (typeof window !== undefined) {
             const search = new URLSearchParams(window.location.search)
-            if(search && search.get('need_login') ==='true' && context?.alert){
+            if (search && search.get('need_login') === 'true' && context?.alert) {
                 context.alert.show('warning',
                     t('futures:mobile.invalid_session_title'),
                     t('futures:mobile.invalid_session_content'),
@@ -115,15 +115,15 @@ const PlaceOrder = ({
                         emitWebViewEvent('login');
                     },
                     null, {
-                        confirmTitle: t('futures:mobile.invalid_session_button'),
-                        hideCloseButton: true
-                    }
+                    confirmTitle: t('futures:mobile.invalid_session_button'),
+                    hideCloseButton: true
+                }
                 )
             }
         }
     }, [context.alert]);
 
-    
+
     useEffect(() => {
         if (firstTime.current && (marketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0)) {
             firstTime.current = false;
@@ -345,10 +345,11 @@ const PlaceOrder = ({
 
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
-        const not_valid = !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quoteQty').isValid ||
-            !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid || !inputValidator('leverage').isValid;
+        const not_valid = collapse ? (!inputValidator('quoteQty').isValid || !inputValidator('leverage').isValid) :
+            (!inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid ||
+                !inputValidator('quoteQty').isValid || !inputValidator('leverage').isValid);
         return !isVndcFutures ? false : not_valid;
-    }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage, quoteQty]);
+    }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage, quoteQty, collapse]);
 
     const onChangeTpSL = () => {
         if (!isAuth) return;

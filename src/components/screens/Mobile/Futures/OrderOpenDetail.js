@@ -12,8 +12,7 @@ import { AlertContext } from 'components/common/layouts/LayoutMobile'
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { ApiStatus, FuturesOrderEnum } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api'
-import ShareFutureMobile from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile'
-
+import ShareFutureMobile from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
 
 const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSLTP }) => {
     const { t } = useTranslation();
@@ -62,8 +61,14 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         special_mode: 1
                     }
                     fetchOrder('DELETE', params, () => {
-                        context.alert.show('success', t('common:success'), t('futures:close_order:request_successfully', { value: order?.displaying_id }))
-                        onClose();
+                        context.alert.show('success', t('common:success'),
+                            t('futures:close_order:request_successfully', { value: order?.displaying_id }),
+                            undefined,
+                            undefined,
+                            () => {
+                                onClose();
+                            }
+                        )
                     });
                 }
             )
@@ -134,7 +139,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         <div className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         <div className="text-teal border-teal border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
                     </div>
-                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-teal': 'text-red'}`}>
+                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-teal' : 'text-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order)}</span>
                     </div>
