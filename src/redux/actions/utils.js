@@ -851,8 +851,14 @@ export const secondToMinutesAndSeconds = (time) => {
     }
 }
 
-export const getPriceColor = (value) =>
-    value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant'
+export const getPriceColor = (value, onusMode=false) =>{
+    if(onusMode){
+return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green'
+    }else{
+return value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant'
+    }
+}
+    
 
 const BASE_ASSET = ['VNDC', 'USDT']
 

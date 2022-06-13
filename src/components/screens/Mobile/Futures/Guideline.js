@@ -113,7 +113,7 @@ const Content = ({title, text, step, onClose, top, goTo, ...props}) => {
     const {t} = useTranslation();
     return (
         <div className="flex flex-col items-center justify-center" onClick={() => onClose(false)}>
-            {top && <img className="m-auto" src={getS3Url("/images/icon/ic_guide_arrow.png")} width={10}/>}
+            {top && <img className="m-auto" src={getS3Url("/images/icon/ic_guide_arrow_onus.png")} width={10}/>}
             <div className='relative'>
                 <View id={`guideline-step-${step}`}>
                     <div className="flex items-center justify-between">
@@ -137,7 +137,7 @@ const Content = ({title, text, step, onClose, top, goTo, ...props}) => {
                 </div>
             </div>
 
-            {!top && <img className="m-auto rotate-180" src={getS3Url("/images/icon/ic_guide_arrow.png")} width={10}/>}
+            {!top && <img className="m-auto rotate-180" src={getS3Url("/images/icon/ic_guide_arrow_onus.png")} width={10}/>}
         </div>
     )
 }

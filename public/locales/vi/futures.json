@@ -100,7 +100,7 @@
         "error_qty": "Khối lượng không được để trống",
         "error_tp": "Chốt lời không được để trống",
         "error_sl": "Dừng lỗ không được để trống",
-        "estimate_stop_loss": "Số lỗ ước tính sẽ là"
+        "estimate_stop_loss": "số lỗ ước tính sẽ là"
     },
     "balance": "Số dư",
     "unrealized_pnl": "Lợi nhuận ước tính",

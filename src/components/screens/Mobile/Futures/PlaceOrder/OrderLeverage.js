@@ -36,7 +36,7 @@ const OrderLeverage = ({leverage, setLeverage, isAuth, pair, pairConfig, context
             <div
                 onClick={() => setOpenModal(true)}
                 data-tut="order-leverage"
-                className="h-[32px] w-12 text-teal border-teal leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px]">{leverage}x
+                className="h-[32px] w-12 text-onus-green border-onus-green leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px]">{leverage}x
             </div>
             {openModal &&
             <FuturesLeverageSettings

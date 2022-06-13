@@ -153,7 +153,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     </div>
                     {profit ?
                         <div className="border-[1px] border-onus-green p-[5px] rounded-[2px] ml-[16px]" onClick={() => setOpenShareModal(true)}>
-                            <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
+                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={16} width={16} />
                         </div>
                         : null
                     }

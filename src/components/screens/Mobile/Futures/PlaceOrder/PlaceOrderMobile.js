@@ -401,6 +401,7 @@ const PlaceOrder = ({
 
                 {showEditSLTP &&
                     <FuturesEditSLTPVndc
+                        onusMode={true}
                         isVisible={showEditSLTP}
                         order={rowData.current}
                         onClose={() => setShowEditSLTP(false)}
