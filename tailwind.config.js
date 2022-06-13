@@ -27,13 +27,16 @@ const commonColors = {
     onus: {
         bg: '#090D17',
         bg2: '#36445A',
+        bgModal: '#243042',
         base: '#0068FF',
         green: '#0DB787',
         red: '#DC1F4E',
         line: '#1B222D',
         input: '#192231',
         white: '#F6F6F6',
+        textPrimary: '#F6F6F6',
         grey: '#8492A7',
+        textSecondary: '#8492A7',
     },
 };
 
