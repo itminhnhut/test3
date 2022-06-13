@@ -171,7 +171,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <span className="text-xs font-medium text-onus-green"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
             </div> */}
             <div className="flex flex-wrap gap-x-[10px] w-full">
-                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(data?.price, decimal, 0, true)} />
+                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(order?.price, decimal, 0, true)} />
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />

@@ -76,17 +76,17 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
                 :
                 <div className="flex pt-[10px]">
                     <TradingLabel
-                        label={t('futures:mobile:available')}
-                        value={<div className="flex items-center">{formatNumber(availableAsset ?? 0, 0)}&nbsp;&nbsp;<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openDeposit} /></div>}
-                        containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
-                    />
-                    <TradingLabel
                         label={t('futures:margin')}
                         value={`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
                             marginAndValue?.margin,
                             pairConfig?.pricePrecision || 2
                         )}`}
                         containerClassName='text-xs flex justify-between w-1/2 pb-[5px]'
+                    />
+                    <TradingLabel
+                        label={t('futures:mobile:available')}
+                        value={<div className="flex items-center">{formatNumber(availableAsset ?? 0, 0)}&nbsp;&nbsp;<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openDeposit} /></div>}
+                        containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
                     />
                 </div>
             }
