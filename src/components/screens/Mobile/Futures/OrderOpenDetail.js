@@ -4,7 +4,7 @@ import TradingInput from '../../../trade/TradingInput';
 import { SideComponent, OrderItem } from './TabOrders/OrderItemMobile';
 import { useSelector } from 'react-redux'
 import { renderCellTable, VndcFutureOrderType, getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import { formatNumber, formatTime, countDecimals, getS3Url } from 'redux/actions/utils'
+import { formatNumber, formatTime, countDecimals, getS3Url, emitWebViewEvent } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next'
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import Button from 'components/common/Button';
@@ -12,7 +12,8 @@ import { AlertContext } from 'components/common/layouts/LayoutMobile'
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { ApiStatus, FuturesOrderEnum } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api'
-import ShareFutureMobile from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
+import ShareFutureMobile, { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile'
+
 
 const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSLTP }) => {
     const { t } = useTranslation();
@@ -152,7 +153,12 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         </div>
                     </div>
                     {profit ?
-                        <div className="border-[1px] border-teal p-[5px] rounded-[2px] ml-[16px]" onClick={() => setOpenShareModal(true)}>
+                        <div className="border-[1px] border-teal p-[5px] rounded-[2px] ml-[16px]" onClick={() => {
+                            const emitData = getShareModalData({order, pairPrice:dataMarketWatch})
+                            emitWebViewEvent(JSON.stringify(emitData))
+                            // setOpenShareModal(true)
+                            }
+                        }>
                             <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
                         </div>
                         : null
