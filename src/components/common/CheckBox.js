@@ -8,6 +8,7 @@ const CheckBox = ({
     labelClassName,
     onChange,
     className,
+    onusMode=false
 }) => {
     const onCheck = () => onChange && onChange()
     return (
@@ -15,8 +16,10 @@ const CheckBox = ({
             <div
                 onClick={onCheck}
                 className={classNames(
-                    'w-[16px] h-[16px] flex items-center justify-center rounded-sm border border-divider dark:border-divider-dark cursor-pointer hover:!border-dominant',
-                    { 'bg-dominant border-dominant': active },
+                    'w-[16px] h-[16px] flex items-center justify-center rounded-sm border border-divider dark:border-divider-dark cursor-pointer ',
+                    {'hover:!border-dominant': !onusMode},
+                    { 'bg-dominant border-dominant': !onusMode && active },
+                    { 'bg-onus-green border-onus-green': onusMode && active },
                     boxContainerClassName
                 )}
             >
