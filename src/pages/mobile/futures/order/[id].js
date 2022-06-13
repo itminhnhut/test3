@@ -14,11 +14,11 @@ import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout'
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import { UserSocketEvent } from 'redux/actions/const';
 import { getOrdersList } from 'redux/actions/futures';
-
+import OrderDetailLoading from 'components/screens/Mobile/Futures/OrderDetailLoading'
 import dynamic from 'next/dynamic';
 const OrderDetailComponent = dynamic(
     () => import('components/screens/Mobile/Futures/OrderDetail'),
-    { loading: () => <LoadingPage /> }
+    { loading: () => <OrderDetailLoading /> }
 );
 
 const OrderDetail = (props) => {
@@ -98,7 +98,7 @@ const OrderDetail = (props) => {
         }
     }, [ordersList, orderDetail])
 
-    if (loading) return <LoadingPage />
+    if (loading) return <OrderDetailLoading />
     if (!orderDetail) return null;
 
     return (
