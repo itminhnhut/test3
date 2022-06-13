@@ -458,6 +458,7 @@ const FuturesEditSLTPVndc = ({
                     <div
                         className={`px-3 flex items-center w-full h-[36px] bg-gray-5 ${isMobile ? 'dark:bg-onus-bg2' : 'dark:bg-darkBlue-3'} rounded-[4px]`}>
                         <TradingInput
+                            onusMode={onusMode}
                             thousandSeparator
                             type="text"
                             label={t('futures:take_profit')}
@@ -507,6 +508,7 @@ const FuturesEditSLTPVndc = ({
                     <div
                         className={`px-3 flex items-center w-full h-[36px] bg-gray-5 ${isMobile ? 'dark:bg-onus-bg2' : 'dark:bg-darkBlue-3'} rounded-[4px]`}>
                         <TradingInput
+                            onusMode={onusMode}
                             thousandSeparator
                             type="text"
                             label={t('futures:stop_loss')}
