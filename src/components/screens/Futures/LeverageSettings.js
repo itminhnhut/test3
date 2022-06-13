@@ -122,6 +122,9 @@ const FuturesLeverageSettings = ({
         )
     }
 
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2': 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
+
+    console.log('check onus color', onusMode)
     return (
         <Modal
             onusMode={onusMode}
@@ -129,7 +132,7 @@ const FuturesLeverageSettings = ({
             onBackdropCb={onClose}
             containerClassName={`max-w-[306px] select-none ${className}`}
         >
-            <div className='-mt-1 mb-3 flex items-center justify-between font-bold text-sm'>
+            <div className={`-mt-1 mb-7 pb-4 flex items-center justify-between font-bold text-sm ${onusMode? 'border-b dark:border-onus-line border-onus-line' : ''}`}>
                 {t('futures:leverage:title')}
                 <div
                     className='flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer'
@@ -141,8 +144,9 @@ const FuturesLeverageSettings = ({
             <div className='mb-1.5 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
                 {t('futures:leverage:leverage')}
             </div>
-            <div className='px-2 mb-4 h-[36px] flex items-center bg-gray-4 dark:bg-darkBlue-3 rounded-[4px]'>
-                <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
+            <div className={`px-2 mb-4 h-[36px] flex items-center ${onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2': 'bg-gray-4 dark:bg-darkBlue-3'}rounded-[4px]`}>
+            
+                <div className={changeClass}>
                     <Minus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
@@ -153,18 +157,20 @@ const FuturesLeverageSettings = ({
                     />
                 </div>
                 <TradingInput
+                    onusMode={onusMode}
                     label=' '
                     value={_leverage}
                     suffix={'x'}
                     decimalScale={0}
                     containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[36px]'
+                    
                     inputClassName="!text-center"
                     onValueChange={({ value }) => _setLeverage(value)}
                     validator={getValidator}
                     inputMode="decimal"
                     allowedDecimalSeparators={[',', '.']}
                 />
-                <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
+                <div className={changeClass}>
                     <Plus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'

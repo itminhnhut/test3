@@ -17,6 +17,7 @@ const OrderVolumeMobileModal = (props) => {
         type, onConfirm, availableAsset, side, pairPrice, price,
         leverage, getValidator, quoteQty
     } = props;
+    const onusMode =  true
     const { t } = useTranslation();
     const [volume, setVolume] = useState(quoteQty)
     const [percent, setPercent] = useState(0);
@@ -57,6 +58,8 @@ const OrderVolumeMobileModal = (props) => {
 
     const available = maxQuoteQty >= minQuoteQty;
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
+
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2': 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
     return (
         <Modal
             onusMode={true}
@@ -64,7 +67,7 @@ const OrderVolumeMobileModal = (props) => {
             onBackdropCb={onClose}
             containerClassName={`select-none w-[95%] overflow-x-hidden`}
         >
-            <div className='-mt-1 mb-7 pb-4 flex items-center justify-between font-bold text-sm border-b border-divider dark:border-divider-dark'>
+            <div className='-mt-1 mb-7 pb-4 flex items-center justify-between font-bold text-sm border-b border-onus-line dark:border-onus-line'>
                 {t('futures:order_table:volume')}
                 <div
                     className='flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer'
@@ -74,8 +77,8 @@ const OrderVolumeMobileModal = (props) => {
                 </div>
             </div>
 
-            <div className='px-2 mb-7 h-[36px] flex items-center bg-gray-4 dark:bg-darkBlue-3 rounded-[4px]'>
-                <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
+            <div className='px-2 mb-7 h-[36px] flex items-center bg-gray-4 dark:bg-onus-bg2 rounded-[4px]'>
+                <div className={changeClass}> 
                     <Minus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
@@ -98,7 +101,7 @@ const OrderVolumeMobileModal = (props) => {
                     inputMode="decimal"
                     allowedDecimalSeparators={[',', '.']}
                 />
-                <div className='w-5 h-5 flex items-center justify-center rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark'>
+                <div className={changeClass}> 
                     <Plus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
