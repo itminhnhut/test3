@@ -242,7 +242,7 @@ const ExternalWithdrawal = (props) => {
                 <meta name="viewport"
                       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
             </Head>
-            <Div100vh className="px-4 py-6 flex flex-col bg-onus">
+            <Div100vh className="px-4 py-6 flex flex-col bg-[#1B222D]">
                 <div className="flex-1 text-onus font-medium text-sm">
                     <div className="flex items-center px-4 bg-onus-2 rounded-md h-11 mb-6">
                         <AssetLogo assetCode="ONUS" size={28}/>
