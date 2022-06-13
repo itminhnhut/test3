@@ -27,6 +27,7 @@ const commonColors = {
     onus: {
         bg: '#090D17',
         bg2: '#36445A',
+        bg3: '#243042',
         bgModal: '#243042',
         base: '#0068FF',
         green: '#0DB787',
@@ -254,6 +255,7 @@ module.exports = {
             onus: {
                 DEFAULT: commonColors.onus.bg,
                 1: commonColors.onus.bg2,
+                2: commonColors.onus.bg3,
                 ...commonColors.onus,
             },
         },

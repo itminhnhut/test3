@@ -244,7 +244,7 @@ const ExternalWithdrawal = (props) => {
             </Head>
             <Div100vh className="px-4 py-6 flex flex-col bg-onus">
                 <div className="flex-1 text-onus font-medium text-sm">
-                    <div className="flex items-center px-4 bg-onus-1 rounded-md h-11 mb-6">
+                    <div className="flex items-center px-4 bg-onus-2 rounded-md h-11 mb-6">
                         <AssetLogo assetCode="ONUS" size={28}/>
                         <span className="ml-1">
                             {t('ext_gate:onus_wallet')}
@@ -254,7 +254,7 @@ const ExternalWithdrawal = (props) => {
                     <span className="text-onus-secondary text-xs uppercase">
                         {t('ext_gate:asset')}
                     </span>
-                    <div className="flex justify-between items-center px-4 bg-onus-1 rounded-md h-11 mb-6 mt-2">
+                    <div className="flex justify-between items-center px-4 bg-onus-2 rounded-md h-11 mb-6 mt-2">
                         <div className="flex items-center font-medium">
                             <AssetLogo
                                 size={28}
@@ -272,7 +272,7 @@ const ExternalWithdrawal = (props) => {
                         </span>
                         {errorMessage}
                     </div>
-                    <div className="flex justify-between items-center pl-4 bg-onus-1 rounded-md h-11 mb-2 mt-2">
+                    <div className="flex justify-between items-center pl-4 bg-onus-2 rounded-md h-11 mb-2 mt-2">
                         <NumberFormat
                             thousandSeparator
                             allowNegative={false}
@@ -289,17 +289,17 @@ const ExternalWithdrawal = (props) => {
                                 setAmount(formatNumber(Math.min(currentCurr?.available || 0, max), decimalScale))
                             }
                         >
-                            <span className="px-4 py-2 text-[#418FFF] font-semibold">
+                            <span className="px-4 py-2 text-onus-base font-semibold">
                                 {t('ext_gate:max_opt')}
                             </span>
                             <div
-                                className="h-full leading-[2.75rem] bg-[#36445A] w-16 text-[#8492A7] rounded-r-md text-center">
+                                className="h-full leading-[2.75rem] bg-onus-1 w-16 text-onus-grey rounded-r-md text-center">
                                 {currentCurr?.assetCode}
                             </div>
                         </div>
                     </div>
                     <div className="text-xs mb-6">
-                        <span className="text-onus-secondary mr-1">
+                        <span className="text-onus-grey mr-1">
                             {t('ext_gate:available')}:
                         </span>
                         <span>
@@ -311,22 +311,22 @@ const ExternalWithdrawal = (props) => {
                     <span className="text-onus-secondary text-xs uppercase">
                         {t('ext_gate:trans_fee')}
                     </span>
-                    <div className="flex justify-between items-center pl-4 bg-onus-1 rounded-md h-11 mb-6 mt-2">
+                    <div className="flex justify-between items-center pl-4 bg-onus-2 rounded-md h-11 mb-6 mt-2">
                         <span>{fee > 0 ? formatNumber(fee, decimalScale) : t('common:free')}</span>
                         <div
-                            className="h-full leading-[2.75rem] bg-[#36445A] w-16 text-[#8492A7] rounded-r-md text-center">
+                            className="h-full leading-[2.75rem] bg-onus-1 w-16 text-onus-grey rounded-r-md text-center">
                             {currentCurr?.assetName}
                         </div>
                     </div>
                 </div>
                 <div className="text-center mb-2">
-                    {error && <span className="text-sm text-red">{error}</span>}
+                    {error && <span className="text-sm text-onus-red">{error}</span>}
                 </div>
                 <div
                     className={classNames(
                         'bg-[#0068FF] h-12 w-full rounded-md text-center leading-[3rem] text-onus font-semibold',
                         {
-                            '!bg-darkBlue-4 text-txtSecondary-dark': isDisableBtn
+                            '!bg-darkBlue-4 text-onus-grey': isDisableBtn
                         }
                     )}
                     onClick={() => !isDisableBtn && onWdl(+amount, currentCurr?.id)}
@@ -374,7 +374,7 @@ const ExternalWithdrawal = (props) => {
                                         <div className="font-bold">
                                             {a.assetCode}
                                         </div>
-                                        <div className="text-onus-secondary text-sm">
+                                        <div className="text-onus-grey text-sm">
                                             {a.assetName}
                                         </div>
                                     </div>
@@ -411,12 +411,12 @@ const ExternalWithdrawal = (props) => {
                 <p className="text-center font-semibold text-lg mt-5">
                     {t('wallet:mobile:transfer_asset_success', {})}
                 </p>
-                <p className="text-center text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                <p className="text-center text-sm text-onus-grey">
                     {t('wallet:mobile:tips')}
                 </p>
                 <div className="mt-7 mb-8 space-y-4">
                     <div className="flex justify-between text-xs">
-                        <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                        <span className="font-medium text-onus-grey">
                             {t('wallet:mobile:time')}
                         </span>
                         <span className="font-semibold">
@@ -424,7 +424,7 @@ const ExternalWithdrawal = (props) => {
                         </span>
                     </div>
                     <div className="flex justify-between text-xs">
-                        <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                        <span className="font-medium text-onus-grey">
                             {t('wallet:mobile:amount')}
                         </span>
                         <span className="font-semibold">
@@ -434,7 +434,7 @@ const ExternalWithdrawal = (props) => {
                     </div>
                     <div className="flex justify-between text-xs">
                         <span
-                            className="font-medium text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-3">
+                            className="font-medium text-onus-grey whitespace-nowrap mr-3">
                             {t('wallet:mobile:transfer_from_to')}
                         </span>
                         <span className="font-semibold whitespace-nowrap">
