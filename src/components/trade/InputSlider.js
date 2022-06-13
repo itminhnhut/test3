@@ -48,6 +48,8 @@ const Slider = ({
     xStart = 0,
     reload,
     dots,
+    onusMode = true,
+    BgColorLine,
     ...props
 }) => {
     const container = useRef(null)
@@ -313,7 +315,7 @@ const Slider = ({
                 onMouseDown={handleTrackMouseDown}
             >
                 <Active style={valueStyle} bgColorSlide={bgColorSlide} />
-                <SliderBackground isDark={currentTheme === THEME_MODE.DARK} />
+                <SliderBackground isDark={currentTheme === THEME_MODE.DARK} BgColorLine={BgColorLine} />
                 <DotContainer>
                     {!customDotAndLabel &&
                         <Dot
