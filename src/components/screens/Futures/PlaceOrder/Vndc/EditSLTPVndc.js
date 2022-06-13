@@ -397,6 +397,7 @@ const FuturesEditSLTPVndc = ({
                         <div
                             className={`px-3 flex items-center w-full h-[36px] bg-gray-5 ${isMobile ? 'dark:bg-onus-bg2' : 'dark:bg-darkBlue-3'} rounded-[4px] justify-between`}>
                             <TradingInput
+                                onusMode={onusMode}
                                 thousandSeparator
                                 type="text"
                                 className="flex-grow text-right font-medium h-[21px]"
