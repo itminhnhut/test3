@@ -13,10 +13,10 @@ import IndicatorBars, {
     mainIndicators,
     subIndicators
 } from "components/TVChartContainer/MobileTradingView/IndicatorBars";
-import {find} from "lodash";
+import {find, get, set} from "lodash";
 
 const CONTAINER_ID = "nami-mobile-tv";
-const CHART_VERSION = "1.0.6";
+const CHART_VERSION = "1.0.7";
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
@@ -65,7 +65,7 @@ export class MobileTradingView extends React.PureComponent {
         ) {
             this.widget.remove();
             this.oldOrdersList = [];
-            this.initWidget(this.props.symbol, this.state.interval);
+            this.initWidget(this.props.symbol);
         }
 
         if (prevProps.theme !== this.props.theme) {
@@ -147,55 +147,37 @@ export class MobileTradingView extends React.PureComponent {
     loadSavedChart = () => {
         // Load saved chart
         let savedChart = localStorage.getItem(this.getChartKey);
-        if (savedChart && this.props.autoSave) {
+        if (savedChart) {
             try {
-                const symbol = this.props.symbol
                 const data = JSON.parse(savedChart);
-                if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
-                    this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
-                    this.setState({
-                        ...this.state,
-                        interval: this.widget.activeChart().resolution(),
-                        priceChartType: this.widget.activeChart().chartType(),
-                    })
-                }
+                set(data, 'charts[0].panes[0].sources[0].state.symbol', this.props.symbol)
+                this.widget.load(data);
             } catch (err) {
                 console.error('Load chart error', err);
             }
         }
+
+        // Sync resolution to local component state
+        setTimeout(() => {
+            const interval = this.widget.activeChart().resolution()
+            this.setState({
+                ...this.state,
+                interval,
+                priceChartType: this.widget.activeChart().chartType(),
+            })
+            if (this.props.onIntervalChange) {
+                this.props.onIntervalChange(interval)
+            }
+        }, 0)
     }
 
     // eslint-disable-next-line class-methods-use-this
     saveChart = () => {
         try {
-            if (this.widget && this.props.autoSave) {
+            if (this.widget) {
                 this.widget.save((data) => {
-                    let currentData = localStorage.getItem(this.getChartKey);
-                    if (currentData) {
-                        try {
-                            currentData = JSON.parse(currentData);
-                            if (typeof currentData !== "object") {
-                                currentData = null;
-                            }
-                        } catch (ignored) {
-                            currentData = null;
-                        }
-                    }
-                    if (!currentData) {
-                        currentData = {
-                            created_at: new Date(),
-                        };
-                    }
-
-                    const obj = {
-                        updated_at: new Date(),
-                        [`chart_${this.props.symbol.toLowerCase()}`]: data,
-                        chart_all: data,
-                    };
-                    localStorage.setItem(
-                        this.getChartKey,
-                        JSON.stringify(Object.assign(currentData, obj))
-                    );
+                    let currentData = JSON.parse(localStorage.getItem(this.getChartKey) || '{}')
+                    localStorage.setItem(this.getChartKey, JSON.stringify(Object.assign(currentData, data)));
                 });
             }
         } catch (err) {
@@ -233,13 +215,13 @@ export class MobileTradingView extends React.PureComponent {
                 .setQuantity(null)
                 .setEditable(false)
                 .setLineColor(color)
-                .setBodyTextColor(isMatched ? 'rgb(255,255,255)' : color)
+                .setBodyTextColor('rgb(255,255,255)')
                 .setQuantityBackgroundColor('rgba(0,0,0,0)')
                 .setQuantityBorderColor('rgba(0,0,0,0)')
                 .setQuantityTextColor('rgb(0, 0, 0)')
                 .setLineLength(120)
                 .setLineWidth(2)
-                .setBodyBackgroundColor(isMatched ? color : 'rgb(255,255,255)')
+                .setBodyBackgroundColor(color)
                 .setBodyBorderColor(color)
                 .setCancelButtonBorderColor('rgb(255,0,0)')
                 .setCancelButtonBackgroundColor('rgb(0,255,0)')
@@ -377,7 +359,7 @@ export class MobileTradingView extends React.PureComponent {
         this.oldOrdersList = this.props?.ordersList.map(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && order.displaying_id)
     };
 
-    initWidget = (symbol, interval) => {
+    initWidget = (symbol) => {
         if (!symbol) return;
 
         const datafeed = new Datafeed(this.props.mode || ChartMode.SPOT)
@@ -385,7 +367,7 @@ export class MobileTradingView extends React.PureComponent {
             symbol,
             datafeed,
             theme: 'Dark',
-            interval,
+            interval: this.props.initTimeFrame,
             container_id: this.containerId,
             library_path: this.props.libraryPath,
             locale: "en",
@@ -448,6 +430,10 @@ export class MobileTradingView extends React.PureComponent {
             },
             custom_css_url: '/library/trading_view/custom_mobile_chart.css'
         };
+
+        // Clear to solve config when load saved chart
+        if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
+
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
         this.widget.onChartReady(() => {
@@ -573,7 +559,6 @@ MobileTradingView.defaultProps = {
     showIconGuide: true,
     autosize: true,
     showTimeFrame: true,
-    autoSave: true,
     renderProfit: false,
     ordersList: [],
     studies_overrides: {

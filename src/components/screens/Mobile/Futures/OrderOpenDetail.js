@@ -4,7 +4,7 @@ import TradingInput from '../../../trade/TradingInput';
 import { SideComponent, OrderItem } from './TabOrders/OrderItemMobile';
 import { useSelector } from 'react-redux'
 import { renderCellTable, VndcFutureOrderType, getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import { formatNumber, formatTime, countDecimals, getS3Url } from 'redux/actions/utils'
+import { formatNumber, formatTime, countDecimals, getS3Url, emitWebViewEvent } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next'
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import Button from 'components/common/Button';
@@ -12,7 +12,8 @@ import { AlertContext } from 'components/common/layouts/LayoutMobile'
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
 import { ApiStatus, FuturesOrderEnum } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api'
-import ShareFutureMobile from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
+import ShareFutureMobile, { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile'
+
 
 const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSLTP }) => {
     const { t } = useTranslation();
@@ -139,7 +140,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         <div className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         <div className="text-onus-green border-onus-green border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
                     </div>
-                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-red'}`}>
+                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order)}</span>
                     </div>
@@ -148,11 +149,16 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     <div className="text-xs ">
                         <div className="text-gray-1 dark:text-onus-grey py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
                         <div className="text-xs font-medium text-onus-green py-[1px] float-right">
-                            <OrderProfit className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
+                            <OrderProfit onusMode={true} className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                         </div>
                     </div>
                     {profit ?
-                        <div className="border-[1px] border-onus-green p-[5px] rounded-[2px] ml-[16px]" onClick={() => setOpenShareModal(true)}>
+                        <div className="border-[1px] border-onus-green p-[5px] rounded-[2px] ml-[16px]" onClick={() => {
+                            const emitData = getShareModalData({order, pairPrice:dataMarketWatch})
+                            emitWebViewEvent(JSON.stringify(emitData))
+                            // setOpenShareModal(true)
+                            }
+                        }>
                             <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
                         </div>
                         : null
@@ -168,7 +174,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
-                <OrderItem label={t('futures:stop_loss')} valueClassName="text-red" value={formatNumber(order?.sl, 0)} />
+                <OrderItem label={t('futures:stop_loss')} valueClassName="text-onus-red" value={formatNumber(order?.sl, 0)} />
                 <OrderItem label={t('futures:take_profit')} valueClassName="text-onus-green" value={formatNumber(order?.tp, 0)} />
                 {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>

@@ -273,6 +273,7 @@ const Slider = ({
             const valueX = (i * (dots ? (xmax / dots) : dotStep)).toFixed(0)
             dot.push(
                 <Dot
+                    bgColorActive={bgColorActive}
                     key={`inputSlider_dot_${i}`}
                     active={pos.left >= i * size}
                     percentage={i * size}

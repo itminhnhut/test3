@@ -71,7 +71,9 @@ const FuturesMobile = () => {
 
    
 
-    
+    useEffect(()=>{
+        emitWebViewEvent('nami_futures')
+    }, [])
 
     useEffect(() => {
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });

@@ -12,7 +12,8 @@ import fetchApi from 'utils/fetch-api'
 import { AlertContext } from 'components/common/layouts/LayoutMobile'
 import OrderItemMobile from './OrderItemMobile'
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
-import ShareFutureMobile from './ShareFutureMobile';
+import ShareFutureMobile, { getShareModalData } from './ShareFutureMobile';
+import { emitWebViewEvent } from 'redux/actions/utils';
 
 const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDetail }) => {
     const { t } = useTranslation();
@@ -46,7 +47,12 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
                 setOpenEditModal(!openEditModal);
                 break;
             default:
-                setOpenShareModal(!openShareModal)
+                
+                if(!openShareModal){
+                    const shareModalData = getShareModalData({order: rowData.current, pairPrice:marketWatch[rowData.current?.symbol]})
+                    emitWebViewEvent(JSON.stringify(shareModalData))
+                }
+                // setOpenShareModal(!openShareModal)
                 break;
         }
     }
@@ -95,6 +101,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
         <div className="px-[16px] pt-[10px] overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
             {openEditModal &&
                 <FuturesEditSLTPVndc
+                    onusMode={true}
                     isVisible={openEditModal}
                     order={rowData.current}
                     onClose={() => setOpenEditModal(false)}

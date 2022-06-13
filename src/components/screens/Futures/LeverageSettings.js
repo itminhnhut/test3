@@ -177,9 +177,12 @@ const FuturesLeverageSettings = ({
             </div>
             <div className='mb-3'>
                 <Slider
+                    onusMode={onusMode}
                     useLabel
                     labelSuffix='x'
                     x={_leverage}
+                    bgColorSlide={onusMode ? colors.onus.base: undefined}
+                    bgColorActive={onusMode ? colors.onus.base: undefined}
                     axis='x'
                     xmax={pairConfig?.leverageConfig?.max}
                     onChange={({ x }) =>
@@ -187,6 +190,14 @@ const FuturesLeverageSettings = ({
                     }
                     dots={dots}
                 />
+                    {/* useLabel axis='x' x={percent.sl} xmax={100}
+                        labelSuffix='%'
+                        customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
+                        bgColorSlide={colors.onus.red}
+                        bgColorActive={colors.onus.red}
+                        xStart={50}
+                        reload={tab}
+                        onChange={({ x }) => onChangePercent(x, 100, 'sl')} /> */}
             </div>
             {!isVndcFutures && <>
                 <div className='mb-1 text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark select-none'>

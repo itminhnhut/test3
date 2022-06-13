@@ -25,6 +25,7 @@ const FuturesEditSLTPVndc = ({
     pairTicker,
     lastPrice = 0,
     isMobile,
+    onusMode=false
 }) => {
     const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
     const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
@@ -481,7 +482,6 @@ const FuturesEditSLTPVndc = ({
                         useLabel axis='x' x={percent.tp} xmax={100}
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
-                        // bgColorSlide={'transparent'}
                         xStart={50}
                         reload={tab}
                         bgColorActive={isMobile ? colors.onus.green : colors.teal}
@@ -562,6 +562,7 @@ const FuturesEditSLTPVndc = ({
                     type="primary"
                     className={`mt-5 !h-[36px] ${classNameError}`}
                     componentType="button"
+                    onusMode={onusMode}
                     disabled={isError}
                     onClick={() => {
                         const params = {

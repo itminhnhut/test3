@@ -6,7 +6,7 @@ import { ArrowRight, ChevronLeft } from 'react-feather';
 import ms from 'ms';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
-import { countDecimals, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import { countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { API_ORDER_DETAIL } from 'redux/actions/apis';
@@ -46,27 +46,6 @@ const getAssets = createSelector(
     }
 );
 
-// const closest = (arr, num) => {
-//     return arr.reduce((acc, val) => {
-//         if (Math.abs(val - num) < Math.abs(acc)) {
-//             return val - num;
-//         } else {
-//             return acc;
-//         }
-//     }, Infinity) + num;
-// }
-
-const getResolution = (order) => {
-    if (order.status !== VndcFutureOrderType.Status.CLOSED) return '60'
-    const timestamp = new Date(order?.closed_at).getTime() - new Date(order?.opened_at).getTime();
-    if (isNaN(timestamp)) return '1D';
-    const item = listTimeFrame.reduce((prev, curr) => {
-        return (Math.abs(ms(curr.text) - timestamp) < Math.abs(ms(prev?.text) - timestamp) ? curr : prev);
-    });
-    return item?.value ?? '1D'
-}
-
-
 const OrderDetail = ({
     order,
     pairConfig,
@@ -82,7 +61,7 @@ const OrderDetail = ({
         swap: { currency: order?.margin_currency },
         order_value: { currency: order?.order_value_currency }
     }));
-    const [resolution, setResolution] = useState(getResolution(order));
+    const [resolution, setResolution] = useState('15');
 
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
@@ -157,6 +136,10 @@ const OrderDetail = ({
         router.back()
     }
 
+    useEffect(()=>{
+        emitWebViewEvent('order_detail')
+    }, [])
+
     const resolutionLabel = useMemo(() => {
         return listTimeFrame.find(item => item.value === resolution)?.text;
     }, [resolution]);
@@ -171,8 +154,8 @@ const OrderDetail = ({
                     className="relative w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
                 >
                     <div className="flex items-center" onClick={() => onClose()}>
-                        <ChevronLeft size={24} />
-                        <span className="font-medium text-sm">{t('common:back')}</span>
+                        {/*<ChevronLeft size={24} />*/}
+                        {/*<span className="font-medium text-sm">{t('common:back')}</span>*/}
                     </div>
                     <div
                         className="flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2">
@@ -201,6 +184,7 @@ const OrderDetail = ({
                             symbol={order.symbol}
                             pairConfig={pairConfig}
                             initTimeFrame={resolution}
+                            onIntervalChange={setResolution}
                             isVndcFutures={true}
                             ordersList={orderList}
                             theme={THEME_MODE.DARK}
@@ -208,7 +192,6 @@ const OrderDetail = ({
                             showSymbol={false}
                             showIconGuide={false}
                             showTimeFrame={false}
-                            autoSave={false}
                             classNameChart="!h-[350px]"
                             renderProfit={order.status === VndcFutureOrderType.Status.CLOSED}
                         />

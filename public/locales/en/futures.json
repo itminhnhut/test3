@@ -46,7 +46,7 @@
     },
     "close_order": {
         "modal_title": "Close Order #{{value}}",
-        "confirm_message": "Do you want to close your order with ticket <span class='font-medium'>#{{value}}</span> ?",
+        "confirm_message": "Do you want to close your order with ticket <span class='font-medium'>#{{value}}</span>?",
         "future_note": "* Eco Close mode will close your order by placing Limit order close to the current price and get a discount on fees compared to normal order. See details at ",
         "close_successfully": "Close order #{{value}} successfully",
         "request_successfully": "Submit request successfully",
@@ -97,7 +97,8 @@
         "error_price": "Price cannot be empty",
         "error_qty": "Size cannot be empty",
         "error_tp": "Take profit cannot be empty",
-        "error_sl": "Stop loss cannot be empty"
+        "error_sl": "Stop loss cannot be empty",
+        "estimate_stop_loss": "Estimate loss with be"
     },
     "balance": "Balance",
     "unrealized_pnl": "Unrealized PNL",

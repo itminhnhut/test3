@@ -59,6 +59,7 @@ const OrderVolumeMobileModal = (props) => {
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
     return (
         <Modal
+            onusMode={true}
             isVisible={true}
             onBackdropCb={onClose}
             containerClassName={`select-none w-[95%] overflow-x-hidden`}
@@ -112,6 +113,8 @@ const OrderVolumeMobileModal = (props) => {
                     axis='x'
                     xmax={100}
                     onChange={({ x }) => available && onChangeVolume(x)}
+                    bgColorActive={colors.onus.base}
+                    bgColorSlide={colors.onus.base}
                     dots={4}
                 />
             </div>
@@ -154,6 +157,7 @@ const OrderVolumeMobileModal = (props) => {
             }
             <div className='mt-5 mb-2'>
                 <Button
+                    onusMode={true}
                     title={t(available ? 'futures:leverage:confirm' : 'wallet:deposit')}
                     componentType='button'
                     className={`!h-[36px] ${isError ? 'dark:!bg-darkBlue-3 dark:!text-darkBlue-4' : ''}`}
