@@ -16,7 +16,7 @@ import IndicatorBars, {
 import {find} from "lodash";
 
 const CONTAINER_ID = "nami-mobile-tv";
-const CHART_VERSION = "1.0.6";
+const CHART_VERSION = "1.0.7";
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
