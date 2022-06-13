@@ -447,11 +447,10 @@ const FuturesEditSLTPVndc = ({
                             className="flex-grow text-right font-medium h-[21px] text-onus-green"
                             containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
                             value={tab === 0 ? profit.current.tp : tab === 1 ? data.tp : tabPercent.current.tp}
-                            // validator={tab === 1 && inputValidator('take_profit')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
                             renderTail={() => (
-                                <span className="font-medium text-onus-green pl-2">
+                                <span className={`font-medium ${onusMode ? 'text-onus-green' : 'text-teal'} pl-2`}>
                                     {tab === 2 ? '%' : quoteAsset}
                                 </span>
                             )}
@@ -481,7 +480,7 @@ const FuturesEditSLTPVndc = ({
                         {formatNumber(data.tp, 0, 0, true)}&nbsp;
                     </span>
                     {t('futures:tp_sl:estimate')}&nbsp;
-                    <span className="text-dominant">{profit.current.tp + ' ' + quoteAsset}</span>.
+                    <span className="text-onus-green">{profit.current.tp + ' ' + quoteAsset}</span>.
                 </div>
 
                 <div className="my-4 w-full h-[1px] bg-divider dark:bg-onus-line" />
