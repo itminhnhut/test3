@@ -25,7 +25,7 @@ const FuturesEditSLTPVndc = ({
     pairTicker,
     lastPrice = 0,
     isMobile,
-    onusMode=false
+    onusMode = false
 }) => {
     const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
     const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
@@ -367,13 +367,13 @@ const FuturesEditSLTPVndc = ({
     const classMobile = useMemo(() => {
         const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
         const widht = 'w-[95%]';
-        return height + widht + ' overflow-x-hidden bg-[#243042]'
+        return height + widht + ' overflow-x-hidden !bg-[#243042]'
     }, [isMobile])
 
     return (
-        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%]`}>
+        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%] dark:bg-darkBlue-2`}>
             <div
-                className={`px-5 py-4 flex items-center justify-between border-b border-divider dark:border-onus-line sticky top-0 z-[10] bg-white rounded-t-lg ${isMobile ? 'dark:bg-[#243042]' : 'dark:bg-darkBlue-2'}`}>
+                className={`px-5 py-4 flex items-center justify-between border-b border-divider sticky top-0 z-[10] bg-white rounded-t-lg ${isMobile ? 'dark:bg-[#243042] dark:border-onus-line' : 'dark:bg-darkBlue-2 dark:border-divider-dark'}`}>
                 <span className="font-bold text-[16px]">
                     {t('futures:tp_sl:modify_tpsl')}
                 </span>{' '}
@@ -395,12 +395,12 @@ const FuturesEditSLTPVndc = ({
                 <div className="mb-3 font-medium flex items-center justify-between">
                     {status === VndcFutureOrderType.Status.PENDING && order?.type !== VndcFutureOrderType.Type.MARKET && order?.type ?
                         <div
-                            className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-onus-bg2 rounded-[4px] justify-between">
+                            className={`px-3 flex items-center w-full h-[36px] bg-gray-5 ${isMobile ? 'dark:bg-onus-bg2' : 'dark:bg-darkBlue-3'} rounded-[4px] justify-between`}>
                             <TradingInput
                                 thousandSeparator
                                 type="text"
                                 className="flex-grow text-right font-medium h-[21px]"
-                                containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
+                                containerClassName={`w-full !py-0 !px-0 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
                                 value={data.price}
                                 label={t('futures:order_table:open_price')}
                                 validator={inputValidator('price')}
@@ -456,13 +456,13 @@ const FuturesEditSLTPVndc = ({
                 }
                 <div className="mt-6 flex items-center ">
                     <div
-                        className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-onus-bg2 rounded-[4px]">
+                        className={`px-3 flex items-center w-full h-[36px] bg-gray-5 ${isMobile ? 'dark:bg-onus-bg2' : 'dark:bg-darkBlue-3'} rounded-[4px]`}>
                         <TradingInput
                             thousandSeparator
                             type="text"
                             label={t('futures:take_profit')}
                             className={`flex-grow text-right font-medium h-[21px] ${isMobile ? 'text-onus-green' : 'text-teal'}`}
-                            containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
+                            containerClassName={`w-full !py-0 !px-0 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
                             value={tab === 0 ? profit.current.tp : tab === 1 ? data.tp : tabPercent.current.tp}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
@@ -505,13 +505,13 @@ const FuturesEditSLTPVndc = ({
 
                 <div className="flex items-center">
                     <div
-                        className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-onus-bg2 rounded-[4px]">
+                        className={`px-3 flex items-center w-full h-[36px] bg-gray-5 ${isMobile ? 'dark:bg-onus-bg2' : 'dark:bg-darkBlue-3'} rounded-[4px]`}>
                         <TradingInput
                             thousandSeparator
                             type="text"
                             label={t('futures:stop_loss')}
                             className={`flex-grow text-right font-medium h-[21px] ${isMobile ? 'text-onus-red' : 'text-red'}`}
-                            containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
+                            containerClassName={`w-full !py-0 !px-0 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
                             value={tab === 0 ? profit.current.sl : tab === 1 ? data.sl : tabPercent.current.sl}
                             // validator={tab === 1 && inputValidator('stop_loss')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
