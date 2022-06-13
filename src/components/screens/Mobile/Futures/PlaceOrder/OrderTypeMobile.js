@@ -50,9 +50,9 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="w-full absolute z-50 bg-white dark:bg-bgPrimary-dark">
+                        <Popover.Panel className="w-full absolute z-50 bg-white dark:bg-bgPrimary-dark rounded-md">
                             <div
-                                className="overflow-y-auto overflow-x-hidden px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
+                                className="overflow-y-auto overflow-x-hidden px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col ">
                                 {typeList?.map(o => {
                                     return (
                                         <div onClick={() => {

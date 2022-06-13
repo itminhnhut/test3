@@ -80,7 +80,7 @@ const OrderBalance = ({
     }
     return (
         <div
-            className="sticky top-[42px] bg-white dark:bg-onus z-[10px] flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] pt-[10px] dark:border-divider-dark">
+            className="sticky top-[42px] bg-white dark:bg-onus z-[10px] flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] pt-[10px] dark:border-onus-line">
             <TradingLabel
                 label={t('futures:mobile:balance')}
                 value={_balance}

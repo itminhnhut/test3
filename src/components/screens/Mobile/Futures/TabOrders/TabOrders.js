@@ -113,7 +113,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
 });
 
 const TabMobile = styled.div.attrs({
-    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-divider-dark gap-[32px]"
+    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-onus-line gap-[32px]"
 })`
     height:42px;
     width:100%;
