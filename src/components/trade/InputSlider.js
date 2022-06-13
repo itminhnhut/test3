@@ -48,7 +48,7 @@ const Slider = ({
     xStart = 0,
     reload,
     dots,
-    onusMode=true,
+    onusMode=false,
     ...props
 }) => {
     const container = useRef(null)

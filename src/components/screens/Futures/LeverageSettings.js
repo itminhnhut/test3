@@ -177,6 +177,7 @@ const FuturesLeverageSettings = ({
             </div>
             <div className='mb-3'>
                 <Slider
+                    onusMode={onusMode}
                     useLabel
                     labelSuffix='x'
                     x={_leverage}
