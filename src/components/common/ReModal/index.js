@@ -14,6 +14,7 @@ const Modal = ({
     useCross = false,
     onBackdropCb,
     onClose,
+    onusMode = true
 }) => {
     return (
         <Portal portalId={PORTAL_MODAL_ID}>
@@ -28,7 +29,7 @@ const Modal = ({
                     onClick={() => onBackdropCb && onBackdropCb()}
                     style={{
                         backgroundColor: hexRgb(colors.darkBlue2, {
-                            alpha: 0.6,
+                            alpha: 0.7,
                             format: 'rgba',
                         }),
                     }}
@@ -40,7 +41,9 @@ const Modal = ({
                 />
                 <div
                     className={classNames(
-                        'fixed top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-[280px] min-h-[100px] p-4 z-[99999999] bg-bgPrimary dark:bg-darkBlue-2 dark:border dark:border-teal-opacity rounded-lg dark:drop-shadow-dark',
+                        'fixed top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-[280px] min-h-[100px] p-4 z-[99999999] rounded-lg dark:drop-shadow-dark',
+                        {'bg-bgPrimary dark:bg-darkBlue-2 dark:border dark:border-teal-opacity': !onusMode},
+                        {'bg-onus-bgModal': onusMode},
                         containerClassName
                     )}
                 >

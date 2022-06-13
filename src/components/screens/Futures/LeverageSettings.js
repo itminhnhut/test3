@@ -23,7 +23,8 @@ const FuturesLeverageSettings = ({
     isAuth,
     isVndcFutures,
     dots,
-    className
+    className,
+    onusMode = true
 }) => {
     const [loading, setLoading] = useState(false)
     const { t } = useTranslation();
@@ -149,13 +150,6 @@ const FuturesLeverageSettings = ({
                         }
                     />
                 </div>
-                {/* <input
-                    value={`${_leverage}x`}
-                    onChange={(e) =>
-                        _setLeverage(+e.target.value?.trim()?.replace('x', ''))
-                    }
-                    className='px-2.5 flex-grow text-center text-sm font-medium'
-                /> */}
                 <TradingInput
                     label=' '
                     value={_leverage}
@@ -220,7 +214,7 @@ const FuturesLeverageSettings = ({
                 <div className='mt-5 mb-2'>{renderConfirmButton()}</div>
                 :
                 <div className="mt-5 mb-2 cursor-pointer flex items-center justify-center h-full">
-                    <div className='w-[200px] bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'
+                    <div className={`w-[200px] ${onusMode ? 'bg-onus-base' : 'bg-dominant'} text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`}
                         onClick={onLogin}
                     >
                         {t('futures:order_table:login_to_continue')}
