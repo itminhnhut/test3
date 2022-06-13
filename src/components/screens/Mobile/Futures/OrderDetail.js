@@ -175,8 +175,8 @@ const OrderDetail = ({
                 className="sticky top-0 w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
             >
                 <div className="flex items-center" onClick={() => onClose()}>
-                    <ChevronLeft size={24} />
-                    <span className="font-medium text-sm">{t('common:back')}</span>
+                    {/* <ChevronLeft size={24} />
+                    <span className="font-medium text-sm">{t('common:back')}</span> */}
                 </div>
                 <div
                     className="flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2">
