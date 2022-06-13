@@ -58,7 +58,23 @@ const colors = {
     overlayLight: 'rgba(0, 0, 0, 0.45)',
     overlayDark: 'rgba(0, 0, 0, 0.45)',
 
-    onus: '#1B222D',
+    onus: {
+        bg: '#090D17',
+        bg2: '#36445A',
+        base: '#0068FF',
+        green: '#0DB787',
+        red: '#DC1F4E',
+        line: '#1B222D',
+        input: '#192231',
+        white: '#F6F6F6',
+        grey: '#8492A7'
+    }
+    // onus: '#090D17', //background main
+    // onus1: '#192231',//background input
+    // greenOnus: '#0DB787',
+    // redOnus: '#DC1F4E',
+    // grayOnus: '#8492A7',
+    // whiteOnus: '#F6F6F6'
 };
 
 export default colors;

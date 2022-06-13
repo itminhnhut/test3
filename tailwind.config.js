@@ -24,8 +24,17 @@ const commonColors = {
 
     red2: '#E5544B',
 
-    onus: '#1B222D',
-    onus1: '#243042',
+    onus: {
+        bg: '#090D17',
+        bg2: '#36445A',
+        base: '#0068FF',
+        green: '#0DB787',
+        red: '#DC1F4E',
+        line: '#1B222D',
+        input: '#192231',
+        white: '#F6F6F6',
+        grey: '#8492A7'
+    }
 };
 
 module.exports = {
@@ -239,7 +248,10 @@ module.exports = {
             pink: { DEFAULT: '#E5544B' },
             mint: { DEFAULT: '#00C8BC' },
 
-            onus: { DEFAULT: commonColors.onus, 1: commonColors.onus1 },
+            onus: {
+                DEFAULT: commonColors.onus.bg, 1: commonColors.onus.bg2,
+                ...commonColors.onus
+            },
         },
         extend: {
             spacing: {
