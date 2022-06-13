@@ -266,5 +266,6 @@
     },
     "orders_history": "Orders History",
     "minimum_leverage": "Minimum Leverage is",
-    "maximum_leverage": "Maximum Leverage is"
+    "maximum_leverage": "Maximum Leverage is",
+    "positions": "Positions"
 }
