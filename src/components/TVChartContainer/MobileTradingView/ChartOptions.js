@@ -85,7 +85,7 @@ const ChartOptions = ({
                     classNameButton="px-2 py-2"
                     classNamePanel="rounded-md"
                     label={<div
-                        className="text-sm text-gray-1 dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}
+                        className="text-sm text-gray-1 dark:text-txtSecondary-dark font-normal">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={chartType}

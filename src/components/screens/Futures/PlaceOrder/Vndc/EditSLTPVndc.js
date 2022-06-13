@@ -528,7 +528,7 @@ const FuturesEditSLTPVndc = ({
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
                         {formatNumber(data.sl, 0, 0, true)}&nbsp;
                     </span>
-                    {t('futures:tp_sl:estimate')}&nbsp;
+                    {t('futures:tp_sl:estimate_stop_loss')}&nbsp;
                     <span className="text-red">{profit.current.sl + ' ' + quoteAsset}</span>.
                 </div>
 
