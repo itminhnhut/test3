@@ -46,27 +46,6 @@ const getAssets = createSelector(
     }
 );
 
-// const closest = (arr, num) => {
-//     return arr.reduce((acc, val) => {
-//         if (Math.abs(val - num) < Math.abs(acc)) {
-//             return val - num;
-//         } else {
-//             return acc;
-//         }
-//     }, Infinity) + num;
-// }
-
-const getResolution = (order) => {
-    if (order.status !== VndcFutureOrderType.Status.CLOSED) return '60'
-    const timestamp = new Date(order?.closed_at).getTime() - new Date(order?.opened_at).getTime();
-    if (isNaN(timestamp)) return '1D';
-    const item = listTimeFrame.reduce((prev, curr) => {
-        return (Math.abs(ms(curr.text) - timestamp) < Math.abs(ms(prev?.text) - timestamp) ? curr : prev);
-    });
-    return item?.value ?? '1D'
-}
-
-
 const OrderDetail = ({
     order,
     pairConfig,
@@ -82,7 +61,7 @@ const OrderDetail = ({
         swap: { currency: order?.margin_currency },
         order_value: { currency: order?.order_value_currency }
     }));
-    const [resolution, setResolution] = useState(getResolution(order));
+    const [resolution, setResolution] = useState('15');
 
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
@@ -212,7 +191,6 @@ const OrderDetail = ({
                             showSymbol={false}
                             showIconGuide={false}
                             showTimeFrame={false}
-                            autoSave={false}
                             classNameChart="!h-[350px]"
                             renderProfit={order.status === VndcFutureOrderType.Status.CLOSED}
                         />

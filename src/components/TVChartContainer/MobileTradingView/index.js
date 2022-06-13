@@ -13,10 +13,10 @@ import IndicatorBars, {
     mainIndicators,
     subIndicators
 } from "components/TVChartContainer/MobileTradingView/IndicatorBars";
-import {find} from "lodash";
+import {find, get, set} from "lodash";
 
 const CONTAINER_ID = "nami-mobile-tv";
-const CHART_VERSION = "1.0.6";
+const CHART_VERSION = "1.0.7";
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
@@ -147,13 +147,11 @@ export class MobileTradingView extends React.PureComponent {
     loadSavedChart = () => {
         // Load saved chart
         let savedChart = localStorage.getItem(this.getChartKey);
-        if (savedChart && this.props.autoSave) {
+        if (savedChart) {
             try {
-                const symbol = this.props.symbol
                 const data = JSON.parse(savedChart);
-                if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
-                    this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
-                }
+                set(data, 'charts[0].panes[0].sources[0].state.symbol', this.props.symbol)
+                this.widget.load(data);
             } catch (err) {
                 console.error('Load chart error', err);
             }
@@ -161,45 +159,25 @@ export class MobileTradingView extends React.PureComponent {
 
         // Sync resolution to local component state
         setTimeout(() => {
+            const interval = this.widget.activeChart().resolution()
             this.setState({
                 ...this.state,
-                interval: this.widget.activeChart().resolution(),
+                interval,
                 priceChartType: this.widget.activeChart().chartType(),
             })
+            if (this.props.onIntervalChange) {
+                this.props.onIntervalChange(interval)
+            }
         }, 0)
     }
 
     // eslint-disable-next-line class-methods-use-this
     saveChart = () => {
         try {
-            if (this.widget && this.props.autoSave) {
+            if (this.widget) {
                 this.widget.save((data) => {
-                    let currentData = localStorage.getItem(this.getChartKey);
-                    if (currentData) {
-                        try {
-                            currentData = JSON.parse(currentData);
-                            if (typeof currentData !== "object") {
-                                currentData = null;
-                            }
-                        } catch (ignored) {
-                            currentData = null;
-                        }
-                    }
-                    if (!currentData) {
-                        currentData = {
-                            created_at: new Date(),
-                        };
-                    }
-
-                    const obj = {
-                        updated_at: new Date(),
-                        [`chart_${this.props.symbol.toLowerCase()}`]: data,
-                        chart_all: data,
-                    };
-                    localStorage.setItem(
-                        this.getChartKey,
-                        JSON.stringify(Object.assign(currentData, obj))
-                    );
+                    let currentData = JSON.parse(localStorage.getItem(this.getChartKey) || '{}')
+                    localStorage.setItem(this.getChartKey, JSON.stringify(Object.assign(currentData, data)));
                 });
             }
         } catch (err) {
@@ -463,6 +441,10 @@ export class MobileTradingView extends React.PureComponent {
             },
             custom_css_url: '/library/trading_view/custom_mobile_chart.css'
         };
+
+        // Clear to solve config when load saved chart
+        if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
+
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
         this.widget.onChartReady(() => {
@@ -538,7 +520,7 @@ export class MobileTradingView extends React.PureComponent {
                     }
                     <div
                         id={this.containerId}
-                        className={`h-full ${this.props.classNameChart}`}
+                        className={`h-full`}
                     />
                     <div>
                         {
@@ -578,7 +560,6 @@ MobileTradingView.defaultProps = {
     showIconGuide: true,
     autosize: true,
     showTimeFrame: true,
-    autoSave: true,
     renderProfit: false,
     ordersList: [],
     studies_overrides: {
