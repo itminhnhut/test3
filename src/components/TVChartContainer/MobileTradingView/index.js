@@ -13,7 +13,7 @@ import IndicatorBars, {
     mainIndicators,
     subIndicators
 } from "components/TVChartContainer/MobileTradingView/IndicatorBars";
-import {find} from "lodash";
+import {find, get, set} from "lodash";
 
 const CONTAINER_ID = "nami-mobile-tv";
 const CHART_VERSION = "1.0.7";
@@ -147,11 +147,11 @@ export class MobileTradingView extends React.PureComponent {
     loadSavedChart = () => {
         // Load saved chart
         let savedChart = localStorage.getItem(this.getChartKey);
-        if (savedChart && this.props.autoSave) {
+        if (savedChart) {
             try {
-                const symbol = this.props.symbol
                 const data = JSON.parse(savedChart);
-                    this.widget.load(data);
+                set(data, 'charts[0].panes[0].sources[0].state.symbol', this.props.symbol)
+                this.widget.load(data);
             } catch (err) {
                 console.error('Load chart error', err);
             }
@@ -159,18 +159,22 @@ export class MobileTradingView extends React.PureComponent {
 
         // Sync resolution to local component state
         setTimeout(() => {
+            const interval = this.widget.activeChart().resolution()
             this.setState({
                 ...this.state,
-                interval: this.widget.activeChart().resolution(),
+                interval,
                 priceChartType: this.widget.activeChart().chartType(),
             })
+            if (this.props.onIntervalChange) {
+                this.props.onIntervalChange(interval)
+            }
         }, 0)
     }
 
     // eslint-disable-next-line class-methods-use-this
     saveChart = () => {
         try {
-            if (this.widget && this.props.autoSave) {
+            if (this.widget) {
                 this.widget.save((data) => {
                     let currentData = JSON.parse(localStorage.getItem(this.getChartKey) || '{}')
                     localStorage.setItem(this.getChartKey, JSON.stringify(Object.assign(currentData, data)));
@@ -437,6 +441,10 @@ export class MobileTradingView extends React.PureComponent {
             },
             custom_css_url: '/library/trading_view/custom_mobile_chart.css'
         };
+
+        // Clear to solve config when load saved chart
+        if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
+
         // eslint-disable-next-line new-cap
         this.widget = new widget(widgetOptions);
         this.widget.onChartReady(() => {
@@ -552,7 +560,6 @@ MobileTradingView.defaultProps = {
     showIconGuide: true,
     autosize: true,
     showTimeFrame: true,
-    autoSave: true,
     renderProfit: false,
     ordersList: [],
     studies_overrides: {
