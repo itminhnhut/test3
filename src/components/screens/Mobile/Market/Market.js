@@ -259,7 +259,7 @@ export default ({isRealtime = true}) => {
         })
 
     return (
-        <div className='market-mobile dark:bg-[#001037]'>
+        <div className='market-mobile dark:bg-[#1B222D]'>
             <div className='flex items-center mt-12 px-4'>
                 <InputSearch onChange={changeSearch}/>
             </div>
@@ -303,7 +303,7 @@ export default ({isRealtime = true}) => {
                     })}
                 </div>
             </div>
-            <div className='market-list flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3 dark:bg-[#192648]'>
+            <div className='market-list flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3 dark:bg-[#243042]'>
                 <div className='flex justify-between mb-4 px-3'>
                     <div className='flex flex-1 space-x-1'>
                         <TitleHeadList
@@ -354,7 +354,7 @@ const InputSearch = ({onChange}) => {
         setValue(_value)
         onChange(_value)
     }
-    return <div className='flex flex-1 items-center bg-gray-4 dark:bg-darkBlue-3 rounded-md py-2 px-3'>
+    return <div className='flex flex-1 items-center bg-gray-4 dark:bg-[#243042] rounded-md py-2 px-3'>
         <Search
             size={16}
             className='text-txtSecondary dark:text-txtSecondary-dark'
