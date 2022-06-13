@@ -1,8 +1,9 @@
 import React, {useState, useTransition} from 'react';
 import {getS3Url} from 'redux/actions/utils';
 import SvgActivity from "components/svg/Activity";
-import {Search, X} from "react-feather";
+import {Maximize2, Search, X} from "react-feather";
 import colors from "styles/colors";
+import Maximize from "components/svg/Maximize";
 
 export const mainIndicators = [
     {value: 'Moving Average', label: 'MA'},
@@ -64,11 +65,7 @@ const IndicatorBars = ({
                         onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
                 ))}
             </div>
-            {setCollapse && <img
-                onClick={onCollapse}
-                src={getS3Url(`/images/icon/ic_maximun${collapse ? '_active' : ''}.png`)}
-                height={24} width={24}/>
-            }
+            <Maximize onClick={onCollapse} color={collapse ? colors.onus.green : colors.onus.gray}/>
         </div>
     );
 }
