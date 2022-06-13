@@ -24,7 +24,7 @@ const FuturesLeverageSettings = ({
     isVndcFutures,
     dots,
     className,
-    onusMode = true
+    onusMode = false
 }) => {
     const [loading, setLoading] = useState(false)
     const { t } = useTranslation();
@@ -94,6 +94,7 @@ const FuturesLeverageSettings = ({
                         t('futures:leverage:confirm')
                     )
                 }
+                onusMode={onusMode}
                 componentType='button'
                 className={`!h-[36px] ${getValidator?.isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : ''}`}
                 type='primary'
@@ -101,7 +102,7 @@ const FuturesLeverageSettings = ({
                 onClick={() => !loading && onSetLeverage(pair, _leverage)}
             />
         ),
-        [_leverage, pair, loading]
+        [_leverage, pair, loading, onusMode]
     )
 
     useEffect(() => {
@@ -123,6 +124,7 @@ const FuturesLeverageSettings = ({
 
     return (
         <Modal
+            onusMode={onusMode}
             isVisible={isVisible}
             onBackdropCb={onClose}
             containerClassName={`max-w-[306px] select-none ${className}`}
