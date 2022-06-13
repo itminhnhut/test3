@@ -301,8 +301,8 @@ module.exports = {
                     dark: commonColors.white,
                 },
                 onus: {
-                    DEFAULT: commonColors.white,
-                    secondary: '#8492A7',
+                    DEFAULT: commonColors.onus.white,
+                    secondary: commonColors.onus.grey,
                 },
             },
             backgroundColor: {

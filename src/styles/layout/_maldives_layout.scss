@@ -22,3 +22,10 @@
     height: calc(100% - 64px);
   }
 }
+
+.layout-onus {
+    @apply relative h-full bg-onus dark:bg-onus text-onus;
+
+    min-width: 320px;
+    overflow-x: hidden;
+}
