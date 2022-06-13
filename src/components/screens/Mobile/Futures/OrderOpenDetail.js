@@ -115,7 +115,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     // }, [data, oldOrder.current])
 
     return (
-        <div className="p-[24px] mx-[-24px] border-b dark:border-divider-dark">
+        <div className="p-[24px] mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
                 <FuturesEditSLTPVndc
                     isVisible={showEditSLTP}
@@ -137,22 +137,22 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
                         <div className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
-                        <div className="text-teal border-teal border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
+                        <div className="text-onus-green border-onus-green border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
                     </div>
-                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-teal' : 'text-red'}`}>
+                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order)}</span>
                     </div>
                 </div>
                 <div className="flex items-center">
                     <div className="text-xs ">
-                        <div className="text-gray-1 dark:text-txtSecondary-dark py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
-                        <div className="text-xs font-medium text-teal py-[1px] float-right">
+                        <div className="text-gray-1 dark:text-onus-grey py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
+                        <div className="text-xs font-medium text-onus-green py-[1px] float-right">
                             <OrderProfit className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                         </div>
                     </div>
                     {profit ?
-                        <div className="border-[1px] border-teal p-[5px] rounded-[2px] ml-[16px]" onClick={() => setOpenShareModal(true)}>
+                        <div className="border-[1px] border-onus-green p-[5px] rounded-[2px] ml-[16px]" onClick={() => setOpenShareModal(true)}>
                             <img src={getS3Url("/images/icon/ic_share.png")} height={16} width={16} />
                         </div>
                         : null
@@ -160,8 +160,8 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 </div>
             </div>
             {/* <div className="justify-start w-full flex mb-[10px]">
-                <div className="text-gray-1 text-xs dark:text-txtSecondary-dark min-w-[70px]">{t('futures:mobile:pnl')}</div>
-                <span className="text-xs font-medium text-teal"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
+                <div className="text-gray-1 text-xs dark:text-onus-grey min-w-[70px]">{t('futures:mobile:pnl')}</div>
+                <span className="text-xs font-medium text-onus-green"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
             </div> */}
             <div className="flex flex-wrap gap-x-[10px] w-full">
                 <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(data?.price, decimal, 0, true)} />
@@ -169,7 +169,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
                 <OrderItem label={t('futures:stop_loss')} valueClassName="text-red" value={formatNumber(order?.sl, 0)} />
-                <OrderItem label={t('futures:take_profit')} valueClassName="text-teal" value={formatNumber(order?.tp, 0)} />
+                <OrderItem label={t('futures:take_profit')} valueClassName="text-onus-green" value={formatNumber(order?.tp, 0)} />
                 {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
             {/* <div className="flex gap-x-[10px] w-full">
@@ -183,7 +183,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         decimalScale={decimal}
                         labelClassName='whitespace-nowrap capitalize'
                         containerClassName="h-[36px]"
-                        tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
+                        tailContainerClassName='flex items-center text-txtSecondary dark:text-onus-grey font-medium text-xs select-none'
                         renderTail={() => (
                             <div className='relative group select-none' onClick={onOpenModify}>
                                 <div className='flex items-center'>
@@ -206,7 +206,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         decimalScale={decimal}
                         labelClassName='whitespace-nowrap capitalize'
                         containerClassName="h-[36px]"
-                        tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
+                        tailContainerClassName='flex items-center text-txtSecondary dark:text-onus-grey font-medium text-xs select-none'
                         renderTail={() => (
                             <div className='relative group select-none' onClick={onOpenModify}>
                                 <div className='flex items-center'>
@@ -225,7 +225,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <div style={{ width: 'calc(50% - 5px)' }}>
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}
-                        className="!h-[36px] dark:bg-bgInput-dark dark:text-txtSecondary-dark"
+                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"
                         componentType="button"
                         type="primary"
                         onClick={onOpenModify}
@@ -234,7 +234,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <div style={{ width: 'calc(50% - 5px)' }}>
                     <Button
                         title={t(`common:close`)}
-                        className="!h-[36px] dark:bg-bgInput-dark dark:text-txtSecondary-dark"
+                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions()}

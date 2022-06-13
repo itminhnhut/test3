@@ -116,7 +116,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
                 onClick={() => setHideOther(!hideOther)}
             >
                 <CheckBox active={hideOther} />{' '}
-                <span className='ml-1 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-txtSecondary-dark'>
+                <span className='ml-1 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-onus-gray'>
                     {t('futures:hide_other_symbols')}
                 </span>
             </div>

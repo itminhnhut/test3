@@ -51,7 +51,7 @@ const OrderBalance = ({
         return parseFloat(total).toFixed(10);
     }, [ordersList])
 
-    const className = totalProfit === 0 ? '' : totalProfit > 0 ? 'text-teal' : 'text-red';
+    const className = totalProfit === 0 ? '' : totalProfit > 0 ? 'text-onus-green' : 'text-onus-red';
     const pnl = <div className={className}>{formatNumber(totalProfit, 0, 0, true)}</div>;
     const total = balance.value + totalProfit;
     const lengthEquity = formatNumber(total, balance?.item?.assetDigit)
@@ -62,16 +62,18 @@ const OrderBalance = ({
         .replaceAll(',', '');
     const _balance = length.length > 7 ? formatCurrency(balance.value) : formatNumber(balance.value, balance?.item?.assetDigit);
     if (!visible) return null;
-    if(mode === 'collapse'){
+    if (mode === 'collapse') {
         return <div className="flex pt-[10px]">
             <TradingLabel
                 label={t('futures:mobile:pnl')}
                 value={pnl}
+                labelClassName="dark:text-onus-grey"
                 containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
             />
             <TradingLabel
                 label={t('futures:mobile:equity')}
                 value={equity}
+                labelClassName="dark:text-onus-grey"
                 containerClassName='text-xs flex justify-between w-1/2 pb-[5px]'
             />
         </div>
@@ -82,22 +84,26 @@ const OrderBalance = ({
             <TradingLabel
                 label={t('futures:mobile:balance')}
                 value={_balance}
+                labelClassName="dark:text-onus-grey"
                 containerClassName="text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]"
             />
             <TradingLabel
                 label={t('futures:mobile:equity')}
                 value={equity}
+                labelClassName="dark:text-onus-grey"
                 containerClassName="text-xs flex justify-between w-1/2 pb-[5px]"
             />
 
             <TradingLabel
                 label={t('futures:mobile:pnl')}
                 value={pnl}
+                labelClassName="dark:text-onus-grey"
                 containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
             />
             <TradingLabel
                 label={t('futures:order_table:volume')}
                 value={_volume}
+                labelClassName="dark:text-onus-grey"
                 containerClassName="text-xs flex justify-between w-1/2 pb-[5px]"
             />
 

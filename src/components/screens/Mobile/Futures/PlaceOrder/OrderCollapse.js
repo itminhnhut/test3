@@ -54,17 +54,17 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
     return (
         <div className="w-full">
             <div className="relative flex w-full h-[56px] text-sm order-collapse">
-                <Side className={`bg-teal rounded-l-[6px] text-white ${className} ${disabledClass ? 'border-[1px] border-teal' : ''}`}
+                <Side className={`bg-onus-green rounded-l-[6px] text-white ${className} ${disabledClass ? 'border-[1px] border-onus-green' : ''}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.BUY, pairPrice?.ask)}>
                     <div className={`truncate`} style={style()}>{t('common:buy')}&nbsp;
                         {_quoteQty}&nbsp;{pairConfig?.quoteAsset ?? ''}
                     </div>
                     <span>{formatNumber(pairPrice?.ask, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
-                <Text className={`diff-price ${disabledClass ? 'bg-darkBlue-5 text-darkBlue-3' : ''}`}>
+                <Text className={`diff-price ${disabledClass ? 'bg-darkBlue-5 !text-darkBlue-3' : ''}`}>
                     {formatNumber(pairPrice?.ask - pairPrice?.bid, decimals.decimalScalePrice, 0, true)}
                 </Text>
-                <Side className={`bg-red rounded-r-[6px] text-white items-end ${className} ${disabledClass ? 'border-[1px] border-red' : ''}`}
+                <Side className={`bg-onus-red rounded-r-[6px] text-white items-end ${className} ${disabledClass ? 'border-[1px] border-onus-red' : ''}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.SELL, pairPrice?.bid)}>
                     <div className={`truncate text-right`} style={style()}>{t('common:sell')}&nbsp;
                         {_quoteQty}&nbsp;{pairConfig?.quoteAsset ?? ''}</div>
@@ -113,12 +113,12 @@ const Equity = memo(({ ordersList }) => {
 })
 
 const Side = styled.div.attrs({
-    className: 'w-1/2 bg-teal px-[16px] flex justify-center flex-col font-medium'
+    className: 'w-1/2 px-[16px] flex justify-center flex-col font-medium'
 })`
 `
 
 const Text = styled.div.attrs({
-    className: 'absolute font-medium bg-white text-teal text-xs rounded-[6px] px-[15px] py-[4px] left-[50%] top-[50%]'
+    className: 'absolute font-medium bg-white text-onus-green text-xs rounded-[6px] px-[15px] py-[4px] left-[50%] top-[50%]'
 })`
 transform:translate(-50%, -50%)
 `

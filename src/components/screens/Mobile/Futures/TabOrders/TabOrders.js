@@ -133,9 +133,9 @@ const TabMobile = styled.div.attrs({
 `
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-sm font-medium text-gray-1 h-full flex items-center justify-center dark:text-txtSecondary-dark`,
+        `text-sm font-medium text-gray-1 h-full flex items-center justify-center dark:text-onus-gray`,
         {
-            'active font-semibold text-darkBlue dark:text-white': active
+            'active font-semibold text-darkBlue dark:!text-white': active
         }
     )
 }))`

@@ -13,7 +13,7 @@ const Button = memo((props) => {
         disabled,
         className = '',
         target = '',
-        onusMode = true,
+        onusMode = false,
     } = props
 
     const disabledStyle = useMemo(() => {
@@ -22,7 +22,6 @@ const Button = memo((props) => {
         return ''
     }, [type, disabled])
 
-    console.log('__ check onus mode', onusMode)
     const render = useCallback(() => {
         if (componentType === 'link') {
             return (
