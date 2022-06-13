@@ -213,7 +213,6 @@
             "sl": "Lựa chọn Chốt lỗ và cắt lời để quản lý lợi nhuận của lệnh",
             "order": "Xác nhận giao dịch dễ dàng",
             "tab": "Chi tiết tài khoản và danh sách lệnh giao dịch của bạn sẽ hiển thị ở đây",
-
             "step_title_1": "Chọn cặp giao dịch",
             "step_title_2": "Chọn mua/bán",
             "step_title_3": "Chọn loại lệnh",
@@ -222,7 +221,6 @@
             "step_title_6": "Cài đặt Giá SL và TP",
             "step_title_7": "Điều chỉnh thông số chi tiết",
             "step_title_8": "Bắt đầu giao dịch",
-
             "step_1": "Để bắt đầu giao dịch, hãy lựa chọn cặp giao dịch bạn mong muốn tại đây",
             "step_2": "Lựa chọn Mua / Bán theo dự đoán giá tài sản tăng hay giảm tương ứng",
             "step_3": "Lựa chọn loại lệnh bạn muốn đặt (gồm lệnh Thị trường / lệnh Giới hạn và lệnh Stop Market",
@@ -265,5 +263,6 @@
     },
     "orders_history": "Lịch sử lệnh",
     "minimum_leverage": "Đòn bẩy tối thiểu",
-    "maximum_leverage": "Đòn bẩy tối đa"
+    "maximum_leverage": "Đòn bẩy tối đa",
+    "positions": "Vị thế"
 }

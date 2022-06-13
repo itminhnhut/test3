@@ -110,9 +110,9 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
         return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
     }
 
-    const isDiff = useMemo(() => {
-        return oldOrder.current?.sl !== data.sl || oldOrder.current?.tp !== data.tp || (status === VndcFutureOrderType.Status.PENDING && oldOrder.current?.price !== data.price)
-    }, [data, oldOrder.current])
+    // const isDiff = useMemo(() => {
+    //     return oldOrder.current?.sl !== data.sl || oldOrder.current?.tp !== data.tp || (status === VndcFutureOrderType.Status.PENDING && oldOrder.current?.price !== data.price)
+    // }, [data, oldOrder.current])
 
     return (
         <div className="p-[24px] mx-[-24px] border-b dark:border-divider-dark">
@@ -164,38 +164,12 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <span className="text-xs font-medium text-teal"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
             </div> */}
             <div className="flex flex-wrap gap-x-[10px] w-full">
-                {status === VndcFutureOrderType.Status.PENDING ?
-                    <div style={{ width: 'calc(50% - 5px)' }} className="mb-2">
-                        <TradingInput
-                            thousandSeparator={true}
-                            label={'Price'}
-                            value={data?.price}
-                            allowNegative={false}
-                            onValueChange={({ floatValue = '' }) => setData({ ...data, price: floatValue })}
-                            decimalScale={decimal}
-                            labelClassName='whitespace-nowrap capitalize'
-                            containerClassName="h-[36px]"
-                            tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
-                            renderTail={() => (
-                                <div className='relative group select-none' onClick={onOpenModify}>
-                                    <div className='flex items-center'>
-                                        <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
-                                    </div>
-                                </div>
-                            )}
-                            inputClassName="text-xs !text-center"
-                            inputMode="decimal"
-                            allowedDecimalSeparators={[',', '.']}
-                        />
-                    </div>
-                    :
-                    <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(data?.price, decimal, 0, true)} />
-                }
+                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(data?.price, decimal, 0, true)} />
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
-                <OrderItem label={t('futures:stop_loss')} value={formatNumber(order?.sl, 0)} />
-                <OrderItem label={t('futures:take_profit')} value={formatNumber(order?.tp, 0)} />
+                <OrderItem label={t('futures:stop_loss')} valueClassName="text-red" value={formatNumber(order?.sl, 0)} />
+                <OrderItem label={t('futures:take_profit')} valueClassName="text-teal" value={formatNumber(order?.tp, 0)} />
                 {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
             {/* <div className="flex gap-x-[10px] w-full">
@@ -263,7 +237,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                         className="!h-[36px] dark:bg-bgInput-dark dark:text-txtSecondary-dark"
                         componentType="button"
                         type="primary"
-                        onClick={() => onActions(isDiff)}
+                        onClick={() => onActions()}
                         disabled={loading}
                     />
                 </div>

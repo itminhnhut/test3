@@ -50,6 +50,27 @@ export const RECORD_TAB_VNDC = [
     },
 ]
 
+export const RECORD_TAB_VNDC_MOBILE = [
+    {
+        key: 0,
+        code: FUTURES_RECORD_CODE.position,
+        title: 'futures:positions',
+        localized: null,
+    },
+    {
+        key: 1,
+        code: FUTURES_RECORD_CODE.openOrders,
+        title: 'spot:open_orders',
+        localized: null,
+    },
+    {
+        key: 2,
+        code: FUTURES_RECORD_CODE.orderHistory,
+        title: 'futures:orders_history',
+        localized: null,
+    },
+]
+
 export const RECORD_TAB = [
     {
         key: 0,

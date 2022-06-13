@@ -4,7 +4,7 @@ import colors from 'styles/colors';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'next-i18next'
-import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC, RECORD_TAB } from 'components/screens/Futures/TradeRecord/RecordTableTab'
+import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC_MOBILE, RECORD_TAB } from 'components/screens/Futures/TradeRecord/RecordTableTab'
 import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders'
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
@@ -25,10 +25,6 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
     const [openDetailModal, setOpenDetailModal] = useState(false);
     const rowData = useRef(null);
     const router = useRouter();
-
-    useEffect(() => {
-        setTab(FUTURES_RECORD_CODE.openOrders)
-    }, [isVndcFutures])
 
     const onShowDetail = (row, isTabHistory) => {
         // if (openDetailModal) {
@@ -64,6 +60,14 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
 
     }, [rowData.current, ordersList])
 
+
+    const orderListFilter = useMemo(() => {
+        const isPositions = tab === FUTURES_RECORD_CODE.position;
+        const position = ordersList?.filter(item => item.status === 1) ?? [];
+        const openOrders = ordersList?.filter(item => item.status === 0 || item.status === 3) ?? [];
+        return { position, openOrders, orderList: isPositions ? position : openOrders }
+    }, [tab, ordersList])
+
     return (
         <div className={`h-full ${isFullScreen ? 'overflow-hidden' : ''}`}>
             {openDetailModal &&
@@ -75,19 +79,22 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
                 />
             }
             <TabMobile isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
-                {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((item) => (
+                {(isVndcFutures ? RECORD_TAB_VNDC_MOBILE : RECORD_TAB).map((item) => (
                     <TabItem key={item.code} active={tab === item.code} onClick={() => setTab(item.code)}>
-                        {isVndcFutures ? t(item.title) : item.title}&nbsp;{isVndcFutures && item.code === FUTURES_RECORD_CODE.openOrders && ' (' + ordersList.length + ')'}
+                        {isVndcFutures ? t(item.title) : item.title}&nbsp;{isVndcFutures &&
+                            (item.code === FUTURES_RECORD_CODE.openOrders || item.code === FUTURES_RECORD_CODE.position)
+                            && ' (' + orderListFilter[item.code].length + ')'}
                     </TabItem>
                 ))}
                 {/* <img src="/images/icon/ic_filter.png" height={24} width={24} /> */}
             </TabMobile>
             {isAuth &&
-                <OrderBalance ordersList={ordersList} visible={tab === FUTURES_RECORD_CODE.openOrders} />}
+                <OrderBalance ordersList={ordersList} visible={tab === FUTURES_RECORD_CODE.position} />}
             {isAuth ?
                 <div className="h-full">
-                    <TabContent active={tab === FUTURES_RECORD_CODE.openOrders} >
-                        <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK} ordersList={ordersList} pair={pair} pairConfig={pairConfig}
+                    <TabContent active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position} >
+                        <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK}
+                            ordersList={orderListFilter.orderList} pair={pair} pairConfig={pairConfig}
                             onShowDetail={onShowDetail} />
                     </TabContent>
                     <TabContent active={tab === FUTURES_RECORD_CODE.orderHistory} >
@@ -106,7 +113,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
 });
 
 const TabMobile = styled.div.attrs({
-    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-divider-dark"
+    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-divider-dark gap-[32px]"
 })`
     height:42px;
     width:100%;
@@ -126,7 +133,7 @@ const TabMobile = styled.div.attrs({
 `
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-sm font-medium mr-[32px] text-gray-1 h-full flex items-center justify-center dark:text-txtSecondary-dark`,
+        `text-sm font-medium text-gray-1 h-full flex items-center justify-center dark:text-txtSecondary-dark`,
         {
             'active font-semibold text-darkBlue dark:text-white': active
         }
