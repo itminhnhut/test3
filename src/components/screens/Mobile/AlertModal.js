@@ -61,7 +61,7 @@ const AlertModal = forwardRef((props, ref) => {
 
 
     return (
-        <Modal isVisible={isVisible} onBackdropCb={onCancel}
+        <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
             containerClassName={`px-[24px] py-[34px] top-[50%] flex flex-col items-center ${className}`}>
             <div className='mb-[30px]'>
                 <img src={getS3Url(getImage(options.current.type))} width={66} height={66} />
@@ -77,6 +77,7 @@ const AlertModal = forwardRef((props, ref) => {
             </div>
             {actions.current?.onConfirm &&
                 <Button
+                    onusMode={true}
                     title={options.current?.confirmTitle || t('futures:leverage:confirm')}
                     type="primary"
                     className={`!h-[44px] !text-sm !font-semibold`}
@@ -84,7 +85,9 @@ const AlertModal = forwardRef((props, ref) => {
                     onClick={onConfirm}
                 />
             }
-            {!options.current?.hideCloseButton && <Button
+            {!options.current?.hideCloseButton 
+            && <Button
+                onusMode={true}
                 title={options.current.closeTitle || t('common:close')}
                 className={`mt-[8px] !h-[44px] !text-sm !font-semibold`}
                 componentType="button"

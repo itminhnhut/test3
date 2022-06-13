@@ -32,7 +32,7 @@ const Button = memo((props) => {
                     className={`mal-button ${
                         type === 'primary'
                             ? `${onusMode ? 'bg-onus-base text-onus-textPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
-                            : `${onusMode ? 'bg-onus-base text-onus-textPrimary dark:bg-onus-base dark:text-onus-textPrimary': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
+                            : `${onusMode ? 'bg-onus-bg2 text-onus-textPrimary dark:bg-onus-bg2 dark:text-onus-textPrimary': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
                     } ${disabledStyle} ${className}`}
                 >
                     {title || 'TITLE_NOT_FOUND'}
@@ -47,7 +47,7 @@ const Button = memo((props) => {
                     className={`mal-button ${
                         type === 'primary'
                             ? `${onusMode ? 'bg-onus-base text-onus-textPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
-                            : `${onusMode ? 'bg-onus-base text-onus-textPrimary dark:bg-onus-base dark:text-onus-textPrimary': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
+                            : `${onusMode ? 'bg-onus-bg2 text-onus-textPrimary dark:bg-onus-bg2 dark:text-onus-textPrimary': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
                     } ${disabledStyle} ${className}`}
                     onClick={() => onClick && !disabled && onClick()}
                 >

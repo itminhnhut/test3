@@ -14,7 +14,7 @@ const Modal = ({
     useCross = false,
     onBackdropCb,
     onClose,
-    onusMode = true
+    onusMode = false
 }) => {
     return (
         <Portal portalId={PORTAL_MODAL_ID}>
