@@ -65,7 +65,7 @@ export class MobileTradingView extends React.PureComponent {
         ) {
             this.widget.remove();
             this.oldOrdersList = [];
-            this.initWidget(this.props.symbol, this.state.interval);
+            this.initWidget(this.props.symbol);
         }
 
         if (prevProps.theme !== this.props.theme) {
@@ -153,16 +153,20 @@ export class MobileTradingView extends React.PureComponent {
                 const data = JSON.parse(savedChart);
                 if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
                     this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
-                    this.setState({
-                        ...this.state,
-                        interval: this.widget.activeChart().resolution(),
-                        priceChartType: this.widget.activeChart().chartType(),
-                    })
                 }
             } catch (err) {
                 console.error('Load chart error', err);
             }
         }
+
+        // Sync resolution to local component state
+        setTimeout(() => {
+            this.setState({
+                ...this.state,
+                interval: this.widget.activeChart().resolution(),
+                priceChartType: this.widget.activeChart().chartType(),
+            })
+        }, 0)
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -377,7 +381,7 @@ export class MobileTradingView extends React.PureComponent {
         this.oldOrdersList = this.props?.ordersList.map(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && order.displaying_id)
     };
 
-    initWidget = (symbol, interval) => {
+    initWidget = (symbol) => {
         if (!symbol) return;
 
         const datafeed = new Datafeed(this.props.mode || ChartMode.SPOT)
@@ -385,7 +389,7 @@ export class MobileTradingView extends React.PureComponent {
             symbol,
             datafeed,
             theme: 'Dark',
-            interval,
+            interval: this.props.initTimeFrame,
             container_id: this.containerId,
             library_path: this.props.libraryPath,
             locale: "en",
