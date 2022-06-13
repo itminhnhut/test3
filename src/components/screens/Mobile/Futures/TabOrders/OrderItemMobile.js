@@ -37,7 +37,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 }
                 text = row.price ? formatNumber(row.price, 8) : '';
                 return <div className="flex items-center text-right ">
-                    <div>{text} {bias}</div>
+                    <div>{text}</div>
                 </div>;
             case VndcFutureOrderType.Status.ACTIVE:
                 text = row.open_price ? formatNumber(row.open_price, 8) : '';
@@ -77,6 +77,8 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
     const actions = (action, key) => {
         if (action === 'modal') {
             isModal.current = true;
+            const shareData = {}
+            console.log('__ share modal data', order)
             onShowModal(order, key)
         }
         if (action === 'delete') {
@@ -138,7 +140,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     />
                     <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                     <OrderItem
-                        label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'last_price2'}`)}
+                        label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'mark_price'}`)}
                         value={formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice)}
                     />
                     <OrderItem
