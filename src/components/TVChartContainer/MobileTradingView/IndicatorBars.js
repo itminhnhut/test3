@@ -1,7 +1,9 @@
 import React, {useState, useTransition} from 'react';
 import {getS3Url} from 'redux/actions/utils';
 import SvgActivity from "components/svg/Activity";
-import {Search, X} from "react-feather";
+import {Maximize2, Search, X} from "react-feather";
+import colors from "styles/colors";
+import Maximize from "components/svg/Maximize";
 
 export const mainIndicators = [
     {value: 'Moving Average', label: 'MA'},
@@ -43,31 +45,27 @@ const IndicatorBars = ({
 
     return (
         <div
-            className='h-[38px] flex items-center justify-between px-[10px] border-b border-t border-gray-4 dark:border-divider-dark'>
+            className='h-[38px] flex items-center justify-between px-[10px] border-b border-t border-onus-line'>
             <div
-                className='flex items-center text-xs text-gray-1 dark:text-txtSecondary-dark font-medium justify-around w-full mr-[10px]'>
+                className='flex items-center text-xs text-onus-grey font-medium justify-around w-full mr-[10px]'>
                 <div onClick={handleOpenIndicatorModal}>
-                    <SvgActivity/>
+                    <SvgActivity color={colors.onus.green}/>
                 </div>
                 {mainIndicators.map(item => (
                     <div
                         key={item.value}
-                        className={mainIndicator === item.value ? 'text-teal' : ''}
+                        className={mainIndicator === item.value ? 'text-onus-green' : ''}
                         onClick={() => setIndicator(item.value, 'main')}>{item.label}</div>
                 ))}
-                |
+                <div className='bg-onus-line w-[2px] h-4'/>
                 {subIndicators.map(item => (
                     <div
                         key={item.value}
-                        className={subIndicator === item.value ? 'text-teal' : ''}
+                        className={subIndicator === item.value ? 'text-onus-green' : ''}
                         onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
                 ))}
             </div>
-            {setCollapse && <img
-                onClick={onCollapse}
-                src={getS3Url(`/images/icon/ic_maximun${collapse ? '_active' : ''}.png`)}
-                height={24} width={24}/>
-            }
+            <Maximize onClick={onCollapse} color={collapse ? colors.onus.green : colors.onus.gray}/>
         </div>
     );
 }

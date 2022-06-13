@@ -24,7 +24,7 @@ const FuturesEditSLTPVndc = ({
     onConfirm,
     pairTicker,
     lastPrice = 0,
-    isMobile
+    isMobile,
 }) => {
     const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
     const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;

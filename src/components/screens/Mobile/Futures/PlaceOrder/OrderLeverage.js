@@ -40,6 +40,7 @@ const OrderLeverage = ({leverage, setLeverage, isAuth, pair, pairConfig, context
             </div>
             {openModal &&
             <FuturesLeverageSettings
+                onusMode={true}
                 pair={pair}
                 leverage={leverage}
                 setLeverage={setLeverage}

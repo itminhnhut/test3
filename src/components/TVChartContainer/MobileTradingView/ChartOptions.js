@@ -59,9 +59,9 @@ const ChartOptions = ({
                 <div className="flex items-center flex-wrap">
                     <div className="flex items-center cursor-pointer" data-tut="order-symbol"
                          onClick={() => setShowModelMarket(true)}>
-                        <img src={getS3Url('/images/icon/ic_exchange_mobile.png')} height={16} width={16}/>
+                        <img src={'/images/icon/ic_exchange_mobile_onus.png'} height={16} width={16}/>
                         <div
-                            className="px-2 font-semibold text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                            className="px-2 font-semibold text-onus-white text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
                     </div>
                     <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent}>
                         <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures}/>
@@ -85,7 +85,7 @@ const ChartOptions = ({
                     classNameButton="px-2 py-2"
                     classNamePanel="rounded-md"
                     label={<div
-                        className="text-sm text-gray-1 dark:text-txtSecondary-dark font-normal">{resolutionLabel}</div>}
+                        className="text-sm text-onus-gray font-normal">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={chartType}
@@ -112,9 +112,9 @@ const Change24h = ({pairPrice, isVndcFutures}) => {
     return (
         <div className='flex items-center'>
             <div
-                className={classNames('pl-2 text-dominant font-medium text-sm',
+                className={classNames('pl-2 text-onus-green font-medium text-sm',
                     {
-                        '!text-red':
+                        '!text-onus-red':
                             pairPrice?.priceChangePercent < 0,
                     })}
             >
