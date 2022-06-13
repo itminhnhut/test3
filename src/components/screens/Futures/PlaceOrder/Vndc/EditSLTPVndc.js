@@ -465,9 +465,9 @@ const FuturesEditSLTPVndc = ({
                         useLabel axis='x' x={percent.tp} xmax={100}
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
-                        // bgColorSlide={'transparent'}
                         xStart={50}
                         reload={tab}
+                        bgColorSlide={colors.onus.green}
                         bgColorActive={colors.onus.green}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')} />
                 </div>
