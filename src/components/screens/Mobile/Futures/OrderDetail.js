@@ -57,13 +57,13 @@ const getAssets = createSelector(
 // }
 
 const getResolution = (order) => {
-    if (order.status !== VndcFutureOrderType.Status.CLOSED) return '60'
+    if (order.status !== VndcFutureOrderType.Status.CLOSED) return '15'
     const timestamp = new Date(order?.closed_at).getTime() - new Date(order?.opened_at).getTime();
-    if (isNaN(timestamp)) return '1D';
+    if (isNaN(timestamp)) return '15';
     const item = listTimeFrame.reduce((prev, curr) => {
         return (Math.abs(ms(curr.text) - timestamp) < Math.abs(ms(prev?.text) - timestamp) ? curr : prev);
     });
-    return item?.value ?? '1D'
+    return item?.value ?? '15'
 }
 
 

@@ -16,7 +16,7 @@ import IndicatorBars, {
 import {find} from "lodash";
 
 const CONTAINER_ID = "nami-mobile-tv";
-const CHART_VERSION = "1.0.6";
+const CHART_VERSION = "1.0.7";
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
@@ -151,9 +151,7 @@ export class MobileTradingView extends React.PureComponent {
             try {
                 const symbol = this.props.symbol
                 const data = JSON.parse(savedChart);
-                if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
-                    this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
-                }
+                    this.widget.load(data);
             } catch (err) {
                 console.error('Load chart error', err);
             }
@@ -174,32 +172,8 @@ export class MobileTradingView extends React.PureComponent {
         try {
             if (this.widget && this.props.autoSave) {
                 this.widget.save((data) => {
-                    let currentData = localStorage.getItem(this.getChartKey);
-                    if (currentData) {
-                        try {
-                            currentData = JSON.parse(currentData);
-                            if (typeof currentData !== "object") {
-                                currentData = null;
-                            }
-                        } catch (ignored) {
-                            currentData = null;
-                        }
-                    }
-                    if (!currentData) {
-                        currentData = {
-                            created_at: new Date(),
-                        };
-                    }
-
-                    const obj = {
-                        updated_at: new Date(),
-                        [`chart_${this.props.symbol.toLowerCase()}`]: data,
-                        chart_all: data,
-                    };
-                    localStorage.setItem(
-                        this.getChartKey,
-                        JSON.stringify(Object.assign(currentData, obj))
-                    );
+                    let currentData = JSON.parse(localStorage.getItem(this.getChartKey) || '{}')
+                    localStorage.setItem(this.getChartKey, JSON.stringify(Object.assign(currentData, data)));
                 });
             }
         } catch (err) {
