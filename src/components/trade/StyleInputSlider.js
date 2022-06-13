@@ -29,7 +29,7 @@ export const Active = styled.div`
 
 export const SliderBackground = styled.div`
     position: absolute;
-    background-color: ${({ isDark }) =>
+    background-color: ${({ isDark, BgColorLine }) => BgColorLine ? BgColorLine :
         isDark ? colors.darkBlue4 : colors.grey5};
     border-radius: 4px;
     user-select: none;
@@ -55,8 +55,8 @@ export const Dot = styled.span`
     width: 9px;
     height: 8px;
     box-sizing: content-box;
-    background-color: ${({ active, isDark, bgColorActive }) =>
-        active ? bgColorActive ? bgColorActive : colors.teal : isDark ? colors.darkBlue4 : colors.grey5};
+    background-color: ${({ active, isDark, bgColorActive, bgColorDot }) =>
+        active ? bgColorActive ? bgColorActive : colors.teal : bgColorDot ? bgColorDot : isDark ? colors.darkBlue4 : colors.grey5};
     z-index: 30;
     transition: transform 0.2s; /* Animation */
 

@@ -327,7 +327,8 @@ const FuturesEditSLTPVndc = ({
                     active={active}
                     percentage={i * size}
                     isDark={currentTheme === THEME_MODE.DARK}
-                    bgColorActive={key === 'sl' ? colors.onus.red : colors.onus.green}
+                    bgColorDot={isMobile ? colors.onus.grey : null}
+                    bgColorActive={key === 'sl' ? isMobile ? colors.onus.red : colors.red : isMobile ? colors.onus.green : colors.teal}
                 />
             )
             label.push(
@@ -365,13 +366,13 @@ const FuturesEditSLTPVndc = ({
     const classMobile = useMemo(() => {
         const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
         const widht = 'w-[95%]';
-        return height + widht + ' overflow-x-hidden'
+        return height + widht + ' overflow-x-hidden bg-[#243042]'
     }, [isMobile])
 
     return (
-        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%] bg-[#243042]`}>
+        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%]`}>
             <div
-                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-onus-line sticky top-0 z-[10] bg-white dark:bg-[#243042] rounded-t-lg">
+                className={`px-5 py-4 flex items-center justify-between border-b border-divider dark:border-onus-line sticky top-0 z-[10] bg-white rounded-t-lg ${isMobile ? 'dark:bg-[#243042]' : 'dark:bg-darkBlue-2'}`}>
                 <span className="font-bold text-[16px]">
                     {t('futures:tp_sl:modify_tpsl')}
                 </span>{' '}
@@ -388,7 +389,7 @@ const FuturesEditSLTPVndc = ({
                         {t('futures:order_table:symbol')}
                     </span>
                     <span
-                        className="text-onus-green">{order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x</span>
+                        className={isMobile ? 'text-onus-green' : 'text-teal'}>{order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x</span>
                 </div>
                 <div className="mb-3 font-medium flex items-center justify-between">
                     {status === VndcFutureOrderType.Status.PENDING && order?.type !== VndcFutureOrderType.Type.MARKET && order?.type ?
@@ -428,29 +429,45 @@ const FuturesEditSLTPVndc = ({
                     </span>
                     <span className="">{formatNumber(_lastPrice, 2, 0, true) + ' ' + quoteAsset}</span>
                 </div>
-                <div className='px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] bg-[#F2FCFC] dark:bg-onus-green opacity-[0.2] w-[calc(100% + 40px)] mt-5 font-semibold'>
-                    <TabItem active={tab === 1} onClick={() => setTab(1)}
-                        isDark={currentTheme === THEME_MODE.DARK}>{t('futures:price')}</TabItem>
-                    <TabItem active={tab === 0} onClick={() => setTab(0)}
-                        isDark={currentTheme === THEME_MODE.DARK}>{t('futures:order_table:profit')}</TabItem>
-                    <TabItem active={tab === 2} onClick={() => setTab(2)}
-                        isDark={currentTheme === THEME_MODE.DARK}>{t('futures:profit_margin')}</TabItem>
-                </div>
-                <div className="mt-6 flex items-center">
+                {isMobile ?
+                    <div className="relative">
+                        <div className='relative z-[10] px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] w-[calc(100% + 40px)] mt-5 font-semibold'>
+                            <TabItem isMobile active={tab === 1} onClick={() => setTab(1)}
+                                isDark={currentTheme === THEME_MODE.DARK}>{t('futures:price')}</TabItem>
+                            <TabItem isMobile active={tab === 0} onClick={() => setTab(0)}
+                                isDark={currentTheme === THEME_MODE.DARK}>{t('futures:order_table:profit')}</TabItem>
+                            <TabItem isMobile active={tab === 2} onClick={() => setTab(2)}
+                                isDark={currentTheme === THEME_MODE.DARK}>{t('futures:profit_margin')}</TabItem>
+                        </div>
+                        <div className='absolute top-0 min-h-[45px] dark:bg-onus-green opacity-[0.2] w-[200%] right-[-10%]'>
+
+                        </div>
+                    </div>
+                    :
+                    <div className='px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] bg-[#F2FCFC] dark:bg-darkBlue-4 w-[calc(100% + 40px)] mt-5 font-semibold'>
+                        <TabItem active={tab === 1} onClick={() => setTab(1)}
+                            isDark={currentTheme === THEME_MODE.DARK}>{t('futures:price')}</TabItem>
+                        <TabItem active={tab === 0} onClick={() => setTab(0)}
+                            isDark={currentTheme === THEME_MODE.DARK}>{t('futures:order_table:profit')}</TabItem>
+                        <TabItem active={tab === 2} onClick={() => setTab(2)}
+                            isDark={currentTheme === THEME_MODE.DARK}>{t('futures:profit_margin')}</TabItem>
+                    </div>
+                }
+                <div className="mt-6 flex items-center ">
                     <div
                         className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-onus-bg2 rounded-[4px]">
                         <TradingInput
                             thousandSeparator
                             type="text"
                             label={t('futures:take_profit')}
-                            className="flex-grow text-right font-medium h-[21px] text-onus-green"
+                            className={`flex-grow text-right font-medium h-[21px] ${isMobile ? 'text-onus-green' : 'text-teal'}`}
                             containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
                             value={tab === 0 ? profit.current.tp : tab === 1 ? data.tp : tabPercent.current.tp}
                             // validator={tab === 1 && inputValidator('take_profit')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
                             renderTail={() => (
-                                <span className="font-medium text-onus-green pl-2">
+                                <span className={`font-medium ${isMobile ? 'text-onus-green' : 'text-teal'} pl-2`}>
                                     {tab === 2 ? '%' : quoteAsset}
                                 </span>
                             )}
@@ -467,7 +484,8 @@ const FuturesEditSLTPVndc = ({
                         // bgColorSlide={'transparent'}
                         xStart={50}
                         reload={tab}
-                        bgColorActive={colors.onus.green}
+                        bgColorActive={isMobile ? colors.onus.green : colors.teal}
+                        BgColorLine={isMobile ? colors.onus.grey : null}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')} />
                 </div>
                 <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
@@ -480,7 +498,7 @@ const FuturesEditSLTPVndc = ({
                         {formatNumber(data.tp, 0, 0, true)}&nbsp;
                     </span>
                     {t('futures:tp_sl:estimate')}&nbsp;
-                    <span className="text-dominant">{profit.current.tp + ' ' + quoteAsset}</span>.
+                    <span className={isMobile ? 'text-onus-green' : 'text-dominant'}>{profit.current.tp + ' ' + quoteAsset}</span>.
                 </div>
 
                 <div className="my-4 w-full h-[1px] bg-divider dark:bg-onus-line" />
@@ -492,14 +510,14 @@ const FuturesEditSLTPVndc = ({
                             thousandSeparator
                             type="text"
                             label={t('futures:stop_loss')}
-                            className="flex-grow text-right font-medium h-[21px] text-onus-red"
+                            className={`flex-grow text-right font-medium h-[21px] ${isMobile ? 'text-onus-red' : 'text-red'}`}
                             containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
                             value={tab === 0 ? profit.current.sl : tab === 1 ? data.sl : tabPercent.current.sl}
                             // validator={tab === 1 && inputValidator('stop_loss')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('sl', e)}
                             renderTail={() => (
-                                <span className="font-medium text-onus-red pl-2">
+                                <span className={`font-medium ${isMobile ? 'text-onus-red' : 'text-red'} pl-2`}>
                                     {tab === 2 ? '%' : quoteAsset}
                                 </span>
                             )}
@@ -513,8 +531,9 @@ const FuturesEditSLTPVndc = ({
                         useLabel axis='x' x={percent.sl} xmax={100}
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
-                        bgColorSlide={colors.onus.red}
-                        bgColorActive={colors.onus.red}
+                        bgColorSlide={isMobile ? colors.onus.red : colors.red}
+                        bgColorActive={isMobile ? colors.onus.red : colors.red}
+                        BgColorLine={isMobile ? colors.onus.grey : null}
                         xStart={50}
                         reload={tab}
                         onChange={({ x }) => onChangePercent(x, 100, 'sl')} />
@@ -529,7 +548,7 @@ const FuturesEditSLTPVndc = ({
                         {formatNumber(data.sl, 0, 0, true)}&nbsp;
                     </span>
                     {t('futures:tp_sl:estimate_stop_loss')}&nbsp;
-                    <span className="text-onus-red">{profit.current.sl + ' ' + quoteAsset}</span>.
+                    <span className={isMobile ? 'text-onus-red' : 'text-red'}>{profit.current.sl + ' ' + quoteAsset}</span>.
                 </div>
 
                 <div className="mt-4 font-medium text-xs text-txtSecondary dark:text-onus-grey">
@@ -561,7 +580,7 @@ const FuturesEditSLTPVndc = ({
 
 const TabItem = styled.div`
     cursor:pointer;
-    color: ${({ active, isDark }) => active ? (isDark ? colors.onus.green : colors.darkBlue) : isDark ? colors.onus.white : colors.grey1};
+    color: ${({ active, isDark, isMobile }) => active ? (isDark ? (isMobile ? colors.onus.green : colors.teal) : colors.darkBlue) : isDark ? (isMobile ? colors.onus.white : colors.darkBlue5) : colors.grey1};
     font-weight: ${({ active }) => active ? 600 : 500};;
     position:relative;
     height:45px;
@@ -572,7 +591,7 @@ const TabItem = styled.div`
         display: ${({ active }) => active ? 'block' : 'none'};
         content: '';
         position: absolute;
-        border-bottom: 2px solid ${colors.onus.green};
+        border-bottom: ${({ isMobile }) => `2px solid ${isMobile ? colors.onus.green : colors.teal}`};
         width:40px;
         bottom:0;
         z-index: 2
