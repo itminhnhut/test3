@@ -468,6 +468,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput>
                         <OrderPriceMobile
+                            onusMode={true}
                             validator={inputValidator('price')}
                             type={type}
                             price={price} setPrice={setPrice} decimals={decimals}

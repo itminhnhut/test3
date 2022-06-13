@@ -11,7 +11,7 @@ const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice,
     const stopMarket = OrderTypes.StopMarket === type
     return (
         <TradingInput
-        onusMode={true}
+            onusMode={true}
             thousandSeparator={true}
             label={getLabelName}
             value={disabled ? '' : stopMarket ? stopPrice : price}
