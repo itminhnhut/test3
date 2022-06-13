@@ -22,7 +22,6 @@ const Button = memo((props) => {
         return ''
     }, [type, disabled])
 
-    console.log('__ check onus mode 111', onusMode)
     const render = useCallback(() => {
         if (componentType === 'link') {
             return (
