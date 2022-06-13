@@ -261,8 +261,9 @@
         "invalid_session_content": "Phiên làm việc của bạn đã hết hạn, vui lòng đăng nhập lại để sử dụng Nami Exchange",
         "invalid_session_button": "Đăng nhập ngay"
     },
-    "orders_history": "Lịch sử lệnh",
+    "orders_history": "Lịch sử",
     "minimum_leverage": "Đòn bẩy tối thiểu",
     "maximum_leverage": "Đòn bẩy tối đa",
-    "positions": "Vị thế"
+    "positions": "Vị thế",
+    "open_orders": "Lệnh mở"
 }
