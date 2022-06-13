@@ -163,7 +163,7 @@ const OrderDetail = ({
 
     const orderList = useMemo(() => [order], [order])
 
-    const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-teal' : 'text-red';
+    const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
     return (
         <div className={'bg-white dark:!bg-onus overflow-hidden'} >
             <div className="relative overflow-auto h-full overflow-x-hidden">
@@ -228,14 +228,14 @@ const OrderDetail = ({
                             </Row>
                             <Row>
                                 <Label>{t('futures:leverage:leverage')}</Label>
-                                <Span className="text-teal">{order?.leverage}x</Span>
+                                <Span className="text-onus-green">{order?.leverage}x</Span>
                             </Row>
                             {
                                 isTabHistory
                                 &&
                                 <Row>
                                     <Label>{t('futures:mobile:realized_pnl')}</Label>
-                                    <Span className={+order?.profit > 0 ? 'text-teal' : 'text-red'}>{formatNumber(String(order?.profit)
+                                    <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>{formatNumber(String(order?.profit)
                                         .replace(',', ''), 0, 0, true)}</Span>
                                 </Row>}
                             <Row>
@@ -268,11 +268,11 @@ const OrderDetail = ({
                             </Row>
                             <Row>
                                 <Label>{t('futures:take_profit')}</Label>
-                                <Span className="text-teal">{formatNumber(order?.tp)}</Span>
+                                <Span className="text-onus-green">{formatNumber(order?.tp)}</Span>
                             </Row>
                             <Row>
                                 <Label>{t('futures:mobile:stop_loss')}</Label>
-                                <Span className="text-red">{formatNumber(order?.sl)}</Span>
+                                <Span className="text-onus-red">{formatNumber(order?.sl)}</Span>
                             </Row>
                             <Row>
                                 <Label>{t('futures:mobile:open_fee')}</Label>
@@ -311,7 +311,7 @@ const OrderDetail = ({
                             {order?.futuresorderlogs.length > 0 ?
                                 order?.futuresorderlogs.map((item, index) => (
                                     <div key={index}
-                                        className="border-b border-divider dark:border-divider-dark last:border-0">
+                                        className="border-b border-divider dark:border-onus-line last:border-0">
                                         <Row>
                                             <Label>{t('common:time')}</Label>
                                             <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
@@ -319,13 +319,13 @@ const OrderDetail = ({
                                         {item?.metadata?.modify_tp &&
                                             <Row>
                                                 <Label>{t('futures:take_profit')}</Label>
-                                                <Span className="text-teal">{renderModify(item?.metadata, 'take_profit')}</Span>
+                                                <Span className="text-onus-green">{renderModify(item?.metadata, 'take_profit')}</Span>
                                             </Row>
                                         }
                                         {item?.metadata?.modify_sl &&
                                             <Row>
                                                 <Label>{t('futures:stop_loss')}</Label>
-                                                <Span className="text-red">{renderModify(item?.metadata, 'stop_loss')}</Span>
+                                                <Span className="text-onus-red">{renderModify(item?.metadata, 'stop_loss')}</Span>
                                             </Row>
                                         }
                                         {item?.metadata?.modify_price &&
@@ -351,7 +351,7 @@ const Row = styled.div.attrs({
 })``;
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
-    className: `text-gray-1 dark:text-txtSecondary-dark ${isTabOpen ? 'text-xs' : 'text-sm'} font-medium`
+    className: `text-gray-1 dark:text-onus-grey ${isTabOpen ? 'text-xs' : 'text-sm'} font-medium`
 }))``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({

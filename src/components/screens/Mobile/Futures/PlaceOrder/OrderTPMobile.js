@@ -30,8 +30,8 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, 
                 onValueChange={({ floatValue = '' }) => setTp(floatValue)}
                 decimalScale={decimals.decimalScalePrice}
                 validator={validator}
-                labelClassName='whitespace-nowrap capitalize'
-                containerClassName="h-[36px]"
+                labelClassName='whitespace-nowrap capitalize dark:text-onus-grey'
+                containerClassName="h-[36px] dark:bg-onus-input"
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
                     <div className='relative group select-none'

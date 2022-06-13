@@ -49,7 +49,7 @@ const OrderButtonMobile = ({
     const classNameError = disabled || (isAuth && isError) ? '!bg-gray-3 dark:!bg-darkBlue-3 text-gray-1 dark:text-darkBlue-4 cursor-not-allowed' : '';
     const title = type === FuturesOrderTypes.Limit ? t('futures:mobile:limit') : type === FuturesOrderTypes.StopMarket ? 'stop market' : ''
     return (
-        <div onClick={onHandleSave} className={`${isBuy ? 'bg-dominant' : 'bg-red'} text-white text-sm h-[67px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
+        <div onClick={onHandleSave} className={`${isBuy ? 'bg-onus-green' : 'bg-onus-red'} text-white text-sm h-[67px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
             <div className='font-semibold text-center'>{!isAuth ? t('futures:mobile:login_short') : (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</div>
             <div className='font-medium break-all text-center'>{formatNumber(_price, decimals.decimalScalePrice, 0, true)}</div>
         </div>

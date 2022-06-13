@@ -327,7 +327,7 @@ const FuturesEditSLTPVndc = ({
                     active={active}
                     percentage={i * size}
                     isDark={currentTheme === THEME_MODE.DARK}
-                    bgColorActive={key === 'sl' ? colors.red : colors.teal}
+                    bgColorActive={key === 'sl' ? colors.onus.red : colors.onus.green}
                 />
             )
             label.push(
@@ -337,7 +337,7 @@ const FuturesEditSLTPVndc = ({
                             onSetValuePercent(i * size, key)
                         }}
                         className={classNames(
-                            'block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
+                            'block absolute font-medium text-xs text-txtSecondary dark:text-onus-grey select-none cursor-pointer',
                             {
                                 'left-1/2 -translate-x-1/2': i > 0 && i < dotStep.current,
                                 '-left-1/2 translate-x-[-80%]': i === dotStep.current,
@@ -360,7 +360,7 @@ const FuturesEditSLTPVndc = ({
         return not_valid;
     }, [data]);
 
-    const classNameError = isError ? '!bg-gray-3 dark:!bg-darkBlue-3 dark:!text-darkBlue-4 text-gray-1 cursor-not-allowed' : '';
+    const classNameError = isError ? '!bg-gray-3 dark:!bg-onus-input dark:!text-darkBlue-4 text-gray-1 cursor-not-allowed' : '';
 
     const classMobile = useMemo(() => {
         const height = window.innerHeight <= 600 ? 'max-h-[500px] overflow-auto ' : '';
@@ -369,9 +369,9 @@ const FuturesEditSLTPVndc = ({
     }, [isMobile])
 
     return (
-        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%]`}>
+        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%] bg-[#243042]`}>
             <div
-                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-divider-dark sticky top-0 z-[10] bg-white dark:bg-darkBlue-2 rounded-t-lg">
+                className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-onus-line sticky top-0 z-[10] bg-white dark:bg-[#243042] rounded-t-lg">
                 <span className="font-bold text-[16px]">
                     {t('futures:tp_sl:modify_tpsl')}
                 </span>{' '}
@@ -384,21 +384,21 @@ const FuturesEditSLTPVndc = ({
             </div>
             <div className="px-5 pt-4 pb-6 text-sm">
                 <div className="mb-3 font-medium flex items-center justify-between">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                    <span className="text-txtSecondary dark:text-onus-grey">
                         {t('futures:order_table:symbol')}
                     </span>
                     <span
-                        className="text-dominant">{order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x</span>
+                        className="text-onus-green">{order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x</span>
                 </div>
                 <div className="mb-3 font-medium flex items-center justify-between">
                     {status === VndcFutureOrderType.Status.PENDING && order?.type !== VndcFutureOrderType.Type.MARKET && order?.type ?
                         <div
-                            className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px] justify-between">
+                            className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-onus-bg2 rounded-[4px] justify-between">
                             <TradingInput
                                 thousandSeparator
                                 type="text"
                                 className="flex-grow text-right font-medium h-[21px]"
-                                containerClassName="w-full !py-0 !px-0 border-none"
+                                containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
                                 value={data.price}
                                 label={t('futures:order_table:open_price')}
                                 validator={inputValidator('price')}
@@ -407,7 +407,7 @@ const FuturesEditSLTPVndc = ({
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
                                 renderTail={() => (
-                                    <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark pl-2">
+                                    <span className="font-medium text-txtSecondary dark:text-onus-grey pl-2">
                                         {quoteAsset}
                                     </span>
                                 )}
@@ -415,7 +415,7 @@ const FuturesEditSLTPVndc = ({
                         </div>
                         :
                         <>
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <span className="text-txtSecondary dark:text-onus-grey">
                                 {t('futures:order_table:open_price')}
                             </span>
                             <span className="">{formatNumber(data.price, 2, 0, true) + ' ' + quoteAsset}</span>
@@ -423,12 +423,12 @@ const FuturesEditSLTPVndc = ({
                     }
                 </div>
                 <div className="font-medium flex items-center justify-between">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                    <span className="text-txtSecondary dark:text-onus-grey">
                         {t('futures:tp_sl:mark_price')}
                     </span>
                     <span className="">{formatNumber(_lastPrice, 2, 0, true) + ' ' + quoteAsset}</span>
                 </div>
-                <div className='px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] bg-[#F2FCFC] dark:bg-darkBlue-4 w-[calc(100% + 40px)] mt-5 font-semibold'>
+                <div className='px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] bg-[#F2FCFC] dark:bg-onus-green opacity-[0.2] w-[calc(100% + 40px)] mt-5 font-semibold'>
                     <TabItem active={tab === 1} onClick={() => setTab(1)}
                         isDark={currentTheme === THEME_MODE.DARK}>{t('futures:price')}</TabItem>
                     <TabItem active={tab === 0} onClick={() => setTab(0)}
@@ -438,19 +438,19 @@ const FuturesEditSLTPVndc = ({
                 </div>
                 <div className="mt-6 flex items-center">
                     <div
-                        className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
+                        className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-onus-bg2 rounded-[4px]">
                         <TradingInput
                             thousandSeparator
                             type="text"
                             label={t('futures:take_profit')}
-                            className="flex-grow text-right font-medium h-[21px] text-teal"
-                            containerClassName="w-full !py-0 !px-0 border-none"
+                            className="flex-grow text-right font-medium h-[21px] text-onus-green"
+                            containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
                             value={tab === 0 ? profit.current.tp : tab === 1 ? data.tp : tabPercent.current.tp}
                             // validator={tab === 1 && inputValidator('take_profit')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
                             renderTail={() => (
-                                <span className="font-medium text-teal pl-2">
+                                <span className="font-medium text-onus-green pl-2">
                                     {tab === 2 ? '%' : quoteAsset}
                                 </span>
                             )}
@@ -467,10 +467,10 @@ const FuturesEditSLTPVndc = ({
                         // bgColorSlide={'transparent'}
                         xStart={50}
                         reload={tab}
-                        bgColorActive={colors.teal}
+                        bgColorActive={colors.onus.green}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')} />
                 </div>
-                <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
                         {t('futures:tp_sl:mark_price')}&nbsp;
@@ -483,23 +483,23 @@ const FuturesEditSLTPVndc = ({
                     <span className="text-dominant">{profit.current.tp + ' ' + quoteAsset}</span>.
                 </div>
 
-                <div className="my-4 w-full h-[1px] bg-divider dark:bg-divider-dark" />
+                <div className="my-4 w-full h-[1px] bg-divider dark:bg-onus-line" />
 
                 <div className="flex items-center">
                     <div
-                        className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
+                        className="px-3 flex items-center w-full h-[36px] bg-gray-5 dark:bg-onus-bg2 rounded-[4px]">
                         <TradingInput
                             thousandSeparator
                             type="text"
                             label={t('futures:stop_loss')}
-                            className="flex-grow text-right font-medium h-[21px] text-red"
-                            containerClassName="w-full !py-0 !px-0 border-none"
+                            className="flex-grow text-right font-medium h-[21px] text-onus-red"
+                            containerClassName="w-full !py-0 !px-0 border-none dark:bg-onus-bg2"
                             value={tab === 0 ? profit.current.sl : tab === 1 ? data.sl : tabPercent.current.sl}
                             // validator={tab === 1 && inputValidator('stop_loss')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('sl', e)}
                             renderTail={() => (
-                                <span className="font-medium text-red pl-2">
+                                <span className="font-medium text-onus-red pl-2">
                                     {tab === 2 ? '%' : quoteAsset}
                                 </span>
                             )}
@@ -513,13 +513,13 @@ const FuturesEditSLTPVndc = ({
                         useLabel axis='x' x={percent.sl} xmax={100}
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
-                        bgColorSlide={colors.red}
-                        bgColorActive={colors.red}
+                        bgColorSlide={colors.onus.red}
+                        bgColorActive={colors.onus.red}
                         xStart={50}
                         reload={tab}
                         onChange={({ x }) => onChangePercent(x, 100, 'sl')} />
                 </div>
-                <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
                     {t('futures:tp_sl:when')}&nbsp;
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">
                         {t('futures:tp_sl:mark_price')}&nbsp;
@@ -529,10 +529,10 @@ const FuturesEditSLTPVndc = ({
                         {formatNumber(data.sl, 0, 0, true)}&nbsp;
                     </span>
                     {t('futures:tp_sl:estimate_stop_loss')}&nbsp;
-                    <span className="text-red">{profit.current.sl + ' ' + quoteAsset}</span>.
+                    <span className="text-onus-red">{profit.current.sl + ' ' + quoteAsset}</span>.
                 </div>
 
-                <div className="mt-4 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="mt-4 font-medium text-xs text-txtSecondary dark:text-onus-grey">
                     {/* {t('futures:tp_sl:this_setting')}&nbsp; */}
                     {/* <span className="font-bold">{t('futures:tp_sl:take_profit_stop_loss')}</span>&nbsp; */}
                     {/* {t('futures:tp_sl:automaticcally_cancel')} */}
@@ -561,7 +561,7 @@ const FuturesEditSLTPVndc = ({
 
 const TabItem = styled.div`
     cursor:pointer;
-    color: ${({ active, isDark }) => active ? (isDark ? colors.teal : colors.darkBlue) : isDark ? colors.darkBlue5 : colors.grey1};
+    color: ${({ active, isDark }) => active ? (isDark ? colors.onus.green : colors.darkBlue) : isDark ? colors.onus.white : colors.grey1};
     font-weight: ${({ active }) => active ? 600 : 500};;
     position:relative;
     height:45px;
@@ -572,7 +572,7 @@ const TabItem = styled.div`
         display: ${({ active }) => active ? 'block' : 'none'};
         content: '';
         position: absolute;
-        border-bottom: 2px solid ${colors.teal};
+        border-bottom: 2px solid ${colors.onus.green};
         width:40px;
         bottom:0;
         z-index: 2

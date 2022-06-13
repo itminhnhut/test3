@@ -33,7 +33,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
         <Popover className="relative pr-3" style={{flexGrow: 1}}>
             {({ open, close }) => (
                 <>
-                    <Popover.Button data-tut="order-type" className='w-full h-[36px] border-b-2 dark:border-divider-dark'>
+                    <Popover.Button data-tut="order-type" className='w-full h-[36px] border-b-2 dark:border-onus-input'>
                         <div className="flex items-center justify-between text-xs font-medium">
                             <div className="w-full">
                                 {getTypesLabel(type)}
@@ -60,7 +60,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                                             close()
                                         }}
                                             className={classNames(
-                                                'pb-2 w-full min-w-[78px] text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer border-b-[2px] border-transparent',
+                                                'pb-2 w-full min-w-[78px] text-txtSecondary dark:text-onus-grey font-medium text-xs cursor-pointer border-b-[2px] border-transparent',
                                                 {
                                                     '!text-txtPrimary dark:!text-txtPrimary-dark':
                                                         o === type,

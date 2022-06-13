@@ -18,11 +18,11 @@ const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quote
                 // onValueChange={({ floatValue = '' }) => setSize(floatValue)}
                 // validator={getValidator('quantity')}
                 decimalScale={0}
-                labelClassName='whitespace-nowrap'
-                containerClassName="h-[36px]"
+                labelClassName='whitespace-nowrap capitalize dark:text-onus-grey'
+                containerClassName="h-[36px] dark:bg-onus-input"
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => (
-                    <div className='relative group select-none'>
+                    <div className='relative group select-none dark:text-onus-grey'>
                         <div className='flex items-center'>
                             {pairConfig?.quoteAsset ?? ''}
                         </div>

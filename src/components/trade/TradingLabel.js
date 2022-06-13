@@ -6,11 +6,12 @@ const TradingLabel = ({
     value = '--',
     valueLoading,
     containerClassName = '',
-    valueClassName = ''
+    valueClassName = '',
+    labelClassName = ''
 }) => {
     return (
         <div className={classNames('font-medium text-sm', containerClassName)}>
-            <span className='mr-1 text-txtSecondary dark:text-txtSecondary-dark'>
+            <span className={`mr-1 text-txtSecondary dark:text-txtSecondary-dark ${labelClassName}`}>
                 {label}
                 {useColon && ':'}
             </span>
