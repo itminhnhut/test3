@@ -47,9 +47,9 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
                 setOpenEditModal(!openEditModal);
                 break;
             default:
-                
-                if(!openShareModal){
-                    const shareModalData = getShareModalData({order: rowData.current, pairPrice:marketWatch[rowData.current?.symbol]})
+
+                if (!openShareModal) {
+                    const shareModalData = getShareModalData({ order: rowData.current, pairPrice: marketWatch[rowData.current?.symbol] })
                     emitWebViewEvent(JSON.stringify(shareModalData))
                 }
                 // setOpenShareModal(!openShareModal)
@@ -122,8 +122,8 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
                 className='flex items-center text-sm font-medium select-none cursor-pointer'
                 onClick={() => setHideOther(!hideOther)}
             >
-                <CheckBox active={hideOther} />{' '}
-                <span className='ml-1 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-onus-gray'>
+                <CheckBox active={hideOther} />
+                <span className='ml-3 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-onus-gray text-xs'>
                     {t('futures:hide_other_symbols')}
                 </span>
             </div>
