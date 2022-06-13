@@ -33,8 +33,8 @@ const commonColors = {
         line: '#1B222D',
         input: '#192231',
         white: '#F6F6F6',
-        grey: '#8492A7'
-    }
+        grey: '#8492A7',
+    },
 };
 
 module.exports = {
@@ -249,8 +249,9 @@ module.exports = {
             mint: { DEFAULT: '#00C8BC' },
 
             onus: {
-                DEFAULT: commonColors.onus.bg, 1: commonColors.onus.bg2,
-                ...commonColors.onus
+                DEFAULT: commonColors.onus.bg,
+                1: commonColors.onus.bg2,
+                ...commonColors.onus,
             },
         },
         extend: {
@@ -300,8 +301,8 @@ module.exports = {
                     dark: commonColors.white,
                 },
                 onus: {
-                    DEFAULT: commonColors.white,
-                    secondary: '#8492A7',
+                    DEFAULT: commonColors.onus.white,
+                    secondary: commonColors.onus.grey,
                 },
             },
             backgroundColor: {
