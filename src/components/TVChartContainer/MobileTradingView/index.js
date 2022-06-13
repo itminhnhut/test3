@@ -222,9 +222,9 @@ export class MobileTradingView extends React.PureComponent {
     async newOrder(displayingId, order) {
         const isMatched = !(order.status === 0 || (order.status === 2 && order.openPrice == null))
         try {
-            const color = this.getOrderType(order).startsWith('BUY') ? colors.teal : colors.red2;
-            const colorSl = colors.red2;
-            const colorTp = colors.teal;
+            const color = this.getOrderType(order).startsWith('BUY') ? colors.onus.green : colors.onus.red;
+            const colorSl = colors.onus.red;
+            const colorTp = colors.onus.green;
             const line = this.widget
                 .chart()
                 .createOrderLine()
@@ -285,7 +285,7 @@ export class MobileTradingView extends React.PureComponent {
 
 
             if (this.props.renderProfit) {
-                const color = order.profit > 0 ? colors.teal : colors.red2;
+                const color = order.profit > 0 ? colors.onus.green : colors.onus.red;
 
                 if (order.close_price != null && (order.profit != null || order.profitToDraw != null)) {
                     const lineProfit = this.widget
@@ -433,28 +433,17 @@ export class MobileTradingView extends React.PureComponent {
             fullscreen: this.props.fullscreen,
             autosize: true,
             loading_screen: {backgroundColor: this.props.theme === "dark" ? colors.onus.bg : "#fff",},
-            // studies_overrides: {
-            //     "volume.volume.color.0": colors.teal,
-            //     "volume.volume.color.1": colors.red2,
-            //     "volume.volume ma.color": colors.red2,
-            //     "volume.volume ma.linewidth": 5,
-            //     "volume.volume ma.visible": true,
-            // },
+            studies_overrides: {
+                "volume.volume.color.0": colors.onus.green,
+                "volume.volume.color.1": colors.onus.red,
+                "volume.volume ma.color": colors.onus.red,
+                "volume.volume ma.linewidth": 5,
+                "volume.volume ma.visible": true,
+            },
             timezone: getTradingViewTimezone(),
             overrides: {
                 "scalesProperties.fontSize": 10,
-
                 editorFontsList: ["Inter", "Sans"],
-
-                "mainSeriesProperties.candleStyle.borderUpColor": colors.teal,
-                "mainSeriesProperties.candleStyle.borderDownColor": colors.red2,
-                "mainSeriesProperties.candleStyle.wickUpColor": colors.teal,
-                "mainSeriesProperties.candleStyle.wickDownColor": colors.red2,
-                "mainSeriesProperties.candleStyle.upColor": colors.teal,
-                "mainSeriesProperties.candleStyle.downColor": colors.red2,
-                "mainSeriesProperties.hollowCandleStyle.borderColor": colors.teal,
-                "mainSeriesProperties.hollowCandleStyle.borderDownColor": colors.red2,
-                "mainSeriesProperties.priceAxisProperties.autoScale": true,
                 "volumePaneSize": "tiny"
             },
             custom_css_url: '/library/trading_view/custom_mobile_chart.css'
@@ -472,6 +461,16 @@ export class MobileTradingView extends React.PureComponent {
                 'paneProperties.background': colors.onus.bg,
                 "paneProperties.vertGridProperties.color": colors.onus.bg,
                 "paneProperties.horzGridProperties.color": colors.onus.bg,
+
+                "mainSeriesProperties.candleStyle.borderUpColor": colors.onus.green,
+                "mainSeriesProperties.candleStyle.borderDownColor": colors.onus.red,
+                "mainSeriesProperties.candleStyle.wickUpColor": colors.onus.green,
+                "mainSeriesProperties.candleStyle.wickDownColor": colors.onus.red,
+                "mainSeriesProperties.candleStyle.upColor": colors.onus.green,
+                "mainSeriesProperties.candleStyle.downColor": colors.onus.red,
+                "mainSeriesProperties.hollowCandleStyle.borderColor": colors.onus.green,
+                "mainSeriesProperties.hollowCandleStyle.borderDownColor": colors.onus.red,
+
                 "volumePaneSize": "tiny"
             });
             this.setState({chartStatus: ChartStatus.LOADED});
@@ -578,9 +577,9 @@ MobileTradingView.defaultProps = {
     renderProfit: false,
     ordersList: [],
     studies_overrides: {
-        "volume.volume.color.0": "#03BBCC",
-        "volume.volume.color.1": "#ff0065",
-        "volume.volume ma.color": "#ff0065",
+        "volume.volume.color.0": colors.onus.green,
+        "volume.volume.color.1": colors.onus.red,
+        "volume.volume ma.color": colors.onus.red,
         "volume.volume ma.linewidth": 5,
         "volume.volume ma.visible": true,
         "bollinger bands.median.color": "#33FF88",
