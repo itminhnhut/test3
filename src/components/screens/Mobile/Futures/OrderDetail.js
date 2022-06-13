@@ -184,6 +184,7 @@ const OrderDetail = ({
                             symbol={order.symbol}
                             pairConfig={pairConfig}
                             initTimeFrame={resolution}
+                            onIntervalChange={setResolution}
                             isVndcFutures={true}
                             ordersList={orderList}
                             theme={THEME_MODE.DARK}
