@@ -59,7 +59,7 @@ const ChartOptions = ({
                 <div className="flex items-center flex-wrap">
                     <div className="flex items-center cursor-pointer" data-tut="order-symbol"
                          onClick={() => setShowModelMarket(true)}>
-                        <img src={'/images/icon/ic_exchange_mobile_onus.png'} height={16} width={16}/>
+                        <img src={getS3Url('/images/icon/ic_exchange_mobile_onus.png')} height={16} width={16}/>
                         <div
                             className="px-2 font-semibold text-onus-white text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
                     </div>
