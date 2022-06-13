@@ -16,7 +16,7 @@ import IndicatorBars, {
 import {find, get, set} from "lodash";
 
 const CONTAINER_ID = "nami-mobile-tv";
-const CHART_VERSION = "1.0.7";
+const CHART_VERSION = "1.0.8";
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
@@ -421,6 +421,15 @@ export class MobileTradingView extends React.PureComponent {
                 "volume.volume ma.color": colors.onus.red,
                 "volume.volume ma.linewidth": 5,
                 "volume.volume ma.visible": true,
+                "bollinger bands.median.color": "#33FF88",
+                "bollinger bands.upper.color": "#00C8BC",
+                "bollinger bands.lower.color": "#00C8BC",
+                "moving average exponential.plot.color": "#00C8BC",
+                "moving average.plot.color": "#00C8BC",
+                "macd.histogram.color": "#00ffff",
+                "macd.macd.color": "#e9a55d",
+                "macd.signal.color": "#f263f3",
+                "relative strength index.plot.color": "#00ffff",
             },
             timezone: getTradingViewTimezone(),
             overrides: {
