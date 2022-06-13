@@ -79,9 +79,9 @@ export class MobileTradingView extends React.PureComponent {
                 const isDark = this.props.theme === "dark";
                 this.widget.applyOverrides({
                     "scalesProperties.lineColor": isDark ? "#202C4C" : "#F2F4F6",
-                    'paneProperties.background': isDark ? colors.onus : colors.white,
-                    "paneProperties.vertGridProperties.color": isDark ? colors.onus : colors.grey4,
-                    "paneProperties.horzGridProperties.color": isDark ? colors.onus : colors.grey4,
+                    'paneProperties.background': isDark ? colors.onus.bg : colors.white,
+                    "paneProperties.vertGridProperties.color": isDark ? colors.onus.bg : colors.grey4,
+                    "paneProperties.horzGridProperties.color": isDark ? colors.onus.bg : colors.grey4,
                 });
                 this.theme = newTheme;
             }
@@ -432,7 +432,7 @@ export class MobileTradingView extends React.PureComponent {
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            loading_screen: {backgroundColor: this.props.theme === "dark" ? colors.onus : "#fff",},
+            loading_screen: {backgroundColor: this.props.theme === "dark" ? colors.onus.bg : "#fff",},
             // studies_overrides: {
             //     "volume.volume.color.0": colors.teal,
             //     "volume.volume.color.1": colors.red2,
@@ -469,9 +469,9 @@ export class MobileTradingView extends React.PureComponent {
             this.widget.applyOverrides({
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
                 "scalesProperties.lineColor": "#202C4C",
-                'paneProperties.background': colors.onus,
-                "paneProperties.vertGridProperties.color": colors.onus,
-                "paneProperties.horzGridProperties.color": colors.onus,
+                'paneProperties.background': colors.onus.bg,
+                "paneProperties.vertGridProperties.color": colors.onus.bg,
+                "paneProperties.horzGridProperties.color": colors.onus.bg,
                 "volumePaneSize": "tiny"
             });
             this.setState({chartStatus: ChartStatus.LOADED});
