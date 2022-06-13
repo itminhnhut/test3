@@ -242,9 +242,9 @@ export default ({isRealtime = true}) => {
                                 className={cn(
                                     'h-9 w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium border',
                                     {
-                                        'text-red border-red':
+                                        'text-onus-red border-onus-red':
                                             item.change24h < 0,
-                                        'text-teal border-teal':
+                                        'text-onus-green border-onus-green':
                                             item.change24h >= 0,
                                     }
                                 )}
@@ -382,8 +382,8 @@ const LastPrice = ({price}) => {
     return (
         <span
             className={cn('text-sm leading-5', {
-                'text-red': price < prevPrice,
-                'text-teal': price >= prevPrice,
+                'text-onus-red': price < prevPrice,
+                'text-onus-green': price >= prevPrice,
             })}
         >
             {formatPrice(price)}
