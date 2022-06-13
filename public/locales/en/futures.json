@@ -97,7 +97,8 @@
         "error_price": "Price cannot be empty",
         "error_qty": "Size cannot be empty",
         "error_tp": "Take profit cannot be empty",
-        "error_sl": "Stop loss cannot be empty"
+        "error_sl": "Stop loss cannot be empty",
+        "estimate_stop_loss": "Estimate loss with be"
     },
     "balance": "Balance",
     "unrealized_pnl": "Unrealized PNL",
