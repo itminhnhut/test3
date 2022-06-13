@@ -215,7 +215,7 @@ export default ({isRealtime = true}) => {
                         router.push(`/mobile/futures/${item.symbol}`)
                     }}
                 >
-                    <div className='flex flex-1 items-start'>
+                    <div className='flex flex-1 items-center'>
                         <AssetLogo assetCode={item.baseAsset} size={30}/>
                         <div className='ml-3'>
                             <div className='flex items-center text-sm whitespace-nowrap  leading-5'>
