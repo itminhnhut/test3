@@ -25,6 +25,7 @@ const FuturesEditSLTPVndc = ({
     pairTicker,
     lastPrice = 0,
     isMobile,
+    onusMode=false
 }) => {
     const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
     const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
@@ -369,7 +370,7 @@ const FuturesEditSLTPVndc = ({
     }, [isMobile])
 
     return (
-        <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%] bg-[#243042]`}>
+        <Modal onusMode={onusMode} isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%] bg-[#243042]`}>
             <div
                 className="px-5 py-4 flex items-center justify-between border-b border-divider dark:border-onus-line sticky top-0 z-[10] bg-white dark:bg-[#243042] rounded-t-lg">
                 <span className="font-bold text-[16px]">
@@ -464,9 +465,9 @@ const FuturesEditSLTPVndc = ({
                         useLabel axis='x' x={percent.tp} xmax={100}
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
-                        // bgColorSlide={'transparent'}
                         xStart={50}
                         reload={tab}
+                        bgColorSlide={colors.onus.green}
                         bgColorActive={colors.onus.green}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')} />
                 </div>
@@ -543,6 +544,7 @@ const FuturesEditSLTPVndc = ({
                     type="primary"
                     className={`mt-5 !h-[36px] ${classNameError}`}
                     componentType="button"
+                    onusMode={onusMode}
                     disabled={isError}
                     onClick={() => {
                         const params = {

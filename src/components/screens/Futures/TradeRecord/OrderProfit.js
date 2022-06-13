@@ -3,12 +3,12 @@ import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutur
 import { formatNumber, getPriceColor } from 'redux/actions/utils';
 import { Share2 } from 'react-feather';
 
-const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory }) => {
+const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode=false }) => {
     if (!pairPrice?.lastPrice && !isTabHistory) return '-';
     const profit = isTabHistory ? order?.profit : getProfitVndc(order, pairPrice?.lastPrice);
     const percent = formatNumber(((profit / order.margin) * 100), 2, 0, true);
     return <div className='flex items-center w-full'>
-        <div className={`${getPriceColor(profit)} ${className}`}>
+        <div className={`${getPriceColor(profit, onusMode)} ${className}`}>
             {profit !== 0 ? <>
                 <div>
                     {profit > 0 ? '+' : ''}

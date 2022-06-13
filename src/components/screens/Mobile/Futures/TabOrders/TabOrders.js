@@ -78,7 +78,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
                     isDark={currentTheme === THEME_MODE.DARK}
                 />
             }
-            <TabMobile isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
+            <TabMobile onusMode={true} isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
                 {(isVndcFutures ? RECORD_TAB_VNDC_MOBILE : RECORD_TAB).map((item) => (
                     <TabItem key={item.code} active={tab === item.code} onClick={() => setTab(item.code)}>
                         {isVndcFutures ? t(item.title) : item.title}&nbsp;{isVndcFutures &&
@@ -128,7 +128,7 @@ const TabMobile = styled.div.attrs({
         bottom:0;
         width:32px;
         height:4px;
-        background-color: ${colors.teal}
+        background-color: ${({onusMode})=> onusMode ? colors.onus.green : colors.teal}
     }
 `
 const TabItem = styled.div.attrs(({ active }) => ({
@@ -155,7 +155,7 @@ export const LoginOrder = () => {
     return (
         <div className="cursor-pointer flex items-center justify-center h-full text-sm py-[10px] min-h-[300px]">
             <Link href={getLoginUrl('sso', 'login')} locale={false}>
-                <a className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
+                <a className='w-[200px] bg-onus-base !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
                     {t('futures:mobile:login_short')}
                 </a>
             </Link>

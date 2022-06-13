@@ -117,22 +117,18 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     <div className="text-xs ">
                         <div className="text-gray-1 dark:text-onus-gray py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
                         <div className="text-xs font-medium text-onus-green py-[1px] float-right">
-                            <OrderProfit className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
+                            <OrderProfit onusMode={true} className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
                         </div>
                     </div>
                     {profit ?
                         <div className="border-[1px] border-onus-green p-[5px] rounded-[2px] ml-[16px]" onClick={() => actions('modal', 'share')}>
-                            <img src={getS3Url("/images/icon/ic_share.png")} height={18} width={18} />
+                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={18} width={18} />
                         </div>
                         : null
                     }
                 </div>
             </div>
             <div>
-                {/* <Row className="!justify-start !w-full">
-                    <div className="text-gray-1 text-xs dark:text-onus-gray min-w-[70px]">{t('futures:mobile:pnl')}</div>
-                    <span className="text-xs font-medium text-teal"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} /></span>
-                </Row> */}
                 <div className="flex flex-wrap gap-x-[10px] w-full">
                     <OrderItem
                         label={t('futures:order_table:open_price')}
