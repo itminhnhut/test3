@@ -1,19 +1,16 @@
-import React, { useMemo, useRef, useState } from 'react'
-import ReactDOM from 'react-dom'
-import html2canvas from 'html2canvas'
+import React, { useMemo, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import html2canvas from 'html2canvas';
 
-import Modal from 'components/common/ReModal'
-import { useSelector } from 'react-redux'
-import CheckBox from 'components/common/CheckBox'
-import QRCode from 'qrcode.react'
-import classNames from 'classnames'
-import {
-    getProfitVndc,
-    VndcFutureOrderType,
-} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils'
-import { IconLoading } from 'components/common/Icons'
-import { useTranslation } from 'next-i18next'
+import Modal from 'components/common/ReModal';
+import { useSelector } from 'react-redux';
+import CheckBox from 'components/common/CheckBox';
+import QRCode from 'qrcode.react';
+import classNames from 'classnames';
+import { getProfitVndc, VndcFutureOrderType, } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import { IconLoading } from 'components/common/Icons';
+import { useTranslation } from 'next-i18next';
 
 const { PENDING, ACTIVE, CLOSED } = VndcFutureOrderType.Status
 const APP_URL = process.env.APP_URL || 'https://nami.exchange'

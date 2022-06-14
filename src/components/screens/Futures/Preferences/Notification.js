@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { SET_FUTURES_PREFERENCES } from 'redux/actions/types';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 import ToggleItem from './ToggleItem';
 
 const NOTI = {

@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'components/trade/InputSlider';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { FuturesOrderTypes as OrderTypes, } from 'redux/reducers/futures';
 
 const initPercent = 25;
 

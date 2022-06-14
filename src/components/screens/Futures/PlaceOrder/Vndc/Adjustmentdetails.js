@@ -1,11 +1,11 @@
-import React, { useEffect, useState, memo, useMemo } from 'react';
-import Modal from 'components/common/ReModal'
-import { API_ORDER_DETAIL } from 'redux/actions/apis'
-import fetchApi from 'utils/fetch-api'
-import { ApiStatus } from 'redux/actions/const'
-import { X, ArrowRight } from 'react-feather';
-import { formatTime, formatNumber } from 'redux/actions/utils';
-import Skeletor from 'src/components/common/Skeletor'
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import Modal from 'components/common/ReModal';
+import { API_ORDER_DETAIL } from 'redux/actions/apis';
+import fetchApi from 'utils/fetch-api';
+import { ApiStatus } from 'redux/actions/const';
+import { ArrowRight, X } from 'react-feather';
+import { formatNumber, formatTime } from 'redux/actions/utils';
+import Skeletor from 'src/components/common/Skeletor';
 import TableNoData from 'components/common/table.old/TableNoData';
 import { useTranslation } from 'next-i18next';
 

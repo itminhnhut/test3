@@ -9,8 +9,7 @@ import { formatNumber, getSymbolObject } from 'redux/actions/utils';
 import classNames from 'classnames';
 import useMakePrice from 'hooks/useMakePrice';
 import { BINANCE_LEVERAGE_MARGIN } from 'constants/constants';
-import { useTranslation } from 'next-i18next'
-
+import { useTranslation } from 'next-i18next';
 
 const FuturesMarginRatio = ({ pairConfig }) => {
     const { t } = useTranslation()

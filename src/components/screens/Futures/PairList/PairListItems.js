@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { PublicSocketEvent } from 'redux/actions/const';
 import { debounce } from 'lodash';
@@ -15,8 +15,7 @@ import Star from 'components/svg/Star';
 import colors from 'styles/colors';
 import { favoriteAction } from 'redux/actions/user';
 import { TRADING_MODE } from 'src/redux/actions/const';
-import { getFuturesFavoritePairs } from '../../../../redux/actions/futures'
-import { useDispatch } from 'react-redux';
+import { getFuturesFavoritePairs } from '../../../../redux/actions/futures';
 
 const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite, isAuth }) => {
     const [pairTicker, setPairTicker] = useState(null)

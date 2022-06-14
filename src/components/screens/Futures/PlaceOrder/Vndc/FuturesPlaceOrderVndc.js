@@ -11,7 +11,6 @@ import axios from 'axios';
 import FuturesOrderCostAndMaxVndc from './OrderCostAndMaxVndc';
 import TabOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/TabOrderVndc';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { maxBy } from 'lodash/math';
 
 const FuturesPlaceOrderVndc = ({
     pairConfig,

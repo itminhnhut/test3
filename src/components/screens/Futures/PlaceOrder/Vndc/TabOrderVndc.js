@@ -1,8 +1,7 @@
 import React from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
-
 
 const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) => {
     const { t } = useTranslation()

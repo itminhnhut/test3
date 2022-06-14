@@ -112,12 +112,6 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
                     isMobile
                 />
             }
-            {openShareModal && <ShareFutureMobile
-                isVisible={openShareModal} order={rowData.current}
-                onClose={() => setOpenShareModal(false)}
-                pairPrice={marketWatch[rowData.current?.symbol]}
-            />}
-            {/* <OrderClose open={openCloseModal} onClose={setOpenCloseModal} data={rowData.current} onConfirm={onConfirmDelete} isMobile /> */}
             <div
                 className='flex items-center text-sm font-medium select-none cursor-pointer'
                 onClick={() => setHideOther(!hideOther)}

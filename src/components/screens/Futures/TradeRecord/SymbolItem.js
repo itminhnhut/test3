@@ -1,4 +1,5 @@
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
+
 const FuturesRecordSymbolItem = ({ symbol, leverage }) => {
     const { t } = useTranslation()
     return (

@@ -1,17 +1,14 @@
-import { useEffect, useState, useRef } from 'react'
-import dynamic from 'next/dynamic';
-import FuturesRecordTableTab, { FUTURES_RECORD_CODE } from 'components/screens/Futures/TradeRecord/RecordTableTab'
-import FuturesOrderHistory from 'components/screens/Futures/TradeRecord/OrderHistory'
-import FuturesTradeHistory from 'components/screens/Futures/TradeRecord/TradeHistory'
-import FuturesPosition from 'components/screens/Futures/TradeRecord/Position'
-import classNames from 'classnames'
-import CheckBox from 'components/common/CheckBox'
-import FuturesOpenOrders from 'components/screens/Futures/TradeRecord/OpenOrders'
-import FuturesTxHistory from 'components/screens/Futures/TradeRecord/TxHistory'
-import FuturesAssets from 'components/screens/Futures/TradeRecord/Assets'
-import FuturesOpenOrdersVndc from 'components/screens/Futures/PlaceOrder/Vndc/OpenOrdersVndc'
-import FuturesOrderHistoryVndc from 'components/screens/Futures/PlaceOrder/Vndc/OrderHistoryVndc'
-import { tableStyle } from "config/tables";
+import { useEffect, useRef, useState } from 'react';
+import FuturesRecordTableTab, { FUTURES_RECORD_CODE } from 'components/screens/Futures/TradeRecord/RecordTableTab';
+import FuturesOrderHistory from 'components/screens/Futures/TradeRecord/OrderHistory';
+import FuturesTradeHistory from 'components/screens/Futures/TradeRecord/TradeHistory';
+import FuturesPosition from 'components/screens/Futures/TradeRecord/Position';
+import CheckBox from 'components/common/CheckBox';
+import FuturesOpenOrders from 'components/screens/Futures/TradeRecord/OpenOrders';
+import FuturesTxHistory from 'components/screens/Futures/TradeRecord/TxHistory';
+import FuturesAssets from 'components/screens/Futures/TradeRecord/Assets';
+import FuturesOpenOrdersVndc from 'components/screens/Futures/PlaceOrder/Vndc/OpenOrdersVndc';
+import FuturesOrderHistoryVndc from 'components/screens/Futures/PlaceOrder/Vndc/OrderHistoryVndc';
 import { useRouter } from 'next/router';
 import { getLoginUrl } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';

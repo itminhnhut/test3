@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 import { ChevronDown } from 'react-feather';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { getS3Url } from 'redux/actions/utils';
-import { useState, useRef, useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import Tooltip from 'components/common/Tooltip';
 import { FuturesOrderTypes } from 'redux/reducers/futures';

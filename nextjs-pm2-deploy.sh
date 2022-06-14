@@ -1,10 +1,10 @@
 echo "Deploy starting..."
 
-npm install || exit
+yarn || exit
 
 mkdir -p temp
 
-BUILD_DIR=temp npm run build || exit
+BUILD_DIR=temp yarn build || exit
 
 if [ ! -d "temp" ]; then
   echo '\033[31m temp Directory not exists!\033[0m'  
@@ -13,8 +13,8 @@ fi
 
 rm -rf .next
 
-mv temp .next
+cp -rf temp .next
 
-pm2 reload nami-exchange-web-v2 --update-env
+pm2 reload nami-exchange-web-v2
 
 echo "Deploy done."

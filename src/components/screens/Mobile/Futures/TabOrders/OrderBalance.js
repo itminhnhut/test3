@@ -40,7 +40,8 @@ const OrderBalance = ({
     const totalProfit = useMemo(() => {
         let _totalProfit = 0;
         ordersList.forEach((item) => {
-            const lastPrice = futuresMarketWatch?.[item.symbol]?.lastPrice || 0;
+            const refPrice = item?.side === VndcFutureOrderType.Side.BUY ? futuresMarketWatch?.[item.symbol]?.bid : futuresMarketWatch?.[item.symbol]?.ask
+            const lastPrice = refPrice || 0;
             _totalProfit += getProfitVndc(item, lastPrice);
         });
         return _totalProfit;

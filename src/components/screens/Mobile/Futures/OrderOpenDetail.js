@@ -28,7 +28,8 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     });
     const marketWatch = useSelector((state) => state.futures.marketWatch)
     const dataMarketWatch = marketWatch[order?.symbol]
-    const profit = dataMarketWatch && getProfitVndc(order, dataMarketWatch?.lastPrice)
+    const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask)
+
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const rowData = useRef(null);
     const [loading, setLoading] = useState(false);
@@ -129,11 +130,6 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     isMobile
                 />
             }
-            {openShareModal && <ShareFutureMobile
-                isVisible={openShareModal} order={oldOrder.current}
-                onClose={() => setOpenShareModal(false)}
-                pairPrice={marketWatch[oldOrder.current?.symbol]}
-            />}
             <div className="flex items-center justify-between mb-[10px]">
                 <div className="flex flex-col" >
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}

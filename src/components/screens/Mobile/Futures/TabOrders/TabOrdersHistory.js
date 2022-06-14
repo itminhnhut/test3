@@ -132,13 +132,6 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
 
     return (
         <div className="min-h-screen">
-            {openShareModal && <ShareFutureMobile
-                isVisible={openShareModal} order={rowData.current}
-                onClose={() => setOpenShareModal(false)}
-                isClosePrice
-                pairPrice={pairConfigDetail}
-            />}
-
             <InfiniteScroll
                 dataLength={dataSource.length}
                 next={onNext}

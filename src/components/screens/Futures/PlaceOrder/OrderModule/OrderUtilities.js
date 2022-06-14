@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { setTransferModal, getS3Url } from 'redux/actions/utils';
+import { getS3Url, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch } from 'react-redux';
 
