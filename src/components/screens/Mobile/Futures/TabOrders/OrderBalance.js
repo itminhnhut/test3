@@ -55,11 +55,11 @@ const OrderBalance = ({
     const pnl = <div className={className}>{formatNumber(totalProfit, 0, 0, true)}</div>;
     const total = balance.value + totalProfit;
     const lengthEquity = total ? formatNumber(total, balance?.item?.assetDigit)
-        .replaceAll(',', '') : 0;
+        .replace(/,/g, '') : 0;
     const equity = lengthEquity.length > 7 ? formatCurrency(total) : formatNumber(total, balance?.item?.assetDigit, 0, true);
     const _volume = formatCurrency(volume);
     const length = balance?.value ? formatNumber(balance.value, balance?.item?.assetDigit)
-        .replaceAll(',', '') : 0;
+        .replace(/,/g, '') : 0;
     const _balance = length.length > 7 ? formatCurrency(balance.value) : formatNumber(balance.value, balance?.item?.assetDigit);
     if (!visible) return null;
     if (mode === 'collapse') {

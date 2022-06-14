@@ -113,7 +113,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
 });
 
 const TabMobile = styled.div.attrs({
-    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-onus-line gap-[32px]"
+    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-onus-line"
 })`
     height:42px;
     width:100%;
@@ -133,7 +133,7 @@ const TabMobile = styled.div.attrs({
 `
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-sm font-medium text-gray-1 h-full flex items-center justify-center dark:text-onus-gray`,
+        `text-sm font-medium text-gray-1 h-full flex items-center justify-center dark:text-onus-gray mr-[32px] last:mr-0`,
         {
             'active font-semibold text-darkBlue dark:!text-white': active
         }

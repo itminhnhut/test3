@@ -80,8 +80,8 @@ const Slider = ({
     const throttleChange = throttle(change, 50, { 'trailing': false });
     function change({ top, left }) {
         if (!onChange) return
-
-        const { width, height } = container.current.getBoundingClientRect()
+        const width = container.current?.getBoundingClientRect()?.width ?? 0;
+        const height = container.current?.getBoundingClientRect()?.height ?? 0;
         let dx = 0
         let dy = 0
 

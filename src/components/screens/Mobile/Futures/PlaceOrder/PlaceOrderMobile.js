@@ -21,7 +21,7 @@ import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
 import { getFilter, } from 'src/redux/actions/utils';
-
+import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
 import { ExchangeOrderEnum, FuturesOrderEnum } from 'src/redux/actions/const';
 
 const getPairPrice = createSelector(
@@ -67,6 +67,7 @@ const PlaceOrder = ({
     const newDataLeverage = useRef(0);
     const [showEditVolume, setShowEditVolume] = useState(false);
     const [quoteQty, setQuoteQty] = useState(0);
+    const [showExpiredModal, setShowExpiredModal] = useState(false);
 
     useEffect(() => {
         if (usdRate) {
@@ -106,22 +107,23 @@ const PlaceOrder = ({
     useEffect(() => {
         if (typeof window !== undefined) {
             const search = new URLSearchParams(window.location.search)
-            if (search && search.get('need_login') === 'true' && context?.alert) {
-                context.alert.show('warning',
-                    t('futures:mobile.invalid_session_title'),
-                    t('futures:mobile.invalid_session_content'),
-                    null,
-                    () => {
-                        emitWebViewEvent('login');
-                    },
-                    null, {
-                    confirmTitle: t('futures:mobile.invalid_session_button'),
-                    hideCloseButton: true
-                }
-                )
+            if (search && search.get('need_login') === 'true') {
+                setShowExpiredModal(true);
+                // context.alert.show('warning',
+                //     t('futures:mobile.invalid_session_title'),
+                //     t('futures:mobile.invalid_session_content'),
+                //     null,
+                //     () => {
+                //         emitWebViewEvent('login');
+                //     },
+                //     null, {
+                //     confirmTitle: t('futures:mobile.invalid_session_button'),
+                //     hideCloseButton: true
+                // }
+                // )
             }
         }
-    }, [context.alert]);
+    }, []);
 
 
     useEffect(() => {
@@ -371,8 +373,8 @@ const PlaceOrder = ({
             price: _price,
             quoteAsset: pairConfig?.quoteAsset,
             symbol: pairConfig?.symbol,
-            sl: +sl.toFixed(decimals.decimalScalePrice),
-            tp: +tp.toFixed(decimals.decimalScalePrice),
+            sl: sl ? +Number(sl).toFixed(decimals?.decimalScalePrice ?? 0) : 0,
+            tp: tp ? +Number(tp).toFixed(decimals?.decimalScalePrice ?? 0) : 0,
             leverage,
             side,
         };
@@ -398,7 +400,7 @@ const PlaceOrder = ({
         <>
 
             <div className="flex flex-wrap justify-between px-[16px] py-[10px]">
-
+                {showExpiredModal && <ExpiredModal onClose={() => setShowExpiredModal(false)} />}
                 {showEditSLTP &&
                     <FuturesEditSLTPVndc
                         onusMode={true}

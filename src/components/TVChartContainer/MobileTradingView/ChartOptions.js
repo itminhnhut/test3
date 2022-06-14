@@ -41,7 +41,7 @@ const ChartOptions = ({
                           showIconGuide = true, pairParent
                       }) => {
 
-    if (!pairConfig) return null;
+    // if (!pairConfig) return null;
     const [showModelMarket, setShowModelMarket] = useState(false)
     const [start, setStart] = useState(false);
 
@@ -60,8 +60,7 @@ const ChartOptions = ({
                     <div className="flex items-center cursor-pointer" data-tut="order-symbol"
                          onClick={() => setShowModelMarket(true)}>
                         <img src={getS3Url('/images/icon/ic_exchange_mobile_onus.png')} height={16} width={16}/>
-                        <div
-                            className="px-2 font-semibold text-onus-white text-sm">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</div>
+                        <div className="px-2 font-semibold text-onus-white text-sm">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                     </div>
                     <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent}>
                         <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures}/>
