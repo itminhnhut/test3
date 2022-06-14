@@ -26,7 +26,7 @@ const basePath = '';
 
 const { i18n } = require('./next-i18next.config');
 const sentryWebpackPluginOptions = {
-    authToken: 
+    authToken: SENTRY_AUTH_TOKEN,
     // Additional config options for the Sentry Webpack plugin. Keep in mind that
     // the following options are set automatically, and overriding them is not
     // recommended:
