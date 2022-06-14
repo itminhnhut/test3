@@ -10,6 +10,7 @@
     "build": "yarn clean && next build",
     "start": "next start",
     "export": "next export",
+    "deploy": "pm2 deploy production",
     "lint": "eslint './src/**/*.js' --max-warnings 0 --fix",
     "build:docker-compose": "docker-compose build",
     "start:docker-compose": "docker-compose up -d",
