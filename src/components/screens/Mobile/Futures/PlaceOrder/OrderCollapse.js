@@ -46,7 +46,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
     }
 
     const disabledClass = isError || disabled || !isAuth;
-    const className = disabledClass ? '!bg-gray-3 dark:!bg-darkBlue-3 text-gray-1 dark:text-darkBlue-5 cursor-not-allowed' : '';
+    const className = disabledClass ? 'opacity-[0.3] cursor-not-allowed' : '';
     const _quoteQty = String(quoteQty).length > 7 ? formatCurrency(quoteQty) : formatNumber(
         quoteQty,
         decimals.decimalScaleQtyLimit
@@ -61,7 +61,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
                     </div>
                     <span>{formatNumber(pairPrice?.ask, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
-                <Text className={`diff-price ${disabledClass ? 'bg-darkBlue-5 !text-darkBlue-3' : ''}`}>
+                <Text className={`diff-price ${disabledClass ? 'bg-onus-bg2 !text-onus-grey' : ''}`}>
                     {formatNumber(pairPrice?.ask - pairPrice?.bid, decimals.decimalScalePrice, 0, true)}
                 </Text>
                 <Side className={`bg-onus-red rounded-r-[6px] text-white items-end ${className} ${disabledClass ? 'border-[1px] border-onus-red' : ''}`}
@@ -118,7 +118,7 @@ const Side = styled.div.attrs({
 `
 
 const Text = styled.div.attrs({
-    className: 'absolute font-medium bg-white text-onus-green text-xs rounded-[6px] px-[15px] py-[4px] left-[50%] top-[50%]'
+    className: 'absolute font-medium bg-white text-onus-green text-xs rounded-[6px] px-[15px] py-[4px] left-[50%] top-[50%] z-[10]'
 })`
 transform:translate(-50%, -50%)
 `
