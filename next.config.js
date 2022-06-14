@@ -3,6 +3,7 @@ const withFonts = require('next-fonts');
 const withPlugins = require('next-compose-plugins');
 const { parsed: env } = require('dotenv').config();
 const path = require('path');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 const {
     NEXT_PUBLIC_SENTRY_DSN: SENTRY_DSN,
@@ -24,8 +25,18 @@ process.env.SENTRY_DSN = SENTRY_DSN;
 const basePath = '';
 
 const { i18n } = require('./next-i18next.config');
-
-module.exports = withPlugins([
+const sentryWebpackPluginOptions = {
+    // Additional config options for the Sentry Webpack plugin. Keep in mind that
+    // the following options are set automatically, and overriding them is not
+    // recommended:
+    //   release, url, org, project, authToken, configFile, stripPrefix,
+    //   urlPrefix, include, ignore
+  
+    silent: true, // Suppresses all logs
+    // For all available options, see:
+    // https://github.com/getsentry/sentry-webpack-plugin#options.
+  };
+  const moduleExports = withPlugins([
     [withBundleAnalyzer],
     [withFonts],
 ],
@@ -76,3 +87,5 @@ module.exports = withPlugins([
         ],
     },
 });
+
+module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);

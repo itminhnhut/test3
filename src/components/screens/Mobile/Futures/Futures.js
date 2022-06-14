@@ -167,6 +167,14 @@ const FuturesMobile = () => {
                             isFullScreen={futuresScreen.isFullScreen}
                             decimals={decimals}
                         />
+                        <button
+                        type="button"
+                        onClick={() => {
+                            throw new Error("Sentry Frontend Error");
+                        }}
+                        >
+                        Throw error
+                        </button>
 
                         <SocketLayout pair={state.pair} pairConfig={pairConfig}>
                             <PlaceOrderMobile
