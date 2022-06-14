@@ -1,6 +1,6 @@
 echo "Deploy starting..."
 
-npm run install || exit
+npm install || exit
 
 BUILD_DIR=temp npm run build || exit
 
