@@ -2,6 +2,8 @@ echo "Deploy starting..."
 
 npm install || exit
 
+mkdir -p temp
+
 BUILD_DIR=temp npm run build || exit
 
 if [ ! -d "temp" ]; then
