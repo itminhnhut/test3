@@ -12,9 +12,4 @@ module.exports = {
             },
         },
     ],
-    deploy: {
-        production: {
-            'post-deploy': 'sh nextjs-pm2-deploy.sh',
-        },
-    },
 };
