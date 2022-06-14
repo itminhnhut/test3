@@ -114,7 +114,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <div className="text-xs ">
+                    <div className="text-xs text-right">
                         <div className="text-gray-1 dark:text-onus-gray py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
                         <div className="text-xs font-medium text-onus-green py-[1px] float-right">
                             <OrderProfit onusMode={true} className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
@@ -129,7 +129,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 </div>
             </div>
             <div>
-                <div className="flex flex-wrap gap-x-[10px] w-full">
+                <div className="flex flex-wrap w-full">
                     <OrderItem
                         label={t('futures:order_table:open_price')}
                         value={isTabHistory ? formatNumber(order?.open_price, 8, 0, false) : getOpenPrice(order, dataMarketWatch)}
@@ -174,9 +174,12 @@ export const SideComponent = styled.div.attrs(({ isBuy }) => ({
     font-size:10px
 `
 const Row = styled.div.attrs({
-    className: `flex mb-[10px] justify-between`
+    className: `flex mb-[10px] justify-between mr-[10px]`
 })`
-width:calc(50% - 5px)
+    width:calc(50% - 5px);
+    :nth-child(2n+2){
+        margin:0
+    }
 `
 
 const Label = styled.div.attrs({

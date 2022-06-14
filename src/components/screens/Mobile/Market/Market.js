@@ -220,9 +220,9 @@ export default ({isRealtime = true}) => {
                         <div className='ml-3'>
                             <div className='flex items-center text-sm whitespace-nowrap  leading-5'>
                                 <span className='font-semibold'>{item.baseAsset}</span>
-                                <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+                                {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                                     /{item.quoteAsset}
-                                </span>
+                                </span> */}
                             </div>
                             <p className='text-xs font-medium text-txtSecondary leading-4'>
                                 $
@@ -280,7 +280,7 @@ export default ({isRealtime = true}) => {
                                 }
                             >
                                 {t === TABS.FAVOURITE && (
-                                    <span className='mt-1'>
+                                    <span>
                                         <IconStarFilled
                                             size={16}
                                             color={colors.yellow}
@@ -303,8 +303,8 @@ export default ({isRealtime = true}) => {
                     })}
                 </div>
             </div>
-            <div className='market-list flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3 dark:bg-[#243042]'>
-                <div className='flex justify-between mb-4 px-3'>
+            <div className='market-list flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3 dark:bg-onus-line'>
+                <div className='flex justify-between mb-6 px-3'>
                     <div className='flex flex-1 space-x-1'>
                         <TitleHeadList
                             title={t('markets:pair')}

@@ -170,7 +170,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <div className="text-gray-1 text-xs dark:text-onus-grey min-w-[70px]">{t('futures:mobile:pnl')}</div>
                 <span className="text-xs font-medium text-onus-green"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
             </div> */}
-            <div className="flex flex-wrap gap-x-[10px] w-full">
+            <div className="flex flex-wrap w-full">
                 <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(order?.price, decimal, 0, true)} />
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
@@ -228,8 +228,8 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 </div>
             </div> */}
 
-            <div className="flex gap-x-[10px] w-full mt-2">
-                <div style={{ width: 'calc(50% - 5px)' }}>
+            <div className="flex w-full mt-2">
+                <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}
                         className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"

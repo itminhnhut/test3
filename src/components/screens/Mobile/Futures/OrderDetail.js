@@ -177,7 +177,7 @@ const OrderDetail = ({
                 </div>
 
                 <div className="shadow-order_detail py-[10px] dark:bg-onus h-full">
-                    <div className="min-h-[350px] max-h-[420px] spot-chart max-w-full">
+                    <div className="min-h-[350px] spot-chart max-w-full" style={{ height: `calc(var(--vh, 1vh) * 100 - 280px)` }}>
                         <MobileTradingView
                             t={t}
                             containerId="nami-mobile-detail-tv"
@@ -192,7 +192,8 @@ const OrderDetail = ({
                             showSymbol={false}
                             showIconGuide={false}
                             showTimeFrame={false}
-                            classNameChart="!h-[350px]"
+                            // classNameChart="!h-[350px]"
+                            styleChart={{ height: `calc(100% - 40px)` }}
                             renderProfit={order.status === VndcFutureOrderType.Status.CLOSED}
                         />
                     </div>

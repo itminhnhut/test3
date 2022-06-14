@@ -9,7 +9,7 @@ const OrderDetailLoading = () => {
                 <Skeletor width={100} height={10} />
             </div>
             <div>
-                <Skeletor width={'100%'} height={350} />
+                <Skeletor width={'100%'} height={400} />
             </div>
             <div className="mt-5 px-[16px]">
                 <div className="py-[10px]">
