@@ -80,7 +80,7 @@
         "title": "Điều chỉnh đòn bẩy",
         "check_leverage": "Kiểm tra bảng tỷ lệ Đòn bẩy & số tiền Ký quỹ",
         "position_limit_enlarge": "Tăng hạn mức vị thế",
-        "description": "Việc chọn đòn bẩy cao hơn, chẳng hạn như [10x] sẽ làm tăng rủi ro thanh lý. Hãy luôn kiểm soát mức độ rủi ro của bạn. Xem bài viết trợ giúp của chúng tôi để biết thêm thông tin.",
+        "description": "Việc chọn đòn bẩy cao hơn, chẳng hạn như [10x] sẽ làm tăng rủi ro thanh lý. Hãy luôn kiểm soát mức độ rủi ro của bạn.",
         "confirm": "Xác nhận",
         "leverage": "Đòn bẩy"
     },

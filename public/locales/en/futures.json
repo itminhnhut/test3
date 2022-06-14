@@ -78,7 +78,7 @@
         "title": "Adjust Leverage",
         "check_leverage": "Check on Leverage & Margin table",
         "position_limit_enlarge": "Position Limit Enlarge",
-        "description": "Selecting higher leverage such as [10x] increases your liquidation risk. Always manage your risk levels. See help articles for more information.",
+        "description": "Selecting higher leverage such as [10x] increases your liquidation risk. Always manage your risk levels.",
         "confirm": "Confirm",
         "leverage": "Leverage"
     },

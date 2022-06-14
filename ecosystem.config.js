@@ -4,10 +4,6 @@ module.exports = {
         script: 'yarn',
         args: 'start',
         interpreter: '/bin/bash',
-        instances: 'max',
-        exec_mode: 'cluster',
-        autorestart: false,
-        watch: false,
         max_memory_restart: '1G',
         env: {
             NODE_ENV: 'development',
