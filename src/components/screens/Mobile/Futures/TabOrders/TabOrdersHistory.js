@@ -38,8 +38,8 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
 
     const onShowModal = (item, key) => {
         rowData.current = item;
-        if(!openShareModal){
-            const shareModalData = getShareModalData({order: rowData.current, pairPrice: pairConfigDetail})
+        if (!openShareModal) {
+            const shareModalData = getShareModalData({ order: rowData.current, pairPrice: pairConfigDetail })
             emitWebViewEvent(JSON.stringify(shareModalData))
         }
         // setOpenShareModal(!openShareModal)
@@ -102,7 +102,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
                         <Skeletor width={80} height={8} />
                         <Skeletor width={80} height={8} />
                     </div>
-                   <div className="ml-[16px]"> <Skeletor width={30} height={30} /></div>
+                    <div className="ml-[16px]"> <Skeletor width={30} height={30} /></div>
                 </div>
             </div>
             <div className="flex items-center justify-between flex-wrap mt-[5px]">
@@ -128,7 +128,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
     }
 
     if (loading && isLoading.current) return (<div className="min-h-screen px-[10px]">{getLoading()}</div>)
-    if (dataSource.length <= 0 && !loading) return <TableNoData title={t('futures:order_table:no_history_order')} className="h-full min-h-screen" />
+    if (dataSource.length <= 0 && !loading) return <TableNoData isMobile title={t('futures:order_table:no_history_order')} className="h-full min-h-screen" />
 
     return (
         <div className="min-h-screen">

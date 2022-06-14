@@ -139,7 +139,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
                         <div className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
-                        <div className="text-onus-green border-onus-green border-[1px] text-xs px-[5px] rounded-[2px]">{order?.leverage}x</div>
+                        <div className="text-onus-green border-onus-green border-[1px] text-[10px] font-medium leading-3 py-[1px] px-[5px] rounded-[2px]">{order?.leverage}x</div>
                     </div>
                     <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
