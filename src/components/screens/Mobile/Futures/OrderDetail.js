@@ -87,7 +87,7 @@ const OrderDetail = ({
     };
 
     const getValue = (number) => {
-        return formatNumber(number, 0, 0, true) + ' VNDC';
+        return formatNumber(number, 0, 0, true);
     };
 
     const renderModify = (metadata, key) => {
@@ -319,7 +319,7 @@ const OrderDetail = ({
                                         }
                                     </div>
                                 ))
-                                : <TableNoData className="min-h-[300px]" />
+                                : <TableNoData className="min-h-[300px]" isMobile />
                             }
                         </div>
                     </div>
