@@ -50,7 +50,7 @@ const FuturesOrderCostAndMaxVndc = ({
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
         const decimalScaleQtyMarket = pairConfig?.filters.find(rs => rs.filterType === 'MARKET_LOT_SIZE');
         const stepSize = currentType === FuturesOrderTypes.Market ? decimalScaleQtyLimit?.stepSize : decimalScaleQtyMarket?.stepSize;
-        const _size = +Number(String(size).replaceAll(',', '')).toFixed(countDecimals(stepSize));
+        const _size = +Number(String(size).replace(/,/g, '')).toFixed(countDecimals(stepSize));
         // console.log(_size, size)
         const volume = _size * _price;
         const volumeLength = volume.toFixed(0).length;
@@ -103,7 +103,7 @@ const FuturesOrderCostAndMaxVndc = ({
 
     useEffect(() => {
         // Limit initial margin
-        const _size = +String(size).replaceAll(',', '')
+        const _size = +String(size).replace(/,/g, '')
         if (leverage) {
             let cost = 0;
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType)) {

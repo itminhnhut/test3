@@ -199,7 +199,7 @@ const TransferModal = ({ isMobile, alert }) => {
     }
 
     const onSetMax = useMemo(() => () => {
-        const format = formatNumber(currentWallet?.available, assetDigit, 0, true).replaceAll(',', '')
+        const format = formatNumber(currentWallet?.available, assetDigit, 0, true).replace(/,/g, '')
         setState({ amount: format });
         return null
     }, [currentWallet, assetDigit])

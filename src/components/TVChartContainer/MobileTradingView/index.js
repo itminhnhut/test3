@@ -528,7 +528,8 @@ export class MobileTradingView extends React.PureComponent {
                     }
                     <div
                         id={this.containerId}
-                        className={`h-full ${this.props.classNameChart}`}
+                        className={`h-full ${this.props.classNameChart}`} 
+                        style={this.props.styleChart}
                     />
                     <div>
                         {

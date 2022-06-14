@@ -261,7 +261,8 @@
         "info_swap_fee": "For every opening futures order, Nami Exchange applies a swap fee of 0.002% of order’s volume for every maintaining hour.",
         "invalid_session_title": "Session expired",
         "invalid_session_content": "Your session has expired, please login again to use Nami Exchange",
-        "invalid_session_button": "Log in now"
+        "invalid_session_button": "Log in now",
+        "retry": "Retry"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

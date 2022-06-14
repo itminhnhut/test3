@@ -136,7 +136,7 @@ const OrderDetail = ({
         router.back()
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         emitWebViewEvent('order_detail')
     }, [])
 
@@ -223,7 +223,7 @@ const OrderDetail = ({
                                 </Row>}
                             <Row>
                                 <Label>{t('futures:order_table:volume')}</Label>
-                                <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${formatNumber(order?.quantity, 8)} ${pairConfig?.baseAsset})`}</Span>
+                                <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
                             </Row>
                             <Row>
                                 <Label>{t('futures:margin')}</Label>

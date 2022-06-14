@@ -65,7 +65,7 @@ const FuturesPlaceOrderVndc = ({
 
     const handleQuantity = useCallback(
         (size, isPercent = false) => {
-            const sizeFormat = String(size).replaceAll(',', '')
+            const sizeFormat = String(size).replace(/,/g, '')
             setSize(sizeFormat)
             const _size = sizeFormat
                 ? assetReversed

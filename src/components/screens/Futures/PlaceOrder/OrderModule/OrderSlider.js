@@ -16,7 +16,7 @@ const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, si
 
     useEffect(() => {
         if (isVndcFutures) {
-            const _size = +String(size).replaceAll(',', '')
+            const _size = +String(size).replace(/,/g, '')
             setPercent(_size * 100 / maxSize);
             return;
         }

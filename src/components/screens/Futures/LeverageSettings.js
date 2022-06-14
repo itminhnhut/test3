@@ -45,7 +45,7 @@ const FuturesLeverageSettings = ({
                 setLeverage(data?.data?.[symbol])
             }
         } catch (error) {
-            console.log(`Can't set leverage `, e)
+            // console.log(`Can't set leverage `, e)
         } finally {
             setLoading(false)
             onClose()
@@ -124,7 +124,6 @@ const FuturesLeverageSettings = ({
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2': 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
 
-    console.log('check onus color', onusMode)
     return (
         <Modal
             onusMode={onusMode}
@@ -144,7 +143,7 @@ const FuturesLeverageSettings = ({
             <div className='mb-1.5 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
                 {t('futures:leverage:leverage')}
             </div>
-            <div className={`px-2 mb-4 h-[36px] flex items-center ${onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2': 'bg-gray-4 dark:bg-darkBlue-3'}rounded-[4px]`}>
+            <div className={`px-2 mb-4 h-[36px] flex items-center ${onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2': 'bg-gray-4 dark:bg-darkBlue-3'} rounded-[4px]`}>
             
                 <div className={changeClass}>
                     <Minus

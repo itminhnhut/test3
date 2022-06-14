@@ -49,7 +49,7 @@ const FuturesOrderSLTP = ({
         rowData.current = {
             fee: 0,
             side: side,
-            quantity: +Number(String(size).replaceAll(',', '')),
+            quantity: +Number(String(size).replace(/,/g, '')),
             status: 0,
             price: _price,
             quoteAsset: pairConfig.quoteAsset,
