@@ -5,6 +5,7 @@ import Emitter from 'src/redux/actions/emitter';
 import { PublicSocketEvent } from 'src/redux/actions/const';
 import throttle from 'lodash/throttle';
 import { SET_MULTI_FUTURES_MARKET_WATCH } from 'src/redux/actions/types';
+import { reloadData } from 'redux/actions/heath';
 
 let WS;
 let lastPrice = 0;
@@ -96,6 +97,10 @@ function initPublicSocket() {
             });
         });
 
+        WS.on('reconnect', () => {
+            dispatch(reloadData());
+        });
+
         WS.on('disconnect', () => {
             dispatch({
                 type: types.SET_PUBLIC_SOCKET,
@@ -103,6 +108,12 @@ function initPublicSocket() {
             });
         });
     };
+}
+
+export function reconnectPublicSocket() {
+    if (typeof WS.reconnect === 'function') {
+        WS.reconnect();
+    }
 }
 
 export default initPublicSocket;
