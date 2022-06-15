@@ -200,7 +200,7 @@ const OrderDetail = ({
                             />
                         }
                         <div className="py-[24px]">
-                            <div className="font-semibold mb-[6px]">{t('futures:mobile:order_detail')}</div>
+                            <div className="font-semibold mb-4">{t('futures:mobile:order_detail')}</div>
                             <div className='bg-onus-line px-3 rounded-lg'>
                                 <Row>
                                     <Label>ID</Label>
@@ -302,7 +302,7 @@ const OrderDetail = ({
                         </div>
                         {order?.futuresorderlogs.length > 0 &&
                             <div className="pb-2.5">
-                                <div className="font-semibold mb-[6px] text-lg">{t('futures:order_history:adjustment_history')}</div>
+                                <div className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
                                 {order?.futuresorderlogs.map((item, index) => (
                                     <div key={index}
                                         className="bg-onus-line px-3 rounded-lg mb-3">
@@ -344,11 +344,11 @@ const Row = styled.div.attrs({
 })``;
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
-    className: `text-gray-1 dark:text-onus-grey ${isTabOpen ? 'text-xs' : 'text-sm'} font-normal`
+    className: `text-gray-1 text-left dark:text-onus-grey ${isTabOpen ? 'text-xs' : 'text-sm'} font-normal`
 }))``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({
-    className: `text-sm font-medium ${isTabOpen ? 'text-xs' : 'text-sm'}`
+    className: `text-sm text-right font-medium ${isTabOpen ? 'text-xs' : 'text-sm'}`
 }))``;
 
 export default OrderDetail;
