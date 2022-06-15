@@ -158,10 +158,12 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     <OrderItem
                         label={t('futures:stop_loss')}
                         value={formatNumber(order?.sl)}
+                        valueClassName="text-onus-red"
                     />
                     <OrderItem
                         label={t('futures:take_profit')}
                         value={formatNumber(order?.tp)}
+                        valueClassName="text-onus-green"
                     />
                       <OrderItem
                         label={t('futures:mobile:order_id')}
