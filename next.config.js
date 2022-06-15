@@ -25,6 +25,7 @@ process.env.SENTRY_DSN = SENTRY_DSN;
 const basePath = '';
 
 const { i18n } = require('./next-i18next.config');
+
 const sentryWebpackPluginOptions = {
     authToken: SENTRY_AUTH_TOKEN,
     // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -32,13 +33,12 @@ const sentryWebpackPluginOptions = {
     // recommended:
     //   release, url, org, project, authToken, configFile, stripPrefix,
     //   urlPrefix, include, ignore
-  
 
     silent: true, // Suppresses all logs
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options.
-  };
-  const moduleExports = withPlugins([
+};
+const moduleExports = withPlugins([
     [withBundleAnalyzer],
     [withFonts],
 ],
@@ -88,6 +88,7 @@ const sentryWebpackPluginOptions = {
             'datav2.nami.exchange',
         ],
     },
+    distDir: process.env.BUILD_DIR || 'build',
 });
 
 module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
