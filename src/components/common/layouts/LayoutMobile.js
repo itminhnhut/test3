@@ -64,7 +64,7 @@ const LayoutMobile = ({
 
         const intervalReloadData = setInterval(() => {
             dispath(reloadData())
-        }, 5 * 60 * 1000)
+        }, 5 * 1000)
 
         return () => {
             document.body.classList.remove('hidden-scrollbar')

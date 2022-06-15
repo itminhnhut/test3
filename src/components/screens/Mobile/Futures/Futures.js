@@ -68,8 +68,6 @@ const FuturesMobile = () => {
         }
     }, [router]);
 
-
-
     useEffect(()=>{
         emitWebViewEvent('nami_futures')
     }, [])
