@@ -148,19 +148,19 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 </div>
                 <div className="flex items-center">
                     <div className="text-xs ">
-                        <div className="text-gray-1 dark:text-onus-grey py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
+                        {/* <div className="text-gray-1 dark:text-onus-grey py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div> */}
                         <div className="text-xs font-medium text-onus-green py-[1px] float-right">
-                            <OrderProfit onusMode={true} className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
+                            <OrderProfit onusMode={true} className="flex flex-col text-right" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                         </div>
                     </div>
                     {profit ?
-                        <div className="border-[1px] border-onus-green p-[5px] rounded-[2px] ml-[16px]" onClick={() => {
-                            const emitData = getShareModalData({order, pairPrice:dataMarketWatch})
+                        <div className="border-[1px] border-onus-grey p-[5px] rounded-[2px] ml-[12px]" onClick={() => {
+                            const emitData = getShareModalData({ order, pairPrice: dataMarketWatch })
                             emitWebViewEvent(JSON.stringify(emitData))
                             // setOpenShareModal(true)
-                            }
+                        }
                         }>
-                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={16} width={16} />
+                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={20} width={20} />
                         </div>
                         : null
                     }
@@ -177,6 +177,8 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
                 <OrderItem label={t('futures:stop_loss')} valueClassName="text-onus-red" value={formatNumber(order?.sl, 0)} />
                 <OrderItem label={t('futures:take_profit')} valueClassName="text-onus-green" value={formatNumber(order?.tp, 0)} />
+                <OrderItem label={t('futures:mobile:order_id')} value={order?.displaying_id} />
+                <OrderItem label={t('common:time')} value={formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')} />
                 {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
             {/* <div className="flex gap-x-[10px] w-full">

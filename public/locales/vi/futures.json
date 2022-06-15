@@ -205,7 +205,7 @@
     "place_order": "Đặt lệnh",
     "mobile": {
         "balance": "Tài khoản",
-        "pnl": "Lợi nhuận",
+        "pnl": "Tổng lợi nhuận",
         "equity": "Số dư",
         "guide": {
             "symbol": "Để bắt đầu giao dịch lựa chọn cặp tiền muốn giao dịch tại đây",
@@ -261,7 +261,9 @@
         "invalid_session_title": "Phiên làm việc hết hạn",
         "invalid_session_content": "Phiên làm việc của bạn đã hết hạn, vui lòng đăng nhập lại để sử dụng Nami Exchange",
         "invalid_session_button": "Đăng nhập ngay",
-        "retry": "Thử lại"
+        "retry": "Thử lại",
+        "order_id":"ID lệnh",
+        "volume_2":"KL giao dịch"
     },
     "orders_history": "Lịch sử",
     "minimum_leverage": "Đòn bẩy tối thiểu",

@@ -240,11 +240,11 @@ export default ({isRealtime = true}) => {
                         <div className='flex justify-end w-24'>
                             <div
                                 className={cn(
-                                    'h-9 w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium border',
+                                    'h-9 w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium',
                                     {
-                                        'text-onus-red border-onus-red':
+                                        'bg-onus-red':
                                             item.change24h < 0,
-                                        'text-onus-green border-onus-green':
+                                        'bg-onus-green':
                                             item.change24h >= 0,
                                     }
                                 )}

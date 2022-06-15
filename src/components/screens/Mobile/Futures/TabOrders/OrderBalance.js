@@ -101,7 +101,7 @@ const OrderBalance = ({
                 containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
             />
             <TradingLabel
-                label={t('futures:order_table:volume')}
+                label={t('futures:mobile:volume_2')}
                 value={_volume}
                 labelClassName="dark:text-onus-grey"
                 containerClassName="text-xs flex justify-between w-1/2 pb-[5px]"

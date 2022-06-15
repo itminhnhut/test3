@@ -21,7 +21,7 @@ import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
 import { getFilter, } from 'src/redux/actions/utils';
-import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
+// import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
 import { ExchangeOrderEnum, FuturesOrderEnum } from 'src/redux/actions/const';
 
 const getPairPrice = createSelector(
@@ -107,23 +107,23 @@ const PlaceOrder = ({
     useEffect(() => {
         if (typeof window !== undefined) {
             const search = new URLSearchParams(window.location.search)
-            if (search && search.get('need_login') === 'true') {
-                setShowExpiredModal(true);
-                // context.alert.show('warning',
-                //     t('futures:mobile.invalid_session_title'),
-                //     t('futures:mobile.invalid_session_content'),
-                //     null,
-                //     () => {
-                //         emitWebViewEvent('login');
-                //     },
-                //     null, {
-                //     confirmTitle: t('futures:mobile.invalid_session_button'),
-                //     hideCloseButton: true
-                // }
-                // )
+            if (search && search.get('need_login') === 'true' && context?.alert) {
+                // setShowExpiredModal(true);
+                context.alert.show('expired',
+                    t('futures:mobile.invalid_session_title'),
+                    t('futures:mobile.invalid_session_content'),
+                    null,
+                    () => {
+                        emitWebViewEvent('login');
+                    },
+                    null, {
+                    confirmTitle: t('futures:mobile.invalid_session_button'),
+                    hideCloseButton: true
+                }
+                )
             }
         }
-    }, []);
+    }, [context.alert]);
 
 
     useEffect(() => {
@@ -400,7 +400,7 @@ const PlaceOrder = ({
         <>
 
             <div className="flex flex-wrap justify-between px-[16px] py-[10px]">
-                {showExpiredModal && <ExpiredModal onClose={() => setShowExpiredModal(false)} />}
+                {/* {showExpiredModal && <ExpiredModal onClose={() => setShowExpiredModal(false)} />} */}
                 {showEditSLTP &&
                     <FuturesEditSLTPVndc
                         onusMode={true}

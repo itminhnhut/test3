@@ -115,14 +115,14 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 </div>
                 <div className="flex items-center">
                     <div className="text-xs text-right">
-                        <div className="text-gray-1 dark:text-onus-gray py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
+                        {/* <div className="text-gray-1 dark:text-onus-gray py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div> */}
                         <div className="text-xs font-medium text-onus-green py-[1px] float-right">
-                            <OrderProfit onusMode={true} className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
+                            <OrderProfit onusMode={true} className="flex flex-col" order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
                         </div>
                     </div>
                     {profit ?
-                        <div className="border-[1px] border-onus-green p-[5px] rounded-[2px] ml-[16px]" onClick={() => actions('modal', 'share')}>
-                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={18} width={18} />
+                        <div className="border-[1px] border-onus-grey p-[5px] rounded-[2px] ml-[12px]" onClick={() => actions('modal', 'share')}>
+                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={20} width={20} />
                         </div>
                         : null
                     }
@@ -151,12 +151,20 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                         label={t('futures:take_profit')}
                         value={formatNumber(order?.tp)}
                     />
+                      <OrderItem
+                        label={t('futures:mobile:order_id')}
+                        value={order?.displaying_id}
+                    />
+                    <OrderItem
+                        label={t('common:time')}
+                        value={formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}
+                    />
                 </div>
             </div>
             {allowButton &&
                 <div className="flex items-center justify-between ">
-                    <Button className="dark:bg-onus-line dark:text-onus-gray" onClick={() => actions('modal', 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
-                    <Button className="dark:bg-onus-line dark:text-onus-gray" onClick={() => actions('delete')}>{t('common:close')}</Button>
+                    <Button className="dark:bg-onus-line dark:text-onus-gray !h-[36px]" onClick={() => actions('modal', 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
+                    <Button className="dark:bg-onus-line dark:text-onus-gray !h-[36px]" onClick={() => actions('delete')}>{t('common:close')}</Button>
                 </div>
             }
         </div>
