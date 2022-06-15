@@ -180,6 +180,8 @@
     "market": "Market",
     "place_order_success": "Place order",
     "minimum_price": "Minimum price: ",
+    "liquidate_alert_greater": "SL needs > liquidation price: ",
+    "liquidate_alert_less": "SL needs < liquidation price: ",
     "maximum_price": "Maximum price: ",
     "fullscreen": "Fullscreen",
     "order_mode": "Order Mode",

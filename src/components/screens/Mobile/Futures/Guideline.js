@@ -1,12 +1,11 @@
-import React, {useState, useEffect, useRef, useMemo, useContext} from 'react';
-import Tour from "reactour";
+import React, { useEffect, useMemo, useRef } from 'react';
+import Tour from 'reactour';
 import colors from 'styles/colors';
-import {useTranslation} from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
-import {X} from 'react-feather';
-import {AlertContext} from 'components/common/layouts/LayoutMobile';
-import {disableBodyScroll, enableBodyScroll} from "body-scroll-lock";
-import {getS3Url} from 'redux/actions/utils';
+import { X } from 'react-feather';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import { getS3Url } from 'redux/actions/utils';
 
 const Guideline = ({pair, start, setStart, isFullScreen}) => {
     const {t} = useTranslation();

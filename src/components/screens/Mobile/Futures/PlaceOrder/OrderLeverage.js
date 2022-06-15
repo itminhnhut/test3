@@ -1,11 +1,9 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import TradingInput from 'components/trade/TradingInput';
-import {useTranslation} from 'next-i18next'
-import {getS3Url} from 'redux/actions/utils';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import FuturesLeverageSettings from 'components/screens/Futures/LeverageSettings';
-import {API_FUTURES_LEVERAGE} from 'redux/actions/apis';
+import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import axios from 'axios';
-import {ApiStatus} from 'redux/actions/const';
+import { ApiStatus } from 'redux/actions/const';
 
 const OrderLeverage = ({leverage, setLeverage, isAuth, pair, pairConfig, context, getLeverage}) => {
     const {t} = useTranslation();

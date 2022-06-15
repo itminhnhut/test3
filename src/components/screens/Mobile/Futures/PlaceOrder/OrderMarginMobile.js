@@ -1,9 +1,7 @@
-import React, { memo, useMemo } from 'react';
-import TradingLabel from 'components/trade/TradingLabel';
+import React from 'react';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, formatCurrency, emitWebViewEvent } from 'redux/actions/utils';
-import { useSelector, useDispatch } from 'react-redux'
-import { getS3Url, setTransferModal } from 'redux/actions/utils';
+import { emitWebViewEvent, formatCurrency, formatNumber, getS3Url } from 'redux/actions/utils';
+import { useDispatch } from 'react-redux';
 
 const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
     const { t } = useTranslation();

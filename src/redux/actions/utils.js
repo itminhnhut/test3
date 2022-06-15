@@ -9,6 +9,7 @@ import defaults from 'lodash/defaults';
 import find from 'lodash/find';
 import { useStore as store } from 'src/redux/store';
 import {
+    DefaultFuturesFee,
     ExchangeFilterDefault,
     LoginButtonPosition,
     TokenConfigV1 as TokenConfig,
@@ -20,6 +21,8 @@ import { SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY, SET_BOTTOM_NAVIGATION } fro
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { PATHS } from 'constants/paths';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
 
 const WAValidator = require('multicoin-address-validator')
 const EthereumAddress = require('ethereum-address')
@@ -851,14 +854,14 @@ export const secondToMinutesAndSeconds = (time) => {
     }
 }
 
-export const getPriceColor = (value, onusMode=false) =>{
-    if(onusMode){
-return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green'
-    }else{
-return value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant'
+export const getPriceColor = (value, onusMode = false) => {
+    if (onusMode) {
+        return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green'
+    } else {
+        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant'
     }
 }
-    
+
 
 const BASE_ASSET = ['VNDC', 'USDT']
 
@@ -923,5 +926,35 @@ export const setBottomTab = (tab) => async (dispatch) => {
 export const emitWebViewEvent = (event) => {
     if (typeof window !== undefined) {
         window.ReactNativeWebView && window.ReactNativeWebView.postMessage(event);
+    }
+}
+
+export const getLiquidatePrice = (order = {}, activePrice = 0) => {
+
+    let liquidatePrice = 0
+    const {
+        side, quantity: size, leverage, quoteQty,
+    } = order
+    const _size = (side === VndcFutureOrderType.Side.SELL ? -size : size)
+    const _sign = (side === VndcFutureOrderType.Side.SELL ? -1 : 1);
+    const margin = quoteQty / leverage
+    const feeRatio = DefaultFuturesFee.NamiFrameOnus
+    liquidatePrice = (_size * activePrice + quoteQty * feeRatio - margin) / (size * (_sign - feeRatio))
+    return liquidatePrice
+}
+
+export const getSuggestSl = (side, activePrice = 0, leverage = 10, profitRatio = 0.6) => {
+    if (side == VndcFutureOrderType.Side.BUY) {
+        return (-profitRatio * activePrice / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus)
+    } else {
+        return (-profitRatio * activePrice / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus)
+    }
+}
+
+export const getSuggestTp = (side, activePrice = 0, leverage = 10, profitRatio = 0.6) => {
+    if (side == VndcFutureOrderType.Side.BUY) {
+        return (profitRatio * activePrice / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus)
+    } else {
+        return (profitRatio * activePrice / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus)
     }
 }

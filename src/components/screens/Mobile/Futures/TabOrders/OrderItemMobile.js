@@ -3,10 +3,14 @@ import styled from 'styled-components';
 import colors from 'styles/colors';
 import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-import { useTranslation } from 'next-i18next'
-import { getProfitVndc, VndcFutureOrderType, renderCellTable } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import Big from "big.js";
-import { FuturesOrderEnum } from 'redux/actions/const';
+import { useTranslation } from 'next-i18next';
+import {
+    getProfitVndc,
+    renderCellTable,
+    VndcFutureOrderType
+} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import Big from 'big.js';
+import { DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
 
 const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isDark, onShowDetail, symbol, allowButton }) => {
     const { t } = useTranslation();
@@ -53,7 +57,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
     const renderLiqPrice = (row) => {
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
-        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - 0.1 / 100))
+        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus))
         return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
     }
 

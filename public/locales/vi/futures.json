@@ -179,6 +179,8 @@
     "market": "Thị trường",
     "place_order_success": "Đặt lệnh",
     "minimum_price": "Giá tối thiểu: ",
+    "liquidate_alert_greater": "Giá SL cần lớn hơn giá thanh lý: ",
+    "liquidate_alert_less": "Giá SL cần nhỏ hơn giá thanh lý: ",
     "maximum_price": "Giá tối đa: ",
     "fullscreen": "Toàn màn hình",
     "order_mode": "Chế độ đặt lệnh",
