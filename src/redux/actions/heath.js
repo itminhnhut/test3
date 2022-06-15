@@ -13,6 +13,5 @@ export function reloadData() {
         dispatch(updateTimestamp());
         dispatch(getAssetConfig());
         dispatch(getFuturesConfigs());
-        dispatch(getOrdersList());
     };
 }

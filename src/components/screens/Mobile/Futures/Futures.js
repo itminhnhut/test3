@@ -31,6 +31,7 @@ const FuturesMobile = () => {
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
+    const timestamp = useSelector((state) => state.heath.timestamp);
     const router = useRouter();
     const [side, setSide] = useState(VndcFutureOrderType.Side.BUY);
     const avlbAsset = useSelector((state) => state.wallet?.FUTURES);
@@ -78,8 +79,8 @@ const FuturesMobile = () => {
     }, [pairConfig, userSettings, state.layouts]);
 
     useEffect(() => {
-        if (auth) getOrders();
-    }, [auth]);
+        if (auth && timestamp) getOrders();
+    }, [auth, timestamp]);
 
     const getOrders = () => {
         if (auth) dispatch(getOrdersList());
