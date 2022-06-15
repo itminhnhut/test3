@@ -11,7 +11,7 @@ export const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case types.UPDATE_TIMESTAMP_RELOAD_APP:
-            return { timestamp: Date.now() };
+            return { timestamp: millisecondsToMinutes(Date.now()) };
         default:
             return state;
     }
