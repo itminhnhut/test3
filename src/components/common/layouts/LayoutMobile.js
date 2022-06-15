@@ -62,13 +62,14 @@ const LayoutMobile = ({
             }
         }, 1000);
 
-        setInterval(() => {
+        const intervalReloadData = setInterval(() => {
             dispath(reloadData())
         }, 5 * 60 * 1000)
 
         return () => {
             document.body.classList.remove('hidden-scrollbar')
             document.body.classList.remove('bg-onus');
+            clearInterval(intervalReloadData)
         }
     }, [])
 

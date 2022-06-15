@@ -10,9 +10,9 @@ function updateTimestamp() {
 
 export function reloadData() {
     return dispatch => {
+        dispatch(updateTimestamp());
+        dispatch(getAssetConfig());
         dispatch(getFuturesConfigs());
         dispatch(getOrdersList());
-        dispatch(getAssetConfig());
-        dispatch(updateTimestamp());
     };
 }
