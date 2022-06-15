@@ -208,7 +208,7 @@
     "place_order": "Place order",
     "mobile": {
         "balance": "Balance",
-        "pnl": "PnL",
+        "pnl": "Total PnL",
         "equity": "Equity",
         "guide": {
             "symbol": "To start trading, select your desired trading pair here",
@@ -265,7 +265,9 @@
         "invalid_session_title": "Session expired",
         "invalid_session_content": "Your session has expired, please login again to use Nami Exchange",
         "invalid_session_button": "Log in now",
-        "retry": "Retry"
+        "retry": "Retry",
+        "order_id":"Order ID",
+        "volume_2":"Trade volume"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

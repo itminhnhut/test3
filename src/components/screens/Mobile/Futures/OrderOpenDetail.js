@@ -146,19 +146,19 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 </div>
                 <div className="flex items-center">
                     <div className="text-xs ">
-                        <div className="text-gray-1 dark:text-onus-grey py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
+                        {/* <div className="text-gray-1 dark:text-onus-grey py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div> */}
                         <div className="text-xs font-medium text-onus-green py-[1px] float-right">
-                            <OrderProfit onusMode={true} className="flex" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
+                            <OrderProfit onusMode={true} className="flex flex-col text-right" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                         </div>
                     </div>
                     {profit ?
-                        <div className="border-[1px] border-onus-green p-[5px] rounded-[2px] ml-[16px]" onClick={() => {
-                            const emitData = getShareModalData({order, pairPrice:dataMarketWatch})
+                        <div className="border-[1px] border-onus-grey p-[5px] rounded-[2px] ml-[12px]" onClick={() => {
+                            const emitData = getShareModalData({ order, pairPrice: dataMarketWatch })
                             emitWebViewEvent(JSON.stringify(emitData))
                             // setOpenShareModal(true)
-                            }
+                        }
                         }>
-                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={16} width={16} />
+                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={20} width={20} />
                         </div>
                         : null
                     }
@@ -168,7 +168,9 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <div className="text-gray-1 text-xs dark:text-onus-grey min-w-[70px]">{t('futures:mobile:pnl')}</div>
                 <span className="text-xs font-medium text-onus-green"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
             </div> */}
-            <div className="flex flex-wrap gap-x-[10px] w-full">
+            <div className="flex flex-wrap w-full">
+                <OrderItem label={t('futures:mobile:order_id')} value={order?.displaying_id} />
+                <OrderItem label={t('common:time')} value={formatTime(order?.created_at, 'yyyy-MM-dd HH:mm')} />
                 <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(order?.price, decimal, 0, true)} />
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
@@ -226,8 +228,8 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 </div>
             </div> */}
 
-            <div className="flex gap-x-[10px] w-full mt-2">
-                <div style={{ width: 'calc(50% - 5px)' }}>
+            <div className="flex w-full mt-2">
+                <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}
                         className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"

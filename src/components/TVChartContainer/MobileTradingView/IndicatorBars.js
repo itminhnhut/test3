@@ -65,7 +65,7 @@ const IndicatorBars = ({
                         onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
                 ))}
             </div>
-            <Maximize onClick={onCollapse} color={collapse ? colors.onus.green : colors.onus.gray}/>
+            {setCollapse && <Maximize onClick={onCollapse} color={collapse ? colors.onus.green : colors.onus.gray} />}
         </div>
     );
 }
