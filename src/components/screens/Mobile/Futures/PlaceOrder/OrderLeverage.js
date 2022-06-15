@@ -11,7 +11,7 @@ const OrderLeverage = ({leverage, setLeverage, isAuth, pair, pairConfig, context
 
     useEffect(() => {
         isAuth && fetchLeverage(pairConfig?.pair)
-    }, [pairConfig, isAuth])
+    }, [pairConfig?.pair, isAuth])
 
     const fetchLeverage = async (symbol) => {
         const {data} = await axios.get(API_FUTURES_LEVERAGE, {

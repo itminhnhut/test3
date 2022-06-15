@@ -29,6 +29,7 @@ const OrderDetail = (props) => {
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const userSocket = useSelector((state) => state.socket.userSocket);
+    const timestamp = useSelector((state) => state.heath.timestamp);
     const auth = useSelector((state) => state.auth?.user);
     const [orderDetail, setOrderDetail] = useState(null);
     const isTabHistory = useRef(true);
@@ -39,8 +40,8 @@ const OrderDetail = (props) => {
     }, [orderDetail])
 
     useEffect(() => {
-        if (auth) getOrders();
-    }, [auth]);
+        if (auth && timestamp) getOrders();
+    }, [auth, timestamp]);
 
     const getOrders = () => {
         if (auth) dispatch(getOrdersList());
