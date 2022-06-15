@@ -100,10 +100,10 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
     }
 
     let profit = 0
-    if(isTabHistory){
+    if (isTabHistory) {
         profit = order?.profit
-    }else {
-        if(order && dataMarketWatch){
+    } else {
+        if (order && dataMarketWatch) {
             profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
         }
     }
@@ -143,6 +143,14 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
             <div>
                 <div className="flex flex-wrap w-full">
                     <OrderItem
+                        label={t('futures:mobile:order_id')}
+                        value={order?.displaying_id}
+                    />
+                    <OrderItem
+                        label={t('common:time')}
+                        value={formatTime(order?.created_at, 'yyyy-MM-dd HH:mm')}
+                    />
+                    <OrderItem
                         label={t('futures:order_table:open_price')}
                         value={isTabHistory ? formatNumber(order?.open_price, 8, 0, false) : getOpenPrice(order, dataMarketWatch)}
                     />
@@ -164,14 +172,6 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                         label={t('futures:take_profit')}
                         value={formatNumber(order?.tp)}
                         valueClassName="text-onus-green"
-                    />
-                      <OrderItem
-                        label={t('futures:mobile:order_id')}
-                        value={order?.displaying_id}
-                    />
-                    <OrderItem
-                        label={t('common:time')}
-                        value={formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}
                     />
                 </div>
             </div>
