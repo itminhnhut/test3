@@ -218,8 +218,8 @@ const OrderDetail = ({
                                 &&
                                 <Row>
                                     <Label>{t('futures:mobile:realized_pnl')}</Label>
-                                    <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>{formatNumber(String(order?.profit)
-                                        .replace(',', ''), 0, 0, true)}</Span>
+                                    <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
+                                    {formatNumber(String(order?.profit).replace(',', ''), 0, 0, true)} ({formatNumber(order?.profit/order?.margin*100, 2, 0, true)}%)</Span>
                                 </Row>}
                             <Row>
                                 <Label>{t('futures:order_table:volume')}</Label>
@@ -265,8 +265,22 @@ const OrderDetail = ({
                                 <Label>{t('futures:mobile:close_fee')}</Label>
                                 <Span>{renderFee(order, 'close_order')}</Span>
                             </Row>
+                            <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
+                                overridePosition={(e) => ({
+                                    left: 0,
+                                    top: e.top
+                                })}
+                            >
+                                <div>{t('futures:mobile:info_liquidate_fee')}</div>
+                            </Tooltip>
                             <Row>
-                                <Label>{t('futures:mobile:liquidate_fee')}</Label>
+                                <Label className="flex">
+                                    {t('futures:mobile:liquidate_fee')}
+                                    <div className="px-2" data-tip="" data-for="liquidate-fee" id="tooltip-liquidate-fee">
+                                        <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
+                                    </div>
+                                </Label>
                                 <Span>{renderFee(order, 'liquidate_order')}</Span>
                             </Row>
                             <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
@@ -282,7 +296,7 @@ const OrderDetail = ({
                                 <Label className="flex">
                                     {t('futures:mobile:swap_fee')}
                                     <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
-                                        <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                                        <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
                                     </div>
                                 </Label>
                                 <Span>{renderFee(order, 'swap')}</Span>
