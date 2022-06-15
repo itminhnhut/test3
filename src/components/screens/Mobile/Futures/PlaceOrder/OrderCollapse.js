@@ -1,13 +1,13 @@
-import React, { memo, useContext, useState, useEffect, useMemo } from 'react';
-import styled from 'styled-components'
+import React, { memo, useContext, useState } from 'react';
+import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import { formatNumber, formatCurrency, getS3Url, emitWebViewEvent } from 'redux/actions/utils';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { emitWebViewEvent, formatCurrency, formatNumber, getS3Url } from 'redux/actions/utils';
 import OrderBalance, { Balance } from '../TabOrders/OrderBalance';
 import TradingLabel from 'components/trade/TradingLabel';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import { placeFuturesOrder } from 'redux/actions/futures';
-import { AlertContext } from 'components/common/layouts/LayoutMobile'
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
 
 const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth, marginAndValue, availableAsset, quoteQty, isError }) => {
     const { t } = useTranslation();

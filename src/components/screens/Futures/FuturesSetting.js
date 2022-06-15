@@ -1,12 +1,10 @@
-
-
 import { Popover, Transition } from '@headlessui/react';
 import SvgMoon from 'src/components/svg/Moon';
 import Setting from 'src/components/svg/Setting';
 import SvgSun from 'src/components/svg/Sun';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
-import { Fragment, useState, useMemo } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';

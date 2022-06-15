@@ -1,19 +1,22 @@
-import React, { memo, useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { memo, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import classNames from 'classnames';
-import { useSelector } from 'react-redux'
-import { useTranslation } from 'next-i18next'
-import { FUTURES_RECORD_CODE, RECORD_TAB_VNDC_MOBILE, RECORD_TAB } from 'components/screens/Futures/TradeRecord/RecordTableTab'
-import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders'
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'next-i18next';
+import {
+    FUTURES_RECORD_CODE,
+    RECORD_TAB,
+    RECORD_TAB_VNDC_MOBILE
+} from 'components/screens/Futures/TradeRecord/RecordTableTab';
+import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders';
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
-import { emitWebViewEvent, getLoginUrl } from 'redux/actions/utils'
+import { getLoginUrl } from 'redux/actions/utils';
 import OrderBalance from 'components/screens/Mobile/Futures/TabOrders/OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
-import { socket } from "components/KlineChart/kline.service";
-import { VndcFutureOrderType } from "../../../Futures/PlaceOrder/Vndc/VndcFutureOrderType"
+import { VndcFutureOrderType } from '../../../Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useRouter } from 'next/router';
 
 const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender, isFullScreen }) => {
@@ -83,7 +86,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
                     <TabItem key={item.code} active={tab === item.code} onClick={() => setTab(item.code)}>
                         {isVndcFutures ? t(item.title) : item.title}&nbsp;{isVndcFutures &&
                             (item.code === FUTURES_RECORD_CODE.openOrders || item.code === FUTURES_RECORD_CODE.position)
-                            && ' (' + orderListFilter[item.code].length + ')'}
+                            && (orderListFilter[item.code].length > 0 ? ' (' + orderListFilter[item.code].length + ')' : '')}
                     </TabItem>
                 ))}
                 {/* <img src="/images/icon/ic_filter.png" height={24} width={24} /> */}
@@ -128,7 +131,7 @@ const TabMobile = styled.div.attrs({
         bottom:0;
         width:32px;
         height:4px;
-        background-color: ${({onusMode})=> onusMode ? colors.onus.green : colors.teal}
+        background-color: ${({ onusMode }) => onusMode ? colors.onus.green : colors.teal}
     }
 `
 const TabItem = styled.div.attrs(({ active }) => ({

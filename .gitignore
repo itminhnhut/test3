@@ -48,3 +48,6 @@ gh-pages/
 coverage
 
 static/server
+
+# Sentry
+.sentryclirc

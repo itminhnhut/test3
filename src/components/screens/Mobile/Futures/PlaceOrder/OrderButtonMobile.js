@@ -1,13 +1,11 @@
-import React, { useState, useContext } from 'react';
-import classNames from 'classnames';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import { useTranslation } from 'next-i18next'
-import { emitWebViewEvent, formatNumber, getLoginUrl } from 'redux/actions/utils';
-import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
-import { getType, getPrice } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc'
+import React, { useContext, useState } from 'react';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { useTranslation } from 'next-i18next';
+import { emitWebViewEvent, formatNumber } from 'redux/actions/utils';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
+import { getPrice, getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { placeFuturesOrder } from 'redux/actions/futures';
-import showNotification from 'utils/notificationService';
-import { AlertContext } from 'components/common/layouts/LayoutMobile'
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
 
 const OrderButtonMobile = ({
     side, price, size, stopPrice, type, decimals,

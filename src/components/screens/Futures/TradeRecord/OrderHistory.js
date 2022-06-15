@@ -4,9 +4,9 @@ import { customTableStyles } from './index';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { ChevronDown, Copy, Minus, Plus } from 'react-feather';
 
-import FuturesRecordSymbolItem from './SymbolItem'
-import FuturesTimeFilter from './TimeFilter'
-import DataTable from 'react-data-table-component'
+import FuturesRecordSymbolItem from './SymbolItem';
+import FuturesTimeFilter from './TimeFilter';
+import DataTable from 'react-data-table-component';
 
 const FuturesOrderHistory = ({
     pickedTime,

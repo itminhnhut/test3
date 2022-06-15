@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
 import { FuturesOrderTypes, FuturesStopOrderMode } from 'redux/reducers/futures';
 import { useTranslation } from 'next-i18next';
 import { formatNumber } from 'redux/actions/utils';
 import { ApiStatus } from 'redux/actions/const';
-import { log } from 'utils';
 import FuturesOrderButtonsGroup from 'components/screens/Futures/PlaceOrder/OrderModule/OrderButtonsGroup';
 import FuturesOrderUtilities from 'components/screens/Futures/PlaceOrder/OrderModule/OrderUtilities';
 import FuturesOrderSlider from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSlider';

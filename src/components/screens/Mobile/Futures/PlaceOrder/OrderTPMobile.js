@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TradingInput from '../../../../trade/TradingInput';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 
 const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, isAuth }) => {

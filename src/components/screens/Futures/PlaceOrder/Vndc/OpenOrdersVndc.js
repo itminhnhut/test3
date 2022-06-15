@@ -1,24 +1,24 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils'
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils';
 import { customTableStyles } from 'components/screens/Futures/TradeRecord/index';
 import { ChevronDown, Edit } from 'react-feather';
 
-import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem'
-import DataTable from 'react-data-table-component'
-import showNotification from 'utils/notificationService'
-import { renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType'
+import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
+import DataTable from 'react-data-table-component';
+import showNotification from 'utils/notificationService';
+import { renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-import FuturesTimeFilter2 from "components/screens/Futures/TradeRecord/FuturesTimeFilter2";
-import { FilterTradeOrder } from "components/screens/Futures/FilterTradeOrder";
+import FuturesTimeFilter2 from 'components/screens/Futures/TradeRecord/FuturesTimeFilter2';
+import { FilterTradeOrder } from 'components/screens/Futures/FilterTradeOrder';
 
-import { useSelector } from 'react-redux'
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
-import { ApiStatus } from 'redux/actions/const'
+import { useSelector } from 'react-redux';
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
 
-import { useTranslation } from 'next-i18next'
-import fetchApi from 'utils/fetch-api'
-import Big from "big.js";
-import { isArray } from "lodash";
+import { useTranslation } from 'next-i18next';
+import fetchApi from 'utils/fetch-api';
+import Big from 'big.js';
+import { isArray } from 'lodash';
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 import CloseAllOrders from 'components/screens/Futures/PlaceOrder/Vndc/CloseAllOrders';

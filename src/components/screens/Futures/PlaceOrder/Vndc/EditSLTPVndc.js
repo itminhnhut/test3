@@ -8,13 +8,12 @@ import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import { useSelector } from 'react-redux';
 import { find } from 'lodash';
-import styled from "styled-components";
+import styled from 'styled-components';
 import colors from 'styles/colors';
 import Slider from 'components/trade/InputSlider';
 import { Dot } from 'components/trade/StyleInputSlider';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-
 
 const FuturesEditSLTPVndc = ({
     isVisible,

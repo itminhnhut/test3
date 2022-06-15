@@ -10,7 +10,7 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import OrderTypeMobile from './OrderTypeMobile';
 import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
-import { emitWebViewEvent, formatNumber } from 'redux/actions/utils';
+import { formatNumber, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import OrderCollapse from './OrderCollapse';
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
@@ -144,25 +144,25 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _sl = +(lastPrice - ((side === VndcFutureOrderType.Side.BUY ? lastPrice : -lastPrice) * 0.05)).toFixed(decimals.decimalScalePrice);
-        const _tp = +(lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -lastPrice : lastPrice) * 0.05)).toFixed(decimals.decimalScalePrice);
+        const _sl = +(getSuggestSl(side, lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
+        const _tp = +(getSuggestTp(side, lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
         setTp(_tp);
         setSl(_sl);
         if (type === OrderTypes.Market) {
             onChangeQuoteQty(lastPrice, leverage);
         }
-    }, [side, type, decimals]);
+    }, [side, type, decimals, leverage]);
 
     useEffect(() => {
         if (firstTime.current) return;
         const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
         setPrice(_lastPrice);
         setStopPrice(_lastPrice);
-        const _sl = +(_lastPrice - ((side === VndcFutureOrderType.Side.BUY ? _lastPrice : -_lastPrice) * 0.05)).toFixed(decimals.decimalScalePrice);
-        const _tp = +(_lastPrice + ((side === VndcFutureOrderType.Side.SELL ? -_lastPrice : _lastPrice) * 0.05)).toFixed(decimals.decimalScalePrice);
+        const _sl = +(getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
+        const _tp = +(getSuggestTp(side, _lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
         setTp(_tp);
         setSl(_sl);
-    }, [firstTime.current, decimals]);
+    }, [firstTime.current, decimals, leverage]);
 
     const onChangeQuoteQty = (price, leverage) => {
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
@@ -317,6 +317,24 @@ const PlaceOrder = ({
                                 msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
                             }
                         }
+                    }
+                }
+
+                if(mode === 'stop_loss' && isValid){
+                    //  Kiểm tra hợp lệ giá liquidate không
+                    // const size = size
+                    const liquidatePrice = getLiquidatePrice({quantity: size, side, quoteQty, leverage}, _activePrice)
+                    const bias = 0.1/100
+                    const liquidatePriceBound = {
+                        upper: liquidatePrice*(1-bias),
+                        lower: liquidatePrice*(1+bias)
+                    }
+                    if(side === VndcFutureOrderType.Side.SELL && sl > liquidatePriceBound.upper){
+                        isValid = false
+                        msg = `${t('futures:liquidate_alert_less')} ${formatNumber(liquidatePriceBound.upper, decimals.decimalScalePrice, 0, true)}`;
+                    }else if(side === VndcFutureOrderType.Side.BUY && sl < liquidatePriceBound.lower){
+                        isValid = false
+                        msg = `${t('futures:liquidate_alert_greater')} ${formatNumber(liquidatePriceBound.lower, decimals.decimalScalePrice, 0, true)}`;
                     }
                 }
 

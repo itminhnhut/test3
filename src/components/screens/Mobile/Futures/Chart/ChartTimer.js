@@ -1,27 +1,20 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
 import classNames from 'classnames';
-import ms from "ms";
-import { listTimeFrame } from "components/KlineChart/kline.service";
-import { Popover, Transition } from "@headlessui/react";
-import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
-import { AreaChart, CandleChart, LineChart } from '../../../../TVChartContainer/timeFrame'
-import { IconStar, IconStarFilled } from "components/common/Icons";
-import colors from "styles/colors";
-import fetchAPI from "utils/fetch-api";
-import { API_GET_FAVORITE } from "redux/actions/apis";
-import { TRADING_MODE } from "redux/actions/const";
-import { favoriteAction } from "redux/actions/user";
-import { LANGUAGE_TAG } from "hooks/useLanguage";
-import showNotification from "utils/notificationService";
-import { useTranslation } from "next-i18next";
-import { getFuturesFavoritePairs } from "redux/actions/futures";
-import { useDispatch, useSelector } from "react-redux";
+import { listTimeFrame } from 'components/KlineChart/kline.service';
+import { Popover, Transition } from '@headlessui/react';
+import ModelMarketMobile from 'components/screens/Mobile/Market/ModelMarket';
+import { AreaChart, CandleChart, LineChart } from '../../../../TVChartContainer/timeFrame';
+import { IconStar, IconStarFilled } from 'components/common/Icons';
+import colors from 'styles/colors';
+import { TRADING_MODE } from 'redux/actions/const';
+import { favoriteAction } from 'redux/actions/user';
+import { getFuturesFavoritePairs } from 'redux/actions/futures';
+import { useDispatch, useSelector } from 'react-redux';
 import Guideline from 'components/screens/Mobile/Futures/Guideline';
 import styled from 'styled-components';
-
 
 const candleList = [
     { value: 'candle_solid', text: 'Candle', icon: CandleChart },

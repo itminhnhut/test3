@@ -1,19 +1,21 @@
-import React, { useMemo, useRef, useState, useContext } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-import TradingInput from '../../../trade/TradingInput';
-import { SideComponent, OrderItem } from './TabOrders/OrderItemMobile';
-import { useSelector } from 'react-redux'
-import { renderCellTable, VndcFutureOrderType, getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import { formatNumber, formatTime, countDecimals, getS3Url, emitWebViewEvent } from 'redux/actions/utils';
-import { useTranslation } from 'next-i18next'
+import { OrderItem } from './TabOrders/OrderItemMobile';
+import { useSelector } from 'react-redux';
+import {
+    getProfitVndc,
+    renderCellTable,
+    VndcFutureOrderType
+} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import Button from 'components/common/Button';
-import { AlertContext } from 'components/common/layouts/LayoutMobile'
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
-import { ApiStatus, FuturesOrderEnum } from 'redux/actions/const';
-import fetchApi from 'utils/fetch-api'
-import ShareFutureMobile, { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile'
-
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { ApiStatus, DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
+import fetchApi from 'utils/fetch-api';
+import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
 
 const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSLTP }) => {
     const { t } = useTranslation();
@@ -28,7 +30,8 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     });
     const marketWatch = useSelector((state) => state.futures.marketWatch)
     const dataMarketWatch = marketWatch[order?.symbol]
-    const profit = dataMarketWatch && getProfitVndc(order, dataMarketWatch?.lastPrice)
+    const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask)
+
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const rowData = useRef(null);
     const [loading, setLoading] = useState(false);
@@ -106,7 +109,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     const renderLiqPrice = (row, returnNumber) => {
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
-        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - 0.1 / 100))
+        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus))
         if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
         return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
     }
@@ -129,11 +132,6 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     isMobile
                 />
             }
-            {openShareModal && <ShareFutureMobile
-                isVisible={openShareModal} order={oldOrder.current}
-                onClose={() => setOpenShareModal(false)}
-                pairPrice={marketWatch[oldOrder.current?.symbol]}
-            />}
             <div className="flex items-center justify-between mb-[10px]">
                 <div className="flex flex-col" >
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}

@@ -1,4 +1,5 @@
 import { useTranslation } from 'next-i18next';
+
 export const VndcFutureOrderType = {
     GroupStatus: {
         OPENING: 0,
@@ -8,7 +9,7 @@ export const VndcFutureOrderType = {
         PENDING: 0,
         ACTIVE: 1,
         CLOSED: 2,
-        REQUESTING:3
+        REQUESTING: 3,
     },
     Side: {
         BUY: 'Buy',
@@ -36,39 +37,37 @@ export const VndcFutureOrderType = {
         NORMAL: 0,
         LUCKY_MONEY_2020: 1,
         AIRDROP_VNDC: 2,
-    }
-}
+    },
+};
 
 export const getProfitVndc = (order, lastPrice = 0) => {
     const { status, quantity, open_price, type, symbol, side, close_price } = order || {};
-    if (!order || !symbol) return null
+    if (!order || !symbol) return null;
     let { fee } = order;
-    fee = fee || 0
+    fee = fee || 0;
     let profitVNDC = 0;
-    let closePrice = 0
+    let closePrice = 0;
     // if (status === VndcFutureOrderType.Status.PENDING || status === VndcFutureOrderType.Status.PENDING) {
     //     return 0
     // }
     if (status === VndcFutureOrderType.Status.ACTIVE) {
         closePrice = lastPrice;
     } else if (status === VndcFutureOrderType.Status.CLOSED) {
-        closePrice = close_price
+        closePrice = close_price;
     } else {
-        return 0
+        return 0;
     }
     try {
         let buyProfitVNDC = 0;
-        buyProfitVNDC = quantity * (closePrice - open_price)
+        buyProfitVNDC = quantity * (closePrice - open_price);
         profitVNDC = side === VndcFutureOrderType.Side.BUY ? buyProfitVNDC - fee : -buyProfitVNDC - fee;
-
     } catch (e) {
-        console.error('__ e ', e);
     }
     return profitVNDC;
-}
+};
 
 export const renderCellTable = (key, rowData) => {
-    const { t, i18n: { language } } = useTranslation()
+    const { t, i18n: { language } } = useTranslation();
     switch (key) {
         case 'side':
             return language === 'vi' ? rowData[key] === 'Sell' ? t('common:sell') : t('common:buy') : rowData[key];
@@ -77,6 +76,5 @@ export const renderCellTable = (key, rowData) => {
             return language === 'vi' ?
                 (rowData[key] === 'Market' ? t('futures:market') : rowData[key] === 'Limit' ? t('futures:limit') : rowData[key]) : rowData[key];
         default:
-            return;
     }
-}
+};

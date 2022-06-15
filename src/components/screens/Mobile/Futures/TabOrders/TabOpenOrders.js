@@ -1,18 +1,16 @@
-import React, { useMemo, useState, useRef, useContext } from 'react';
-import CheckBox from 'components/common/CheckBox'
-import { useTranslation } from 'next-i18next'
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
-import classNames from 'classnames';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import CheckBox from 'components/common/CheckBox';
+import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import TableNoData from 'components/common/table.old/TableNoData';
 // import OrderClose from 'components/screens/Futures/PlaceOrder/Vndc/OrderClose';
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis'
-import { ApiStatus } from 'redux/actions/const'
-import fetchApi from 'utils/fetch-api'
-import { AlertContext } from 'components/common/layouts/LayoutMobile'
-import OrderItemMobile from './OrderItemMobile'
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc'
-import ShareFutureMobile, { getShareModalData } from './ShareFutureMobile';
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import fetchApi from 'utils/fetch-api';
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import OrderItemMobile from './OrderItemMobile';
+import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
+import { getShareModalData } from './ShareFutureMobile';
 import { emitWebViewEvent } from 'redux/actions/utils';
 
 const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDetail }) => {
@@ -112,12 +110,6 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
                     isMobile
                 />
             }
-            {openShareModal && <ShareFutureMobile
-                isVisible={openShareModal} order={rowData.current}
-                onClose={() => setOpenShareModal(false)}
-                pairPrice={marketWatch[rowData.current?.symbol]}
-            />}
-            {/* <OrderClose open={openCloseModal} onClose={setOpenCloseModal} data={rowData.current} onConfirm={onConfirmDelete} isMobile /> */}
             <div
                 className='flex items-center text-sm font-medium select-none cursor-pointer'
                 onClick={() => setHideOther(!hideOther)}

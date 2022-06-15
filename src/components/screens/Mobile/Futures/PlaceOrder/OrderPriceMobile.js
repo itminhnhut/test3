@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import TradingInput from '../../../../trade/TradingInput';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
-
 
 const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice, setStopPrice, pairConfig, validator }) => {
     const { t } = useTranslation();

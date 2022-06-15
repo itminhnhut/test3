@@ -1,8 +1,8 @@
-import React, { Fragment, useMemo, useState } from "react";
-import classNames from "classnames";
-import { Popover, Transition } from "@headlessui/react";
-import { ChevronDown } from "react-feather";
-import { useTranslation } from 'next-i18next'
+import React, { Fragment, useMemo, useState } from 'react';
+import classNames from 'classnames';
+import { Popover, Transition } from '@headlessui/react';
+import { ChevronDown } from 'react-feather';
+import { useTranslation } from 'next-i18next';
 
 export const FilterTradeOrder = ({ label = '', options = [], value = '', onChange, allowSearch }) => {
     const currentOption = useMemo(() => options.find(o => o.value === value), [value])

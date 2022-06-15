@@ -1,8 +1,6 @@
-import React, { useEffect, useRef, memo, useState } from 'react';
+import React, { memo } from 'react';
 import TradingInput from '../../../../trade/TradingInput';
-import { useTranslation } from 'next-i18next'
-import { getS3Url } from 'redux/actions/utils';
-import OrderVolumeMobileModal from './OrderVolumeMobileModal';
+import { useTranslation } from 'next-i18next';
 
 const initPercent = 25;
 const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quoteQty }) => {

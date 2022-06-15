@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
-import Modal from 'components/common/ReModal'
-import Button from 'components/common/Button'
-import { useTranslation } from 'next-i18next'
-import { API_CLOSE_ALL_ORDER } from 'redux/actions/apis'
-import fetchApi from 'utils/fetch-api'
-import { ApiStatus } from 'redux/actions/const'
+import Modal from 'components/common/ReModal';
+import Button from 'components/common/Button';
+import { useTranslation } from 'next-i18next';
+import { API_CLOSE_ALL_ORDER } from 'redux/actions/apis';
+import fetchApi from 'utils/fetch-api';
+import { ApiStatus } from 'redux/actions/const';
 
 const CloseAllOrders = () => {
     const { t } = useTranslation()

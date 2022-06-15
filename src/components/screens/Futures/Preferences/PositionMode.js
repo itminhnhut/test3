@@ -3,7 +3,7 @@ import { getFuturesUserSettings, setFuturesPositionMode, } from 'redux/actions/f
 import { FuturesPositionMode } from 'redux/reducers/futures';
 
 import RadioBox from 'components/common/RadioBox';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 
 const FuturesPreferencesPositionMode = ({ positionMode }) => {
     const dispatch = useDispatch()

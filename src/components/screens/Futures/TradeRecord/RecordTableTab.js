@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 
 const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrders }) => {
     const { t } = useTranslation()

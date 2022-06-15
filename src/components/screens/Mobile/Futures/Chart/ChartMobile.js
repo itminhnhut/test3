@@ -1,12 +1,10 @@
-import KlineChart from 'components/KlineChart/KlineChart'
-import ms from 'ms'
-import React, { useState, memo, useMemo } from 'react'
-import useDarkMode from 'hooks/useDarkMode'
+import React, { memo, useMemo } from 'react';
+import useDarkMode from 'hooks/useDarkMode';
 
-import dynamic from "next/dynamic";
-import { useTranslation } from "next-i18next";
-import { ChartMode } from "redux/actions/const";
-import { useSelector } from "react-redux";
+import dynamic from 'next/dynamic';
+import { useTranslation } from 'next-i18next';
+import { ChartMode } from 'redux/actions/const';
+import { useSelector } from 'react-redux';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView/').then(mod => mod.MobileTradingView),

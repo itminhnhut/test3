@@ -1,9 +1,9 @@
-import classNames from 'classnames'
-import {isArray, isDate, isString} from 'lodash'
-import {DatePicker} from "antd";
-import { useMemo, useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import {add} from "date-fns";
-import { useTranslation } from 'next-i18next'
+import classNames from 'classnames';
+import { isArray, isDate, isString } from 'lodash';
+import { DatePicker } from 'antd';
+import { forwardRef, useImperativeHandle, useMemo, useState } from 'react';
+import { add } from 'date-fns';
+import { useTranslation } from 'next-i18next';
 
 const {RangePicker} = DatePicker
 
@@ -26,7 +26,7 @@ const FuturesTimeFilter2 = forwardRef(({currentTimeRange, onChange},ref) => {
         setCustomRange(time)
         onChange(timeRanges[time])
     }
-  
+
     const value = useMemo(() => {
         // TOTO: improve check is moment object
         if (isArray(currentTimeRange) && currentTimeRange.every(e => !isDate(e))) {

@@ -1,9 +1,9 @@
-import React, { useMemo, Fragment } from 'react';
-import { Popover, Transition } from "@headlessui/react";
-import { ChevronDown } from "react-feather";
+import React, { Fragment, useMemo } from 'react';
+import { Popover, Transition } from '@headlessui/react';
+import { ChevronDown } from 'react-feather';
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
-import { useTranslation } from 'next-i18next'
-import classNames from "classnames";
+import { useTranslation } from 'next-i18next';
+import classNames from 'classnames';
 
 const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
     const { t } = useTranslation();

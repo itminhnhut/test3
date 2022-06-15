@@ -1,16 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Button from 'components/common/Button';
 import Modal from 'components/common/ReModal';
 import { Minus, Plus, X } from 'react-feather';
 import Slider from 'components/trade/InputSlider';
-import { formatNumber, formatCurrency, emitWebViewEvent } from 'redux/actions/utils';
+import { emitWebViewEvent, formatCurrency, formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
-import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
-import { VndcFutureOrderType } from '../../../Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import TradingLabel from 'components/trade/TradingLabel';
 import SvgWarning from 'components/svg/SvgWarning';
-import colors from '../../../../../styles/colors'
+import colors from '../../../../../styles/colors';
+
 const initValue = 100000;
 const OrderVolumeMobileModal = (props) => {
     const { onClose, size, decimal, getMaxQuoteQty, pairConfig,
@@ -78,7 +77,7 @@ const OrderVolumeMobileModal = (props) => {
             </div>
 
             <div className='px-2 mb-7 h-[36px] flex items-center bg-gray-4 dark:bg-onus-bg2 rounded-[4px]'>
-                <div className={changeClass}> 
+                <div className={changeClass}>
                     <Minus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
@@ -101,7 +100,7 @@ const OrderVolumeMobileModal = (props) => {
                     inputMode="decimal"
                     allowedDecimalSeparators={[',', '.']}
                 />
-                <div className={changeClass}> 
+                <div className={changeClass}>
                     <Plus
                         size={10}
                         className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'

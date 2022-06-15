@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SET_FUTURES_PREFERENCES } from 'redux/actions/types';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import ToggleItem from './ToggleItem';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 
 const FuturesPreferencesOrderConfirmation = () => {
     const { t } = useTranslation()

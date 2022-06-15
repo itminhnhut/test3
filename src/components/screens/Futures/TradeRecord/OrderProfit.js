@@ -5,7 +5,18 @@ import { Share2 } from 'react-feather';
 
 const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode=false }) => {
     if (!pairPrice?.lastPrice && !isTabHistory) return '-';
-    const profit = isTabHistory ? order?.profit : getProfitVndc(order, pairPrice?.lastPrice);
+    // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
+
+    let profit = 0
+    if(isTabHistory){
+        profit = order?.profit
+    }else {
+        if(order && pairPrice){
+            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask);
+        }
+    }
+
+    // const profit = isTabHistory ? order?.profit : getProfitVndc(order, pairPrice?.lastPrice,);
     const percent = formatNumber(((profit / order.margin) * 100), 2, 0, true);
     return <div className='flex items-center w-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className}`}>

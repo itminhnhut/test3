@@ -1,7 +1,7 @@
-import React, { useState, useEffect, cloneElement } from 'react';
+import React, { cloneElement, useEffect, useState } from 'react';
 import Emitter from 'redux/actions/emitter';
 import { PublicSocketEvent } from 'redux/actions/const';
-import FuturesMarketWatch from 'models/FuturesMarketWatch'
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { useSelector } from 'react-redux';
 
 const SocketLayout = ({ pair, children, pairConfig, pairParent }) => {

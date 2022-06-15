@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TradingInput from '../../../../trade/TradingInput';
-import { useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 
 const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, isAuth }) => {
@@ -23,7 +23,7 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, 
                 </div>
             }
             <TradingInput
-            onusMode={true}
+                onusMode={true}
                 thousandSeparator={true}
                 validator={validator}
                 label={'SL'}
