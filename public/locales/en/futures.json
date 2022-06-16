@@ -263,8 +263,8 @@
         "info_swap_fee": "For every opening futures order, Nami Exchange applies a swap fee of 0.002% of order’s volume for every maintaining hour and is paid by the Futures account balance.",
         "info_liquidate_fee": "For each order liquidated, the liquidation fee is calculated at 1% of the volume and is paid by the Futures account balance.",
         "invalid_session_title": "Session expired",
-        "invalid_session_content": "Your session has expired, please login again to use Nami Exchange",
-        "invalid_session_button": "Log in now",
+        "invalid_session_content": "Please reload to continue Futures trading",
+        "invalid_session_button": "Refresh",
         "retry": "Retry",
         "order_id":"Order ID",
         "volume_2":"Trade volume"
