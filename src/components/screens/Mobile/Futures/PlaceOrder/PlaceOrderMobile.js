@@ -22,7 +22,7 @@ import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
 import { getFilter, } from 'src/redux/actions/utils';
 // import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
-import { ExchangeOrderEnum, FuturesOrderEnum } from 'src/redux/actions/const';
+import { ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
 
 const getPairPrice = createSelector(
     [
@@ -200,6 +200,19 @@ const PlaceOrder = ({
         };
     }, [pairPrice, side, type, size, quoteQty]);
 
+    const awaitValidator = useRef(false);
+    const timerValidator = useRef(null);
+    const [flag, setFlag] = useState(false);
+    useEffect(() => {
+        awaitValidator.current = true;
+        clearTimeout(timerValidator.current)
+        timerValidator.current = setTimeout(() => {
+            awaitValidator.current = false;
+            setFlag(!flag);
+        }, 500);
+        setFlag(!flag);
+    }, [side])
+
     const inputValidator = (mode) => {
         let isValid = true;
         let msg = null;
@@ -320,19 +333,19 @@ const PlaceOrder = ({
                     }
                 }
 
-                if(mode === 'stop_loss' && isValid){
+                if (mode === 'stop_loss' && isValid) {
                     //  Kiểm tra hợp lệ giá liquidate không
                     // const size = size
-                    const liquidatePrice = getLiquidatePrice({quantity: size, side, quoteQty, leverage}, _activePrice)
-                    const bias = 0.1/100
+                    const liquidatePrice = getLiquidatePrice({ quantity: size, side, quoteQty, leverage }, _activePrice)
+                    const bias = 0.1 / 100
                     const liquidatePriceBound = {
-                        upper: liquidatePrice*(1-bias),
-                        lower: liquidatePrice*(1+bias)
+                        upper: liquidatePrice * (1 - bias),
+                        lower: liquidatePrice * (1 + bias)
                     }
-                    if(side === VndcFutureOrderType.Side.SELL && sl > liquidatePriceBound.upper){
+                    if (side === VndcFutureOrderType.Side.SELL && sl > liquidatePriceBound.upper) {
                         isValid = false
                         msg = `${t('futures:liquidate_alert_less')} ${formatNumber(liquidatePriceBound.upper, decimals.decimalScalePrice, 0, true)}`;
-                    }else if(side === VndcFutureOrderType.Side.BUY && sl < liquidatePriceBound.lower){
+                    } else if (side === VndcFutureOrderType.Side.BUY && sl < liquidatePriceBound.lower) {
                         isValid = false
                         msg = `${t('futures:liquidate_alert_greater')} ${formatNumber(liquidatePriceBound.lower, decimals.decimalScalePrice, 0, true)}`;
                     }
@@ -498,7 +511,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput data-tut="order-sl">
                         <OrderSLMobile
-                            validator={inputValidator('stop_loss')}
+                            validator={!awaitValidator.current && inputValidator('stop_loss')}
                             sl={sl} setSl={setSl} decimals={decimals}
                             onChangeTpSL={onChangeTpSL} context={context}
                             isAuth={isAuth}
@@ -506,7 +519,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput data-tut="order-tp">
                         <OrderTPMobile
-                            validator={inputValidator('take_profit')}
+                            validator={!awaitValidator.current && inputValidator('take_profit')}
                             tp={tp} setTp={setTp} decimals={decimals}
                             onChangeTpSL={onChangeTpSL} context={context}
                             isAuth={isAuth}
