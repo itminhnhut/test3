@@ -10,7 +10,7 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import OrderTypeMobile from './OrderTypeMobile';
 import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
-import { formatNumber, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import { emitWebViewEvent, formatNumber, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import OrderCollapse from './OrderCollapse';
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
