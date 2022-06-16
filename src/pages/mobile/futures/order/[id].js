@@ -88,12 +88,10 @@ const OrderDetail = (props) => {
 
     const oldData = useRef(false);
     useEffect(() => {
-        if (Array.isArray(ordersList) && orderDetail && !isTabHistory.current && !oldData.current) {
+        if (Array.isArray(ordersList) && orderDetail && !isTabHistory.current) {
             const detail = ordersList.find(item => item.displaying_id === orderDetail?.displaying_id);
             if (!detail) {
-                oldData.current = true;
-                router.push('/mobile/futures')
-                // getDetail();
+                router.back();
             }
         }
     }, [ordersList, orderDetail])

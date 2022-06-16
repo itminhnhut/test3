@@ -70,7 +70,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                             undefined,
                             undefined,
                             () => {
-                                onClose();
+                                if (onClose) onClose();
                             }
                         )
                     });
@@ -123,7 +123,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     }, [order])
 
     return (
-        <div className="p-[24px] mx-[-24px] border-b dark:border-onus-line">
+        <div className="p-6 py-4 mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
                 <FuturesEditSLTPVndc
                     onusMode={true}
@@ -136,12 +136,12 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     isMobile
                 />
             }
-            <div className="flex items-center justify-between mb-[10px]">
+            <div className="flex items-center justify-between">
                 <div className="flex flex-col" >
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
                         <div className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
-                        <div className="text-onus-green border-onus-green border-[1px] text-[10px] font-medium leading-3 py-[1px] px-[5px] rounded-[2px]">{order?.leverage}x</div>
+                        <div className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x</div>
                     </div>
                     <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
@@ -149,39 +149,37 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <div className="text-xs ">
-                        {/* <div className="text-gray-1 dark:text-onus-grey py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div> */}
+                    <div className="text-xs text-right">
                         <div className="text-xs font-medium text-onus-green py-[1px] float-right">
-                            <OrderProfit onusMode={true} className="flex flex-col text-right" order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
+                            <OrderProfit onusMode={true} className="flex flex-col text-right"
+                                order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                         </div>
                     </div>
                     {profit ?
-                        <div className="border-[1px] border-onus-grey p-[5px] rounded-[2px] ml-[12px]" onClick={() => {
+                        <div className="p-[5px] rounded-[2px]" onClick={() => {
                             const emitData = getShareModalData({ order, pairPrice: dataMarketWatch })
                             emitWebViewEvent(JSON.stringify(emitData))
                             // setOpenShareModal(true)
                         }
                         }>
-                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={20} width={20} />
+                            <img src={getS3Url("/images/icon/ic_share-icon-onus.png")} height={20} width={20} />
                         </div>
                         : null
                     }
                 </div>
             </div>
-            {/* <div className="justify-start w-full flex mb-[10px]">
-                <div className="text-gray-1 text-xs dark:text-onus-grey min-w-[70px]">{t('futures:mobile:pnl')}</div>
-                <span className="text-xs font-medium text-onus-green"><OrderProfit className="flex" isMobile order={order} pairPrice={dataMarketWatch} isTabHistory={false} /></span>
-            </div> */}
+            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6]">
+                <div>ID #{order?.displaying_id}</div>
+                <div className="bg-[#535D6D] h-[2px] w-[2px] rounded-[50%] mx-1.5"></div>
+                <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
+            </div>
             <div className="flex flex-wrap w-full">
-                <OrderItem label={t('futures:mobile:order_id')} value={order?.displaying_id} />
-                <OrderItem label={t('common:time')} value={formatTime(order?.created_at, 'yyyy-MM-dd HH:mm')} />
                 <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimal, 0, true)} />
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
                 <OrderItem label={t('futures:stop_loss')} valueClassName="text-onus-red" value={formatNumber(order?.sl, 0)} />
                 <OrderItem label={t('futures:take_profit')} valueClassName="text-onus-green" value={formatNumber(order?.tp, 0)} />
-                {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
             {/* <div className="flex gap-x-[10px] w-full">
                 <div style={{ width: 'calc(50% - 5px)' }}>
@@ -232,7 +230,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 </div>
             </div> */}
 
-            <div className="flex w-full mt-2">
+            <div className="flex w-full mt-4">
                 <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}

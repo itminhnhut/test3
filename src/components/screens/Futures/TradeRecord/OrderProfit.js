@@ -3,15 +3,15 @@ import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutur
 import { formatNumber, getPriceColor } from 'redux/actions/utils';
 import { Share2 } from 'react-feather';
 
-const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode=false }) => {
+const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false }) => {
     if (!pairPrice?.lastPrice && !isTabHistory) return '-';
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
 
     let profit = 0
-    if(isTabHistory){
+    if (isTabHistory) {
         profit = order?.profit
-    }else {
-        if(order && pairPrice){
+    } else {
+        if (order && pairPrice) {
             profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask);
         }
     }
@@ -21,7 +21,7 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
     return <div className='flex items-center w-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className}`}>
             {profit !== 0 ? <>
-                <div>
+                <div className={isMobile ? 'text-[16px] font-semibold' : ''}>
                     {profit > 0 ? '+' : ''}
                     {formatNumber(profit, 0, 0, true)} {!isMobile && pairPrice?.quoteAsset}
                 </div>

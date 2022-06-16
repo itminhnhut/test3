@@ -9,7 +9,8 @@ import isNil from 'lodash/isNil';
 const OrderBalance = ({
     ordersList,
     visible,
-    mode
+    mode,
+    isTabHistory
 }) => {
     const { t } = useTranslation();
 
@@ -69,32 +70,35 @@ const OrderBalance = ({
                 label={t('futures:mobile:pnl')}
                 value={pnl}
                 labelClassName="dark:text-onus-grey"
-                containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
+                containerClassName={`text-xs flex justify-between w-1/2 pb-[6px] pr-[8px]`}
             />
             <TradingLabel
                 label={t('futures:mobile:equity')}
                 value={equity}
                 labelClassName="dark:text-onus-grey"
-                containerClassName='text-xs flex justify-between w-1/2 pb-[5px]'
+                containerClassName='text-xs flex justify-between w-1/2 pb-[6px]'
             />
         </div>
     }
     return (
         <div
             className="sticky top-[42px] bg-white dark:bg-onus z-[10px] flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] pt-[10px] dark:border-onus-line">
-            <TradingLabel
-                label={t('futures:mobile:balance')}
-                value={_balance}
-                labelClassName="dark:text-onus-grey"
-                containerClassName="text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]"
-            />
-            <TradingLabel
-                label={t('futures:mobile:equity')}
-                value={equity}
-                labelClassName="dark:text-onus-grey"
-                containerClassName="text-xs flex justify-between w-1/2 pb-[5px]"
-            />
-
+            {!isTabHistory &&
+                <TradingLabel
+                    label={t('futures:mobile:balance')}
+                    value={_balance}
+                    labelClassName="dark:text-onus-grey"
+                    containerClassName="text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]"
+                />
+            }
+            {!isTabHistory &&
+                <TradingLabel
+                    label={t('futures:mobile:equity')}
+                    value={equity}
+                    labelClassName="dark:text-onus-grey"
+                    containerClassName="text-xs flex justify-between w-1/2 pb-[5px]"
+                />
+            }
             <TradingLabel
                 label={t('futures:mobile:pnl')}
                 value={pnl}

@@ -266,8 +266,10 @@
         "invalid_session_content": "Your session has expired, please login again to use Nami Exchange",
         "invalid_session_button": "Log in now",
         "retry": "Retry",
-        "order_id":"Order ID",
-        "volume_2":"Trade volume"
+        "order_id": "Order ID",
+        "volume_2": "Trade volume",
+        "cancelled_order": "Cancelled order",
+        "pending_order": "Pending order"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

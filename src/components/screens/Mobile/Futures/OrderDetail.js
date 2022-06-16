@@ -137,8 +137,9 @@ const OrderDetail = ({
     useEffect(() => {
         if (isModal) {
             getAdjustmentDetail();
+        } else {
+            emitWebViewEvent('order_detail')
         }
-        // emitWebViewEvent('order_detail')
     }, [])
 
     const oldOrder = useRef(null);

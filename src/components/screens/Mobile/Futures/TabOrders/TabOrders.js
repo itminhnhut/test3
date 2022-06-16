@@ -33,26 +33,22 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
     const oldDetail = useRef({});
     const isModal = +router.query?.v > 1;
 
-    // const isUIWebView = () => {
-    //     return navigator.userAgent.toLowerCase().match(/\(ip.*applewebkit(?!.*(version|crios))/)
-    // };
+    // useEffect(() => {
+    //     const isUIWebView = /\(ip.*applewebkit(?!.*(version|crios))/i.test(navigator.userAgent);
+    //     const receiver = isUIWebView ? window : document;
+    //     window.addEventListener("message", onListenWebview);
+    //     return () => {
+    //         window.removeEventListener("message", onListenWebview);
+    //     }
+    // }, [])
 
-    useEffect(() => {
-        const isUIWebView = /\(ip.*applewebkit(?!.*(version|crios))/i.test(navigator.userAgent);
-        const receiver = isUIWebView ? window : document;
-        window.addEventListener("message", onListenWebview);
-        return () => {
-            window.removeEventListener("message", onListenWebview);
-        }
-    }, [])
+    // useEffect(() => {
+    //     emitWebViewEvent('postMessage');
+    // }, [tab])
 
-    useEffect(() => {
-        emitWebViewEvent('postMessage');
-    }, [tab])
-
-    const onListenWebview = (data) => {
-        console.log('data', data)
-    }
+    // const onListenWebview = (data) => {
+    //     console.log('data', data)
+    // }
 
     const onShowDetail = (row, isTabHistory) => {
         if (isModal) {
@@ -120,7 +116,8 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
                 {/* <img src="/images/icon/ic_filter.png" height={24} width={24} /> */}
             </TabMobile>
             {isAuth &&
-                <OrderBalance ordersList={ordersList} visible={tab === FUTURES_RECORD_CODE.position} />}
+                <OrderBalance ordersList={ordersList} isTabHistory={tab === FUTURES_RECORD_CODE.orderHistory}
+                    visible={tab !== FUTURES_RECORD_CODE.orderHistory} />}
             {
                 isAuth ?
                     <div className="h-full">
@@ -146,7 +143,7 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
 });
 
 const TabMobile = styled.div.attrs({
-    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-onus-line"
+    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-onus-line h-[38px]"
 })`
             height:42px;
             width:100%;
@@ -161,14 +158,14 @@ const TabMobile = styled.div.attrs({
             bottom:0;
             width:32px;
             height:4px;
-            background-color: ${({ onusMode }) => onusMode ? colors.onus.green : colors.teal}
+            background-color: ${({ onusMode }) => onusMode ? '#418FFF' : colors.teal}
     }
             `
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-sm font-medium text-gray-1 h-full flex items-center justify-center dark:text-onus-gray mr-[32px] last:mr-0`,
+        `text-sm font-semibold text-gray-1 h-full flex items-center justify-center dark:text-onus-gray mr-[32px] last:mr-0`,
         {
-            'active font-semibold text-darkBlue dark:!text-white': active
+            'active font-semibold text-[#418FFF]': active
         }
     )
 }))`
