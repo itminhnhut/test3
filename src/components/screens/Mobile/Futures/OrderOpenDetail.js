@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { OrderItem } from './TabOrders/OrderItemMobile';
 import { useSelector } from 'react-redux';
@@ -118,6 +118,10 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     //     return oldOrder.current?.sl !== data.sl || oldOrder.current?.tp !== data.tp || (status === VndcFutureOrderType.Status.PENDING && oldOrder.current?.price !== data.price)
     // }, [data, oldOrder.current])
 
+    const price = useMemo(() => {
+        return +(status === VndcFutureOrderType.Status.PENDING ? order?.price : status === VndcFutureOrderType.Status.ACTIVE ? order?.open_price : order?.close_price)
+    }, [order])
+
     return (
         <div className="p-[24px] mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
@@ -171,7 +175,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
             <div className="flex flex-wrap w-full">
                 <OrderItem label={t('futures:mobile:order_id')} value={order?.displaying_id} />
                 <OrderItem label={t('common:time')} value={formatTime(order?.created_at, 'yyyy-MM-dd HH:mm')} />
-                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(order?.price, decimal, 0, true)} />
+                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimal, 0, true)} />
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />

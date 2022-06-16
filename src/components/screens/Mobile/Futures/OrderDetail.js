@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { ArrowRight, ChevronLeft } from 'react-feather';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
@@ -129,9 +129,7 @@ const OrderDetail = ({
     }, [pairConfig]);
 
     const changeSLTP = (data) => {
-        if (isModal) {
-            getAdjustmentDetail();
-        } else {
+        if (!isModal) {
             getDetail();
         }
     };
@@ -140,11 +138,18 @@ const OrderDetail = ({
         if (isModal) {
             getAdjustmentDetail();
         }
-        emitWebViewEvent('order_detail')
+        // emitWebViewEvent('order_detail')
     }, [])
 
+    const oldOrder = useRef(null);
     useEffect(() => {
-        if (isModal) setDataSource(order?.futuresorderlogs ?? [])
+        if (!isModal) {
+            setDataSource(order?.futuresorderlogs ?? [])
+        } else {
+            if (JSON.stringify(oldOrder.current) === JSON.stringify(order)) return;
+            oldOrder.current = order;
+            getAdjustmentDetail();
+        }
     }, [order, isModal])
 
     const getAdjustmentDetail = async () => {
@@ -202,7 +207,7 @@ const OrderDetail = ({
                 </div>
 
                 <div className="shadow-order_detail py-[10px] dark:bg-onus h-full">
-                    <div className="min-h-[350px] spot-chart max-w-full" style={{ height: `calc(var(--vh, 1vh) * 100 - 280px)` }}>
+                    <div className="min-h-[350px] spot-chart max-w-full" style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
                         <MobileTradingView
                             t={t}
                             containerId="nami-mobile-detail-tv"

@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState } from 'react';
+import React, { memo, useMemo, useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import classNames from 'classnames';
@@ -30,16 +30,32 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
     const [openDetailModal, setOpenDetailModal] = useState(false);
     const rowData = useRef(null);
     const router = useRouter();
-    const isModal = +router.query?.version > 1;
+    const oldDetail = useRef({});
+    const isModal = +router.query?.v > 1;
+
+    // const isUIWebView = () => {
+    //     return navigator.userAgent.toLowerCase().match(/\(ip.*applewebkit(?!.*(version|crios))/)
+    // };
+
+    useEffect(() => {
+        const isUIWebView = /\(ip.*applewebkit(?!.*(version|crios))/i.test(navigator.userAgent);
+        const receiver = isUIWebView ? window : document;
+        window.addEventListener("message", onListenWebview);
+        return () => {
+            window.removeEventListener("message", onListenWebview);
+        }
+    }, [])
+
+    useEffect(() => {
+        emitWebViewEvent('postMessage');
+    }, [tab])
+
+    const onListenWebview = (data) => {
+        console.log('data', data)
+    }
 
     const onShowDetail = (row, isTabHistory) => {
         if (isModal) {
-            // if (openDetailModal) {
-            //     if (rowData.current.symbol !== pair) {
-            //         socket.emit('subscribe:futures:ticker', pair)
-            //     }
-            //     setForceRender(!forceRender)
-            // }
             rowData.current = row;
             rowData.current?.isTabHistory = isTabHistory;
             emitWebViewEvent(openDetailModal ? 'nami_futures' : 'order_detail')
@@ -52,8 +68,6 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
     const pairConfigDetail = useMemo(() => {
         return allPairConfigs.find(rs => rs.symbol === rowData.current?.symbol)
     }, [rowData.current, openDetailModal])
-
-    const oldDetail = useRef({});
 
     const orderDetail = useMemo(() => {
         if (rowData.current?.isTabHistory) return rowData.current
@@ -68,7 +82,6 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
         }
 
     }, [rowData.current, ordersList])
-
 
     const orderListFilter = useMemo(() => {
         const isPositions = tab === FUTURES_RECORD_CODE.position;
