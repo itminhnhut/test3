@@ -925,6 +925,7 @@ export const setBottomTab = (tab) => async (dispatch) => {
 
 export const emitWebViewEvent = (event) => {
     if (typeof window !== undefined) {
+        console.log('__ emitWebViewEvent', event)
         window.ReactNativeWebView && window.ReactNativeWebView.postMessage(event);
     }
 }
