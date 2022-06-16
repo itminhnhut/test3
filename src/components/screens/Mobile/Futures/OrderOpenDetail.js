@@ -114,6 +114,14 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
         return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
     }
 
+    const renderSlTp = (value) => {
+        if (value) {
+            return formatNumber(value)
+        }
+        return t('futures:not_set')
+    }
+    
+
     // const isDiff = useMemo(() => {
     //     return oldOrder.current?.sl !== data.sl || oldOrder.current?.tp !== data.tp || (status === VndcFutureOrderType.Status.PENDING && oldOrder.current?.price !== data.price)
     // }, [data, oldOrder.current])
@@ -175,8 +183,8 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                 <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
                 <OrderItem label={t('futures:tp_sl:mark_price')} value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
-                <OrderItem label={t('futures:stop_loss')} valueClassName="text-onus-red" value={formatNumber(order?.sl, 0)} />
-                <OrderItem label={t('futures:take_profit')} valueClassName="text-onus-green" value={formatNumber(order?.tp, 0)} />
+                <OrderItem label={t('futures:stop_loss')} valueClassName="text-onus-red" value={renderSlTp(order?.sl)} />
+                <OrderItem label={t('futures:take_profit')} valueClassName="text-onus-green" value={renderSlTp(order?.tp)} />
                 {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
             {/* <div className="flex gap-x-[10px] w-full">

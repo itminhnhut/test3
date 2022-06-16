@@ -227,6 +227,14 @@ const PlaceOrder = ({
             case 'price':
             case 'stop_loss':
             case 'take_profit':
+                // Nếu không nhập thì ko cần validate luôn, cho phép đặt lệnh không cần SL, TP
+                if((mode === 'stop_loss' && !sl) 
+                || mode === 'take_profit' && !tp){
+                    return {
+                        isValid,
+                        msg
+                    };
+                }
                 const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, pairConfig);
                 const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
                 const _maxPrice = priceFilter?.maxPrice;

@@ -132,6 +132,14 @@ const FuturesEditSLTPVndc = ({
             case 'price':
             case 'stop_loss':
             case 'take_profit':
+                console.log('__ check sl, tp', data)
+                if ((type === 'stop_loss' && !data.sl)
+                    || type === 'take_profit' && !data.tp) {
+                    return {
+                        isValid,
+                        msg
+                    };
+                }
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
                 const _price = type === 'price' ? data.price : type === 'stop_loss' ? data.sl : data.tp;
@@ -357,7 +365,7 @@ const FuturesEditSLTPVndc = ({
     const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
 
     const isError = useMemo(() => {
-        const not_valid = !inputValidator('price').isValid || !data.tp || !data.sl
+        const not_valid = !inputValidator('price').isValid
         return not_valid;
     }, [data]);
 
@@ -368,6 +376,8 @@ const FuturesEditSLTPVndc = ({
         const widht = 'w-[95%]';
         return height + widht + ' overflow-x-hidden !bg-[#243042]'
     }, [isMobile])
+
+
 
     return (
         <Modal isVisible={isVisible} onBackdropCb={onClose} containerClassName={`${isMobile ? classMobile : 'w-[390px]'} p-0 top-[50%] dark:bg-darkBlue-2`}>
@@ -489,18 +499,27 @@ const FuturesEditSLTPVndc = ({
                         BgColorLine={isMobile ? colors.onus.grey : null}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')} />
                 </div>
-                <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
-                    {t('futures:tp_sl:when')}&nbsp;
-                    <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {t('futures:tp_sl:mark_price')}&nbsp;
-                    </span>
-                    {t('futures:tp_sl:reaches')}&nbsp;
-                    <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {formatNumber(data.tp, 0, 0, true)}&nbsp;
-                    </span>
-                    {t('futures:tp_sl:estimate')}&nbsp;
-                    <span className={isMobile ? 'text-onus-green' : 'text-dominant'}>{profit.current.tp + ' ' + quoteAsset}</span>.
-                </div>
+                {
+                    data.tp ?
+
+                        <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
+                            {t('futures:tp_sl:when')}&nbsp;
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                                {t('futures:tp_sl:mark_price')}&nbsp;
+                            </span>
+                            {t('futures:tp_sl:reaches')}&nbsp;
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                                {formatNumber(data.tp, 0, 0, true)}&nbsp;
+                            </span>
+                            {t('futures:tp_sl:estimate')}&nbsp;
+                            <span className={isMobile ? 'text-onus-green' : 'text-dominant'}>{profit.current.tp + ' ' + quoteAsset}</span>.
+                        </div>
+
+                        : <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
+                            {t('futures:tp_sl:tp_not_set')}&nbsp;
+                        </div>
+
+                }
 
                 <div className="my-4 w-full h-[1px] bg-divider dark:bg-onus-line" />
 
@@ -540,18 +559,24 @@ const FuturesEditSLTPVndc = ({
                         reload={tab}
                         onChange={({ x }) => onChangePercent(x, 100, 'sl')} />
                 </div>
-                <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
-                    {t('futures:tp_sl:when')}&nbsp;
-                    <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {t('futures:tp_sl:mark_price')}&nbsp;
-                    </span>
-                    {t('futures:tp_sl:reaches')}&nbsp;
-                    <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                        {formatNumber(data.sl, 0, 0, true)}&nbsp;
-                    </span>
-                    {t('futures:tp_sl:estimate_stop_loss')}&nbsp;
-                    <span className={isMobile ? 'text-onus-red' : 'text-red'}>{profit.current.sl + ' ' + quoteAsset}</span>.
-                </div>
+                {
+                    data?.sl
+                        ? <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
+                            {t('futures:tp_sl:when')}&nbsp;
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                                {t('futures:tp_sl:mark_price')}&nbsp;
+                            </span>
+                            {t('futures:tp_sl:reaches')}&nbsp;
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                                {formatNumber(data.sl, 0, 0, true)}&nbsp;
+                            </span>
+                            {t('futures:tp_sl:estimate_stop_loss')}&nbsp;
+                            <span className={isMobile ? 'text-onus-red' : 'text-red'}>{profit.current.sl + ' ' + quoteAsset}</span>.
+                        </div>
+                        : <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
+                            {t('futures:tp_sl:sl_not_set')}&nbsp;
+                        </div>
+                }
 
                 <div className="mt-4 font-medium text-xs text-txtSecondary dark:text-onus-grey">
                     {/* {t('futures:tp_sl:this_setting')}&nbsp; */}

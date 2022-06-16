@@ -82,8 +82,19 @@ const OrderDetail = ({
     };
 
     const getValue = (number) => {
-        return formatNumber(number, 0, 0, true);
+        if (number) {
+            return formatNumber(number, 0, 0, true);
+        } else {
+            return t('futures:not_set')
+        }
     };
+    const renderSlTp = (value) => {
+        if (value) {
+            return formatNumber(value)
+        }
+        return t('futures:not_set')
+    }
+
 
     const renderModify = (metadata, key) => {
         let value = null;
@@ -248,11 +259,11 @@ const OrderDetail = ({
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:take_profit')}</Label>
-                                    <Span className="text-onus-green">{formatNumber(order?.tp)}</Span>
+                                    <Span className="text-onus-green">{renderSlTp(order?.tp)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:stop_loss')}</Label>
-                                    <Span className="text-onus-red">{formatNumber(order?.sl)}</Span>
+                                    <Span className="text-onus-red">{renderSlTp(order?.sl)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:open_fee')}</Label>

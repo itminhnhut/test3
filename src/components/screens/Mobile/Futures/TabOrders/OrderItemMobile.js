@@ -51,6 +51,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 return <div>{text}</div>;
             default:
                 return <div>{text}</div>;
+
         }
     }
 
@@ -75,6 +76,15 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 return '';
         }
     }
+
+    const renderSlTp = (value) => {
+        if (value) {
+            return formatNumber(value)
+        }
+        return t('futures:not_set')
+    }
+
+
 
     const isModal = useRef(false);
 
@@ -165,12 +175,12 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     />
                     <OrderItem
                         label={t('futures:stop_loss')}
-                        value={formatNumber(order?.sl)}
+                        value={renderSlTp(order?.sl)}
                         valueClassName="text-onus-red"
                     />
                     <OrderItem
                         label={t('futures:take_profit')}
-                        value={formatNumber(order?.tp)}
+                        value={renderSlTp(order?.tp)}
                         valueClassName="text-onus-green"
                     />
                 </div>
