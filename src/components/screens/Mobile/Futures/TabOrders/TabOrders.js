@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState } from 'react';
+import React, { memo, useMemo, useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import classNames from 'classnames';
@@ -12,12 +12,14 @@ import {
 import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders';
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
-import { getLoginUrl } from 'redux/actions/utils';
+import { getLoginUrl, emitWebViewEvent } from 'redux/actions/utils';
 import OrderBalance from 'components/screens/Mobile/Futures/TabOrders/OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
-import { VndcFutureOrderType } from '../../../Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useRouter } from 'next/router';
+import Portal from 'components/hoc/Portal'
+import { socket } from "components/KlineChart/kline.service";
 
 const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender, isFullScreen }) => {
     const { t } = useTranslation();
@@ -28,26 +30,40 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
     const [openDetailModal, setOpenDetailModal] = useState(false);
     const rowData = useRef(null);
     const router = useRouter();
+    const oldDetail = useRef({});
+    const isModal = +router.query?.v > 1;
+
+    // useEffect(() => {
+    //     const isUIWebView = /\(ip.*applewebkit(?!.*(version|crios))/i.test(navigator.userAgent);
+    //     const receiver = isUIWebView ? window : document;
+    //     window.addEventListener("message", onListenWebview);
+    //     return () => {
+    //         window.removeEventListener("message", onListenWebview);
+    //     }
+    // }, [])
+
+    // useEffect(() => {
+    //     emitWebViewEvent('postMessage');
+    // }, [tab])
+
+    // const onListenWebview = (data) => {
+    //     console.log('data', data)
+    // }
 
     const onShowDetail = (row, isTabHistory) => {
-        // if (openDetailModal) {
-        //     if (rowData.current.symbol !== pair) {
-        //         socket.emit('subscribe:futures:ticker', pair)
-        //     }
-        //     setForceRender(!forceRender)
-        // }
-        // rowData.current = row;
-        // rowData.current?.isTabHistory = isTabHistory;
-        // emitWebViewEvent(openDetailModal ? 'nami_futures' : 'order_detail')
-        // setOpenDetailModal(!openDetailModal);
-        router.push(`/mobile/futures/order/${row.displaying_id}`)
+        if (isModal) {
+            rowData.current = row;
+            rowData.current?.isTabHistory = isTabHistory;
+            emitWebViewEvent(openDetailModal ? 'nami_futures' : 'order_detail')
+            setOpenDetailModal(!openDetailModal);
+        } else {
+            router.push(`/mobile/futures/order/${row.displaying_id}`)
+        }
     }
 
     const pairConfigDetail = useMemo(() => {
         return allPairConfigs.find(rs => rs.symbol === rowData.current?.symbol)
     }, [rowData.current, openDetailModal])
-
-    const oldDetail = useRef({});
 
     const orderDetail = useMemo(() => {
         if (rowData.current?.isTabHistory) return rowData.current
@@ -63,7 +79,6 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
 
     }, [rowData.current, ordersList])
 
-
     const orderListFilter = useMemo(() => {
         const isPositions = tab === FUTURES_RECORD_CODE.position;
         const position = ordersList?.filter(item => item.status === 1) ?? [];
@@ -74,12 +89,21 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
     return (
         <div className={`h-full ${isFullScreen ? 'overflow-hidden' : ''}`}>
             {openDetailModal &&
-                <OrderDetail order={orderDetail} onClose={onShowDetail} isMobile
-                    pairConfig={pairConfigDetail}
-                    pairParent={pair} isVndcFutures={isVndcFutures}
-                    isTabHistory={orderDetail?.isTabHistory}
-                    isDark={currentTheme === THEME_MODE.DARK}
-                />
+                <Portal portalId='PORTAL_MODAL'>
+                    <div className={classNames(
+                        'flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] bg-white dark:!bg-onus',
+                        { invisible: !openDetailModal },
+                        { visible: openDetailModal }
+                    )}>
+                        <OrderDetail order={orderDetail} onClose={onShowDetail} isMobile
+                            pairConfig={pairConfigDetail}
+                            pairParent={pair} isVndcFutures={isVndcFutures}
+                            isTabHistory={orderDetail?.isTabHistory}
+                            isDark={currentTheme === THEME_MODE.DARK}
+                            isModal={isModal}
+                        />
+                    </div>
+                </Portal>
             }
             <TabMobile onusMode={true} isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
                 {(isVndcFutures ? RECORD_TAB_VNDC_MOBILE : RECORD_TAB).map((item) => (
@@ -92,57 +116,60 @@ const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, s
                 {/* <img src="/images/icon/ic_filter.png" height={24} width={24} /> */}
             </TabMobile>
             {isAuth &&
-                <OrderBalance ordersList={ordersList} visible={tab === FUTURES_RECORD_CODE.position} />}
-            {isAuth ?
-                <div className="h-full">
-                    <TabContent active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position} >
-                        <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK}
-                            ordersList={orderListFilter.orderList} pair={pair} pairConfig={pairConfig}
-                            onShowDetail={onShowDetail} />
-                    </TabContent>
-                    <TabContent active={tab === FUTURES_RECORD_CODE.orderHistory} >
-                        <TabOrdersHistory
-                            forceRender={forceRender} setForceRender={setForceRender} scrollSnap={scrollSnap}
-                            isDark={currentTheme === THEME_MODE.DARK} pair={pair}
-                            isVndcFutures={isVndcFutures}
-                            active={tab === FUTURES_RECORD_CODE.orderHistory}
-                            onShowDetail={onShowDetail}
-                        />
-                    </TabContent>
-                </div>
-                : <LoginOrder />}
+                <OrderBalance ordersList={ordersList} isTabHistory={tab === FUTURES_RECORD_CODE.orderHistory}
+                    visible={tab !== FUTURES_RECORD_CODE.orderHistory} />}
+            {
+                isAuth ?
+                    <div className="h-full">
+                        <TabContent active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position} >
+                            <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK}
+                                ordersList={orderListFilter.orderList} pair={pair} pairConfig={pairConfig}
+                                onShowDetail={onShowDetail} />
+                        </TabContent>
+                        <TabContent active={tab === FUTURES_RECORD_CODE.orderHistory} >
+                            <TabOrdersHistory
+                                forceRender={forceRender} setForceRender={setForceRender} scrollSnap={scrollSnap}
+                                isDark={currentTheme === THEME_MODE.DARK} pair={pair}
+                                isVndcFutures={isVndcFutures}
+                                active={tab === FUTURES_RECORD_CODE.orderHistory}
+                                onShowDetail={onShowDetail}
+                            />
+                        </TabContent>
+                    </div>
+                    : <LoginOrder />
+            }
         </div>
     );
 });
 
 const TabMobile = styled.div.attrs({
-    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-onus-line"
+    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-onus-line h-[38px]"
 })`
-    height:42px;
-    width:100%;
-    border-bottom:1px solid ${colors.grey4};
-    border-top:${({ isDark }) => isDark ? '0' : '1px solid ' + colors.grey4};
-    position:sticky;
-    top:0;
-    z-index:10;
-    .active::after {
-        content:'';
-        position:absolute;
-        bottom:0;
-        width:32px;
-        height:4px;
-        background-color: ${({ onusMode }) => onusMode ? colors.onus.green : colors.teal}
+            height:42px;
+            width:100%;
+            border-bottom:1px solid ${colors.grey4};
+            border-top:${({ isDark }) => isDark ? '0' : '1px solid ' + colors.grey4};
+            position:sticky;
+            top:0;
+            z-index:10;
+            .active::after {
+                content:'';
+            position:absolute;
+            bottom:0;
+            width:32px;
+            height:4px;
+            background-color: ${({ onusMode }) => onusMode ? '#418FFF' : colors.teal}
     }
-`
+            `
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-sm font-medium text-gray-1 h-full flex items-center justify-center dark:text-onus-gray mr-[32px] last:mr-0`,
+        `text-sm font-semibold text-gray-1 h-full flex items-center justify-center dark:text-onus-gray mr-[32px] last:mr-0`,
         {
-            'active font-semibold text-darkBlue dark:!text-white': active
+            'active font-semibold text-[#418FFF]': active
         }
     )
 }))`
-`
+            `
 const TabContent = styled.div.attrs(({ active }) => ({
     className: classNames(
         `h-full`,
@@ -151,7 +178,7 @@ const TabContent = styled.div.attrs(({ active }) => ({
         }
     )
 }))`
-`
+            `
 
 export const LoginOrder = () => {
     const { t } = useTranslation();

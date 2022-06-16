@@ -49,23 +49,23 @@ const IndicatorBars = ({
             <div
                 className='flex items-center text-xs text-onus-grey font-medium justify-around w-full mr-[10px]'>
                 <div onClick={handleOpenIndicatorModal}>
-                    <SvgActivity color={colors.onus.green}/>
+                    <SvgActivity color={colors.onus.white}/>
                 </div>
                 {mainIndicators.map(item => (
                     <div
                         key={item.value}
-                        className={mainIndicator === item.value ? 'text-onus-green' : ''}
+                        className={mainIndicator === item.value ? 'text-onus-white' : ''}
                         onClick={() => setIndicator(item.value, 'main')}>{item.label}</div>
                 ))}
                 <div className='bg-onus-line w-[2px] h-4'/>
                 {subIndicators.map(item => (
                     <div
                         key={item.value}
-                        className={subIndicator === item.value ? 'text-onus-green' : ''}
+                        className={subIndicator === item.value ? 'text-onus-white' : ''}
                         onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
                 ))}
             </div>
-            {setCollapse && <Maximize onClick={onCollapse} color={collapse ? colors.onus.green : colors.onus.gray} />}
+            {setCollapse && <Maximize onClick={onCollapse} color={collapse ? colors.onus.white : colors.onus.gray} />}
         </div>
     );
 }

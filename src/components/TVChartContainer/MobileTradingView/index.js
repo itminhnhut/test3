@@ -511,7 +511,7 @@ export class MobileTradingView extends React.PureComponent {
                         <IconLoading color="#00C8BC"/>
                     </div>
                     {this.props.showTimeFrame &&
-                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-1 px-1 dragHandleArea">
+                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-2 px-1 dragHandleArea">
                         <ChartOptions
                             pair={this.props.symbol}
                             pairConfig={this.props.pairConfig}
