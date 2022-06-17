@@ -101,7 +101,6 @@ const OrderItemMobile = ({
         if (action === 'modal') {
             isModal.current = true;
             const shareData = {}
-            console.log('__ share modal data', order)
             onShowModal(order, key)
         }
         if (action === 'delete') {
@@ -159,8 +158,7 @@ const OrderItemMobile = ({
                 </div>
                 <div className="flex items-center">
                     {orderStatus.cancelled || orderStatus.pending ?
-                        <div
-                            className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-[#FF9F1A]'}`}>
+                        <div className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-onus-orange bg-onus-orange/[0.1]'}`}>
                             {t(`futures:mobile:${orderStatus.cancelled ? 'cancelled_order' : 'pending_order'}`)}
                         </div>
                         :

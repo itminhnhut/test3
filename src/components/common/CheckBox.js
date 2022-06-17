@@ -19,7 +19,7 @@ const CheckBox = ({
                     'w-[16px] h-[16px] flex items-center justify-center rounded-sm border border-divider dark:border-divider-dark cursor-pointer ',
                     {'hover:!border-dominant': !onusMode},
                     { 'bg-dominant border-dominant': !onusMode && active },
-                    { 'bg-onus-green border-onus-green': onusMode && active },
+                    { 'bg-onus-base border-onus-base': onusMode && active },
                     boxContainerClassName
                 )}
             >

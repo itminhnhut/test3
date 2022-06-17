@@ -21,11 +21,11 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
     return <div className='flex items-center w-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className}`}>
             {profit !== 0 ? <>
-                <div className={isMobile ? 'text-[16px] font-semibold' : ''}>
+                <div className={isMobile ? 'text-[16px] font-semibold my-[3px]' : ''}>
                     {profit > 0 ? '+' : ''}
                     {formatNumber(profit, 0, 0, true)} {!isMobile && pairPrice?.quoteAsset}
                 </div>
-                <div>
+                <div className={isMobile ? 'my-1' : ''}>
                     ({percent > 0 ? '+' : ''}
                     {percent + '%'})
                 </div>
