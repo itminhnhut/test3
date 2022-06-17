@@ -202,6 +202,7 @@
     "minimum_qty": "Khối lượng tối thiểu",
     "maximum_qty": "Khối lượng tối đa",
     "invalid_amount": "Giá trị không hợp lệ",
+    "invalid_amount_price": "Bạn cần nhập khối lượng và giá hợp lệ để sử dụng tính năng này",
     "value": "Khối lượng",
     "price_market": "Giá thị trường",
     "cancel": "Hủy",
