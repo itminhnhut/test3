@@ -85,6 +85,7 @@ export const API_GET_FUTURES_OPEN_ORDERS = API_V3_PREFIX + 'futures/openOrders';
 export const API_FUTURES_CANCEL_OPEN_ORDERS = API_V3_PREFIX + 'futures/order';
 
 export const API_GET_VNDC_FUTURES_HISTORY_ORDERS = API_V3_PREFIX + 'futures/vndc-order-histories';
+export const API_VNDC_FUTURES_CHANGE_MARGIN = API_V3_PREFIX + 'futures/vndc/edit-margin';
 
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + 'swap/estimate_price';
@@ -185,6 +186,6 @@ export const API_GET_FUTURES_ORDER = API_V3_PREFIX + 'futures/vndc/order';
 export const API_CLOSE_ALL_ORDER = API_V3_PREFIX + 'futures/vndc/close-all-by-condition';
 export const API_ORDER_DETAIL = API_V3_PREFIX + 'futures/vndc/order-detail';
 
-export const DIRECT_WITHDRAW_VNDC = API_PREFIX + 'vndc/direct_withdraw_vndc'
-export const DIRECT_WITHDRAW_ONUS = API_PREFIX + 'vndc/direct_withdraw_onus'
+export const DIRECT_WITHDRAW_VNDC = API_PREFIX + 'vndc/direct_withdraw_vndc';
+export const DIRECT_WITHDRAW_ONUS = API_PREFIX + 'vndc/direct_withdraw_onus';
 export const API_AUTH_USER_OTP = service => `${API_PREFIX}authenticated/${service}`;

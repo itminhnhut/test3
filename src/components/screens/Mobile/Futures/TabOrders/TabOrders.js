@@ -18,6 +18,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useRouter } from 'next/router';
+import AdjustPositionMargin from "components/screens/Mobile/Futures/ AdjustPositionMargin";
 import Portal from 'components/hoc/Portal'
 import { socket } from "components/KlineChart/kline.service";
 

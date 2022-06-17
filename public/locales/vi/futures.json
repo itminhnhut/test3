@@ -85,6 +85,7 @@
         "leverage": "Đòn bẩy"
     },
     "tp_sl": {
+        "adjust_margin": "Thêm kí quỹ",
         "modify_tpsl": "Chỉnh sửa SL-TP",
         "perpetual": "Vĩnh cửu",
         "when": "Khi",
@@ -237,6 +238,28 @@
             "step_8": "Kiểm tra lại các thông số lệnh và bắt đầu giao dịch. Chúc bạn có nhiều lợi nhuận từ giao dịch Nami Futures!",
             "step": "Bước",
             "next": "Tiếp tục"
+        },
+        "adjust_margin": {
+            "adjust_position_margin": "Điều chỉnh ký quỹ",
+            "add": "Thêm",
+            "remove": "Rút",
+            "amount": "Khối lượng",
+            "max": "Max",
+            "min_profit_ratio": "Tỉ lệ âm kí quỹ tối thiểu là: {min}",
+            "assigned_margin": "Ký quỹ:",
+            "available": "Khả dụng:",
+            "new_liq_price": "Giá thanh lý mới:",
+            "profit_ratio": "Tỷ lệ lợi nhuận:",
+            "confirm_btn": "Xác nhận",
+            "add_success": "Thêm thành công",
+            "remove_success": "Rút thành công",
+            "error": {
+                "NOT_FOUND_ORDER": "Không tìm thấy lệnh",
+                "CAN_NOT_CHANGE_MARGIN": "Không thể thay đổi ký quỹ",
+                "BALANCE_INSUFFICIENT": "Số dư không đủ",
+                "UNKNOWN": "Lỗi không xác định",
+                "error": "Lỗi không xác định",
+            }
         },
         "login_short": "Đăng nhập ngay",
         "available": "Khả dụng",

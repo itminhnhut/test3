@@ -16,6 +16,7 @@ import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus, DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
+import AdjustPositionMargin from "components/screens/Mobile/Futures/ AdjustPositionMargin";
 
 const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSLTP }) => {
     const { t } = useTranslation();
@@ -33,6 +34,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask)
 
     const [showEditSLTP, setShowEditSLTP] = useState(false);
+    const [showEditMargin, setShowEditMargin] = useState(false);
     const rowData = useRef(null);
     const [loading, setLoading] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
@@ -144,6 +146,14 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     isMobile
                 />
             }
+            {
+                showEditMargin &&
+                <AdjustPositionMargin
+                    order={order}
+                    pairPrice={dataMarketWatch}
+                    onClose={() => setShowEditMargin(false)}
+                />
+            }
             <div className="flex items-center justify-between">
                 <div className="flex flex-col" >
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
@@ -240,6 +250,15 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
             </div> */}
 
             <div className="flex w-full mt-4">
+                <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
+                    <Button
+                        title={t('futures:tp_sl:adjust_margin')}
+                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"
+                        componentType="button"
+                        type="primary"
+                        onClick={() => setShowEditMargin(true)}
+                    />
+                </div>
                 <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}

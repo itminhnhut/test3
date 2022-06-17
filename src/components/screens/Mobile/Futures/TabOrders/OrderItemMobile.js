@@ -200,9 +200,9 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                     />
                 </div>
             </div>
-            {
-                allowButton &&
-                <div className="flex items-center justify-between mt-4">
+            {allowButton &&
+                <div className="flex items-center justify-between space-x-2">
+                    <Button className="dark:bg-onus-line dark:text-onus-gray !h-[36px]" onClick={() => actions('modal', 'edit-margin')}> {t('futures:tp_sl:adjust_margin')}</Button>
                     <Button className="dark:bg-onus-line dark:text-onus-gray !h-[36px]" onClick={() => actions('modal', 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
                     <Button className="dark:bg-onus-line dark:text-onus-gray !h-[36px]" onClick={() => actions('delete')}>{t('common:close')}</Button>
                 </div>
