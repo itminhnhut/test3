@@ -22,7 +22,8 @@ const EditSLTPVndcMobile = ({
         tp: Number(order?.tp),
     });
     const [show, setShow] = useState({ tp: +order?.tp > 0, sl: +order?.sl > 0 })
-    const [tab, setTab] = useState(0)
+    const [tabSl, setTabSl] = useState(0)
+    const [tabTp, setTabTp] = useState(0)
     const profit = useRef({ tp: 0, sl: 0 })
     const tabPercent = useRef({ tp: 0, sl: 0 })
     const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
@@ -103,8 +104,8 @@ const EditSLTPVndcMobile = ({
             }
         } else {
             profit.current = {
-                tp: tab === 0 ? getProfitSLTP(Number(order?.tp)) : 0,
-                sl: tab === 0 ? getProfitSLTP(Number(order?.sl)) : 0,
+                tp: tabTp === 0 ? getProfitSLTP(Number(order?.tp)) : 0,
+                sl: tabSl === 0 ? getProfitSLTP(Number(order?.sl)) : 0,
             }
         }
         tabPercent.current = { tp: 0, sl: 0 }
@@ -114,48 +115,30 @@ const EditSLTPVndcMobile = ({
             sl: Number(order?.sl),
         });
 
-    }, [tab])
+    }, [tabSl, tabTp])
 
-    const tabs = [{ value: 0, label: t('futures:price') }, { value: 1, label: t('futures:order_table:profit') }, { value: 2, label: '%' }]
-    const renderTab = () => {
+    const tabs = [{ value: 0, label: t('futures:price') }, { value: 2, label: '%' }]
+    const renderTab = (mode) => {
+        const tab = mode === 'sl' ? tabSl : tabTp
         const tabName = tabs.find(rs => rs.value === tab);
         return (
-            <Popover className="relative flex items-center justify-between h-full w-full" >
-                {({ open, close }) => (
-                    <>
-                        <Popover.Button
-                            type="button"
-                            className="flex items-center justify-between focus:outline-none w-full"
-                            aria-expanded="false"
-                        >
-                            <div className="text-sm font-medium">{tabName.label}</div>
-                            <div className="min-w-[12px]"><SortIcon /></div>
-                        </Popover.Button>
-                        <Transition
-                            show={open}
-                            as={Fragment}
-                            enter="transition ease-out duration-200"
-                            enterFrom="opacity-0 translate-y-1"
-                            enterTo="opacity-100 translate-y-0"
-                            leave="transition ease-in duration-150"
-                            leaveFrom="opacity-100 translate-y-0"
-                            leaveTo="opacity-0 translate-y-1"
-                        >
-                            <Popover.Panel
-                                static
-                                className="absolute z-10 mt-2 top-[100%] right-[-12px] w-screen transform max-w-[115px] rounded-md bg-[#445571] shadow-xl"
-                            >
-                                <div className="overflow-hidden px-4 text-sm font-medium" >
-                                    {tabs.map(item => (
-                                        <div key={item.value} className="py-1"
-                                            onClick={() => { setTab(item.value); close(); }}>{item.label}</div>
-                                    ))}
-                                </div>
-                            </Popover.Panel>
-                        </Transition>
-                    </>
-                )}
-            </Popover>
+            <div className="relative flex items-center justify-between h-full w-full" >
+            <button
+                type="button"
+                className="flex items-center justify-between focus:outline-none w-full"
+                aria-expanded="false"
+                onClick={()=>{
+                    if(mode=== 'sl'){
+                        setTabSl(tabSl === 0 ? 2 : 0)
+                    }else{
+                        setTabTp(tabTp === 0 ? 2 : 0)
+                    }
+                }}
+            >
+                <div className="text-sm font-medium">{tabName.label}</div>
+                <div className="min-w-[12px]"><SortIcon /></div>
+            </button>
+        </div>
         )
     }
 
@@ -164,7 +147,8 @@ const EditSLTPVndcMobile = ({
         const balance = _avlb?.value;
         let label = 0;
         let value = 0
-        const prefix = key === 'sl' ? '-' : '';
+        const prefix = key === 'sl' ? '+' : '+';
+        let tab = key === 'sl' ? tabSl  : tabTp
         if (tab === 0) {
             //40%
             value = data.price + (data.price * index * 0.4 / 100)
@@ -184,6 +168,7 @@ const EditSLTPVndcMobile = ({
     }
 
     const onChangeSlTP = (value, key, index) => {
+        const tab = key === 'sl' ? tabSl : tabTp
         if (tab === 2) {
             tabPercent.current[key] = index;
             profit.current[key] = getProfitSLTP(value);
@@ -192,19 +177,11 @@ const EditSLTPVndcMobile = ({
     }
 
     const renderButtons = (qty, key) => {
+        const tab = key === 'sl' ? tabSl:tabTp
         if (tab !== 2) return null;
         const size = 100 / qty;
         const arr = [5, 10, 25, 50, 100];
         const result = [];
-        // for (let i = 1; i <= qty; i++) {
-        //     const { label, value } = getLabelButton(i * size, true, key);
-        //     result.push(
-        //         <div onClick={() => onChangeSlTP(value, key, i * size)}
-        //             className="active:bg-onus/[0.1] px-4 py-[5px] bg-onus-bg2 rounded-[4px] text-xs font-medium mr-[4.5px] last:mr-0">
-        //             {label}
-        //         </div>
-        //     )
-        // }
         arr.forEach(per => {
             const { label, value } = getLabelButton(per, true, key);
             result.push(
@@ -220,6 +197,7 @@ const EditSLTPVndcMobile = ({
     const onHandleChange = (key, e) => {
         const value = +e.value === 0 ? '' : +e.value;
         const decimals = countDecimals(decimalScalePrice?.tickSize);
+        const tab = key === 'sl' ? tabSl : tabTp
         if (tab === 0) {
             profit.current[key] = getProfitSLTP(value)
             setData({
@@ -244,7 +222,8 @@ const EditSLTPVndcMobile = ({
             } = order;
             const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
             const margin = openPrice * quantity;
-            const _profit = (value / 100) * margin / leverage;
+            const _value = key === 'sl' ? -value : value
+            const _profit = (_value / 100) * margin / leverage;
             profit.current[key] = formatNumber(_profit, decimals, 0, true)
             tabPercent.current[key] = value;
             setData({
@@ -255,10 +234,12 @@ const EditSLTPVndcMobile = ({
     }
 
     const placeholder = (key) => {
+        const tab = key === 'stop_loss' ? tabSl : tabTp
         return tab === 0 ? t(`futures:mobile:${key}_input`) : tab === 1 ? t(`futures:mobile:profit_input`) : t('futures:mobile:percent_input')
     }
 
     const onSwitch = (key) => {
+        const tab = key === 'sl' ? tabSl : tabTp
         tabPercent.current[key] = 0;
         if (tab === 0) {
             if (order.leverage < 10) {
@@ -336,19 +317,19 @@ const EditSLTPVndcMobile = ({
                                 labelClassName="hidden"
                                 className={`flex-grow text-sm font-normal h-[21px] text-onus-grey w-full `}
                                 containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
-                                value={tab === 0 ? data.sl : tab === 1 ? profit.current.sl : tabPercent.current.sl}
+                                value={tabSl === 0 ? data.sl : tabSl === 1 ? profit.current.sl : tabPercent.current.sl}
                                 decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                                 onValueChange={(e) => onHandleChange('sl', e)}
                                 renderTail={() => (
                                     <span className={`font-medium pl-2 text-onus-grey`}>
-                                        {tab === 2 ? '%' : quoteAsset}
+                                        {tabSl === 2 ? '%' : quoteAsset}
                                     </span>
                                 )}
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
                             />
                             <div className="min-w-[66px] bg-[#445571] px-3 h-full rounded-r-[6px]">
-                                {renderTab()}
+                                {renderTab('sl')}
                             </div>
                         </div>
                         {renderButtons(4, 'sl')}
@@ -375,19 +356,19 @@ const EditSLTPVndcMobile = ({
                                 labelClassName="hidden"
                                 className={`flex-grow text-sm font-normal h-[21px] text-onus-grey w-full `}
                                 containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
-                                value={tab === 0 ? data.tp : tab === 1 ? profit.current.tp : tabPercent.current.tp}
+                                value={tabTp === 0 ? data.tp : tabTp === 1 ? profit.current.tp : tabPercent.current.tp}
                                 decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                                 onValueChange={(e) => onHandleChange('tp', e)}
                                 renderTail={() => (
                                     <span className={`font-medium pl-2 text-onus-grey`}>
-                                        {tab === 2 ? '%' : quoteAsset}
+                                        {tabTp === 2 ? '%' : quoteAsset}
                                     </span>
                                 )}
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
                             />
                             <div className="min-w-[66px] bg-[#445571] px-3 h-full rounded-r-[6px]">
-                                {renderTab()}
+                                {renderTab('tp')}
                             </div>
                         </div>
                         {renderButtons(4, 'tp')}
