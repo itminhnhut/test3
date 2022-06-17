@@ -13,7 +13,7 @@ import OrderButtonMobile from './OrderButtonMobile';
 import { emitWebViewEvent, formatNumber, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import OrderCollapse from './OrderCollapse';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
+// import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import { getPrice, getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { createSelector } from 'reselect';
@@ -23,6 +23,7 @@ import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLev
 import { getFilter, } from 'src/redux/actions/utils';
 // import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
 import { ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
+import EditSLTPVndcMobile from 'components/screens/Mobile/Futures/EditSLTPVndcMobile';
 
 const getPairPrice = createSelector(
     [
@@ -441,7 +442,7 @@ const PlaceOrder = ({
             <div className="flex flex-wrap justify-between px-[16px] py-[10px]">
                 {/* {showExpiredModal && <ExpiredModal onClose={() => setShowExpiredModal(false)} />} */}
                 {showEditSLTP &&
-                    <FuturesEditSLTPVndc
+                    <EditSLTPVndcMobile
                         onusMode={true}
                         isVisible={showEditSLTP}
                         order={rowData.current}

@@ -9,13 +9,14 @@ import {
 } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
+// import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import Button from 'components/common/Button';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus, DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
+import EditSLTPVndcMobile from 'components/screens/Mobile/Futures/EditSLTPVndcMobile';
 
 const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSLTP }) => {
     const { t } = useTranslation();
@@ -133,7 +134,7 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
     return (
         <div className="p-6 py-4 mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
-                <FuturesEditSLTPVndc
+                <EditSLTPVndcMobile
                     onusMode={true}
                     isVisible={showEditSLTP}
                     order={rowData.current}

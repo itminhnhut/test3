@@ -38,6 +38,7 @@ const commonColors = {
         textPrimary: '#F6F6F6',
         grey: '#8492A7',
         textSecondary: '#8492A7',
+        orange: '#FF9F1A'
     },
 };
 

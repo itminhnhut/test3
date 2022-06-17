@@ -9,9 +9,10 @@ import { ApiStatus } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import OrderItemMobile from './OrderItemMobile';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
+// import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import { getShareModalData } from './ShareFutureMobile';
 import { emitWebViewEvent } from 'redux/actions/utils';
+import EditSLTPVndcMobile from 'components/screens/Mobile/Futures/EditSLTPVndcMobile';
 
 const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDetail }) => {
     const { t } = useTranslation();
@@ -98,7 +99,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
     return (
         <div className="px-[16px] pt-4 overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
             {openEditModal &&
-                <FuturesEditSLTPVndc
+                <EditSLTPVndcMobile
                     onusMode={true}
                     isVisible={openEditModal}
                     order={rowData.current}
@@ -114,7 +115,7 @@ const TabOpenOrders = ({ ordersList, pair, isAuth, isDark, pairConfig, onShowDet
                 className='flex items-center text-sm font-medium select-none cursor-pointer'
                 onClick={() => setHideOther(!hideOther)}
             >
-                <CheckBox onusMode={true} active={hideOther} />
+                <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[3.2px]" />
                 <span className='ml-3 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-onus-gray text-xs'>
                     {t('futures:hide_other_symbols')}
                 </span>
