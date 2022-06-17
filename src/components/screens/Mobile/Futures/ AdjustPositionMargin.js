@@ -26,7 +26,7 @@ const ADJUST_TYPE = {
 const VNDC_ID = 72
 
 const CONFIG_MIN_PROFIT = [
-    {leverage: [1, 1], minProfit: -80},
+    {leverage: [0.9, 1], minProfit: -80},
     {leverage: [1, 5], minProfit: -75},
     {leverage: [5, 10], minProfit: -70},
     {leverage: [10, 15], minProfit: -60},
