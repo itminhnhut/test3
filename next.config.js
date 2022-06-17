@@ -88,7 +88,7 @@ const moduleExports = withPlugins([
             'datav2.nami.exchange',
         ],
     },
-    // distDir: process.env.BUILD_DIR || 'build',
+    distDir: process.env.BUILD_DIR || 'build',
 });
 
 module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
