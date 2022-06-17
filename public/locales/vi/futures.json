@@ -253,7 +253,7 @@
             "new_liq_price": "Giá thanh lý mới:",
             "profit_ratio": "Tỷ lệ lợi nhuận:",
             "confirm_btn": "Xác nhận",
-            "add_success": "Thêm thành công",
+            "add_success": "Thêm kí quỹ thành công",
             "remove_success": "Rút thành công",
             "temp_future": "Hiện tại Nami chưa hỗ trợ bỏ kí quỹ khỏi vị thế, tính năng này sẽ được ra mắt trong thời gian tới",
             "error": {
@@ -265,7 +265,7 @@
                 "REMOVE_FUTURES_MARGIN_INVALID_AMOUNT": "Số lượng bạn muốn rút vượt quá lượng kí quỹ khả dụng",
                 "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "Để đảm bảo an toàn cho vị thế của bạn, tính năng này không hỗ trợ với tỉ lệ lợi nhuận hiện tại.",
                 "UNKNOWN": "Lỗi không xác định",
-                "error": "Lỗi không xác định",
+                "error": "Lỗi không xác định"
             }
         },
         "login_short": "Đăng nhập ngay",

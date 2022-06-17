@@ -123,7 +123,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                     [ADJUST_TYPE.REMOVE]: 'remove_success'
                 }[adjustType]
                 }`)
-            alertContext.alert.show('success', message)
+            alertContext.alert.show('success', t('common:success'), message)
         }
         if (data.status !== 'ok') {
             alertContext.alert.show('error', t('common:failed'), t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
