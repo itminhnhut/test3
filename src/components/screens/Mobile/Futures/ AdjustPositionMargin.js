@@ -69,6 +69,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     const {newMargin = 0, newLiqPrice = 0} = useMemo(() => {
         if (!order) return
         const newMargin = order?.margin + amount
+
         return {newMargin, newLiqPrice: calLiqPrice(order.side, order.quantity, order.open_price, newMargin, order.fee)}
     }, [order, amount])
 
@@ -195,7 +196,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             <div
                                 className='flex items-center'
                                 onClick={() => {
-                                    setAmount(formatNumber(available, assetConfig?.assetDigit))
+                                    setAmount(parseInt(available, 10))
                                 }}
                             >
                             <span className='px-4 py-2 text-onus-base font-semibold'>
