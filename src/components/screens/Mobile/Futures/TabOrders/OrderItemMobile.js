@@ -217,7 +217,7 @@ const OrderItemMobile = ({
                 </div>
             </div>
             {allowButton &&
-            <div className="flex items-center justify-between space-x-2">
+            <div className="flex items-center justify-between space-x-2 mt-4">
                 {
                     order.status === VndcFutureOrderType.Status.ACTIVE &&
                     <Button
