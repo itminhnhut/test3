@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
-import { ArrowRight } from 'react-feather';
+import { ArrowRight, ChevronLeft } from 'react-feather';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
 import { countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { ChartMode } from 'redux/actions/const';
 import TableNoData from 'components/common/table.old/TableNoData';
 import OrderOpenDetail from './OrderOpenDetail';
 import Tooltip from 'components/common/Tooltip';
@@ -14,6 +13,9 @@ import { THEME_MODE } from 'hooks/useDarkMode';
 import dynamic from 'next/dynamic';
 import { listTimeFrame, MenuTime } from 'components/TVChartContainer/MobileTradingView/ChartOptions';
 import { useRouter } from 'next/router';
+import { API_ORDER_DETAIL } from 'redux/actions/apis'
+import fetchApi from 'utils/fetch-api'
+import { ApiStatus, ChartMode } from 'redux/actions/const'
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
@@ -47,7 +49,9 @@ const OrderDetail = ({
     pairParent,
     isTabHistory = false,
     isDark,
-    getDetail
+    getDetail,
+    isModal,
+    onClose
 }) => {
     const router = useRouter();
     const { t } = useTranslation();
@@ -57,6 +61,7 @@ const OrderDetail = ({
         order_value: { currency: order?.order_value_currency }
     }));
     const [resolution, setResolution] = useState('15');
+    const [dataSource, setDataSource] = useState([])
 
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
@@ -82,8 +87,19 @@ const OrderDetail = ({
     };
 
     const getValue = (number) => {
-        return formatNumber(number, 0, 0, true);
+        if (number) {
+            return formatNumber(number, 0, 0, true);
+        } else {
+            return t('futures:not_set')
+        }
     };
+    const renderSlTp = (value) => {
+        if (value) {
+            return formatNumber(value)
+        }
+        return t('futures:not_set')
+    }
+
 
     const renderModify = (metadata, key) => {
         let value = null;
@@ -124,16 +140,47 @@ const OrderDetail = ({
     }, [pairConfig]);
 
     const changeSLTP = (data) => {
-        getDetail();
+        if (!isModal) {
+            getDetail();
+        }
     };
 
-    const onClose = () => {
-        router.back()
-    }
-
     useEffect(() => {
-        emitWebViewEvent('order_detail')
+        if (isModal) {
+            getAdjustmentDetail();
+        } else {
+            emitWebViewEvent('order_detail')
+        }
     }, [])
+
+    const oldOrder = useRef(null);
+    useEffect(() => {
+        if (!isModal) {
+            setDataSource(order?.futuresorderlogs ?? [])
+        } else {
+            if (JSON.stringify(oldOrder.current) === JSON.stringify(order)) return;
+            oldOrder.current = order;
+            getAdjustmentDetail();
+        }
+    }, [order, isModal])
+
+    const getAdjustmentDetail = async () => {
+        try {
+            const { status, data, message } = await fetchApi({
+                url: API_ORDER_DETAIL,
+                options: { method: 'GET' },
+                params: {
+                    orderId: order.displaying_id
+                },
+            })
+            if (status === ApiStatus.SUCCESS) {
+                setDataSource(data?.futuresorderlogs ?? [])
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+        }
+    }
 
     const resolutionLabel = useMemo(() => {
         return listTimeFrame.find(item => item.value === resolution)?.text;
@@ -148,9 +195,9 @@ const OrderDetail = ({
                 <div
                     className="relative w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
                 >
-                    <div className="flex items-center" onClick={() => onClose()}>
-                        {/*<ChevronLeft size={24} />*/}
-                        {/*<span className="font-medium text-sm">{t('common:back')}</span>*/}
+                    <div className="flex items-center" onClick={() => onClose && onClose()}>
+                        {/* <ChevronLeft size={24} /> */}
+                        {/* <span className="font-medium text-sm">{t('common:back')}</span> */}
                     </div>
                     <div
                         className="flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2">
@@ -172,7 +219,7 @@ const OrderDetail = ({
                 </div>
 
                 <div className="shadow-order_detail py-[10px] dark:bg-onus h-full">
-                    <div className="min-h-[350px] spot-chart max-w-full" style={{ height: `calc(var(--vh, 1vh) * 100 - 280px)` }}>
+                    <div className="min-h-[350px] spot-chart max-w-full" style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
                         <MobileTradingView
                             t={t}
                             containerId="nami-mobile-detail-tv"
@@ -248,11 +295,11 @@ const OrderDetail = ({
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:take_profit')}</Label>
-                                    <Span className="text-onus-green">{formatNumber(order?.tp)}</Span>
+                                    <Span className="text-onus-green">{renderSlTp(order?.tp)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:stop_loss')}</Label>
-                                    <Span className="text-onus-red">{formatNumber(order?.sl)}</Span>
+                                    <Span className="text-onus-red">{renderSlTp(order?.sl)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:open_fee')}</Label>
@@ -300,10 +347,10 @@ const OrderDetail = ({
                                 </Row>
                             </div>
                         </div>
-                        {order?.futuresorderlogs.length > 0 &&
+                        {dataSource.length > 0 &&
                             <div className="pb-2.5">
                                 <div className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
-                                {order?.futuresorderlogs.map((item, index) => (
+                                {dataSource.map((item, index) => (
                                     <div key={index}
                                         className="bg-onus-line px-3 rounded-lg mb-3">
                                         <Row>

@@ -8,7 +8,6 @@ import fetchApi from 'utils/fetch-api';
 import { ApiStatus, ChartMode } from 'redux/actions/const';
 import { useEffect } from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import LoadingPage from 'components/screens/Mobile/LoadingPage';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout'
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
@@ -88,12 +87,10 @@ const OrderDetail = (props) => {
 
     const oldData = useRef(false);
     useEffect(() => {
-        if (Array.isArray(ordersList) && orderDetail && !isTabHistory.current && !oldData.current) {
+        if (Array.isArray(ordersList) && orderDetail && !isTabHistory.current) {
             const detail = ordersList.find(item => item.displaying_id === orderDetail?.displaying_id);
             if (!detail) {
-                oldData.current = true;
-                router.push('/mobile/futures')
-                // getDetail();
+                router.back();
             }
         }
     }, [ordersList, orderDetail])

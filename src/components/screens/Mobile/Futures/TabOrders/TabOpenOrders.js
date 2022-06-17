@@ -106,7 +106,7 @@ const TabOpenOrders = ({ordersList, pair, isAuth, isDark, pairConfig, onShowDeta
                                                     className="h-full min-h-[300px]"/>
 
     return (
-        <div className="px-[16px] pt-[10px] overflow-x-auto" style={{height: 'calc(100% - 114px)'}}>
+        <div className="px-[16px] pt-4 overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
             {openEditModal &&
             <FuturesEditSLTPVndc
                 onusMode={true}

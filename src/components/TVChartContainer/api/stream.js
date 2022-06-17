@@ -84,10 +84,11 @@ export default class {
                 lastBar: historyProvider?.history?.[symbolInfo.symbol]?.lastBar,
                 listener: updateCb,
             };
-            _subs.push(newSub);
+            _subs.unshift(newSub);
         } catch (e) {
             console.error('__ subscribeBars e', e);
         }
+        console.log(_subs, 'SUBLIST');
     }
 
     unsubscribeBars(uid) {
@@ -98,6 +99,7 @@ export default class {
         }
         // socket.emit('unsubscribe:recent_trade', lastSymbol);
         _subs.splice(subIndex, 1);
+        console.log(_subs, 'SUBLIST');
     }
 }
 socket.on('connect', () => {

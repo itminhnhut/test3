@@ -80,7 +80,7 @@
         "title": "Điều chỉnh đòn bẩy",
         "check_leverage": "Kiểm tra bảng tỷ lệ Đòn bẩy & số tiền Ký quỹ",
         "position_limit_enlarge": "Tăng hạn mức vị thế",
-        "description": "Việc chọn đòn bẩy cao hơn, chẳng hạn như [10x] sẽ làm tăng rủi ro thanh lý. Hãy luôn kiểm soát mức độ rủi ro của bạn.",
+        "description": "Luôn kiểm soát rủi ro khi lựa chọn đòn bẩy, đặc biệt với đòn bẩy trên 10x.",
         "confirm": "Xác nhận",
         "leverage": "Đòn bẩy"
     },
@@ -90,6 +90,8 @@
         "perpetual": "Vĩnh cửu",
         "when": "Khi",
         "reaches": "chạm đến",
+        "sl_not_set": "Bạn chưa cài đặt cắt lỗ, lệnh cắt lỗ giúp bạn giảm thiểu rủi ro khi thị trường biến động",
+        "tp_not_set": "Bạn chưa cài đặt chốt lời, lệnh chốt lời giúp bạn tối ưu hóa lợi nhuận khi giao dịch",
         "is_will": ", lệnh Take Profit Market sẽ được kích hoạt để đóng vị thế này. PnL ước tính sẽ là",
         "this_setting": "Cài đặt này áp dụng cho toàn bộ vị thế.",
         "take_profit_stop_loss": "Chốt lời và cắt lỗ",
@@ -196,6 +198,7 @@
     "side": "Mua/Bán",
     "rows_per_page": "Số dòng/trang",
     "volume": "KL",
+    "not_set": "Chưa đặt",
     "profit_margin": "% Lợi nhuận",
     "minimum_qty": "Khối lượng tối thiểu",
     "maximum_qty": "Khối lượng tối đa",
@@ -254,7 +257,8 @@
                 "NOT_FOUND_ORDER": "Không tìm thấy lệnh",
                 "CAN_NOT_CHANGE_MARGIN": "Không thể thay đổi ký quỹ",
                 "BALANCE_INSUFFICIENT": "Số dư không đủ",
-                "UNKNOWN": "Lỗi không xác định"
+                "UNKNOWN": "Lỗi không xác định",
+                "error": "Lỗi không xác định",
             }
         },
         "login_short": "Đăng nhập ngay",
@@ -287,8 +291,10 @@
         "invalid_session_content": "Vui lòng thử lại để tiếp tục Giao dịch Futures",
         "invalid_session_button": "Đồng ý",
         "retry": "Thử lại",
-        "order_id":"ID lệnh",
-        "volume_2":"KL giao dịch"
+        "order_id": "ID lệnh",
+        "volume_2": "KL giao dịch",
+        "cancelled_order": "Lệnh hủy",
+        "pending_order":"Lệnh đang chờ"
     },
     "orders_history": "Lịch sử",
     "minimum_leverage": "Đòn bẩy tối thiểu",

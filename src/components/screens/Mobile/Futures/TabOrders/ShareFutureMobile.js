@@ -45,9 +45,9 @@ export const getShareModalData = ({ order, pairPrice }) => {
         quoteAsset: pairPrice?.quoteAsset ?? '',
         bg: _percent > 0 ? 'green' : 'red',
         status,
+        id: order?.displaying_id,
         type: 'share'
     }
-    console.log('__ check share data', shareData)
     return shareData
 }
 

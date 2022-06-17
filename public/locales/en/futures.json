@@ -78,7 +78,7 @@
         "title": "Adjust Leverage",
         "check_leverage": "Check on Leverage & Margin table",
         "position_limit_enlarge": "Position Limit Enlarge",
-        "description": "Selecting higher leverage such as [10x] increases your liquidation risk. Always manage your risk levels.",
+        "description": "Always control risk when choosing leverage, especially with leverage over 10x",
         "confirm": "Confirm",
         "leverage": "Leverage"
     },
@@ -88,6 +88,8 @@
         "perpetual": "Perpetual",
         "when": "When",
         "reaches": "reaches",
+        "sl_not_set": "You have not set stop loss, stop loss order helps you to reduce risk when the market fluctuates",
+        "tp_not_set": "You have not set take profit, take profit order helps you to optimize profit when trading",
         "is_will": ", it will trigger Take Profit Market order to clos this position. Estimate PNL will be",
         "this_setting": "This setting applies to the entire position.",
         "take_profit_stop_loss": "Take-profit and stop-loss",
@@ -197,6 +199,7 @@
     "side": "Side",
     "rows_per_page": "Rows per page",
     "volume": "Volume",
+    "not_set": "Not set",
     "profit_margin": "% Profit",
     "minimum_qty": "Minimum Qty is",
     "maximum_qty": "Maximum Qty is",
@@ -255,7 +258,8 @@
                 "NOT_FOUND_ORDER": "Not found order",
                 "CAN_NOT_CHANGE_MARGIN": "Can not change margin",
                 "BALANCE_INSUFFICIENT": "Balance insufficient",
-                "UNKNOWN": "Unknown"
+                "UNKNOWN": "Unknown",
+                "error": "Unknown"
             }
         },
         "login_short": "Login",
@@ -288,8 +292,10 @@
         "invalid_session_content": "Please reload to continue Futures trading",
         "invalid_session_button": "Refresh",
         "retry": "Retry",
-        "order_id":"Order ID",
-        "volume_2":"Trade volume"
+        "order_id": "Order ID",
+        "volume_2": "Trade volume",
+        "cancelled_order": "Cancelled order",
+        "pending_order": "Pending order"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

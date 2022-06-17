@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
@@ -51,6 +51,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 return <div>{text}</div>;
             default:
                 return <div>{text}</div>;
+
         }
     }
 
@@ -75,6 +76,15 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 return '';
         }
     }
+
+    const renderSlTp = (value) => {
+        if (value) {
+            return formatNumber(value)
+        }
+        return t('futures:not_set')
+    }
+
+
 
     const isModal = useRef(false);
 
@@ -107,70 +117,85 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
             profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
         }
     }
+
+    const orderStatus = useMemo(() => {
+        const cancelled = isTabHistory && (order.status === VndcFutureOrderType.Status.PENDING ||
+            (order.status === VndcFutureOrderType.Status.CLOSED && !order?.close_price && order?.type !== VndcFutureOrderType.Type.MARKET));
+        const pending = !isTabHistory && order.status === VndcFutureOrderType.Status.PENDING || order.status === VndcFutureOrderType.Status.REQUESTING;
+        return { cancelled, pending }
+    }, [order])
+
     // const profit = isTabHistory ? order?.profit : dataMarketWatch && getProfitVndc(order, dataMarketWatch?.lastPrice)
 
     return (
         <div className="flex flex-col mx-[-16px] p-[16px] border-b-[1px] border-b-gray-4 dark:border-onus-line"
             onClick={() => onShowDetail && actions('detail')}
         >
-            <div className="flex items-center justify-between mb-[10px]">
+            <div className="flex items-center justify-between">
                 <div className="flex flex-col" >
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
                         <div className="font-semibold mr-[10px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
-                        <div className="text-onus-green border-onus-green border-[1px] text-[10px] font-medium leading-3 py-[1px] px-[5px] rounded-[2px]">{order?.leverage}x</div>
+                        <div className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x</div>
                     </div>
-                    <div className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
+                    <div className={`text-xs font-medium my-1 ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order)}</span>
                     </div>
+
                 </div>
                 <div className="flex items-center">
-                    <div className="text-xs text-right">
-                        {/* <div className="text-gray-1 dark:text-onus-gray py-[1px]">{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div> */}
-                        <div className="text-xs font-medium text-onus-green py-[1px] float-right">
-                            <OrderProfit onusMode={true} className="flex flex-col" order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
+                    {orderStatus.cancelled || orderStatus.pending ?
+                        <div className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-[#FF9F1A]'}`}>
+                            {t(`futures:mobile:${orderStatus.cancelled ? 'cancelled_order' : 'pending_order'}`)}
                         </div>
-                    </div>
-                    {profit ?
-                        <div className="border-[1px] border-onus-grey p-[5px] rounded-[2px] ml-[12px]" onClick={() => actions('modal', 'share')}>
-                            <img src={getS3Url("/images/icon/share-icon-onus.png")} height={20} width={20} />
-                        </div>
-                        : null
+                        :
+                        <>
+                            <div className="text-xs text-right">
+                                <div className="text-xs font-medium text-onus-green py-[1px] float-right">
+                                    <OrderProfit onusMode={true} className="flex flex-col"
+                                        order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
+                                </div>
+                            </div>
+                            {profit ?
+                                <div className="p-[5px] rounded-[2px]" onClick={() => actions('modal', 'share')}>
+                                    <img src={getS3Url("/images/icon/ic_share-icon-onus.png")} height={20} width={20} />
+                                </div>
+                                : null
+                            }
+                        </>
                     }
                 </div>
             </div>
+            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6]">
+                <div>ID #{order?.displaying_id}</div>
+                <div className="bg-[#535D6D] h-[2px] w-[2px] rounded-[50%] mx-1.5"></div>
+                <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
+            </div>
             <div>
                 <div className="flex flex-wrap w-full">
-                    <OrderItem
-                        label={t('futures:mobile:order_id')}
-                        value={order?.displaying_id}
-                    />
-                    <OrderItem
-                        label={t('common:time')}
-                        value={formatTime(order?.created_at, 'yyyy-MM-dd HH:mm')}
-                    />
-                    <OrderItem
-                        label={t('futures:order_table:open_price')}
-                        value={isTabHistory ? formatNumber(order?.open_price, 8, 0, false) : getOpenPrice(order, dataMarketWatch)}
-                    />
-                    <OrderItem label={t('futures:order_table:volume')} value={formatNumber(order?.order_value, 0, 0, true)} />
-                    <OrderItem
-                        label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'mark_price'}`)}
-                        value={formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice)}
-                    />
+                    <OrderItem label={t('futures:order_table:volume')} value={order?.order_value ? formatNumber(order?.order_value, 0, 0, true) : '-'} />
                     <OrderItem
                         label={t(isTabHistory ? 'futures:order_table:reason_close' : `futures:mobile:liq_price`)}
                         value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
                     />
+
+                    <OrderItem
+                        label={t('futures:order_table:open_price')}
+                        value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : getOpenPrice(order, dataMarketWatch)}
+                    />
                     <OrderItem
                         label={t('futures:stop_loss')}
-                        value={formatNumber(order?.sl)}
+                        value={renderSlTp(order?.sl)}
                         valueClassName="text-onus-red"
                     />
                     <OrderItem
+                        label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'mark_price'}`)}
+                        value={isTabHistory ? (order?.close_price ? formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice) : '-') : formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice)}
+                    />
+                    <OrderItem
                         label={t('futures:take_profit')}
-                        value={formatNumber(order?.tp)}
+                        value={renderSlTp(order?.tp)}
                         valueClassName="text-onus-green"
                     />
                 </div>
@@ -203,6 +228,9 @@ const Row = styled.div.attrs({
     :nth-child(2n+2){
         margin:0
     }
+    :nth-last-child(2){
+        margin-bottom:0
+    }
 `
 
 const Label = styled.div.attrs({
@@ -210,7 +238,7 @@ const Label = styled.div.attrs({
 })``
 
 const Button = styled.div.attrs({
-    className: `text-gray-1 bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-medium`
+    className: `text-gray-1 bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-semibold`
 })`
 width:calc(50% - 4px)
 `
