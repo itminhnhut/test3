@@ -247,6 +247,7 @@
             "amount": "Amount",
             "max": "Max",
             "min_profit_ratio": "Min profit ratio allow is: {min}",
+            "amount_placeholder": "Enter amount",
             "not_allow_change_margin": "Not allow change margin",
             "assigned_margin": "Assigned margin:",
             "available": "Available:",

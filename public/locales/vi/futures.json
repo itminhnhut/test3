@@ -246,6 +246,7 @@
             "amount": "Khối lượng",
             "max": "Max",
             "min_profit_ratio": "Tỉ lệ âm kí quỹ tối thiểu là: {min}",
+            "amount_placeholder": "Nhập vào khối lượng",
             "not_allow_change_margin": "Không thể thay đổi kí quỹ",
             "assigned_margin": "Ký quỹ:",
             "available": "Khả dụng:",

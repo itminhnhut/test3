@@ -180,7 +180,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
                                 decimalScale={2}
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
-                                placeholder="Nhập số lượng muốn rút"
+                                placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
                             />
                             <div
                                 className='flex items-center'
@@ -239,7 +239,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
                             '!bg-onus-1 !text-onus-textSecondary': !!error || !amount
                         })}
                         onClick={() => {
-                            if (!!error || !amount || submitting) {
+                            if (!error && !!amount && !submitting) {
                                 handleConfirm()
                             }
                         }}
