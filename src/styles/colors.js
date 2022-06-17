@@ -67,8 +67,8 @@ const colors = {
         line: '#1B222D',
         input: '#192231',
         white: '#F6F6F6',
-        grey: '#8492A7'
-    }
+        grey: '#8492A7',
+    },
     // onus: '#090D17', //background main
     // onus1: '#192231',//background input
     // greenOnus: '#0DB787',

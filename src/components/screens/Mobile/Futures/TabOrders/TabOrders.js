@@ -18,6 +18,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
 import { VndcFutureOrderType } from '../../../Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useRouter } from 'next/router';
+import AdjustPositionMargin from "components/screens/Mobile/Futures/ AdjustPositionMargin";
 
 const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender, isFullScreen }) => {
     const { t } = useTranslation();

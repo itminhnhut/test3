@@ -83,6 +83,7 @@
         "leverage": "Leverage"
     },
     "tp_sl": {
+        "adjust_margin": "Adjust margin",
         "modify_tpsl": "Modify SL-TP",
         "perpetual": "Perpetual",
         "when": "When",
@@ -235,6 +236,27 @@
             "step_8": "Check the order parameters again and start trading. Wish you a lot of profit from trading Nami Futures!",
             "step": "Step",
             "next": "Next"
+        },
+        "adjust_margin": {
+            "adjust_position_margin": "Adjust position margin",
+            "add": "Add",
+            "remove": "Remove",
+            "amount": "Amount",
+            "max": "Max",
+            "min_profit_ratio": "Min profit ratio allow is: {min}",
+            "assigned_margin": "Assigned margin:",
+            "available": "Available:",
+            "new_liq_price": "New liq price:",
+            "profit_ratio": "Profit ratio:",
+            "confirm_btn": "Confirm",
+            "add_success": "Add successful",
+            "remove_success": "Remove successful",
+            "error": {
+                "NOT_FOUND_ORDER": "Not found order",
+                "CAN_NOT_CHANGE_MARGIN": "Can not change margin",
+                "BALANCE_INSUFFICIENT": "Balance insufficient",
+                "UNKNOWN": "Unknown"
+            }
         },
         "login_short": "Login",
         "available": "Available",

@@ -47,7 +47,6 @@ const OrderDetail = (props) => {
         if (auth) dispatch(getOrdersList());
     };
 
-
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
