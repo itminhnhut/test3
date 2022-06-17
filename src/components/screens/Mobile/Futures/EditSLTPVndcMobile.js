@@ -10,6 +10,7 @@ import SortIcon from 'components/screens/Mobile/SortIcon';
 import TradingInput from 'components/trade/TradingInput';
 import { Popover, Transition } from '@headlessui/react';
 import Switcher from 'components/common/Switcher';
+import { log } from 'utils';
 
 const EditSLTPVndcMobile = ({
     onClose, isVisible, order, status, onConfirm,
@@ -173,6 +174,7 @@ const EditSLTPVndcMobile = ({
             tabPercent.current[key] = index;
             profit.current[key] = getProfitSLTP(value);
         }
+
         setData({ ...data, [key]: value })
     }
 
@@ -385,7 +387,17 @@ const EditSLTPVndcMobile = ({
                     type="primary"
                     className={`!h-[50px] !text-[16px] !font-semibold`}
                     componentType="button"
-                    onClick={() => onConfirm(data)}
+                    onClick={() => {
+
+                        const newData = {
+                            ...data,
+                            sl: show?.sl ? data.sl : 0,
+                            tp: show?.tp ? data.tp : 0,
+                        }
+
+                        console.log('__ check new data', newData, show, data)
+                        onConfirm(newData)
+                    }}
                 />
             </div>
         </Modal>

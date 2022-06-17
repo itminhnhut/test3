@@ -114,6 +114,7 @@ const TabOpenOrders = ({
 
     const onConfirmEdit = (params) => {
         fetchOrder('PUT', params, () => {
+            console.log('__ check params', params);
             localStorage.setItem('edited_id', params.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
         });
