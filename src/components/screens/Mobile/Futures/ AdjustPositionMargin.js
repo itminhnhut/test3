@@ -53,7 +53,12 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
     const [amount, setAmount] = useState('')
     const [submitting, setSubmitting] = useState(false)
 
-    const assetConfig = useSelector((state) => state.utils.assetConfig.find(({ id }) => id === VNDC_ID))
+    const _setAdjustType = (type) => {
+        setAdjustType(type)
+        setAmount('')
+    }
+
+    const assetConfig = useSelector((state) => state.utils.assetConfig.find(({id}) => id === VNDC_ID))
     const futuresBalance = useSelector((state) => state.wallet.FUTURES[VNDC_ID]) || {};
     const alertContext = useContext(AlertContext);
 
@@ -83,6 +88,9 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
     }, [amount, available, assetConfig, adjustType, percent])
 
     const errorProfit = useMemo(() => {
+        if (adjustType === ADJUST_TYPE.REMOVE) {
+            return t('futures:mobile:adjust_margin:temp_future')
+        }
         if (!order) return
         if (adjustType === ADJUST_TYPE.REMOVE) {
             const min = calMinProfitAllow(order.leverage)
@@ -152,7 +160,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                                 }
                             )
                         }
-                        onClick={() => setAdjustType(ADJUST_TYPE.ADD)}
+                        onClick={() => _setAdjustType(ADJUST_TYPE.ADD)}
                     >
                         {t('futures:mobile:adjust_margin:add')}
                     </div>
@@ -166,7 +174,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                                 }
                             )
                         }
-                        onClick={() => setAdjustType(ADJUST_TYPE.REMOVE)}
+                        onClick={() => _setAdjustType(ADJUST_TYPE.REMOVE)}
                     >
                         {t('futures:mobile:adjust_margin:remove')}
                     </div>
@@ -253,10 +261,10 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                     </div>
                     <div
                         className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold mt-8', {
-                            '!bg-onus-1 !text-onus-textSecondary': !!error || !amount || !!errorProfit
+                            '!bg-onus-1 !text-onus-textSecondary': !!error || !amount || !!errorProfit || adjustType === ADJUST_TYPE.REMOVE
                         })}
                         onClick={() => {
-                            if (!error && !errorProfit && !!amount && !submitting) {
+                            if (!error && !errorProfit && !!amount && !submitting && adjustType !== ADJUST_TYPE.REMOVE) {
                                 handleConfirm()
                             }
                         }}
