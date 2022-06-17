@@ -82,36 +82,51 @@ const OrderBalance = ({
     }
     return (
         <div
-            className="sticky top-[42px] bg-white dark:bg-onus z-[10px] flex flex-wrap px-[16px] pb-[5px] border-b-gray-4 border-b-[1px] pt-[10px] dark:border-onus-line">
-            {!isTabHistory &&
+            className="sticky top-[42px] bg-white dark:bg-onus z-[10px] flex flex-wrap px-[16px] pb-[5px] pt-4">
+            <div className="bg-onus-line rounded-[6px] w-full text-sm py-[9px] flex justify-around items-center px-[25px]">
+                <div className="flex flex-col items-center">
+                    <div className="font-normal text-onus-grey">{t('futures:mobile:equity')}</div>
+                    <div className="font-medium">{equity}</div>
+                </div>
+                <div className="h-[30px] w-[1px] bg-[#2B3247]"></div>
+                <div className="flex flex-col items-center ">
+                    <div className="font-normal text-onus-grey">{t('futures:mobile:pnl')}</div>
+                    <div className="font-medium">{pnl}</div>
+                </div>
+                <div className="h-[30px] w-[1px] bg-[#2B3247]"></div>
+                <div className="flex flex-col items-center ">
+                    <div className="font-normal text-onus-grey">{t('futures:mobile:volume_2')}</div>
+                    <div className="font-medium">{_volume}</div>
+                </div>
+                {/* {!isTabHistory &&
+                    <TradingLabel
+                        label={t('futures:mobile:balance')}
+                        value={_balance}
+                        labelClassName="dark:text-onus-grey"
+                        containerClassName="text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]"
+                    />
+                }
+                {!isTabHistory &&
+                    <TradingLabel
+                        label={t('futures:mobile:equity')}
+                        value={equity}
+                        labelClassName="dark:text-onus-grey"
+                        containerClassName="text-xs flex justify-between w-1/2 pb-[5px]"
+                    />
+                }
                 <TradingLabel
-                    label={t('futures:mobile:balance')}
-                    value={_balance}
+                    label={t('futures:mobile:pnl')}
+                    value={pnl}
                     labelClassName="dark:text-onus-grey"
-                    containerClassName="text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]"
+                    containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
                 />
-            }
-            {!isTabHistory &&
                 <TradingLabel
-                    label={t('futures:mobile:equity')}
-                    value={equity}
+                    label={t('futures:mobile:volume_2')}
+                    value={_volume}
                     labelClassName="dark:text-onus-grey"
                     containerClassName="text-xs flex justify-between w-1/2 pb-[5px]"
-                />
-            }
-            <TradingLabel
-                label={t('futures:mobile:pnl')}
-                value={pnl}
-                labelClassName="dark:text-onus-grey"
-                containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
-            />
-            <TradingLabel
-                label={t('futures:mobile:volume_2')}
-                value={_volume}
-                labelClassName="dark:text-onus-grey"
-                containerClassName="text-xs flex justify-between w-1/2 pb-[5px]"
-            />
-
+                /> */}
+            </div>
         </div>
     );
 };
