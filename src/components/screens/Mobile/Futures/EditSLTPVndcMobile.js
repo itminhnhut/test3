@@ -57,7 +57,7 @@ const EditSLTPVndcMobile = ({
             status,
             price
         } = order;
-        const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price
+        const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
         let total = quantity * (sltp - openPrice);
         let profit = side === VndcFutureOrderType.Side.BUY ? total - fee : -total - fee;
         return formatNumber(profit, 0, 0, true);
@@ -79,7 +79,7 @@ const EditSLTPVndcMobile = ({
         return +Number(sltp).toFixed(decimals);
     };
 
-    const getSLTP = (index = 100, key) => {
+    const getSLTP = (index = 60, key) => {
         const {
             quantity,
             open_price,
@@ -88,15 +88,24 @@ const EditSLTPVndcMobile = ({
             side,
             leverage
         } = order;
-        const tpsl = key === 'sl' ? getSuggestSl(side, _lastPrice, leverage, index / 100) : getSuggestTp(side, _lastPrice, leverage, index / 100);
+        const tpsl = key === 'sl' ? getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : index / 100) : getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : index / 100);
         const decimals = countDecimals(decimalScalePrice?.tickSize)
         return +tpsl.toFixed(decimals)
     }
 
     useEffect(() => {
-        profit.current = {
-            tp: tab === 0 ? getProfitSLTP(Number(order?.tp)) : 0,
-            sl: tab === 0 ? getProfitSLTP(Number(order?.sl)) : 0,
+        if (order.leverage < 10) {
+            if (!order?.sl) {
+                profit.current.sl = 0
+            }
+            if (!order?.tp) {
+                profit.current.tp = 0
+            }
+        } else {
+            profit.current = {
+                tp: tab === 0 ? getProfitSLTP(Number(order?.tp)) : 0,
+                sl: tab === 0 ? getProfitSLTP(Number(order?.sl)) : 0,
+            }
         }
         tabPercent.current = { tp: 0, sl: 0 }
         setData({
@@ -252,11 +261,34 @@ const EditSLTPVndcMobile = ({
     const onSwitch = (key) => {
         tabPercent.current[key] = 0;
         if (tab === 0) {
-            profit.current[key] = getProfitSLTP(order[key]);
+            if (order.leverage < 10) {
+                profit.current = {
+                    tp: 0,
+                    sl: 0,
+                }
+            } else if (order.leverage <= 20) {
+                if (!order?.sl) {
+                    setData({ ...data, sl: getSLTP(order.leverage, 'sl') });
+                    profit.current.sl = getProfitSLTP(getSLTP(order.leverage, 'sl'));
+                }
+            } else if (order.leverage > 20 && (!order?.sl || !order?.tp)) {
+                if (key === 'sl' && !order?.sl) {
+                    setData({ ...data, [key]: getSLTP(order.leverage, 'sl') });
+                    profit.current[key] = getProfitSLTP(getSLTP(order.leverage, 'sl'));
+                } else if (!order?.tp) {
+                    setData({ ...data, [key]: getSLTP(order.leverage, 'tp') });
+                    profit.current[key] = getProfitSLTP(getSLTP(order.leverage, 'tp'));
+                }
+            } else if (!order?.sl || !order?.tp) {
+                setData({ ...data, [key]: getSLTP(order.leverage, key) });
+                profit.current[key] = getProfitSLTP(getSLTP(order.leverage, key));
+            } else {
+                setData({ ...data, [key]: order[key] });
+                profit.current[key] = getProfitSLTP(getSLTP(order.leverage, key));
+            }
         } else {
             profit.current[key] = 0;
         }
-        setData({ ...data, [key]: order[key] });
         setShow({ ...show, [key]: !show[key] })
     }
 

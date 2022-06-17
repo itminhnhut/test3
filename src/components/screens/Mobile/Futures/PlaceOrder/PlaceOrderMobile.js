@@ -147,8 +147,16 @@ const PlaceOrder = ({
         if (firstTime.current) return;
         const _sl = +(getSuggestSl(side, lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
         const _tp = +(getSuggestTp(side, lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
-        setTp(_tp);
-        setSl(_sl);
+        if (leverage < 10) {
+            setTp('');
+            setSl('');
+        } else if (leverage <= 20) {
+            setSl(_sl);
+            setTp('');
+        } if (leverage > 20) {
+            setSl(_sl);
+            setTp(_tp);
+        }
         if (type === OrderTypes.Market) {
             onChangeQuoteQty(lastPrice, leverage);
         }
@@ -161,8 +169,16 @@ const PlaceOrder = ({
         setStopPrice(_lastPrice);
         const _sl = +(getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
         const _tp = +(getSuggestTp(side, _lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
-        setTp(_tp);
-        setSl(_sl);
+        if (leverage < 10) {
+            setTp('');
+            setSl('');
+        } else if (leverage <= 20) {
+            setSl(_sl);
+            setTp('');
+        } if (leverage > 20) {
+            setSl(_sl);
+            setTp(_tp);
+        }
     }, [firstTime.current, decimals, leverage]);
 
     const onChangeQuoteQty = (price, leverage) => {
@@ -242,8 +258,8 @@ const PlaceOrder = ({
             case 'stop_loss':
             case 'take_profit':
                 // Nếu không nhập thì ko cần validate luôn, cho phép đặt lệnh không cần SL, TP
-                if((mode === 'stop_loss' && !sl) 
-                || mode === 'take_profit' && !tp){
+                if ((mode === 'stop_loss' && !sl)
+                    || mode === 'take_profit' && !tp) {
                     return {
                         isValid,
                         msg
