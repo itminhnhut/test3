@@ -18,6 +18,7 @@ import { ApiStatus, DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/co
 import fetchApi from 'utils/fetch-api';
 import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/ AdjustPositionMargin';
+import EditSLTPVndcMobile from './EditSLTPVndcMobile';
 
 const OrderOpenDetail = ({
     order,

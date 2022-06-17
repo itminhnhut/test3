@@ -128,6 +128,14 @@ const OrderDetail = ({
                         <div className="text-right">{getValue(metadata?.modify_sl?.after)} </div>
                     </div> : null;
                 return value;
+            case 'margin':
+                value = metadata?.modify_margin ?
+                    <div className="flex items-center justify-between">
+                        <div className="text-left">{getValue(metadata?.modify_margin?.before)}</div>
+                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        <div className="text-right">{getValue(metadata?.modify_margin?.after)} </div>
+                    </div> : null;
+                return value;
 
             default:
                 return value;
@@ -373,6 +381,12 @@ const OrderDetail = ({
                                             <Row>
                                                 <Label>{t('futures:price')}</Label>
                                                 <Span>{renderModify(item?.metadata, 'price')}</Span>
+                                            </Row>
+                                        }
+                                        {item?.metadata?.modify_margin &&
+                                            <Row>
+                                                <Label>{t('futures:margin')}</Label>
+                                                <Span>{renderModify(item?.metadata, 'margin')}</Span>
                                             </Row>
                                         }
                                     </div>
