@@ -131,6 +131,12 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
         return +(status === VndcFutureOrderType.Status.PENDING ? order?.price : status === VndcFutureOrderType.Status.ACTIVE ? order?.open_price : order?.close_price)
     }, [order])
 
+    const openShare = () => {
+        if (!profit) return null;
+        const emitData = getShareModalData({ order, pairPrice: dataMarketWatch })
+        emitWebViewEvent(JSON.stringify(emitData))
+    }
+
     return (
         <div className="p-6 py-4 mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
@@ -158,19 +164,14 @@ const OrderOpenDetail = ({ order, isDark, pairConfig, decimal, onClose, changeSL
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <div className="text-xs text-right">
+                    <div className="text-xs text-right" onClick={openShare}>
                         <div className="text-xs font-medium text-onus-green py-[1px] float-right">
                             <OrderProfit onusMode={true} className="flex flex-col text-right"
                                 order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                         </div>
                     </div>
                     {profit ?
-                        <div className="p-[5px] rounded-[2px]" onClick={() => {
-                            const emitData = getShareModalData({ order, pairPrice: dataMarketWatch })
-                            emitWebViewEvent(JSON.stringify(emitData))
-                            // setOpenShareModal(true)
-                        }
-                        }>
+                        <div className="p-[5px] rounded-[2px]" onClick={openShare}>
                             <img src={getS3Url("/images/icon/ic_share-icon-onus.png")} height={20} width={20} />
                         </div>
                         : null

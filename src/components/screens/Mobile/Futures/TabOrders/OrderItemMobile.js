@@ -150,7 +150,7 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                         </div>
                         :
                         <>
-                            <div className="text-xs text-right">
+                            <div className="text-xs text-right" onClick={() => profit && actions('modal', 'share')}>
                                 <div className="text-xs font-medium text-onus-green py-[1px] float-right">
                                     <OrderProfit onusMode={true} className="flex flex-col"
                                         order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
