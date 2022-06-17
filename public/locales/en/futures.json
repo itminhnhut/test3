@@ -260,6 +260,11 @@
                 "NOT_FOUND_ORDER": "Not found order",
                 "CAN_NOT_CHANGE_MARGIN": "Can not change margin",
                 "BALANCE_INSUFFICIENT": "Balance insufficient",
+                
+                "INVALID_ORDER_STATUS": "This feature only applies to successfully opened positions",
+                "MODIFY_FUTURES_MARGIN_INVALID_LEVERAGE": "For the safety of your position, this feature is not available with current leverage.",
+                "REMOVE_FUTURES_MARGIN_INVALID_AMOUNT": "The amount you want to withdraw exceeds the available margin",
+                "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "For the safety of your position, this feature is not supported with the current rate of return.",
                 "UNKNOWN": "Unknown",
                 "error": "Unknown"
             }

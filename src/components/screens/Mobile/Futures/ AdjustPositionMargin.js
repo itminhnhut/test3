@@ -118,7 +118,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
             alertContext.alert.show('success', message)
         }
         if (data.status !== 'ok') {
-            alertContext.alert.show('error', t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
+            alertContext.alert.show('error', t('common:failed'), t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
         }
     }
 
@@ -133,7 +133,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
         >
             <div className='h-full' onClick={onClose} />
             <div
-                className='bg-onus-line w-full rounded-t-2xl'>
+                className='bg-onus-line w-full rounded-t-2xl pb-12'>
                 <div className='flex justify-between items-center p-4'>
                     <span
                         className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
