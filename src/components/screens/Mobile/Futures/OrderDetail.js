@@ -139,7 +139,7 @@ const OrderDetail = ({
         return countDecimals(decimalScalePrice?.tickSize) ?? 0;
     }, [pairConfig]);
 
-    const changeSLTP = (data) => {
+    const forceFetchOrder = (data) => {
         if (!isModal) {
             getDetail();
         }
@@ -243,7 +243,7 @@ const OrderDetail = ({
                         {!isTabHistory &&
                             <OrderOpenDetail order={order} decimal={decimal} isDark={isDark}
                                 pairConfig={pairConfig} onClose={onClose}
-                                changeSLTP={changeSLTP}
+                                             forceFetchOrder={forceFetchOrder}
                             />
                         }
                         <div className="py-[24px]">
