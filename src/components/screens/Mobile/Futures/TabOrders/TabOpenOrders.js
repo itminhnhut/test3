@@ -13,6 +13,7 @@ import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/Edit
 import {getShareModalData} from './ShareFutureMobile';
 import {emitWebViewEvent} from 'redux/actions/utils';
 import AdjustPositionMargin from "components/screens/Mobile/Futures/ AdjustPositionMargin";
+import {find, map} from "lodash";
 
 const TabOpenOrders = ({ordersList, pair, isAuth, isDark, pairConfig, onShowDetail}) => {
     const {t} = useTranslation();
@@ -27,8 +28,7 @@ const TabOpenOrders = ({ordersList, pair, isAuth, isDark, pairConfig, onShowDeta
     const [openCloseModal, setOpenCloseModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
-    const [orderEditMargin, setOrderEditMargin] = useState();
-    console.log(orderEditMargin, '0000001111100000000')
+    const [orderEditMarginId, setOrderEditMarginId] = useState();
 
     const onShowModal = (item, key) => {
         rowData.current = item;
@@ -49,7 +49,7 @@ const TabOpenOrders = ({ordersList, pair, isAuth, isDark, pairConfig, onShowDeta
                 setOpenEditModal(!openEditModal);
                 break;
             case 'edit-margin':
-                setOrderEditMargin(item);
+                setOrderEditMarginId(item.displaying_id);
                 break;
             default:
                 if (!openShareModal) {
@@ -102,11 +102,13 @@ const TabOpenOrders = ({ordersList, pair, isAuth, isDark, pairConfig, onShowDeta
         });
     }
 
-    if (ordersList.length <= 0) return <TableNoData isMobile title={t('futures:order_table:no_opening_order')}
-                                                    className="h-full min-h-[300px]"/>
+    if (ordersList.length <= 0) return <TableNoData
+        isMobile
+        title={t('futures:order_table:no_opening_order')}
+        className="h-full min-h-[300px]"/>
 
     return (
-        <div className="px-[16px] pt-4 overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
+        <div className="px-[16px] pt-4 overflow-x-auto" style={{height: 'calc(100% - 114px)'}}>
             {openEditModal &&
             <FuturesEditSLTPVndc
                 onusMode={true}
@@ -142,11 +144,11 @@ const TabOpenOrders = ({ordersList, pair, isAuth, isDark, pairConfig, onShowDeta
                 })}
             </div>
             {
-                orderEditMargin &&
+                orderEditMarginId &&
                 <AdjustPositionMargin
-                    order={orderEditMargin}
-                    pairPrice={marketWatch[orderEditMargin?.symbol]}
-                    onClose={() => setOrderEditMargin()}
+                    order={find(dataFilter, {displaying_id: orderEditMarginId})}
+                    pairPrice={marketWatch[orderEditMarginId?.symbol]}
+                    onClose={() => setOrderEditMarginId()}
                 />
             }
         </div>

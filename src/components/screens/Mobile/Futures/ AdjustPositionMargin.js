@@ -6,7 +6,7 @@ import {useTranslation} from 'next-i18next'
 
 import classNames from 'classnames'
 import {X} from 'react-feather'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getProfitVndc, VndcFutureOrderType} from "components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType";
 import axios from "axios";
 import {API_VNDC_FUTURES_CHANGE_MARGIN} from "redux/actions/apis";
@@ -14,6 +14,9 @@ import {DefaultFuturesFee} from "redux/actions/const";
 import {AlertContext} from "components/common/layouts/LayoutMobile";
 import {IconLoading} from "components/common/Icons";
 import useOutsideClick from "hooks/useOutsideClick";
+import {getOrdersList} from "redux/actions/futures";
+import SvgWarning from "components/svg/SvgWarning";
+import WarningCircle from "components/svg/WarningCircle";
 
 const ADJUST_TYPE = {
     ADD: 'ADD',
@@ -45,7 +48,7 @@ const calLiqPrice = (side, quantity, open_price, margin, fee) => {
     return (size * open_price + fee - margin) / (quantity * (number - DefaultFuturesFee.NamiFrameOnus))
 }
 
-const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
+const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     const [adjustType, setAdjustType] = useState(ADJUST_TYPE.ADD)
     const [amount, setAmount] = useState('')
     const [submitting, setSubmitting] = useState(false)
@@ -77,6 +80,10 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
             return t('futures:maximum_price') + formatNumber(available, assetConfig?.assetDigit)
         }
 
+    }, [amount, available, assetConfig, adjustType, percent])
+
+    const errorProfit = useMemo(() => {
+        if (!order) return
         if (adjustType === ADJUST_TYPE.REMOVE) {
             const min = calMinProfitAllow(order.leverage)
             if (min === Infinity) {
@@ -85,7 +92,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
                 return t(`futures:mobile:adjust_margin:min_profit_ratio`, {min: `-${min}%`})
             }
         }
-    }, [amount, available, assetConfig, adjustType, percent])
+    }, [adjustType, percent, order])
 
     const handleConfirm = async () => {
         setSubmitting(true)
@@ -98,6 +105,8 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
             return {data: {status: 'UNKNOWN'}}
         })
         setSubmitting(false)
+
+        if (forceFetchOrder) forceFetchOrder()
 
         if (data.status === 'ok') {
             const message = t(`futures:mobile:adjust_margin:${
@@ -168,7 +177,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
                         {t('futures:mobile:adjust_margin:amount')}
                         </span>
                     </div>
-                    <ErrorToolTip message={error}>
+                    <ErrorToolTip message={!errorProfit ? error : ''}>
                         <div
                             className='flex justify-between items-center pl-4 bg-onus-2 text-sm rounded-md h-11 mb-2 mt-2'>
                             <NumberFormat
@@ -198,7 +207,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
                             </div>
                         </div>
                     </ErrorToolTip>
-                    <div className='my-6 space-y-1'>
+                    <div className='mt-6 space-y-1'>
                         <div className='text-xs'>
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:assigned_margin')}</span>
@@ -227,19 +236,27 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:profit_ratio')}</span>
                             <span className={classNames('font-medium', {
-                                'text-onus-green': percent >= 0,
-                                'text-onus-red': percent < 0
+                                'text-onus-green': profit >= 0,
+                                'text-onus-red': profit < 0
                             })}>
-                                 {(percent > 0 ? '+' : '') + percent + '%'}
+                                 {(profit > 0 ? '+' : '') + percent + '%'}
                             </span>
                         </div>
                     </div>
+                    <div className='mt-5 leading-3'>
+                        {
+                            errorProfit && <div className='flex items-start'>
+                                <WarningCircle className='flex-none mr-2'/>
+                                <span className='text-xs text-[#FF9F1A]'>{errorProfit}</span>
+                            </div>
+                        }
+                    </div>
                     <div
-                        className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold', {
-                            '!bg-onus-1 !text-onus-textSecondary': !!error || !amount
+                        className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold mt-8', {
+                            '!bg-onus-1 !text-onus-textSecondary': !!error || !amount || !!errorProfit
                         })}
                         onClick={() => {
-                            if (!error && !!amount && !submitting) {
+                            if (!error && !errorProfit && !!amount && !submitting) {
                                 handleConfirm()
                             }
                         }}

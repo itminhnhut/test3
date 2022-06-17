@@ -1,19 +1,29 @@
-import React, { useRef, useMemo } from 'react';
+import React, {useRef, useMemo} from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import {formatNumber, formatTime, getS3Url} from 'redux/actions/utils';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-import { useTranslation } from 'next-i18next';
+import {useTranslation} from 'next-i18next';
 import {
     getProfitVndc,
     renderCellTable,
     VndcFutureOrderType
 } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import Big from 'big.js';
-import { DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
+import {DefaultFuturesFee, FuturesOrderEnum} from 'redux/actions/const';
 
-const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isDark, onShowDetail, symbol, allowButton }) => {
-    const { t } = useTranslation();
+const OrderItemMobile = ({
+                             order,
+                             isBuy,
+                             dataMarketWatch,
+                             onShowModal,
+                             mode,
+                             isDark,
+                             onShowDetail,
+                             symbol,
+                             allowButton
+                         }) => {
+    const {t} = useTranslation();
     const isTabHistory = mode === 'history';
 
     const getOpenPrice = (row, pairPrice) => {
@@ -85,7 +95,6 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
     }
 
 
-
     const isModal = useRef(false);
 
     const actions = (action, key) => {
@@ -122,23 +131,27 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
         const cancelled = isTabHistory && (order.status === VndcFutureOrderType.Status.PENDING ||
             (order.status === VndcFutureOrderType.Status.CLOSED && !order?.close_price && order?.type !== VndcFutureOrderType.Type.MARKET));
         const pending = !isTabHistory && order.status === VndcFutureOrderType.Status.PENDING || order.status === VndcFutureOrderType.Status.REQUESTING;
-        return { cancelled, pending }
+        return {cancelled, pending}
     }, [order])
 
     // const profit = isTabHistory ? order?.profit : dataMarketWatch && getProfitVndc(order, dataMarketWatch?.lastPrice)
 
     return (
         <div className="flex flex-col mx-[-16px] p-[16px] border-b-[1px] border-b-gray-4 dark:border-onus-line"
-            onClick={() => onShowDetail && actions('detail')}
+             onClick={() => onShowDetail && actions('detail')}
         >
             <div className="flex items-center justify-between">
-                <div className="flex flex-col" >
+                <div className="flex flex-col">
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
-                        <div className="font-semibold mr-[10px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
-                        <div className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x</div>
+                        <div
+                            className="font-semibold mr-[10px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
+                        <div
+                            className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
+                        </div>
                     </div>
-                    <div className={`text-xs font-medium my-1 ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
+                    <div
+                        className={`text-xs font-medium my-1 ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order)}</span>
                     </div>
@@ -146,7 +159,8 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 </div>
                 <div className="flex items-center">
                     {orderStatus.cancelled || orderStatus.pending ?
-                        <div className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-[#FF9F1A]'}`}>
+                        <div
+                            className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-[#FF9F1A]'}`}>
                             {t(`futures:mobile:${orderStatus.cancelled ? 'cancelled_order' : 'pending_order'}`)}
                         </div>
                         :
@@ -154,12 +168,13 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                             <div className="text-xs text-right">
                                 <div className="text-xs font-medium text-onus-green py-[1px] float-right">
                                     <OrderProfit onusMode={true} className="flex flex-col"
-                                        order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory} isMobile />
+                                                 order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory}
+                                                 isMobile/>
                                 </div>
                             </div>
                             {profit ?
                                 <div className="p-[5px] rounded-[2px]" onClick={() => actions('modal', 'share')}>
-                                    <img src={getS3Url("/images/icon/ic_share-icon-onus.png")} height={20} width={20} />
+                                    <img src={getS3Url("/images/icon/ic_share-icon-onus.png")} height={20} width={20}/>
                                 </div>
                                 : null
                             }
@@ -174,7 +189,8 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
             </div>
             <div>
                 <div className="flex flex-wrap w-full">
-                    <OrderItem label={t('futures:order_table:volume')} value={order?.order_value ? formatNumber(order?.order_value, 0, 0, true) : '-'} />
+                    <OrderItem label={t('futures:order_table:volume')}
+                               value={order?.order_value ? formatNumber(order?.order_value, 0, 0, true) : '-'}/>
                     <OrderItem
                         label={t(isTabHistory ? 'futures:order_table:reason_close' : `futures:mobile:liq_price`)}
                         value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
@@ -201,35 +217,46 @@ const OrderItemMobile = ({ order, isBuy, dataMarketWatch, onShowModal, mode, isD
                 </div>
             </div>
             {allowButton &&
-                <div className="flex items-center justify-between space-x-2">
-                    <Button className="dark:bg-onus-line dark:text-onus-gray !h-[36px]" onClick={() => actions('modal', 'edit-margin')}> {t('futures:tp_sl:adjust_margin')}</Button>
-                    <Button className="dark:bg-onus-line dark:text-onus-gray !h-[36px]" onClick={() => actions('modal', 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
-                    <Button className="dark:bg-onus-line dark:text-onus-gray !h-[36px]" onClick={() => actions('delete')}>{t('common:close')}</Button>
-                </div>
+            <div className="flex items-center justify-between space-x-2">
+                {
+                    order.status === VndcFutureOrderType.Status.ACTIVE &&
+                    <Button
+                        className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"
+                        onClick={() => actions('modal', 'edit-margin')}> {t('futures:tp_sl:adjust_margin')}</Button>
+                }
+                <Button
+                    className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"
+                    onClick={() => actions('modal', 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
+                <Button
+                    className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"
+                    onClick={() => actions('delete')}>{t('common:close')}</Button>
+            </div>
             }
         </div>
     );
 };
 
-export const SideComponent = styled.div.attrs(({ isBuy }) => ({
+export const SideComponent = styled.div.attrs(({isBuy}) => ({
     className: `flex items-center justify-center font-medium mr-[12px]`
 }))`
-    width:38px;
-    height:38px;
-    border-radius:2px;
-    background-color:${({ isBuy, isDark }) => isBuy ? (isDark ? '#00c8bc1a' : colors.lightTeal) : colors.lightRed2};
-    color:${({ isBuy }) => isBuy ? colors.teal : colors.red2};
-    font-size:10px
+    width: 38px;
+    height: 38px;
+    border-radius: 2px;
+    background-color: ${({isBuy, isDark}) => isBuy ? (isDark ? '#00c8bc1a' : colors.lightTeal) : colors.lightRed2};
+    color: ${({isBuy}) => isBuy ? colors.teal : colors.red2};
+    font-size: 10px
 `
 const Row = styled.div.attrs({
     className: `flex mb-[10px] justify-between mr-[10px]`
 })`
-    width:calc(50% - 5px);
-    :nth-child(2n+2){
-        margin:0
+    width: calc(50% - 5px);
+
+    :nth-child(2n+2) {
+        margin: 0
     }
-    :nth-last-child(2){
-        margin-bottom:0
+
+    :nth-last-child(2) {
+        margin-bottom: 0
     }
 `
 
@@ -240,10 +267,10 @@ const Label = styled.div.attrs({
 const Button = styled.div.attrs({
     className: `text-gray-1 bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-semibold`
 })`
-width:calc(50% - 4px)
+    width: calc(50% - 4px)
 `
 
-export const OrderItem = ({ label, value, valueClassName = '' }) => {
+export const OrderItem = ({label, value, valueClassName = ''}) => {
     return (
         <Row className="justify-between">
             <Label>{label}</Label>
