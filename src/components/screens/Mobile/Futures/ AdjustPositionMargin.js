@@ -26,7 +26,7 @@ const ADJUST_TYPE = {
 const VNDC_ID = 72
 
 const CONFIG_MIN_PROFIT = [
-    {leverage: [0.9, 1], minProfit: -80},
+    {leverage: [-Infinity, 1], minProfit: -80},
     {leverage: [1, 5], minProfit: -75},
     {leverage: [5, 10], minProfit: -70},
     {leverage: [10, 15], minProfit: -60},
@@ -89,7 +89,8 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
             if (min === Infinity) {
                 return t('futures:mobile:adjust_margin:not_allow_change_margin')
             } else if (+percent < min) {
-                return t(`futures:mobile:adjust_margin:min_profit_ratio`, {min: `-${min}%`})
+                console.log(min)
+                return t(`futures:mobile:adjust_margin:min_profit_ratio`, {min: `${min}%`})
             }
         }
     }, [adjustType, percent, order])

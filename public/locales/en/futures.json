@@ -248,7 +248,7 @@
             "max": "Max",
             "amount_placeholder": "Enter amount",
             "not_allow_change_margin": "For the safety of your position, Nami does not support margin reduction for positions with leverage over 25x",
-            "min_profit_ratio": "For the safety of your position, Nami does not support margin reduction for positions with loss over {min}",
+            "min_profit_ratio": "For the safety of your position, Nami does not support margin reduction for positions with loss over {{min}}",
             "assigned_margin": "Assigned margin:",
             "available": "Available:",
             "new_liq_price": "New liq price:",

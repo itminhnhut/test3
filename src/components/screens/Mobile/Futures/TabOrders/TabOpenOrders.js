@@ -30,6 +30,11 @@ const TabOpenOrders = ({ordersList, pair, isAuth, isDark, pairConfig, onShowDeta
     const [openShareModal, setOpenShareModal] = useState(false);
     const [orderEditMarginId, setOrderEditMarginId] = useState();
 
+    const orderEditMargin = useMemo(() => {
+        if (!orderEditMarginId) return
+        return find(dataFilter, {displaying_id: orderEditMarginId})
+    }, [orderEditMarginId, dataFilter])
+
     const onShowModal = (item, key) => {
         rowData.current = item;
         switch (key) {
@@ -146,8 +151,8 @@ const TabOpenOrders = ({ordersList, pair, isAuth, isDark, pairConfig, onShowDeta
             {
                 orderEditMarginId &&
                 <AdjustPositionMargin
-                    order={find(dataFilter, {displaying_id: orderEditMarginId})}
-                    pairPrice={marketWatch[orderEditMarginId?.symbol]}
+                    order={orderEditMargin}
+                    pairPrice={marketWatch[orderEditMargin?.symbol]}
                     onClose={() => setOrderEditMarginId()}
                 />
             }
