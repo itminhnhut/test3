@@ -9,12 +9,12 @@ import { ApiStatus } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import OrderItemMobile from './OrderItemMobile';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 // import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import { getShareModalData } from './ShareFutureMobile';
 import { emitWebViewEvent } from 'redux/actions/utils';
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/ AdjustPositionMargin';
 import { find } from 'lodash';
+import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 
 const TabOpenOrders = ({
     ordersList,

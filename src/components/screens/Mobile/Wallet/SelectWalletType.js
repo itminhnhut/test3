@@ -1,7 +1,7 @@
-import React, {Fragment} from "react";
-import {Popover, Transition} from "@headlessui/react";
-import {Check, ChevronDown} from "react-feather";
-import classNames from "classnames";
+import React, { Fragment } from 'react';
+import { Popover, Transition } from '@headlessui/react';
+import { Check, ChevronDown } from 'react-feather';
+import classNames from 'classnames';
 
 export default function SelectWalletType({options = [], value, onChange}) {
     const selected = options.find((o) => o.value === value)

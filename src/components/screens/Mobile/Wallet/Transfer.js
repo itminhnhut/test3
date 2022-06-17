@@ -1,36 +1,30 @@
-import AssetLogo from 'components/wallet/AssetLogo'
+import AssetLogo from 'components/wallet/AssetLogo';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
-import NumberFormat from 'react-number-format'
-import Button from 'components/common/Button'
-import Modal from 'components/common/ReModal'
-import {X} from 'react-feather'
-import React, {
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {useRouter} from 'next/router'
-import {useTranslation} from 'next-i18next'
-import {AlertContext} from 'components/common/layouts/LayoutMobile'
-import {WalletType} from 'redux/actions/const'
-import {isNumeric} from 'utils'
-import axios from 'axios'
-import {POST_WALLET_TRANSFER} from 'redux/actions/apis'
-import {getUserFuturesBalance, getWallet} from 'redux/actions/user'
-import {LANGUAGE_TAG} from 'hooks/useLanguage'
-import {WalletCurrency} from 'components/screens/OnusWithdrawGate/helper'
-import {reduce} from 'lodash/collection'
-import {isNil, union} from 'lodash'
-import SelectWalletType from 'components/screens/Mobile/Wallet/SelectWalletType'
-import SliderAmount from 'components/screens/Mobile/Wallet/SliderAmount'
-import {WalletTypeV1} from 'components/wallet/TransferModal'
-import {format} from 'date-fns'
-import classNames from 'classnames'
-import {PulseLoader} from 'react-spinners'
-import colors from 'styles/colors'
+import NumberFormat from 'react-number-format';
+import Button from 'components/common/Button';
+import Modal from 'components/common/ReModal';
+import { X } from 'react-feather';
+import React, { useCallback, useContext, useEffect, useMemo, useState, } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import { WalletType } from 'redux/actions/const';
+import { isNumeric } from 'utils';
+import axios from 'axios';
+import { POST_WALLET_TRANSFER } from 'redux/actions/apis';
+import { getUserFuturesBalance, getWallet } from 'redux/actions/user';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { WalletCurrency } from 'components/screens/OnusWithdrawGate/helper';
+import { reduce } from 'lodash/collection';
+import { isNil, union } from 'lodash';
+import SelectWalletType from 'components/screens/Mobile/Wallet/SelectWalletType';
+import SliderAmount from 'components/screens/Mobile/Wallet/SliderAmount';
+import { WalletTypeV1 } from 'components/wallet/TransferModal';
+import { format } from 'date-fns';
+import classNames from 'classnames';
+import { PulseLoader } from 'react-spinners';
+import colors from 'styles/colors';
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 300e3,

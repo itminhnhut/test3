@@ -1,19 +1,12 @@
-import React, { useState, memo, useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import classNames from 'classnames';
-import { setBottomTab } from 'redux/actions/utils'
+import { setBottomTab } from 'redux/actions/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router'
-import url from 'socket.io-client/lib/url';
-import SvgWallet from 'components/svg/SvgWallet';
-import SvgSwap from 'components/svg/SvgSwap';
-import SvgFutures from 'components/svg/SvgFutures';
-import SvgMarket from 'components/svg/SvgMarket';
-import { useTranslation } from 'next-i18next'
-
-
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 const BottomNavBar = memo(() => {
     const router = useRouter();

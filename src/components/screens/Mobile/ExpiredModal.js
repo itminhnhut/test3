@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { getS3Url, emitWebViewEvent } from 'redux/actions/utils';
+import { emitWebViewEvent, getS3Url } from 'redux/actions/utils';
 
 const ExpiredModal = ({ onClose }) => {
     const { t } = useTranslation();

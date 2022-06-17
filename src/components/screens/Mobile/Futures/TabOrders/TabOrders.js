@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState, useEffect } from 'react';
+import React, { memo, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import classNames from 'classnames';
@@ -12,15 +12,13 @@ import {
 import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders';
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
-import { getLoginUrl, emitWebViewEvent } from 'redux/actions/utils';
+import { emitWebViewEvent, getLoginUrl } from 'redux/actions/utils';
 import OrderBalance from 'components/screens/Mobile/Futures/TabOrders/OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useRouter } from 'next/router';
-import AdjustPositionMargin from "components/screens/Mobile/Futures/ AdjustPositionMargin";
-import Portal from 'components/hoc/Portal'
-import { socket } from "components/KlineChart/kline.service";
+import Portal from 'components/hoc/Portal';
 
 const TabOrders = memo(({ isVndcFutures, pair, pairConfig, isAuth, scrollSnap, setForceRender, forceRender, isFullScreen }) => {
     const { t } = useTranslation();

@@ -1,15 +1,15 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import fetchApi from 'utils/fetch-api';
-import {API_GET_FUTURES_ORDER} from 'redux/actions/apis';
-import {ApiStatus} from 'redux/actions/const';
+import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
 import TableNoData from 'components/common/table.old/TableNoData';
 import OrderItemMobile from './OrderItemMobile';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import {getShareModalData} from './ShareFutureMobile';
-import {useTranslation} from 'next-i18next';
+import { getShareModalData } from './ShareFutureMobile';
+import { useTranslation } from 'next-i18next';
 import Skeletor from 'components/common/Skeletor';
-import {emitWebViewEvent} from 'redux/actions/utils';
+import { emitWebViewEvent } from 'redux/actions/utils';
 
 const TabOrdersHistory = ({isDark, scrollSnap, pair, isVndcFutures, active, onShowDetail}) => {
     const {t} = useTranslation();

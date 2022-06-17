@@ -1,21 +1,20 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { ArrowRight, ChevronLeft } from 'react-feather';
+import { ArrowRight } from 'react-feather';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
 import { countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import TableNoData from 'components/common/table.old/TableNoData';
 import OrderOpenDetail from './OrderOpenDetail';
 import Tooltip from 'components/common/Tooltip';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import dynamic from 'next/dynamic';
 import { listTimeFrame, MenuTime } from 'components/TVChartContainer/MobileTradingView/ChartOptions';
 import { useRouter } from 'next/router';
-import { API_ORDER_DETAIL } from 'redux/actions/apis'
-import fetchApi from 'utils/fetch-api'
-import { ApiStatus, ChartMode } from 'redux/actions/const'
+import { API_ORDER_DETAIL } from 'redux/actions/apis';
+import fetchApi from 'utils/fetch-api';
+import { ApiStatus, ChartMode } from 'redux/actions/const';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),

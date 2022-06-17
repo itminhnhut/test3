@@ -1,16 +1,16 @@
-import React, {useRef, useMemo} from 'react';
+import React, { useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-import {formatNumber, formatTime, getS3Url} from 'redux/actions/utils';
+import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-import {useTranslation} from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import {
     getProfitVndc,
     renderCellTable,
     VndcFutureOrderType
 } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import Big from 'big.js';
-import {DefaultFuturesFee, FuturesOrderEnum} from 'redux/actions/const';
+import { DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
 
 const OrderItemMobile = ({
                              order,
@@ -220,7 +220,7 @@ const OrderItemMobile = ({
                     order.status === VndcFutureOrderType.Status.ACTIVE &&
                     <Button
                         className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"
-                        onClick={() => actions('modal', 'edit-margin')}> {t('futures:tp_sl:adjust_margin')}</Button>
+                        onClick={() => actions('modal', 'edit-margin')}> {t('futures:mobile.adjust_margin.button_title')}</Button>
                 }
                 <Button
                     className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"

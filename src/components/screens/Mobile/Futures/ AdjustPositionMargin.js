@@ -1,22 +1,19 @@
-import Div100vh from 'react-div-100vh'
-import NumberFormat from 'react-number-format'
-import {formatNumber} from 'redux/actions/utils'
-import React, {useContext, useEffect, useMemo, useRef, useState} from 'react'
-import {useTranslation} from 'next-i18next'
+import Div100vh from 'react-div-100vh';
+import NumberFormat from 'react-number-format';
+import { formatNumber } from 'redux/actions/utils';
+import React, { useContext, useMemo, useState } from 'react';
+import { useTranslation } from 'next-i18next';
 
-import classNames from 'classnames'
-import {X} from 'react-feather'
-import {useDispatch, useSelector} from "react-redux";
-import {getProfitVndc, VndcFutureOrderType} from "components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType";
-import axios from "axios";
-import {API_VNDC_FUTURES_CHANGE_MARGIN} from "redux/actions/apis";
-import {DefaultFuturesFee} from "redux/actions/const";
-import {AlertContext} from "components/common/layouts/LayoutMobile";
-import {IconLoading} from "components/common/Icons";
-import useOutsideClick from "hooks/useOutsideClick";
-import {getOrdersList} from "redux/actions/futures";
-import SvgWarning from "components/svg/SvgWarning";
-import WarningCircle from "components/svg/WarningCircle";
+import classNames from 'classnames';
+import { X } from 'react-feather';
+import { useSelector } from 'react-redux';
+import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import axios from 'axios';
+import { API_VNDC_FUTURES_CHANGE_MARGIN } from 'redux/actions/apis';
+import { DefaultFuturesFee } from 'redux/actions/const';
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import { IconLoading } from 'components/common/Icons';
+import WarningCircle from 'components/svg/WarningCircle';
 
 const ADJUST_TYPE = {
     ADD: 'ADD',

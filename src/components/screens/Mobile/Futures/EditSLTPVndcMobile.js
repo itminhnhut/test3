@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef, useMemo, Fragment, useCallback } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { getS3Url, formatNumber, countDecimals, formatCurrency, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import { countDecimals, formatCurrency, formatNumber, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useSelector } from 'react-redux';
 import { find } from 'lodash';
@@ -176,7 +176,7 @@ const EditSLTPVndcMobile = ({
             label = prefix + formatCurrency(value, 2);
         }
         if (tab === 2) {
-            //+- 100% 
+            //+- 100%
             value = getSLTP(index, key);
             label = prefix + index + '%';
         }

@@ -15,7 +15,6 @@ import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
 import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
-import AdjustPositionMargin from "components/screens/Mobile/Futures/ AdjustPositionMargin";
 
 const INITIAL_STATE = {
     loading: false,

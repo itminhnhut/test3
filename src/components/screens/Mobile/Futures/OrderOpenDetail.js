@@ -10,7 +10,6 @@ import {
 // import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import { emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import Button from 'components/common/Button';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
@@ -279,7 +278,7 @@ const OrderOpenDetail = ({
                     order.status === VndcFutureOrderType.Status.ACTIVE &&
                     <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                         <Button
-                            title={t('futures:tp_sl:adjust_margin')}
+                            title={t('futures:mobile.adjust_margin.button_title')}
                             className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"
                             componentType="button"
                             type="primary"

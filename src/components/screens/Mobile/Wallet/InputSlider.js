@@ -1,17 +1,9 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
-import {
-    Active,
-    Dot,
-    DotContainer,
-    SliderBackground,
-    Thumb,
-    ThumbLabel,
-    Track,
-} from './StyleInputSlider'
-import useDarkMode, {THEME_MODE} from 'hooks/useDarkMode'
-import classNames from 'classnames'
-import colors from 'styles/colors'
-import Hexagon from "components/screens/Mobile/Wallet/Hexagon";
+import { useEffect, useMemo, useRef } from 'react';
+import { Active, Dot, DotContainer, SliderBackground, Thumb, Track, } from './StyleInputSlider';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import classNames from 'classnames';
+import colors from 'styles/colors';
+import Hexagon from 'components/screens/Mobile/Wallet/Hexagon';
 
 function getClientPosition(e) {
     const {touches} = e

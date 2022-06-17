@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
-import colors from "styles/colors";
+import PropTypes from 'prop-types';
+import colors from 'styles/colors';
 
 function SortIcon({size = 14, color = '#C4C4C4', direction }) {
     return <svg width={size} height={size} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

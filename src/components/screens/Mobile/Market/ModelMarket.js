@@ -1,10 +1,11 @@
-import { useTranslation } from 'next-i18next'
-import Portal from 'components/hoc/Portal'
-import classNames from 'classnames'
-import Market from 'components/screens/Mobile/Market/Market'
-import React, { Fragment, useEffect, useRef } from 'react'
-import { useRouter } from 'next/router'
-import { Transition } from '@headlessui/react'
+import { useTranslation } from 'next-i18next';
+import Portal from 'components/hoc/Portal';
+import classNames from 'classnames';
+import Market from 'components/screens/Mobile/Market/Market';
+import React, { Fragment, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
+import { Transition } from '@headlessui/react';
+
 function useOutsideAlerter(ref, cb) {
     useEffect(() => {
         /**

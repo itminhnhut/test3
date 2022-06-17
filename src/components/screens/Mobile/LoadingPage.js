@@ -1,7 +1,7 @@
 import React from 'react';
-import { getS3Url } from '../../../redux/actions/utils'
+import { getS3Url } from '../../../redux/actions/utils';
 import styled, { keyframes } from 'styled-components';
-import colors from '../../../styles/colors'
+import colors from '../../../styles/colors';
 
 const LoadingPage = () => {
     return (

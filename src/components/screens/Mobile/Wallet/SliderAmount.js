@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {debounce} from "lodash/function";
-import Slider from "./InputSlider";
+import React, { useCallback, useEffect, useState } from 'react';
+import { debounce } from 'lodash/function';
+import Slider from './InputSlider';
 
 export default function SliderAmount({value = 0, onChange}) {
     const [internalPercent, setInternalPercent] = useState(0)

@@ -1,32 +1,20 @@
-import CoinPairs from 'components/svg/CoinPairs'
-import useDarkMode, {THEME_MODE} from 'hooks/useDarkMode'
-import colors from 'styles/colors'
-import DollarCoin from 'components/svg/DollarCoin'
-import cn from 'classnames'
-import {IconClose, IconStarFilled} from 'components/common/Icons'
-import Tag from 'components/common/Tag'
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import {debounce} from 'lodash/function'
-import {useTranslation} from 'next-i18next'
-import fetchAPI from 'utils/fetch-api'
-import {
-    API_GET_FUTURES_MARKET_WATCH,
-    API_GET_REFERENCE_CURRENCY,
-} from 'redux/actions/apis'
-import {
-    formatCurrency,
-    formatPercentage,
-    formatPrice,
-    getExchange24hPercentageChange,
-} from 'redux/actions/utils'
-import AssetLogo from 'components/wallet/AssetLogo'
-import usePrevious from 'hooks/usePrevious'
-import SortIcon from 'components/screens/Mobile/SortIcon'
-import {useRouter} from 'next/router'
-import {useDispatch, useSelector} from 'react-redux'
-import {getFuturesFavoritePairs} from 'redux/actions/futures'
-import {Search} from 'react-feather'
-import classNames from "classnames";
+import colors from 'styles/colors';
+import cn from 'classnames';
+import classNames from 'classnames';
+import { IconClose, IconStarFilled } from 'components/common/Icons';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { debounce } from 'lodash/function';
+import { useTranslation } from 'next-i18next';
+import fetchAPI from 'utils/fetch-api';
+import { API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY, } from 'redux/actions/apis';
+import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, } from 'redux/actions/utils';
+import AssetLogo from 'components/wallet/AssetLogo';
+import usePrevious from 'hooks/usePrevious';
+import SortIcon from 'components/screens/Mobile/SortIcon';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFuturesFavoritePairs } from 'redux/actions/futures';
+import { Search } from 'react-feather';
 
 const TABS = {
     FAVOURITE: 'FAVOURITE',
