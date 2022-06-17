@@ -210,8 +210,8 @@
     "place_order": "Đặt lệnh",
     "mobile": {
         "balance": "Tài khoản",
-        "pnl": "Tổng lợi nhuận",
-        "equity": "Số dư",
+        "pnl": "Lời/lỗ tạm tính",
+        "equity": "Số dư ví",
         "guide": {
             "symbol": "Để bắt đầu giao dịch lựa chọn cặp tiền muốn giao dịch tại đây",
             "side": "Lựa chọn Mua/Bán để dự đoán giá sẽ tăng/giảm",
@@ -269,7 +269,7 @@
         "invalid_session_button": "Đồng ý",
         "retry": "Thử lại",
         "order_id": "ID lệnh",
-        "volume_2": "KL giao dịch",
+        "volume_2": "Tổng vị thế",
         "cancelled_order": "Lệnh hủy",
         "pending_order": "Lệnh đang chờ",
         "est_stop_loss": "Lỗ ước tính",

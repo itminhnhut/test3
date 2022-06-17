@@ -211,7 +211,7 @@
     "place_order": "Place order",
     "mobile": {
         "balance": "Balance",
-        "pnl": "Total PnL",
+        "pnl": "Unrealized PnL",
         "equity": "Equity",
         "guide": {
             "symbol": "To start trading, select your desired trading pair here",
@@ -270,7 +270,7 @@
         "invalid_session_button": "Refresh",
         "retry": "Retry",
         "order_id": "Order ID",
-        "volume_2": "Trade volume",
+        "volume_2": "Total position",
         "cancelled_order": "Cancelled order",
         "pending_order": "Pending order",
         "est_stop_loss": "Estimate loss",
