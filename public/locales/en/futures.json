@@ -247,6 +247,7 @@
             "amount": "Amount",
             "max": "Max",
             "min_profit_ratio": "Min profit ratio allow is: {min}",
+            "not_allow_change_margin": "Not allow change margin",
             "assigned_margin": "Assigned margin:",
             "available": "Available:",
             "new_liq_price": "New liq price:",

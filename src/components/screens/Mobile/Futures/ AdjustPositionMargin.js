@@ -47,7 +47,7 @@ const calLiqPrice = (side, quantity, open_price, margin, fee) => {
 
 const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
     const [adjustType, setAdjustType] = useState(ADJUST_TYPE.ADD)
-    const [amount, setAmount] = useState(0)
+    const [amount, setAmount] = useState('')
     const [submitting, setSubmitting] = useState(false)
 
     const assetConfig = useSelector((state) => state.utils.assetConfig.find(({id}) => id === VNDC_ID))
@@ -79,7 +79,9 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
 
         if (adjustType === ADJUST_TYPE.REMOVE) {
             const min = calMinProfitAllow(order.leverage)
-            if (min !== Infinity && +percent < min) {
+            if (min === Infinity) {
+                return t('futures:mobile:adjust_margin:not_allow_change_margin')
+            } else if (+percent < min) {
                 return t(`futures:mobile:adjust_margin:min_profit_ratio`, {min: `-${min}%`})
             }
         }
@@ -174,10 +176,11 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
                                 allowNegative={false}
                                 className='outline-none font-medium flex-1 py-2'
                                 value={amount}
-                                onValueChange={({value}) => setAmount(+value)}
+                                onValueChange={({value}) => setAmount(value)}
                                 decimalScale={2}
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
+                                placeholder="Nhập số lượng muốn rút"
                             />
                             <div
                                 className='flex items-center'
@@ -236,7 +239,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose}) => {
                             '!bg-onus-1 !text-onus-textSecondary': !!error || !amount
                         })}
                         onClick={() => {
-                            if (!error || !amount || submitting) {
+                            if (!!error || !amount || submitting) {
                                 handleConfirm()
                             }
                         }}
