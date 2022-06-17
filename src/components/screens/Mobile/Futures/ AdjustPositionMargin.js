@@ -119,14 +119,14 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
 
         if (data.status === 'ok') {
             const message = t(`futures:mobile:adjust_margin:${{
-                [ADJUST_TYPE.ADD]: 'add_success',
-                [ADJUST_TYPE.REMOVE]: 'remove_success'
-            }[adjustType]
-            }`)
-            alertContext.alert.show('success', message)
+                    [ADJUST_TYPE.ADD]: 'add_success',
+                    [ADJUST_TYPE.REMOVE]: 'remove_success'
+                }[adjustType]
+                }`)
+            alertContext.alert.show('success', t('common:success'), message)
         }
         if (data.status !== 'ok') {
-            alertContext.alert.show('error', t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
+            alertContext.alert.show('error', t('common:failed'), t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
         }
     }
 
@@ -141,7 +141,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         >
             <div className='h-full' onClick={onClose}/>
             <div
-                className='bg-onus-line w-full rounded-t-2xl'>
+                className='bg-onus-line w-full rounded-t-2xl pb-12'>
                 <div className='flex justify-between items-center p-4'>
                     <span
                         className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
