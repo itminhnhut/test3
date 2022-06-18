@@ -64,7 +64,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     const {available} = useMemo(() => {
         if (!assetConfig || !futuresBalance) return {}
         return {
-            available: futuresBalance.value - futuresBalance.locked_value
+            available: Math.max(futuresBalance.value, 0) - Math.max(futuresBalance.locked_value, 0)
         }
     }, [assetConfig, futuresBalance])
 
@@ -132,7 +132,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     const onFocus=()=>{
         const el = document.querySelector('#adjust_margin')
         if (typeof window !== 'undefined' && el) {
-            window.scrollTo(0, el.scrollHeight); 
+            window.scrollTo(0, el.scrollHeight);
         }
     }
 

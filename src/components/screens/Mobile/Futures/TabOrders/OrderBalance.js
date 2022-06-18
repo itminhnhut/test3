@@ -28,7 +28,7 @@ const OrderBalance = ({
                 ...futures[0],
                 wallet: wallets?.[futures[0].id],
             };
-            value = dataFilter?.wallet?.value;
+            value = Math.max(dataFilter?.wallet?.value, 0)
             if (+value < 0 || Math.abs(+value) < 1e-4 || isNil(value) || !value) value = 0;
             return {
                 value,

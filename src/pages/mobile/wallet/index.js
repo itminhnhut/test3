@@ -99,8 +99,7 @@ const ExternalWithdrawal = (props) => {
                 _assets.push({
                     ..._config,
                     ...balance,
-                    available: balance?.value - balance?.locked_value,
-
+                    available: Math.max(balance?.value, 0) - Math.max(balance?.locked_value, 0),
                 });
             }
         });

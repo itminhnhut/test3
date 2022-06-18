@@ -145,7 +145,7 @@ const EditSLTPVndcMobile = ({
 
     const getLabelButton = (index, isString = false, key) => {
         const _avlb = wallets?.[pairConfig?.quoteAssetId];
-        const balance = _avlb?.value;
+        const balance = Math.max(_avlb?.value, 0);
         let label = 0;
         let value = 0
         const prefix = key === 'sl' ? '+' : '+';

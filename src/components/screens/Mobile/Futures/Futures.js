@@ -109,7 +109,7 @@ const FuturesMobile = () => {
     useEffect(() => {
         if (avlbAsset) {
             const _avlb = avlbAsset?.[pairConfig?.quoteAssetId];
-            setAvailableAsset(_avlb?.value - _avlb?.locked_value);
+            setAvailableAsset(Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0));
         }
     }, [avlbAsset, pairConfig]);
 
