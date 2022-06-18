@@ -203,6 +203,7 @@
     "minimum_qty": "Minimum Qty is",
     "maximum_qty": "Maximum Qty is",
     "invalid_amount": "Invalid amount",
+    "invalid_amount_price": "You need to enter valid volume and price to use this feature",
     "value": "Value",
     "price_market": "Price market",
     "cancel": "Cancel",
@@ -316,4 +317,3 @@
     "positions": "Positions",
     "open_orders": "Open Orders"
 }
-

@@ -417,7 +417,7 @@ const PlaceOrder = ({
             const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
             const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
             const available = maxQuoteQty >= minQuoteQty;
-            context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount') : t('futures:mobile:balance_insufficient'));
+            context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount_price') : t('futures:mobile:balance_insufficient'));
             return;
         }
         onBlurInput();
