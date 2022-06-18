@@ -241,6 +241,7 @@
             "next": "Tiếp tục"
         },
         "adjust_margin": {
+            "button_title": "Điều chỉnh ký quỹ",
             "adjust_position_margin": "Điều chỉnh ký quỹ",
             "add": "Thêm",
             "remove": "Rút",

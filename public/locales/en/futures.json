@@ -241,6 +241,7 @@
             "next": "Next"
         },
         "adjust_margin": {
+            "button_title": "Add margin",
             "adjust_position_margin": "Adjust position margin",
             "add": "Add",
             "remove": "Remove",
