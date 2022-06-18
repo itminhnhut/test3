@@ -201,7 +201,7 @@ const OrderItemMobile = ({
                     <OrderItem
                         label={t('futures:stop_loss')}
                         value={renderSlTp(order?.sl)}
-                        valueClassName="text-onus-red"
+                        valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-grey'}
                     />
                     <OrderItem
                         label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'mark_price'}`)}
@@ -210,7 +210,7 @@ const OrderItemMobile = ({
                     <OrderItem
                         label={t('futures:take_profit')}
                         value={renderSlTp(order?.tp)}
-                        valueClassName="text-onus-green"
+                        valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-grey'}
                     />
                 </div>
             </div>
@@ -219,7 +219,7 @@ const OrderItemMobile = ({
                 {
                     order.status === VndcFutureOrderType.Status.ACTIVE &&
                     <Button
-                        className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"
+                        className="dark:bg-onus-line dark:text-onus-white !h-[36px]"
                         onClick={() => actions('modal', 'edit-margin')}> {t('futures:mobile.adjust_margin.button_title')}</Button>
                 }
                 <Button
@@ -259,7 +259,7 @@ const Row = styled.div.attrs({
 `
 
 const Label = styled.div.attrs({
-    className: `text-gray-1 text-xs dark:text-onus-gray min-w-[50px]`
+    className: `text-gray-1 text-xs dark:text-onus-grey min-w-[50px]`
 })``
 
 const Button = styled.div.attrs({

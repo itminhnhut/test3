@@ -37,7 +37,8 @@ const Modal = ({
                     className={classNames(
                         'absolute z-[9999999] top-0 left-0 w-full h-full transition-opacity duration-200',
                         { 'visible opacity-100': isVisible },
-                        { 'invisible opacity-0': !isVisible }
+                        { 'invisible opacity-0': !isVisible },
+                        { '!bg-onus-bgModal2/[0.7]': onusMode },
                     )}
                 />
                 <div style={containerStyle}

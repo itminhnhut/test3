@@ -120,21 +120,29 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     [ADJUST_TYPE.REMOVE]: 'remove_success'
                 }[adjustType]
                 }`)
-            alertContext.alert.show('success', t('common:success'), message)
+            alertContext.alert.show('success', t('common:success'), message, null, null, onClose)
         }
         if (data.status !== 'ok') {
             alertContext.alert.show('error', t('common:failed'), t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
         }
     }
 
+    const onFocus=()=>{
+        const el = document.querySelector('#adjust_margin')
+        if (typeof window !== 'undefined' && el) {
+            window.scrollTo(0, el.scrollHeight); 
+        }
+    }
+
     return (
         <Div100vh
             className={classNames(
-                'flex flex-col fixed w-full h-full inset-0 z-20 bg-darkBlue-2/[.75]',
+                'flex flex-col fixed w-full h-full inset-0 z-20 bg-onus-bgModal2/[0.7]',
                 {
                     hidden: !order,
                 }
             )}
+            id="adjust_margin"
         >
             <div className='h-full' onClick={onClose}/>
             <div
@@ -195,6 +203,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
+                                onFocus={onFocus}
                             />
                             <div
                                 className='flex items-center'

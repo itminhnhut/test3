@@ -219,8 +219,8 @@ const OrderOpenDetail = ({
                 <OrderItem label={t('futures:tp_sl:mark_price')}
                            value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)}/>
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)}/>
-                <OrderItem label={t('futures:stop_loss')} valueClassName="text-onus-red" value={renderSlTp(order?.sl)}/>
-                <OrderItem label={t('futures:take_profit')} valueClassName="text-onus-green"
+                <OrderItem label={t('futures:stop_loss')} valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-grey'} value={renderSlTp(order?.sl)} />
+                <OrderItem label={t('futures:take_profit')} valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-grey'}
                            value={renderSlTp(order?.tp)}/>
                 {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
@@ -279,7 +279,7 @@ const OrderOpenDetail = ({
                     <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                         <Button
                             title={t('futures:mobile.adjust_margin.button_title')}
-                            className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"
+                            className="!h-[36px] dark:bg-onus-line dark:text-onus-white"
                             componentType="button"
                             type="primary"
                             onClick={() => setShowEditMargin(true)}
