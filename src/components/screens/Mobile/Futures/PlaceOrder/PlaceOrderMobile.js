@@ -169,7 +169,7 @@ const PlaceOrder = ({
         setStopPrice(_lastPrice);
         const _sl = +(getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
         const _tp = +(getSuggestTp(side, _lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
-        if (leverage < 10) {
+        if (leverage <= 10) {
             setTp('');
             setSl('');
         } else if (leverage <= 20) {
