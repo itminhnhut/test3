@@ -83,18 +83,16 @@ const OrderBalance = ({
     return (
         <div
             className="sticky top-[42px] bg-white dark:bg-onus z-[10px] flex flex-wrap px-[16px] pb-[5px] pt-4">
-            <div className="bg-onus-line rounded-[6px] w-full text-xs py-[9px] flex justify-around items-center px-[25px]">
-                <div className="flex flex-col items-center">
+            <div className="bg-onus-line rounded-[6px] w-full text-xs py-[9px] flex items-center">
+                <div className="flex flex-col items-center w-1/3 border-r border-[#2B3247]">
                     <div className="font-normal text-onus-grey pb-[2px]">{t('futures:mobile:balance')}</div>
                     <div className="font-medium">{_balance}</div>
                 </div>
-                <div className="h-[30px] w-[1px] bg-[#2B3247]"></div>
-                <div className="flex flex-col items-center ">
+                <div className="flex flex-col items-center w-1/3 border-r border-[#2B3247]">
                     <div className="font-normal text-onus-grey pb-[2px]">{t('futures:mobile:pnl')}</div>
                     <div className="font-medium">{pnl}</div>
                 </div>
-                <div className="h-[30px] w-[1px] bg-[#2B3247]"></div>
-                <div className="flex flex-col items-center ">
+                <div className="flex flex-col items-center w-1/3">
                     <div className="font-normal text-onus-grey pb-[2px]">{t('futures:mobile:volume_2')}</div>
                     <div className="font-medium">{_volume}</div>
                 </div>

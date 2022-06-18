@@ -167,7 +167,7 @@ const App = ({
             }
         }
     });
-    if (!mount && isMobile) return <LoadingPage />
+    if (!mount && isMobile) return null;
     return (
         <>
             <Head language={language} />

@@ -29,6 +29,7 @@ const commonColors = {
         bg2: '#36445A',
         bg3: '#243042',
         bgModal: '#243042',
+        bgModal2: '#1e1e1e',
         base: '#0068FF',
         green: '#0DB787',
         red: '#DC1F4E',
