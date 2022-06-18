@@ -14,6 +14,8 @@ import { DefaultFuturesFee } from 'redux/actions/const';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { IconLoading } from 'components/common/Icons';
 import WarningCircle from 'components/svg/WarningCircle';
+import floor from 'lodash/floor'
+import { log } from 'utils';
 
 const ADJUST_TYPE = {
     ADD: 'ADD',
@@ -199,7 +201,8 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             <div
                                 className='flex items-center'
                                 onClick={() => {
-                                    setAmount(parseInt(available, 10))
+                                    console.log('__ chekc floor', floor(+available, 0))
+                                    setAmount(floor(+available, 0))
                                 }}
                             >
                                 <span className='px-4 py-2 text-onus-base font-semibold'>
@@ -225,7 +228,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:available')}</span>
                             <span className='text-onus-white font-medium'>
-                                {formatNumber(available, assetConfig?.assetDigit)}
+                                {formatNumber(floor(+available, 0), assetConfig?.assetDigit)}
                                 <span className='ml-1'>{assetConfig?.assetCode}</span>
                             </span>
                         </div>
