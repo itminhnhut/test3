@@ -33,7 +33,7 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, 
                 decimalScale={decimals.decimalScalePrice}
                 labelClassName='whitespace-nowrap capitalize dark:text-onus-grey'
                 containerClassName="h-[36px] dark:bg-onus-input"
-                tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
+                tailContainerClassName='flex items-center text-txtSecondary dark:text-onus-grey font-medium text-xs select-none'
                 renderTail={() => (
                     <div className='relative group select-none' data-tut="order-adjust-btn">
                         <div className='flex items-center'

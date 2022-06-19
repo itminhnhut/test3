@@ -18,9 +18,9 @@ const useDarkMode = () => {
 
         localStorage.setItem(LOCAL_STORAGE_KEY.THEME, nextTheme)
         dispatch({
-                     type: SET_THEME,
-                     payload: nextTheme
-                 })
+            type: SET_THEME,
+            payload: nextTheme
+        })
     }
 
     const onThemeSwitch = () => {

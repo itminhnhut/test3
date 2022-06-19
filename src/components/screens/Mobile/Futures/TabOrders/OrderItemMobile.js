@@ -201,7 +201,7 @@ const OrderItemMobile = ({
                     <OrderItem
                         label={t('futures:stop_loss')}
                         value={renderSlTp(order?.sl)}
-                        valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-grey'}
+                        valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}
                     />
                     <OrderItem
                         label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'mark_price'}`)}
@@ -210,7 +210,7 @@ const OrderItemMobile = ({
                     <OrderItem
                         label={t('futures:take_profit')}
                         value={renderSlTp(order?.tp)}
-                        valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-grey'}
+                        valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}
                     />
                 </div>
             </div>
