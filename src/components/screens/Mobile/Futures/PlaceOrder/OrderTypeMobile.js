@@ -4,6 +4,7 @@ import { ChevronDown } from 'react-feather';
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
+import colors from "styles/colors";
 
 const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
     const { t } = useTranslation();
@@ -38,7 +39,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                             <div className="w-full">
                                 {getTypesLabel(type)}
                             </div>
-                            <ChevronDown size={16} className="ml-1" />
+                            <ChevronDown color={colors.grey1} size={16} className="ml-1" />
                         </div>
                     </Popover.Button>
                     <Transition
@@ -62,7 +63,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                                             className={classNames(
                                                 'pb-2 w-full min-w-[78px] text-txtSecondary dark:text-onus-grey font-medium text-xs cursor-pointer border-b-[2px] border-transparent',
                                                 {
-                                                    '!text-txtPrimary dark:!text-txtPrimary-dark':
+                                                    '!text-txtPrimary dark:!text-onus-white':
                                                         o === type,
                                                 }
                                             )}
