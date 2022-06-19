@@ -245,7 +245,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:new_liq_price')}</span>
                             <span className='text-onus-white font-medium'>
-                                {newLiqPrice > 0 ? formatNumber(newLiqPrice, assetConfig?.assetDigit, 0, true) : 0}
+                                {newLiqPrice > 0 ? formatNumber(newLiqPrice, assetConfig?.assetDigit, 0, true) : '0'}
                                 <span className='ml-1'>{assetConfig?.assetCode}</span>
                             </span>
                         </div>

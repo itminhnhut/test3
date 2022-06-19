@@ -69,7 +69,7 @@ const OrderItemMobile = ({
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus))
-        return row?.status === VndcFutureOrderType.Status.ACTIVE ? formatNumber(liqPrice, 0, 0, true) : '-'
+        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, 0, 0, false) : '-'
     }
 
     const renderReasonClose = (row) => {
