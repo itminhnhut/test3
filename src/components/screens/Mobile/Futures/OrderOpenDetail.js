@@ -194,14 +194,14 @@ const OrderOpenDetail = ({
                 </div>
                 <div className="flex items-center">
                     <div className="text-xs text-right" onClick={openShare}>
-                        <div className="text-xs font-medium text-onus-green py-[1px] float-right">
+                        <div className="text-xs font-medium text-onus-green float-right">
                             <OrderProfit onusMode={true} className="flex flex-col text-right"
                                          order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile/>
                         </div>
                     </div>
                     {profit ?
-                        <div className="p-[5px] rounded-[2px]" onClick={openShare}>
-                            <img src={getS3Url("/images/icon/ic_share-icon-onus.png")} height={20} width={20} />
+                        <div className="p-[5px] rounded-[6px] border border-onus-textSecondary mr-4" onClick={openShare}>
+                            <img src={getS3Url("/images/icon/ic-share-onus-blue.png")} height={20} width={20} />
                         </div>
                         : null
                     }

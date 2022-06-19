@@ -13,7 +13,7 @@ import OrderItemMobile from './OrderItemMobile';
 import { getShareModalData } from './ShareFutureMobile';
 import { emitWebViewEvent } from 'redux/actions/utils';
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/ AdjustPositionMargin';
-import { find } from 'lodash';
+import { find, countBy } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 
 const TabOpenOrders = ({
@@ -42,6 +42,12 @@ const TabOpenOrders = ({
         if (!orderEditMarginId) return;
         return find(dataFilter, { displaying_id: orderEditMarginId });
     }, [orderEditMarginId, dataFilter]);
+
+
+    const needShowHideOther = useMemo(() => {
+        const totalSymbol = countBy(ordersList, 'symbol')
+        return Object.keys(totalSymbol).length > 1
+    }, [ordersList]);
 
     const onShowModal = (item, key) => {
         rowData.current = item;
@@ -142,7 +148,10 @@ const TabOpenOrders = ({
                     isMobile
                 />
             }
-            <div
+            {
+                needShowHideOther
+                && 
+                <div
                 className="flex items-center text-sm font-medium select-none cursor-pointer"
                 onClick={() => setHideOther(!hideOther)}
             >
@@ -151,6 +160,8 @@ const TabOpenOrders = ({
                     {t('futures:hide_other_symbols')}
                 </span>
             </div>
+            }
+            
             <div className="min-h-[100px]">
                 {dataFilter?.map((order, i) => {
                     const dataMarketWatch = marketWatch[order?.symbol];

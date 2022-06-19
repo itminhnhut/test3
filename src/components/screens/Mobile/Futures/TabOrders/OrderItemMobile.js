@@ -171,8 +171,8 @@ const OrderItemMobile = ({
                                 </div>
                             </div>
                             {profit ?
-                                <div className="p-[5px] rounded-[2px]" onClick={() => actions('modal', 'share')}>
-                                    <img src={getS3Url("/images/icon/ic_share-icon-onus.png")} height={20} width={20}/>
+                                <div className="p-[5px] rounded-[6px] border border-onus-textSecondary ml-4" onClick={() => actions('modal', 'share')}>
+                                    <img src={getS3Url("/images/icon/ic-share-onus-blue.png")} height={20} width={20}/>
                                 </div>
                                 : null
                             }
