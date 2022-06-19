@@ -42,7 +42,7 @@
         "open_at": "Open at",
         "volume": "Volume",
         "last_price2": "Last Price",
-        "reason_close": "Reason close"
+        "reason_close": "Reason"
     },
     "close_order": {
         "modal_title": "Close Order #{{value}}",
@@ -284,7 +284,7 @@
         "open_time": "Open Time",
         "close_time": "Close Time",
         "realized_pnl": "Realized PNL",
-        "reason_close": "Reason Close",
+        "reason_close": "Reason",
         "stop_loss": "Stop loss",
         "market_price": "Market Price",
         "balance_insufficient": "Your balance is not enough, please deposit.",

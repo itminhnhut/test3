@@ -44,7 +44,7 @@
         "open_at": "Thời gian mở",
         "volume": "Khối lượng",
         "last_price2": "Giá thị trường",
-        "reason_close": "Nguyên nhân"
+        "reason_close": "Lý do"
     },
     "close_order": {
         "modal_title": "Đóng Lệnh #{{value}}",
@@ -86,7 +86,7 @@
     },
     "tp_sl": {
         "adjust_margin": "Thêm kí quỹ",
-        "modify_tpsl": "Chỉnh sửa SL-TP",
+        "modify_tpsl": "Sửa SL-TP",
         "perpetual": "Vĩnh cửu",
         "when": "Khi",
         "reaches": "chạm đến",
@@ -152,9 +152,9 @@
         "adjustment_detail": "Chi tiết điều chỉnh",
         "view_detail": "Xem chi tiết",
         "normal": "Đóng thủ công",
-        "hit_sl": "Chạm điểm cắt lỗ",
+        "hit_sl": "Chạm cắt lỗ",
         "hit_tp": "Chạm chốt lời",
-        "liquidate": "Bị thanh lý",
+        "liquidate": "Thanh lý",
         "adjustment_history": "Lịch sử điều chỉnh lệnh"
     },
     "hide_other_symbols": "Ẩn các cặp khác",
@@ -241,7 +241,7 @@
             "next": "Tiếp tục"
         },
         "adjust_margin": {
-            "button_title": "Điều chỉnh ký quỹ",
+            "button_title": "Thêm ký quỹ",
             "adjust_position_margin": "Điều chỉnh ký quỹ",
             "add": "Thêm",
             "remove": "Rút",
@@ -284,7 +284,7 @@
         "open_time": "Thời gian mở",
         "close_time": "Thời gian đóng",
         "realized_pnl": "Lợi nhuận",
-        "reason_close": "Lý do đóng",
+        "reason_close": "Lý do",
         "stop_loss": "Cắt lỗ",
         "market_price": "Giá thị trường",
         "balance_insufficient": "Số dư của bạn không đủ, vui lòng nạp thêm.",
