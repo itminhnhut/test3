@@ -71,7 +71,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     const {t} = useTranslation()
 
     const {newMargin = 0, newLiqPrice = 0} = useMemo(() => {
-        if (!order) return
+        if (!order) return {}
         const newMargin = +order?.margin + (adjustType === ADJUST_TYPE.REMOVE ? -amount : +amount)
         return {newMargin, newLiqPrice: calLiqPrice(order.side, order.quantity, order.open_price, newMargin, order.fee)}
     }, [order, amount, adjustType])
