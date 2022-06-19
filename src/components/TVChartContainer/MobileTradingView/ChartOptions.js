@@ -69,7 +69,7 @@ const ChartOptions = ({
                 }
             </div>
 
-            <div className="flex items-center">
+            <div className="flex flex-wrap items-center">
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
@@ -79,7 +79,7 @@ const ChartOptions = ({
                     classNameButton="px-2 py-2"
                     classNamePanel="rounded-md"
                     label={<div
-                        className="text-sm text-onus-gray font-normal">{resolutionLabel}</div>}
+                        className="text-sm text-onus-grey font-normal">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={chartType}
@@ -93,7 +93,7 @@ const ChartOptions = ({
                 />
                 {showIconGuide &&
                     <div className="px-2" onClick={() => setStart(true)}>
-                        <img src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                        <img src={getS3Url('/images/icon/ic_help.png')} height={18} width={18} />
                     </div>
                 }
                 <FavouriteButton pair={pair} pairConfig={pairConfig}/>
@@ -187,8 +187,9 @@ const Svg = styled.div.attrs({
     className: ''
 })`
     svg {
-        height: 24px;
-        width: 24px
+        height: 22px;
+        width: 22px;
+        fill: ${colors.onus.grey}
     }
 `
 
@@ -205,7 +206,7 @@ const FavouriteButton = ({pairConfig}) => {
     }
 
     return <div className='px-2 py-2 cursor-pointer' onClick={handleSetFavorite}>
-        {isFavorite ? <IconStarFilled size={16} color={colors.yellow}/> :
+        {isFavorite ? <IconStarFilled color={colors.yellow} strokeWidth={0.5} size={16}/> :
             <IconStar color="#718096" strokeWidth={0.5} size={18}/>}
     </div>
 }

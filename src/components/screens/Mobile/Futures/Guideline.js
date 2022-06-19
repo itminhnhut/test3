@@ -111,7 +111,7 @@ const Guideline = ({pair, start, setStart, isFullScreen}) => {
 const Content = ({title, text, step, onClose, top, goTo, ...props}) => {
     const {t} = useTranslation();
     return (
-        <div className="flex flex-col items-center justify-center" onClick={() => onClose(false)}>
+        <div className="flex flex-col items-center font-inter justify-center" onClick={() => onClose(false)}>
             {top && <img className="m-auto" src={getS3Url("/images/icon/ic_guide_arrow_onus.png")} width={10}/>}
             <div className='relative'>
                 <View id={`guideline-step-${step}`}>
@@ -142,7 +142,7 @@ const Content = ({title, text, step, onClose, top, goTo, ...props}) => {
 }
 
 const View = styled.div.attrs({
-    className: 'my-[10px] bg-onus flex flex-col justify-between'
+    className: 'my-[10px] bg-onus font-inter flex flex-col justify-between'
 })`
     width: 294px;
 ${'' /* background-color:${colors.darkBlue1}; */}

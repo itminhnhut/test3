@@ -206,7 +206,7 @@ export default ({isRealtime = true}) => {
                     <div className='flex flex-1 items-center'>
                         <AssetLogo assetCode={item.baseAsset} size={30}/>
                         <div className='ml-3'>
-                            <div className='flex items-center text-sm whitespace-nowrap  leading-5'>
+                            <div className='flex items-center text-sm whitespace-nowrap leading-5'>
                                 <span className='font-semibold'>{item.baseAsset}</span>
                                 {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                                     /{item.quoteAsset}
@@ -247,18 +247,18 @@ export default ({isRealtime = true}) => {
         })
 
     return (
-        <div className='market-mobile dark:bg-[#1B222D]'>
-            <div className='flex items-center mt-12 px-4'>
+        <div className='market-mobile bg-onus'>
+            <div className='mt-12 px-4'>
                 <InputSearch onChange={changeSearch}/>
             </div>
-            <div>
+            <div className='border-b border-onus-line'>
                 <div className='flex space-x-8 px-4 mt-6'>
                     {Object.values(TABS).map((t) => {
                         return (
                             <div
                                 key={t}
                                 className={cn(
-                                    'flex cursor-pointer text-gray-1'
+                                    'flex cursor-pointer text-onus-grey'
                                 )}
                                 onClick={() =>
                                     setTab({
@@ -279,7 +279,7 @@ export default ({isRealtime = true}) => {
                                     className={cn(
                                         `text-sm ml-2 pb-3 relative ${t === tab.active ? 'font-semibold': 'font-medium'}`,
                                         {
-                                            'tab-active text-darkBlue dark:text-gray-4':
+                                            'tab-active text-onus-white':
                                                 t === tab.active,
                                         }
                                     )}
@@ -291,7 +291,7 @@ export default ({isRealtime = true}) => {
                     })}
                 </div>
             </div>
-            <div className='market-list flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3 dark:bg-onus-line'>
+            <div className='flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3'>
                 <div className='flex justify-between mb-6 px-3'>
                     <div className='flex flex-1 space-x-1'>
                         <TitleHeadList
@@ -342,13 +342,14 @@ const InputSearch = ({onChange}) => {
         setValue(_value)
         onChange(_value)
     }
-    return <div className='flex flex-1 items-center bg-gray-4 dark:bg-[#243042] rounded-md py-2 px-3'>
+    return <div className='flex flex-1 items-center bg-onus-input rounded-md py-2 px-3'>
         <Search
-            size={16}
-            className='text-txtSecondary dark:text-txtSecondary-dark'
+            size={20}
+            className='text-onus-grey'
+            strokeWidth={1}
         />
         <input
-            className='flex-1 ml-2 outline-none placeholder-gray-1 placeholder:font-medium placeholder-text-center text-sm'
+            className='flex-1 ml-2 outline-none placeholder-onus-grey placeholder:font-medium text-sm'
             onChange={({target: {value: v}}) => handleChange(v?.replace(/[^\w\s]/gi, ""))}
             value={value}
             placeholder={t('markets:search_placeholder')}
@@ -387,8 +388,8 @@ const TitleHeadList = ({title, className = '', onClick, sortDirection}) => {
             }
             onClick={onClick}
         >
-            <span className='text-gray-1 text-xs leading-4'>{title}</span>
-            <SortIcon direction={sortDirection}/>
+            <span className='text-onus-grey text-xs leading-4'>{title}</span>
+            <SortIcon color={colors.onus.grey} activeColor={colors.onus.base} direction={sortDirection}/>
         </div>
     )
 }
