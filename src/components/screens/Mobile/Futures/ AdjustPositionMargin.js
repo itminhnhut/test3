@@ -1,21 +1,20 @@
 import Div100vh from 'react-div-100vh';
 import NumberFormat from 'react-number-format';
-import { formatNumber } from 'redux/actions/utils';
-import React, { useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'next-i18next';
+import {formatNumber} from 'redux/actions/utils';
+import React, {useContext, useMemo, useState} from 'react';
+import {useTranslation} from 'next-i18next';
 
 import classNames from 'classnames';
-import { X } from 'react-feather';
-import { useSelector } from 'react-redux';
-import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import {X} from 'react-feather';
+import {useSelector} from 'react-redux';
+import {getProfitVndc, VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import axios from 'axios';
-import { API_VNDC_FUTURES_CHANGE_MARGIN } from 'redux/actions/apis';
-import { DefaultFuturesFee } from 'redux/actions/const';
-import { AlertContext } from 'components/common/layouts/LayoutMobile';
-import { IconLoading } from 'components/common/Icons';
+import {API_VNDC_FUTURES_CHANGE_MARGIN} from 'redux/actions/apis';
+import {DefaultFuturesFee} from 'redux/actions/const';
+import {AlertContext} from 'components/common/layouts/LayoutMobile';
+import {IconLoading} from 'components/common/Icons';
 import WarningCircle from 'components/svg/WarningCircle';
 import floor from 'lodash/floor'
-import { log } from 'utils';
 
 const ADJUST_TYPE = {
     ADD: 'ADD',
@@ -25,20 +24,20 @@ const ADJUST_TYPE = {
 const VNDC_ID = 72
 
 const CONFIG_MIN_PROFIT = [
-    {leverage: [-Infinity, 1], minProfit: -80},
-    {leverage: [1, 5], minProfit: -75},
-    {leverage: [5, 10], minProfit: -70},
-    {leverage: [10, 15], minProfit: -60},
-    {leverage: [15, 25], minProfit: -50},
-    {leverage: [25, Infinity], minProfit: Infinity},
+    {leverage: [-Infinity, 1], minMarginRatio: .2},
+    {leverage: [1, 5], minMarginRatio: .25},
+    {leverage: [5, 10], minMarginRatio: .3},
+    {leverage: [10, 15], minMarginRatio: .4},
+    {leverage: [15, 25], minMarginRatio: .5},
+    {leverage: [25, Infinity], minMarginRatio: null},
 ]
 
 const calMinProfitAllow = (leverage) => {
-    const {minProfit} = CONFIG_MIN_PROFIT.find(c => {
+    const {minMarginRatio} = CONFIG_MIN_PROFIT.find(c => {
         const [start, end] = c.leverage
         return leverage > start && leverage <= end
     })
-    return minProfit
+    return minMarginRatio
 }
 
 const calLiqPrice = (side, quantity, open_price, margin, fee) => {
@@ -70,13 +69,30 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
 
     const {t} = useTranslation()
 
-    const {newMargin = 0, newLiqPrice = 0} = useMemo(() => {
-        if (!order) return {}
-        const newMargin = +order?.margin + (adjustType === ADJUST_TYPE.REMOVE ? -amount : +amount)
-        return {newMargin, newLiqPrice: calLiqPrice(order.side, order.quantity, order.open_price, newMargin, order.fee)}
-    }, [order, amount, adjustType])
+    const lastPrice = order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask
+    const profit = getProfitVndc(order, lastPrice)
 
-    const profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask)
+    const {newMargin = 0, newLiqPrice = 0, minMarginRatio, initMargin = 0, maxRemovable = 0} = useMemo(() => {
+        if (!order) return {}
+        const profit = getProfitVndc(order, lastPrice, true)
+        const initMargin = +order.order_value / +order.leverage
+        const minMarginRatio = calMinProfitAllow(order.leverage)
+        // const maxRemovable = initMargin * (1 - minMarginRatio + Math.min(profit / initMargin, 0)) - (initMargin - order.margin)
+        let maxRemovable = order.margin - initMargin * minMarginRatio + Math.min(profit, 0)
+        if (!minMarginRatio) {
+            maxRemovable = 0
+        }
+
+        const newMargin = +order?.margin + (adjustType === ADJUST_TYPE.REMOVE ? -amount : +amount)
+        return {
+            newMargin,
+            newLiqPrice: calLiqPrice(order.side, order.quantity, order.open_price, newMargin, order.fee),
+            minMarginRatio,
+            initMargin,
+            maxRemovable: maxRemovable * .9 // Minus 10% to ensure valid in server
+        }
+    }, [order, amount, adjustType, lastPrice])
+
     const percent = formatNumber(((profit / newMargin) * 100), 2, 0, true);
 
     const error = useMemo(() => {
@@ -86,21 +102,26 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
 
     }, [amount, available, assetConfig, adjustType, percent])
 
+    const handleSetMaxAmount = () => {
+        switch (adjustType) {
+            case ADJUST_TYPE.ADD:
+                setAmount(floor(available))
+                break;
+            case ADJUST_TYPE.REMOVE:
+                setAmount(floor(maxRemovable))
+                break;
+        }
+    }
+
     const errorProfit = useMemo(() => {
         if (adjustType === ADJUST_TYPE.REMOVE) {
-            return t('futures:mobile:adjust_margin:temp_future')
-        }
-        if (!order) return
-        if (adjustType === ADJUST_TYPE.REMOVE) {
-            const min = calMinProfitAllow(order.leverage)
-            if (min === Infinity) {
+            if (minMarginRatio === null) {
                 return t('futures:mobile:adjust_margin:not_allow_change_margin')
-            } else if (+percent < min) {
-                console.log(min)
-                return t(`futures:mobile:adjust_margin:min_profit_ratio`, {min: `${min}%`})
+            } else if (+amount > maxRemovable) {
+                return t(`futures:mobile:adjust_margin:max_removable`, {max: formatNumber(maxRemovable, assetConfig?.assetDigit || 0)})
             }
         }
-    }, [adjustType, percent, order])
+    }, [adjustType, amount, maxRemovable, minMarginRatio, assetConfig])
 
     const handleConfirm = async () => {
         setSubmitting(true)
@@ -118,10 +139,10 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
 
         if (data.status === 'ok') {
             const message = t(`futures:mobile:adjust_margin:${{
-                    [ADJUST_TYPE.ADD]: 'add_success',
-                    [ADJUST_TYPE.REMOVE]: 'remove_success'
-                }[adjustType]
-                }`)
+                [ADJUST_TYPE.ADD]: 'add_success',
+                [ADJUST_TYPE.REMOVE]: 'remove_success'
+            }[adjustType]
+            }`)
             alertContext.alert.show('success', t('common:success'), message, null, null, onClose)
         }
         if (data.status !== 'ok') {
@@ -129,7 +150,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         }
     }
 
-    const onFocus=()=>{
+    const onFocus = () => {
         const el = document.querySelector('#adjust_margin')
         if (typeof window !== 'undefined' && el) {
             window.scrollTo(0, el.scrollHeight);
@@ -148,7 +169,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         >
             <div className='h-full' onClick={onClose}/>
             <div
-                className='bg-onus-line w-full rounded-t-2xl pb-12'>
+                className='bg-onus-line w-full rounded-t-2xl pb-10'>
                 <div className='flex justify-between items-center p-4'>
                     <span
                         className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
@@ -186,7 +207,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                         {t('futures:mobile:adjust_margin:remove')}
                     </div>
                 </div>
-                <div className='p-4'>
+                <div className='px-4 pt-4'>
                     <div>
                         <span className='uppercase text-xs text-onus-textSecondary'>
                             {t('futures:mobile:adjust_margin:amount')}
@@ -209,10 +230,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             />
                             <div
                                 className='flex items-center'
-                                onClick={() => {
-                                    console.log('__ chekc floor', floor(+available, 0))
-                                    setAmount(floor(+available, 0))
-                                }}
+                                onClick={handleSetMaxAmount}
                             >
                                 <span className='px-4 py-2 text-onus-base font-semibold'>
                                     {t('futures:mobile:adjust_margin:max')}
@@ -253,10 +271,10 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:profit_ratio')}</span>
                             <span className={classNames('font-medium', {
-                                'text-onus-green': profit >= 0,
-                                'text-onus-red': profit < 0
+                                'text-onus-green': percent >= 0,
+                                'text-onus-red': percent < 0
                             })}>
-                                {(profit > 0 ? '+' : '') + percent + '%'}
+                                {(percent > 0 ? '+' : '') + percent + '%'}
                             </span>
                         </div>
                     </div>
@@ -270,10 +288,10 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     </div>
                     <div
                         className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold mt-8', {
-                            '!bg-onus-1 !text-onus-textSecondary': !!error || !amount || !!errorProfit || adjustType === ADJUST_TYPE.REMOVE
+                            '!bg-onus-1 !text-onus-textSecondary': !!error || !amount || !!errorProfit
                         })}
                         onClick={() => {
-                            if (!error && !errorProfit && !!amount && !submitting && adjustType !== ADJUST_TYPE.REMOVE) {
+                            if (!error && !errorProfit && !!amount && !submitting) {
                                 handleConfirm()
                             }
                         }}

@@ -40,7 +40,7 @@ export const VndcFutureOrderType = {
     },
 };
 
-export const getProfitVndc = (order, lastPrice = 0) => {
+export const getProfitVndc = (order, lastPrice = 0, isOnus) => {
     const { status, quantity, open_price, type, symbol, side, close_price } = order || {};
     if (!order || !symbol) return null;
     let { fee } = order;
@@ -56,6 +56,9 @@ export const getProfitVndc = (order, lastPrice = 0) => {
         closePrice = close_price;
     } else {
         return 0;
+    }
+    if (isOnus) {
+        fee += quantity * closePrice * (0.06 / 100);
     }
     try {
         let buyProfitVNDC = 0;
