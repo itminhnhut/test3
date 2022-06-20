@@ -164,12 +164,11 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         >
             <div className='h-full' onClick={onClose}/>
             <div
-                className='bg-onus-line w-full rounded-t-2xl pb-10'>
+                className='relative bg-onus-line w-full rounded-t-2xl pb-10'>
                 <div className='flex justify-between items-center px-4 pb-4 pt-11'>
-                    <span
-
-                        className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
+                    <span className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
                 </div>
+                <div className='h-1 w-14 rounded absolute top-2 right-1/2 translate-x-1/2 bg-onus-white/[.16]'/>
                 <div className='grid grid-cols-2 font-bold'>
                     <div
                         className={
