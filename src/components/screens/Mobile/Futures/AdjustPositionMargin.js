@@ -97,7 +97,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     const percent = formatNumber(((profit / newMargin) * 100), 2, 0, true);
 
     const error = useMemo(() => {
-        if (amount > available) {
+        if (+amount > available && adjustType === ADJUST_TYPE.ADD) {
             return t('futures:maximum_price') + formatNumber(available, assetConfig?.assetDigit)
         }
 
@@ -212,7 +212,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                 className='outline-none font-medium flex-1 py-2'
                                 value={amount}
                                 onValueChange={({value}) => setAmount(value)}
-                                decimalScale={2}
+                                decimalScale={assetConfig?.assetDigit}
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
@@ -278,10 +278,10 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     </div>
                     <div
                         className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold mt-8', {
-                            '!bg-onus-1 !text-onus-textSecondary': !!error || !amount || !!errorProfit
+                            '!bg-onus-1 !text-onus-textSecondary': !!error || !+amount || !!errorProfit
                         })}
                         onClick={() => {
-                            if (!error && !errorProfit && !!amount && !submitting) {
+                            if (!error && !errorProfit && !!+amount && !submitting) {
                                 handleConfirm()
                             }
                         }}
