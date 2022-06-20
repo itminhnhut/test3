@@ -58,11 +58,11 @@ const OrderBalance = ({
     const total = balance.value + totalProfit;
     const lengthEquity = total ? formatNumber(total, balance?.item?.assetDigit)
         .replace(/,/g, '') : 0;
-    const equity = lengthEquity.length > 7 ? formatCurrency(total) : formatNumber(total, balance?.item?.assetDigit, 0, true);
-    const _volume = formatCurrency(volume);
+    const equity = lengthEquity.length > 7 ? formatCurrency(total, 2) : formatNumber(total, balance?.item?.assetDigit, 0, true);
+    const _volume = formatCurrency(volume, 2);
     const length = balance?.value ? formatNumber(balance.value, balance?.item?.assetDigit)
         .replace(/,/g, '') : 0;
-    const _balance = length.length > 7 ? formatCurrency(balance.value) : formatNumber(balance.value, balance?.item?.assetDigit);
+    const _balance = length.length > 7 ? formatCurrency(balance.value, 2) : formatNumber(balance.value, balance?.item?.assetDigit);
     if (!visible) return null;
     if (mode === 'collapse') {
         return <div className="flex pt-[10px]">
