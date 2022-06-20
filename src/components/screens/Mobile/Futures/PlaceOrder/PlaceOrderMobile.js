@@ -157,10 +157,16 @@ const PlaceOrder = ({
             setSl(_sl);
             setTp(_tp);
         }
+    }, [side, type, decimals, leverage]);
+
+
+
+    useEffect(() => {
+        if (firstTime.current) return;
         if (type === OrderTypes.Market) {
             onChangeQuoteQty(lastPrice, leverage);
         }
-    }, [side, type, decimals, leverage]);
+    }, [decimals, leverage]);
 
     useEffect(() => {
         if (firstTime.current) return;
@@ -180,6 +186,8 @@ const PlaceOrder = ({
             setTp(_tp);
         }
     }, [firstTime.current, decimals, leverage]);
+
+    
 
     const onChangeQuoteQty = (price, leverage) => {
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
@@ -410,6 +418,16 @@ const PlaceOrder = ({
         return !isVndcFutures ? false : not_valid;
     }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage, quoteQty, collapse]);
 
+    const canShowChangeTpSL = useMemo( () => {
+        if (!isAuth) return false
+        const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
+        if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
+            !inputValidator('quoteQty').isValid) {
+            return false
+        }
+        return true
+    }, [isAuth, type, pairConfig, price, side, leverage, availableAsset, pairPrice]);
+
     const onChangeTpSL = () => {
         if (!isAuth) return;
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
@@ -539,6 +557,7 @@ const PlaceOrder = ({
                         <OrderSLMobile
                             validator={!awaitValidator.current && inputValidator('stop_loss')}
                             sl={sl} setSl={setSl} decimals={decimals}
+                            show={canShowChangeTpSL}
                             onChangeTpSL={onChangeTpSL} context={context}
                             isAuth={isAuth}
                         />
@@ -546,6 +565,7 @@ const PlaceOrder = ({
                     <OrderInput data-tut="order-tp">
                         <OrderTPMobile
                             validator={!awaitValidator.current && inputValidator('take_profit')}
+                            show={canShowChangeTpSL}
                             tp={tp} setTp={setTp} decimals={decimals}
                             onChangeTpSL={onChangeTpSL} context={context}
                             isAuth={isAuth}

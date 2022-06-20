@@ -3,10 +3,11 @@ import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 
-const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, isAuth }) => {
+const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, isAuth, show }) => {
     const { t } = useTranslation();
     const [isFocus, setIsFocus] = useState(false);
 
+    
     return (
         <div className="relative">
             {!isAuth && isFocus &&
@@ -34,8 +35,9 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, 
                 labelClassName='whitespace-nowrap capitalize dark:text-onus-grey'
                 containerClassName="h-[36px] dark:bg-onus-input"
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
-                renderTail={() => (
-                    <div className='relative group select-none'
+                renderTail={() => {
+                    if(!show) return null
+                    return <div className='relative group select-none'
                         onMouseDown={() => setIsFocus(true)}
                         onMouseLeave={() => setIsFocus(false)}
                         onClick={onChangeTpSL}>
@@ -43,7 +45,7 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, 
                             <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
                         </div>
                     </div>
-                )}
+                }}
                 inputClassName="text-xs !text-center"
                 inputMode="decimal"
                 allowedDecimalSeparators={[',', '.']}

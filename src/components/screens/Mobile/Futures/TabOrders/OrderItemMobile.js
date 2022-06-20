@@ -163,7 +163,7 @@ const OrderItemMobile = ({
                         }
                     </div>
                     <div
-                        className={`text-xs font-medium my-1 ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
+                        className={`text-xs font-medium mb-1 mt-[2px] ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order)}</span>
                     </div>
