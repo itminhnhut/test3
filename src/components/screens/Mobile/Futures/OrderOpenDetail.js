@@ -212,7 +212,7 @@ const OrderOpenDetail = ({
                     </div>
                 </div>
             </div>
-            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6]">
+            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6] leading-tight">
                 <div>ID #{order?.displaying_id}</div>
                 <div className="bg-[#535D6D] h-[2px] w-[2px] rounded-[50%] mx-1.5"></div>
                 <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
