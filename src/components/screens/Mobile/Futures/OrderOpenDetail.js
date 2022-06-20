@@ -191,9 +191,10 @@ const OrderOpenDetail = ({
                         <div
                             className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
                         </div>
-                        {profit &&
-                            <img className="ml-2" F
+                        {profit ?
+                            <img className="ml-2"
                                 onClick={openShare} src={getS3Url("/images/icon/ic_share_onus.png")} height={20} width={20} />
+                            : null
                         }
                     </div>
                     <div
