@@ -310,7 +310,8 @@
         "percent_input": "Input percent",
         "take_profit_input": "Input take profit",
         "stop_loss_input": "Input stop loss",
-        "profit_input": "Input profit"
+        "profit_input": "Input profit",
+        "margin_rate":"Margin rate"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

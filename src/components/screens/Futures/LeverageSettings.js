@@ -8,9 +8,10 @@ import Slider from 'components/trade/InputSlider';
 import colors from 'styles/colors';
 import Modal from 'components/common/ReModal';
 import axios from 'axios';
-import { formatNumber, getLoginUrl } from 'redux/actions/utils';
+import { formatNumber, getLoginUrl, scrollFocusInput } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
+import WarningCircle from '../../svg/WarningCircle'
 
 const FuturesLeverageSettings = ({
     pair,
@@ -24,7 +25,9 @@ const FuturesLeverageSettings = ({
     isVndcFutures,
     dots,
     className,
-    onusMode = false
+    onusMode = false,
+    containerStyle,
+    selectorClose
 }) => {
     const [loading, setLoading] = useState(false)
     const { t } = useTranslation();
@@ -96,7 +99,7 @@ const FuturesLeverageSettings = ({
                 }
                 onusMode={onusMode}
                 componentType='button'
-                className={`!h-[36px] ${getValidator?.isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : ''}`}
+                className={`${onusMode ? '!text-[16px] !font-semibold !h-[48px]' : '!h-[36px]'} ${getValidator?.isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : ''}`}
                 type='primary'
                 disabled={loading || getValidator?.isError}
                 onClick={() => !loading && onSetLeverage(pair, _leverage)}
@@ -122,7 +125,7 @@ const FuturesLeverageSettings = ({
         )
     }
 
-    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2': 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2' : 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
 
     return (
         <Modal
@@ -130,25 +133,29 @@ const FuturesLeverageSettings = ({
             isVisible={isVisible}
             onBackdropCb={onClose}
             containerClassName={`max-w-[306px] select-none ${className}`}
+            containerStyle={{ ...containerStyle }}
+            selectorClose={selectorClose}
         >
-            <div className={`-mt-1 mb-7 pb-4 flex items-center justify-between font-bold text-sm ${onusMode? 'border-b dark:border-onus-line border-onus-line' : ''}`}>
+            <div className={`-mt-1 ${onusMode ? 'mb-6 text-lg' : 'mb-7 pb-4 text-sm'} flex items-center justify-between font-bold`}>
                 {t('futures:leverage:title')}
-                <div
-                    className='flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer'
-                    onClick={onClose}
-                >
-                    <X size={16} />
-                </div>
+                {!onusMode &&
+                    <div
+                        className='flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer'
+                        onClick={onClose}
+                    >
+                        <X size={16} />
+                    </div>
+                }
             </div>
-            <div className='mb-1.5 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
+            <div className={`mb-1.5 font-medium text-txtSecondary dark:text-txtSecondary-dark ${onusMode ? 'uppercase text-xs' : 'text-sm'}`}>
                 {t('futures:leverage:leverage')}
             </div>
-            <div className={`px-2 mb-4 h-[36px] flex items-center ${onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2': 'bg-gray-4 dark:bg-darkBlue-3'} rounded-[4px]`}>
-            
+            <div className={`px-2 flex items-center ${onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2 mb-6 h-[44px]' : 'bg-gray-4 dark:bg-darkBlue-3 mb-4 h-[36px]'} rounded-[4px]`}>
+
                 <div className={changeClass}>
                     <Minus
-                        size={10}
-                        className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
+                        size={onusMode ? 20 : 10}
+                        className={`${onusMode ? 'text-onus-white' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
                         onClick={() =>
                             _leverage > 1 &&
                             _setLeverage((prevState) => Number(prevState) - 1)
@@ -161,18 +168,19 @@ const FuturesLeverageSettings = ({
                     value={_leverage}
                     suffix={'x'}
                     decimalScale={0}
-                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[36px]'
-                    
+                    containerClassName={`px-2.5 flex-grow text-sm font-medium border-none ${onusMode ? 'h-[44px]' : 'h-[36px]'}`}
+
                     inputClassName="!text-center"
                     onValueChange={({ value }) => _setLeverage(value)}
                     validator={getValidator}
                     inputMode="decimal"
                     allowedDecimalSeparators={[',', '.']}
+                    onFocus={onusMode && scrollFocusInput}
                 />
                 <div className={changeClass}>
                     <Plus
-                        size={10}
-                        className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
+                        size={onusMode ? 20 : 10}
+                        className={`${onusMode ? 'text-onus-white' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
                         onClick={() =>
                             _leverage < pairConfig?.leverageConfig?.max &&
                             _setLeverage((prevState) => Number(prevState) + 1)
@@ -180,14 +188,15 @@ const FuturesLeverageSettings = ({
                     />
                 </div>
             </div>
-            <div className='mb-3'>
+            <div className={`${onusMode ? 'mb-5' : 'mb-3'}`}>
                 <Slider
                     onusMode={onusMode}
                     useLabel
+                    positionLabel={onusMode ? 'top' : 'bottom'}
                     labelSuffix='x'
                     x={_leverage}
-                    bgColorSlide={onusMode ? colors.onus.base: undefined}
-                    bgColorActive={onusMode ? colors.onus.base: undefined}
+                    bgColorSlide={onusMode ? '#418FFF' : undefined}
+                    bgColorActive={onusMode ? '#418FFF' : undefined}
                     axis='x'
                     xmax={pairConfig?.leverageConfig?.max}
                     onChange={({ x }) =>
@@ -195,7 +204,7 @@ const FuturesLeverageSettings = ({
                     }
                     dots={dots}
                 />
-                    {/* useLabel axis='x' x={percent.sl} xmax={100}
+                {/* useLabel axis='x' x={percent.sl} xmax={100}
                         labelSuffix='%'
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
                         bgColorSlide={colors.onus.red}
@@ -220,19 +229,23 @@ const FuturesLeverageSettings = ({
                 }
                 <div className='mt-2.5 flex items-start'>
                     <div className='pt-1'>
-                        <SvgWarning size={12} fill={colors.red2} />
+                        {onusMode ?
+                            <WarningCircle size={16} fill={colors.onus.orange} className="mt-[-2px]" />
+                            :
+                            <SvgWarning size={12} fill={colors.red2} />
+                        }
                     </div>
-                    <div className='pl-2.5 font-medium text-xs text-red'>
+                    <div className={`pl-2.5 font-medium text-xs ${onusMode ? 'text-onus-orange' : 'text-red'} `}>
                         {t('futures:leverage:description')}
                     </div>
                 </div>
             </>
             }
             {isAuth ?
-                <div className='mt-5 mb-2'>{renderConfirmButton()}</div>
+                <div className={`${onusMode ? 'mt-8' : 'mt-5 mb-2'}`}>{renderConfirmButton()}</div>
                 :
-                <div className="mt-5 mb-2 cursor-pointer flex items-center justify-center h-full">
-                    <div className={`w-[200px] ${onusMode ? 'bg-onus-base' : 'bg-dominant'} text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`}
+                <div className={`${onusMode ? 'mt-8' : 'mt-5'} mb-2 cursor-pointer flex items-center justify-center h-full`}>
+                    <div className={`w-[200px] ${onusMode ? 'bg-onus-base' : 'bg-dominant font-medium '} text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`}
                         onClick={onLogin}
                     >
                         {t('futures:order_table:login_to_continue')}

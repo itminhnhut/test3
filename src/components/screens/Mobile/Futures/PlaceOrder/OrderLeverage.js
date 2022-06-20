@@ -5,8 +5,8 @@ import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import axios from 'axios';
 import { ApiStatus } from 'redux/actions/const';
 
-const OrderLeverage = ({leverage, setLeverage, isAuth, pair, pairConfig, context, getLeverage}) => {
-    const {t} = useTranslation();
+const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, context, getLeverage }) => {
+    const { t } = useTranslation();
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ const OrderLeverage = ({leverage, setLeverage, isAuth, pair, pairConfig, context
     }, [pairConfig?.pair, isAuth])
 
     const fetchLeverage = async (symbol) => {
-        const {data} = await axios.get(API_FUTURES_LEVERAGE, {
+        const { data } = await axios.get(API_FUTURES_LEVERAGE, {
             params: {
                 symbol,
             },
@@ -25,9 +25,19 @@ const OrderLeverage = ({leverage, setLeverage, isAuth, pair, pairConfig, context
         }
     }
 
-    const classMobile = useMemo(() => {
-        return 'w-[95%] overflow-x-hidden !max-w-[500px]'
+    useEffect(() => {
+        document.addEventListener('click', _onClose)
+        return () => {
+            document.removeEventListener('click', _onClose)
+        }
     }, [])
+
+    const _onClose = (e) => {
+        const container = document.querySelector('.leverage-mobile');
+        if (container && !container.contains(e.target.parentElement)) {
+            setOpenModal(false);
+        }
+    }
 
     return (
         <>
@@ -37,19 +47,21 @@ const OrderLeverage = ({leverage, setLeverage, isAuth, pair, pairConfig, context
                 className="h-[32px] w-12 text-onus-white border-onus-white leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium">{leverage}x
             </div>
             {openModal &&
-            <FuturesLeverageSettings
-                onusMode={true}
-                pair={pair}
-                leverage={leverage}
-                setLeverage={setLeverage}
-                pairConfig={pairConfig}
-                isVisible={openModal}
-                isAuth={isAuth}
-                onClose={() => setOpenModal(false)}
-                isVndcFutures={true}
-                dots={5}
-                className={`top-[50%] ${classMobile}`}
-            />
+                <FuturesLeverageSettings
+                    onusMode={true}
+                    pair={pair}
+                    leverage={leverage}
+                    setLeverage={setLeverage}
+                    pairConfig={pairConfig}
+                    isVisible={openModal}
+                    isAuth={isAuth}
+                    onClose={() => setOpenModal(false)}
+                    isVndcFutures={true}
+                    dots={5}
+                    className="max-w-full overflow-hidden"
+                    // containerStyle={{ transform: 'unset' }}
+                    selectorClose="leverage-mobile"
+                />
             }
         </>
     );

@@ -69,41 +69,44 @@ const AlertModal = forwardRef((props, ref) => {
     if (!options.current.title) return null;
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
-            containerStyle={{ top: `calc(var(--vh, 1vh) * 100 - ${height + 50}px)`, width: 'calc(100vw - 30px)' }}
-            containerClassName={`alert-modal-mobile px-[24px] min-h-[363px] py-[34px] flex flex-col items-center justify-between`}>
-            <div className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-onus-white  absolute top-2"></div>
-            <div className='mb-[30px] mt-2'>
-                <img src={getS3Url(getImage(options.current.type))} width={80} height={80} />
-            </div>
-            <div className='text-[20px] font-semibold mb-[12px]'>
-                {options.current.title}
-            </div>
-            <div className=' mb-[10px] text-center text-onus-grey font-normal'>
-                {options.current.messages}
-            </div>
-            <div className='text-gray-1 mb-[30px] text-center'>
-                {options.current.note}
-            </div>
-            <div className='flex items-center w-full mt-[8px] '>
-                {!options.current?.hideCloseButton
-                    && <Button
-                        onusMode={true}
-                        title={options.current.closeTitle || t('common:close')}
-                        className={`!h-[50px] !text-[16px] !font-semibold`}
-                        componentType="button"
-                        onClick={onCancel}
-                    />
-                }
-                {actions.current?.onConfirm &&
-                    <Button
-                        onusMode={true}
-                        title={options.current?.confirmTitle || t('futures:leverage:confirm')}
-                        type="primary"
-                        className={`ml-[7px] !h-[50px] !text-[16px] !font-semibold`}
-                        componentType="button"
-                        onClick={onConfirm}
-                    />
-                }
+            containerStyle={{ width: 'calc(100vw - 30px)', transform: 'translate(-50%,0)', left: '50%' }}
+            selectorClose="alert-modal-mobile"
+            onusClassName="!px-[30px] !py-[40px] min-h-[363px] !bottom-[50px] rounded-[16px]"
+        >
+            <div className="flex flex-col items-center justify-between">
+                <div className='mb-[30px] mt-2'>
+                    <img src={getS3Url(getImage(options.current.type))} width={80} height={80} />
+                </div>
+                <div className='text-[20px] font-semibold mb-[12px]'>
+                    {options.current.title}
+                </div>
+                <div className=' mb-[10px] text-center text-onus-grey font-normal'>
+                    {options.current.messages}
+                </div>
+                <div className='text-gray-1 mb-[30px] text-center'>
+                    {options.current.note}
+                </div>
+                <div className='flex items-center w-full mt-[8px] '>
+                    {!options.current?.hideCloseButton
+                        && <Button
+                            onusMode={true}
+                            title={options.current.closeTitle || t('common:close')}
+                            className={`!h-[50px] !text-[16px] !font-semibold`}
+                            componentType="button"
+                            onClick={onCancel}
+                        />
+                    }
+                    {actions.current?.onConfirm &&
+                        <Button
+                            onusMode={true}
+                            title={options.current?.confirmTitle || t('futures:leverage:confirm')}
+                            type="primary"
+                            className={`ml-[7px] !h-[50px] !text-[16px] !font-semibold`}
+                            componentType="button"
+                            onClick={onConfirm}
+                        />
+                    }
+                </div>
             </div>
         </Modal>
     );

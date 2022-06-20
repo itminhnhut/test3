@@ -292,6 +292,12 @@ export function formatNumber(
     )
 }
 
+export function scrollFocusInput(){
+    if (typeof window !== 'undefined') {
+        window.scrollTo(0, window.innerHeight);
+    }
+}
+
 export function getExchange24hPercentageChange(price) {
     let change24h
     if (price) {

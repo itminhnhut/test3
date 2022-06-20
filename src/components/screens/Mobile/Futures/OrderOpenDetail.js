@@ -16,7 +16,7 @@ import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus, DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
-import AdjustPositionMargin from 'components/screens/Mobile/Futures/ AdjustPositionMargin';
+import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
 import EditSLTPVndcMobile from './EditSLTPVndcMobile';
 
 const OrderOpenDetail = ({
@@ -185,6 +185,10 @@ const OrderOpenDetail = ({
                         <div
                             className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
                         </div>
+                        {profit &&
+                            <img className="ml-2" F
+                                onClick={openShare} src={getS3Url("/images/icon/ic_share_onus.png")} height={20} width={20} />
+                        }
                     </div>
                     <div
                         className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
@@ -196,15 +200,9 @@ const OrderOpenDetail = ({
                     <div className="text-xs text-right" onClick={openShare}>
                         <div className="text-xs font-medium text-onus-green float-right">
                             <OrderProfit onusMode={true} className="flex flex-col text-right"
-                                         order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile/>
+                                order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                         </div>
                     </div>
-                    {profit ?
-                        <div className="p-[5px] rounded-[6px] border border-onus-textSecondary mr-4" onClick={openShare}>
-                            <img src={getS3Url("/images/icon/ic-share-onus-blue.png")} height={20} width={20} />
-                        </div>
-                        : null
-                    }
                 </div>
             </div>
             <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6]">
@@ -213,15 +211,24 @@ const OrderOpenDetail = ({
                 <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
             </div>
             <div className="flex flex-wrap w-full">
-                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimal, 0, true)}/>
                 <OrderItem label={t('futures:order_table:volume')}
-                           value={formatNumber(order?.order_value, 0, 0, true)}/>
+                    value={formatNumber(order?.order_value, 0, 0, true)} />
+                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimal, 0, true)} />
+                <OrderItem
+                    label={t('futures:margin')}
+                    value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
+                />
                 <OrderItem label={t('futures:tp_sl:mark_price')}
-                           value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)}/>
-                <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)}/>
+                    value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
+                <OrderItem
+                    label={t('futures:mobile:margin_rate')}
+                    value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
+                    valueClassName="text-onus-orange"
+                />
                 <OrderItem label={t('futures:stop_loss')} valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-grey'} value={renderSlTp(order?.sl)} />
+                <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
                 <OrderItem label={t('futures:take_profit')} valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-grey'}
-                           value={renderSlTp(order?.tp)}/>
+                    value={renderSlTp(order?.tp)} />
                 {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
             {/* <div className="flex gap-x-[10px] w-full">
@@ -279,7 +286,7 @@ const OrderOpenDetail = ({
                     <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                         <Button
                             title={t('futures:mobile.adjust_margin.button_title')}
-                            className="!h-[36px] dark:bg-onus-line dark:text-onus-white"
+                            className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={() => setShowEditMargin(true)}
@@ -289,7 +296,7 @@ const OrderOpenDetail = ({
                 <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}
-                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"
+                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={onOpenModify}
@@ -298,7 +305,7 @@ const OrderOpenDetail = ({
                 <div style={{ width: 'calc(50% - 5px)' }}>
                     <Button
                         title={t(`common:close`)}
-                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey"
+                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions()}

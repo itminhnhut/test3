@@ -1,6 +1,6 @@
 import Div100vh from 'react-div-100vh';
 import NumberFormat from 'react-number-format';
-import {formatNumber} from 'redux/actions/utils';
+import {formatNumber, scrollFocusInput} from 'redux/actions/utils';
 import React, {useContext, useMemo, useState} from 'react';
 import {useTranslation} from 'next-i18next';
 
@@ -15,6 +15,7 @@ import {AlertContext} from 'components/common/layouts/LayoutMobile';
 import {IconLoading} from 'components/common/Icons';
 import WarningCircle from 'components/svg/WarningCircle';
 import floor from 'lodash/floor'
+import Modal from "components/common/ReModal";
 
 const ADJUST_TYPE = {
     ADD: 'ADD',
@@ -150,32 +151,21 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         }
     }
 
-    const onFocus = () => {
-        const el = document.querySelector('#adjust_margin')
-        if (typeof window !== 'undefined' && el) {
-            window.scrollTo(0, el.scrollHeight);
-        }
-    }
-
     return (
-        <Div100vh
-            className={classNames(
-                'flex flex-col fixed w-full h-full inset-0 z-20 bg-onus-bgModal2/[0.7]',
-                {
-                    hidden: !order,
-                }
-            )}
-            id="adjust_margin"
+        <Modal
+            onusMode={true}
+            isVisible={true}
+            onBackdropCb={onClose}
+            selectorClose="adjust-margin-mobile"
+            containerClassName={'flex flex-col fixed w-full h-full inset-0 z-20'}
+            onusClassName="!p-0"
         >
-            <div className='h-full' onClick={onClose}/>
             <div
                 className='bg-onus-line w-full rounded-t-2xl pb-10'>
-                <div className='flex justify-between items-center p-4'>
+                <div className='flex justify-between items-center px-4 pb-4 pt-11'>
                     <span
+
                         className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
-                    <div className='p-2 -mr-2' onClick={onClose}>
-                        <X size={20}/>
-                    </div>
                 </div>
                 <div className='grid grid-cols-2 font-bold'>
                     <div
@@ -226,7 +216,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
-                                onFocus={onFocus}
+                                onFocus={scrollFocusInput}
                             />
                             <div
                                 className='flex items-center'
@@ -304,7 +294,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     </div>
                 </div>
             </div>
-        </Div100vh>
+        </Modal>
     )
 }
 

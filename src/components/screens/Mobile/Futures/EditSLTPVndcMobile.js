@@ -36,20 +36,6 @@ const EditSLTPVndcMobile = ({
     const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
     if (!pairConfig) return null
 
-    useEffect(() => {
-        document.addEventListener('click', _onClose)
-        return () => {
-            document.removeEventListener('click', _onClose)
-        }
-    }, [])
-
-    const _onClose = (e) => {
-        const container = document.querySelector('.sltp-mobile');
-        if (!container.contains(e.target.parentElement)) {
-            if (onClose) onClose();
-        }
-    }
-
     const getProfitSLTP = (sltp) => {
         const {
             fee = 0,
@@ -124,22 +110,22 @@ const EditSLTPVndcMobile = ({
         const tabName = tabs.find(rs => rs.value === tab);
         return (
             <div className="relative flex items-center justify-between h-full w-full" >
-            <button
-                type="button"
-                className="flex items-center justify-between focus:outline-none w-full"
-                aria-expanded="false"
-                onClick={()=>{
-                    if(mode=== 'sl'){
-                        setTabSl(tabSl === 0 ? 2 : 0)
-                    }else{
-                        setTabTp(tabTp === 0 ? 2 : 0)
-                    }
-                }}
-            >
-                <div className="text-sm font-medium">{tabName.label}</div>
-                <div className="min-w-[12px]"><SortIcon /></div>
-            </button>
-        </div>
+                <button
+                    type="button"
+                    className="flex items-center justify-between focus:outline-none w-full"
+                    aria-expanded="false"
+                    onClick={() => {
+                        if (mode === 'sl') {
+                            setTabSl(tabSl === 0 ? 2 : 0)
+                        } else {
+                            setTabTp(tabTp === 0 ? 2 : 0)
+                        }
+                    }}
+                >
+                    <div className="text-sm font-medium">{tabName.label}</div>
+                    <div className="min-w-[12px]"><SortIcon /></div>
+                </button>
+            </div>
         )
     }
 
@@ -149,7 +135,7 @@ const EditSLTPVndcMobile = ({
         let label = 0;
         let value = 0
         const prefix = key === 'sl' ? '+' : '+';
-        let tab = key === 'sl' ? tabSl  : tabTp
+        let tab = key === 'sl' ? tabSl : tabTp
         if (tab === 0) {
             //40%
             value = data.price + (data.price * index * 0.4 / 100)
@@ -179,7 +165,7 @@ const EditSLTPVndcMobile = ({
     }
 
     const renderButtons = (qty, key) => {
-        const tab = key === 'sl' ? tabSl:tabTp
+        const tab = key === 'sl' ? tabSl : tabTp
         if (tab !== 2) return null;
         const size = 100 / qty;
         const arr = [5, 10, 25, 50, 100];
@@ -277,129 +263,124 @@ const EditSLTPVndcMobile = ({
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-            containerStyle={{ transform: 'unset' }}
-            containerClassName="sltp-mobile bg-[transparent] !left-0 !top-0 !transform-[unset] w-full h-full p-0"
+            selectorClose="sltp-mobile"
         >
-            <div className="absolute w-full bottom-0 bg-onus-bgModal rounded-t-[16px] px-4 py-[50px] max-h-[90%] overflow-y-auto">
-                <div
-                    style={{ transform: 'translate(-50%,0)' }}
-                    className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-onus-white  absolute top-2 left-1/2 "></div>
-                <div className="pb-[33px]">
-                    <div className="text-lg font-bold text-onus-white pb-[20px]">{t('futures:tp_sl:modify_tpsl')}</div>
-                    <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">{order?.symbol} {order?.leverage}x</div>
-                    <div className="border border-onus-bg2 px-[15px] py-[10px] rounded-lg pt-[21px]">
-                        <div className="text-sm flex items-center justify-between">
-                            <span className="text-txtSecondary dark:text-onus-grey">
-                                {t('futures:tp_sl:mark_price')}
-                            </span>
-                            <span className="font-medium">{formatNumber(_lastPrice, 2, 0, true)}</span>
-                        </div>
-                        <div className="h-[1px] bg-onus-bg2 w-full my-[10px]"></div>
-                        <div className="text-sm flex items-center justify-between">
-                            <span className="text-txtSecondary dark:text-onus-grey">
-                                {t('futures:order_table:open_price')}
-                            </span>
-                            <span className="font-medium">{formatNumber(data.price, 2, 0, true)}</span>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div className='flex items-center'>
-                        <label className="text-onus-white font-semibold mr-2">{t('futures:stop_loss')}</label>
-                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
-                            active={show.sl} onChange={() => onSwitch('sl')} />
-                    </div>
-                    {show.sl && <>
-                        <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
-                            <TradingInput
-                                onusMode={onusMode}
-                                thousandSeparator
-                                type="text"
-                                placeholder={placeholder('stop_loss')}
-                                labelClassName="hidden"
-                                className={`flex-grow text-sm font-normal h-[21px] text-onus-grey w-full `}
-                                containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
-                                value={tabSl === 0 ? data.sl : tabSl === 1 ? profit.current.sl : tabPercent.current.sl}
-                                decimalScale={countDecimals(decimalScalePrice?.tickSize)}
-                                onValueChange={(e) => onHandleChange('sl', e)}
-                                renderTail={() => (
-                                    <span className={`font-medium pl-2 text-onus-grey`}>
-                                        {tabSl === 2 ? '%' : quoteAsset}
-                                    </span>
-                                )}
-                                inputMode="decimal"
-                                allowedDecimalSeparators={[',', '.']}
-                            />
-                            <div className="min-w-[66px] bg-[#445571] px-3 h-full rounded-r-[6px]">
-                                {renderTab('sl')}
-                            </div>
-                        </div>
-                        {renderButtons(4, 'sl')}
-                        <div className="text-xs flex pt-3">
-                            <div className="font-normal text-onus-grey">{t('futures:mobile:est_stop_loss')}:</div>&nbsp;
-                            <div className="font-medium text-onus-red">{profit.current.sl + ' ' + quoteAsset}</div>
-                        </div>
-                    </>
-                    }
-                </div>
-                <div className="pt-[33px] pb-10">
-                    <div className='flex items-center pb-4'>
-                        <label className="text-onus-white font-semibold mr-2">{t('futures:take_profit')}</label>
-                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
-                            active={show.tp} onChange={() => onSwitch('tp')} />
-                    </div>
-                    {show.tp && <>
-                        <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex">
-                            <TradingInput
-                                onusMode={onusMode}
-                                thousandSeparator
-                                type="text"
-                                placeholder={placeholder('take_profit')}
-                                labelClassName="hidden"
-                                className={`flex-grow text-sm font-normal h-[21px] text-onus-grey w-full `}
-                                containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
-                                value={tabTp === 0 ? data.tp : tabTp === 1 ? profit.current.tp : tabPercent.current.tp}
-                                decimalScale={countDecimals(decimalScalePrice?.tickSize)}
-                                onValueChange={(e) => onHandleChange('tp', e)}
-                                renderTail={() => (
-                                    <span className={`font-medium pl-2 text-onus-grey`}>
-                                        {tabTp === 2 ? '%' : quoteAsset}
-                                    </span>
-                                )}
-                                inputMode="decimal"
-                                allowedDecimalSeparators={[',', '.']}
-                            />
-                            <div className="min-w-[66px] bg-[#445571] px-3 h-full rounded-r-[6px]">
-                                {renderTab('tp')}
-                            </div>
-                        </div>
-                        {renderButtons(4, 'tp')}
-                        <div className="text-xs flex pt-3">
-                            <div className="font-normal text-onus-grey">{t('futures:mobile:est_take_profit')}:</div>&nbsp;
-                            <div className="font-medium text-onus-green">{profit.current.tp + ' ' + quoteAsset}</div>
-                        </div>
-                    </>
-                    }
-                </div>
-                <Button
-                    onusMode={true}
-                    title={t('futures:leverage:confirm')}
-                    type="primary"
-                    className={`!h-[50px] !text-[16px] !font-semibold`}
-                    componentType="button"
-                    onClick={() => {
 
-                        const newData = {
-                            ...data,
-                            sl: show?.sl ? data.sl : 0,
-                            tp: show?.tp ? data.tp : 0,
-                        }
-
-                        console.log('__ check new data', newData, show, data)
-                        onConfirm(newData)
-                    }}
-                />
+            <div className="pb-[33px]">
+                <div className="text-lg font-bold text-onus-white pb-[20px]">{t('futures:tp_sl:modify_tpsl')}</div>
+                <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">{order?.symbol} {order?.leverage}x</div>
+                <div className="border border-onus-bg2 px-[15px] py-[10px] rounded-lg pt-[21px]">
+                    <div className="text-sm flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-onus-grey">
+                            {t('futures:tp_sl:mark_price')}
+                        </span>
+                        <span className="font-medium">{formatNumber(_lastPrice, 2, 0, true)}</span>
+                    </div>
+                    <div className="h-[1px] bg-onus-bg2 w-full my-[10px]"></div>
+                    <div className="text-sm flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-onus-grey">
+                            {t('futures:order_table:open_price')}
+                        </span>
+                        <span className="font-medium">{formatNumber(data.price, 2, 0, true)}</span>
+                    </div>
+                </div>
             </div>
+            <div>
+                <div className='flex items-center'>
+                    <label className="text-onus-white font-semibold mr-2">{t('futures:stop_loss')}</label>
+                    <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
+                        active={show.sl} onChange={() => onSwitch('sl')} />
+                </div>
+                {show.sl && <>
+                    <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
+                        <TradingInput
+                            onusMode={onusMode}
+                            thousandSeparator
+                            type="text"
+                            placeholder={placeholder('stop_loss')}
+                            labelClassName="hidden"
+                            className={`flex-grow text-sm font-normal h-[21px] text-onus-grey w-full `}
+                            containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
+                            value={tabSl === 0 ? data.sl : tabSl === 1 ? profit.current.sl : tabPercent.current.sl}
+                            decimalScale={countDecimals(decimalScalePrice?.tickSize)}
+                            onValueChange={(e) => onHandleChange('sl', e)}
+                            renderTail={() => (
+                                <span className={`font-medium pl-2 text-onus-grey`}>
+                                    {tabSl === 2 ? '%' : quoteAsset}
+                                </span>
+                            )}
+                            inputMode="decimal"
+                            allowedDecimalSeparators={[',', '.']}
+                        />
+                        <div className="min-w-[66px] bg-[#445571] px-3 h-full rounded-r-[6px]">
+                            {renderTab('sl')}
+                        </div>
+                    </div>
+                    {renderButtons(4, 'sl')}
+                    <div className="text-xs flex pt-3">
+                        <div className="font-normal text-onus-grey">{t('futures:mobile:est_stop_loss')}:</div>&nbsp;
+                        <div className="font-medium text-onus-red">{profit.current.sl + ' ' + quoteAsset}</div>
+                    </div>
+                </>
+                }
+            </div>
+            <div className="pt-[33px] pb-10">
+                <div className='flex items-center pb-4'>
+                    <label className="text-onus-white font-semibold mr-2">{t('futures:take_profit')}</label>
+                    <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
+                        active={show.tp} onChange={() => onSwitch('tp')} />
+                </div>
+                {show.tp && <>
+                    <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex">
+                        <TradingInput
+                            onusMode={onusMode}
+                            thousandSeparator
+                            type="text"
+                            placeholder={placeholder('take_profit')}
+                            labelClassName="hidden"
+                            className={`flex-grow text-sm font-normal h-[21px] text-onus-grey w-full `}
+                            containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
+                            value={tabTp === 0 ? data.tp : tabTp === 1 ? profit.current.tp : tabPercent.current.tp}
+                            decimalScale={countDecimals(decimalScalePrice?.tickSize)}
+                            onValueChange={(e) => onHandleChange('tp', e)}
+                            renderTail={() => (
+                                <span className={`font-medium pl-2 text-onus-grey`}>
+                                    {tabTp === 2 ? '%' : quoteAsset}
+                                </span>
+                            )}
+                            inputMode="decimal"
+                            allowedDecimalSeparators={[',', '.']}
+                        />
+                        <div className="min-w-[66px] bg-[#445571] px-3 h-full rounded-r-[6px]">
+                            {renderTab('tp')}
+                        </div>
+                    </div>
+                    {renderButtons(4, 'tp')}
+                    <div className="text-xs flex pt-3">
+                        <div className="font-normal text-onus-grey">{t('futures:mobile:est_take_profit')}:</div>&nbsp;
+                        <div className="font-medium text-onus-green">{profit.current.tp + ' ' + quoteAsset}</div>
+                    </div>
+                </>
+                }
+            </div>
+            <Button
+                onusMode={true}
+                title={t('futures:leverage:confirm')}
+                type="primary"
+                className={`!h-[50px] !text-[16px] !font-semibold`}
+                componentType="button"
+                onClick={() => {
+
+                    const newData = {
+                        ...data,
+                        sl: show?.sl ? data.sl : 0,
+                        tp: show?.tp ? data.tp : 0,
+                    }
+
+                    console.log('__ check new data', newData, show, data)
+                    onConfirm(newData)
+                }}
+            />
         </Modal>
     );
 };
