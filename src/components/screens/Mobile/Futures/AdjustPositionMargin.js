@@ -148,21 +148,21 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
             }[adjustType]
             }`)
             alertContext.alert.show('success', t('common:success'), message, null, null, onClose)
-        }
-        if (data.status !== 'ok') {
+        } else {
             alertContext.alert.show('error', t('common:failed'), t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
         }
     }
 
     return (
-        <Modal
-            onusMode={true}
-            isVisible={true}
-            onBackdropCb={onClose}
-            selectorClose="adjust-margin-mobile"
-            containerClassName={'flex flex-col fixed w-full h-full inset-0 z-20'}
-            onusClassName="!p-0"
+        <Div100vh
+            className={classNames(
+                'flex flex-col fixed w-full h-full inset-0 z-20 bg-onus-bgModal2/[0.7]',
+                {
+                    hidden: !order,
+                }
+            )}
         >
+            <div className='h-full' onClick={onClose}/>
             <div
                 className='bg-onus-line w-full rounded-t-2xl pb-10'>
                 <div className='flex justify-between items-center px-4 pb-4 pt-11'>
@@ -297,7 +297,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     </div>
                 </div>
             </div>
-        </Modal>
+        </Div100vh>
     )
 }
 
