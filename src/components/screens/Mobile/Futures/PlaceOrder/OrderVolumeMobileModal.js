@@ -65,7 +65,7 @@ const OrderVolumeMobileModal = (props) => {
             isVisible={true}
             onBackdropCb={onClose}
             selectorClose="volume-mobile"
-            onusClassName="!bg-onus-line !pt-[44px] !pb-[40px]"
+            onusClassName="!bg-onus-bgModal !pt-[44px] !pb-[40px]"
         >
 
             <div className='mb-6 flex items-center justify-between font-bold text-lg'>
