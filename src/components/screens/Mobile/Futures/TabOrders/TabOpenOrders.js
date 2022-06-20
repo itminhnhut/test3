@@ -12,7 +12,7 @@ import OrderItemMobile from './OrderItemMobile';
 // import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import { getShareModalData } from './ShareFutureMobile';
 import { emitWebViewEvent } from 'redux/actions/utils';
-import AdjustPositionMargin from 'components/screens/Mobile/Futures/ AdjustPositionMargin';
+import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
 import { find, countBy } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 

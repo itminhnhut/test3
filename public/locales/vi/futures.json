@@ -249,7 +249,7 @@
             "max": "Max",
             "amount_placeholder": "Nhập vào khối lượng",
             "not_allow_change_margin": "Để đảm bảo an toàn cho vị thế của bạn, Nami không hỗ trợ bớt ký quỹ với các vị thế có đòn bẩy trên 25x",
-            "min_profit_ratio": "Để đảm bảo an toàn cho vị thế của bạn, Nami không hỗ trợ bớt ký quỹ với các vị thế có lỗ ước tính nhỏ hơn {{min}}",
+            "max_removable": "Lượng kí quỹ tối đa bạn có thể rút là {{max}} VNDC",
             "assigned_margin": "Ký quỹ:",
             "available": "Khả dụng:",
             "new_liq_price": "Giá thanh lý mới:",
