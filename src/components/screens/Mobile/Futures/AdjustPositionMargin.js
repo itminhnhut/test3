@@ -116,6 +116,9 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
 
     const errorProfit = useMemo(() => {
         if (adjustType === ADJUST_TYPE.REMOVE) {
+            return t('futures:mobile:adjust_margin:temp_future')
+        }
+        if (adjustType === ADJUST_TYPE.REMOVE) {
             if (minMarginRatio === null) {
                 return t('futures:mobile:adjust_margin:not_allow_change_margin')
             } else if (+amount > maxRemovable) {
