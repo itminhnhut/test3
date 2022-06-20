@@ -207,7 +207,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     </div>
                     <ErrorToolTip message={!errorProfit ? error : ''}>
                         <div
-                            className='flex justify-between items-center pl-4 bg-onus-input text-sm rounded-md h-11 mb-2 mt-2'>
+                            className='flex justify-between items-center pl-4 bg-onus-input2 text-sm rounded-md h-11 mb-2 mt-2'>
                             <NumberFormat
                                 thousandSeparator
                                 allowNegative={false}
