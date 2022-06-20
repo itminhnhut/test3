@@ -40,7 +40,7 @@ const OrderOpenDetail = ({
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const dataMarketWatch = marketWatch[order?.symbol];
     const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
-
+    const marginRatio = (profit / order?.margin) * 100;
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const [showEditMargin, setShowEditMargin] = useState(false);
     const rowData = useRef(null);
@@ -153,6 +153,12 @@ const OrderOpenDetail = ({
         emitWebViewEvent(JSON.stringify(emitData))
     }
 
+
+    const renderColorMarginRatio = () => {
+        const _marginRatio = Math.abs(marginRatio);
+        return marginRatio < 0 && `text-onus-${_marginRatio <= 20 ? 'green' : _marginRatio > 20 && _marginRatio <= 60 ? 'orange' : 'red'}`
+    }
+
     return (
         <div className="p-6 py-4 mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
@@ -221,9 +227,9 @@ const OrderOpenDetail = ({
                 <OrderItem label={t('futures:tp_sl:mark_price')}
                     value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem
-                    label={t('futures:mobile:margin_rate')}
-                    value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
-                    valueClassName="text-onus-orange"
+                    label={t('futures:mobile:margin_ratio')}
+                    value={marginRatio > 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
+                    valueClassName={renderColorMarginRatio()}
                 />
                 <OrderItem label={t('futures:stop_loss')} valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-grey'} value={renderSlTp(order?.sl)} />
                 <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />

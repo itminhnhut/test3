@@ -118,12 +118,20 @@ const OrderItemMobile = ({
     }
 
     let profit = 0
+    let marginRatio = 0
     if (isTabHistory) {
         profit = order?.profit
+        marginRatio = (profit / order?.margin) * 100;
     } else {
         if (order && dataMarketWatch) {
             profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
+            marginRatio = (profit / order?.margin) * 100;
         }
+    }
+
+    const renderColorMarginRatio = () => {
+        const _marginRatio = Math.abs(marginRatio);
+        return marginRatio < 0 && `text-onus-${_marginRatio <= 20 ? 'green' : _marginRatio > 20 && _marginRatio <= 60 ? 'orange' : 'red'}`
     }
 
     const orderStatus = useMemo(() => {
@@ -132,7 +140,6 @@ const OrderItemMobile = ({
         const pending = !isTabHistory && order.status === VndcFutureOrderType.Status.PENDING || order.status === VndcFutureOrderType.Status.REQUESTING;
         return { cancelled, pending }
     }, [order])
-
     // const profit = isTabHistory ? order?.profit : dataMarketWatch && getProfitVndc(order, dataMarketWatch?.lastPrice)
 
     return (
@@ -201,9 +208,9 @@ const OrderItemMobile = ({
                         value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
                     />
                     <OrderItem
-                        label={t('futures:mobile:margin_rate')}
-                        value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
-                        valueClassName="text-onus-orange"
+                        label={t('futures:mobile:margin_ratio')}
+                        value={marginRatio > 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
+                        valueClassName={renderColorMarginRatio()}
                     />
                     <OrderItem
                         label={t('futures:stop_loss')}

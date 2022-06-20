@@ -35,7 +35,7 @@
         "profit": "Lợi nhuận",
         "note": "Ghi chú",
         "no_opening_order": "Không có lệnh đang mở",
-        "no_history_order": "Không có lệnh lịch sử",
+        "no_history_order": "Không có lịch sử lệnh",
         "login_to_continue": "Vui lòng đăng nhập để tiếp tục",
         "loading": "Đang tải...",
         "mobile": {
@@ -311,7 +311,7 @@
         "take_profit_input": "Nhập giá chốt lời",
         "stop_loss_input": "Nhập giá cắt lỗ",
         "profit_input": "Nhập lợi nhuận",
-        "margin_rate":"Tỷ lệ ký quỹ"
+        "margin_ratio":"Tỷ lệ ký quỹ"
     },
     "orders_history": "Lịch sử",
     "minimum_leverage": "Đòn bẩy tối thiểu",

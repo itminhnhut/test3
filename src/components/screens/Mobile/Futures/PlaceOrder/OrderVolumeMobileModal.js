@@ -74,7 +74,7 @@ const OrderVolumeMobileModal = (props) => {
             <div className='px-2 mb-12 h-[44px] flex items-center bg-gray-4 dark:bg-onus-bg2 rounded-[4px]'>
                 <div className={changeClass}>
                     <Minus
-                        size={20}
+                        size={15}
                         className='text-onus-white cursor-pointer'
                         onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - initValue)}
                     />
@@ -98,7 +98,7 @@ const OrderVolumeMobileModal = (props) => {
                 />
                 <div className={changeClass}>
                     <Plus
-                        size={20}
+                        size={15}
                         className='text-onus-white cursor-pointer'
                         onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + initValue)}
                     />
