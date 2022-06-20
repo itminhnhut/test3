@@ -61,6 +61,7 @@ const colors = {
     onus: {
         bg: '#090D17',
         bg2: '#36445A',
+        bg3: '#243042',
         base: '#0068FF',
         green: '#0DB787',
         red: '#DC1F4E',

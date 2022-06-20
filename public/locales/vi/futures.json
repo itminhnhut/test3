@@ -310,7 +310,8 @@
         "percent_input": "Nhập phần trăm cắt lỗ",
         "take_profit_input": "Nhập giá chốt lời",
         "stop_loss_input": "Nhập giá cắt lỗ",
-        "profit_input": "Nhập lợi nhuận"
+        "profit_input": "Nhập lợi nhuận",
+        "margin_rate":"Tỷ lệ ký quỹ"
     },
     "orders_history": "Lịch sử",
     "minimum_leverage": "Đòn bẩy tối thiểu",

@@ -152,17 +152,19 @@ const TabMobile = styled.div.attrs({
             top:0;
             z-index:10;
             .active::after {
-                content:'';
+            content:'';
             position:absolute;
             bottom:0;
             width:32px;
             height:4px;
-            background-color: ${({ onusMode }) => onusMode ? '#418FFF' : colors.teal}
+            background-color: ${({ onusMode }) => onusMode ? '#418FFF' : colors.teal};
+            left: 50%;
+            transform: translate(-50%, 0);
     }
             `
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-sm font-semibold text-gray-1 h-full flex items-center justify-center dark:text-onus-gray mr-[32px] last:mr-0`,
+        `text-sm relative font-semibold text-gray-1 h-full flex items-center justify-center dark:text-onus-gray mr-[32px] last:mr-0`,
         {
             'active font-semibold text-[#418FFF]': active
         }

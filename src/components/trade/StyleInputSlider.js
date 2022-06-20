@@ -22,7 +22,7 @@ export const Active = styled.div`
     border-radius: 4px;
     user-select: none;
     box-sizing: border-box;
-    height: 2.5px;
+    height:${({ onusMode }) => onusMode ? '5px' : '2.5px'};
     top: 6.5px;
     z-index: 11;
 `
@@ -36,7 +36,7 @@ export const SliderBackground = styled.div`
     box-sizing: border-box;
     width: 100%;
     top: 6.5px;
-    height: 2.5px;
+    height:${({ onusMode }) => onusMode ? '5px' : '2.5px'};
     z-index: 10;
 `
 
@@ -48,16 +48,18 @@ export const DotContainer = styled.div`
 
 export const Dot = styled.span`
     position: absolute;
-    top: -4px;
+    top: ${({ onusMode, active }) => onusMode ? '-6.5px' : '-4px'};
     //top: 10px;
     left: ${({ percentage }) => `calc(${percentage}% - 4.5px)`};
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    width: 9px;
-    height: 8px;
+    clip-path:${({ onusMode }) => onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'};
+    border-radius:${({ onusMode }) => onusMode ? '50%' : '0'};
+    width: ${({ onusMode, active }) => onusMode ? (active ? '15px' : '9px') : '9px'};
+    height: ${({ onusMode, active }) => onusMode ? (active ? '15px' : '9px') : '8px'};
     box-sizing: content-box;
     background-color: ${({ active, isDark, bgColorActive, bgColorDot }) =>
         active ? bgColorActive ? bgColorActive : colors.teal : bgColorDot ? bgColorDot : isDark ? colors.darkBlue4 : colors.grey5};
     z-index: 30;
+    border:${({ onusMode, active }) => onusMode && !active ? '3px solid #36445A' : 'none'};
     transition: transform 0.2s; /* Animation */
 
     &:hover {
@@ -70,9 +72,12 @@ export const Thumb = styled.div`
     position: relative;
     display: block;
     content: '';
-    width: 14px;
-    height: 12px;
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    top: ${({ onusMode }) => onusMode ? '1px' : '0'};
+    width: ${({ onusMode }) => onusMode ? '20px' : '14px'};
+    height: ${({ onusMode }) => onusMode ? '20px' : '12px'};
+    clip-path:${({ onusMode }) => onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'};
+    border-radius:${({ onusMode }) => onusMode ? '50%' : '0'};
+    border:${({ onusMode }) => onusMode ? '4px solid #76AEFF' : 'none'};
     background-color: ${({ isZero, isDark, bgColorActive }) =>
         isZero ? (isDark ? colors.darkBlue4 : bgColorActive ? bgColorActive : colors.grey5) : bgColorActive ? bgColorActive : colors.teal};
 
@@ -86,10 +91,11 @@ export const ThumbLabel = styled.div`
     top: -1.25rem;
     right: -10px;
     text-align: center;
-    color: ${({ isZero, isDark }) =>
+    color: ${({ isZero, isDark, onusMode }) => onusMode ? colors.onus.white :
         isZero ? (isDark ? colors.darkBlue4 : colors.grey5) : colors.teal};
     font-size: 12px;
     font-style: normal;
-    font-weight: 600;
+    font-weight:${({ onusMode }) => onusMode ? '400' : '600'};
+    margin-top:${({ onusMode }) => onusMode ? '-2px' : '0'};
     line-height: 18px;
 `

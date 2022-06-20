@@ -118,7 +118,7 @@ const Side = styled.div.attrs({
 `
 
 const Text = styled.div.attrs({
-    className: 'absolute font-medium bg-white text-onus-green text-xs rounded-[6px] px-[15px] py-[4px] left-[50%] top-[50%] z-[10]'
+    className: 'absolute font-medium bg-onus-input text-onus-white text-xs rounded-[6px] px-[15px] py-[4px] left-[50%] top-[50%] z-[10]'
 })`
 transform:translate(-50%, -50%)
 `

@@ -3,12 +3,12 @@ import Button from 'components/common/Button';
 import Modal from 'components/common/ReModal';
 import { Minus, Plus, X } from 'react-feather';
 import Slider from 'components/trade/InputSlider';
-import { emitWebViewEvent, formatCurrency, formatNumber } from 'redux/actions/utils';
+import { emitWebViewEvent, formatCurrency, formatNumber, scrollFocusInput } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import TradingLabel from 'components/trade/TradingLabel';
 import SvgWarning from 'components/svg/SvgWarning';
-import colors from '../../../../../styles/colors';
+import colors from 'styles/colors';
 
 const initValue = 100000;
 const OrderVolumeMobileModal = (props) => {
@@ -16,7 +16,7 @@ const OrderVolumeMobileModal = (props) => {
         type, onConfirm, availableAsset, side, pairPrice, price,
         leverage, getValidator, quoteQty
     } = props;
-    const onusMode =  true
+    const onusMode = true
     const { t } = useTranslation();
     const [volume, setVolume] = useState(quoteQty)
     const [percent, setPercent] = useState(0);
@@ -58,40 +58,35 @@ const OrderVolumeMobileModal = (props) => {
     const available = maxQuoteQty >= minQuoteQty;
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
 
-    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2': 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2' : 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
     return (
         <Modal
             onusMode={true}
             isVisible={true}
             onBackdropCb={onClose}
-            containerClassName={`select-none w-[95%] overflow-x-hidden`}
+            selectorClose="volume-mobile"
+            onusClassName="!bg-onus-line !pt-[44px] !pb-[40px]"
         >
-            <div className='-mt-1 mb-7 pb-4 flex items-center justify-between font-bold text-sm border-b border-onus-line dark:border-onus-line'>
-                {t('futures:order_table:volume')}
-                <div
-                    className='flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer'
-                    onClick={onClose}
-                >
-                    <X size={16} />
-                </div>
-            </div>
 
-            <div className='px-2 mb-7 h-[36px] flex items-center bg-gray-4 dark:bg-onus-bg2 rounded-[4px]'>
+            <div className='mb-6 flex items-center justify-between font-bold text-lg'>
+                {t('futures:order_table:volume')}
+            </div>
+            <div className='px-2 mb-12 h-[44px] flex items-center bg-gray-4 dark:bg-onus-bg2 rounded-[4px]'>
                 <div className={changeClass}>
                     <Minus
-                        size={10}
-                        className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
+                        size={20}
+                        className='text-onus-white cursor-pointer'
                         onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - initValue)}
                     />
                 </div>
                 <TradingInput
-                onusMode={true}
+                    onusMode={true}
                     label=' '
                     value={volume}
                     decimalScale={decimal}
                     allowNegative={false}
                     thousandSeparator={true}
-                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[36px] w-[200px]'
+                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px]'
                     inputClassName="!text-center"
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}
@@ -99,56 +94,58 @@ const OrderVolumeMobileModal = (props) => {
                     autoFocus
                     inputMode="decimal"
                     allowedDecimalSeparators={[',', '.']}
+                    onFocus={scrollFocusInput}
                 />
                 <div className={changeClass}>
                     <Plus
-                        size={10}
-                        className='text-txtSecondary dark:text-txtSecondary-dark cursor-pointer'
+                        size={20}
+                        className='text-onus-white cursor-pointer'
                         onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + initValue)}
                     />
                 </div>
             </div>
-            <div className='mb-7'>
+            <div className='mb-8'>
                 <Slider
-                    useLabel
+                    onusMode
                     labelSuffix='%'
                     x={percent}
                     axis='x'
                     xmax={100}
                     onChange={({ x }) => available && onChangeVolume(x)}
-                    bgColorActive={colors.onus.base}
-                    bgColorSlide={colors.onus.base}
+                    bgColorActive={'#418FFF'}
+                    bgColorSlide={'#418FFF'}
                     dots={4}
+                    showPercentLabel
                 />
             </div>
-            <div className="flex flex-wrap">
+            <div className="flex flex-col">
                 <TradingLabel
                     label={t('common:min') + ':'}
-                    value={formatNumber(minQuoteQty, decimal)}
-                    containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px]'
+                    value={formatNumber(minQuoteQty, decimal) + ' ' + pairConfig?.quoteAsset}
+                    containerClassName='text-xs flex pb-[6px]'
                     valueClassName="text-right"
                 />
                 <TradingLabel
-                    label={t('common:max') + ':'}
-                    value={formatNumber(maxQuoteQty, decimal)}
-                    containerClassName='text-xs flex justify-between w-1/2 pb-[15px]'
+                    label={t('common:max') + ' (' + leverage + 'x):'}
+                    value={formatNumber(maxQuoteQty, decimal) + ' ' + pairConfig?.quoteAsset}
+                    containerClassName='text-xs flex pb-[6px]'
                     valueClassName="text-right"
                 />
                 <TradingLabel
-                    label={t('futures:margin') + ':'}
+                    label={t('futures:margin') + ' :'}
                     value={`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
                         marginAndValue?.margin,
                         0
-                    )}`}
-                    containerClassName='text-xs flex justify-between w-1/2 pb-[15px] pr-[8px] '
+                    )} ${pairConfig?.quoteAsset}`}
+                    containerClassName='text-xs flex'
                     valueClassName="text-right break-all"
                 />
-                <TradingLabel
-                    label={t('futures:mobile:available') + ':'}
-                    value={formatNumber(availableAsset ?? 0, 0)}
-                    containerClassName='text-xs flex justify-between w-1/2 pb-[15px]'
-                    valueClassName="text-right"
-                />
+                {/* <TradingLabel
+                        label={t('futures:mobile:available') + ':'}
+                        value={formatNumber(availableAsset ?? 0, 0)}
+                        containerClassName='text-xs flex  pb-[15px]'
+                        valueClassName="text-right"
+                    /> */}
             </div>
             {!available &&
                 <div className='mt-2.5 flex items-center'>
@@ -158,12 +155,12 @@ const OrderVolumeMobileModal = (props) => {
                     </div>
                 </div>
             }
-            <div className='mt-5 mb-2'>
+            <div className='mt-8'>
                 <Button
                     onusMode={true}
                     title={t(available ? 'futures:leverage:confirm' : 'wallet:deposit')}
                     componentType='button'
-                    className={`!h-[36px] ${isError ? 'dark:!bg-darkBlue-3 dark:!text-darkBlue-4' : ''}`}
+                    className={`!h-[48px] !text-[16px] !font-semibold ${isError ? 'dark:!bg-darkBlue-3 dark:!text-darkBlue-4' : ''}`}
                     type='primary'
                     disabled={isError}
                     onClick={() => available ? onConfirm(+volume) : onRedirect()}

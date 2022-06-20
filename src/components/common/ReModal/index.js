@@ -1,6 +1,7 @@
 import { PORTAL_MODAL_ID } from '../../../constants/constants';
 import { X } from 'react-feather';
 
+import { useEffect } from 'react';
 import classNames from 'classnames';
 import Portal from 'components/hoc/Portal';
 import hexRgb from 'utils/hexRgb';
@@ -15,8 +16,25 @@ const Modal = ({
     onBackdropCb,
     onClose,
     onusMode = false,
-    containerStyle
+    containerStyle,
+    selectorClose,
+    onusClassName = ''
 }) => {
+    useEffect(() => {
+        document.addEventListener('click', _onClose)
+        return () => {
+            document.removeEventListener('click', _onClose)
+        }
+    }, [])
+
+    const _onClose = (e) => {
+        if (!selectorClose || !onusMode) return;
+        const container = document.querySelector(`.${selectorClose}`);
+        if (container && !container.contains(e.target.parentElement)) {
+            if (onBackdropCb) onBackdropCb();
+        }
+    }
+
     return (
         <Portal portalId={PORTAL_MODAL_ID}>
             <div
@@ -41,12 +59,13 @@ const Modal = ({
                         { '!bg-onus-bgModal2/[0.7]': onusMode },
                     )}
                 />
-                <div style={containerStyle}
+                <div style={{ ...containerStyle}}
                     className={classNames(
-                        'fixed top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-[280px] min-h-[100px] p-4 z-[99999999] rounded-lg dark:drop-shadow-dark',
-                        {'bg-bgPrimary dark:bg-darkBlue-2 dark:border dark:border-teal-opacity': !onusMode},
-                        {'bg-onus-bgModal': onusMode},
-                        containerClassName
+                        `${selectorClose} fixed min-w-[280px] min-h-[100px] p-4 z-[99999999] rounded-lg dark:drop-shadow-dark`,
+                        { 'bg-bgPrimary dark:bg-darkBlue-2 dark:border dark:border-teal-opacity top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 ': !onusMode },
+                        { 'bg-onus-bgModal bg-[transparent] left-0 top-0 w-full h-full p-0': onusMode },
+                        containerClassName,
+
                     )}
                 >
                     <div className='relative'>
@@ -66,7 +85,16 @@ const Modal = ({
                             {title}
                         </div>
                     )}
-                    {children}
+                    {onusMode ?
+                        <div className={`${onusClassName} absolute w-full bottom-0 bg-onus-bgModal rounded-t-[16px] px-4 py-[50px] max-h-[90%] overflow-y-auto`}>
+                            <div
+                                style={{ transform: 'translate(-50%,0)' }}
+                                className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-onus-white  absolute top-2 left-1/2 "></div>
+                            {children}
+                        </div>
+                        :
+                        children
+                    }
                 </div>
             </div>
         </Portal>

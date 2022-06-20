@@ -25,7 +25,7 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
                     {profit > 0 ? '+' : ''}
                     {formatNumber(profit, 0, 0, true)} {!isMobile && pairPrice?.quoteAsset}
                 </div>
-                <div className={isMobile ? 'my-1' : ''}>
+                <div className={isMobile ? 'my-1 font-medium' : ''}>
                     ({percent > 0 ? '+' : ''}
                     {percent + '%'})
                 </div>

@@ -1,6 +1,6 @@
 import Div100vh from 'react-div-100vh';
 import NumberFormat from 'react-number-format';
-import { formatNumber } from 'redux/actions/utils';
+import { formatNumber, scrollFocusInput } from 'redux/actions/utils';
 import React, { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
@@ -129,13 +129,6 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         }
     }
 
-    const onFocus=()=>{
-        const el = document.querySelector('#adjust_margin')
-        if (typeof window !== 'undefined' && el) {
-            window.scrollTo(0, el.scrollHeight);
-        }
-    }
-
     return (
         <Div100vh
             className={classNames(
@@ -205,7 +198,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
-                                onFocus={onFocus}
+                                onFocus={scrollFocusInput}
                             />
                             <div
                                 className='flex items-center'

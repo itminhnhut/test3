@@ -4,6 +4,7 @@ import throttle from 'lodash/throttle';
 import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track, } from './StyleInputSlider';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import classNames from 'classnames';
+import colors from 'styles/colors';
 
 function getClientPosition(e) {
     const { touches } = e
@@ -48,8 +49,10 @@ const Slider = ({
     xStart = 0,
     reload,
     dots,
-    onusMode = true,
+    onusMode = false,
     BgColorLine,
+    positionLabel = 'bottom',
+    showPercentLabel = false,
     ...props
 }) => {
     const container = useRef(null)
@@ -278,6 +281,8 @@ const Slider = ({
                     active={pos.left >= i * size}
                     percentage={i * size}
                     isDark={currentTheme === THEME_MODE.DARK}
+                    onusMode={onusMode}
+                    bgColorDot={onusMode ? colors.onus.bg3 : null}
                 />
             )
             label.push(
@@ -293,7 +298,9 @@ const Slider = ({
                                     i > 0 && i !== _dots,
                                 '-left-1/2 translate-x-[-80%]':
                                     i === _dots,
-                            }
+                            },
+                            { '!font-normal': onusMode },
+                            { '!text-onus-white': Number(labelX) === Number(x) && onusMode },
                         )}
                     >
                         {labelX}
@@ -308,14 +315,22 @@ const Slider = ({
 
     return (
         <>
+            {useLabel && positionLabel === 'top' && (
+                <>
+                    <div className='relative w-full flex items-center justify-between'>
+                        {customDotAndLabel ? customDotAndLabel(xmax, pos)?.label : renderDotAndLabel()?.label}
+                    </div>
+                    <div className='h-[20px] w-full' />
+                </>
+            )}
             <Track
                 {...props}
                 ref={container}
                 onTouchStart={handleTrackMouseDown}
                 onMouseDown={handleTrackMouseDown}
             >
-                <Active style={valueStyle} bgColorSlide={bgColorSlide} />
-                <SliderBackground isDark={currentTheme === THEME_MODE.DARK} BgColorLine={BgColorLine} />
+                <Active onusMode={onusMode} style={valueStyle} bgColorSlide={bgColorSlide} />
+                <SliderBackground onusMode={onusMode} isDark={currentTheme === THEME_MODE.DARK} BgColorLine={BgColorLine} />
                 <DotContainer>
                     {!customDotAndLabel &&
                         <Dot
@@ -323,6 +338,7 @@ const Slider = ({
                             percentage={0}
                             isDark={currentTheme === THEME_MODE.DARK}
                             bgColorActive={bgColorActive}
+                            onusMode={onusMode}
                         />
                     }
                     {customDotAndLabel ? customDotAndLabel(xmax, pos)?.dot : renderDotAndLabel()?.dot}
@@ -341,17 +357,19 @@ const Slider = ({
                         isZero={customDotAndLabel ? false : pos.left === 0}
                         isDark={currentTheme === THEME_MODE.DARK}
                         bgColorActive={bgColorActive}
+                        onusMode={onusMode}
                     >
-                        <ThumbLabel
+                        {showPercentLabel && <ThumbLabel
                             isZero={pos.left === 0}
                             isDark={currentTheme === THEME_MODE.DARK}
+                            onusMode={onusMode}
                         >
                             {ceil(pos.left, 0)}%
-                        </ThumbLabel>
+                        </ThumbLabel>}
                     </Thumb>
                 </div>
             </Track>
-            {useLabel && (
+            {useLabel && positionLabel === 'bottom' && (
                 <>
                     <div className='relative w-full flex items-center justify-between'>
                         {customDotAndLabel ? customDotAndLabel(xmax, pos)?.label : renderDotAndLabel()?.label}
