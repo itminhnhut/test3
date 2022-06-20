@@ -155,10 +155,11 @@ const OrderItemMobile = ({
                         <div
                             className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
                         </div>
-                        {profit &&
+                        {profit ?
                             <img className="ml-2"
                                 onClick={() => actions('modal', 'share')}
                                 src={getS3Url("/images/icon/ic_share_onus.png")} height={20} width={20} />
+                            : null
                         }
                     </div>
                     <div
@@ -197,7 +198,7 @@ const OrderItemMobile = ({
                         value={order?.order_value ? formatNumber(order?.order_value, 0, 0, true) : '-'} />
                     <OrderItem
                         label={t('futures:order_table:open_price')}
-                        value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
+                        value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : getOpenPrice(order, dataMarketWatch)}
                     />
                     <OrderItem
                         label={t('futures:margin')}
@@ -209,7 +210,7 @@ const OrderItemMobile = ({
                     />
                     <OrderItem
                         label={t('futures:mobile:margin_ratio')}
-                        value={marginRatio > 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
+                        value={marginRatio >= 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
                         valueClassName={renderColorMarginRatio()}
                     />
                     <OrderItem
