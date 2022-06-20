@@ -312,7 +312,7 @@ const EditSLTPVndcMobile = ({
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
                         />
-                        <div className="min-w-[66px] bg-[#445571] px-3 h-full rounded-r-[6px]">
+                        <div className="min-w-[66px] bg-onus-grey2 px-3 h-full rounded-r-[6px]">
                             {renderTab('sl')}
                         </div>
                     </div>
@@ -351,7 +351,7 @@ const EditSLTPVndcMobile = ({
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
                         />
-                        <div className="min-w-[66px] bg-[#445571] px-3 h-full rounded-r-[6px]">
+                        <div className="min-w-[66px] bg-onus-grey2 px-3 h-full rounded-r-[6px]">
                             {renderTab('tp')}
                         </div>
                     </div>

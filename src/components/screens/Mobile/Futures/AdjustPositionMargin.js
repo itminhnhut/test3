@@ -164,7 +164,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         >
             <div className='h-full' onClick={onClose}/>
             <div
-                className='relative bg-onus-line w-full rounded-t-2xl pb-10'>
+                className='relative bg-onus-bgModal w-full rounded-t-2xl pb-10'>
                 <div className='flex justify-between items-center px-4 pb-4 pt-11'>
                     <span className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
                 </div>
@@ -175,7 +175,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             classNames(
                                 'p-2 text-center',
                                 {
-                                    'border-b border-[#2B3247] text-onus-textSecondary': adjustType === ADJUST_TYPE.REMOVE,
+                                    'border-b border-onus-bg2 text-onus-textSecondary': adjustType === ADJUST_TYPE.REMOVE,
                                     'border-b-2 border-onus-base text-onus-base': adjustType === ADJUST_TYPE.ADD,
                                 }
                             )
@@ -189,7 +189,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             classNames(
                                 'p-2 text-center',
                                 {
-                                    'border-b border-[#2B3247] text-onus-textSecondary': adjustType === ADJUST_TYPE.ADD,
+                                    'border-b border-onus-bg2 text-onus-textSecondary': adjustType === ADJUST_TYPE.ADD,
                                     'border-b-2 border-onus-base text-onus-base': adjustType === ADJUST_TYPE.REMOVE,
                                 }
                             )
@@ -207,7 +207,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     </div>
                     <ErrorToolTip message={!errorProfit ? error : ''}>
                         <div
-                            className='flex justify-between items-center pl-4 bg-onus-2 text-sm rounded-md h-11 mb-2 mt-2'>
+                            className='flex justify-between items-center pl-4 bg-onus-input text-sm rounded-md h-11 mb-2 mt-2'>
                             <NumberFormat
                                 thousandSeparator
                                 allowNegative={false}
@@ -228,7 +228,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                     {t('futures:mobile:adjust_margin:max')}
                                 </span>
                                 <div
-                                    className='h-full leading-[2.75rem] bg-onus-1 w-16 text-onus-grey font-medium rounded-r-md text-center'>
+                                    className='h-full leading-[2.75rem] bg-onus-grey2 w-16 text-onus-grey font-medium rounded-r-md text-center'>
                                     {assetConfig?.assetCode}
                                 </div>
                             </div>

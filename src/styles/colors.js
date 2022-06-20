@@ -66,11 +66,12 @@ const colors = {
         green: '#0DB787',
         red: '#DC1F4E',
         line: '#1B222D',
-        input: '#192231',
+        input: '#36445A',
         white: '#F6F6F6',
         grey: '#8492A7',
-        orange: '#FF9F1A'
-    }
+        grey2: '#445571',
+        orange: '#FF9F1A',
+    },
     // onus: '#090D17', //background main
     // onus1: '#192231',//background input
     // greenOnus: '#0DB787',

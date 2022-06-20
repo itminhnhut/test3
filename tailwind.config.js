@@ -34,12 +34,13 @@ const commonColors = {
         green: '#0DB787',
         red: '#DC1F4E',
         line: '#1B222D',
-        input: '#192231',
+        input: '#36445A',
         white: '#F6F6F6',
         textPrimary: '#F6F6F6',
         grey: '#8492A7',
+        grey2: '#445571',
         textSecondary: '#8492A7',
-        orange: '#FF9F1A'
+        orange: '#FF9F1A',
     },
 };
 
