@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
@@ -11,6 +11,12 @@ import TradingInput from 'components/trade/TradingInput';
 import { Popover, Transition } from '@headlessui/react';
 import Switcher from 'components/common/Switcher';
 import { log } from 'utils';
+import CheckBox from 'components/common/CheckBox';
+import Slider from 'components/trade/InputSlider';
+import { Dot } from 'components/trade/StyleInputSlider';
+import classNames from 'classnames';
+import colors from 'styles/colors'
+import { DefaultFuturesFee } from 'redux/actions/const';
 
 const EditSLTPVndcMobile = ({
     onClose, isVisible, order, status, onConfirm,
@@ -26,7 +32,9 @@ const EditSLTPVndcMobile = ({
     const [tabSl, setTabSl] = useState(0)
     const [tabTp, setTabTp] = useState(0)
     const profit = useRef({ tp: 0, sl: 0 })
-    const tabPercent = useRef({ tp: 0, sl: 0 })
+    const [percent, setPercent] = useState({ tp: 0, sl: 0 })
+    const [autoType, setAutoType] = useState(false);
+    const dotStep = useRef(4);
     const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
     const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
     const futuresConfigs = useSelector(state => state.futures.pairConfigs);
@@ -35,6 +43,7 @@ const EditSLTPVndcMobile = ({
     const pairConfig = find(futuresConfigs, { symbol });
     const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
     if (!pairConfig) return null
+    const isChangeSlide = useRef(false);
 
     const getProfitSLTP = (sltp) => {
         const {
@@ -81,7 +90,23 @@ const EditSLTPVndcMobile = ({
         return +tpsl.toFixed(decimals)
     }
 
+    const onChangeAutoType = () => {
+        if (!autoType) {
+            localStorage.setItem('edit_tp_sl_auto_type', true)
+            setAutoType(true)
+        } else {
+            localStorage.removeItem('edit_tp_sl_auto_type')
+            setAutoType(false)
+        }
+    }
+
     useEffect(() => {
+        if (order?.sl) {
+            profit.current.sl = getProfitSLTP(Number(order?.sl));
+        }
+        if (order?.tp) {
+            profit.current.tp = getProfitSLTP(Number(order?.tp));
+        }
         if (order.leverage < 10) {
             if (!order?.sl) {
                 profit.current.sl = 0
@@ -89,136 +114,49 @@ const EditSLTPVndcMobile = ({
             if (!order?.tp) {
                 profit.current.tp = 0
             }
-        } else {
-            profit.current = {
-                tp: tabTp === 0 ? getProfitSLTP(Number(order?.tp)) : 0,
-                sl: tabSl === 0 ? getProfitSLTP(Number(order?.sl)) : 0,
-            }
         }
-        tabPercent.current = { tp: 0, sl: 0 }
+        setTimeout(() => {
+            setPercent({
+                sl: getPercentSlTp(Number(order?.sl), 'sl').toFixed(0),
+                tp: getPercentSlTp(Number(order?.tp), 'tp').toFixed(0),
+            })
+        }, 100);
         setData({
             ...data,
             tp: Number(order?.tp),
             sl: Number(order?.sl),
         });
 
-    }, [tabSl, tabTp])
-
-    const tabs = [{ value: 0, label: t('futures:price') }, { value: 2, label: '%' }]
-    const renderTab = (mode) => {
-        const tab = mode === 'sl' ? tabSl : tabTp
-        const tabName = tabs.find(rs => rs.value === tab);
-        return (
-            <div className="relative flex items-center justify-between h-full w-full" >
-                <button
-                    type="button"
-                    className="flex items-center justify-between focus:outline-none w-full"
-                    aria-expanded="false"
-                    onClick={() => {
-                        if (mode === 'sl') {
-                            setTabSl(tabSl === 0 ? 2 : 0)
-                        } else {
-                            setTabTp(tabTp === 0 ? 2 : 0)
-                        }
-                    }}
-                >
-                    <div className="text-sm font-medium">{tabName.label}</div>
-                    <div className="min-w-[12px]"><SortIcon /></div>
-                </button>
-            </div>
-        )
-    }
-
-    const getLabelButton = (index, isString = false, key) => {
-        const _avlb = wallets?.[pairConfig?.quoteAssetId];
-        const balance = Math.max(_avlb?.value, 0);
-        let label = 0;
-        let value = 0
-        const prefix = key === 'sl' ? '+' : '+';
-        let tab = key === 'sl' ? tabSl : tabTp
-        if (tab === 0) {
-            //40%
-            value = data.price + (data.price * index * 0.4 / 100)
-            label = prefix + formatCurrency(value, 2);
+        if (localStorage.getItem('edit_tp_sl_auto_type')) {
+            setAutoType(true)
         }
-        if (tab === 1) {
-            // 10%
-            value = balance * (index * 0.1 / 100);
-            label = prefix + formatCurrency(value, 2);
-        }
-        if (tab === 2) {
-            //+- 100%
-            value = getSLTP(index, key);
-            label = prefix + index + '%';
-        }
-        return { label, value };
-    }
-
-    const onChangeSlTP = (value, key, index) => {
-        const tab = key === 'sl' ? tabSl : tabTp
-        if (tab === 2) {
-            tabPercent.current[key] = index;
-            profit.current[key] = getProfitSLTP(value);
-        }
-
-        setData({ ...data, [key]: value })
-    }
-
-    const renderButtons = (qty, key) => {
-        const tab = key === 'sl' ? tabSl : tabTp
-        if (tab !== 2) return null;
-        const size = 100 / qty;
-        const arr = [5, 10, 25, 50, 100];
-        const result = [];
-        arr.forEach(per => {
-            const { label, value } = getLabelButton(per, true, key);
-            result.push(
-                <div onClick={() => onChangeSlTP(value, key, per)}
-                    className="active:bg-onus/[0.1] px-4 py-[5px] mb-[4.5px] bg-onus-bg2 rounded-[4px] text-xs font-medium mr-[4.5px] last:mr-0">
-                    {label}
-                </div>
-            )
-        })
-        return <div className={`flex flex-wrap mt-3 text-onus-white font-medium`}>{result}</div>;
-    }
+    }, [])
 
     const onHandleChange = (key, e) => {
+        if (isChangeSlide.current) {
+            isChangeSlide.current = false;
+            return;
+        }
         const value = +e.value === 0 ? '' : +e.value;
         const decimals = countDecimals(decimalScalePrice?.tickSize);
-        const tab = key === 'sl' ? tabSl : tabTp
-        if (tab === 0) {
-            profit.current[key] = getProfitSLTP(value)
-            setData({
-                ...data,
-                [key]: value
-            });
-        } else if (tab === 1) {
-            profit.current[key] = formatNumber(value, decimals, 0, true)
-            if (value) {
-                setData({
-                    ...data,
-                    [key]: calculateSLTP(value)
-                });
-            }
+        profit.current[key] = value ? getProfitSLTP(value) : 0;
+        setPercent({ ...percent, [key]: getPercentSlTp(value, key) })
+        setData({
+            ...data,
+            [key]: value
+        });
+    }
+
+    const getPercentSlTp = (sltp, key) => {
+        if (!sltp) return 50;
+        const { leverage, side } = order;
+        let formatX = 0;
+        if (side == VndcFutureOrderType.Side.BUY) {
+            formatX = (sltp * (1 - DefaultFuturesFee.NamiFrameOnus) - _lastPrice * (1 + DefaultFuturesFee.NamiFrameOnus)) * leverage / _lastPrice * 100
         } else {
-            const {
-                quantity,
-                open_price,
-                status,
-                price,
-                leverage,
-            } = order;
-            const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
-            const margin = openPrice * quantity;
-            const _value = key === 'sl' ? -value : value
-            const _profit = (_value / 100) * margin / leverage;
-            profit.current[key] = formatNumber(_profit, decimals, 0, true)
-            tabPercent.current[key] = value;
-            setData({
-                ...data,
-                [key]: getSLTP(value, key)
-            })
+            formatX = (sltp * (-1 - DefaultFuturesFee.NamiFrameOnus) + _lastPrice * (1 - DefaultFuturesFee.NamiFrameOnus)) * leverage / _lastPrice * 100
         }
+        return formatX <= -100 ? -1 : Math.abs(formatX > 0 ? 50 + formatX / 2 : -50 - formatX / 2)
     }
 
     const placeholder = (key) => {
@@ -226,46 +164,132 @@ const EditSLTPVndcMobile = ({
         return tab === 0 ? t(`futures:mobile:${key}_input`) : tab === 1 ? t(`futures:mobile:profit_input`) : t('futures:mobile:percent_input')
     }
 
+    const setDataGeneral = (sltp, key) => {
+        profit.current[key] = sltp ? getProfitSLTP(sltp) : 0;
+        setData({ ...data, [key]: sltp });
+        setPercent({ ...percent, [key]: sltp ? getPercentSlTp(sltp, key) : 50 })
+    }
+
     const onSwitch = (key) => {
-        const tab = key === 'sl' ? tabSl : tabTp
-        tabPercent.current[key] = 0;
-        if (tab === 0) {
-            if (order.leverage < 10) {
-                profit.current = {
-                    tp: 0,
-                    sl: 0,
+        if (!order?.displaying_id) {
+            if (autoType) {
+                if (order.leverage < 10) {
+                    setDataGeneral(0, key);
+                } else if (order.leverage <= 20) {
+                    if (key === 'sl') {
+                        const sltp = getSLTP(60, key);
+                        setDataGeneral(sltp, key);
+                    } else {
+                        setDataGeneral(0, key);
+                    }
+                } else if (order.leverage > 20 && order.leverage <= 100) {
+                    const sltp = getSLTP(60, key);
+                    setDataGeneral(sltp, key);
+                } else {
+                    const sltp = getSLTP(90, key);
+                    setDataGeneral(sltp, key);
                 }
-            } else if (order.leverage <= 20) {
-                if (!order?.sl) {
-                    setData({ ...data, sl: getSLTP(order.leverage, 'sl') });
-                    profit.current.sl = getProfitSLTP(getSLTP(order.leverage, 'sl'));
-                }
-            } else if (order.leverage > 20 && (!order?.sl || !order?.tp)) {
-                if (key === 'sl' && !order?.sl) {
-                    setData({ ...data, [key]: getSLTP(order.leverage, 'sl') });
-                    profit.current[key] = getProfitSLTP(getSLTP(order.leverage, 'sl'));
-                } else if (!order?.tp) {
-                    setData({ ...data, [key]: getSLTP(order.leverage, 'tp') });
-                    profit.current[key] = getProfitSLTP(getSLTP(order.leverage, 'tp'));
-                }
-            } else if (!order?.sl || !order?.tp) {
-                setData({ ...data, [key]: getSLTP(order.leverage, key) });
-                profit.current[key] = getProfitSLTP(getSLTP(order.leverage, key));
-            } else {
-                setData({ ...data, [key]: order[key] });
-                profit.current[key] = getProfitSLTP(getSLTP(order.leverage, key));
             }
         } else {
-            profit.current[key] = 0;
+            if (order[key]) {
+                if (!data[key]) setDataGeneral(order[key], key);
+            } else {
+                setDataGeneral(0, key);
+            }
         }
         setShow({ ...show, [key]: !show[key] })
+    }
+
+    const customDotAndLabel = useCallback((xmax, pos, key) => {
+        const dot = []
+        const label = []
+        const size = 100 / dotStep.current
+        const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
+        for (let i = 0; i <= dotStep.current; ++i) {
+            const index = postion * dotStep.current / 100;
+            const a = index / 2;
+            const b = i - (dotStep.current / 2);
+            let active = false;
+            if (a >= b && b >= 0 || a <= b && b <= 0) {
+                active = true;
+            }
+            dot.push(
+                <Dot
+                    key={`inputSlider_dot_${i}`}
+                    active={active}
+                    percentage={i * size}
+                    isDark
+                    onusMode
+                    bgColorActive={colors.onus.slider}
+                    bgColorDot={colors.onus.bg3}
+
+                />
+            )
+            label.push(
+                <div className='relative' key={`inputSlider_label_${i}`}>
+                    <span
+                        onClick={() => {
+                            onSetValuePercent(i * size, key)
+                        }}
+                        className={classNames(
+                            'block absolute font-medium text-xs text-txtSecondary dark:text-onus-grey select-none cursor-pointer',
+                            {
+                                'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
+                                '-left-1/2 translate-x-[-80%]': i === dotStep.current,
+                                '!text-onus-white': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
+                            }
+                        )}
+                    >
+                        {getLabelPercent(i * size, key)}
+                        {'%'}
+                    </span>
+                </div>
+            )
+        }
+        return { dot, label }
+    }, [percent])
+
+    const getLabelPercent = (index, key) => {
+        //+- 100% -> total 200%
+        const negative = -(50 - index) < 0
+        const formatX = index === 50 ? 0 : index > 50 ? (index - 50) * 2 : -(50 - index) * 2;
+        return formatX.toFixed(0)
+    }
+
+    const arrDot = useMemo(() => {
+        const size = 100 / dotStep.current;
+        const arr = [];
+        for (let i = 0; i <= dotStep.current; i++) {
+            arr.push(i * size)
+        }
+        return arr
+    }, [dotStep.current])
+
+    const onChangePercent = (x, xmax, key) => {
+        const _x = arrDot.reduce((prev, curr) => {
+            let i = 0;
+            if (Math.abs(curr - x) < 2 || Math.abs(prev - x) < 2) {
+                i = Math.abs(curr - x) < Math.abs(prev - x) ? curr : prev;
+            }
+            return i;
+        });
+        isChangeSlide.current = true;
+        onSetValuePercent(_x ? _x : x, key)
+    }
+
+    const onSetValuePercent = (x, key) => {
+        const formatX = getLabelPercent(x, key);
+        const tpsl = getSLTP(key === 'sl' ? -formatX : formatX, key);
+        profit.current[key] = getProfitSLTP(tpsl);
+        setData({ ...data, [key]: tpsl })
+        setPercent({ ...percent, [key]: x })
     }
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
         >
 
-            <div className="pb-[33px]">
+            <div className="pb-[25px]">
                 <div className="text-lg font-bold text-onus-white pb-[20px]">{t('futures:tp_sl:modify_tpsl')}</div>
                 <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">{order?.symbol} {order?.leverage}x</div>
                 <div className="border border-onus-bg2 px-[15px] py-[10px] rounded-lg pt-[21px]">
@@ -284,13 +308,30 @@ const EditSLTPVndcMobile = ({
                     </div>
                 </div>
             </div>
-            <div>
-                <div className='flex items-center'>
-                    <label className="text-onus-white font-semibold mr-2">{t('futures:stop_loss')}</label>
-                    <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
-                        active={show.sl} onChange={() => onSwitch('sl')} />
+            <div
+                className="flex items-center text-sm font-medium select-none cursor-pointer"
+                onClick={onChangeAutoType}
+            >
+                <CheckBox onusMode={true} active={autoType}
+                    boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-onus-grey !bg-onus-bg2'}`} />
+                <span className="ml-3 whitespace-nowrap text-onus-grey font-medium capitalize text-xs">
+                    {t('futures:mobile:auto_type_sltp')}
+                </span>
+            </div>
+            <div className="pt-[25px]">
+                <div className='flex items-center justify-between'>
+                    <div className='flex items-center'>
+                        <label className="text-onus-white font-semibold mr-2">{t('futures:stop_loss')}</label>
+                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
+                            active={show.sl} onChange={() => onSwitch('sl')} />
+                    </div>
+                    {show.sl && <div className="text-xs flex">
+                        <div className="font-normal text-onus-grey">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
+                        <div className="font-medium text-onus-red">{profit.current.sl + ' ' + quoteAsset}</div>
+                    </div>
+                    }
                 </div>
-                {show.sl && <>
+                {show.sl &&
                     <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
                         <TradingInput
                             onusMode={onusMode}
@@ -298,9 +339,9 @@ const EditSLTPVndcMobile = ({
                             type="text"
                             placeholder={placeholder('stop_loss')}
                             labelClassName="hidden"
-                            className={`flex-grow text-sm font-normal h-[21px] text-onus-grey w-full `}
+                            className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full `}
                             containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
-                            value={tabSl === 0 ? data.sl : tabSl === 1 ? profit.current.sl : tabPercent.current.sl}
+                            value={data.sl}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('sl', e)}
                             renderTail={() => (
@@ -311,35 +352,48 @@ const EditSLTPVndcMobile = ({
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
                         />
-                        <div className="min-w-[66px] bg-onus-grey2 px-3 h-full rounded-r-[6px]">
-                            {renderTab('sl')}
-                        </div>
                     </div>
-                    {renderButtons(4, 'sl')}
-                    <div className="text-xs flex pt-3">
-                        <div className="font-normal text-onus-grey">{t('futures:mobile:est_stop_loss')}:</div>&nbsp;
-                        <div className="font-medium text-onus-red">{profit.current.sl + ' ' + quoteAsset}</div>
-                    </div>
-                </>
                 }
-            </div>
-            <div className="pt-[33px] pb-10">
-                <div className='flex items-center pb-4'>
-                    <label className="text-onus-white font-semibold mr-2">{t('futures:take_profit')}</label>
-                    <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
-                        active={show.tp} onChange={() => onSwitch('tp')} />
+                <div className={`mt-2 mb-[14px] ${!show.sl ? 'hidden' : ''}`}>
+                    <Slider
+                        useLabel
+                        onusMode
+                        labelSuffix='%'
+                        x={percent.sl}
+                        axis='x'
+                        xmax={100}
+                        bgColorActive={colors.onus.slider}
+                        bgColorSlide={colors.onus.slider}
+                        xStart={50}
+                        positionLabel="top"
+                        customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
+                        onChange={({ x }) => onChangePercent(x, 100, 'sl')}
+                    />
                 </div>
-                {show.tp && <>
-                    <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex">
+            </div>
+            <div className="pt-[34px] pb-10">
+                <div className='flex items-center justify-between'>
+                    <div className='flex items-center'>
+                        <label className="text-onus-white font-semibold mr-2">{t('futures:take_profit')}</label>
+                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
+                            active={show.tp} onChange={() => onSwitch('tp')} />
+                    </div>
+                    {show.tp && <div className="text-xs flex">
+                        <div className="font-normal text-onus-grey">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
+                        <div className="font-medium text-onus-green">{profit.current.tp + ' ' + quoteAsset}</div>
+                    </div>}
+                </div>
+                {show.tp &&
+                    <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
                         <TradingInput
                             onusMode={onusMode}
                             thousandSeparator
                             type="text"
                             placeholder={placeholder('take_profit')}
                             labelClassName="hidden"
-                            className={`flex-grow text-sm font-normal h-[21px] text-onus-grey w-full `}
+                            className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full `}
                             containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
-                            value={tabTp === 0 ? data.tp : tabTp === 1 ? profit.current.tp : tabPercent.current.tp}
+                            value={data.tp}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
                             renderTail={() => (
@@ -350,17 +404,24 @@ const EditSLTPVndcMobile = ({
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
                         />
-                        <div className="min-w-[66px] bg-onus-grey2 px-3 h-full rounded-r-[6px]">
-                            {renderTab('tp')}
-                        </div>
                     </div>
-                    {renderButtons(4, 'tp')}
-                    <div className="text-xs flex pt-3">
-                        <div className="font-normal text-onus-grey">{t('futures:mobile:est_take_profit')}:</div>&nbsp;
-                        <div className="font-medium text-onus-green">{profit.current.tp + ' ' + quoteAsset}</div>
-                    </div>
-                </>
                 }
+                <div className={`mt-2 mb-[14px] ${!show.tp ? 'hidden' : ''}`}>
+                    <Slider
+                        useLabel
+                        onusMode
+                        labelSuffix='%'
+                        x={percent.tp}
+                        axis='x'
+                        xmax={100}
+                        bgColorActive={colors.onus.slider}
+                        bgColorSlide={colors.onus.slider}
+                        xStart={50}
+                        positionLabel="top"
+                        customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
+                        onChange={({ x }) => onChangePercent(x, 100, 'tp')}
+                    />
+                </div>
             </div>
             <Button
                 onusMode={true}
@@ -369,14 +430,11 @@ const EditSLTPVndcMobile = ({
                 className={`!h-[50px] !text-[16px] !font-semibold`}
                 componentType="button"
                 onClick={() => {
-
                     const newData = {
                         ...data,
                         sl: show?.sl ? data.sl : 0,
                         tp: show?.tp ? data.tp : 0,
                     }
-
-                    console.log('__ check new data', newData, show, data)
                     onConfirm(newData)
                 }}
             />
