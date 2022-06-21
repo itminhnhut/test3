@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import Button from 'components/common/Button';
 import Modal from 'components/common/ReModal';
 import { Minus, Plus, X } from 'react-feather';
@@ -20,6 +20,7 @@ const OrderVolumeMobileModal = (props) => {
     const { t } = useTranslation();
     const [volume, setVolume] = useState(quoteQty)
     const [percent, setPercent] = useState(0);
+    const firstTime = useRef(true);
 
     const minQuoteQty = useMemo(() => {
         return pairConfig ? pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : initValue
@@ -40,16 +41,21 @@ const OrderVolumeMobileModal = (props) => {
 
     const onChangeVolume = (x) => {
         if (!x) {
+            firstTime.current = true;
             setVolume(minQuoteQty);
         } else {
             const value = (+maxQuoteQty * x / 100).toFixed(decimal);
             setVolume(value);
+            setPercent(x);
         }
     }
 
     useEffect(() => {
-        setPercent(volume * 100 / maxQuoteQty);
-    }, [volume])
+        if (firstTime.current) {
+            setPercent(volume * 100 / maxQuoteQty);
+            firstTime.current = false;
+        }
+    }, [volume, maxQuoteQty])
 
     const onRedirect = () => {
         emitWebViewEvent('deposit')
@@ -57,15 +63,13 @@ const OrderVolumeMobileModal = (props) => {
 
     const available = maxQuoteQty >= minQuoteQty;
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
-
-    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2' : 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg3 dark:hover:bg-onus-bg3' : 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
     return (
         <Modal
             onusMode={true}
             isVisible={true}
             onBackdropCb={onClose}
-            selectorClose="volume-mobile"
-            onusClassName="!bg-onus-line !pt-[44px] !pb-[40px]"
+            onusClassName="!pt-[44px] !pb-[40px]"
         >
 
             <div className='mb-6 flex items-center justify-between font-bold text-lg'>
@@ -86,7 +90,7 @@ const OrderVolumeMobileModal = (props) => {
                     decimalScale={decimal}
                     allowNegative={false}
                     thousandSeparator={true}
-                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px]'
+                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] dark:bg-onus-bg2'
                     inputClassName="!text-center"
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}
@@ -106,6 +110,8 @@ const OrderVolumeMobileModal = (props) => {
             </div>
             <div className='mb-8'>
                 <Slider
+                    useLabel
+                    positionLabel='top'
                     onusMode
                     labelSuffix='%'
                     x={percent}
@@ -115,7 +121,7 @@ const OrderVolumeMobileModal = (props) => {
                     bgColorActive={'#418FFF'}
                     bgColorSlide={'#418FFF'}
                     dots={4}
-                    showPercentLabel
+
                 />
             </div>
             <div className="flex flex-col">

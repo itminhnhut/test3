@@ -27,7 +27,6 @@ const FuturesLeverageSettings = ({
     className,
     onusMode = false,
     containerStyle,
-    selectorClose
 }) => {
     const [loading, setLoading] = useState(false)
     const { t } = useTranslation();
@@ -134,7 +133,6 @@ const FuturesLeverageSettings = ({
             onBackdropCb={onClose}
             containerClassName={`max-w-[306px] select-none ${className}`}
             containerStyle={{ ...containerStyle }}
-            selectorClose={selectorClose}
         >
             <div className={`-mt-1 ${onusMode ? 'mb-6 text-lg' : 'mb-7 pb-4 text-sm'} flex items-center justify-between font-bold`}>
                 {t('futures:leverage:title')}
@@ -197,6 +195,7 @@ const FuturesLeverageSettings = ({
                     x={_leverage}
                     bgColorSlide={onusMode ? '#418FFF' : undefined}
                     bgColorActive={onusMode ? '#418FFF' : undefined}
+                    // BgColorLine={onusMode ? colors.onus.bg2 : ''}
                     axis='x'
                     xmax={pairConfig?.leverageConfig?.max}
                     onChange={({ x }) =>

@@ -69,8 +69,8 @@ const AlertModal = forwardRef((props, ref) => {
     if (!options.current.title) return null;
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
+            modalClassName="z-[99999999999]"
             containerStyle={{ width: 'calc(100vw - 30px)', transform: 'translate(-50%,0)', left: '50%' }}
-            selectorClose="alert-modal-mobile"
             onusClassName="!px-[30px] !py-[40px] min-h-[363px] !bottom-[50px] rounded-[16px]"
         >
             <div className="flex flex-col items-center justify-between">
