@@ -60,7 +60,7 @@ const OrderVolumeMobileModal = (props) => {
                 }
                 return i;
             });
-            const value = (+maxQuoteQty * _x ? _x : x / 100).toFixed(decimal);
+            const value = (+maxQuoteQty * (_x ? _x : x) / 100).toFixed(decimal);
             setVolume(value);
             setPercent(_x ? _x : x);
         }
