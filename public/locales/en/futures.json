@@ -270,6 +270,21 @@
                 "error": "Unknown"
             }
         },
+        "transaction_histories": {
+            "time": "Time",
+            "transaction_number": "Transaction number",
+            "cancel": "Cancel",
+            "done": "Done",
+            "categories": {
+                "all": "All",
+                "600": "Fee",
+                "602": "Profit",
+                "606": "Insurance Clearance Fee",
+                "603": "Funding Rates",
+                "4": "Deposit",
+                "5": "Withdraw"
+            }
+        },
         "login_short": "Login",
         "available": "Available",
         "liq_price": "Liq. Price",
@@ -311,11 +326,12 @@
         "take_profit_input": "Input take profit",
         "stop_loss_input": "Input stop loss",
         "profit_input": "Input profit",
-        "margin_ratio":"Risk"
+        "margin_ratio": "Risk"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",
     "maximum_leverage": "Maximum Leverage is",
     "positions": "Positions",
-    "open_orders": "Open Orders"
+    "open_orders": "Open Orders",
+    "transaction_histories": "Transaction histories"
 }

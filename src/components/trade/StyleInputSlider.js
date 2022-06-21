@@ -29,7 +29,7 @@ export const Active = styled.div`
 
 export const SliderBackground = styled.div`
     position: absolute;
-    background-color: ${({ isDark, BgColorLine }) => BgColorLine ? BgColorLine :
+    background-color: ${({ isDark, BgColorLine, onusMode }) => onusMode ? colors.onus.bg2 : BgColorLine ? BgColorLine :
         isDark ? colors.darkBlue4 : colors.grey5};
     border-radius: 4px;
     user-select: none;

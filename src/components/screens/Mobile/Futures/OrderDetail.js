@@ -99,6 +99,14 @@ const OrderDetail = ({
         return t('futures:not_set')
     }
 
+    const getColor = (key, value) => {
+        if (key === 'tp') {
+            return value > 0 ? '' : '!text-onus-white'
+        } else {
+            return value > 0 ? '' : '!text-onus-white'
+        }
+    }
+
 
     const renderModify = (metadata, key) => {
         let value = null;
@@ -114,17 +122,21 @@ const OrderDetail = ({
             case 'take_profit':
                 value = metadata?.modify_tp ?
                     <div className="flex items-center justify-between">
-                        <div className="text-left">{getValue(metadata?.modify_tp?.before)}</div>
+                        <div className={`text-left ${getColor('tp', metadata?.modify_tp?.before)}`}>
+                            {getValue(metadata?.modify_tp?.before)}</div>
                         &nbsp;<ArrowRight size={14} />&nbsp;
-                        <div className="text-right">{getValue(metadata?.modify_tp?.after)}</div>
+                        <div className={`text-right ${getColor('tp', metadata?.modify_tp?.after)}`}>
+                            {getValue(metadata?.modify_tp?.after)}</div>
                     </div> : null;
                 return value;
             case 'stop_loss':
                 value = metadata?.modify_sl ?
                     <div className="flex items-center justify-between">
-                        <div className="text-left">{getValue(metadata?.modify_sl?.before)}</div>
+                        <div className={`text-left ${getColor('sl', metadata?.modify_sl?.before)}`}>
+                            {getValue(metadata?.modify_sl?.before)}</div>
                         &nbsp;<ArrowRight size={14} />&nbsp;
-                        <div className="text-right">{getValue(metadata?.modify_sl?.after)} </div>
+                        <div className={`text-right ${getColor('sl', metadata?.modify_sl?.after)}`}>
+                            {getValue(metadata?.modify_sl?.after)} </div>
                     </div> : null;
                 return value;
             case 'margin':
@@ -250,7 +262,7 @@ const OrderDetail = ({
                         {!isTabHistory &&
                             <OrderOpenDetail order={order} decimal={decimal} isDark={isDark}
                                 pairConfig={pairConfig} onClose={onClose}
-                                             forceFetchOrder={forceFetchOrder}
+                                forceFetchOrder={forceFetchOrder}
                             />
                         }
                         <div className="py-[24px]">
@@ -302,11 +314,11 @@ const OrderDetail = ({
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:take_profit')}</Label>
-                                    <Span className="text-onus-green">{renderSlTp(order?.tp)}</Span>
+                                    <Span valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}>{renderSlTp(order?.tp)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:stop_loss')}</Label>
-                                    <Span className="text-onus-red">{renderSlTp(order?.sl)}</Span>
+                                    <Span valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}>{renderSlTp(order?.sl)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:open_fee')}</Label>

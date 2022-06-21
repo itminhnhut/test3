@@ -270,6 +270,21 @@
                 "error": "Lỗi không xác định"
             }
         },
+        "transaction_histories": {
+            "time": "Thời gian",
+            "transaction_number": "Số giao dịch",
+            "cancel": "Huỷ",
+            "done": "Đồng ý",
+            "categories": {
+                "all": "Tất cả",
+                "600": "Phí giao dịch",
+                "602": "Lợi nhuận",
+                "606": "Phí bảo hiểm",
+                "603": "Phí funding rate",
+                "4": "Nạp tiền",
+                "5": "Rút tiền"
+            }
+        },
         "login_short": "Đăng nhập ngay",
         "available": "Khả dụng",
         "liq_price": "Giá thanh lý",
@@ -317,6 +332,7 @@
     "minimum_leverage": "Đòn bẩy tối thiểu",
     "maximum_leverage": "Đòn bẩy tối đa",
     "positions": "Vị thế",
-    "open_orders": "Lệnh mở"
+    "open_orders": "Lệnh mở",
+    "transaction_histories": "Lịch sử giao dịch"
 }
 

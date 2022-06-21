@@ -60,7 +60,6 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
                     dots={5}
                     className="max-w-full overflow-hidden"
                     // containerStyle={{ transform: 'unset' }}
-                    selectorClose="leverage-mobile"
                 />
             }
         </>

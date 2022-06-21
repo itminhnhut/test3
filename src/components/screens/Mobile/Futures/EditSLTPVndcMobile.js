@@ -174,7 +174,7 @@ const EditSLTPVndcMobile = ({
             const { label, value } = getLabelButton(per, true, key);
             result.push(
                 <div onClick={() => onChangeSlTP(value, key, per)}
-                    className="active:bg-onus/[0.1] px-4 py-[5px] bg-onus-bg2 rounded-[4px] text-xs font-medium mr-[4.5px] last:mr-0">
+                    className="active:bg-onus/[0.1] px-4 py-[5px] mb-[4.5px] bg-onus-bg2 rounded-[4px] text-xs font-medium mr-[4.5px] last:mr-0">
                     {label}
                 </div>
             )
@@ -263,7 +263,6 @@ const EditSLTPVndcMobile = ({
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-            selectorClose="sltp-mobile"
         >
 
             <div className="pb-[33px]">

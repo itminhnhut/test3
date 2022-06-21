@@ -96,6 +96,7 @@ const TabOpenOrders = ({
             });
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
+                
             } else {
                 context.alert.show('error', t('commom:failed'), message);
             }
@@ -103,7 +104,6 @@ const TabOpenOrders = ({
             console.log(e);
         } finally {
             setOpenCloseModal(false);
-            setOpenEditModal(false);
         }
     };
 
@@ -120,9 +120,9 @@ const TabOpenOrders = ({
 
     const onConfirmEdit = (params) => {
         fetchOrder('PUT', params, () => {
-            console.log('__ check params', params);
             localStorage.setItem('edited_id', params.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
+            setOpenEditModal(false);
         });
     };
 
@@ -130,7 +130,7 @@ const TabOpenOrders = ({
         return <TableNoData
             isMobile
             title={t('futures:order_table:no_opening_order')}
-            className="h-full min-h-[300px]"/>;
+            className="h-full min-h-[300px]" />;
     }
 
     return (
@@ -152,14 +152,14 @@ const TabOpenOrders = ({
                 needShowHideOther
                 &&
                 <div
-                className="flex items-center text-sm font-medium select-none cursor-pointer"
-                onClick={() => setHideOther(!hideOther)}
-            >
-                <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
-                <span className="ml-3 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-onus-gray text-xs">
-                    {t('futures:hide_other_symbols')}
-                </span>
-            </div>
+                    className="flex items-center text-sm font-medium select-none cursor-pointer"
+                    onClick={() => setHideOther(!hideOther)}
+                >
+                    <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
+                    <span className="ml-3 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-onus-gray text-xs">
+                        {t('futures:hide_other_symbols')}
+                    </span>
+                </div>
             }
 
             <div className="min-h-[100px]">
@@ -168,8 +168,8 @@ const TabOpenOrders = ({
                     const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
                     return (
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
-                                         onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
-                                         onShowDetail={onShowDetail}
+                            onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
+                            onShowDetail={onShowDetail}
                         />
                     );
                 })}
