@@ -88,7 +88,8 @@ const EditSLTPVndcMobile = ({
             side,
             leverage
         } = order;
-        const tpsl = key === 'sl' ? getSuggestSl(side, _lastPrice, leverage, index / 100) : getSuggestTp(side, _lastPrice, leverage, index / 100);
+        const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
+        const tpsl = key === 'sl' ? getSuggestSl(side, openPrice, leverage, index / 100) : getSuggestTp(side, openPrice, leverage, index / 100);
         const decimals = countDecimals(decimalScalePrice?.tickSize)
         return +tpsl.toFixed(decimals)
     }
@@ -205,6 +206,7 @@ const EditSLTPVndcMobile = ({
         const size = 100 / dotStep.current
         const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
         for (let i = 0; i <= dotStep.current; ++i) {
+            // console.log(Number(i * size) ,Number(data[key] > 0 ? percent[key] : 50))
             const index = postion * dotStep.current / 100;
             const a = index / 2;
             const b = i - (dotStep.current / 2);
@@ -272,11 +274,11 @@ const EditSLTPVndcMobile = ({
             }
             return i;
         });
-        isChangeSlide.current = true;
         onSetValuePercent(_x ? _x : x, key)
     }
 
     const onSetValuePercent = (x, key) => {
+        isChangeSlide.current = true;
         const formatX = getLabelPercent(x, key);
         const tpsl = getSLTP(key === 'sl' ? -formatX : formatX, key);
         profit.current[key] = getProfitSLTP(tpsl);
@@ -289,22 +291,23 @@ const EditSLTPVndcMobile = ({
         >
 
             <div className="pb-[25px]">
-                <div className="text-lg font-bold text-onus-white pb-[6px]">{t('futures:tp_sl:modify_tpsl')}</div>
+                <div className="text-lg font-bold text-onus-white pb-[6px]">{t('futures:mobile:modify_tpsl_title')}</div>
                 <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">{order?.symbol} {order?.leverage}x</div>
                 <div className="border border-onus-bg2 px-[15px] py-[10px] rounded-lg pt-[21px]">
-                    <div className="text-sm flex items-center justify-between">
-                        <span className="text-txtSecondary dark:text-onus-grey">
-                            {t('futures:tp_sl:mark_price')}
-                        </span>
-                        <span className="font-medium">{formatNumber(_lastPrice, 2, 0, true)}</span>
-                    </div>
-                    <div className="h-[1px] bg-onus-bg2 w-full my-[10px]"></div>
                     <div className="text-sm flex items-center justify-between">
                         <span className="text-txtSecondary dark:text-onus-grey">
                             {t('futures:order_table:open_price')}
                         </span>
                         <span className="font-medium">{formatNumber(data.price, 2, 0, true)}</span>
                     </div>
+                    <div className="h-[1px] bg-onus-bg2 w-full my-[10px]"></div>
+                    <div className="text-sm flex items-center justify-between">
+                        <span className="text-txtSecondary dark:text-onus-grey">
+                            {t('futures:tp_sl:mark_price')}
+                        </span>
+                        <span className="font-medium">{formatNumber(_lastPrice, 2, 0, true)}</span>
+                    </div>
+
                 </div>
             </div>
             {!order?.displaying_id ?
