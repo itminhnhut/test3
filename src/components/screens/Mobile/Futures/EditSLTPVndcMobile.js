@@ -310,29 +310,26 @@ const EditSLTPVndcMobile = ({
 
                 </div>
             </div>
-            {!order?.displaying_id ?
-                <div
-                    className="flex items-center text-sm font-medium select-none cursor-pointer"
-                    onClick={onChangeAutoType}
-                >
-                    <CheckBox onusMode={true} active={autoType}
-                        boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-onus-grey !bg-onus-bg2'}`} />
-                    <span className="ml-3 whitespace-nowrap text-onus-grey font-medium text-xs">
-                        {t('futures:mobile:auto_type_sltp')}
-                    </span>
-                </div>
-                : null
-            }
-            <div className="pt-[33px]">
+            <div
+                className="flex items-center text-sm font-medium select-none cursor-pointer pt-6"
+                onClick={onChangeAutoType}
+            >
+                <CheckBox onusMode={true} active={autoType}
+                    boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-onus-grey !bg-onus-bg2'}`} />
+                <span className="ml-3 whitespace-nowrap text-onus-grey font-medium text-xs">
+                    {t('futures:mobile:auto_type_sltp')}
+                </span>
+            </div>
+            <div className="pt-6">
                 <div className='flex items-center justify-between'>
-                    <div className='flex items-center'>
-                        <label className="text-onus-white font-semibold mr-2">{t('futures:stop_loss')}</label>
+                    <div className='flex items-center mr-2'>
+                        <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:stop_loss')}</label>
                         <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
                             active={show.sl} onChange={() => onSwitch('sl')} />
                     </div>
-                    {show.sl && <div className="text-xs flex">
-                        <div className="font-normal text-onus-grey">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
-                        <div className="font-medium text-onus-red">{profit.current.sl + ' ' + quoteAsset}</div>
+                    {show.sl && <div className="text-xs flex items-center ">
+                        <div className="font-normal text-onus-grey mr-2 whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
+                        <div className="font-medium text-onus-red text-right">{profit.current.sl + ' ' + quoteAsset}</div>
                     </div>
                     }
                 </div>
@@ -359,7 +356,7 @@ const EditSLTPVndcMobile = ({
                         />
                     </div>
                 }
-                <div className={`mt-2 ${!show.sl ? 'hidden' : ''}`}>
+                <div className={`mt-2 pb-2 ${!show.sl ? 'hidden' : ''}`}>
                     <Slider
                         useLabel
                         onusMode
@@ -376,16 +373,16 @@ const EditSLTPVndcMobile = ({
                     />
                 </div>
             </div>
-            <div className="pt-[33px] pb-10">
+            <div className="pt-[32px] pb-10">
                 <div className='flex items-center justify-between'>
-                    <div className='flex items-center'>
-                        <label className="text-onus-white font-semibold mr-2">{t('futures:take_profit')}</label>
+                    <div className='flex items-center mr-2'>
+                        <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:take_profit')}</label>
                         <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
                             active={show.tp} onChange={() => onSwitch('tp')} />
                     </div>
-                    {show.tp && <div className="text-xs flex">
-                        <div className="font-normal text-onus-grey">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
-                        <div className="font-medium text-onus-green">{profit.current.tp + ' ' + quoteAsset}</div>
+                    {show.tp && <div className="text-xs flex items-center">
+                        <div className="font-normal text-onus-grey whitespace-nowrap mr-2">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
+                        <div className="font-medium text-onus-green text-right">{profit.current.tp + ' ' + quoteAsset}</div>
                     </div>}
                 </div>
                 {show.tp &&
