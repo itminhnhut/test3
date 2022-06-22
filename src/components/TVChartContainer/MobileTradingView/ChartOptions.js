@@ -69,7 +69,7 @@ const ChartOptions = ({
                 }
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center ">
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
@@ -111,7 +111,7 @@ const Change24h = ({pairPrice, isVndcFutures}) => {
     return (
         <div className='flex items-center'>
             <div
-                className={classNames('pl-2 text-onus-green font-medium',
+                className={classNames('px-2 min-w-[5.625rem] text-onus-green font-medium',
                     {
                         '!text-onus-red':
                             pairPrice?.priceChangePercent < 0,
