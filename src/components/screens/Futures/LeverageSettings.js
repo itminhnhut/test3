@@ -8,7 +8,7 @@ import Slider from 'components/trade/InputSlider';
 import colors from 'styles/colors';
 import Modal from 'components/common/ReModal';
 import axios from 'axios';
-import { formatNumber, getLoginUrl, scrollFocusInput } from 'redux/actions/utils';
+import { formatNumber, getLoginUrl, scrollFocusInput, emitWebViewEvent } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import WarningCircle from '../../svg/WarningCircle'
@@ -118,10 +118,7 @@ const FuturesLeverageSettings = ({
     }, [_leverage, pairConfig])
 
     const onLogin = () => {
-        window.open(
-            getLoginUrl('sso', 'login'),
-            '_self'
-        )
+        emitWebViewEvent('login')
     }
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2' : 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
@@ -153,7 +150,7 @@ const FuturesLeverageSettings = ({
                 <div className={changeClass}>
                     <Minus
                         size={onusMode ? 20 : 10}
-                        className={`${onusMode ? 'text-onus-white' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
+                        className={`${onusMode ? 'text-onus-white w-5' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
                         onClick={() =>
                             _leverage > 1 &&
                             _setLeverage((prevState) => Number(prevState) - 1)
@@ -166,7 +163,7 @@ const FuturesLeverageSettings = ({
                     value={_leverage}
                     suffix={'x'}
                     decimalScale={0}
-                    containerClassName={`px-2.5 flex-grow text-sm font-medium border-none ${onusMode ? 'h-[44px]' : 'h-[36px]'}`}
+                    containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium border-none ${onusMode ? 'h-[44px]' : 'h-[36px]'}`}
 
                     inputClassName="!text-center"
                     onValueChange={({ value }) => _setLeverage(value)}
@@ -178,7 +175,7 @@ const FuturesLeverageSettings = ({
                 <div className={changeClass}>
                     <Plus
                         size={onusMode ? 20 : 10}
-                        className={`${onusMode ? 'text-onus-white' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
+                        className={`${onusMode ? 'text-onus-white w-5' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
                         onClick={() =>
                             _leverage < pairConfig?.leverageConfig?.max &&
                             _setLeverage((prevState) => Number(prevState) + 1)
@@ -243,11 +240,11 @@ const FuturesLeverageSettings = ({
             {isAuth ?
                 <div className={`${onusMode ? 'mt-8' : 'mt-5 mb-2'}`}>{renderConfirmButton()}</div>
                 :
-                <div className={`${onusMode ? 'mt-8' : 'mt-5'} mb-2 cursor-pointer flex items-center justify-center h-full`}>
+                <div className={`${onusMode ? 'mt-8' : 'mt-5 h-full'} mb-2 cursor-pointer flex items-center justify-center `}>
                     <div className={`w-[200px] ${onusMode ? 'bg-onus-base' : 'bg-dominant font-medium '} text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`}
                         onClick={onLogin}
                     >
-                        {t('futures:order_table:login_to_continue')}
+                        {onusMode ? t('futures:mobile:login_short') : t('futures:order_table:login_to_continue')}
                     </div>
                 </div>
             }
