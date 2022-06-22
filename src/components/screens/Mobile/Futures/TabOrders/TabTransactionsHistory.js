@@ -122,13 +122,17 @@ function TabTransactionsHistory({scrollSnap}) {
                     <ChevronDown size={12} color={colors.onus.grey}/>}
             </div>
         </div>
-        <div id="list-transaction-histories" className='h-[calc(100vh-5.25rem)] overflow-y-auto'>
+        <div
+            // id="list-transaction-histories"
+            className='h-[calc(100vh-5.25rem)] overflow-y-auto'
+        >
             <InfiniteScroll
                 dataLength={data.result.length}
                 hasMore={data.hasNext && !loading}
                 next={() => fetchData(true)}
-                scrollableTarget="list-transaction-histories"
+                scrollableTarget="futures-mobile"
                 loader={<div><IconLoading color={colors.onus.white}/></div>}
+                {...scrollSnap ? {height: 'calc(100vh - 5.25rem)'} : {scrollableTarget: "futures-mobile"}}
             >
                 {loading ? <Loading/> : data.result.map(item => {
                     const assetConfig = assetConfigMap[item.currency]
@@ -144,7 +148,7 @@ function TabTransactionsHistory({scrollSnap}) {
                                 <div
                                     className='font-medium text-onus-grey text-xs mr-2'
                                 >
-                                    {format(new Date(item.created_at), 'yyyy-MM-dd hh:mm:ss')}
+                                    {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
                                 </div>
                             </div>
                         </div>
@@ -157,7 +161,7 @@ function TabTransactionsHistory({scrollSnap}) {
                             <div
                                 className='font-medium text-onus-grey text-xs'
                             >
-                                {t(`futures:mobile:transaction_histories:categories:${item.category}`)}
+                                {categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'}
                             </div>
                         </div>
                     </div>
@@ -203,7 +207,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
     >
         <div className='text-onus-white text-center border-b border-onus-bg2 pb-6'>
             <span className='text-sm'>
-                {t(`futures:mobile:transaction_histories:categories:${transaction?.category}`)}
+                {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'}
             </span>
             <div className='text-2xl font-bold'>
                 <span>{formatNumber(transaction?.money_use, assetConfig.assetDigit, null, true)}</span>
@@ -216,7 +220,8 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
                     {t('futures:mobile:transaction_histories:transaction_number')}
                 </span>
                 <div className='flex flex-1 min-w-0 items-center'>
-                    <div className='flex-1 min-w-0 overflow-hidden text-right' style={{textOverflow: 'ellipsis'}}>{transaction?._id}</div>
+                    <div className='flex-1 min-w-0 overflow-hidden text-right'
+                         style={{textOverflow: 'ellipsis'}}>{transaction?._id}</div>
                     <CopyToClipboard text={transaction?._id}>
                         <Copy className='ml-2' size={14} color={colors.onus.grey}/>
                     </CopyToClipboard>
@@ -224,7 +229,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
             </div>
             <div className='flex justify-between text-sm'>
                 <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:time')}</span>
-                <span>{transaction?.created_at ? format(new Date(transaction?.created_at), 'yyyy-MM-dd hh:mm:ss') : '--'}</span>
+                <span>{transaction?.created_at ? format(new Date(transaction?.created_at), 'yyyy-MM-dd H:mm:ss') : '--'}</span>
             </div>
         </div>
         <div
