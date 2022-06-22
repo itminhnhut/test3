@@ -69,6 +69,12 @@ export const RECORD_TAB_VNDC_MOBILE = [
         title: 'futures:orders_history',
         localized: null,
     },
+    {
+        key: 3,
+        code: FUTURES_RECORD_CODE.tradingHistory,
+        title: 'futures:transaction_histories',
+        localized: null,
+    },
 ]
 
 export const RECORD_TAB = [
