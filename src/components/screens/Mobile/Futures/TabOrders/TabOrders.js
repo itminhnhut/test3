@@ -146,7 +146,7 @@ const TabOrders = memo(({
                             />
                         </TabContent>
                         <TabContent active={tab === FUTURES_RECORD_CODE.tradingHistory}>
-                            <TabTransactionsHistory/>
+                            <TabTransactionsHistory scrollSnap={scrollSnap}/>
                         </TabContent>
                     </div>
                     : <LoginOrder/>

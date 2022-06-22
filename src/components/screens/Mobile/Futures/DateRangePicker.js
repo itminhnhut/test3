@@ -64,7 +64,7 @@ function DateRangePicker({visible, value, onClose, onChange}) {
             </div>
             <div className='bg-onus absolute bottom-4 inset-x-0 px-4 pt-1 grid grid-cols-2 gap-2 font-semibold'>
                 <div
-                    className='h-12 flex justify-center items-center rounded bg-onus-bg2'
+                    className='h-12 flex justify-center items-center rounded bg-onus-line text-onus-grey'
                     onClick={_onCancel}
                 >{t('futures:mobile:transaction_histories:cancel')}</div>
                 <div
