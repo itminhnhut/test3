@@ -124,7 +124,7 @@ function TabTransactionsHistory({scrollSnap}) {
         </div>
         <div
             // id="list-transaction-histories"
-            className='h-[calc(100vh-5.25rem)] overflow-y-auto'
+            className=''
         >
             <InfiniteScroll
                 dataLength={data.result.length}
