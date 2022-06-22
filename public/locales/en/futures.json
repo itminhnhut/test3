@@ -313,7 +313,7 @@
         "profit_input": "Input profit",
         "margin_ratio": "Risk",
         "auto_type_sltp": "Auto type SL-TP",
-        "pnl_estimate": "Estimate Pnl",
+        "pnl_estimate": "Estimate PNL",
         "modify_tpsl_title": "Modify SL-TP"
     },
     "orders_history": "Order History",

@@ -313,7 +313,7 @@
         "profit_input": "Nhập lợi nhuận",
         "margin_ratio": "Rủi ro",
         "auto_type_sltp": "Tự động nhập SL-TP",
-        "pnl_estimate": "Pnl ước tính",
+        "pnl_estimate": "Lời/lỗ ước tính",
         "modify_tpsl_title": "Chỉnh sửa SL-TP"
     },
     "orders_history": "Lịch sử",
