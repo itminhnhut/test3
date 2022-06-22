@@ -75,7 +75,7 @@ const Modal = ({
                     {onusMode ?
                         <div className="h-full flex flex-col justify-between relative">
                             <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>
-                            <div className={`${onusClassName} h-max w-full relative bg-onus-bgModal rounded-t-[16px] px-4 py-[50px] max-h-[90%] overflow-y-auto`}>
+                            <div className={`${onusClassName} h-max w-full relative bg-onus-bgModal rounded-t-[16px] px-4 pt-11 pb-[50px] max-h-[90%] overflow-y-auto`}>
                                 <div
                                     style={{ transform: 'translate(-50%,0)' }}
                                     className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-onus-white  absolute top-2 left-1/2 "></div>

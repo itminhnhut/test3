@@ -135,6 +135,9 @@ const PlaceOrder = ({
 
     useEffect(() => {
         firstTime.current = true;
+        if (!localStorage.getItem('auto_type_tp_sl')) {
+            localStorage.setItem('auto_type_tp_sl', JSON.stringify({ auto: true }))
+        }
     }, [pair]);
 
     useEffect(() => {
@@ -145,20 +148,25 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _sl = +(getSuggestSl(side, lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
-        const _tp = +(getSuggestTp(side, lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
-        if (leverage < 10) {
-            setTp('');
-            setSl('');
-        } else if (leverage <= 20) {
-            setSl(_sl);
-            setTp('');
-        } if (leverage > 20) {
-            setSl(_sl);
-            setTp(_tp);
+        let autoTypeInput = localStorage.getItem('auto_type_tp_sl');
+        if (autoTypeInput) {
+            autoTypeInput = JSON.parse(autoTypeInput)
+            if (autoTypeInput.auto) {
+                const _sl = +(getSuggestSl(side, lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
+                const _tp = +(getSuggestTp(side, lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
+                if (leverage <= 10) {
+                    setTp('');
+                    setSl('');
+                } else if (leverage <= 20) {
+                    setSl(_sl);
+                    setTp('');
+                } if (leverage > 20) {
+                    setSl(_sl);
+                    setTp(_tp);
+                }
+            }
         }
     }, [side, type, decimals, leverage]);
-
 
 
     useEffect(() => {
@@ -173,21 +181,28 @@ const PlaceOrder = ({
         const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
         setPrice(_lastPrice);
         setStopPrice(_lastPrice);
-        const _sl = +(getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
-        const _tp = +(getSuggestTp(side, _lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
-        if (leverage <= 10) {
-            setTp('');
-            setSl('');
-        } else if (leverage <= 20) {
-            setSl(_sl);
-            setTp('');
-        } if (leverage > 20) {
-            setSl(_sl);
-            setTp(_tp);
+        let autoTypeInput = localStorage.getItem('auto_type_tp_sl');
+        if (autoTypeInput) {
+            autoTypeInput = JSON.parse(autoTypeInput)
+            if (autoTypeInput.auto) {
+                const _sl = +(getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
+                const _tp = +(getSuggestTp(side, _lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
+                if (leverage <= 10) {
+                    setTp('');
+                    setSl('');
+                } else if (leverage <= 20) {
+                    setSl(_sl);
+                    setTp('');
+                } if (leverage > 20) {
+                    setSl(_sl);
+                    setTp(_tp);
+                }
+            }
         }
+
     }, [firstTime.current, decimals, leverage]);
 
-    
+
 
     const onChangeQuoteQty = (price, leverage) => {
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
@@ -196,7 +211,7 @@ const PlaceOrder = ({
             .toFixed(0);
         // let _quoteQty = minQuoteQty
         _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
-        const _size = +((_quoteQty / price) * initPercent / 100);
+        const _size = +((_quoteQty / price) * initPercent / 100).toFixed(decimals?.decimalScaleQtyLimit);;
         setSize(_size);
         setQuoteQty(_quoteQty);
     };
@@ -418,7 +433,7 @@ const PlaceOrder = ({
         return !isVndcFutures ? false : not_valid;
     }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage, quoteQty, collapse]);
 
-    const canShowChangeTpSL = useMemo( () => {
+    const canShowChangeTpSL = useMemo(() => {
         if (!isAuth) return false
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
         if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
@@ -466,7 +481,7 @@ const PlaceOrder = ({
         const _price = type === FuturesOrderTypes.Market ?
             (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
             price;
-        const _size = (quoteQty / _price);
+        const _size = (quoteQty / _price).toFixed(decimals?.decimalScaleQtyLimit);
         setSize(+_size);
         setQuoteQty(quoteQty);
         setShowEditVolume(false);

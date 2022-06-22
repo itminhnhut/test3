@@ -52,11 +52,14 @@ const EditSLTPVndcMobile = ({
             quantity,
             open_price,
             status,
-            price
+            price,
+            size
         } = order;
+        const isBuy = side === VndcFutureOrderType.Side.BUY;
         const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
-        let total = quantity * (sltp - openPrice);
-        let profit = side === VndcFutureOrderType.Side.BUY ? total - fee : -total - fee;
+        let total = quantity * (isBuy ? sltp - openPrice : openPrice - sltp);
+        const _fee = quantity * (sltp + openPrice) * DefaultFuturesFee.NamiFrameOnus;
+        let profit = total - _fee
         return formatNumber(profit, 0, 0, true);
     };
 
@@ -85,19 +88,14 @@ const EditSLTPVndcMobile = ({
             side,
             leverage
         } = order;
-        const tpsl = key === 'sl' ? getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : index / 100) : getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : index / 100);
+        const tpsl = key === 'sl' ? getSuggestSl(side, _lastPrice, leverage, index / 100) : getSuggestTp(side, _lastPrice, leverage, index / 100);
         const decimals = countDecimals(decimalScalePrice?.tickSize)
         return +tpsl.toFixed(decimals)
     }
 
     const onChangeAutoType = () => {
-        if (!autoType) {
-            localStorage.setItem('edit_tp_sl_auto_type', true)
-            setAutoType(true)
-        } else {
-            localStorage.removeItem('edit_tp_sl_auto_type')
-            setAutoType(false)
-        }
+        localStorage.setItem('auto_type_tp_sl', JSON.stringify({ auto: !autoType }))
+        setAutoType(!autoType)
     }
 
     useEffect(() => {
@@ -107,7 +105,7 @@ const EditSLTPVndcMobile = ({
         if (order?.tp) {
             profit.current.tp = getProfitSLTP(Number(order?.tp));
         }
-        if (order.leverage < 10) {
+        if (order.leverage <= 10) {
             if (!order?.sl) {
                 profit.current.sl = 0
             }
@@ -126,9 +124,10 @@ const EditSLTPVndcMobile = ({
             tp: Number(order?.tp),
             sl: Number(order?.sl),
         });
-
-        if (localStorage.getItem('edit_tp_sl_auto_type')) {
-            setAutoType(true)
+        const autoTypeInput = localStorage.getItem('auto_type_tp_sl');
+        if (autoTypeInput) {
+            autoTypeInput = JSON.parse(autoTypeInput);
+            setAutoType(autoTypeInput?.auto)
         }
     }, [])
 
@@ -173,7 +172,7 @@ const EditSLTPVndcMobile = ({
     const onSwitch = (key) => {
         if (!order?.displaying_id) {
             if (autoType) {
-                if (order.leverage < 10) {
+                if (order.leverage <= 10) {
                     setDataGeneral(0, key);
                 } else if (order.leverage <= 20) {
                     if (key === 'sl') {
@@ -232,7 +231,7 @@ const EditSLTPVndcMobile = ({
                             onSetValuePercent(i * size, key)
                         }}
                         className={classNames(
-                            'block absolute font-medium text-xs text-txtSecondary dark:text-onus-grey select-none cursor-pointer',
+                            'block absolute text-xs dark:text-onus-grey select-none cursor-pointer',
                             {
                                 'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
                                 '-left-1/2 translate-x-[-80%]': i === dotStep.current,
@@ -290,7 +289,7 @@ const EditSLTPVndcMobile = ({
         >
 
             <div className="pb-[25px]">
-                <div className="text-lg font-bold text-onus-white pb-[20px]">{t('futures:tp_sl:modify_tpsl')}</div>
+                <div className="text-lg font-bold text-onus-white pb-[6px]">{t('futures:tp_sl:modify_tpsl')}</div>
                 <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">{order?.symbol} {order?.leverage}x</div>
                 <div className="border border-onus-bg2 px-[15px] py-[10px] rounded-lg pt-[21px]">
                     <div className="text-sm flex items-center justify-between">
@@ -308,16 +307,19 @@ const EditSLTPVndcMobile = ({
                     </div>
                 </div>
             </div>
-            <div
-                className="flex items-center text-sm font-medium select-none cursor-pointer"
-                onClick={onChangeAutoType}
-            >
-                <CheckBox onusMode={true} active={autoType}
-                    boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-onus-grey !bg-onus-bg2'}`} />
-                <span className="ml-3 whitespace-nowrap text-onus-grey font-medium capitalize text-xs">
-                    {t('futures:mobile:auto_type_sltp')}
-                </span>
-            </div>
+            {!order?.displaying_id ?
+                <div
+                    className="flex items-center text-sm font-medium select-none cursor-pointer"
+                    onClick={onChangeAutoType}
+                >
+                    <CheckBox onusMode={true} active={autoType}
+                        boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-onus-grey !bg-onus-bg2'}`} />
+                    <span className="ml-3 whitespace-nowrap text-onus-grey font-medium text-xs">
+                        {t('futures:mobile:auto_type_sltp')}
+                    </span>
+                </div>
+                : null
+            }
             <div className="pt-[25px]">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center'>
@@ -371,7 +373,7 @@ const EditSLTPVndcMobile = ({
                     />
                 </div>
             </div>
-            <div className="pt-[34px] pb-10">
+            <div className="pt-[30px] pb-10">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center'>
                         <label className="text-onus-white font-semibold mr-2">{t('futures:take_profit')}</label>
@@ -406,7 +408,7 @@ const EditSLTPVndcMobile = ({
                         />
                     </div>
                 }
-                <div className={`mt-2 mb-[14px] ${!show.tp ? 'hidden' : ''}`}>
+                <div className={`mt-2 ${!show.tp ? 'hidden' : ''}`}>
                     <Slider
                         useLabel
                         onusMode
