@@ -60,7 +60,7 @@ const EditSLTPVndcMobile = ({
         let total = quantity * (isBuy ? sltp - openPrice : openPrice - sltp);
         const _fee = quantity * (sltp + openPrice) * DefaultFuturesFee.NamiFrameOnus;
         let profit = total - _fee
-        return formatNumber(profit, 0, 0, true);
+        return profit;
     };
 
     const calculateSLTP = (profit) => {
@@ -286,6 +286,10 @@ const EditSLTPVndcMobile = ({
         setPercent({ ...percent, [key]: x })
     }
 
+    const textColor = (value) => {
+        return value === 0 ? 'text-onus-white' : value > 0 ? 'text-onus-green' : 'text-onus-red'
+    }
+
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
         >
@@ -329,7 +333,7 @@ const EditSLTPVndcMobile = ({
                     </div>
                     {show.sl && <div className="text-xs flex items-center ">
                         <div className="font-normal text-onus-grey whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
-                        <div className="font-medium text-onus-red text-right">{profit.current.sl + ' ' + quoteAsset}</div>
+                        <div className={`font-medium text-right ${textColor(profit.current.sl)}`}>{formatNumber(profit.current.sl, 0, 0, true) + ' ' + quoteAsset}</div>
                     </div>
                     }
                 </div>
@@ -382,7 +386,7 @@ const EditSLTPVndcMobile = ({
                     </div>
                     {show.tp && <div className="text-xs flex items-center">
                         <div className="font-normal text-onus-grey whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
-                        <div className="font-medium text-onus-green text-right">{profit.current.tp + ' ' + quoteAsset}</div>
+                        <div className={`font-medium text-right ${textColor(profit.current.tp)}`}>{formatNumber(profit.current.tp, 0, 0, true) + ' ' + quoteAsset}</div>
                     </div>}
                 </div>
                 {show.tp &&
