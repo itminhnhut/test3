@@ -283,7 +283,8 @@
                 "603": "Funding Rates",
                 "4": "Deposit",
                 "5": "Withdraw"
-            }
+            },
+            "close": "Close"
         },
         "login_short": "Login",
         "available": "Available",

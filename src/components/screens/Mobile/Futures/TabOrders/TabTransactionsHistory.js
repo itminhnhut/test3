@@ -215,7 +215,8 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
         </div>
         <div className='px-4 pt-6 space-y-4'>
             <div className='flex justify-between text-sm'>
-                <span className='text-onus-grey mr-1'>{t('futures:mobile:transaction_histories:transaction_number')}</span>
+                <span
+                    className='text-onus-grey mr-1'>{t('futures:mobile:transaction_histories:transaction_number')}</span>
                 <div className='flex items-center'>
                     <span>{transaction?._id}</span>
                     <CopyToClipboard text={transaction?._id}>
@@ -228,6 +229,10 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
                 <span>{transaction?.created_at ? format(new Date(transaction?.created_at), 'yyyy-MM-dd hh:mm:ss') : '--'}</span>
             </div>
         </div>
+        <div
+            className='flex items-center justify-center mx-4 mt-8 font-bold text-onus-white h-12 rounded bg-onus-base'
+            onClick={onClose}
+        >{t('futures:mobile:transaction_histories:close')}</div>
     </Modal>
 }
 

@@ -283,7 +283,8 @@
                 "603": "Phí funding rate",
                 "4": "Nạp tiền",
                 "5": "Rút tiền"
-            }
+            },
+            "close": "Đóng"
         },
         "login_short": "Đăng nhập ngay",
         "available": "Khả dụng",
