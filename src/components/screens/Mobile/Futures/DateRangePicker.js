@@ -57,7 +57,7 @@ function DateRangePicker({visible, value, onClose, onChange}) {
         <div className={classNames('fixed inset-0 bg-onus z-20 p-4', {
             hidden: !visible
         })}>
-            <div className='w-full h-full overflow-y-auto'>
+            <div className='w-full h-full overflow-y-auto pb-14'>
                 {months.map((m, index) => {
                     return <Month key={index} range={range} setRange={setRange} date={addDays(m, -1)}/>
                 })}

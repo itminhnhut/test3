@@ -177,6 +177,7 @@ const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
         isVisible={visible}
         onusMode
         onBackdropCb={onClose}
+        onusClassName='pb-8 pt-8'
     >
         {categories.map(c => {
             return <div
@@ -194,10 +195,6 @@ const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
 }
 
 const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}}) => {
-    const _onChange = (v) => {
-        onChange(v)
-        onClose()
-    }
     return <Modal
         isVisible={visible}
         onusMode
