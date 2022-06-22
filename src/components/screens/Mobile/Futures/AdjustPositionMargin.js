@@ -154,21 +154,13 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     }
 
     return (
-        <Div100vh
-            className={classNames(
-                'flex flex-col fixed w-full h-full inset-0 z-20 bg-onus-bgModal2/[0.7]',
-                {
-                    hidden: !order,
-                }
-            )}
-        >
-            <div className='h-full' onClick={onClose}/>
+        <Modal onusMode={true} isVisible={true} onBackdropCb={onClose} onusClassName='px-0'>
             <div
-                className='relative bg-onus-bgModal w-full rounded-t-2xl pb-10'>
-                <div className='flex justify-between items-center px-4 pb-4 pt-11'>
-                    <span className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
+                className='relative bg-onus-bgModal w-full rounded-t-2xl'>
+                <div className='flex justify-between items-center px-4 pb-4'>
+                    <span
+                        className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
                 </div>
-                <div className='h-1 w-14 rounded absolute top-2 right-1/2 translate-x-1/2 bg-onus-white/[.16]'/>
                 <div className='grid grid-cols-2 font-bold'>
                     <div
                         className={
@@ -296,7 +288,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     </div>
                 </div>
             </div>
-        </Div100vh>
+        </Modal>
     )
 }
 
