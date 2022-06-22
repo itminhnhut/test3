@@ -111,7 +111,7 @@ const Change24h = ({pairPrice, isVndcFutures}) => {
     return (
         <div className='flex items-center'>
             <div
-                className={classNames('pl-2 text-onus-green font-medium text-xs',
+                className={classNames('pl-2 text-onus-green font-medium',
                     {
                         '!text-onus-red':
                             pairPrice?.priceChangePercent < 0,

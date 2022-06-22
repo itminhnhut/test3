@@ -72,6 +72,7 @@ const colors = {
         grey: '#8492A7',
         grey2: '#445571',
         orange: '#FF9F1A',
+        slider: '#418FFF'
     },
     // onus: '#090D17', //background main
     // onus1: '#192231',//background input

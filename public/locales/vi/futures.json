@@ -326,7 +326,9 @@
         "take_profit_input": "Nhập giá chốt lời",
         "stop_loss_input": "Nhập giá cắt lỗ",
         "profit_input": "Nhập lợi nhuận",
-        "margin_ratio":"Rủi ro"
+        "margin_ratio": "Rủi ro",
+        "auto_type_sltp": "Tự động nhập SL-TP",
+        "pnl_estimate": "Pnl ước tính"
     },
     "orders_history": "Lịch sử",
     "minimum_leverage": "Đòn bẩy tối thiểu",
@@ -335,4 +337,3 @@
     "open_orders": "Lệnh mở",
     "transaction_histories": "Lịch sử giao dịch"
 }
-

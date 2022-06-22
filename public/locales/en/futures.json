@@ -326,7 +326,9 @@
         "take_profit_input": "Input take profit",
         "stop_loss_input": "Input stop loss",
         "profit_input": "Input profit",
-        "margin_ratio": "Risk"
+        "margin_ratio": "Risk",
+        "auto_type_sltp": "Auto type SL-TP",
+        "pnl_estimate": "Estimate Pnl"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

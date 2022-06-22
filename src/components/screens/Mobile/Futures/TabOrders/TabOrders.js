@@ -35,7 +35,7 @@ const TabOrders = memo(({
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const [currentTheme] = useDarkMode()
     const ordersList = useSelector(state => state?.futures?.ordersList)
-    const [tab, setTab] = useState(FUTURES_RECORD_CODE.tradingHistory)
+    const [tab, setTab] = useState(FUTURES_RECORD_CODE.position)
     const [openDetailModal, setOpenDetailModal] = useState(false);
     const rowData = useRef(null);
     const router = useRouter();
@@ -201,11 +201,9 @@ export const LoginOrder = () => {
     const {t} = useTranslation();
     return (
         <div className="cursor-pointer flex items-center justify-center h-full text-sm py-[10px] min-h-[300px]">
-            <Link href={getLoginUrl('sso', 'login')} locale={false}>
-                <a className='w-[200px] bg-onus-base !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
-                    {t('futures:mobile:login_short')}
-                </a>
-            </Link>
+            <div onClick={() => emitWebViewEvent('login')} className='w-[200px] bg-onus-base !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
+                {t('futures:mobile:login_short')}
+            </div>
         </div>
     )
 }

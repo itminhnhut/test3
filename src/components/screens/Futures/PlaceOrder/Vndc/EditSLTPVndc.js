@@ -132,7 +132,7 @@ const FuturesEditSLTPVndc = ({
             case 'price':
             case 'stop_loss':
             case 'take_profit':
-                console.log('__ check sl, tp', data)
+                // console.log('__ check sl, tp', data)
                 if ((type === 'stop_loss' && !data.sl)
                     || type === 'take_profit' && !data.tp) {
                     return {

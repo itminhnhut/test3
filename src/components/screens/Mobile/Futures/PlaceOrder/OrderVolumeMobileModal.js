@@ -39,14 +39,30 @@ const OrderVolumeMobileModal = (props) => {
         return { volume, margin, volumeLength, marginLength }
     }, [pairPrice, side, type, volume])
 
+    const arrDot = useMemo(() => {
+        const size = 100 / 4;
+        const arr = [];
+        for (let i = 0; i <= 4; i++) {
+            arr.push(i * size)
+        }
+        return arr
+    }, [])
+
     const onChangeVolume = (x) => {
         if (!x) {
             firstTime.current = true;
             setVolume(minQuoteQty);
         } else {
-            const value = (+maxQuoteQty * x / 100).toFixed(decimal);
+            const _x = arrDot.reduce((prev, curr) => {
+                let i = 0;
+                if (Math.abs(curr - x) < 2 || Math.abs(prev - x) < 2) {
+                    i = Math.abs(curr - x) < Math.abs(prev - x) ? curr : prev;
+                }
+                return i;
+            });
+            const value = (+maxQuoteQty * (_x ? _x : x) / 100).toFixed(decimal);
             setVolume(value);
-            setPercent(x);
+            setPercent(_x ? _x : x);
         }
     }
 
@@ -117,8 +133,8 @@ const OrderVolumeMobileModal = (props) => {
                     axis='x'
                     xmax={100}
                     onChange={({ x }) => available && onChangeVolume(x)}
-                    bgColorActive={'#418FFF'}
-                    bgColorSlide={'#418FFF'}
+                    bgColorActive={colors.onus.slider}
+                    bgColorSlide={colors.onus.slider}
                     dots={4}
 
                 />
@@ -126,13 +142,13 @@ const OrderVolumeMobileModal = (props) => {
             <div className="flex flex-col">
                 <TradingLabel
                     label={t('common:min') + ':'}
-                    value={formatNumber(minQuoteQty, decimal) + ' ' + pairConfig?.quoteAsset}
+                    value={formatNumber(minQuoteQty, decimal) + ' ' + (pairConfig?.quoteAsset ?? '')}
                     containerClassName='text-xs flex pb-[6px]'
                     valueClassName="text-right"
                 />
                 <TradingLabel
                     label={t('common:max') + ' (' + leverage + 'x):'}
-                    value={formatNumber(maxQuoteQty, decimal) + ' ' + pairConfig?.quoteAsset}
+                    value={formatNumber(maxQuoteQty, decimal) + ' ' + (pairConfig?.quoteAsset ?? '')}
                     containerClassName='text-xs flex pb-[6px]'
                     valueClassName="text-right"
                 />
@@ -141,7 +157,7 @@ const OrderVolumeMobileModal = (props) => {
                     value={`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
                         marginAndValue?.margin,
                         0
-                    )} ${pairConfig?.quoteAsset}`}
+                    )} ${pairConfig?.quoteAsset ?? ''}`}
                     containerClassName='text-xs flex'
                     valueClassName="text-right break-all"
                 />
