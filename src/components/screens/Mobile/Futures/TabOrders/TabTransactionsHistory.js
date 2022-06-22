@@ -212,10 +212,11 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
         </div>
         <div className='px-4 pt-6 space-y-4'>
             <div className='flex justify-between text-sm'>
-                <span
-                    className='text-onus-grey mr-1'>{t('futures:mobile:transaction_histories:transaction_number')}</span>
-                <div className='flex items-center'>
-                    <span>{transaction?._id}</span>
+                <span className='text-onus-grey mr-2 whitespace-nowrap'>
+                    {t('futures:mobile:transaction_histories:transaction_number')}
+                </span>
+                <div className='flex flex-1 min-w-0 items-center'>
+                    <div className='flex-1 min-w-0 overflow-hidden text-right' style={{textOverflow: 'ellipsis'}}>{transaction?._id}</div>
                     <CopyToClipboard text={transaction?._id}>
                         <Copy className='ml-2' size={14} color={colors.onus.grey}/>
                     </CopyToClipboard>
