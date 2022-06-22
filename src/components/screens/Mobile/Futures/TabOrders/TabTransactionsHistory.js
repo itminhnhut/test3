@@ -20,7 +20,7 @@ const categories = ['all', 600, 602, 606, 603, 4, 5]
 
 const ASSETS = [72]
 
-function TabTransactionsHistory({scrollSnap}) {
+function TabTransactionsHistory({scrollSnap, active}) {
     const [data, setData] = useState({
         result: [],
         hasNext: false
@@ -34,6 +34,7 @@ function TabTransactionsHistory({scrollSnap}) {
     const [loading, setLoading] = useState(false)
     const [transactionDetail, setTransactionDetail] = useState()
     const assetConfigs = useSelector(state => state.utils.assetConfig)
+    const timestamp = useSelector((state) => state.heath.timestamp);
 
     const {t} = useTranslation()
 
@@ -73,8 +74,10 @@ function TabTransactionsHistory({scrollSnap}) {
     }
 
     useEffect(() => {
-        fetchData()
-    }, [range, category])
+        if (active) {
+            fetchData()
+        }
+    }, [range, category, active, timestamp])
 
     return <div>
         <DateRangePicker
