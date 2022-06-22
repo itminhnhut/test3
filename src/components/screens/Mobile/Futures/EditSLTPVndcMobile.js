@@ -290,7 +290,7 @@ const EditSLTPVndcMobile = ({
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
         >
 
-            <div className="pb-[25px]">
+            <div>
                 <div className="text-lg font-bold text-onus-white pb-[6px]">{t('futures:mobile:modify_tpsl_title')}</div>
                 <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">{order?.symbol} {order?.leverage}x</div>
                 <div className="border border-onus-bg2 px-[15px] py-[10px] rounded-lg pt-[21px]">
@@ -323,7 +323,7 @@ const EditSLTPVndcMobile = ({
                 </div>
                 : null
             }
-            <div className="pt-[25px]">
+            <div className="pt-[33px]">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center'>
                         <label className="text-onus-white font-semibold mr-2">{t('futures:stop_loss')}</label>
@@ -359,7 +359,7 @@ const EditSLTPVndcMobile = ({
                         />
                     </div>
                 }
-                <div className={`mt-2 mb-[14px] ${!show.sl ? 'hidden' : ''}`}>
+                <div className={`mt-2 ${!show.sl ? 'hidden' : ''}`}>
                     <Slider
                         useLabel
                         onusMode
@@ -376,7 +376,7 @@ const EditSLTPVndcMobile = ({
                     />
                 </div>
             </div>
-            <div className="pt-[30px] pb-10">
+            <div className="pt-[33px] pb-10">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center'>
                         <label className="text-onus-white font-semibold mr-2">{t('futures:take_profit')}</label>
