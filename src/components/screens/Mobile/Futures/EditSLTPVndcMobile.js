@@ -328,7 +328,7 @@ const EditSLTPVndcMobile = ({
                             active={show.sl} onChange={() => onSwitch('sl')} />
                     </div>
                     {show.sl && <div className="text-xs flex items-center ">
-                        <div className="font-normal text-onus-grey mr-2 whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
+                        <div className="font-normal text-onus-grey whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
                         <div className="font-medium text-onus-red text-right">{profit.current.sl + ' ' + quoteAsset}</div>
                     </div>
                     }
@@ -381,7 +381,7 @@ const EditSLTPVndcMobile = ({
                             active={show.tp} onChange={() => onSwitch('tp')} />
                     </div>
                     {show.tp && <div className="text-xs flex items-center">
-                        <div className="font-normal text-onus-grey whitespace-nowrap mr-2">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
+                        <div className="font-normal text-onus-grey whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:</div>&nbsp;
                         <div className="font-medium text-onus-green text-right">{profit.current.tp + ' ' + quoteAsset}</div>
                     </div>}
                 </div>
