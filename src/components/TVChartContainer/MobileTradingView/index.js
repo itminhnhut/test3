@@ -528,7 +528,7 @@ export class MobileTradingView extends React.PureComponent {
                     }
                     <div
                         id={this.containerId}
-                        className={`h-full ${this.props.classNameChart}`} 
+                        className={`h-full ${this.props.classNameChart}`}
                         style={this.props.styleChart}
                     />
                     <div>
@@ -545,9 +545,9 @@ export class MobileTradingView extends React.PureComponent {
                             />
                         }
                     </div>
-                    <div className="!w-32 cheat-watermark">
-                        <NamiExchangeSvg color={colors.grey4}/>
-                    </div>
+                    {/*<div className="!w-32 cheat-watermark">*/}
+                    {/*    <NamiExchangeSvg color={colors.grey4}/>*/}
+                    {/*</div>*/}
                 </div>
             </>
         );

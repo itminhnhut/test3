@@ -87,7 +87,6 @@ const OrderVolumeMobileModal = (props) => {
             onBackdropCb={onClose}
             onusClassName="!pt-[44px] !pb-[40px]"
         >
-
             <div className='mb-6 flex items-center justify-between font-bold text-lg'>
                 {t('futures:order_table:volume')}
             </div>
