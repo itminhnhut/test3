@@ -2,7 +2,7 @@ import {endOfDay, format, startOfDay} from "date-fns";
 import {Check, ChevronDown, ChevronUp, Copy} from "react-feather";
 import colors from "styles/colors";
 import DateRangePicker from "components/screens/Mobile/Futures/DateRangePicker";
-import {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Modal from "components/common/ReModal";
 import fetchApi from 'utils/fetch-api';
 import {API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES} from "redux/actions/apis";
@@ -15,6 +15,7 @@ import {useSelector} from "react-redux";
 import {formatNumber} from "redux/actions/utils";
 import {useTranslation} from "next-i18next";
 import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
+import TableNoData from "components/common/table.old/TableNoData";
 
 const categories = ['all', 600, 602, 606, 603, 4, 5]
 
@@ -79,6 +80,14 @@ function TabTransactionsHistory({scrollSnap, active}) {
         }
     }, [range, category, active, timestamp])
 
+    if (data.result.length <= 0 && !loading) {
+        return <TableNoData
+            isMobile
+            title={t('futures:order_table:no_transaction_history')}
+            className="h-full min-h-screen"
+        />
+    }
+
     return <div>
         <DateRangePicker
             visible={visibleDateRangePicker}
@@ -101,7 +110,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
             assetConfig={assetConfigMap[transactionDetail?.currency]}
         />
 
-        <div className='flex justify-between text-xs text-onus-grey px-4 pt-2'>
+        <div className='sticky top-[2.625rem] bg-onus z-10 flex justify-between text-xs text-onus-grey px-4 pt-2'>
             <div className='flex items-center p-2 -ml-2' onClick={() => setVisibleDateRangePicker(true)}>
                 <span className='mr-1'>
                     {range.start && range.end ?
@@ -127,7 +136,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
         </div>
         <div
             // id="list-transaction-histories"
-            className=''
+            className='min-h-screen'
         >
             <InfiniteScroll
                 dataLength={data.result.length}
@@ -243,7 +252,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
 }
 
 const Loading = () => {
-    return range(0, 6).map(i => {
+    return range(0, 10).map(i => {
         return <div key={i} className='flex justify-between animate-pulse p-4 border-b border-onus-line'>
             <div className='flex items-center'>
                 <div className='!rounded-full bg-darkBlue-3 h-9 !w-9'/>

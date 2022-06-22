@@ -34,6 +34,7 @@
         "note": "Note",
         "no_opening_order": "No opening orders",
         "no_history_order": "No history orders",
+        "no_transaction_history": "No transaction history",
         "login_to_continue": "Please login to continue",
         "loading": "Loading...",
         "mobile": {
