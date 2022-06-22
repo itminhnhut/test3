@@ -80,12 +80,39 @@ function TabTransactionsHistory({scrollSnap, active}) {
         }
     }, [range, category, active, timestamp])
 
-    if (data.result.length <= 0 && !loading) {
-        return <TableNoData
-            isMobile
-            title={t('futures:order_table:no_transaction_history')}
-            className="h-full min-h-screen"
-        />
+    const ListData = () => {
+        return data.result.map(item => {
+            const assetConfig = assetConfigMap[item.currency]
+            return <div
+                key={item._id}
+                className='flex justify-between p-4 border-b border-onus-line'
+                onClick={() => setTransactionDetail(item)}
+            >
+                <div className='flex items-center'>
+                    <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
+                    <div className='ml-2'>
+                        <div className='font-bold text-onus-white'>{assetConfig?.assetCode}</div>
+                        <div
+                            className='font-medium text-onus-grey text-xs mr-2'
+                        >
+                            {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
+                        </div>
+                    </div>
+                </div>
+                <div className='text-right'>
+                    <div
+                        className='font-bold text-onus-white'
+                    >
+                        {formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}
+                    </div>
+                    <div
+                        className='font-medium text-onus-grey text-xs'
+                    >
+                        {categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'}
+                    </div>
+                </div>
+            </div>
+        })
     }
 
     return <div>
@@ -146,38 +173,17 @@ function TabTransactionsHistory({scrollSnap, active}) {
                 loader={<div><IconLoading color={colors.onus.white}/></div>}
                 {...scrollSnap ? {height: 'calc(100vh - 5.25rem)'} : {scrollableTarget: "futures-mobile"}}
             >
-                {loading ? <Loading/> : data.result.map(item => {
-                    const assetConfig = assetConfigMap[item.currency]
-                    return <div
-                        key={item._id}
-                        className='flex justify-between p-4 border-b border-onus-line'
-                        onClick={() => setTransactionDetail(item)}
-                    >
-                        <div className='flex items-center'>
-                            <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
-                            <div className='ml-2'>
-                                <div className='font-bold text-onus-white'>{assetConfig?.assetCode}</div>
-                                <div
-                                    className='font-medium text-onus-grey text-xs mr-2'
-                                >
-                                    {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
-                                </div>
-                            </div>
-                        </div>
-                        <div className='text-right'>
-                            <div
-                                className='font-bold text-onus-white'
-                            >
-                                {formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}
-                            </div>
-                            <div
-                                className='font-medium text-onus-grey text-xs'
-                            >
-                                {categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'}
-                            </div>
-                        </div>
-                    </div>
-                })}
+                {
+                    loading ?
+                        <Loading/> :
+                        !data.result.length ?
+                            <TableNoData
+                                isMobile
+                                title={t('futures:order_table:no_transaction_history')}
+                                className="h-[calc(100vh-5.25rem)]"
+                            /> :
+                            <ListData/>
+                }
             </InfiniteScroll>
         </div>
 
