@@ -192,3 +192,4 @@ export const API_AUTH_USER_OTP = service => `${API_PREFIX}authenticated/${servic
 
 export const API_FUTURES_CAMPAIGN_STATUS = API_PREFIX + 'futures_campaign/onboarding/status';
 export const API_FUTURES_CAMPAIGN_ATTEND = API_PREFIX + 'futures_campaign/onboarding/attend';
+export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campaign/onboarding/withdrawStatus';
