@@ -69,7 +69,7 @@ const ChartOptions = ({
                 }
             </div>
 
-            <div className="flex flex-wrap items-center">
+            <div className="flex items-center">
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
@@ -101,6 +101,7 @@ const ChartOptions = ({
             <ModelMarketMobile
                 visible={showModelMarket}
                 onClose={() => setShowModelMarket(false)}
+                pair={pair}
             />
         </div>
     );

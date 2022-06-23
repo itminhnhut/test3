@@ -211,7 +211,7 @@ const PlaceOrder = ({
             .toFixed(0);
         // let _quoteQty = minQuoteQty
         _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
-        const _size = +((_quoteQty / price) * initPercent / 100).toFixed(decimals?.decimalScaleQtyLimit);;
+        const _size = +((_quoteQty / price) * initPercent / 100);
         setSize(_size);
         setQuoteQty(_quoteQty);
     };
@@ -481,7 +481,7 @@ const PlaceOrder = ({
         const _price = type === FuturesOrderTypes.Market ?
             (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
             price;
-        const _size = (quoteQty / _price).toFixed(decimals?.decimalScaleQtyLimit);
+        const _size = (quoteQty / _price)
         setSize(+_size);
         setQuoteQty(quoteQty);
         setShowEditVolume(false);

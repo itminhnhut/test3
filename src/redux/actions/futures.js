@@ -12,6 +12,7 @@ import {
     API_GET_FUTURES_USER_SETTINGS,
     API_SET_FUTURES_MARGIN_MODE,
     API_SET_FUTURES_POSITION_MODE,
+    API_UPDATE_FUTURES_SYMBOL_VIEW
 } from './apis';
 import { ApiStatus, TRADING_MODE } from './const';
 import {
@@ -38,10 +39,10 @@ export const setFuturesOrderTypes =
             payload,
         });
         isAdvance &&
-                dispatch({
-                    type: SET_FUTURES_ORDER_ADVANCE_TYPES,
-                    payload,
-                });
+            dispatch({
+                type: SET_FUTURES_ORDER_ADVANCE_TYPES,
+                payload,
+            });
     };
 
 export const getFuturesFavoritePairs = () => async (dispatch) => {
@@ -277,3 +278,10 @@ export const getOrdersList = () => async (dispatch) => {
         });
     }
 };
+
+export const updateSymbolView = ({ symbol }) => async (dispatch) => {
+    const { data } = await Axios.post(API_UPDATE_FUTURES_SYMBOL_VIEW, {
+         symbol 
+    });
+};
+

@@ -40,6 +40,8 @@
   "views_hint": "Số lượt xem trong vòng 7 ngày gần nhất.",
   "pair": "Cặp",
   "vol": "KL",
-  "favourite": "Cặp yêu thích",
-  "search_placeholder": "Tìm cặp giao dịch"
+  "favourite": "Yêu thích",
+  "search_placeholder": "Tìm kiếm cặp giao dịch",
+  "gainers": "Tăng giá",
+  "losers": "Giảm giá"
 }

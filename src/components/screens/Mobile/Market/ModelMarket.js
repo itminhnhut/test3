@@ -26,7 +26,7 @@ function useOutsideAlerter(ref, cb) {
 }
 
 
-const ModelMarketMobile = ({ visible, onClose }) => {
+const ModelMarketMobile = ({ visible, onClose, pair }) => {
     const router = useRouter()
     const { t } = useTranslation(['common'])
     const wrapperRef = useRef(null);
@@ -63,8 +63,8 @@ const ModelMarketMobile = ({ visible, onClose }) => {
                         'flex flex-col absolute top-0 left-0 h-full w-full z-[20] bg-onus-bgModal2/[0.7]',
                     )}
                 >
-                    <div ref={wrapperRef} className='flex-1 w-10/12 min-h-0  '>
-                        <Market isRealtime={true} />
+                    <div ref={wrapperRef} className='flex-1 w-[calc(100%-48px)] min-h-0  '>
+                        <Market isRealtime={true} pair={pair} />
                     </div>
 
 
