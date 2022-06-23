@@ -101,6 +101,7 @@ const ChartOptions = ({
             <ModelMarketMobile
                 visible={showModelMarket}
                 onClose={() => setShowModelMarket(false)}
+                pair={pair}
             />
         </div>
     );

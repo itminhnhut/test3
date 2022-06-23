@@ -8,7 +8,7 @@ import { UserSocketEvent } from 'redux/actions/const';
 import { LOCAL_STORAGE_KEY } from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
-import { getOrdersList } from 'redux/actions/futures';
+import { getOrdersList, updateSymbolView } from 'redux/actions/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
@@ -65,10 +65,11 @@ const FuturesMobile = () => {
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,
                 router.query.pair
             );
+            dispatch(updateSymbolView({ symbol: router.query.pair }))
         }
     }, [router]);
 
-    useEffect(()=>{
+    useEffect(() => {
         emitWebViewEvent('nami_futures')
     }, [])
 
