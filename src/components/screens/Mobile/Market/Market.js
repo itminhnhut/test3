@@ -316,10 +316,10 @@ export default ({ isRealtime = true, pair }) => {
                                 onClick={() => onChangeTab(t)}
                             >
                                 {t === TABS.FAVOURITE && (
-                                    <span>
+                                    <span className="mt-0.5">
                                         <IconStarFilled
                                             size={16}
-                                            color={colors.yellow}
+                                            color={'#F3BA2F'}
                                         />
                                     </span>
                                 )}
@@ -397,7 +397,7 @@ const InputSearch = ({ onChange }) => {
             strokeWidth={1}
         />
         <input
-            className='flex-1 ml-2 outline-none placeholder-onus-grey placeholder:font-medium text-sm'
+            className='flex-1 ml-2 outline-none !placeholder-onus-grey placeholder:font-medium text-sm'
             onChange={({ target: { value: v } }) => handleChange(v?.replace(/[^\w\s]/gi, ""))}
             value={value}
             placeholder={t('markets:search_placeholder')}
