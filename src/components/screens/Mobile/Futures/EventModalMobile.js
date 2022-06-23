@@ -8,7 +8,7 @@ import fetchApi from 'utils/fetch-api';
 import { useTranslation } from 'next-i18next';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { Errors, PromotionStatus } from 'components/screens/Mobile/Futures/onboardingType';
-import { formatNumber } from 'redux/actions/utils';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
 
 const EventModalMobile = ({ visible, onClose }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -70,7 +70,7 @@ const EventModalMobile = ({ visible, onClose }) => {
 const Background = styled.div.attrs({
     className: 'h-full w-full !rounded-[20px] select-none px-5 py-[23px] flex items-end'
 })`
-     background-image:${({ language }) => `url(${(`/images/screen/futures/popup_onboarding_10k_${language}.png`)})`};
+     background-image:${({ language }) => `url(${getS3Url(`/images/screen/futures/popup_onboarding_10k_${language}-min.png`)})`};
     background-position: center;
     background-repeat: no-repeat;     
     background-size: cover;
