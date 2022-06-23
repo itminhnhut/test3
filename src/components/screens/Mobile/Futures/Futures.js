@@ -15,6 +15,11 @@ import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
 import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
+import EventModalMobile from './EventModalMobile';
+import { API_FUTURES_CAMPAIGN_STATUS } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import fetchApi from 'utils/fetch-api';
+import { PromotionStatus } from 'components/screens/Mobile/Futures/onboardingType';
 
 const INITIAL_STATE = {
     loading: false,
@@ -39,7 +44,7 @@ const FuturesMobile = () => {
     const [collapse, setCollapse] = useState(false);
     const [scrollSnap, setScrollSnap] = useState(false);
     const [forceRender, setForceRender] = useState(false);
-
+    const [showOnBoardingModal, setShowOnBoardingModal] = useState(false)
 
 
     const pairConfig = useMemo(
@@ -68,8 +73,25 @@ const FuturesMobile = () => {
         }
     }, [router]);
 
-    useEffect(()=>{
-        emitWebViewEvent('nami_futures')
+    const getCampaignStatus = async () => {
+        try {
+            const { status, data, message } = await fetchApi({
+                url: API_FUTURES_CAMPAIGN_STATUS,
+                options: { method: 'GET' },
+            });
+            if (status === ApiStatus.SUCCESS && data.status === PromotionStatus.PENDING) {
+                setShowOnBoardingModal(true);
+            }
+        } catch (e) {
+            console.log(e);
+        } finally {
+        }
+
+    }
+
+    useEffect(() => {
+        getCampaignStatus();
+        emitWebViewEvent('nami_futures');
     }, [])
 
     useEffect(() => {
@@ -153,6 +175,7 @@ const FuturesMobile = () => {
                 />
             </SocketLayout>
             <LayoutMobile>
+                {showOnBoardingModal && <EventModalMobile onClose={() => setShowOnBoardingModal(false)} />}
                 <Container id="futures-mobile" onScroll={onScroll}>
                     <Section className="form-order bg-onus"
                         style={{ ...futuresScreen.style }}>
