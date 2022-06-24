@@ -30,7 +30,7 @@ const TabOrdersHistory = ({isDark, scrollSnap, pair, isVndcFutures, active, onSh
         if (active) {
             filter.current.page = 0;
             setLoading(true);
-            getOrders();
+            getOrders(true);
         } else {
             isLoading.current = true;
             setDataSource([])
@@ -46,7 +46,7 @@ const TabOrdersHistory = ({isDark, scrollSnap, pair, isVndcFutures, active, onSh
         // setOpenShareModal(!openShareModal)
     }
 
-    const getOrders = async () => {
+    const getOrders = async (isFirstLoad) => {
         try {
             const {status, data} = await fetchApi({
                 url: API_GET_FUTURES_ORDER,
@@ -61,7 +61,7 @@ const TabOrdersHistory = ({isDark, scrollSnap, pair, isVndcFutures, active, onSh
                 if (data.pagesCount <= filter.current.page) {
                     hasMore.current = false;
                 }
-                const _dataSource = [...dataSource].concat(data?.orders);
+                const _dataSource = isFirstLoad ? data?.orders || [] : [...dataSource].concat(data?.orders);
                 setDataSource(_dataSource)
             } else {
                 setDataSource([])
