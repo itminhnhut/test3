@@ -93,7 +93,7 @@ const ChartOptions = ({
                 />
                 {showIconGuide &&
                     <div className="px-2" onClick={() => setStart(true)}>
-                        <img src={getS3Url('/images/icon/ic_help.png')} height={18} width={18} />
+                        <img className="min-w-[18px]" src={getS3Url('/images/icon/ic_help.png')} height={18} width={18} />
                     </div>
                 }
                 <FavouriteButton pair={pair} pairConfig={pairConfig}/>
