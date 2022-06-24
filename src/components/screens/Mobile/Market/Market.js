@@ -305,7 +305,7 @@ export default ({ isRealtime = true, pair }) => {
                 <InputSearch onChange={changeSearch} />
             </div>
             <div className='border-b border-onus-line'>
-                <div className='flex space-x-5 px-4 mt-6 overflow-x-auto'>
+                <div className='flex space-x-5 px-4 mt-6 overflow-x-auto overflow-y-hidden'>
                     {Object.values(TABS).map((t) => {
                         return (
                             <div
