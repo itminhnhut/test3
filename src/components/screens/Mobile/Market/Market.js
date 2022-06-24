@@ -164,7 +164,7 @@ export default ({ isRealtime = true, pair }) => {
                         volume24h: item.vq,
                         quoteAsset: item.q,
                         baseAsset: item.b,
-                        leverageMax: item.blb,
+                        leverageMax: item.lbl,
                         view: item.vc ?? 0,
                         change24hRaw: getExchange24hPercentageChange(item),
                         change24h: formatPercentage(
