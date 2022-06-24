@@ -313,7 +313,10 @@ export default ({ isRealtime = true, pair }) => {
                                 className={cn(
                                     'flex cursor-pointer text-onus-grey whitespace-nowrap'
                                 )}
-                                onClick={() => onChangeTab(t)}
+                                onClick={(e) => {
+                                    onChangeTab(t)
+                                    e.target.scrollIntoView()
+                                }}
                             >
                                 {t === TABS.FAVOURITE && (
                                     <span className="mt-0.5">
@@ -387,6 +390,8 @@ const InputSearch = ({ onChange }) => {
     const [value, setValue] = useState('')
 
     const handleChange = (_value) => {
+        const str = _value.normalize('NFD');
+        _value = str.replace(/[\u0300-\u036f]/g, '')
         setValue(_value)
         onChange(_value)
     }
@@ -398,7 +403,7 @@ const InputSearch = ({ onChange }) => {
         />
         <input
             className='flex-1 ml-2 outline-none !placeholder-onus-grey placeholder:font-medium text-sm'
-            onChange={({ target: { value: v } }) => handleChange(v?.replace(/[^\w\s]/gi, ""))}
+            onChange={({ target: { value: v } }) => handleChange(v)}
             value={value}
             placeholder={t('markets:search_placeholder')}
             type='text'
