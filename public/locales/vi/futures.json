@@ -332,7 +332,8 @@
         "margin_ratio": "Rủi ro",
         "auto_type_sltp": "Tự động nhập SL-TP",
         "pnl_estimate": "Pnl ước tính",
-        "modify_tpsl_title": "Chỉnh sửa SL-TP"
+        "modify_tpsl_title": "Chỉnh sửa SL-TP",
+        "change_24h": "24h"
     },
     "orders_history": "Lịch sử",
     "minimum_leverage": "Đòn bẩy tối thiểu",

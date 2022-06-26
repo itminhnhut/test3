@@ -332,7 +332,8 @@
         "margin_ratio": "Risk",
         "auto_type_sltp": "Auto type SL-TP",
         "pnl_estimate": "Estimate Pnl",
-        "modify_tpsl_title": "Modify SL-TP"
+        "modify_tpsl_title": "Modify SL-TP",
+        "change_24h": "24h"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",
