@@ -272,8 +272,9 @@
             }
         },
         "transaction_histories": {
+            "id": "Id",
             "time": "Time",
-            "transaction_number": "Transaction number",
+            "note": "Note",
             "cancel": "Cancel",
             "done": "Done",
             "categories": {

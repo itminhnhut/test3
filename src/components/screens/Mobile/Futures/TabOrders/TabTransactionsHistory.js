@@ -235,7 +235,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
         <div className='px-4 pt-6 space-y-4'>
             <div className='flex justify-between text-sm'>
                 <span className='text-onus-grey mr-2 whitespace-nowrap'>
-                    {t('futures:mobile:transaction_histories:transaction_number')}
+                    {t('futures:mobile:transaction_histories:id')}
                 </span>
                 <div className='flex flex-1 min-w-0 items-center'>
                     <div className='flex-1 min-w-0 overflow-hidden text-right'
@@ -248,6 +248,10 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
             <div className='flex justify-between text-sm'>
                 <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:time')}</span>
                 <span>{transaction?.created_at ? format(new Date(transaction?.created_at), 'yyyy-MM-dd H:mm:ss') : '--'}</span>
+            </div>
+            <div className='flex justify-between text-sm'>
+                <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:note')}</span>
+                <span className='ml-2 text-right'>{transaction?.note}</span>
             </div>
         </div>
         <div
