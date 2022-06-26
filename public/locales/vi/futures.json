@@ -272,8 +272,9 @@
             }
         },
         "transaction_histories": {
+            "id": "Id",
             "time": "Thời gian",
-            "transaction_number": "Số giao dịch",
+            "note": "Ghi chú",
             "cancel": "Huỷ",
             "done": "Đồng ý",
             "categories": {
