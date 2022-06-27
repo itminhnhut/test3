@@ -46,6 +46,7 @@ function TabTransactionsHistory({ scrollSnap, active }) {
         end: null
     })
     const [loading, setLoading] = useState(false)
+    const [loadMore, setLoadMore] = useState(false)
     const [transactionDetail, setTransactionDetail] = useState()
     const assetConfigs = useSelector(state => state.utils.assetConfig)
     const timestamp = useSelector((state) => state.heath.timestamp);
@@ -66,7 +67,11 @@ function TabTransactionsHistory({ scrollSnap, active }) {
     }
 
     const fetchData = (isLoadMore) => {
-        setLoading(!isLoadMore)
+        if (isLoadMore) {
+            setLoadMore(true)
+        } else {
+            setLoading(true)
+        }
         fetchApi({
             url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
             params: {
@@ -76,7 +81,11 @@ function TabTransactionsHistory({ scrollSnap, active }) {
                 lastId: isLoadMore ? last(data.result)?._id : ''
             }
         }).then(res => {
-            setLoading(false)
+            if (isLoadMore) {
+                setLoadMore(false)
+            } else {
+                setLoading(false)
+            }
             if (res.status === 'ok' && res.data) {
                 setData({
                     hasNext: res.data.hasNext,
@@ -97,7 +106,7 @@ function TabTransactionsHistory({ scrollSnap, active }) {
         if(!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
-    
+
             return note.includes('close')
                 ? t(`futures:mobile:transaction_histories:categories:close_fee`)
                 : t(`futures:mobile:transaction_histories:categories:open_fee`)
@@ -190,26 +199,24 @@ function TabTransactionsHistory({ scrollSnap, active }) {
             // id="list-transaction-histories"
             className='min-h-screen'
         >
-            <InfiniteScroll
-                dataLength={data.result.length}
-                hasMore={data.hasNext && !loading}
-                next={() => fetchData(true)}
-                scrollableTarget="futures-mobile"
-                loader={<div><IconLoading color={colors.onus.white} /></div>}
-                {...scrollSnap ? { height: 'calc(100vh - 5.25rem)' } : { scrollableTarget: "futures-mobile" }}
-            >
-                {
-                    loading ?
-                        <Loading /> :
-                        !data.result.length ?
-                            <TableNoData
-                                isMobile
-                                title={t('futures:order_table:no_transaction_history')}
-                                className="h-[calc(100vh-5.25rem)]"
-                            /> :
-                            <ListData />
-                }
-            </InfiniteScroll>
+            {
+                loading ?
+                    <Loading/> :
+                    !data.result.length ?
+                        <TableNoData
+                            isMobile
+                            title={t('futures:order_table:no_transaction_history')}
+                            className="h-[calc(100vh-5.25rem)]"
+                        /> :
+                        <>
+                            <ListData/>
+                            {data.hasNext && <div
+                                className='flex items-center justify-center text-center h-10 text-sm font-semibold'
+                                onClick={() => fetchData(true)}
+                            >{loadMore ? <IconLoading color={colors.onus.white}/> : <span>Load more</span>}
+                            </div>}
+                        </>
+            }
         </div>
 
     </div>
@@ -247,7 +254,7 @@ const TransactionDetail = ({ t, visible, onClose, transaction, assetConfig = {} 
         if(!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
-    
+
             return note.includes('close')
                 ? t(`futures:mobile:transaction_histories:categories:close_fee`)
                 : t(`futures:mobile:transaction_histories:categories:open_fee`)
