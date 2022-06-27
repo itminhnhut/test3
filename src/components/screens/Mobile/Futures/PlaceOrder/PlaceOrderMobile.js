@@ -472,8 +472,8 @@ const PlaceOrder = ({
     };
 
     const onConfirmSLTP = (data) => {
-        setSl(data.sl);
-        setTp(data.tp);
+        setSl(data.sl || '');
+        setTp(data.tp || '');
         setShowEditSLTP(false);
     };
 

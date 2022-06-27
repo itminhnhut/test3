@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { countDecimals, formatCurrency, formatNumber, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useSelector } from 'react-redux';
-import { find } from 'lodash';
+import { find, ceil } from 'lodash';
 import SortIcon from 'components/screens/Mobile/SortIcon';
 import TradingInput from 'components/trade/TradingInput';
 import { Popover, Transition } from '@headlessui/react';
@@ -13,7 +13,7 @@ import Switcher from 'components/common/Switcher';
 import { log } from 'utils';
 import CheckBox from 'components/common/CheckBox';
 import Slider from 'components/trade/InputSlider';
-import { Dot } from 'components/trade/StyleInputSlider';
+import { Dot, ThumbLabel } from 'components/trade/StyleInputSlider';
 import classNames from 'classnames';
 import colors from 'styles/colors'
 import { DefaultFuturesFee } from 'redux/actions/const';
@@ -226,29 +226,44 @@ const EditSLTPVndcMobile = ({
 
                 />
             )
-            label.push(
-                <div className='relative' key={`inputSlider_label_${i}`}>
-                    <span
-                        onClick={() => {
-                            onSetValuePercent(i * size, key)
-                        }}
-                        className={classNames(
-                            'block absolute text-xs dark:text-onus-grey select-none cursor-pointer',
-                            {
-                                'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
-                                '-left-1/2 translate-x-[-80%]': i === dotStep.current,
-                                '!text-onus-white': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
-                            }
-                        )}
-                    >
-                        {getLabelPercent(i * size, key)}
-                        {'%'}
-                    </span>
-                </div>
-            )
+            // label.push(
+            //     <div className='relative' key={`inputSlider_label_${i}`}>
+            //         <span
+            //             onClick={() => {
+            //                 onSetValuePercent(i * size, key)
+            //             }}
+            //             className={classNames(
+            //                 'block absolute text-xs dark:text-onus-grey select-none cursor-pointer',
+            //                 {
+            //                     'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
+            //                     '-left-1/2 translate-x-[-80%]': i === dotStep.current,
+            //                     '!text-onus-white': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
+            //                 }
+            //             )}
+            //         >
+            //             {getLabelPercent(i * size, key)}
+            //             {'%'}
+            //         </span>
+            //     </div>
+            // )
         }
         return { dot, label }
     }, [percent])
+
+    const customPercentLabel = useCallback((pos) => {
+        // const hidden = arrDot.includes(pos.left);
+        // if (hidden) return;
+        const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
+        return (
+            <ThumbLabel isZero={pos.left === 0}
+                isDark
+                onusMode
+                className={`left-1/2 translate-x-[-50%] w-max`}
+            >
+                {ceil(postion, 0)}%
+            </ThumbLabel>
+        )
+    }, [])
 
     const getLabelPercent = (index, key) => {
         //+- 100% -> total 200%
@@ -372,6 +387,7 @@ const EditSLTPVndcMobile = ({
                         bgColorSlide={colors.onus.slider}
                         xStart={50}
                         positionLabel="top"
+                        customPercentLabel={customPercentLabel}
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
                         onChange={({ x }) => onChangePercent(x, 100, 'sl')}
                     />
@@ -424,6 +440,7 @@ const EditSLTPVndcMobile = ({
                         bgColorSlide={colors.onus.slider}
                         xStart={50}
                         positionLabel="top"
+                        customPercentLabel={customPercentLabel}
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')}
                     />
