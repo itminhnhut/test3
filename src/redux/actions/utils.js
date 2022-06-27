@@ -27,6 +27,20 @@ import { FuturesOrderTypes } from 'redux/reducers/futures';
 const WAValidator = require('multicoin-address-validator')
 const EthereumAddress = require('ethereum-address')
 
+export function scrollHorizontal(el, parentEl) {
+    if (!parentEl || !el) return;
+    const rect = el.getBoundingClientRect();
+    const { left, right, bottom, top } = parentEl.getBoundingClientRect();
+    const inView = rect.left >= left && rect.right <= right
+    const position = rect.left < left ? 0 : rect.right;
+    if (!inView) {
+        parentEl.scrollTo({
+            left: position,
+            behavior: 'smooth'
+        })
+    }
+}
+
 export function getFilter(filterType, config) {
     const filter = find(config?.filters, { filterType })
     return filter || ExchangeFilterDefault[filterType]

@@ -272,19 +272,24 @@
             }
         },
         "transaction_histories": {
-            "id": "Id",
+            "id": "ID",
             "time": "Time",
-            "order_id": "Order Id",
+            "order_id": "Order ID",
             "cancel": "Cancel",
             "done": "Done",
             "categories": {
                 "all": "All",
-                "600": "Fee",
+                "600": "Order Opening/Closing Fee",
                 "602": "Profit",
-                "606": "Insurance Clearance Fee",
-                "603": "Funding Rates",
+                "606": "Liquidate Fee",
+                "603": "Swap Fee",
                 "4": "Deposit",
-                "5": "Withdraw"
+                "5": "Withdraw",
+                "723": "Withdraw",
+                "608": "Insurance",
+                "609": "Promotion",
+                "open_fee": "Order Opening Fee",
+                "close_fee": "Order Olosing Fee"
             },
             "close": "Close"
         },
