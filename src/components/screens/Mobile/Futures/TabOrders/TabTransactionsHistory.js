@@ -86,6 +86,18 @@ function TabTransactionsHistory({ scrollSnap, active }) {
             } else {
                 setLoading(false)
             }
+    const fetchData = async (isLoadMore) => {
+        setLoading(!isLoadMore)
+        try{
+            const res =  await fetchApi({
+                url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
+                params: {
+                    timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
+                    timeTo: range.end ? endOfDay(range.end).valueOf() : '',
+                    category: category !== 'all' ? category : '',
+                    lastId: isLoadMore ? last(data.result)?._id : ''
+                }
+            })
             if (res.status === 'ok' && res.data) {
                 setData({
                     hasNext: res.data.hasNext,
@@ -93,12 +105,19 @@ function TabTransactionsHistory({ scrollSnap, active }) {
                 })
                 // setTransactionDetail(res.data.result[0])
             }
-        })
+
+
+        } catch(e){
+            console.error('Load transasction error', e?.response?.status)
+        }finally{
+            console.error('Load transasction load more', )
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
         if (active) {
-            fetchData()
+            fetchData(false)
         }
     }, [range, category, active, timestamp])
 
