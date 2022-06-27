@@ -227,6 +227,7 @@ const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
 }
 
 const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}}) => {
+    const orderId = first(transaction?.note?.match(/\d+/g)) || '--'
     return <Modal
         isVisible={visible}
         onusMode
@@ -256,12 +257,17 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
                 </div>
             </div>
             <div className='flex justify-between text-sm'>
-                <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:time')}</span>
-                <span>{transaction?.created_at ? format(new Date(transaction?.created_at), 'yyyy-MM-dd H:mm:ss') : '--'}</span>
+                <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:order_id')}</span>
+                <div className='flex flex-1 min-w-0 items-center'>
+                   <div className='flex-1 min-w-0 overflow-hidden text-right'>{orderId}</div>
+                    <CopyToClipboard text={orderId}>
+                        <Copy className='ml-2' size={14} color={colors.onus.grey}/>
+                    </CopyToClipboard>
+                </div>
             </div>
             <div className='flex justify-between text-sm'>
-                <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:order_id')}</span>
-                <span className='ml-2 text-right'>{first(transaction?.note?.match(/\d+/g)) || '--'}</span>
+                <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:time')}</span>
+                <span>{transaction?.created_at ? format(new Date(transaction?.created_at), 'yyyy-MM-dd H:mm:ss') : '--'}</span>
             </div>
         </div>
         <div
