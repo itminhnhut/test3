@@ -272,9 +272,9 @@
             }
         },
         "transaction_histories": {
-            "id": "Id",
+            "id": "ID",
             "time": "Time",
-            "order_id": "Order Id",
+            "order_id": "Order ID",
             "cancel": "Cancel",
             "done": "Done",
             "categories": {
