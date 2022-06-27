@@ -148,24 +148,8 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        let autoTypeInput = localStorage.getItem('auto_type_tp_sl');
-        if (autoTypeInput) {
-            autoTypeInput = JSON.parse(autoTypeInput)
-            if (autoTypeInput.auto) {
-                const _sl = +(getSuggestSl(side, lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
-                const _tp = +(getSuggestTp(side, lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
-                if (leverage <= 10) {
-                    setTp('');
-                    setSl('');
-                } else if (leverage <= 20) {
-                    setSl(_sl);
-                    setTp('');
-                } if (leverage > 20) {
-                    setSl(_sl);
-                    setTp(_tp);
-                }
-            }
-        }
+        const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
+        onChangeSlTp(leverage, _lastPrice)
     }, [side, type, decimals, leverage]);
 
 
@@ -181,6 +165,21 @@ const PlaceOrder = ({
         const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
         setPrice(_lastPrice);
         setStopPrice(_lastPrice);
+    }, [firstTime.current, decimals]);
+
+    const onChangeQuoteQty = (price, leverage) => {
+        const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
+        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
+        let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
+            .toFixed(0);
+        // let _quoteQty = minQuoteQty
+        _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
+        const _size = +((_quoteQty / price) * initPercent / 100);
+        setSize(_size);
+        setQuoteQty(_quoteQty);
+    };
+
+    const onChangeSlTp = (leverage, _lastPrice) => {
         let autoTypeInput = localStorage.getItem('auto_type_tp_sl');
         if (autoTypeInput) {
             autoTypeInput = JSON.parse(autoTypeInput)
@@ -199,28 +198,14 @@ const PlaceOrder = ({
                 }
             }
         }
-
-    }, [firstTime.current, decimals, leverage]);
-
-
-
-    const onChangeQuoteQty = (price, leverage) => {
-        const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
-        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
-        let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
-            .toFixed(0);
-        // let _quoteQty = minQuoteQty
-        _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
-        const _size = +((_quoteQty / price) * initPercent / 100);
-        setSize(_size);
-        setQuoteQty(_quoteQty);
-    };
+    }
 
     useEffect(() => {
         if (firstTime.current) return;
         if (newDataLeverage.current) {
             const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
             onChangeQuoteQty(_lastPrice, newDataLeverage?.current);
+            onChangeSlTp(newDataLeverage.current, _lastPrice)
         }
     }, [firstTime.current, newDataLeverage.current]);
 

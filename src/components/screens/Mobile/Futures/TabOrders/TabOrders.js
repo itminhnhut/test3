@@ -12,7 +12,7 @@ import {
 import TabOpenOrders from 'components/screens/Mobile/Futures/TabOrders/TabOpenOrders';
 import TabOrdersHistory from 'components/screens/Mobile/Futures/TabOrders/TabOrdersHistory';
 import Link from 'next/link';
-import {emitWebViewEvent, getLoginUrl} from 'redux/actions/utils';
+import { emitWebViewEvent, getLoginUrl, scrollHorizontal } from 'redux/actions/utils';
 import OrderBalance from 'components/screens/Mobile/Futures/TabOrders/OrderBalance';
 import useDarkMode, {THEME_MODE} from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
@@ -41,6 +41,7 @@ const TabOrders = memo(({
     const router = useRouter();
     const oldDetail = useRef({});
     const isModal = +router.query?.v > 1;
+    const refTabsOrder =useRef(null);
 
     // useEffect(() => {
     //     const isUIWebView = /\(ip.*applewebkit(?!.*(version|crios))/i.test(navigator.userAgent);
@@ -114,12 +115,12 @@ const TabOrders = memo(({
                 </div>
             </Portal>
             }
-            <TabMobile onusMode={true} isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
+            <TabMobile ref={refTabsOrder} onusMode={true} isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
                 {(isVndcFutures ? RECORD_TAB_VNDC_MOBILE : RECORD_TAB).map((item) => (
                     <TabItem key={item.code} active={tab === item.code}
                         onClick={(e) => {
                             setTab(item.code)
-                            e.target.scrollIntoView()
+                            scrollHorizontal(e.target, refTabsOrder.current)
                         }}
                     >
                         {isVndcFutures ? t(item.title) : item.title}&nbsp;{isVndcFutures &&
