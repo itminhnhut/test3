@@ -19,7 +19,7 @@
     "see_more": "Xem thêm",
     "see_less": "Ẩn bớt",
     "max_opt": "Max",
-    "wdl_success": "Lệnh rút đã được ghi nhận",
+    "wdl_success": "Bạn đã rút thành công {{amount}} {{assetCode}}",
     "time": "Thời gian giao dịch",
     "remain_balance": "Số dư còn lại",
     "tips": "Tài sản sẽ được chuyển về ví VNDC của bạn trong một thời gian ngắn.",
