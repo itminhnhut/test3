@@ -140,7 +140,6 @@ function TabTransactionsHistory({scrollSnap, active}) {
             transaction={transactionDetail}
             assetConfig={assetConfigMap[transactionDetail?.currency]}
         />
-
         <div className='sticky top-[2.625rem] bg-onus z-10 flex justify-between text-xs text-onus-grey px-4 pt-2'>
             <div className='flex items-center p-2 -ml-2' onClick={() => setVisibleDateRangePicker(true)}>
                 <span className='mr-1'>
@@ -166,8 +165,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
             </div>
         </div>
         <div
-            // id="list-transaction-histories"
-            className='min-h-screen'
+            className='h-[calc(100vh-5.25rem)] overflow-y-auto'
         >
             {
                 loading ?
@@ -215,7 +213,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
                                 })
                             }
                             {data.hasNext && <div
-                                className='flex items-center justify-center text-center h-10 text-sm font-semibold'
+                                className='flex items-center justify-center text-center h-12 text-sm font-semibold mb-4'
                                 onClick={() => fetchData(true)}
                             >{loadMore ? <IconLoading color={colors.onus.white}/> : <span>Load more</span>}
                             </div>}
