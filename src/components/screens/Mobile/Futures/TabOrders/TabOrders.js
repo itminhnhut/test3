@@ -116,7 +116,12 @@ const TabOrders = memo(({
             }
             <TabMobile onusMode={true} isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
                 {(isVndcFutures ? RECORD_TAB_VNDC_MOBILE : RECORD_TAB).map((item) => (
-                    <TabItem key={item.code} active={tab === item.code} onClick={() => setTab(item.code)}>
+                    <TabItem key={item.code} active={tab === item.code}
+                        onClick={(e) => {
+                            setTab(item.code)
+                            e.target.scrollIntoView()
+                        }}
+                    >
                         {isVndcFutures ? t(item.title) : item.title}&nbsp;{isVndcFutures &&
                     (item.code === FUTURES_RECORD_CODE.openOrders || item.code === FUTURES_RECORD_CODE.position)
                     && (orderListFilter[item.code].length > 0 ? ' (' + orderListFilter[item.code].length + ')' : '')}

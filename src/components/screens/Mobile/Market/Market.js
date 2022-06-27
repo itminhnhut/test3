@@ -164,7 +164,7 @@ export default ({ isRealtime = true, pair }) => {
                         volume24h: item.vq,
                         quoteAsset: item.q,
                         baseAsset: item.b,
-                        leverageMax: item.blb,
+                        leverageMax: item.lbl,
                         view: item.vc ?? 0,
                         change24hRaw: getExchange24hPercentageChange(item),
                         change24h: formatPercentage(
@@ -305,7 +305,7 @@ export default ({ isRealtime = true, pair }) => {
                 <InputSearch onChange={changeSearch} />
             </div>
             <div className='border-b border-onus-line'>
-                <div className='flex space-x-5 px-4 mt-6 overflow-x-auto'>
+                <div className='flex space-x-5 px-4 mt-6 overflow-x-auto overflow-y-hidden'>
                     {Object.values(TABS).map((t) => {
                         return (
                             <div
@@ -313,13 +313,16 @@ export default ({ isRealtime = true, pair }) => {
                                 className={cn(
                                     'flex cursor-pointer text-onus-grey whitespace-nowrap'
                                 )}
-                                onClick={() => onChangeTab(t)}
+                                onClick={(e) => {
+                                    onChangeTab(t)
+                                    e.target.scrollIntoView()
+                                }}
                             >
                                 {t === TABS.FAVOURITE && (
-                                    <span>
+                                    <span className="mt-0.5">
                                         <IconStarFilled
                                             size={16}
-                                            color={colors.yellow}
+                                            color={'#F3BA2F'}
                                         />
                                     </span>
                                 )}
@@ -367,7 +370,7 @@ export default ({ isRealtime = true, pair }) => {
                             }
                         />
                         <TitleHeadList
-                            title={t('futures:mobile:change_24h')}
+                            title={t('markets:change_24h')}
                             onClick={changeSort('change24hRaw')}
                             className='w-24'
                             sortDirection={
@@ -387,6 +390,8 @@ const InputSearch = ({ onChange }) => {
     const [value, setValue] = useState('')
 
     const handleChange = (_value) => {
+        const str = _value.normalize('NFD');
+        _value = str.replace(/[\u0300-\u036f]/g, '')
         setValue(_value)
         onChange(_value)
     }
