@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import fetchApi from 'utils/fetch-api';
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { API_GET_FUTURES_ORDER_HISTORY } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import TableNoData from 'components/common/table.old/TableNoData';
 import OrderItemMobile from './OrderItemMobile';
@@ -18,7 +18,6 @@ const TabOrdersHistory = ({isDark, scrollSnap, pair, isVndcFutures, active, onSh
     const [dataSource, setDataSource] = useState([]);
     const [loading, setLoading] = useState(true);
     const filter = useRef({
-        pageSize: 20,
         page: 0
     })
     const hasMore = useRef(true);
@@ -49,18 +48,15 @@ const TabOrdersHistory = ({isDark, scrollSnap, pair, isVndcFutures, active, onSh
     const getOrders = async (isFirstLoad) => {
         try {
             const {status, data} = await fetchApi({
-                url: API_GET_FUTURES_ORDER,
+                url: API_GET_FUTURES_ORDER_HISTORY,
                 options: {method: 'GET'},
                 params: {
                     ...filter.current,
                     status: 1,
                 },
             })
-
             if (status === ApiStatus.SUCCESS) {
-                if (data.pagesCount <= filter.current.page) {
-                    hasMore.current = false;
-                }
+                hasMore.current = data.hasNext;
                 const _dataSource = isFirstLoad ? data?.orders || [] : [...dataSource].concat(data?.orders);
                 setDataSource(_dataSource)
             } else {
