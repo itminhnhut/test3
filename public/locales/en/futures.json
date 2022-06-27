@@ -274,7 +274,7 @@
         "transaction_histories": {
             "id": "Id",
             "time": "Time",
-            "note": "Note",
+            "order_id": "Order Id",
             "cancel": "Cancel",
             "done": "Done",
             "categories": {

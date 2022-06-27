@@ -274,7 +274,7 @@
         "transaction_histories": {
             "id": "Id",
             "time": "Thời gian",
-            "note": "Ghi chú",
+            "order_id": "Id Lệnh",
             "cancel": "Huỷ",
             "done": "Đồng ý",
             "categories": {

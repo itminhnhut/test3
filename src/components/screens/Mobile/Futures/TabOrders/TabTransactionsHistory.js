@@ -7,7 +7,7 @@ import Modal from "components/common/ReModal";
 import fetchApi from 'utils/fetch-api';
 import {API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES} from "redux/actions/apis";
 import classNames from "classnames";
-import {concat, filter, find, keyBy, last, range} from "lodash";
+import {concat, filter, find, first, keyBy, last, range} from "lodash";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {IconLoading} from "components/common/Icons";
 import AssetLogo from "components/wallet/AssetLogo";
@@ -250,8 +250,8 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
                 <span>{transaction?.created_at ? format(new Date(transaction?.created_at), 'yyyy-MM-dd H:mm:ss') : '--'}</span>
             </div>
             <div className='flex justify-between text-sm'>
-                <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:note')}</span>
-                <span className='ml-2 text-right'>{transaction?.note}</span>
+                <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:order_id')}</span>
+                <span className='ml-2 text-right'>{first(transaction?.note?.match(/\d+/g)) || '--'}</span>
             </div>
         </div>
         <div
