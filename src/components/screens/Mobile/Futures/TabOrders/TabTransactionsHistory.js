@@ -1,22 +1,22 @@
-import { endOfDay, format, startOfDay } from "date-fns";
-import { Check, ChevronDown, ChevronUp, Copy } from "react-feather";
+import {endOfDay, format, startOfDay} from "date-fns";
+import {Check, ChevronDown, ChevronUp, Copy} from "react-feather";
 import colors from "styles/colors";
 import DateRangePicker from "components/screens/Mobile/Futures/DateRangePicker";
-import React, { useEffect, useMemo, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Modal from "components/common/ReModal";
 import fetchApi from 'utils/fetch-api';
-import { API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES } from "redux/actions/apis";
+import {API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES} from "redux/actions/apis";
 import classNames from "classnames";
-import { concat, filter, find, first, keyBy, last, range } from "lodash";
+import {concat, filter, find, first, keyBy, last, range} from "lodash";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { IconLoading } from "components/common/Icons";
+import {IconLoading} from "components/common/Icons";
 import AssetLogo from "components/wallet/AssetLogo";
-import { useSelector } from "react-redux";
-import { formatNumber } from "redux/actions/utils";
-import { useTranslation } from "next-i18next";
-import { CopyToClipboard } from "react-copy-to-clipboard/lib/Component";
+import {useSelector} from "react-redux";
+import {formatNumber} from "redux/actions/utils";
+import {useTranslation} from "next-i18next";
+import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
 import TableNoData from "components/common/table.old/TableNoData";
-import { TransactionCategory } from "../../../../../redux/actions/const";
+import {TransactionCategory} from "../../../../../redux/actions/const";
 
 const categories = [
     'all',// "All",
@@ -34,7 +34,7 @@ const categories = [
 const ASSETS = [72]
 
 
-function TabTransactionsHistory({ scrollSnap, active }) {
+function TabTransactionsHistory({scrollSnap, active}) {
     const [data, setData] = useState({
         result: [],
         hasNext: false
@@ -51,7 +51,7 @@ function TabTransactionsHistory({ scrollSnap, active }) {
     const assetConfigs = useSelector(state => state.utils.assetConfig)
     const timestamp = useSelector((state) => state.heath.timestamp);
 
-    const { t } = useTranslation()
+    const {t} = useTranslation()
 
     const assetConfigMap = useMemo(() => {
         return keyBy(filter(assetConfigs, (a) => ASSETS.includes(a.id)), 'id')
@@ -103,7 +103,7 @@ function TabTransactionsHistory({ scrollSnap, active }) {
     }, [range, category, active, timestamp])
 
     const _renderCategory = (item) => {
-        if(!item) return '-'
+        if (!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
 
@@ -112,41 +112,6 @@ function TabTransactionsHistory({ scrollSnap, active }) {
                 : t(`futures:mobile:transaction_histories:categories:open_fee`)
         }
         return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
-    }
-
-    const ListData = () => {
-        return data.result.map(item => {
-            const assetConfig = assetConfigMap[item.currency]
-            return <div
-                key={item._id}
-                className='flex justify-between p-4 border-b border-onus-line'
-                onClick={() => setTransactionDetail(item)}
-            >
-                <div className='flex items-center'>
-                    <AssetLogo size={36} assetCode={assetConfig?.assetCode} />
-                    <div className='ml-2'>
-                        <div className='font-bold text-onus-white'>{assetConfig?.assetCode}</div>
-                        <div
-                            className='font-medium text-onus-grey text-xs mr-2'
-                        >
-                            {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
-                        </div>
-                    </div>
-                </div>
-                <div className='text-right'>
-                    <div
-                        className='font-bold text-onus-white'
-                    >
-                        {formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}
-                    </div>
-                    <div
-                        className='font-medium text-onus-grey text-xs'
-                    >
-                        {_renderCategory(item)}
-                    </div>
-                </div>
-            </div>
-        })
     }
 
     return <div>
@@ -182,7 +147,7 @@ function TabTransactionsHistory({ scrollSnap, active }) {
                         </> :
                         t('futures:mobile:transaction_histories:time')}
                 </span>
-                <ChevronDown size={12} color={colors.onus.grey} />
+                <ChevronDown size={12} color={colors.onus.grey}/>
             </div>
             <div
                 className={classNames('flex items-center p-2 -mr-2', {
@@ -191,8 +156,8 @@ function TabTransactionsHistory({ scrollSnap, active }) {
                 onClick={() => setVisibleCategoryPicker(true)}>
                 <span className='mr-1'>{t(`futures:mobile:transaction_histories:categories:${category}`)}</span>
                 {visibleCategoryPicker ?
-                    <ChevronUp size={12} color={colors.onus.base} /> :
-                    <ChevronDown size={12} color={colors.onus.grey} />}
+                    <ChevronUp size={12} color={colors.onus.base}/> :
+                    <ChevronDown size={12} color={colors.onus.grey}/>}
             </div>
         </div>
         <div
@@ -209,7 +174,41 @@ function TabTransactionsHistory({ scrollSnap, active }) {
                             className="h-[calc(100vh-5.25rem)]"
                         /> :
                         <>
-                            <ListData/>
+                            {
+                                data.result.map(item => {
+                                    const assetConfig = assetConfigMap[item.currency]
+                                    return <div
+                                        key={item._id}
+                                        className='flex justify-between p-4 border-b border-onus-line'
+                                        onClick={() => setTransactionDetail(item)}
+                                    >
+                                        <div className='flex items-center'>
+                                            <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
+                                            <div className='ml-2'>
+                                                <div
+                                                    className='font-bold text-onus-white'>{assetConfig?.assetCode}</div>
+                                                <div
+                                                    className='font-medium text-onus-grey text-xs mr-2'
+                                                >
+                                                    {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='text-right'>
+                                            <div
+                                                className='font-bold text-onus-white'
+                                            >
+                                                {formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}
+                                            </div>
+                                            <div
+                                                className='font-medium text-onus-grey text-xs'
+                                            >
+                                                {_renderCategory(item)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                })
+                            }
                             {data.hasNext && <div
                                 className='flex items-center justify-center text-center h-10 text-sm font-semibold'
                                 onClick={() => fetchData(true)}
@@ -222,7 +221,7 @@ function TabTransactionsHistory({ scrollSnap, active }) {
     </div>
 }
 
-const CategoryPicker = ({ t, visible, onClose, value, onChange }) => {
+const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
     const _onChange = (v) => {
         onChange(v)
         onClose()
@@ -242,16 +241,16 @@ const CategoryPicker = ({ t, visible, onClose, value, onChange }) => {
                 <span className='text-onus-white py-3 font-medium'>
                     {t(`futures:mobile:transaction_histories:categories:${c}`)}
                 </span>
-                {value === c && <Check size={16} color={colors.onus.base} />}
+                {value === c && <Check size={16} color={colors.onus.base}/>}
             </div>
         })}
     </Modal>
 }
 
-const TransactionDetail = ({ t, visible, onClose, transaction, assetConfig = {} }) => {
+const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}}) => {
     const orderId = first(transaction?.note?.match(/\d+/g)) || '--'
     const _renderCategory = (item) => {
-        if(!item) return '-'
+        if (!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
 
@@ -284,9 +283,9 @@ const TransactionDetail = ({ t, visible, onClose, transaction, assetConfig = {} 
                 </span>
                 <div className='flex flex-1 min-w-0 items-center'>
                     <div className='flex-1 min-w-0 overflow-hidden text-right'
-                        style={{ textOverflow: 'ellipsis' }}>{transaction?._id}</div>
+                         style={{textOverflow: 'ellipsis'}}>{transaction?._id}</div>
                     <CopyToClipboard text={transaction?._id}>
-                        <Copy className='ml-2' size={14} color={colors.onus.grey} />
+                        <Copy className='ml-2' size={14} color={colors.onus.grey}/>
                     </CopyToClipboard>
                 </div>
             </div>
@@ -295,7 +294,7 @@ const TransactionDetail = ({ t, visible, onClose, transaction, assetConfig = {} 
                 <div className='flex flex-1 min-w-0 items-center'>
                     <div className='flex-1 min-w-0 overflow-hidden text-right'>{orderId}</div>
                     <CopyToClipboard text={orderId}>
-                        <Copy className='ml-2' size={14} color={colors.onus.grey} />
+                        <Copy className='ml-2' size={14} color={colors.onus.grey}/>
                     </CopyToClipboard>
                 </div>
             </div>
@@ -315,15 +314,15 @@ const Loading = () => {
     return range(0, 10).map(i => {
         return <div key={i} className='flex justify-between animate-pulse p-4 border-b border-onus-line'>
             <div className='flex items-center'>
-                <div className='!rounded-full bg-darkBlue-3 h-9 !w-9' />
+                <div className='!rounded-full bg-darkBlue-3 h-9 !w-9'/>
                 <div className='flex flex-col justify-between h-full ml-2'>
-                    <div className='rounded bg-darkBlue-3 h-3 w-12' />
-                    <div className='rounded bg-darkBlue-3 h-2 w-28' />
+                    <div className='rounded bg-darkBlue-3 h-3 w-12'/>
+                    <div className='rounded bg-darkBlue-3 h-2 w-28'/>
                 </div>
             </div>
             <div className='flex flex-col justify-between items-end'>
-                <div className='rounded bg-darkBlue-3 w-9 h-3' />
-                <div className='rounded bg-darkBlue-3 w-14 h-2' />
+                <div className='rounded bg-darkBlue-3 w-9 h-3'/>
+                <div className='rounded bg-darkBlue-3 w-14 h-2'/>
             </div>
         </div>
     })
