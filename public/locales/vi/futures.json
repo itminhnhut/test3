@@ -350,5 +350,6 @@
     "maximum_leverage": "Đòn bẩy tối đa",
     "positions": "Vị thế",
     "open_orders": "Lệnh mở",
+    "load_more": "Xem thêm",
     "transaction_histories": "Lịch sử giao dịch"
 }

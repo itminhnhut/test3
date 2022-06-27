@@ -227,7 +227,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
                             {data.hasNext && <div
                                 className='flex items-center justify-center text-center h-12 text-sm font-semibold mb-4'
                                 onClick={() => fetchData(true)}
-                            >{loadMore ? <IconLoading color={colors.onus.white}/> : <span>Load more</span>}
+                            >{loadMore ? <IconLoading color={colors.onus.white}/> : <span>{t('futures:load_more')}</span>}
                             </div>}
                         </>
             }

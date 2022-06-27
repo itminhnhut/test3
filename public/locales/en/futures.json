@@ -350,5 +350,6 @@
     "maximum_leverage": "Maximum Leverage is",
     "positions": "Positions",
     "open_orders": "Open Orders",
+    "load_more": "Load more",
     "transaction_histories": "Transaction History"
 }
