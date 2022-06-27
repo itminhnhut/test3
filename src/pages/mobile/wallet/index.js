@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { NoticePopup } from 'components/screens/OnusWithdrawGate/styledExternalWdl';
 import { useSelector } from 'react-redux';
-import { Key, X } from 'react-feather';
+import { Key, LogIn, X } from 'react-feather';
 
 import { PulseLoader } from 'react-spinners';
 import Axios from 'axios';
@@ -16,17 +16,19 @@ import 'react-input-range/lib/css/index.css';
 import classNames from 'classnames';
 import Div100vh from 'react-div-100vh';
 import CheckSuccess from 'components/svg/CheckSuccess';
-import { isNumeric } from 'utils';
+import { isNumeric, log } from 'utils';
 import { format } from 'date-fns';
 import Button from 'components/common/Button';
 import Modal from 'components/common/ReModal';
 import colors from 'styles/colors';
 import Head from 'next/head';
-import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
+import { API_FUTURES_CAMPAIGN_WITHDRAW_STATUS, DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
 import AssetName from 'components/wallet/AssetName';
 import find from 'lodash/find';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import Divider from 'components/common/Divider';
+import axios from 'axios';
+import { ApiStatus } from 'redux/actions/const';
 
 const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI];
 
@@ -71,10 +73,12 @@ const ExternalWithdrawal = (props) => {
         isSuccessModal: false,
         isNotice: false,
     });
+    const user = useSelector((state) => state.auth.user) || null
     const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [wdlResult, setWdlResult] = useState(null);
     const [error, setError] = useState(null);
+    const [maxValue, setMaxValue] = useState(500e6);
 
     // map state from redux
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
@@ -99,13 +103,31 @@ const ExternalWithdrawal = (props) => {
                     ...balance,
                     available: Math.max(balance?.value, 0) - Math.max(balance?.locked_value, 0),
                 });
-                console.log('__ check wallet', balance);
             }
         });
 
 
         return _assets;
     }, [assetConfigs, futuresBalances]);
+
+    const getWithdrawstatusInfo = async ()=>{
+        const { data } = await axios.get(API_FUTURES_CAMPAIGN_WITHDRAW_STATUS)
+        if (data?.status === ApiStatus.SUCCESS) {
+            const {status, value} = data.data
+            if(status === 'limited'){
+                setMaxValue(value)
+            }
+        }
+    }
+
+    useEffect(() => {
+        if(user){
+
+            // call get withdraw status
+            getWithdrawstatusInfo()
+
+        }
+    }, [user]);
 
     useEffect(() => {
         setCurrentCurr(assets[0]);
@@ -123,11 +145,11 @@ const ExternalWithdrawal = (props) => {
     } = useMemo(() => {
         return {
             min: MIN_WITHDRAWAL[currentCurr?.id],
-            max: MAX_WITHDRAWAL[currentCurr?.id],
+            max: Math.min(MAX_WITHDRAWAL[currentCurr?.id], maxValue),
             fee: VNDC_WITHDRAWAL_FEE[currentCurr?.id],
             decimalScale: DECIMAL_SCALES[currentCurr?.id],
         };
-    }, [currentCurr]);
+    }, [currentCurr, maxValue]);
 
     // helper
     const handleModal = (key, value = null) =>
@@ -285,8 +307,10 @@ const ExternalWithdrawal = (props) => {
                         />
                         <div
                             className="flex items-center"
-                            onClick={() =>
+                            onClick={() =>{
                                 setAmount(formatNumber(Math.min(currentCurr?.available || 0, max), decimalScale))
+                            }
+
                             }
                         >
                             <span className="px-4 py-2 text-onus-base font-semibold">

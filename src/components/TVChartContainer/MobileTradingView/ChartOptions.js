@@ -69,7 +69,7 @@ const ChartOptions = ({
                 }
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center ">
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
@@ -93,7 +93,7 @@ const ChartOptions = ({
                 />
                 {showIconGuide &&
                     <div className="px-2" onClick={() => setStart(true)}>
-                        <img src={getS3Url('/images/icon/ic_help.png')} height={18} width={18} />
+                        <img className="min-w-[18px]" src={getS3Url('/images/icon/ic_help.png')} height={18} width={18} />
                     </div>
                 }
                 <FavouriteButton pair={pair} pairConfig={pairConfig}/>
@@ -112,7 +112,7 @@ const Change24h = ({pairPrice, isVndcFutures}) => {
     return (
         <div className='flex items-center'>
             <div
-                className={classNames('pl-2 text-onus-green font-medium',
+                className={classNames('px-2 min-w-[5.625rem] text-onus-green font-medium',
                     {
                         '!text-onus-red':
                             pairPrice?.priceChangePercent < 0,
