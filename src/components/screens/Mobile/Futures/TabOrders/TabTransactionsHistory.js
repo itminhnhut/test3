@@ -33,6 +33,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
         end: null
     })
     const [loading, setLoading] = useState(false)
+    const [loadMore, setLoadMore] = useState(false)
     const [transactionDetail, setTransactionDetail] = useState()
     const assetConfigs = useSelector(state => state.utils.assetConfig)
     const timestamp = useSelector((state) => state.heath.timestamp);
@@ -53,7 +54,11 @@ function TabTransactionsHistory({scrollSnap, active}) {
     }
 
     const fetchData = (isLoadMore) => {
-        setLoading(!isLoadMore)
+        if (isLoadMore) {
+            setLoadMore(true)
+        } else {
+            setLoading(true)
+        }
         fetchApi({
             url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
             params: {
@@ -63,7 +68,11 @@ function TabTransactionsHistory({scrollSnap, active}) {
                 lastId: isLoadMore ? last(data.result)?._id : ''
             }
         }).then(res => {
-            setLoading(false)
+            if (isLoadMore) {
+                setLoadMore(false)
+            } else {
+                setLoading(false)
+            }
             if (res.status === 'ok' && res.data) {
                 setData({
                     hasNext: res.data.hasNext,
@@ -165,26 +174,24 @@ function TabTransactionsHistory({scrollSnap, active}) {
             // id="list-transaction-histories"
             className='min-h-screen'
         >
-            <InfiniteScroll
-                dataLength={data.result.length}
-                hasMore={data.hasNext && !loading}
-                next={() => fetchData(true)}
-                scrollableTarget="futures-mobile"
-                loader={<div><IconLoading color={colors.onus.white}/></div>}
-                {...scrollSnap ? {height: 'calc(100vh - 5.25rem)'} : {scrollableTarget: "futures-mobile"}}
-            >
-                {
-                    loading ?
-                        <Loading/> :
-                        !data.result.length ?
-                            <TableNoData
-                                isMobile
-                                title={t('futures:order_table:no_transaction_history')}
-                                className="h-[calc(100vh-5.25rem)]"
-                            /> :
+            {
+                loading ?
+                    <Loading/> :
+                    !data.result.length ?
+                        <TableNoData
+                            isMobile
+                            title={t('futures:order_table:no_transaction_history')}
+                            className="h-[calc(100vh-5.25rem)]"
+                        /> :
+                        <>
                             <ListData/>
-                }
-            </InfiniteScroll>
+                            {data.hasNext && <div
+                                className='flex items-center justify-center text-center h-10 text-sm font-semibold'
+                                onClick={() => fetchData(true)}
+                            >{loadMore ? <IconLoading color={colors.onus.white}/> : <span>Load more</span>}
+                            </div>}
+                        </>
+            }
         </div>
 
     </div>
@@ -249,7 +256,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
             <div className='flex justify-between text-sm'>
                 <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:order_id')}</span>
                 <div className='flex flex-1 min-w-0 items-center'>
-                   <div className='flex-1 min-w-0 overflow-hidden text-right'>{orderId}</div>
+                    <div className='flex-1 min-w-0 overflow-hidden text-right'>{orderId}</div>
                     <CopyToClipboard text={orderId}>
                         <Copy className='ml-2' size={14} color={colors.onus.grey}/>
                     </CopyToClipboard>
