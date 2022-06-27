@@ -65,18 +65,18 @@ function TabTransactionsHistory({ scrollSnap, active }) {
         setRange(range)
     }
 
-    const fetchData = (isLoadMore) => {
+    const fetchData = async (isLoadMore) => {
         setLoading(!isLoadMore)
-        fetchApi({
-            url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
-            params: {
-                timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
-                timeTo: range.end ? endOfDay(range.end).valueOf() : '',
-                category: category !== 'all' ? category : '',
-                lastId: isLoadMore ? last(data.result)?._id : ''
-            }
-        }).then(res => {
-            setLoading(false)
+        try{
+            const res =  await fetchApi({
+                url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
+                params: {
+                    timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
+                    timeTo: range.end ? endOfDay(range.end).valueOf() : '',
+                    category: category !== 'all' ? category : '',
+                    lastId: isLoadMore ? last(data.result)?._id : ''
+                }
+            })
             if (res.status === 'ok' && res.data) {
                 setData({
                     hasNext: res.data.hasNext,
@@ -84,12 +84,19 @@ function TabTransactionsHistory({ scrollSnap, active }) {
                 })
                 // setTransactionDetail(res.data.result[0])
             }
-        })
+
+
+        } catch(e){
+            console.error('Load transasction error', e?.response?.status)
+        }finally{
+            console.error('Load transasction load more', )
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
         if (active) {
-            fetchData()
+            fetchData(false)
         }
     }, [range, category, active, timestamp])
 
@@ -97,7 +104,7 @@ function TabTransactionsHistory({ scrollSnap, active }) {
         if(!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
-    
+
             return note.includes('close')
                 ? t(`futures:mobile:transaction_histories:categories:close_fee`)
                 : t(`futures:mobile:transaction_histories:categories:open_fee`)
@@ -247,7 +254,7 @@ const TransactionDetail = ({ t, visible, onClose, transaction, assetConfig = {} 
         if(!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
-    
+
             return note.includes('close')
                 ? t(`futures:mobile:transaction_histories:categories:close_fee`)
                 : t(`futures:mobile:transaction_histories:categories:open_fee`)
