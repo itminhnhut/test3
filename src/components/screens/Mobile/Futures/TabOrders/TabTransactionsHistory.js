@@ -119,6 +119,52 @@ function TabTransactionsHistory({scrollSnap, active}) {
         return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
     }
 
+    const _renderListItem = () => {
+        return data.result.map(item => {
+            const assetConfig = assetConfigMap[item.currency]
+            const orderId = first(item?.note?.match(/\d+/g))
+            return <div
+                key={item._id}
+                className='flex justify-between p-4 border-b border-onus-line'
+                onClick={() => setTransactionDetail(item)}
+            >
+                <div className='flex items-center'>
+                    <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
+                    <div className='ml-2'>
+                        <div
+                            className='font-medium text-onus-white text-sm'>{_renderCategory(item)}</div>
+                        <div
+                            className='font-medium text-onus-grey text-xs mr-2'
+                        >
+                            {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
+                        </div>
+                    </div>
+                </div>
+                <div className='text-right'>
+                    <div
+                        className='font-medium text-onus-white text-sm'
+                    >
+                        <span>{formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}</span>
+                        <span className='ml-1'>{assetConfig?.assetCode}</span>
+                    </div>
+                    <div
+                        className='font-medium text-onus-grey text-xs'
+                    >
+
+                        {
+                            orderId ?
+                                <>
+                                    <span>ID:</span>
+                                    <span className='ml-1'>{orderId}</span>
+                                </> :
+                                <span>--</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        })
+    }
+
     return <div>
         <DateRangePicker
             visible={visibleDateRangePicker}
@@ -177,41 +223,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
                             className="h-[calc(100vh-5.25rem)]"
                         /> :
                         <>
-                            {
-                                data.result.map(item => {
-                                    const assetConfig = assetConfigMap[item.currency]
-                                    return <div
-                                        key={item._id}
-                                        className='flex justify-between p-4 border-b border-onus-line'
-                                        onClick={() => setTransactionDetail(item)}
-                                    >
-                                        <div className='flex items-center'>
-                                            <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
-                                            <div className='ml-2'>
-                                                <div
-                                                    className='font-bold text-onus-white'>{assetConfig?.assetCode}</div>
-                                                <div
-                                                    className='font-medium text-onus-grey text-xs mr-2'
-                                                >
-                                                    {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='text-right'>
-                                            <div
-                                                className='font-bold text-onus-white'
-                                            >
-                                                {formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}
-                                            </div>
-                                            <div
-                                                className='font-medium text-onus-grey text-xs'
-                                            >
-                                                {_renderCategory(item)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                })
-                            }
+                            {_renderListItem()}
                             {data.hasNext && <div
                                 className='flex items-center justify-center text-center h-12 text-sm font-semibold mb-4'
                                 onClick={() => fetchData(true)}
