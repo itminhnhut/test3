@@ -34,6 +34,7 @@
         "note": "Note",
         "no_opening_order": "No opening orders",
         "no_history_order": "No history orders",
+        "no_transaction_history": "No transaction history",
         "login_to_continue": "Please login to continue",
         "loading": "Loading...",
         "mobile": {
@@ -271,8 +272,9 @@
             }
         },
         "transaction_histories": {
+            "id": "ID",
             "time": "Time",
-            "transaction_number": "Transaction number",
+            "order_id": "Order ID",
             "cancel": "Cancel",
             "done": "Done",
             "categories": {
@@ -282,7 +284,10 @@
                 "606": "Insurance Clearance Fee",
                 "603": "Funding Rates",
                 "4": "Deposit",
-                "5": "Withdraw"
+                "5": "Withdraw",
+                "723": "Withdraw",
+                "608": "Insurance",
+                "609": "Promotion"
             },
             "close": "Close"
         },
@@ -329,8 +334,13 @@
         "profit_input": "Input profit",
         "margin_ratio": "Risk",
         "auto_type_sltp": "Auto type SL-TP",
-        "pnl_estimate": "Estimate Pnl",
+        "pnl_estimate": "Estimate PNL",
         "modify_tpsl_title": "Modify SL-TP",
+        "get_now": "Get it now",
+        "invalid_nami_frame_user": "You are not eligible for this program",
+        "invalid_log_status": "Your reward not found please come back later",
+        "title_on_boarding": "Claim Reward",
+        "content_on_boarding": "Congratulations, you have successfully received {{value}} VNDC",
         "change_24h": "24h"
     },
     "orders_history": "Order History",

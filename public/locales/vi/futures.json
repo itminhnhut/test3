@@ -36,6 +36,7 @@
         "note": "Ghi chú",
         "no_opening_order": "Không có lệnh đang mở",
         "no_history_order": "Không có lịch sử lệnh",
+        "no_transaction_history": "Không có lịch sử giao dịch",
         "login_to_continue": "Vui lòng đăng nhập để tiếp tục",
         "loading": "Đang tải...",
         "mobile": {
@@ -271,8 +272,9 @@
             }
         },
         "transaction_histories": {
+            "id": "Id",
             "time": "Thời gian",
-            "transaction_number": "Số giao dịch",
+            "order_id": "ID lệnh",
             "cancel": "Huỷ",
             "done": "Đồng ý",
             "categories": {
@@ -282,7 +284,10 @@
                 "606": "Phí bảo hiểm",
                 "603": "Phí funding rate",
                 "4": "Nạp tiền",
-                "5": "Rút tiền"
+                "5": "Rút tiền",
+                "723": "Rút tiền",
+                "608": "Bảo hiểm",
+                "609": "Khuyến mãi"
             },
             "close": "Đóng"
         },
@@ -329,8 +334,13 @@
         "profit_input": "Nhập lợi nhuận",
         "margin_ratio": "Rủi ro",
         "auto_type_sltp": "Tự động nhập SL-TP",
-        "pnl_estimate": "Pnl ước tính",
+        "pnl_estimate": "Lời/lỗ ước tính",
         "modify_tpsl_title": "Chỉnh sửa SL-TP",
+        "get_now": "Nhận ngay",
+        "invalid_nami_frame_user": "Bạn không đủ điều kiện để tham gia chương trình này",
+        "invalid_log_status": "Không tìm thấy phần thưởng của bạn vui lòng quay lại sau",
+        "title_on_boarding": "Nhận thưởng",
+        "content_on_boarding": "Chúc mừng bạn đã nhận thành công {{value}} VNDC",
         "change_24h": "24h"
     },
     "orders_history": "Lịch sử",

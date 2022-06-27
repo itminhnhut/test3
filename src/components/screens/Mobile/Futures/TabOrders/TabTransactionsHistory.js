@@ -2,12 +2,12 @@ import {endOfDay, format, startOfDay} from "date-fns";
 import {Check, ChevronDown, ChevronUp, Copy} from "react-feather";
 import colors from "styles/colors";
 import DateRangePicker from "components/screens/Mobile/Futures/DateRangePicker";
-import {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Modal from "components/common/ReModal";
 import fetchApi from 'utils/fetch-api';
 import {API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES} from "redux/actions/apis";
 import classNames from "classnames";
-import {concat, filter, find, keyBy, last, range} from "lodash";
+import {concat, filter, find, first, keyBy, last, range} from "lodash";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {IconLoading} from "components/common/Icons";
 import AssetLogo from "components/wallet/AssetLogo";
@@ -15,12 +15,23 @@ import {useSelector} from "react-redux";
 import {formatNumber} from "redux/actions/utils";
 import {useTranslation} from "next-i18next";
 import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
+import TableNoData from "components/common/table.old/TableNoData";
 
-const categories = ['all', 600, 602, 606, 603, 4, 5]
+const categories = [
+    'all',// "All",
+    600,// "Fee",
+    602,// "Profit",
+    606,// "Insurance Clearance Fee",
+    603,// "Funding Rates",
+    4,// "Deposit",
+    723,// "Withdraw",
+    608,// "Insurance",
+    609,// "Promotion"
+]
 
 const ASSETS = [72]
 
-function TabTransactionsHistory({scrollSnap}) {
+function TabTransactionsHistory({scrollSnap, active}) {
     const [data, setData] = useState({
         result: [],
         hasNext: false
@@ -34,6 +45,7 @@ function TabTransactionsHistory({scrollSnap}) {
     const [loading, setLoading] = useState(false)
     const [transactionDetail, setTransactionDetail] = useState()
     const assetConfigs = useSelector(state => state.utils.assetConfig)
+    const timestamp = useSelector((state) => state.heath.timestamp);
 
     const {t} = useTranslation()
 
@@ -73,8 +85,45 @@ function TabTransactionsHistory({scrollSnap}) {
     }
 
     useEffect(() => {
-        fetchData()
-    }, [range, category])
+        if (active) {
+            fetchData()
+        }
+    }, [range, category, active, timestamp])
+
+    const ListData = () => {
+        return data.result.map(item => {
+            const assetConfig = assetConfigMap[item.currency]
+            return <div
+                key={item._id}
+                className='flex justify-between p-4 border-b border-onus-line'
+                onClick={() => setTransactionDetail(item)}
+            >
+                <div className='flex items-center'>
+                    <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
+                    <div className='ml-2'>
+                        <div className='font-bold text-onus-white'>{assetConfig?.assetCode}</div>
+                        <div
+                            className='font-medium text-onus-grey text-xs mr-2'
+                        >
+                            {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
+                        </div>
+                    </div>
+                </div>
+                <div className='text-right'>
+                    <div
+                        className='font-bold text-onus-white'
+                    >
+                        {formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}
+                    </div>
+                    <div
+                        className='font-medium text-onus-grey text-xs'
+                    >
+                        {categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'}
+                    </div>
+                </div>
+            </div>
+        })
+    }
 
     return <div>
         <DateRangePicker
@@ -98,7 +147,7 @@ function TabTransactionsHistory({scrollSnap}) {
             assetConfig={assetConfigMap[transactionDetail?.currency]}
         />
 
-        <div className='flex justify-between text-xs text-onus-grey px-4 pt-2'>
+        <div className='sticky top-[2.625rem] bg-onus z-10 flex justify-between text-xs text-onus-grey px-4 pt-2'>
             <div className='flex items-center p-2 -ml-2' onClick={() => setVisibleDateRangePicker(true)}>
                 <span className='mr-1'>
                     {range.start && range.end ?
@@ -124,7 +173,7 @@ function TabTransactionsHistory({scrollSnap}) {
         </div>
         <div
             // id="list-transaction-histories"
-            className=''
+            className='min-h-screen'
         >
             <InfiniteScroll
                 dataLength={data.result.length}
@@ -134,38 +183,17 @@ function TabTransactionsHistory({scrollSnap}) {
                 loader={<div><IconLoading color={colors.onus.white}/></div>}
                 {...scrollSnap ? {height: 'calc(100vh - 5.25rem)'} : {scrollableTarget: "futures-mobile"}}
             >
-                {loading ? <Loading/> : data.result.map(item => {
-                    const assetConfig = assetConfigMap[item.currency]
-                    return <div
-                        key={item._id}
-                        className='flex justify-between p-4 border-b border-onus-line'
-                        onClick={() => setTransactionDetail(item)}
-                    >
-                        <div className='flex items-center'>
-                            <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
-                            <div className='ml-2'>
-                                <div className='font-bold text-onus-white'>{assetConfig?.assetCode}</div>
-                                <div
-                                    className='font-medium text-onus-grey text-xs mr-2'
-                                >
-                                    {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
-                                </div>
-                            </div>
-                        </div>
-                        <div className='text-right'>
-                            <div
-                                className='font-bold text-onus-white'
-                            >
-                                {formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}
-                            </div>
-                            <div
-                                className='font-medium text-onus-grey text-xs'
-                            >
-                                {categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'}
-                            </div>
-                        </div>
-                    </div>
-                })}
+                {
+                    loading ?
+                        <Loading/> :
+                        !data.result.length ?
+                            <TableNoData
+                                isMobile
+                                title={t('futures:order_table:no_transaction_history')}
+                                className="h-[calc(100vh-5.25rem)]"
+                            /> :
+                            <ListData/>
+                }
             </InfiniteScroll>
         </div>
 
@@ -199,6 +227,7 @@ const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
 }
 
 const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}}) => {
+    const orderId = first(transaction?.note?.match(/\d+/g)) || '--'
     return <Modal
         isVisible={visible}
         onusMode
@@ -217,12 +246,21 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
         <div className='px-4 pt-6 space-y-4'>
             <div className='flex justify-between text-sm'>
                 <span className='text-onus-grey mr-2 whitespace-nowrap'>
-                    {t('futures:mobile:transaction_histories:transaction_number')}
+                    {t('futures:mobile:transaction_histories:id')}
                 </span>
                 <div className='flex flex-1 min-w-0 items-center'>
                     <div className='flex-1 min-w-0 overflow-hidden text-right'
                          style={{textOverflow: 'ellipsis'}}>{transaction?._id}</div>
                     <CopyToClipboard text={transaction?._id}>
+                        <Copy className='ml-2' size={14} color={colors.onus.grey}/>
+                    </CopyToClipboard>
+                </div>
+            </div>
+            <div className='flex justify-between text-sm'>
+                <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:order_id')}</span>
+                <div className='flex flex-1 min-w-0 items-center'>
+                   <div className='flex-1 min-w-0 overflow-hidden text-right'>{orderId}</div>
+                    <CopyToClipboard text={orderId}>
                         <Copy className='ml-2' size={14} color={colors.onus.grey}/>
                     </CopyToClipboard>
                 </div>
@@ -240,7 +278,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
 }
 
 const Loading = () => {
-    return range(0, 6).map(i => {
+    return range(0, 10).map(i => {
         return <div key={i} className='flex justify-between animate-pulse p-4 border-b border-onus-line'>
             <div className='flex items-center'>
                 <div className='!rounded-full bg-darkBlue-3 h-9 !w-9'/>

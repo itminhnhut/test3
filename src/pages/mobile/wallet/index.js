@@ -1,14 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { NoticePopup } from 'components/screens/OnusWithdrawGate/styledExternalWdl';
-import { useSelector } from 'react-redux';
-import { Key, X } from 'react-feather';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
+import {NoticePopup} from 'components/screens/OnusWithdrawGate/styledExternalWdl';
+import {useSelector} from 'react-redux';
+import {Key, LogIn, X} from 'react-feather';
 
-import { PulseLoader } from 'react-spinners';
+import {PulseLoader} from 'react-spinners';
 import Axios from 'axios';
-import { WalletCurrency, } from 'components/screens/OnusWithdrawGate/helper';
-import { emitWebViewEvent, formatNumber, getS3Url } from 'redux/actions/utils';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import {WalletCurrency,} from 'components/screens/OnusWithdrawGate/helper';
+import {emitWebViewEvent, formatNumber, getS3Url} from 'redux/actions/utils';
+import {useTranslation} from 'next-i18next';
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 import AssetLogo from 'components/wallet/AssetLogo';
 import NumberFormat from 'react-number-format';
 
@@ -16,17 +16,19 @@ import 'react-input-range/lib/css/index.css';
 import classNames from 'classnames';
 import Div100vh from 'react-div-100vh';
 import CheckSuccess from 'components/svg/CheckSuccess';
-import { isNumeric } from 'utils';
-import { format } from 'date-fns';
+import {isNumeric, log} from 'utils';
+import {format} from 'date-fns';
 import Button from 'components/common/Button';
 import Modal from 'components/common/ReModal';
 import colors from 'styles/colors';
 import Head from 'next/head';
-import { DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
+import {API_FUTURES_CAMPAIGN_WITHDRAW_STATUS, DIRECT_WITHDRAW_ONUS} from 'redux/actions/apis';
 import AssetName from 'components/wallet/AssetName';
 import find from 'lodash/find';
-import LayoutMobile from 'components/common/layouts/LayoutMobile';
+import LayoutMobile, {AlertContext} from 'components/common/layouts/LayoutMobile';
 import Divider from 'components/common/Divider';
+import axios from 'axios';
+import {ApiStatus} from 'redux/actions/const';
 
 const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI];
 
@@ -62,6 +64,12 @@ const WDL_STATUS = {
 
 const MAINTAIN = true;
 
+const WithdrawWrapper = () => {
+    return <LayoutMobile>
+        <ExternalWithdrawal/>
+    </LayoutMobile>
+}
+
 const ExternalWithdrawal = (props) => {
     // initial state
     const [currentCurr, setCurrentCurr] = useState(null);
@@ -71,24 +79,28 @@ const ExternalWithdrawal = (props) => {
         isSuccessModal: false,
         isNotice: false,
     });
+    const user = useSelector((state) => state.auth.user) || null
     const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [wdlResult, setWdlResult] = useState(null);
     const [error, setError] = useState(null);
+    const [maxValue, setMaxValue] = useState(500e6);
 
     // map state from redux
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
     const futuresBalances = useSelector((state) => state.wallet.FUTURES) || {};
 
+    const alertContext = useContext(AlertContext);
+
     // use hooks
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const isDark = true;
 
     const assets = useMemo(() => {
         const _assets = [];
 
         ASSET_LIST.forEach(item => {
-            const _config = find(assetConfigs, { id: item });
+            const _config = find(assetConfigs, {id: item});
             if (_config) {
                 const balance = futuresBalances[_config.id] || {
                     value: 0,
@@ -99,13 +111,31 @@ const ExternalWithdrawal = (props) => {
                     ...balance,
                     available: Math.max(balance?.value, 0) - Math.max(balance?.locked_value, 0),
                 });
-                console.log('__ check wallet', balance);
             }
         });
 
 
         return _assets;
     }, [assetConfigs, futuresBalances]);
+
+    const getWithdrawstatusInfo = async () => {
+        const {data} = await axios.get(API_FUTURES_CAMPAIGN_WITHDRAW_STATUS)
+        if (data?.status === ApiStatus.SUCCESS) {
+            const {status, value} = data.data
+            if (status === 'limited') {
+                setMaxValue(value)
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+
+            // call get withdraw status
+            getWithdrawstatusInfo()
+
+        }
+    }, [user]);
 
     useEffect(() => {
         setCurrentCurr(assets[0]);
@@ -123,11 +153,11 @@ const ExternalWithdrawal = (props) => {
     } = useMemo(() => {
         return {
             min: MIN_WITHDRAWAL[currentCurr?.id],
-            max: MAX_WITHDRAWAL[currentCurr?.id],
+            max: Math.min(MAX_WITHDRAWAL[currentCurr?.id], maxValue),
             fee: VNDC_WITHDRAWAL_FEE[currentCurr?.id],
             decimalScale: DECIMAL_SCALES[currentCurr?.id],
         };
-    }, [currentCurr]);
+    }, [currentCurr, maxValue]);
 
     // helper
     const handleModal = (key, value = null) =>
@@ -137,9 +167,9 @@ const ExternalWithdrawal = (props) => {
         });
 
     const onAllDone = () => {
-        setModal({ isSuccessModal: false });
+        setModal({isSuccessModal: false});
         setAmount('');
-        setWdlResult(null);
+        // setWdlResult(null);
         setError(null);
     };
 
@@ -149,15 +179,19 @@ const ExternalWithdrawal = (props) => {
         try {
             setIsSubmitting(true);
             setError(null);
-            const { data } = await Axios.post(DIRECT_WITHDRAW_ONUS, {
+            const {data} = await Axios.post(DIRECT_WITHDRAW_ONUS, {
                 amount,
                 currency,
             });
             // let data = {status: 'ok', message: 'PHA_KE_DATA', data: {currency: 72, amount: 40000, amountLeft: 32000}}
             if (data && data.status === 'ok') {
                 const res = (data.hasOwnProperty('data') && data.data) || {};
-                setWdlResult(res); // get withdraw result
-                handleModal('isSuccessModal', true);
+                alertContext.alert.show('success',
+                    t('common:success'),
+                    t('ext_gate:wdl_success', {
+                        amount: res?.amount || '--',
+                        assetCode: find(assetConfigs, {id: res?.currency})?.assetCode || '--',
+                    }))
             } else {
                 // console.log('namidev-DEBUG: ERROR_OCCURED____ ', data)
                 const status = data ? data.status : WDL_STATUS.UNKNOWN;
@@ -237,7 +271,7 @@ const ExternalWithdrawal = (props) => {
     const wdlAmount = wdlResult?.amount || 0;
     const wdlCurrency = wdlResult?.currency || 0;
     return (
-        <LayoutMobile>
+        <>
             <Head>
                 <meta name="viewport"
                       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
@@ -278,15 +312,17 @@ const ExternalWithdrawal = (props) => {
                             allowNegative={false}
                             className="outline-none text-sm font-medium flex-1 py-2"
                             value={amount}
-                            onValueChange={({ value }) => setAmount(value)}
+                            onValueChange={({value}) => setAmount(value)}
                             decimalScale={decimalScale}
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
                         />
                         <div
                             className="flex items-center"
-                            onClick={() =>
+                            onClick={() => {
                                 setAmount(formatNumber(Math.min(currentCurr?.available || 0, max), decimalScale))
+                            }
+
                             }
                         >
                             <span className="px-4 py-2 text-onus-base font-semibold">
@@ -388,68 +424,68 @@ const ExternalWithdrawal = (props) => {
                 })}
             </Div100vh>
 
-            <Modal
-                isVisible={modal.isSuccessModal}
-                containerClassName="px-6 py-8 !min-w-[18rem] !top-[50%]"
-            >
-                <div className="absolute right-0 top-0 p-3">
-                    <X
-                        size={16}
-                        className="cursor-pointer hover:text-dominant"
-                        onClick={onAllDone}
-                    />
-                </div>
-                <img
-                    className="mx-auto"
-                    src={getS3Url(isDark
-                        ? '/images/screen/wallet/coins_pana_dark.png'
-                        : '/images/screen/wallet/coins_pana.png'
-                    )}
-                    width={150}
-                    height={150}
-                />
-                <p className="text-center font-semibold text-lg mt-5">
-                    {t('wallet:mobile:transfer_asset_success', {})}
-                </p>
-                <p className="text-center text-sm text-onus-grey">
-                    {t('wallet:mobile:tips')}
-                </p>
-                <div className="mt-7 mb-8 space-y-4">
-                    <div className="flex justify-between text-xs">
-                        <span className="font-medium text-onus-grey">
-                            {t('wallet:mobile:time')}
-                        </span>
-                        <span className="font-semibold">
-                            {format(Date.now(), 'yyyy-MM-dd hh:mm:ss')}
-                        </span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                        <span className="font-medium text-onus-grey">
-                            {t('wallet:mobile:amount')}
-                        </span>
-                        <span className="font-semibold">
-                            {formatNumber(+wdlAmount, decimalScale)}&nbsp;
-                            <AssetName assetId={wdlCurrency}/>
-                        </span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                        <span
-                            className="font-medium text-onus-grey whitespace-nowrap mr-3">
-                            {t('wallet:mobile:transfer_from_to')}
-                        </span>
-                        <span className="font-semibold whitespace-nowrap">
-                            {t('ext_gate:nami_futures_wallet')}
-                            &nbsp;-&nbsp;
-                            {t('ext_gate:onus_wallet')}
-                        </span>
-                    </div>
-                </div>
-                <Button
-                    componentType="button"
-                    title={t('common:cancel')}
-                    onClick={() => handleModal('isSuccessModal', false)}
-                />
-            </Modal>
+            {/*<Modal*/}
+            {/*    isVisible={modal.isSuccessModal}*/}
+            {/*    containerClassName="px-6 py-8 !min-w-[18rem] !top-[50%]"*/}
+            {/*>*/}
+            {/*    <div className="absolute right-0 top-0 p-3">*/}
+            {/*        <X*/}
+            {/*            size={16}*/}
+            {/*            className="cursor-pointer hover:text-dominant"*/}
+            {/*            onClick={onAllDone}*/}
+            {/*        />*/}
+            {/*    </div>*/}
+            {/*    <img*/}
+            {/*        className="mx-auto"*/}
+            {/*        src={getS3Url(isDark*/}
+            {/*            ? '/images/screen/wallet/coins_pana_dark.png'*/}
+            {/*            : '/images/screen/wallet/coins_pana.png'*/}
+            {/*        )}*/}
+            {/*        width={150}*/}
+            {/*        height={150}*/}
+            {/*    />*/}
+            {/*    <p className="text-center font-semibold text-lg mt-5">*/}
+            {/*        {t('wallet:mobile:transfer_asset_success', {})}*/}
+            {/*    </p>*/}
+            {/*    <p className="text-center text-sm text-onus-grey">*/}
+            {/*        {t('wallet:mobile:tips')}*/}
+            {/*    </p>*/}
+            {/*    <div className="mt-7 mb-8 space-y-4">*/}
+            {/*        <div className="flex justify-between text-xs">*/}
+            {/*            <span className="font-medium text-onus-grey">*/}
+            {/*                {t('wallet:mobile:time')}*/}
+            {/*            </span>*/}
+            {/*            <span className="font-semibold">*/}
+            {/*                {format(Date.now(), 'yyyy-MM-dd hh:mm:ss')}*/}
+            {/*            </span>*/}
+            {/*        </div>*/}
+            {/*        <div className="flex justify-between text-xs">*/}
+            {/*            <span className="font-medium text-onus-grey">*/}
+            {/*                {t('wallet:mobile:amount')}*/}
+            {/*            </span>*/}
+            {/*            <span className="font-semibold">*/}
+            {/*                {formatNumber(+wdlAmount, decimalScale)}&nbsp;*/}
+            {/*                <AssetName assetId={wdlCurrency}/>*/}
+            {/*            </span>*/}
+            {/*        </div>*/}
+            {/*        <div className="flex justify-between text-xs">*/}
+            {/*            <span*/}
+            {/*                className="font-medium text-onus-grey whitespace-nowrap mr-3">*/}
+            {/*                {t('wallet:mobile:transfer_from_to')}*/}
+            {/*            </span>*/}
+            {/*            <span className="font-semibold whitespace-nowrap">*/}
+            {/*                {t('ext_gate:nami_futures_wallet')}*/}
+            {/*                &nbsp;-&nbsp;*/}
+            {/*                {t('ext_gate:onus_wallet')}*/}
+            {/*            </span>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*    <Button*/}
+            {/*        componentType="button"*/}
+            {/*        title={t('common:cancel')}*/}
+            {/*        onClick={() => handleModal('isSuccessModal', false)}*/}
+            {/*    />*/}
+            {/*</Modal>*/}
 
             <NoticePopup active={modal.isNotice} isDark={isDark}>
                 <div className="NoticePopup__Header">{t('modal:notice')}</div>
@@ -461,11 +497,11 @@ const ExternalWithdrawal = (props) => {
                     </a>
                 </div>
             </NoticePopup>
-        </LayoutMobile>
+        </>
     );
 };
 
-export const getStaticProps = async ({ locale }) => ({
+export const getStaticProps = async ({locale}) => ({
     props: {
         ...(await serverSideTranslations(locale, [
             'common',
@@ -477,4 +513,4 @@ export const getStaticProps = async ({ locale }) => ({
     },
 });
 
-export default ExternalWithdrawal;
+export default WithdrawWrapper;
