@@ -66,30 +66,14 @@ function TabTransactionsHistory({scrollSnap, active}) {
         setRange(range)
     }
 
-    const fetchData = (isLoadMore) => {
+    const fetchData = async (isLoadMore) => {
         if (isLoadMore) {
             setLoadMore(true)
         } else {
             setLoading(true)
         }
-        fetchApi({
-            url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
-            params: {
-                timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
-                timeTo: range.end ? endOfDay(range.end).valueOf() : '',
-                category: category !== 'all' ? category : '',
-                lastId: isLoadMore ? last(data.result)?._id : ''
-            }
-        }).then(res => {
-            if (isLoadMore) {
-                setLoadMore(false)
-            } else {
-                setLoading(false)
-            }
-    const fetchData = async (isLoadMore) => {
-        setLoading(!isLoadMore)
-        try{
-            const res =  await fetchApi({
+        try {
+            const res = await fetchApi({
                 url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
                 params: {
                     timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
@@ -105,13 +89,15 @@ function TabTransactionsHistory({scrollSnap, active}) {
                 })
                 // setTransactionDetail(res.data.result[0])
             }
-
-
-        } catch(e){
+        } catch (e) {
             console.error('Load transasction error', e?.response?.status)
-        }finally{
-            console.error('Load transasction load more', )
-            setLoading(false)
+        } finally {
+            console.error('Load transasction load more',)
+            if (isLoadMore) {
+                setLoadMore(false)
+            } else {
+                setLoading(false)
+            }
         }
     }
 
