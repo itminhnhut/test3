@@ -274,7 +274,7 @@
         "transaction_histories": {
             "id": "Id",
             "time": "Thời gian",
-            "order_id": "Id Lệnh",
+            "order_id": "ID lệnh",
             "cancel": "Huỷ",
             "done": "Đồng ý",
             "categories": {
@@ -284,7 +284,10 @@
                 "606": "Phí bảo hiểm",
                 "603": "Phí funding rate",
                 "4": "Nạp tiền",
-                "5": "Rút tiền"
+                "5": "Rút tiền",
+                "723": "Rút tiền",
+                "608": "Bảo hiểm",
+                "609": "Khuyến mãi"
             },
             "close": "Đóng"
         },

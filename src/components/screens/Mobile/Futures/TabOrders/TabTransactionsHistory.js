@@ -17,7 +17,17 @@ import {useTranslation} from "next-i18next";
 import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
 import TableNoData from "components/common/table.old/TableNoData";
 
-const categories = ['all', 600, 602, 606, 603, 4, 5]
+const categories = [
+    'all',// "All",
+    600,// "Fee",
+    602,// "Profit",
+    606,// "Insurance Clearance Fee",
+    603,// "Funding Rates",
+    4,// "Deposit",
+    723,// "Withdraw",
+    608,// "Insurance",
+    609,// "Promotion"
+]
 
 const ASSETS = [72]
 

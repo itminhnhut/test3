@@ -284,7 +284,10 @@
                 "606": "Insurance Clearance Fee",
                 "603": "Funding Rates",
                 "4": "Deposit",
-                "5": "Withdraw"
+                "5": "Withdraw",
+                "723": "Withdraw",
+                "608": "Insurance",
+                "609": "Promotion"
             },
             "close": "Close"
         },
