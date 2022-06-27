@@ -33,10 +33,11 @@ const OrderDetail = (props) => {
     const [orderDetail, setOrderDetail] = useState(null);
     const isTabHistory = useRef(true);
     const [loading, setLoading] = useState(true);
+    const mount = useRef(false);
 
     const pairConfigDetail = useMemo(() => {
         return allPairConfigs.find(rs => rs.symbol === orderDetail?.symbol)
-    }, [orderDetail])
+    }, [orderDetail, allPairConfigs])
 
     useEffect(() => {
         if (auth && timestamp) getOrders();
@@ -87,12 +88,17 @@ const OrderDetail = (props) => {
 
     const oldData = useRef(false);
     useEffect(() => {
-        if (Array.isArray(ordersList) && orderDetail && !isTabHistory.current) {
+        if (!mount.current && Array.isArray(ordersList) && ordersList.length > 0) {
+            mount.current = true;
+            return;
+        }
+        if (Array.isArray(ordersList) && orderDetail && !isTabHistory.current && mount.current) {
             const detail = ordersList.find(item => item.displaying_id === orderDetail?.displaying_id);
             if (!detail) {
                 router.back();
             }
         }
+
     }, [ordersList, orderDetail])
 
     if (loading) return <OrderDetailLoading />

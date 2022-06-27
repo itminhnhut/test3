@@ -50,7 +50,7 @@ export const Dot = styled.span`
     position: absolute;
     top: ${({ onusMode, active }) => onusMode ? '-6.5px' : '-4px'};
     //top: 10px;
-    left: ${({ percentage }) => `calc(${percentage}% - 4.5px)`};
+    left: ${({ percentage }) => `calc(${percentage}% - 6.5px)`};
     clip-path:${({ onusMode }) => onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'};
     border-radius:${({ onusMode }) => onusMode ? '50%' : '0'};
     width: ${({ onusMode, active }) => onusMode ? (active ? '15px' : '9px') : '9px'};
@@ -96,6 +96,6 @@ export const ThumbLabel = styled.div`
     font-size: 12px;
     font-style: normal;
     font-weight:${({ onusMode }) => onusMode ? '400' : '600'};
-    margin-top:${({ onusMode }) => onusMode ? '-2px' : '0'};
+    margin-top:${({ onusMode }) => onusMode ? '-3px' : '0'};
     line-height: 18px;
 `

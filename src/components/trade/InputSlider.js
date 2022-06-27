@@ -53,6 +53,7 @@ const Slider = ({
     BgColorLine,
     positionLabel = 'bottom',
     showPercentLabel = false,
+    customPercentLabel,
     ...props
 }) => {
     const container = useRef(null)
@@ -359,13 +360,15 @@ const Slider = ({
                         bgColorActive={bgColorActive}
                         onusMode={onusMode}
                     >
-                        {showPercentLabel && <ThumbLabel
-                            isZero={pos.left === 0}
-                            isDark={currentTheme === THEME_MODE.DARK}
-                            onusMode={onusMode}
-                        >
-                            {ceil(pos.left, 0)}%
-                        </ThumbLabel>}
+                        {customPercentLabel ? customPercentLabel(pos) :
+                            showPercentLabel && <ThumbLabel
+                                isZero={pos.left === 0}
+                                isDark={currentTheme === THEME_MODE.DARK}
+                                onusMode={onusMode}
+                            >
+                                {ceil(pos.left, 0)}%
+                            </ThumbLabel>
+                        }
                     </Thumb>
                 </div>
             </Track>
