@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { getS3Url } from 'redux/actions/utils';
+
 const NaoInfo = () => {
     return (
-        <section className="flex items-center justify-between pt-20 flex-wrap">
+        <section className="flex items-center justify-between pt-10 sm:pt-20 flex-wrap gap-8">
             <div className="flex items-center">
                 <BackgroundImage>
-                    <img src='/images/nao/ic_nao_large.png' height='80' width='80' alt="" />
+                    <img src={getS3Url('/images/nao/ic_nao_large.png')} className='w-[62px] h-[62px] sm:w-[80px] sm:h-[80px]' alt="" />
                 </BackgroundImage>
                 <div className="flex flex-col justify-between leading-10">
                     <label className="text-nao-blue uppercase text-[1.25re] font-semibold">NAO Token</label>
@@ -15,14 +17,14 @@ const NaoInfo = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex bg-nao-bg2 rounded-xl p-7">
+            <div className="flex bg-nao-bg2 rounded-xl p-6 sm:p-7 flex-1 sm:flex-none flex-col sm:flex-row">
                 <div className="">
                     <label className="text-nao-text font-medium text-lg">Circulating Supply</label>
-                    <div className="mt-6">
+                    <div className="mt-4 sm:mt-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center mr-8">
                                 <span className="font-semibold mr-1">22,250,000</span>
-                                <img src="/images/nao/ic_nao.png" width={16} height={16} alt="" />
+                                <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                             </div>
                             <div className="text-nao-grey">100,000,000</div>
                         </div>
@@ -34,13 +36,13 @@ const NaoInfo = () => {
                         <div className="text-xs font-medium">{(22250000 / 100000000) * 100}%</div>
                     </div>
                 </div>
-                <div className="w-[1px] bg-nao-line mx-[39px]"></div>
+                <div className="h-[1px] mx-0 sm:h-auto sm:w-[1px] bg-nao-line sm:mx-[39px] my-6 sm:my-0"></div>
                 <div>
                     <label className="text-nao-text font-medium text-lg">Distributed Today</label>
-                    <div className="mt-[45px]">
+                    <div className="mt-4 sm:mt-[45px]">
                         <div className="flex items-center mr-8">
                             <span className="font-semibold mr-2 text-lg">-</span>
-                            <img src="/images/nao/ic_nao.png" width={28} height={28} alt="" />
+                            <img src={getS3Url("/images/nao/ic_nao.png")} width={28} height={28} alt="" />
                         </div>
                     </div>
                 </div>
@@ -51,7 +53,7 @@ const NaoInfo = () => {
 
 
 const BackgroundImage = styled.div.attrs({
-    className: 'w-[7.25rem] h-[7.25rem] rounded-[50%] flex justify-center items-center mr-6'
+    className: 'min-w-[90px] w-[90px] h-[90px] sm:min-w-[116px] sm:w-[116px] sm:h-[116px] rounded-[50%] flex justify-center items-center mr-6'
 })`
     background: linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%);
 `

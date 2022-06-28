@@ -1,11 +1,15 @@
 import React, { useRef } from 'react';
-import { TextLiner, CardNao } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, Divider } from 'components/screens/Nao/NaoStyle';
 import SwiperCore, { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
+import { useWindowSize } from 'utils/customHooks';
+import styled from 'styled-components';
+import { getS3Url } from 'redux/actions/utils';
 
 const NaoSectionGov = () => {
     const sliderRef = useRef(null);
+    const { width } = useWindowSize();
     const arr = [1, 2, 3, 4, 5, 6, 6, 6, 6]
 
     const onNavigate = (isNext) => {
@@ -15,22 +19,22 @@ const NaoSectionGov = () => {
     }
 
     const renderSlide = () => {
-        const size = 4;
+        const size = 3;
         const page = Array.isArray(arr) && Math.ceil(arr.length / size)
         const result = [];
         for (let i = 0; i < page; i++) {
             const dataFilter = arr.slice(i * size, (i + 1) * size);
             result.push(<SwiperSlide key={i}>
-                <div className="flex w-full justify-between">
+                <div className="flex flex-col  w-full justify-between">
                     {dataFilter.map((item, index) => (
                         <>
-                            {index !== 0 && <div className="bg-nao-grey/[0.15] h-[56px] w-[1px]" />}
-                            <div >
-                                <div className="text-nao-blue text-[1.125rem] font-semibold pb-2 flex items-center">
-                                    <span className="mr-2">100,034,238</span>
-                                    <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
-                                </div>
+                            {index !== 0 && <Divider />}
+                            <div className='flex items-center justify-between'>
                                 <span className="text-sm text-nao-grey">10/5/2022 - 17/5/2022</span>
+                                <div className="text-nao-white text-lg font-semibold flex items-center">
+                                    <span className="mr-2">100,034,238</span>
+                                    <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                </div>
                             </div>
                         </>
                     ))}
@@ -43,94 +47,74 @@ const NaoSectionGov = () => {
 
 
     return (
-        <section className="pt-20">
+        <section className="pt-10 sm:pt-20">
             <div className="flex items-center justify-between">
                 <div>
-                    <TextLiner>Governance Pool</TextLiner>
-                    <span className="text-nao-grey">Lorem ipsum doren sitala ipsum doren sitala ipsum doren.</span>
+                    <TextLiner>Governance Pool (Coming Soon)</TextLiner>
+                    {/* <span className="text-nao-grey">Lorem ipsum doren sitala ipsum doren sitala ipsum doren.</span> */}
                 </div>
             </div>
             <div className="pt-6 flex items-center flex-wrap gap-[21px]">
-                <CardNao>
-                    <label className="text-nao-text font-medium text-lg">Staked</label>
-                    <div className="pt-4">
-                        <div className="text-nao-blue text-[1.125rem] font-semibold pb-2 flex items-center">
-                            <span className="mr-2">2,034,238,000</span>
+                <CardNao className="!flex-row items-center !justify-start relative flex-wrap">
+                    <div className="text-nao-grey w-full sm:w-1/2">Staking into the Governance Pool to share revenue from trading fees and vote on project proposals.</div>
+                    <div className="sm:absolute right-0 -bottom-7">
+                        <img src={getS3Url("/images/nao/ic_nao_coming.png")} className="w-full h-full sm:w-[428px] sm:h-[292px]" alt="" />
+                    </div>
+                </CardNao>
+                {/* <CardNao className="!p-10 sm:flex-none">
+                    <div>
+                        <label className="text-nao-text font-medium text-lg">NAO Staked</label>
+                        <div className="pt-4">
+                            <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
+                                <span className="mr-2">2,034,238,000</span>
+                                <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
+                            </div>
+                            <span className="text-sm text-nao-grey">100,000 USDT</span>
+                        </div>
+                    </div>
+                    <div className="h-[1px] bg-nao-line my-8"></div>
+                    <div>
+                        <label className="text-nao-text font-medium text-lg">Participants</label>
+                        <div className="pt-4">
+                            <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
+                                <span className="mr-2">2,238,000</span>
+                                <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
+                            </div>
+                            <span className="text-sm text-nao-grey">+1,000 participants today</span>
+                        </div>
+                    </div>
+                </CardNao>
+                <CardNao className="!p-10">
+                    <div className="flex items-center justify-between">
+                        <label className="text-nao-blue text-lg font-medium">Estimated Revenue Shares in the next EPOSH</label>
+                        <div className="text-nao-white text-xl font-semibold flex items-center leading-[18px]">
+                            <span className="mr-2">2,238,000</span>
                             <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
                         </div>
-                        <span className="text-sm text-nao-grey">100,000 USDT</span>
                     </div>
-                </CardNao>
-                <CardNao>
-                    <label className="text-nao-text font-medium text-lg">Trades</label>
-                    <div className="pt-4">
-                        <div className="text-nao-white text-[1.375rem] font-semibold pb-2">2,238,000</div>
-                        <span className="text-sm text-nao-grey">(~ 1000 users per day)</span>
-                    </div>
-                </CardNao>
-                <CardNao>
-                    <label className="text-nao-text font-medium text-lg">Estimated Revenue</label>
-                    <div className="pt-4">
-                        <div className="text-nao-blue text-[1.125rem] font-semibold pb-2 flex items-center">
-                            <span className="mr-2">100,034,238</span>
-                            <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
+                    <div className="h-[1px] bg-nao-line my-8"></div>
+                    <div className="flex items-center justify-between">
+                        <label className="text-nao-text font-medium text-lg">Revenue Shares History</label>
+                        <div className="flex space-x-2">
+                            <img onClick={() => onNavigate(false)} className="cursor-pointer" src="/images/nao/ic_chevron.png" width={24} height={24} alt="" />
+                            <img onClick={() => onNavigate(true)} className="rotate-180 cursor-pointer" src="/images/nao/ic_chevron.png" width={24} height={24} alt="" />
                         </div>
-                        <span className="text-sm text-nao-grey">Next EPOSH</span>
                     </div>
-                </CardNao>
-            </div>
-            <CardNao className="mt-5">
-                <div className="flex items-center justify-between">
-                    <label className="text-nao-text font-medium text-lg">History Revenue Sharing</label>
-                    <div className="flex space-x-2">
-                        <img onClick={() => onNavigate(false)} className="cursor-pointer" src="/images/nao/ic_chevron.png" width={24} height={24} alt="" />
-                        <img onClick={() => onNavigate(true)} className="rotate-180 cursor-pointer" src="/images/nao/ic_chevron.png" width={24} height={24} alt="" />
-                    </div>
-                </div>
-                <div className="pt-4 flex items-center justify-between">
-                    <Swiper
-                        ref={sliderRef}
-                        loop={true}
-                        lazy grabCursor
-                        className={`mySwiper`}
-                        slidesPerView={1}
-                    >
-                        {renderSlide()}
+                    <div className="pt-5 flex items-center justify-between">
+                        <Swiper
+                            ref={sliderRef}
+                            loop={true}
+                            lazy grabCursor
+                            className={`mySwiper`}
+                            slidesPerView={1}
+                        >
+                            {renderSlide()}
 
-                    </Swiper>
-                    {/* <div className="">
-                        <div className="text-nao-blue text-[1.125rem] font-semibold pb-2 flex items-center">
-                            <span className="mr-2">100,034,238</span>
-                            <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
-                        </div>
-                        <span className="text-sm text-nao-grey">Next EPOSH</span>
+                        </Swiper>
                     </div>
-                    <div className="bg-nao-grey/[0.15] h-[56px] w-[1px]" />
-                    <div className="">
-                        <div className="text-nao-blue text-[1.125rem] font-semibold pb-2 flex items-center">
-                            <span className="mr-2">100,034,238</span>
-                            <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
-                        </div>
-                        <span className="text-sm text-nao-grey">Next EPOSH</span>
-                    </div>
-                    <div className="bg-nao-grey/[0.15] h-[56px] w-[1px]" />
-                    <div className="">
-                        <div className="text-nao-blue text-[1.125rem] font-semibold pb-2 flex items-center">
-                            <span className="mr-2">100,034,238</span>
-                            <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
-                        </div>
-                        <span className="text-sm text-nao-grey">Next EPOSH</span>
-                    </div>
-                    <div className="bg-nao-grey/[0.15] h-[56px] w-[1px]" />
-                    <div className="">
-                        <div className="text-nao-blue text-[1.125rem] font-semibold pb-2 flex items-center">
-                            <span className="mr-2">100,034,238</span>
-                            <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
-                        </div>
-                        <span className="text-sm text-nao-grey">Next EPOSH</span>
-                    </div> */}
-                </div>
-            </CardNao>
+                </CardNao> */}
+            </div>
+
         </section>
     );
 };

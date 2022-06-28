@@ -14,10 +14,15 @@ export const TextLiner = styled.div.attrs({
 
 export const CardNao = styled.div.attrs(({ noBg }) => ({
     className: classNames(
-        `px-10 py-9 rounded-xl min-w-[372px] min-h-[180px] flex flex-col justify-between flex-1`,
+        `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] sm:min-h-[180px] flex flex-col justify-between flex-1`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
         { 'bg-nao-bg/[0.15] border-[2px] border-nao-border/[0.15] ': !noBg }
     )
 }))`
     background-image:${({ noBg }) => noBg && `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%237686B1' stroke-width='0.8' stroke-dasharray='4 %2c 6' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e")`} 
+`
+export const Divider = styled.div.attrs({
+    className: 'h-[1px] opacity-[0.3] my-[10px]'
+})`
+ background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%237686B1' stroke-width='2' stroke-dasharray='3 %2c 10' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");
 `

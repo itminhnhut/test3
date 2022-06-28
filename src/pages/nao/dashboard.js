@@ -8,7 +8,7 @@ import NaoInfo from 'components/screens/Nao/Section/NaoInfo';
 import NaoPlatform from 'components/screens/Nao/Section/NaoPlatform';
 import NaoGov from 'components/screens/Nao/Section/NaoGov';
 import NaoToken from 'components/screens/Nao/Section/NaoToken';
-
+import { getS3Url } from 'redux/actions/utils';
 const NaoDashboard = () => {
     return (
         <LayoutNaoToken>
@@ -30,7 +30,7 @@ const NaoDashboard = () => {
 const Background = styled.div.attrs({
     className: 'min-w-full min-h-screen flex flex-col justify-between'
 })`
-    background-image:${() => `url(${('/images/nao/bg-dashboard.png')})`};
+    background-image:${() => `url(${getS3Url('/images/nao/bg-dashboard.png')})`};
     background-position: center;
     background-repeat: no-repeat;     
     background-size: cover;
