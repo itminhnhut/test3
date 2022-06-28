@@ -74,12 +74,17 @@ const colors = {
         orange: '#FF9F1A',
         slider: '#418FFF'
     },
-    // onus: '#090D17', //background main
-    // onus1: '#192231',//background input
-    // greenOnus: '#0DB787',
-    // redOnus: '#DC1F4E',
-    // grayOnus: '#8492A7',
-    // whiteOnus: '#F6F6F6'
+    nao: {
+        bg: '#619095',
+        bg2: '#12182B',
+        bg3: '#192138',
+        text: '#B9CCFF',
+        grey: '#7686B1',
+        white: '#F6F6F6',
+        blue: '#27CEE0',
+        line: '#1C2644',
+        border: '#4AEDFF'
+    }
 };
 
 export default colors;

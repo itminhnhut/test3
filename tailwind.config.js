@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 
 // Common colors
 const commonColors = {
@@ -43,6 +45,19 @@ const commonColors = {
         textSecondary: '#8492A7',
         orange: '#FF9F1A',
     },
+    nao: {
+        bg: '#619095',
+        bg2: '#12182B',
+        bg3: '#192138',
+        text: '#B9CCFF',
+        grey: '#7686B1',
+        white: '#F6F6F6',
+        blue: '#27CEE0',
+        line: '#1C2644',
+        border: '#4AEDFF',
+        bgModal: '#161D32',
+        bgShadow: '#000921'
+    }
 };
 
 module.exports = {
@@ -262,8 +277,15 @@ module.exports = {
                 2: commonColors.onus.bg3,
                 ...commonColors.onus,
             },
+            nao: {
+                DEFAULT: commonColors.nao.bg,
+                ...commonColors.nao,
+            },
         },
         extend: {
+            screens: {
+                'nao': '1160px',
+            },
             spacing: {
                 128: '32rem',
                 144: '36rem',
