@@ -293,6 +293,7 @@
             },
             "close": "Close"
         },
+        "confirm_order_message": "Do you confirm the order to {{type}} BTC at the price {{price}} {{asset}}?",
         "login_short": "Login",
         "available": "Available",
         "liq_price": "Liq. Price",

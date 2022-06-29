@@ -577,12 +577,11 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput data-tut="order-button">
                         <OrderButtonMobile
-
                             tp={tp} sl={sl} type={type} size={size} price={price}
                             stopPrice={stopPrice} side={side} decimals={decimals}
                             pairConfig={pairConfig} pairPrice={pairPrice}
                             leverage={leverage} isAuth={isAuth} isError={isError}
-                            isAuth={isAuth} quoteQty={quoteQty}
+                            quoteQty={quoteQty}
                         />
                     </OrderInput>
                 </div>
