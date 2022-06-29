@@ -37,7 +37,7 @@ const NaoHeader = () => {
             <div className={`flex items-center text-nao-text font-medium ${width > 768 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 768 && <>
                     {category.map(item => (
-                        <div onClick={() => scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
+                        <div key={item.label} onClick={() => scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
                     ))}
                 </>
                 }
@@ -47,7 +47,7 @@ const NaoHeader = () => {
                     <Language onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
                         active={language === LANGUAGE_TAG.EN}>ENG</Language>
                 </div>
-                {width < 768 &&
+                {width <= 768 &&
                     <div
                         className='relative'
                         onClick={() => setVisible(true)}
@@ -129,7 +129,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
                     <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
                         <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
                             {category.map(item => (
-                                <div onClick={() => _scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
+                                <div key={item.label} onClick={() => _scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
                             ))}
                             <div className="flex items-center select-none gap-2 justify-center">
                                 <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}

@@ -51,7 +51,7 @@ const NaoInfo = () => {
 
 
 const BackgroundImage = styled.div.attrs({
-    className: 'min-w-[90px] w-[90px] h-[90px] sm:min-w-[116px] sm:w-[116px] sm:h-[116px] rounded-[50%] flex justify-center items-center mr-6'
+    className: 'min-w-[90px] w-[90px] h-[90px] sm:min-w-[116px] sm:w-[116px] sm:h-[116px] rounded-[50%] flex justify-center items-center mr-4 sm:mr-6'
 })`
     background: linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%);
 `
