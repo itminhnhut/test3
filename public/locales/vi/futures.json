@@ -293,7 +293,8 @@
             },
             "close": "Đóng"
         },
-        "confirm_order_message":  "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} ở giá {{price}}?",
+        "confirm_order_message":  "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} ở giá {{price}} không?",
+        "confirm_order_message_market":  "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} không?",
         "login_short": "Đăng nhập ngay",
         "available": "Khả dụng",
         "liq_price": "Giá thanh lý",
