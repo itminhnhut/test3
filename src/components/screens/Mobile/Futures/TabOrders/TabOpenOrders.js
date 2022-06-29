@@ -55,8 +55,7 @@ const TabOpenOrders = ({
             case 'delete':
                 context.alert.show('warning',
                     t('futures:close_order:modal_title', { value: item?.displaying_id }),
-                    <div
-                        dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: item?.displaying_id }) }}></div>,
+                    t('futures:close_order:confirm_message', { value: item?.displaying_id }),
                     null,
                     () => {
                         onConfirmDelete(item);
@@ -96,7 +95,7 @@ const TabOpenOrders = ({
             });
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
-                
+
             } else {
                 context.alert.show('error', t('commom:failed'), message);
             }

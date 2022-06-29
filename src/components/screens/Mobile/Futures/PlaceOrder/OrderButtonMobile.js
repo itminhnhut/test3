@@ -64,7 +64,7 @@ const OrderButtonMobile = ({
         if (isError) return;
 
         const typeHtml = `<span class="${isBuy ? 'text-onus-green' : 'text-onus-red'}">
-                            ${isBuy ? t('futures:buy_order') : t('futures:sell_order')} ${getTypesLabel(type)}
+                            ${isBuy ? t('futures:buy') : t('futures:sell')} ${getTypesLabel(type)}
                             </span>`
 
         let priceFormatted = formatNumber(_price, decimals.decimalScalePrice, 0, true)

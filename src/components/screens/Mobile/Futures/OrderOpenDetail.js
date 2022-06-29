@@ -70,8 +70,7 @@ const OrderOpenDetail = ({
         if (!isDiff) {
             context.alert.show('warning',
                 t('futures:close_order:modal_title', { value: order?.displaying_id }),
-                <div
-                    dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: order?.displaying_id }) }}></div>,
+                t('futures:close_order:confirm_message', { value: order?.displaying_id }),
                 null,
                 () => {
                     const params = {
