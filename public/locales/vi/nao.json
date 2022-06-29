@@ -1,0 +1,33 @@
+{
+    "performance": "Thống kê",
+    "governance_pool": "Pool quản trị",
+    "buy_token": "Mua token",
+    "project_info": "Thông tin dự án",
+    "circulating_supply": "Tổng lưu hành",
+    "distributed_today": "Phân phối hôm nay",
+    "coming_soon": "Sắp ra mắt",
+    "onus_performance": {
+        "title": "Thống kê về ONUS Futures",
+        "description": "Các thông tin cập nhật về sản phẩm ONUS Futures",
+        "total_volume": "Khối lượng giao dịch",
+        "total_traders": "Số lệnh giao dịch",
+        "total_fee": "Tổng phí giao dịch",
+        "users": "Người dùng"
+    },
+    "pool": {
+        "title": "Pool Quản trị {{value}}",
+        "description": "Tham gia Pool Quản trị để nhận được chia sẻ doanh thu từ phí giao dịch và có quyền biểu quyết thay đổi cơ chế dự án",
+        "description2": "StTham gia Pool Quản trị để nhận được chia sẻ doanh thu từ phí giao dịch và có quyền biểu quyết thay đổi cơ chế dự án.",
+        "nao_staked": "Số NAO trong pool",
+        "participants": "Số người tham gia",
+        "participants_today": "{{value}} người tham gia hôm nay",
+        "estimated_revenue": "Dự kiến doanh thu chia sẻ kỳ tới {{value}}",
+        "revenue_history": "Lịch sử chia sẻ doanh thu"
+    },
+    "nao_token": {
+        "title": "Mua token NAO",
+        "description": "Sở hữu NAO token để có thể tham gia Pool Quản trị hoặc dùng làm phí nhận chiết khấu 40%",
+        "nao_token": "Giá hiện tại",
+        "get_buy_now": "Tải app Onus để mua NAO ngay!"
+    }
+}

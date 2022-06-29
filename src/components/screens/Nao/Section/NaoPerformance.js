@@ -15,14 +15,14 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 const days = [
-    { en: '1 day', vi: '1 ngày', value: 'd' },
+    { en: 'Today', vi: 'Hôm nay', value: 'd' },
     { en: '7 days', vi: '7 ngày', value: 'w' },
     { en: '30 days', vi: '1 tháng', value: 'm' },
     { en: '60 days', vi: '2 tháng', value: '2m' }
 ]
 
 
-const NaoPlatform = () => {
+const NaoPerformance = () => {
     const { t, i18n: { language } } = useTranslation()
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -94,11 +94,11 @@ const NaoPlatform = () => {
     }, [fee, assets])
 
     return (
-        <section className="pt-10 sm:pt-20">
+        <section id="nao_performance" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-5">
                 <div>
-                    <TextLiner>Platform performance</TextLiner>
-                    <span className="text-nao-grey">Lorem ipsum doren sitala ipsum doren sitala ipsum doren.</span>
+                    <TextLiner>{t('nao:onus_performance:title')}</TextLiner>
+                    <span className="text-sm sm:text-[1rem] text-nao-grey">{t('nao:onus_performance:description')}</span>
                 </div>
                 <div className="flex space-x-2">
                     {days.map((day, i) => {
@@ -109,22 +109,22 @@ const NaoPlatform = () => {
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
                 <CardNao>
-                    <label className="text-nao-text font-medium text-lg">Total Volume</label>
+                    <label className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
                     <div className="pt-4">
                         <div className="text-nao-white text-[1.375rem] font-semibold pb-2">{dataSource ? formatNumber(dataSource?.notionalValue, 0) + ' VNDC' : '-'}</div>
                         <span className="text-sm text-nao-grey">{dataSource ? formatPrice(referencePrice[`VNDC/USD`] * dataSource?.notionalValue, 4) + ' USD' : '-'} </span>
                     </div>
                 </CardNao>
                 <CardNao>
-                    <label className="text-nao-text font-medium text-lg">Trades</label>
+                    <label className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_traders')}</label>
                     <div className="pt-4">
                         <div className="text-nao-white text-[1.375rem] font-semibold pb-2">{dataSource ? formatNumber(dataSource?.count, 0) : '-'}</div>
-                        <span className="text-sm text-nao-grey">{dataSource ? formatNumber(dataSource?.userCount, 0) + ' Users' : '-'}</span>
+                        <span className="text-sm text-nao-grey capitalize">{dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}</span>
                     </div>
                 </CardNao>
                 <CardNao noBg className="">
                     <div className="flex items-center justify-between">
-                        <label className="text-nao-text font-medium text-lg">Fees</label>
+                        <label className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
                         <Popover className="relative">
                             {({ open, close }) => (
                                 <>
@@ -173,4 +173,4 @@ const Days = styled.div.attrs({
     font-weight:${({ active }) => active ? '600' : '400'}
 `
 
-export default NaoPlatform;
+export default NaoPerformance;

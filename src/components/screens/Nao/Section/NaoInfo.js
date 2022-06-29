@@ -1,29 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
 import { getS3Url } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
 
 const NaoInfo = () => {
+    const { t } = useTranslation();
+
     return (
-        <section className="flex items-center justify-between pt-10 sm:pt-20 flex-wrap gap-8">
+        <section id="nao_info" className="flex items-center justify-between pt-10 sm:pt-20 flex-wrap gap-8">
             <div className="flex items-center">
                 <BackgroundImage>
                     <img src={getS3Url('/images/nao/ic_nao_large.png')} className='w-[62px] h-[62px] sm:w-[80px] sm:h-[80px]' alt="" />
                 </BackgroundImage>
                 <div className="flex flex-col justify-between leading-10">
-                    <label className="text-nao-blue uppercase text-[1.25re] font-semibold">NAO Token</label>
                     <div>
-                        <div className="text-[2rem] font-semibold">Project Information</div>
-                        <div className="text-lg font-light">Nami frame futures</div>
+                        <div className="text-2xl sm:text-[2.25rem] font-semibold text-nao-white">{t('nao:project_info')}</div>
+                        <div className="text-lg sm:text-[1.25rem] flex items-center pt-1 flex-wrap">
+                            <label className="text-nao-blue uppercase text-[1.25re] font-semibold">NAO</label>
+                            <span className="mx-2">•</span>
+                            <div className="font-light text-nao-white">Nami frame futures</div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="flex bg-nao-bg2 rounded-xl p-6 sm:p-7 flex-1 sm:flex-none flex-col sm:flex-row">
                 <div className="">
-                    <label className="text-nao-text font-medium text-lg">Circulating Supply</label>
+                    <label className="text-nao-text font-medium text-lg">{t('nao:circulating_supply')}</label>
                     <div className="mt-4 sm:mt-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center mr-8">
-                                <span className="font-semibold mr-1">22,250,000</span>
+                                <span className="font-semibold mr-1 ">22,250,000</span>
                                 <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                             </div>
                             <div className="text-nao-grey">100,000,000</div>
@@ -38,7 +44,7 @@ const NaoInfo = () => {
                 </div>
                 <div className="h-[1px] mx-0 sm:h-auto sm:w-[1px] bg-nao-line sm:mx-[39px] my-6 sm:my-0"></div>
                 <div>
-                    <label className="text-nao-text font-medium text-lg">Distributed Today</label>
+                    <label className="text-nao-text font-medium text-lg">{t('nao:distributed_today')}</label>
                     <div className="mt-4 sm:mt-[45px]">
                         <div className="flex items-center mr-8">
                             <span className="font-semibold mr-2 text-lg">-</span>

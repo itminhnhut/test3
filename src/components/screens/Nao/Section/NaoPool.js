@@ -6,8 +6,10 @@ import 'swiper/swiper.min.css';
 import { useWindowSize } from 'utils/customHooks';
 import styled from 'styled-components';
 import { getS3Url } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
 
-const NaoSectionGov = () => {
+const NaoPool = () => {
+    const { t } = useTranslation();
     const sliderRef = useRef(null);
     const { width } = useWindowSize();
     const arr = [1, 2, 3, 4, 5, 6, 6, 6, 6]
@@ -47,16 +49,16 @@ const NaoSectionGov = () => {
 
 
     return (
-        <section className="pt-10 sm:pt-20">
+        <section id="nao_pool" className="pt-10 sm:pt-20">
             <div className="flex items-center justify-between">
                 <div>
-                    <TextLiner>Governance Pool (Coming Soon)</TextLiner>
+                    <TextLiner>{t('nao:pool:title', { value: '(' + t('nao:coming_soon') + ')' })}</TextLiner>
                     {/* <span className="text-nao-grey">Lorem ipsum doren sitala ipsum doren sitala ipsum doren.</span> */}
                 </div>
             </div>
             <div className="pt-6 flex items-center flex-wrap gap-[21px]">
                 <CardNao className="!flex-row items-center !justify-start relative flex-wrap">
-                    <div className="text-nao-grey w-full sm:w-1/2">Staking into the Governance Pool to share revenue from trading fees and vote on project proposals.</div>
+                    <div className="text-nao-grey w-full sm:w-1/2">{t('nao:pool:description2')}</div>
                     <div className="sm:absolute right-0 -bottom-7">
                         <img src={getS3Url("/images/nao/ic_nao_coming.png")} className="w-full h-full sm:w-[428px] sm:h-[292px]" alt="" />
                     </div>
@@ -119,4 +121,4 @@ const NaoSectionGov = () => {
     );
 };
 
-export default NaoSectionGov;
+export default NaoPool;
