@@ -49,7 +49,7 @@ const SEO = (props) => {
 };
 
 SEO.defaultProps = {
-    image: "https://static.namifutures.com/nami.exchange/images/nao-featured.png",
+    image: "/images/features/nao-featured.png",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
 };
