@@ -293,7 +293,7 @@
             },
             "close": "Close"
         },
-        "confirm_order_message": "Do you confirm the order to {{type}} {{baseAsset}} at the price {{price}} {{quoteAsset}}?",
+        "confirm_order_message": "Do you confirm the order to {{type}} {{symbol}} at the price {{price}}?",
         "login_short": "Login",
         "available": "Available",
         "liq_price": "Liq. Price",

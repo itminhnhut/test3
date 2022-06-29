@@ -67,15 +67,18 @@ const OrderButtonMobile = ({
                             ${isBuy ? t('futures:buy_order') : t('futures:sell_order')} ${getTypesLabel(type)}
                             </span>`
 
-        const priceFormatted = formatNumber(_price, decimals.decimalScalePrice, 0, true)
+        let priceFormatted = formatNumber(_price, decimals.decimalScalePrice, 0, true)
+
+        if (type.includes('MARKET')) {
+            priceFormatted = t('futures:market')
+        }
 
         alertContext.alert.show('success',
             t('futures:preferences:order_confirm'),
             t('futures:mobile:confirm_order_message', {
                     type: typeHtml,
                     price: priceFormatted,
-                    baseAsset: pairConfig?.baseAsset || '--',
-                    quoteAsset: pairConfig?.quoteAsset || '--'
+                    symbol: pairConfig?.symbol,
                 }
             ), '',
             handlePlaceOrder
