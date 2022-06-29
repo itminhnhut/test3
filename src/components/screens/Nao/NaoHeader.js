@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
@@ -6,7 +6,6 @@ import SvgMenu from 'src/components/svg/Menu';
 import { useWindowSize } from 'utils/customHooks';
 import colors from 'styles/colors';
 import Portal from 'components/hoc/Portal';
-import { Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { X } from 'react-feather';
 import { Divider } from 'components/screens/Nao/NaoStyle';
@@ -32,7 +31,7 @@ const NaoHeader = () => {
     }
 
     return (
-        <div className="nao_header flex justify-between items-center h-[90px]">
+        <div className="nao_header flex justify-between items-center h-[90px] relative">
             <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang} language={language} t={t} scrollToView={scrollToView} />
             <img src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
             <div className={`flex items-center text-nao-text font-medium ${width > 1180 ? 'space-x-10' : 'space-x-4'}`}>
@@ -106,58 +105,54 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
 
     useOutsideAlerter(wrapperRef, handleOutside.bind(this));
 
+    const _scrollToView = (el) => {
+        document.body.classList.remove('overflow-hidden')
+        if (scrollToView) scrollToView(el)
+    }
+
     return (
         <Portal portalId='PORTAL_MODAL'>
-            <Transition
-                key={`nao-token-drawer}`}
-                show={visible}
-                as={Fragment}
-                enter="transition ease-in duration-200"
-                enterFrom="opacity-0 translate-x-full"
-                enterTo="opacity-100 translate-x-0"
-                leave="transition ease-out duration-200"
-                leaveFrom="opacity-100 translate-x-0"
-                leaveTo="opacity-0 translate-x-full"
+            <div
+                className={classNames(
+                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden',
+                    'ease-in-out transition-all flex items-end duration-300 z-30',
+                    { invisible: !visible },
+                    { visible: visible },
+                    { 'translate-x-full': !visible },
+                    { 'translate-x-0': visible },
+                )}
             >
-                <div
-                    className={classNames(
-                        'flex flex-col absolute top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden',
-                    )}
-                    style={{ direction: 'rtl' }}
-                >
-                    <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-nao-bgModal' style={{ direction: 'ltr' }}>
-                        <div className="pt-[35px] px-5">
-                            <img className="cursor-pointer" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='24' width='24' alt="" />
-                        </div>
-                        <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
-                            <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
-                                {category.map(item => (
-                                    <div onClick={() => scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
-                                ))}
-                                <div className="flex items-center select-none gap-2 justify-center">
-                                    <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
-                                        active={language === LANGUAGE_TAG.VI}>VI</Language>
-                                    <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
-                                        active={language === LANGUAGE_TAG.EN}>ENG</Language>
-                                </div>
+                <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-nao-bgModal'>
+                    <div className="pt-[35px] px-5 flex justify-end">
+                        <img className="cursor-pointer" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='24' width='24' alt="" />
+                    </div>
+                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
+                        <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
+                            {category.map(item => (
+                                <div onClick={() => _scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
+                            ))}
+                            <div className="flex items-center select-none gap-2 justify-center">
+                                <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
+                                    active={language === LANGUAGE_TAG.VI}>VI</Language>
+                                <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
+                                    active={language === LANGUAGE_TAG.EN}>ENG</Language>
                             </div>
-                            <div className="flex flex-col w-full">
-                                <Divider className="w-full !mb-8" />
-                                <div className="flex items-center pb-[18px]">
-                                    <img alt="" src={getS3Url("/images/nao/ic_onus.png")} height="30" width="30" />
-                                    <div className="text-nao-text text-xs font-semibold ml-2">{t('nao:nao_token:get_buy_now')}</div>
-                                </div>
-                                <div className="flex justify-between items-center w-full">
-                                    <img alt="" src={getS3Url("/images/nao/ic_app_store.png")} className="min-h-[35px]" width="107" />
-                                    <img alt="" src={getS3Url("/images/nao/ic_google_play.png")} className="min-h-[35px]" width="107" />
-                                </div>
+                        </div>
+                        <div className="flex flex-col w-full">
+                            <Divider className="w-full !mb-8" />
+                            <div className="flex items-center pb-[18px]">
+                                <img alt="" src={getS3Url("/images/nao/ic_onus.png")} height="30" width="30" />
+                                <div className="text-nao-text text-xs font-semibold ml-2">{t('nao:nao_token:get_buy_now')}</div>
+                            </div>
+                            <div className="flex justify-between items-center w-full">
+                                <img alt="" src={getS3Url("/images/nao/ic_app_store.png")} className="min-h-[35px]" width="107" />
+                                <img alt="" src={getS3Url("/images/nao/ic_google_play.png")} className="min-h-[35px]" width="107" />
                             </div>
                         </div>
                     </div>
-
                 </div>
-            </Transition>
 
+            </div>
         </Portal>
     )
 }
