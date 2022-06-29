@@ -25,16 +25,6 @@ class MyDocument extends Document {
                         href='/css/coolicons/coolicons.css'
                         rel='stylesheet'
                     />
-                    <script src='/library/trading_view/tv.js' />
-                    <script
-                        type='text/javascript'
-                        src='/library/trading_view/datafeeds/udf/dist/polyfills.js'
-                    />
-                    <script
-                        type='text/javascript'
-                        src='/library/trading_view/datafeeds/udf/dist/bundle.js'
-                    />
-
                     <script
                         dangerouslySetInnerHTML={{
                             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
