@@ -11,6 +11,11 @@ import classNames from 'classnames';
 import { X } from 'react-feather';
 import { Divider } from 'components/screens/Nao/NaoStyle';
 import { getS3Url } from 'redux/actions/utils';
+const category = [
+    { label: 'performance', el: 'nao_performance' },
+    { label: 'governance_pool', el: 'nao_pool' },
+    { label: 'buy_token', el: 'nao_token' }
+];
 
 const NaoHeader = () => {
     const [currentLocale, onChangeLang] = useLanguage()
@@ -18,16 +23,23 @@ const NaoHeader = () => {
     const { width } = useWindowSize();
     const [visible, setVisible] = useState(false);
 
+    const scrollToView = (el) => {
+        const _el = document.querySelector('#' + el);
+        if (_el) {
+            _el.scrollIntoView()
+            if (visible) setVisible(false);
+        }
+    }
+
     return (
         <div className="nao_header flex justify-between items-center h-[90px]">
-            <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang} language={language} />
+            <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang} language={language} t={t} scrollToView={scrollToView} />
             <img src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
             <div className={`flex items-center text-nao-text font-medium ${width > 1180 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 1180 && <>
-                    <div>Introducing</div>
-                    <div>Performance</div>
-                    <div>Governance Pool</div>
-                    <div>Buy Token</div>
+                    {category.map(item => (
+                        <div onClick={() => scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
+                    ))}
                 </>
                 }
                 <div className="flex items-center p-2 bg-nao-bg2 rounded-[4px] select-none space-x-2">
@@ -72,7 +84,7 @@ function useOutsideAlerter(ref, cb) {
     }, [ref, cb]);
 }
 
-const Drawer = ({ visible, onClose, language, onChangeLang }) => {
+const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) => {
     const wrapperRef = useRef(null);
     const timer = useRef(null)
     const handleOutside = () => {
@@ -113,32 +125,31 @@ const Drawer = ({ visible, onClose, language, onChangeLang }) => {
                     )}
                     style={{ direction: 'rtl' }}
                 >
-                    <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-nao-bgModal'>
+                    <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-nao-bgModal' style={{ direction: 'ltr' }}>
                         <div className="pt-[35px] px-5">
                             <img className="cursor-pointer" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='24' width='24' alt="" />
                         </div>
                         <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
                             <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
-                                <div className="cursor-pointer">Introducing</div>
-                                <div className="cursor-pointer">Performance</div>
-                                <div className="cursor-pointer">Governance Pool</div>
-                                <div className="cursor-pointer">Buy Token</div>
+                                {category.map(item => (
+                                    <div onClick={() => scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
+                                ))}
                                 <div className="flex items-center select-none gap-2 justify-center">
-                                    <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
-                                        active={language === LANGUAGE_TAG.EN}>ENG</Language>
                                     <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
                                         active={language === LANGUAGE_TAG.VI}>VI</Language>
+                                    <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
+                                        active={language === LANGUAGE_TAG.EN}>ENG</Language>
                                 </div>
                             </div>
-                            <div className="flex flex-col items-end w-full">
+                            <div className="flex flex-col w-full">
                                 <Divider className="w-full !mb-8" />
                                 <div className="flex items-center pb-[18px]">
-                                    <div className="text-nao-text text-xs font-semibold ml-2">Get Onus App to buy NAO now!</div>
                                     <img alt="" src={getS3Url("/images/nao/ic_onus.png")} height="30" width="30" />
+                                    <div className="text-nao-text text-xs font-semibold ml-2">{t('nao:nao_token:get_buy_now')}</div>
                                 </div>
                                 <div className="flex justify-between items-center w-full">
-                                    <img alt="" src={getS3Url("/images/nao/ic_google_play.png")} className="min-h-[35px]" width="107" />
                                     <img alt="" src={getS3Url("/images/nao/ic_app_store.png")} className="min-h-[35px]" width="107" />
+                                    <img alt="" src={getS3Url("/images/nao/ic_google_play.png")} className="min-h-[35px]" width="107" />
                                 </div>
                             </div>
                         </div>

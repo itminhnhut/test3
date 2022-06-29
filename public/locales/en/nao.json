@@ -1,0 +1,33 @@
+{
+    "performance": "Performance",
+    "governance_pool": "Governance Pool",
+    "buy_token": "Buy Token",
+    "project_info": "Project Information",
+    "circulating_supply": "Circulating Supply",
+    "distributed_today": "Distributed Today",
+    "coming_soon": "Coming soon",
+    "onus_performance": {
+        "title": "ONUS Futures performance",
+        "description": "Update information about ONUS Futures product",
+        "total_volume": "Total Volume",
+        "total_traders": "Total Traders",
+        "total_fee": "Total Fee",
+        "users": "User"
+    },
+    "pool": {
+        "title": "Governance Pool {{value}}",
+        "description": "Staking into the Governance Pool to share revenue from trading fees and vote on project proposals.",
+        "description2": "Staking into the Governance Pool to share revenue from trading fees and vote on project proposals.",
+        "nao_staked": "NAO Staked",
+        "participants": "Participants",
+        "participants_today": "{{value}} participants today",
+        "estimated_revenue": "Estimated Revenue Shares in the next EPOSH {{value}}",
+        "revenue_history": "Revenue Shares History"
+    },
+    "nao_token": {
+        "title": "buy NAO Token",
+        "description": "Hold NAO to participate in Governance Pool or use as fee to enjoy a discount of 40%",
+        "nao_token": "NAO Token",
+        "get_buy_now": "Get Onus App to buy NAO now!"
+    }
+}

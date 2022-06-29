@@ -5,8 +5,8 @@ import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken'
 import NaoHeader from 'components/screens/Nao/NaoHeader';
 import NaoFooter from 'components/screens/Nao/NaoFooter';
 import NaoInfo from 'components/screens/Nao/Section/NaoInfo';
-import NaoPlatform from 'components/screens/Nao/Section/NaoPlatform';
-import NaoGov from 'components/screens/Nao/Section/NaoGov';
+import NaoPerformance from 'components/screens/Nao/Section/NaoPerformance';
+import NaoPool from 'components/screens/Nao/Section/NaoPool';
 import NaoToken from 'components/screens/Nao/Section/NaoToken';
 import { getS3Url } from 'redux/actions/utils';
 const NaoDashboard = () => {
@@ -17,8 +17,8 @@ const NaoDashboard = () => {
                     <NaoHeader />
                     <div className="nao_section">
                         <NaoInfo />
-                        <NaoPlatform />
-                        <NaoGov />
+                        <NaoPerformance />
+                        <NaoPool />
                         <NaoToken />
                     </div>
                 </div>
@@ -38,7 +38,7 @@ const Background = styled.div.attrs({
 export const getStaticProps = async ({ locale }) => ({
     props: {
         ...(await serverSideTranslations(locale, [
-            'common',
+            'common', 'nao'
         ])),
     },
 })
