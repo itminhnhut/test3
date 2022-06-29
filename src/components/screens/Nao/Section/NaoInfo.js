@@ -23,34 +23,26 @@ const NaoInfo = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex bg-nao-bg2 rounded-xl p-6 sm:p-7 flex-1 sm:flex-none flex-col sm:flex-row">
+            <div className="flex bg-nao-bg2 rounded-xl p-6 sm:px-12 sm:py-[45px] flex-1 sm:flex-none flex-col sm:flex-row">
                 <div className="">
-                    <label className="text-nao-text font-medium text-lg">{t('nao:circulating_supply')}</label>
-                    <div className="mt-4 sm:mt-6">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center mr-8">
-                                <span className="font-semibold mr-1 ">22,250,000</span>
-                                <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
-                            </div>
-                            <div className="text-nao-grey">100,000,000</div>
-                        </div>
-                        <div className="my-2">
-                            <div className="w-full bg-[#000000] rounded-lg">
-                                <Progressbar percent={(22250000 / 100000000) * 100} />
-                            </div>
-                        </div>
-                        <div className="text-xs font-medium">{(22250000 / 100000000) * 100}%</div>
-                    </div>
+                    <label className="text-nao-text font-medium text-lg pb-1 leading-7">{t('nao:circulating_supply')}</label>
+                    <div className="text-nao-blue uppercase text-sm font-medium leading-7">NAO TOKEN</div>
                 </div>
-                <div className="h-[1px] mx-0 sm:h-auto sm:w-[1px] bg-nao-line sm:mx-[39px] my-6 sm:my-0"></div>
-                <div>
-                    <label className="text-nao-text font-medium text-lg">{t('nao:distributed_today')}</label>
-                    <div className="mt-4 sm:mt-[45px]">
+                <div className="h-[1px] mx-0 sm:h-auto sm:w-0 bg-nao-line sm:mx-[33px] my-6 sm:my-0"></div>
+                <div className="">
+                    <div className="flex items-center justify-between">
                         <div className="flex items-center mr-8">
-                            <span className="font-semibold mr-2 text-lg">-</span>
-                            <img src={getS3Url("/images/nao/ic_nao.png")} width={28} height={28} alt="" />
+                            <span className="font-semibold mr-1 leading-7">22,250,000</span>
+                            <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
+                        </div>
+                        <div className="text-nao-grey text-sm">100,000,000</div>
+                    </div>
+                    <div className="my-2">
+                        <div className="w-full bg-[#000000] rounded-lg">
+                            <Progressbar percent={(22250000 / 100000000) * 100} />
                         </div>
                     </div>
+                    <div className="text-xs font-medium leading-6">{(22250000 / 100000000) * 100}%</div>
                 </div>
             </div>
         </section>

@@ -17,7 +17,6 @@
     "pool": {
         "title": "Governance Pool {{value}}",
         "description": "Staking into the Governance Pool to share revenue from trading fees and vote on project proposals.",
-        "description2": "Staking into the Governance Pool to share revenue from trading fees and vote on project proposals.",
         "nao_staked": "NAO Staked",
         "participants": "Participants",
         "participants_today": "{{value}} participants today",
@@ -29,5 +28,8 @@
         "description": "Hold NAO to participate in Governance Pool or use as fee to enjoy a discount of 40%",
         "nao_token": "NAO Token",
         "get_buy_now": "Get Onus App to buy NAO now!"
-    }
+    },
+    "term": "Term of Use",
+    "privacy_policy": "Privacy Policy",
+    "credit_agreement": "Credit Agreement"
 }

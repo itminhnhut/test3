@@ -17,7 +17,6 @@
     "pool": {
         "title": "Pool Quản trị {{value}}",
         "description": "Tham gia Pool Quản trị để nhận được chia sẻ doanh thu từ phí giao dịch và có quyền biểu quyết thay đổi cơ chế dự án",
-        "description2": "StTham gia Pool Quản trị để nhận được chia sẻ doanh thu từ phí giao dịch và có quyền biểu quyết thay đổi cơ chế dự án.",
         "nao_staked": "Số NAO trong pool",
         "participants": "Số người tham gia",
         "participants_today": "{{value}} người tham gia hôm nay",
@@ -29,5 +28,8 @@
         "description": "Sở hữu NAO token để có thể tham gia Pool Quản trị hoặc dùng làm phí nhận chiết khấu 40%",
         "nao_token": "Giá hiện tại",
         "get_buy_now": "Tải app Onus để mua NAO ngay!"
-    }
+    },
+    "term": "Điều khoản sử dụng",
+    "privacy_policy": "Chính sách bảo mật",
+    "credit_agreement": "Hợp đồng tín dụng"
 }

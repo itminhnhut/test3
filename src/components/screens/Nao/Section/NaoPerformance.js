@@ -167,7 +167,7 @@ const NaoPerformance = () => {
 };
 
 const Days = styled.div.attrs({
-    className: 'px-4 py-2 rounded-[6px] cursor-pointer text-nao-white text-sm bg-nao-bg3 select-none'
+    className: 'px-4 py-2 rounded-[6px] cursor-pointer text-nao-white text-sm bg-nao-bg3 select-none text-center'
 })` 
     background:${({ active }) => active ? `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)` : ''};
     font-weight:${({ active }) => active ? '600' : '400'}

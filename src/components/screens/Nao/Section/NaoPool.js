@@ -58,8 +58,8 @@ const NaoPool = () => {
             </div>
             <div className="pt-6 flex items-center flex-wrap gap-[21px]">
                 <CardNao className="!flex-row items-center !justify-start relative flex-wrap">
-                    <div className="text-nao-grey w-full sm:w-1/2">{t('nao:pool:description2')}</div>
-                    <div className="sm:absolute right-0 -bottom-7">
+                    <div className="text-nao-grey sm:w-1/2">{t('nao:pool:description')}</div>
+                    <div className="sm:absolute sm:right-0 lg:right-[76px] -bottom-7 sm:w-1/2 flex justify-end">
                         <img src={getS3Url("/images/nao/ic_nao_coming.png")} className="w-full h-full sm:w-[428px] sm:h-[292px]" alt="" />
                     </div>
                 </CardNao>

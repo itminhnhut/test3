@@ -34,8 +34,8 @@ const NaoHeader = () => {
         <div className="nao_header flex justify-between items-center h-[90px] relative">
             <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang} language={language} t={t} scrollToView={scrollToView} />
             <img src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
-            <div className={`flex items-center text-nao-text font-medium ${width > 1180 ? 'space-x-10' : 'space-x-4'}`}>
-                {width > 1180 && <>
+            <div className={`flex items-center text-nao-text font-medium ${width > 768 ? 'space-x-10' : 'space-x-4'}`}>
+                {width > 768 && <>
                     {category.map(item => (
                         <div onClick={() => scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
                     ))}
@@ -47,14 +47,14 @@ const NaoHeader = () => {
                     <Language onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
                         active={language === LANGUAGE_TAG.EN}>ENG</Language>
                 </div>
-                {width < 1180 &&
+                {width < 768 &&
                     <div
                         className='relative'
                         onClick={() => setVisible(true)}
                     >
                         <SvgMenu
                             size={25}
-                            className={'cursor-pointer'}
+                            className={'cursor-pointer select-none'}
                             color={colors.nao.text}
                         />
                     </div>
@@ -124,7 +124,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
             >
                 <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-nao-bgModal'>
                     <div className="pt-[35px] px-5 flex justify-end">
-                        <img className="cursor-pointer" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='24' width='24' alt="" />
+                        <img className="cursor-pointer select-none" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='24' width='24' alt="" />
                     </div>
                     <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
                         <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
@@ -158,7 +158,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
 }
 
 const Language = styled.div.attrs({
-    className: 'px-3 text-xs py-[3px] nao:py-[1px] nao:px-4 nao:text-sm rounded-[4px] cursor-pointer text-nao-white  font-semibold nao:leading-[26px]'
+    className: 'px-3 text-xs py-[3px] md:py-[1px] md:px-4 md:text-sm rounded-[4px] cursor-pointer text-nao-white  font-semibold nao:leading-[26px]'
 })`
     background:${({ active }) => active ? `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)` : ''} ;
             `
