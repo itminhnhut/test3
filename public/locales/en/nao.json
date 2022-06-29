@@ -10,7 +10,7 @@
         "title": "ONUS Futures performance",
         "description": "Update information about ONUS Futures product",
         "total_volume": "Total Volume",
-        "total_traders": "Total Traders",
+        "total_orders": "Total Orders",
         "total_fee": "Total Fee",
         "users": "User"
     },

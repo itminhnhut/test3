@@ -10,7 +10,7 @@
         "title": "Thống kê về ONUS Futures",
         "description": "Các thông tin cập nhật về sản phẩm ONUS Futures",
         "total_volume": "Khối lượng giao dịch",
-        "total_traders": "Số lệnh giao dịch",
+        "total_orders": "Số lệnh giao dịch",
         "total_fee": "Tổng phí giao dịch",
         "users": "Người dùng"
     },
