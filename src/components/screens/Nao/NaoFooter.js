@@ -7,7 +7,7 @@ const NaoFooter = () => {
 
     return (
         <div className="nao_footer min-h-[6.25rem] bg-nao-bg3 flex items-center mt-[100px] sm:mt-20 py-9 px-4 nao:p-0">
-            <div className="max-w-[72.5rem] w-full m-auto h-full flex flex-col lg:flex-row  items-center justify-between text-center flex-wrap sm:gap-5">
+            <div className="text-sm sm:text-[1rem] max-w-[72.5rem] w-full m-auto h-full flex flex-col lg:flex-row  items-center justify-between text-center flex-wrap sm:gap-5">
                 <div className="nao_footer_left text-nao-text font-medium gap-0 sm:gap-5 flex items-center sm:flex-row flex-col sm:w-auto w-full">
                     <div className="pb-3 border-b border-nao-line w-full sm:border-none whitespace-nowrap sm:p-0">{t('nao:term')}</div>
                     <div className="hidden sm:flex">|</div>

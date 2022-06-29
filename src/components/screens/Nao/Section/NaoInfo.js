@@ -25,7 +25,7 @@ const NaoInfo = () => {
             </div>
             <div className="flex bg-nao-bg2 rounded-xl p-6 sm:px-12 sm:py-[45px] flex-1 sm:flex-none flex-col sm:flex-row">
                 <div className="">
-                    <label className="text-nao-text font-medium text-lg pb-1 leading-7">{t('nao:circulating_supply')}</label>
+                    <label className="text-nao-text font-medium sm:text-lg pb-1 leading-7">{t('nao:circulating_supply')}</label>
                     <div className="text-nao-blue uppercase text-sm font-medium leading-7">NAO TOKEN</div>
                 </div>
                 <div className="h-[1px] mx-0 sm:h-auto sm:w-0 bg-nao-line sm:mx-[33px] my-6 sm:my-0"></div>
