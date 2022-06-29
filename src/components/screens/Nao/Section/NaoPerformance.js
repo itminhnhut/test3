@@ -15,7 +15,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 const days = [
-    { en: '24h', vi: '24h', value: 'd' },
+    { en: 'Today', vi: 'Hôm nay', value: 'd' },
     { en: '7 days', vi: '7 ngày', value: 'w' },
     { en: '30 days', vi: '1 tháng', value: 'm' },
     { en: '60 days', vi: '2 tháng', value: '2m' }
