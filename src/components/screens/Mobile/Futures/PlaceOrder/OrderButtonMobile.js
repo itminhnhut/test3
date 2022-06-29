@@ -74,7 +74,8 @@ const OrderButtonMobile = ({
             t('futures:mobile:confirm_order_message', {
                     type: typeHtml,
                     price: priceFormatted,
-                    asset: pairConfig?.quoteAsset || '--'
+                    baseAsset: pairConfig?.baseAsset || '--',
+                    quoteAsset: pairConfig?.quoteAsset || '--'
                 }
             ), '',
             handlePlaceOrder

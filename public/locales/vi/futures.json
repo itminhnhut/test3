@@ -293,7 +293,7 @@
             },
             "close": "Đóng"
         },
-        "confirm_order_message":  "Bạn có xác nhận đặt lệnh {{type}} BTC ở giá {{price}} {{asset}}?",
+        "confirm_order_message":  "Bạn có xác nhận đặt lệnh {{type}} {{baseAsset}} ở giá {{price}} {{quoteAsset}}?",
         "login_short": "Đăng nhập ngay",
         "available": "Khả dụng",
         "liq_price": "Giá thanh lý",
