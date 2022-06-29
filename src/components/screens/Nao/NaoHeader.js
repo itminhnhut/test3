@@ -45,7 +45,7 @@ const NaoHeader = () => {
                     <Language onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
                         active={language === LANGUAGE_TAG.VI}>VI</Language>
                     <Language onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
-                        active={language === LANGUAGE_TAG.EN}>ENG</Language>
+                        active={language === LANGUAGE_TAG.EN}>EN</Language>
                 </div>
                 {width <= 768 &&
                     <div
@@ -135,7 +135,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
                                 <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
                                     active={language === LANGUAGE_TAG.VI}>VI</Language>
                                 <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
-                                    active={language === LANGUAGE_TAG.EN}>ENG</Language>
+                                    active={language === LANGUAGE_TAG.EN}>EN</Language>
                             </div>
                         </div>
                         <div className="flex flex-col w-full">

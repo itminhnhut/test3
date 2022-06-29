@@ -15,7 +15,7 @@
         "users": "Người dùng"
     },
     "pool": {
-        "title": "Pool Quản trị {{value}}",
+        "title": "Pool Quản Trị {{value}}",
         "description": "Tham gia Pool Quản trị để nhận được chia sẻ doanh thu từ phí giao dịch và có quyền biểu quyết thay đổi cơ chế dự án",
         "nao_staked": "Số NAO trong pool",
         "participants": "Số người tham gia",

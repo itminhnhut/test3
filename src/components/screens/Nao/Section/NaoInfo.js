@@ -18,7 +18,7 @@ const NaoInfo = () => {
                         <div className="text-lg sm:text-[1.25rem] flex items-center pt-1 flex-wrap">
                             <label className="text-nao-blue uppercase text-[1.25re] font-semibold">NAO</label>
                             <span className="mx-2">•</span>
-                            <div className="font-light text-nao-white">Nami frame futures</div>
+                            <div className="font-light text-nao-white capitalize">Nami frame futures</div>
                         </div>
                     </div>
                 </div>

@@ -52,7 +52,7 @@ const NaoPool = () => {
         <section id="nao_pool" className="pt-10 sm:pt-20">
             <div className="flex items-center justify-between">
                 <div>
-                    <TextLiner>{t('nao:pool:title', { value: '(' + t('nao:coming_soon') + ')' })}</TextLiner>
+                    <TextLiner className="normal-case">{t('nao:pool:title', { value: '(' + t('nao:coming_soon') + ')' })}</TextLiner>
                     {/* <span className="text-nao-grey">Lorem ipsum doren sitala ipsum doren sitala ipsum doren.</span> */}
                 </div>
             </div>
