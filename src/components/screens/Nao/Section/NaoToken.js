@@ -32,7 +32,7 @@ const NaoToken = () => {
                         <img src={getS3Url("/images/nao/ic_onus.png")} className="w-[70px] h-[70px] sm:w-[90px] sm:h-[90px]" alt="" />
                         <div className="text-lg sm:text-[1.25rem] text-nao-text font-semibold">{t('nao:nao_token:get_buy_now')}</div>
                     </div>
-                    <div className="flex items-center gap-4 min-w-[300px]">
+                    <div className="flex items-center flex-wrap gap-4 justify-center sm:justify-end">
                         <img className="cursor-pointer h-[46px] sm:h-[50] w-[140px] sm:w-[152px]" src={getS3Url("/images/nao/ic_app_store.png")} alt="" />
                         <img className="cursor-pointer h-[46px] sm:h-[50] w-[140px] sm:w-[152px]" src={getS3Url("/images/nao/ic_google_play.png")} alt="" />
                     </div>

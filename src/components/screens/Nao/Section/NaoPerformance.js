@@ -100,7 +100,7 @@ const NaoPerformance = () => {
                     <TextLiner>{t('nao:onus_performance:title')}</TextLiner>
                     <span className="text-sm sm:text-[1rem] text-nao-grey">{t('nao:onus_performance:description')}</span>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap gap-2">
                     {days.map((day, i) => {
                         return <Days key={i} active={day.value === filter.current}
                             onClick={() => getData(day.value)}>{day[language]}</Days>
