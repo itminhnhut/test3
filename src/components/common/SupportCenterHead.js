@@ -30,12 +30,12 @@ const SupportCenterHead = ({article}) => {
 
                 <meta
                     property="og:image"
-                    content={article?.feature_image || 'https://static.namifutures.com/nami.exchange/images/common-featured.png'}
+                    content={'https://static.namifutures.com/nami.exchange/images/common-featured.png'}
                     key="fb-image"
                 />
                 <meta
                     name="twitter:image"
-                    content={article?.feature_image || 'https://static.namifutures.com/nami.exchange/images/common-featured.png'}
+                    content={'https://static.namifutures.com/nami.exchange/images/common-featured.png'}
                     key="twitter-image"
                 />
                 <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
