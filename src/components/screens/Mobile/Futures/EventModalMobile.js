@@ -70,7 +70,7 @@ const EventModalMobile = ({ visible, onClose }) => {
 const Background = styled.div.attrs({
     className: 'h-full w-full !rounded-[20px] select-none px-5 py-[23px] flex items-end'
 })`
-     background-image:${({ language }) => `url(${getS3Url(`/images/screen/futures/popup_onboarding_10k_${language}-min.png`)})`};
+     background-image:${({ language }) => `url(${getS3Url(`/images/screen/futures/popup_onboarding_20k_${language}-min.png`)})`};
     background-position: center;
     background-repeat: no-repeat;     
     background-size: cover;
