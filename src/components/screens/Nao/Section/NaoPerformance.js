@@ -15,10 +15,11 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 const days = [
+    // { en: 'Yesterday', vi: 'Hôm qua', value: 'y' },
     { en: 'Today', vi: 'Hôm nay', value: 'd' },
     { en: '7 days', vi: '7 ngày', value: 'w' },
-    { en: '30 days', vi: '1 tháng', value: 'm' },
-    { en: '60 days', vi: '2 tháng', value: '2m' }
+    { en: '30 days', vi: '30 ngày', value: 'm' },
+    { en: '60 days', vi: '60 ngày', value: '2m' }
 ]
 
 
@@ -45,9 +46,8 @@ const NaoPerformance = () => {
                 options: { method: 'GET' },
                 params: { range: filter.current },
             })
-            setDataSource(data)
+            setDataSource(!data?.error ? data : null)
         } catch (e) {
-            console.log(e)
         } finally {
             if (loading) setLoading(false);
         }
@@ -76,7 +76,7 @@ const NaoPerformance = () => {
     const assets = useMemo(() => {
         if (!dataSource) return [];
         const assets = [];
-        return Object.keys(dataSource.feeRevenue).reduce((newItem, item) => {
+        return Object.keys(dataSource?.feeRevenue).reduce((newItem, item) => {
             const asset = assetConfig.find(rs => rs.id === Number(item));
             if (asset) {
                 assets.push({

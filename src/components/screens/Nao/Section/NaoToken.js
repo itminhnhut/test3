@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 
 const NaoToken = () => {
     const { width } = useWindowSize();
-    const {t}= useTranslation();
+    const { t } = useTranslation();
 
     return (
         <section id="nao_token" className="pt-10 sm:pt-20">
@@ -27,14 +27,14 @@ const NaoToken = () => {
                         </div>
                     </div>
                 </CardNao>
-                <CardNao noBg className="!flex-row items-center flex-wrap w-full gap-4 !justify-center sm:!justify-between">
+                <CardNao noBg className="!flex-row items-center flex-wrap w-full gap-4 sm:!justify-between">
                     <div className="flex items-center gap-5 max-w-[300px]">
                         <img src={getS3Url("/images/nao/ic_onus.png")} className="w-[70px] h-[70px] sm:w-[90px] sm:h-[90px]" alt="" />
                         <div className="text-lg sm:text-[1.25rem] text-nao-text font-semibold">{t('nao:nao_token:get_buy_now')}</div>
                     </div>
-                    <div className="flex items-center flex-wrap gap-4 justify-center sm:justify-end">
+                    <div className={`flex items-center flex-wrap gap-2 ${width < 390 ? 'justify-center' : 'justify-between'}  w-full sm:w-max sm:flex-nowrap sm:justify-end`}>
                         <img className="cursor-pointer h-[46px] sm:h-[50] w-[140px] sm:w-[152px]" src={getS3Url("/images/nao/ic_app_store.png")} alt="" />
-                        <img className="cursor-pointer h-[46px] sm:h-[50] w-[140px] sm:w-[152px]" src={getS3Url("/images/nao/ic_google_play.png")} alt="" />
+                        <img className="cursor-pointer h-[46px] sm:h-[50] w-[154px] sm:w-[169px]" src={getS3Url("/images/nao/ic_google_play.png")} alt="" />
                     </div>
                 </CardNao>
             </div>

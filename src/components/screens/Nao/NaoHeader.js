@@ -13,6 +13,7 @@ import { getS3Url } from 'redux/actions/utils';
 const category = [
     { label: 'performance', el: 'nao_performance' },
     { label: 'governance_pool', el: 'nao_pool' },
+    { label: 'Whitepaper', link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics' },
     { label: 'buy_token', el: 'nao_token' }
 ];
 
@@ -22,11 +23,15 @@ const NaoHeader = () => {
     const { width } = useWindowSize();
     const [visible, setVisible] = useState(false);
 
-    const scrollToView = (el) => {
-        const _el = document.querySelector('#' + el);
-        if (_el) {
-            _el.scrollIntoView()
-            if (visible) setVisible(false);
+    const scrollToView = (item) => {
+        if (!item?.el && item.link) {
+            window.open(item.link, '_blank')
+        } else {
+            const _el = document.querySelector('#' + item.el);
+            if (_el) {
+                _el.scrollIntoView()
+                if (visible) setVisible(false);
+            }
         }
     }
 
@@ -37,7 +42,7 @@ const NaoHeader = () => {
             <div className={`flex items-center text-nao-text font-medium ${width > 768 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 768 && <>
                     {category.map(item => (
-                        <div key={item.label} onClick={() => scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
+                        <div key={item.label} onClick={() => scrollToView(item)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
                     ))}
                 </>
                 }
@@ -124,12 +129,12 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
             >
                 <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-nao-bgModal'>
                     <div className="pt-[35px] px-5 flex justify-end">
-                        <img className="cursor-pointer select-none" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='24' width='24' alt="" />
+                        <img className="cursor-pointer select-none" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='18' width='18' alt="" />
                     </div>
                     <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
                         <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
                             {category.map(item => (
-                                <div key={item.label} onClick={() => _scrollToView(item.el)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
+                                <div key={item.label} onClick={() => _scrollToView(item)} className="cursor-pointer capitalize leading-8">{t(`nao:${item.label}`)}</div>
                             ))}
                             <div className="flex items-center select-none gap-2 justify-center">
                                 <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
@@ -141,12 +146,12 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
                         <div className="flex flex-col w-full">
                             <Divider className="w-full !mb-8" />
                             <div className="flex items-center pb-[18px]">
-                                <img alt="" src={getS3Url("/images/nao/ic_onus.png")} height="30" width="30" />
+                                <img alt="" src={getS3Url("/images/nao/ic_onus.png")} height="32" width="32" />
                                 <div className="text-nao-text text-xs font-semibold ml-2">{t('nao:nao_token:get_buy_now')}</div>
                             </div>
                             <div className="flex justify-between items-center w-full">
                                 <img alt="" src={getS3Url("/images/nao/ic_app_store.png")} className="min-h-[35px]" width="107" />
-                                <img alt="" src={getS3Url("/images/nao/ic_google_play.png")} className="min-h-[35px]" width="107" />
+                                <img alt="" src={getS3Url("/images/nao/ic_google_play.png")} className="min-h-[35px]" width="117" />
                             </div>
                         </div>
                     </div>

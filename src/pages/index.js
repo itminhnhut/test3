@@ -16,7 +16,7 @@ const NaoDashboard = () => {
     return (
         <LayoutNaoToken>
             <Background width={width}>
-                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto">
+                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
                     <NaoHeader />
                     <div className="nao_section">
                         <NaoInfo />

@@ -3,7 +3,7 @@ import colors from 'styles/colors';
 import classNames from 'classnames';
 
 export const TextLiner = styled.div.attrs({
-    className: 'text-[1.375rem] sm:text-2xl font-semibold pb-[6px] capitalize'
+    className: 'text-[1.375rem] sm:text-2xl font-semibold pb-[6px] capitalize w-max'
 })`
     background:linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
     -webkit-background-clip: text;
