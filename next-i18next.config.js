@@ -1,7 +1,7 @@
 module.exports = {
     i18n: {
         locales: ['vi', 'en'],
-        defaultLocale: 'en',
+        defaultLocale: 'vi',
         keySeparator: '.',
         localeDetection: false,
     },
