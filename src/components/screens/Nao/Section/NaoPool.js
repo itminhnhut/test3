@@ -60,7 +60,7 @@ const NaoPool = () => {
                 <CardNao className="!flex-row items-center !justify-start relative flex-wrap">
                     <div className="text-nao-grey sm:w-1/2">{t('nao:pool:description')}</div>
                     <div className="sm:absolute sm:right-0 lg:right-[76px] -bottom-7 sm:w-1/2 flex justify-end">
-                        <img src={getS3Url("/images/nao-featured.png")} className="w-full h-full sm:w-[428px] sm:h-[292px]" alt="" />
+                        <img src={getS3Url("/images/nao/ic_nao_coming.png")} className="w-full h-full sm:w-[428px] sm:h-[292px]" alt="" />
                     </div>
                 </CardNao>
                 {/* <CardNao className="!p-10 sm:flex-none">
