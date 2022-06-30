@@ -4,7 +4,7 @@ import { useWindowSize } from 'utils/customHooks';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 
-const NaoToken = () => {
+const NaoToken = ({ onDownload }) => {
     const { width } = useWindowSize();
     const { t } = useTranslation();
 
@@ -33,8 +33,8 @@ const NaoToken = () => {
                         <div className="text-lg sm:text-[1.25rem] text-nao-text font-semibold">{t('nao:nao_token:get_buy_now')}</div>
                     </div>
                     <div className={`flex items-center flex-wrap gap-2 ${width < 390 ? 'justify-center' : 'justify-between'}  w-full sm:w-max sm:flex-nowrap sm:justify-end`}>
-                        <img className="cursor-pointer h-[46px] sm:h-[50] w-[140px] sm:w-[152px]" src={getS3Url("/images/nao/ic_app_store.png")} alt="" />
-                        <img className="cursor-pointer h-[46px] sm:h-[50] w-[154px] sm:w-[169px]" src={getS3Url("/images/nao/ic_google_play.png")} alt="" />
+                        <img onClick={() => onDownload('app_store')} className="cursor-pointer h-[46px] sm:h-[50] w-[140px] sm:w-[152px]" src={getS3Url("/images/nao/ic_app_store.png")} alt="" />
+                        <img onClick={() => onDownload('google_play')} className="cursor-pointer h-[46px] sm:h-[50] w-[154px] sm:w-[169px]" src={getS3Url("/images/nao/ic_google_play.png")} alt="" />
                     </div>
                 </CardNao>
             </div>

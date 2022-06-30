@@ -13,16 +13,32 @@ import { useWindowSize } from 'utils/customHooks';
 
 const NaoDashboard = () => {
     const { width } = useWindowSize();
+
+    const onDownload = (key) => {
+        let url = '';
+        switch (key) {
+            case 'app_store':
+                url = 'https://apps.apple.com/us/app/onus-invest-btc-eth-doge/id1498452975';
+                break;
+            case 'google_play':
+                url = 'https://play.google.com/store/apps/details?id=com.vndc';
+                break;
+            default:
+                break;
+        }
+        window.open(url, '_blank');
+    }
+
     return (
         <LayoutNaoToken>
             <Background width={width}>
                 <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
-                    <NaoHeader />
+                    <NaoHeader onDownload={onDownload} />
                     <div className="nao_section">
                         <NaoInfo />
                         <NaoPerformance />
                         <NaoPool />
-                        <NaoToken />
+                        <NaoToken onDownload={onDownload} />
                     </div>
                 </div>
                 <NaoFooter />

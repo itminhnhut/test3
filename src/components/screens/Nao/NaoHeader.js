@@ -17,7 +17,7 @@ const category = [
     { label: 'buy_token', el: 'nao_token' }
 ];
 
-const NaoHeader = () => {
+const NaoHeader = ({ onDownload }) => {
     const [currentLocale, onChangeLang] = useLanguage()
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize();
@@ -37,7 +37,8 @@ const NaoHeader = () => {
 
     return (
         <div className="nao_header flex justify-between items-center h-[90px] relative">
-            <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang} language={language} t={t} scrollToView={scrollToView} />
+            <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
+                language={language} t={t} scrollToView={scrollToView} onDownload={onDownload} />
             <img src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
             <div className={`flex items-center text-nao-text font-medium ${width > 768 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 768 && <>
@@ -88,7 +89,7 @@ function useOutsideAlerter(ref, cb) {
     }, [ref, cb]);
 }
 
-const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) => {
+const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView, onDownload }) => {
     const wrapperRef = useRef(null);
     const timer = useRef(null)
     const handleOutside = () => {
@@ -150,8 +151,8 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
                                 <div className="text-nao-text text-xs font-semibold ml-2">{t('nao:nao_token:get_buy_now')}</div>
                             </div>
                             <div className="flex justify-between items-center w-full">
-                                <img alt="" src={getS3Url("/images/nao/ic_app_store.png")} className="min-h-[35px]" width="107" />
-                                <img alt="" src={getS3Url("/images/nao/ic_google_play.png")} className="min-h-[35px]" width="117" />
+                                <img onClick={() => onDownload('app_store')} alt="" src={getS3Url("/images/nao/ic_app_store.png")} className="min-h-[35px] cursor-pointer" width="107" />
+                                <img onClick={() => onDownload('google_play')} alt="" src={getS3Url("/images/nao/ic_google_play.png")} className="min-h-[35px] cursor-pointer" width="117" />
                             </div>
                         </div>
                     </div>
