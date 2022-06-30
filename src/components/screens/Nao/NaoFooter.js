@@ -14,6 +14,18 @@ const NaoFooter = () => {
             case 'privacy':
                 url = 'https://nao.namifutures.com/privacy';
                 break;
+            case 'facebook':
+                url = 'https://www.facebook.com/groups/nami.exchange';
+                break;
+            case 'telegram':
+                url = 'https://t.me/namitradevn';
+                break;
+            case 'twitter':
+                url = 'https://twitter.com/NamiTrade';
+                break;
+            case 'reddit':
+                url = 'https://www.reddit.com/r/NAMIcoin';
+                break;
             default:
                 break;
         }
@@ -30,10 +42,10 @@ const NaoFooter = () => {
                 </div>
                 <div className='nao_footer_center text-nao-text font-medium pt-6 pb-4 sm:p-0 mx-11 sm:mx-0'>Copyright © 2022 Nami Foundation. All rights reserved.</div>
                 <div className='nao_footer_right items-center gap-5 flex'>
-                    <img src={getS3Url("/images/nao/ic_facebook.png")} alt="" height={24} width={24} />
-                    <img src={getS3Url("/images/nao/ic_twitter.png")} alt="" height={24} width={24} />
-                    <img src={getS3Url("/images/nao/ic_reddit.png")} alt="" height={24} width={24} />
-                    <img src={getS3Url("/images/nao/ic_gecko_ai.png")} alt="" height={24} width={24} />
+                    <img className="cursor-pointer" onClick={() => onRedirect('facebook')} src={getS3Url("/images/nao/ic_facebook.png")} alt="" height={24} width={24} />
+                    <img className="cursor-pointer" onClick={() => onRedirect('telegram')} src={getS3Url("/images/nao/ic_telegram.png")} alt="" height={24} width={24} />
+                    <img className="cursor-pointer" onClick={() => onRedirect('twitter')} src={getS3Url("/images/nao/ic_twitter.png")} alt="" height={24} width={24} />
+                    <img className="cursor-pointer" onClick={() => onRedirect('reddit')} src={getS3Url("/images/nao/ic_reddit.png")} alt="" height={24} width={24} />
                 </div>
             </div>
         </div>
