@@ -346,7 +346,7 @@ const ExternalWithdrawal = (props) => {
                         </span>
                         <span>
                             {formatNumber(currentCurr?.available, decimalScale)}{' '}
-                            {currentCurr?.assetName}
+                            {currentCurr?.assetCode}
                         </span>
                     </div>
 
@@ -357,7 +357,7 @@ const ExternalWithdrawal = (props) => {
                         <span>{fee > 0 ? formatNumber(fee, decimalScale) : t('common:free')}</span>
                         <div
                             className="h-full leading-[2.75rem] bg-onus-1 w-16 text-onus-grey rounded-r-md text-center">
-                            {currentCurr?.assetName}
+                            {currentCurr?.assetCode}
                         </div>
                     </div>
                 </div>
