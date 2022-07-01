@@ -25,6 +25,7 @@ import Head from 'next/head';
 import {API_FUTURES_CAMPAIGN_WITHDRAW_STATUS, DIRECT_WITHDRAW_ONUS} from 'redux/actions/apis';
 import AssetName from 'components/wallet/AssetName';
 import find from 'lodash/find';
+import floor from 'lodash/floor';
 import LayoutMobile, {AlertContext} from 'components/common/layouts/LayoutMobile';
 import Divider from 'components/common/Divider';
 import axios from 'axios';
@@ -328,7 +329,7 @@ const ExternalWithdrawal = (props) => {
                         <div
                             className="flex items-center"
                             onClick={() => {
-                                setAmount(formatNumber(Math.min(currentCurr?.available || 0, max), decimalScale))
+                                setAmount(floor(Math.min(currentCurr?.available || 0, max), decimalScale))
                             }}
                         >
                             <span className="px-4 py-2 text-onus-base font-semibold">
