@@ -270,7 +270,7 @@ const ExternalWithdrawal = (props) => {
         }
     }, [min, max, decimalScale, amount, currentCurr]);
 
-    const isDisableBtn = !amount || !!errorMessage;
+    const isDisableBtn = !+amount || !!errorMessage;
 
     const amountLeft = wdlResult?.amountLeft || 0;
     const wdlAmount = wdlResult?.amount || 0;
