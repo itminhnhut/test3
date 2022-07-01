@@ -289,7 +289,7 @@
                 "608": "Insurance",
                 "609": "Promotion",
                 "open_fee": "Order Opening Fee",
-                "close_fee": "Order Olosing Fee"
+                "close_fee": "Order Closing Fee"
             },
             "close": "Close"
         },
