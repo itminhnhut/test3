@@ -129,7 +129,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
                 onClick={() => setTransactionDetail(item)}
             >
                 <div className='flex items-center'>
-                    <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
+                    <AssetLogo size={36} assetId={item.currency}/>
                     <div className='ml-2'>
                         <div
                             className='font-medium text-onus-white text-sm'>{_renderCategory(item)}</div>
