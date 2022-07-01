@@ -31,8 +31,24 @@ const categories = [
 
 ]
 
-const ASSETS = [72]
+const ASSETS = [72, 447]
 
+const noteCases = [
+    '^BALANCE: Swap future order (\\d+)$',
+    '^BALANCE: Place future order (\\d+) fee$',
+    '^BALANCE: Close future order (\\d+) fee$',
+    '^BALANCE: Close future order (\\d+) raw profit$',
+    '^BALANCE: Close pending future order (\\d+) return fee$',
+    '^BALANCE: Liquidate active position (\\d+) liquidate fee$',
+    '^BALANCE: Liquidate active position (\\d+) close fee$',
+    '^BALANCE: Liquidate active position (\\d+) raw profit$',
+]
+
+const getOrderIdFromNote = (note) => {
+    const regex = noteCases.map(e => new RegExp(e)).find(r => r.test(note))
+    if (!regex) return
+    return note.replace(regex, '$1')
+}
 
 function TabTransactionsHistory({scrollSnap, active}) {
     const [data, setData] = useState({
@@ -122,7 +138,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
     const _renderListItem = () => {
         return data.result.map(item => {
             const assetConfig = assetConfigMap[item.currency]
-            const orderId = first(item?.note?.match(/\d+/g))
+            const orderId = getOrderIdFromNote(item?.note)
             return <div
                 key={item._id}
                 className='flex justify-between p-4 border-b border-onus-line'
@@ -227,7 +243,8 @@ function TabTransactionsHistory({scrollSnap, active}) {
                             {data.hasNext && <div
                                 className='flex items-center justify-center text-center h-12 text-sm font-semibold mb-4'
                                 onClick={() => fetchData(true)}
-                            >{loadMore ? <IconLoading color={colors.onus.white}/> : <span>{t('futures:load_more')}</span>}
+                            >{loadMore ? <IconLoading color={colors.onus.white}/> :
+                                <span>{t('futures:load_more')}</span>}
                             </div>}
                         </>
             }
@@ -263,7 +280,7 @@ const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
 }
 
 const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}}) => {
-    const orderId = first(transaction?.note?.match(/\d+/g)) || '--'
+    const orderId = getOrderIdFromNote(transaction?.note) || '--'
     const _renderCategory = (item) => {
         if (!item) return '-'
         const note = (item.note).toLowerCase()

@@ -145,7 +145,7 @@ const ExternalWithdrawal = (props) => {
 
     useEffect(() => {
         setCurrentCurr(assets[0]);
-    }, [assets]);
+    }, [assets.length]);
 
     useEffect(() => {
         setAmount('');
@@ -229,6 +229,7 @@ const ExternalWithdrawal = (props) => {
             console.log('Notice: ', e);
         } finally {
             setIsSubmitting(false);
+            setAmount('')
         }
     };
 
