@@ -9,6 +9,7 @@ export const WalletCurrency = {
     WHC: 88,
     SFO: 187,
     NAMI: 1,
+    NAO: 447,
 }
 
 export const getAvailableToken = (currency, balance) => {

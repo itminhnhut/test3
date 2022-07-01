@@ -35,21 +35,25 @@ const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI];
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 0,
+    [WalletCurrency.NAO]: 0,
 };
 
 const MAX_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 500e6,
     [WalletCurrency.NAMI]: 100000,
+    [WalletCurrency.NAO]: 50000,
 };
 
 const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 0,
+    [WalletCurrency.NAO]: 0,
 };
 
 const DECIMAL_SCALES = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 1,
+    [WalletCurrency.NAO]: 1,
 };
 
 const WDL_STATUS = {
