@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
+import { Progressbar } from 'components/screens/Nao/NaoStyle';
 
 const NaoInfo = () => {
     const { t } = useTranslation();
@@ -56,11 +57,6 @@ const BackgroundImage = styled.div.attrs({
     background: linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%);
 `
 
-const Progressbar = styled.div.attrs({
-    className: 'h-[6px] rounded-lg transition-all'
-})`
-    background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
-    width:${({ percent }) => `${percent > 100 ? 100 : percent}%`};
-`
+
 
 export default NaoInfo;

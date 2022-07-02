@@ -1,6 +1,6 @@
-const API_PREFIX = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/`;
-const API_V2_PREFIX = `${process.env.NEXT_PUBLIC_API_URL}/api/v2/`;
-const API_V3_PREFIX = `${process.env.NEXT_PUBLIC_API_URL}/api/v3/`;
+const API_PREFIX = `/api/v1/`;
+const API_V2_PREFIX = `/api/v2/`;
+const API_V3_PREFIX = `/api/v3/`;
 const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/content`;
 
 
@@ -200,3 +200,7 @@ export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campai
 
 //NAO token
 export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic';
+//POOL
+export const API_POOL_INFO = API_V3_PREFIX + 'pool/info';
+export const API_POOL_STAKE = API_V3_PREFIX + 'pool/place-stake';
+export const API_POOL_UN_STAKE = API_V3_PREFIX + 'pool/un-stake';

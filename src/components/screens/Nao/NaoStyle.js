@@ -14,15 +14,36 @@ export const TextLiner = styled.div.attrs({
 
 export const CardNao = styled.div.attrs(({ noBg }) => ({
     className: classNames(
-        `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] sm:min-h-[180px] flex flex-col justify-between flex-1`,
+        `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] sm:min-h-[180px] flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
         { 'bg-nao-bg/[0.15] border-[2px] border-nao-border/[0.15] ': !noBg }
     )
 }))`
-    background-image:${({ noBg }) => noBg && `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%237686B1' stroke-width='0.8' stroke-dasharray='4 %2c 6' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e")`} 
+    background-image:${({ noBg, stroke = 0.8 }) => noBg && `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%237686B1' stroke-width='${stroke}' stroke-dasharray='4 %2c 6' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e")`} 
 `
 export const Divider = styled.div.attrs({
     className: 'h-[1px] opacity-[0.3] my-[10px]'
 })`
  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%237686B1' stroke-width='2' stroke-dasharray='3 %2c 10' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");
+`
+
+export const ButtonNao = styled.div.attrs({
+    className: 'text-center flex items-center justify-center bg-nao-bg4'
+})`
+   background:${({ active, isActive }) => isActive ? (active ? `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)` : '') : `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)`};
+   border-radius: 12px;
+
+`
+
+export const BackgroundHeader = styled.div.attrs({
+    className: 'relative z-[9]'
+})`
+    background: linear-gradient(101.26deg, rgba(9, 61, 209,0.32) -5.29%, rgba(74, 232, 214,0.32) 113.82%);
+`
+
+export const Progressbar = styled.div.attrs({
+    className: 'h-[6px] rounded-lg transition-all'
+})`
+    background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
+    width:${({ percent }) => `${percent > 100 ? 100 : percent}%`};
 `
