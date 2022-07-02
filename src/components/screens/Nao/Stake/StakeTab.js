@@ -161,7 +161,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                     <div className="text-nao-white font-semibold text-sm">{dataSource?.duration ?? 7} days</div>
                                 </div>
                             </div>
-                            <div className="mt-5 space-x-2 flex items-center text-nao-text">
+                            {/* <div className="mt-5 space-x-2 flex items-center text-nao-text">
                                 <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
                                     <div>Token Info</div>
                                 </div>
@@ -171,7 +171,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
                                     <div>Contract</div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     }
                 </div>
