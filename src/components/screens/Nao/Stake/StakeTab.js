@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { CardNao, TextLiner, ButtonNao, Divider } from 'components/screens/Nao/NaoStyle';
 import styled from 'styled-components';
 import { Minus, Plus } from 'react-feather';
@@ -24,7 +24,7 @@ const getBalance = createSelector(
     }
 );
 
-const StakeTab = ({ dataSource, getStake, assetNao }) => {
+const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
     const { t } = useTranslation();
     const [hidden, setHidden] = useState(true);
     const [showLockModal, setShowLockModal] = useState(false);
@@ -35,6 +35,10 @@ const StakeTab = ({ dataSource, getStake, assetNao }) => {
     useEffect(() => {
         getRef();
     }, [])
+
+    useImperativeHandle(ref, () => ({
+        showLock: onShowLockModal
+    }))
 
 
     const onShowLockModal = (mode) => {
@@ -87,7 +91,7 @@ const StakeTab = ({ dataSource, getStake, assetNao }) => {
             <CardNao noBg stroke="1.5" className="pt-9 pb-8 bg-opacity-100">
                 <div className="flex items-center justify-between pb-4">
                     <div className="text-sm font-medium text-nao-text uppercase">{t('nao:pool:est_apy')}</div>
-                    <div className="text-[1.25rem] font-semibold">{dataSource ? dataSource?.estimateAPY : '-'}%</div>
+                    <div className="text-[1.25rem] font-semibold">{dataSource ? formatNumber(dataSource?.estimateAPY, 2) : '-'}%</div>
                 </div>
                 <div >
                     <label className="text-nao-green text-sm font-semibold">{t('nao:pool:nao_earned')}</label>
@@ -166,7 +170,7 @@ const StakeTab = ({ dataSource, getStake, assetNao }) => {
             </CardNao>
         </div>
     );
-};
+});
 
 const BackgroundImage = styled.div.attrs({
     className: 'w-[80px] h-[80px] rounded-[50%] flex justify-center items-center'

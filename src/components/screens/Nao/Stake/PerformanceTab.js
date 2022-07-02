@@ -3,11 +3,11 @@ import { CardNao, TextLiner, ButtonNao, Divider, Progressbar } from 'components/
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 
-const PerformanceTab = ({ isSmall, dataSource, assetNao }) => {
+const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
     const { t } = useTranslation();
 
     return (
-        dataSource ?
+        dataSource?.totalStaked ?
             <>
                 <div>
                     <TextLiner className="pb-1">{t('nao:pool:per_overview')}</TextLiner>
@@ -18,31 +18,30 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao }) => {
                             <div className="mt-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center mr-8">
-                                        <span className="font-semibold mr-1 leading-7">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</span>
+                                        <span className="font-semibold mr-1 leading-7">{formatNumber(dataSource?.availableStaked, assetNao?.assetDigit ?? 8)}</span>
                                         <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                                     </div>
-                                    <div className="text-nao-grey text-sm">100,000,000</div>
+                                    <div className="text-nao-grey text-sm">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
                                 </div>
                                 <div className="my-2">
                                     <div className="w-full bg-[#000000] rounded-lg">
-                                        <Progressbar percent={((dataSource?.totalStaked ?? 0) / 100000000) * 100} />
+                                        <Progressbar percent={((dataSource?.availableStaked ?? 0) / dataSource?.totalStaked) * 100} />
                                     </div>
                                 </div>
-                                <div className="text-xs font-medium leading-6">{formatNumber(((dataSource?.totalStaked ?? 0) / 100000000) * 100, assetNao?.assetDigit ?? 8)}%</div>
+                                <div className="text-xs font-medium leading-6">{formatNumber(((dataSource?.availableStaked ?? 0) / dataSource?.totalStaked) * 100, assetNao?.assetDigit ?? 8)}%</div>
                             </div>
                         </div>
                         <div className="py-4">
                             <label className="text-nao-text font-medium leading-6">{t('nao:pool:total_revenue')}</label>
                             <div className="flex items-center mt-4">
-                                <div className="text-[22px font-semibold leading-8 mr-2">0</div>
-                                <img src={getS3Url("/images/nao/ic_nao.png")} width={28} height={28} alt="" />
+                                <div className="text-[22px font-semibold leading-8 mr-2">0 VNDC</div>
+
                             </div>
                         </div>
                         <div className="pt-4">
                             <label className="text-nao-blue font-medium leading-6">{t('nao:pool:per_est_revenue')}</label>
                             <div className="flex items-center mt-4">
-                                <div className="text-[22px font-semibold leading-8 mr-2">{formatNumber(dataSource?.estimateNextValue ?? 0, assetNao?.assetDigit ?? 8)}</div>
-                                <img src={getS3Url("/images/nao/ic_nao.png")} width={28} height={28} alt="" />
+                                <div className="text-[22px font-semibold leading-8 mr-2">{formatNumber(dataSource?.estimateNextValue ?? 0, assetNao?.assetDigit ?? 8)} VNDC</div>
                             </div>
                         </div>
                     </CardNao>
@@ -79,7 +78,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao }) => {
                 </div>
                 <div className={`absolute w-full ${isSmall ? 'bottom-[30px] ' : '-ml-4 bottom-[60px] '}`}>
                     <div className='px-4'>
-                        <ButtonNao className="font-semibold py-3 w-full">Stake now</ButtonNao>
+                        <ButtonNao onClick={onShowLock} className="font-semibold py-3 w-full">Stake now</ButtonNao>
                     </div>
                 </div>
             </>

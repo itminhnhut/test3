@@ -101,7 +101,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                     { visible: visible },
                 )}
             >
-                <div className='flex-1 min-h-0'>
+                <div className='flex-1 min-h-0 overflow-y-auto'>
                     <BackgroundHeader className='px-4 py-6 flex items-center justify-between'>
                         <img src={getS3Url('/images/nao/ic_nao.png')} alt="" width="40" height="40" />
                         <img className="cursor-pointer select-none" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='18' width='18' alt="" />

@@ -38,7 +38,7 @@ const Stake = () => {
     const [tab, setTab] = useState(0);
     const [dataSource, setDataSource] = useState(null);
     const assetNao = useSelector(state => getAssetNao(state, 'NAO'));
-
+    const refStake = useRef(null);
 
     useEffect(() => {
         getStake();
@@ -58,13 +58,17 @@ const Stake = () => {
         }
     }
 
+    const onShowLock = () => {
+        refStake.current.showLock(true)
+    }
+
     return (
         <LayoutNaoToken >
             <BackgroundHeader className="stake_header ">
                 <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                     language={language} t={t} />
                 <div className="flex items-center justify-between px-4 pt-6">
-                    <img src="/images/nao/ic_nao.png" alt="" width={40} height={40} />
+                    <img src={getS3Url("/images/nao/ic_nao.png")} alt="" width={40} height={40} />
                     {width <= 768 &&
                         <div
                             className='relative'
@@ -88,10 +92,10 @@ const Stake = () => {
             </BackgroundHeader>
             <div className="h-full w-full px-4 py-6">
                 <div className={tab !== 0 ? 'hidden' : ''}>
-                    <StakeTab assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
+                    <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />
                 </div>
                 <div className={tab !== 1 ? 'hidden' : height < 600 ? 'min-h-[600px] relative' : ''}>
-                    <PerformanceTab assetNao={assetNao} isSmall={height < 600} dataSource={dataSource} />
+                    <PerformanceTab onShowLock={onShowLock} assetNao={assetNao} isSmall={height < 600} dataSource={dataSource} />
                 </div>
             </div>
         </LayoutNaoToken>
