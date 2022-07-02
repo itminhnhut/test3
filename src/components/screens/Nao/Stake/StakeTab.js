@@ -46,6 +46,14 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
         setShowLockModal(!showLockModal)
     }
 
+    useEffect(() => {
+        if (showLockModal) {
+            document.body.classList.add('overflow-hidden')
+        } else {
+            document.body.classList.remove('overflow-hidden')
+        }
+    }, [showLockModal])
+
     const getRef = async (day) => {
         try {
             const { data } = await fetchApi({

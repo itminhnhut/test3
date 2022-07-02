@@ -65,7 +65,7 @@ const Stake = () => {
     return (
         <LayoutNaoToken >
             <BackgroundHeader className="stake_header ">
-                <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
+                {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                     language={language} t={t} />
                 <div className="flex items-center justify-between px-4 pt-6">
                     <img src={getS3Url("/images/nao/ic_nao.png")} alt="" width={40} height={40} />
@@ -81,7 +81,7 @@ const Stake = () => {
                             />
                         </div>
                     }
-                </div>
+                </div> */}
                 <div className='flex justify-center py-4'>
                     <label className="text-2xl font-semibold leading-[50px] text-nao-green">{t('nao:governance_pool')}</label>
                 </div>

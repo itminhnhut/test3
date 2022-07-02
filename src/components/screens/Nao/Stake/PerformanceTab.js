@@ -41,7 +41,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="pt-4">
                             <label className="text-nao-blue font-medium leading-6">{t('nao:pool:per_est_revenue')}</label>
                             <div className="flex items-center mt-4">
-                                <div className="text-[22px font-semibold leading-8 mr-2">{formatNumber(dataSource?.estimateNextValue ?? 0, assetNao?.assetDigit ?? 8)} VNDC</div>
+                                <div className="text-[22px font-semibold leading-8 mr-2">{formatNumber(dataSource?.estimateNextValue ?? 0, 0)} VNDC</div>
                             </div>
                         </div>
                     </CardNao>

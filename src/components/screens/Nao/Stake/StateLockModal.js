@@ -46,7 +46,8 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
 
     const onChangeAmount = (e) => {
         amount.current = e.floatValue ?? '';
-        setPercent(!amount.current ? 0 : amount.current * 100 / balance)
+        const per = +(!amount.current ? 0 : amount.current * 100 / balance).toFixed(0);
+        setPercent(per);
     }
 
     const onSave = async () => {
@@ -176,11 +177,11 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_apy_2')}</div>
-                                        <span className="font-semibold">{data ? data?.estimateAPY : '-'}%</span>
+                                        <span className="font-semibold">{data ? formatNumber(data?.estimateAPY, 2) : '-'}%</span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="text-nao-text font-medium leading-6">Expected ROI</div>
-                                        <span className="font-semibold">XXX VNDC</span>
+                                        <span className="font-semibold">{data ? formatNumber(data?.expectedROI, 0) + ' VNDC' : '-'} </span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:duration')}</div>
@@ -241,14 +242,14 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data }) =>
                     <span>{isLock ? `${data?.duration ?? 7} ${t('nao:pool:days')}` : formatTime(timeTogetBack, 'HH:mm:ss dd/MM/yyyy')} </span>
                 </div>
             </div>
-            <div className="flex items-center my-6" onClick={onHandleChecked}>
+            {/* <div className="flex items-center mt-6" onClick={onHandleChecked}>
                 <CheckBox onusMode={true} active={checked}
                     boxContainerClassName={`rounded-[2px] ${checked ? '' : '!bg-onus-bg2'}`} />
                 <span className="ml-3 whitespace-nowrap text-nao-grey font-medium text-xs">
                     {t('nao:pool:not_show_message')}
                 </span>
-            </div>
-            <div className="flex items-center space-x-2 font-semibold">
+            </div> */}
+            <div className="flex items-center space-x-2 font-semibold mt-6">
                 <div onClick={onClose} className="h-[50px] w-full flex items-center justify-center bg-onus-bg2 rounded-md">
                     {t('nao:cancel')}
                 </div>
