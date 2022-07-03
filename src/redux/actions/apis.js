@@ -1,8 +1,7 @@
-const API_PREFIX = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/`;
-const API_V2_PREFIX = `${process.env.NEXT_PUBLIC_API_URL}/api/v2/`;
-const API_V3_PREFIX = `${process.env.NEXT_PUBLIC_API_URL}/api/v3/`;
+const API_PREFIX = '/api/v1/';
+const API_V2_PREFIX = '/api/v2/';
+const API_V3_PREFIX = '/api/v3/';
 const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/content`;
-
 
 export const getBlogApi = (apiEndpoint, params) => {
     if (!apiEndpoint) return '';
