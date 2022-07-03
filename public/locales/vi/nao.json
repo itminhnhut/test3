@@ -61,7 +61,8 @@
         "stake_now": "Stake NAO ngay",
         "total_users": "Số người tham gia",
         "users": "{{value}} người",
-        "guide": "Hướng dẫn"
+        "guide": "Hướng dẫn",
+        "you_not_staked": "Bạn chưa stake NAO"
     },
     "nao_token": {
         "title": "Mua token NAO",

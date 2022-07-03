@@ -114,9 +114,9 @@ const NaoPool = () => {
         const pool = availableStaked / totalStaked;
         const percent = (availableStaked / totalStaked) * 100;
         return {
-            totalStaked: formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8),
+            totalStaked: totalStaked,
             totalUsers: formatNumber(dataSource?.totalUser, 0),
-            estimate: formatNumber((dataSource?.estimateNextValue ?? 0) * pool, 0)
+            estimate: formatNumber((dataSource?.estimateNextValue ?? 0) * pool, 0),
         }
     }, [dataSource])
 
@@ -140,10 +140,10 @@ const NaoPool = () => {
                         <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:nao_staked')}</label>
                         <div className="pt-4">
                             <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
-                                <span className="mr-2">{data.totalStaked}</span>
+                                <span className="mr-2">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
                                 <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
                             </div>
-                            <span className="text-sm text-nao-grey">{formatNumber(dataSource?.totalStaked * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)} USDT</span>
+                            <span className="text-sm text-nao-grey">{formatNumber(data.totalStaked* (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)} USDT</span>
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>

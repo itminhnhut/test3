@@ -26,6 +26,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     const arrPercent = ['25', '50', '75', '100'];
     const [amount, setAmount] = useState(0);
     const [showAlert, setShowAlert] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const onChangePercent = (x) => {
         setAmount(Number((balance * x / 100).toFixed(assetNao?.assetDigit ?? 8)))
@@ -52,7 +53,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     }
 
     const onSave = async () => {
-        if (!amount || amount > balance) return;
+        if (!amount || amount > balance || loading) return;
         let isAlert = localStorage.getItem('hidden_alert');
         if (isAlert) {
             isAlert = JSON.parse(isAlert)
@@ -61,6 +62,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
             setShowAlert(true)
             return;
         }
+        setLoading(true);
         try {
             const { data, status, message } = await fetchApi({
                 url: isLock ? API_POOL_STAKE : API_POOL_UN_STAKE,
@@ -80,6 +82,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
         } catch (e) {
             console.log(e)
         } finally {
+            setLoading(false);
         }
     }
 
@@ -94,11 +97,11 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
         <Portal portalId='PORTAL_MODAL'>
             {showAlert && <AlertModal onConfirm={onSave} onClose={() => setShowAlert(false)} t={t} isLock={isLock}
                 amount={amount} decimal={assetNao?.assetDigit ?? 8}
-                data={data}
+                data={data} loading={loading}
             />}
             <div
                 className={classNames(
-                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow',
+                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow disabled-zoom',
                     { invisible: !visible },
                     { visible: visible },
                 )}
@@ -207,7 +210,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     );
 };
 
-const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data }) => {
+const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, loading }) => {
     const [checked, setChecked] = useState(false);
 
     const onHandleChecked = () => {
@@ -223,7 +226,9 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data }) =>
     const revenue = useMemo(() => {
         if (!data) return 0;
         const _amount = (isLock ? amount : -amount);
-        const ratio = (data?.availableStaked + _amount) / (data?.totalStaked + _amount)
+        const availableStaked = data?.availableStaked ?? 0;
+        const totalStaked = dataSource?.totalStaked ?? 0;
+        const ratio = (availableStaked + _amount) / (totalStaked + _amount);
         return (data?.estimateNextValue ?? 0) * ratio;
     }, [data])
 
@@ -256,7 +261,7 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data }) =>
                 <div onClick={onClose} className="h-[50px] w-full flex items-center justify-center bg-onus-bg2 rounded-md">
                     {t('nao:cancel')}
                 </div>
-                <div onClick={onConfirm} className="h-[50px] w-full flex items-center justify-center bg-onus-base rounded-md">
+                <div onClick={onConfirm} className={`h-[50px] w-full flex items-center justify-center bg-onus-base rounded-md ${loading ? 'opacity-[0.7]' : ''}`}>
                     {t('common:confirm')}
                 </div>
             </div>

@@ -14,12 +14,14 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         const percent = (availableStaked / totalStaked) * 100;
         return {
             percent: percent,
-            estimate: formatNumber((dataSource?.estimateNextValue ?? 0) * pool, 0)
+            estimate: formatNumber((dataSource?.estimateNextValue ?? 0) * pool, 0),
+            totalStaked,
+            availableStaked
         }
     }, [dataSource])
 
     return (
-        dataSource?.totalStaked ?
+        data.totalStaked ?
             <>
                 <div>
                     <TextLiner className="pb-1">{t('nao:pool:per_overview')}</TextLiner>
@@ -30,10 +32,10 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             <div className="mt-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center mr-8">
-                                        <span className="font-semibold mr-1 leading-7">{formatNumber(dataSource?.availableStaked, assetNao?.assetDigit ?? 8)}</span>
+                                        <span className="font-semibold mr-1 leading-7">{formatNumber(data.availableStaked, assetNao?.assetDigit ?? 8)}</span>
                                         <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                                     </div>
-                                    <div className="text-nao-grey text-sm">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
+                                    <div className="text-nao-grey text-sm">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</div>
                                 </div>
                                 <div className="my-2">
                                     <div className="w-full bg-[#000000] rounded-lg">
@@ -93,7 +95,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                 <div className="relative flex flex-col justify-center items-center translate-y-1/2 mt-[-60px]">
                     <img src={getS3Url("/images/nao/ic_nao_coming.png")} className='opacity-[0.4]' alt="" width="100" height="193" width="283" />
                     <div className='text-center mt-6'>
-                        <TextLiner className="!text-lg !w-full !pb-0">Bạn chưa stake NAO</TextLiner>
+                        <TextLiner className="!text-lg !w-full !pb-0 !normal-case">{t('nao:pool:you_not_staked')}</TextLiner>
                         <div className="text-sm text-nao-grey mt-4">{t('nao:pool:share_revenue')}</div>
                     </div>
                 </div>

@@ -25,7 +25,7 @@ const getBalance = createSelector(
 );
 
 const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const [hidden, setHidden] = useState(true);
     const [showLockModal, setShowLockModal] = useState(false);
     const isLock = useRef(false);
@@ -87,7 +87,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                 <StateLockModal isLock={isLock.current}
                     onConfirm={onConfirm} onClose={() => setShowLockModal(false)}
                     assetNao={assetNao} data={dataSource}
-                    balance={isLock.current ? balance : dataSource?.availableStaked}
+                    balance={isLock.current ? balance : (dataSource?.availableStaked ?? 0)}
                 />}
             <CardNao className="text-center mt-10">
                 <BackgroundImage className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
@@ -102,10 +102,10 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     <div className="text-[1.25rem] font-semibold">{formatNumber(dataSource?.estimateAPY ?? 0, 2)}%</div>
                 </div>
                 <div >
-                    <label className="text-nao-green text-sm font-semibold capitalize">{t('nao:pool:total_staked')}</label>
-                    <div className="text-nao-text mt-4 flex items-center justify-between">
+                    <label className={`text-nao-green text-sm font-semibold ${language !== 'vi' ? 'capitalize' : ''}`}>{t('nao:pool:total_staked')}</label>
+                    <div className="text-nao-text mt-4 flex items-center justify-between space-x-4">
                         <div>
-                            <div className="font-semibold leading-8 text-2xl">{formatNumber(staked, assetNao?.assetDigit ?? 8)}</div>
+                            <div className="font-semibold leading-8 text-2xl break-all">{formatNumber(staked, assetNao?.assetDigit ?? 8)}</div>
                             <span className="text-sm font-medium">${formatNumber(staked * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
                         </div>
                         <div className="flex  space-x-[10px]">
@@ -154,15 +154,15 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:total_staked')}</div>
-                                    <div className="text-nao-white font-semibold text-sm">{formatNumber(staked, assetNao?.assetDigit ?? 8)} NAO</div>
+                                    <div className="text-nao-white font-semibold text-sm text-right">{formatNumber(staked, assetNao?.assetDigit ?? 8)} NAO</div>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:total_users')}</div>
-                                    <div className="text-nao-white font-semibold text-sm">{t('nao:pool:users', { value: formatNumber(dataSource?.totalUser, 0) })}</div>
+                                    <div className="text-nao-white font-semibold text-sm text-right">{t('nao:pool:users', { value: formatNumber(dataSource?.totalUser, 0) })}</div>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:lock_duration')}</div>
-                                    <div className="text-nao-white font-semibold text-sm">{dataSource?.duration ?? 7} days</div>
+                                    <div className="text-nao-white font-semibold text-sm text-right">{dataSource?.duration ?? 7} {t('nao:pool:days')}</div>
                                 </div>
                             </div>
                             <div className="mt-5 space-x-2 flex items-center text-nao-text">

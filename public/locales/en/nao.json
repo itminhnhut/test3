@@ -61,7 +61,8 @@
         "stake_now": "Stake now",
         "total_users": "Total user",
         "users": "{{value}} users",
-        "guide": "Guide"
+        "guide": "Guide",
+        "you_not_staked": "You have not staked NAO"
     },
     "nao_token": {
         "title": "buy NAO Token",
