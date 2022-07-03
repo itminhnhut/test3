@@ -70,6 +70,7 @@ const NaoPool = () => {
 
     useEffect(() => {
         getStake();
+        getRef();
     }, [])
 
     const getStake = async () => {
