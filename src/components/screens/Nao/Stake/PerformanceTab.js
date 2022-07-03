@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next';
 import TableNoData from 'components/common/table.old/TableNoData';
 const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
     const { t } = useTranslation();
+    const [listHitory, setListHitory] = useState([]);
 
     const data = useMemo(() => {
         const availableStaked = dataSource?.availableStaked ?? 0;
@@ -60,29 +61,32 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                 <div className="mt-10">
                     <TextLiner className="pb-1">{t('nao:pool:history_revenue')}</TextLiner>
                     <div className="text-nao-grey text-sm">{t('nao:pool:history_description')}</div>
-                    <div className="mt-6 flex flex-col justify-center items-center">
-                        <TableNoData
-                            isMobile
-                            title={t('nao:pool:history_nodata')}
-                            className="h-full min-h-[300px]" />
-                    </div>
-                    {/* <  <CardNao className="mt-6">
-                        div>
-                            <div className="text-nao-grey text-sm">10/06/2022 - 17/06/2022</div>
-                            <div className="flex items-center mt-1">
-                                <div className="text-lg font-semibold leading-7 mr-2">100,034,238</div>
-                                <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                    {listHitory.length > 0 ?
+                        <CardNao className="mt-6">
+                            <div>
+                                <div className="text-nao-grey text-sm">10/06/2022 - 17/06/2022</div>
+                                <div className="flex items-center mt-1">
+                                    <div className="text-lg font-semibold leading-7 mr-2">100,034,238</div>
+                                    <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                </div>
                             </div>
+                            <Divider className="w-full !my-4" />
+                            <div>
+                                <div className="text-nao-grey text-sm">10/06/2022 - 17/06/2022</div>
+                                <div className="flex items-center mt-1">
+                                    <div className="text-lg font-semibold leading-7 mr-2">100,034,238</div>
+                                    <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                </div>
+                            </div>
+                        </CardNao>
+                        :
+                        <div className="mt-6 flex flex-col justify-center items-center">
+                            <TableNoData
+                                isMobile
+                                title={t('nao:pool:history_nodata')}
+                                className="h-full min-h-[300px]" />
                         </div>
-                        <Divider className="w-full !my-4" />
-                        <div>
-                            <div className="text-nao-grey text-sm">10/06/2022 - 17/06/2022</div>
-                            <div className="flex items-center mt-1">
-                                <div className="text-lg font-semibold leading-7 mr-2">100,034,238</div>
-                                <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
-                            </div>
-                        </div> 
-                    </CardNao>*/}
+                    }
                 </div>
             </>
             : <>

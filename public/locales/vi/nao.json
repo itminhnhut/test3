@@ -26,8 +26,8 @@
         "performance": "Thống kê",
         "staking_token": "Stake NAO ngay",
         "share_revenue": "Nhận được chia sẻ doanh thu và có quyền biểu quyết với dự án",
-        "est_apy": "APY dự kiến",
-        "est_apy_2": "APY dự kiến",
+        "est_apy": "APY ước tính",
+        "est_apy_2": "APY ước tính",
         "nao_earned": "Số NAO đã góp",
         "auto": "Gia hạn tự động",
         "lock": "Stake",
@@ -38,6 +38,7 @@
         "per_overview": "Tổng quan",
         "per_description": "Thống kê lợi nhuận của bạn",
         "total_staked": "Số lượng NAO đã stake",
+        "total_staked2": "Số lượng NAO đã stake",
         "total_revenue": "Tổng lợi nhuận đã nhận",
         "per_est_revenue": "Ước tính lợi nhuận lần tới",
         "history_revenue": "Lịch sử lợi nhuận",
@@ -48,7 +49,7 @@
         "amount_lock": "Số NAO nạp",
         "amount_unlock": "Số NAO rút",
         "est_revenue": "Doanh thu ước tính",
-        "pool_duration": "Thời gian khóa",
+        "lock_duration": "Thời gian khóa",
         "time_to_get_back": "Thời gian nhận lại NAO",
         "not_show_message": "Không hiện lại thông báo này",
         "description_lock": "Lượng NAO này sẽ được khóa và được chia sẻ lợi nhuận từ Pool vào đợt chia lợi nhuận tiếp theo",
@@ -74,5 +75,5 @@
     "credit_agreement": "Hợp đồng tín dụng",
     "maximum_amount": "Số lượng tối đa là {{max}}",
     "cancel": "Hủy",
-    "balance": "Khả dụng"
+    "available": "Khả dụng"
 }

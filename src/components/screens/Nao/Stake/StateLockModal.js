@@ -111,7 +111,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                     <div className="px-4 py-6">
                         <label className="text-nao-green text-2xl font-semibold leading-[50px]">{t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO</label>
                         <div className="flex items-center justify-between">
-                            <div className="text-nao-text font-medium leading-6">{isLock ? t('nao:pool:input_lock') : t('nao:pool:input_unlock')}</div>
+                            <div className="text-nao-text font-medium leading-6 text-sm">{isLock ? t('nao:pool:input_lock') : t('nao:pool:input_unlock')}</div>
                             <div className="flex items-center">
                                 <img src={getS3Url('/images/nao/ic_nao.png')} alt="" width="20" height="20" />
                                 <div className='ml-2 text-lg font-semibold text-nao-blue'>NAO</div>
@@ -139,7 +139,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             />
                         </CardNao>
                         <div className="text-sm font-medium leading-6 flex justify-end">
-                            <div className="text-nao-text">{t('nao:balance')}:</div>&nbsp;
+                            <div className="text-nao-text">{t('nao:available')}:</div>&nbsp;
                             <span>{formatNumber(balance, assetNao?.assetDigit ?? 0)} NAO</span>
                         </div>
                         <div className='mt-8'>
@@ -186,7 +186,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                         <span className="font-semibold">~{formatNumber(data?.expectedROI, 0) + ' VNDC'} </span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
-                                        <div className="text-nao-text font-medium leading-6">{t('nao:pool:duration')}</div>
+                                        <div className="text-nao-text font-medium leading-6">{t('nao:pool:lock_duration')}</div>
                                         <span className="font-semibold">{data?.duration ?? 7} {t('nao:pool:days')}</span>
                                     </div>
                                 </CardNao>
@@ -197,7 +197,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             {t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}
                         </div>
                         <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount) || amount > balance ? 'opacity-70' : ''}`}>
-                            {t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO
+                            {t('common:confirm')}
                         </ButtonNao>
                     </div>
                 </div>
@@ -241,7 +241,7 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data }) =>
                     <span>{formatNumber(revenue, decimal)} NAO</span>
                 </div>
                 <div className="flex items-center justify-between pt-3">
-                    <label className="text-nao-grey">{isLock ? t('nao:pool:pool_duration') : t('nao:pool:time_to_get_back')}</label>
+                    <label className="text-nao-grey">{isLock ? t('nao:pool:lock_duration') : t('nao:pool:time_to_get_back')}</label>
                     <span>{isLock ? `${data?.duration ?? 7} ${t('nao:pool:days')}` : formatTime(timeTogetBack, 'HH:mm:ss dd/MM/yyyy')} </span>
                 </div>
             </div>

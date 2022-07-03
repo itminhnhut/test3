@@ -130,7 +130,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     {!staked &&
                         <div className="mt-4">
                             <label className="text-nao-text font-medium leading-6 uppercase">Stake NAO</label>
-                            <ButtonNao className="h-12 mt-2 font-semibold">Stake</ButtonNao>
+                            <ButtonNao onClick={() => onShowLockModal(true)} className="h-12 mt-2 font-semibold">Stake</ButtonNao>
                         </div>
                     }
                     <Divider className="!opacity-100 !my-6" />
@@ -153,7 +153,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                         <div className="mt-4">
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:total_staked')}</div>
+                                    <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:total_staked2')}</div>
                                     <div className="text-nao-white font-semibold text-sm">{formatNumber(staked, assetNao?.assetDigit ?? 8)} NAO</div>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -161,7 +161,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                     <div className="text-nao-white font-semibold text-sm">{t('nao:pool:users', { value: formatNumber(dataSource?.totalUser, 0) })}</div>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:pool_duration')}</div>
+                                    <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:lock_duration')}</div>
                                     <div className="text-nao-white font-semibold text-sm">{dataSource?.duration ?? 7} days</div>
                                 </div>
                             </div>
