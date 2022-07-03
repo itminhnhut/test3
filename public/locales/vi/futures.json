@@ -279,18 +279,22 @@
             "done": "Đồng ý",
             "categories": {
                 "all": "Tất cả",
-                "600": "Phí giao dịch",
+                "600": "Phí mở/đóng lệnh",
                 "602": "Lợi nhuận",
-                "606": "Phí bảo hiểm",
-                "603": "Phí funding rate",
+                "606": "Phí thanh lý",
+                "603": "Phí swap",
                 "4": "Nạp tiền",
                 "5": "Rút tiền",
                 "723": "Rút tiền",
-                "608": "Bảo hiểm",
-                "609": "Khuyến mãi"
+                "608": "Bù từ quỹ bảo hiểm",
+                "609": "Khuyến mãi",
+                "open_fee": "Phí mở lệnh",
+                "close_fee": "Phí đóng lệnh"
             },
             "close": "Đóng"
         },
+        "confirm_order_message":  "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} ở giá {{price}} không?",
+        "confirm_order_message_market":  "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} không?",
         "login_short": "Đăng nhập ngay",
         "available": "Khả dụng",
         "liq_price": "Giá thanh lý",
@@ -343,10 +347,11 @@
         "content_on_boarding": "Chúc mừng bạn đã nhận thành công {{value}} VNDC",
         "change_24h": "24h"
     },
-    "orders_history": "Lịch sử",
+    "orders_history": "Lịch sử lệnh",
     "minimum_leverage": "Đòn bẩy tối thiểu",
     "maximum_leverage": "Đòn bẩy tối đa",
     "positions": "Vị thế",
     "open_orders": "Lệnh mở",
+    "load_more": "Xem thêm",
     "transaction_histories": "Lịch sử giao dịch"
 }

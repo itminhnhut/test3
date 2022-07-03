@@ -25,31 +25,37 @@ import Head from 'next/head';
 import {API_FUTURES_CAMPAIGN_WITHDRAW_STATUS, DIRECT_WITHDRAW_ONUS} from 'redux/actions/apis';
 import AssetName from 'components/wallet/AssetName';
 import find from 'lodash/find';
+import floor from 'lodash/floor';
 import LayoutMobile, {AlertContext} from 'components/common/layouts/LayoutMobile';
 import Divider from 'components/common/Divider';
 import axios from 'axios';
 import {ApiStatus} from 'redux/actions/const';
+import SortIcon from "components/screens/Mobile/SortIcon";
 
-const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAMI];
+const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO];
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 0,
+    [WalletCurrency.NAO]: 0,
 };
 
 const MAX_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 500e6,
     [WalletCurrency.NAMI]: 100000,
+    [WalletCurrency.NAO]: 50000,
 };
 
 const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 0,
+    [WalletCurrency.NAO]: 0,
 };
 
 const DECIMAL_SCALES = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 1,
+    [WalletCurrency.NAO]: 1,
 };
 
 const WDL_STATUS = {
@@ -223,6 +229,7 @@ const ExternalWithdrawal = (props) => {
             console.log('Notice: ', e);
         } finally {
             setIsSubmitting(false);
+            setAmount('')
         }
     };
 
@@ -265,7 +272,7 @@ const ExternalWithdrawal = (props) => {
         }
     }, [min, max, decimalScale, amount, currentCurr]);
 
-    const isDisableBtn = !amount || !!errorMessage;
+    const isDisableBtn = !+amount || !!errorMessage;
 
     const amountLeft = wdlResult?.amountLeft || 0;
     const wdlAmount = wdlResult?.amount || 0;
@@ -288,7 +295,10 @@ const ExternalWithdrawal = (props) => {
                     <span className="text-onus-secondary text-xs uppercase">
                         {t('ext_gate:asset')}
                     </span>
-                    <div className="flex justify-between items-center px-4 bg-onus-2 rounded-md h-11 mb-6 mt-2">
+                    <div
+                        className="flex justify-between items-center px-4 bg-onus-2 rounded-md h-11 mb-6 mt-2"
+                        onClick={() => handleModal('isListAssetModal', true)}
+                    >
                         <div className="flex items-center font-medium">
                             <AssetLogo
                                 size={28}
@@ -298,7 +308,7 @@ const ExternalWithdrawal = (props) => {
                                 {currentCurr?.assetName}
                             </span>
                         </div>
-                        {/*<SortIcon size={14}/>*/}
+                        <SortIcon size={14}/>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-onus-secondary text-xs uppercase">
@@ -320,10 +330,8 @@ const ExternalWithdrawal = (props) => {
                         <div
                             className="flex items-center"
                             onClick={() => {
-                                setAmount(formatNumber(Math.min(currentCurr?.available || 0, max), decimalScale))
-                            }
-
-                            }
+                                setAmount(floor(Math.min(currentCurr?.available || 0, max), decimalScale))
+                            }}
                         >
                             <span className="px-4 py-2 text-onus-base font-semibold">
                                 {t('ext_gate:max_opt')}
@@ -340,7 +348,7 @@ const ExternalWithdrawal = (props) => {
                         </span>
                         <span>
                             {formatNumber(currentCurr?.available, decimalScale)}{' '}
-                            {currentCurr?.assetName}
+                            {currentCurr?.assetCode}
                         </span>
                     </div>
 
@@ -351,7 +359,7 @@ const ExternalWithdrawal = (props) => {
                         <span>{fee > 0 ? formatNumber(fee, decimalScale) : t('common:free')}</span>
                         <div
                             className="h-full leading-[2.75rem] bg-onus-1 w-16 text-onus-grey rounded-r-md text-center">
-                            {currentCurr?.assetName}
+                            {currentCurr?.assetCode}
                         </div>
                     </div>
                 </div>

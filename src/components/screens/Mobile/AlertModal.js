@@ -1,11 +1,11 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
-import { useTranslation } from 'next-i18next';
-import { getS3Url } from 'redux/actions/utils';
+import {useTranslation} from 'next-i18next';
+import {getS3Url} from 'redux/actions/utils';
 
 const AlertModal = forwardRef((props, ref) => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [isVisible, setVisible] = useState(false);
     const [height, setHeight] = useState(362 / 2);
 
@@ -24,7 +24,7 @@ const AlertModal = forwardRef((props, ref) => {
     }))
 
     const onShow = (type, title, messages, note, onConfirm, onCancel, _options) => {
-        options.current = { type, title, messages, note, ..._options };
+        options.current = {type, title, messages, note, ..._options};
         actions.current.onConfirm = onConfirm;
         actions.current.onCancel = onCancel;
         setVisible(true);
@@ -69,42 +69,42 @@ const AlertModal = forwardRef((props, ref) => {
     if (!options.current.title) return null;
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
-            modalClassName="z-[99999999999]"
-            containerStyle={{ width: 'calc(100vw - 30px)', transform: 'translate(-50%,0)', left: '50%' }}
-            onusClassName="!px-[30px] !py-[40px] min-h-[363px] !bottom-[50px] rounded-[16px]"
+               modalClassName="z-[99999999999]"
+               containerStyle={{width: 'calc(100vw - 30px)', transform: 'translate(-50%,0)', left: '50%'}}
+               onusClassName="!px-[30px] !py-[40px] min-h-[363px] !bottom-[50px] rounded-[16px]"
         >
             <div className="flex flex-col items-center justify-between">
                 <div className='mb-[30px] mt-2'>
-                    <img src={getS3Url(getImage(options.current.type))} width={80} height={80} />
+                    <img src={getS3Url(getImage(options.current.type))} width={80} height={80}/>
                 </div>
                 <div className='text-[20px] font-semibold mb-[12px]'>
                     {options.current.title}
                 </div>
-                <div className=' mb-[10px] text-center text-onus-grey font-normal'>
-                    {options.current.messages}
+                <div className='mb-[10px] text-center text-onus-grey font-normal'
+                     dangerouslySetInnerHTML={{__html: options.current.messages}}>
                 </div>
                 <div className='text-gray-1 mb-[30px] text-center'>
                     {options.current.note}
                 </div>
                 <div className='flex items-center w-full mt-[8px] '>
                     {!options.current?.hideCloseButton
-                        && <Button
-                            onusMode={true}
-                            title={options.current.closeTitle || t('common:close')}
-                            className={`!h-[50px] !text-[16px] !font-semibold`}
-                            componentType="button"
-                            onClick={onCancel}
-                        />
+                    && <Button
+                        onusMode={true}
+                        title={options.current.closeTitle || t('common:close')}
+                        className={`!h-[50px] !text-[16px] !font-semibold`}
+                        componentType="button"
+                        onClick={onCancel}
+                    />
                     }
                     {actions.current?.onConfirm &&
-                        <Button
-                            onusMode={true}
-                            title={options.current?.confirmTitle || t('futures:leverage:confirm')}
-                            type="primary"
-                            className={`ml-[7px] !h-[50px] !text-[16px] !font-semibold`}
-                            componentType="button"
-                            onClick={onConfirm}
-                        />
+                    <Button
+                        onusMode={true}
+                        title={options.current?.confirmTitle || t('futures:leverage:confirm')}
+                        type="primary"
+                        className={`ml-[7px] !h-[50px] !text-[16px] !font-semibold`}
+                        componentType="button"
+                        onClick={onConfirm}
+                    />
                     }
                 </div>
             </div>

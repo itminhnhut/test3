@@ -16,20 +16,39 @@ import {formatNumber} from "redux/actions/utils";
 import {useTranslation} from "next-i18next";
 import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
 import TableNoData from "components/common/table.old/TableNoData";
+import {TransactionCategory} from "../../../../../redux/actions/const";
 
 const categories = [
     'all',// "All",
-    600,// "Fee",
-    602,// "Profit",
-    606,// "Insurance Clearance Fee",
-    603,// "Funding Rates",
-    4,// "Deposit",
-    723,// "Withdraw",
-    608,// "Insurance",
-    609,// "Promotion"
+    TransactionCategory.FUTURE_PLACE_ORDER_FEE, // 600
+    TransactionCategory.FUTURE_CLOSE_ORDER_PROFIT, // 602
+    TransactionCategory.FUTURE_SWAP, // 603
+    TransactionCategory.FUTURE_VNDC_LIQUIDATE_FEE, // 606
+    TransactionCategory.FUTURE_INSURANCE_FUND, // 608
+    TransactionCategory.FUTURE_PROMOTION, // 609
+    TransactionCategory.DEPOSIT, //T: 4
+    TransactionCategory.VNDC_DIRECT_WITHDRAW, // 723
+
 ]
 
-const ASSETS = [72]
+const ASSETS = [72, 447]
+
+const noteCases = [
+    '^BALANCE: Swap future order (\\d+)$',
+    '^BALANCE: Place future order (\\d+) fee$',
+    '^BALANCE: Close future order (\\d+) fee$',
+    '^BALANCE: Close future order (\\d+) raw profit$',
+    '^BALANCE: Close pending future order (\\d+) return fee$',
+    '^BALANCE: Liquidate active position (\\d+) liquidate fee$',
+    '^BALANCE: Liquidate active position (\\d+) close fee$',
+    '^BALANCE: Liquidate active position (\\d+) raw profit$',
+]
+
+const getOrderIdFromNote = (note) => {
+    const regex = noteCases.map(e => new RegExp(e)).find(r => r.test(note))
+    if (!regex) return
+    return note.replace(regex, '$1')
+}
 
 function TabTransactionsHistory({scrollSnap, active}) {
     const [data, setData] = useState({
@@ -43,6 +62,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
         end: null
     })
     const [loading, setLoading] = useState(false)
+    const [loadMore, setLoadMore] = useState(false)
     const [transactionDetail, setTransactionDetail] = useState()
     const assetConfigs = useSelector(state => state.utils.assetConfig)
     const timestamp = useSelector((state) => state.heath.timestamp);
@@ -62,18 +82,22 @@ function TabTransactionsHistory({scrollSnap, active}) {
         setRange(range)
     }
 
-    const fetchData = (isLoadMore) => {
-        setLoading(!isLoadMore)
-        fetchApi({
-            url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
-            params: {
-                timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
-                timeTo: range.end ? endOfDay(range.end).valueOf() : '',
-                category: category !== 'all' ? category : '',
-                lastId: isLoadMore ? last(data.result)?._id : ''
-            }
-        }).then(res => {
-            setLoading(false)
+    const fetchData = async (isLoadMore) => {
+        if (isLoadMore) {
+            setLoadMore(true)
+        } else {
+            setLoading(true)
+        }
+        try {
+            const res = await fetchApi({
+                url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
+                params: {
+                    timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
+                    timeTo: range.end ? endOfDay(range.end).valueOf() : '',
+                    category: category !== 'all' ? category : '',
+                    lastId: isLoadMore ? last(data.result)?._id : ''
+                }
+            })
             if (res.status === 'ok' && res.data) {
                 setData({
                     hasNext: res.data.hasNext,
@@ -81,27 +105,50 @@ function TabTransactionsHistory({scrollSnap, active}) {
                 })
                 // setTransactionDetail(res.data.result[0])
             }
-        })
+        } catch (e) {
+            console.error('Load transasction error', e?.response?.status)
+        } finally {
+            console.error('Load transasction load more',)
+            if (isLoadMore) {
+                setLoadMore(false)
+            } else {
+                setLoading(false)
+            }
+        }
     }
 
     useEffect(() => {
         if (active) {
-            fetchData()
+            fetchData(false)
         }
     }, [range, category, active, timestamp])
 
-    const ListData = () => {
+    const _renderCategory = (item) => {
+        if (!item) return '-'
+        const note = (item.note).toLowerCase()
+        if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
+
+            return note.includes('close')
+                ? t(`futures:mobile:transaction_histories:categories:close_fee`)
+                : t(`futures:mobile:transaction_histories:categories:open_fee`)
+        }
+        return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
+    }
+
+    const _renderListItem = () => {
         return data.result.map(item => {
             const assetConfig = assetConfigMap[item.currency]
+            const orderId = getOrderIdFromNote(item?.note)
             return <div
                 key={item._id}
                 className='flex justify-between p-4 border-b border-onus-line'
                 onClick={() => setTransactionDetail(item)}
             >
                 <div className='flex items-center'>
-                    <AssetLogo size={36} assetCode={assetConfig?.assetCode}/>
+                    <AssetLogo size={36} assetId={item.currency}/>
                     <div className='ml-2'>
-                        <div className='font-bold text-onus-white'>{assetConfig?.assetCode}</div>
+                        <div
+                            className='font-medium text-onus-white text-sm'>{_renderCategory(item)}</div>
                         <div
                             className='font-medium text-onus-grey text-xs mr-2'
                         >
@@ -111,14 +158,23 @@ function TabTransactionsHistory({scrollSnap, active}) {
                 </div>
                 <div className='text-right'>
                     <div
-                        className='font-bold text-onus-white'
+                        className='font-medium text-onus-white text-sm'
                     >
-                        {formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}
+                        <span>{formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}</span>
+                        <span className='ml-1'>{assetConfig?.assetCode}</span>
                     </div>
                     <div
                         className='font-medium text-onus-grey text-xs'
                     >
-                        {categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'}
+
+                        {
+                            orderId ?
+                                <>
+                                    <span>ID:</span>
+                                    <span className='ml-1'>{orderId}</span>
+                                </> :
+                                <span>--</span>
+                        }
                     </div>
                 </div>
             </div>
@@ -146,7 +202,6 @@ function TabTransactionsHistory({scrollSnap, active}) {
             transaction={transactionDetail}
             assetConfig={assetConfigMap[transactionDetail?.currency]}
         />
-
         <div className='sticky top-[2.625rem] bg-onus z-10 flex justify-between text-xs text-onus-grey px-4 pt-2'>
             <div className='flex items-center p-2 -ml-2' onClick={() => setVisibleDateRangePicker(true)}>
                 <span className='mr-1'>
@@ -172,29 +227,27 @@ function TabTransactionsHistory({scrollSnap, active}) {
             </div>
         </div>
         <div
-            // id="list-transaction-histories"
-            className='min-h-screen'
+            className='h-[calc(100vh-5.25rem)] overflow-y-auto'
         >
-            <InfiniteScroll
-                dataLength={data.result.length}
-                hasMore={data.hasNext && !loading}
-                next={() => fetchData(true)}
-                scrollableTarget="futures-mobile"
-                loader={<div><IconLoading color={colors.onus.white}/></div>}
-                {...scrollSnap ? {height: 'calc(100vh - 5.25rem)'} : {scrollableTarget: "futures-mobile"}}
-            >
-                {
-                    loading ?
-                        <Loading/> :
-                        !data.result.length ?
-                            <TableNoData
-                                isMobile
-                                title={t('futures:order_table:no_transaction_history')}
-                                className="h-[calc(100vh-5.25rem)]"
-                            /> :
-                            <ListData/>
-                }
-            </InfiniteScroll>
+            {
+                loading ?
+                    <Loading/> :
+                    !data.result.length ?
+                        <TableNoData
+                            isMobile
+                            title={t('futures:order_table:no_transaction_history')}
+                            className="h-[calc(100vh-5.25rem)]"
+                        /> :
+                        <>
+                            {_renderListItem()}
+                            {data.hasNext && <div
+                                className='flex items-center justify-center text-center h-12 text-sm font-semibold mb-4'
+                                onClick={() => fetchData(true)}
+                            >{loadMore ? <IconLoading color={colors.onus.white}/> :
+                                <span>{t('futures:load_more')}</span>}
+                            </div>}
+                        </>
+            }
         </div>
 
     </div>
@@ -227,7 +280,18 @@ const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
 }
 
 const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}}) => {
-    const orderId = first(transaction?.note?.match(/\d+/g)) || '--'
+    const orderId = getOrderIdFromNote(transaction?.note) || '--'
+    const _renderCategory = (item) => {
+        if (!item) return '-'
+        const note = (item.note).toLowerCase()
+        if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
+
+            return note.includes('close')
+                ? t(`futures:mobile:transaction_histories:categories:close_fee`)
+                : t(`futures:mobile:transaction_histories:categories:open_fee`)
+        }
+        return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
+    }
     return <Modal
         isVisible={visible}
         onusMode
@@ -236,7 +300,8 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
     >
         <div className='text-onus-white text-center border-b border-onus-bg2 pb-6'>
             <span className='text-sm'>
-                {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'}
+                {_renderCategory(transaction)}
+                {/* {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'} */}
             </span>
             <div className='text-2xl font-bold'>
                 <span>{formatNumber(transaction?.money_use, assetConfig.assetDigit, null, true)}</span>
@@ -259,7 +324,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
             <div className='flex justify-between text-sm'>
                 <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:order_id')}</span>
                 <div className='flex flex-1 min-w-0 items-center'>
-                   <div className='flex-1 min-w-0 overflow-hidden text-right'>{orderId}</div>
+                    <div className='flex-1 min-w-0 overflow-hidden text-right'>{orderId}</div>
                     <CopyToClipboard text={orderId}>
                         <Copy className='ml-2' size={14} color={colors.onus.grey}/>
                     </CopyToClipboard>

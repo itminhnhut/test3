@@ -44,7 +44,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
             <div
                 onClick={() => setOpenModal(true)}
                 data-tut="order-leverage"
-                className="h-[32px] w-12 text-onus-white border-onus-white leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium">{leverage}x
+                className="flex items-center justify-center h-[32px] w-12 text-onus-white border-onus-white leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium">{leverage}x
             </div>
             {openModal &&
                 <FuturesLeverageSettings

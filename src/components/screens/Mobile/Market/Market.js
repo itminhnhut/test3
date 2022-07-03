@@ -7,7 +7,7 @@ import { debounce } from 'lodash/function';
 import { useTranslation } from 'next-i18next';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY, } from 'redux/actions/apis';
-import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, } from 'redux/actions/utils';
+import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, scrollHorizontal } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import usePrevious from 'hooks/usePrevious';
 import SortIcon from 'components/screens/Mobile/SortIcon';
@@ -63,6 +63,7 @@ export default ({ isRealtime = true, pair }) => {
     })
     const [search, setSearch] = useState('')
     const [referencePrice, setReferencePrice] = useState([])
+    const refTabsMarkets = useRef(null);
 
     const dispatch = useDispatch()
     const favoritePairRaws = useSelector((state) => state.futures.favoritePairs) || []
@@ -298,14 +299,14 @@ export default ({ isRealtime = true, pair }) => {
         ))
 
     }
-
+   
     return (
         <div className='market-mobile bg-onus'>
             <div className='mt-4 px-4'>
                 <InputSearch onChange={changeSearch} />
             </div>
             <div className='border-b border-onus-line'>
-                <div className='flex space-x-5 px-4 mt-6 overflow-x-auto overflow-y-hidden'>
+                <div ref={refTabsMarkets} className='flex space-x-5 px-4 mt-6 overflow-x-auto overflow-y-hidden'>
                     {Object.values(TABS).map((t) => {
                         return (
                             <div
@@ -315,7 +316,7 @@ export default ({ isRealtime = true, pair }) => {
                                 )}
                                 onClick={(e) => {
                                     onChangeTab(t)
-                                    e.target.scrollIntoView()
+                                    scrollHorizontal(e.target, refTabsMarkets.current)
                                 }}
                             >
                                 {t === TABS.FAVOURITE && (
@@ -370,7 +371,7 @@ export default ({ isRealtime = true, pair }) => {
                             }
                         />
                         <TitleHeadList
-                            title={t('markets:change_24h')}
+                            title={t('futures:mobile:change_24h')}
                             onClick={changeSort('change24hRaw')}
                             className='w-24'
                             sortDirection={
@@ -402,8 +403,8 @@ const InputSearch = ({ onChange }) => {
             strokeWidth={1}
         />
         <input
-            className='flex-1 ml-2 outline-none placeholder-onus-grey placeholder:font-medium text-sm'
-            onChange={({ target: { value: v } }) => handleChange(v?.replace(/[^\w\s]/gi, ""))}
+            className='flex-1 ml-2 outline-none !placeholder-onus-grey placeholder:font-medium text-sm'
+            onChange={({ target: { value: v } }) => handleChange(v)}
             value={value}
             placeholder={t('markets:search_placeholder')}
             type='text'
