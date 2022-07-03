@@ -2,9 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
 
 const NaoInfo = () => {
     const { t } = useTranslation();
+    const user = useSelector(state => state.auth.user) || null;
 
     return (
         <section id="nao_info" className="flex items-center justify-between pt-10 sm:pt-20 flex-wrap gap-8">
@@ -19,6 +21,7 @@ const NaoInfo = () => {
                             <label className="text-nao-blue uppercase text-[1.25re] font-semibold">NAO</label>
                             <span className="mx-2">•</span>
                             <div className="font-light text-nao-white capitalize">Nami frame futures</div>
+                            <div className="font-light text-nao-white capitalize">{user?.code}</div>
                         </div>
                     </div>
                 </div>
