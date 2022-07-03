@@ -118,7 +118,7 @@ const NaoPerformance = () => {
                 <CardNao>
                     <label className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
                     <div className="pt-4">
-                        <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.count, 0) : '-'}</div>
+                        <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.count*2, 0) : '-'}</div>
                         <span className="text-sm text-nao-grey capitalize">{dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}</span>
                     </div>
                 </CardNao>
