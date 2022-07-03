@@ -136,7 +136,7 @@ const NaoPool = () => {
                 </CardNao> */}
                 <CardNao className="!p-10 sm:flex-none">
                     <div>
-                        <label className="text-nao-text font-medium text-lg">{t('nao:pool:nao_staked')}</label>
+                        <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:nao_staked')}</label>
                         <div className="pt-4">
                             <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
                                 <span className="mr-2">{data.totalStaked}</span>
@@ -147,7 +147,7 @@ const NaoPool = () => {
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
                     <div>
-                        <label className="text-nao-text font-medium text-lg">{t('nao:pool:participants')}</label>
+                        <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:participants')}</label>
                         <div className="pt-4">
                             <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
                                 <span className="mr-2">{data.totalUsers}</span>
