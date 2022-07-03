@@ -227,7 +227,7 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
         if (!data) return 0;
         const _amount = (isLock ? amount : -amount);
         const availableStaked = data?.availableStaked ?? 0;
-        const totalStaked = dataSource?.totalStaked ?? 0;
+        const totalStaked = data?.totalStaked ?? 0;
         const ratio = (availableStaked + _amount) / (totalStaked + _amount);
         return (data?.estimateNextValue ?? 0) * ratio;
     }, [data])
