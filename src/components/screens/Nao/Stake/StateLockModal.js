@@ -24,11 +24,11 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     const [percent, setPercent] = useState(0);
     const { t } = useTranslation();
     const arrPercent = ['25', '50', '75', '100'];
-    const amount = useRef(0);
+    const [amount, setAmount] = useState(0);
     const [showAlert, setShowAlert] = useState(false);
 
     const onChangePercent = (x) => {
-        amount.current = Number((balance * x / 100).toFixed(assetNao?.assetDigit ?? 8));
+        setAmount(Number((balance * x / 100).toFixed(assetNao?.assetDigit ?? 8)))
         setPercent(x)
     }
 
@@ -45,13 +45,14 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     }, [])
 
     const onChangeAmount = (e) => {
-        amount.current = e.floatValue ?? '';
-        const per = +(!amount.current ? 0 : amount.current * 100 / balance).toFixed(0);
+        const _amount = e.floatValue ?? '';
+        setAmount(_amount)
+        const per = +(!_amount ? 0 : _amount * 100 / balance).toFixed(0);
         setPercent(per);
     }
 
     const onSave = async () => {
-        if (!amount.current || amount.current > balance) return;
+        if (!amount || amount > balance) return;
         let isAlert = localStorage.getItem('hidden_alert');
         if (isAlert) {
             isAlert = JSON.parse(isAlert)
@@ -66,7 +67,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                 options: {
                     method: 'POST',
                 },
-                params: { amount: Number(amount.current) }
+                params: { amount: Number(amount) }
             });
             if (status === ApiStatus.SUCCESS) {
                 context.alert.show('success', t('common:success'), message, null, null, () => {
@@ -83,7 +84,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     }
 
     const validator = () => {
-        if (amount.current > balance) {
+        if (amount > balance) {
             return { msg: `${t('nao:maximum_amount')} ${formatNumber(balance, assetNao?.assetDigit)}`, isValid: false };
         }
         return {};
@@ -92,7 +93,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     return (
         <Portal portalId='PORTAL_MODAL'>
             {showAlert && <AlertModal onConfirm={onSave} onClose={() => setShowAlert(false)} t={t} isLock={isLock}
-                amount={amount.current} decimal={assetNao?.assetDigit ?? 8}
+                amount={amount} decimal={assetNao?.assetDigit ?? 8}
                 data={data}
             />}
             <div
@@ -110,7 +111,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                     <div className="px-4 py-6">
                         <label className="text-nao-green text-2xl font-semibold leading-[50px]">{t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO</label>
                         <div className="flex items-center justify-between">
-                            <div className="text-nao-text font-medium leading-6">{isLock ? t('nao:pool:to_lock') : t('nao:pool:to_unlock')}</div>
+                            <div className="text-nao-text font-medium leading-6">{isLock ? t('nao:pool:input_lock') : t('nao:pool:input_unlock')}</div>
                             <div className="flex items-center">
                                 <img src={getS3Url('/images/nao/ic_nao.png')} alt="" width="20" height="20" />
                                 <div className='ml-2 text-lg font-semibold text-nao-blue'>NAO</div>
@@ -121,11 +122,12 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 validator={validator()}
                                 onusMode
                                 thousandSeparator
+                                allowNegative={false}
                                 type="text"
                                 labelClassName="hidden"
                                 className={`flex-grow text-2xl font-semibold text-nao-white w-full `}
                                 containerClassName={`w-full border-none !bg-transparent !p-0`}
-                                value={amount.current}
+                                value={amount}
                                 decimalScale={assetNao?.assetDigit}
                                 onValueChange={onChangeAmount}
                                 renderTail={() => (
@@ -172,16 +174,16 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 <label className="text-sm text-nao-text font-medium leading-6">{t('nao:pool:lock_overview')}</label>
                                 <CardNao noBg stroke="1.5" className="mt-2 !py-5 space-y-2">
                                     <div className="text-sm flex justify-between items-center">
-                                        <div className="text-nao-text font-medium leading-6">{t('common:ext_gate:available')}</div>
+                                        <div className="text-nao-text font-medium leading-6">{t('nao:pool:qty_lock')}</div>
                                         <span className="font-semibold">{formatNumber(data?.availableStaked, assetNao?.assetDigit ?? 8)} NAO</span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_apy_2')}</div>
-                                        <span className="font-semibold">{data ? formatNumber(data?.estimateAPY, 2) : '-'}%</span>
+                                        <span className="font-semibold">{formatNumber(data?.estimateAPY, 2)}%</span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
-                                        <div className="text-nao-text font-medium leading-6">Expected ROI</div>
-                                        <span className="font-semibold">{data ? formatNumber(data?.expectedROI, 0) + ' VNDC' : '-'} </span>
+                                        <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_profit')}</div>
+                                        <span className="font-semibold">~{formatNumber(data?.expectedROI, 0) + ' VNDC'} </span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:duration')}</div>
@@ -194,7 +196,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             <img src={getS3Url('/images/nao/ic_warning.png')} className="mr-3" width={24} height={22} alt="" />
                             {t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}
                         </div>
-                        <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount.current) || amount.current > balance ? 'opacity-70' : ''}`}>
+                        <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount) || amount > balance ? 'opacity-70' : ''}`}>
                             {t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO
                         </ButtonNao>
                     </div>
@@ -219,8 +221,9 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data }) =>
     }, [data])
 
     const revenue = useMemo(() => {
+        if (!data) return 0;
         const _amount = (isLock ? amount : -amount);
-        const ratio = (data.availableStaked + _amount) / (data.totalStaked + _amount)
+        const ratio = (data?.availableStaked + _amount) / (data?.totalStaked + _amount)
         return (data?.estimateNextValue ?? 0) * ratio;
     }, [data])
 

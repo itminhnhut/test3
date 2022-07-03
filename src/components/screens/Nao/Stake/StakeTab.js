@@ -87,7 +87,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                 <StateLockModal isLock={isLock.current}
                     onConfirm={onConfirm} onClose={() => setShowLockModal(false)}
                     assetNao={assetNao} data={dataSource}
-                    balance={isLock.current ? balance : dataSource.availableStaked}
+                    balance={isLock.current ? balance : dataSource?.availableStaked}
                 />}
             <CardNao className="text-center mt-10">
                 <BackgroundImage className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
@@ -99,10 +99,10 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
             <CardNao noBg stroke="1.5" className="pt-9 pb-8 bg-opacity-100">
                 <div className="flex items-center justify-between pb-4">
                     <div className="text-sm font-medium text-nao-text uppercase">{t('nao:pool:est_apy')}</div>
-                    <div className="text-[1.25rem] font-semibold">{dataSource ? formatNumber(dataSource?.estimateAPY, 2) : '-'}%</div>
+                    <div className="text-[1.25rem] font-semibold">{formatNumber(dataSource?.estimateAPY ?? 0, 2)}%</div>
                 </div>
                 <div >
-                    <label className="text-nao-green text-sm font-semibold">{t('nao:pool:nao_earned')}</label>
+                    <label className="text-nao-green text-sm font-semibold">{t('nao:pool:total_staked')}</label>
                     <div className="text-nao-text mt-4 flex items-center justify-between">
                         <div>
                             <div className="font-semibold leading-8 text-2xl">{formatNumber(staked, assetNao?.assetDigit ?? 8)}</div>
@@ -143,7 +143,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                             <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} />
                         </div>
                         <div className="text-nao-green flex items-end space-x-1" onClick={() => setHidden(!hidden)}>
-                            <div className="font-semibold">Hide</div>
+                            <div className="font-semibold">{t('nao:pool:hide')}</div>
                             <div className="w-5 h-5 flex items-center justify-center">
                                 <img className={hidden ? '' : 'rotate-180'} src={getS3Url("/images/nao/ic_sort.png")} alt='' width="10" height="10" />
                             </div>
@@ -157,21 +157,25 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                     <div className="text-nao-white font-semibold text-sm">{formatNumber(staked, assetNao?.assetDigit ?? 8)} NAO</div>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <div className="text-nao-text font-medium text-sm leading-6">Lock duration</div>
+                                    <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:total_users')}</div>
+                                    <div className="text-nao-white font-semibold text-sm">{t('nao:pool:users', { value: formatNumber(dataSource?.totalUser, 0) })}</div>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:pool_duration')}</div>
                                     <div className="text-nao-white font-semibold text-sm">{dataSource?.duration ?? 7} days</div>
                                 </div>
                             </div>
-                            {/* <div className="mt-5 space-x-2 flex items-center text-nao-text">
+                            <div className="mt-5 space-x-2 flex items-center text-nao-text">
                                 <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
-                                    <div>Token Info</div>
+                                    <div>Whitepaper</div>
                                 </div>
                                 <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
-                                    <div>Tutorial</div>
+                                    <div>{t('nao:pool:guide')}</div>
                                 </div>
-                                <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
+                                {/* <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
                                     <div>Contract</div>
-                                </div>
-                            </div> */}
+                                </div> */}
+                            </div>
                         </div>
                     }
                 </div>

@@ -7,7 +7,7 @@ const LayoutNaoToken = ({ children }) => {
     const alert = useRef(null);
 
     return (
-        <div className="bg-nao-bgShadow text-nao-white min-h-full">
+        <div className="bg-nao-bgShadow text-nao-white min-h-full font-inter">
             <AlertContext.Provider value={{
                 alert: alert.current,
             }}>

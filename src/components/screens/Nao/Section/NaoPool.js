@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { TextLiner, CardNao, Divider } from 'components/screens/Nao/NaoStyle';
 import SwiperCore, { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -7,12 +7,29 @@ import { useWindowSize } from 'utils/customHooks';
 import styled from 'styled-components';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
+import fetchApi from 'utils/fetch-api';
+import { API_POOL_INFO } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+
+const getAssetNao = createSelector(
+    [
+        state => state.utils.assetConfig,
+        (utils, params) => params
+    ],
+    (assets, params) => {
+        return assets.find(rs => rs.assetCode === params);
+    }
+);
 
 const NaoPool = () => {
     const { t } = useTranslation();
     const sliderRef = useRef(null);
     const { width } = useWindowSize();
     const arr = [1, 2, 3, 4, 5, 6, 6, 6, 6]
+    const assetNao = useSelector(state => getAssetNao(state, 'NAO'));
+    const [dataSource, setDataSource] = useState([])
 
     const onNavigate = (isNext) => {
         if (sliderRef.current) {
@@ -47,6 +64,23 @@ const NaoPool = () => {
         return result;
     }
 
+    useEffect(() => {
+        getStake();
+    }, [])
+
+    const getStake = async () => {
+        try {
+            const { data } = await fetchApi({
+                url: API_POOL_INFO,
+            });
+            if (data) {
+                setDataSource(data)
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+        }
+    }
 
     return (
         <section id="nao_pool" className="pt-10 sm:pt-20">
