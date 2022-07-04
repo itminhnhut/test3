@@ -93,7 +93,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                 <BackgroundImage className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
                     <img src={getS3Url("/images/nao/ic_nao_large.png")} alt="" width="55" height="55" />
                 </BackgroundImage>
-                <TextLiner className="!text-lg leading-6 !w-full mb-3 !pb-0 pt-8">{t('nao:pool:staking_token')}</TextLiner>
+                <TextLiner className="!text-lg leading-6 !w-full mb-3 !pb-0 pt-8 !normal-case">{t('nao:pool:staking_token')}</TextLiner>
                 <div className="text-nao-grey text-sm px-[26px]">{t('nao:pool:share_revenue')}</div>
             </CardNao>
             <CardNao noBg stroke="1.5" className="pt-9 pb-8 bg-opacity-100">
