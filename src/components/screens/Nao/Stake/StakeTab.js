@@ -117,7 +117,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     <div className="text-[1.25rem] font-semibold">{formatNumber(dataSource?.estimateAPY ?? 0, 2)}%</div>
                 </div>
                 <div >
-                    <label className={`text-nao-green text-sm font-semibold ${language !== 'vi' ? 'capitalize' : ''}`}>{t('nao:pool:total_staked')}</label>
+                    <label className={`text-nao-green text-sm font-semibold ${language !== 'vi' ? 'capitalize' : ''}`}>{t('nao:pool:staked_title')}</label>
                     <div className="text-nao-text mt-4 flex items-center justify-between space-x-4">
                         <div>
                             <div className="font-semibold leading-8 text-2xl break-all">{formatNumber(dataSource?.availableStaked, assetNao?.assetDigit ?? 8)}</div>
@@ -168,7 +168,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                         <div className="mt-4">
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:total_staked')}</div>
+                                    <div className="text-nao-text font-medium text-sm leading-6">{t('nao:pool:total_available_staked')}</div>
                                     <div className="text-nao-white font-semibold text-sm text-right">{formatNumber(staked, assetNao?.assetDigit ?? 8)} NAO</div>
                                 </div>
                                 <div className="flex items-center justify-between">

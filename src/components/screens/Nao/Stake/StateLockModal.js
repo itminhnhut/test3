@@ -61,7 +61,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     }
 
     const onSave = async () => {
-        if (!amount || amount > balance || loading) return;
+        if (!amount || loading || !validator().isValid) return;
         let isAlert = localStorage.getItem('hidden_alert');
         if (isAlert) {
             isAlert = JSON.parse(isAlert)
@@ -98,7 +98,10 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
         if (amount > balance) {
             return { msg: `${t('nao:maximum_amount')} ${formatNumber(balance, assetNao?.assetDigit)}`, isValid: false };
         }
-        return {};
+        if (amount < 500 && isLock) {
+            return { msg: `${t('nao:minimum_amount')} ${formatNumber(500)}`, isValid: false };
+        }
+        return { isValid: true };
     }
 
     return (
@@ -207,7 +210,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             <img src={getS3Url('/images/nao/ic_warning.png')} className="mr-3" width={24} height={22} alt="" />
                             {t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}
                         </div>
-                        <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount) || amount > balance ? 'opacity-70' : ''}`}>
+                        <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount) || !validator()?.isValid ? 'opacity-70' : ''}`}>
                             {t('common:confirm')}
                         </ButtonNao>
                     </div>
