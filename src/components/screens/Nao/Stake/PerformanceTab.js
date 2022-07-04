@@ -28,7 +28,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     <div className="text-nao-grey text-sm">{t('nao:pool:per_description')}</div>
                     <CardNao className="divide-nao-line divide-y mt-6">
                         <div className='pb-4'>
-                            <label className="text-nao-text font-medium leading-6 capitalize">{t('nao:pool:total_staked')}</label>
+                            <label className="text-nao-text font-medium leading-6 ">{t('nao:pool:total_staked')}</label>
                             <div className="mt-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center mr-8">
@@ -46,14 +46,14 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             </div>
                         </div>
                         <div className="py-4">
-                            <label className="text-nao-text font-medium leading-6 capitalize">{t('nao:pool:total_revenue')}</label>
+                            <label className="text-nao-text font-medium leading-6 ">{t('nao:pool:total_revenue')}</label>
                             <div className="flex items-center mt-4">
                                 <div className="text-[22px font-semibold leading-8 mr-2">0 VNDC</div>
 
                             </div>
                         </div>
                         <div className="pt-4">
-                            <label className="text-nao-blue font-medium leading-6 capitalize">{t('nao:pool:per_est_revenue')}</label>
+                            <label className="text-nao-blue font-medium leading-6 ">{t('nao:pool:per_est_revenue')}</label>
                             <div className="flex items-center mt-4">
                                 <div className="text-[22px font-semibold leading-8 mr-2">{data.estimate} VNDC</div>
                             </div>
