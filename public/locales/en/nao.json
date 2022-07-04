@@ -12,7 +12,7 @@
         "total_volume": "Total Volume",
         "total_orders": "Total Trades",
         "total_fee": "Total Fee",
-        "users": "User"
+        "users": "Users"
     },
     "pool": {
         "title": "Governance Pool {{value}}",
