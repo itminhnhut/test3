@@ -152,7 +152,6 @@ const NaoPool = () => {
                         <div className="pt-4">
                             <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
                                 <span className="mr-2">{data.totalUsers}</span>
-                                <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
                             </div>
                             <span className="text-sm text-nao-grey">+{t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 })}</span>
                         </div>
