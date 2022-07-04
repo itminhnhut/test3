@@ -28,7 +28,7 @@ const NaoPerformance = () => {
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
     const filter = useRef(null);
-    const [fee, setFee] = useState('VNDC');
+    const [fee, setFee] = useState(null);
     const [referencePrice, setReferencePrice] = useState({})
     const assetConfig = useSelector(state => state.utils.assetConfig);
 
@@ -76,9 +76,14 @@ const NaoPerformance = () => {
     const assets = useMemo(() => {
         if (!dataSource) return [];
         const assets = [];
+        let first = true
         return Object.keys(dataSource?.feeRevenue).reduce((newItem, item) => {
             const asset = assetConfig.find(rs => rs.id === Number(item));
             if (asset) {
+                if (first && !fee) {
+                    setFee(asset?.assetCode)
+                    first = false;
+                }
                 assets.push({
                     assetCode: asset?.assetCode,
                     assetDigit: asset?.assetDigit,
@@ -168,7 +173,7 @@ const NaoPerformance = () => {
 
 const Days = styled.div.attrs({
     className: 'px-4 py-2 rounded-[6px] cursor-pointer text-nao-white text-sm bg-nao-bg3 select-none text-center'
-})` 
+})`
     background:${({ active }) => active ? `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)` : ''};
     font-weight:${({ active }) => active ? '600' : '400'}
 `

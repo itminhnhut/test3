@@ -23,7 +23,7 @@ const NaoToken = ({ onDownload }) => {
                         <label className="text-sm text-nao-blue font-medium leading-6">{t('nao:nao_token:nao_token')}</label>
                         <div className="pt-2">
                             <div className="text-nao-white font-semibold text-[1.375rem] sm:text-2xl leading-8">1,000 VNDC</div>
-                            <span className="text-sm text-nao-grey">$0,025</span>
+                            <span className="text-sm text-nao-grey">$0.025</span>
                         </div>
                     </div>
                 </CardNao>
