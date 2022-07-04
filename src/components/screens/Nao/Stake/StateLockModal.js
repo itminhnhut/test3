@@ -17,6 +17,7 @@ import Modal from 'components/common/ReModal';
 import CheckBox from 'components/common/CheckBox';
 import { useEffect } from 'react';
 import { addDays } from 'date-fns'
+import { floor } from 'lodash'
 
 
 const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, data, balance = 0 }) => {
@@ -29,13 +30,9 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     const [loading, setLoading] = useState(false);
     const isChangeSlide = useRef(false);
 
-    const formatAmount = (value) => {
-        return +formatNumber(value, assetNao?.assetDigit).replace(/,/g, '')
-    }
-
     const onChangePercent = (x) => {
         isChangeSlide.current = true;
-        const _amount = formatAmount(balance * x / 100);
+        const _amount = floor(balance * x / 100, assetNao?.assetDigit ?? 8);
         setAmount(_amount)
         setPercent(x)
     }

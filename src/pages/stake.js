@@ -8,7 +8,7 @@ import colors from 'styles/colors';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import Portal from 'components/hoc/Portal';
-import { X } from 'react-feather';
+import { X, ArrowLeft } from 'react-feather';
 import classNames from 'classnames';
 import StakeTab from 'components/screens/Nao/Stake/StakeTab';
 import PerformanceTab from 'components/screens/Nao/Stake/PerformanceTab';
@@ -19,6 +19,7 @@ import { API_POOL_INFO } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import { useRouter } from 'next/router'; 'next/router'
 
 const getAssetNao = createSelector(
     [
@@ -39,6 +40,7 @@ const Stake = () => {
     const [dataSource, setDataSource] = useState(null);
     const assetNao = useSelector(state => getAssetNao(state, 'NAO'));
     const refStake = useRef(null);
+    const router = useRouter();
 
     useEffect(() => {
         getStake();
@@ -83,7 +85,10 @@ const Stake = () => {
                         </div>
                     }
                 </div> */}
-                    <div className='flex justify-center py-4'>
+                    <div className='flex items-center justify-center py-4'>
+                        <div className='absolute left-5'>
+                            <ArrowLeft onClick={() => router.back()} />
+                        </div>
                         <label className="text-2xl font-semibold leading-[50px] text-nao-green">{t('nao:governance_pool')}</label>
                     </div>
                     <Tabs tab={tab}>
