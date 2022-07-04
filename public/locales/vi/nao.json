@@ -43,7 +43,7 @@
         "total_revenue": "Tổng lợi nhuận đã nhận",
         "per_est_revenue": "Lợi nhuận tuần này",
         "history_revenue": "Lịch sử lợi nhuận",
-        "history_description": "Lợi nhuận sẽ được chia sẻ vào lúc 00:00 thứ Hai hàng tuần",
+        "history_description": "Lợi nhuận sẽ được chia sẻ vào lúc 07:00 thứ hai hàng tuần",
         "history_nodata": "Chưa có lịch sử lợi nhuận",
         "confirm_lock": "Xác nhận nạp",
         "confirm_unlock": "Xác nhận rút",

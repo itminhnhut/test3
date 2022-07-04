@@ -114,7 +114,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
             <CardNao noBg stroke="1.5" className="pt-9 pb-8 bg-opacity-100">
                 <div className="flex items-center justify-between pb-4">
                     <div className="text-sm font-medium text-nao-text uppercase">{t('nao:pool:est_apy')}</div>
-                    <div className="text-[1.25rem] font-semibold">{formatNumber(dataSource?.estimateAPY ?? 0, 2)}%</div>
+                    <div className="text-[1.25rem] font-semibold">{formatNumber(dataSource?.apy ?? 0, 2)}%</div>
                 </div>
                 <div >
                     <label className={`text-nao-green text-sm font-semibold ${language !== 'vi' ? 'capitalize' : ''}`}>{t('nao:pool:staked_title')}</label>
