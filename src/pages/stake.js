@@ -15,7 +15,7 @@ import PerformanceTab from 'components/screens/Nao/Stake/PerformanceTab';
 import { BackgroundHeader } from 'components/screens/Nao/NaoStyle';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import fetchApi from 'utils/fetch-api';
-import { API_POOL_INFO } from 'redux/actions/apis';
+import { API_POOL_USER_INFO } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -49,7 +49,7 @@ const Stake = () => {
     const getStake = async () => {
         try {
             const { data } = await fetchApi({
-                url: API_POOL_INFO,
+                url: API_POOL_USER_INFO,
             });
             if (data) {
                 setDataSource(data)
