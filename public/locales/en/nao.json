@@ -58,11 +58,16 @@
         "est_profit": "Expected ROI",
         "qty_lock": "Locked amount",
         "hide": "Hide",
+        "show": "Show",
         "stake_now": "Stake now",
         "total_users": "Total user",
         "users": "{{value}} users",
         "guide": "Guide",
-        "you_not_staked": "You have not staked NAO"
+        "you_not_staked": "You have not staked NAO",
+        "stake_success": "Stake Successfully",
+        "unstake_success": "Unstake Successfully",
+        "stake_message": "Congratulations, you have successfully registered to stake",
+        "unstake_message": "Congratulations, you have successfully registered to unstake"
     },
     "nao_token": {
         "title": "buy NAO Token",

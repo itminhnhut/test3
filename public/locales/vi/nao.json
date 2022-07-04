@@ -42,7 +42,7 @@
         "per_est_revenue": "Ước tính lợi nhuận lần tới",
         "history_revenue": "Lịch sử lợi nhuận",
         "history_description": "Lợi nhuận sẽ được chia sẻ vào lúc 00:00 thứ Hai hàng tuần",
-        "history_nodata": "Chưa có lịch sử doanh thu",
+        "history_nodata": "Chưa có lịch sử lợi nhuận",
         "confirm_lock": "Xác nhận nạp",
         "confirm_unlock": "Xác nhận rút",
         "amount_lock": "Số NAO nạp",
@@ -58,11 +58,16 @@
         "est_profit": "Lợi nhuận ước tính",
         "qty_lock": "Số lượng khóa",
         "hide": "Ẩn",
+        "show": "Hiện",
         "stake_now": "Stake NAO ngay",
         "total_users": "Số người tham gia",
         "users": "{{value}} người",
         "guide": "Hướng dẫn",
-        "you_not_staked": "Bạn chưa stake NAO"
+        "you_not_staked": "Bạn chưa stake NAO",
+        "stake_success": "Stake thành công",
+        "unstake_success": "Unstake thành công",
+        "stake_message": "Chúc mừng bạn đã đăng kí stake thành công",
+        "unstake_message": "Chúc mừng bạn đã đăng kí unstake thành công"
     },
     "nao_token": {
         "title": "Mua token NAO",
