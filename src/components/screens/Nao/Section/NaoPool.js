@@ -109,11 +109,14 @@ const NaoPool = () => {
     }
 
     const data = useMemo(() => {
+        const availableStakedVNDC = dataSource?.availableStakedVNDC ?? 0;
         const availableStaked = dataSource?.availableStaked ?? 0;
         const totalStaked = dataSource?.totalStaked ?? 0;
         const pool = availableStaked / totalStaked;
         const percent = (availableStaked / totalStaked) * 100;
         return {
+            availableStakedVNDC: availableStakedVNDC,
+            availableStaked: availableStaked,
             totalStaked: totalStaked,
             totalUsers: formatNumber(dataSource?.totalUser, 0),
             estimate: formatNumber((dataSource?.estimateNextValue ?? 0) * pool, 0),
@@ -141,9 +144,9 @@ const NaoPool = () => {
                         <div className="pt-4">
                             <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
                                 <span className="mr-2">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
-                                <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
+                                <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
-                            <span className="text-sm text-nao-grey">{formatNumber(data.totalStaked* (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)} USDT</span>
+                            <span className="text-sm text-nao-grey">{formatNumber(data.availableStakedVNDC * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)} USDT</span>
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
@@ -162,7 +165,7 @@ const NaoPool = () => {
                         <label className="text-nao-blue text-lg font-medium">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</label>
                         <div className="text-nao-white text-xl font-semibold flex items-center leading-[18px]">
                             <span className="mr-2">{data.estimate}</span>
-                            <img src="/images/nao/ic_nao.png" width={20} height={20} alt="" />
+                            <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
@@ -170,8 +173,8 @@ const NaoPool = () => {
                         <label className="text-nao-text font-medium text-lg">{t('nao:pool:history_revenue')}</label>
                         {listHitory.length > 0 &&
                             <div className="flex space-x-2">
-                                <img onClick={() => onNavigate(false)} className="cursor-pointer" src="/images/nao/ic_chevron.png" width={24} height={24} alt="" />
-                                <img onClick={() => onNavigate(true)} className="rotate-180 cursor-pointer" src="/images/nao/ic_chevron.png" width={24} height={24} alt="" />
+                                <img onClick={() => onNavigate(false)} className="cursor-pointer" src={getS3Url('/images/nao/ic_chevron.png')} width={24} height={24} alt="" />
+                                <img onClick={() => onNavigate(true)} className="rotate-180 cursor-pointer" src={getS3Url('/images/nao/ic_chevron.png')} width={24} height={24} alt="" />
                             </div>
                         }
                     </div>
