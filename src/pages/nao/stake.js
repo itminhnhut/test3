@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken';
 import { useWindowSize } from 'utils/customHooks';
-import SvgMenu from 'src/components/svg/Menu';
+import SvgMenu from 'components/svg/Menu';
 import { getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
