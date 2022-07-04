@@ -28,7 +28,7 @@ const NaoPerformance = () => {
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
     const filter = useRef(null);
-    const [fee, setFee] = useState('VNDC');
+    const [fee, setFee] = useState(null);
     const [referencePrice, setReferencePrice] = useState({})
     const assetConfig = useSelector(state => state.utils.assetConfig);
 
@@ -76,9 +76,14 @@ const NaoPerformance = () => {
     const assets = useMemo(() => {
         if (!dataSource) return [];
         const assets = [];
+        let first = true
         return Object.keys(dataSource?.feeRevenue).reduce((newItem, item) => {
             const asset = assetConfig.find(rs => rs.id === Number(item));
             if (asset) {
+                if (first && !fee) {
+                    setFee(asset?.assetCode)
+                    first = false;
+                }
                 assets.push({
                     assetCode: asset?.assetCode,
                     assetDigit: asset?.assetDigit,
@@ -112,13 +117,13 @@ const NaoPerformance = () => {
                     <label className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
                     <div className="pt-4">
                         <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.notionalValue, 0) + ' VNDC' : '-'}</div>
-                        <span className="text-sm text-nao-grey">{dataSource ? formatPrice(referencePrice[`VNDC/USD`] * dataSource?.notionalValue, 4) + ' USD' : '-'} </span>
+                        <span className="text-sm text-nao-grey">{dataSource ? '$' + formatPrice(referencePrice[`VNDC/USD`] * dataSource?.notionalValue, 3) : '-'} </span>
                     </div>
                 </CardNao>
                 <CardNao>
                     <label className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
                     <div className="pt-4">
-                        <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.count*2, 0) : '-'}</div>
+                        <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}</div>
                         <span className="text-sm text-nao-grey capitalize">{dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}</span>
                     </div>
                 </CardNao>
@@ -168,7 +173,7 @@ const NaoPerformance = () => {
 
 const Days = styled.div.attrs({
     className: 'px-4 py-2 rounded-[6px] cursor-pointer text-nao-white text-sm bg-nao-bg3 select-none text-center'
-})` 
+})`
     background:${({ active }) => active ? `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)` : ''};
     font-weight:${({ active }) => active ? '600' : '400'}
 `

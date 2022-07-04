@@ -140,7 +140,7 @@ const NaoPool = () => {
                         <img src={getS3Url("/images/nao/ic_nao_coming.png")} className="w-full h-full sm:w-[428px] sm:h-[292px]" alt="" />
                     </div>
                 </CardNao> */}
-                <CardNao className="!p-10 sm:flex-none">
+                <CardNao className="sm:!p-10 sm:flex-none">
                     <div>
                         <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:nao_staked')}</label>
                         <div className="pt-4">
@@ -148,7 +148,7 @@ const NaoPool = () => {
                                 <span className="mr-2">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
-                            <span className="text-sm text-nao-grey">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
+                            <span className="text-sm text-nao-grey">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}</span>
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
@@ -162,11 +162,11 @@ const NaoPool = () => {
                         </div>
                     </div>
                 </CardNao>
-                <CardNao className="!p-10">
-                    <div className="flex items-center justify-between">
-                        <label className="text-nao-blue text-lg font-medium">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</label>
-                        <div className="text-nao-white text-xl font-semibold flex items-center leading-[18px] text-right">
-                            <span className="mr-2">{data.estimate} VNDC</span>
+                <CardNao className="sm:!p-10">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                        <label className="text-nao-blue font-medium sm:text-lg">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</label>
+                        <div className="text-nao-white text-lg sm:text-xl font-semibold flex items-center leading-[18px] text-right">
+                            <span className="mr-2 ">{data.estimate} VNDC</span>
                             {/* <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" /> */}
                         </div>
                     </div>

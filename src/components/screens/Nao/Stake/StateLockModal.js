@@ -216,7 +216,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                             <img src={getS3Url('/images/nao/ic_warning.png')} className="mr-3" width={24} height={22} alt="" />
                             {t(`nao:pool:description_${isLock ? 'lock' : 'unlock'}`)}
                         </div>
-                        <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount) || !validator()?.isValid ? 'opacity-70' : ''}`}>
+                        <ButtonNao onClick={onSave} className={`py-3 mt-8 font-semibold ${!Number(amount) || !validator()?.isValid ? 'opacity-30' : ''}`}>
                             {t('common:confirm')}
                         </ButtonNao>
                     </div>
@@ -278,7 +278,7 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
                 <div onClick={onClose} className="h-[50px] w-full flex items-center justify-center bg-onus-bg2 rounded-md">
                     {t('nao:cancel')}
                 </div>
-                <div onClick={onConfirm} className={`h-[50px] w-full flex items-center justify-center bg-onus-base rounded-md ${loading ? 'opacity-[0.7]' : ''}`}>
+                <div onClick={onConfirm} className={`h-[50px] w-full flex items-center justify-center bg-onus-base rounded-md ${loading ? 'opacity-30' : ''}`}>
                     {t('common:confirm')}
                 </div>
             </div>
