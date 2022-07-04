@@ -14,7 +14,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         const percent = (availableStaked / totalStaked) * 100;
         return {
             percent: percent,
-            estimate: formatNumber((dataSource?.estimateNextValue ?? 0) * pool, 0),
+            estimate: formatNumber((dataSource?.poolRevenueThisWeek ?? 0) * pool, 0),
             totalStaked,
             availableStaked
         }

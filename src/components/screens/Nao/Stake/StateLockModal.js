@@ -199,11 +199,11 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_apy_2')}</div>
-                                        <span className="font-semibold">{formatNumber(data?.estimateAPY, 2)}%</span>
+                                        <span className="font-semibold">{formatNumber(data?.apy, 2)}%</span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_profit')}</div>
-                                        <span className="font-semibold">~{formatNumber(data?.expectedROI, 0) + ' VNDC'} </span>
+                                        <span className="font-semibold">~{formatNumber(data?.profitEstimated, 0) + ' VNDC'} </span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:lock_duration')}</div>
@@ -246,7 +246,7 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
         const availableStaked = data?.availableStaked ?? 0;
         const totalStaked = data?.totalStaked ?? 0;
         const ratio = (availableStaked + _amount) / (totalStaked + _amount);
-        return (data?.estimateNextValue ?? 0) * ratio;
+        return (data?.poolRevenueThisWeek ?? 0) * ratio;
     }, [data])
 
     return (
