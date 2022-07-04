@@ -143,7 +143,7 @@ const NaoPool = () => {
                         <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:nao_staked')}</label>
                         <div className="pt-4">
                             <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
-                                <span className="mr-2">{formatNumber(data.availableStaked, assetNao?.assetDigit ?? 8)}</span>
+                                <span className="mr-2">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
                             <span className="text-sm text-nao-grey">{formatNumber(data.availableStakedVNDC * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)} USDT</span>
