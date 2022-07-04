@@ -64,8 +64,9 @@ const Stake = () => {
 
     return (
         <LayoutNaoToken>
-            <BackgroundHeader className="stake_header ">
-                {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
+            <div className="bg-nao-bgShadow sticky top-0 z-10">
+                <BackgroundHeader className="stake_header">
+                    {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                     language={language} t={t} />
                 <div className="flex items-center justify-between px-4 pt-6">
                     <img src={getS3Url("/images/nao/ic_nao.png")} alt="" width={40} height={40} />
@@ -82,14 +83,15 @@ const Stake = () => {
                         </div>
                     }
                 </div> */}
-                <div className='flex justify-center py-4'>
-                    <label className="text-2xl font-semibold leading-[50px] text-nao-green">{t('nao:governance_pool')}</label>
-                </div>
-                <Tabs tab={tab}>
-                    <TabItem onClick={() => setTab(0)} active={tab === 0}>{t("nao:pool:stake_nao")}</TabItem>
-                    <TabItem onClick={() => setTab(1)} active={tab === 1}>{t("nao:pool:performance")}</TabItem>
-                </Tabs>
-            </BackgroundHeader>
+                    <div className='flex justify-center py-4'>
+                        <label className="text-2xl font-semibold leading-[50px] text-nao-green">{t('nao:governance_pool')}</label>
+                    </div>
+                    <Tabs tab={tab}>
+                        <TabItem onClick={() => setTab(0)} active={tab === 0}>{t("nao:pool:stake_nao")}</TabItem>
+                        <TabItem onClick={() => setTab(1)} active={tab === 1}>{t("nao:pool:performance")}</TabItem>
+                    </Tabs>
+                </BackgroundHeader>
+            </div>
             <div className="h-full w-full px-4 py-6">
                 <div className={tab !== 0 ? 'hidden' : ''}>
                     <StakeTab ref={refStake} assetNao={assetNao} dataSource={dataSource} getStake={getStake} />

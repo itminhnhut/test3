@@ -48,7 +48,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     const onChangeAmount = (e) => {
         const _amount = e.floatValue ?? '';
         setAmount(_amount)
-        const per = +(!_amount ? 0 : _amount * 100 / balance).toFixed(0);
+        const per = balance ? +(!_amount ? 0 : _amount * 100 / balance).toFixed(0) : 0;
         setPercent(per);
     }
 
@@ -72,7 +72,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                 params: { amount: Number(amount) }
             });
             if (status === ApiStatus.SUCCESS) {
-                context.alert.show('success', t('common:success'), message, null, null, () => {
+                context.alert.show('success', t(`nao:pool:${isLock ? 'stake' : 'unstake'}_success`), t(`nao:pool:${isLock ? 'stake' : 'unstake'}_message`), null, null, () => {
                     if (onConfirm) onConfirm();
                 })
             } else {

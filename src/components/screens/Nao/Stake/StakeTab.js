@@ -26,7 +26,7 @@ const getBalance = createSelector(
 
 const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
     const { t, i18n: { language } } = useTranslation();
-    const [hidden, setHidden] = useState(true);
+    const [hidden, setHidden] = useState(false);
     const [showLockModal, setShowLockModal] = useState(false);
     const isLock = useRef(false);
     const [referencePrice, setReferencePrice] = useState({})
@@ -80,6 +80,21 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
         setShowLockModal(false)
     }
 
+    const onRedirect = (key) => {
+        let url = '';
+        switch (key) {
+            case 'whitepaper':
+                url = 'https://naotoken.gitbook.io/du-an-nao'
+                break;
+            case 'contract':
+                url = 'https://bscscan.com/address/0x07430e1482574389bc0e5d33cfb65280e881ee8c'
+                break;
+            default:
+                break;
+        }
+        window.open(url, '_blank');
+    }
+
     const staked = dataSource?.totalStaked ?? 0;
     return (
         <div className="flex flex-wrap gap-6">
@@ -105,8 +120,8 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     <label className={`text-nao-green text-sm font-semibold ${language !== 'vi' ? 'capitalize' : ''}`}>{t('nao:pool:total_staked')}</label>
                     <div className="text-nao-text mt-4 flex items-center justify-between space-x-4">
                         <div>
-                            <div className="font-semibold leading-8 text-2xl break-all">{formatNumber(staked, assetNao?.assetDigit ?? 8)}</div>
-                            <span className="text-sm font-medium">${formatNumber(staked * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
+                            <div className="font-semibold leading-8 text-2xl break-all">{formatNumber(dataSource?.availableStaked, assetNao?.assetDigit ?? 8)}</div>
+                            <span className="text-sm font-medium">${formatNumber(staked * 1200 * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
                         </div>
                         <div className="flex  space-x-[10px]">
                             <div className={`w-[49px] h-[49px] ${staked ? 'border-nao-green' : 'border-nao-text'} border-[1.5px] rounded-xl flex justify-center items-center`}>
@@ -140,10 +155,10 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 <img src={getS3Url("/images/nao/ic_refresh.png")} alt="" width="12" height="12" />
                                 <span className="text-nao-green text-sm font-semibold ml-1">{t('nao:pool:auto')}</span>
                             </div>
-                            <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} />
+                            {/* <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} /> */}
                         </div>
                         <div className="text-nao-green flex items-end space-x-1" onClick={() => setHidden(!hidden)}>
-                            <div className="font-semibold">{t('nao:pool:hide')}</div>
+                            <div className="font-semibold">{t(`nao:pool:${!hidden ? 'hide' : 'show'}`)}</div>
                             <div className="w-5 h-5 flex items-center justify-center">
                                 <img className={hidden ? '' : 'rotate-180'} src={getS3Url("/images/nao/ic_sort.png")} alt='' width="10" height="10" />
                             </div>
@@ -166,11 +181,11 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 </div>
                             </div>
                             <div className="mt-5 space-x-2 flex items-center text-nao-text">
-                                <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
+                                <div onClick={() => onRedirect('whitepaper')} className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
                                     <div>Whitepaper</div>
                                 </div>
-                                <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
-                                    <div>{t('nao:pool:guide')}</div>
+                                <div onClick={() => onRedirect('contract')} className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
+                                    <div>Contract</div>
                                 </div>
                                 {/* <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
                                     <div>Contract</div>

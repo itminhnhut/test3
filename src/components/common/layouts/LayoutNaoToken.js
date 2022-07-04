@@ -1,6 +1,6 @@
 import React, { useRef, createContext } from 'react';
 import { PORTAL_MODAL_ID } from 'constants/constants';
-import AlertModal from 'components/screens/Mobile/AlertModal';
+import AlertNaoModal from 'components/screens/Nao/AlertNaoModal';
 import Head from 'next/head';
 import { useEffect } from 'react';
 export const AlertContext = createContext(null);
@@ -25,7 +25,7 @@ const LayoutNaoToken = ({ children }) => {
                     {children}
                 </AlertContext.Provider>
                 <div id={`${PORTAL_MODAL_ID}`} />
-                <AlertModal ref={alert} />
+                <AlertNaoModal ref={alert} />
             </div>
         </>
     );

@@ -28,7 +28,7 @@ export const Divider = styled.div.attrs({
 `
 
 export const ButtonNao = styled.div.attrs({
-    className: 'text-center flex items-center justify-center bg-nao-bg4'
+    className: 'text-center flex items-center justify-center bg-nao-bg4 select-none'
 })`
    background:${({ active, isActive }) => isActive ? (active ? `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)` : '') : `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)`};
    border-radius: 12px;
