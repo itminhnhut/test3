@@ -164,8 +164,7 @@ const NaoPool = () => {
                     <div className="flex items-center justify-between">
                         <label className="text-nao-blue text-lg font-medium">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</label>
                         <div className="text-nao-white text-xl font-semibold flex items-center leading-[18px]">
-                            <span className="mr-2">{data.estimate}</span>
-                            <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
+                            <span className="mr-2">{data.estimate} VNDC</span>
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
