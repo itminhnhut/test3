@@ -158,7 +158,7 @@ const NaoPerformance = () => {
                     </div>
                     <div className="pt-4">
                         <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{_fee ? formatNumber(_fee?.value, _fee?.assetDigit) + ' ' + _fee?.assetCode : '-'}</div>
-                        <span className="text-sm text-nao-grey">0.036%</span>
+                        <span className="text-sm text-nao-grey">{(_fee?.assetCode || fee) === 'NAO' ? '0.036' : '0.06'}%</span>
                     </div>
                 </CardNao>
             </div>

@@ -81,6 +81,7 @@
     "privacy_policy": "Chính sách bảo mật",
     "credit_agreement": "Hợp đồng tín dụng",
     "maximum_amount": "Số lượng tối đa là {{max}}",
+    "minimum_amount": "Số lượng tối thiểu là {{max}}",
     "cancel": "Hủy",
     "available": "Khả dụng"
 }

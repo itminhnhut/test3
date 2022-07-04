@@ -110,6 +110,7 @@ const NaoPool = () => {
 
     const data = useMemo(() => {
         const availableStakedVNDC = dataSource?.availableStakedVNDC ?? 0;
+        const totalStakedVNDC = dataSource?.totalStakedVNDC ?? 0;
         const availableStaked = dataSource?.availableStaked ?? 0;
         const totalStaked = dataSource?.totalStaked ?? 0;
         const pool = availableStaked / totalStaked;
@@ -118,6 +119,7 @@ const NaoPool = () => {
             availableStakedVNDC: availableStakedVNDC,
             availableStaked: availableStaked,
             totalStaked: totalStaked,
+            totalStakedVNDC: totalStakedVNDC,
             totalUsers: formatNumber(dataSource?.totalUser, 0),
             estimate: formatNumber((dataSource?.estimateNextValue ?? 0) * pool, 0),
         }
@@ -146,7 +148,7 @@ const NaoPool = () => {
                                 <span className="mr-2">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
-                            <span className="text-sm text-nao-grey">{formatNumber(data.availableStakedVNDC * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)} USDT</span>
+                            <span className="text-sm text-nao-grey">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
@@ -164,9 +166,9 @@ const NaoPool = () => {
                 <CardNao className="!p-10">
                     <div className="flex items-center justify-between">
                         <label className="text-nao-blue text-lg font-medium">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</label>
-                        <div className="text-nao-white text-xl font-semibold flex items-center leading-[18px]">
-                            <span className="mr-2">{data.estimate}</span>
-                            <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
+                        <div className="text-nao-white text-xl font-semibold flex items-center leading-[18px] text-right">
+                            <span className="mr-2">{data.estimate} VNDC</span>
+                            {/* <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" /> */}
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
