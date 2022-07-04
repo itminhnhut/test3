@@ -121,7 +121,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     <div className="text-nao-text mt-4 flex items-center justify-between space-x-4">
                         <div>
                             <div className="font-semibold leading-8 text-2xl break-all">{formatNumber(dataSource?.availableStaked, assetNao?.assetDigit ?? 8)}</div>
-                            <span className="text-sm font-medium">${formatNumber(staked * 1200 * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
+                            <span className="text-sm font-medium">${formatNumber((dataSource?.availableStaked ?? 0) * 1200 * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
                         </div>
                         <div className="flex  space-x-[10px]">
                             <div className={`w-[49px] h-[49px] ${staked ? 'border-nao-green' : 'border-nao-text'} border-[1.5px] rounded-xl flex justify-center items-center`}>
