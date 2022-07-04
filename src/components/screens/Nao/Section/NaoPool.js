@@ -121,7 +121,7 @@ const NaoPool = () => {
             totalStaked: totalStaked,
             totalStakedVNDC: totalStakedVNDC,
             totalUsers: formatNumber(dataSource?.totalUser, 0),
-            estimate: formatNumber((dataSource?.estimateNextValue ?? 0) * pool, 0),
+            estimate: formatNumber((dataSource?.estimateNextValue ?? 0), 0),
         }
     }, [dataSource])
 

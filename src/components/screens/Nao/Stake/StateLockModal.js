@@ -152,9 +152,15 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 renderText={e => console.log(e)}
                             />
                         </CardNao>
-                        <div className="text-sm font-medium leading-6 flex justify-end">
-                            <div className="text-nao-text">{t('nao:available')}:</div>&nbsp;
-                            <span>{formatNumber(balance, assetNao?.assetDigit ?? 0)} NAO</span>
+                        <div className="flex items-center justify-between">
+                            {isLock ?
+                                <div className="text-nao-yellow text-sm italic">{t('nao:minimun', { value: '500 NAO' })}</div>
+                                : <div />
+                            }
+                            <div className="text-sm font-medium leading-6 flex justify-end">
+                                <div className="text-nao-text">{t('nao:available')}:</div>&nbsp;
+                                <span>{formatNumber(balance, assetNao?.assetDigit ?? 0)} NAO</span>
+                            </div>
                         </div>
                         <div className='mt-8'>
                             <Slider
