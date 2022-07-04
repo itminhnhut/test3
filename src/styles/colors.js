@@ -78,10 +78,12 @@ const colors = {
         bg: '#619095',
         bg2: '#12182B',
         bg3: '#192138',
+        bg4: '#202E42',
         text: '#B9CCFF',
         grey: '#7686B1',
         white: '#F6F6F6',
         blue: '#27CEE0',
+        green: '#49E8D5',
         line: '#1C2644',
         border: '#4AEDFF'
     }

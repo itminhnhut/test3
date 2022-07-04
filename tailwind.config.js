@@ -49,14 +49,18 @@ const commonColors = {
         bg: '#619095',
         bg2: '#12182B',
         bg3: '#192138',
+        bg4: '#202E42',
         text: '#B9CCFF',
         grey: '#7686B1',
         white: '#F6F6F6',
         blue: '#27CEE0',
+        green: '#49E8D5',
+        yellow: '#F3BA2F',
         line: '#1C2644',
         border: '#4AEDFF',
         bgModal: '#161D32',
-        bgShadow: '#000921'
+        bgShadow: '#000921',
+
     }
 };
 
@@ -394,6 +398,7 @@ module.exports = {
                 'features': '0px 10px 30px rgba(89, 111, 153, 0.05)',
                 mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
+                nao: '0px 4px 4px rgba(0, 0, 0, 0.25)'
             },
         },
     },
