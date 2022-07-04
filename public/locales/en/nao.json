@@ -81,7 +81,7 @@
     "privacy_policy": "Privacy Policy",
     "credit_agreement": "Credit Agreement",
     "maximum_amount": "Maximum amount is {{max}}",
-    "minimum_amount": "Ninimum amount is {{max}}",
+    "minimum_amount": "Minimum amount is {{max}}",
     "cancel": "Cancel",
     "available": "Available"
 }
