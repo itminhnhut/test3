@@ -8,8 +8,9 @@ import colors from 'styles/colors';
 import Portal from 'components/hoc/Portal';
 import classNames from 'classnames';
 import { X } from 'react-feather';
-import { Divider } from 'components/screens/Nao/NaoStyle';
+import { Divider, ButtonNao } from 'components/screens/Nao/NaoStyle';
 import { getS3Url } from 'redux/actions/utils';
+import { useRouter } from 'next/router'
 const category = [
     { label: 'performance', el: 'nao_performance' },
     { label: 'governance_pool', el: 'nao_pool' },
@@ -22,6 +23,7 @@ const NaoHeader = ({ onDownload }) => {
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize();
     const [visible, setVisible] = useState(false);
+    const router = useRouter();
 
     const scrollToView = (item) => {
         if (!item?.el && item.link) {
@@ -45,15 +47,16 @@ const NaoHeader = ({ onDownload }) => {
                     {category.map(item => (
                         <div key={item.label} onClick={() => scrollToView(item)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
                     ))}
+                    <div className="flex items-center p-2 bg-nao-bg2 rounded-[4px] select-none space-x-2">
+                        <Language onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
+                            active={language === LANGUAGE_TAG.VI}>VI</Language>
+                        <Language onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
+                            active={language === LANGUAGE_TAG.EN}>EN</Language>
+                    </div>
                 </>
                 }
-                <div className="flex items-center p-2 bg-nao-bg2 rounded-[4px] select-none space-x-2">
-                    <Language onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
-                        active={language === LANGUAGE_TAG.VI}>VI</Language>
-                    <Language onClick={() => language !== LANGUAGE_TAG.EN && onChangeLang()}
-                        active={language === LANGUAGE_TAG.EN}>EN</Language>
-                </div>
-                {width <= 768 &&
+                {width <= 768 && <>
+                    <ButtonNao onClick={() => router.push('/nao/stake')} className="!rounded-md h-10 px-6 text-nao-white">Stake NAO</ButtonNao>
                     <div
                         className='relative'
                         onClick={() => setVisible(true)}
@@ -64,6 +67,7 @@ const NaoHeader = ({ onDownload }) => {
                             color={colors.nao.text}
                         />
                     </div>
+                </>
                 }
             </div>
         </div>
