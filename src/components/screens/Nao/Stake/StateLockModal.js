@@ -249,10 +249,10 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
                     <label className="text-nao-grey">{t(`nao:pool:amount_${isLock ? 'lock' : 'unlock'}`)}</label>
                     <span>{formatNumber(amount, decimal)} NAO</span>
                 </div>
-                <div className="flex items-center justify-between py-3">
+                {/* <div className="flex items-center justify-between py-3">
                     <label className="text-nao-grey">{t('nao:pool:est_revenue')}</label>
                     <span>{formatNumber(revenue, decimal)} NAO</span>
-                </div>
+                </div> */}
                 <div className="flex items-center justify-between pt-3">
                     <label className="text-nao-grey">{isLock ? t('nao:pool:lock_duration') : t('nao:pool:time_to_get_back')}</label>
                     <span>{isLock ? `${data?.duration ?? 7} ${t('nao:pool:days')}` : formatTime(timeTogetBack, 'HH:mm:ss dd/MM/yyyy')} </span>
