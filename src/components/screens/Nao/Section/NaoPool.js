@@ -148,7 +148,7 @@ const NaoPool = () => {
                                 <span className="mr-2">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
-                            <span className="text-sm text-nao-grey">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
+                            <span className="text-sm text-nao-grey">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}</span>
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
