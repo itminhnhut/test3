@@ -38,6 +38,8 @@
         "per_overview": "Overview",
         "per_description": "Your profit statistics",
         "total_staked": "Total staked",
+        "staked_title": "NAO Staked",
+        "total_available_staked": "Total staked",
         "total_revenue": "total revenue received",
         "per_est_revenue": "Estimated Revenue in the next EPOSH",
         "history_revenue": "History Revenue",
