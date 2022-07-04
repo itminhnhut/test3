@@ -27,9 +27,16 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     const [amount, setAmount] = useState(0);
     const [showAlert, setShowAlert] = useState(false);
     const [loading, setLoading] = useState(false);
+    const isChangeSlide = useRef(false);
+
+    const formatAmount = (value) => {
+        return +formatNumber(value, assetNao?.assetDigit).replace(/,/g, '')
+    }
 
     const onChangePercent = (x) => {
-        setAmount(Number((balance * x / 100).toFixed(assetNao?.assetDigit ?? 8)))
+        isChangeSlide.current = true;
+        const _amount = formatAmount(balance * x / 100);
+        setAmount(_amount)
         setPercent(x)
     }
 
@@ -46,6 +53,10 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
     }, [])
 
     const onChangeAmount = (e) => {
+        if (isChangeSlide.current) {
+            isChangeSlide.current = false;
+            return;
+        }
         const _amount = e.floatValue ?? '';
         setAmount(_amount)
         const per = balance ? +(!_amount ? 0 : _amount * 100 / balance).toFixed(0) : 0;
