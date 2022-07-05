@@ -52,7 +52,7 @@ const NaoPool = () => {
                     {dataFilter.map((item, index) => (
                         <>
                             {index !== 0 && <Divider />}
-                            <div className='flex items-center justify-between'>
+                            <div className='flex items-center justify-between flex-wrap gap-1'>
                                 <span className="text-sm text-nao-grey">{formatTime(item.fromTime, 'dd/MM/yyyy HH:mm')} - {formatTime(item.toTime, 'dd/MM/yyyy HH:mm')}</span>
                                 <div className="flex items-center space-x-6">
                                     <div className="text-nao-white text-lg font-semibold flex items-center">
@@ -175,7 +175,7 @@ const NaoPool = () => {
                             <span className="text-sm text-nao-grey">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}</span>
                         </div>
                     </div>
-                    <div className="h-[1px] bg-nao-line my-8"></div>
+                    <div className="h-[1px] bg-nao-line my-6 sm:my-8"></div>
                     <div>
                         <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:participants')}</label>
                         <div className="pt-4">
@@ -207,7 +207,7 @@ const NaoPool = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="h-[1px] bg-nao-line my-8"></div>
+                    <div className="h-[1px] bg-nao-line my-6 sm:my-8"></div>
                     <div className="flex items-center justify-between">
                         <label className="text-nao-text font-medium text-lg">{t('nao:pool:revenue_history')}</label>
                         {listHitory.length > 0 &&
