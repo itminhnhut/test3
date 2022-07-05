@@ -53,14 +53,14 @@ const NaoPool = () => {
                         <>
                             {index !== 0 && <Divider />}
                             <div className='flex items-center justify-between flex-wrap gap-1'>
-                                <span className="text-sm text-nao-grey">{formatTime(item.fromTime, 'dd/MM/yyyy HH:mm')} - {formatTime(item.toTime, 'dd/MM/yyyy HH:mm')}</span>
-                                <div className="flex items-center space-x-6">
-                                    <div className="text-nao-white text-lg font-semibold flex items-center">
-                                        <span className="mr-2">{formatNumber(item?.interest['NAO'], assetNao?.assetDigit ?? 8)}</span>
+                                <span className="text-sm text-nao-grey">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</span>
+                                <div className="flex items-center justify-between space-x-6 w-full sm:w-max">
+                                    <div className="text-nao-white text-lg font-semibold flex items-center justify-end sm:min-w-[150px]">
+                                        <span className="mr-2">{formatNumber(item?.interest['NAO'] * 100, assetNao?.assetDigit ?? 8)}</span>
                                         <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
                                     </div>
-                                    <div className="text-nao-white text-lg font-semibold flex items-center">
-                                        <span className="mr-2">{formatNumber(item?.interest['VNDC'], 0)}</span>
+                                    <div className="text-nao-white text-lg font-semibold flex items-center justify-end sm:min-w-[150px]">
+                                        <span className="mr-2">{formatNumber(item?.interest['VNDC'] * 100, 0)}</span>
                                         <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
                                     </div>
                                 </div>
@@ -166,7 +166,7 @@ const NaoPool = () => {
                 </CardNao> */}
                 <CardNao className="sm:!p-10 sm:flex-none">
                     <div>
-                        <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:nao_staked')}</label>
+                        <label className="text-nao-text font-medium text-lg">{t('nao:pool:nao_staked')}</label>
                         <div className="pt-4">
                             <div className="text-lg font-semibold pb-1 flex items-center space-x-2">
                                 <span>{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
@@ -177,11 +177,10 @@ const NaoPool = () => {
                     </div>
                     <div className="h-[1px] bg-nao-line my-6 sm:my-8"></div>
                     <div>
-                        <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:participants')}</label>
+                        <label className="text-nao-text font-medium text-lg">{t('nao:pool:participants')}</label>
                         <div className="pt-4">
                             <div className="text-lg font-semibold pb-1 flex items-center space-x-2">
                                 <span>{data.totalUsers}</span>
-                                <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
                             <span className="text-sm text-nao-grey">+{t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 })}</span>
                         </div>
@@ -211,13 +210,13 @@ const NaoPool = () => {
                     <div className="flex items-center justify-between">
                         <label className="text-nao-text font-medium text-lg">{t('nao:pool:revenue_history')}</label>
                         {listHitory.length > 0 &&
-                            <div className="flex space-x-2">
+                            <div className="flex space-x-2 opacity-50">
                                 <img onClick={() => onNavigate(false)} className="cursor-pointer" src={getS3Url('/images/nao/ic_chevron.png')} width={24} height={24} alt="" />
                                 <img onClick={() => onNavigate(true)} className="rotate-180 cursor-pointer" src={getS3Url('/images/nao/ic_chevron.png')} width={24} height={24} alt="" />
                             </div>
                         }
                     </div>
-                    <div className="pt-5">
+                    <div className="pt-4 sm:pt-5">
                         {listHitory.length > 0 ?
                             <Swiper
                                 ref={sliderRef}

@@ -16,7 +16,7 @@ const category = [
     { label: 'performance', el: 'nao_performance' },
     { label: 'governance_pool', el: 'nao_pool' },
     { label: 'buy_token', el: 'nao_token' },
-    { label: 'Stake Nao', link: '/nao/stake' }
+    { label: 'Stake NAO', link: '/nao/stake' }
 ];
 
 const NaoHeader = ({ onDownload }) => {
@@ -43,8 +43,8 @@ const NaoHeader = ({ onDownload }) => {
             <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                 language={language} t={t} scrollToView={scrollToView} onDownload={onDownload} />
             <img src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
-            <div className={`flex items-center text-nao-text font-medium ${width > 768 ? 'space-x-10' : 'space-x-4'}`}>
-                {width > 768 && <>
+            <div className={`flex items-center text-nao-text font-medium ${width > 800 ? 'space-x-10' : 'space-x-4'}`}>
+                {width > 800 && <>
                     {category.map(item => (
                         <div key={item.label} onClick={() => scrollToView(item)} className="cursor-pointer">{t(`nao:${item.label}`)}</div>
                     ))}
@@ -56,7 +56,7 @@ const NaoHeader = ({ onDownload }) => {
                     </div>
                 </>
                 }
-                {width <= 768 && <>
+                {width <= 800 && <>
                     <ButtonNao onClick={() => router.push('/nao/stake')} className="!rounded-md h-10 px-6 text-nao-white">Stake NAO</ButtonNao>
                     <div
                         className='relative'
