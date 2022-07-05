@@ -6,9 +6,8 @@ const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/co
 
 export const getBlogApi = (apiEndpoint, params) => {
     if (!apiEndpoint) return '';
-    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${
-        process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
-    }${params || ''}`;
+    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
+        }${params || ''}`;
 };
 
 export const API_REGISTER = API_PREFIX + 'user/register';
@@ -205,3 +204,6 @@ export const API_POOL_INFO = API_V3_PREFIX + 'pool/info';
 export const API_POOL_USER_INFO = API_V3_PREFIX + 'pool/user-info';
 export const API_POOL_STAKE = API_V3_PREFIX + 'pool/place-stake';
 export const API_POOL_UN_STAKE = API_V3_PREFIX + 'pool/un-stake';
+export const API_POOL_SHARE_HISTORIES = API_V3_PREFIX + 'pool/share-revenue-histories';
+export const API_POOL_USER_SHARE_HISTORIES = API_V3_PREFIX + 'pool/user-share-revenue-histories';
+
