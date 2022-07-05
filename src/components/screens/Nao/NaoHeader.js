@@ -28,7 +28,7 @@ const NaoHeader = memo(({ onDownload }) => {
 
     const scrollToView = (item) => {
         if (!item?.el && item.link) {
-            window.open(item.link, item.options)
+            item?.options === '_self' ? router.push(item.link) : window.open(item.link, item.options);
         } else {
             const _el = document.querySelector('#' + item.el);
             if (_el) {
