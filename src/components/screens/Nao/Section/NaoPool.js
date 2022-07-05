@@ -166,12 +166,12 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help_blue.png')} height={20} width={20} />
                             </div>
                         </div>
-                        <div className="flex items-center space-x-6">
-                            <div className="text-nao-white text-lg sm:text-[22px] font-semibold flex items-center leading-[18px] text-right space-x-2">
+                        <div className="flex items-center space-x-6 justify-between w-full sm:w-max">
+                            <div className="text-nao-white text-lg sm:text-[22px] font-semibold flex items-center leading-[18px] text-right space-x-2 justify-end sm:min-w-[150px]">
                                 <span>{data.estimateNao}</span>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
-                            <div className="text-nao-white text-lg sm:text-[22px] font-semibold flex items-center leading-[18px] text-right space-x-2">
+                            <div className="text-nao-white text-lg sm:text-[22px] font-semibold flex items-center leading-[18px] text-right space-x-2 justify-end sm:min-w-[150px]">
                                 <span>{data.estimate}</span>
                                 <img src={getS3Url('/images/nao/ic_vndc.png')} width={20} height={20} alt="" />
                             </div>

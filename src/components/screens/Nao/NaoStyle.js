@@ -52,7 +52,7 @@ export const Progressbar = styled.div.attrs({
 export const Tooltip = ({ id }) => {
     return (
         <CTooltip id={id} place="top" effect="solid"
-            className="!opacity-100 !rounded-lg !-mt-5 max-w-[300px] sm:w-full"
+            className="!opacity-100 !rounded-lg !-mt-5 max-w-[250px] sm:max-w sm:w-full"
             arrowColor={colors.onus.bg2}
             backgroundColor={colors.onus.bg2}
         />
