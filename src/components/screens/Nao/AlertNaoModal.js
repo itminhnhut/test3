@@ -1,10 +1,10 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState, memo } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 
-const AlertModal = forwardRef((props, ref) => {
+const AlertModal = memo(forwardRef((props, ref) => {
     const { t } = useTranslation();
     const [isVisible, setVisible] = useState(false);
     const [height, setHeight] = useState(362 / 2);
@@ -109,6 +109,6 @@ const AlertModal = forwardRef((props, ref) => {
             </div>
         </Modal>
     );
-});
+}));
 
 export default AlertModal;

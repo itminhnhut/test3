@@ -10,27 +10,13 @@ import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_POOL_INFO, API_GET_REFERENCE_CURRENCY, API_POOL_SHARE_HISTORIES } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
 import TableNoData from 'components/common/table.old/TableNoData';
 import { useRouter } from 'next/router'
 
-const getAssetNao = createSelector(
-    [
-        state => state.utils.assetConfig,
-        (utils, params) => params
-    ],
-    (assets, params) => {
-        return assets.find(rs => rs.assetCode === params);
-    }
-);
-
-const NaoPool = () => {
+const NaoPool = ({ dataSource, assetNao }) => {
     const { t } = useTranslation();
     const sliderRef = useRef(null);
     const { width } = useWindowSize();
-    const assetNao = useSelector(state => getAssetNao(state, 'NAO'));
-    const [dataSource, setDataSource] = useState([])
     const [referencePrice, setReferencePrice] = useState({})
     const [listHitory, setListHitory] = useState([]);
     const router = useRouter();
@@ -50,7 +36,7 @@ const NaoPool = () => {
             result.push(<SwiperSlide key={i}>
                 <div className="flex flex-col  w-full justify-between">
                     {dataFilter.map((item, index) => (
-                        <>
+                        <div key={index}>
                             {index !== 0 && <Divider />}
                             <div className='flex items-center justify-between flex-wrap gap-1'>
                                 <span className="text-sm text-nao-grey">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</span>
@@ -65,7 +51,7 @@ const NaoPool = () => {
                                     </div>
                                 </div>
                             </div>
-                        </>
+                        </div>
                     ))}
                 </div>
             </SwiperSlide>
@@ -75,24 +61,9 @@ const NaoPool = () => {
     }
 
     useEffect(() => {
-        getStake();
         getRef();
         getListHistory();
     }, [])
-
-    const getStake = async () => {
-        try {
-            const { data } = await fetchApi({
-                url: API_POOL_INFO,
-            });
-            if (data) {
-                setDataSource(data)
-            }
-        } catch (e) {
-            console.log(e)
-        } finally {
-        }
-    }
 
     const getRef = async (day) => {
         try {

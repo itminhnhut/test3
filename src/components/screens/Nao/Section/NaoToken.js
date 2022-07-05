@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { TextLiner, CardNao } from 'components/screens/Nao/NaoStyle';
 import { useWindowSize } from 'utils/customHooks';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 
-const NaoToken = ({ onDownload }) => {
+const NaoToken = memo(({ onDownload }) => {
     const { width } = useWindowSize();
     const { t } = useTranslation();
 
@@ -40,6 +40,6 @@ const NaoToken = ({ onDownload }) => {
             </div>
         </section>
     );
-};
+});
 
 export default NaoToken;

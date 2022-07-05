@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, memo } from 'react';
 import { TextLiner, CardNao } from 'components/screens/Nao/NaoStyle';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -24,7 +24,7 @@ const days = [
 ]
 
 
-const NaoPerformance = () => {
+const NaoPerformance = memo(() => {
     const { t, i18n: { language } } = useTranslation()
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -171,7 +171,7 @@ const NaoPerformance = () => {
             </div>
         </section>
     );
-};
+});
 
 const Days = styled.div.attrs({
     className: 'px-4 py-2 rounded-[6px] cursor-pointer text-nao-white text-sm bg-nao-bg3 select-none text-center'

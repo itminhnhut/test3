@@ -141,7 +141,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                             </div>
                         </div>
                     </div>
-                    {!staked &&
+                    {dataSource?.isNewUser &&
                         <div className="mt-4">
                             <label className="text-nao-text font-medium leading-6 uppercase">Stake NAO</label>
                             <ButtonNao onClick={() => onShowLockModal(true)} className="h-12 mt-2 font-semibold">Stake</ButtonNao>

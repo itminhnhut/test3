@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { getS3Url } from 'redux/actions/utils';
+import { getS3Url, formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { Progressbar } from 'components/screens/Nao/NaoStyle';
 import { useSelector } from 'react-redux';
 
-const NaoInfo = () => {
+const NaoInfo = ({ dataSource, assetNao }) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
+
+    const holders_wallet = useMemo(() => {
+        return 22250000 - 6250000 - dataSource?.totalStaked
+    }, [dataSource])
 
     return (
         <section id="nao_info" className="flex items-center justify-between pt-10 sm:pt-20 flex-wrap gap-8">
@@ -50,21 +54,21 @@ const NaoInfo = () => {
                     <div className="flex items-center justify-between text-sm space-x-10">
                         <label className="text-nao-text font-medium">{t('nao:holders_wallet')}</label>
                         <div className="flex items-center space-x-2">
-                            <div className='font-semibold'>2,034,238,000</div>
+                            <div className='font-semibold'>{formatNumber(holders_wallet, assetNao?.assetDigit ?? 8)}</div>
                             <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                         </div>
                     </div>
                     <div className="flex items-center justify-between text-sm space-x-10">
                         <label className="text-nao-text font-medium">{t('nao:liq_pools')}</label>
                         <div className="flex items-center space-x-2">
-                            <div className='font-semibold'>2,034,238,000</div>
+                            <div className='font-semibold'>6,250,000</div>
                             <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                         </div>
                     </div>
                     <div className="flex items-center justify-between text-sm space-x-10">
                         <label className="text-nao-text font-medium">{t('nao:governance_pool')}</label>
                         <div className="flex items-center space-x-2">
-                            <div className='font-semibold'>2,034,238,000</div>
+                            <div className='font-semibold'>{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
                             <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                         </div>
                     </div>
