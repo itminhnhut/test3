@@ -193,7 +193,7 @@ const NaoPool = () => {
                         <div className="space-x-3 flex items-center">
                             <label className="text-nao-blue font-medium sm:text-lg">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</label>
                             <div data-tip={t('nao:pool:tooltip_revenue_history')} data-for="tooltip-revenue-history" >
-                                <img className="min-w-[20px]" src={('/images/nao/ic_help_blue.png')} height={20} width={20} />
+                                <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help_blue.png')} height={20} width={20} />
                             </div>
                         </div>
                         <div className="flex items-center space-x-6">
