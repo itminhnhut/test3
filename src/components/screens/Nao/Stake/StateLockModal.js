@@ -200,6 +200,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                         </div>
                         {isLock &&
                             <div className="mt-8">
+                                <Tooltip id="tooltip-profit-est" />
                                 <label className="text-sm text-nao-text font-medium leading-6">{t('nao:pool:lock_overview')}</label>
                                 <CardNao noBg stroke="1.5" className="mt-2 !py-5 space-y-2">
                                     <div className="text-sm flex justify-between items-center">
@@ -210,7 +211,6 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_apy_2')}</div>
                                         <span className="font-semibold">{formatNumber(data?.apy, 2)}%</span>
                                     </div>
-                                    <Tooltip id="tooltip-profit-est" />
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="space-x-2 flex items-center">
                                             <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_profit')}</div>

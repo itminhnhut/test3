@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken'
@@ -10,9 +10,44 @@ import NaoPool from 'components/screens/Nao/Section/NaoPool';
 import NaoToken from 'components/screens/Nao/Section/NaoToken';
 import { getS3Url } from 'redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
+import fetchApi from 'utils/fetch-api';
+import { API_POOL_INFO } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+
+const getAssetNao = createSelector(
+    [
+        state => state.utils.assetConfig,
+        (utils, params) => params
+    ],
+    (assets, params) => {
+        return assets.find(rs => rs.assetCode === params);
+    }
+);
 
 const NaoDashboard = () => {
     const { width } = useWindowSize();
+    const [dataSource, setDataSource] = useState([])
+    const assetNao = useSelector(state => getAssetNao(state, 'NAO'));
+
+    useEffect(() => {
+        getStake();
+    }, [])
+
+    const getStake = async () => {
+        try {
+            const { data } = await fetchApi({
+                url: API_POOL_INFO,
+            });
+            if (data) {
+                setDataSource(data)
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+        }
+    }
 
     const onDownload = (key) => {
         let url = '';
@@ -35,9 +70,9 @@ const NaoDashboard = () => {
                 <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
                     <NaoHeader onDownload={onDownload} />
                     <div className="nao_section">
-                        <NaoInfo />
+                        <NaoInfo dataSource={dataSource} assetNao={assetNao} />
                         <NaoPerformance />
-                        <NaoPool />
+                        <NaoPool dataSource={dataSource} assetNao={assetNao} />
                         <NaoToken onDownload={onDownload} />
                     </div>
                 </div>

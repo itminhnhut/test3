@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import styled from 'styled-components';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
@@ -12,14 +12,14 @@ import { Divider, ButtonNao } from 'components/screens/Nao/NaoStyle';
 import { getS3Url } from 'redux/actions/utils';
 import { useRouter } from 'next/router'
 const category = [
-    { label: 'Whitepaper', link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics' },
+    { label: 'Whitepaper', link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics', options: '_blank' },
     { label: 'performance', el: 'nao_performance' },
     { label: 'governance_pool', el: 'nao_pool' },
     { label: 'buy_token', el: 'nao_token' },
-    { label: 'Stake NAO', link: '/nao/stake' }
+    { label: 'Stake NAO', link: '/nao/stake', options: '_self' }
 ];
 
-const NaoHeader = ({ onDownload }) => {
+const NaoHeader = memo(({ onDownload }) => {
     const [currentLocale, onChangeLang] = useLanguage()
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize();
@@ -28,7 +28,7 @@ const NaoHeader = ({ onDownload }) => {
 
     const scrollToView = (item) => {
         if (!item?.el && item.link) {
-            window.open(item.link, '_blank')
+            window.open(item.link, item.options)
         } else {
             const _el = document.querySelector('#' + item.el);
             if (_el) {
@@ -73,7 +73,7 @@ const NaoHeader = ({ onDownload }) => {
             </div>
         </div>
     );
-};
+});
 
 function useOutsideAlerter(ref, cb) {
     useEffect(() => {

@@ -97,7 +97,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             {listHitory.map((item, index) => {
                                 return (
                                     <>
-                                        {index !== listHitory.length - 1 && <Divider className="w-full !my-4" />}
+                                        {index !== 0 && <Divider className="w-full !my-4" />}
                                         <div>
                                             <div className="text-nao-grey text-sm">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</div>
                                             <div className="mt-1 flex items-center justify-between">

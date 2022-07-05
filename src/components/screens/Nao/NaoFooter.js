@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 
-const NaoFooter = () => {
+const NaoFooter = memo(() => {
     const { t } = useTranslation();
-
     const onRedirect = (key) => {
         let url = '';
         switch (key) {
@@ -50,6 +49,6 @@ const NaoFooter = () => {
             </div>
         </div>
     );
-};
+});
 
 export default NaoFooter;
