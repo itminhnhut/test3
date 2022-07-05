@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import CTooltip from 'components/common/Tooltip';
 
 export const TextLiner = styled.div.attrs({
-    className: 'text-[1.375rem] sm:text-2xl font-semibold pb-[6px] w-max text-nao-white'
+    className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-nao-white'
 })`
     ${'' /* background:linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
     -webkit-background-clip: text;
