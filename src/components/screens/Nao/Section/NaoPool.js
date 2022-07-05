@@ -56,11 +56,11 @@ const NaoPool = () => {
                                 <span className="text-sm text-nao-grey">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</span>
                                 <div className="flex items-center justify-between space-x-6 w-full sm:w-max">
                                     <div className="text-nao-white text-lg font-semibold flex items-center justify-end sm:min-w-[150px]">
-                                        <span className="mr-2">{formatNumber(item?.interest['NAO'] * 100, assetNao?.assetDigit ?? 8)}</span>
+                                        <span className="mr-2">{formatNumber(item?.interest['NAO'], assetNao?.assetDigit ?? 8)}</span>
                                         <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
                                     </div>
                                     <div className="text-nao-white text-lg font-semibold flex items-center justify-end sm:min-w-[150px]">
-                                        <span className="mr-2">{formatNumber(item?.interest['VNDC'] * 100, 0)}</span>
+                                        <span className="mr-2">{formatNumber(item?.interest['VNDC'], 0)}</span>
                                         <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
                                     </div>
                                 </div>
