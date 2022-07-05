@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-import { CardNao, TextLiner, ButtonNao, Divider } from 'components/screens/Nao/NaoStyle';
+import { CardNao, TextLiner, ButtonNao, Divider, Tooltip } from 'components/screens/Nao/NaoStyle';
 import styled from 'styled-components';
 import { Minus, Plus } from 'react-feather';
 import { getS3Url, formatNumber, getLoginUrl } from 'redux/actions/utils';
@@ -12,7 +12,6 @@ import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useTranslation } from 'next-i18next';
-
 
 const getBalance = createSelector(
     [
@@ -109,7 +108,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                     <img src={getS3Url("/images/nao/ic_nao_large.png")} alt="" width="55" height="55" />
                 </BackgroundImage>
                 <TextLiner className="!text-lg leading-6 !w-full mb-3 !pb-0 pt-8 !normal-case">{t('nao:pool:staking_token')}</TextLiner>
-                <div className="text-nao-grey text-sm px-[26px]">{t('nao:pool:share_revenue')}</div>
+                <div className="text-nao-grey text-sm px-[26px]">{t('nao:pool:revenue_share_from_trade')}</div>
             </CardNao>
             <CardNao noBg stroke="1.5" className="pt-9 pb-8 bg-opacity-100">
                 <div className="flex items-center justify-between pb-4">
@@ -155,7 +154,10 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                 <img src={getS3Url("/images/nao/ic_refresh.png")} alt="" width="12" height="12" />
                                 <span className="text-nao-green text-sm font-semibold ml-1">{t('nao:pool:auto')}</span>
                             </div>
-                            {/* <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} /> */}
+                            <Tooltip id="tooltip-auto" />
+                            <div data-tip={t('nao:pool:tooltip_auto')} data-for="tooltip-auto" >
+                                <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} />
+                            </div>
                         </div>
                         <div className="text-nao-green flex items-end space-x-1" onClick={() => setHidden(!hidden)}>
                             <div className="font-semibold">{t(`nao:pool:${!hidden ? 'hide' : 'show'}`)}</div>
@@ -185,7 +187,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                                     <div>Whitepaper</div>
                                 </div>
                                 <div onClick={() => onRedirect('contract')} className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
-                                    <div>Contract</div>
+                                    <div>Smart contract</div>
                                 </div>
                                 {/* <div className="w-full py-2 px-5 bg-nao-bg4 flex justify-center items-center text-xs rounded-md">
                                     <div>Contract</div>

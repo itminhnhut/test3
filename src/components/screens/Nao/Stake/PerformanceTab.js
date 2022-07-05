@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { CardNao, TextLiner, ButtonNao, Divider, Progressbar } from 'components/screens/Nao/NaoStyle';
+import { CardNao, TextLiner, ButtonNao, Divider, Progressbar, Tooltip } from 'components/screens/Nao/NaoStyle';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableNoData from 'components/common/table.old/TableNoData';
+
 const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
     const { t } = useTranslation();
     const [listHitory, setListHitory] = useState([]);
@@ -21,7 +22,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
     }, [dataSource])
 
     return (
-        data.totalStaked ?
+        !dataSource?.isNewUser ?
             <>
                 <div>
                     <TextLiner className="pb-1">{t('nao:pool:per_overview')}</TextLiner>
@@ -53,7 +54,13 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             </div>
                         </div>
                         <div className="pt-4">
-                            <label className="text-nao-blue font-medium leading-6 ">{t('nao:pool:per_est_revenue')}</label>
+                            <Tooltip id="tooltip-est-this-week" />
+                            <div className="space-x-2 flex items-center">
+                                <label className="text-nao-text font-medium leading-6 ">{t('nao:pool:per_est_revenue')}</label>
+                                <div data-tip={t('nao:pool:tooltip_est_this_week')} data-for="tooltip-est-this-week" >
+                                    <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} />
+                                </div>
+                            </div>
                             <div className="flex items-center mt-4">
                                 <div className="text-[22px font-semibold leading-8 mr-2">{data.estimate} VNDC</div>
                             </div>
@@ -96,7 +103,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     <img src={getS3Url("/images/nao/ic_nao_coming.png")} className='opacity-[0.4]' alt="" width="100" height="193" width="283" />
                     <div className='text-center mt-6'>
                         <TextLiner className="!text-lg !w-full !pb-0 !normal-case">{t('nao:pool:you_not_staked')}</TextLiner>
-                        <div className="text-sm text-nao-grey mt-4">{t('nao:pool:share_revenue')}</div>
+                        <div className="text-sm text-nao-grey mt-4">{t('nao:pool:share_revenue_nodata')}</div>
                     </div>
                 </div>
                 <div className={`absolute w-full ${isSmall ? 'bottom-[30px] ' : '-ml-4 bottom-[60px] '}`}>

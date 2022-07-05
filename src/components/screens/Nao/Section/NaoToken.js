@@ -20,10 +20,10 @@ const NaoToken = ({ onDownload }) => {
                 <CardNao className={`!flex-row items-center !justify-start ${width > 1080 ? '!flex-none' : ''}`}>
                     <img src={getS3Url("/images/nao/ic_nao_large.png")} alt="" width={60} height={60} />
                     <div className="flex flex-col pl-6">
-                        <label className="text-sm text-nao-blue font-medium leading-6">{t('nao:nao_token:nao_token')}</label>
-                        <div className="pt-2">
+                        <label className="text-nao-text text-sm font-medium leading-6">{t('nao:nao_token:nao_token')}</label>
+                        <div className="pt-3">
                             <div className="text-nao-white font-semibold text-[1.375rem] sm:text-2xl leading-8">1,000 VNDC</div>
-                            <span className="text-sm text-nao-grey">$0.025</span>
+                            <span className="text-sm text-nao-grey leading-6">$0.025</span>
                         </div>
                     </div>
                 </CardNao>

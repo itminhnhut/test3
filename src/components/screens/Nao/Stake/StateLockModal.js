@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo, useRef, useContext } from 'react
 import Portal from 'components/hoc/Portal';
 import classNames from 'classnames';
 import { getS3Url, formatNumber, formatTime } from 'redux/actions/utils';
-import { BackgroundHeader, CardNao, ButtonNao } from 'components/screens/Nao/NaoStyle';
+import { BackgroundHeader, CardNao, ButtonNao, Tooltip } from 'components/screens/Nao/NaoStyle';
 import Slider from 'components/trade/InputSlider'
 import colors from 'styles/colors';
 import { ThumbLabel } from 'components/trade/StyleInputSlider';
@@ -104,6 +104,15 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
         return { isValid: true };
     }
 
+
+    // const overview = useMemo(() => {
+    //     const available = (data?.availableStaked ?? 0) + amount;
+    //     return {
+    //         available: available,
+    //         estimate:
+    //     }
+    // }, [amount, data])
+    // console.log(overview)
     return (
         <Portal portalId='PORTAL_MODAL'>
             {showAlert && <AlertModal onConfirm={onSave} onClose={() => setShowAlert(false)} t={t} isLock={isLock}
@@ -201,8 +210,14 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                         <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_apy_2')}</div>
                                         <span className="font-semibold">{formatNumber(data?.apy, 2)}%</span>
                                     </div>
+                                    <Tooltip id="tooltip-profit-est" />
                                     <div className="text-sm flex justify-between items-center">
-                                        <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_profit')}</div>
+                                        <div className="space-x-2 flex items-center">
+                                            <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_profit')}</div>
+                                            <div data-tip={t('nao:pool:tooltip_profit_est')} data-for="tooltip-profit-est" >
+                                                <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} />
+                                            </div>
+                                        </div>
                                         <span className="font-semibold">~{formatNumber(data?.profitEstimated, 0) + ' VNDC'} </span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
