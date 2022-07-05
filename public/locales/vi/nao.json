@@ -91,5 +91,7 @@
     "minimum_amount": "Số lượng tối thiểu là {{min}}",
     "minimun": "Tối thiểu: {{value}}",
     "cancel": "Hủy",
-    "available": "Khả dụng"
+    "available": "Khả dụng",
+    "holders_wallet": "Ví holder",
+    "liq_pools": "Pool thanh khoản"
 }

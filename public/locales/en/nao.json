@@ -1,17 +1,17 @@
 {
     "performance": "Performance",
-    "governance_pool": "Governance Pool",
+    "governance_pool": "Governance pool",
     "buy_token": "Buy Token",
-    "project_info": "Project Information",
-    "circulating_supply": "Circulating Supply",
-    "distributed_today": "Distributed Today",
+    "project_info": "Project information",
+    "circulating_supply": "Circulating supply",
+    "distributed_today": "Distributed today",
     "coming_soon": "Coming soon",
     "onus_performance": {
         "title": "ONUS Futures performance",
         "description": "Update information about ONUS Futures product",
-        "total_volume": "Total Volume",
-        "total_orders": "Total Trades",
-        "total_fee": "Total Fee",
+        "total_volume": "Total volume",
+        "total_orders": "Total trades",
+        "total_fee": "Total fee",
         "users": "Users"
     },
     "pool": {
@@ -91,5 +91,7 @@
     "minimum_amount": "Minimum amount is {{min}}",
     "minimun": "Minimum: {{value}}",
     "cancel": "Cancel",
-    "available": "Available"
+    "available": "Available",
+    "holders_wallet": "Holders wallet",
+    "liq_pools": "Liquidity pools"
 }
