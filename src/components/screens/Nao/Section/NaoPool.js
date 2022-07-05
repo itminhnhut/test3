@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { TextLiner, CardNao, Divider } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, Divider, ButtonNao, Tooltip } from 'components/screens/Nao/NaoStyle';
 import SwiperCore, { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
@@ -8,12 +8,12 @@ import styled from 'styled-components';
 import { getS3Url, formatNumber, formatTime } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
-import { API_POOL_INFO, API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import { API_POOL_INFO, API_GET_REFERENCE_CURRENCY, API_POOL_SHARE_HISTORIES } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import TableNoData from 'components/common/table.old/TableNoData';
-import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 const getAssetNao = createSelector(
     [
@@ -29,11 +29,11 @@ const NaoPool = () => {
     const { t } = useTranslation();
     const sliderRef = useRef(null);
     const { width } = useWindowSize();
-    const arr = [1, 2, 3, 4, 5, 6, 6, 6, 6]
     const assetNao = useSelector(state => getAssetNao(state, 'NAO'));
     const [dataSource, setDataSource] = useState([])
     const [referencePrice, setReferencePrice] = useState({})
     const [listHitory, setListHitory] = useState([]);
+    const router = useRouter();
 
     const onNavigate = (isNext) => {
         if (sliderRef.current) {
@@ -43,20 +43,26 @@ const NaoPool = () => {
 
     const renderSlide = () => {
         const size = 3;
-        const page = Array.isArray(arr) && Math.ceil(arr.length / size)
+        const page = Array.isArray(listHitory) && Math.ceil(listHitory.length / size)
         const result = [];
         for (let i = 0; i < page; i++) {
-            const dataFilter = arr.slice(i * size, (i + 1) * size);
+            const dataFilter = listHitory.slice(i * size, (i + 1) * size);
             result.push(<SwiperSlide key={i}>
                 <div className="flex flex-col  w-full justify-between">
                     {dataFilter.map((item, index) => (
                         <>
                             {index !== 0 && <Divider />}
                             <div className='flex items-center justify-between'>
-                                <span className="text-sm text-nao-grey">10/5/2022 - 17/5/2022</span>
-                                <div className="text-nao-white text-lg font-semibold flex items-center">
-                                    <span className="mr-2">100,034,238</span>
-                                    <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                <span className="text-sm text-nao-grey">{formatTime(item.fromTime, 'dd/MM/yyyy HH:mm')} - {formatTime(item.toTime, 'dd/MM/yyyy HH:mm')}</span>
+                                <div className="flex items-center space-x-6">
+                                    <div className="text-nao-white text-lg font-semibold flex items-center">
+                                        <span className="mr-2">{formatNumber(item?.interest['NAO'], assetNao?.assetDigit ?? 8)}</span>
+                                        <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                    </div>
+                                    <div className="text-nao-white text-lg font-semibold flex items-center">
+                                        <span className="mr-2">{formatNumber(item?.interest['VNDC'], 0)}</span>
+                                        <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
+                                    </div>
                                 </div>
                             </div>
                         </>
@@ -71,6 +77,7 @@ const NaoPool = () => {
     useEffect(() => {
         getStake();
         getRef();
+        getListHistory();
     }, [])
 
     const getStake = async () => {
@@ -108,6 +115,21 @@ const NaoPool = () => {
         }
     }
 
+    const getListHistory = async () => {
+        try {
+            const { data, status } = await fetchApi({
+                url: API_POOL_SHARE_HISTORIES,
+            });
+            if (status === ApiStatus.SUCCESS && Array.isArray(data) && data) {
+                setListHitory(data);
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+
+        }
+    }
+
     const data = useMemo(() => {
         const availableStakedVNDC = dataSource?.availableStakedVNDC ?? 0;
         const totalStakedVNDC = dataSource?.totalStakedVNDC ?? 0;
@@ -122,16 +144,18 @@ const NaoPool = () => {
             totalStakedVNDC: totalStakedVNDC,
             totalUsers: formatNumber(dataSource?.totalUser, 0),
             estimate: formatNumber((dataSource?.poolRevenueThisWeek ?? 0), 0),
+            estimateNao: formatNumber((dataSource?.poolRevenueThisWeekNAO ?? 0), assetNao?.assetDigit ?? 8),
         }
     }, [dataSource])
 
     return (
         <section id="nao_pool" className="pt-10 sm:pt-20">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center flex-wrap justify-between gap-4">
                 <div>
                     <TextLiner className="normal-case">{t('nao:pool:title')}</TextLiner>
                     <span className="text-nao-grey">{t('nao:pool:description')}</span>
                 </div>
+                <ButtonNao className="py-2 px-7 !rounded-md text-sm font-semibold leading-6" onClick={() => router.push('/nao/stake')}>Stake NAO</ButtonNao>
             </div>
             <div className="pt-6 flex items-center flex-wrap gap-[21px]">
                 {/* <CardNao className="!flex-row items-center !justify-start relative flex-wrap">
@@ -144,8 +168,8 @@ const NaoPool = () => {
                     <div>
                         <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:nao_staked')}</label>
                         <div className="pt-4">
-                            <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
-                                <span className="mr-2">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
+                            <div className="text-lg font-semibold pb-1 flex items-center space-x-2">
+                                <span>{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
                             <span className="text-sm text-nao-grey">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}</span>
@@ -155,24 +179,37 @@ const NaoPool = () => {
                     <div>
                         <label className="text-nao-text font-medium text-lg capitalize">{t('nao:pool:participants')}</label>
                         <div className="pt-4">
-                            <div className="text-nao-blue text-lg font-semibold pb-1 flex items-center">
-                                <span className="mr-2">{data.totalUsers}</span>
+                            <div className="text-lg font-semibold pb-1 flex items-center space-x-2">
+                                <span>{data.totalUsers}</span>
+                                <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                             </div>
                             <span className="text-sm text-nao-grey">+{t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 })}</span>
                         </div>
                     </div>
                 </CardNao>
-                <CardNao className="sm:!p-10">
+                <CardNao className="sm:!p-10 sm:min-h-[344px] !justify-start">
+                    <Tooltip id="tooltip-revenue-history" />
                     <div className="flex items-center justify-between flex-wrap gap-2">
-                        <label className="text-nao-blue font-medium sm:text-lg">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</label>
-                        <div className="text-nao-white text-lg sm:text-xl font-semibold flex items-center leading-[18px] text-right">
-                            <span className="mr-2 ">{data.estimate} VNDC</span>
-                            {/* <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" /> */}
+                        <div className="space-x-3 flex items-center">
+                            <label className="text-nao-blue font-medium sm:text-lg">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</label>
+                            <div data-tip={t('nao:pool:tooltip_revenue_history')} data-for="tooltip-revenue-history" >
+                                <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help_blue.png')} height={20} width={20} />
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-6">
+                            <div className="text-nao-white text-lg sm:text-[22px] font-semibold flex items-center leading-[18px] text-right space-x-2">
+                                <span>{data.estimateNao}</span>
+                                <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
+                            </div>
+                            <div className="text-nao-white text-lg sm:text-[22px] font-semibold flex items-center leading-[18px] text-right space-x-2">
+                                <span>{data.estimate}</span>
+                                <img src={getS3Url('/images/nao/ic_vndc.png')} width={20} height={20} alt="" />
+                            </div>
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-line my-8"></div>
                     <div className="flex items-center justify-between">
-                        <label className="text-nao-text font-medium text-lg">{t('nao:pool:history_revenue')}</label>
+                        <label className="text-nao-text font-medium text-lg">{t('nao:pool:revenue_history')}</label>
                         {listHitory.length > 0 &&
                             <div className="flex space-x-2">
                                 <img onClick={() => onNavigate(false)} className="cursor-pointer" src={getS3Url('/images/nao/ic_chevron.png')} width={24} height={24} alt="" />
@@ -180,21 +217,22 @@ const NaoPool = () => {
                             </div>
                         }
                     </div>
-                    <div className="pt-5 flex items-center justify-between">
+                    <div className="pt-5">
                         {listHitory.length > 0 ?
                             <Swiper
                                 ref={sliderRef}
-                                loop={true}
+                                loop={false}
                                 lazy grabCursor
                                 className={`mySwiper`}
                                 slidesPerView={1}
+                                spaceBetween={10}
                             >
                                 {renderSlide()}
 
                             </Swiper>
                             :
                             <div className={`flex items-center justify-center flex-col m-auto`}>
-                                <Image src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
+                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
                                 <div className="text-xs text-nao-grey mt-1">{t('nao:pool:history_nodata')}</div>
                             </div>
                         }

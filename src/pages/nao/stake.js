@@ -89,7 +89,7 @@ const Stake = () => {
                         <div className='absolute left-5'>
                             <ArrowLeft onClick={() => router.back()} />
                         </div>
-                        <label className="text-2xl font-semibold leading-[50px] text-nao-green">{t('nao:governance_pool')}</label>
+                        <label className="text-[20px] font-semibold leading-[50px] text-nao-green">{t('nao:governance_pool')}</label>
                     </div>
                     <Tabs tab={tab}>
                         <TabItem onClick={() => setTab(0)} active={tab === 0}>{t("nao:pool:stake_nao")}</TabItem>

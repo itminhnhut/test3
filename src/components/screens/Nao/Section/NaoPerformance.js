@@ -13,6 +13,7 @@ import { formatNumber, formatPrice, getS3Url } from 'redux/actions/utils';
 import { DefaultFuturesFee } from 'redux/actions/const';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import colors from 'styles/colors';
 
 const days = [
     { en: 'Today', vi: 'Hôm nay', value: 'd' },
@@ -40,6 +41,7 @@ const NaoPerformance = () => {
     const getData = async (day) => {
         if (filter.current === day) return;
         filter.current = day;
+        setLoading(true)
         try {
             const data = await fetchApi({
                 url: API_NAO_DASHBOARD_STATISTIC,
@@ -49,7 +51,7 @@ const NaoPerformance = () => {
             setDataSource(!(data?.error || data?.status) ? data : null)
         } catch (e) {
         } finally {
-            if (loading) setLoading(false);
+            setLoading(false);
         }
     }
 
@@ -124,13 +126,13 @@ const NaoPerformance = () => {
                     <label className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
                     <div className="pt-4">
                         <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}</div>
-                        <span className="text-sm text-nao-grey capitalize">{dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}</span>
+                        <span className="text-sm text-nao-grey">{dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}</span>
                     </div>
                 </CardNao>
-                <CardNao noBg className="">
+                <CardNao noBg>
                     <div className="flex items-center justify-between">
                         <label className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
-                        <Popover className="relative">
+                        <Popover className="relative flex">
                             {({ open, close }) => (
                                 <>
                                     <Popover.Button >
@@ -174,7 +176,7 @@ const NaoPerformance = () => {
 const Days = styled.div.attrs({
     className: 'px-4 py-2 rounded-[6px] cursor-pointer text-nao-white text-sm bg-nao-bg3 select-none text-center'
 })`
-    background:${({ active }) => active ? `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)` : ''};
+    background:${({ active }) => active ? colors.nao.blue2 : ''};
     font-weight:${({ active }) => active ? '600' : '400'}
 `
 

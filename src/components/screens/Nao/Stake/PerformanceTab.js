@@ -1,11 +1,34 @@
-import React, { useState, useMemo } from 'react';
-import { CardNao, TextLiner, ButtonNao, Divider, Progressbar } from 'components/screens/Nao/NaoStyle';
-import { formatNumber, getS3Url } from 'redux/actions/utils';
+import React, { useState, useMemo, useEffect } from 'react';
+import { CardNao, TextLiner, ButtonNao, Divider, Progressbar, Tooltip } from 'components/screens/Nao/NaoStyle';
+import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableNoData from 'components/common/table.old/TableNoData';
+import fetchApi from 'utils/fetch-api';
+import { API_POOL_USER_SHARE_HISTORIES } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+
 const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
     const { t } = useTranslation();
     const [listHitory, setListHitory] = useState([]);
+
+    useEffect(() => {
+        getListHistory();
+    }, [])
+
+    const getListHistory = async () => {
+        try {
+            const { data, status } = await fetchApi({
+                url: API_POOL_USER_SHARE_HISTORIES,
+            });
+            if (status === ApiStatus.SUCCESS && Array.isArray(data) && data) {
+                setListHitory(data);
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+
+        }
+    }
 
     const data = useMemo(() => {
         const availableStaked = dataSource?.availableStaked ?? 0;
@@ -21,7 +44,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
     }, [dataSource])
 
     return (
-        data.totalStaked ?
+        !dataSource?.isNewUser ?
             <>
                 <div>
                     <TextLiner className="pb-1">{t('nao:pool:per_overview')}</TextLiner>
@@ -53,7 +76,13 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                             </div>
                         </div>
                         <div className="pt-4">
-                            <label className="text-nao-blue font-medium leading-6 ">{t('nao:pool:per_est_revenue')}</label>
+                            <Tooltip id="tooltip-est-this-week" />
+                            <div className="space-x-2 flex items-center">
+                                <label className="text-nao-text font-medium leading-6 ">{t('nao:pool:per_est_revenue')}</label>
+                                <div data-tip={t('nao:pool:tooltip_est_this_week')} data-for="tooltip-est-this-week" >
+                                    <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} />
+                                </div>
+                            </div>
                             <div className="flex items-center mt-4">
                                 <div className="text-[22px font-semibold leading-8 mr-2">{data.estimate} VNDC</div>
                             </div>
@@ -65,28 +94,33 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     <div className="text-nao-grey text-sm">{t('nao:pool:history_description')}</div>
                     {listHitory.length > 0 ?
                         <CardNao className="mt-6">
-                            <div>
-                                <div className="text-nao-grey text-sm">10/06/2022 - 17/06/2022</div>
-                                <div className="flex items-center mt-1">
-                                    <div className="text-lg font-semibold leading-7 mr-2">100,034,238</div>
-                                    <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
-                                </div>
-                            </div>
-                            <Divider className="w-full !my-4" />
-                            <div>
-                                <div className="text-nao-grey text-sm">10/06/2022 - 17/06/2022</div>
-                                <div className="flex items-center mt-1">
-                                    <div className="text-lg font-semibold leading-7 mr-2">100,034,238</div>
-                                    <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
-                                </div>
-                            </div>
+                            {listHitory.map((item, index) => {
+                                return (
+                                    <>
+                                        {index !== listHitory.length - 1 && <Divider className="w-full !my-4" />}
+                                        <div>
+                                            <div className="text-nao-grey text-sm">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</div>
+                                            <div className="mt-1 flex items-center justify-between">
+                                                <div className="flex items-center">
+                                                    <div className="text-lg font-semibold leading-7 mr-2">{formatNumber(item?.interest['NAO'], assetNao?.assetDigit ?? 8)}</div>
+                                                    <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                                </div>
+                                                <div className="flex items-center">
+                                                    <div className="text-lg font-semibold leading-7 mr-2">{formatNumber(item?.interest['VNDC'], 0)}</div>
+                                                    <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )
+                            })}
                         </CardNao>
                         :
                         <div className="mt-6 flex flex-col justify-center items-center">
-                            <TableNoData
-                                isMobile
-                                title={t('nao:pool:history_nodata')}
-                                className="h-full min-h-[300px]" />
+                            <div className={`flex items-center justify-center flex-col m-auto h-full min-h-[300px]`}>
+                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={130} height={130} />
+                                <div className="text-xs text-nao-grey mt-1">{t('nao:pool:history_nodata')}</div>
+                            </div>
                         </div>
                     }
                 </div>
@@ -96,7 +130,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     <img src={getS3Url("/images/nao/ic_nao_coming.png")} className='opacity-[0.4]' alt="" width="100" height="193" width="283" />
                     <div className='text-center mt-6'>
                         <TextLiner className="!text-lg !w-full !pb-0 !normal-case">{t('nao:pool:you_not_staked')}</TextLiner>
-                        <div className="text-sm text-nao-grey mt-4">{t('nao:pool:share_revenue')}</div>
+                        <div className="text-sm text-nao-grey mt-4">{t('nao:pool:share_revenue_nodata')}</div>
                     </div>
                 </div>
                 <div className={`absolute w-full ${isSmall ? 'bottom-[30px] ' : '-ml-4 bottom-[60px] '}`}>

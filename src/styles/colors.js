@@ -83,6 +83,7 @@ const colors = {
         grey: '#7686B1',
         white: '#F6F6F6',
         blue: '#27CEE0',
+        blue2: '#093DD1',
         green: '#49E8D5',
         line: '#1C2644',
         border: '#4AEDFF'

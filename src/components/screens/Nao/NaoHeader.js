@@ -12,10 +12,11 @@ import { Divider, ButtonNao } from 'components/screens/Nao/NaoStyle';
 import { getS3Url } from 'redux/actions/utils';
 import { useRouter } from 'next/router'
 const category = [
+    { label: 'Whitepaper', link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics' },
     { label: 'performance', el: 'nao_performance' },
     { label: 'governance_pool', el: 'nao_pool' },
-    { label: 'Whitepaper', link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics' },
-    { label: 'buy_token', el: 'nao_token' }
+    { label: 'buy_token', el: 'nao_token' },
+    { label: 'Stake Nao', link: '/nao/stake' }
 ];
 
 const NaoHeader = ({ onDownload }) => {
@@ -45,7 +46,7 @@ const NaoHeader = ({ onDownload }) => {
             <div className={`flex items-center text-nao-text font-medium ${width > 768 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 768 && <>
                     {category.map(item => (
-                        <div key={item.label} onClick={() => scrollToView(item)} className="cursor-pointer capitalize">{t(`nao:${item.label}`)}</div>
+                        <div key={item.label} onClick={() => scrollToView(item)} className="cursor-pointer">{t(`nao:${item.label}`)}</div>
                     ))}
                     <div className="flex items-center p-2 bg-nao-bg2 rounded-[4px] select-none space-x-2">
                         <Language onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
@@ -139,7 +140,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView, onD
                     <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
                         <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
                             {category.map(item => (
-                                <div key={item.label} onClick={() => _scrollToView(item)} className="cursor-pointer capitalize leading-8">{t(`nao:${item.label}`)}</div>
+                                <div key={item.label} onClick={() => _scrollToView(item)} className="cursor-pointer leading-8">{t(`nao:${item.label}`)}</div>
                             ))}
                             <div className="flex items-center select-none gap-2 justify-center">
                                 <Language className="m-0 !text-sm" onClick={() => language !== LANGUAGE_TAG.VI && onChangeLang()}
@@ -170,7 +171,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView, onD
 const Language = styled.div.attrs({
     className: 'px-3 text-xs py-[3px] md:py-[1px] md:px-4 md:text-sm rounded-[4px] cursor-pointer text-nao-white  font-semibold nao:leading-[26px]'
 })`
-    background:${({ active }) => active ? `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)` : ''} ;
+    background:${({ active }) => active ? colors.nao.blue2 : ''} ;
             `
 
 export default NaoHeader;
