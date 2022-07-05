@@ -13,7 +13,6 @@ import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import TableNoData from 'components/common/table.old/TableNoData';
-import Image from 'next/image'
 
 const getAssetNao = createSelector(
     [
@@ -195,7 +194,7 @@ const NaoPool = () => {
                             </Swiper>
                             :
                             <div className={`flex items-center justify-center flex-col m-auto`}>
-                                <Image src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
+                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
                                 <div className="text-xs text-nao-grey mt-1">{t('nao:pool:history_nodata')}</div>
                             </div>
                         }
