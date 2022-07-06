@@ -123,20 +123,21 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                             <span className="text-sm font-medium">${formatNumber((dataSource?.availableStakedVNDC ?? 0) * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
                         </div>
                         <div className="flex  space-x-[10px]">
-                            <div className={`w-[49px] h-[49px] ${staked ? 'border-nao-green' : 'border-nao-text'} border-[1.5px] rounded-xl flex justify-center items-center`}>
+                            <div
+                                onClick={() => onShowLockModal(false)}
+                                className={`cursor-pointer w-[49px] h-[49px] ${staked ? 'border-nao-green' : 'border-nao-text'} border-[1.5px] rounded-xl flex justify-center items-center`}>
                                 <Minus
                                     size={25}
                                     className={`cursor-pointer`}
                                     color={staked ? colors.nao.green : colors.nao.text}
-                                    onClick={() => onShowLockModal(false)}
                                 />
                             </div>
-                            <div className={`w-[49px] h-[49px] ${staked ? 'border-nao-green' : 'border-nao-text'} border-[1.5px] rounded-xl flex justify-center items-center`}>
+                            <div
+                                onClick={() => onShowLockModal(true)}
+                                className={`cursor-pointer w-[49px] h-[49px] ${staked ? 'border-nao-green' : 'border-nao-text'} border-[1.5px] rounded-xl flex justify-center items-center`}>
                                 <Plus
                                     size={25}
-                                    className={`cursor-pointer`}
                                     color={staked ? colors.nao.green : colors.nao.text}
-                                    onClick={() => onShowLockModal(true)}
                                 />
                             </div>
                         </div>

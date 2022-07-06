@@ -56,6 +56,7 @@ const commonColors = {
         blue: '#27CEE0',
         blue2: '#093DD1',
         green: '#49E8D5',
+        green2: '#0DB787',
         yellow: '#F3BA2F',
         line: '#1C2644',
         border: '#4AEDFF',
