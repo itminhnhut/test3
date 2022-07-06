@@ -159,7 +159,7 @@ const ExternalWithdrawal = (props) => {
     } = useMemo(() => {
         return {
             min: MIN_WITHDRAWAL[currentCurr?.id],
-            max: Math.min(MAX_WITHDRAWAL[currentCurr?.id], maxValue),
+            max: currentCurr?.id === WalletCurrency.VNDC ? Math.min(MAX_WITHDRAWAL[currentCurr?.id], maxValue) : MAX_WITHDRAWAL[currentCurr?.id],
             fee: VNDC_WITHDRAWAL_FEE[currentCurr?.id],
             decimalScale: DECIMAL_SCALES[currentCurr?.id],
         };
