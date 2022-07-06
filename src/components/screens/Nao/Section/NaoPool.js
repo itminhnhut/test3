@@ -117,7 +117,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
             estimate: formatNumber((dataSource?.poolRevenueThisWeek ?? 0), 0),
             estimateNao: formatNumber((dataSource?.poolRevenueThisWeekNAO ?? 0), assetNao?.assetDigit ?? 8),
         }
-    }, [dataSource])
+    }, [dataSource, assetNao])
 
     return (
         <section id="nao_pool" className="pt-10 sm:pt-20">
