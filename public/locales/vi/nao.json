@@ -103,7 +103,7 @@
         "start_in": "Bắt đầu sau",
         "end_in": "Kết thúc sau",
         "ended": "Cuộc thi đã kết thúc",
-        "date": "<div class='font-semibold'>{{days}}</div>&nbsp;ngày<div class='font-semibold'>{{hours}}</div>&nbsp;giờ<div class='font-semibold'>{{minutes}}</div>&nbsp;phút",
+        "date": "<div class='font-semibold'>{{days}}</div>&nbsp;ngày&nbsp;<div class='font-semibold'>{{hours}}</div>&nbsp;giờ&nbsp;<div class='font-semibold'>{{minutes}}</div>&nbsp;phút",
         "personal": "Thông tin cá nhân",
         "trades": "Số lệnh",
         "total_pnl": "Tổng lợi nhuận",

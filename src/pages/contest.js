@@ -23,7 +23,7 @@ const Contest = () => {
             {showDetail && <ContestDetail rowData={rowData.current} sortName={sortName.current} onClose={() => showShowDetail(false)} />}
             <div className="nao_section">
                 <ContesRules />
-                <ContestInfo />
+                <ContestInfo onShowDetail={onShowDetail} />
                 <ContestPerRanks />
                 <ContestTeamRanks onShowDetail={onShowDetail} />
             </div>

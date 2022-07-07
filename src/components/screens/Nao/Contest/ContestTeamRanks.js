@@ -57,7 +57,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
 
 
     return (
-        <section className="contest_individual_ranks pt-[70px] sm:pt-[124px]">
+        <section className="contest_individual_ranks pt-[70px]">
             <div className="flex justify-between flex-wrap gap-4">
                 <TextLiner>{t('nao:contest:team_ranking')}</TextLiner>
                 <div className="flex items-center gap-3 text-sm">
@@ -106,7 +106,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                         {Array.isArray(dataSource) && dataSource?.length > 0 ?
                             dataSource.map((item, index) => {
                                 return (
-                                    <div key={index} className={`flex gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
+                                    <div onClick={() => onShowDetail(item, tab)} key={index} className={`flex gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
                                         <div className="min-w-[55px] text-nao-grey text-sm font-medium">{item?.[rank]}</div>
                                         <div className="text-sm flex-1">
                                             <div className="font-semibold leading-6 gap-2 flex items-center">

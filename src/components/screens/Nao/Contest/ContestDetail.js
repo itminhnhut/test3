@@ -8,6 +8,7 @@ import { API_CONTEST_GET_GROUP_DETAIL } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import useWindowSize from 'hooks/useWindowSize';
+import Skeletor from 'components/common/Skeletor';
 
 const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }) => {
     const { t } = useTranslation();
@@ -56,13 +57,17 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                     { visible: visible },
                 )}
             >
-                <div className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl mx-4 w-[calc(100%-32px)] max-w-[979px]">
+                <div className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl mx-4 w-[calc(100%-32px)] max-w-[979px] overflow-y-auto">
                     <div className="flex sm:items-center sm:justify-between gap-2 lg:gap-20 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7">
                             <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{dataSource?.[rank]}</TextLiner>
                             <div className="flex flex-col">
-                                <div className="text-[20px] leading-8 font-semibold">{dataSource?.name}</div>
-                                <div className="text-sm text-nao-text leading-6 mt-[6px]">{dataSource?.leader_name}</div>
+                                <div className="text-[20px] leading-8 font-semibold">
+                                    {!dataSource ? <Skeletor width={120} height={20} /> : dataSource?.name}
+                                </div>
+                                <div className="text-sm text-nao-text leading-6 mt-[6px]">
+                                    {!dataSource ? <Skeletor width={80} height={10} /> : dataSource?.leader_name}
+                                </div>
                             </div>
                         </div>
                         <CardNao className="!py-5 !px-[26px] !min-h-[92px] sm:flex-row w-full">
@@ -138,7 +143,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                         :
                         <Table dataSource={dataSource?.members ?? []} >
                             <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:no')} fieldName={"index"} />
-                            <Column minWidth={200} className="font-semibold" title={t('nao:contest:name')} fieldName="name" />
+                            <Column minWidth={300} className="font-semibold" title={t('nao:contest:name')} fieldName="name" />
                             <Column minWidth={150} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                             <Column minWidth={100} align="right" className="font-medium" title={t('nao:contest:trades')} fieldName="total_order" />
                             <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />

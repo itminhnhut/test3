@@ -48,7 +48,7 @@ const ContestPerRanks = () => {
 
 
     return (
-        <section className="contest_individual_ranks pt-[70px] sm:pt-[124px]">
+        <section className="contest_individual_ranks pt-[70px]">
             <div className="flex justify-between flex-wrap gap-4">
                 <TextLiner>{t('nao:contest:individual_ranking')}</TextLiner>
                 <div className="flex items-center gap-3 text-sm">

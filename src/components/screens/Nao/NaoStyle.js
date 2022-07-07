@@ -90,6 +90,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick }) =>
     const { t } = useTranslation();
     const content = useRef(null);
     const header = useRef(null);
+    const timer = useRef(null);
 
     const onScroll = (e) => {
         header.current.scrollTo({
@@ -124,28 +125,21 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick }) =>
         content.current.scrollTop = scrollTop.current - scrollY;
     }
 
-    const isScrollable = () => {
-        const el = content.current;
-        if (el) {
-            var y1 = el.scrollTop;
-            el.scrollTop += 1;
-            var y2 = el.scrollTop;
-            el.scrollTop -= 1;
-            var y3 = el.scrollTop;
-            el.scrollTop = y1;
-            var x1 = el.scrollLeft;
-            el.scrollLeft += 1;
-            var x2 = el.scrollLeft;
-            el.scrollLeft -= 1;
-            var x3 = el.scrollLeft;
-            el.scrollLeft = x1;
-            return {
-                horizontally: x1 !== x2 || x2 !== x3,
-                vertically: y1 !== y2 || y2 !== y3
-            }
-        }
+    const checkScrollBar = (element, dir) => {
+        if (!element) return null;
+        dir = (dir === 'vertical') ?
+            'scrollTop' : 'scrollLeft';
 
+        var res = !!element[dir];
+
+        if (!res) {
+            element[dir] = 1;
+            res = !!element[dir];
+            element[dir] = 0;
+        }
+        return res;
     }
+
 
     useEffect(() => {
         if (content.current) {
@@ -163,7 +157,8 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick }) =>
             }
         }
     }, [content.current])
-    console.log(isScrollable())
+    const isScroll = checkScrollBar(content.current, 'vertical');
+
     return (
         <CardNao noBg className="mt-5 !py-6 !px-3 max-h-[400px] !justify-start">
             <div ref={header} className={classNames(
@@ -179,13 +174,14 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick }) =>
             </div>
             <div onScroll={onScroll} ref={content}
                 className={classNames(
-                    'nao-table-content mt-3 overflow-auto nao-table pr-[10px] ',
+                    'nao-table-content mt-3 overflow-auto nao-table  ',
+                    { 'pr-[10px]': isScroll }
                 )}>
                 {Array.isArray(dataSource) && dataSource?.length > 0 ?
                     dataSource.map((item, index) => {
                         return (
                             <div
-                                onClick={() => onRowClick && onRowClick(item)}
+                                onDoubleClick={() => onRowClick && onRowClick(item)}
                                 key={`row_${index}`} className={classNames(
                                     'px-3 flex items-center flex-1 min-w-max',
                                     { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 },

@@ -103,7 +103,7 @@
         "start_in": "Start in",
         "end_in": "Ends in",
         "ended": "Contest is finished",
-        "date": "<div class='font-semibold'>{{days}}</div>&nbsp;days<div class='font-semibold'>{{hours}}</div>&nbsp;hours<div class='font-semibold'>{{minutes}}</div>&nbsp;minutes",
+        "date": "<div class='font-semibold'>{{days}}</div>&nbsp;days&nbsp;<div class='font-semibold'>{{hours}}</div>&nbsp;hours&nbsp;<div class='font-semibold'>{{minutes}}</div>&nbsp;minutes",
         "personal": "Personal Achievements",
         "trades": "Trades",
         "total_pnl": "Total PnL",
