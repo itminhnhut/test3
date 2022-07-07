@@ -81,7 +81,7 @@ export const Column = ({ title, minWidth = 100, sortable, align = 'left', classH
     )
 }
 
-export const Table = ({ dataSource, children, classHeader = '', onRowClick }) => {
+export const Table = ({ dataSource, children, classHeader = '', onRowClick, noItemsMessage }) => {
     const mouseDown = useRef(false);
     const startX = useRef(null)
     const scrollLeft = useRef(null)
@@ -216,7 +216,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick }) =>
                     :
                     <div className={`flex items-center justify-center flex-col m-auto`}>
                         <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                        <div className="text-xs text-nao-grey mt-1">{t('common:no_data')}</div>
+                        <div className="text-xs text-nao-grey mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
                     </div>
                 }
 
