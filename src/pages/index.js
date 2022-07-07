@@ -11,6 +11,8 @@ import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
+import ContesRules from 'components/screens/Nao/Contest/ContesRules';
+import { SectionNao } from '../components/screens/Nao/NaoStyle';
 const getAssetNao = createSelector(
     [
         state => state.utils.assetConfig,
@@ -64,7 +66,13 @@ const NaoDashboard = () => {
                 <NaoInfo dataSource={dataSource} assetNao={assetNao} />
                 <NaoPerformance />
                 <NaoPool dataSource={dataSource} assetNao={assetNao} />
-                <NaoToken onDownload={onDownload} />
+                {/* <NaoToken onDownload={onDownload} /> */}
+                <section id="nao_pool" className="pt-10 sm:pt-20">
+                    <SectionNao noBg className="px-6 sm:px-10 rounded-xl min-w-full sm:min-w-[372px] flex flex-col justify-between flex-1 relative">
+                        <ContesRules inHome={true}/>
+                    </SectionNao>
+                </section>
+
             </div>
         </LayoutNaoToken>
     );

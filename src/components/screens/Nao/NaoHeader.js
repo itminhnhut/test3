@@ -15,8 +15,9 @@ const category = [
     { label: 'Whitepaper', link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics', options: '_blank' },
     { label: 'performance', el: 'nao_performance' },
     { label: 'governance_pool', el: 'nao_pool' },
-    { label: 'buy_token', el: 'nao_token' },
-    { label: 'Stake NAO', link: '/nao/stake', options: '_self' }
+    // { label: 'buy_token', el: 'nao_token' },
+    { label: 'Stake NAO', link: '/nao/stake', options: '_self' },
+    { label: 'contest_futures', link: '/contest', options: '_self' }
 ];
 
 const NaoHeader = memo(({ onDownload }) => {
