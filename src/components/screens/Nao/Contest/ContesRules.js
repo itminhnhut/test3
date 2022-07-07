@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 const ContesRules = ({ inHome = false }) => {
     const { t } = useTranslation();
     const router = useRouter();
-    const renderCountDown = useMemo(() => {
+    const renderCountDown = () => {
         const CONTEST_TIME = {
             START: new Date('2022-07-07T17:00:00.000Z').getTime(),
             END: new Date('2022-07-27T17:00:00.000Z').getTime()
@@ -49,7 +49,6 @@ const ContesRules = ({ inHome = false }) => {
             </>
         }
     }
-        , []);
 
     return (
         <section className='contest_rules pt-[71px] flex justify-center md:justify-between flex-wrap relative text-center sm:text-left'>
@@ -63,7 +62,7 @@ const ContesRules = ({ inHome = false }) => {
                             : <ButtonNao onClick={() => router.push('https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien')} className='py-2 px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:detail_rules')}</ButtonNao>
                     }
                     <CardNao customHeight={'sm:min-h-[40px] lg:min-h-[40]'} noBg className="flex !flex-row !justify-center md:!justify-start !py-3 items-center gap-3 sm:!bg-none flex-wrap">
-                        {renderCountDown}
+                        {renderCountDown()}
                     </CardNao>
                 </div>
             </div>

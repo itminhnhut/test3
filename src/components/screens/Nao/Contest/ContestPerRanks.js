@@ -92,7 +92,7 @@ const ContestPerRanks = () => {
 
             {width <= 640 ?
                 <CardNao noBg className="mt-5 !py-[18px] !px-3">
-                    <div className="flex mx-3 gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
+                    <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
                         <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>
@@ -100,7 +100,7 @@ const ContestPerRanks = () => {
                         {Array.isArray(dataSource) && dataSource?.length > 0 ?
                             dataSource.map((item, index) => {
                                 return (
-                                    <div key={index} className={`flex gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
+                                    <div key={index} className={`flex gap-4 sm:gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
                                         <div className="min-w-[31px] text-nao-grey text-sm font-medium">{item?.[rank] || '-'}</div>
                                         <div className="text-sm flex-1">
                                             <label className="font-semibold leading-6">{item?.name}</label>
