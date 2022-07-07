@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import ContesRules from 'components/screens/Nao/Contest/ContesRules';
@@ -8,14 +8,24 @@ import ContestTeamRanks from 'components/screens/Nao/Contest/ContestTeamRanks';
 import ContestDetail from 'components/screens/Nao/Contest/ContestDetail';
 
 const Contest = () => {
+    const [showDetail, showShowDetail] = useState(false)
+    const sortName = useRef('volume');
+    const rowData = useRef(null);
+
+    const onShowDetail = (e, sort) => {
+        sortName.current = sort;
+        rowData.current = e;
+        showShowDetail(true)
+    }
+
     return (
         <LayoutNaoToken>
-            {/* <ContestDetail /> */}
+            {showDetail && <ContestDetail rowData={rowData.current} sortName={sortName.current} onClose={() => showShowDetail(false)} />}
             <div className="nao_section">
                 <ContesRules />
                 <ContestInfo />
                 <ContestPerRanks />
-                <ContestTeamRanks />
+                <ContestTeamRanks onShowDetail={onShowDetail} />
             </div>
         </LayoutNaoToken>
     );

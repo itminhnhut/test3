@@ -7,7 +7,7 @@ import { API_CONTEST_GET_RANK_GROUP_PNL, API_CONTEST_GET_RANK_GROUP_VOLUME } fro
 import { ApiStatus } from 'redux/actions/const';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 
-const ContestTeamRanks = () => {
+const ContestTeamRanks = ({ onShowDetail }) => {
     const [tab, setTab] = useState('volume');
     const { t } = useTranslation();
     const { width } = useWindowSize()
@@ -46,7 +46,7 @@ const ContestTeamRanks = () => {
         return (
             <div className='flex items-center gap-2'>
                 <div className='w-6 h-6 rounded-[50%] bg-[#273446]'>
-                    <img src={item?.avatar} width="24" height="24" alt="" />
+                    <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                 </div>
                 <div>{data}</div>
             </div>
@@ -74,18 +74,18 @@ const ContestTeamRanks = () => {
                         <div className="flex items-center gap-[30px] sm:gap-6">
                             <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{index + 1}</TextLiner>
                             <div className="gap-1 flex flex-col">
-                                <label className="text-lg font-semibold leading-8">{item?.name}</label>
-                                <span className="text-nao-grey text-sm text-medium cursor-pointer">{item?.leader_name}</span>
+                                <div className="text-lg font-semibold leading-8">{item?.name}</div>
+                                <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.leader_name}</span>
                             </div>
                         </div>
                         <div className="rounded-lg mt-7">
                             <div className="flex items-center justify-between gap-2">
-                                <label className="text-sm text-nao-text">{t('nao:contest:volume')}</label>
+                                <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
                                 <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} VNDC</span>
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2"></div>
                             <div className="flex items-center justify-between gap-2">
-                                <label className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</label>
+                                <div className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</div>
                                 <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
                                     {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}{formatNumber(item?.pnl, 2, 0, true)}%
                                 </span>
@@ -110,11 +110,11 @@ const ContestTeamRanks = () => {
                                         <div className="text-sm flex-1">
                                             <div className="font-semibold leading-6 gap-2 flex items-center">
                                                 <div className='w-6 h-6 rounded-[50%] bg-[#273446]'>
-                                                    <img src={item?.avatar} width="24" height="24" alt="" />
+                                                    <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                                                 </div>
                                                 <div>{item?.name}</div>
                                             </div>
-                                            <div className="text-nao-grey text-medium leading-6 cursor-pointer">{item?.leader_name}</div>
+                                            <div className="text-nao-grey font-medium leading-6 cursor-pointer">{item?.leader_name}</div>
                                             <div className="flex items-center justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
@@ -125,7 +125,11 @@ const ContestTeamRanks = () => {
                                                     {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
                                                 </span>
                                             </div>
-                                            <div className="underline text-sm font-medium text-nao-grey pt-1 cursor-pointer select-none">{t('nao:contest:details')}</div>
+                                            <div
+                                                onClick={() => onShowDetail(item, tab)}
+                                                className="underline text-sm font-medium text-nao-grey pt-1 cursor-pointer select-none">
+                                                {t('nao:contest:details')}
+                                            </div>
                                         </div>
                                     </div>
                                 )
@@ -139,7 +143,7 @@ const ContestTeamRanks = () => {
                     </div>
                 </CardNao>
                 :
-                <Table dataSource={dataSource} >
+                <Table dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)} >
                     <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} />
                     <Column minWidth={200} className="font-semibold" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column minWidth={300} className="text-nao-text" title={t('nao:contest:captain')} fieldName="leader_name" />
