@@ -97,7 +97,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                     {width <= 640 ?
                         <CardNao noBg className="mt-5 !py-3 !px-2">
                             <div className="flex  mx-3 gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
-                                <div className="min-w-[55px]">{t('nao:contest:no')}</div>
+                                <div className="min-w-[20px]">{t('nao:contest:no')}</div>
                                 <div>{t('nao:contest:information')}</div>
                             </div>
                             <div className="flex nao-table flex-col overflow-y-auto mt-3 pr-[10px]">
@@ -105,7 +105,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                                     dataSource?.members.map((item, index) => {
                                         return (
                                             <div key={index} className={`flex gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                                <div className="min-w-[55px] text-nao-grey text-sm font-medium">{index + 1}</div>
+                                                <div className="min-w-[20px] text-nao-grey text-sm font-medium">{index + 1}</div>
                                                 <div className="text-sm flex-1">
                                                     <div className="font-semibold leading-6">{item?.name}</div>
                                                     <div className='flex flex-col gap-1 mt-[6px]'>
