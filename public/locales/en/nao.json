@@ -113,7 +113,7 @@
         "volume_rank": "Volume ranking",
         "pnl_rank": "PnL ranking",
         "individual_ranking": "Individual Ranking",
-
+        "no_rank": "There are no ranking",
         "rank": "Rank",
         "team": "Team",
         "team_label": "Team",
