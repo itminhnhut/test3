@@ -76,7 +76,7 @@ const NaoPerformance = memo(() => {
     }
 
     const assets = useMemo(() => {
-        if (!dataSource) return [];
+        if (!dataSource?.feeRevenue) return [];
         const assets = [];
         let first = true
         return Object.keys(dataSource?.feeRevenue).reduce((newItem, item) => {

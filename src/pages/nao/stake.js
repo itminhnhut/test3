@@ -65,7 +65,7 @@ const Stake = () => {
     }
 
     return (
-        <LayoutNaoToken>
+        <LayoutNaoToken isHeader={false}>
             <div className="bg-nao-bgShadow sticky top-0 z-10">
                 <BackgroundHeader className="stake_header">
                     {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}

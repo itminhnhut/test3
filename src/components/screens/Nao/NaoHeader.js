@@ -15,8 +15,9 @@ const category = [
     { label: 'Whitepaper', link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics', options: '_blank' },
     { label: 'performance', el: 'nao_performance' },
     { label: 'governance_pool', el: 'nao_pool' },
-    { label: 'buy_token', el: 'nao_token' },
-    { label: 'Stake NAO', link: '/nao/stake', options: '_self' }
+    // { label: 'buy_token', el: 'nao_token' },
+    { label: 'Stake NAO', link: '/nao/stake', options: '_self' },
+    { label: 'contest_futures', link: '/contest', options: '_self' }
 ];
 
 const NaoHeader = memo(({ onDownload }) => {
@@ -42,7 +43,7 @@ const NaoHeader = memo(({ onDownload }) => {
         <div className="nao_header flex justify-between items-center h-[90px] relative">
             <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                 language={language} t={t} scrollToView={scrollToView} onDownload={onDownload} />
-            <img src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
+            <img onClick={()=> router.push('/nao')} src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
             <div className={`flex items-center text-nao-text font-medium ${width > 800 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 800 && <>
                     {category.map(item => (

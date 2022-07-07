@@ -52,16 +52,20 @@ const commonColors = {
         bg4: '#202E42',
         text: '#B9CCFF',
         grey: '#7686B1',
+        grey2: '#7586AD',
         white: '#F6F6F6',
         blue: '#27CEE0',
         blue2: '#093DD1',
         green: '#49E8D5',
+        green2: '#0DB787',
         yellow: '#F3BA2F',
         line: '#1C2644',
         border: '#4AEDFF',
+        border2: '#18223E',
         bgModal: '#161D32',
+        bgModal2: '#00030D',
         bgShadow: '#000921',
-
+        red: '#DC1F4E'
     }
 };
 
@@ -401,6 +405,9 @@ module.exports = {
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
                 nao: '0px 4px 4px rgba(0, 0, 0, 0.25)'
             },
+            cursor: {
+                grabbing: 'grabbing'
+            }
         },
     },
     variants: {
@@ -409,6 +416,7 @@ module.exports = {
             borderColor: ['checked'],
             display: ['group-hover'],
             visibility: ['group-hover'],
+            cursor: ['grabbing'],
         },
     },
     plugins: [

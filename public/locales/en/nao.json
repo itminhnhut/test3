@@ -2,6 +2,7 @@
     "performance": "Performance",
     "governance_pool": "Governance pool",
     "buy_token": "Buy Token",
+    "contest_futures": "Contest Futures",
     "project_info": "Project information",
     "circulating_supply": "Circulating supply",
     "distributed_today": "Distributed today",
@@ -93,6 +94,36 @@
     "cancel": "Cancel",
     "available": "Available",
     "holders_wallet": "Holders wallet",
-    "liq_pools": "Liquidity pools"
-}
+    "liq_pools": "Liquidity pools",
+    "contest": {
+        "title": "ONUS Futures Trading Contest Season 1",
+        "description": "Compete as an individual or team to win a reward of",
+        "detail_rules": "Detail Rules",
+        "ranking": "Ranking",
+        "start_in": "Start in",
+        "end_in": "Ends in",
+        "ended": "Contest is finished",
+        "date": "<div class='font-semibold'>{{days}}</div>&nbsp;days<div class='font-semibold'>{{hours}}</div>&nbsp;hours<div class='font-semibold'>{{minutes}}</div>&nbsp;minutes",
+        "personal": "Personal Achievements",
+        "trades": "Trades",
+        "total_pnl": "Total PnL",
+        "per_pnl": "% PnL",
+        "per_pnl_tooltip": "% PnL = (PnL / Margin) x 100%",
+        "volume": "Volume",
+        "volume_rank": "Volume ranking",
+        "pnl_rank": "PnL ranking",
+        "individual_ranking": "Individual Ranking",
 
+        "rank": "Rank",
+        "team": "Team",
+        "team_label": "Team",
+        "name": "Name",
+        "captain": "Captain",
+        "information": "Details",
+        "team_ranking": "Team Ranking",
+        "details": "Details",
+        "volume_ranking": "Volume ranking",
+        "pnl_ranking": "% PnL ranking",
+        "no": "No"
+    }
+}
