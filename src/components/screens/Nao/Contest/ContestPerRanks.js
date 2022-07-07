@@ -15,14 +15,15 @@ const ContestPerRanks = () => {
     const [top3, setTop3] = useState([]);
 
     useEffect(() => {
-        if(Date.now() > new Date('2022-07-07T17:00:00.000Z').getTime()){
-            getRanks();
-        }
+        getRanks();
     }, [])
 
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
     const getRanks = async (tab) => {
+        if (Date.now() > new Date('2022-07-07T17:00:00.000Z').getTime()) {
+            return
+        }
         try {
             const { data, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
@@ -127,8 +128,8 @@ const ContestPerRanks = () => {
                     </div>
                 </CardNao>
                 :
-                <Table noItemsMessage={t('nao:contest:no_rank')}  dataSource={dataSource} >
-                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={(data, item)=> <div>{item?.[rank] || '-'}</div>} />
+                <Table noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} >
+                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={(data, item) => <div>{item?.[rank] || '-'}</div>} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" />
                     <Column minWidth={300} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
