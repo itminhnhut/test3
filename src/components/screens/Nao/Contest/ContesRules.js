@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { ButtonNao, CardNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 
+import { getS3Url } from 'redux/actions/utils';
 import Countdown from 'react-countdown';
+import { useMemo } from 'react';
 import { useRouter } from 'next/router';
-
 const ContesRules = ({ inHome = false }) => {
     const { t } = useTranslation();
     const router = useRouter();
@@ -67,7 +68,7 @@ const ContesRules = ({ inHome = false }) => {
                 </div>
             </div>
             <div className='relative lg:-top-10 sm:m-auto md:m-auto mt-4'>
-                <img src="/images/nao/contest/ic_contest_info.png" alt="" width={300} height={292} />
+                <img src={getS3Url("/images/nao/contest/ic_contest_info.png")} alt="" width={300} height={292} />
             </div>
         </section>
     );
