@@ -183,7 +183,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     dataSource.map((item, index) => {
                         return (
                             <div
-                                onDoubleClick={() => onRowClick && onRowClick(item)}
+                                onClick={() => onRowClick && onRowClick(item)}
                                 key={`row_${index}`} className={classNames(
                                     'px-3 flex items-center flex-1 min-w-max',
                                     { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 },
