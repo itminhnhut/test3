@@ -144,7 +144,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                 </CardNao>
                 :
                 <Table dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)} >
-                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} />
+                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} cellRender={(data, item)=> <div>{item?.[rank] || '-'}</div>} />
                     <Column minWidth={200} className="font-semibold" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column minWidth={300} className="text-nao-text" title={t('nao:contest:captain')} fieldName="leader_name" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
