@@ -21,7 +21,7 @@ const ContestPerRanks = () => {
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
     const getRanks = async (tab) => {
-        if (Date.now() > new Date('2022-07-07T17:00:00.000Z').getTime()) {
+        if (Date.now() < new Date('2022-07-07T17:00:00.000Z').getTime()) {
             return
         }
         try {
