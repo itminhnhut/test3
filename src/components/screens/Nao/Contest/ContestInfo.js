@@ -7,7 +7,6 @@ import { getS3Url } from 'redux/actions/utils';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL } from 'redux/actions/apis';
-import { getS3Url } from 'redux/actions/utils';
 
 import Tooltip from 'components/common/Tooltip';
 const ContestInfo = () => {
