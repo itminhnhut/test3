@@ -33,7 +33,7 @@ const ContestInfo = () => {
         }
     };
 
-    if (!user) return null;
+    if (!(user && userData)) return null;
 
     return (
         <section className="contest_info pt-[100px] sm:pt-9">
