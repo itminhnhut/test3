@@ -81,7 +81,7 @@ export const Column = ({ title, minWidth = 100, sortable, align = 'left', classH
     )
 }
 
-export const Table = ({ dataSource, children }) => {
+export const Table = ({ dataSource, children, classHeader = '', onRowClick }) => {
     const mouseDown = useRef(false);
     const startX = useRef(null)
     const scrollLeft = useRef(null)
@@ -124,6 +124,29 @@ export const Table = ({ dataSource, children }) => {
         content.current.scrollTop = scrollTop.current - scrollY;
     }
 
+    const isScrollable = () => {
+        const el = content.current;
+        if (el) {
+            var y1 = el.scrollTop;
+            el.scrollTop += 1;
+            var y2 = el.scrollTop;
+            el.scrollTop -= 1;
+            var y3 = el.scrollTop;
+            el.scrollTop = y1;
+            var x1 = el.scrollLeft;
+            el.scrollLeft += 1;
+            var x2 = el.scrollLeft;
+            el.scrollLeft -= 1;
+            var x3 = el.scrollLeft;
+            el.scrollLeft = x1;
+            return {
+                horizontally: x1 !== x2 || x2 !== x3,
+                vertically: y1 !== y2 || y2 !== y3
+            }
+        }
+
+    }
+
     useEffect(() => {
         if (content.current) {
             content.current.addEventListener('mousemove', onDrag)
@@ -140,17 +163,17 @@ export const Table = ({ dataSource, children }) => {
             }
         }
     }, [content.current])
-
+    console.log(isScrollable())
     return (
-        <CardNao noBg className="mt-5 !py-6 !px-3 max-h-[400px]">
+        <CardNao noBg className="mt-5 !py-6 !px-3 max-h-[400px] !justify-start">
             <div ref={header} className={classNames(
-                'sticky top-0 z-10 pb-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden',
+                'z-10 pb-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden',
                 'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between pr-7 w-full',
+                classHeader
             )}>
                 {children.map((item, indx) => (
                     <Column key={indx} {...item.props} classHeader={classNames(
                         { 'flex-1': indx !== 0 },
-                        { ...item?.classHeader }
                     )} />
                 ))}
             </div>
@@ -162,6 +185,7 @@ export const Table = ({ dataSource, children }) => {
                     dataSource.map((item, index) => {
                         return (
                             <div
+                                onClick={() => onRowClick && onRowClick(item)}
                                 key={`row_${index}`} className={classNames(
                                     'px-3 flex items-center flex-1 min-w-max',
                                     { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 },
@@ -174,14 +198,18 @@ export const Table = ({ dataSource, children }) => {
                                     const cellRender = child?.props?.cellRender;
                                     const suffix = child?.props?.suffix;
                                     const decimal = child?.props?.decimal;
+                                    const fieldName = child?.props?.fieldName;
                                     return (
                                         <div style={{ minWidth, textAlign: align }} key={indx}
                                             className={classNames(
                                                 `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
+                                                'break-all',
                                                 { 'flex-1': indx !== 0 }
                                             )}>
-                                            {cellRender ? cellRender(item[child?.props.fieldName], item) :
-                                                decimal >= 0 ? formatNumber(item[child?.props.fieldName], decimal, 0, true) : item[child?.props.fieldName]}
+                                            {cellRender ? cellRender(item[fieldName], item) :
+                                                decimal >= 0 ? formatNumber(item[fieldName], decimal, 0, true) :
+                                                    fieldName === 'index' ? index + 1 : item[fieldName]
+                                            }
                                             {suffix ? ` ${suffix}` : ''}
                                         </div>
                                     )
@@ -202,10 +230,10 @@ export const Table = ({ dataSource, children }) => {
 }
 
 export const getColor = (value) => {
-    return value !== 0 ? value > 0 ? 'text-nao-green2' : 'text-nao-red' : '';
+    return !!value ? value > 0 ? 'text-nao-green2' : 'text-nao-red' : '';
 }
 
 export const renderPnl = (data, item) => {
-    const prefix = data && data > 0 ? '+' : ''
+    const prefix = !!data && data > 0 ? '+' : ''
     return <div className={`${getColor(data)}`}>{prefix + formatNumber(data, 2, 0, true)}%</div>
 }

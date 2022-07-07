@@ -63,18 +63,18 @@ const ContestPerRanks = () => {
                         <div className="flex items-center gap-[30px] sm:gap-6">
                             <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{index + 1}</TextLiner>
                             <div className="gap-1 flex flex-col">
-                                <label className="text-lg font-semibold leading-8">{item?.name}</label>
-                                <span className="text-nao-grey text-sm text-medium cursor-pointer">{item?.onus_user_id}</span>
+                                <div className="text-lg font-semibold leading-8">{item?.name}</div>
+                                <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
                             </div>
                         </div>
                         <div className="rounded-lg mt-7">
                             <div className="flex items-center justify-between gap-2">
-                                <label className="text-sm text-nao-text">{t('nao:contest:volume')}</label>
+                                <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
                                 <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} VNDC</span>
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2"></div>
                             <div className="flex items-center justify-between gap-2">
-                                <label className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</label>
+                                <div className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</div>
                                 <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
                                     {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}{formatNumber(item?.pnl, 2, 0, true)}%
                                 </span>
@@ -98,7 +98,7 @@ const ContestPerRanks = () => {
                                         <div className="min-w-[55px] text-nao-grey text-sm font-medium">{item?.[rank]}</div>
                                         <div className="text-sm flex-1">
                                             <label className="font-semibold leading-6">{item?.name}</label>
-                                            <div className="text-nao-grey text-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
+                                            <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
                                             <div className="flex items-center justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
