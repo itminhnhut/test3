@@ -18,14 +18,16 @@ const ContestTeamRanks = ({ onShowDetail }) => {
         getRanks();
     }, [])
 
+    const rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
     const getRanks = async (tab) => {
         try {
             const { data, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
             });
             if (data && status === ApiStatus.SUCCESS) {
-                const _top3 = data.slice(0, 3);
-                const _dataSource = data.slice(3)
+                const sliceIndex = data[0]?.[rank] > 0 ? 3 : 0
+                const _top3 = data.slice(0, sliceIndex);
+                const _dataSource = data.slice(sliceIndex)
                 setTop3(_top3);
                 setDataSource(_dataSource);
             }
@@ -53,7 +55,6 @@ const ContestTeamRanks = ({ onShowDetail }) => {
         )
     }
 
-    const rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
 
     return (
         <section className="contest_individual_ranks pt-[70px] sm:pt-[124px]">
@@ -144,7 +145,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                 </CardNao>
                 :
                 <Table dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)} >
-                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} />
+                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} cellRender={(data, item)=> <div>{item?.[rank] || '-'}</div>} />
                     <Column minWidth={200} className="font-semibold" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column minWidth={300} className="text-nao-text" title={t('nao:contest:captain')} fieldName="leader_name" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />

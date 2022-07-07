@@ -18,14 +18,17 @@ const ContestPerRanks = () => {
         getRanks();
     }, [])
 
+    const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
+
     const getRanks = async (tab) => {
         try {
             const { data, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
             });
             if (data && status === ApiStatus.SUCCESS) {
-                const _top3 = data.slice(0, 3);
-                const _dataSource = data.slice(3)
+                const sliceIndex = data[0]?.[rank] > 0 ? 3 : 0
+                const _top3 = data.slice(0, sliceIndex);
+                const _dataSource = data.slice(sliceIndex)
                 setTop3(_top3);
                 setDataSource(_dataSource);
             }
@@ -42,7 +45,7 @@ const ContestPerRanks = () => {
         setTab(key)
     }
 
-    const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
+
 
     return (
         <section className="contest_individual_ranks pt-[70px] sm:pt-[124px]">
@@ -95,7 +98,7 @@ const ContestPerRanks = () => {
                             dataSource.map((item, index) => {
                                 return (
                                     <div key={index} className={`flex gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="min-w-[55px] text-nao-grey text-sm font-medium">{item?.[rank]}</div>
+                                        <div className="min-w-[55px] text-nao-grey text-sm font-medium">{item?.[rank] || '-'}</div>
                                         <div className="text-sm flex-1">
                                             <label className="font-semibold leading-6">{item?.name}</label>
                                             <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
@@ -123,7 +126,7 @@ const ContestPerRanks = () => {
                 </CardNao>
                 :
                 <Table dataSource={dataSource} >
-                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} />
+                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={(data, item)=> <div>{item?.[rank] || '-'}</div>} />
                     <Column minWidth={200} className="font-semibold" title={t('nao:contest:name')} fieldName="name" />
                     <Column minWidth={300} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
