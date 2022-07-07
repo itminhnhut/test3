@@ -39,11 +39,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
     useEffect(() => {
         if (visible) {
             document.body.classList.add('overflow-hidden')
-        } else {
-            clearTimeout(timer.current)
-            timer.current = setTimeout(() => {
-                document.body.classList.remove('overflow-hidden')
-            }, 300);
+        }
+        return () => {
+            document.body.classList.remove('overflow-hidden')
         }
     }, [visible])
 
@@ -149,7 +147,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                     }
 
                     <div className="w-max mt-7 sm:mt-10 m-auto">
-                        <ButtonNao onClick={onClose} className="py-2 px-11 !rounded-md">{t('common:close')}</ButtonNao>
+                        <ButtonNao onClick={onClose} className="py-2 px-11 !rounded-md font-semibold">{t('common:close')}</ButtonNao>
                     </div>
                 </div>
             </div>
