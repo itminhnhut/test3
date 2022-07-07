@@ -100,11 +100,19 @@
         "detail_rules": "Thể lệ chi tiết",
         "start_in": "Bắt đầu sau",
         "date": "<div class='font-semibold'>{{days}}</div>&nbsp;ngày<div class='font-semibold'>{{hours}}</div>&nbsp;giờ<div class='font-semibold'>{{minutes}}</div>&nbsp;phút",
-        "infomation": "Thông tin cá nhân",
+        "personal": "Thông tin cá nhân",
         "trades": "Số lệnh",
         "total_pnl": "Tổng lợi nhuận",
         "per_pnl": "% Lợi nhuận",
         "volume": "Khối lượng",
-        "personal_ranks": "Bảng xếp hạng cá nhân"
+        "volume_rank": "Thứ hạng khối lượng",
+        "pnl_rank": "Thứ hạng lợi nhuận",
+        "individual_ranking": "Bảng xếp hạng cá nhân",
+        "rank": "Thứ hạng",
+        "team": "Tên đội",
+        "name": "Tên",
+        "captain": "Đội trưởng",
+        "information": "Thông tin",
+        "team_ranking": "Bảng xếp hạng đội nhóm"
     }
 }

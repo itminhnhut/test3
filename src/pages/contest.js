@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import ContesRules from 'components/screens/Nao/Contest/ContesRules';
 import ContestInfo from 'components/screens/Nao/Contest/ContestInfo';
 import ContestPerRanks from 'components/screens/Nao/Contest/ContestPerRanks';
+import ContestTeamRanks from 'components/screens/Nao/Contest/ContestTeamRanks';
 
 const Contest = () => {
     return (
@@ -12,6 +13,7 @@ const Contest = () => {
                 <ContesRules />
                 <ContestInfo />
                 <ContestPerRanks />
+                <ContestTeamRanks />
             </div>
         </LayoutNaoToken>
     );

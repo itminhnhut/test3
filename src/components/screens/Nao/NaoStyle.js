@@ -2,15 +2,21 @@ import styled from 'styled-components';
 import colors from 'styles/colors';
 import classNames from 'classnames';
 import CTooltip from 'components/common/Tooltip';
+import { useMemo, useState } from 'react';
+import useWindowSize from 'hooks/useWindowSize';
+import { useEffect } from 'react';
+import { useRef } from 'react';
+import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-nao-white'
 })`
-    ${'' /* background:linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent; */}
+    background: ${({ linder }) => linder && `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)`};
+    -webkit-background-clip: ${({ linder }) => linder && `text`};
+    -webkit-text-fill-color: ${({ linder }) => linder && `transparent`};
+    background-clip: ${({ linder }) => linder && `text`};
+    text-fill-color: ${({ linder }) => linder && `transparent`};
 `
 
 export const CardNao = styled.div.attrs(({ noBg }) => ({
@@ -56,5 +62,128 @@ export const Tooltip = ({ id }) => {
             arrowColor={colors.onus.bg2}
             backgroundColor={colors.onus.bg2}
         />
+    )
+}
+
+
+export const Column = ({ title, minWidth = 100, sortable, align = 'left', classHeader = '' }) => {
+    return (
+        <div style={{ minWidth, textAlign: align }} className={classHeader}> {title}</div>
+    )
+}
+
+export const Table = ({ dataSource, children }) => {
+    const { width } = useWindowSize();
+    const mouseDown = useRef(false);
+    const startX = useRef(null)
+    const scrollLeft = useRef(null)
+    const startY = useRef(null)
+    const scrollTop = useRef(null)
+    const { t } = useTranslation();
+
+    const onScroll = (e) => {
+        const header = document.querySelector('.nao-table-header');
+        header.scrollTo({
+            left: e.target.scrollLeft,
+        })
+    }
+
+    const startDragging = (e) => {
+        const el = document.querySelector('.nao-table-content')
+        el.classList.add('cursor-grabbing');
+        mouseDown.current = true;
+        startX.current = e.pageX - el.offsetLeft;
+        scrollLeft.current = el.scrollLeft;
+
+        startY.current = e.pageY - el.offsetTop;
+        scrollTop.current = el.scrollTop;
+    }
+
+    const stopDragging = (event) => {
+        const el = document.querySelector('.nao-table-content')
+        el.classList.remove('cursor-grabbing');
+        mouseDown.current = false;
+    };
+
+    const onDrag = (e) => {
+        e.preventDefault();
+        if (!mouseDown.current) return;
+        const el = document.querySelector('.nao-table-content')
+        const x = e.pageX - el.offsetLeft;
+        const scroll = x - startX.current;
+        el.scrollLeft = scrollLeft.current - scroll;
+
+        const y = e.pageY - el.offsetTop;
+        const scrollY = y - startY.current;
+        el.scrollTop = scrollTop.current - scrollY;
+    }
+
+    useEffect(() => {
+        const el = document.querySelector('.nao-table-content')
+        el.addEventListener('mousemove', onDrag)
+        el.addEventListener('mousedown', startDragging, false);
+        el.addEventListener('mouseup', stopDragging, false);
+        el.addEventListener('mouseleave', stopDragging, false);
+        return () => {
+            el.removeEventListener('mousemove', onDrag)
+            el.removeEventListener('mousedown', startDragging, false);
+            el.removeEventListener('mouseup', stopDragging, false);
+            el.removeEventListener('mouseleave', stopDragging, false);
+        }
+    }, [])
+
+    return (
+        <CardNao noBg className="mt-5 !py-6 !px-3 max-h-[400px]">
+            <div className={classNames(
+                'sticky top-0 z-10 pb-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden',
+                'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between pr-7 w-full',
+            )}>
+                {children.map((item, indx) => (
+                    <Column key={indx} {...item.props} classHeader={classNames(
+                        { 'flex-1': indx !== 0 },
+                        { ...item?.classHeader }
+                    )} />
+                ))}
+            </div>
+            <div onScroll={onScroll}
+                className={classNames(
+                    'nao-table-content mt-3 overflow-auto nao-table pr-[10px] cursor-grabbing',
+                )}>
+                {Array.isArray(dataSource) && dataSource?.length > 0 ?
+                    dataSource.map((item, index) => {
+                        return (
+                            <div
+                                key={`row_${index}`} className={classNames(
+                                    'px-3 flex items-center flex-1 min-w-max',
+                                    { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 },
+                                )}>
+                                {children.map((child, indx) => {
+                                    const minWidth = child?.props?.minWidth;
+                                    const className = child?.props?.className ?? '';
+                                    const align = child?.props?.align ?? 'left';
+                                    const _align = align === 'right' ? 'flex justify-end' : '';
+                                    const cellRender = child?.props?.cellRender;
+                                    return (
+                                        <div style={{ minWidth, textAlign: align }} key={indx}
+                                            className={classNames(
+                                                `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
+                                                { 'flex-1': indx !== 0 }
+                                            )}>
+                                            {cellRender ? cellRender(item[child?.props.fieldName], item) : item[child?.props.fieldName]}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )
+                    })
+                    :
+                    <div className={`flex items-center justify-center flex-col m-auto`}>
+                        <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
+                        <div className="text-xs text-nao-grey mt-1">{t('common:no_data')}</div>
+                    </div>
+                }
+
+            </div>
+        </CardNao>
     )
 }
