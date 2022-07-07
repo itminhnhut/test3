@@ -50,7 +50,7 @@ const ContestPerRanks = () => {
 
 
     return (
-        <section className="contest_individual_ranks pt-[70px] sm:pt-[124px]">
+        <section className="contest_individual_ranks pt-[70px]">
             <div className="flex justify-between flex-wrap gap-4">
                 <TextLiner>{t('nao:contest:individual_ranking')}</TextLiner>
                 <div className="flex items-center gap-3 text-sm">
@@ -90,9 +90,9 @@ const ContestPerRanks = () => {
             </div>
 
             {width <= 640 ?
-                <CardNao noBg className="mt-5 !py-[18px] !px-3 max-h-[980px]">
-                    <div className="flex  mx-3 gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
-                        <div className="min-w-[55px]">{t('nao:contest:rank')}</div>
+                <CardNao noBg className="mt-5 !py-[18px] !px-3">
+                    <div className="flex mx-3 gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
+                        <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>
                     <div className="flex nao-table flex-col overflow-y-auto mt-3 pr-[10px]">
@@ -100,15 +100,15 @@ const ContestPerRanks = () => {
                             dataSource.map((item, index) => {
                                 return (
                                     <div key={index} className={`flex gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="min-w-[55px] text-nao-grey text-sm font-medium">{item?.[rank] || '-'}</div>
+                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium">{item?.[rank] || '-'}</div>
                                         <div className="text-sm flex-1">
                                             <label className="font-semibold leading-6">{item?.name}</label>
                                             <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
-                                            <div className="flex items-center justify-between pt-2">
+                                            <div className="flex items-center font-medium justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
                                             </div>
-                                            <div className="flex items-center justify-between pt-1">
+                                            <div className="flex items-center font-medium justify-between pt-1">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:per_pnl')}</label>
                                                 <span className={`text-right ${getColor(item?.pnl)}`}>
                                                     {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
@@ -129,7 +129,7 @@ const ContestPerRanks = () => {
                 :
                 <Table noItemsMessage={t('nao:contest:no_rank')}  dataSource={dataSource} >
                     <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={(data, item)=> <div>{item?.[rank] || '-'}</div>} />
-                    <Column minWidth={200} className="font-semibold" title={t('nao:contest:name')} fieldName="name" />
+                    <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" />
                     <Column minWidth={300} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />

@@ -25,7 +25,7 @@ const ContesRules = ({ inHome = false }) => {
                         hours,
                         minutes,
                         seconds,
-                    } }) => <div className="text-lg sm:text-2xl flex space-x-1" dangerouslySetInnerHTML={{ __html: t('nao:contest:date', { days, hours, minutes }) }} ></div>}
+                    } }) => <div className="text-lg sm:text-2xl flex" dangerouslySetInnerHTML={{ __html: t('nao:contest:date', { days, hours, minutes }) }} ></div>}
                     onComplete={() => setIsLoadingEmail(false)}
                 />
             </>
@@ -39,7 +39,7 @@ const ContesRules = ({ inHome = false }) => {
                         hours,
                         minutes,
                         seconds,
-                    } }) => <div className="text-lg sm:text-2xl flex space-x-1" dangerouslySetInnerHTML={{ __html: t('nao:contest:date', { days, hours, minutes }) }} ></div>}
+                    } }) => <div className="text-lg sm:text-2xl flex" dangerouslySetInnerHTML={{ __html: t('nao:contest:date', { days, hours, minutes }) }} ></div>}
                     onComplete={() => setIsLoadingEmail(false)}
                 />
             </>
@@ -62,12 +62,12 @@ const ContesRules = ({ inHome = false }) => {
                             ? <ButtonNao onClick={() => router.push('/contest')} className='py-2 px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:ranking')}</ButtonNao>
                             : <ButtonNao onClick={() => router.push('https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien')} className='py-2 px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:detail_rules')}</ButtonNao>
                     }
-                    <CardNao customHeight={'sm:min-h-[40px] lg:min-h-[40]'} noBg className="flex !flex-row !justify-center md:!justify-start !py-3 items-center gap-3 sm:!bg-none">
+                    <CardNao customHeight={'sm:min-h-[40px] lg:min-h-[40]'} noBg className="flex !flex-row !justify-center md:!justify-start !py-3 items-center gap-3 sm:!bg-none flex-wrap">
                         {renderCountDown}
                     </CardNao>
                 </div>
             </div>
-            <div className='relative lg:-top-10 sm:m-auto md:m-auto mt-4'>
+            <div className='relative xl:-top-10 sm:m-auto md:m-auto mt-4'>
                 <img src={getS3Url("/images/nao/contest/ic_contest_info.png")} alt="" width={300} height={292} />
             </div>
         </section>

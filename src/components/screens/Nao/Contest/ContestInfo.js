@@ -9,7 +9,7 @@ import { formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL } from 'redux/actions/apis';
 
 import Tooltip from 'components/common/Tooltip';
-const ContestInfo = () => {
+const ContestInfo = ({ onShowDetail }) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
     const [userData, setUserData] = useState(null);
@@ -38,14 +38,14 @@ const ContestInfo = () => {
     if (!(user && userData)) return null;
 
     return (
-        <section className="contest_info pt-[100px] sm:pt-9">
+        <section className="contest_info pt-[70px]">
             <TextLiner>{t('nao:contest:personal')}</TextLiner>
             <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-8 ">
                 <CardNao className="!min-h-[136px] !px-6 !py-9 lg:!max-w-[375px]">
                     <label className="text-2xl text-nao-green font-semibold left-8">{userData?.name}</label>
                     <div
                         className=" text-nao-grey2 text-sm font-medium mt-4 flex sm:flex-col items-center sm:items-start">
-                        <div className="leading-6 mt-1 cursor-pointer">ID: {userData?.onus_user_id}</div>
+                        <div onClick={() => onShowDetail({ displaying_id: userData?.onus_user_id })} className="leading-6 mt-1 cursor-pointer">ID: {userData?.onus_user_id}</div>
                         <span className="text-nao-white mx-2 sm:hidden">•</span>
                         <div className="flex text-nao-grey2 leading-6 ">{t('nao:contest:team_label')}:&nbsp;<span
                             className="text-nao-green font-medium">{userData?.group_name || '-'}</span></div>
