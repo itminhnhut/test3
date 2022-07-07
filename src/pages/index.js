@@ -11,7 +11,7 @@ import NaoToken from 'components/screens/Nao/Section/NaoToken';
 import { getS3Url } from 'redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
 import fetchApi from 'utils/fetch-api';
-import { API_POOL_INFO } from 'redux/actions/apis';
+import { API_POOL_AMM, API_POOL_INFO } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -29,10 +29,12 @@ const getAssetNao = createSelector(
 const NaoDashboard = () => {
     const { width } = useWindowSize();
     const [dataSource, setDataSource] = useState([])
+    const [ammData, setAmmData] = useState(null)
     const assetNao = useSelector(state => getAssetNao(state, 'NAO'));
 
     useEffect(() => {
         getStake();
+        getPoolAmm();
     }, [])
 
     const getStake = async () => {
@@ -42,6 +44,20 @@ const NaoDashboard = () => {
             });
             if (data) {
                 setDataSource(data)
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+        }
+    }
+
+    const getPoolAmm = async () => {
+        try {
+            const { data } = await fetchApi({
+                url: API_POOL_AMM,
+            });
+            if (data) {
+                setAmmData(data)
             }
         } catch (e) {
             console.log(e)
@@ -70,7 +86,7 @@ const NaoDashboard = () => {
                 <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
                     <NaoHeader onDownload={onDownload} />
                     <div className="nao_section">
-                        <NaoInfo dataSource={dataSource} assetNao={assetNao} />
+                        <NaoInfo dataSource={dataSource} assetNao={assetNao} ammData={ammData} />
                         <NaoPerformance />
                         <NaoPool dataSource={dataSource} assetNao={assetNao} />
                         <NaoToken onDownload={onDownload} />

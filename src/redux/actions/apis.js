@@ -201,6 +201,7 @@ export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campai
 export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic';
 //POOL
 export const API_POOL_INFO = API_V3_PREFIX + 'pool/info';
+export const API_POOL_AMM = API_V3_PREFIX + 'pool/amm-analytic';
 export const API_POOL_USER_INFO = API_V3_PREFIX + 'pool/user-info';
 export const API_POOL_STAKE = API_V3_PREFIX + 'pool/place-stake';
 export const API_POOL_UN_STAKE = API_V3_PREFIX + 'pool/un-stake';

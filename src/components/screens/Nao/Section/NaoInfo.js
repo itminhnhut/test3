@@ -4,12 +4,12 @@ import { getS3Url, formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { Progressbar } from 'components/screens/Nao/NaoStyle';
 
-const NaoInfo = ({ dataSource, assetNao }) => {
+const NaoInfo = ({ dataSource, assetNao, ammData }) => {
     const { t } = useTranslation();
 
     const holders_wallet = useMemo(() => {
-        return 22250000 - 6250000 - dataSource?.totalStaked
-    }, [dataSource])
+        return 22250000 - ammData - dataSource?.totalStaked
+    }, [dataSource, ammData])
 
     return (
         <section id="nao_info" className="flex items-center justify-between pt-10 sm:pt-20 flex-wrap gap-8">
@@ -52,14 +52,22 @@ const NaoInfo = ({ dataSource, assetNao }) => {
                     <div className="flex items-center justify-between text-sm space-x-10">
                         <label className="text-nao-text font-medium">{t('nao:holders_wallet')}</label>
                         <div className="flex items-center space-x-2">
-                            <div className='font-semibold'>-</div>
+                            {
+                                ammData
+                                    ?<div className='font-semibold'>{formatNumber(holders_wallet, assetNao?.assetDigit ?? 8)}</div>
+                                    :<div className='font-semibold'>-</div>
+                            }
                             <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                         </div>
                     </div>
                     <div className="flex items-center justify-between text-sm space-x-10">
                         <label className="text-nao-text font-medium">{t('nao:liq_pools')}</label>
                         <div className="flex items-center space-x-2">
-                            <div className='font-semibold'>-</div>
+                            {
+                                ammData
+                                    ?<div className='font-semibold'>{formatNumber(ammData, assetNao?.assetDigit ?? 8)}</div>
+                                    :<div className='font-semibold'>-</div>
+                            }
                             <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
                         </div>
                     </div>
