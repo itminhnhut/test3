@@ -120,6 +120,10 @@
         "name": "Tên",
         "captain": "Đội trưởng",
         "information": "Thông tin",
-        "team_ranking": "Bảng xếp hạng đội nhóm"
+        "team_ranking": "Bảng xếp hạng đội nhóm",
+        "details": "Chi tiết",
+        "volume_ranking": "Thứ hạng KL",
+        "pnl_ranking": "Thứ hạng LN",
+        "no": "STT"
     }
 }

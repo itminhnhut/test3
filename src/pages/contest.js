@@ -5,10 +5,12 @@ import ContesRules from 'components/screens/Nao/Contest/ContesRules';
 import ContestInfo from 'components/screens/Nao/Contest/ContestInfo';
 import ContestPerRanks from 'components/screens/Nao/Contest/ContestPerRanks';
 import ContestTeamRanks from 'components/screens/Nao/Contest/ContestTeamRanks';
+import ContestDetail from 'components/screens/Nao/Contest/ContestDetail';
 
 const Contest = () => {
     return (
         <LayoutNaoToken>
+            {/* <ContestDetail /> */}
             <div className="nao_section">
                 <ContesRules />
                 <ContestInfo />
