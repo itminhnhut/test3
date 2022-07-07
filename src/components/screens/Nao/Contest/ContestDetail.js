@@ -57,7 +57,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                     { visible: visible },
                 )}
             >
-                <div className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl mx-4 w-[calc(100%-32px)] max-w-[979px] overflow-y-auto">
+                <div className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl w-[calc(100%-32px)] max-w-[979px] overflow-y-auto">
                     <div className="flex sm:items-center sm:justify-between gap-2 lg:gap-20 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7">
                             <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{dataSource?.[rank]}</TextLiner>
@@ -82,20 +82,20 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                             </div>
                             <div className="h-[1px] sm:h-auto w-full sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                             <div className="flex sm:flex-col gap-1 justify-between sm:justify-start">
+                                <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
+                                <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
+                            </div>
+                            <div className="h-[1px] sm:h-auto w-full sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
+                            <div className="flex sm:flex-col gap-1 justify-between sm:justify-start">
                                 <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:per_pnl')}</label>
                                 <span className={`font-semibold ${getColor(dataSource?.pnl)}`}>
                                     {`${dataSource?.pnl > 0 ? '+' : ''}${formatNumber(dataSource?.pnl, 2, 0, true)}%`}
                                 </span>
                             </div>
-                            <div className="h-[1px] sm:h-auto w-full sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
-                            <div className="flex sm:flex-col gap-1 justify-between sm:justify-start">
-                                <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
-                                <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
-                            </div>
                         </CardNao>
                     </div>
                     {width <= 640 ?
-                        <CardNao noBg className="mt-5 !py-3 !px-2 max-h-[317px]">
+                        <CardNao noBg className="mt-5 !py-3 !px-2">
                             <div className="flex  mx-3 gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
                                 <div className="min-w-[55px]">{t('nao:contest:no')}</div>
                                 <div>{t('nao:contest:information')}</div>
@@ -115,7 +115,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                                                         </div>
                                                         <div className="font-medium flex items-center justify-between pt-2">
                                                             <div className="leading-6 text-nao-grey">{t('nao:contest:trades')}</div>
-                                                            <span className="text-right">{formatNumber(item?.total_order, 0)}</span>
+                                                            <span className="text-right text-nao-text">{formatNumber(item?.total_order, 0)}</span>
                                                         </div>
                                                         <div className="font-medium flex items-center justify-between pt-2">
                                                             <div className="leading-6 text-nao-grey">{t('nao:contest:volume')}</div>
@@ -142,12 +142,12 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                         </CardNao>
                         :
                         <Table dataSource={dataSource?.members ?? []} >
-                            <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:no')} fieldName={"index"} />
-                            <Column minWidth={300} className="font-semibold" title={t('nao:contest:name')} fieldName="name" />
-                            <Column minWidth={150} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
-                            <Column minWidth={100} align="right" className="font-medium" title={t('nao:contest:trades')} fieldName="total_order" />
-                            <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
-                            <Column minWidth={150} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
+                            <Column minWidth={70} className="text-nao-grey font-medium" title={t('nao:contest:no')} fieldName={"index"} />
+                            <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" />
+                            <Column minWidth={200} ellipsis className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
+                            <Column minWidth={100} className="font-medium" title={t('nao:contest:trades')} fieldName="total_order" />
+                            <Column minWidth={150} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
+                            <Column minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                         </Table>
                     }
 

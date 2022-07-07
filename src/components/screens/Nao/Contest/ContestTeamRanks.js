@@ -47,8 +47,8 @@ const ContestTeamRanks = ({ onShowDetail }) => {
     const renderTeam = (data, item) => {
         return (
             <div className='flex items-center gap-2'>
-                <div className='w-6 h-6 rounded-[50%] bg-[#273446]'>
-                    <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
+                    <img className='rounded-[50%]' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                 </div>
                 <div>{data}</div>
             </div>
@@ -97,9 +97,9 @@ const ContestTeamRanks = ({ onShowDetail }) => {
             </div>
 
             {width <= 640 ?
-                <CardNao noBg className="mt-5 !py-[18px] !px-3 max-h-[980px]">
+                <CardNao noBg className="mt-5 !py-[18px] !px-3">
                     <div className="flex  mx-3 gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
-                        <div className="min-w-[55px]">{t('nao:contest:rank')}</div>
+                        <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>
                     <div className="flex nao-table flex-col overflow-y-auto mt-3 pr-[10px]">
@@ -107,20 +107,20 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                             dataSource.map((item, index) => {
                                 return (
                                     <div onClick={() => onShowDetail(item, tab)} key={index} className={`flex gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="min-w-[55px] text-nao-grey text-sm font-medium">{item?.[rank]}</div>
+                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium">{item?.[rank] || '-'}</div>
                                         <div className="text-sm flex-1">
                                             <div className="font-semibold leading-6 gap-2 flex items-center">
-                                                <div className='w-6 h-6 rounded-[50%] bg-[#273446]'>
-                                                    <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                                                <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
+                                                    <img className="rounded-[50%] object-cover" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                                                 </div>
                                                 <div>{item?.name}</div>
                                             </div>
                                             <div className="text-nao-grey font-medium leading-6 cursor-pointer">{item?.leader_name}</div>
-                                            <div className="flex items-center justify-between pt-2">
+                                            <div className="flex items-center font-medium justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
                                             </div>
-                                            <div className="flex items-center justify-between pt-1">
+                                            <div className="flex items-center font-medium justify-between pt-1">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:per_pnl')}</label>
                                                 <span className={`text-right ${getColor(item?.pnl)}`}>
                                                     {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
@@ -145,9 +145,9 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                 </CardNao>
                 :
                 <Table noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)} >
-                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} cellRender={(data, item)=> <div>{item?.[rank] || '-'}</div>} />
+                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} cellRender={(data, item) => <div>{item?.[rank] || '-'}</div>} />
                     <Column minWidth={200} className="font-semibold" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
-                    <Column minWidth={300} className="text-nao-text" title={t('nao:contest:captain')} fieldName="leader_name" />
+                    <Column minWidth={300} className="text-nao-text capitalize" title={t('nao:contest:captain')} fieldName="leader_name" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                 </Table>

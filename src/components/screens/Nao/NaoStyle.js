@@ -75,9 +75,9 @@ export const Tooltip = ({ id }) => {
 }
 
 
-export const Column = ({ title, minWidth = 100, sortable, align = 'left', classHeader = '' }) => {
+export const Column = ({ title, maxWidth, minWidth = 100, sortable, align = 'left', classHeader = '' }) => {
     return (
-        <div style={{ minWidth, textAlign: align }} className={classHeader}> {title}</div>
+        <div style={{ minWidth, textAlign: align, maxWidth }} className={classHeader}> {title}</div>
     )
 }
 
@@ -160,14 +160,16 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
     const isScroll = checkScrollBar(content.current, 'vertical');
 
     return (
-        <CardNao noBg className="mt-5 !py-6 !px-3 max-h-[400px] !justify-start">
+        <CardNao noBg className="mt-5 !pb-6 !pt-3 !px-3 !justify-start">
             <div ref={header} className={classNames(
-                'z-10 pb-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden',
-                'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between pr-7 w-full',
+                'z-10 py-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden',
+                'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between w-full',
+                // 'pr-7'
                 classHeader
             )}>
                 {children.map((item, indx) => (
                     <Column key={indx} {...item.props} classHeader={classNames(
+                        'whitespace-nowrap',
                         { 'flex-1': indx !== 0 },
                     )} />
                 ))}
@@ -188,6 +190,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                 )}>
                                 {children.map((child, indx) => {
                                     const minWidth = child?.props?.minWidth;
+                                    const maxWidth = child?.props?.maxWidth;
                                     const className = child?.props?.className ?? '';
                                     const align = child?.props?.align ?? 'left';
                                     const _align = align === 'right' ? 'flex justify-end' : '';
@@ -195,8 +198,10 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                     const suffix = child?.props?.suffix;
                                     const decimal = child?.props?.decimal;
                                     const fieldName = child?.props?.fieldName;
+                                    const ellipsis = child?.props?.ellipsis;
+
                                     return (
-                                        <div style={{ minWidth, textAlign: align }} key={indx}
+                                        <div title={item[fieldName]} style={{ maxWidth, minWidth, textAlign: align }} key={indx}
                                             className={classNames(
                                                 `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
                                                 'break-all',
@@ -204,7 +209,11 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                             )}>
                                             {cellRender ? cellRender(item[fieldName], item) :
                                                 decimal >= 0 ? formatNumber(item[fieldName], decimal, 0, true) :
-                                                    fieldName === 'index' ? index + 1 : item[fieldName]
+                                                    fieldName === 'index' ? index + 1 :
+                                                        ellipsis ? <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                                                            {item[fieldName]}
+                                                        </span> : item[fieldName]
+
                                             }
                                             {suffix ? ` ${suffix}` : ''}
                                         </div>
