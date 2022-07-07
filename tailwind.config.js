@@ -63,6 +63,7 @@ const commonColors = {
         border: '#4AEDFF',
         border2: '#18223E',
         bgModal: '#161D32',
+        bgModal2: '#00030D',
         bgShadow: '#000921',
         red: '#DC1F4E'
     }

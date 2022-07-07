@@ -7,16 +7,16 @@ import useWindowSize from 'hooks/useWindowSize';
 import { useEffect } from 'react';
 import { useRef } from 'react';
 import { useTranslation } from 'next-i18next';
-import { getS3Url } from 'redux/actions/utils';
+import { getS3Url, formatNumber } from 'redux/actions/utils';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-nao-white'
 })`
-    background: ${({ linder }) => linder && `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)`};
-    -webkit-background-clip: ${({ linder }) => linder && `text`};
-    -webkit-text-fill-color: ${({ linder }) => linder && `transparent`};
-    background-clip: ${({ linder }) => linder && `text`};
-    text-fill-color: ${({ linder }) => linder && `transparent`};
+    background: ${({ liner }) => liner && `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)`};
+    -webkit-background-clip: ${({ liner }) => liner && `text`};
+    -webkit-text-fill-color: ${({ liner }) => liner && `transparent`};
+    background-clip: ${({ liner }) => liner && `text`};
+    text-fill-color: ${({ liner }) => liner && `transparent`};
 `
 
 export const CardNao = styled.div.attrs(({ noBg, customHeight }) => ({
@@ -82,68 +82,68 @@ export const Column = ({ title, minWidth = 100, sortable, align = 'left', classH
 }
 
 export const Table = ({ dataSource, children }) => {
-    const { width } = useWindowSize();
     const mouseDown = useRef(false);
     const startX = useRef(null)
     const scrollLeft = useRef(null)
     const startY = useRef(null)
     const scrollTop = useRef(null)
     const { t } = useTranslation();
+    const content = useRef(null);
+    const header = useRef(null);
 
     const onScroll = (e) => {
-        const header = document.querySelector('.nao-table-header');
-        header.scrollTo({
+        header.current.scrollTo({
             left: e.target.scrollLeft,
         })
     }
 
     const startDragging = (e) => {
-        const el = document.querySelector('.nao-table-content')
-        el.classList.add('cursor-grabbing');
+        content.current.classList.add('cursor-grabbing');
         mouseDown.current = true;
-        startX.current = e.pageX - el.offsetLeft;
-        scrollLeft.current = el.scrollLeft;
+        startX.current = e.pageX - content.current.offsetLeft;
+        scrollLeft.current = content.current.scrollLeft;
 
-        startY.current = e.pageY - el.offsetTop;
-        scrollTop.current = el.scrollTop;
+        startY.current = e.pageY - content.current.offsetTop;
+        scrollTop.current = content.current.scrollTop;
     }
 
     const stopDragging = (event) => {
-        const el = document.querySelector('.nao-table-content')
-        el.classList.remove('cursor-grabbing');
+        content.current.classList.remove('cursor-grabbing');
         mouseDown.current = false;
     };
 
     const onDrag = (e) => {
         e.preventDefault();
         if (!mouseDown.current) return;
-        const el = document.querySelector('.nao-table-content')
-        const x = e.pageX - el.offsetLeft;
+        const x = e.pageX - content.current.offsetLeft;
         const scroll = x - startX.current;
-        el.scrollLeft = scrollLeft.current - scroll;
+        content.current.scrollLeft = scrollLeft.current - scroll;
 
-        const y = e.pageY - el.offsetTop;
+        const y = e.pageY - content.current.offsetTop;
         const scrollY = y - startY.current;
-        el.scrollTop = scrollTop.current - scrollY;
+        content.current.scrollTop = scrollTop.current - scrollY;
     }
 
     useEffect(() => {
-        const el = document.querySelector('.nao-table-content')
-        el.addEventListener('mousemove', onDrag)
-        el.addEventListener('mousedown', startDragging, false);
-        el.addEventListener('mouseup', stopDragging, false);
-        el.addEventListener('mouseleave', stopDragging, false);
-        return () => {
-            el.removeEventListener('mousemove', onDrag)
-            el.removeEventListener('mousedown', startDragging, false);
-            el.removeEventListener('mouseup', stopDragging, false);
-            el.removeEventListener('mouseleave', stopDragging, false);
+        if (content.current) {
+            content.current.addEventListener('mousemove', onDrag)
+            content.current.addEventListener('mousedown', startDragging, false);
+            content.current.addEventListener('mouseup', stopDragging, false);
+            content.current.addEventListener('mouseleave', stopDragging, false);
         }
-    }, [])
+        return () => {
+            if (content.current) {
+                content.current.removeEventListener('mousemove', onDrag)
+                content.current.removeEventListener('mousedown', startDragging, false);
+                content.current.removeEventListener('mouseup', stopDragging, false);
+                content.current.removeEventListener('mouseleave', stopDragging, false);
+            }
+        }
+    }, [content.current])
 
     return (
         <CardNao noBg className="mt-5 !py-6 !px-3 max-h-[400px]">
-            <div className={classNames(
+            <div ref={header} className={classNames(
                 'sticky top-0 z-10 pb-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden',
                 'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between pr-7 w-full',
             )}>
@@ -154,9 +154,9 @@ export const Table = ({ dataSource, children }) => {
                     )} />
                 ))}
             </div>
-            <div onScroll={onScroll}
+            <div onScroll={onScroll} ref={content}
                 className={classNames(
-                    'nao-table-content mt-3 overflow-auto nao-table pr-[10px] cursor-grabbing',
+                    'nao-table-content mt-3 overflow-auto nao-table pr-[10px] ',
                 )}>
                 {Array.isArray(dataSource) && dataSource?.length > 0 ?
                     dataSource.map((item, index) => {
@@ -172,13 +172,17 @@ export const Table = ({ dataSource, children }) => {
                                     const align = child?.props?.align ?? 'left';
                                     const _align = align === 'right' ? 'flex justify-end' : '';
                                     const cellRender = child?.props?.cellRender;
+                                    const suffix = child?.props?.suffix;
+                                    const decimal = child?.props?.decimal;
                                     return (
                                         <div style={{ minWidth, textAlign: align }} key={indx}
                                             className={classNames(
                                                 `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
                                                 { 'flex-1': indx !== 0 }
                                             )}>
-                                            {cellRender ? cellRender(item[child?.props.fieldName], item) : item[child?.props.fieldName]}
+                                            {cellRender ? cellRender(item[child?.props.fieldName], item) :
+                                                decimal >= 0 ? formatNumber(item[child?.props.fieldName], decimal, 0, true) : item[child?.props.fieldName]}
+                                            {suffix ? ` ${suffix}` : ''}
                                         </div>
                                     )
                                 })}
@@ -195,4 +199,13 @@ export const Table = ({ dataSource, children }) => {
             </div>
         </CardNao>
     )
+}
+
+export const getColor = (value) => {
+    return value !== 0 ? value > 0 ? 'text-nao-green2' : 'text-nao-red' : '';
+}
+
+export const renderPnl = (data, item) => {
+    const prefix = data && data > 0 ? '+' : ''
+    return <div className={`${getColor(data)}`}>{prefix + formatNumber(data, 2, 0, true)}%</div>
 }

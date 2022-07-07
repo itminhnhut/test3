@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL } from 'redux/actions/apis';
+import { getS3Url } from 'redux/actions/utils';
 
 const ContestInfo = () => {
     const { t } = useTranslation();
@@ -43,7 +44,7 @@ const ContestInfo = () => {
                     <label className="text-2xl text-nao-green font-semibold left-8">{userData?.name}</label>
                     <div
                         className=" text-nao-grey2 text-sm font-medium mt-4 flex sm:flex-col items-center sm:items-start">
-                        <div className="leading-6 mt-1">ID: {userData?.onus_user_id}</div>
+                        <div className="leading-6 mt-1 cursor-pointer">ID: {userData?.onus_user_id}</div>
                         <span className="text-nao-white mx-2 sm:hidden">•</span>
                         <div className="flex text-nao-grey2 leading-6 ">{t('nao:contest:team_label')}:&nbsp;<span
                             className="text-nao-green font-medium">{userData?.group_name || '-'}</span></div>
@@ -74,10 +75,11 @@ const ContestInfo = () => {
                         </div>
                         <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2 md:hidden"></div>
                         <div className="flex items-center justify-between w-full md:w-1/2">
-                            <label className="text-nao-grey2 text-sm leading-6 ">{t('nao:contest:per_pnl')}</label>
-                            <div
-                                className={`font-semibold leading-8 text-right ${userData?.pnl < 0 ? 'text-nao-red' : 'text-nao-green2'}`}>{formatNumber(userData?.pnl, 2, 0, true)}%
+                            <div className="flex items-center gap-2">
+                                <label className="text-nao-grey2 text-sm leading-6 ">{t('nao:contest:per_pnl')}</label>
+                                <img className="opacity-60 cursor-pointer" alt="" src={getS3Url('/images/nao/ic_help.png')} height={16} width={16} />
                             </div>
+                            className={`font-semibold leading-8 text-right ${userData?.pnl < 0 ? 'text-nao-red' : 'text-nao-green2'}`}>{formatNumber(userData?.pnl, 2, 0, true)}%
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2 md:hidden"></div>
