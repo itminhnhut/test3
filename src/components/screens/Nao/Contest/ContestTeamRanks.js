@@ -55,6 +55,12 @@ const ContestTeamRanks = ({ onShowDetail }) => {
         )
     }
 
+    const renderActions = (e) => {
+        return (
+            <div className="text-nao-grey underline text-xs cursor-pointer">{t('nao:contest:details')}</div>
+        )
+    }
+
 
     return (
         <section className="contest_individual_ranks pt-[70px]">
@@ -150,6 +156,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                     <Column minWidth={300} className="text-nao-text capitalize" title={t('nao:contest:captain')} fieldName="leader_name" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
+                    <Column minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
                 </Table>
             }
         </section>
