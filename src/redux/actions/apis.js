@@ -209,4 +209,5 @@ export const API_POOL_USER_SHARE_HISTORIES = API_V3_PREFIX + 'pool/user-share-re
 
 export const API_CONTEST_GET_RANK_MEMBERS_PNL = API_PREFIX + 'event/futures-contest/rank-member-pnl';
 export const API_CONTEST_GET_RANK_MEMBERS_VOLUME = API_PREFIX + 'event/futures-contest/rank-member-volume';
+export const API_CONTEST_GET_USER_DETAIL = API_PREFIX + 'event/futures-contest/user-info';
 
