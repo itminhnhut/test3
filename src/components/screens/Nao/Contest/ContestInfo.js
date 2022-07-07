@@ -3,11 +3,12 @@ import { CardNao, TextLiner } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 
+import { getS3Url } from 'redux/actions/utils';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL } from 'redux/actions/apis';
-import { getS3Url } from 'redux/actions/utils';
 
+import Tooltip from 'components/common/Tooltip';
 const ContestInfo = () => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
@@ -75,11 +76,20 @@ const ContestInfo = () => {
                         </div>
                         <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2 md:hidden"></div>
                         <div className="flex items-center justify-between w-full md:w-1/2">
-                            <div className="flex items-center gap-2">
-                                <label className="text-nao-grey2 text-sm leading-6 ">{t('nao:contest:per_pnl')}</label>
-                                <img className="opacity-60 cursor-pointer" alt="" src={getS3Url('/images/nao/ic_help.png')} height={16} width={16} />
+                            <label className="flex items-center text-nao-grey2 text-sm leading-6 ">{t('nao:contest:per_pnl')}
+                                <div className="px-2 cursor-pointer" data-tip="" data-for="liquidate-fee" id="tooltip-liquidate-fee">
+                                    <img src={getS3Url('/images/icon/ic_help.png')} height={16} width={16} />
+                                </div>
+                                <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                    arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
+                                >
+                                    <div>{t('nao:contest:per_pnl_tooltip')}</div>
+                                </Tooltip>
+
+                            </label>
+                            <div
+                                className={`font-semibold leading-8 text-right ${userData?.pnl < 0 ? 'text-nao-red' : 'text-nao-green2'}`}>{formatNumber(userData?.pnl, 2, 0, true)}%
                             </div>
-                            className={`font-semibold leading-8 text-right ${userData?.pnl < 0 ? 'text-nao-red' : 'text-nao-green2'}`}>{formatNumber(userData?.pnl, 2, 0, true)}%
                         </div>
                     </div>
                     <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2 md:hidden"></div>

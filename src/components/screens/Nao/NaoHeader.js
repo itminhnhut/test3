@@ -43,7 +43,7 @@ const NaoHeader = memo(({ onDownload }) => {
         <div className="nao_header flex justify-between items-center h-[90px] relative">
             <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                 language={language} t={t} scrollToView={scrollToView} onDownload={onDownload} />
-            <img src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
+            <img onClick={()=> router.push('/nao')} src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
             <div className={`flex items-center text-nao-text font-medium ${width > 800 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 800 && <>
                     {category.map(item => (

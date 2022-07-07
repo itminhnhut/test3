@@ -108,10 +108,12 @@
         "trades": "Số lệnh",
         "total_pnl": "Tổng lợi nhuận",
         "per_pnl": "% Lợi nhuận",
+        "per_pnl_tooltip": " % PnL = (Lợi nhuận / Ký quỹ) x 100%",
         "volume": "Khối lượng",
         "volume_rank": "Thứ hạng khối lượng",
         "pnl_rank": "Thứ hạng lợi nhuận",
         "individual_ranking": "Bảng xếp hạng cá nhân",
+        
         "rank": "Thứ hạng",
         "team": "Tên đội",
         "team_label": "Đội",
