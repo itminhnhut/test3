@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column } from 'components/screens/Nao/NaoStyle';
+import React, { useEffect, useState } from 'react';
+import { ButtonNao, CardNao, Column, Table, TextLiner } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_MEMBERS_PNL, API_CONTEST_GET_RANK_MEMBERS_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { getS3Url, formatNumber } from 'redux/actions/utils';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
 
 const ContestPerRanks = () => {
     const [tab, setTab] = useState('volume');

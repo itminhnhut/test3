@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ButtonNao, CardNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 
 import Countdown from 'react-countdown';
-import { useMemo } from 'react';
 import { useRouter } from 'next/router';
+
 const ContesRules = ({ inHome = false }) => {
     const { t } = useTranslation();
     const router = useRouter();

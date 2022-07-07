@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column } from 'components/screens/Nao/NaoStyle';
+import React, { useState } from 'react';
+import { ButtonNao, CardNao, Column, Table, TextLiner } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 
@@ -18,7 +18,7 @@ const ContestTeamRanks = () => {
         { rank: 1, team: "QUNI Offical", caption: 3, volume: 4, pnl: 5 },
         { rank: 1, team: "QUNI Offical", caption: 3, volume: 4, pnl: 5 },
         { rank: 1, team: "QUNI Offical", caption: 3, volume: 4, pnl: 5 },
-        
+
     ]
     const top3 = arr.slice(0, 3)
 
