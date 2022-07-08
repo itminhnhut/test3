@@ -45,10 +45,11 @@ const ContestInfo = ({ onShowDetail }) => {
                     <label className="text-2xl text-nao-green font-semibold left-8">{userData?.name}</label>
                     <div
                         className=" text-nao-grey2 text-sm font-medium mt-4 flex sm:flex-col items-center sm:items-start">
-                        <div onClick={() => onShowDetail({ displaying_id: userData?.onus_user_id })} className="leading-6 mt-1 cursor-pointer">ID: {userData?.onus_user_id}</div>
+                        <div className="leading-6 mt-1">ID: {userData?.onus_user_id}</div>
                         <span className="text-nao-white mx-2 sm:hidden">•</span>
-                        <div className="flex text-nao-grey2 leading-6 ">{t('nao:contest:team_label')}:&nbsp;<span
-                            className="text-nao-green font-medium">{userData?.group_name || '-'}</span></div>
+                        <div className="flex text-nao-grey2 leading-6 ">{t('nao:contest:team_label')}:&nbsp;
+                            <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.onus_user_id })}
+                                className="text-nao-green font-medium cursor-pointer">{userData?.group_name || '-'}</span></div>
                     </div>
                 </CardNao>
                 <CardNao className="!min-h-[136px] !py-7 !px-[35px] w-full lg:w-max">

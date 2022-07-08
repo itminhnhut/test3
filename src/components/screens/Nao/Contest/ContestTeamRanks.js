@@ -77,12 +77,12 @@ const ContestTeamRanks = ({ onShowDetail }) => {
             </div>
             <div className="flex items-center flex-wrap gap-5 sm:gap-[22px] mt-8">
                 {top3.map((item, index) => (
-                    <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
+                    <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
                         <div className="flex items-center gap-[30px] sm:gap-6">
                             <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{index + 1}</TextLiner>
                             <div className="gap-1 flex flex-col">
-                                <div className="text-lg font-semibold leading-8">{item?.name}</div>
-                                <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.leader_name}</span>
+                                <div className="text-lg font-semibold leading-8 cursor-pointer capitalize">{item?.name}</div>
+                                <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{item?.leader_name}</span>
                             </div>
                         </div>
                         <div className="rounded-lg mt-7">
@@ -121,7 +121,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                                                 </div>
                                                 <div>{item?.name}</div>
                                             </div>
-                                            <div className="text-nao-grey font-medium leading-6 cursor-pointer">{item?.leader_name}</div>
+                                            <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{item?.leader_name}</div>
                                             <div className="flex items-center font-medium justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
@@ -152,7 +152,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                 :
                 <Table noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)} >
                     <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} cellRender={(data, item) => <div>{item?.[rank] || '-'}</div>} />
-                    <Column minWidth={200} className="font-semibold" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
+                    <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column minWidth={300} className="text-nao-text capitalize" title={t('nao:contest:captain')} fieldName="leader_name" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />

@@ -91,6 +91,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
     const content = useRef(null);
     const header = useRef(null);
     const timer = useRef(null);
+    const handleClick = useRef(true);
 
     const onScroll = (e) => {
         header.current.scrollTo({
@@ -106,6 +107,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
 
         startY.current = e.pageY - content.current.offsetTop;
         scrollTop.current = content.current.scrollTop;
+        handleClick.current = true;
     }
 
     const stopDragging = (event) => {
@@ -123,6 +125,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
         const y = e.pageY - content.current.offsetTop;
         const scrollY = y - startY.current;
         content.current.scrollTop = scrollTop.current - scrollY;
+        handleClick.current = false;
     }
 
     const checkScrollBar = (element, dir) => {
@@ -138,6 +141,10 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
             element[dir] = 0;
         }
         return res;
+    }
+
+    const _onRowClick = (e, index) => {
+        if (onRowClick && handleClick.current) onRowClick(e)
     }
 
 
@@ -183,7 +190,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     dataSource.map((item, index) => {
                         return (
                             <div
-                                onClick={() => onRowClick && onRowClick(item)}
+                                onClick={() => _onRowClick(item, index)}
                                 key={`row_${index}`} className={classNames(
                                     'px-3 flex items-center flex-1 min-w-max',
                                     { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 },

@@ -57,15 +57,15 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                     { visible: visible },
                 )}
             >
-                <div className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl w-[calc(100%-32px)] max-w-[979px] overflow-y-auto">
+                <div className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl w-[calc(100%-32px)] max-h-[calc(100%-32px)] max-w-[979px] overflow-y-auto">
                     <div className="flex sm:items-center sm:justify-between gap-2 lg:gap-20 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7">
                             <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{dataSource?.[rank]}</TextLiner>
                             <div className="flex flex-col">
-                                <div className="text-[20px] leading-8 font-semibold">
+                                <div className="text-[20px] leading-8 font-semibold capitalize">
                                     {!dataSource ? <Skeletor width={120} height={20} /> : dataSource?.name}
                                 </div>
-                                <div className="text-sm text-nao-text leading-6 mt-[6px]">
+                                <div className="text-sm text-nao-text leading-6 mt-[6px] capitalize">
                                     {!dataSource ? <Skeletor width={80} height={10} /> : dataSource?.leader_name}
                                 </div>
                             </div>
@@ -107,7 +107,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                                             <div key={index} className={`flex gap-4 sm:gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
                                                 <div className="min-w-[31px] text-nao-grey text-sm font-medium">{index + 1}</div>
                                                 <div className="text-sm flex-1">
-                                                    <div className="font-semibold leading-6">{item?.name}</div>
+                                                    <div className="font-semibold leading-6 capitalize">{item?.name}</div>
                                                     <div className='flex flex-col gap-1 mt-[6px]'>
                                                         <div className="font-medium leading-6 cursor-pointer flex justify-between items-center">
                                                             <div className="text-nao-grey ">ID: </div>
