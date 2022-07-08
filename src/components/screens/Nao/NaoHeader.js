@@ -13,8 +13,8 @@ import { getS3Url } from 'redux/actions/utils';
 import { useRouter } from 'next/router'
 const category = [
     { label: 'Whitepaper', link: 'https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics', options: '_blank' },
-    { label: 'performance', el: 'nao_performance' },
-    { label: 'governance_pool', el: 'nao_pool' },
+    { label: 'performance', el: 'nao_performance', url: '/nao' },
+    { label: 'governance_pool', el: 'nao_pool', url: '/nao' },
     // { label: 'buy_token', el: 'nao_token' },
     { label: 'Stake NAO', link: '/nao/stake', options: '_self' },
     { label: 'contest_futures', link: '/contest', options: '_self' }
@@ -26,24 +26,40 @@ const NaoHeader = memo(({ onDownload }) => {
     const { width } = useWindowSize();
     const [visible, setVisible] = useState(false);
     const router = useRouter();
+    const el = useRef(null);
 
     const scrollToView = (item) => {
-        if (!item?.el && item.link) {
-            item?.options === '_self' ? router.push(item.link) : window.open(item.link, item.options);
+        if (!item?.el) {
+            if (item.link) item?.options === '_self' ? router.push(item.link) : window.open(item.link, item.options);
         } else {
-            const _el = document.querySelector('#' + item.el);
+            if (item?.url && router.route !== item?.url) {
+                el.current = item.el;
+                router.push(item.url)
+            } else {
+                const _el = document.querySelector('#' + item.el);
+                if (_el) _el.scrollIntoView()
+            }
+
+        }
+        if (visible) setVisible(false)
+
+    }
+    useEffect(() => {
+        router.events.on('routeChangeComplete', () => {
+            const _el = document.querySelector('#' + el.current);
             if (_el) {
                 _el.scrollIntoView()
-                if (visible) setVisible(false);
+                el.current = null;
             }
-        }
-    }
+        });
+    }, [router, el.current])
+
 
     return (
         <div className="nao_header flex justify-between items-center h-[90px] relative">
             <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                 language={language} t={t} scrollToView={scrollToView} onDownload={onDownload} />
-            <img onClick={()=> router.push('/nao')} src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
+            <img onClick={() => router.push('/nao')} src={getS3Url('/images/nao/ic_nao.png')} width='40' height='40' className='min-w-[2.5rem]' />
             <div className={`flex items-center text-nao-text font-medium ${width > 800 ? 'space-x-10' : 'space-x-4'}`}>
                 {width > 800 && <>
                     {category.map(item => (

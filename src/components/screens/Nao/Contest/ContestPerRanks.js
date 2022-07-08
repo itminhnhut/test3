@@ -5,7 +5,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_MEMBERS_PNL, API_CONTEST_GET_RANK_MEMBERS_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { formatNumber, getS3Url } from 'redux/actions/utils';
+import { formatNumber, getS3Url ,getLoginUrl} from 'redux/actions/utils';
 
 const ContestPerRanks = () => {
     const [tab, setTab] = useState('volume');
@@ -69,7 +69,7 @@ const ContestPerRanks = () => {
                         <div className="flex items-center gap-[30px] sm:gap-6">
                             <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{index + 1}</TextLiner>
                             <div className="gap-1 flex flex-col">
-                                <div className="text-lg font-semibold leading-8">{item?.name}</div>
+                                <div className="text-lg font-semibold leading-8 capitalize">{item?.name}</div>
                                 <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
                             </div>
                         </div>
@@ -103,7 +103,7 @@ const ContestPerRanks = () => {
                                     <div key={index} className={`flex gap-4 sm:gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
                                         <div className="min-w-[31px] text-nao-grey text-sm font-medium">{item?.[rank] || '-'}</div>
                                         <div className="text-sm flex-1">
-                                            <label className="font-semibold leading-6">{item?.name}</label>
+                                            <label className="font-semibold leading-6 capitalize">{item?.name}</label>
                                             <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
                                             <div className="flex items-center font-medium justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
