@@ -29,7 +29,7 @@ const NaoPerformance = memo(() => {
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
     const filter = useRef(null);
-    const [fee, setFee] = useState(null);
+    const [fee, setFee] = useState('VNDC');
     const [referencePrice, setReferencePrice] = useState({})
     const assetConfig = useSelector(state => state.utils.assetConfig);
 
