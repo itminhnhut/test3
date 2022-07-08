@@ -32,7 +32,7 @@ import axios from 'axios';
 import {ApiStatus} from 'redux/actions/const';
 import SortIcon from "components/screens/Mobile/SortIcon";
 
-const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO];
+const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO, WalletCurrency.NAMI, WalletCurrency.ONUS];
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 0,
