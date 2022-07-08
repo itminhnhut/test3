@@ -96,8 +96,18 @@ const NaoPerformance = memo(() => {
         }, []);
     }, [dataSource, assetConfig])
 
-    const _fee = useMemo(() => {
-        return assets.find(rs => rs.assetCode === fee)
+    const feeFilter = useMemo(() => {
+        const _fee = assets.find(rs => rs.assetCode === fee);
+        const filter = [
+            { label: 'NAO', ratio: '0.036' },
+            { label: 'NAMI', ratio: '0.045' },
+            { label: 'ONUS', ratio: '0.045' },
+            { label: 'VNDC', ratio: '0.06' },
+        ];
+        return {
+            total: _fee ? formatNumber(_fee?.value, _fee?.assetDigit) + ' ' + _fee?.assetCode : '-',
+            ratio: filter.find(rs => rs.label === fee)?.ratio ?? '0.06'
+        }
     }, [fee, assets])
 
     return (
@@ -164,8 +174,8 @@ const NaoPerformance = memo(() => {
                         </Popover>
                     </div>
                     <div className="pt-4">
-                        <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{_fee ? formatNumber(_fee?.value, _fee?.assetDigit) + ' ' + _fee?.assetCode : '-'}</div>
-                        <span className="text-sm text-nao-grey">{(_fee?.assetCode || fee) === 'NAO' ? '0.036' : '0.06'}%</span>
+                        <div className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{feeFilter.total}</div>
+                        <span className="text-sm text-nao-grey">{feeFilter.ratio}%</span>
                     </div>
                 </CardNao>
             </div>

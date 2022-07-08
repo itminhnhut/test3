@@ -155,7 +155,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                     <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} cellRender={(data, item) => <div>{item?.[rank] || '-'}</div>} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column minWidth={300} className="text-nao-text capitalize" title={t('nao:contest:captain')} fieldName="leader_name" />
-                    <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
+                    <Column minWidth={200} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                     <Column minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
                 </Table>

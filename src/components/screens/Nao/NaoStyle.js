@@ -75,9 +75,9 @@ export const Tooltip = ({ id }) => {
 }
 
 
-export const Column = ({ title, maxWidth, minWidth = 100, sortable, align = 'left', classHeader = '' }) => {
+export const Column = ({ title, maxWidth, minWidth, width, sortable, align = 'left', classHeader = '' }) => {
     return (
-        <div style={{ minWidth, textAlign: align, maxWidth }} className={classHeader}> {title}</div>
+        <div style={{ minWidth, textAlign: align, maxWidth, width }} className={classHeader}> {title}</div>
     )
 }
 
@@ -176,8 +176,10 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
             )}>
                 {children.map((item, indx) => (
                     <Column key={indx} {...item.props} classHeader={classNames(
-                        'whitespace-nowrap',
+                        'whitespace-nowrap px-2',
                         { 'flex-1': indx !== 0 },
+                        { 'pl-0': indx === 0 },
+                        { 'pr-0': indx == children.length - 1 },
                     )} />
                 ))}
             </div>
@@ -191,11 +193,13 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                         return (
                             <div
                                 onClick={() => _onRowClick(item, index)}
+                                style={{ minWidth: 'fit-content' }}
                                 key={`row_${index}`} className={classNames(
-                                    'px-3 flex items-center flex-1 min-w-max',
+                                    'px-3 flex items-center flex-1 w-full',
                                     { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 },
                                 )}>
                                 {children.map((child, indx) => {
+                                    const width = child?.props?.width;
                                     const minWidth = child?.props?.minWidth;
                                     const maxWidth = child?.props?.maxWidth;
                                     const className = child?.props?.className ?? '';
@@ -208,11 +212,13 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                     const ellipsis = child?.props?.ellipsis;
 
                                     return (
-                                        <div title={item[fieldName]} style={{ maxWidth, minWidth, textAlign: align }} key={indx}
+                                        <div title={item[fieldName]} style={{ width, maxWidth, minWidth, textAlign: align }} key={indx}
                                             className={classNames(
                                                 `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
-                                                'break-all',
-                                                { 'flex-1': indx !== 0 }
+                                                'break-words px-2',
+                                                { 'flex-1': indx !== 0 },
+                                                { 'pl-0': indx === 0 },
+                                                { 'pr-0': indx == children.length - 1 },
                                             )}>
                                             {cellRender ? cellRender(item[fieldName], item) :
                                                 decimal >= 0 ? formatNumber(item[fieldName], decimal, 0, true) :
