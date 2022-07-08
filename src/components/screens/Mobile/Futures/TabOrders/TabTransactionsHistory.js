@@ -31,7 +31,7 @@ const categories = [
 
 ]
 
-const ASSETS = [72, 447]
+const ASSETS = [72, 447, 1, 86]
 
 const noteCases = [
     '^BALANCE: Swap future order (\\d+)$',
