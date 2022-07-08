@@ -20,12 +20,13 @@ const ContestTeamRanks = ({ onShowDetail }) => {
 
     const rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
     const getRanks = async (tab) => {
+        const _rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
         try {
             const { data, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
             });
             if (data && status === ApiStatus.SUCCESS) {
-                const sliceIndex = data[0]?.[rank] > 0 ? 3 : 0
+                const sliceIndex = data[0]?.[_rank] > 0 ? 3 : 0
                 const _top3 = data.slice(0, sliceIndex);
                 const _dataSource = data.slice(sliceIndex)
                 setTop3(_top3);
