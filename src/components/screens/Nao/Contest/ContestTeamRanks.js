@@ -119,7 +119,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                                                 <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
                                                     <img className="rounded-[50%] object-cover" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                                                 </div>
-                                                <div>{item?.name}</div>
+                                                <div className="capitalize">{item?.name}</div>
                                             </div>
                                             <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{item?.leader_name}</div>
                                             <div className="flex items-center font-medium justify-between pt-2">

@@ -26,20 +26,34 @@ const NaoHeader = memo(({ onDownload }) => {
     const { width } = useWindowSize();
     const [visible, setVisible] = useState(false);
     const router = useRouter();
+    const el = useRef(null);
 
     const scrollToView = (item) => {
         if (!item?.el) {
             if (item.link) item?.options === '_self' ? router.push(item.link) : window.open(item.link, item.options);
         } else {
-            // if(item?.url){
-            //     console.log(router)  
-            // }
-            const _el = document.querySelector('#' + item.el);
-            if (_el) _el.scrollIntoView()
+            if (item?.url && router.route !== item?.url) {
+                el.current = item.el;
+                router.push(item.url)
+            } else {
+                const _el = document.querySelector('#' + item.el);
+                if (_el) _el.scrollIntoView()
+            }
+
         }
         if (visible) setVisible(false)
 
     }
+    useEffect(() => {
+        router.events.on('routeChangeComplete', () => {
+            const _el = document.querySelector('#' + el.current);
+            if (_el) {
+                _el.scrollIntoView()
+                el.current = null;
+            }
+        });
+    }, [router, el.current])
+
 
     return (
         <div className="nao_header flex justify-between items-center h-[90px] relative">
