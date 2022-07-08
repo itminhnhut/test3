@@ -77,8 +77,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                             </div>
                             <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                             <div className="flex sm:flex-col gap-1 justify-between sm:justify-start sm:min-w-[150px]">
-                                <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume')}</label>
-                                <span className="font-semibold break-words">{formatNumber(dataSource?.total_volume, 0)} VNDC</span>
+                                <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume')} (VNDC)</label>
+                                <span className="font-semibold break-words">{formatNumber(dataSource?.total_volume, 0)}</span>
                             </div>
                             <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                             <div className="flex sm:flex-col gap-1 justify-between sm:justify-start">
@@ -143,10 +143,10 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                         :
                         <Table dataSource={dataSource?.members ?? []} >
                             <Column minWidth={70} className="text-nao-grey font-medium" title={t('nao:contest:no')} fieldName={"index"} />
-                            <Column minWidth={180} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" />
+                            <Column minWidth={180} ellipsis className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" />
                             <Column minWidth={200} ellipsis className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                             <Column minWidth={70} className="font-medium" title={t('nao:contest:trades')} fieldName="total_order" />
-                            <Column minWidth={150} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
+                            <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
                             <Column minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                         </Table>
                     }

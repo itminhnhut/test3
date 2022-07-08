@@ -5,7 +5,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_RANK_MEMBERS_PNL, API_CONTEST_GET_RANK_MEMBERS_VOLUME } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { formatNumber, getS3Url ,getLoginUrl} from 'redux/actions/utils';
+import { formatNumber, getS3Url, getLoginUrl } from 'redux/actions/utils';
 
 const ContestPerRanks = () => {
     const [tab, setTab] = useState('volume');
@@ -132,7 +132,7 @@ const ContestPerRanks = () => {
                     <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={(data, item) => <div>{item?.[rank] || '-'}</div>} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" />
                     <Column minWidth={300} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
-                    <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:volume')} decimal={0} suffix="VNDC" fieldName="total_volume" />
+                    <Column minWidth={200} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
                     <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                 </Table>
             }
