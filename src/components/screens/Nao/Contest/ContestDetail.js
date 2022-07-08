@@ -70,22 +70,22 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                                 </div>
                             </div>
                         </div>
-                        <CardNao className="!py-5 !px-[26px] !min-h-[92px] sm:flex-row w-full">
+                        <CardNao className="!py-5 !px-[26px] !min-h-[92px] sm:flex-row w-full sm:min-w-[577px]">
                             <div className="flex sm:flex-col gap-1 justify-between sm:justify-start">
                                 <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume_ranking')}</label>
                                 <span className="font-semibold">#{dataSource?.current_rank_volume}</span>
                             </div>
-                            <div className="h-[1px] sm:h-auto w-full sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
+                            <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                             <div className="flex sm:flex-col gap-1 justify-between sm:justify-start sm:min-w-[150px]">
                                 <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume')}</label>
-                                <span className="font-semibold">{formatNumber(dataSource?.total_volume, 0)} VNDC</span>
+                                <span className="font-semibold break-words">{formatNumber(dataSource?.total_volume, 0)} VNDC</span>
                             </div>
-                            <div className="h-[1px] sm:h-auto w-full sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
+                            <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                             <div className="flex sm:flex-col gap-1 justify-between sm:justify-start">
                                 <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
                                 <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
                             </div>
-                            <div className="h-[1px] sm:h-auto w-full sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
+                            <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                             <div className="flex sm:flex-col gap-1 justify-between sm:justify-start ">
                                 <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:per_pnl')}</label>
                                 <span className={`font-semibold ${getColor(dataSource?.pnl)}`}>

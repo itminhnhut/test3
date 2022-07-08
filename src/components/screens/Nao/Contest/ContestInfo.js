@@ -48,7 +48,7 @@ const ContestInfo = ({ onShowDetail }) => {
                         <div className="leading-6 mt-1">ID: {userData?.onus_user_id}</div>
                         <span className="text-nao-white mx-2 sm:hidden">•</span>
                         <div className="flex text-nao-grey2 leading-6 ">{t('nao:contest:team_label')}:&nbsp;
-                            <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.onus_user_id })}
+                            <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.group_displaying_id })}
                                 className="text-nao-green font-medium cursor-pointer">{userData?.group_name || '-'}</span></div>
                     </div>
                 </CardNao>
