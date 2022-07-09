@@ -82,10 +82,10 @@ const NaoPerformance = memo(() => {
         return Object.keys(dataSource?.feeRevenue).reduce((newItem, item) => {
             const asset = assetConfig.find(rs => rs.id === Number(item));
             if (asset) {
-                if (first && !fee) {
-                    setFee(asset?.assetCode)
-                    first = false;
-                }
+                // if (first && !fee) {
+                //     setFee(asset?.assetCode)
+                //     first = false;
+                // }
                 assets.push({
                     assetCode: asset?.assetCode,
                     assetDigit: asset?.assetDigit,
