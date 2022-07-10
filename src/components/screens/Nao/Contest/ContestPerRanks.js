@@ -79,12 +79,22 @@ const ContestPerRanks = () => {
                                 <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} VNDC</span>
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2"></div>
-                            <div className="flex items-center justify-between gap-2">
-                                <div className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</div>
-                                <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
-                                    {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}{formatNumber(item?.pnl, 2, 0, true)}%
-                                </span>
-                            </div>
+                            {
+                                tab === 'pnl'
+                                    ? <div className="flex items-center justify-between gap-2">
+                                        <div className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</div>
+                                        <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
+                                            {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}{formatNumber(item?.pnl, 2, 0, true)}%
+                                        </span>
+                                    </div>
+                                    : <div className="flex items-center justify-between gap-2">
+                                        <div className="text-sm text-nao-text">{t('nao:contest:total_trades')}</div>
+                                        <span className={`font-semibold leading-8`}>
+                                            {formatNumber(item?.total_order)}
+                                        </span>
+                                    </div>
+                            }
+
                         </div>
                     </CardNao>
                 ))}
@@ -133,7 +143,11 @@ const ContestPerRanks = () => {
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" />
                     <Column minWidth={300} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                     <Column minWidth={200} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
-                    <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
+                    {
+                        tab === 'pnl'
+                            ? <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
+                            : <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:total_trades')} fieldName="total_order" decimal={0} />
+                    }
                 </Table>
             }
         </section>
