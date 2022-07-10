@@ -81,7 +81,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                         <div className="flex items-center justify-between gap-6 w-full md:w-max flex-wrap">
                                             <div className="text-nao-white text-lg font-semibold flex items-center justify-end lg:min-w-[180px]">
                                                 <span className="mr-2">{formatNumber(item?.interest?.[1], assetConfig[1]?.assetDigit ?? 0)}</span>
-                                                <img src={getS3Url("/images/nao/ic_nami.png")} width={20} height={20} alt="" />
+                                                <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
                                             </div>
                                             <div className="text-nao-white text-lg font-semibold flex items-center justify-end lg:min-w-[180px]">
                                                 <span className="mr-2">{formatNumber(item?.interest?.[86], assetConfig[86]?.assetDigit ?? 0)}</span>
@@ -212,7 +212,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         <div className="flex items-center justify-between gap-6 w-full lg:w-max flex-wrap">
                             <div className="text-nao-white text-lg font-semibold flex items-center leading-[18px]  space-x-2 justify-end lg:min-w-[180px]">
                                 <span>{formatNumber(data.estimate?.[1], assetConfig[1]?.assetDigit ?? 0)}</span>
-                                <img src={getS3Url('/images/nao/ic_nami.png')} width={20} height={20} alt="" />
+                                <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
                             </div>
                             <div className="text-nao-white text-lg font-semibold flex items-center leading-[18px] text-right space-x-2 justify-end lg:min-w-[180px]">
                                 <span>{formatNumber(data.estimate?.[86], assetConfig[86]?.assetDigit ?? 0)}</span>

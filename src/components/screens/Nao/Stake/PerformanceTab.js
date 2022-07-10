@@ -144,7 +144,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                                         <div className="text-lg font-semibold leading-7 mr-2">
                                                             {formatNumber(item?.interest?.[1], assetConfig[1]?.assetDigit ?? 0)}
                                                         </div>
-                                                        <img src={getS3Url("/images/nao/ic_nami.png")} width={20} height={20} alt="" />
+                                                        <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
                                                     </div>
                                                     <div className="flex items-center">
                                                         <div className="text-lg font-semibold leading-7 mr-2">
