@@ -6,10 +6,34 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import fetchApi from 'utils/fetch-api';
 import { API_POOL_USER_SHARE_HISTORIES } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+
+const getAssets = createSelector(
+    [
+        state => state.utils,
+        (utils, params) => params
+    ],
+    (utils, params) => {
+        const assets = {};
+        const arr = [1, 72, 86, 447];
+        arr.map(id => {
+            const asset = utils.assetConfig.find(rs => rs.id === id);
+            if (asset) {
+                assets[id] = {
+                    assetCode: asset?.assetCode,
+                    assetDigit: asset?.assetDigit
+                };
+            }
+        })
+        return assets;
+    }
+);
 
 const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
     const { t } = useTranslation();
     const [listHitory, setListHitory] = useState([]);
+    const assetConfig = useSelector(state => getAssets(state));
 
     useEffect(() => {
         getListHistory();
@@ -37,7 +61,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         const percent = (availableStaked / totalStaked) * 100;
         return {
             percent: percent,
-            estimate: formatNumber((dataSource?.poolRevenueThisWeek ?? 0) * pool, 0),
+            estimate: dataSource?.poolRevenueThisWeek,
             totalStaked,
             availableStaked
         }
@@ -83,8 +107,35 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                     <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} />
                                 </div>
                             </div>
-                            <div className="flex items-center mt-4">
-                                <div className="text-[22px font-semibold leading-8 mr-2">{data.estimate} VNDC</div>
+                            <div className="flex items-center justify-between mt-4 flex-wrap">
+                                <div className="flex items-center justify-between w-full flex-wrap">
+                                    <div className="flex items-center ">
+                                        <div className="text-lg font-semibold leading-7 mr-2">
+                                            {formatNumber((data.estimate?.[447] || 0)*(data.percent/100 || 0), assetConfig[447]?.assetDigit ?? 8)}
+                                        </div>
+                                        <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                    </div>
+                                    <div className="flex items-center">
+                                        <div className="text-lg font-semibold leading-7 mr-2">
+                                            {formatNumber((data.estimate?.[72] || 0)*(data.percent/100 || 0), assetConfig[72]?.assetDigit ?? 0)}
+                                        </div>
+                                        <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between w-full flex-wrap">
+                                    <div className="flex items-center">
+                                        <div className="text-lg font-semibold leading-7 mr-2">
+                                            {formatNumber((data.estimate?.[1] || 0)*(data.percent/100 || 0), assetConfig[1]?.assetDigit ?? 4)}
+                                        </div>
+                                        <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
+                                    </div>
+                                    <div className="flex items-center">
+                                        <div className="text-lg font-semibold leading-7 mr-2">
+                                            {formatNumber((data.estimate?.[86] || 0)*(data.percent/100 || 0), assetConfig[86]?.assetDigit ?? 4)}
+                                        </div>
+                                        <img src={getS3Url("/images/nao/ic_onus.png")} width={20} height={20} alt="" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </CardNao>
@@ -100,14 +151,34 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                         {index !== 0 && <Divider className="w-full !my-4" />}
                                         <div>
                                             <div className="text-nao-grey text-sm">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</div>
-                                            <div className="mt-1 flex items-center justify-between">
-                                                <div className="flex items-center">
-                                                    <div className="text-lg font-semibold leading-7 mr-2">{formatNumber(item?.interest['NAO'], assetNao?.assetDigit ?? 8)}</div>
-                                                    <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                            <div className="mt-1">
+                                                <div className="flex items-center justify-between flex-wrap">
+                                                    <div className="flex items-center">
+                                                        <div className="text-lg font-semibold leading-7 mr-2">
+                                                            {formatNumber(item?.interest?.[447], assetConfig[447]?.assetDigit ?? 8)}
+                                                        </div>
+                                                        <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <div className="text-lg font-semibold leading-7 mr-2">
+                                                            {formatNumber(item?.interest?.[72], assetConfig[72]?.assetDigit ?? 0)}
+                                                        </div>
+                                                        <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
+                                                    </div>
                                                 </div>
-                                                <div className="flex items-center">
-                                                    <div className="text-lg font-semibold leading-7 mr-2">{formatNumber(item?.interest['VNDC'], 0)}</div>
-                                                    <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
+                                                <div className="flex items-center justify-between flex-wrap">
+                                                    <div className="flex items-center">
+                                                        <div className="text-lg font-semibold leading-7 mr-2">
+                                                            {formatNumber(item?.interest?.[1], assetConfig[1]?.assetDigit ?? 0)}
+                                                        </div>
+                                                        <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <div className="text-lg font-semibold leading-7 mr-2">
+                                                            {formatNumber(item?.interest?.[86], assetConfig[86]?.assetDigit ?? 0)}
+                                                        </div>
+                                                        <img src={getS3Url("/images/nao/ic_onus.png")} width={20} height={20} alt="" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
