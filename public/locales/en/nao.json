@@ -117,6 +117,7 @@
         "rank": "Rank",
         "team": "Team",
         "team_label": "Team",
+        "total_trades": "Total Trades",
         "name": "Name",
         "captain": "Captain",
         "information": "Details",
