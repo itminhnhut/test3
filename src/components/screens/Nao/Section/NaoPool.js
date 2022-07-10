@@ -68,7 +68,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 <div className='flex items-center justify-between flex-wrap gap-1'>
                                     <span className="text-sm text-nao-grey">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</span>
                                     <div className="flex items-center justify-between gap-6 w-full lg:w-max flex-wrap">
-                                        <div className="flex items-center justify-between gap-6 w-full md:w-max flex-wrap">
+                                        <div className="flex items-center justify-between gap-6 w-full lg:w-max flex-wrap">
                                             <div className="text-nao-white text-lg font-semibold flex items-center justify-end lg:min-w-[180px]">
                                                 <span className="mr-2">{formatNumber(item?.interest?.[447], assetConfig[447]?.assetDigit ?? 8)}</span>
                                                 <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
@@ -78,7 +78,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                                 <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
                                             </div>
                                         </div>
-                                        <div className="flex items-center justify-between gap-6 w-full md:w-max flex-wrap">
+                                        <div className="flex items-center justify-between gap-6 w-full lg:w-max flex-wrap">
                                             <div className="text-nao-white text-lg font-semibold flex items-center justify-end lg:min-w-[180px]">
                                                 <span className="mr-2">{formatNumber(item?.interest?.[1], assetConfig[1]?.assetDigit ?? 0)}</span>
                                                 <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
@@ -198,7 +198,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help_blue.png')} height={20} width={20} />
                         </div>
                     </div>
-                    <div className="flex items-center gap-6 justify-between w-full md:w-max flex-wrap">
+                    <div className="flex items-center gap-6 justify-between w-full lg:w-max flex-wrap">
                         <div className="flex items-center justify-between gap-6 w-full lg:w-max flex-wrap">
                             <div className="text-nao-white text-lg font-semibold flex items-center leading-[18px] space-x-2 justify-end lg:min-w-[180px]">
                                 <span>{formatNumber(data.estimate?.[447], assetConfig[447]?.assetDigit ?? 2)}</span>
