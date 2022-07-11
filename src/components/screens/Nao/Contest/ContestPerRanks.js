@@ -68,7 +68,7 @@ const ContestPerRanks = () => {
         return (
             <div className="min-w-[24px] text-center">
                 {data && data <= 10 ?
-                    <img src={getS3Url(`images/nao/contest/ic_top_${item?.rowIndex + 4}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
+                    <img src={getS3Url(`/images/nao/contest/ic_top_${item?.rowIndex + 4}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
                     : <span >{_rank}</span>}
             </div>
         )
@@ -155,7 +155,7 @@ const ContestPerRanks = () => {
                                         <div className="min-w-[31px] text-nao-grey text-sm font-medium text-center flex justify-center items-start">
                                             {loading ? <Skeletor width={24} height={24} circle /> :
                                                 item?.[rank] && item?.[rank] <= 10 ?
-                                                    <img src={getS3Url(`images/nao/contest/ic_top_${item?.[rank]}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
+                                                    <img src={getS3Url(`/images/nao/contest/ic_top_${item?.[rank]}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
                                                     : item?.[rank] || '-'
                                             }
                                         </div>
