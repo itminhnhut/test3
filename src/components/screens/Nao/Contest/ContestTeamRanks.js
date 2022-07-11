@@ -137,10 +137,16 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
                                             </div>
                                             <div className="flex items-center font-medium justify-between pt-1">
-                                                <label className="leading-6 text-nao-grey">{t('nao:contest:per_pnl')}</label>
-                                                <span className={`text-right ${getColor(item?.pnl)}`}>
-                                                    {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
-                                                </span>
+                                                <label className="leading-6 text-nao-grey">{t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}</label>
+                                                {tab === 'pnl' ?
+                                                    <span className={`text-right ${getColor(item?.pnl)}`}>
+                                                        {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
+                                                    </span>
+                                                    :
+                                                    <span className={`text-right`}>
+                                                        {formatNumber(item?.total_order)}
+                                                    </span>
+                                                }
                                             </div>
                                             <div
                                                 onClick={() => onShowDetail(item, tab)}
