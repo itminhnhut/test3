@@ -104,7 +104,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                         <div className="flex justify-between flex-1 mb-4 gap-5">
                             <div className="flex flex-col">
                                 <TextLiner className="!text-[3rem] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
-                                <div className="gap-1 flex flex-col">
+                                <div className="sm:gap-1 flex flex-col">
                                     <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
                                         <div>{item?.name}</div>
                                         <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
@@ -154,7 +154,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                             dataSource.map((item, index) => {
                                 return (
                                     <div onClick={() => onShowDetail(item, tab)} key={index} className={`flex gap-4 sm:gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium">
+                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium text-center flex justify-center items-start">
                                             {loading ? <Skeletor width={24} height={24} circle /> :
                                                 item?.[rank] && item?.[rank] <= 10 ?
                                                     <img src={getS3Url(`images/nao/contest/ic_top_${item?.[rank]}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
@@ -162,13 +162,16 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                                             }
                                         </div>
                                         <div className="text-sm flex-1">
-                                            <div className="font-semibold leading-6 gap-2 flex items-center">
-                                                <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                                                    <img className="rounded-[50%] object-cover min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px]" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <div className="font-semibold leading-6 capitalize">{item?.name} </div>
+                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{item?.leader_name}</div>
                                                 </div>
-                                                <div className="capitalize">{item?.name}</div>
+                                                <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
+                                                    <img className="rounded-[50%] object-cover min-w-[2.275rem] min-h-[2.275rem] max-w-[2.275rem] max-h-[2.275rem]" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                                                </div>
                                             </div>
-                                            <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{item?.leader_name}</div>
+
                                             <div className="flex items-center font-medium justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>

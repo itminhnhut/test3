@@ -101,7 +101,7 @@ const ContestPerRanks = () => {
                         <div className="flex justify-between flex-1 mb-4 gap-5">
                             <div className="flex flex-col">
                                 <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
-                                <div className="gap-1 flex flex-col">
+                                <div className="sm:gap-1 flex flex-col">
                                     <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
                                         <div>{item?.name}</div>
                                         <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
@@ -152,7 +152,7 @@ const ContestPerRanks = () => {
                             dataSource.map((item, index) => {
                                 return (
                                     <div key={index} className={`flex gap-4 sm:gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium text-center">
+                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium text-center flex justify-center items-start">
                                             {loading ? <Skeletor width={24} height={24} circle /> :
                                                 item?.[rank] && item?.[rank] <= 10 ?
                                                     <img src={getS3Url(`images/nao/contest/ic_top_${item?.[rank]}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
@@ -160,8 +160,15 @@ const ContestPerRanks = () => {
                                             }
                                         </div>
                                         <div className="text-sm flex-1">
-                                            <label className="font-semibold leading-6 capitalize">{item?.name}</label>
-                                            <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <label className="font-semibold leading-6 capitalize">{item?.name}</label>
+                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
+                                                </div>
+                                                <div className='w-[2.75rem] h-[2.75rem] rounded-[50%]'>
+                                                    <img className='rounded-[50%] object-cover min-w-[2.75rem] min-h-[2.75rem] max-w-[2.75rem] max-h-[2.75rem]' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} alt="" />
+                                                </div>
+                                            </div>
                                             <div className="flex items-center font-medium justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
