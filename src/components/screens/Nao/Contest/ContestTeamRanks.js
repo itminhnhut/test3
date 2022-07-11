@@ -114,7 +114,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                             </div>
                             <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
                                 <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')}
-                                    className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem max-h-[6.375rem] rounded-[50%]" alt="" />
+                                    className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem max-h-[6.375rem] rounded-[50%] object-cover" alt="" />
                             </div>
                         </div>
                         <div className="rounded-lg">
