@@ -28,6 +28,7 @@ const categories = [
     TransactionCategory.FUTURE_PROMOTION, // 609
     TransactionCategory.DEPOSIT, //T: 4
     TransactionCategory.VNDC_DIRECT_WITHDRAW, // 723
+    TransactionCategory.PAY_INTEREST_STAKE_TRANSACTION, // 1019
 
 ]
 
