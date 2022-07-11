@@ -53,7 +53,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
         return (
             <div className='flex items-center gap-2'>
                 <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                    <img className='rounded-[50%]' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                    <img className='rounded-[50%] min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px]' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                 </div>
                 <div>{data}</div>
             </div>
@@ -98,12 +98,12 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                         className={`px-4 py-2 !rounded-md   ${tab === 'pnl' ? 'font-semibold' : '!bg-nao-bg3'}`}>{t('nao:contest:per_pnl')}</ButtonNao>
                 </div>
             </div>
-            <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-8">
+            <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-8">
                 {top3.map((item, index) => (
                     <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
                         <div className="flex justify-between flex-1 mb-4 gap-5">
                             <div className="flex flex-col">
-                                <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
+                                <TextLiner className="!text-[3rem] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
                                 <div className="gap-1 flex flex-col">
                                     <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
                                         <div>{item?.name}</div>
@@ -112,9 +112,9 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                                     <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{item?.leader_name}</span>
                                 </div>
                             </div>
-                            <div className="w-[102px] h-[102px] rounded-[50%]">
+                            <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
                                 <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')}
-                                    className="min-w-[102px] min-h-[102px] max-w-[102px max-h-[102px] rounded-[50%]" alt="" />
+                                    className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem max-h-[6.375rem] rounded-[50%]" alt="" />
                             </div>
                         </div>
                         <div className="rounded-lg">
@@ -144,7 +144,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
             </div>
 
             {width <= 640 ?
-                <CardNao noBg className="mt-5 !py-[18px] !px-3">
+                <CardNao noBg className="mt-5 !py-[1.125rem] !px-3">
                     <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
                         <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
@@ -164,7 +164,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                                         <div className="text-sm flex-1">
                                             <div className="font-semibold leading-6 gap-2 flex items-center">
                                                 <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                                                    <img className="rounded-[50%] object-cover" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                                                    <img className="rounded-[50%] object-cover min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px]" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                                                 </div>
                                                 <div className="capitalize">{item?.name}</div>
                                             </div>

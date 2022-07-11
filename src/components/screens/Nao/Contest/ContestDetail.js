@@ -60,15 +60,15 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                 <div className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl w-[calc(100%-32px)] max-h-[calc(100%-32px)] max-w-[979px] overflow-y-auto">
                     <div className="flex sm:items-center sm:justify-between gap-2 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7 min-w-[250px]">
-                            <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{dataSource?.[rank]}</TextLiner>
+                            <TextLiner className="!text-[4.125rem] !leading-[6.25rem] !pb-0" liner>#{dataSource?.[rank]}</TextLiner>
                             <div className="flex flex-col">
                                 <div className="flex items-center space-x-3">
                                     <div className="w-[32px] h-[32px] rounded-[50%]">
                                         {loading ? <Skeletor width={32} height={32} circle /> :
-                                            <img className="rounded-[50%]" src={dataSource?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />
+                                            <img className="rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]" src={dataSource?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />
                                         }
                                     </div>
-                                    <div className="text-[20px] leading-8 font-semibold capitalize">
+                                    <div className="text-[1.25rem] leading-8 font-semibold capitalize">
                                         {loading ? <Skeletor width={120} height={20} /> : dataSource?.name}
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                             <div className="flex flex-col w-full">
                                 <div className="flex gap-1 justify-between ">
                                     <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume')} (VNDC)</label>
-                                    <span className="font-semibold break-words">{formatNumber(dataSource?.total_volume, 0)}</span>
+                                    <span className="font-semibold break-all text-right">{formatNumber(dataSource?.total_volume, 0)}</span>
                                 </div>
                                 <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                                 <div className="flex gap-1 justify-between ">

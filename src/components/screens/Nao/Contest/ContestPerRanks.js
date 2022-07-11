@@ -109,9 +109,9 @@ const ContestPerRanks = () => {
                                     <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
                                 </div>
                             </div>
-                            <div className="w-[102px] h-[102px] rounded-[50%]">
+                            <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
                                 <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')}
-                                    className="min-w-[102px] min-h-[102px] max-w-[102px max-h-[102px] rounded-[50%]" alt="" />
+                                    className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem] max-h-[6.375rem] rounded-[50%]" alt="" />
                             </div>
                         </div>
                         <div className="rounded-lg mt-auto">
