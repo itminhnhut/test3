@@ -56,7 +56,7 @@ const ContestPerRanks = () => {
         return (
             <div className='flex items-center gap-2'>
                 <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                    <img className='rounded-[50%]' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                    <img className='rounded-[50%] object-cover' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                 </div>
                 <div>{data}</div>
             </div>
@@ -111,7 +111,7 @@ const ContestPerRanks = () => {
                             </div>
                             <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
                                 <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')}
-                                    className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem] max-h-[6.375rem] rounded-[50%]" alt="" />
+                                    className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem] max-h-[6.375rem] rounded-[50%] object-cover" alt="" />
                             </div>
                         </div>
                         <div className="rounded-lg mt-auto">

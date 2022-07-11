@@ -65,7 +65,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                                 <div className="flex items-center space-x-3">
                                     <div className="w-[32px] h-[32px] rounded-[50%]">
                                         {loading ? <Skeletor width={32} height={32} circle /> :
-                                            <img className="rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]" src={dataSource?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />
+                                            <img className="rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px] object-cover" src={dataSource?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />
                                         }
                                     </div>
                                     <div className="text-[1.25rem] leading-8 font-semibold capitalize">
