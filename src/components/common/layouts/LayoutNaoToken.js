@@ -17,6 +17,10 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
 
     useEffect(() => {
         document.body.classList.add('disabled-zoom');
+        let vw = window.innerWidth;
+        if (vw <= 360) {
+            document.documentElement.style.setProperty('font-size', '14px');
+        }
     }, [])
 
     const onDownload = (key) => {

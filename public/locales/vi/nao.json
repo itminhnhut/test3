@@ -20,7 +20,7 @@
         "description": "Tham gia Pool Quản trị để nhận 20% doanh thu từ phí và có quyền biểu quyết",
         "nao_staked": "Số NAO trong pool",
         "participants": "Số người tham gia",
-        "participants_today": "{{value}} người tham gia hôm nay",
+        "participants_today": "<span class='font-semibold'>+{{value}}</span> người tham gia hôm nay",
         "estimated_revenue_share": "Doanh thu tuần này",
         "revenue_history": "Lịch sử chia sẻ doanh thu",
         "stake_nao": "Stake NAO",

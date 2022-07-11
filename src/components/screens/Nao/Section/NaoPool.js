@@ -176,15 +176,21 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 </CardNao> */}
                 <CardNao className="sm:!px-10 sm:!py-12 !flex-row items-center !min-h-[124px]">
                     <label className="text-nao-text font-medium text-lg">{t('nao:pool:nao_staked')}</label>
-                    <div className="text-lg sm:text-[22px] font-semibold flex items-center space-x-2">
-                        <span>{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
-                        <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
+                    <div className='text-right flex flex-col gap-2'>
+                        <div className="text-lg sm:text-[22px] font-semibold flex items-center space-x-2">
+                            <span>{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
+                            <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
+                        </div>
+                        <span className="text-sm text-nao-grey">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}</span>
                     </div>
                 </CardNao>
                 <CardNao className="sm:!px-10 sm:!py-12 !flex-row items-center !min-h-[124px]">
                     <label className="text-nao-text font-medium text-lg">{t('nao:pool:participants')}</label>
-                    <div className="text-lg sm:text-[22px] font-semibold flex items-center space-x-2">
-                        <span>{data.totalUsers}</span>
+                    <div className='text-right flex flex-col gap-2'>
+                        <div className="text-lg sm:text-[22px] font-semibold">
+                            {data.totalUsers}
+                        </div>
+                        <div className="text-sm text-nao-grey" dangerouslySetInnerHTML={{ __html: t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 }) }}></div>
                     </div>
                 </CardNao>
 

@@ -61,7 +61,7 @@ const ContesRules = ({ inHome = false }) => {
                             ? <ButtonNao onClick={() => router.push('/contest')} className='py-2 px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:ranking')}</ButtonNao>
                             : <ButtonNao onClick={() => router.push('https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien')} className='py-2 px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:detail_rules')}</ButtonNao>
                     }
-                    <CardNao customHeight={'sm:min-h-[40px] lg:min-h-[40]'} noBg className="flex !flex-row !justify-center md:!justify-start !py-3 items-center gap-3 sm:!bg-none flex-wrap">
+                    <CardNao customHeight={'sm:min-h-[40px] lg:min-h-[40] min-h-[50px]'} noBg className="flex !flex-row !justify-center md:!justify-start !py-3 items-center gap-3 sm:!bg-none flex-wrap">
                         {renderCountDown()}
                     </CardNao>
                 </div>
