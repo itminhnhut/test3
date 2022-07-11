@@ -14,6 +14,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
     const { t } = useTranslation();
     const { width } = useWindowSize()
     const [dataSource, setDataSource] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         getDetail(rowData?.displaying_id);
@@ -33,7 +34,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
         } catch (e) {
             console.log(e)
         } finally {
-
+            setLoading(false);
         }
     }
 
@@ -47,7 +48,6 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
     }, [visible])
 
     const rank = sortName === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
-
     return (
         <Portal portalId='PORTAL_MODAL'>
             <div
@@ -62,35 +62,46 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                         <div className="flex items-center gap-7 min-w-[250px]">
                             <TextLiner className="!text-[4.125rem] !leading-[100px] !pb-0" liner>#{dataSource?.[rank]}</TextLiner>
                             <div className="flex flex-col">
-                                <div className="text-[20px] leading-8 font-semibold capitalize">
-                                    {!dataSource ? <Skeletor width={120} height={20} /> : dataSource?.name}
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-[32px] h-[32px] rounded-[50%]">
+                                        {loading ? <Skeletor width={32} height={32} circle /> :
+                                            <img className="rounded-[50%]" src={dataSource?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />
+                                        }
+                                    </div>
+                                    <div className="text-[20px] leading-8 font-semibold capitalize">
+                                        {loading ? <Skeletor width={120} height={20} /> : dataSource?.name}
+                                    </div>
                                 </div>
                                 <div className="text-sm text-nao-text leading-6 mt-[6px] capitalize">
-                                    {!dataSource ? <Skeletor width={80} height={10} /> : dataSource?.leader_name}
+                                    {loading ? <Skeletor width={80} height={10} /> : dataSource?.leader_name}
                                 </div>
                             </div>
                         </div>
                         <CardNao className="!py-5 !px-[26px] !min-h-[92px] sm:flex-row w-full sm:min-w-[577px]">
-                            <div className="flex sm:flex-col gap-1 justify-between sm:justify-start">
-                                <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume_ranking')}</label>
-                                <span className="font-semibold">#{dataSource?.current_rank_volume}</span>
+                            <div className="flex flex-col w-full">
+                                <div className="flex gap-1 justify-between ">
+                                    <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume')} (VNDC)</label>
+                                    <span className="font-semibold break-words">{formatNumber(dataSource?.total_volume, 0)}</span>
+                                </div>
+                                <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
+                                <div className="flex gap-1 justify-between ">
+                                    <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume_ranking')}</label>
+                                    <span className="font-semibold">#{dataSource?.[rank]}</span>
+                                </div>
                             </div>
-                            <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
-                            <div className="flex sm:flex-col gap-1 justify-between sm:justify-start sm:min-w-[150px]">
-                                <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume')} (VNDC)</label>
-                                <span className="font-semibold break-words">{formatNumber(dataSource?.total_volume, 0)}</span>
-                            </div>
-                            <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
-                            <div className="flex sm:flex-col gap-1 justify-between sm:justify-start">
-                                <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
-                                <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
-                            </div>
-                            <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
-                            <div className="flex sm:flex-col gap-1 justify-between sm:justify-start ">
-                                <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:per_pnl')}</label>
-                                <span className={`font-semibold ${getColor(dataSource?.pnl)}`}>
-                                    {`${dataSource?.pnl > 0 ? '+' : ''}${formatNumber(dataSource?.pnl, 2, 0, true)}%`}
-                                </span>
+                            <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-5 my-2 sm:my-0 "></div>
+                            <div className="flex flex-col w-full">
+                                <div className="flex gap-1 justify-between  ">
+                                    <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:per_pnl')}</label>
+                                    <span className={`font-semibold ${getColor(dataSource?.pnl)}`}>
+                                        {`${dataSource?.pnl > 0 ? '+' : ''}${formatNumber(dataSource?.pnl, 2, 0, true)}%`}
+                                    </span>
+                                </div>
+                                <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
+                                <div className="flex gap-1 justify-between ">
+                                    <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
+                                    <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
+                                </div>
                             </div>
                         </CardNao>
                     </div>

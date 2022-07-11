@@ -65,7 +65,8 @@ const commonColors = {
         bgModal: '#161D32',
         bgModal2: '#00030D',
         bgShadow: '#000921',
-        red: '#DC1F4E'
+        red: '#DC1F4E',
+        tooltip: '#0E1D32',
     }
 };
 

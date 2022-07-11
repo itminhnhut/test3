@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
+import Skeletor from 'components/common/Skeletor';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-nao-white'
@@ -64,13 +65,16 @@ export const Progressbar = styled.div.attrs({
     width:${({ percent }) => `${percent > 100 ? 100 : percent}%`};
 `
 
-export const Tooltip = ({ id }) => {
+export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, place = "top" }) => {
     return (
-        <CTooltip id={id} place="top" effect="solid"
-            className="!opacity-100 !rounded-lg !-mt-5 max-w-[250px] sm:max-w sm:w-full"
-            arrowColor={colors.onus.bg2}
-            backgroundColor={colors.onus.bg2}
-        />
+        <CTooltip id={id} place={place} effect="solid"
+            className={classNames(
+                `!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full ${className} `,
+                { '!-mt-5 ': place === 'top' }
+            )}
+            arrowColor={arrowColor ?? colors.onus.bg2}
+            backgroundColor={backgroundColor ?? colors.onus.bg2}
+        >{children}</CTooltip>
     )
 }
 
@@ -81,7 +85,7 @@ export const Column = ({ title, maxWidth, minWidth, width, sortable, align = 'le
     )
 }
 
-export const Table = ({ dataSource, children, classHeader = '', onRowClick, noItemsMessage }) => {
+export const Table = ({ dataSource, children, classHeader = '', onRowClick, noItemsMessage, loading = false }) => {
     const mouseDown = useRef(false);
     const startX = useRef(null)
     const scrollLeft = useRef(null)
@@ -167,25 +171,25 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
     const isScroll = checkScrollBar(content.current, 'vertical');
 
     return (
-        <CardNao noBg className="mt-5 !pb-6 !pt-3 !px-3 !justify-start">
+        <CardNao id="nao-table" noBg className="mt-5 !pb-6 !pt-3 !px-3 !justify-start">
             <div ref={header} className={classNames(
                 'z-10 py-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden',
-                'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between w-full',
+                'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between',
                 // 'pr-7'
                 classHeader
             )}>
                 {children.map((item, indx) => (
                     <Column key={indx} {...item.props} classHeader={classNames(
-                        'whitespace-nowrap px-2',
+                        'whitespace-nowrap mx-2 min-h-[10px]',
                         { 'flex-1': indx !== 0 },
-                        { 'pl-0': indx === 0 },
-                        { 'pr-0': indx == children.length - 1 },
+                        { 'ml-0': indx === 0 },
+                        { 'mr-0': indx === children.length - 1 },
                     )} />
                 ))}
             </div>
             <div onScroll={onScroll} ref={content}
                 className={classNames(
-                    'nao-table-content mt-3 overflow-auto nao-table  ',
+                    'nao-table-content mt-3 overflow-auto',
                     { 'pr-[10px]': isScroll }
                 )}>
                 {Array.isArray(dataSource) && dataSource?.length > 0 ?
@@ -215,17 +219,18 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                         <div title={item[fieldName]} style={{ width, maxWidth, minWidth, textAlign: align }} key={indx}
                                             className={classNames(
                                                 `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
-                                                'break-words px-2',
+                                                'break-words mx-2',
                                                 { 'flex-1': indx !== 0 },
-                                                { 'pl-0': indx === 0 },
-                                                { 'pr-0': indx == children.length - 1 },
+                                                { 'ml-0': indx === 0 },
+                                                { 'mr-0': indx == children.length - 1 },
                                             )}>
-                                            {cellRender ? cellRender(item[fieldName], item) :
-                                                decimal >= 0 ? formatNumber(item[fieldName], decimal, 0, true) :
-                                                    fieldName === 'index' ? index + 1 :
-                                                        ellipsis ? <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
-                                                            {item[fieldName]}
-                                                        </span> : item[fieldName]
+                                            {loading ? <Skeletor width={minWidth ?? 50} height={20} /> :
+                                                cellRender ? cellRender(item[fieldName], { ...item, rowIndex: index }) :
+                                                    decimal >= 0 ? formatNumber(item[fieldName], decimal, 0, true) :
+                                                        fieldName === 'index' ? index + 1 :
+                                                            ellipsis ? <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                                                                {item[fieldName]}
+                                                            </span> : item[fieldName]
 
                                             }
                                             {suffix ? ` ${suffix}` : ''}
