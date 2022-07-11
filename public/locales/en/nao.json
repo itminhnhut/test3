@@ -125,6 +125,8 @@
         "details": "Details",
         "volume_ranking": "Volume ranking",
         "pnl_ranking": "% PnL ranking",
-        "no": "No"
+        "no": "No",
+        "tooltip_personal": "Minimum volume for individual ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>",
+        "tooltip_team": "Minimum volume for team ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>"
     }
 }

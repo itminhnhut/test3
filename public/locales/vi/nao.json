@@ -125,6 +125,8 @@
         "details": "Thành viên",
         "volume_ranking": "Thứ hạng KL",
         "pnl_ranking": "Thứ hạng LN",
-        "no": "STT"
+        "no": "STT",
+        "tooltip_personal": "Khối lượng tối thiểu để được xếp hạng cá nhận là <span class='text-nao-green'>&nbsp;{{value}} tỷ VNDC</span>",
+        "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>&nbsp;{{value}} tỷ VNDC</span>"
     }
 }
