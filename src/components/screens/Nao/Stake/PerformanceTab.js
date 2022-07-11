@@ -63,7 +63,8 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             percent: percent,
             estimate: dataSource?.poolRevenueThisWeek,
             totalStaked,
-            availableStaked
+            availableStaked,
+            totalProfit: dataSource?.totalProfit
         }
     }, [dataSource])
 
@@ -95,7 +96,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                         <div className="py-4">
                             <label className="text-nao-text font-medium leading-6 ">{t('nao:pool:total_revenue')}</label>
                             <div className="flex items-center mt-4">
-                                <div className="text-[22px font-semibold leading-8 mr-2">0 VNDC</div>
+                                <div className="text-[22px font-semibold leading-8 mr-2">≈ {formatNumber(data.totalProfit, 0)} VNDC</div>
 
                             </div>
                         </div>
@@ -111,13 +112,13 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                 <div className="flex items-center justify-between w-full flex-wrap">
                                     <div className="flex items-center ">
                                         <div className="text-lg font-semibold leading-7 mr-2">
-                                            {formatNumber((data.estimate?.[447] || 0)*(data.percent/100 || 0), assetConfig[447]?.assetDigit ?? 8)}
+                                            {formatNumber((data.estimate?.[447] || 0) * (data.percent / 100 || 0), assetConfig[447]?.assetDigit ?? 8)}
                                         </div>
                                         <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
                                     </div>
                                     <div className="flex items-center">
                                         <div className="text-lg font-semibold leading-7 mr-2">
-                                            {formatNumber((data.estimate?.[72] || 0)*(data.percent/100 || 0), assetConfig[72]?.assetDigit ?? 0)}
+                                            {formatNumber((data.estimate?.[72] || 0) * (data.percent / 100 || 0), assetConfig[72]?.assetDigit ?? 0)}
                                         </div>
                                         <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
                                     </div>
@@ -125,13 +126,13 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                 <div className="flex items-center justify-between w-full flex-wrap">
                                     <div className="flex items-center">
                                         <div className="text-lg font-semibold leading-7 mr-2">
-                                            {formatNumber((data.estimate?.[1] || 0)*(data.percent/100 || 0), assetConfig[1]?.assetDigit ?? 4)}
+                                            {formatNumber((data.estimate?.[1] || 0) * (data.percent / 100 || 0), assetConfig[1]?.assetDigit ?? 4)}
                                         </div>
                                         <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
                                     </div>
                                     <div className="flex items-center">
                                         <div className="text-lg font-semibold leading-7 mr-2">
-                                            {formatNumber((data.estimate?.[86] || 0)*(data.percent/100 || 0), assetConfig[86]?.assetDigit ?? 4)}
+                                            {formatNumber((data.estimate?.[86] || 0) * (data.percent / 100 || 0), assetConfig[86]?.assetDigit ?? 4)}
                                         </div>
                                         <img src={getS3Url("/images/nao/ic_onus.png")} width={20} height={20} alt="" />
                                     </div>
