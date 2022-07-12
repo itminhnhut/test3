@@ -6,8 +6,10 @@ import { API_POOL_USER_SHARE_HISTORIES, API_POOL_STAKE_ORDER } from 'redux/actio
 import { ApiStatus } from 'redux/actions/const';
 import TableNoData from 'components/common/table.old/TableNoData';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
+import { formatNumber, getS3Url, formatTime, getTimeAgo } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
+import { add, formatDistanceToNow, differenceInMinutes } from 'date-fns';
+import { floor } from 'lodash';
 
 const StakeOrders = ({ assetConfig }) => {
     const { t } = useTranslation();
@@ -43,10 +45,22 @@ const StakeOrders = ({ assetConfig }) => {
         }
     }
 
-    const renderStatus = (status) => {
-        const title = status === 0 ? t('nao:pool:fail') : status === 1 ? t('nao:pool:pending') : t('common:success');
-        const color = status === 0 ? 'text-nao-red' : status === 1 ? 'text-onus-orange' : 'text-nao-green';
-        return <div className={`font-semibold ${color}`}>{title}</div>
+    const formatDate = (minutes) => {
+        const hours = floor(minutes / 60);
+        const days = floor(minutes / 60 / 24);
+        return days > 1 ? days + ' ' + t('common:days') : hours > 1 ? hours + ' ' + t('common:hours') : minutes + ' ' + t('common:minutes')
+    }
+
+    const renderStatus = (item) => {
+        const status = item?.status;
+        let minutes = 0;
+        if (status === 1) {
+            const date = add(new Date(item?.createdAt), { days: 7 })
+            minutes = differenceInMinutes(date, new Date());
+        }
+        const title = status === 0 ? t('nao:pool:fail') : status === 1 ? t('nao:pool:unlock_status', { value: formatDate(minutes) }) : t('common:success');
+        const color = status === 0 ? 'text-nao-red font-semibold' : status === 1 ? 'text-nao-grey' : 'text-nao-green font-semibold';
+        return <div className={`${color}`}>{title}</div>
     }
 
     const loader = () => {
@@ -97,8 +111,8 @@ const StakeOrders = ({ assetConfig }) => {
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between leading-6 text-sm pt-2">
-                                            <div className="text-nao-grey ">{formatTime(item?.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
-                                            {renderStatus(item?.status)}
+                                            <div className="text-nao-grey">{formatTime(item?.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
+                                            {renderStatus(item)}
                                         </div>
                                     </div>
                                 </Fragment>

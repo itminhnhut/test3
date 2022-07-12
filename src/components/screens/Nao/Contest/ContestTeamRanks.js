@@ -149,7 +149,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                         <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>
-                    <div className="flex nao-table flex-col overflow-y-auto mt-3 pr-[10px]">
+                    <div className="mt-3">
                         {Array.isArray(dataSource) && dataSource?.length > 0 ?
                             dataSource.map((item, index) => {
                                 return (
