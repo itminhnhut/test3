@@ -207,6 +207,7 @@ export const API_POOL_STAKE = API_V3_PREFIX + 'pool/place-stake';
 export const API_POOL_UN_STAKE = API_V3_PREFIX + 'pool/un-stake';
 export const API_POOL_SHARE_HISTORIES = API_V3_PREFIX + 'pool/share-revenue-histories';
 export const API_POOL_USER_SHARE_HISTORIES = API_V3_PREFIX + 'pool/user-share-revenue-histories';
+export const API_POOL_STAKE_ORDER = API_V3_PREFIX + 'pool/stake-orders';
 
 export const API_CONTEST_GET_RANK_MEMBERS_PNL = API_PREFIX + 'event/futures-contest/rank-member-pnl';
 export const API_CONTEST_GET_RANK_MEMBERS_VOLUME = API_PREFIX + 'event/futures-contest/rank-member-volume';

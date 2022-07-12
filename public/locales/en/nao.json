@@ -77,7 +77,9 @@
         "tooltip_est_this_week": "Profit based on the amount of NAO staked on the pool this period",
         "tooltip_profit_est": "Estimated profit based on last period pool revenue and NAO staking",
         "tooltip_apy": "Estimated yearly interest based on last week's total pool revenue",
-        "tooltip_revenue_history": "Total pool revenue shared from transaction fees, accumulated from Monday 00:00 (UTC+7) until now"
+        "tooltip_revenue_history": "Total pool revenue shared from transaction fees, accumulated from Monday 00:00 (UTC+7) until now",
+        "revenue": "Revenue",
+        "pending": "Pending"
     },
     "nao_token": {
         "title": "Buy NAO token",
