@@ -1,13 +1,17 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Fragment } from 'react';
 import { CardNao, TextLiner, ButtonNao, Divider, Progressbar, Tooltip } from 'components/screens/Nao/NaoStyle';
 import { formatNumber, getS3Url, formatTime } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableNoData from 'components/common/table.old/TableNoData';
 import fetchApi from 'utils/fetch-api';
-import { API_POOL_USER_SHARE_HISTORIES } from 'redux/actions/apis';
+import { API_POOL_USER_SHARE_HISTORIES, API_POOL_STAKE_ORDER } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import styled from 'styled-components'
+import classnames from 'classnames';
+import colors from 'styles/colors';
+import StakeOrders from 'components/screens/Nao/Stake/StakeOrders';
 
 const getAssets = createSelector(
     [
@@ -34,6 +38,8 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
     const { t } = useTranslation();
     const [listHitory, setListHitory] = useState([]);
     const assetConfig = useSelector(state => getAssets(state));
+    const [tab, setTab] = useState(0);
+
 
     useEffect(() => {
         getListHistory();
@@ -52,6 +58,10 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
         } finally {
 
         }
+    }
+
+    const onSetTab = (key) => {
+        setTab(key)
     }
 
     const data = useMemo(() => {
@@ -142,59 +152,68 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     </CardNao>
                 </div>
                 <div className="mt-10">
-                    <TextLiner className="pb-1">{t('nao:pool:history_revenue')}</TextLiner>
+                    <TextLiner className="pb-1">{t('common:transaction_history')}</TextLiner>
                     <div className="text-nao-grey text-sm">{t('nao:pool:history_description')}</div>
-                    {listHitory.length > 0 ?
-                        <CardNao className="mt-6">
-                            {listHitory.map((item, index) => {
-                                return (
-                                    <>
-                                        {index !== 0 && <Divider className="w-full !my-4" />}
-                                        <div>
-                                            <div className="text-nao-grey text-sm">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</div>
-                                            <div className="mt-1">
-                                                <div className="flex items-center justify-between flex-wrap">
-                                                    <div className="flex items-center">
-                                                        <div className="text-lg font-semibold leading-7 mr-2">
-                                                            {formatNumber(item?.interest?.[447], assetConfig[447]?.assetDigit ?? 8)}
+                    <Tabs tab={tab}>
+                        <TabItem active={tab === 0} onClick={() => onSetTab(0)}>{t('nao:pool:revenue')}</TabItem>
+                        <TabItem active={tab === 1} onClick={() => onSetTab(1)} >Stake</TabItem>
+                    </Tabs>
+                    <TabContent active={tab === 0}>
+                        {listHitory.length > 0 ?
+                            <CardNao className="mt-6">
+                                {listHitory.map((item, index) => {
+                                    return (
+                                        <Fragment key={index}>
+                                            {index !== 0 && <Divider className="w-full !my-4" />}
+                                            <div>
+                                                <div className="text-nao-grey text-sm">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</div>
+                                                <div className="mt-1">
+                                                    <div className="flex items-center justify-between flex-wrap">
+                                                        <div className="flex items-center">
+                                                            <div className="text-lg font-semibold leading-7 mr-2">
+                                                                {formatNumber(item?.interest?.[447], assetConfig[447]?.assetDigit ?? 8)}
+                                                            </div>
+                                                            <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
                                                         </div>
-                                                        <img src={getS3Url("/images/nao/ic_nao.png")} width={20} height={20} alt="" />
+                                                        <div className="flex items-center">
+                                                            <div className="text-lg font-semibold leading-7 mr-2">
+                                                                {formatNumber(item?.interest?.[72], assetConfig[72]?.assetDigit ?? 0)}
+                                                            </div>
+                                                            <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
+                                                        </div>
                                                     </div>
-                                                    <div className="flex items-center">
-                                                        <div className="text-lg font-semibold leading-7 mr-2">
-                                                            {formatNumber(item?.interest?.[72], assetConfig[72]?.assetDigit ?? 0)}
+                                                    <div className="flex items-center justify-between flex-wrap">
+                                                        <div className="flex items-center">
+                                                            <div className="text-lg font-semibold leading-7 mr-2">
+                                                                {formatNumber(item?.interest?.[1], assetConfig[1]?.assetDigit ?? 0)}
+                                                            </div>
+                                                            <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
                                                         </div>
-                                                        <img src={getS3Url("/images/nao/ic_vndc.png")} width={20} height={20} alt="" />
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center justify-between flex-wrap">
-                                                    <div className="flex items-center">
-                                                        <div className="text-lg font-semibold leading-7 mr-2">
-                                                            {formatNumber(item?.interest?.[1], assetConfig[1]?.assetDigit ?? 0)}
+                                                        <div className="flex items-center">
+                                                            <div className="text-lg font-semibold leading-7 mr-2">
+                                                                {formatNumber(item?.interest?.[86], assetConfig[86]?.assetDigit ?? 0)}
+                                                            </div>
+                                                            <img src={getS3Url("/images/nao/ic_onus.png")} width={20} height={20} alt="" />
                                                         </div>
-                                                        <img src={getS3Url(`/images/coins/64/${1}.png`)} width={20} height={20} alt="" />
-                                                    </div>
-                                                    <div className="flex items-center">
-                                                        <div className="text-lg font-semibold leading-7 mr-2">
-                                                            {formatNumber(item?.interest?.[86], assetConfig[86]?.assetDigit ?? 0)}
-                                                        </div>
-                                                        <img src={getS3Url("/images/nao/ic_onus.png")} width={20} height={20} alt="" />
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </>
-                                )
-                            })}
-                        </CardNao>
-                        :
-                        <div className="mt-6 flex flex-col justify-center items-center">
-                            <div className={`flex items-center justify-center flex-col m-auto h-full min-h-[300px]`}>
-                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={130} height={130} />
-                                <div className="text-xs text-nao-grey mt-1">{t('nao:pool:history_nodata')}</div>
+                                        </Fragment>
+                                    )
+                                })}
+                            </CardNao>
+                            :
+                            <div className="mt-6 flex flex-col justify-center items-center">
+                                <div className={`flex items-center justify-center flex-col m-auto h-full min-h-[300px]`}>
+                                    <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={130} height={130} />
+                                    <div className="text-xs text-nao-grey mt-1">{t('nao:pool:history_nodata')}</div>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </TabContent>
+                    <TabContent active={tab === 1}>
+                        {tab === 1 && <StakeOrders assetConfig={assetConfig} />}
+                    </TabContent>
                 </div>
             </>
             : <>
@@ -213,5 +232,38 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
             </>
     );
 };
+
+const Tabs = styled.div.attrs({
+    className: 'bg-nao-tooltip rounded-xl mt-5 mb-7 flex items-center justify-between text-sm h-[42px] relative'
+})`
+    &:after{
+        content: "";
+        position:absolute;
+        height:100%;
+        background-color:${() => colors.nao.blue2};
+        transform:${({ tab }) => `translate(${tab * 100}%,0)`};
+        width:calc(100% / 2);
+        transition: all 0.2s;
+        border-radius:12px;
+    }
+ 
+`
+
+const TabItem = styled.div.attrs(({ active }) => ({
+    className: classnames(
+        'py-2 leading-6 w-1/2 h-full flex items-center justify-center z-[2] capitalize',
+        { 'font-semibold': active }
+    )
+}))`
+
+`
+
+const TabContent = styled.div.attrs(({ active }) => ({
+    className: classnames(
+        'min-h-[calc(100vh-234px)]',
+        { 'hidden': !active }
+    )
+}))`
+`
 
 export default PerformanceTab;

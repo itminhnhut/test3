@@ -76,7 +76,7 @@ const ContestPerRanks = () => {
 
     return (
         <section className="contest_individual_ranks pt-[70px]">
-            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" place="bottom"
+            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" 
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-personal-rank" >
                 <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_personal', { value: '1' }) }} >
                 </div>
