@@ -172,81 +172,83 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
 
     return (
         <CardNao id="nao-table" noBg className="mt-5 !pb-6 !pt-3 !px-3 !justify-start">
-            <div ref={header} className={classNames(
-                'z-10 py-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden',
-                'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between',
-                // 'pr-7'
-                classHeader
-            )}>
-                {children.map((item, indx) => (
-                    <Column key={indx} {...item.props} classHeader={classNames(
-                        'whitespace-nowrap mx-2 min-h-[10px]',
-                        { 'flex-1': indx !== 0 },
-                        { 'ml-0': indx === 0 },
-                        { 'mr-0': indx === children.length - 1 },
-                    )} />
-                ))}
-            </div>
-            <div onScroll={onScroll} ref={content}
-                className={classNames(
-                    'nao-table-content mt-3 overflow-auto',
-                    { 'pr-[10px]': isScroll }
+            <div ref={content} className='overflow-auto nao-table-content min-h-[200px]'>
+                <div ref={header} className={classNames(
+                    'z-10 py-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden min-w-max w-full',
+                    'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between',
+                    // 'pr-7'
+                    classHeader
                 )}>
-                {Array.isArray(dataSource) && dataSource?.length > 0 ?
-                    dataSource.map((item, index) => {
-                        return (
-                            <div
-                                onClick={() => _onRowClick(item, index)}
-                                style={{ minWidth: 'fit-content' }}
-                                key={`row_${index}`} className={classNames(
-                                    'px-3 flex items-center flex-1 w-full',
-                                    { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 },
-                                )}>
-                                {children.map((child, indx) => {
-                                    const width = child?.props?.width;
-                                    const minWidth = child?.props?.minWidth;
-                                    const maxWidth = child?.props?.maxWidth;
-                                    const className = child?.props?.className ?? '';
-                                    const align = child?.props?.align ?? 'left';
-                                    const _align = align === 'right' ? 'flex justify-end' : '';
-                                    const cellRender = child?.props?.cellRender;
-                                    const suffix = child?.props?.suffix;
-                                    const decimal = child?.props?.decimal;
-                                    const fieldName = child?.props?.fieldName;
-                                    const ellipsis = child?.props?.ellipsis;
+                    {children.map((item, indx) => (
+                        <Column key={indx} {...item.props} classHeader={classNames(
+                            'whitespace-nowrap mx-2 min-h-[10px]',
+                            { 'flex-1': indx !== 0 },
+                            { 'ml-0': indx === 0 },
+                            { 'mr-0': indx === children.length - 1 },
+                        )} />
+                    ))}
+                </div>
+                <div 
+                    className={classNames(
+                        ' mt-3 overflow-none',
+                        { 'pr-[10px]': isScroll }
+                    )}>
+                    {Array.isArray(dataSource) && dataSource?.length > 0 ?
+                        dataSource.map((item, index) => {
+                            return (
+                                <div
+                                    onClick={() => _onRowClick(item, index)}
+                                    style={{ minWidth: 'fit-content' }}
+                                    key={`row_${index}`} className={classNames(
+                                        'px-3 flex items-center flex-1 w-full',
+                                        { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 },
+                                    )}>
+                                    {children.map((child, indx) => {
+                                        const width = child?.props?.width;
+                                        const minWidth = child?.props?.minWidth;
+                                        const maxWidth = child?.props?.maxWidth;
+                                        const className = child?.props?.className ?? '';
+                                        const align = child?.props?.align ?? 'left';
+                                        const _align = align === 'right' ? 'flex justify-end' : '';
+                                        const cellRender = child?.props?.cellRender;
+                                        const suffix = child?.props?.suffix;
+                                        const decimal = child?.props?.decimal;
+                                        const fieldName = child?.props?.fieldName;
+                                        const ellipsis = child?.props?.ellipsis;
 
-                                    return (
-                                        <div title={item[fieldName]} style={{ width, maxWidth, minWidth, textAlign: align }} key={indx}
-                                            className={classNames(
-                                                `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
-                                                'break-words mx-2',
-                                                { 'flex-1': indx !== 0 },
-                                                { 'ml-0': indx === 0 },
-                                                { 'mr-0': indx == children.length - 1 },
-                                            )}>
-                                            {loading ? <Skeletor width={minWidth ?? 50} height={20} /> :
-                                                cellRender ? cellRender(item[fieldName], { ...item, rowIndex: index }) :
-                                                    decimal >= 0 ? formatNumber(item[fieldName], decimal, 0, true) :
-                                                        fieldName === 'index' ? index + 1 :
-                                                            ellipsis ? <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
-                                                                {item[fieldName]}
-                                                            </span> : item[fieldName]
+                                        return (
+                                            <div title={item[fieldName]} style={{ width, maxWidth, minWidth, textAlign: align }} key={indx}
+                                                className={classNames(
+                                                    `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
+                                                    'break-words mx-2',
+                                                    { 'flex-1': indx !== 0 },
+                                                    { 'ml-0': indx === 0 },
+                                                    { 'mr-0': indx == children.length - 1 },
+                                                )}>
+                                                {loading ? <Skeletor width={minWidth ?? 50} height={20} /> :
+                                                    cellRender ? cellRender(item[fieldName], { ...item, rowIndex: index }) :
+                                                        decimal >= 0 ? formatNumber(item[fieldName], decimal, 0, true) :
+                                                            fieldName === 'index' ? index + 1 :
+                                                                ellipsis ? <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                                                                    {item[fieldName]}
+                                                                </span> : item[fieldName]
 
-                                            }
-                                            {suffix ? ` ${suffix}` : ''}
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        )
-                    })
-                    :
-                    <div className={`flex items-center justify-center flex-col m-auto`}>
-                        <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                        <div className="text-xs text-nao-grey mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
-                    </div>
-                }
+                                                }
+                                                {suffix ? ` ${suffix}` : ''}
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            )
+                        })
+                        :
+                        <div className={`flex items-center justify-center flex-col m-auto`}>
+                            <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
+                            <div className="text-xs text-nao-grey mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
+                        </div>
+                    }
 
+                </div>
             </div>
         </CardNao>
     )
