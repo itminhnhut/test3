@@ -82,7 +82,8 @@
         "profit": "Profit",
         "pending": "Pending",
         "fail": "Fail",
-        "no_transaction_history": "No transaction history"
+        "no_transaction_history": "No transaction history",
+        "unlock_status": "Unlock: {{value}}"
     },
     "nao_token": {
         "title": "Buy NAO token",
