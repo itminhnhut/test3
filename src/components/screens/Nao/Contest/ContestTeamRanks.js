@@ -154,7 +154,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                             dataSource.map((item, index) => {
                                 return (
                                     <div onClick={() => onShowDetail(item, tab)} key={index} className={`flex gap-4 sm:gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium text-center flex justify-center items-start">
+                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium ">
                                             {loading ? <Skeletor width={24} height={24} circle /> :
                                                 item?.[rank] && item?.[rank] <= 10 ?
                                                     <img src={getS3Url(`/images/nao/contest/ic_top_${item?.[rank]}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
@@ -167,7 +167,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
                                                     <div className="font-semibold leading-6 capitalize">{item?.name} </div>
                                                     <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{item?.leader_name}</div>
                                                 </div>
-                                                <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
+                                                <div className=''>
                                                     <img className="rounded-[50%] object-cover min-w-[2.275rem] min-h-[2.275rem] max-w-[2.275rem] max-h-[2.275rem]" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                                                 </div>
                                             </div>

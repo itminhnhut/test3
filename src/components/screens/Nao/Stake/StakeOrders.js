@@ -44,7 +44,7 @@ const StakeOrders = ({ assetConfig }) => {
     }
 
     const renderStatus = (status) => {
-        const title = status === 0 ? t('common:canceled') : status === 1 ? t('nao:pool:pending') : t('common:success');
+        const title = status === 0 ? t('nao:pool:fail') : status === 1 ? t('nao:pool:pending') : t('common:success');
         const color = status === 0 ? 'text-nao-red' : status === 1 ? 'text-onus-orange' : 'text-nao-green';
         return <div className={`font-semibold ${color}`}>{title}</div>
     }
@@ -75,7 +75,7 @@ const StakeOrders = ({ assetConfig }) => {
     }
 
     return (
-        <div className='min-h-[300px]'>
+        <Fragment>
             {loading ? loader() :
                 <InfiniteScroll
                     dataLength={dataSource.length}
@@ -83,29 +83,37 @@ const StakeOrders = ({ assetConfig }) => {
                     hasMore={hasNext.current}
                 // {...scrollSnap ? { height: 'calc(100vh - 42px)' } : { scrollableTarget: "futures-mobile" }}
                 >
-                    {dataSource.map((item, idx) => {
-                        return (
-                            <Fragment key={idx}>
-                                {idx !== 0 && <Divider className="w-full !my-4" />}
-                                <div className="">
-                                    <div className="flex items-center justify-between">
-                                        <div className="text-nao-text font-semibold leading-6">{t(`nao:pool:${item?.type === 1 ? 'lock' : 'unlock'}`)} NAO</div>
-                                        <div className="flex items-center space-x-2">
-                                            <div className="text-lg font-semibold leading-7">{formatNumber(item?.amount, assetConfig[447]?.assetDigit ?? 2)}</div>
-                                            <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
+                    {dataSource.length > 0 ?
+                        dataSource.map((item, idx) => {
+                            return (
+                                <Fragment key={idx}>
+                                    {idx !== 0 && <Divider className="w-full !my-4" />}
+                                    <div className="">
+                                        <div className="flex items-center justify-between">
+                                            <div className="text-nao-text font-semibold leading-6">{t(`nao:pool:${item?.type === 1 ? 'lock2' : 'unlock'}`)} NAO</div>
+                                            <div className="flex items-center space-x-2">
+                                                <div className="text-lg font-semibold leading-7">{formatNumber(item?.amount, assetConfig[447]?.assetDigit ?? 2)}</div>
+                                                <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between leading-6 text-sm pt-2">
+                                            <div className="text-nao-grey ">{formatTime(item?.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
+                                            {renderStatus(item?.status)}
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between leading-6 text-sm pt-2">
-                                        <div className="text-nao-grey ">{formatTime(item?.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
-                                        {renderStatus(item?.status)}
-                                    </div>
-                                </div>
-                            </Fragment>
-                        )
-                    })}
+                                </Fragment>
+                            )
+                        }) :
+                        <div className="flex flex-col justify-center items-center">
+                            <div className={`flex items-center justify-center flex-col m-auto h-full min-h-[300px]`}>
+                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={130} height={130} />
+                                <div className="text-xs text-nao-grey mt-1">{t('nao:pool:no_transaction_history')}</div>
+                            </div>
+                        </div>
+                    }
                 </InfiniteScroll>
             }
-        </div>
+        </Fragment>
     );
 };
 

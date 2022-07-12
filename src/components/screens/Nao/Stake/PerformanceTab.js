@@ -155,7 +155,7 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                     <TextLiner className="pb-1">{t('common:transaction_history')}</TextLiner>
                     <div className="text-nao-grey text-sm">{t('nao:pool:history_description')}</div>
                     <Tabs tab={tab}>
-                        <TabItem active={tab === 0} onClick={() => onSetTab(0)}>{t('nao:pool:revenue')}</TabItem>
+                        <TabItem active={tab === 0} onClick={() => onSetTab(0)}>{t('nao:pool:profit')}</TabItem>
                         <TabItem active={tab === 1} onClick={() => onSetTab(1)} >Stake</TabItem>
                     </Tabs>
                     <TabContent active={tab === 0}>
