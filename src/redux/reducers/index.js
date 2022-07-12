@@ -8,6 +8,7 @@ import futures from './futures';
 import wallet from './wallet';
 import notification from './notification';
 import heath from './heath';
+import nao from './nao';
 
 const rootReducer = combineReducers({
     auth,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     notification,
     wallet,
     heath,
+    nao
 });
 
 export default rootReducer;
