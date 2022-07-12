@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useRef } from 'react';
+import React, { useState, useEffect, Fragment, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Divider } from 'components/screens/Nao/NaoStyle';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import fetchApi from 'utils/fetch-api';
@@ -10,22 +10,24 @@ import { formatNumber, getS3Url, formatTime, getTimeAgo } from 'redux/actions/ut
 import Skeletor from 'components/common/Skeletor';
 import { add, formatDistanceToNow, differenceInMinutes } from 'date-fns';
 import { floor } from 'lodash';
+import { useSelector } from 'react-redux';
 
 const StakeOrders = ({ assetConfig }) => {
     const { t } = useTranslation();
     const [dataSource, setDataSource] = useState([]);
     const hasNext = useRef(false);
     const [loading, setLoading] = useState(true);
+    const isReload = useSelector(state => state?.nao?.isReloadStake)
 
     useEffect(() => {
         getStakeOrders(true);
-    }, [])
+    }, [isReload])
 
     const getStakeOrders = async (isReset) => {
         try {
             const { data, status } = await fetchApi({
                 url: API_POOL_STAKE_ORDER,
-                params: {
+                params: isReset ? {} : {
                     lastId: dataSource[dataSource.length - 1]?._id
                 }
             });
@@ -59,8 +61,8 @@ const StakeOrders = ({ assetConfig }) => {
             minutes = differenceInMinutes(date, new Date());
         }
         const title = status === 0 ? t('nao:pool:fail') : status === 1 ? t('nao:pool:unlock_status', { value: formatDate(minutes) }) : t('common:success');
-        const color = status === 0 ? 'text-nao-red font-semibold' : status === 1 ? 'text-nao-grey' : 'text-nao-green font-semibold';
-        return <div className={`${color}`}>{title}</div>
+        const color = status === 0 ? 'text-nao-red' : status === 1 ? 'text-nao-yellow' : 'text-nao-green';
+        return <div className={`font-medium ${color}`}>{title}</div>
     }
 
     const loader = () => {

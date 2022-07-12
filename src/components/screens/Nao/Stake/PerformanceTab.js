@@ -251,8 +251,9 @@ const Tabs = styled.div.attrs({
 
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classnames(
-        'py-2 leading-6 w-1/2 h-full flex items-center justify-center z-[2] capitalize',
-        { 'font-semibold': active }
+        'py-2 leading-6 w-1/2 h-full flex items-center justify-center z-[2] capitalize ',
+        { 'font-semibold': active },
+        { 'text-nao-text font-medium': !active }
     )
 }))`
 

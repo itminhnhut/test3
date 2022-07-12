@@ -9,9 +9,10 @@ import { useRef } from 'react';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useTranslation } from 'next-i18next';
+import { requestNao } from 'redux/actions/nao';
 
 const getBalance = createSelector(
     [
@@ -30,6 +31,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
     const isLock = useRef(false);
     const [referencePrice, setReferencePrice] = useState({})
     const balance = useSelector(state => getBalance(state, 447));
+    const dispatch = useDispatch()
 
     useEffect(() => {
         getRef();
@@ -77,6 +79,7 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
     const onConfirm = (data) => {
         getStake()
         setShowLockModal(false)
+        dispatch(requestNao())
     }
 
     const onRedirect = (key) => {
