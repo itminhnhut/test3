@@ -120,10 +120,10 @@ const StakeTab = forwardRef(({ dataSource, getStake, assetNao }, ref) => {
                 </div>
                 <div >
                     <label className={`text-nao-green text-sm font-semibold ${language !== 'vi' ? 'capitalize' : ''}`}>{t('nao:pool:staked_title')}</label>
-                    <div className="text-nao-text mt-4 flex items-center justify-between space-x-4">
+                    <div className="mt-4 flex items-center justify-between space-x-4">
                         <div>
                             <div className="font-semibold leading-8 text-2xl break-all">{formatNumber(dataSource?.availableStaked, assetNao?.assetDigit ?? 8)}</div>
-                            <span className="text-sm font-medium">${formatNumber((dataSource?.availableStakedVNDC ?? 0) * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
+                            <span className="text-nao-text text-sm font-medium">${formatNumber((dataSource?.availableStakedVNDC ?? 0) * (referencePrice['VNDC'] ?? 1), assetNao?.assetDigit ?? 8)}</span>
                         </div>
                         <div className="flex  space-x-[10px]">
                             <div
