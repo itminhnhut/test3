@@ -79,8 +79,10 @@
         "tooltip_profit_est": "Lợi nhuận ước tính dựa trên doanh thu pool kỳ trước và số NAO đang stake",
         "tooltip_apy": "Lãi suất năm dự tính dựa trên số liệu tổng doanh thu pool tuần trước",
         "tooltip_revenue_history": "Tổng doanh thu pool được chia sẻ từ phí giao dịch, lũy kế từ 00:00 thứ 2 tới thời điểm này",
-        "revenue": "Lợi nhuận",
-        "pending": "Đang chờ"
+        "profit": "Lợi nhuận",
+        "pending": "Đang chờ",
+        "fail": "Lỗi",
+        "no_transaction_history": "Không có lịch sử giao dịch"
     },
     "nao_token": {
         "title": "Mua token NAO",

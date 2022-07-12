@@ -34,6 +34,7 @@
         "nao_earned": "NAO Earned (Compounding)",
         "auto": "Auto",
         "lock": "Stake",
+        "lock2": "Stake",
         "unlock": "Unstake",
         "input_lock": "Amount",
         "input_unlock": "Amount",
@@ -46,7 +47,7 @@
         "total_revenue": "Total profit",
         "per_est_revenue": "Profit this week",
         "history_revenue": "Profit history",
-        "history_description": "Profit will be transfer at 07:00 every Monday (UTC+7)",
+        "history_description": "Profits are distributed at 07:00 every Monday (UTC+7)",
         "history_nodata": "There are no history revenue",
         "confirm_lock": "Confirm lock",
         "confirm_unlock": "Confirm unlock",
@@ -78,8 +79,10 @@
         "tooltip_profit_est": "Estimated profit based on last period pool revenue and NAO staking",
         "tooltip_apy": "Estimated yearly interest based on last week's total pool revenue",
         "tooltip_revenue_history": "Total pool revenue shared from transaction fees, accumulated from Monday 00:00 (UTC+7) until now",
-        "revenue": "Revenue",
-        "pending": "Pending"
+        "profit": "Profit",
+        "pending": "Pending",
+        "fail": "Fail",
+        "no_transaction_history": "No transaction history"
     },
     "nao_token": {
         "title": "Buy NAO token",
