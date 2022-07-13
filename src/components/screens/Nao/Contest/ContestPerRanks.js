@@ -206,8 +206,8 @@ const ContestPerRanks = () => {
                     <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
                     {
                         tab === 'pnl'
-                            ? <Column maxWidth={120} minWidth={120} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
-                            : <Column maxWidth={120} minWidth={120} align="right" className="font-medium" title={t('nao:contest:total_trades')} fieldName="total_order" decimal={0} />
+                            ? <Column maxWidth={120} minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
+                            : <Column maxWidth={120} minWidth={100} align="right" className="font-medium" title={t('nao:contest:total_trades')} fieldName="total_order" decimal={0} />
                     }
                 </Table>
             }
