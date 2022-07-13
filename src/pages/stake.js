@@ -20,6 +20,7 @@ import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useRouter } from 'next/router'; 'next/router'
+import { useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 
 const getAssetNao = createSelector(
     [
@@ -108,26 +109,6 @@ const Stake = () => {
         </LayoutNaoToken>
     );
 };
-
-
-function useOutsideAlerter(ref, cb) {
-    useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
-        function handleClickOutside(event, cb) {
-            if (ref.current && !ref.current.contains(event.target)) {
-                cb()
-            }
-        }
-        // Bind the event listener
-        document.addEventListener("mousedown", (event) => handleClickOutside(event, cb));
-        return () => {
-            // Unbind the event listener on clean up
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref, cb]);
-}
 
 const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) => {
     const wrapperRef = useRef(null);

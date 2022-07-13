@@ -56,7 +56,8 @@ const ContestPerRanks = () => {
         return (
             <div className='flex items-center gap-2'>
                 <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                    <img className='rounded-[50%] object-cover' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                    <img className='rounded-[50%] object-cover min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px]'
+                        src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
                 </div>
                 <div>{data}</div>
             </div>
@@ -76,7 +77,7 @@ const ContestPerRanks = () => {
 
     return (
         <section className="contest_individual_ranks pt-[70px]">
-            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" 
+            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-personal-rank" >
                 <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_personal', { value: '1' }) }} >
                 </div>
@@ -199,14 +200,14 @@ const ContestPerRanks = () => {
                 </CardNao>
                 :
                 <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} >
-                    <Column minWidth={100} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
+                    <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
-                    <Column minWidth={300} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
-                    <Column minWidth={200} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
+                    <Column minWidth={150} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
+                    <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
                     {
                         tab === 'pnl'
-                            ? <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
-                            : <Column minWidth={200} align="right" className="font-medium" title={t('nao:contest:total_trades')} fieldName="total_order" decimal={0} />
+                            ? <Column maxWidth={120} minWidth={120} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
+                            : <Column maxWidth={120} minWidth={120} align="right" className="font-medium" title={t('nao:contest:total_trades')} fieldName="total_order" decimal={0} />
                     }
                 </Table>
             }

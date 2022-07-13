@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Portal from 'components/hoc/Portal';
 import classNames from 'classnames';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_GROUP_DETAIL } from 'redux/actions/apis';
@@ -15,6 +15,15 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
     const { width } = useWindowSize()
     const [dataSource, setDataSource] = useState(null)
     const [loading, setLoading] = useState(true)
+    const wrapperRef = useRef(null);
+
+    const handleOutside = () => {
+        if (visible && onClose) {
+            onClose()
+        }
+    }
+
+    useOutsideAlerter(wrapperRef, handleOutside);
 
     useEffect(() => {
         getDetail(rowData?.displaying_id);
@@ -57,7 +66,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                     { visible: visible },
                 )}
             >
-                <div className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl w-[calc(100%-32px)] max-h-[calc(100%-32px)] max-w-[979px] overflow-y-auto">
+                <div ref={wrapperRef} className="bg-[#0E1D32] px-5 py-7 sm:px-10 sm:py-11 rounded-xl w-[calc(100%-32px)] max-h-[calc(100%-32px)] max-w-[979px] overflow-y-auto">
                     <div className="flex sm:items-center sm:justify-between gap-2 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7 min-w-[250px]">
                             <TextLiner className="!text-[4.125rem] !leading-[6.25rem] !pb-0" liner>#{dataSource?.[rank]}</TextLiner>

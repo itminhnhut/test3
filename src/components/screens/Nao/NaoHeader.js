@@ -8,7 +8,7 @@ import colors from 'styles/colors';
 import Portal from 'components/hoc/Portal';
 import classNames from 'classnames';
 import { X } from 'react-feather';
-import { Divider, ButtonNao } from 'components/screens/Nao/NaoStyle';
+import { Divider, ButtonNao, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 import { getS3Url } from 'redux/actions/utils';
 import { useRouter } from 'next/router'
 const category = [
@@ -91,25 +91,6 @@ const NaoHeader = memo(({ onDownload }) => {
         </div>
     );
 });
-
-function useOutsideAlerter(ref, cb) {
-    useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
-        function handleClickOutside(event, cb) {
-            if (ref.current && !ref.current.contains(event.target)) {
-                cb()
-            }
-        }
-        // Bind the event listener
-        document.addEventListener("mousedown", (event) => handleClickOutside(event, cb));
-        return () => {
-            // Unbind the event listener on clean up
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref, cb]);
-}
 
 const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView, onDownload }) => {
     const wrapperRef = useRef(null);

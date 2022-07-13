@@ -188,7 +188,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                         )} />
                     ))}
                 </div>
-                <div 
+                <div
                     className={classNames(
                         ' mt-3 overflow-none',
                         { 'pr-[10px]': isScroll }
@@ -261,4 +261,23 @@ export const getColor = (value) => {
 export const renderPnl = (data, item) => {
     const prefix = !!data && data > 0 ? '+' : ''
     return <div className={`${getColor(data)}`}>{prefix + formatNumber(data, 2, 0, true)}%</div>
+}
+
+export const useOutsideAlerter = (ref, cb) => {
+    useEffect(() => {
+        /**
+         * Alert if clicked on outside of element
+         */
+        const handleClickOutside = (event, cb) => {
+            if (ref.current && !ref.current.contains(event.target)) {
+                cb()
+            }
+        }
+        // Bind the event listener
+        document.addEventListener("mousedown", (event) => handleClickOutside(event, cb));
+        return () => {
+            // Unbind the event listener on clean up
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [ref, cb]);
 }
