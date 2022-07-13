@@ -50,7 +50,7 @@ const StakeOrders = ({ assetConfig }) => {
     const formatDate = (minutes) => {
         const hours = floor(minutes / 60);
         const days = floor(minutes / 60 / 24);
-        return days > 1 ? days + ' ' + t('common:days') : hours > 1 ? hours + ' ' + t('common:hours') : minutes + ' ' + t('common:minutes')
+        return days >= 1 ? days + ' ' + t('common:days') : hours >= 1 ? hours + ' ' + t('common:hours') : minutes + ' ' + t('common:minutes')
     }
 
     const renderStatus = (item) => {
