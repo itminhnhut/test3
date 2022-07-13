@@ -151,10 +151,11 @@ const EditSLTPVndcMobile = ({
         if (!sltp) return 50;
         const { leverage, side } = order;
         let formatX = 0;
+        let _activePrice = data.price;
         if (side == VndcFutureOrderType.Side.BUY) {
-            formatX = (sltp * (1 - DefaultFuturesFee.NamiFrameOnus) - _lastPrice * (1 + DefaultFuturesFee.NamiFrameOnus)) * leverage / _lastPrice * 100
+            formatX = (sltp * (1 - DefaultFuturesFee.NamiFrameOnus) - _activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) * leverage / _activePrice * 100
         } else {
-            formatX = (sltp * (-1 - DefaultFuturesFee.NamiFrameOnus) + _lastPrice * (1 - DefaultFuturesFee.NamiFrameOnus)) * leverage / _lastPrice * 100
+            formatX = (sltp * (-1 - DefaultFuturesFee.NamiFrameOnus) + _activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) * leverage / _activePrice * 100
         }
         return formatX <= -100 ? -1 : Math.abs(formatX > 0 ? 50 + formatX / 2 : -50 - formatX / 2)
     }
