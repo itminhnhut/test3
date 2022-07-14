@@ -134,5 +134,14 @@
         "no": "No",
         "tooltip_personal": "Minimum volume for individual ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>",
         "tooltip_team": "Minimum volume for team ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>"
+    },
+    "luckydraw": {
+        "not_ticket_title": "You don't have any lucky ticket",
+        "ticket_title": "You've just received a lucky ticket",
+        "ticket_des": "Reach {{vndc}} VNDC daily volume to have a chance of winning {{nao}} NAO from ONUS Futures",
+        "trade": "Trade now",
+        "open_now": "Open",
+        "pull_ticket": "Pull the ticket out to see the gift",
+        "goodluck": "Wish you better luck next time!"
     }
 }

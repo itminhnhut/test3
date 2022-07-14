@@ -281,3 +281,14 @@ export const useOutsideAlerter = (ref, cb) => {
         };
     }, [ref, cb]);
 }
+
+export const TextTicket = styled.div.attrs(({ xs }) => ({
+    className: classNames(
+        'absolute font-medium opacity-[0.65] w-full px-4',
+        { 'text-[0.4375rem] ': xs },
+        { 'text-[0.625rem] ': !xs }
+    )
+}))`
+    left:50%;
+    transform: translate(-50%,0)
+`
