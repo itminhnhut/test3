@@ -216,3 +216,9 @@ export const API_CONTEST_GET_RANK_GROUP_PNL = API_PREFIX + 'event/futures-contes
 export const API_CONTEST_GET_RANK_GROUP_VOLUME = API_PREFIX + 'event/futures-contest/group-volume';
 export const API_CONTEST_GET_GROUP_DETAIL = API_PREFIX + 'event/futures-contest/group-detail';
 
+
+//Luckydraw
+export const API_GET_TICKETS = API_PREFIX + 'futures_reward/tickets';
+export const API_GET_TICKET_DETAIL = API_PREFIX + 'futures_reward/ticket-detail';
+export const API_CLAIM_TICKET = API_PREFIX + 'futures_reward/claim';
+

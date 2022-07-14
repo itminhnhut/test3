@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken';
 import styled from 'styled-components';
 import LuckyPage from 'components/screens/Nao/Luckydraw/LuckyPage';
@@ -6,17 +6,71 @@ import LuckyTicket from 'components/screens/Nao/Luckydraw/LuckyTicket';
 import { useWindowSize } from 'utils/customHooks';
 import classnames from 'classnames';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { API_GET_TICKETS, API_CLAIM_TICKET } from 'redux/actions/apis';
+import fetchApi from 'utils/fetch-api';
+import { ApiStatus } from 'redux/actions/const';
+import { emitWebViewEvent, getS3Url } from 'redux/actions/utils';
+import { ArrowLeft } from 'react-feather';
 
 const Luckydraw = () => {
-    const ticket = false;
+    const [tickets, setTickets] = useState([]);
     const { width } = useWindowSize();
     const [open, setOpen] = useState(false);
+    const ticket = useRef(null)
 
-    const onOpen = () => {
-        if (!ticket) return;
+    useEffect(() => {
+        // getTickets();
+    }, [])
+
+    const onClaim = async (code) => {
+        try {
+            const { data, status } = await fetchApi({
+                url: API_CLAIM_TICKET,
+                options: { method: 'POST' },
+                params: {
+                    ticket_code: code
+                }
+            });
+        } catch (e) {
+            console.log(e)
+        } finally {
+        }
+    }
+
+    const getTickets = async () => {
+        try {
+            const { data, status } = await fetchApi({
+                url: API_GET_TICKETS,
+            });
+            if (status === ApiStatus.SUCCESS) {
+                setTickets(data)
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+        }
+    }
+
+    const _tickets = tickets.length > 0 ? tickets : false
+
+    const onOpen = (data) => {
+        if (!_tickets) return;
+        ticket.current = data;
         setTimeout(() => {
             setOpen(true);
-        }, 500);
+        }, 300);
+    }
+
+    const onClose = (data) => {
+        const _tickets = [...tickets];
+        const index = _tickets.findIndex(i => i?._id === data?._id)
+        _tickets.splice(index, 1)
+        ticket.current = null;
+        if (data?.can_receive) {
+            onClaim(data?.reward?.ticket_code)
+        }
+        setTickets(_tickets)
+        setOpen(false);
     }
 
     return (
@@ -24,13 +78,17 @@ const Luckydraw = () => {
             <Background>
                 <BackgroundImage width={width} className="text-center">
                     <div className="flex items-center justify-between relative top-0">
-                        <img src="/images/nao/luckydraw/ic_onus.png" width="74" height="20" alt="" />
-                        <img src="/images/nao/luckydraw/ic_nami.png" width="66" height="36" alt="" />
+                        {!ticket.current ? <ArrowLeft size={24} onClick={() => emitWebViewEvent('back')} />
+                            : <>
+                                <img src={getS3Url("/images/nao/luckydraw/ic_onus.png")} width="74" height="20" alt="" />
+                                <img src={getS3Url("/images/nao/luckydraw/ic_nami.png")} width="66" height="36" alt="" />
+                            </>
+                        }
                     </div>
                     {!open ?
-                        <LuckyPage ticket={ticket} width={width} onOpen={onOpen} />
+                        <LuckyPage tickets={_tickets} width={width} onOpen={onOpen} />
                         :
-                        <LuckyTicket open={open} width={width} onClose={() => setOpen(false)} />
+                        <LuckyTicket ticket={ticket.current} open={open} width={width} onClose={onClose} />
                     }
                 </BackgroundImage>
             </Background>
@@ -53,7 +111,7 @@ const BackgroundImage = styled.div.attrs(({ width }) => ({
         { 'p-4': width <= 360 },
     )
 }))`
-    background-image:${() => `url(${(`/images/nao/luckydraw/bg_screen.png`)})`};
+    background-image:${() => `url(${getS3Url(`/images/nao/luckydraw/bg_screen.png`)})`};
     background-repeat: no-repeat;     
     background-size: cover;
     background-position: center top;
