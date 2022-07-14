@@ -17,6 +17,8 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
 
     useEffect(() => {
         document.body.classList.add('disabled-zoom');
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
         let vw = window.innerWidth;
         if (vw <= 360) {
             document.documentElement.style.setProperty('font-size', '14px');

@@ -106,6 +106,7 @@
     "react-device-detect": "^1.17.0",
     "react-div-100vh": "^0.6.0",
     "react-dom": "^17.0.2",
+    "react-draggable": "^4.4.5",
     "react-dropzone": "^11.4.2",
     "react-feather": "^2.0.9",
     "react-grid-layout": "^1.2.4",
