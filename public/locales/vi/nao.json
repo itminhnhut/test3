@@ -137,13 +137,14 @@
     },
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",
-        "ticket_title": "Bạn đã nhận được vé may mắn",
+        "ticket_title": "Bạn có {{value}} vé may mắn",
         "ticket_des": "Đạt khối lượng giao dịch ngày {{vndc}} VNDC để có cơ hội nhận {{nao}} NAO từ ONUS Futures",
         "trade": "Giao dịch ngay",
         "open_now": "Mở ngay",
         "pull_ticket": "Kéo tấm vé ra khỏi bao để xem quà",
         "goodluck": "Chúc bạn may mắn lần sau!",
         "congrat_first": "Chúc mừng bạn đã nhận được",
-        "get_now": "Nhận ngay"
+        "get_now": "Nhận ngay",
+        "continue": "Tiếp tục mở"
     }
 }

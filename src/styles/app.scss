@@ -736,3 +736,39 @@ input[type='number'] {
 .animation{
     transition: transform 0.9s
 }
+
+.bounceAlpha {
+    animation-name: bounceAlpha;
+    animation-duration:1.4s;
+    animation-iteration-count:infinite;
+    animation-timing-function:linear;
+}
+
+.bounceAlpha-1 {
+    animation-name: bounceAlpha;
+    animation-duration:1.4s;
+    animation-iteration-count:infinite;
+    animation-timing-function:linear;
+}
+.bounceAlpha-2 {
+    animation-name: bounceAlpha;
+    animation-duration:1.4s;
+    animation-delay:0.2s;
+    animation-iteration-count:infinite;
+    animation-timing-function:linear;
+}
+
+.bounceAlpha-3 {
+    animation-name: bounceAlpha;
+    animation-duration:1.4s;
+    animation-delay:0.4s;
+    animation-iteration-count:infinite;
+    animation-timing-function:linear;
+}
+
+@keyframes bounceAlpha {
+    0% {opacity: 1; transform: translateY(0) scale(1);}
+    25%{opacity: 0; transform:translateY(-10px) scale(0.9);}
+    26%{opacity: 0; transform:translateY(10px) scale(0.9);}
+    55% {opacity: 1; transform: translateY(0px) scale(1);}
+  }

@@ -7,7 +7,7 @@ import { TextTicket } from 'components/screens/Nao/NaoStyle';
 import { formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 
-const DragTicket = ({ ticket, onOpen, xs }) => {
+const DragTicket = ({ ticket, onOpen, xs, last, index }) => {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const { t } = useTranslation();
 
@@ -22,6 +22,7 @@ const DragTicket = ({ ticket, onOpen, xs }) => {
         }
     }
 
+
     return (
         <Draggable
             axis="y"
@@ -32,11 +33,9 @@ const DragTicket = ({ ticket, onOpen, xs }) => {
         >
 
             <Ticket>
-                <TextTicket xs={xs} className="top-[8%]">
-                    <div className="leading-4">ID: #{ticket?.reward?.ticket_code}</div>
-                    <div className="leading-4">{t('common:Thời gian')}: {formatTime(ticket?.reward?.time, 'yyyy-MM-dd HH:mm')}</div>
-                </TextTicket>
-                <img src={getS3Url("/images/nao/luckydraw/ic_ticket.png")} width={181} height={390} />
+                {/* <div className={`${!last ? 'rotate-[-10deg]' : ''}`}> */}
+                    <img src={getS3Url("/images/nao/luckydraw/ic_ticket.png")} width={181} height={390} />
+                {/* </div> */}
             </Ticket>
         </Draggable>
     );
