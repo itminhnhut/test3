@@ -142,6 +142,8 @@
         "trade": "Giao dịch ngay",
         "open_now": "Mở ngay",
         "pull_ticket": "Kéo tấm vé ra khỏi bao để xem quà",
-        "goodluck": "Chúc bạn may mắn lần sau!"
+        "goodluck": "Chúc bạn may mắn lần sau!",
+        "congrat_first": "Chúc mừng bạn đã nhận được",
+        "get_now": "Nhận ngay"
     }
 }

@@ -142,6 +142,8 @@
         "trade": "Trade now",
         "open_now": "Open",
         "pull_ticket": "Pull the ticket out to see the gift",
-        "goodluck": "Wish you better luck next time!"
+        "goodluck": "Wish you better luck next time!",
+        "congrat_first": "Congratulation! You have received",
+        "get_now": "Get it now"
     }
 }
