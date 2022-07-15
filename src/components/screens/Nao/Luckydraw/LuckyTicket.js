@@ -32,7 +32,7 @@ const LuckyTicket = ({ ticket, onClose, width, tickets }) => {
                         <div className="leading-4">ID: #{ticket?.reward?.ticket_code}</div>
                         <div className="leading-4">{t('common:Thời gian')}: {formatTime(ticket?.reward?.time, 'yyyy-MM-dd HH:mm')}</div>
                     </TextTicket>
-                    <img src={(`/images/nao/luckydraw/${isGift ? 'ic_gift' : 'ic_open_ticket'}.png`)} width={221} height={474} />
+                    <img src={getS3Url(`/images/nao/luckydraw/${isGift ? 'ic_gift' : 'ic_open_ticket'}.png`)} width={221} height={474} />
                 </BgCenter>
             </Div>
             {hidden ?
