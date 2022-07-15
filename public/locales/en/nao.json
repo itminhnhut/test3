@@ -139,6 +139,7 @@
         "not_ticket_title": "You don't have any lucky ticket",
         "ticket_title": "You've {{value}} lucky tickets",
         "ticket_des": "Reach {{vndc}} VNDC daily volume to have a chance of winning {{nao}} NAO from ONUS Futures",
+        "received_tickets": "You have used up all your lucky tickets today, wish you a successful trading day.",
         "trade": "Trade now",
         "open_now": "Open",
         "pull_ticket": "Pull the ticket out to see the gift",

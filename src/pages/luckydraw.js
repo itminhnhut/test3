@@ -20,6 +20,7 @@ const Luckydraw = () => {
     const [tickets, setTickets] = useState([]);
     const { width, height } = useWindowSize();
     const [open, setOpen] = useState(false);
+    const [isNewUser, setIsNewUser] = useState(false);
     const ticket = useRef(null)
     const [loading, setLoading] = useState(true);
     const [showInfo, setShowInfo] = useState(false);
@@ -53,6 +54,7 @@ const Luckydraw = () => {
             if (status === ApiStatus.SUCCESS) {
                 volume.current = data?.data_volume
                 setTickets(data?.tickets)
+                setIsNewUser(data?.is_new_user)
             }
         } catch (e) {
             console.log(e)
@@ -92,7 +94,7 @@ const Luckydraw = () => {
                         {!open && <img onClick={() => setShowInfo(true)} src={getS3Url("/images/nao/luckydraw/v2/ic_helper.png")} width="24" height="24" alt="" />}
                     </div>
                     {!open ?
-                        <LuckyPage flag={flag.current} loading={loading} tickets={_tickets} width={width} onOpen={onOpen} />
+                        <LuckyPage isNewUser={isNewUser} volume={volume.current} flag={flag.current} loading={loading} tickets={_tickets} width={width} onOpen={onOpen} />
                         :
                         <LuckyTicket tickets={_tickets} ticket={ticket.current} open={open} width={width} onClose={onClose} />
                     }
@@ -118,7 +120,7 @@ const BackgroundImage = styled.div.attrs(({ width }) => ({
     )
 }))`
     background-image:${() => `url(${getS3Url(`/images/nao/luckydraw/bg_screen.png`)})`};
-    background-repeat: no-repeat;     
+    background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
 `

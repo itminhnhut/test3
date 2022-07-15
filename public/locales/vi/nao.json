@@ -139,6 +139,7 @@
         "not_ticket_title": "Bạn chưa có vé may mắn",
         "ticket_title": "Bạn có {{value}} vé may mắn",
         "ticket_des": "Đạt khối lượng giao dịch ngày {{vndc}} VNDC để có cơ hội nhận {{nao}} NAO từ ONUS Futures",
+        "received_tickets": "Bạn đã sử dụng hết vé may mắn ngày hôm nay, chúc bạn một ngày giao dịch thành công.",
         "trade": "Giao dịch ngay",
         "open_now": "Mở ngay",
         "pull_ticket": "Kéo tấm vé ra khỏi bao để xem quà",
