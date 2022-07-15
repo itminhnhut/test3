@@ -77,9 +77,7 @@ const Luckydraw = () => {
         const index = _tickets.findIndex(i => i?._id === data?._id)
         _tickets.splice(index, 1)
         ticket.current = null;
-        if (data?.can_receive) {
-            onClaim(data?.reward?.ticket_code)
-        }
+        onClaim(data?.reward?.ticket_code)
         setTickets(_tickets)
         setOpen(false);
     }
