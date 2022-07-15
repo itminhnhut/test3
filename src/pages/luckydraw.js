@@ -20,7 +20,7 @@ const Luckydraw = () => {
     const [tickets, setTickets] = useState([]);
     const { width, height } = useWindowSize();
     const [open, setOpen] = useState(false);
-    const [isReachTarget, setIsReachTarget] = useState(false);
+    const [isNewUser, setIsNewUser] = useState(false);
     const ticket = useRef(null)
     const [loading, setLoading] = useState(true);
     const [showInfo, setShowInfo] = useState(false);
@@ -54,7 +54,7 @@ const Luckydraw = () => {
             if (status === ApiStatus.SUCCESS) {
                 volume.current = data?.data_volume
                 setTickets(data?.tickets)
-                setIsReachTarget(!data?.is_new_user || (data?.is_new_user && data?.data_volume >= 1e7))
+                setIsNewUser(data?.is_new_user)
             }
         } catch (e) {
             console.log(e)
@@ -94,7 +94,7 @@ const Luckydraw = () => {
                         {!open && <img onClick={() => setShowInfo(true)} src={getS3Url("/images/nao/luckydraw/v2/ic_helper.png")} width="24" height="24" alt="" />}
                     </div>
                     {!open ?
-                        <LuckyPage isReachTarget={isReachTarget} flag={flag.current} loading={loading} tickets={_tickets} width={width} onOpen={onOpen} />
+                        <LuckyPage isNewUser={isNewUser} volume={volume.current} flag={flag.current} loading={loading} tickets={_tickets} width={width} onOpen={onOpen} />
                         :
                         <LuckyTicket tickets={_tickets} ticket={ticket.current} open={open} width={width} onClose={onClose} />
                     }
