@@ -137,13 +137,16 @@
     },
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",
-        "ticket_title": "You've just received a lucky ticket",
+        "ticket_title": "You've {{value}} lucky tickets",
         "ticket_des": "Reach {{vndc}} VNDC daily volume to have a chance of winning {{nao}} NAO from ONUS Futures",
         "trade": "Trade now",
         "open_now": "Open",
         "pull_ticket": "Pull the ticket out to see the gift",
         "goodluck": "Wish you better luck next time!",
         "congrat_first": "Congratulation! You have received",
-        "get_now": "Get it now"
+        "get_now": "Get it now",
+        "continue": "Continue",
+        "conditions": "Bonus conditions",
+        "vol_trade": "Trade volume today"
     }
 }

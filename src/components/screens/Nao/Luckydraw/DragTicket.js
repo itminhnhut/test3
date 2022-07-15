@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { useWindowSize } from 'utils/customHooks';
 import classnames from 'classnames';
 import Draggable from 'react-draggable';
-import { TextTicket } from 'components/screens/Nao/NaoStyle';
+import { TextTicket, TextTicketLiner } from 'components/screens/Nao/NaoStyle';
 import { formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 
-const DragTicket = ({ ticket, onOpen, xs }) => {
+const DragTicket = ({ ticket, onOpen, xs, last, index, flag }) => {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const { t } = useTranslation();
 
@@ -22,6 +22,8 @@ const DragTicket = ({ ticket, onOpen, xs }) => {
         }
     }
 
+    const isGift = ticket?.can_receive;
+
     return (
         <Draggable
             axis="y"
@@ -31,12 +33,20 @@ const DragTicket = ({ ticket, onOpen, xs }) => {
             defaultClassName={`animation`}
         >
 
-            <Ticket>
-                <TextTicket xs={xs} className="top-[8%]">
+            <Ticket className={flag ? '' : 'grown-up'}>
+                {/* <div className={`${!last ? 'rotate-[-10deg]' : ''}`}> */}
+                <TextTicket className={`top-[38%] !opacity-100 ${isGift ? '!text-sm' : '!text-[1rem]'} font-semibold px-10 flex flex-col items-center`}>
+                    {t(`nao:luckydraw:${isGift ? 'congrat_first' : 'goodluck'}`)}
+                    {isGift && <div className="flex items-center space-x-2 pt-1">
+                        <TextTicketLiner className="text-[1.75rem] leading-9 font-semibold">{ticket?.reward?.value} NAO</TextTicketLiner>
+                    </div>}
+                </TextTicket>
+                <TextTicket xs={xs} className="top-[86%]">
                     <div className="leading-4">ID: #{ticket?.reward?.ticket_code}</div>
                     <div className="leading-4">{t('common:Thời gian')}: {formatTime(ticket?.reward?.time, 'yyyy-MM-dd HH:mm')}</div>
                 </TextTicket>
-                <img src={getS3Url("/images/nao/luckydraw/ic_ticket.png")} width={181} height={390} />
+                <img src={(`/images/nao/luckydraw/${isGift ? 'ic_gift' : 'ic_open_ticket'}.png`)} width={181} height={390} />
+                {/* </div> */}
             </Ticket>
         </Draggable>
     );

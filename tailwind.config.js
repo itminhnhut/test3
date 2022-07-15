@@ -51,6 +51,7 @@ const commonColors = {
         bg3: '#192138',
         bg4: '#202E42',
         text: '#B9CCFF',
+        text2: '#A6BFE6',
         grey: '#7686B1',
         grey2: '#7586AD',
         white: '#F6F6F6',

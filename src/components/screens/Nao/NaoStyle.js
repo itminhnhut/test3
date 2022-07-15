@@ -58,11 +58,12 @@ export const BackgroundHeader = styled.div.attrs({
     background: linear-gradient(101.26deg, rgba(9, 61, 209,0.32) -5.29%, rgba(74, 232, 214,0.32) 113.82%);
 `
 
-export const Progressbar = styled.div.attrs({
-    className: 'h-[6px] rounded-lg transition-all'
-})`
-    background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
+export const Progressbar = styled.div.attrs(({ height = 6 }) => ({
+    className: `rounded-lg transition-all`
+}))`
+    background:${({ background }) => background ? background : 'linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)'};
     width:${({ percent }) => `${percent > 100 ? 100 : percent}%`};
+    height:${({ height }) => `${height}px`}
 `
 
 export const Tooltip = ({ id, arrowColor, backgroundColor, className, children, place = "top" }) => {
@@ -284,11 +285,21 @@ export const useOutsideAlerter = (ref, cb) => {
 
 export const TextTicket = styled.div.attrs(({ xs }) => ({
     className: classNames(
-        'absolute font-medium opacity-[0.65] w-full px-4',
+        'absolute font-medium opacity-[0.8] w-full px-4',
         { 'text-[0.4375rem] ': xs },
         { 'text-[0.625rem] ': !xs }
     )
 }))`
     left:50%;
     transform: translate(-50%,0)
+`
+
+export const TextTicketLiner = styled.div.attrs({
+    className: 'w-full'
+})`
+    background: linear-gradient(94.68deg, #24BAE2 -3.13%, #60F2D8 46.7%, #24BAE2 103.69%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
 `

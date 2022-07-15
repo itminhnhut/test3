@@ -3,8 +3,9 @@ import styled, { keyframes } from 'styled-components';
 import classnames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { formatTime, getS3Url } from 'redux/actions/utils';
+import { TextTicketLiner, TextTicket } from 'components/screens/Nao/NaoStyle';
 
-const LuckyTicket = ({ ticket, onClose, width }) => {
+const LuckyTicket = ({ ticket, onClose, width, tickets }) => {
     const xs = width <= 360;
     const { t } = useTranslation();
     const [hidden, setHidden] = useState(true);
@@ -21,26 +22,25 @@ const LuckyTicket = ({ ticket, onClose, width }) => {
         <>
             <Div>
                 <BgCenter className={`top-1/2 ${xs ? 'min-w-[183px]' : 'min-w-[221px]'}`}>
-                    <TextTicket xs={xs} className="top-[10%] text-[0.625rem] font-medium opacity-[0.65]">
+                    <TextTicket className={`top-[38%] !opacity-100 ${isGift ? '!text-sm' : '!text-[1rem]'} font-semibold !px-8 flex flex-col items-center`}>
+                        {t(`nao:luckydraw:${isGift ? 'congrat_first' : 'goodluck'}`)}
+                        {isGift && <div className="flex items-center space-x-2 pt-1">
+                            <TextTicketLiner className="text-[1.75rem] leading-9 font-semibold">{ticket?.reward?.value} NAO</TextTicketLiner>
+                        </div>}
+                    </TextTicket>
+                    <TextTicket xs={xs} className="top-[86%]">
                         <div className="leading-4">ID: #{ticket?.reward?.ticket_code}</div>
                         <div className="leading-4">{t('common:Thời gian')}: {formatTime(ticket?.reward?.time, 'yyyy-MM-dd HH:mm')}</div>
                     </TextTicket>
-                    <TextTicket className="top-[33%] text-lg font-medium px-5 flex flex-col items-center">
-                        {t(`nao:luckydraw:${isGift ? 'congrat_first' : 'goodluck'}`)}
-                        {isGift && <div className="flex items-center space-x-2 pt-3">
-                            <TextShadow className="text-[2.625rem] leading-[3.125rem] font-semibold">{ticket?.reward?.value}</TextShadow>
-                            <BgIcon>
-                                <img src={getS3Url('/images/nao/ic_nao.png')} width="20" height="20" alt="" />
-                            </BgIcon>
-                        </div>}
-                    </TextTicket>
-                    <img src={getS3Url(`/images/nao/luckydraw/${isGift ? 'ic_gift' : 'ic_open_ticket'}.png`)} width={221} height={474} />
+                    <img src={(`/images/nao/luckydraw/${isGift ? 'ic_gift' : 'ic_open_ticket'}.png`)} width={221} height={474} />
                 </BgCenter>
             </Div>
-            {hidden ? <div className="h-[48px]" />
+            {hidden ?
+                <div className="min-h-[24px]" />
                 :
-                <div onClick={() => onClose(ticket)} className="bg-nao-blue2 font-semibold leading-6 py-3 rounded-xl cursor-pointer">
-                    {isGift ? t('nao:luckydraw:get_now') : t('common:close')}
+                <div onClick={() => onClose(ticket)}
+                    className="bg-nao-blue2 font-semibold leading-6 py-3 rounded-xl cursor-pointer">
+                    {tickets.length > 1 ? t('nao:luckydraw:continue') : t('common:close')}
                 </div>}
         </>
     );
@@ -52,15 +52,6 @@ const BgCenter = styled.div.attrs({
     left:50%;
     transform: translate(-50%,-50%)
 `
-
-const TextTicket = styled.div.attrs({
-    className: 'absolute w-full'
-})`
-    left:50%;
-    transform: translate(-50%,0)
-`
-
-
 const InZoom = keyframes`
     0% {
         transform: scale(0, 0);
@@ -75,12 +66,6 @@ const Div = styled.div.attrs({
 })`
     animation-name: ${InZoom};
     animation-duration: 2s;
-`
-
-const BgIcon = styled.div.attrs({
-    className: "w-7 h-7 rounded-[50%] flex items-center justify-center"
-})`
-    background: linear-gradient(101.26deg, rgb(0 21 81 / 60%) -5.29%, rgb(0 72 64 / 60%) 113.82%);
 `
 
 const TextShadow = styled.div.attrs({
