@@ -85,7 +85,7 @@ const LuckyPage = ({
 
 const ArrowEffect = () => {
     return (
-        <div className="absolute top-[15%] left-1/2 -translate-x-1/2">
+        <div className="absolute top-[12%] left-1/2 -translate-x-1/2">
             <div className="bounceAlpha-1 bounceAlpha">
                 <ChevronUp size={30}/>
             </div>
