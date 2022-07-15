@@ -64,14 +64,14 @@ const LuckyPage = ({ tickets, onOpen, width, loading, flag }) => {
 
 const ArrowEffect = () => {
     return (
-        <div className='absolute top-[10%] left-1/2 -translate-x-1/2'>
-            <div className='arrow-1 bounceAlpha-1 bounceAlpha'>
+        <div className='absolute top-[15%] left-1/2 -translate-x-1/2'>
+            <div className='bounceAlpha-1 bounceAlpha'>
                 <ChevronUp size={30} />
             </div>
-            <div className='arrow-2 bounceAlpha-2 bounceAlpha -mt-6'>
+            <div className='bounceAlpha-2 bounceAlpha -mt-6'>
                 <ChevronUp size={30} />
             </div>
-            <div className='arrow-2 bounceAlpha-3 bounceAlpha -mt-6'>
+            <div className='bounceAlpha-3 bounceAlpha -mt-6'>
                 <ChevronUp size={30} />
             </div>
         </div>
