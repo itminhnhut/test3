@@ -37,7 +37,7 @@ const OrderButtonMobile = ({
         }
     }
 
-    const handlePlaceOrder = async () => {
+    const handlePlaceOrder = async (requestId) => {
         setDisabled(true)
         const params = {
             symbol: pairConfig?.symbol,
@@ -49,7 +49,8 @@ const OrderButtonMobile = ({
             sl: sl,
             tp: tp,
             quoteQty,
-            useQuoteQty: true
+            useQuoteQty: true,
+            requestId
         };
         placeFuturesOrder(params, {alert: context?.alert}, t, () => {
             setDisabled(false)
@@ -84,10 +85,12 @@ const OrderButtonMobile = ({
         )
         }
 
+        const requestId = Date.now()
+
         alertContext.alert.show('success',
             t('futures:preferences:order_confirm'),
             msg, '',
-            handlePlaceOrder
+            () => handlePlaceOrder(requestId)
         )
     }
 
