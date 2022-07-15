@@ -10,16 +10,23 @@ import { useTranslation } from 'next-i18next';
 const DragTicket = ({ ticket, onOpen, xs, last, index, flag }) => {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const { t } = useTranslation();
+    const dragRef = useRef(null);
 
     const handleDrag = (e, data) => {
+        if (data.y < -(data.node.clientHeight / 5)) {
+            setPosition({ x: 0, y: -1000 });
+            setTimeout(() => {
+                if (onOpen) onOpen(ticket);
+            }, 300);
+        }
     }
 
     const handleStop = (e, data) => {
-        if (data.y < -123) {
-            data.node.style.transform = 'translate(0, -100vh)'
-            setPosition({ x: 0, y: data.y });
-            if (onOpen) onOpen(ticket);
-        }
+        // if (data.y < -123) {
+        //     data.node.style.transform = 'translate(0, -100vh)'
+        //     setPosition({ x: 0, y: data.y });
+        //     if (onOpen) onOpen(ticket);
+        // }
     }
 
     const isGift = ticket?.can_receive;
@@ -31,6 +38,7 @@ const DragTicket = ({ ticket, onOpen, xs, last, index, flag }) => {
             onDrag={handleDrag}
             onStop={handleStop}
             defaultClassName={`animation`}
+            ref={dragRef}
         >
 
             <Ticket className={flag ? '' : 'grown-up'}>
@@ -38,7 +46,7 @@ const DragTicket = ({ ticket, onOpen, xs, last, index, flag }) => {
                 <TextTicket className={`top-[38%] !opacity-100 ${isGift ? '!text-sm' : '!text-[1rem]'} font-semibold px-10 flex flex-col items-center`}>
                     {t(`nao:luckydraw:${isGift ? 'congrat_first' : 'goodluck'}`)}
                     {isGift && <div className="flex items-center space-x-2 pt-1">
-                        <TextTicketLiner className="text-[1.75rem] leading-9 font-semibold">{ticket?.reward?.value} NAO</TextTicketLiner>
+                        <TextTicketLiner className="text-sm font-semibold">{ticket?.reward?.value} NAO</TextTicketLiner>
                     </div>}
                 </TextTicket>
                 <TextTicket xs={xs} className="top-[86%]">
