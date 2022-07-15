@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import classnames from 'classnames';
 import Draggable from 'react-draggable';
@@ -8,12 +8,11 @@ import { getS3Url, emitWebViewEvent } from 'redux/actions/utils';
 import { ChevronUp } from 'react-feather';
 import Skeletor from 'components/common/Skeletor';
 
-const LuckyPage = ({ tickets, onOpen, width, loading }) => {
+const LuckyPage = ({ tickets, onOpen, width, loading, flag }) => {
     const { t } = useTranslation();
     const xs = width <= 360;
     const minWidth = xs ? 177 : 253;
     const zeroPad = (num, places) => String(num).padStart(places, '0')
-
     return (
         <>
             <div className="relative z-[2]">
@@ -29,34 +28,34 @@ const LuckyPage = ({ tickets, onOpen, width, loading }) => {
                     'font-medium ',
                     { 'text-xs pb-8 px-8': xs },
                     { 'leading-7 pb-12 px-5': !xs },
-                    { '!pb-[4.75rem]': tickets },
+                    { '!pb-[10%]': tickets },
                 )}>
                     {loading ? <Skeletor width={250} height={20} /> :
                         !tickets ? t(`nao:luckydraw:ticket_des`, { vndc: '10,000,000', nao: '10' }) : t('nao:luckydraw:pull_ticket')}
                 </div>
                 {!tickets && !loading &&
                     <div onClick={() => emitWebViewEvent('back')}
-                        className="mb-9 bg-nao-blue2 font-semibold leading-6 py-3 rounded-xl cursor-pointer">
+                        className="mb-[5%] bg-nao-blue2 font-semibold leading-6 py-3 rounded-xl cursor-pointer">
                         {t('common:close')}
                     </div>
                 }
             </div>
-            {/* {tickets && <ArrowEffect />} */}
+            {tickets && <ArrowEffect />}
             <BgCenter className={`select-none ${tickets ? 'top-[55%]' : 'top-1/2'}  ${xs ? 'min-w-[177px]' : 'min-w-[253px]'}`}>
                 <div className={`bg-[#3C8BFD] w-full rounded-[50%] ${xs ? 'h-[165px] ' : 'h-[235px] '}`}></div>
                 {tickets &&
                     tickets.map((ticket, idx) => (
-                        <BgCenter key={idx} className={`${xs ? 'min-w-[127px]' : 'min-w-[181px]'} top-[25%]`}>
-                            <DragTicket last={tickets.length - 1 === idx} ticket={ticket} onOpen={onOpen} xs={xs} />
+                        <BgCenter key={idx} className={`${xs ? 'min-w-[127px]' : 'min-w-[181px]'} top-[29%]`}>
+                            <DragTicket flag={flag} last={tickets.length - 1 === idx} ticket={ticket} onOpen={onOpen} xs={xs} />
                         </BgCenter>
                     ))
                 }
                 <div style={{ bottom: `calc(${minWidth}px/2)` }} className='z-[2] relative w-full'>
-                    <img src={getS3Url("/images/nao/luckydraw/bg_cover.png")} />
+                    <img src={("/images/nao/luckydraw/bg_cover.png")} />
                 </div>
             </BgCenter>
             <div className={`${tickets ? 'h-[30%]' : 'h-[45%]'} bottom-0 absolute left-0  w-full`}>
-                <img src={getS3Url('/images/nao/luckydraw/bg_footer.png')} className='w-full' />
+                <img src={('/images/nao/luckydraw/bg_footer.png')} className='w-full' />
             </div>
         </>
     );
@@ -69,10 +68,10 @@ const ArrowEffect = () => {
             <div className='arrow-1 bounceAlpha-1 bounceAlpha'>
                 <ChevronUp size={30} />
             </div>
-            <div className='arrow-2 bounceAlpha-2 bounceAlpha -mt-5'>
+            <div className='arrow-2 bounceAlpha-2 bounceAlpha -mt-6'>
                 <ChevronUp size={30} />
             </div>
-            <div className='arrow-2 bounceAlpha-3 bounceAlpha -mt-5'>
+            <div className='arrow-2 bounceAlpha-3 bounceAlpha -mt-6'>
                 <ChevronUp size={30} />
             </div>
         </div>

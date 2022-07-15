@@ -145,6 +145,8 @@
         "goodluck": "Wish you better luck next time!",
         "congrat_first": "Congratulation! You have received",
         "get_now": "Get it now",
-        "continue": "Continue"
+        "continue": "Continue",
+        "conditions": "Bonus conditions",
+        "vol_trade": "Trade volume today"
     }
 }

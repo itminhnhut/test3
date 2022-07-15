@@ -13,14 +13,18 @@ import { emitWebViewEvent, getS3Url } from 'redux/actions/utils';
 import { ArrowLeft } from 'react-feather';
 import { Tooltip } from 'components/screens/Nao/NaoStyle'
 import { useTranslation } from 'next-i18next'
+import LuckyInfoModal from 'components/screens/Nao/Luckydraw/LuckyInfoModal'
 
 const Luckydraw = () => {
     const { t } = useTranslation();
     const [tickets, setTickets] = useState([]);
-    const { width } = useWindowSize();
+    const { width, height } = useWindowSize();
     const [open, setOpen] = useState(false);
     const ticket = useRef(null)
     const [loading, setLoading] = useState(true);
+    const [showInfo, setShowInfo] = useState(false);
+    const flag = useRef(false);
+    const volume = useRef(0)
 
     useEffect(() => {
         getTickets();
@@ -47,7 +51,8 @@ const Luckydraw = () => {
                 url: API_GET_TICKETS,
             });
             if (status === ApiStatus.SUCCESS) {
-                setTickets(data)
+                volume.current = data?.data_volume
+                setTickets(data?.tickets)
             }
         } catch (e) {
             console.log(e)
@@ -61,6 +66,7 @@ const Luckydraw = () => {
     const onOpen = (data) => {
         if (!_tickets) return;
         ticket.current = data;
+        flag.current = true;
         setTimeout(() => {
             setOpen(true);
         }, 300);
@@ -80,21 +86,19 @@ const Luckydraw = () => {
 
     return (
         <LayoutNaoToken isHeader={false}>
+            {showInfo && <LuckyInfoModal volume={volume.current} onClose={() => setShowInfo(false)} />}
             <Background>
                 <BackgroundImage width={width} className="text-center">
                     {_tickets ? <div>
-                        <Tooltip arrowColor={'transparent'} className="!mt-4" place="left" id="tooltip-luckydraw" />
                         <div className="flex items-center justify-between relative top-0">
                             <ArrowLeft size={24} onClick={() => emitWebViewEvent('back')} />
-                            <div data-tip={t('nao:luckydraw:ticket_des', { vndc: '100,000,000', nao: '100' })} data-for="tooltip-luckydraw">
-                                <img src={getS3Url("/images/nao/luckydraw/ic_helper.png")} width="24" height="24" alt="" />
-                            </div>
+                            <img onClick={() => setShowInfo(true)} src={("/images/nao/luckydraw/ic_helper.png")} width="24" height="24" alt="" />
                         </div>
                     </div>
                         : <div />
                     }
                     {!open ?
-                        <LuckyPage loading={loading} tickets={_tickets} width={width} onOpen={onOpen} />
+                        <LuckyPage flag={flag.current} loading={loading} tickets={_tickets} width={width} onOpen={onOpen} />
                         :
                         <LuckyTicket tickets={_tickets} ticket={ticket.current} open={open} width={width} onClose={onClose} />
                     }
@@ -115,7 +119,7 @@ const Background = styled.div.attrs({
 const BackgroundImage = styled.div.attrs(({ width }) => ({
     className: classnames(
         'min-w-full h-full flex flex-col justify-between overflow-hidden relative ',
-        { 'px-4 py-6': width > 360 },
+        { 'px-4 pt-8 pb-6': width > 360 },
         { 'p-4': width <= 360 },
     )
 }))`
