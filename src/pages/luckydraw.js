@@ -87,14 +87,10 @@ const Luckydraw = () => {
             {showInfo && <LuckyInfoModal volume={volume.current} onClose={() => setShowInfo(false)} />}
             <Background>
                 <BackgroundImage width={width} className="text-center">
-                    {_tickets ? <div>
-                        <div className="flex items-center justify-between relative top-0">
-                            <ArrowLeft size={24} onClick={() => emitWebViewEvent('back')} />
-                            <img onClick={() => setShowInfo(true)} src={getS3Url("/images/nao/luckydraw/v2/ic_helper.png")} width="24" height="24" alt="" />
-                        </div>
+                    <div className="flex items-center justify-between relative top-0">
+                        {_tickets ? <ArrowLeft size={24} onClick={() => emitWebViewEvent('back')} /> : <div />}
+                        {!open && <img onClick={() => setShowInfo(true)} src={getS3Url("/images/nao/luckydraw/v2/ic_helper.png")} width="24" height="24" alt="" />}
                     </div>
-                        : <div />
-                    }
                     {!open ?
                         <LuckyPage flag={flag.current} loading={loading} tickets={_tickets} width={width} onOpen={onOpen} />
                         :
