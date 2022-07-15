@@ -45,7 +45,7 @@ const DragTicket = ({ ticket, onOpen, xs, last, index, flag }) => {
                     <div className="leading-4">ID: #{ticket?.reward?.ticket_code}</div>
                     <div className="leading-4">{t('common:Thời gian')}: {formatTime(ticket?.reward?.time, 'yyyy-MM-dd HH:mm')}</div>
                 </TextTicket>
-                <img src={(`/images/nao/luckydraw/${isGift ? 'ic_gift' : 'ic_open_ticket'}.png`)} width={181} height={390} />
+                <img src={getS3Url(`/images/nao/luckydraw/${isGift ? 'ic_gift' : 'ic_open_ticket'}.png`)} width={181} height={390} />
                 {/* </div> */}
             </Ticket>
         </Draggable>

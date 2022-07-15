@@ -51,11 +51,11 @@ const LuckyPage = ({ tickets, onOpen, width, loading, flag }) => {
                     ))
                 }
                 <div style={{ bottom: `calc(${minWidth}px/2)` }} className='z-[2] relative w-full'>
-                    <img src={("/images/nao/luckydraw/bg_cover.png")} />
+                    <img src={getS3Url("/images/nao/luckydraw/bg_cover.png")} />
                 </div>
             </BgCenter>
             <div className={`${tickets ? 'h-[30%]' : 'h-[45%]'} bottom-0 absolute left-0  w-full`}>
-                <img src={('/images/nao/luckydraw/bg_footer.png')} className='w-full' />
+                <img src={getS3Url('/images/nao/luckydraw/bg_footer.png')} className='w-full' />
             </div>
         </>
     );
