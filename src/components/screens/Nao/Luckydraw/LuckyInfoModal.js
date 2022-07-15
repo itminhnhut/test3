@@ -15,12 +15,12 @@ const LuckyInfoModal = ({ visible = true, onClose, volume }) => {
         <Portal portalId='PORTAL_MODAL'>
             <div
                 className={classNames(
-                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden',
+                    'flex flex-col items-center justify-center fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden',
                     { invisible: !visible },
                     { visible: visible },
                 )}
             >
-                <div ref={wrapperRef} className={'bg-[#00288C] rounded-3xl px-6 py-10 relative -translate-y-1/2 top-1/2 mx-[1.875rem] text-center flex flex-col items-center'}>
+                <div ref={wrapperRef} className={'max-w-[330px] bg-[#00288C] rounded-3xl px-6 py-10 relative mx-[1.875rem] text-center flex flex-col items-center'}>
                     <label className='text-[#02FFFE] text-xl leading-7 font-semibold'>{t('nao:luckydraw:conditions')}</label>
                     <div className='pt-[1.125rem]'>{t('nao:luckydraw:ticket_des', { vndc: '100,000,000', nao: '100' })}</div>
                     <div className='pt-10'>
