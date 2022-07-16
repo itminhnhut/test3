@@ -130,7 +130,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
             if (note.includes('close')) {
                 return item.money_use > 0 ?
-                    t(`futures:mobile:transaction_histories:categories:return_of_open_fee`) :
+                    t(`futures:mobile:transaction_histories:categories:refund_of_open_fee`) :
                     t(`futures:mobile:transaction_histories:categories:close_fee`)
             } else {
                 return t(`futures:mobile:transaction_histories:categories:open_fee`)
