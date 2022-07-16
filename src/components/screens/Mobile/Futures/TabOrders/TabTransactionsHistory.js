@@ -161,8 +161,8 @@ function TabTransactionsHistory({scrollSnap, active}) {
                     <div
                         className='font-medium text-onus-white text-sm'
                     >
-                        <span>{formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}</span>
-                        <span className='ml-1'>{assetConfig?.assetCode}</span>
+                        <span>{item.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(item.money_use), assetConfig?.assetDigit, null)}</span>
+                        <span className="ml-1">{assetConfig?.assetCode}</span>
                     </div>
                     <div
                         className='font-medium text-onus-grey text-xs'
@@ -304,9 +304,9 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
                 {_renderCategory(transaction)}
                 {/* {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'} */}
             </span>
-            <div className='text-2xl font-bold'>
-                <span>{formatNumber(transaction?.money_use, assetConfig.assetDigit, null, true)}</span>
-                <span className='ml-1'>{assetConfig.assetCode}</span>
+            <div className="text-2xl font-bold">
+                <span>{transaction?.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(transaction?.money_use), assetConfig?.assetDigit, null)}</span>
+                <span className="ml-1">{assetConfig.assetCode}</span>
             </div>
         </div>
         <div className='px-4 pt-6 space-y-4'>
