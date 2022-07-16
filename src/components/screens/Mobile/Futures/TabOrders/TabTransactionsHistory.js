@@ -128,10 +128,13 @@ function TabTransactionsHistory({scrollSnap, active}) {
         if (!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
-
-            return note.includes('close')
-                ? t(`futures:mobile:transaction_histories:categories:close_fee`)
-                : t(`futures:mobile:transaction_histories:categories:open_fee`)
+            if (note.includes('close')) {
+                return item.money_use > 0 ?
+                    t(`futures:mobile:transaction_histories:categories:return_of_open_fee`) :
+                    t(`futures:mobile:transaction_histories:categories:close_fee`)
+            } else {
+                return t(`futures:mobile:transaction_histories:categories:open_fee`)
+            }
         }
         return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
     }
