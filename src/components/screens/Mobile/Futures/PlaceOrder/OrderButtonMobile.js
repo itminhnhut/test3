@@ -4,8 +4,9 @@ import {useTranslation} from 'next-i18next';
 import {emitWebViewEvent, formatNumber} from 'redux/actions/utils';
 import {FuturesOrderTypes as OrderTypes, FuturesOrderTypes} from 'redux/reducers/futures';
 import {getPrice, getType} from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
-import {placeFuturesOrder} from 'redux/actions/futures';
+import { getOrdersList, placeFuturesOrder } from 'redux/actions/futures';
 import {AlertContext} from 'components/common/layouts/LayoutMobile';
+import { useDispatch } from 'react-redux';
 
 const OrderButtonMobile = ({
                                side, price, size, stopPrice, type, decimals,
@@ -15,6 +16,8 @@ const OrderButtonMobile = ({
     const context = useContext(AlertContext);
     const [disabled, setDisabled] = useState(false);
     const {t} = useTranslation();
+    const dispatch = useDispatch()
+
     const alertContext = useContext(AlertContext);
 
     const isBuy = VndcFutureOrderType.Side.BUY === side
@@ -54,7 +57,19 @@ const OrderButtonMobile = ({
         };
         placeFuturesOrder(params, {alert: context?.alert}, t, () => {
             setDisabled(false)
+
+            setTimeout(() => {
+                reFetchOrder()
+            }, 5 * 1000)
+
+            setTimeout(() => {
+                reFetchOrder()
+            }, 10 * 1000)
         })
+    }
+
+    const reFetchOrder = () => {
+        dispatch(getOrdersList());
     }
 
     const onHandleSave = () => {
