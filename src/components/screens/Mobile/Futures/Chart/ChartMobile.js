@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import useDarkMode from 'hooks/useDarkMode';
 
 import dynamic from 'next/dynamic';
@@ -14,6 +14,7 @@ const MobileTradingView = dynamic(
 // import {MobileTradingView} from "components/TVChartContainer/MobileTradingView";
 
 const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, forceRender, isFullScreen, decimals }) => {
+    const [chartKey, setChartKey] = useState('check12344')
     const [themeMode] = useDarkMode()
     const { t } = useTranslation();
 
@@ -32,6 +33,7 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
         <div className='spot-chart h-full max-w-full' style={style}>
             <MobileTradingView
                 t={t}
+                key={chartKey}
                 symbol={pairConfig?.symbol}
                 pairConfig={pairConfig}
                 initTimeFrame="15"
@@ -43,6 +45,7 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
                 isFullScreen={isFullScreen}
                 showIconGuide={!collapse}
                 styleChart={{ height: `calc(100% - 90px)` }}
+                reNewComponentKey={() => setChartKey(Math.random().toString())} // Change component key will remount component
             />
         </div>
     );

@@ -497,6 +497,11 @@ export class MobileTradingView extends React.PureComponent {
         }
     };
 
+    resetComponent = () => {
+        localStorage.removeItem(this.getChartKey);
+        if (this.props.reNewComponentKey) this.props.reNewComponentKey()
+    }
+
     render() {
         return (
             <>
@@ -543,6 +548,7 @@ export class MobileTradingView extends React.PureComponent {
                                 subIndicator={this.state.subIndicator?.name}
                                 setCollapse={this.props.setCollapse}
                                 collapse={this.props.collapse}
+                                resetComponent={this.resetComponent}
                             />
                         }
                     </div>
