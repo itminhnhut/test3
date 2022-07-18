@@ -258,7 +258,7 @@
             "confirm_btn": "Xác nhận",
             "add_success": "Thêm kí quỹ thành công",
             "remove_success": "Rút thành công",
-            "temp_future": "Hiện tại chưa hỗ trợ bỏ kí quỹ khỏi vị thế, tính năng này sẽ được ra mắt trong thời gian tới",
+            "temp_future": "Hiện tại chúng tôi chưa hỗ trợ bỏ kí quỹ khỏi vị thế, tính năng này sẽ được ra mắt trong thời gian tới",
             "error": {
                 "NOT_FOUND_ORDER": "Không tìm thấy lệnh",
                 "CAN_NOT_CHANGE_MARGIN": "Không thể thay đổi ký quỹ",
