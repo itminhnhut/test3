@@ -508,7 +508,7 @@ export class MobileTradingView extends React.PureComponent {
                             "hidden": this.state.chartStatus === ChartStatus.LOADED
                         })}
                     >
-                        <IconLoading color="#00C8BC"/>
+                        <IconLoading color="#0db787"/>
                     </div>
                     {this.props.showTimeFrame &&
                     <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-2 px-1 dragHandleArea">
