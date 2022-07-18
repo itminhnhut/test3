@@ -347,7 +347,8 @@
         "content_on_boarding": "Chúc mừng bạn đã nhận thành công {{value}} VNDC",
         "change_24h": "24h",
         "leverage_v2": "Loại/đòn bẩy",
-        "not_show_this_message": "Không hiện lại thông báo này"
+        "not_show_this_message": "Không hiện lại thông báo này",
+        "quote_price": "Giá thị trường"
     },
     "orders_history": "Lịch sử lệnh",
     "minimum_leverage": "Đòn bẩy tối thiểu",

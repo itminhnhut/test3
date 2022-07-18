@@ -69,14 +69,13 @@ const ChartOptions = ({
                 }
             </div>
 
-            <div className="flex items-center ">
+            <div className="flex items-center space-x-3 py-2">
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
                     keyValue="value"
                     displayValue="text"
                     options={listTimeFrame}
-                    classNameButton="px-2 py-2"
                     classNamePanel="rounded-md"
                     label={<div
                         className="text-sm text-onus-grey font-semibold">{resolutionLabel}</div>}
@@ -87,13 +86,12 @@ const ChartOptions = ({
                     keyValue="value"
                     displayValue="text"
                     options={listChartType}
-                    classNameButton="px-2 py-2"
                     classNamePanel="rounded-md left-[-20px]"
                     label={<Svg>{labelCandle.icon}</Svg>}
                 />
                 {showIconGuide &&
-                    <div className="px-2" onClick={() => setStart(true)}>
-                        <img className="min-w-[24px]" src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                    <div onClick={() => setStart(true)}>
+                        <img className="flex items-center min-w-[24px] min-h-[24px]" src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
                     </div>
                 }
                 <FavouriteButton pair={pair} pairConfig={pairConfig}/>
@@ -141,7 +139,7 @@ export const MenuTime = ({value, onChange, options, label, keyValue, displayValu
         <Popover className="relative">
             {({open, close}) => (
                 <>
-                    <Popover.Button className={`flex ${classNameButton} text-gray-1 dark:text-txtSecondary-dark`}>
+                    <Popover.Button className={`items-center min-w-[24px] min-h-[24px] flex ${classNameButton} text-gray-1 dark:text-txtSecondary-dark`}>
                         {label}
                     </Popover.Button>
                     <Transition
@@ -206,9 +204,9 @@ const FavouriteButton = ({pairConfig}) => {
         dispatch(getFuturesFavoritePairs())
     }
 
-    return <div className='pl-2 py-2 cursor-pointer' onClick={handleSetFavorite}>
-        {isFavorite ? <IconStarFilled color={colors.onus.orange} strokeWidth={0.5} size={16}/> :
-            <IconStar color="#718096" strokeWidth={0.5} size={18}/>}
+    return <div className='cursor-pointer flex items-center min-w-[24px] min-h-[24px]' onClick={handleSetFavorite}>
+        {isFavorite ? <IconStarFilled color={colors.onus.orange} strokeWidth={0.5} size={20}/> :
+            <IconStar color="#718096" strokeWidth={0.5} size={20}/>}
     </div>
 }
 

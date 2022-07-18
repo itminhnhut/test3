@@ -134,6 +134,11 @@ const OrderItemMobile = ({
         return marginRatio < 0 && `text-onus-${_marginRatio <= 20 ? 'green' : _marginRatio > 20 && _marginRatio <= 60 ? 'orange' : 'red'}`
     }
 
+    const renderQuoteprice = () => {
+        const value = order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask;
+        return formatNumber(value)
+    }
+
     const orderStatus = useMemo(() => {
         const cancelled = isTabHistory && (order.status === VndcFutureOrderType.Status.PENDING ||
             (order.status === VndcFutureOrderType.Status.CLOSED && !order?.close_price && order?.type !== VndcFutureOrderType.Type.MARKET));
@@ -209,9 +214,8 @@ const OrderItemMobile = ({
                         value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
                     />
                     <OrderItem
-                        label={t('futures:mobile:margin_ratio')}
-                        value={marginRatio >= 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
-                        valueClassName={renderColorMarginRatio()}
+                        label={t('futures:mobile:quote_price')}
+                        value={renderQuoteprice()}
                     />
                     <OrderItem
                         label={t('futures:stop_loss')}
@@ -219,7 +223,7 @@ const OrderItemMobile = ({
                         valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}
                     />
                     <OrderItem
-                        label={t(`futures:order_table:${isTabHistory ? 'close_price' : 'mark_price'}`)}
+                        label={isTabHistory ? t(`futures:order_table:close_price}`) : t('common:last_price')}
                         value={isTabHistory ? (order?.close_price ? formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice) : '-') : formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice)}
                     />
                     <OrderItem

@@ -347,7 +347,8 @@
         "content_on_boarding": "Congratulations, you have successfully received {{value}} VNDC",
         "change_24h": "24h",
         "leverage_v2": "Type/leverage",
-        "not_show_this_message": "don't show this message again"
+        "not_show_this_message": "don't show this message again",
+        "quote_price": "Quote price"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",
