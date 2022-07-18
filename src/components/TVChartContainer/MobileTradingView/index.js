@@ -452,7 +452,8 @@ export class MobileTradingView extends React.PureComponent {
             this.syncIndicators()
             this.widget.applyOverrides({
                 "mainSeriesProperties.priceAxisProperties.autoScale": true,
-                "scalesProperties.lineColor": "#202C4C",
+                "scalesProperties.lineColor": colors.onus.bg,
+                "scalesProperties.textColor": colors.onus.grey,
                 'paneProperties.background': colors.onus.bg,
                 "paneProperties.vertGridProperties.color": colors.onus.bg,
                 "paneProperties.horzGridProperties.color": colors.onus.bg,
@@ -511,7 +512,7 @@ export class MobileTradingView extends React.PureComponent {
                         <IconLoading color="#00C8BC"/>
                     </div>
                     {this.props.showTimeFrame &&
-                    <div className="w-full border-b border-gray-4 dark:border-darkBlue-3 py-2 px-1 dragHandleArea">
+                    <div className="w-full border-b border-onus-line py-2 dragHandleArea">
                         <ChartOptions
                             pair={this.props.symbol}
                             pairConfig={this.props.pairConfig}
@@ -528,7 +529,7 @@ export class MobileTradingView extends React.PureComponent {
                     }
                     <div
                         id={this.containerId}
-                        className={`h-full ${this.props.classNameChart}`}
+                        className={`h-full pr-2 ${this.props.classNameChart}`}
                         style={this.props.styleChart}
                     />
                     <div>

@@ -59,13 +59,13 @@ const colors = {
     overlayDark: 'rgba(0, 0, 0, 0.45)',
 
     onus: {
-        bg: '#090D17',
+        bg: '#1B222D',
         bg2: '#36445A',
         bg3: '#243042',
         base: '#0068FF',
         green: '#0DB787',
         red: '#DC1F4E',
-        line: '#1B222D',
+        line: '#2B3247',
         input: '#192231',
         input2: '#36445A',
         white: '#F6F6F6',

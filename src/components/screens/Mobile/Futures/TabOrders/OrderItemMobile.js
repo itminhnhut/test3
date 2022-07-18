@@ -234,14 +234,14 @@ const OrderItemMobile = ({
                     {
                         order.status === VndcFutureOrderType.Status.ACTIVE &&
                         <Button
-                            className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"
+                            className="dark:bg-onus-bg3 dark:text-onus-gray !h-[36px]"
                             onClick={() => actions('modal', 'edit-margin')}> {t('futures:mobile.adjust_margin.button_title')}</Button>
                     }
                     <Button
-                        className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"
+                        className="dark:bg-onus-bg3 dark:text-onus-gray !h-[36px]"
                         onClick={() => actions('modal', 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
                     <Button
-                        className="dark:bg-onus-line dark:text-onus-gray !h-[36px]"
+                        className="dark:bg-onus-bg3 dark:text-onus-gray !h-[36px]"
                         onClick={() => actions('delete')}>{t('common:close')}</Button>
                 </div>
             }

@@ -293,8 +293,8 @@
             },
             "close": "Đóng"
         },
-        "confirm_order_message":  "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} ở giá {{price}} không?",
-        "confirm_order_message_market":  "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} không?",
+        "confirm_order_message": "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} ở giá {{price}} không?",
+        "confirm_order_message_market": "Bạn có xác nhận đặt lệnh {{type}} {{symbol}} không?",
         "login_short": "Đăng nhập ngay",
         "available": "Khả dụng",
         "liq_price": "Giá thanh lý",
@@ -345,7 +345,9 @@
         "invalid_log_status": "Không tìm thấy phần thưởng của bạn vui lòng quay lại sau",
         "title_on_boarding": "Nhận thưởng",
         "content_on_boarding": "Chúc mừng bạn đã nhận thành công {{value}} VNDC",
-        "change_24h": "24h"
+        "change_24h": "24h",
+        "leverage_v2": "Loại/đòn bẩy",
+        "not_show_this_message": "Không hiện lại thông báo này"
     },
     "orders_history": "Lịch sử lệnh",
     "minimum_leverage": "Đòn bẩy tối thiểu",

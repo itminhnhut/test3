@@ -292,7 +292,7 @@ const OrderOpenDetail = ({
                     <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                         <Button
                             title={t('futures:mobile.adjust_margin.button_title')}
-                            className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
+                            className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={() => setShowEditMargin(true)}
@@ -302,7 +302,7 @@ const OrderOpenDetail = ({
                 <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}
-                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
+                        className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={onOpenModify}
@@ -311,7 +311,7 @@ const OrderOpenDetail = ({
                 <div style={{ width: 'calc(50% - 5px)' }}>
                     <Button
                         title={t(`common:close`)}
-                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
+                        className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions()}

@@ -59,8 +59,8 @@ const ChartOptions = ({
                 <div className="flex items-center flex-wrap">
                     <div className="flex items-center cursor-pointer" data-tut="order-symbol"
                          onClick={() => setShowModelMarket(true)}>
-                        <img src={getS3Url('/images/icon/ic_exchange_mobile_onus.png')} height={16} width={16}/>
-                        <div className="px-2 font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                        <img src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24} width={24}/>
+                        <div className="pl-2 font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                     </div>
                     <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent}>
                         <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures}/>
@@ -79,7 +79,7 @@ const ChartOptions = ({
                     classNameButton="px-2 py-2"
                     classNamePanel="rounded-md"
                     label={<div
-                        className="text-sm text-onus-grey font-normal">{resolutionLabel}</div>}
+                        className="text-sm text-onus-grey font-semibold">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={chartType}
@@ -93,7 +93,7 @@ const ChartOptions = ({
                 />
                 {showIconGuide &&
                     <div className="px-2" onClick={() => setStart(true)}>
-                        <img className="min-w-[18px]" src={getS3Url('/images/icon/ic_help.png')} height={18} width={18} />
+                        <img className="min-w-[24px]" src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
                     </div>
                 }
                 <FavouriteButton pair={pair} pairConfig={pairConfig}/>
@@ -206,8 +206,8 @@ const FavouriteButton = ({pairConfig}) => {
         dispatch(getFuturesFavoritePairs())
     }
 
-    return <div className='px-2 py-2 cursor-pointer' onClick={handleSetFavorite}>
-        {isFavorite ? <IconStarFilled color={colors.yellow} strokeWidth={0.5} size={16}/> :
+    return <div className='pl-2 py-2 cursor-pointer' onClick={handleSetFavorite}>
+        {isFavorite ? <IconStarFilled color={colors.onus.orange} strokeWidth={0.5} size={16}/> :
             <IconStar color="#718096" strokeWidth={0.5} size={18}/>}
     </div>
 }

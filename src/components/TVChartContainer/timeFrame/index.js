@@ -32,17 +32,11 @@ export const BarsChart = (
     </svg>
 );
 export const CandleChart = (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 28 28"
-        width="20"
-        height="20"
-        fill="currentColor"
-    >
-        <path d="M17 11v6h3v-6h-3zm-.5-1h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5z" />
-        <path d="M18 7h1v3.5h-1zm0 10.5h1V21h-1z" />
-        <path d="M9 8v12h3V8H9zm-.5-1h4a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 .5-.5z" />
-        <path d="M10 4h1v3.5h-1zm0 16.5h1V24h-1z" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.7539 21.7148L15.7539 4.46431" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M7.38672 21.7148L7.38672 1.99995" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="5.51113" y="5.47011" width="3.75711" height="12.7782" rx="0.76669" fill="#8492A7" stroke="#8492A7" stroke-width="1.02225" />
+        <rect x="13.8744" y="9.41347" width="3.75711" height="8.83519" rx="0.76669" fill="#8492A7" stroke="#8492A7" stroke-width="1.02225" />
     </svg>
 );
 export const AreaChart = (

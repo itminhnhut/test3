@@ -345,7 +345,9 @@
         "invalid_log_status": "Your reward not found please come back later",
         "title_on_boarding": "Claim Reward",
         "content_on_boarding": "Congratulations, you have successfully received {{value}} VNDC",
-        "change_24h": "24h"
+        "change_24h": "24h",
+        "leverage_v2": "Type/leverage",
+        "not_show_this_message": "don't show this message again"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

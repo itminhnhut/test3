@@ -3,7 +3,7 @@ html, body {
 }
 
 html.theme-dark .chart-page {
-    background-color: #090D17 !important;
+    background-color: #1B222D !important;
 }
 
 ._tv-dialog {
@@ -21,11 +21,11 @@ html ._tv-dialog-content .main-properties {
 }
 
 html ._tv-dialog {
-    border-color: #363c4e;
+    border-color: #1B222D;
 }
 
 html ._tv-dialog {
-    background: #1c2030;
+    background: #1B222D;
 }
 
 html .pane-legend-title__details {

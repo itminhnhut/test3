@@ -25,7 +25,7 @@ const commonColors = {
     red2: '#E5544B',
 
     onus: {
-        bg: '#090D17',
+        bg: '#1B222D',
         bg2: '#36445A',
         bg3: '#243042',
         bgModal: '#243042',
@@ -33,8 +33,8 @@ const commonColors = {
         base: '#0068FF',
         green: '#0DB787',
         red: '#DC1F4E',
-        line: '#1B222D',
-        input: '#192231',
+        line: '#2B3247',
+        input: '#243042',
         input2: '#36445A',
         white: '#F6F6F6',
         textPrimary: '#F6F6F6',
@@ -42,6 +42,7 @@ const commonColors = {
         grey2: '#445571',
         textSecondary: '#8492A7',
         orange: '#FF9F1A',
+
     },
 };
 

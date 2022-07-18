@@ -230,10 +230,10 @@ const OrderDetail = ({
                         keyValue="value"
                         displayValue="text"
                         options={listTimeFrame}
-                        classNameButton="px-2 py-2"
+                        classNameButton="pl-2 py-2"
                         classNamePanel="rounded-md right-0"
                         label={<div
-                            className="text-sm text-gray-1 dark:text-txtSecondary-dark font-normal">{resolutionLabel}</div>}
+                            className="text-sm text-onus-grey font-medium">{resolutionLabel}</div>}
                     />
                 </div>
 
@@ -267,7 +267,7 @@ const OrderDetail = ({
                         }
                         <div className="py-[24px]">
                             <div className="font-semibold mb-4">{t('futures:mobile:order_detail')}</div>
-                            <div className='bg-onus-line px-3 rounded-lg'>
+                            <div className='bg-onus-bg3 px-3 rounded-lg'>
                                 <Row>
                                     <Label>ID</Label>
                                     <Span>{order?.displaying_id}</Span>
@@ -329,13 +329,16 @@ const OrderDetail = ({
                                     <Span>{renderFee(order, 'close_order')}</Span>
                                 </Row>
                                 <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                    arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
+                                    className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
                                     overridePosition={(e) => ({
                                         left: 0,
                                         top: e.top
                                     })}
                                 >
-                                    <div>{t('futures:mobile:info_liquidate_fee')}</div>
+                                    <div>
+                                        <label className="text-sm font-semibold">{t('futures:mobile:liquidate_fee')}</label>
+                                        <div className="text-sm mt-3">{t('futures:mobile:info_liquidate_fee')}</div>
+                                    </div>
                                 </Tooltip>
                                 <Row>
                                     <Label className="flex">
@@ -347,13 +350,16 @@ const OrderDetail = ({
                                     <Span>{renderFee(order, 'liquidate_order')}</Span>
                                 </Row>
                                 <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                    arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
+                                    className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
                                     overridePosition={(e) => ({
                                         left: 0,
                                         top: e.top
                                     })}
                                 >
-                                    <div>{t('futures:mobile:info_swap_fee')}</div>
+                                    <div>
+                                        <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
+                                        <div className="text-sm mt-3">{t('futures:mobile:info_swap_fee')}</div>
+                                    </div>
                                 </Tooltip>
                                 <Row>
                                     <Label className="flex">
@@ -371,7 +377,7 @@ const OrderDetail = ({
                                 <div className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
                                 {dataSource.map((item, index) => (
                                     <div key={index}
-                                        className="bg-onus-line px-3 rounded-lg mb-3">
+                                        className="bg-onus-bg3 px-3 rounded-lg mb-3">
                                         <Row>
                                             <Label>{t('common:time')}</Label>
                                             <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
@@ -412,7 +418,7 @@ const OrderDetail = ({
 };
 
 const Row = styled.div.attrs({
-    className: 'flex items-center justify-between py-3 border-b border-[#2B3247] last:border-0'
+    className: 'flex items-center justify-between py-3 border-b border-onus-input2 last:border-0'
 })``;
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
