@@ -55,7 +55,8 @@ const OrderButtonMobile = ({
             useQuoteQty: true
         };
         placeFuturesOrder(params, { alert: context?.alert }, t, () => {
-            setDisabled(false)
+            setDisabled(false);
+            setShowConfirmModal(false);
         })
     }
 

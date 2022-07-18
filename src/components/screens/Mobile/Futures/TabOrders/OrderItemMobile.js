@@ -205,7 +205,7 @@ const OrderItemMobile = ({
                         value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
                     />
                     <OrderItem
-                        label={t(isTabHistory ? 'futures:order_table:reason_close' : `futures:mobile:liq_price`)}
+                        label={t(isTabHistory ? 'futures:mobile:reason_close' : `futures:mobile:liq_price`)}
                         value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
                     />
                     <OrderItem

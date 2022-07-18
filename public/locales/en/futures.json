@@ -155,7 +155,7 @@
         "hit_sl": "Hit SL",
         "hit_tp": "Hit TP",
         "liquidate": "Liquidate",
-        "adjustment_history": "Adjustment history"
+        "adjustment_history": "Adjustment History"
     },
     "hide_other_symbols": "Hide Other Symbols",
     "stop_price": "Stop Price",
@@ -299,7 +299,7 @@
         "available": "Available",
         "liq_price": "Liq. Price",
         "share": "Share",
-        "order_detail": "Order detail",
+        "order_detail": "Order Detail",
         "limit": "limit",
         "order_details": "Order details",
         "open_fee": "Open Fee",
@@ -309,7 +309,7 @@
         "open_time": "Open Time",
         "close_time": "Close Time",
         "realized_pnl": "Realized PNL",
-        "reason_close": "Reason",
+        "reason_close": "Reason Close",
         "stop_loss": "Stop loss",
         "market_price": "Market Price",
         "balance_insufficient": "Your balance is not enough, please deposit.",

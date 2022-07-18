@@ -317,7 +317,7 @@ const OrderDetail = ({
                                     <Span valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}>{renderSlTp(order?.tp)}</Span>
                                 </Row>
                                 <Row>
-                                    <Label>{t('futures:mobile:stop_loss')}</Label>
+                                    <Label>{t('futures:stop_loss')}</Label>
                                     <Span valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}>{renderSlTp(order?.sl)}</Span>
                                 </Row>
                                 <Row>
