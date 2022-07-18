@@ -258,7 +258,7 @@
             "confirm_btn": "Confirm",
             "add_success": "Add margin successful",
             "remove_success": "Remove successful",
-            "temp_future": "Currently Nami does not support removing margin from positions, this feature will be released in the near future",
+            "temp_future": "Currently we do not support removing margin from positions, this feature will be released in the near future",
             "error": {
                 "NOT_FOUND_ORDER": "Not found order",
                 "CAN_NOT_CHANGE_MARGIN": "Can not change margin",

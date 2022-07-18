@@ -36,7 +36,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                 <>
                     <Popover.Button data-tut="order-type" className='w-full h-[36px] border-b-2 dark:border-onus-input'>
                         <div className="flex items-center justify-between text-xs font-medium">
-                            <div className="w-full">
+                            <div className="w-full text-left px-[12px]">
                                 {getTypesLabel(type)}
                             </div>
                             <ChevronDown color={colors.grey1} size={16} className="ml-1" />
