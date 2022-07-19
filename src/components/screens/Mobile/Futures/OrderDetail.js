@@ -62,6 +62,7 @@ const OrderDetail = ({
     }));
     const [resolution, setResolution] = useState('15');
     const [dataSource, setDataSource] = useState([])
+    const [chartKey, setChartKey] = useState('nami-mobile-chart')
 
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
@@ -242,6 +243,7 @@ const OrderDetail = ({
                     <div className="min-h-[350px] spot-chart max-w-full" style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
                         <MobileTradingView
                             t={t}
+                            key={chartKey}
                             containerId="nami-mobile-detail-tv"
                             symbol={order.symbol}
                             pairConfig={pairConfig}
@@ -257,6 +259,7 @@ const OrderDetail = ({
                             // classNameChart="!h-[350px]"
                             styleChart={{ height: `calc(100% - 40px)` }}
                             renderProfit={order.status === VndcFutureOrderType.Status.CLOSED}
+                            reNewComponentKey={() => setChartKey(Math.random().toString())} // Change component key will remount component
                         />
                     </div>
                     <div className="px-[16px] bg-onus">

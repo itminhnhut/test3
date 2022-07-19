@@ -14,7 +14,7 @@ const MobileTradingView = dynamic(
 // import {MobileTradingView} from "components/TVChartContainer/MobileTradingView";
 
 const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, forceRender, isFullScreen, decimals }) => {
-    const [chartKey, setChartKey] = useState('check12344')
+    const [chartKey, setChartKey] = useState('nami-mobile-chart')
     const [themeMode] = useDarkMode()
     const { t } = useTranslation();
 
