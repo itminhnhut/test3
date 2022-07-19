@@ -288,8 +288,10 @@
                 "723": "Rút tiền",
                 "608": "Bù từ quỹ bảo hiểm",
                 "609": "Khuyến mãi",
+                "1019": "Lãi Staking",
                 "open_fee": "Phí mở lệnh",
-                "close_fee": "Phí đóng lệnh"
+                "close_fee": "Phí đóng lệnh",
+                "refund_of_open_fee": "Hoàn phí mở lệnh"
             },
             "close": "Đóng"
         },

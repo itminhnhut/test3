@@ -288,8 +288,10 @@
                 "723": "Withdraw",
                 "608": "Insurance",
                 "609": "Promotion",
+                "1019": "Staking Interest",
                 "open_fee": "Order Opening Fee",
-                "close_fee": "Order Closing Fee"
+                "close_fee": "Order Closing Fee",
+                "refund_of_open_fee": "Refund of opening fee"
             },
             "close": "Close"
         },

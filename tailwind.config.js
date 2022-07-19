@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 
 // Common colors
 const commonColors = {
@@ -45,6 +47,30 @@ const commonColors = {
         orange: '#FF9F1A',
 
     },
+    nao: {
+        bg: '#619095',
+        bg2: '#12182B',
+        bg3: '#192138',
+        bg4: '#202E42',
+        text: '#B9CCFF',
+        text2: '#A6BFE6',
+        grey: '#7686B1',
+        grey2: '#7586AD',
+        white: '#F6F6F6',
+        blue: '#27CEE0',
+        blue2: '#093DD1',
+        green: '#49E8D5',
+        green2: '#0DB787',
+        yellow: '#F3BA2F',
+        line: '#1C2644',
+        border: '#4AEDFF',
+        border2: '#18223E',
+        bgModal: '#161D32',
+        bgModal2: '#00030D',
+        bgShadow: '#000921',
+        red: '#DC1F4E',
+        tooltip: '#0E1D32',
+    }
 };
 
 module.exports = {
@@ -264,8 +290,15 @@ module.exports = {
                 2: commonColors.onus.bg3,
                 ...commonColors.onus,
             },
+            nao: {
+                DEFAULT: commonColors.nao.bg,
+                ...commonColors.nao,
+            },
         },
         extend: {
+            screens: {
+                'nao': '1160px',
+            },
             spacing: {
                 128: '32rem',
                 144: '36rem',
@@ -374,7 +407,11 @@ module.exports = {
                 'features': '0px 10px 30px rgba(89, 111, 153, 0.05)',
                 mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
+                nao: '0px 4px 4px rgba(0, 0, 0, 0.25)'
             },
+            cursor: {
+                grabbing: 'grabbing'
+            }
         },
     },
     variants: {
@@ -383,6 +420,7 @@ module.exports = {
             borderColor: ['checked'],
             display: ['group-hover'],
             visibility: ['group-hover'],
+            cursor: ['grabbing'],
         },
     },
     plugins: [

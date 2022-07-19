@@ -32,30 +32,34 @@ import axios from 'axios';
 import {ApiStatus} from 'redux/actions/const';
 import SortIcon from "components/screens/Mobile/SortIcon";
 
-const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO];
+const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO, WalletCurrency.NAMI, WalletCurrency.ONUS];
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 0,
     [WalletCurrency.NAO]: 0,
+    [WalletCurrency.ONUS]: 0,
 };
 
 const MAX_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 500e6,
     [WalletCurrency.NAMI]: 100000,
     [WalletCurrency.NAO]: 50000,
+    [WalletCurrency.ONUS]: 50000,
 };
 
 const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 0,
     [WalletCurrency.NAO]: 0,
+    [WalletCurrency.ONUS]: 0,
 };
 
 const DECIMAL_SCALES = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 1,
     [WalletCurrency.NAO]: 1,
+    [WalletCurrency.ONUS]: 1,
 };
 
 const WDL_STATUS = {
@@ -159,7 +163,7 @@ const ExternalWithdrawal = (props) => {
     } = useMemo(() => {
         return {
             min: MIN_WITHDRAWAL[currentCurr?.id],
-            max: Math.min(MAX_WITHDRAWAL[currentCurr?.id], maxValue),
+            max: currentCurr?.id === WalletCurrency.VNDC ? Math.min(MAX_WITHDRAWAL[currentCurr?.id], maxValue) : MAX_WITHDRAWAL[currentCurr?.id],
             fee: VNDC_WITHDRAWAL_FEE[currentCurr?.id],
             decimalScale: DECIMAL_SCALES[currentCurr?.id],
         };

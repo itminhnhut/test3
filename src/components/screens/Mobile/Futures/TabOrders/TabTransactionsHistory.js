@@ -28,10 +28,11 @@ const categories = [
     TransactionCategory.FUTURE_PROMOTION, // 609
     TransactionCategory.DEPOSIT, //T: 4
     TransactionCategory.VNDC_DIRECT_WITHDRAW, // 723
+    TransactionCategory.PAY_INTEREST_STAKE_TRANSACTION, // 1019
 
 ]
 
-const ASSETS = [72, 447]
+const ASSETS = [72, 447, 1, 86]
 
 const noteCases = [
     '^BALANCE: Swap future order (\\d+)$',
@@ -127,10 +128,13 @@ function TabTransactionsHistory({scrollSnap, active}) {
         if (!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
-
-            return note.includes('close')
-                ? t(`futures:mobile:transaction_histories:categories:close_fee`)
-                : t(`futures:mobile:transaction_histories:categories:open_fee`)
+            if (note.includes('close')) {
+                return item.money_use > 0 ?
+                    t(`futures:mobile:transaction_histories:categories:refund_of_open_fee`) :
+                    t(`futures:mobile:transaction_histories:categories:close_fee`)
+            } else {
+                return t(`futures:mobile:transaction_histories:categories:open_fee`)
+            }
         }
         return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
     }
@@ -160,8 +164,8 @@ function TabTransactionsHistory({scrollSnap, active}) {
                     <div
                         className='font-medium text-onus-white text-sm'
                     >
-                        <span>{formatNumber(item.money_use, assetConfig?.assetDigit, null, true)}</span>
-                        <span className='ml-1'>{assetConfig?.assetCode}</span>
+                        <span>{item.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(item.money_use), assetConfig?.assetDigit, null)}</span>
+                        <span className="ml-1">{assetConfig?.assetCode}</span>
                     </div>
                     <div
                         className='font-medium text-onus-grey text-xs'
@@ -287,10 +291,13 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
         if (!item) return '-'
         const note = (item.note).toLowerCase()
         if (item.category === TransactionCategory.FUTURE_PLACE_ORDER_FEE) {
-
-            return note.includes('close')
-                ? t(`futures:mobile:transaction_histories:categories:close_fee`)
-                : t(`futures:mobile:transaction_histories:categories:open_fee`)
+            if (note.includes('close')) {
+                return item.money_use > 0 ?
+                    t(`futures:mobile:transaction_histories:categories:refund_of_open_fee`) :
+                    t(`futures:mobile:transaction_histories:categories:close_fee`)
+            } else {
+                return t(`futures:mobile:transaction_histories:categories:open_fee`)
+            }
         }
         return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
     }
@@ -303,10 +310,10 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
             <div className='text-sm text-onus-grey leading-[1.375rem] pb-2'>
                 {_renderCategory(transaction)}
                 {/* {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'} */}
-            </div>
-            <div className='text-2xl font-bold'>
-                <span>{formatNumber(transaction?.money_use, assetConfig.assetDigit, null, true)}</span>
-                <span className='ml-1'>{assetConfig.assetCode}</span>
+            </span>
+            <div className="text-2xl font-bold">
+                <span>{transaction?.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(transaction?.money_use), assetConfig?.assetDigit, null)}</span>
+                <span className="ml-1">{assetConfig.assetCode}</span>
             </div>
         </div>
         <div className='pt-6 space-y-4'>

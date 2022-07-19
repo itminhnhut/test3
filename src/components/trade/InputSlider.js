@@ -5,6 +5,7 @@ import { Active, Dot, DotContainer, SliderBackground, Thumb, ThumbLabel, Track, 
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import classNames from 'classnames';
 import colors from 'styles/colors';
+import { getS3Url } from 'redux/actions/utils';
 
 function getClientPosition(e) {
     const { touches } = e
@@ -54,6 +55,8 @@ const Slider = ({
     positionLabel = 'bottom',
     showPercentLabel = false,
     customPercentLabel,
+    height,
+    naoMode,
     ...props
 }) => {
     const container = useRef(null)
@@ -229,7 +232,7 @@ const Slider = ({
 
     const valueStyle = {}
     if (axis === 'x') {
-        if (customDotAndLabel) {
+        if (customDotAndLabel && !naoMode) {
             if (pos.left < 50) {
                 valueStyle.width = 50 - pos.left + '%';
                 valueStyle.right = 50 + '%';
@@ -330,8 +333,8 @@ const Slider = ({
                 onTouchStart={handleTrackMouseDown}
                 onMouseDown={handleTrackMouseDown}
             >
-                <Active onusMode={onusMode} style={valueStyle} bgColorSlide={bgColorSlide} />
-                <SliderBackground onusMode={onusMode} isDark={currentTheme === THEME_MODE.DARK} BgColorLine={BgColorLine} />
+                <Active onusMode={onusMode} height={height} style={valueStyle} bgColorSlide={bgColorSlide} />
+                <SliderBackground onusMode={onusMode} height={height} isDark={currentTheme === THEME_MODE.DARK} BgColorLine={BgColorLine} />
                 <DotContainer>
                     {!customDotAndLabel &&
                         <Dot
@@ -359,7 +362,10 @@ const Slider = ({
                         isDark={currentTheme === THEME_MODE.DARK}
                         bgColorActive={bgColorActive}
                         onusMode={onusMode}
+                        naoMode={naoMode}
+                        className={naoMode ? '!flex justify-center items-center' : ''}
                     >
+                        {naoMode && <img src={getS3Url('/images/nao/ic_nao.png')} width={22} height={22} alt="" />}
                         {customPercentLabel ? customPercentLabel(pos) :
                             showPercentLabel && <ThumbLabel
                                 isZero={pos.left === 0}

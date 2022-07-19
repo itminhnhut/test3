@@ -1,13 +1,12 @@
-const API_PREFIX = '/api/v1/';
-const API_V2_PREFIX = '/api/v2/';
-const API_V3_PREFIX = '/api/v3/';
+const API_PREFIX = `/api/v1/`;
+const API_V2_PREFIX = `/api/v2/`;
+const API_V3_PREFIX = `/api/v3/`;
 const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/content`;
 
 export const getBlogApi = (apiEndpoint, params) => {
     if (!apiEndpoint) return '';
-    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${
-        process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
-    }${params || ''}`;
+    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
+        }${params || ''}`;
 };
 
 export const API_REGISTER = API_PREFIX + 'user/register';
@@ -196,3 +195,31 @@ export const API_AUTH_USER_OTP = service => `${API_PREFIX}authenticated/${servic
 export const API_FUTURES_CAMPAIGN_STATUS = API_PREFIX + 'futures_campaign/onboarding/status';
 export const API_FUTURES_CAMPAIGN_ATTEND = API_PREFIX + 'futures_campaign/onboarding/attend';
 export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campaign/onboarding/withdrawStatus';
+
+
+//NAO token
+export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic';
+//POOL
+export const API_POOL_INFO = API_V3_PREFIX + 'pool/info';
+export const API_POOL_AMM = API_V3_PREFIX + 'pool/amm-analytic';
+export const API_POOL_USER_INFO = API_V3_PREFIX + 'pool/user-info';
+export const API_POOL_STAKE = API_V3_PREFIX + 'pool/place-stake';
+export const API_POOL_UN_STAKE = API_V3_PREFIX + 'pool/un-stake';
+export const API_POOL_SHARE_HISTORIES = API_V3_PREFIX + 'pool/share-revenue-histories';
+export const API_POOL_USER_SHARE_HISTORIES = API_V3_PREFIX + 'pool/user-share-revenue-histories';
+export const API_POOL_STAKE_ORDER = API_V3_PREFIX + 'pool/stake-orders';
+
+export const API_CONTEST_GET_RANK_MEMBERS_PNL = API_PREFIX + 'event/futures-contest/rank-member-pnl';
+export const API_CONTEST_GET_RANK_MEMBERS_VOLUME = API_PREFIX + 'event/futures-contest/rank-member-volume';
+export const API_CONTEST_GET_USER_DETAIL = API_PREFIX + 'event/futures-contest/user-info';
+
+export const API_CONTEST_GET_RANK_GROUP_PNL = API_PREFIX + 'event/futures-contest/group-pnl';
+export const API_CONTEST_GET_RANK_GROUP_VOLUME = API_PREFIX + 'event/futures-contest/group-volume';
+export const API_CONTEST_GET_GROUP_DETAIL = API_PREFIX + 'event/futures-contest/group-detail';
+
+
+//Luckydraw
+export const API_GET_TICKETS = API_PREFIX + 'futures_reward/tickets';
+export const API_GET_TICKET_DETAIL = API_PREFIX + 'futures_reward/ticket-detail';
+export const API_CLAIM_TICKET = API_PREFIX + 'futures_reward/claim';
+
