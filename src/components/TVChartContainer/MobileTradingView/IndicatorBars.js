@@ -64,7 +64,7 @@ const IndicatorBars = ({
         <div
             className="h-[38px] flex items-center justify-between px-[10px] border-b border-t border-onus-line">
             <div
-                className="flex items-center text-xs text-onus-grey font-medium justify-around w-full mr-[10px]">
+                className="flex items-center text-xs text-onus-grey font-medium justify-around w-full">
                 <div onClick={handleOpenIndicatorModal}>
                     <SvgActivity color={colors.onus.white}/>
                 </div>
@@ -81,8 +81,8 @@ const IndicatorBars = ({
                         className={subIndicator === item.value ? 'text-onus-white' : ''}
                         onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
                 ))}
+                <Reload onClick={resetComponent} color={collapse ? colors.onus.white : colors.onus.gray}/>
             </div>
-            <Reload onClick={resetComponent} color={collapse ? colors.onus.white : colors.onus.gray}/>
         </div>
     );
 };
