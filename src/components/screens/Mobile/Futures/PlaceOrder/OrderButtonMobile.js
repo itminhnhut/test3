@@ -120,15 +120,7 @@ const OrderButtonMobile = ({
     const classNameError = disabled || (isAuth && isError) ? 'opacity-[0.3] cursor-not-allowed' : '';
     const title = type === FuturesOrderTypes.Limit ? t('futures:mobile:limit') : type === FuturesOrderTypes.StopMarket ? 'stop market' : ''
 
-    const isShowConfirm = useMemo(() => {
-        if (typeof window === 'undefined') return false;
-        let isShowConfirm = localStorage.getItem('show_order_confirm');
-        if (isShowConfirm) {
-            isShowConfirm = JSON.parse(isShowConfirm)
-            return isShowConfirm.hidden
-        }
-        return false;
-    }, [showConfirmModal])
+    const isShowConfirm = false
 
     return (
         <>
