@@ -62,9 +62,9 @@ const IndicatorBars = ({
 
     return (
         <div
-            className="h-[38px] flex items-center justify-between px-[10px] border-b border-t border-onus-line">
+            className="h-[38px] flex items-center justify-between px-4 border-b border-t border-onus-line">
             <div
-                className="flex items-center text-xs text-onus-grey font-medium justify-around w-full">
+                className="flex items-center text-xs text-onus-grey font-medium justify-between w-full">
                 <div onClick={handleOpenIndicatorModal}>
                     <SvgActivity color={colors.onus.white}/>
                 </div>

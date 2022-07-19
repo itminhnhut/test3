@@ -98,7 +98,7 @@ const ContestPerRanks = () => {
             </div>
             <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-8">
                 {top3.map((item, index) => (
-                    <CardNao key={index} className="!px-7 !py-5 !bg-transparent border border-nao-border2">
+                    <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
                         <div className="flex justify-between flex-1 mb-4 gap-5">
                             <div className="flex flex-col">
                                 <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
