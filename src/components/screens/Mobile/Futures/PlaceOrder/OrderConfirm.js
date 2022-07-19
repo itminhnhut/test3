@@ -3,7 +3,7 @@ import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
 import CheckBox from 'components/common/CheckBox';
-import { renderCellTable } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber } from 'redux/actions/utils';
 
 const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm }) => {
@@ -28,11 +28,14 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm }) => {
                     <div className="text-onus-grey">{t('futures:order_table:type')}</div>
                     <div>{renderCellTable('type', data)}</div>
                 </div>
-                {/* <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
-                <div className="flex items-center justify-between text-sm">
-                    <div className="text-onus-grey">{t('futures:price')}</div>
-                    <div>Long BTC/VNDC <span className="text-onus-green">50x</span></div>
-                </div> */}
+                {data?.type !== VndcFutureOrderType.Type.MARKET && <>
+                    <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
+                    <div className="flex items-center justify-between text-sm">
+                        <div className="text-onus-grey">{t('futures:price')}</div>
+                        <div>{formatNumber(data?.price, 0)} {data?.quoteAsset}</div>
+                    </div>
+                </>
+                }
                 <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
                 <div className="flex items-center justify-between text-sm">
                     <div className="text-onus-grey">{t('futures:margin')}</div>
