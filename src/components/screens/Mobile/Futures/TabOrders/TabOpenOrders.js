@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useRef, useState } from 'react';
 import CheckBox from 'components/common/CheckBox';
 import { useTranslation } from 'next-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TableNoData from 'components/common/table.old/TableNoData';
 // import OrderClose from 'components/screens/Futures/PlaceOrder/Vndc/OrderClose';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
@@ -15,6 +15,7 @@ import { emitWebViewEvent } from 'redux/actions/utils';
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
 import { find, countBy } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
+import { reFetchOrderListInterval } from 'redux/actions/futures';
 
 const TabOpenOrders = ({
     ordersList,
@@ -37,6 +38,8 @@ const TabOpenOrders = ({
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
     const [orderEditMarginId, setOrderEditMarginId] = useState();
+
+    const dispatch = useDispatch()
 
     const orderEditMargin = useMemo(() => {
         if (!orderEditMarginId) return;
@@ -114,6 +117,7 @@ const TabOpenOrders = ({
         };
         fetchOrder('DELETE', params, () => {
             context.alert.show('success', t('futures:close_order:modal_title', { value: id }), t('futures:close_order:request_successfully', { value: id }));
+            dispatch(reFetchOrderListInterval(1, 10000))
         });
     };
 

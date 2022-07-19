@@ -153,6 +153,7 @@ export class MobileTradingView extends React.PureComponent {
                 set(data, 'charts[0].panes[0].sources[0].state.symbol', this.props.symbol)
                 this.widget.load(data);
             } catch (err) {
+                localStorage.removeItem(this.getChartKey);
                 console.error('Load chart error', err);
             }
         }

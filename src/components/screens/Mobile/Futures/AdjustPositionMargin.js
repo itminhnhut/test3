@@ -6,7 +6,7 @@ import {useTranslation} from 'next-i18next';
 
 import classNames from 'classnames';
 import {X} from 'react-feather';
-import {useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {getProfitVndc, VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import axios from 'axios';
 import {API_VNDC_FUTURES_CHANGE_MARGIN} from 'redux/actions/apis';
@@ -16,6 +16,7 @@ import {IconLoading} from 'components/common/Icons';
 import WarningCircle from 'components/svg/WarningCircle';
 import floor from 'lodash/floor'
 import Modal from "components/common/ReModal";
+import { reFetchOrderListInterval } from 'redux/actions/futures';
 
 const ADJUST_TYPE = {
     ADD: 'ADD',
@@ -51,6 +52,8 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     const [adjustType, setAdjustType] = useState(ADJUST_TYPE.ADD)
     const [amount, setAmount] = useState('')
     const [submitting, setSubmitting] = useState(false)
+
+    const dispatch = useDispatch()
 
     const _setAdjustType = (type) => {
         setAdjustType(type)
@@ -137,6 +140,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
             console.error(err)
             return {data: {status: 'UNKNOWN'}}
         })
+        dispatch(reFetchOrderListInterval(2, 5000))
         setSubmitting(false)
 
         if (forceFetchOrder) forceFetchOrder()

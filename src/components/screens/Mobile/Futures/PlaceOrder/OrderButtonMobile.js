@@ -4,7 +4,7 @@ import {useTranslation} from 'next-i18next';
 import {emitWebViewEvent, formatNumber} from 'redux/actions/utils';
 import {FuturesOrderTypes as OrderTypes, FuturesOrderTypes} from 'redux/reducers/futures';
 import {getPrice, getType} from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
-import { getOrdersList, placeFuturesOrder } from 'redux/actions/futures';
+import { getOrdersList, placeFuturesOrder, reFetchOrderListInterval } from 'redux/actions/futures';
 import {AlertContext} from 'components/common/layouts/LayoutMobile';
 import { useDispatch } from 'react-redux';
 import OrderConfirm from 'components/screens/Mobile/Futures/PlaceOrder/OrderConfirm';
@@ -60,19 +60,8 @@ const OrderButtonMobile = ({
         placeFuturesOrder(params, {alert: context?.alert}, t, () => {
             setDisabled(false)
             setShowConfirmModal(false);
-
-            setTimeout(() => {
-                reFetchOrder()
-            }, 5 * 1000)
-
-            setTimeout(() => {
-                reFetchOrder()
-            }, 10 * 1000)
+            dispatch(reFetchOrderListInterval(2, 5000));
         })
-    }
-
-    const reFetchOrder = () => {
-        dispatch(getOrdersList());
     }
 
     const onHandleSave = () => {

@@ -279,9 +279,18 @@ export const getOrdersList = () => async (dispatch) => {
     }
 };
 
+export const reFetchOrderListInterval = (times = 1, duration = 5000) => (dispatch) => {
+    for (let i = 0; i < times; i++) {
+        console.log(`call ${i}`.repeat(10));
+        setTimeout(() => {
+            dispatch(getOrdersList());
+        }, duration * (i + 1));
+    }
+};
+
 export const updateSymbolView = ({ symbol }) => async (dispatch) => {
     const { data } = await Axios.post(API_UPDATE_FUTURES_SYMBOL_VIEW, {
-         symbol 
+         symbol
     });
 };
 
