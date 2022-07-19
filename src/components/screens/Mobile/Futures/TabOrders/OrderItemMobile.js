@@ -229,7 +229,7 @@ const OrderItemMobile = ({
                         valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}
                     />
                     <OrderItem
-                        label={isTabHistory ? t(`futures:order_table:close_price}`) : t('common:last_price')}
+                        label={isTabHistory ? t(`futures:order_table:close_price`) : t('common:last_price')}
                         value={isTabHistory ? (order?.close_price ? formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice) : '-') : formatNumber(isTabHistory ? order?.close_price : dataMarketWatch?.lastPrice)}
                     />
                     <OrderItem
