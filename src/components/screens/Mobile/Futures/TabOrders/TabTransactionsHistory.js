@@ -310,7 +310,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
             <div className='text-sm text-onus-grey leading-[1.375rem] pb-2'>
                 {_renderCategory(transaction)}
                 {/* {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'} */}
-            </span>
+            </div>
             <div className="text-2xl font-bold">
                 <span>{transaction?.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(transaction?.money_use), assetConfig?.assetDigit, null)}</span>
                 <span className="ml-1">{assetConfig.assetCode}</span>

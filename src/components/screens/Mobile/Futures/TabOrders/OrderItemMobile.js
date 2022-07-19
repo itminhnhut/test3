@@ -211,10 +211,18 @@ const OrderItemMobile = ({
                         label={t(isTabHistory ? 'futures:mobile:reason_close' : `futures:mobile:liq_price`)}
                         value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
                     />
-                    <OrderItem
-                        label={t('futures:mobile:quote_price')}
-                        value={renderQuoteprice()}
-                    />
+                    {isTabHistory ?
+                        <OrderItem
+                            label={t('futures:mobile:margin_ratio')}
+                            value={marginRatio >= 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
+                            valueClassName={renderColorMarginRatio()}
+                        />
+                        :
+                        <OrderItem
+                            label={t('futures:mobile:quote_price')}
+                            value={renderQuoteprice()}
+                        />
+                    }
                     <OrderItem
                         label={t('futures:stop_loss')}
                         value={renderSlTp(order?.sl)}
