@@ -71,27 +71,28 @@ const AlertModal = forwardRef((props, ref) => {
         <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
                modalClassName="z-[99999999999]"
                containerStyle={{width: 'calc(100vw - 30px)', transform: 'translate(-50%,0)', left: '50%'}}
-               onusClassName="!px-[30px] !py-[40px] min-h-[363px] !bottom-[50px] rounded-[16px]"
+               onusClassName="!px-9 !pb-10 min-h-[334px] !bottom-[50px] rounded-[16px]"
         >
             <div className="flex flex-col items-center justify-between">
-                <div className='mb-[30px] mt-2'>
+                <div className='mb-8'>
                     <img src={getS3Url(getImage(options.current.type))} width={80} height={80}/>
                 </div>
-                <div className='text-[20px] font-semibold mb-[12px]'>
+                <div className='text-lg font-semibold mb-3 leading-6'>
                     {options.current.title}
                 </div>
-                <div className='mb-[10px] text-center text-onus-grey font-normal'
+                <div className='text-center text-onus-grey font-normal leading-[1.375rem]'
                      dangerouslySetInnerHTML={{__html: options.current.messages}}>
                 </div>
-                <div className='text-gray-1 mb-[30px] text-center'>
+                {options.current.note && <div className='text-gray-1 text-center mt-[10px] '>
                     {options.current.note}
                 </div>
-                <div className='flex items-center w-full mt-[8px] '>
+                }
+                <div className='flex items-center w-full mt-8'>
                     {!options.current?.hideCloseButton
                     && <Button
                         onusMode={true}
                         title={options.current.closeTitle || t('common:close')}
-                        className={`!h-[50px] !text-[16px] !font-semibold`}
+                        className={`!h-[3rem] !text-[16px] !font-semibold`}
                         componentType="button"
                         onClick={onCancel}
                     />
@@ -101,7 +102,7 @@ const AlertModal = forwardRef((props, ref) => {
                         onusMode={true}
                         title={options.current?.confirmTitle || t('futures:leverage:confirm')}
                         type="primary"
-                        className={`ml-[7px] !h-[50px] !text-[16px] !font-semibold`}
+                        className={`ml-[7px] !h-[3rem] !text-[16px] !font-semibold`}
                         componentType="button"
                         onClick={onConfirm}
                     />

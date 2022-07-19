@@ -152,13 +152,11 @@ const OrderItemMobile = ({
             onClick={() => onShowDetail && actions('detail')}
         >
             <div className="flex items-center justify-between">
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-[2px]">
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
-                        <div
-                            className="font-semibold mr-[10px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
-                        <div
-                            className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
+                        <div className="font-semibold leading-[1.375rem] mr-[5px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
+                        <div className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
                         </div>
                         {profit ?
                             <img className="ml-2"
@@ -168,7 +166,7 @@ const OrderItemMobile = ({
                         }
                     </div>
                     <div
-                        className={`text-xs font-medium mb-1 mt-[2px] ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
+                        className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
                         <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order)}</span>
                     </div>
@@ -192,7 +190,7 @@ const OrderItemMobile = ({
                     }
                 </div>
             </div>
-            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6] leading-[18px]">
+            <div className="mt-2 flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6] leading-[1.125rem]">
                 <div>ID #{order?.displaying_id}</div>
                 <div className="bg-[#535D6D] h-[2px] w-[2px] rounded-[50%] mx-1.5"></div>
                 <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>

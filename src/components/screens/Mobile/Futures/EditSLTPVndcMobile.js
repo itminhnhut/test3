@@ -331,7 +331,7 @@ const EditSLTPVndcMobile = ({
                 </div>
             </div>
             <div
-                className="flex items-center text-sm font-medium select-none cursor-pointer pt-6"
+                className="flex items-center text-sm font-medium select-none cursor-pointer pt-4"
                 onClick={onChangeAutoType}
             >
                 <CheckBox onusMode={true} active={autoType}
@@ -340,7 +340,7 @@ const EditSLTPVndcMobile = ({
                     {t('futures:mobile:auto_type_sltp')}
                 </span>
             </div>
-            <div className="pt-6">
+            <div className="pt-8">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:stop_loss')}</label>
@@ -394,7 +394,7 @@ const EditSLTPVndcMobile = ({
                     />
                 </div>
             </div>
-            <div className="pt-[32px] pb-10">
+            <div className="pt-8 pb-10">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:take_profit')}</label>

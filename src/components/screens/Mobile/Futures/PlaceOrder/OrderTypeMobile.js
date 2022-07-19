@@ -31,12 +31,12 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
     }, [orderTypes, isVndcFutures])
 
     return (
-        <Popover className="relative mr-3" style={{flexGrow: 1}}>
+        <Popover className="relative mr-2" style={{flexGrow: 1}}>
             {({ open, close }) => (
                 <>
-                    <Popover.Button data-tut="order-type" className='w-full h-[36px] border-b-2 dark:border-onus-input'>
+                    <Popover.Button data-tut="order-type" className='w-full h-[32px] border-b-2 dark:border-onus-input'>
                         <div className="flex items-center justify-between text-xs font-medium">
-                            <div className="w-full text-left px-[12px]">
+                            <div className="w-full text-left">
                                 {getTypesLabel(type)}
                             </div>
                             <ChevronDown color={colors.grey1} size={16} className="ml-1" />

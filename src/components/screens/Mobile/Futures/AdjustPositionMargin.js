@@ -157,15 +157,15 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose} onusClassName='px-0'>
             <div
                 className='relative bg-onus-bgModal w-full rounded-t-2xl'>
-                <div className='flex justify-between items-center px-4 pb-4'>
+                <div className='flex justify-between items-center px-4 pb-6'>
                     <span
-                        className='text-lg text-onus-white font-bold'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
+                        className='text-lg text-onus-white font-bold leading-6'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
                 </div>
                 <div className='grid grid-cols-2 font-bold'>
                     <div
                         className={
                             classNames(
-                                'p-2 text-center',
+                                'px-2 py-1 text-center leading-[1.375rem]',
                                 {
                                     'border-b border-onus-bg2 text-onus-textSecondary': adjustType === ADJUST_TYPE.REMOVE,
                                     'border-b-2 border-onus-base text-onus-base': adjustType === ADJUST_TYPE.ADD,
@@ -179,7 +179,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     <div
                         className={
                             classNames(
-                                'p-2 text-center',
+                                'px-2 py-1 text-center leading-[1.375rem]',
                                 {
                                     'border-b border-onus-bg2 text-onus-textSecondary': adjustType === ADJUST_TYPE.ADD,
                                     'border-b-2 border-onus-base text-onus-base': adjustType === ADJUST_TYPE.REMOVE,
@@ -191,15 +191,13 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                         {t('futures:mobile:adjust_margin:remove')}
                     </div>
                 </div>
-                <div className='px-4 pt-4'>
-                    <div>
-                        <span className='uppercase text-xs text-onus-textSecondary'>
-                            {t('futures:mobile:adjust_margin:amount')}
-                        </span>
+                <div className='px-4 pt-6'>
+                    <div className='uppercase text-xs text-onus-textSecondary leading-[1.125rem] pb-2'>
+                        {t('futures:mobile:adjust_margin:amount')}
                     </div>
                     <ErrorToolTip message={!errorProfit ? error : ''}>
                         <div
-                            className='flex justify-between items-center pl-4 bg-onus-input2 text-sm rounded-md h-11 mb-2 mt-2'>
+                            className='flex justify-between items-center pl-4 bg-onus-input2 text-sm rounded-md h-11'>
                             <NumberFormat
                                 thousandSeparator
                                 allowNegative={false}
@@ -226,8 +224,8 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             </div>
                         </div>
                     </ErrorToolTip>
-                    <div className='mt-6 space-y-1'>
-                        <div className='text-xs'>
+                    <div className='mt-4 space-y-2'>
+                        <div className='text-xs leading-[1.125rem]'>
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:assigned_margin')}</span>
                             <span className='text-onus-white font-medium'>
@@ -235,7 +233,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                 <span className='ml-1'>{assetConfig?.assetCode}</span>
                             </span>
                         </div>
-                        <div className='text-xs'>
+                        <div className='text-xs leading-[1.125rem]'>
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:available')}</span>
                             <span className='text-onus-white font-medium'>
@@ -243,7 +241,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                 <span className='ml-1'>{assetConfig?.assetCode}</span>
                             </span>
                         </div>
-                        <div className='text-xs'>
+                        <div className='text-xs leading-[1.125rem]'>
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:new_liq_price')}</span>
                             <span className='text-onus-white font-medium'>
@@ -251,7 +249,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                 <span className='ml-1'>{assetConfig?.assetCode}</span>
                             </span>
                         </div>
-                        <div className='text-xs'>
+                        <div className='text-xs leading-[1.125rem]'>
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:profit_ratio')}</span>
                             <span className={classNames('font-medium', {
@@ -262,16 +260,16 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             </span>
                         </div>
                     </div>
-                    <div className='mt-5 leading-3'>
-                        {
-                            errorProfit && <div className='flex items-start'>
-                                <WarningCircle className='flex-none mr-2'/>
+                    {errorProfit &&
+                        <div className='mt-6 leading-3'>
+                            <div className='flex items-start'>
+                                <WarningCircle className='flex-none mr-2' />
                                 <span className='text-xs text-[#FF9F1A]'>{errorProfit}</span>
                             </div>
-                        }
-                    </div>
+                        </div>
+                    }
                     <div
-                        className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold mt-8', {
+                        className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold mt-6', {
                             '!bg-onus-1 !text-onus-textSecondary': !!error || !+amount || !!errorProfit
                         })}
                         onClick={() => {

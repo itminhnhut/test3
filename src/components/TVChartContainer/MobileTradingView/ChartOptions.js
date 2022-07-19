@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import {Popover, Transition} from "@headlessui/react";
 import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
 import {AreaChart, BarsChart, BaseLineChart, CandleChart, LineChart} from '../timeFrame'
-import {IconStar, IconStarFilled} from "components/common/Icons";
+import { IconStar, IconStarFilled, IconStarOnus, IconHelper } from "components/common/Icons";
 import colors from "styles/colors";
 import {TRADING_MODE} from "redux/actions/const";
 import {favoriteAction} from "redux/actions/user";
@@ -90,8 +90,8 @@ const ChartOptions = ({
                     label={<Svg>{labelCandle.icon}</Svg>}
                 />
                 {showIconGuide &&
-                    <div onClick={() => setStart(true)}>
-                        <img className="flex items-center min-w-[24px] min-h-[24px]" src={getS3Url('/images/icon/ic_help.png')} height={24} width={24} />
+                    <div className="" onClick={() => setStart(true)}>
+                        <IconHelper />
                     </div>
                 }
                 <FavouriteButton pair={pair} pairConfig={pairConfig}/>
@@ -151,7 +151,7 @@ export const MenuTime = ({value, onChange, options, label, keyValue, displayValu
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className={`absolute z-50 bg-white dark:bg-bgPrimary-dark ${classNamePanel}`}>
+                        <Popover.Panel className={`absolute z-50 bg-onus-bg3 ${classNamePanel}`}>
                             <div
                                 className="overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
                                 {options?.map(item => {
@@ -204,9 +204,8 @@ const FavouriteButton = ({pairConfig}) => {
         dispatch(getFuturesFavoritePairs())
     }
 
-    return <div className='cursor-pointer flex items-center min-w-[24px] min-h-[24px]' onClick={handleSetFavorite}>
-        {isFavorite ? <IconStarFilled color={colors.onus.orange} strokeWidth={0.5} size={20}/> :
-            <IconStar color="#718096" strokeWidth={0.5} size={20}/>}
+    return <div className='cursor-pointer flex items-center min-w-[24px] min-h-[24px] justify-end' onClick={handleSetFavorite}>
+        <IconStarOnus color={isFavorite ? colors.onus.orange : colors.onus.grey} />
     </div>
 }
 

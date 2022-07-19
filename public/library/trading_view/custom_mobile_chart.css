@@ -4,6 +4,7 @@ html, body {
 
 html.theme-dark .chart-page {
     background-color: #1B222D !important;
+    background: #1B222D !important;
 }
 
 ._tv-dialog {

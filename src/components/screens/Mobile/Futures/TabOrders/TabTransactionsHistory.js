@@ -262,20 +262,22 @@ const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
         isVisible={visible}
         onusMode
         onBackdropCb={onClose}
-        onusClassName='pb-8 pt-8'
+        // onusClassName='pb-8 pt-8'
     >
-        {categories.map(c => {
-            return <div
-                key={c}
-                className='flex justify-between items-center'
-                onClick={() => _onChange(c)}
-            >
-                <span className='text-onus-white py-3 font-medium'>
-                    {t(`futures:mobile:transaction_histories:categories:${c}`)}
-                </span>
-                {value === c && <Check size={16} color={colors.onus.base}/>}
-            </div>
-        })}
+        <div className="flex flex-col gap-5">
+            {categories.map(c => {
+                return <div
+                    key={c}
+                    className='flex justify-between items-center'
+                    onClick={() => _onChange(c)}
+                >
+                    <span className='text-onus-white leading-6 font-medium'>
+                        {t(`futures:mobile:transaction_histories:categories:${c}`)}
+                    </span>
+                    {value === c && <Check size={16} color={colors.onus.base} />}
+                </div>
+            })}
+        </div>
     </Modal>
 }
 
@@ -296,20 +298,19 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
         isVisible={visible}
         onusMode
         onBackdropCb={onClose}
-        onusClassName='px-0'
     >
         <div className='text-onus-white text-center border-b border-onus-bg2 pb-6'>
-            <span className='text-sm'>
+            <div className='text-sm text-onus-grey leading-[1.375rem] pb-2'>
                 {_renderCategory(transaction)}
                 {/* {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'} */}
-            </span>
+            </div>
             <div className='text-2xl font-bold'>
                 <span>{formatNumber(transaction?.money_use, assetConfig.assetDigit, null, true)}</span>
                 <span className='ml-1'>{assetConfig.assetCode}</span>
             </div>
         </div>
-        <div className='px-4 pt-6 space-y-4'>
-            <div className='flex justify-between text-sm'>
+        <div className='pt-6 space-y-4'>
+            <div className='flex justify-between text-sm leading-[1.375rem]'>
                 <span className='text-onus-grey mr-2 whitespace-nowrap'>
                     {t('futures:mobile:transaction_histories:id')}
                 </span>
@@ -321,7 +322,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
                     </CopyToClipboard>
                 </div>
             </div>
-            <div className='flex justify-between text-sm'>
+            <div className='flex justify-between text-sm leading-[1.375rem]'>
                 <span className='text-onus-grey'>{t('futures:mobile:transaction_histories:order_id')}</span>
                 <div className='flex flex-1 min-w-0 items-center'>
                     <div className='flex-1 min-w-0 overflow-hidden text-right'>{orderId}</div>
@@ -336,7 +337,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
             </div>
         </div>
         <div
-            className='flex items-center justify-center mx-4 mt-8 font-bold text-onus-white h-12 rounded bg-onus-base'
+            className='flex items-center justify-center mt-8 font-bold text-onus-white h-12 rounded bg-onus-base'
             onClick={onClose}
         >{t('futures:mobile:transaction_histories:close')}</div>
     </Modal>

@@ -249,7 +249,7 @@ export default ({ isRealtime = true, pair }) => {
         return listItem.map((item) => (
             <div
                 key={item.symbol}
-                className={`flex justify-between h-[3.25rem] items-center px-4 mb-3 ${pair === item.symbol ? 'bg-onus-line' : ''}`}
+                className={`flex justify-between h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-onus-line' : ''}`}
                 onClick={() => {
                     router.push(`/mobile/futures/${item.symbol}`)
                 }}
@@ -272,7 +272,7 @@ export default ({ isRealtime = true, pair }) => {
 
                 </div>
                 <div className='flex items-start justify-end'>
-                    <div className='flex flex-col font-medium text-right'>
+                    <div className='flex flex-col text-right'>
                         <LastPrice price={item.lastPrice} />
                         <span className='text-xs text-onus-grey leading-4 whitespace-nowrap'>
                             ${formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
@@ -301,7 +301,7 @@ export default ({ isRealtime = true, pair }) => {
     }
    
     return (
-        <div className='market-mobile bg-onus'>
+        <div className='market-mobile'>
             <div className='mt-4 px-4'>
                 <InputSearch onChange={changeSearch} />
             </div>
@@ -380,7 +380,7 @@ export default ({ isRealtime = true, pair }) => {
                         />
                     </div>
                 </div>
-                <div className='flex-1 overflow-y-auto'>{renderItem(dataSource)}</div>
+                <div className='flex-1 overflow-y-auto flex flex-col space-y-3'>{renderItem(dataSource)}</div>
             </div>
         </div>
     )
@@ -424,7 +424,7 @@ const LastPrice = ({ price }) => {
     const prevPrice = usePrevious(price)
     return (
         <span
-            className={cn('text-sm leading-5', {
+            className={cn('text-sm leading-5 font-medium', {
                 'text-onus-red': price < prevPrice,
                 'text-onus-green': price >= prevPrice,
             })}

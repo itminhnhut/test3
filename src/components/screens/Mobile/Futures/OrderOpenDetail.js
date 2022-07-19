@@ -159,7 +159,7 @@ const OrderOpenDetail = ({
     }
 
     return (
-        <div className="p-6 py-4 mx-[-24px] border-b dark:border-onus-line">
+        <div className="p-6 py-5 mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
                 <EditSLTPVndcMobile
                     onusMode={true}
@@ -182,13 +182,11 @@ const OrderOpenDetail = ({
                 />
             }
             <div className="flex items-center justify-between">
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-[2px]">
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
-                        <div
-                            className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
-                        <div
-                            className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
+                        <div className="font-semibold leading-[1.375rem] mr-[5px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                        <div className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
                         </div>
                         {profit ?
                             <img className="ml-2"
@@ -211,7 +209,7 @@ const OrderOpenDetail = ({
                     </div>
                 </div>
             </div>
-            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6] leading-tight">
+            <div className="mt-2 flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6] leading-[1.125rem]">
                 <div>ID #{order?.displaying_id}</div>
                 <div className="bg-[#535D6D] h-[2px] w-[2px] rounded-[50%] mx-1.5"></div>
                 <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
@@ -286,10 +284,10 @@ const OrderOpenDetail = ({
                 </div>
             </div> */}
 
-            <div className="flex w-full mt-4">
+            <div className="flex w-full mt-4 space-x-2">
                 {
                     order.status === VndcFutureOrderType.Status.ACTIVE &&
-                    <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
+                    <div className="w-full">
                         <Button
                             title={t('futures:mobile.adjust_margin.button_title')}
                             className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"
@@ -299,7 +297,7 @@ const OrderOpenDetail = ({
                         />
                     </div>
                 }
-                <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
+                <div className="w-full">
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}
                         className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"
@@ -308,7 +306,7 @@ const OrderOpenDetail = ({
                         onClick={onOpenModify}
                     />
                 </div>
-                <div style={{ width: 'calc(50% - 5px)' }}>
+                <div className="w-full">
                     <Button
                         title={t(`common:close`)}
                         className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"

@@ -183,7 +183,7 @@ const FuturesLeverageSettings = ({
                     />
                 </div>
             </div>
-            <div className={`${onusMode ? 'mb-5' : 'mb-3'}`}>
+            <div className={`${onusMode ? 'mb-6' : 'mb-3'}`}>
                 <Slider
                     onusMode={onusMode}
                     useLabel

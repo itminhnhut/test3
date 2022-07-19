@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { ArrowRight } from 'react-feather';
+import { ArrowRight, Copy } from 'react-feather';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
 import { countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 import { API_ORDER_DETAIL } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { ApiStatus, ChartMode } from 'redux/actions/const';
+import colors from 'styles/colors';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
@@ -233,7 +234,7 @@ const OrderDetail = ({
                         classNameButton="pl-2 py-2"
                         classNamePanel="rounded-md right-0"
                         label={<div
-                            className="text-sm text-onus-grey font-medium">{resolutionLabel}</div>}
+                            className="text-sm text-onus-grey font-semibold">{resolutionLabel}</div>}
                     />
                 </div>
 
@@ -265,12 +266,15 @@ const OrderDetail = ({
                                 forceFetchOrder={forceFetchOrder}
                             />
                         }
-                        <div className="py-[24px]">
+                        <div className="pt-5">
                             <div className="font-semibold mb-4">{t('futures:mobile:order_detail')}</div>
                             <div className='bg-onus-bg3 px-3 rounded-lg'>
                                 <Row>
                                     <Label>ID</Label>
-                                    <Span>{order?.displaying_id}</Span>
+                                    <Span className="flex items-center" onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
+                                        {order?.displaying_id}
+                                        <Copy color={colors.onus.grey} size={16} className="ml-2 "/>
+                                    </Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:leverage:leverage')}</Label>
@@ -373,7 +377,7 @@ const OrderDetail = ({
                             </div>
                         </div>
                         {dataSource.length > 0 &&
-                            <div className="pb-2.5">
+                            <div className="pb-2.5 pt-8">
                                 <div className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
                                 {dataSource.map((item, index) => (
                                     <div key={index}

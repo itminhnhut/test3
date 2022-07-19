@@ -85,12 +85,12 @@ const OrderVolumeMobileModal = (props) => {
             onusMode={true}
             isVisible={true}
             onBackdropCb={onClose}
-            onusClassName="!pt-[44px] !pb-[40px]"
         >
             <div className='mb-6 flex items-center justify-between font-bold text-lg'>
-                {t('futures:order_table:volume')}
+                {t('futures:mobile:adjust_volume')}
             </div>
-            <div className='px-2 mb-12 h-[44px] flex items-center bg-gray-4 dark:bg-onus-bg2 rounded-[4px]'>
+            <div className='text-xs uppercase text-onus-grey leading-[1.125rem] mb-2'>{t('futures:order_table:volume')}</div>
+            <div className='px-2 mb-5 h-[44px] flex items-center bg-gray-4 dark:bg-onus-bg2 rounded-[4px]'>
                 <div className={changeClass}>
                     <Minus
                         size={15}
@@ -139,17 +139,17 @@ const OrderVolumeMobileModal = (props) => {
 
                 />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col space-y-2">
                 <TradingLabel
                     label={t('common:min') + ':'}
                     value={formatNumber(minQuoteQty, decimal) + ' ' + (pairConfig?.quoteAsset ?? '')}
-                    containerClassName='text-xs flex pb-[6px]'
+                    containerClassName='text-xs flex'
                     valueClassName="text-right"
                 />
                 <TradingLabel
                     label={t('common:max') + ' (' + leverage + 'x):'}
                     value={formatNumber(maxQuoteQty, decimal) + ' ' + (pairConfig?.quoteAsset ?? '')}
-                    containerClassName='text-xs flex pb-[6px]'
+                    containerClassName='text-xs flex'
                     valueClassName="text-right"
                 />
                 <TradingLabel
@@ -176,7 +176,7 @@ const OrderVolumeMobileModal = (props) => {
                     </div>
                 </div>
             }
-            <div className='mt-8'>
+            <div className='mt-6'>
                 <Button
                     onusMode={true}
                     title={t(available ? 'futures:leverage:confirm' : 'wallet:deposit')}
