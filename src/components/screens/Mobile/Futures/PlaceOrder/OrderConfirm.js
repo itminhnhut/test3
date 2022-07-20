@@ -58,13 +58,12 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm }) => {
                 </>
                 }
             </div>
-            {/*<div className="mt-6 flex items-center" onClick={onHandleHidden}>*/}
-            <div className="mt-6 flex items-center">
-                {/*<CheckBox onusMode={true} active={hidden}*/}
-                {/*    boxContainerClassName={`rounded-[2px] ${hidden ? '' : 'border-none !bg-onus-bg2'}`} />*/}
-                {/*<span className="ml-3 whitespace-nowrap text-onus-grey font-medium text-xs">*/}
-                {/*    {t('futures:mobile:not_show_this_message')}*/}
-                {/*</span>*/}
+            <div className="mt-6 flex items-center" onClick={onHandleHidden}>
+                <CheckBox onusMode={true} active={hidden}
+                    boxContainerClassName={`rounded-[2px] ${hidden ? '' : 'border-none !bg-onus-bg2'}`} />
+                <span className="ml-3 whitespace-nowrap text-onus-grey font-medium text-xs">
+                    {t('futures:mobile:not_show_this_message')}
+                </span>
             </div>
             <div className='flex items-center w-full mt-6'>
                 <Button
