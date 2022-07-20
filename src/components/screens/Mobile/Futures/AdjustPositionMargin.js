@@ -132,7 +132,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
 
     const handleConfirm = async () => {
         setSubmitting(true)
-        const {data} = await axios.put(API_VNDC_FUTURES_CHANGE_MARGIN, {
+        const {data,status} = await axios.put(API_VNDC_FUTURES_CHANGE_MARGIN, {
             displaying_id: order?.displaying_id,
             margin_change: amount,
             type: adjustType
@@ -153,7 +153,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
             }`)
             alertContext.alert.show('success', t('common:success'), message, null, null, onClose)
         } else {
-            alertContext.alert.show('error', t('common:failed'), t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
+            alertContext.alert.show('error', t('common:failed'), t(`error:futures:${data.status || 'UNKNOWN'}`))
         }
     }
 

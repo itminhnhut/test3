@@ -99,9 +99,8 @@ const TabOpenOrders = ({
             });
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
-
             } else {
-                context.alert.show('error', t('commom:failed'), message);
+                context.alert.show('error', t('common:failed'), t(`error:futures.${status}`));
             }
         } catch (e) {
             console.log(e);
