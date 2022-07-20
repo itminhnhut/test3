@@ -180,8 +180,8 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             // handle multi language
             log.i('placeFuturesOrder result: ', data);
             let message = data?.message;
-            if (t(`error:futures.${data?.status}`)) {
-                message = t(`error:futures.${data?.status}`);
+            if (t(`error:futures${data?.status}`)) {
+                message = t(`error:futures:${data?.status || 'UNKNOWN'}`);
             }
             if (utils?.alert) {
                 utils.alert.show('error', t('futures:place_order'), message, data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`);
@@ -201,7 +201,11 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
     } catch (e) {
         console.log('Can\'t place order ', e?.message);
         if (utils?.alert) {
-            utils.alert.show('error', t('futures:place_order'), e?.message);
+            if (e.message === 'Network Error') {
+                utils.alert.show('error', t('futures:place_order'), t('error:futures:NETWORK_ERROR'));
+            } else {
+                utils.alert.show('error', t('futures:place_order'), e?.message);
+            }
         } else {
             showNotification(
                 {
@@ -290,7 +294,7 @@ export const reFetchOrderListInterval = (times = 1, duration = 5000) => (dispatc
 
 export const updateSymbolView = ({ symbol }) => async (dispatch) => {
     const { data } = await Axios.post(API_UPDATE_FUTURES_SYMBOL_VIEW, {
-         symbol
+        symbol
     });
 };
 

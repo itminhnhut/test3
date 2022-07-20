@@ -32,13 +32,30 @@ export const BarsChart = (
     </svg>
 );
 export const CandleChart = (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15.7539 21.7148L15.7539 4.46431" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M7.38672 21.7148L7.38672 1.99995" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
-        <rect x="5.51113" y="5.47011" width="3.75711" height="12.7782" rx="0.76669" fill="#8492A7" stroke="#8492A7" stroke-width="1.02225" />
-        <rect x="13.8744" y="9.41347" width="3.75711" height="8.83519" rx="0.76669" fill="#8492A7" stroke="#8492A7" stroke-width="1.02225" />
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 28 28"
+        width="20"
+        height="20"
+        fill="currentColor"
+    >
+        <path d="M17 11v6h3v-6h-3zm-.5-1h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5z" />
+        <path d="M18 7h1v3.5h-1zm0 10.5h1V21h-1z" />
+        <path d="M9 8v12h3V8H9zm-.5-1h4a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 .5-.5z" />
+        <path d="M10 4h1v3.5h-1zm0 16.5h1V24h-1z" />
     </svg>
 );
+
+export const CandleChartOnus = (
+    <svg width="14" height="22" viewBox="0 0 14 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.457 21L11.457 3.5" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M2.54297 21L2.54297 0.999999" stroke="#8492A7" stroke-width="1.02225" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="0.511127" y="4.5121" width="4.06892" height="12.9777" rx="0.76669" fill="#1B222D" stroke="#8492A7" stroke-width="1.02225" />
+        <rect x="9.42128" y="8.51308" width="4.06892" height="8.97775" rx="0.76669" fill="#1B222D" stroke="#8492A7" stroke-width="1.02225" />
+    </svg>
+
+);
+
 export const AreaChart = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="20" height="20" fill="currentColor"><path d="M12.5 17.207L18.707 11h2l3.647-3.646-.708-.708L20.293 10h-2L12.5 15.793l-3-3-4.854 4.853.708.708L9.5 14.207z" /><path d="M9 16h1v1H9zm1 1h1v1h-1zm-1 1h1v1H9zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1H9zm2 0h1v1h-1zm-3-3h1v1H8zm-1 1h1v1H7zm-1 1h1v1H6zm2 0h1v1H8zm-1 1h1v1H7zm-2 0h1v1H5zm17-9h1v1h-1zm1-1h1v1h-1zm0 2h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-5-7h1v1h-1zm2 0h1v1h-1zm1-1h1v1h-1zm-2 2h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-2-6h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-3-3h1v1h-1zm-1 1h1v1h-1zm-1 1h1v1h-1zm2 0h1v1h-1zm-1 1h1v1h-1z" /></svg>
 );

@@ -25,11 +25,13 @@ const OrderOpenDetail = ({
     pairConfig,
     decimal,
     onClose,
-    forceFetchOrder
+    forceFetchOrder,
+    isTabHistory
 }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
     const status = order?.status;
+    const isTabOpen = status === 0 || status === 3;
     const oldOrder = useRef(order);
     const [data, setData] = useState({
         displaying_id: order?.displaying_id,
@@ -46,9 +48,11 @@ const OrderOpenDetail = ({
     const rowData = useRef(null);
     const [loading, setLoading] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
+    const [disabled, setDisabled] = useState(false);
 
     const onConfirmSLTP = (e) => {
         // setData(e);
+        setDisabled(true);
         fetchOrder('PUT', e, () => {
             localStorage.setItem('edited_id', e.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
@@ -114,12 +118,18 @@ const OrderOpenDetail = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                context.alert.show('error', t('commom:failed'), message);
+                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
             }
         } catch (e) {
+            if (e.message === 'Network Error') {
+                context.alert.show('error', t('futures:place_order'), t('error:futures:NETWORK_ERROR'));
+            }
             console.log(e);
         } finally {
             setLoading(false);
+            setTimeout(() => {
+                setDisabled(false)
+            }, 1000);
         }
     };
 
@@ -158,6 +168,16 @@ const OrderOpenDetail = ({
         return marginRatio < 0 && `text-onus-${_marginRatio <= 20 ? 'green' : _marginRatio > 20 && _marginRatio <= 60 ? 'orange' : 'red'}`
     }
 
+    const renderQuoteprice = () => {
+        const value = order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask;
+        return formatNumber(value)
+    }
+
+    const orderStatus = useMemo(() => {
+        const pending = !isTabHistory && order.status === VndcFutureOrderType.Status.PENDING || order.status === VndcFutureOrderType.Status.REQUESTING;
+        return { pending }
+    }, [order])
+
     return (
         <div className="p-6 py-5 mx-[-24px] border-b dark:border-onus-line">
             {showEditSLTP &&
@@ -165,11 +185,12 @@ const OrderOpenDetail = ({
                     onusMode={true}
                     isVisible={showEditSLTP}
                     order={rowData.current}
-                    onClose={() => setShowEditSLTP(false)}
+                    onClose={() => !disabled && setShowEditSLTP(false)}
                     status={rowData.current.status}
                     onConfirm={onConfirmSLTP}
                     lastPrice={dataMarketWatch?.lastPrice}
                     isMobile
+                    disabled={disabled}
                 />
             }
             {
@@ -201,12 +222,18 @@ const OrderOpenDetail = ({
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <div className="text-xs text-right" onClick={openShare}>
-                        <div className="text-xs font-medium text-onus-green float-right">
-                            <OrderProfit onusMode={true} className="flex flex-col text-right"
-                                order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
+                    {orderStatus.pending ?
+                        <div className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-onus-orange bg-onus-orange/[0.1]'}`}>
+                            {t(`futures:mobile:${orderStatus.cancelled ? 'cancelled_order' : 'pending_order'}`)}
                         </div>
-                    </div>
+                        :
+                        <div className="text-xs text-right" onClick={openShare}>
+                            <div className="text-xs font-medium text-onus-green float-right">
+                                <OrderProfit onusMode={true} className="flex flex-col text-right"
+                                    order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
             <div className="mt-2 flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6] leading-[1.125rem]">
@@ -214,76 +241,48 @@ const OrderOpenDetail = ({
                 <div className="bg-[#535D6D] h-[2px] w-[2px] rounded-[50%] mx-1.5"></div>
                 <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
             </div>
+            {isTabOpen &&
+                <div className="flex items-center justify-between mb-2">
+                    <OrderItem
+                        className="flex flex-col gap-[2px]"
+                        valueClassName='!text-left !text-sm'
+                        label={t('futures:mobile:quote_price')}
+                        value={renderQuoteprice()}
+                    />
+                    <OrderItem
+                        className="flex flex-col gap-[2px]"
+                        label={t('futures:order_table:open_price')}
+                        valueClassName='!text-left !text-sm'
+                        value={formatNumber(price, decimal, 0, true)}
+                    />
+                </div>
+            }
             <div className="flex flex-wrap w-full">
                 <OrderItem label={t('futures:order_table:volume')}
                     value={formatNumber(order?.order_value, 0, 0, true)} />
-                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimal, 0, true)} />
+                {!isTabOpen ?
+                    <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimal, 0, true)} />
+                    :
+                    <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
+                }
                 <OrderItem
                     label={t('futures:margin')}
                     value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
                 />
-                <OrderItem label={t('futures:tp_sl:mark_price')}
-                    value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
-                <OrderItem
-                    label={t('futures:mobile:margin_ratio')}
-                    value={marginRatio > 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
-                    valueClassName={renderColorMarginRatio()}
-                />
+                {!isTabOpen && <>
+                    <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
+                    <OrderItem
+                        label={t('futures:mobile:quote_price')}
+                        value={renderQuoteprice()}
+                    />
+                </>
+                }
                 <OrderItem label={t('futures:stop_loss')} valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'} value={renderSlTp(order?.sl)} />
-                <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
+                <OrderItem label={t('common:last_price')}
+                    value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem label={t('futures:take_profit')} valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}
                     value={renderSlTp(order?.tp)} />
-                {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
             </div>
-            {/* <div className="flex gap-x-[10px] w-full">
-                <div style={{ width: 'calc(50% - 5px)' }}>
-                    <TradingInput
-                        thousandSeparator={true}
-                        label={'SL'}
-                        value={data?.sl}
-                        allowNegative={false}
-                        onValueChange={({ floatValue = '' }) => setData({ ...data, sl: floatValue })}
-                        decimalScale={decimal}
-                        labelClassName='whitespace-nowrap capitalize'
-                        containerClassName="h-[36px]"
-                        tailContainerClassName='flex items-center text-txtSecondary dark:text-onus-grey font-medium text-xs select-none'
-                        renderTail={() => (
-                            <div className='relative group select-none' onClick={onOpenModify}>
-                                <div className='flex items-center'>
-                                    <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
-                                </div>
-                            </div>
-                        )}
-                        inputClassName="text-xs !text-center"
-                        inputMode="decimal"
-                        allowedDecimalSeparators={[',', '.']}
-                    />
-                </div>
-                <div style={{ width: 'calc(50% - 5px)' }}>
-                    <TradingInput
-                        thousandSeparator={true}
-                        label={'TP'}
-                        value={data?.tp}
-                        allowNegative={false}
-                        onValueChange={({ floatValue = '' }) => setData({ ...data, tp: floatValue })}
-                        decimalScale={decimal}
-                        labelClassName='whitespace-nowrap capitalize'
-                        containerClassName="h-[36px]"
-                        tailContainerClassName='flex items-center text-txtSecondary dark:text-onus-grey font-medium text-xs select-none'
-                        renderTail={() => (
-                            <div className='relative group select-none' onClick={onOpenModify}>
-                                <div className='flex items-center'>
-                                    <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
-                                </div>
-                            </div>
-                        )}
-                        inputClassName="text-xs !text-center"
-                        inputMode="decimal"
-                        allowedDecimalSeparators={[',', '.']}
-                    />
-                </div>
-            </div> */}
-
             <div className="flex w-full mt-4 space-x-2">
                 {
                     order.status === VndcFutureOrderType.Status.ACTIVE &&

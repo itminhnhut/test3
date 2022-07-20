@@ -48,7 +48,9 @@ const Button = memo((props) => {
                         type === 'primary'
                             ? `${onusMode ? 'bg-onus-base text-onus-textPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
                             : `${onusMode ? 'bg-onus-bg2 text-onus-textPrimary dark:bg-onus-bg2 dark:text-onus-textPrimary': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
-                    } ${disabledStyle} ${className}`}
+                    } ${disabledStyle} ${className}
+                    ${disabled && onusMode ? '!bg-onus-base/[0.3]' : ''}
+                    `}
                     onClick={() => onClick && !disabled && onClick()}
                 >
                     {title || 'TITLE_NOT_FOUND'}

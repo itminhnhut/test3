@@ -16,6 +16,7 @@ import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositi
 import { find, countBy } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 import { reFetchOrderListInterval } from 'redux/actions/futures';
+import { faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
 
 const TabOpenOrders = ({
     ordersList,
@@ -23,7 +24,8 @@ const TabOpenOrders = ({
     isAuth,
     isDark,
     pairConfig,
-    onShowDetail
+    onShowDetail,
+    tab
 }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
@@ -38,6 +40,7 @@ const TabOpenOrders = ({
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
     const [orderEditMarginId, setOrderEditMarginId] = useState();
+    const [disabled, setDisabled] = useState(false);
 
     const dispatch = useDispatch()
 
@@ -98,14 +101,19 @@ const TabOpenOrders = ({
             });
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
-
             } else {
-                context.alert.show('error', t('commom:failed'), message);
+                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
+
             }
         } catch (e) {
-            console.log(e);
+            if (e.message === 'Network Error') {
+                context.alert.show('error', t('futures:place_order'), t('error:futures:NETWORK_ERROR'));
+            }
         } finally {
             setOpenCloseModal(false);
+            setTimeout(() => {
+                setDisabled(false)
+            }, 1000);
         }
     };
 
@@ -122,6 +130,7 @@ const TabOpenOrders = ({
     };
 
     const onConfirmEdit = (params) => {
+        setDisabled(true)
         fetchOrder('PUT', params, () => {
             localStorage.setItem('edited_id', params.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
@@ -143,12 +152,13 @@ const TabOpenOrders = ({
                     onusMode={true}
                     isVisible={openEditModal}
                     order={rowData.current}
-                    onClose={() => setOpenEditModal(false)}
+                    onClose={() => !disabled && setOpenEditModal(false)}
                     status={rowData.current.status}
                     onConfirm={onConfirmEdit}
                     pairConfig={pairConfig}
                     pairTicker={marketWatch}
                     isMobile
+                    disabled={disabled}
                 />
             }
             {
@@ -173,6 +183,7 @@ const TabOpenOrders = ({
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
                             onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
                             onShowDetail={onShowDetail}
+                            tab={tab}
                         />
                     );
                 })}

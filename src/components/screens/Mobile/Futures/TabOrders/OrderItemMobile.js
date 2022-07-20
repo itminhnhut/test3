@@ -11,6 +11,7 @@ import {
 } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import Big from 'big.js';
 import { DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
+import { FUTURES_RECORD_CODE } from 'components/screens/Futures/TradeRecord/RecordTableTab';
 
 const OrderItemMobile = ({
     order,
@@ -21,10 +22,12 @@ const OrderItemMobile = ({
     isDark,
     onShowDetail,
     symbol,
-    allowButton
+    allowButton,
+    tab
 }) => {
     const { t } = useTranslation();
     const isTabHistory = mode === 'history';
+    const isTabOpen = tab === FUTURES_RECORD_CODE.openOrders;
 
     const getOpenPrice = (row, pairPrice) => {
         let text = row?.price ? formatNumber(row?.price, 8, 0, true) : 0;
@@ -196,22 +199,47 @@ const OrderItemMobile = ({
                 <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
             </div>
             <div>
+                {isTabOpen &&
+                    <div className="flex items-center justify-between mb-2">
+                        <OrderItem
+                            className="flex flex-col gap-[2px]"
+                            valueClassName='!text-left !text-sm'
+                            label={t('futures:mobile:quote_price')}
+                            value={renderQuoteprice()}
+                        />
+                        <OrderItem
+                            className="flex flex-col gap-[2px]"
+                            label={t('futures:order_table:open_price')}
+                            valueClassName='!text-left !text-sm'
+                            value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : getOpenPrice(order, dataMarketWatch)}
+                        />
+                    </div>
+                }
                 <div className="flex flex-wrap w-full">
                     <OrderItem label={t('futures:order_table:volume')}
                         value={order?.order_value ? formatNumber(order?.order_value, 0, 0, true) : '-'} />
-                    <OrderItem
-                        label={t('futures:order_table:open_price')}
-                        value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : getOpenPrice(order, dataMarketWatch)}
-                    />
+                    {isTabOpen ?
+                        <OrderItem
+                            label={t(isTabHistory ? 'futures:mobile:reason_close' : `futures:mobile:liq_price`)}
+                            value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
+                        />
+                        :
+                        <OrderItem
+                            label={t('futures:order_table:open_price')}
+                            value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : getOpenPrice(order, dataMarketWatch)}
+                        />
+                    }
                     <OrderItem
                         label={t('futures:margin')}
                         value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
                     />
-                    <OrderItem
-                        label={t(isTabHistory ? 'futures:mobile:reason_close' : `futures:mobile:liq_price`)}
-                        value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
-                    />
-                    {isTabHistory ?
+                    {!isTabOpen &&
+                        <OrderItem
+                            label={t(isTabHistory ? 'futures:mobile:reason_close' : `futures:mobile:liq_price`)}
+                            value={isTabHistory ? renderReasonClose(order) : renderLiqPrice(order)}
+                        />
+                    }
+                    {!isTabOpen && (isTabHistory ?
                         <OrderItem
                             label={t('futures:mobile:margin_ratio')}
                             value={marginRatio >= 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
@@ -222,7 +250,7 @@ const OrderItemMobile = ({
                             label={t('futures:mobile:quote_price')}
                             value={renderQuoteprice()}
                         />
-                    }
+                    )}
                     <OrderItem
                         label={t('futures:stop_loss')}
                         value={renderSlTp(order?.sl)}
@@ -270,7 +298,7 @@ export const SideComponent = styled.div.attrs(({ isBuy }) => ({
     font-size: 10px
 `
 const Row = styled.div.attrs({
-    className: `flex mb-[8px] justify-between mr-[10px]`
+    className: `flex mb-1 justify-between mr-[10px]`
 })`
     width: calc(50% - 5px);
 
@@ -284,7 +312,7 @@ const Row = styled.div.attrs({
 `
 
 const Label = styled.div.attrs({
-    className: `text-gray-1 text-xs dark:text-onus-grey min-w-[50px]`
+    className: `text-gray-1 text-xs dark:text-onus-grey min-w-[50px] leading-[1.25rem]`
 })``
 
 const Button = styled.div.attrs({
@@ -293,11 +321,11 @@ const Button = styled.div.attrs({
     width: calc(50% - 4px)
 `
 
-export const OrderItem = ({ label, value, valueClassName = '' }) => {
+export const OrderItem = ({ label, value, className = '', valueClassName = '' }) => {
     return (
-        <Row className="justify-between">
+        <Row className={`${className} justify-between`}>
             <Label>{label}</Label>
-            <div className={`text-xs font-medium text-right ${valueClassName}`}>{value}</div>
+            <div className={`leading-[1.25rem] text-xs font-medium text-right ${valueClassName}`}>{value}</div>
         </Row>
     )
 }

@@ -132,13 +132,13 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
 
     const handleConfirm = async () => {
         setSubmitting(true)
-        const {data} = await axios.put(API_VNDC_FUTURES_CHANGE_MARGIN, {
+        const {data,status} = await axios.put(API_VNDC_FUTURES_CHANGE_MARGIN, {
             displaying_id: order?.displaying_id,
             margin_change: amount,
             type: adjustType
         }).catch(err => {
             console.error(err)
-            return {data: {status: 'UNKNOWN'}}
+            return { data: { status: err.message === 'Network Error' ? 'NETWORK_ERROR' : 'UNKNOWN' } }
         })
         dispatch(reFetchOrderListInterval(2, 5000))
         setSubmitting(false)
@@ -153,12 +153,12 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
             }`)
             alertContext.alert.show('success', t('common:success'), message, null, null, onClose)
         } else {
-            alertContext.alert.show('error', t('common:failed'), t(`futures:mobile:adjust_margin:error:${data.status || 'UNKNOWN'}`))
+            alertContext.alert.show('error', t('common:failed'), t(`error:futures:${data.status || 'UNKNOWN'}`))
         }
     }
 
     return (
-        <Modal onusMode={true} isVisible={true} onBackdropCb={onClose} onusClassName='px-0'>
+        <Modal onusMode={true} isVisible={true} onBackdropCb={() => !submitting && onClose()} onusClassName='px-0'>
             <div
                 className='relative bg-onus-bgModal w-full rounded-t-2xl'>
                 <div className='flex justify-between items-center px-4 pb-6'>

@@ -1,46 +1,48 @@
-import React, {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
-import {formatNumber, getS3Url} from 'redux/actions/utils';
-import {roundTo} from 'round-to';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
+import { roundTo } from 'round-to';
 import classNames from 'classnames';
-import {Popover, Transition} from "@headlessui/react";
+import { Popover, Transition } from "@headlessui/react";
 import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
-import {AreaChart, BarsChart, BaseLineChart, CandleChart, LineChart} from '../timeFrame'
+import { AreaChart, BarsChart, BaseLineChart, CandleChartOnus, LineChart } from '../timeFrame'
 import { IconStar, IconStarFilled, IconStarOnus, IconHelper } from "components/common/Icons";
 import colors from "styles/colors";
-import {TRADING_MODE} from "redux/actions/const";
-import {favoriteAction} from "redux/actions/user";
-import {getFuturesFavoritePairs} from "redux/actions/futures";
-import {useDispatch, useSelector} from "react-redux";
+import { TRADING_MODE } from "redux/actions/const";
+import { favoriteAction } from "redux/actions/user";
+import { getFuturesFavoritePairs } from "redux/actions/futures";
+import { useDispatch, useSelector } from "react-redux";
 import Guideline from 'components/screens/Mobile/Futures/Guideline';
 import styled from 'styled-components';
+import useWindowSize from 'hooks/useWindowSize'
 
 const listChartType = [
-    {text: 'Bar', value: 0, icon: BarsChart},
-    {text: 'Candle', value: 1, icon: CandleChart},
-    {text: 'Line', value: 2, icon: LineChart},
-    {text: 'Area', value: 3, icon: AreaChart},
-    {text: 'Base Line', value: 10, icon: BaseLineChart},
+    { text: 'Bar', value: 0, icon: BarsChart },
+    { text: 'Candle', value: 1, icon: CandleChartOnus },
+    { text: 'Line', value: 2, icon: LineChart },
+    { text: 'Area', value: 3, icon: AreaChart },
+    { text: 'Base Line', value: 10, icon: BaseLineChart },
 ];
 
 export const listTimeFrame = [
-    {value: '1', text: '1m'},
-    {value: '5', text: '5m'},
-    {value: '15', text: '15m'},
-    {value: '30', text: '30m'},
-    {value: '60', text: '1h'},
-    {value: '240', text: '4h'},
-    {value: '1D', text: '1D'},
-    {value: '1W', text: '1W'},
-    {value: '1M', text: '1M'},
+    { value: '1', text: '1m' },
+    { value: '5', text: '5m' },
+    { value: '15', text: '15m' },
+    { value: '30', text: '30m' },
+    { value: '60', text: '1h' },
+    { value: '240', text: '4h' },
+    { value: '1D', text: '1D' },
+    { value: '1W', text: '1W' },
+    { value: '1M', text: '1M' },
 ];
 
 const ChartOptions = ({
-                          pairConfig, pair, isVndcFutures, resolution, setResolution,
-                          chartType, setChartType, className = '', isFullScreen, showSymbol = true,
-                          showIconGuide = true, pairParent
-                      }) => {
-
+    pairConfig, pair, isVndcFutures, resolution, setResolution,
+    chartType, setChartType, className = '', isFullScreen, showSymbol = true,
+    showIconGuide = true, pairParent
+}) => {
+    const { width } = useWindowSize()
+    const xs = width < 390;
     // if (!pairConfig) return null;
     const [showModelMarket, setShowModelMarket] = useState(false)
     const [start, setStart] = useState(false);
@@ -53,23 +55,23 @@ const ChartOptions = ({
 
     return (
         <div className={`${className} chart-timer flex items-center justify-between px-4`}>
-            <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen}/>
+            <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen} />
             <div className="flex items-center">
                 {showSymbol &&
-                <div className="flex items-center flex-wrap">
-                    <div className="flex items-center cursor-pointer" data-tut="order-symbol"
-                         onClick={() => setShowModelMarket(true)}>
-                        <img src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24} width={24}/>
-                        <div className="pl-2 font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                    <div className="flex items-center flex-wrap gap-2">
+                        <div className="flex items-center cursor-pointer" data-tut="order-symbol"
+                            onClick={() => setShowModelMarket(true)}>
+                            {!xs && <img className="mr-2 min-w-[24px] min-h-[24px]" src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24} width={24} />}
+                            <div className="font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                        </div>
+                        <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent}>
+                            <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
+                        </SocketLayout>
                     </div>
-                    <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent}>
-                        <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures}/>
-                    </SocketLayout>
-                </div>
                 }
             </div>
 
-            <div className="flex items-center space-x-3 py-2">
+            <div className={`flex items-center space-x-${xs ? '2' : '4'} py-2`}>
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
@@ -78,7 +80,7 @@ const ChartOptions = ({
                     options={listTimeFrame}
                     classNamePanel="rounded-md"
                     label={<div
-                        className="text-sm text-onus-grey font-semibold">{resolutionLabel}</div>}
+                        className="text-[0.9375rem] text-onus-grey font-medium leading-[1.25rem]">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={chartType}
@@ -94,7 +96,7 @@ const ChartOptions = ({
                         <IconHelper />
                     </div>
                 }
-                <FavouriteButton pair={pair} pairConfig={pairConfig}/>
+                <FavouriteButton pair={pair} pairConfig={pairConfig} />
             </div>
             <ModelMarketMobile
                 visible={showModelMarket}
@@ -105,12 +107,12 @@ const ChartOptions = ({
     );
 };
 
-const Change24h = ({pairPrice, isVndcFutures}) => {
+const Change24h = ({ pairPrice, isVndcFutures }) => {
 
     return (
         <div className='flex items-center'>
             <div
-                className={classNames('px-2 min-w-[5.625rem] text-onus-green font-medium',
+                className={classNames('pr-2 min-w-[5rem] text-onus-green font-medium',
                     {
                         '!text-onus-red':
                             pairPrice?.priceChangePercent < 0,
@@ -134,12 +136,12 @@ const Change24h = ({pairPrice, isVndcFutures}) => {
 }
 
 
-export const MenuTime = ({value, onChange, options, label, keyValue, displayValue, classNameButton, classNamePanel}) => {
+export const MenuTime = ({ value, onChange, options, label, keyValue, displayValue, classNameButton, classNamePanel }) => {
     return (
         <Popover className="relative">
-            {({open, close}) => (
+            {({ open, close }) => (
                 <>
-                    <Popover.Button className={`items-center min-w-[24px] min-h-[24px] flex ${classNameButton} text-gray-1 dark:text-txtSecondary-dark`}>
+                    <Popover.Button className={`items-center flex ${classNameButton} text-gray-1 dark:text-txtSecondary-dark`}>
                         {label}
                     </Popover.Button>
                     <Transition
@@ -160,13 +162,13 @@ export const MenuTime = ({value, onChange, options, label, keyValue, displayValu
                                             onChange(item[keyValue])
                                             close()
                                         }}
-                                             className={classNames(
-                                                 'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
-                                                 {
-                                                     '!text-txtPrimary dark:!text-txtPrimary-dark':
-                                                         item[keyValue] === value,
-                                                 }
-                                             )}
+                                            className={classNames(
+                                                'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
+                                                {
+                                                    '!text-txtPrimary dark:!text-txtPrimary-dark':
+                                                        item[keyValue] === value,
+                                                }
+                                            )}
                                         >
                                             <Svg>{item?.icon}</Svg>
                                             {item[displayValue]}
@@ -186,13 +188,13 @@ const Svg = styled.div.attrs({
     className: ''
 })`
     svg {
-        height: 22px;
-        width: 22px;
+        height: 20px;
+        width: 20px;
         fill: ${colors.onus.grey}
     }
 `
 
-const FavouriteButton = ({pairConfig}) => {
+const FavouriteButton = ({ pairConfig }) => {
     const favoritePairs = useSelector((state) => state.futures.favoritePairs)
     const dispatch = useDispatch();
 
@@ -204,8 +206,8 @@ const FavouriteButton = ({pairConfig}) => {
         dispatch(getFuturesFavoritePairs())
     }
 
-    return <div className='cursor-pointer flex items-center min-w-[24px] min-h-[24px] justify-end' onClick={handleSetFavorite}>
-        <IconStarOnus color={isFavorite ? colors.onus.orange : colors.onus.grey} />
+    return <div className='cursor-pointer flex items-center ' onClick={handleSetFavorite}>
+        <IconStarOnus stroke={isFavorite ? colors.onus.orange : colors.onus.grey} color={isFavorite ? colors.onus.orange : ''} />
     </div>
 }
 

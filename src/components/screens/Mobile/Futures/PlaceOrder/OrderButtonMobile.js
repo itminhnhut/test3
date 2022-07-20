@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useRef, useState } from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useTranslation } from 'next-i18next';
 import { emitWebViewEvent, formatNumber } from 'redux/actions/utils';
-import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
+import { FuturesOrderTypes, FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
 import { getPrice, getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { placeFuturesOrder, reFetchOrderListInterval } from 'redux/actions/futures';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
@@ -68,9 +68,10 @@ const OrderButtonMobile = ({
             useQuoteQty: true,
             requestId
         };
-
         placeFuturesOrder(params, { alert: context?.alert }, t, () => {
-            setDisabled(false);
+            setTimeout(() => {
+                setDisabled(false);
+            }, 1000);
             setShowConfirmModal(false);
             dispatch(reFetchOrderListInterval(2, 5000));
         });
@@ -145,9 +146,10 @@ const OrderButtonMobile = ({
     return (
         <>
             {showConfirmModal &&
-                <OrderConfirm isShowConfirm={isShowConfirm} open={showConfirmModal} data={rowData.current}
+                <OrderConfirm disabled={disabled} isShowConfirm={isShowConfirm} open={showConfirmModal}
+                              data={rowData.current}
                               onConfirm={handlePlaceOrder}
-                              onClose={() => setShowConfirmModal(false)}/>
+                              onClose={() => !disabled && setShowConfirmModal(false)}/>
             }
             <div onClick={onHandleSave}
                  className={`${isBuy ? 'bg-onus-green' : 'bg-onus-red'} text-white text-sm h-[56px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
