@@ -121,6 +121,9 @@ const OrderOpenDetail = ({
                 context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
             }
         } catch (e) {
+            if (e.message === 'Network Error') {
+                context.alert.show('error', t('futures:place_order'), t('error:futures:NETWORK_ERROR'));
+            }
             console.log(e);
         } finally {
             setLoading(false);

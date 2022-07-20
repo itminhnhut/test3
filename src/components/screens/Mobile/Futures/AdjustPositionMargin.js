@@ -138,7 +138,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
             type: adjustType
         }).catch(err => {
             console.error(err)
-            return {data: {status: 'UNKNOWN'}}
+            return { data: { status: err.message === 'Network Error' ? 'NETWORK_ERROR' : 'UNKNOWN' } }
         })
         dispatch(reFetchOrderListInterval(2, 5000))
         setSubmitting(false)

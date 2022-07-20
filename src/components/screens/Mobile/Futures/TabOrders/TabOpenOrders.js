@@ -106,7 +106,9 @@ const TabOpenOrders = ({
 
             }
         } catch (e) {
-            console.log(e);
+            if (e.message === 'Network Error') {
+                context.alert.show('error', t('futures:place_order'), t('error:futures:NETWORK_ERROR'));
+            }
         } finally {
             setOpenCloseModal(false);
             setTimeout(() => {
