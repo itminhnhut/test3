@@ -181,7 +181,7 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             log.i('placeFuturesOrder result: ', data);
             let message = data?.message;
             if (t(`error:futures${data?.status}`)) {
-                message = t(`error:futures:${data?.status}`);
+                message = t(`error:futures:${data?.status || 'UNKNOWN'}`);
             }
             if (utils?.alert) {
                 utils.alert.show('error', t('futures:place_order'), message, data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`);
@@ -290,7 +290,7 @@ export const reFetchOrderListInterval = (times = 1, duration = 5000) => (dispatc
 
 export const updateSymbolView = ({ symbol }) => async (dispatch) => {
     const { data } = await Axios.post(API_UPDATE_FUTURES_SYMBOL_VIEW, {
-         symbol
+        symbol
     });
 };
 

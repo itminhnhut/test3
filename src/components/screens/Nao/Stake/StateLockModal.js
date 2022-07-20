@@ -84,7 +84,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                     if (onConfirm) onConfirm();
                 })
             } else {
-                context.alert.show('error', t('common:failed'), t(`error:futures:${status}`))
+                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`))
             }
 
         } catch (e) {

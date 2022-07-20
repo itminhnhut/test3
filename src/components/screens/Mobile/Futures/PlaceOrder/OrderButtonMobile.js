@@ -130,7 +130,7 @@ const OrderButtonMobile = ({
             {showConfirmModal &&
                 <OrderConfirm disabled={disabled} isShowConfirm={isShowConfirm} open={showConfirmModal} data={rowData.current}
                     onConfirm={handlePlaceOrder}
-                    onClose={() => setShowConfirmModal(false)} />
+                    onClose={() => !disabled && setShowConfirmModal(false)} />
             }
             <div onClick={onHandleSave}
                 className={`${isBuy ? 'bg-onus-green' : 'bg-onus-red'} text-white text-sm h-[56px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>

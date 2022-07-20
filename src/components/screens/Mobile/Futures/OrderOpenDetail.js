@@ -118,7 +118,7 @@ const OrderOpenDetail = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                context.alert.show('error', t('common:failed'), t(`error:futures:${status}`));
+                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
             }
         } catch (e) {
             console.log(e);
@@ -182,7 +182,7 @@ const OrderOpenDetail = ({
                     onusMode={true}
                     isVisible={showEditSLTP}
                     order={rowData.current}
-                    onClose={() => setShowEditSLTP(false)}
+                    onClose={() => !disabled && setShowEditSLTP(false)}
                     status={rowData.current.status}
                     onConfirm={onConfirmSLTP}
                     lastPrice={dataMarketWatch?.lastPrice}
