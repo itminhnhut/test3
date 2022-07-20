@@ -249,7 +249,7 @@ export default ({ isRealtime = true, pair }) => {
         return listItem.map((item) => (
             <div
                 key={item.symbol}
-                className={`flex justify-between h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-onus-line' : ''}`}
+                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-onus-line' : ''}`}
                 onClick={() => {
                     router.push(`/mobile/futures/${item.symbol}`)
                 }}
