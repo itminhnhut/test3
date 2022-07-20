@@ -158,7 +158,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
     }
 
     return (
-        <Modal onusMode={true} isVisible={true} onBackdropCb={onClose} onusClassName='px-0'>
+        <Modal onusMode={true} isVisible={true} onBackdropCb={() => !submitting && onClose()} onusClassName='px-0'>
             <div
                 className='relative bg-onus-bgModal w-full rounded-t-2xl'>
                 <div className='flex justify-between items-center px-4 pb-6'>
