@@ -2,6 +2,8 @@ import React from 'react';
 import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber, getPriceColor } from 'redux/actions/utils';
 import { Share2 } from 'react-feather';
+import { IconArrowOnus } from "components/common/Icons";
+import colors from 'styles/colors'
 
 const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false }) => {
     if (!pairPrice?.lastPrice && !isTabHistory) return '-';
@@ -17,7 +19,8 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
     }
 
     // const profit = isTabHistory ? order?.profit : getProfitVndc(order, pairPrice?.lastPrice,);
-    const percent = formatNumber(((profit / order.margin) * 100), 2, 0, true);
+    const ratio = profit / order.margin;
+    const percent = formatNumber(((onusMode ? Math.abs(ratio) : ratio) * 100), 2, 0, true);
     return <div className='flex items-center w-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className}`}>
             {profit !== 0 ? <>
@@ -25,9 +28,15 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
                     {profit > 0 ? '+' : ''}
                     {formatNumber(profit, 0, 0, true)} {!isMobile && pairPrice?.quoteAsset}
                 </div>
-                <div className={isMobile ? 'leading-[1.125rem] font-medium' : ''}>
-                    ({percent > 0 ? '+' : ''}
-                    {percent + '%'})
+                <div className={isMobile ? 'flex items-center justify-end gap-[2px] leading-[1.125rem] font-medium' : ''}>
+                    {onusMode ?
+                        <>
+                            <IconArrowOnus className={profit > 0 ? '' : 'rotate-180'} color={profit > 0 ? colors.onus.green : colors.onus.red} />
+                            {percent + '%'}
+                        </>
+                        :
+                        <> ({percent + '%'}) </>
+                    }
                 </div>
             </>
                 :

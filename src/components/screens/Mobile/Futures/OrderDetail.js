@@ -235,7 +235,7 @@ const OrderDetail = ({
                         classNameButton="pl-2 py-2"
                         classNamePanel="rounded-md right-0"
                         label={<div
-                            className="text-sm text-onus-grey font-semibold">{resolutionLabel}</div>}
+                            className="text-sm text-onus-grey font-medium">{resolutionLabel}</div>}
                     />
                 </div>
 
@@ -266,7 +266,7 @@ const OrderDetail = ({
                         {!isTabHistory &&
                             <OrderOpenDetail order={order} decimal={decimal} isDark={isDark}
                                 pairConfig={pairConfig} onClose={onClose}
-                                forceFetchOrder={forceFetchOrder}
+                                forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory}
                             />
                         }
                         <div className="pt-5">

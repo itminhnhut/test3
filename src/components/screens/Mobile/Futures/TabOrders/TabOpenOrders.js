@@ -23,7 +23,8 @@ const TabOpenOrders = ({
     isAuth,
     isDark,
     pairConfig,
-    onShowDetail
+    onShowDetail,
+    tab
 }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
@@ -173,6 +174,7 @@ const TabOpenOrders = ({
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
                             onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
                             onShowDetail={onShowDetail}
+                            tab={tab}
                         />
                     );
                 })}

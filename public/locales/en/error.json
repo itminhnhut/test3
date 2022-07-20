@@ -246,6 +246,8 @@
     "INVALID_TIME_INTERVAL": "INVALID_TIME_INTERVAL",
     "PRICE_HIGHTER_THAN_STOP_MULTIPLIER_UP": "PRICE_HIGHTER_THAN_STOP_MULTIPLIER_UP",
     "PRICE_LOWER_THAN_STOP_MULTIPLIER_DOWN": "PRICE_LOWER_THAN_STOP_MULTIPLIER_DOWN",
-    "INVALID_TYPE_CLOSE_ALL_ORDER": "INVALID_TYPE_CLOSE_ALL_ORDER"
+    "INVALID_TYPE_CLOSE_ALL_ORDER": "INVALID_TYPE_CLOSE_ALL_ORDER",
+    "error": "Something went wrong, please provide the error code below to the support team.",
+    "UNKNOWN": "Something went wrong, please provide the error code below to the support team."
   }
 }

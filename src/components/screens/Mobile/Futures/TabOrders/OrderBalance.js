@@ -84,11 +84,11 @@ const OrderBalance = ({
         <div
             className="sticky top-[42px] border-b border-onus bg-onus z-[10] flex flex-wrap px-[16px] pt-4">
             <div className="bg-onus-bg3 rounded-[6px] w-full text-xs py-[9px] flex items-center">
-                <div className="flex flex-col items-center w-1/3 border-r border-[#2B3247]">
+                <div className="flex flex-col items-center w-1/3 border-r border-onus-bg2">
                     <div className="font-normal text-onus-grey pb-[2px]">{t('futures:mobile:balance')}</div>
                     <div className="font-medium">{_balance}</div>
                 </div>
-                <div className="flex flex-col items-center w-1/3 border-r border-[#2B3247]">
+                <div className="flex flex-col items-center w-1/3 border-r border-onus-bg2">
                     <div className="font-normal text-onus-grey pb-[2px]">{t('futures:mobile:pnl')}</div>
                     <div className="font-medium">{pnl}</div>
                 </div>

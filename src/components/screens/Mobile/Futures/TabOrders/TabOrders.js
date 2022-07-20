@@ -138,9 +138,11 @@ const TabOrders = memo(({
                     <div className="h-full">
                         <TabContent
                             active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position}>
-                            <TabOpenOrders isDark={currentTheme === THEME_MODE.DARK}
-                                           ordersList={orderListFilter.orderList} pair={pair} pairConfig={pairConfig}
-                                           onShowDetail={onShowDetail}/>
+                            <TabOpenOrders
+                                isDark={currentTheme === THEME_MODE.DARK}
+                                tab={tab}
+                                ordersList={orderListFilter.orderList} pair={pair} pairConfig={pairConfig}
+                                onShowDetail={onShowDetail} />
                         </TabContent>
                         <TabContent active={tab === FUTURES_RECORD_CODE.orderHistory}>
                             <TabOrdersHistory
