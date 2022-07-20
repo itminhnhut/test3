@@ -1,13 +1,14 @@
-import React, {useContext, useState, useRef, useMemo} from 'react';
-import {VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import {useTranslation} from 'next-i18next';
-import {emitWebViewEvent, formatNumber} from 'redux/actions/utils';
-import {FuturesOrderTypes as OrderTypes, FuturesOrderTypes} from 'redux/reducers/futures';
-import {getPrice, getType} from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
+import React, { useContext, useState, useRef, useMemo } from 'react';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { useTranslation } from 'next-i18next';
+import { emitWebViewEvent, formatNumber } from 'redux/actions/utils';
+import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
+import { getPrice, getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { getOrdersList, placeFuturesOrder, reFetchOrderListInterval } from 'redux/actions/futures';
-import {AlertContext} from 'components/common/layouts/LayoutMobile';
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { useDispatch } from 'react-redux';
 import OrderConfirm from 'components/screens/Mobile/Futures/PlaceOrder/OrderConfirm';
+import { millisecondsToSeconds } from 'date-fns'
 
 const OrderButtonMobile = ({
     side, price, size, stopPrice, type, decimals,
@@ -16,7 +17,7 @@ const OrderButtonMobile = ({
 }) => {
     const context = useContext(AlertContext);
     const [disabled, setDisabled] = useState(false);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const dispatch = useDispatch()
 
     const isBuy = VndcFutureOrderType.Side.BUY === side
@@ -42,7 +43,7 @@ const OrderButtonMobile = ({
     }
 
     const handlePlaceOrder = async () => {
-        const requestId = Date.now();
+        const requestId = millisecondsToSeconds(Date.now());
         setDisabled(true)
         const params = {
             symbol: pairConfig?.symbol,
@@ -57,8 +58,10 @@ const OrderButtonMobile = ({
             useQuoteQty: true,
             requestId
         };
-        placeFuturesOrder(params, {alert: context?.alert}, t, () => {
-            setDisabled(false)
+        placeFuturesOrder(params, { alert: context?.alert }, t, () => {
+            setTimeout(() => {
+                setDisabled(false)
+            }, 1000);
             setShowConfirmModal(false);
             dispatch(reFetchOrderListInterval(2, 5000));
         })
@@ -125,7 +128,8 @@ const OrderButtonMobile = ({
     return (
         <>
             {showConfirmModal &&
-                <OrderConfirm isShowConfirm={isShowConfirm} open={showConfirmModal} data={rowData.current} onConfirm={handlePlaceOrder}
+                <OrderConfirm disabled={disabled} isShowConfirm={isShowConfirm} open={showConfirmModal} data={rowData.current}
+                    onConfirm={handlePlaceOrder}
                     onClose={() => setShowConfirmModal(false)} />
             }
             <div onClick={onHandleSave}

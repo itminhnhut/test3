@@ -14,6 +14,7 @@ import { getFuturesFavoritePairs } from "redux/actions/futures";
 import { useDispatch, useSelector } from "react-redux";
 import Guideline from 'components/screens/Mobile/Futures/Guideline';
 import styled from 'styled-components';
+import useWindowSize from 'hooks/useWindowSize'
 
 const listChartType = [
     { text: 'Bar', value: 0, icon: BarsChart },
@@ -40,7 +41,8 @@ const ChartOptions = ({
     chartType, setChartType, className = '', isFullScreen, showSymbol = true,
     showIconGuide = true, pairParent
 }) => {
-
+    const { width } = useWindowSize()
+    const xs = width < 390;
     // if (!pairConfig) return null;
     const [showModelMarket, setShowModelMarket] = useState(false)
     const [start, setStart] = useState(false);
@@ -56,11 +58,11 @@ const ChartOptions = ({
             <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen} />
             <div className="flex items-center">
                 {showSymbol &&
-                    <div className="flex items-center flex-wrap">
+                    <div className="flex items-center flex-wrap gap-2">
                         <div className="flex items-center cursor-pointer" data-tut="order-symbol"
                             onClick={() => setShowModelMarket(true)}>
-                            <img src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24} width={24} />
-                            <div className="pl-2 font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                            {!xs && <img className="mr-2 min-w-[24px] min-h-[24px]" src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24} width={24} />}
+                            <div className="font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         </div>
                         <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent}>
                             <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
@@ -69,7 +71,7 @@ const ChartOptions = ({
                 }
             </div>
 
-            <div className="flex items-center space-x-4 py-2">
+            <div className={`flex items-center space-x-${xs ? '2' : '4'} py-2`}>
                 <MenuTime
                     value={resolution}
                     onChange={setResolution}
@@ -110,7 +112,7 @@ const Change24h = ({ pairPrice, isVndcFutures }) => {
     return (
         <div className='flex items-center'>
             <div
-                className={classNames('px-2 min-w-[5.625rem] text-onus-green font-medium',
+                className={classNames('pr-2 min-w-[5rem] text-onus-green font-medium',
                     {
                         '!text-onus-red':
                             pairPrice?.priceChangePercent < 0,
@@ -186,8 +188,8 @@ const Svg = styled.div.attrs({
     className: ''
 })`
     svg {
-        height: 22px;
-        width: 22px;
+        height: 20px;
+        width: 20px;
         fill: ${colors.onus.grey}
     }
 `

@@ -39,6 +39,7 @@ const TabOpenOrders = ({
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
     const [orderEditMarginId, setOrderEditMarginId] = useState();
+    const [disabled, setDisabled] = useState(false);
 
     const dispatch = useDispatch()
 
@@ -100,7 +101,7 @@ const TabOpenOrders = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                context.alert.show('error', t('common:failed'), t(`error:futures.${status}`));
+                context.alert.show('error', t('common:failed'), t(`error:futures:${status}`));
             }
         } catch (e) {
             console.log(e);
@@ -122,10 +123,14 @@ const TabOpenOrders = ({
     };
 
     const onConfirmEdit = (params) => {
+        setDisabled(true)
         fetchOrder('PUT', params, () => {
             localStorage.setItem('edited_id', params.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
             setOpenEditModal(false);
+            setTimeout(() => {
+                setDisabled(false)
+            }, 1000);
         });
     };
 
@@ -149,6 +154,7 @@ const TabOpenOrders = ({
                     pairConfig={pairConfig}
                     pairTicker={marketWatch}
                     isMobile
+                    disabled={disabled}
                 />
             }
             {

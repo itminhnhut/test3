@@ -135,6 +135,8 @@
     "EXCHANGE_MAX_NUM_ORDERS": "Tài khoản có quá nhiều lệnh mở trên sàn giao dịch.",
     "EXCHANGE_MAX_ALGO_ORDERS": "Tài khoản có quá nhiều lệnh cắt lỗ và/hoặc chốt lời trên sàn giao dịch.",
     "error": "Có lỗi xảy ra trong quá trình xử lý, vui lòng cung cấp mã lỗi dưới đây cho đội ngũ hỗ trợ.",
-    "UNKNOWN": "Có lỗi xảy ra trong quá trình xử lý, vui lòng cung cấp mã lỗi dưới đây cho đội ngũ hỗ trợ."
+    "UNKNOWN": "Có lỗi xảy ra trong quá trình xử lý, vui lòng cung cấp mã lỗi dưới đây cho đội ngũ hỗ trợ.",
+    "PROCESSING_FUTURES_ORDER": "Lệnh đang được xử lý",
+    "PRICE_CHANGED": "Yêu cầu của bạn đã hết hạn hoặc giá đã thay đổi so với báo giá cũ, vui lòng yêu cầu báo giá mới"
   }
 }

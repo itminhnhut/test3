@@ -23,7 +23,8 @@ const EditSLTPVndcMobile = ({
     pairTicker,
     lastPrice = 0,
     isMobile,
-    onusMode = false
+    onusMode = false,
+    disabled
 }) => {
     const { t } = useTranslation();
     const [data, setData] = useState({
@@ -105,7 +106,7 @@ const EditSLTPVndcMobile = ({
         } = order;
 
         let leverage = order.leverage
-        if(order_value && margin) leverage = order_value / margin;
+        if (order_value && margin) leverage = order_value / margin;
         const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
         const tpsl = key === 'sl' ? getSuggestSl(side, openPrice, leverage, index / 100) : getSuggestTp(side, openPrice, leverage, index / 100);
         const decimals = countDecimals(decimalScalePrice?.tickSize);
@@ -118,6 +119,7 @@ const EditSLTPVndcMobile = ({
     };
 
     useEffect(() => {
+        document.body.classList.add('overflow-hidden')
         if (order?.sl) {
             profit.current.sl = getProfitSLTP(Number(order?.sl));
         }
@@ -150,6 +152,9 @@ const EditSLTPVndcMobile = ({
             autoTypeInput = JSON.parse(autoTypeInput);
             setAutoType(autoTypeInput?.auto);
         }
+        return () => {
+            document.body.classList.remove('overflow-hidden')
+        }
     }, []);
 
     const onHandleChange = (key, e) => {
@@ -179,7 +184,7 @@ const EditSLTPVndcMobile = ({
             margin
         } = order;
 
-        if(order_value  && margin) leverage = order_value / margin;
+        if (order_value && margin) leverage = order_value / margin;
         let formatX = 0;
         let _activePrice = data.price;
         if (side == VndcFutureOrderType.Side.BUY) {
@@ -299,9 +304,9 @@ const EditSLTPVndcMobile = ({
         const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
         return (
             <ThumbLabel isZero={pos.left === 0}
-                        isDark
-                        onusMode
-                        className={`left-1/2 translate-x-[-50%] w-max`}
+                isDark
+                onusMode
+                className={`left-1/2 translate-x-[-50%] w-max`}
             >
                 {ceil(postion, 0)}%
             </ThumbLabel>
@@ -386,7 +391,7 @@ const EditSLTPVndcMobile = ({
                 onClick={onChangeAutoType}
             >
                 <CheckBox onusMode={true} active={autoType}
-                          boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-onus-grey !bg-onus-bg2'}`}/>
+                    boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-onus-grey !bg-onus-bg2'}`} />
                 <span className="ml-3 whitespace-nowrap text-onus-grey font-medium text-xs">
                     {t('futures:mobile:auto_type_sltp')}
                 </span>
@@ -395,8 +400,8 @@ const EditSLTPVndcMobile = ({
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:stop_loss')}</label>
-                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
-                                  active={show.sl} onChange={() => onSwitch('sl')}/>
+                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                            active={show.sl} onChange={() => onSwitch('sl')} />
                     </div>
                     {show.sl && <div className="text-xs flex items-center ">
                         <div
@@ -453,8 +458,8 @@ const EditSLTPVndcMobile = ({
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:take_profit')}</label>
-                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="!h-6 w-12"
-                                  active={show.tp} onChange={() => onSwitch('tp')}/>
+                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                            active={show.tp} onChange={() => onSwitch('tp')} />
                     </div>
                     {show.tp && <div className="text-xs flex items-center">
                         <div
@@ -512,13 +517,14 @@ const EditSLTPVndcMobile = ({
                 type="primary"
                 className={`!h-[50px] !text-[16px] !font-semibold`}
                 componentType="button"
+                disabled={disabled}
                 onClick={() => {
                     const newData = {
                         ...data,
                         sl: show?.sl ? data.sl : 0,
                         tp: show?.tp ? data.tp : 0,
                     };
-                    onConfirm(newData);
+                    if (!disabled) onConfirm(newData);
                 }}
             />
         </Modal>

@@ -180,8 +180,8 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             // handle multi language
             log.i('placeFuturesOrder result: ', data);
             let message = data?.message;
-            if (t(`error:futures.${data?.status}`)) {
-                message = t(`error:futures.${data?.status}`);
+            if (t(`error:futures${data?.status}`)) {
+                message = t(`error:futures:${data?.status}`);
             }
             if (utils?.alert) {
                 utils.alert.show('error', t('futures:place_order'), message, data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`);

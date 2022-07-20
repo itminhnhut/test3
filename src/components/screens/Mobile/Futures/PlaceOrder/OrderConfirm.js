@@ -6,7 +6,7 @@ import CheckBox from 'components/common/CheckBox';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber } from 'redux/actions/utils';
 
-const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm }) => {
+const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled }) => {
     const { t } = useTranslation();
     const [hidden, setHidden] = useState(isShowConfirm)
 
@@ -80,13 +80,14 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm }) => {
                     type="primary"
                     className={`ml-[7px] !h-[50px] !text-[16px] !font-semibold`}
                     componentType="button"
-                    onClick={onConfirm}
+                    disabled={disabled}
+                    onClick={() => !disabled && onConfirm()}
                 />
             </div>
         </Modal>
     );
 }, (pre, next) => {
-    return pre.open === next.open || pre.onClose === next.onClose || pre.onConfirm === next.onConfirm
+    return pre.open === next.open && pre.disabled === next.disabled
 });
 
 export default OrderConfirm;

@@ -48,14 +48,19 @@ const OrderOpenDetail = ({
     const rowData = useRef(null);
     const [loading, setLoading] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
+    const [disabled, setDisabled] = useState(false);
 
     const onConfirmSLTP = (e) => {
         // setData(e);
+        setDisabled(true);
         fetchOrder('PUT', e, () => {
             localStorage.setItem('edited_id', e.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
             setShowEditSLTP(!showEditSLTP);
             forceFetchOrder();
+            setTimeout(() => {
+                setDisabled(false)
+            }, 1000);
         });
     };
 
@@ -182,6 +187,7 @@ const OrderOpenDetail = ({
                     onConfirm={onConfirmSLTP}
                     lastPrice={dataMarketWatch?.lastPrice}
                     isMobile
+                    disabled={disabled}
                 />
             }
             {
