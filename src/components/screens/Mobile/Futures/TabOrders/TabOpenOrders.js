@@ -16,6 +16,7 @@ import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositi
 import { find, countBy } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 import { reFetchOrderListInterval } from 'redux/actions/futures';
+import { faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
 
 const TabOpenOrders = ({
     ordersList,
@@ -102,11 +103,15 @@ const TabOpenOrders = ({
                 if (cb) cb(data?.orders);
             } else {
                 context.alert.show('error', t('common:failed'), t(`error:futures:${status}`));
+                
             }
         } catch (e) {
             console.log(e);
         } finally {
             setOpenCloseModal(false);
+            setTimeout(() => {
+                setDisabled(false)
+            }, 1000);
         }
     };
 
@@ -128,9 +133,6 @@ const TabOpenOrders = ({
             localStorage.setItem('edited_id', params.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
             setOpenEditModal(false);
-            setTimeout(() => {
-                setDisabled(false)
-            }, 1000);
         });
     };
 

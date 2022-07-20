@@ -58,9 +58,6 @@ const OrderOpenDetail = ({
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
             setShowEditSLTP(!showEditSLTP);
             forceFetchOrder();
-            setTimeout(() => {
-                setDisabled(false)
-            }, 1000);
         });
     };
 
@@ -127,6 +124,9 @@ const OrderOpenDetail = ({
             console.log(e);
         } finally {
             setLoading(false);
+            setTimeout(() => {
+                setDisabled(false)
+            }, 1000);
         }
     };
 
