@@ -29,16 +29,21 @@ const EthereumAddress = require('ethereum-address')
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
+
+    const style = el.currentStyle || window.getComputedStyle(el),
+        margin = parseFloat(style.marginLeft) + parseFloat(style.marginRight),
+        padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight),
+        border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+
     const rect = el.getBoundingClientRect();
-    const { left, right, bottom, top } = parentEl.getBoundingClientRect();
-    const inView = rect.left >= left && rect.right <= right
-    const position = rect.left < left ? 0 : rect.right;
-    if (!inView) {
-        parentEl.scrollTo({
-            left: position,
-            behavior: 'smooth'
-        })
-    }
+    const { left, right, bottom, top, width } = parentEl.getBoundingClientRect();
+    // const inView = rect.left >= left && rect.right <= right
+    // const position = rect.left < left ? 0 : rect.right;
+    const center = (rect.left + parentEl.scrollLeft + margin + padding + border) - (width / 2);
+    parentEl.scrollTo({
+        left: center,
+        behavior: 'smooth'
+    })
 }
 
 export function getFilter(filterType, config) {
@@ -306,7 +311,7 @@ export function formatNumber(
     )
 }
 
-export function scrollFocusInput(){
+export function scrollFocusInput() {
     if (typeof window !== 'undefined') {
         window.scrollTo(0, window.innerHeight);
     }

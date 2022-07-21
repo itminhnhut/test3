@@ -201,7 +201,7 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
     } catch (e) {
         console.log('Can\'t place order ', e?.message);
         if (utils?.alert) {
-            if (e.message === 'Network Error') {
+            if (e.message === 'Network Error' || !navigator?.onLine) {
                 utils.alert.show('error', t('futures:place_order'), t('error:futures:NETWORK_ERROR'));
             } else {
                 utils.alert.show('error', t('futures:place_order'), e?.message);
