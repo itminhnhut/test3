@@ -12,6 +12,7 @@ import { formatSpotPrice, formatTime, formatWallet } from 'src/redux/actions/uti
 import fetchAPI from 'utils/fetch-api';
 import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
+import Link from 'next/link';
 
 const OrderHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -191,6 +192,13 @@ const OrderHistory = (props) => {
             selector: 'symbol',
             ignoreRowClick: true,
             minWidth: '120px',
+            cell: (row) => currentPair !== `${row?.baseAsset}-${row?.quoteAsset}` ?
+                <Link href={`/trade/${row?.baseAsset}-${row?.quoteAsset}`}>
+                    <a className='dark:text-white text-darkBlue'>
+                        {row?.symbol}
+                    </a>
+                </Link>
+                : row?.symbol,
         },
         {
             name: t('common:order_type'),
@@ -280,7 +288,7 @@ const OrderHistory = (props) => {
             },
         },
 
-    ], [exchangeConfig]);
+    ], [exchangeConfig, currentPair]);
 
     const getOrderList = async () => {
         setLoading(true);
