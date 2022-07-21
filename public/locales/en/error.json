@@ -248,7 +248,7 @@
     "INVALID_TYPE_CLOSE_ALL_ORDER": "INVALID_TYPE_CLOSE_ALL_ORDER",
     "error": "Something went wrong, please provide the error code below to the support team.",
     "UNKNOWN": "Something went wrong, please provide the error code below to the support team.",
-    "PROCESSING_FUTURES_ORDER": "Order is processing",
+    "PROCESSING_FUTURES_ORDER": "Your request failed because the order was closed",
     "PRICE_CHANGED": "Your request are expired or the current price has changed, please request new price",
     "NETWORK_ERROR": "Network error, Please check your connection again"
   }
