@@ -208,7 +208,6 @@ const OrderDetail = ({
     }, [resolution]);
 
     const orderList = useMemo(() => [order], [order])
-    console.log(order)
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
     return (
         <div className={'bg-white dark:!bg-onus overflow-hidden'} >
