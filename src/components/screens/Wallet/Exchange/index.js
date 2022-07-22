@@ -333,14 +333,6 @@ const ExchangeWallet = ({
                     {t('common:overview')}
                 </div>
                 <div className='flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto'>
-                    {/*<Link href={getV1Url('/wallet/account?type=portfolio')} prefetch>*/}
-                    <a
-                        href={getV1Url('/account?type=portfolio')}
-                        className='py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[120px] md:w-[120px] lg:w-[150px]  mr-3.5 sm:mr-0 sm:ml-2 border border-dominant bg-dominant rounded-md font-medium text-xs xl:text-sm text-white hover:opacity-80 cursor-pointer whitespace-nowrap'
-                    >
-                        {t('common:portfolio')}
-                    </a>
-                    {/*</Link>*/}
                     <Link
                         href={walletLinkBuilder(
                             WalletType.SPOT,
