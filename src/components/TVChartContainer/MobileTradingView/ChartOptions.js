@@ -99,6 +99,7 @@ const ChartOptions = ({
                 <FavouriteButton pair={pair} pairConfig={pairConfig} />
             </div>
             <ModelMarketMobile
+                pairConfig={pairConfig}
                 visible={showModelMarket}
                 onClose={() => setShowModelMarket(false)}
                 pair={pair}

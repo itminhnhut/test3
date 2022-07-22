@@ -5,7 +5,7 @@ import { Share2 } from 'react-feather';
 import { IconArrowOnus } from "components/common/Icons";
 import colors from 'styles/colors'
 
-const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false }) => {
+const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0 }) => {
     if (!pairPrice?.lastPrice && !isTabHistory) return '-';
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
 
@@ -26,7 +26,7 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
             {profit !== 0 ? <>
                 <div className={isMobile ? 'text-[16px] font-semibold leading-[1.375rem]' : ''}>
                     {profit > 0 ? '+' : ''}
-                    {formatNumber(profit, 0, 0, true)} {!isMobile && pairPrice?.quoteAsset}
+                    {formatNumber(profit, decimal, 0, true)} {!isMobile && pairPrice?.quoteAsset}
                 </div>
                 <div className={isMobile ? 'flex items-center justify-end gap-[2px] leading-[1.125rem] font-medium' : ''}>
                     {onusMode ?

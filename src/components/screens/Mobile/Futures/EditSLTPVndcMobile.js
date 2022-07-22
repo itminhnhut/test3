@@ -52,10 +52,12 @@ const EditSLTPVndcMobile = ({
     const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
     const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
     const futuresConfigs = useSelector(state => state.futures.pairConfigs);
+    const assetConfig = useSelector(state => state.utils.assetConfig)
     const wallets = useSelector((state) => state.wallet?.FUTURES);
     const symbol = order?.symbol;
     const pairConfig = find(futuresConfigs, { symbol });
     const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
+    const decimalSymbol = find(assetConfig, { id: pairConfig?.quoteAssetId })?.assetDigit ?? 0;
     if (!pairConfig) return null;
     const isChangeSlide = useRef(false);
 
@@ -409,7 +411,7 @@ const EditSLTPVndcMobile = ({
                         </div>
                         &nbsp;
                         <div
-                            className={`font-medium text-right ${textColor(profit.current.sl)}`}>{formatNumber(profit.current.sl, 0, 0, true) + ' ' + quoteAsset}</div>
+                            className={`font-medium text-right ${textColor(profit.current.sl)}`}>{formatNumber(profit.current.sl, decimalSymbol, 0, true) + ' ' + quoteAsset}</div>
                     </div>
                     }
                 </div>
@@ -467,7 +469,7 @@ const EditSLTPVndcMobile = ({
                         </div>
                         &nbsp;
                         <div
-                            className={`font-medium text-right ${textColor(profit.current.tp)}`}>{formatNumber(profit.current.tp, 0, 0, true) + ' ' + quoteAsset}</div>
+                            className={`font-medium text-right ${textColor(profit.current.tp)}`}>{formatNumber(profit.current.tp, decimalSymbol, 0, true) + ' ' + quoteAsset}</div>
                     </div>}
                 </div>
                 {show.tp &&

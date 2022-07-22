@@ -147,7 +147,7 @@ const OrderButtonMobile = ({
         <>
             {showConfirmModal &&
                 <OrderConfirm disabled={disabled} isShowConfirm={isShowConfirm} open={showConfirmModal}
-                              data={rowData.current}
+                              data={rowData.current} decimals={decimals}
                               onConfirm={handlePlaceOrder}
                               onClose={() => !disabled && setShowConfirmModal(false)}/>
             }

@@ -511,14 +511,14 @@ export class MobileTradingView extends React.PureComponent {
                     id="chart-container"
                 >
                     <div
-                        className={classNames(`absolute w-full h-full bg-bgSpotContainer dark:bg-onus flex justify-center items-center`, {
+                        className={classNames(`absolute w-full h-full flex justify-center items-center`, {
                             "hidden": this.state.chartStatus === ChartStatus.LOADED
                         })}
                     >
                         <IconLoading color={colors.onus.green}/>
                     </div>
                     {this.props.showTimeFrame &&
-                    <div className="w-full border-b border-onus-line py-2 dragHandleArea">
+                    <div className="w-full border-b border-onus-line py-2 dragHandleArea z-10">
                         <ChartOptions
                             pair={this.props.symbol}
                             pairConfig={this.props.pairConfig}

@@ -156,7 +156,7 @@ const OrderVolumeMobileModal = (props) => {
                     label={t('futures:margin') + ' :'}
                     value={`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
                         marginAndValue?.margin,
-                        0
+                        decimal
                     )} ${pairConfig?.quoteAsset ?? ''}`}
                     containerClassName='text-xs flex'
                     valueClassName="text-right break-all"

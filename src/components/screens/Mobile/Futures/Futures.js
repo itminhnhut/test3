@@ -45,12 +45,16 @@ const FuturesMobile = () => {
     const [scrollSnap, setScrollSnap] = useState(false);
     const [forceRender, setForceRender] = useState(false);
     const [showOnBoardingModal, setShowOnBoardingModal] = useState(false)
-
+    const assetConfig = useSelector(state => state?.utils?.assetConfig)
 
     const pairConfig = useMemo(
         () => allPairConfigs?.find((o) => o.pair === state.pair),
         [allPairConfigs, state.pair]
     );
+
+    const asset = useMemo(() => {
+        return assetConfig.find(rs => rs.id === pairConfig?.quoteAssetId);
+    }, [assetConfig, pairConfig])
 
     useEffect(() => {
         if (!router?.query?.pair) return;
@@ -70,14 +74,14 @@ const FuturesMobile = () => {
     // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
-            if (router.query.pair.indexOf('USDT') !== -1) {
-                router.push(
-                    `/mobile${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
-                    undefined,
-                    {shallow: true}
-                );
-                return;
-            }
+            // if (router.query.pair.indexOf('USDT') !== -1) {
+            //     router.push(
+            //         `/mobile${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
+            //         undefined,
+            //         {shallow: true}
+            //     );
+            //     return;
+            // }
             setState({pair: router.query.pair});
             localStorage.setItem(
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,
@@ -208,6 +212,7 @@ const FuturesMobile = () => {
                                 pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
                                 pairConfig={pairConfig} isVndcFutures={isVndcFutures}
                                 collapse={collapse} onBlurInput={onBlurInput}
+                                decimalSymbol={asset?.assetDigit ?? 0}
                             />
                         </SocketLayout>
                     </Section>

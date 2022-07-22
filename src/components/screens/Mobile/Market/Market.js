@@ -17,6 +17,7 @@ import { getFuturesFavoritePairs } from 'redux/actions/futures';
 import { Search } from 'react-feather';
 import { useRef } from 'react';
 import { orderBy } from 'lodash';
+import Tag from 'components/common/Tag'
 
 const TABS = {
     FAVOURITE: 'FAVOURITE',
@@ -27,34 +28,36 @@ const TABS = {
     // EXCHANGE: 'EXCHANGE'
 }
 
+const initTags = {
+    VNDC: 'VNDC',
+    USDT: 'USDT',
+}
+
 const TAGS = {
-    [TABS.FAVOURITE]: {
-        FUTURES: 2,
-        // EXCHANGE: 1,
-    },
-    [TABS.FUTURES]: {
-        VNDC: 'VNDC',
-        // USDT: 'USDT',
-    },
+    [TABS.FAVOURITE]: initTags,
+    [TABS.FUTURES]: initTags,
+    [TABS.TRENDING]: initTags,
+    [TABS.GAINERS]: initTags,
+    [TABS.LOSERS]: initTags,
 }
 
 const defaultFavoritePairs = [
-    'BTC_VNDC',
-    'BCH_VNDC',
-    'ETH_VNDC',
-    'ETC_VNDC',
-    'LTC_VNDC',
-    'BNB_VNDC',
-    'EOS_VNDC',
+    'BTC',
+    'BCH',
+    'ETH',
+    'ETC',
+    'LTC',
+    'BNB',
+    'EOS',
 ]
 
 let loading = false
 
-export default ({ isRealtime = true, pair }) => {
+export default ({ isRealtime = true, pair, pairConfig }) => {
     // * Initial State
     const [tab, setTab] = useState({
         active: TABS.FAVOURITE,
-        tagActive: TAGS[TABS.FAVOURITE].FUTURES,
+        tagActive: pairConfig?.quoteAsset || TAGS[TABS.FAVOURITE].VNDC,
     })
     const [data, setData] = useState([])
     const [sort, setSort] = useState({
@@ -70,12 +73,12 @@ export default ({ isRealtime = true, pair }) => {
     // const marketWatch = useSelector((state) => state.futures.marketWatch);
 
     const favoritePairs = useMemo(() => {
-        const favoritePairVNDC = favoritePairRaws.filter(f => f.split('_')[1] === 'VNDC')
-        if (!favoritePairVNDC || favoritePairVNDC.length <= 0) {
-            return defaultFavoritePairs
+        const favoritePair = favoritePairRaws.filter(f => f.split('_')[1] === tab.tagActive)
+        if (!favoritePair || favoritePair.length <= 0) {
+            return defaultFavoritePairs.map(i => i + `_${tab.tagActive}`)
         }
         return favoritePairRaws
-    })
+    }, [tab, favoritePairRaws])
 
     const router = useRouter()
     const { t } = useTranslation(['common'])
@@ -135,18 +138,18 @@ export default ({ isRealtime = true, pair }) => {
 
     useEffect(() => {
         if (!tab.active || !tab.tagActive) return
-        getData()
+        getData(tab.tagActive)
     }, [tab])
 
     useEffect(() => {
         if (!isRealtime) return
-        const intervalHandle = setInterval(() => getData(), 2000)
+        const intervalHandle = setInterval(() => getData(tab.tagActive), 2000)
         return () => {
             clearInterval(intervalHandle)
         }
-    }, [isRealtime])
+    }, [isRealtime, tab])
 
-    const getData = async () => {
+    const getData = async (tag) => {
         if (loading) return
         loading = true
         await fetchAPI({
@@ -156,7 +159,7 @@ export default ({ isRealtime = true, pair }) => {
                 const newData = data
                     .filter((item) => {
                         // Add more filter before store if needed
-                        return item.q === 'VNDC'
+                        return item.q === tag
                     })
                     .map((item = {}) => ({
                         symbol: item.s,
@@ -240,8 +243,8 @@ export default ({ isRealtime = true, pair }) => {
         }
         setSort(filter.current)
         setTab({
+            ...tab,
             active: t,
-            tagActive: TAGS[t] && Object.values(TAGS[t])[0],
         })
     }
 
@@ -299,7 +302,7 @@ export default ({ isRealtime = true, pair }) => {
         ))
 
     }
-   
+
     return (
         <div className='market-mobile'>
             <div className='mt-4 px-4'>
@@ -342,6 +345,27 @@ export default ({ isRealtime = true, pair }) => {
                         )
                     })}
                 </div>
+            </div>
+            <div className='flex gap-[0.375rem] mt-5 px-4'>
+                {Object.keys(TAGS[tab.active]).map((tag) => {
+                    return (
+                        <div
+                            className={classNames(
+                                'min-h-[2rem] flex items-center justify-center px-3 rounded text-sm font-medium',
+                                { 'bg-onus-base': TAGS[tab.active][tag] === tab.tagActive },
+                                { 'bg-onus-bg3': TAGS[tab.active][tag] !== tab.tagActive }
+                            )}
+                            onClick={() => {
+                                setTab({
+                                    ...tab,
+                                    tagActive: TAGS[tab.active][tag],
+                                })
+                            }}
+                        >
+                            {tag}
+                        </div>
+                    )
+                })}
             </div>
             <div className='flex flex-col flex-1 min-h-0 pt-4 pb-3'>
                 <div className='flex justify-between mb-2 px-4'>

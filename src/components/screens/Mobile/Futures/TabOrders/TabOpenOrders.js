@@ -11,7 +11,7 @@ import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import OrderItemMobile from './OrderItemMobile';
 // import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import { getShareModalData } from './ShareFutureMobile';
-import { emitWebViewEvent } from 'redux/actions/utils';
+import { emitWebViewEvent, countDecimals } from 'redux/actions/utils';
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
 import { find, countBy } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
@@ -41,6 +41,7 @@ const TabOpenOrders = ({
     const [openShareModal, setOpenShareModal] = useState(false);
     const [orderEditMarginId, setOrderEditMarginId] = useState();
     const [disabled, setDisabled] = useState(false);
+    const assetConfig = useSelector(state => state.utils.assetConfig);
 
     const dispatch = useDispatch()
 
@@ -138,6 +139,11 @@ const TabOpenOrders = ({
         });
     };
 
+    const getDecimalPrice = (config) => {
+        const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
+        return countDecimals(decimalScalePrice?.tickSize)
+    }
+
     if (ordersList.length <= 0) {
         return <TableNoData
             isMobile
@@ -179,10 +185,12 @@ const TabOpenOrders = ({
                 {dataFilter?.map((order, i) => {
                     const dataMarketWatch = marketWatch[order?.symbol];
                     const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
+                    const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+                    const decimalScalePrice = getDecimalPrice(symbol);
                     return (
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
                             onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
-                            onShowDetail={onShowDetail}
+                            onShowDetail={onShowDetail} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
                             tab={tab}
                         />
                     );

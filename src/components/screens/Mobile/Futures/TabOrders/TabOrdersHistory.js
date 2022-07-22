@@ -9,7 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { getShareModalData } from './ShareFutureMobile';
 import { useTranslation } from 'next-i18next';
 import Skeletor from 'components/common/Skeletor';
-import { emitWebViewEvent } from 'redux/actions/utils';
+import { emitWebViewEvent, countDecimals } from 'redux/actions/utils';
 import { IconLoading } from 'src/components/common/Icons';
 import colors from 'styles/colors'
 
@@ -27,6 +27,7 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
     const [openShareModal, setOpenShareModal] = useState(false);
     const isLoading = useRef(true);
     const [loadMore, setLoadMore] = useState(false);
+    const assetConfig = useSelector(state => state.utils.assetConfig);
 
     useEffect(() => {
         if (active) {
@@ -129,6 +130,11 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
         return rs;
     }
 
+    const getDecimalPrice = (config) => {
+        const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
+        return countDecimals(decimalScalePrice?.tickSize)
+    }
+
     if (loading && isLoading.current) return (<div className="min-h-screen px-[10px]">{getLoading()}</div>)
     if (dataSource.length <= 0 && !loading) return <TableNoData isMobile
         title={t('futures:order_table:no_history_order')}
@@ -140,10 +146,12 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
                 <div className="px-[16px]">
                     {dataSource?.map((order, i) => {
                         const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
+                        const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+                        const decimalScalePrice = getDecimalPrice(symbol);
                         return (
                             <OrderItemMobile key={i} order={order} mode="history"
                                 isDark={isDark} onShowDetail={onShowDetail} symbol={symbol}
-                                onShowModal={onShowModal}
+                                onShowModal={onShowModal} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
                             />
                         )
                     })}

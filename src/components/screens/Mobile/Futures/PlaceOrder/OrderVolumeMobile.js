@@ -3,7 +3,7 @@ import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next';
 
 const initPercent = 25;
-const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quoteQty }) => {
+const OrderVolumeMobile = memo(({ decimal, pairConfig, setShowEditVolume, quoteQty }) => {
     const { t } = useTranslation();
 
     return (
@@ -16,7 +16,7 @@ const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quote
                 allowNegative={false}
                 // onValueChange={({ floatValue = '' }) => setSize(floatValue)}
                 // validator={getValidator('quantity')}
-                decimalScale={0}
+                decimalScale={decimal}
                 labelClassName='whitespace-nowrap capitalize dark:text-onus-grey'
                 containerClassName="h-[36px] dark:bg-onus-input"
                 tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
