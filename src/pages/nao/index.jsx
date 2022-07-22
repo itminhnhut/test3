@@ -9,6 +9,7 @@ import fetchApi from "utils/fetch-api";
 import { API_POOL_AMM, API_POOL_INFO } from "redux/actions/apis";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
+import { API_USER_VOTE } from "redux/actions/apis";
 
 import ContesRules from "components/screens/Nao/Contest/ContesRules";
 import { SectionNao } from "components/screens/Nao/NaoStyle";
@@ -24,7 +25,19 @@ const NaoDashboard = () => {
     const [dataSource, setDataSource] = useState([]);
     const [ammData, setAmmData] = useState(null);
     const assetNao = useSelector((state) => getAssetNao(state, "NAO"));
+    const [listProposal, setListProposal] = useState([]);
 
+    useEffect(async () => {
+        try {
+            const res = await fetchApi({
+                url: API_USER_VOTE,
+                options: { method: "GET" },
+            });
+            setListProposal(res);
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
     useEffect(() => {
         getStake();
         getPoolAmm();
@@ -84,7 +97,7 @@ const NaoDashboard = () => {
                 />
                 <NaoPerformance />
                 <NaoPool dataSource={dataSource} assetNao={assetNao} />
-                <NaoProposals dataSource={dataSource} assetNao={assetNao} />
+                <NaoProposals listProposal={listProposal} />
 
                 <section id="nao_pool" className="pt-10 sm:pt-20">
                     <SectionNao
