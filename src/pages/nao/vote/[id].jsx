@@ -16,7 +16,6 @@ import FetchApi from "utils/fetch-api";
 import { API_USER_VOTE } from "redux/actions/apis";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-
 import { useSelector } from "react-redux";
 
 export default function vote() {
@@ -102,8 +101,7 @@ export default function vote() {
                                 <img
                                     src="/images/nao/ic_nao.png"
                                     alt=""
-                                    width={20}
-                                    height={20}
+                                    className="w-[20px] h-[20px]"
                                 />
                             </div>
                         </div>
@@ -119,7 +117,7 @@ export default function vote() {
                                 alt=""
                                 className="w-[15px] h-[12px] mr-2"
                             />
-                            <span className="mr-2 font-semibold text-[1.1rem] font-semibold">
+                            <span className="mr-2 font-semibold text-[1.1rem]">
                                 {data && data.status}
                             </span>
                         </div>
@@ -138,8 +136,7 @@ export default function vote() {
                             <img
                                 src="/images/nao/ic_nao.png"
                                 alt=""
-                                width={20}
-                                height={20}
+                                className="w-[20px] h-[20px]"
                             />
                         </div>
                     </div>
