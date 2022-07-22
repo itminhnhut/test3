@@ -209,7 +209,6 @@ const OrderDetail = ({
     }, [resolution]);
 
     const orderList = useMemo(() => [order], [order])
-
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
     return (
         <div className={'bg-white dark:!bg-onus overflow-hidden'} >
@@ -304,6 +303,12 @@ const OrderDetail = ({
                                     <Label>{t('futures:mobile:open_time')}</Label>
                                     <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
                                 </Row>
+                                {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
+                                    <Row>
+                                        <Label>{t(`futures:${order?.type === VndcFutureOrderType.Type.LIMIT ? 'limit_price' : 'stop_price'}`)}</Label>
+                                        <Span>{formatNumber(order?.price)}</Span>
+                                    </Row>
+                                }
                                 <Row>
                                     <Label>{t('futures:order_table:open_price')}</Label>
                                     <Span>{formatNumber(order?.open_price, decimalSymbol)}</Span>
