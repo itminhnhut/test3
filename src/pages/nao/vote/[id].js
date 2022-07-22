@@ -290,7 +290,7 @@ const VoteSuccessModal = ({ onClose, handleSubmitVote, summary }) => {
                         </h3>
                         <p className="text-nao-grey text-center">{summary}</p>
                         <ButtonNao
-                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
+                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
                             onClick={handleSubmitVote}
                             onClick={onClose}
                         >
