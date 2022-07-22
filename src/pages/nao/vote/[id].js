@@ -1,23 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import LayoutNaoToken from "components/common/layouts/LayoutNaoToken";
-import { CardNao, ButtonNao } from "src/components/screens/Nao/NaoStyle";
-import Portal from "components/hoc/Portal";
-import classNames from "classnames";
-import { formatNumber, getLoginUrl } from "redux/actions/utils";
-import { getS3Url } from "redux/actions/utils";
-import {
-    Progressbar,
-    useOutsideAlerter,
-} from "components/screens/Nao/NaoStyle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import SvgSuccessfulCircle from "src/components/svg/SuccessfulCircle";
-import FetchApi from "utils/fetch-api";
-import { API_USER_VOTE } from "redux/actions/apis";
-import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
-import { useSelector } from "react-redux";
-import { createSelector } from "reselect";
+import React, { useEffect, useRef, useState } from 'react';
+import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken';
+import { ButtonNao, CardNao } from 'src/components/screens/Nao/NaoStyle';
+import Portal from 'components/hoc/Portal';
+import classNames from 'classnames';
+import { emitWebViewEvent, formatNumber, getS3Url } from 'redux/actions/utils';
+import { Progressbar, useOutsideAlerter, } from 'components/screens/Nao/NaoStyle';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import SvgSuccessfulCircle from 'src/components/svg/SuccessfulCircle';
+import FetchApi from 'utils/fetch-api';
+import { API_USER_VOTE } from 'redux/actions/apis';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 
 const getAssetNao = createSelector(
     [(state) => state.utils.assetConfig, (utils, params) => params],
@@ -28,13 +23,13 @@ const getAssetNao = createSelector(
 export default function vote() {
     const [isShowProposalModal, setIsShowProposalModal] = useState(false);
     const [isShowSuccessModal, setIsShowSuccessModal] = useState(false);
-    const [dataUserVote, setDataUserVote] = useState("");
+    const [dataUserVote, setDataUserVote] = useState('');
     const [data, setData] = useState({});
     const { id } = useRouter().query;
     const auth = useSelector((state) => state.auth?.user);
     const router = useRouter();
 
-    const assetNao = useSelector((state) => getAssetNao(state, "NAO"));
+    const assetNao = useSelector((state) => getAssetNao(state, 'NAO'));
     const {
         t,
         i18n: { language },
@@ -43,12 +38,12 @@ export default function vote() {
     async function fetchData(params) {
         try {
             const res = await FetchApi({
-                url: API_USER_VOTE + "/" + id,
-                options: { method: "GET" },
+                url: API_USER_VOTE + '/' + id,
+                options: { method: 'GET' },
             });
             const useVoteRes = await FetchApi({
-                url: API_USER_VOTE + "/getuserpool",
-                options: { method: "GET" },
+                url: API_USER_VOTE + '/getuserpool',
+                options: { method: 'GET' },
             });
 
             setData(res);
@@ -67,8 +62,8 @@ export default function vote() {
 
         try {
             const res = await FetchApi({
-                url: API_USER_VOTE + "/",
-                options: { method: "POST" },
+                url: API_USER_VOTE + '/',
+                options: { method: 'POST' },
                 params: {
                     voteId: id,
                 },
@@ -78,6 +73,7 @@ export default function vote() {
             console.log(error);
         }
     }
+
     return (
         <LayoutNaoToken>
             <div className="flex flex-row gap-4 pr-3 justify-between pt-10 items-start flex-wrap">
@@ -104,27 +100,27 @@ export default function vote() {
                             <div className="flex flex-row">
                                 <span className="mr-2 text-[1.1rem] font-semibold">
                                     {data.totalVoteYes &&
-                                        formatNumber(
-                                            data.totalVoteYes,
-                                            assetNao?.assetDigit ?? 0
-                                        )}
+                                    formatNumber(
+                                        data.totalVoteYes,
+                                        assetNao?.assetDigit ?? 0
+                                    )}
                                 </span>
                                 <img
-                                    src={getS3Url("/images/nao/ic_nao.png")}
+                                    src={getS3Url('/images/nao/ic_nao.png')}
                                     alt=""
                                     className="w-[20px] h-[20px]"
                                 />
                             </div>
                         </div>
                         <div className="bg-black mt-3 rounded-lg">
-                            <Progressbar percent={50} height={6} />
+                            <Progressbar percent={50} height={6}/>
                         </div>
                     </div>
                     <div className="flex flex-row justify-between">
                         <span className="text-[0.8rem]">status</span>
                         <div className="flex flex-row items-center">
                             <img
-                                src={getS3Url("/images/nao/ic_checked.png")}
+                                src={getS3Url('/images/nao/ic_checked.png')}
                                 alt=""
                                 className="w-[15px] h-[12px] mr-2"
                             />
@@ -139,14 +135,14 @@ export default function vote() {
                             <span className="mr-2 text-[1.1rem] font-semibold">
                                 {auth && dataUserVote.amount
                                     ? formatNumber(
-                                          dataUserVote.amount -
-                                              dataUserVote.lockAmount,
-                                          assetNao?.assetDigit ?? 0
-                                      )
-                                    : "__"}
+                                        dataUserVote.amount -
+                                        dataUserVote.lockAmount,
+                                        assetNao?.assetDigit ?? 0
+                                    )
+                                    : '__'}
                             </span>
                             <img
-                                src={getS3Url("/images/nao/ic_nao.png")}
+                                src={getS3Url('/images/nao/ic_nao.png')}
                                 alt=""
                                 className="w-[20px] h-[20px]"
                             />
@@ -156,23 +152,16 @@ export default function vote() {
                         className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
                         onClick={() => {
                             if (!auth) {
-                                router.push(getLoginUrl("sso"));
-                                console.log(222);
-                            } else setIsShowProposalModal(true);
+                                // handle login
+                                emitWebViewEvent('login');
+                            } else {
+                                setIsShowProposalModal(true);
+                            }
                         }}
                     >
-                        {auth ? "Vote" : "Login to vote"}
+                        {auth ? 'Vote' : 'Login to vote'}
                     </ButtonNao>
-                    {auth && (
-                        <ButtonNao
-                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
-                            onClick={() => {
-                                setIsShowProposalModal(true);
-                            }}
-                        >
-                            {"Reject"}
-                        </ButtonNao>
-                    )}
+
                 </CardNao>
                 {isShowProposalModal && (
                     <VoteProposalModal
@@ -208,13 +197,13 @@ const VoteProposalModal = ({
         <Portal portalId="PORTAL_MODAL">
             <div
                 className={classNames(
-                    "flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden",
-                    "ease-in-out transition-all flex items-end duration-300 z-30"
+                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden rounded-lg',
+                    'ease-in-out transition-all flex items-end duration-300 z-30'
                 )}
             >
                 <div
                     ref={wrapperRef}
-                    className="w-[500px] min-h-0 bg-nao-bgModal mx-auto mt-[200px] rounded"
+                    className="w-[500px] min-h-0 bg-nao-bgModal mx-auto mt-[200px] rounded-lg"
                 >
                     <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
                         <div className="w-full flex flex-row items-center">
@@ -222,7 +211,7 @@ const VoteProposalModal = ({
                                 Vote for proposal
                             </h3>
                             <img
-                                src={getS3Url("/images/nao/ic_info.png")}
+                                src={getS3Url('/images/nao/ic_info.png')}
                                 className="w-[16px] h-[16px] ml-3"
                             />
                         </div>
@@ -234,8 +223,9 @@ const VoteProposalModal = ({
                                         Voting power
                                     </span>
                                     <p className="text-sm text-nao-text leading-6">
-                                        as of{" "}
-                                        {new Date().toISOString().slice(0, 10)}
+                                        as of{' '}
+                                        {new Date().toISOString()
+                                            .slice(0, 10)}
                                     </p>
                                 </div>
                                 <div className="flex flex-row gap-1 items-center">
@@ -245,17 +235,25 @@ const VoteProposalModal = ({
                                     <img
                                         onClick={() => onNavigate(false)}
                                         className="cursor-pointer h-[24px]"
-                                        src={getS3Url("/images/nao/ic_nao.png")}
+                                        src={getS3Url('/images/nao/ic_nao.png')}
                                     />
                                 </div>
                             </div>
                         </CardNao>
-                        <ButtonNao
-                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
-                            onClick={handleSubmitVote}
-                        >
-                            Vote
-                        </ButtonNao>
+                        <div className="w-full flex justify-between">
+                            <ButtonNao isActive active={false}
+                                       className="py-2 !rounded-md text-sm font-semibold leading-6 w-50"
+                                       onClick={handleSubmitVote}
+                            >
+                                No
+                            </ButtonNao>
+                            <ButtonNao
+                                className="py-2 !rounded-md text-sm font-semibold leading-6 w-50"
+                                onClick={handleSubmitVote}
+                            >
+                                Yes
+                            </ButtonNao>
+                        </div>
                         <p className="text-nao-grey">
                             Your vote cannot be changed once cast.
                         </p>
@@ -265,15 +263,19 @@ const VoteProposalModal = ({
         </Portal>
     );
 };
-const VoteSuccessModal = ({ onClose, handleSubmitVote, summary }) => {
+const VoteSuccessModal = ({
+    onClose,
+    handleSubmitVote,
+    summary
+}) => {
     const wrapperRef = useRef(null);
     useOutsideAlerter(wrapperRef, onClose);
     return (
         <Portal portalId="PORTAL_MODAL">
             <div
                 className={classNames(
-                    "flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden",
-                    "ease-in-out transition-all flex items-end duration-300 z-30"
+                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden',
+                    'ease-in-out transition-all flex items-end duration-300 z-30'
                 )}
             >
                 <div
@@ -283,7 +285,7 @@ const VoteSuccessModal = ({ onClose, handleSubmitVote, summary }) => {
                     <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
                         {/* <div className="w-full items-center"> */}
                         <div className="m-auto">
-                            <SvgSuccessfulCircle />
+                            <SvgSuccessfulCircle/>
                         </div>
                         <h3 className="text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
                             Voted sucessfully
@@ -308,9 +310,9 @@ export const getServerSideProps = async (context) => {
     return {
         props: {
             ...(await serverSideTranslations(context.locale, [
-                "common",
-                "nao",
-                "error",
+                'common',
+                'nao',
+                'error',
             ])),
         },
     };
