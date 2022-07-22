@@ -103,9 +103,9 @@ export default function vote() {
                             <span className="text-[0.8rem]">Voted For</span>
                             <div className="flex flex-row">
                                 <span className="mr-2 text-[1.1rem] font-semibold">
-                                    {data.totalVote &&
+                                    {data.totalVoteYes &&
                                         formatNumber(
-                                            data.totalVote,
+                                            data.totalVoteYes,
                                             assetNao?.assetDigit ?? 0
                                         )}
                                 </span>

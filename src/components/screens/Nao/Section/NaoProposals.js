@@ -93,9 +93,9 @@ const Proposal = ({ proposal, language, assetNao }) => {
                             Voted for:
                         </span>
                         <span className="font-semibold ml-2">
-                            {totalVote &&
+                            {totalVoteYes &&
                                 formatNumber(
-                                    totalVote,
+                                    totalVoteYes,
                                     assetNao?.assetDigit ?? 0
                                 )}
                         </span>
@@ -110,7 +110,9 @@ const Proposal = ({ proposal, language, assetNao }) => {
                             className="absolute top-2 inset-x-1/2"
                         />
                         <Progressbar
-                            percent={Math.ceil((totalVote / totalPool) * 100)}
+                            percent={Math.ceil(
+                                (totalVoteYes / totalPool) * 100
+                            )}
                             height={6}
                         />
                     </div>
