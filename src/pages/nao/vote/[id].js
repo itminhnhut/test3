@@ -4,6 +4,7 @@ import { CardNao, ButtonNao } from "src/components/screens/Nao/NaoStyle";
 import Portal from "components/hoc/Portal";
 import classNames from "classnames";
 import { formatNumber, getLoginUrl } from "redux/actions/utils";
+import { getS3Url } from "redux/actions/utils";
 import {
     Progressbar,
     useOutsideAlerter,
@@ -16,7 +17,13 @@ import { API_USER_VOTE } from "redux/actions/apis";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
-
+import { createSelector } from "reselect";
+const getAssetNao = createSelector(
+    [(state) => state.utils.assetConfig, (utils, params) => params],
+    (assets, params) => {
+        return assets.find((rs) => rs.assetCode === params);
+    }
+);
 export default function vote() {
     const [isShowProposalModal, setIsShowProposalModal] = useState(false);
     const [isShowSuccessModal, setIsShowSuccessModal] = useState(false);
@@ -25,6 +32,8 @@ export default function vote() {
     const { id } = useRouter().query;
     const auth = useSelector((state) => state.auth?.user);
     const router = useRouter();
+
+    const assetNao = useSelector((state) => getAssetNao(state, "NAO"));
     const {
         t,
         i18n: { language },
@@ -40,8 +49,7 @@ export default function vote() {
                 url: API_USER_VOTE + "/getuserpool",
                 options: { method: "GET" },
             });
-            console.log(res);
-            console.log(useVoteRes);
+
             setData(res);
             setDataUserVote(useVoteRes);
         } catch (error) {
@@ -69,6 +77,7 @@ export default function vote() {
             console.log(error);
         }
     }
+
     return (
         <LayoutNaoToken>
             <div className="flex flex-row gap-4 pr-3 justify-between pt-10 items-start flex-wrap">
@@ -95,10 +104,13 @@ export default function vote() {
                             <div className="flex flex-row">
                                 <span className="mr-2 text-[1.1rem] font-semibold">
                                     {data.totalVote &&
-                                        formatNumber(data.totalVote)}
+                                        formatNumber(
+                                            data.totalVote,
+                                            assetNao?.assetDigit ?? 0
+                                        )}
                                 </span>
                                 <img
-                                    src="/images/nao/ic_nao.png"
+                                    src={getS3Url("/images/nao/ic_nao.png")}
                                     alt=""
                                     className="w-[20px] h-[20px]"
                                 />
@@ -112,7 +124,7 @@ export default function vote() {
                         <span className="text-[0.8rem]">status</span>
                         <div className="flex flex-row items-center">
                             <img
-                                src="/images/nao/ic_checked.png"
+                                src={getS3Url("/images/nao/ic_checked.png")}
                                 alt=""
                                 className="w-[15px] h-[12px] mr-2"
                             />
@@ -126,14 +138,12 @@ export default function vote() {
                         <div className="flex flex-row">
                             <span className="mr-2 text-[1.1rem] font-semibold">
                                 {auth && dataUserVote.amount
-                                    ? (
-                                          dataUserVote.amount -
-                                          dataUserVote.lockAmount
-                                      ).toLocaleString()
+                                    ? dataUserVote.amount -
+                                      dataUserVote.lockAmount
                                     : "__"}
                             </span>
                             <img
-                                src="/images/nao/ic_nao.png"
+                                src={getS3Url("/images/nao/ic_nao.png")}
                                 alt=""
                                 className="w-[20px] h-[20px]"
                             />
@@ -164,6 +174,7 @@ export default function vote() {
                         onClose={() => {
                             setIsShowSuccessModal(false);
                         }}
+                        summary={data.voteSummary[language]}
                     />
                 )}
             </div>
@@ -196,7 +207,7 @@ const VoteProposalModal = ({
                                 Vote for proposal
                             </h3>
                             <img
-                                src="/images/nao/ic_info.png"
+                                src={getS3Url("/images/nao/ic_info.png")}
                                 className="w-[16px] h-[16px] ml-3"
                             />
                         </div>
@@ -219,7 +230,7 @@ const VoteProposalModal = ({
                                     <img
                                         onClick={() => onNavigate(false)}
                                         className="cursor-pointer h-[24px]"
-                                        src="/images/nao/ic_nao.png"
+                                        src={getS3Url("/images/nao/ic_nao.png")}
                                     />
                                 </div>
                             </div>
@@ -239,7 +250,7 @@ const VoteProposalModal = ({
         </Portal>
     );
 };
-const VoteSuccessModal = ({ onClose, handleSubmitVote }) => {
+const VoteSuccessModal = ({ onClose, handleSubmitVote, summary }) => {
     const wrapperRef = useRef(null);
     useOutsideAlerter(wrapperRef, onClose);
     return (
@@ -262,10 +273,7 @@ const VoteSuccessModal = ({ onClose, handleSubmitVote }) => {
                         <h3 className="text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
                             Voted sucessfully
                         </h3>
-                        <p className="text-nao-grey text-center">
-                            Đề xuất tăng số lượng NAO tối thiểu tham gia Pool
-                            Quản trị từ 500 NAO lên 10,000 NAO.
-                        </p>
+                        <p className="text-nao-grey text-center">{summary}</p>
                         <ButtonNao
                             className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
                             onClick={handleSubmitVote}

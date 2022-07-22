@@ -97,7 +97,7 @@ const NaoDashboard = () => {
                 />
                 <NaoPerformance />
                 <NaoPool dataSource={dataSource} assetNao={assetNao} />
-                <NaoProposals listProposal={listProposal} />
+                <NaoProposals listProposal={listProposal} assetNao={assetNao} />
 
                 <section id="nao_pool" className="pt-10 sm:pt-20">
                     <SectionNao

@@ -15,7 +15,7 @@ import { API_USER_VOTE } from "redux/actions/apis";
 import FetchApi from "utils/fetch-api";
 import { formatNumber } from "redux/actions/utils";
 
-export default function NaoProposals({ listProposal }) {
+export default function NaoProposals({ listProposal, assetNao }) {
     const [dataUserVote, setDataUserVote] = useState("");
 
     async function fetchData() {
@@ -30,7 +30,7 @@ export default function NaoProposals({ listProposal }) {
             console.log(error);
         }
     }
-
+    console.log(assetNao);
     useEffect(async () => {
         fetchData();
     }, []);
@@ -58,13 +58,14 @@ export default function NaoProposals({ listProposal }) {
                         key={index}
                         proposal={proposal}
                         language={language}
+                        assetNao={assetNao}
                     />
                 );
             })}
         </section>
     );
 }
-const Proposal = ({ proposal, language }) => {
+const Proposal = ({ proposal, language, assetNao }) => {
     const { voteName, totalPool, _id, totalVote } = proposal;
 
     const router = useRouter();
@@ -72,7 +73,7 @@ const Proposal = ({ proposal, language }) => {
         <CardNao
             className="mt-6 p-6 !sm:min-h-0 !min-h-0 cursor-pointer"
             onClick={() => {
-                router.push(`nao/vote/${_id}`);
+                router.push(`/nao/vote/${_id}`);
             }}
         >
             <div className="flex flex-row justify-between">
@@ -80,7 +81,7 @@ const Proposal = ({ proposal, language }) => {
                     <img
                         onClick={() => onNavigate(false)}
                         className="cursor-pointer h-[24px]"
-                        src="/images/nao/ic_nao_radio.png"
+                        src={getS3Url("/images/nao/ic_nao_radio.png")}
                     />
                     <span className="text-nao-text font-medium sm:text-lg ml-2">
                         {voteName && voteName[language]}
@@ -92,17 +93,20 @@ const Proposal = ({ proposal, language }) => {
                             Voted for:
                         </span>
                         <span className="font-semibold ml-2">
-                            {totalVote && formatNumber(totalVote)}
+                            {totalVote &&
+                                formatNumber(
+                                    totalVote,
+                                    assetNao?.assetDigit ?? 0
+                                )}
                         </span>
                     </div>
                     <div className="bg-black mt-3 relative rounded-lg">
-                        {/* <FontAwesomeIcon icon="fa-solid fa-caret-up" /> */}
                         <img
-                            src="/images/nao/ic_caret_down.png"
+                            src={getS3Url("/images/nao/ic_caret_down.png")}
                             className="absolute bottom-2 inset-x-1/2"
                         />
                         <img
-                            src="/images/nao/ic_caret_up.png"
+                            src={getS3Url("/images/nao/ic_caret_up.png")}
                             className="absolute top-2 inset-x-1/2"
                         />
                         <Progressbar
