@@ -66,7 +66,7 @@ export default function NaoProposals({ listProposal, assetNao }) {
     );
 }
 const Proposal = ({ proposal, language, assetNao }) => {
-    const { voteName, totalPool, _id, totalVote } = proposal;
+    const { voteName, totalPool, _id, totalVoteYes } = proposal;
 
     const router = useRouter();
     return (
