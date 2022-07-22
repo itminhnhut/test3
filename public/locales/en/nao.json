@@ -85,6 +85,10 @@
         "no_transaction_history": "No transaction history",
         "unlock_status": "Unlock: {{value}}"
     },
+    "proposals": {
+        "title": "Proposals",
+        "description": "Track proposal statuses and vote on changes."
+    },
     "nao_token": {
         "title": "Buy NAO token",
         "description": "Hold NAO to participate in Governance Pool or use as fee to enjoy a discount of 40%",
