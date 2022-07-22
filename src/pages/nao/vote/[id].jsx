@@ -3,8 +3,7 @@ import LayoutNaoToken from "components/common/layouts/LayoutNaoToken";
 import { CardNao, ButtonNao } from "src/components/screens/Nao/NaoStyle";
 import Portal from "components/hoc/Portal";
 import classNames from "classnames";
-import { getS3Url } from "redux/actions/utils";
-import { formatNumber } from "redux/actions/utils";
+import { formatNumber, getLoginUrl } from "redux/actions/utils";
 import {
     Progressbar,
     useOutsideAlerter,
@@ -143,7 +142,7 @@ export default function vote() {
                     <ButtonNao
                         className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
                         onClick={() => {
-                            if (!auth) router.push("/login");
+                            if (!auth) window.open(getLoginUrl("sso"));
                             else setIsShowProposalModal(true);
                         }}
                     >
