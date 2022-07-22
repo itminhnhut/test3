@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
+
 const getAssetNao = createSelector(
     [(state) => state.utils.assetConfig, (utils, params) => params],
     (assets, params) => {
@@ -77,7 +78,6 @@ export default function vote() {
             console.log(error);
         }
     }
-
     return (
         <LayoutNaoToken>
             <div className="flex flex-row gap-4 pr-3 justify-between pt-10 items-start flex-wrap">
@@ -138,8 +138,11 @@ export default function vote() {
                         <div className="flex flex-row">
                             <span className="mr-2 text-[1.1rem] font-semibold">
                                 {auth && dataUserVote.amount
-                                    ? dataUserVote.amount -
-                                      dataUserVote.lockAmount
+                                    ? formatNumber(
+                                          dataUserVote.amount -
+                                              dataUserVote.lockAmount,
+                                          assetNao?.assetDigit ?? 0
+                                      )
                                     : "__"}
                             </span>
                             <img
@@ -152,12 +155,24 @@ export default function vote() {
                     <ButtonNao
                         className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
                         onClick={() => {
-                            if (!auth) window.open(getLoginUrl("sso"));
-                            else setIsShowProposalModal(true);
+                            if (!auth) {
+                                router.push(getLoginUrl("sso"));
+                                console.log(222);
+                            } else setIsShowProposalModal(true);
                         }}
                     >
                         {auth ? "Vote" : "Login to vote"}
                     </ButtonNao>
+                    {auth && (
+                        <ButtonNao
+                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
+                            onClick={() => {
+                                setIsShowProposalModal(true);
+                            }}
+                        >
+                            {"Reject"}
+                        </ButtonNao>
+                    )}
                 </CardNao>
                 {isShowProposalModal && (
                     <VoteProposalModal
@@ -288,14 +303,15 @@ const VoteSuccessModal = ({ onClose, handleSubmitVote, summary }) => {
         </Portal>
     );
 };
-export const getStaticProps = async ({ locale }) => ({
-    props: {
-        ...(await serverSideTranslations(locale, ["common", "nao", "error"])),
-    },
-});
-export async function getStaticPaths() {
+
+export const getServerSideProps = async (context) => {
     return {
-        paths: [{ params: { id: "" } }],
-        fallback: true,
+        props: {
+            ...(await serverSideTranslations(context.locale, [
+                "common",
+                "nao",
+                "error",
+            ])),
+        },
     };
-}
+};
