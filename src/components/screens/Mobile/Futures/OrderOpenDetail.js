@@ -122,7 +122,7 @@ const OrderOpenDetail = ({
             }
         } catch (e) {
             if (e.message === 'Network Error' || !navigator?.onLine) {
-                context.alert.show('error', t('futures:place_order'), t('error:futures:NETWORK_ERROR'));
+                context.alert.show('error', t('common:failed'), t('error:futures:NETWORK_ERROR'));
             }
             console.log(e);
         } finally {
