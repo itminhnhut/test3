@@ -85,6 +85,23 @@
         "no_transaction_history": "Không có lịch sử giao dịch",
         "unlock_status": "Mở khóa: {{value}}"
     },
+    "vote": {
+        "title": "Biểu quyết",
+        "description": "Theo dõi các trạng thái đề xuất và bỏ phiếu cho các thay đổi.",
+        "voted_for": "Tán thành",
+        "your_vote": "Số phiếu của bạn",
+        "vote_for_proposal": "Biểu quyết",
+        "voting_power": "Số NAO của bạn",
+        "vote_remind": "Biểu quyết  của bạn sẽ không được thay đổi.",
+        "voted_successfully": "Biểu quyết thành công",
+        "vote": "Tán thành",
+        "reject": "Không tán thành",
+        "rejected": "Không tán thành",
+        "voting": "Biểu quyết",
+        "nao_description": "Nội dung",
+        "login_to_vote": "Đăng nhập để biểu quyết",
+        "rejected_successfully": "Biểu quyết thành công"
+    },
     "nao_token": {
         "title": "Mua token NAO",
         "description": "Sở hữu NAO token để có thể tham gia Pool Quản trị hoặc dùng làm phí nhận chiết khấu 40%",

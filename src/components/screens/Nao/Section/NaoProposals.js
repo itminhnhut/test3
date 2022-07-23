@@ -14,6 +14,10 @@ import { useRouter } from "next/router";
 import { API_USER_VOTE } from "redux/actions/apis";
 import FetchApi from "utils/fetch-api";
 import { formatNumber } from "redux/actions/utils";
+import SvgSuccessfulCircle from "src/components/svg/SuccessfulCircle";
+import SvgTimeCircle from "src/components/svg/TimeCircle";
+import SvgCancelCircle from "src/components/svg/CancelCircle";
+import SvgTimeIC from "src/components/svg/TimeIC";
 
 export default function NaoProposals({ listProposal, assetNao }) {
     const [dataUserVote, setDataUserVote] = useState("");
@@ -39,15 +43,15 @@ export default function NaoProposals({ listProposal, assetNao }) {
         i18n: { language },
     } = useTranslation();
     return (
-        <section id="nao__proposals" className="pt-10 sm:pt-20">
+        <section id="nao_proposal" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-4">
                 <div>
                     <TextLiner className="normal-case">
-                        {t("nao:proposals:title")}
+                        {t("nao:vote:title")}
                         {/* Proposals */}
                     </TextLiner>
                     <span className="text-nao-grey">
-                        {t("nao:proposals:description")}
+                        {t("nao:vote:description")}
                         {/* Track proposal statuses and vote on changes. */}
                     </span>
                 </div>
@@ -66,9 +70,9 @@ export default function NaoProposals({ listProposal, assetNao }) {
     );
 }
 const Proposal = ({ proposal, language, assetNao }) => {
-    const { voteName, totalPool, _id, totalVoteYes } = proposal;
-
+    const { voteName, totalPool, _id, totalVoteYes, status } = proposal;
     const router = useRouter();
+    const { t } = useTranslation();
     return (
         <CardNao
             className="mt-6 p-6 !sm:min-h-0 !min-h-0 cursor-pointer"
@@ -78,27 +82,63 @@ const Proposal = ({ proposal, language, assetNao }) => {
         >
             <div className="flex flex-row justify-between">
                 <div className="flex flex-row gap-1 flex-1 items-center">
-                    <img
-                        onClick={() => onNavigate(false)}
-                        className="cursor-pointer h-[24px]"
-                        src={getS3Url("/images/nao/ic_nao_radio.png")}
-                    />
+                    {status === "Processing" && (
+                        <img
+                            onClick={() => onNavigate(false)}
+                            className="cursor-pointer h-[24px]"
+                            src={getS3Url("/images/nao/ic_nao_radio.png")}
+                        />
+                    )}
+                    {status === "Executed" && <SvgSuccessfulCircle />}
+                    {status === "Failed" && <SvgTimeCircle />}
+                    {status === "Canceled" && <SvgCancelCircle />}
+
                     <span className="text-nao-text font-medium sm:text-lg ml-2">
                         {voteName && voteName[language]}
                     </span>
                 </div>
                 <div className="w-[340px]">
-                    <div>
-                        <span className="text-sm text-nao-grey leading-6">
-                            Voted for:
-                        </span>
-                        <span className="font-semibold ml-2">
-                            {totalVoteYes &&
-                                formatNumber(
-                                    totalVoteYes,
-                                    assetNao?.assetDigit ?? 0
-                                )}
-                        </span>
+                    <div className="flex flex-row justify-between">
+                        <div>
+                            <span className="text-sm text-nao-grey leading-6">
+                                {t("nao:vote:voted_for")}:
+                            </span>
+                            <span className="font-semibold ml-2">
+                                {totalVoteYes &&
+                                    formatNumber(
+                                        totalVoteYes,
+                                        assetNao?.assetDigit ?? 0
+                                    )}
+                            </span>
+                        </div>
+                        {status === "Executed" && (
+                            <div className="flex flex-row justify-start items-center gap-2">
+                                <img
+                                    src={getS3Url("/images/nao/ic_checked.png")}
+                                    alt=""
+                                    className="w-[15px] h-[12px] mr-2"
+                                />
+                                <span className="text-[0.875rem]">
+                                    {status}
+                                </span>
+                            </div>
+                        )}
+                        {status === "Failed" && (
+                            <div className="flex flex-row justify-start items-center gap-2">
+                                <SvgTimeIC />
+                                <span className="text-[0.875rem]">
+                                    {status}
+                                </span>
+                            </div>
+                        )}
+                        {status === "Canceled" && (
+                            <div className="flex flex-row justify-start items-center gap-2">
+                                <SvgCancelCircle className="w-[12px] h-[12px]" />
+                                <span className="text-[0.875rem]">
+                                    {status}
+                                </span>
+                            </div>
+                        )}
                     </div>
                     <div className="bg-black mt-3 relative rounded-lg">
                         <img

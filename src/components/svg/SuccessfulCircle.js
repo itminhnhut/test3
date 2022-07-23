@@ -1,17 +1,11 @@
-const SuccessfulCircle = ({
-    color = "#718096",
-    size = 24,
-    fill = "none",
-    style,
-    className,
-    onClick,
-}) => {
+const SuccessfulCircle = ({ className, onClick }) => {
     return (
         <svg
-            width="80"
-            height="80"
+            width="24"
+            height="24"
             viewBox="0 0 80 80"
             fill="none"
+            className={className}
             xmlns="http://www.w3.org/2000/svg"
         >
             <path

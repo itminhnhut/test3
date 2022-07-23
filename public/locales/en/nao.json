@@ -85,9 +85,22 @@
         "no_transaction_history": "No transaction history",
         "unlock_status": "Unlock: {{value}}"
     },
-    "proposals": {
+    "vote": {
         "title": "Proposals",
-        "description": "Track proposal statuses and vote on changes."
+        "description": "Track proposal statuses and vote on changes.",
+        "voted_for": "Voted for",
+        "your_vote": "Your Vote",
+        "vote_for_proposal": "Vote for proposal",
+        "voting_power": "Voting power",
+        "vote_remind": "Your vote cannot be changed once cast.",
+        "voted_successfully": "Voted successfully",
+        "vote": "Vote",
+        "reject": "Reject",
+        "rejected": "Rejected",
+        "voting": "Voting",
+        "nao_description": "Description",
+        "login_to_vote": "Login to Vote",
+        "rejected_successfully": "Rejected successfully"
     },
     "nao_token": {
         "title": "Buy NAO token",
