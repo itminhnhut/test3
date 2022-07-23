@@ -81,8 +81,8 @@ export default function Vote() {
     const description = useCallback(() => {
         if (!data) return null;
         return <>
-            <div className="md:col-span-2 sm:col-span-3">
-                <h5 className="text-nao-white sm:text-xl md:text-2xl pt-10 font-semibold mb-5">
+            <div className="lg:col-span-2 sm:col-span-3">
+                <h5 className="text-nao-white sm:text-xl lg:text-2xl pt-10 font-semibold mb-5">
                     {t('nao:vote:nao_description')}
                 </h5>
                 <div
@@ -146,18 +146,18 @@ export default function Vote() {
 
     return (
         <LayoutNaoToken>
-            <div className="grid md:grid-cols-3 gap-4 pr-3 justify-between pt-10 items-start flex-wrap">
-                <div className="md:col-span-2 sm:col-span-3">
-                    <h3 className="md:text-3xl text-2xl leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+            <div className="grid lg:grid-cols-3 gap-4 pr-3 justify-between pt-10 items-start flex-wrap">
+                <div className="lg:col-span-2 sm:col-span-3">
+                    <h3 className="lg:text-3xl text-2xl leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
                         {data?.vote?.voteName && data?.vote?.voteName[language]}
                     </h3>
 
 
-                    <div className="hidden md:block">
+                    <div className="hidden lg:block">
                         {description()}
                     </div>
                 </div>
-                <div className="md:col-span-1 sm:col-span-3">
+                <div className="lg:col-span-1 sm:col-span-3">
                     <CardNao className="!min-h-0 gap-7">
                         <div>
                             <div className="flex flex-row justify-between">
@@ -288,7 +288,7 @@ export default function Vote() {
                     </CardNao>
                 </div>
 
-                <div className="block    md:hidden">
+                <div className="block    lg:hidden">
                     {description()}
                 </div>
 
