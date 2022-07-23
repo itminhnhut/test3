@@ -123,7 +123,7 @@ const Proposal = ({
                                 <img
                                     src={getS3Url('/images/nao/ic_checked.png')}
                                     alt=""
-                                    className="w-[15px] h-[12px] mr-2"
+                                    className="w-[15px] h-[12px]"
                                 />
                                 <span className="text-[0.875rem]">
                                     {statusText}

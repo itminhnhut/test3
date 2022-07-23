@@ -29,6 +29,7 @@ export default function Vote() {
     const [typeModal, setTypeModal] = useState(true);
     const [dataUserVote, setDataUserVote] = useState('');
     const [data, setData] = useState({});
+    const [userVoteData, setUserVoteData] = useState(null);
     const { id } = useRouter().query;
     const auth = useSelector((state) => state.auth?.user);
     const router = useRouter();
@@ -57,9 +58,29 @@ export default function Vote() {
         }
     }
 
+    async function fetchUserData() {
+        try {
+            const res = await FetchApi({
+                url: API_USER_VOTE + '/getUserVoteInfo/' + id,
+                options: { method: 'GET' },
+            });
+            setUserVoteData(res);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(async () => {
         fetchData();
     }, []);
+    useEffect(async () => {
+        if(auth){
+            fetchUserData();
+        }
+        
+    }, [auth]);
+
+
 
     async function handleSubmitVote(votedYes) {
         setIsShowProposalModal(false);
@@ -89,12 +110,12 @@ export default function Vote() {
                     className="description text-nao-grey leading-7 mb-5"
                     dangerouslySetInnerHTML={{
                         __html:
-                            data?.vote?.voteDescription &&
-                            data?.vote?.voteDescription[language],
+                            data?.voteDescription &&
+                            data?.voteDescription[language],
                     }}
                 ></div>
                 <div className="description text-nao-grey leading-7"
-                     dangerouslySetInnerHTML={{ __html: t('nao:vote:vote_notice') }}></div>
+                    dangerouslySetInnerHTML={{ __html: t('nao:vote:vote_notice') }}></div>
 
             </div>
         </>;
@@ -103,6 +124,14 @@ export default function Vote() {
     const _renderButtonVote = () => {
         if (!data) return null;
 
+        if (data?.status !== 'Processing') {
+            return <ButtonNao
+                disabled
+                className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+            >
+                {t('nao:vote:vote_ended')}
+            </ButtonNao>;
+        }
         if (!auth) {
             return <ButtonNao
                 className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
@@ -111,19 +140,14 @@ export default function Vote() {
                 }}
             >
                 {t('nao:vote:login_to_vote')}
-
-
             </ButtonNao>;
         }
 
-        if (data?.userInfo?.votedForThisVote) {
+
+        if (userVoteData) {
             return <ButtonNao
                 disabled
                 className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
-                onClick={() => {
-                    setTypeModal(true);
-                    setIsShowProposalModal(true);
-                }}
             >
                 {t('nao:vote:voted')}
             </ButtonNao>;
@@ -141,17 +165,16 @@ export default function Vote() {
 
     };
 
-    if (!data || Object.keys(data).length < 1) return <LoadingPage/>;
-    const statusText = t(`nao:vote:status:${(data?.vote?.status).toLowerCase()}`);
+    if (!data || Object.keys(data).length < 1) return <LoadingPage />;
+    const statusText = t(`nao:vote:status:${(data?.status).toLowerCase()}`);
 
     return (
         <LayoutNaoToken>
-            <div className="grid lg:grid-cols-3 gap-4 pr-3 justify-between pt-10 items-start flex-wrap">
+            <div className="grid lg:grid-cols-3 gap-8 pr-3 justify-between pt-10 items-start flex-wrap">
                 <div className="lg:col-span-2 sm:col-span-3">
                     <h3 className="lg:text-3xl text-2xl leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
-                        {data?.vote?.voteName && data?.vote?.voteName[language]}
+                        {data?.voteName && data?.voteName[language]}
                     </h3>
-
 
                     <div className="hidden lg:block">
                         {description()}
@@ -166,11 +189,11 @@ export default function Vote() {
                                 </span>
                                 <div className="flex flex-row">
                                     <span className="mr-2   font-semibold">
-                                        {data?.vote?.totalVoteYes &&
-                                        formatNumber(
-                                            data?.vote?.totalVoteYes,
-                                            assetNao?.assetDigit ?? 0
-                                        )}
+                                        {data?.totalVoteYes &&
+                                            formatNumber(
+                                                data?.totalVoteYes,
+                                                assetNao?.assetDigit ?? 0
+                                            )}
                                     </span>
                                     <img
                                         src={getS3Url('/images/nao/ic_nao.png')}
@@ -182,7 +205,7 @@ export default function Vote() {
                             <div className="bg-black mt-3 rounded-lg">
                                 <Progressbar
                                     percent={
-                                        (data?.vote?.totalVoteYes / data?.vote?.totalPool) * 100
+                                        (data?.totalVoteYes / data?.totalPool) * 100
                                     }
                                     height={6}
                                 />
@@ -195,11 +218,11 @@ export default function Vote() {
                                 </span>
                                 <div className="flex flex-row">
                                     <span className="mr-2 text-[1.1rem] font-semibold">
-                                        {data?.vote?.totalVoteNo &&
-                                        formatNumber(
-                                            data?.vote?.totalVoteNo,
-                                            assetNao?.assetDigit ?? 0
-                                        )}
+                                        {data?.totalVoteNo &&
+                                            formatNumber(
+                                                data?.totalVoteNo,
+                                                assetNao?.assetDigit ?? 0
+                                            )}
                                     </span>
                                     <img
                                         src={getS3Url('/images/nao/ic_nao.png')}
@@ -211,7 +234,7 @@ export default function Vote() {
                             <div className="bg-black mt-3 rounded-lg">
                                 <Progressbar
                                     percent={
-                                        (data?.vote?.totalVoteNo / data?.vote?.totalPool) * 100
+                                        (data?.totalVoteNo / data?.totalPool) * 100
                                     }
                                     height={6}
                                     background="red"
@@ -223,14 +246,14 @@ export default function Vote() {
                                 {t('common:status')}
                             </span>
                             <div className="flex flex-row items-center">
-                                {data?.vote?.status === 'Processing' && (
+                                {data?.status === 'Processing' && (
                                     <div className="flex flex-row justify-start items-center gap-2">
                                         <span className="  font-semibold">
                                             {statusText}
                                         </span>
                                     </div>
                                 )}
-                                {data?.vote?.status === 'Executed' && (
+                                {data?.status === 'Executed' && (
                                     <div className="flex flex-row justify-start items-center gap-2">
                                         <img
                                             src={getS3Url(
@@ -244,17 +267,17 @@ export default function Vote() {
                                         </span>
                                     </div>
                                 )}
-                                {data?.vote?.status === 'Failed' && (
+                                {data?.status === 'Failed' && (
                                     <div className="flex flex-row justify-start items-center gap-2">
-                                        <SvgTimeIC/>
+                                        <SvgTimeIC />
                                         <span className="  font-semibold">
-                                            {data?.vote?.status}
+                                            {data?.status}
                                         </span>
                                     </div>
                                 )}
-                                {data?.vote?.status === 'Canceled' && (
+                                {data?.status === 'Canceled' && (
                                     <div className="flex flex-row justify-start items-center gap-2">
-                                        <SvgCancelCircle className="w-[12px] h-[12px]"/>
+                                        <SvgCancelCircle className="w-[12px] h-[12px]" />
                                         <span className="  font-semibold">
                                             {statusText}
                                         </span>
@@ -288,7 +311,7 @@ export default function Vote() {
                     </CardNao>
                 </div>
 
-                <div className="block    lg:hidden">
+                <div className="block lg:hidden lg:col-span-2 sm:col-span-3">
                     {description()}
                 </div>
 
@@ -299,7 +322,7 @@ export default function Vote() {
                             dataUserVote.amount - dataUserVote.lockAmount
                         ).toLocaleString()}
                         handleSubmitVote={handleSubmitVote}
-                        summary={data?.vote?.voteSummary?.[language] ?? ''}
+                        summary={data?.voteSummary?.[language] ?? ''}
                         type={typeModal}
                     />
                 )}
@@ -309,7 +332,7 @@ export default function Vote() {
                             setIsShowSuccessModal(false);
                         }}
                         type={typeModal}
-                        summary={data?.vote?.voteSummary?.[language] ?? ''}
+                        summary={data?.voteSummary?.[language] ?? ''}
                     />
                 )}
             </div>
@@ -419,7 +442,7 @@ const VoteSuccessModal = ({
                     <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
                         {/* <div className="w-full items-center"> */}
                         <div className="m-auto">
-                            <SvgSuccessfulCircle className="w-[80px] h-[80px]"/>
+                            <SvgSuccessfulCircle className="w-[80px] h-[80px]" />
                         </div>
                         <h3 className="text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
                             {type
