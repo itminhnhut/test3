@@ -54,6 +54,7 @@ export default function NaoProposals({ listProposal, assetNao }) {
                         {t("nao:vote:description")}
                         {/* Track proposal statuses and vote on changes. */}
                     </span>
+
                 </div>
             </div>
             {listProposal.map((proposal, index) => {
@@ -73,6 +74,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
     const { voteName, totalPool, _id, totalVoteYes, status } = proposal;
     const router = useRouter();
     const { t } = useTranslation();
+    const statusText = t(`nao:vote:status:${(status).toLowerCase()}`)
     return (
         <CardNao
             className="mt-6 p-6 !sm:min-h-0 !min-h-0 cursor-pointer"
@@ -80,8 +82,8 @@ const Proposal = ({ proposal, language, assetNao }) => {
                 router.push(`/nao/vote/${_id}`);
             }}
         >
-            <div className="flex flex-row justify-between">
-                <div className="flex flex-row gap-1 flex-1 items-center">
+            <div className="grid grid-cols-3">
+                <div className="md:col-span-2 col-span-3 mb-4 flex flex-row gap-1 flex-1 items-center">
                     {status === "Processing" && (
                         <img
                             onClick={() => onNavigate(false)}
@@ -97,7 +99,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         {voteName && voteName[language]}
                     </span>
                 </div>
-                <div className="w-[340px]">
+                <div className="md:col-span-1 col-span-3">
                     <div className="flex flex-row justify-between">
                         <div>
                             <span className="text-sm text-nao-grey leading-6">
@@ -119,7 +121,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                                     className="w-[15px] h-[12px] mr-2"
                                 />
                                 <span className="text-[0.875rem]">
-                                    {status}
+                                    {statusText}
                                 </span>
                             </div>
                         )}
@@ -127,7 +129,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                             <div className="flex flex-row justify-start items-center gap-2">
                                 <SvgTimeIC />
                                 <span className="text-[0.875rem]">
-                                    {status}
+                                    {statusText}
                                 </span>
                             </div>
                         )}
@@ -135,7 +137,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                             <div className="flex flex-row justify-start items-center gap-2">
                                 <SvgCancelCircle className="w-[12px] h-[12px]" />
                                 <span className="text-[0.875rem]">
-                                    {status}
+                                    {statusText}
                                 </span>
                             </div>
                         )}
