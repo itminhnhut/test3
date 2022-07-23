@@ -1,4 +1,6 @@
-const SuccessfulCircle = ({ className, onClick }) => {
+import PropTypes from 'prop-types';
+const SuccessfulCircle = ({ className }) => {
+
     return (
         <svg
             width="24"
@@ -25,5 +27,6 @@ const SuccessfulCircle = ({ className, onClick }) => {
         </svg>
     );
 };
+
 
 export default SuccessfulCircle;

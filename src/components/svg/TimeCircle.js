@@ -1,4 +1,5 @@
-const TimeCircle = ({ className, onClick }) => {
+import PropTypes from 'prop-types';
+const TimeCircle = ({ className }) => {
     return (
         <svg
             width="24"

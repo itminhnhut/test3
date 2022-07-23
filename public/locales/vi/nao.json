@@ -110,7 +110,8 @@
             "processing": "Đang biểu quyết",
             "failed": "Không thông qua"
         },
-        "rejected_successfully": "Biểu quyết thành công"
+        "rejected_successfully": "Biểu quyết thành công",
+        "vote_rating": "Tỷ lệ bình chọn"
     },
     "nao_token": {
         "title": "Mua token NAO",
