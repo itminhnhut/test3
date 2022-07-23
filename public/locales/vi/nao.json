@@ -95,6 +95,7 @@
         "voting_power": "Số NAO của bạn",
         "vote_remind": "Bạn chỉ được biểu quyết một lần duy nhất",
         "voted_successfully": "Biểu quyết thành công",
+        "nao_too_small": "Số NAO của bạn không đủ",
         "vote": "Tán thành",
         "vote_ended": "Biểu quyết đã kết thúc",
         "reject": "Không tán thành",

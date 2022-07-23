@@ -95,6 +95,7 @@
         "voting_power": "Voting power",
         "vote_remind": "You can only vote once",
         "voted_successfully": "Voted successfully",
+        "nao_too_small": "Your NAO amount is not enough",
         "vote": "Vote",
         "voted": "Voted",
         "vote_ended": "Voting has ended",

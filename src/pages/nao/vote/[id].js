@@ -321,9 +321,9 @@ export default function Vote() {
                 {isShowProposalModal && (
                     <VoteProposalModal
                         onClose={() => setIsShowProposalModal(false)}
-                        numberOfNao={(
+                        numberOfNao={
                             dataUserVote.amount - dataUserVote.lockAmount
-                        ).toLocaleString()}
+                        }
                         handleSubmitVote={handleSubmitVote}
                         summary={data?.voteSummary?.[language] ?? ''}
                         type={typeModal}
@@ -389,7 +389,9 @@ const VoteProposalModal = ({
                                 </div>
                                 <div className="flex flex-row gap-1 items-center">
                                     <span className="text-nao-white text-lg lg:text-3xl font-semibold">
-                                        {numberOfNao.toLocaleString()}
+                                        {
+                                            formatNumber(numberOfNao, 2)
+                                        }
                                     </span>
                                     <img
                                         onClick={() => onNavigate(false)}
@@ -399,7 +401,9 @@ const VoteProposalModal = ({
                                 </div>
                             </div>
                         </CardNao>
-                        <div className=" w-full flex justify-between gap-2">
+                        {
+                            numberOfNao > 0.1
+                            ? <div className=" w-full flex justify-between gap-2">
                             <ButtonNao
                                 className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
                                 onClick={() => handleSubmitVote(false)}
@@ -413,6 +417,16 @@ const VoteProposalModal = ({
                                 {t('nao:vote:vote')}
                             </ButtonNao>
                         </div>
+                        : <div className=" w-full flex justify-between gap-2">
+                            <ButtonNao
+                                className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                            >
+                                {t('nao:vote:nao_too_small')}
+                            </ButtonNao>
+                        </div>
+                            
+                        }
+                        
                         <p className="text-nao-grey text-sm">
                             {t('nao:vote:vote_remind')}
                         </p>
