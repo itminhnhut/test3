@@ -162,7 +162,7 @@ export default function Vote() {
                     setIsShowProposalModal(true);
                 }}
             >
-                {t('nao:vote:vote')}
+                {t('nao:vote:title')}
             </ButtonNao>;
         }
 
