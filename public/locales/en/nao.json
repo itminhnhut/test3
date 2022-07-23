@@ -96,6 +96,7 @@
         "vote_remind": "You can only vote once",
         "voted_successfully": "Voted successfully",
         "vote": "Vote",
+        "voted": "Voted",
         "reject": "Reject",
         "rejected": "Rejected",
         "voting": "Voting",
