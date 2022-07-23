@@ -96,9 +96,21 @@ const Proposal = ({
                             src={getS3Url('/images/nao/ic_nao_radio.png')}
                         />
                     )}
-                    {status === 'Executed' && <SvgSuccessfulCircle/>}
-                    {status === 'Failed' && <SvgTimeCircle/>}
-                    {status === 'Canceled' && <SvgCancelCircle/>}
+                    {status === 'Executed' && <img
+                            onClick={() => onNavigate(false)}
+                            className="cursor-pointer h-[24px]"
+                            src={getS3Url('/images/nao/ic_executed.png')}
+                        />}
+                    {status === 'Failed' && <img
+                            onClick={() => onNavigate(false)}
+                            className="cursor-pointer h-[24px]"
+                            src={getS3Url('/images/nao/ic_failed.png')}
+                        />}
+                    {status === 'Canceled' && <img
+                            onClick={() => onNavigate(false)}
+                            className="cursor-pointer h-[24px]"
+                            src={getS3Url('/images/nao/ic_canceled.png')}
+                        />}
 
                     <span className="text-nao-text font-medium sm:text-lg ml-2">
                         {voteName && voteName[language]}

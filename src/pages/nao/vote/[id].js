@@ -77,7 +77,7 @@ export default function Vote() {
         if(auth){
             fetchUserData();
         }
-        
+
     }, [auth]);
 
 
@@ -96,6 +96,9 @@ export default function Vote() {
             setIsShowSuccessModal(true);
         } catch (error) {
             console.log(error);
+        } finally{
+            fetchUserData()
+            fetchData()
         }
     }
 
@@ -271,7 +274,7 @@ export default function Vote() {
                                     <div className="flex flex-row justify-start items-center gap-2">
                                         <SvgTimeIC />
                                         <span className="  font-semibold">
-                                            {data?.status}
+                                            {statusText}
                                         </span>
                                     </div>
                                 )}
@@ -360,9 +363,9 @@ const VoteProposalModal = ({
             >
                 <div
                     ref={wrapperRef}
-                    className="w-[500px] min-h-0 bg-nao-bgModal mx-auto mt-[200px] rounded-lg"
+                    className="lg:w-[500px] min-h-0 mx-auto mt-[200px]"
                 >
-                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-5">
+                    <div className="rounded-lg pt-10 px-6 pb-[50px] bg-nao-bgModal mx-4 flex flex-col items-center justify-between gap-5">
                         <div className="w-full flex flex-row items-center">
                             <h3 className="text-[1.375rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
                                 {t('nao:vote:vote_for_proposal')}
@@ -385,7 +388,7 @@ const VoteProposalModal = ({
                                     </p>
                                 </div>
                                 <div className="flex flex-row gap-1 items-center">
-                                    <span className="text-nao-white text-[1.375rem] font-semibold">
+                                    <span className="text-nao-white text-lg lg:text-3xl font-semibold">
                                         {numberOfNao.toLocaleString()}
                                     </span>
                                     <img
@@ -437,14 +440,14 @@ const VoteSuccessModal = ({
             >
                 <div
                     ref={wrapperRef}
-                    className="w-[500px] min-h-0 bg-nao-bgModal mx-auto mt-[200px] rounded"
+                    className="lg:w-[500px] min-h-0 mx-auto mt-[200px]"
                 >
-                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
+                    <div className="rounded bg-nao-bgModal mx-4 pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
                         {/* <div className="w-full items-center"> */}
                         <div className="m-auto">
                             <SvgSuccessfulCircle className="w-[80px] h-[80px]" />
                         </div>
-                        <h3 className="text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                        <h3 className="text-[1.375rem] lg:text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
                             {type
                                 ? t('nao:vote:voted_successfully')
                                 : t('nao:vote:rejected_successfully')}
