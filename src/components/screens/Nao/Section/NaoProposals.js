@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
 import {
     CardNao,
     Progressbar,
     TextLiner,
 } from "components/screens/Nao/NaoStyle";
 import { useTranslation } from "next-i18next";
-import { formatNumber, getS3Url } from "redux/actions/utils";
 import { useRouter } from "next/router";
-import { API_USER_VOTE } from "redux/actions/apis";
-import FetchApi from "utils/fetch-api";
+import React, { useEffect, useState } from "react";
+import { API_USER_POOL } from "redux/actions/apis";
+import { formatNumber, getS3Url } from "redux/actions/utils";
+import SvgCancelCircle from "src/components/svg/CancelCircle";
 import SvgSuccessfulCircle from "src/components/svg/SuccessfulCircle";
 import SvgTimeCircle from "src/components/svg/TimeCircle";
-import SvgCancelCircle from "src/components/svg/CancelCircle";
 import SvgTimeIC from "src/components/svg/TimeIC";
+import FetchApi from "utils/fetch-api";
 
 export default function NaoProposals({ listProposal, assetNao }) {
     const [dataUserVote, setDataUserVote] = useState("");
@@ -20,7 +20,7 @@ export default function NaoProposals({ listProposal, assetNao }) {
     async function fetchData() {
         try {
             const useVoteRes = await FetchApi({
-                url: API_USER_VOTE + "/getuserpool",
+                url: API_USER_POOL,
                 options: { method: "GET" },
             });
 
