@@ -163,7 +163,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                         </CardNao>
                         <div className="flex items-center justify-between">
                             {isLock ?
-                                <div className="text-nao-yellow text-sm italic">{t('nao:minimun', { value: '500 NAO' })}</div>
+                                <div className="text-nao-yellow text-sm italic">{t('nao:minimun', { value: '10,000 NAO' })}</div>
                                 : <div />
                             }
                             <div className="text-sm font-medium leading-6 flex justify-end">
