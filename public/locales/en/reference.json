@@ -1,0 +1,65 @@
+{
+    "referral_pages": {
+        "table": {
+            "friends_id": "Nami ID",
+            "friends_username": "Name",
+            "verified": "Verified",
+            "not_verify": "Not Verify",
+            "kyc_status": "Kyc Status",
+            "total_bonus_earned": "Total Bonus Earned",
+            "trading_type": "Trading Type",
+            "reg_time": "Registration Time",
+            "order_type": "Order Type",
+            "order_volume": "Order Volume",
+            "commission_earned": "Commission Earned",
+            "commission_time": "Commission Time",
+            "traded": "Traded",
+            "order_count": "Orders",
+            "volume": "Volume"
+        },
+        "banner": {
+            "title": "<span>Introduce NAMI.</span><br/><span>Earn extra money</span>",
+            "sub_title": "Earn up to <span>20% commission</span> every time your friends make a trade on NAMI.",
+            "inv_btn": "Invite",
+            "detail_btn": "Details",
+            "referral_id": "Referral ID",
+            "referral_link": "Referral Link",
+            "referral_code": "Referral Code",
+            "exchange_commission": "Exchange Commission",
+            "futures_commission": "Futures Commission"
+        },
+        "time_sort": {
+            "date_range": "Date Range",
+            "until": "Until",
+            "all": "All time",
+            "yesterday": "Yesterday",
+            "this_week": "This Week",
+            "this_month": "This Month"
+        },
+        "categories": {
+            "dashboard": "Dashboard",
+            "friends_list": "Friends List",
+            "commission_history": "Commission History"
+        },
+        "dashboard": {
+            "you_earned": "You Earned",
+            "total_of_traded_friends": "Total Number of Traded Friends",
+            "total_of_friends": "Total Numbers of Friends"
+        },
+        "friendslist": {
+
+        },
+        "commission": {
+
+        },
+        "utils": {
+            "export_friendslist": "Export Friends List",
+            "export_commission_history": "Export Commission History"
+        },
+        "addition_info": {
+            "dashboard": "Data is updated once an hour.",
+            "friendslist": "Data is updated once an hour.",
+            "commission": "Displays only last 7 days of data."
+        }
+    }
+}
