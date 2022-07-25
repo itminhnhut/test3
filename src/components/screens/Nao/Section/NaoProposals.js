@@ -8,11 +8,13 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { API_USER_POOL } from "redux/actions/apis";
 import { formatNumber, getS3Url } from "redux/actions/utils";
-import SvgCancelCircle from "src/components/svg/CancelCircle";
-import SvgSuccessfulCircle from "src/components/svg/SuccessfulCircle";
-import SvgTimeCircle from "src/components/svg/TimeCircle";
-import SvgTimeIC from "src/components/svg/TimeIC";
+import SvgCancelCircle from "components/svg/CancelCircle";
+import SvgChecked from "components/svg/Checked";
+import SvgSuccessfulCircle from "components/svg/SuccessfulCircle";
+import SvgTimeCircle from "components/svg/TimeCircle";
+import SvgTimeIC from "components/svg/TimeIC";
 import FetchApi from "utils/fetch-api";
+import SvgProgress from "components/svg/SvgEdit";
 
 export default function NaoProposals({ listProposal, assetNao }) {
     const [dataUserVote, setDataUserVote] = useState("");
@@ -81,20 +83,26 @@ const Proposal = ({ proposal, language, assetNao }) => {
             <div className="grid grid-cols-3 gap-4">
                 <div className="lg:col-span-2 col-span-3 flex flex-row gap-1 flex-1 items-center">
                     {status === "Processing" && (
-                        <img
-                            className="cursor-pointer h-[24px]"
-                            src={getS3Url("/images/nao/ic_nao_radio.png")}
+                        <SvgProgress size={24} className="min-w-[24px]" />
+                    )}
+                    {status === "Executed" && (
+                        <SvgSuccessfulCircle
+                            size={24}
+                            className="min-w-[24px]"
                         />
                     )}
-                    {status === "Executed" && <SvgSuccessfulCircle />}
-                    {status === "Failed" && <SvgTimeCircle />}
-                    {status === "Canceled" && <SvgCancelCircle />}
+                    {status === "Failed" && (
+                        <SvgTimeCircle size={24} className="min-w-[24px]" />
+                    )}
+                    {status === "Canceled" && (
+                        <SvgCancelCircle size={24} className="min-w-[24px]" />
+                    )}
 
                     <span className="text-nao-text font-medium sm:text-lg ml-2">
                         {voteName && voteName[language]}
                     </span>
                 </div>
-                <div className="lg:col-span-1 col-span-3">
+                <div className="lg:col-span-1 col-span-3 lg:max-w-[340px]">
                     <div className="flex flex-row justify-between mb-3">
                         <div>
                             <span className="text-sm text-nao-grey leading-6">
@@ -110,11 +118,8 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         </div>
                         {status === "Executed" && (
                             <div className="flex flex-row justify-start items-center gap-2">
-                                <img
-                                    src={getS3Url("/images/nao/ic_checked.png")}
-                                    alt=""
-                                    className="w-[15px] h-[12px]"
-                                />
+                                <SvgChecked className="min-w-[0.75rem]" />
+
                                 <span className="text-[0.875rem]">
                                     {statusText}
                                 </span>
@@ -122,7 +127,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         )}
                         {status === "Failed" && (
                             <div className="flex flex-row justify-start items-center gap-2">
-                                <SvgTimeIC />
+                                <SvgTimeIC className="min-w-[0.75rem]" />
                                 <span className="text-[0.875rem]">
                                     {statusText}
                                 </span>
@@ -154,24 +159,21 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         />
                     </div>
                     <div className="flex flex-row justify-between">
-                        <span className="text-nao-grey text-[0.875rem] leading-7">
+                        <span className="text-nao-grey text-[0.75rem] lg:text-sm leading-6">
                             {t("nao:vote:vote_rating")}
                         </span>
                         <div className="flex flex-row gap-2">
-                            <div className="flex flex-row items-center">
-                                <img
-                                    src={getS3Url("/images/nao/ic_checked.png")}
-                                    alt=""
-                                    className="w-[15px] h-[12px] mr-2"
-                                />
-                                <span className="text-[0.875rem]">{`${(
+                            <div className="flex flex-row items-center gap-2">
+                                <SvgChecked className="min-w-[0.75rem]" />
+
+                                <span className="text-[0.75rem] lg:text-sm">{`${(
                                     (totalVoteYes / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>
                             </div>
                             <div className="flex flex-row items-center gap-2">
-                                <SvgTimeIC className="" />
-                                <span className="text-[0.875rem]">{`${(
+                                <SvgTimeIC className="min-w-[0.75rem]" />
+                                <span className="text-[0.75rem] lg:text-sm">{`${(
                                     (totalVoteNo / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>

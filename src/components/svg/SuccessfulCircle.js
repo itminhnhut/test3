@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-const SuccessfulCircle = ({ className }) => {
+const SuccessfulCircle = ({ className , size }) => {
 
     return (
         <svg
-            width="24"
-            height="24"
+            width={size || "24"}
+            height={size || "24"}
             viewBox="0 0 80 80"
             fill="none"
             className={className}

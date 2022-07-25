@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
-const TimeCircle = ({ className }) => {
+const TimeCircle = ({ className, size }) => {
     return (
         <svg
-            width="24"
-            height="24"
+            width={size || "24"}
+            height={size || "24"}
+            minWidth="24"
+            minHeight="24"
             viewBox="0 0 24 24"
             fill="none"
             className={className}
@@ -25,7 +27,11 @@ const TimeCircle = ({ className }) => {
             </g>
             <defs>
                 <clipPath id="clip0_14554_3425">
-                    <rect width="24" height="24" fill="white" />
+                    <rect
+                        width={size || "24"}
+                        height={size || "24"}
+                        fill="white"
+                    />
                 </clipPath>
             </defs>
         </svg>
