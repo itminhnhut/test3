@@ -11,7 +11,7 @@ import { useTranslation } from 'next-i18next';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
     const { t } = useTranslation()
-    const [keyword, setKeyWord] = useState('')
+    const [keyword, setKeyWord] = useState('VNDC')
     const [sortBy, setSortBy] = useState({}) // null = default, 1 => desc, 2 => asc
     const favoritePairs = useSelector((state) => state.futures.favoritePairs)
     const [theme] = useDarkMode()

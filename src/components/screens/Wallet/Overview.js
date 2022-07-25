@@ -329,23 +329,23 @@ const OverviewWallet = (props) => {
                             <div className="ml-4 xl:ml-6">
                                 <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
                                     <span className="mr-4">Exchange</span>
-                                    <span className="inline-flex items-center">
-                                        <img
-                                            src={getS3Url(
-                                                '/images/icon/ic_piechart.png'
-                                            )}
-                                            width="16"
-                                            height="16"
-                                            alt=""
-                                        />
-                                        <a
-                                            onClick={(e)=> e.stopPropagation()}
-                                            href={getV1Url( '/account?type=portfolio' )}
-                                            className="ml-1 text-dominant hover:!underline"
-                                        >
-                                            {t('common:portfolio')}
-                                        </a>
-                                    </span>
+                                    {/*<span className="inline-flex items-center">*/}
+                                    {/*    <img*/}
+                                    {/*        src={getS3Url(*/}
+                                    {/*            '/images/icon/ic_piechart.png'*/}
+                                    {/*        )}*/}
+                                    {/*        width="16"*/}
+                                    {/*        height="16"*/}
+                                    {/*        alt=""*/}
+                                    {/*    />*/}
+                                    {/*    <a*/}
+                                    {/*        onClick={(e)=> e.stopPropagation()}*/}
+                                    {/*        href={getV1Url( '/account?type=portfolio' )}*/}
+                                    {/*        className="ml-1 text-dominant hover:!underline"*/}
+                                    {/*    >*/}
+                                    {/*        {t('common:portfolio')}*/}
+                                    {/*    </a>*/}
+                                    {/*</span>*/}
                                 </div>
                                 {renderExchangeEstBalance()}
                             </div>
@@ -428,25 +428,25 @@ const OverviewWallet = (props) => {
                             <div className="ml-4 xl:ml-6">
                                 <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
                                     <span className="mr-4">Futures</span>
-                                    <span className="inline-flex items-center">
-                                        <img
-                                            src={getS3Url(
-                                                '/images/icon/ic_piechart.png'
-                                            )}
-                                            width="16"
-                                            height="16"
-                                            alt=""
-                                        />
-                                        <a
-                                            onClick={(e)=> e.stopPropagation()}
-                                            href={getV1Url(
-                                                '/account?type=futures'
-                                            )}
-                                            className="ml-1 text-dominant hover:!underline"
-                                        >
-                                            {t('common:portfolio')}
-                                        </a>
-                                    </span>
+                                    {/*<span className="inline-flex items-center">*/}
+                                    {/*    <img*/}
+                                    {/*        src={getS3Url(*/}
+                                    {/*            '/images/icon/ic_piechart.png'*/}
+                                    {/*        )}*/}
+                                    {/*        width="16"*/}
+                                    {/*        height="16"*/}
+                                    {/*        alt=""*/}
+                                    {/*    />*/}
+                                    {/*    <a*/}
+                                    {/*        onClick={(e)=> e.stopPropagation()}*/}
+                                    {/*        href={getV1Url(*/}
+                                    {/*            '/account?type=futures'*/}
+                                    {/*        )}*/}
+                                    {/*        className="ml-1 text-dominant hover:!underline"*/}
+                                    {/*    >*/}
+                                    {/*        {t('common:portfolio')}*/}
+                                    {/*    </a>*/}
+                                    {/*</span>*/}
                                 </div>
                                 {renderFuturesEstBalance()}
                             </div>
