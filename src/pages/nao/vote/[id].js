@@ -258,7 +258,7 @@ export default function Vote() {
                                     />
                                 </div>
                             </div>
-                            <div className="bg-black mt-3 rounded-lg mb-3">
+                            <div className="bg-black mt-3 rounded-lg mb-3 ">
                                 <Progressbar
                                     percent={
                                         (data.totalVoteNo / data.totalPool) *
@@ -272,7 +272,7 @@ export default function Vote() {
                                 <span className="text-nao-grey text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem]">{`${(
+                                <span className="text-[0.75rem] text-nao-text">{`${(
                                     (totalVoteNo / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>
