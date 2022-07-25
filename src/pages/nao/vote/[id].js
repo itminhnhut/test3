@@ -16,7 +16,7 @@ import {
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import SvgSuccessfulCircle from "src/components/svg/SuccessfulCircle";
 import FetchApi from "utils/fetch-api";
-import { API_USER_VOTE } from "redux/actions/apis";
+import { API_USER_POOL, API_USER_VOTE } from "redux/actions/apis";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
@@ -55,7 +55,7 @@ export default function Vote() {
                 options: { method: "GET" },
             });
             const useVoteRes = await FetchApi({
-                url: API_USER_VOTE + "/getuserpool",
+                url: API_USER_POOL,
                 options: { method: "GET" },
             });
 
