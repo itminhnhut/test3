@@ -306,7 +306,7 @@ const OrderDetail = ({
                                 {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
                                     <Row>
                                         <Label>{t(`futures:${order?.type === VndcFutureOrderType.Type.LIMIT ? 'limit_price' : 'stop_price'}`)}</Label>
-                                        <Span>{formatNumber(order?.price)}</Span>
+                                        <Span>{formatNumber(order?.price, decimalSymbol)}</Span>
                                     </Row>
                                 }
                                 <Row>
