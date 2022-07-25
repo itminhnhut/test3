@@ -111,12 +111,12 @@ export default function Vote() {
         if (!data) return null;
         return (
             <>
-                <div className="lg:col-span-2 sm:col-span-3">
+                <div className="text-[1.375rem] leading-8 lg:text-xl lg:col-span-2 sm:col-span-3">
                     <h5 className="text-nao-white sm:text-xl lg:text-2xl pt-10 font-semibold mb-5">
                         {t("nao:vote:nao_description")}
                     </h5>
                     <div
-                        className="description text-nao-grey leading-7 mb-5"
+                        className="description text-nao-grey text-sm lg:text-[1rem] leading-7 mb-5"
                         dangerouslySetInnerHTML={{
                             __html:
                                 data?.voteDescription &&
@@ -124,7 +124,7 @@ export default function Vote() {
                         }}
                     ></div>
                     <div
-                        className="description text-nao-grey leading-7"
+                        className="description text-nao-grey text-sm lg:text-[1rem] leading-7"
                         dangerouslySetInnerHTML={{
                             __html: t("nao:vote:vote_notice"),
                         }}
@@ -191,14 +191,14 @@ export default function Vote() {
         <LayoutNaoToken>
             <div className="grid lg:grid-cols-3 gap-8 pr-3 justify-between pt-10 items-start flex-wrap">
                 <div className="lg:col-span-2 sm:col-span-3">
-                    <h3 className="lg:text-3xl text-2xl leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                    <h3 className="lg:text-[2.125rem] lg:leading-[3rem] text-[1.625rem] leading-[2.3755rem] font-semibold pb-[6px] max-w-[700px] text-nao-white">
                         {data?.voteName && data?.voteName[language]}
                     </h3>
 
                     <div className="hidden lg:block">{description()}</div>
                 </div>
                 <div className="lg:col-span-1 sm:col-span-3">
-                    <CardNao className="!min-h-0 gap-7 lg:w-full !min-w-[300px]">
+                    <CardNao className="!min-h-0 gap-7 lg:w-full !min-w-[280px]">
                         <div>
                             <div className="flex flex-row justify-between">
                                 <span className="text-[0.875rem]">
