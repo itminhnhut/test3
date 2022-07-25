@@ -565,7 +565,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput>
                         <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig}
-                            availableAsset={availableAsset} decimal={decimals?.decimalScalePrice} />
+                            availableAsset={availableAsset} decimal={decimalSymbol} />
                     </OrderInput>
                     <OrderInput data-tut="order-button">
                         <OrderButtonMobile
