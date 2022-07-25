@@ -185,7 +185,7 @@ const OrderItemMobile = ({
                         :
                         <>
                             <div className="text-xs text-right" onClick={() => profit && actions('modal', 'share')}>
-                                <div className="text-xs font-medium text-onus-green py-[1px] float-right">
+                                <div className="text-xs font-medium text-onus-green float-right">
                                     <OrderProfit onusMode={true} className="flex flex-col"
                                         order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory}
                                         isMobile decimal={decimalSymbol} />

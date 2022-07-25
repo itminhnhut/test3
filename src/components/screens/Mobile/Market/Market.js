@@ -277,7 +277,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                 <div className='flex items-start justify-end'>
                     <div className='flex flex-col text-right'>
                         <LastPrice price={item.lastPrice} />
-                        <span className='text-xs text-onus-grey leading-4 whitespace-nowrap'>
+                        <span className='text-xs text-onus-grey leading-[1.125rem] whitespace-nowrap'>
                             ${formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
                         </span>
                     </div>

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { emitWebViewEvent, formatCurrency, formatNumber, getS3Url } from 'redux/actions/utils';
-import OrderBalance, { Balance } from '../TabOrders/OrderBalance';
+import OrderBalance from 'components/screens/Mobile/Futures/TabOrders/OrderBalance';
 import TradingLabel from 'components/trade/TradingLabel';
 import { useSelector } from 'react-redux';
 import { placeFuturesOrder } from 'redux/actions/futures';
@@ -94,23 +94,23 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
     );
 };
 
-const Equity = memo(({ ordersList }) => {
-    const { t } = useTranslation();
-    return (
-        <div className="flex pt-[10px]">
-            <TradingLabel
-                label={t('futures:mobile:pnl')}
-                value={<Balance ordersList={ordersList} mode='pnl' />}
-                containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
-            />
-            <TradingLabel
-                label={t('futures:mobile:equity')}
-                value={<Balance ordersList={ordersList} mode='equity' />}
-                containerClassName='text-xs flex justify-between w-1/2 pb-[5px]'
-            />
-        </div>
-    )
-})
+// const Equity = memo(({ ordersList }) => {
+//     const { t } = useTranslation();
+//     return (
+//         <div className="flex pt-[10px]">
+//             <TradingLabel
+//                 label={t('futures:mobile:pnl')}
+//                 value={<Balance ordersList={ordersList} mode='pnl' />}
+//                 containerClassName={`text-xs flex justify-between w-1/2 pb-[5px] pr-[8px]`}
+//             />
+//             <TradingLabel
+//                 label={t('futures:mobile:equity')}
+//                 value={<Balance ordersList={ordersList} mode='equity' />}
+//                 containerClassName='text-xs flex justify-between w-1/2 pb-[5px]'
+//             />
+//         </div>
+//     )
+// })
 
 const Side = styled.div.attrs({
     className: 'w-1/2 px-[16px] flex justify-center flex-col font-medium'
