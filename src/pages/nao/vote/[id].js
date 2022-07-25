@@ -220,7 +220,7 @@ export default function Vote() {
                                     {t('nao:vote:rejected')}
                                 </span>
                                 <div className="flex flex-row">
-                                    <span className="mr-2 text-[1.1rem] font-semibold">
+                                    <span className="mr-2 font-semibold">
                                         {data?.totalVoteNo &&
                                             formatNumber(
                                                 data?.totalVoteNo,
@@ -424,9 +424,9 @@ const VoteProposalModal = ({
                                 {t('nao:vote:nao_too_small')}
                             </ButtonNao>
                         </div>
-                            
+
                         }
-                        
+
                         <p className="text-nao-grey text-sm">
                             {t('nao:vote:vote_remind')}
                         </p>
