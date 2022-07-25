@@ -1,0 +1,70 @@
+{
+    "referral_pages": {
+        "table": {
+            "friends_id": "Nami ID",
+            "friends_username": "Tên",
+            "verified": "Đã xác minh",
+            "not_verify": "Chưa xác minh",
+            "kyc_status": "Trạng thái KYC",
+            "total_bonus_earned": "Tổng hoa hồng đã nhận",
+            "trading_type": "Loại giao dịch",
+            "reg_time": "Thời gian đăng kí",
+            "order_type": "Loại lệnh",
+            "order_volume": "Khối lượng",
+            "commission_earned": "Hoa hồng đã nhận",
+            "commission_time": "Thời gian trả hoa hồng",
+            "traded": "Đã giao dịch",
+            "order_count": "Số lệnh",
+            "volume": "Khối lượng"
+        },
+        "banner": {
+            "title1": "Giới thiệu NAMI.",
+            "title2": "Kiếm thêm thu nhập",
+            "sub_title": "Nhận đến 20% hoa hồng mỗi khi bạn bè của bạn thực hiện giao dịch trên sàn NAMI.",
+            "inv_btn": "Giới thiệu",
+            "detail_btn": "Chi tiết",
+            "referral_id": "ID Giới thiệu",
+            "referral_link": "Link giới thiệu",
+            "referral_code": "Mã giới thiệu",
+            "exchange_commission": "Hoa hồng Exchange",
+            "futures_commission": "Hoa hồng Futures"
+        },
+        "time_sort": {
+            "date_range": "Khung thời gian",
+            "until": "Từ",
+            "all": "Tất cả",
+            "yesterday": "Hôm qua",
+            "this_week": "Tuần này",
+            "this_month": "Tháng này"
+        },
+        "categories": {
+            "dashboard": "Tổng quan",
+            "friends_list": "Danh sách bạn bè",
+            "commission_history": "Lịch sử hoa hồng"
+        },
+        "dashboard": {
+            "you_earned": "Bạn đã nhận",
+            "total_of_traded_friends": "Tổng số bạn bè đã giao dịch",
+            "total_of_friends": "Tổng số bạn bè"
+        },
+        "utils": {
+            "export_friendslist": "Xuất danh sách bạn bè",
+            "export_commission_history": "Xuất lịch sử hoa hồng"
+        },
+        "addition_info": {
+            "dashboard": "Dữ liệu được cập nhật mỗi tiếng một lần.",
+            "friendslist": "Dữ liệu được cập nhật mỗi tiếng một lần.",
+            "commission": "Chỉ hiển thị dữ liệu 7 ngày gần nhất."
+        }
+    },
+    "global_pagination": {
+        "pages": "Trang",
+        "of": "/"
+    },
+    "user": {
+        "login_first": "Vui lòng đăng nhập để tiếp tục",
+        "login_to_trade": "Đăng nhập",
+        "login_to_view": "Đăng nhập để xem",
+        "login_to_continue": "Đăng nhập ngay"
+    }
+}
