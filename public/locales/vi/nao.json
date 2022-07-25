@@ -3,6 +3,7 @@
     "governance_pool": "Pool quản trị",
     "buy_token": "Mua NAO",
     "contest_futures": "Đua top Futures",
+    "voting": "Biểu quyết",
     "project_info": "Thông tin dự án",
     "circulating_supply": "Tổng lưu hành",
     "distributed_today": "Phân phối hôm nay",
@@ -84,6 +85,33 @@
         "fail": "Lỗi",
         "no_transaction_history": "Không có lịch sử giao dịch",
         "unlock_status": "Mở khóa: {{value}}"
+    },
+    "vote": {
+        "title": "Biểu quyết",
+        "description": "Theo dõi các trạng thái đề xuất và bỏ phiếu cho các thay đổi.",
+        "voted_for": "Tán thành",
+        "your_vote": "Số phiếu của bạn",
+        "vote_for_proposal": "Biểu quyết",
+        "voting_power": "Số NAO của bạn",
+        "vote_remind": "Bạn chỉ được biểu quyết một lần duy nhất",
+        "voted_successfully": "Biểu quyết thành công",
+        "vote": "Tán thành",
+        "vote_ended": "Biểu quyết đã kết thúc",
+        "reject": "Không tán thành",
+        "rejected": "Không tán thành",
+        "voting": "Biểu quyết",
+        "voted": "Đã biểu quyết",
+        "nao_description": "Nội dung",
+        "login_to_vote": "Đăng nhập để biểu quyết",
+        "vote_notice": "Quy định Biểu quyết dành cho Pool Quản trị NAO:<br/> - Mỗi người dùng có 1 lần biểu quyết duy nhất, quyết định sẽ được bảo lưu cho tới hết thời gian biểu quyết<br/> - Số NAO người dùng nạp thêm vào Pool sau khi biểu quyết sẽ được tự động cập nhật theo quyết định biểu quyết<br/> - Tỷ lệ biểu quyết dựa trên tỷ lệ góp NAO trong Pool Quản trị <br/> - Đề xuất cần được trên 50% số NAO trong Pool Quản trị ủng hộ để được thông qua",
+        "status": {
+            "canceled": "Huỷ",
+            "executed": "Đã thông qua",
+            "processing": "Đang biểu quyết",
+            "failed": "Không thông qua"
+        },
+        "rejected_successfully": "Biểu quyết thành công",
+        "vote_rating": "Tỷ lệ bình chọn"
     },
     "nao_token": {
         "title": "Mua token NAO",
