@@ -159,21 +159,21 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         />
                     </div>
                     <div className="flex flex-row justify-between">
-                        <span className="text-nao-grey text-[0.75rem] lg:text-sm leading-6">
+                        <span className="text-nao-grey text-[0.75rem] leading-6">
                             {t("nao:vote:vote_rating")}
                         </span>
                         <div className="flex flex-row gap-2">
                             <div className="flex flex-row items-center gap-2">
                                 <SvgChecked className="min-w-[0.75rem]" />
 
-                                <span className="text-[0.75rem] lg:text-sm">{`${(
+                                <span className="text-[0.75rem] text-white">{`${(
                                     (totalVoteYes / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <SvgTimeIC className="min-w-[0.75rem]" />
-                                <span className="text-[0.75rem] lg:text-sm">{`${(
+                                <span className="text-[0.75rem] text-white">{`${(
                                     (totalVoteNo / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>

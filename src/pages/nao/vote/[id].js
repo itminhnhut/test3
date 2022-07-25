@@ -201,7 +201,7 @@ export default function Vote() {
                     <CardNao className="!min-h-0 gap-7 lg:w-full !min-w-[280px]">
                         <div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-[0.875rem]">
+                                <span className="text-[0.875rem] text-nao-text">
                                     {t("nao:vote:voted_for")}
                                 </span>
                                 <div className="flex flex-row">
@@ -229,10 +229,10 @@ export default function Vote() {
                                 />
                             </div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-nao-grey text-[0.875rem] leading-6">
+                                <span className="text-nao-grey text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.875rem]">{`${(
+                                <span className="text-[0.75rem] text-nao-text">{`${(
                                     (totalVoteNo / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>
@@ -240,7 +240,7 @@ export default function Vote() {
                         </div>
                         <div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-[0.875rem]">
+                                <span className="text-[0.875rem] text-nao-text">
                                     {t("nao:vote:rejected")}
                                 </span>
                                 <div className="flex flex-row">
@@ -269,17 +269,17 @@ export default function Vote() {
                                 />
                             </div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-nao-grey text-[0.875rem] leading-6">
+                                <span className="text-nao-grey text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.875rem]">{`${(
+                                <span className="text-[0.75rem]">{`${(
                                     (totalVoteNo / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
-                            <span className="text-[0.875rem]">
+                            <span className="text-[0.875rem] text-nao-text">
                                 {t("common:status")}
                             </span>
                             <div className="flex flex-row items-center">
@@ -323,7 +323,7 @@ export default function Vote() {
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
-                            <span className="text-[0.875rem]">
+                            <span className="text-[0.875rem] text-nao-text">
                                 {" "}
                                 {t("nao:vote:your_vote")}
                             </span>
