@@ -79,7 +79,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
             }}
         >
             <div className="grid grid-cols-3 gap-4">
-                <div className="md:col-span-2 col-span-3 flex flex-row gap-1 flex-1 items-center">
+                <div className="lg:col-span-2 col-span-3 flex flex-row gap-1 flex-1 items-center">
                     {status === "Processing" && (
                         <img
                             className="cursor-pointer h-[24px]"
@@ -94,7 +94,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         {voteName && voteName[language]}
                     </span>
                 </div>
-                <div className="md:col-span-1 col-span-3">
+                <div className="lg:col-span-1 col-span-3">
                     <div className="flex flex-row justify-between mb-3">
                         <div>
                             <span className="text-sm text-nao-grey leading-6">

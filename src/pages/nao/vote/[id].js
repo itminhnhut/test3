@@ -1,15 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import LayoutNaoToken from "components/common/layouts/LayoutNaoToken";
-
+import { ButtonNao, CardNao } from "src/components/screens/Nao/NaoStyle";
 import Portal from "components/hoc/Portal";
 import classNames from "classnames";
-import { formatNumber, getLoginUrl, formatTime } from "redux/actions/utils";
-import { getS3Url } from "redux/actions/utils";
 import {
-    CardNao,
+    emitWebViewEvent,
+    formatNumber,
+    formatTime,
+    getS3Url,
+} from "redux/actions/utils";
+import {
     Progressbar,
     useOutsideAlerter,
-    ButtonNao,
 } from "components/screens/Nao/NaoStyle";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import SvgSuccessfulCircle from "src/components/svg/SuccessfulCircle";
@@ -35,6 +37,7 @@ export default function Vote() {
     const [typeModal, setTypeModal] = useState(true);
     const [dataUserVote, setDataUserVote] = useState("");
     const [data, setData] = useState({});
+    const [userVoteData, setUserVoteData] = useState(null);
     const { id } = useRouter().query;
     const auth = useSelector((state) => state.auth?.user);
     const router = useRouter();
@@ -63,15 +66,31 @@ export default function Vote() {
         }
     }
 
+    async function fetchUserData() {
+        try {
+            const res = await FetchApi({
+                url: API_USER_VOTE + "/getUserVoteInfo/" + id,
+                options: { method: "GET" },
+            });
+            setUserVoteData(res);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(async () => {
         fetchData();
     }, []);
+    useEffect(async () => {
+        if (auth) {
+            fetchUserData();
+        }
+    }, [auth]);
 
-    async function handleSubmitVote() {
+    async function handleSubmitVote(votedYes) {
         setIsShowProposalModal(false);
-        const votedYes = typeModal;
         try {
-            const res = await FetchApi({
+            const data = await FetchApi({
                 url: API_USER_VOTE + "/",
                 options: { method: "POST" },
                 params: {
@@ -82,200 +101,257 @@ export default function Vote() {
             setIsShowSuccessModal(true);
         } catch (error) {
             console.log(error);
+        } finally {
+            fetchUserData();
+            fetchData();
         }
     }
-    if (!data || Object.keys(data).length < 1) return <LoadingPage />;
-    return (
-        <LayoutNaoToken>
-            <div className="flex flex-row gap-4 pr-3 justify-between pt-10 items-start flex-wrap">
-                <div className="left mr-7 min-w-[528px]">
-                    <h3 className="text-[2.5rem] sm:text-3xl leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
-                        {data?.voteName && data.voteName[language]}
-                    </h3>
-                    <h5 className="text-nao-white text-[1.5rem] pt-10 font-semibold mb-2">
+
+    const description = useCallback(() => {
+        if (!data) return null;
+        return (
+            <>
+                <div className="lg:col-span-2 sm:col-span-3">
+                    <h5 className="text-nao-white sm:text-xl lg:text-2xl pt-10 font-semibold mb-5">
                         {t("nao:vote:nao_description")}
                     </h5>
-
                     <div
-                        className="description text-nao-grey leading-7"
+                        className="description text-nao-grey leading-7 mb-5"
                         dangerouslySetInnerHTML={{
                             __html:
                                 data?.voteDescription &&
-                                data.voteDescription[language],
+                                data?.voteDescription[language],
+                        }}
+                    ></div>
+                    <div
+                        className="description text-nao-grey leading-7"
+                        dangerouslySetInnerHTML={{
+                            __html: t("nao:vote:vote_notice"),
                         }}
                     ></div>
                 </div>
-                <CardNao className="!min-h-0 gap-7">
-                    <div>
-                        <div className="flex flex-row justify-between">
-                            <span className="text-[0.875rem]">
-                                {t("nao:vote:voted_for")}
-                            </span>
-                            <div className="flex flex-row">
-                                <span className="mr-2 text-[1.125rem] font-semibold">
-                                    {data.totalVoteYes &&
-                                        formatNumber(
-                                            data.totalVoteYes,
-                                            assetNao?.assetDigit ?? 0
-                                        )}
+            </>
+        );
+    }, [data]);
+
+    const _renderButtonVote = () => {
+        if (!data) return null;
+
+        if (data?.status !== "Processing") {
+            return (
+                <ButtonNao
+                    disabled
+                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                >
+                    {t("nao:vote:vote_ended")}
+                </ButtonNao>
+            );
+        }
+        if (!auth) {
+            return (
+                <ButtonNao
+                    className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
+                    onClick={() => {
+                        emitWebViewEvent("login");
+                    }}
+                >
+                    {t("nao:vote:login_to_vote")}
+                </ButtonNao>
+            );
+        }
+
+        if (userVoteData) {
+            return (
+                <ButtonNao
+                    disabled
+                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                >
+                    {t("nao:vote:voted")}
+                </ButtonNao>
+            );
+        } else {
+            return (
+                <ButtonNao
+                    className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
+                    onClick={() => {
+                        setTypeModal(true);
+                        setIsShowProposalModal(true);
+                    }}
+                >
+                    {t("nao:vote:title")}
+                </ButtonNao>
+            );
+        }
+    };
+
+    if (!data || Object.keys(data).length < 1) return <LoadingPage />;
+    const statusText = t(`nao:vote:status:${(data?.status).toLowerCase()}`);
+
+    return (
+        <LayoutNaoToken>
+            <div className="grid lg:grid-cols-3 gap-8 pr-3 justify-between pt-10 items-start flex-wrap">
+                <div className="lg:col-span-2 sm:col-span-3">
+                    <h3 className="lg:text-3xl text-2xl leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                        {data?.voteName && data?.voteName[language]}
+                    </h3>
+
+                    <div className="hidden lg:block">{description()}</div>
+                </div>
+                <div className="lg:col-span-1 sm:col-span-3">
+                    <CardNao className="!min-h-0 gap-7 lg:w-full !min-w-[300px]">
+                        <div>
+                            <div className="flex flex-row justify-between">
+                                <span className="text-[0.875rem]">
+                                    {t("nao:vote:voted_for")}
                                 </span>
-                                <img
-                                    src={getS3Url("/images/nao/ic_nao.png")}
-                                    alt=""
-                                    className="w-[20px] h-[20px]"
-                                />
-                            </div>
-                        </div>
-                        <div className="bg-black mt-3 rounded-lg mb-3">
-                            <Progressbar
-                                percent={
-                                    (data.totalVoteYes / data.totalPool) * 100
-                                }
-                                height={6}
-                            />
-                        </div>
-                        <div className="flex flex-row justify-between">
-                            <span className="text-nao-grey text-[0.875rem] leading-6">
-                                {t("nao:vote:vote_rating")}
-                            </span>
-                            <span className="text-[0.875rem]">{`${(
-                                (totalVoteNo / totalPool) *
-                                100
-                            ).toFixed()}%`}</span>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="flex flex-row justify-between">
-                            <span className="text-[0.875rem]">
-                                {t("nao:vote:rejected")}
-                            </span>
-                            <div className="flex flex-row">
-                                <span className="mr-2 text-[1.1rem] font-semibold">
-                                    {totalVoteYes &&
-                                        formatNumber(
-                                            totalVoteNo,
-                                            assetNao?.assetDigit ?? 0
-                                        )}
-                                </span>
-                                <img
-                                    src={getS3Url("/images/nao/ic_nao.png")}
-                                    alt=""
-                                    className="w-[20px] h-[20px]"
-                                />
-                            </div>
-                        </div>
-                        <div className="bg-black mt-3 rounded-lg mb-3">
-                            <Progressbar
-                                percent={
-                                    (data.totalVoteNo / data.totalPool) * 100
-                                }
-                                height={6}
-                                background="red"
-                            />
-                        </div>
-                        <div className="flex flex-row justify-between">
-                            <span className="text-nao-grey text-[0.875rem] leading-6">
-                                {t("nao:vote:vote_rating")}
-                            </span>
-                            <span className="text-[0.875rem]">{`${(
-                                (totalVoteNo / totalPool) *
-                                100
-                            ).toFixed()}%`}</span>
-                        </div>
-                    </div>
-                    <div className="flex flex-row justify-between">
-                        <span className="text-[0.875rem]">
-                            {t("common:status")}
-                        </span>
-                        <div className="flex flex-row items-center">
-                            {data.status === "Processing" && (
-                                <div className="flex flex-row justify-start items-center gap-2">
-                                    <span className="text-[1.125rem] font-semibold">
-                                        {data.status}
+                                <div className="flex flex-row">
+                                    <span className="mr-2   font-semibold">
+                                        {data?.totalVoteYes &&
+                                            formatNumber(
+                                                data?.totalVoteYes,
+                                                assetNao?.assetDigit ?? 0
+                                            )}
                                     </span>
-                                </div>
-                            )}
-                            {data.status === "Executed" && (
-                                <div className="flex flex-row justify-start items-center gap-2">
                                     <img
-                                        src={getS3Url(
-                                            "/images/nao/ic_checked.png"
-                                        )}
+                                        src={getS3Url("/images/nao/ic_nao.png")}
                                         alt=""
-                                        className="w-[15px] h-[12px] mr-2"
+                                        className="w-[20px] h-[20px]"
                                     />
-                                    <span className="text-[1.125rem] font-semibold">
-                                        {data.status}
-                                    </span>
                                 </div>
-                            )}
-                            {data.status === "Failed" && (
-                                <div className="flex flex-row justify-start items-center gap-2">
-                                    <SvgTimeIC />
-                                    <span className="text-[1.125rem] font-semibold">
-                                        {data.status}
-                                    </span>
-                                </div>
-                            )}
-                            {data.status === "Canceled" && (
-                                <div className="flex flex-row justify-start items-center gap-2">
-                                    <SvgCancelCircle className="w-[12px] h-[12px]" />
-                                    <span className="text-[1.125rem] font-semibold">
-                                        {data.status}
-                                    </span>
-                                </div>
-                            )}
+                            </div>
+                            <div className="bg-black mt-3 rounded-lg mb-3">
+                                <Progressbar
+                                    percent={
+                                        (data?.totalVoteYes / data?.totalPool) *
+                                        100
+                                    }
+                                    height={6}
+                                />
+                            </div>
+                            <div className="flex flex-row justify-between">
+                                <span className="text-nao-grey text-[0.875rem] leading-6">
+                                    {t("nao:vote:vote_rating")}
+                                </span>
+                                <span className="text-[0.875rem]">{`${(
+                                    (totalVoteNo / totalPool) *
+                                    100
+                                ).toFixed()}%`}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex flex-row justify-between">
-                        <span className="text-[0.875rem]">
-                            {" "}
-                            {t("nao:vote:your_vote")}
-                        </span>
-                        <div className="flex flex-row">
-                            <span className="mr-2 text-[1.125rem] font-semibold">
-                                {auth && dataUserVote.amount
-                                    ? formatNumber(
-                                          dataUserVote.amount -
-                                              dataUserVote.lockAmount,
-                                          assetNao?.assetDigit ?? 0
-                                      )
-                                    : "__"}
+                        <div>
+                            <div className="flex flex-row justify-between">
+                                <span className="text-[0.875rem]">
+                                    {t("nao:vote:rejected")}
+                                </span>
+                                <div className="flex flex-row">
+                                    <span className="mr-2 text-[1.1rem] font-semibold">
+                                        {totalVoteYes &&
+                                            formatNumber(
+                                                totalVoteNo,
+                                                assetNao?.assetDigit ?? 0
+                                            )}
+                                    </span>
+                                    <img
+                                        src={getS3Url("/images/nao/ic_nao.png")}
+                                        alt=""
+                                        className="w-[20px] h-[20px]"
+                                    />
+                                </div>
+                            </div>
+                            <div className="bg-black mt-3 rounded-lg mb-3">
+                                <Progressbar
+                                    percent={
+                                        (data.totalVoteNo / data.totalPool) *
+                                        100
+                                    }
+                                    height={6}
+                                    background="red"
+                                />
+                            </div>
+                            <div className="flex flex-row justify-between">
+                                <span className="text-nao-grey text-[0.875rem] leading-6">
+                                    {t("nao:vote:vote_rating")}
+                                </span>
+                                <span className="text-[0.875rem]">{`${(
+                                    (totalVoteNo / totalPool) *
+                                    100
+                                ).toFixed()}%`}</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-row justify-between">
+                            <span className="text-[0.875rem]">
+                                {t("common:status")}
                             </span>
-                            <img
-                                src={getS3Url("/images/nao/ic_nao.png")}
-                                alt=""
-                                className="w-[20px] h-[20px]"
-                            />
+                            <div className="flex flex-row items-center">
+                                {data?.status === "Processing" && (
+                                    <div className="flex flex-row justify-start items-center gap-2">
+                                        <span className="  font-semibold">
+                                            {statusText}
+                                        </span>
+                                    </div>
+                                )}
+                                {data?.status === "Executed" && (
+                                    <div className="flex flex-row justify-start items-center gap-2">
+                                        <img
+                                            src={getS3Url(
+                                                "/images/nao/ic_checked.png"
+                                            )}
+                                            alt=""
+                                            className="w-[15px] h-[12px] mr-2"
+                                        />
+                                        <span className="  font-semibold">
+                                            {statusText}
+                                        </span>
+                                    </div>
+                                )}
+                                {data?.status === "Failed" && (
+                                    <div className="flex flex-row justify-start items-center gap-2">
+                                        <SvgTimeIC />
+                                        <span className="  font-semibold">
+                                            {statusText}
+                                        </span>
+                                    </div>
+                                )}
+                                {data?.status === "Canceled" && (
+                                    <div className="flex flex-row justify-start items-center gap-2">
+                                        <SvgCancelCircle className="w-[12px] h-[12px]" />
+                                        <span className="  font-semibold">
+                                            {statusText}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    <ButtonNao
-                        className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
-                        onClick={() => {
-                            if (!auth) {
-                                router.push(getLoginUrl("sso"));
-                            } else {
-                                setTypeModal(true);
-                                setIsShowProposalModal(true);
-                            }
-                        }}
-                    >
-                        {auth
-                            ? t("nao:vote:vote")
-                            : t("nao:vote:login_to_vote")}
-                    </ButtonNao>
-                    {auth && (
-                        <ButtonNao
-                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
-                            onClick={() => {
-                                setTypeModal(false);
-                                setIsShowProposalModal(true);
-                            }}
-                        >
-                            {t("nao:vote:rejected")}
-                        </ButtonNao>
-                    )}
-                </CardNao>
+                        <div className="flex flex-row justify-between">
+                            <span className="text-[0.875rem]">
+                                {" "}
+                                {t("nao:vote:your_vote")}
+                            </span>
+                            <div className="flex flex-row">
+                                <span className="mr-2   font-semibold">
+                                    {auth && dataUserVote.amount
+                                        ? formatNumber(
+                                              dataUserVote.amount -
+                                                  dataUserVote.lockAmount,
+                                              assetNao?.assetDigit ?? 0
+                                          )
+                                        : "-"}
+                                </span>
+                                <img
+                                    src={getS3Url("/images/nao/ic_nao.png")}
+                                    alt=""
+                                    className="w-[20px] h-[20px]"
+                                />
+                            </div>
+                        </div>
+                        {_renderButtonVote()}
+                    </CardNao>
+                </div>
+
+                <div className="block lg:hidden lg:col-span-2 sm:col-span-3">
+                    {description()}
+                </div>
+
                 {isShowProposalModal && (
                     <VoteProposalModal
                         onClose={() => setIsShowProposalModal(false)}
@@ -321,17 +397,13 @@ const VoteProposalModal = ({
             >
                 <div
                     ref={wrapperRef}
-                    className="w-[500px] min-h-0 bg-nao-bgModal mx-auto mt-[200px] rounded-lg"
+                    className="lg:w-[500px] min-h-0 mx-auto mt-[200px]"
                 >
-                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-5">
+                    <div className="rounded-lg pt-10 px-6 pb-[50px] bg-nao-bgModal mx-4 flex flex-col items-center justify-between gap-5">
                         <div className="w-full flex flex-row items-center">
                             <h3 className="text-[1.375rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
                                 {t("nao:vote:vote_for_proposal")}
                             </h3>
-                            <img
-                                src={getS3Url("/images/nao/ic_info.png")}
-                                className="w-[16px] h-[16px] ml-3"
-                            />
                         </div>
                         <p className="text-nao-grey text-[0.875rem] leading-6">
                             {summary}
@@ -350,7 +422,7 @@ const VoteProposalModal = ({
                                     </p>
                                 </div>
                                 <div className="flex flex-row gap-1 items-center">
-                                    <span className="text-nao-white text-[1.375rem] font-semibold">
+                                    <span className="text-nao-white text-lg lg:text-3xl font-semibold">
                                         {formatNumber(numberOfNao, 2)}
                                     </span>
                                     <img
@@ -383,13 +455,8 @@ const VoteProposalModal = ({
                                 </ButtonNao>
                             </div>
                         )}
-                        {/* <ButtonNao
-                            className="py-2 px-7 !rounded-md text-sm font-semibold leading-6"
-                            onClick={handleSubmitVote}
-                        >
-                            {type ? t("nao:vote:vote") : t("nao:vote:reject")}
-                        </ButtonNao> */}
-                        <p className="text-nao-grey">
+
+                        <p className="text-nao-grey text-sm">
                             {t("nao:vote:vote_remind")}
                         </p>
                     </div>
@@ -398,7 +465,7 @@ const VoteProposalModal = ({
         </Portal>
     );
 };
-const VoteSuccessModal = ({ onClose, handleSubmitVote, summary, type }) => {
+const VoteSuccessModal = ({ onClose, summary, type }) => {
     const wrapperRef = useRef(null);
     const { t } = useTranslation();
     useOutsideAlerter(wrapperRef, onClose);
@@ -412,14 +479,14 @@ const VoteSuccessModal = ({ onClose, handleSubmitVote, summary, type }) => {
             >
                 <div
                     ref={wrapperRef}
-                    className="w-[500px] min-h-0 bg-nao-bgModal mx-auto mt-[200px] rounded"
+                    className="lg:w-[500px] min-h-0 mx-auto mt-[200px]"
                 >
-                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
+                    <div className="rounded bg-nao-bgModal mx-4 pt-10 px-6 pb-[50px] flex flex-col items-center justify-between gap-8">
                         {/* <div className="w-full items-center"> */}
                         <div className="m-auto">
                             <SvgSuccessfulCircle className="w-[80px] h-[80px]" />
                         </div>
-                        <h3 className="text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                        <h3 className="text-[1.375rem] lg:text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
                             {type
                                 ? t("nao:vote:voted_successfully")
                                 : t("nao:vote:rejected_successfully")}
@@ -427,12 +494,10 @@ const VoteSuccessModal = ({ onClose, handleSubmitVote, summary, type }) => {
                         <p className="text-nao-grey text-center">{summary}</p>
                         <ButtonNao
                             className="py-2 px-7 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
-                            onClick={handleSubmitVote}
                             onClick={onClose}
                         >
                             {t("common:close")}
                         </ButtonNao>
-                        {/* </div> */}
                     </div>
                 </div>
             </div>
