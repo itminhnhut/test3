@@ -11,7 +11,7 @@ import { useTranslation } from 'next-i18next';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
     const { t } = useTranslation()
-    const [keyword, setKeyWord] = useState('VNDC')
+    const [keyword, setKeyWord] = useState('')
     const [sortBy, setSortBy] = useState({}) // null = default, 1 => desc, 2 => asc
     const favoritePairs = useSelector((state) => state.futures.favoritePairs)
     const [theme] = useDarkMode()
@@ -22,7 +22,8 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
     const onSort = (field, value) => setSortBy({ field, value })
 
     const renderPairListItems = useCallback(() => {
-        let data = mode === '' ? pairConfigs : pairConfigs?.filter(i => {
+        const dataFilter = pairConfigs.filter(rs => rs.quoteAsset !== 'USDT');
+        let data = mode === '' ? dataFilter : dataFilter?.filter(i => {
             if (mode === 'Starred') return favoritePairs.find(rs => rs.replace('_', '') === i.symbol);
             return i.quoteAsset === mode
         })
