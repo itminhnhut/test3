@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import colors from "../../../styles/colors"
 
 export const DashboardWrapper = styled.div`
     margin-top: 40px;
@@ -68,7 +69,7 @@ export const DashboardItem = styled.div`
             content: '';
             height: 1px;
             width: 100%;
-            background: ${({theme}) => theme.colors.mint};
+            background: ${colors.mint};
             top: 100%;
             left: 0;
             position: absolute;
@@ -81,7 +82,7 @@ export const DashboardItem = styled.div`
     }
 
     div:last-child {
-        margin-top: 2px;
+        margin-top: 10px;
         font-size: 20px;
         font-weight: 600;
         font-family: Barlow, serif;

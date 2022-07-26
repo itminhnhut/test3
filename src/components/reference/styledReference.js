@@ -18,16 +18,16 @@ export const Containerz = styled(Container)`
 
 export const BannerContainer = styled.div`
     background: linear-gradient(274.75deg, #00B6C7 23.19%, #00DCC2 117.39%);
-    padding-top: 24px;
+    padding-top: 110px;
     padding-bottom: 24px;
 
     @media (min-width: 1200px) {
-        padding-top: 42px;
+        padding-top: 128px;
         padding-bottom: 42px;
     }
 
     @media (min-width: 1300px) {
-        padding-top: 60px;
+        padding-top: 128px;
         padding-bottom: 60px;
     }
 `
@@ -80,7 +80,7 @@ export const SubParagrapgh = styled.div`
     font-size: 14px;
     font-weight: 600;
     padding-left: 1px;
-    margin: 14px 0 20px;
+    margin: 30px 0 20px;
 
     span {
         font-weight: bold;

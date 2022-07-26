@@ -76,7 +76,7 @@ export const NAV_DATA = [
                 title: 'Referral',
                 localized: 'referral',
                 isNew: false,
-                url: getV1Url('/reference'),
+                url: '/reference',
                 child_lv2: [],
             },
             // {

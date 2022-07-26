@@ -18,8 +18,9 @@
             "volume": "Volume"
         },
         "banner": {
-            "title": "<span>Introduce NAMI.</span><br/><span>Earn extra money</span>",
-            "sub_title": "Earn up to <span>20% commission</span> every time your friends make a trade on NAMI.",
+            "title1": "Introduce NAMI.",
+            "title2": "Earn extra money",
+            "sub_title": "Earn up to 20% commission every time your friends make a trade on NAMI.",
             "inv_btn": "Invite",
             "detail_btn": "Details",
             "referral_id": "Referral ID",
@@ -61,5 +62,10 @@
             "friendslist": "Data is updated once an hour.",
             "commission": "Displays only last 7 days of data."
         }
+    },
+
+    "global_pagination": {
+        "pages": "Pages",
+        "of": "of"
     }
 }

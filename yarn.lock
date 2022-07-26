@@ -2255,7 +2255,7 @@ cookie@^0.4.1:
   resolved "https://registry.npmjs.org/cookie/-/cookie-0.4.1.tgz"
   integrity sha512-ZwrFkGJxUR3EIoXtO+yVE69Eb7KlixbaeAWfBQB9vVsNn/o+Yw69gBWSSDK825hQNdN+wF8zELf3dFNl/kxkUA==
 
-copy-to-clipboard@^3, copy-to-clipboard@^3.2.0:
+copy-to-clipboard@^3.2.0, copy-to-clipboard@^3.3.1:
   version "3.3.1"
   resolved "https://registry.npmjs.org/copy-to-clipboard/-/copy-to-clipboard-3.3.1.tgz"
   integrity sha512-i13qo6kIHTTpCm8/Wup+0b1mVWETvu2kIMzKoK8FpkLkFxlt0znUAHcMzox+T8sPlqtZXq3CulEjQHsYiGFJUw==
@@ -6300,13 +6300,13 @@ react-cool-inview@^2.0.8:
   resolved "https://registry.yarnpkg.com/react-cool-inview/-/react-cool-inview-2.0.8.tgz#f8b7aeaf6e880e443c339b8d5e2719374ff8fdc1"
   integrity sha512-D8ilAp7HwRxRMA1xRAvXZF8yhbL/6WWD5nxYX+K1GwbGQuMmCkrr5Bhm/2Mgn8XlFLzAU9frQ7g0UILxt1SnOQ==
 
-react-copy-to-clipboard@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.npmjs.org/react-copy-to-clipboard/-/react-copy-to-clipboard-5.0.4.tgz"
-  integrity sha512-IeVAiNVKjSPeGax/Gmkqfa/+PuMTBhutEvFUaMQLwE2tS0EXrAdgOpWDX26bWTXF3HrioorR7lr08NqeYUWQCQ==
+react-copy-to-clipboard@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/react-copy-to-clipboard/-/react-copy-to-clipboard-5.1.0.tgz#09aae5ec4c62750ccb2e6421a58725eabc41255c"
+  integrity sha512-k61RsNgAayIJNoy9yDsYzDe/yAZAzEbEgcz3DZMhF686LEyukcE1hzurxe85JandPUG+yTfGVFzuEw3xt8WP/A==
   dependencies:
-    copy-to-clipboard "^3"
-    prop-types "^15.5.8"
+    copy-to-clipboard "^3.3.1"
+    prop-types "^15.8.1"
 
 react-countdown@^2.3.2:
   version "2.3.2"
@@ -6424,10 +6424,10 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-2.0.4.tgz"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-feather@^2.0.9:
-  version "2.0.9"
-  resolved "https://registry.npmjs.org/react-feather/-/react-feather-2.0.9.tgz"
-  integrity sha512-yMfCGRkZdXwIs23Zw/zIWCJO3m3tlaUvtHiXlW+3FH7cIT6fiK1iJ7RJWugXq7Fso8ZaQyUm92/GOOHXvkiVUw==
+react-feather@^2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-2.0.10.tgz#0e9abf05a66754f7b7bb71757ac4da7fb6be3b68"
+  integrity sha512-BLhukwJ+Z92Nmdcs+EMw6dy1Z/VLiJTzEQACDUEnWMClhYnFykJCGWQx+NmwP/qQHGX/5CzQ+TGi8ofg2+HzVQ==
   dependencies:
     prop-types "^15.7.2"
 

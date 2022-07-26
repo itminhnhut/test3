@@ -18,8 +18,9 @@
             "volume": "Khối lượng"
         },
         "banner": {
-            "title": "<span>Giới thiệu NAMI.</span><br/><span>Kiếm thêm thu nhập</span>",
-            "sub_title": "Nhận đến <span>20% hoa hồng</span> mỗi khi bạn bè của bạn thực hiện giao dịch trên sàn NAMI.",
+            "title1": "Giới thiệu NAMI.",
+            "title2": "Kiếm thêm thu nhập",
+            "sub_title": "Nhận đến 20% hoa hồng mỗi khi bạn bè của bạn thực hiện giao dịch trên sàn NAMI.",
             "inv_btn": "Giới thiệu",
             "detail_btn": "Chi tiết",
             "referral_id": "ID Giới thiệu",
@@ -55,5 +56,9 @@
             "friendslist": "Dữ liệu được cập nhật mỗi tiếng một lần.",
             "commission": "Chỉ hiển thị dữ liệu 7 ngày gần nhất."
         }
+    },
+    "global_pagination": {
+        "pages": "Trang",
+        "of": "/"
     }
 }
