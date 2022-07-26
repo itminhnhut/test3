@@ -244,8 +244,13 @@ export default function Vote() {
                                     {t("nao:vote:rejected")}
                                 </span>
                                 <div className="flex flex-row">
+<<<<<<< HEAD
                                     <span className="mr-2 text-[1.1rem] font-semibold">
                                         {totalVoteYes &&
+=======
+                                    <span className="mr-2 font-semibold">
+                                        {data?.totalVoteNo &&
+>>>>>>> master
                                             formatNumber(
                                                 totalVoteNo,
                                                 assetNao?.assetDigit ?? 0
@@ -433,6 +438,7 @@ const VoteProposalModal = ({
                                 </div>
                             </div>
                         </CardNao>
+<<<<<<< HEAD
                         {numberOfNao > 0.1 ? (
                             <div className=" w-full flex justify-between gap-2">
                                 <ButtonNao
@@ -455,6 +461,33 @@ const VoteProposalModal = ({
                                 </ButtonNao>
                             </div>
                         )}
+=======
+                        {
+                            numberOfNao > 0.1
+                            ? <div className=" w-full flex justify-between gap-2">
+                            <ButtonNao
+                                className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                                onClick={() => handleSubmitVote(false)}
+                            >
+                                {t('nao:vote:reject')}
+                            </ButtonNao>
+                            <ButtonNao
+                                className="w-full py-2 !rounded-md text-sm font-semibold leading-6"
+                                onClick={() => handleSubmitVote(true)}
+                            >
+                                {t('nao:vote:vote')}
+                            </ButtonNao>
+                        </div>
+                        : <div className=" w-full flex justify-between gap-2">
+                            <ButtonNao
+                                className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                            >
+                                {t('nao:vote:nao_too_small')}
+                            </ButtonNao>
+                        </div>
+
+                        }
+>>>>>>> master
 
                         <p className="text-nao-grey text-sm">
                             {t("nao:vote:vote_remind")}
