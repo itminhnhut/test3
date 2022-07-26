@@ -20,7 +20,7 @@ import { createSelector } from 'reselect';
 import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
-import { getFilter, } from 'src/redux/actions/utils';
+import { getFilter, } from 'redux/actions/utils';
 // import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
 import { ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
 import EditSLTPVndcMobile from 'components/screens/Mobile/Futures/EditSLTPVndcMobile';
@@ -177,7 +177,7 @@ const PlaceOrder = ({
             autoTypeInput = JSON.parse(autoTypeInput)
             if (autoTypeInput.auto) {
                 const _sl = +(getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
-                const _tp = +(getSuggestTp(side, _lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
+                const _tp = +(getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
                 if (leverage <= 10) {
                     setTp('');
                     setSl('');
@@ -573,7 +573,7 @@ const PlaceOrder = ({
                             stopPrice={stopPrice} side={side} decimals={decimals}
                             pairConfig={pairConfig} pairPrice={pairPrice}
                             leverage={leverage} isAuth={isAuth} isError={isError}
-                            quoteQty={quoteQty}
+                            quoteQty={quoteQty} decimalSymbol={decimalSymbol}
                         />
                     </OrderInput>
                 </div>

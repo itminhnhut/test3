@@ -181,7 +181,7 @@ const OrderVolumeMobileModal = (props) => {
                     onusMode={true}
                     title={t(available ? 'futures:leverage:confirm' : 'wallet:deposit')}
                     componentType='button'
-                    className={`!h-[48px] !text-[16px] !font-semibold ${isError ? 'dark:!bg-darkBlue-3 dark:!text-darkBlue-4' : ''}`}
+                    className={`!h-[48px] !text-[16px] !font-semibold`}
                     type='primary'
                     disabled={isError}
                     onClick={() => available ? onConfirm(+volume) : onRedirect()}
