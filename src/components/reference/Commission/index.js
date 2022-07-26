@@ -110,6 +110,7 @@ const ReferralCommission = memo((props) => {
                 dataIndex: 'code',
                 key: 'code',
                 width: 'fit-content',
+                align: 'left'
             },
             {
                 title: <div>{t('referral_pages.table.friends_username')}
@@ -118,12 +119,14 @@ const ReferralCommission = memo((props) => {
                 dataIndex: 'name',
                 key: 'name',
                 width: 'auto',
+                align: 'left'
             },
             {
                 title: t('referral_pages.table.commission_earned'),
                 dataIndex: 'earned',
                 key:  'earned',
                 width: 'auto',
+                align: 'left'
             },
             {
                 title: <div>{t('referral_pages.table.commission_time')}
@@ -131,7 +134,8 @@ const ReferralCommission = memo((props) => {
                         </div>,
                 dataIndex: 'created_at',
                 key: 'created_at',
-                width: 'auto'
+                width: 'auto',
+                align: 'left'
             }
         ]
 
@@ -157,6 +161,7 @@ const ReferralCommission = memo((props) => {
                 dataIndex: 'volume',
                 key: 'volume',
                 width: 'fit-content',
+                align: 'left'
             },
             {
                 title: <div>{t('referral_pages.table.order_count')}
@@ -165,12 +170,16 @@ const ReferralCommission = memo((props) => {
                 dataIndex: 'order_count',
                 key: 'order_count',
                 width: 'auto',
+                align: 'left'
+
             },
             {
                 title: t('referral_pages.table.commission_earned'),
                 dataIndex: 'earned',
                 key:  'earned',
                 width: 'auto',
+                align: 'left'
+
             },
             {
                 title: <div>{t('referral_pages.table.commission_time')}
@@ -178,7 +187,8 @@ const ReferralCommission = memo((props) => {
                 </div>,
                 dataIndex: 'log_time',
                 key: 'log_time',
-                width: 'auto'
+                width: 'auto',
+                align: 'left'
             }
         ]
 

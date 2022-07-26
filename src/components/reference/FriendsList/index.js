@@ -108,6 +108,8 @@ const ReferralFriendsList = memo((props) => {
                 dataIndex: 'code',
                 key: 'code',
                 width: 'fit-content',
+                align: 'left'
+
             },
             {
                 title: <div>{t('referral_pages.table.friends_username')}
@@ -115,6 +117,8 @@ const ReferralFriendsList = memo((props) => {
                 dataIndex: 'name',
                 key: 'name',
                 width: 'auto',
+                align: 'left'
+
             },
             {
                 title: <div>{t('referral_pages.table.kyc_status')}
@@ -123,12 +127,16 @@ const ReferralFriendsList = memo((props) => {
                 dataIndex: 'is_verified',
                 key: 'is_verified',
                 width: 'auto',
+                align: 'left'
+
             },
             {
                 title: friendsList === 2 ? t('referral_pages.table.total_bonus_earned') : t('referral_pages.table.traded'),
                 dataIndex: friendsList === 2 ? 'earned' : 'has_trade',
                 key: friendsList === 2 ? 'earned' : 'has_trade',
                 width: 'auto',
+                align: 'left'
+
             },
             {
                 title: <div> {t('referral_pages.table.reg_time')}
@@ -136,7 +144,9 @@ const ReferralFriendsList = memo((props) => {
                 </div>,
                 dataIndex: 'created_at',
                 key: 'created_at',
-                width: 'auto'
+                width: 'auto',
+                align: 'left'
+
             }
         ]
         data.map(friend => {
