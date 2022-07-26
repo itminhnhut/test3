@@ -132,7 +132,7 @@ const OrderButtonMobile = ({
     };
 
     const classNameError = disabled || (isAuth && isError) ? 'opacity-[0.3] cursor-not-allowed' : '';
-    const title = type === FuturesOrderTypes.Limit ? t('futures:mobile:limit') : type === FuturesOrderTypes.StopMarket ? 'stop market' : '';
+    const title = type === FuturesOrderTypes.Limit ? t('futures:mobile:limit') : type === FuturesOrderTypes.StopMarket ? 'stop market' : type === FuturesOrderTypes.StopLimit ? 'stop limit' : '';
 
     const isShowConfirm = useMemo(() => {
         if (typeof window === 'undefined') return false;

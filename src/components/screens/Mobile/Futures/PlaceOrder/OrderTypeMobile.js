@@ -27,7 +27,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
     }
 
     const typeList = useMemo(() => {
-        return isVndcFutures ? orderTypes : orderTypes?.filter((o) => o === OrderTypes.Limit || o === OrderTypes.Market)
+        return orderTypes
     }, [orderTypes, isVndcFutures])
 
     return (
