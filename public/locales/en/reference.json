@@ -67,5 +67,11 @@
     "global_pagination": {
         "pages": "Pages",
         "of": "of"
+    },
+    "user": {
+        "login_first": "Please login before continue",
+        "login_to_trade": "Login to trade",
+        "login_to_view": "Login to view",
+        "login_to_continue": "Login to continue"
     }
 }

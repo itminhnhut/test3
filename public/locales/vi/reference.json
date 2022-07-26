@@ -60,5 +60,11 @@
     "global_pagination": {
         "pages": "Trang",
         "of": "/"
+    },
+    "user": {
+        "login_first": "Vui lòng đăng nhập để tiếp tục",
+        "login_to_trade": "Đăng nhập",
+        "login_to_view": "Đăng nhập để xem",
+        "login_to_continue": "Đăng nhập ngay"
     }
 }

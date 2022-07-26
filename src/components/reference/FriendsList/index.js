@@ -203,11 +203,8 @@ const ReferralFriendsList = memo((props) => {
             <ComponentTableWrapper>
                 {user ? renderTable()
                     : <div style={width <= 1200 ? { fontSize: 16, fontWeight: 600 } : { fontSize: 18, fontWeight: 600 }}>
-                        <NeedLogin>
-                            <a href='javascript:void(0)' onClick={() => handleLogin(isApp)}>
-                                {t('user.login_to_view')}
-                            </a>
-                        </NeedLogin>
+                        <NeedLogin message={t('user.login_to_view')}  />
+
                     </div>}
             </ComponentTableWrapper>
             {renderPageControl()}

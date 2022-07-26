@@ -225,8 +225,8 @@ const ReferralDashboard = memo((props) => {
             </TimeRange>
             <DashboardWrapper>
                 {!user ?
-                    <div style={width <= 1200 ? { fontSize: 16, fontWeight: 600 } : { fontSize: 18, fontWeight: 600 }}>
-                        <NeedLogin />
+                    <div className="w-full justify-center items-center h-full" style={width <= 1200 ? { fontSize: 16, fontWeight: 600 } : { fontSize: 18, fontWeight: 600 }}>
+                        <NeedLogin message={t('user.login_to_view')}  />
                     </div>
                     : <>
                         {renderEarnedCommissionToken()}
