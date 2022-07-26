@@ -327,11 +327,11 @@ const OrderDetail = ({
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:take_profit')}</Label>
-                                    <Span valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}>{renderSlTp(order?.tp)}</Span>
+                                    <Span className={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}>{renderSlTp(order?.tp)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:stop_loss')}</Label>
-                                    <Span valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}>{renderSlTp(order?.sl)}</Span>
+                                    <Span className={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}>{renderSlTp(order?.sl)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:open_fee')}</Label>
