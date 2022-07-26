@@ -188,11 +188,12 @@ const TabOpenOrders = ({
                     const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
                     const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
                     const decimalScalePrice = getDecimalPrice(symbol);
+                    const isVndcFutures = symbol?.quoteAsset === 'VNDC';
                     return (
                         <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
                             onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
                             onShowDetail={onShowDetail} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
-                            tab={tab}
+                            tab={tab} isVndcFutures={isVndcFutures}
                         />
                     );
                 })}

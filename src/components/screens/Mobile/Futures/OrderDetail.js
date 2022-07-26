@@ -212,6 +212,7 @@ const OrderDetail = ({
 
     const orderList = useMemo(() => [order], [order])
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
+    const decimalUsdt = assetConfig?.swap?.assetDigit ?? 0;
     return (
         <div className={'bg-white dark:!bg-onus overflow-hidden'} >
             <div className="relative overflow-auto h-full overflow-x-hidden">
@@ -268,7 +269,7 @@ const OrderDetail = ({
                         {!isTabHistory &&
                             <OrderOpenDetail order={order} decimalPrice={decimalPrice} isDark={isDark}
                                 pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
-                                forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory}
+                                forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory} isVndcFutures={isVndcFutures}
                             />
                         }
                         <div className="pt-5">
@@ -291,7 +292,7 @@ const OrderDetail = ({
                                     <Row>
                                         <Label>{t('futures:mobile:realized_pnl')}</Label>
                                         <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
-                                            {formatNumber(order?.profit, assetConfig?.swap?.assetDigit ?? 0, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
+                                                {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
                                     </Row>}
                                 <Row>
                                     <Label>{t('futures:order_table:volume')}</Label>

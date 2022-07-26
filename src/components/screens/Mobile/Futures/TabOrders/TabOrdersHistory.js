@@ -148,10 +148,12 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
                         const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
                         const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
                         const decimalScalePrice = getDecimalPrice(symbol);
+                        const isVndcFutures = symbol?.quoteAsset === 'VNDC';
                         return (
                             <OrderItemMobile key={i} order={order} mode="history"
                                 isDark={isDark} onShowDetail={onShowDetail} symbol={symbol}
                                 onShowModal={onShowModal} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
+                                isVndcFutures={isVndcFutures}
                             />
                         )
                     })}
