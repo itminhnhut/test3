@@ -27,7 +27,8 @@ const OrderOpenDetail = ({
     onClose,
     forceFetchOrder,
     isTabHistory,
-    decimalSymbol = 0
+    decimalSymbol = 0,
+    isVndcFutures
 }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
@@ -231,7 +232,7 @@ const OrderOpenDetail = ({
                         :
                         <div className="text-xs text-right" onClick={openShare}>
                             <div className="text-xs font-medium text-onus-green float-right">
-                                <OrderProfit onusMode={true} className="flex flex-col text-right" decimal={decimalSymbol}
+                                <OrderProfit onusMode={true} className="flex flex-col text-right" decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
                                     order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                             </div>
                         </div>
