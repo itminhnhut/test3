@@ -51,7 +51,8 @@ const OrderDetail = ({
     isDark,
     getDetail,
     isModal,
-    onClose
+    onClose,
+    isVndcFutures
 }) => {
     const router = useRouter();
     const { t } = useTranslation();
@@ -82,7 +83,8 @@ const OrderDetail = ({
 
     const renderFee = (order, key) => {
         if (!order) return '-';
-        const decimal = assetConfig ? assetConfig[key]?.assetDigit : 0;
+        const assetDigit = assetConfig ? assetConfig[key]?.assetDigit : 0
+        const decimal = isVndcFutures ? assetDigit : assetDigit + 2;
         const assetCode = assetConfig ? assetConfig[key]?.assetCode : '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];
         return data ? formatNumber(data, decimal) + ' ' + assetCode : '-';

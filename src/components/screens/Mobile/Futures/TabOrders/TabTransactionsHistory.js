@@ -164,7 +164,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
                     <div
                         className='font-medium text-onus-white text-sm'
                     >
-                        <span>{item.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(item.money_use), assetConfig?.assetDigit, null)}</span>
+                        <span>{item.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(item.money_use), assetConfig?.assetDigit ?? 4, null)}</span>
                         <span className="ml-1">{assetConfig?.assetCode}</span>
                     </div>
                     <div
