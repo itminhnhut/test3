@@ -23,7 +23,9 @@ const OrderItemMobile = ({
     onShowDetail,
     symbol,
     allowButton,
-    tab
+    tab,
+    decimalSymbol = 0,
+    decimalScalePrice = 0
 }) => {
     const { t } = useTranslation();
     const isTabHistory = mode === 'history';
@@ -72,7 +74,7 @@ const OrderItemMobile = ({
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus))
-        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, 0, 0, false) : '-'
+        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, decimalScalePrice, 0, false) : '-'
     }
 
     const renderReasonClose = (row) => {
@@ -139,7 +141,7 @@ const OrderItemMobile = ({
 
     const renderQuoteprice = () => {
         const value = order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask;
-        return formatNumber(value)
+        return formatNumber(value, decimalScalePrice)
     }
 
     const orderStatus = useMemo(() => {
@@ -183,10 +185,10 @@ const OrderItemMobile = ({
                         :
                         <>
                             <div className="text-xs text-right" onClick={() => profit && actions('modal', 'share')}>
-                                <div className="text-xs font-medium text-onus-green py-[1px] float-right">
+                                <div className="text-xs font-medium text-onus-green float-right">
                                     <OrderProfit onusMode={true} className="flex flex-col"
                                         order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory}
-                                        isMobile />
+                                        isMobile decimal={decimalSymbol} />
                                 </div>
                             </div>
                         </>
@@ -211,13 +213,13 @@ const OrderItemMobile = ({
                             className="flex flex-col gap-[2px]"
                             label={t('futures:order_table:open_price')}
                             valueClassName='!text-left !text-sm'
-                            value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : getOpenPrice(order, dataMarketWatch)}
+                            value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, decimalScalePrice, 0, false) : '-' : getOpenPrice(order, dataMarketWatch)}
                         />
                     </div>
                 }
                 <div className="flex flex-wrap w-full">
                     <OrderItem label={t('futures:order_table:volume')}
-                        value={order?.order_value ? formatNumber(order?.order_value, 0, 0, true) : '-'} />
+                        value={order?.order_value ? formatNumber(order?.order_value, decimalSymbol, 0, true) : '-'} />
                     {isTabOpen ?
                         <OrderItem
                             label={t(isTabHistory ? 'futures:mobile:reason_close' : `futures:mobile:liq_price`)}
@@ -231,7 +233,7 @@ const OrderItemMobile = ({
                     }
                     <OrderItem
                         label={t('futures:margin')}
-                        value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
+                        value={order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                     />
                     {!isTabOpen &&
                         <OrderItem

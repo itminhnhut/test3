@@ -40,7 +40,7 @@ const SocketLayout = ({ pair, children, pairConfig, pairParent }) => {
             Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
         };
     }, [publicSocket, pair, pairConfig]);
-
+    // console.log(pairPrice)
     return (
         cloneElement(children, {
             pairPrice: pairPrice,

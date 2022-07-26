@@ -91,7 +91,7 @@ export class MobileTradingView extends React.PureComponent {
             this.handleActiveTime(this.props.initTimeFrame)
         }
 
-        if ((prevProps.ordersList !== this.props.ordersList) && this.props.isVndcFutures && !this.firstTime) {
+        if ((prevProps.ordersList !== this.props.ordersList) && !this.firstTime) {
             this.rawOrders();
         }
     }
@@ -471,13 +471,13 @@ export class MobileTradingView extends React.PureComponent {
                 "volumePaneSize": "tiny"
             });
             this.setState({chartStatus: ChartStatus.LOADED});
-            if (this.props.isVndcFutures) {
+            // if (this.props.isVndcFutures) {
                 if (this.timer) clearTimeout(this.timer)
                 this.timer = setTimeout(() => {
                     this.rawOrders();
                     this.firstTime = false;
                 }, 2000);
-            }
+            // }
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(this.saveChart, 5000);
         });
@@ -511,18 +511,18 @@ export class MobileTradingView extends React.PureComponent {
                     id="chart-container"
                 >
                     <div
-                        className={classNames(`absolute w-full h-full bg-bgSpotContainer dark:bg-onus flex justify-center items-center`, {
+                        className={classNames(`absolute w-full h-full flex justify-center items-center`, {
                             "hidden": this.state.chartStatus === ChartStatus.LOADED
                         })}
                     >
                         <IconLoading color={colors.onus.green}/>
                     </div>
                     {this.props.showTimeFrame &&
-                    <div className="w-full border-b border-onus-line py-2 dragHandleArea">
+                    <div className="w-full border-b border-onus-line py-2 dragHandleArea z-10">
                         <ChartOptions
                             pair={this.props.symbol}
                             pairConfig={this.props.pairConfig}
-                            isVndcFutures={true}
+                            isVndcFutures={this.props.isVndcFutures}
                             resolution={this.state.interval}
                             setResolution={this.handleActiveTime}
                             isFullScreen={this.props.isFullScreen}

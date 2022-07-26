@@ -6,7 +6,7 @@ import CheckBox from 'components/common/CheckBox';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber } from 'redux/actions/utils';
 
-const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled }) => {
+const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, decimals, decimalSymbol }) => {
     const { t } = useTranslation();
     const [hidden, setHidden] = useState(isShowConfirm)
 
@@ -32,20 +32,20 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled }
                     <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
                     <div className="flex items-center justify-between text-sm">
                         <div className="text-onus-grey">{t('futures:price')}</div>
-                        <div>{formatNumber(data?.price, 0)} {data?.quoteAsset}</div>
+                        <div>{formatNumber(data?.price, decimalSymbol)} {data?.quoteAsset}</div>
                     </div>
                 </>
                 }
                 <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
                 <div className="flex items-center justify-between text-sm">
                     <div className="text-onus-grey">{t('futures:margin')}</div>
-                    <div>{formatNumber(data?.quoteQty / data?.leverage, 0)} {data?.quoteAsset}</div>
+                    <div>{formatNumber(data?.quoteQty / data?.leverage, decimalSymbol)} {data?.quoteAsset}</div>
                 </div>
                 {data?.sl && <>
                     <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
                     <div className="flex items-center justify-between text-sm">
                         <div className="text-onus-grey">{t('futures:stop_loss')}</div>
-                        <div className="text-onus-red">{formatNumber(data?.sl, 0)}</div>
+                        <div className="text-onus-red">{formatNumber(data?.sl, decimals?.decimalScalePrice ?? 0)}</div>
                     </div>
                 </>
                 }
@@ -53,7 +53,7 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled }
                     <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
                     <div className="flex items-center justify-between text-sm">
                         <div className="text-onus-grey">{t('futures:take_profit')}</div>
-                        <div className="text-onus-green">{formatNumber(data?.tp, 0)}</div>
+                        <div className="text-onus-green">{formatNumber(data?.tp, decimals?.decimalScalePrice ?? 0)}</div>
                     </div>
                 </>
                 }

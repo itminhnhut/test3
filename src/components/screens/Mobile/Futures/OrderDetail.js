@@ -60,6 +60,7 @@ const OrderDetail = ({
         swap: { currency: order?.margin_currency },
         order_value: { currency: order?.order_value_currency }
     }));
+    const decimalSymbol = assetConfig?.['order_value']?.assetDigit ?? 0;
     const [resolution, setResolution] = useState('15');
     const [dataSource, setDataSource] = useState([])
     const [chartKey, setChartKey] = useState('nami-mobile-chart')
@@ -89,7 +90,7 @@ const OrderDetail = ({
 
     const getValue = (number) => {
         if (number) {
-            return formatNumber(number, 0, 0, true);
+            return formatNumber(number, decimalSymbol, 0, true);
         } else {
             return t('futures:not_set')
         }
@@ -155,7 +156,7 @@ const OrderDetail = ({
         }
     };
 
-    const decimal = useMemo(() => {
+    const decimalPrice = useMemo(() => {
         const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
         return countDecimals(decimalScalePrice?.tickSize) ?? 0;
     }, [pairConfig]);
@@ -208,7 +209,6 @@ const OrderDetail = ({
     }, [resolution]);
 
     const orderList = useMemo(() => [order], [order])
-
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
     return (
         <div className={'bg-white dark:!bg-onus overflow-hidden'} >
@@ -264,8 +264,8 @@ const OrderDetail = ({
                     </div>
                     <div className="px-[16px] bg-onus">
                         {!isTabHistory &&
-                            <OrderOpenDetail order={order} decimal={decimal} isDark={isDark}
-                                pairConfig={pairConfig} onClose={onClose}
+                            <OrderOpenDetail order={order} decimalPrice={decimalPrice} isDark={isDark}
+                                pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
                                 forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory}
                             />
                         }
@@ -276,7 +276,7 @@ const OrderDetail = ({
                                     <Label>ID</Label>
                                     <Span className="flex items-center" onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
                                         {order?.displaying_id}
-                                        <Copy color={colors.onus.grey} size={16} className="ml-2 "/>
+                                        <Copy color={colors.onus.grey} size={16} className="ml-2 " />
                                     </Span>
                                 </Row>
                                 <Row>
@@ -303,9 +303,15 @@ const OrderDetail = ({
                                     <Label>{t('futures:mobile:open_time')}</Label>
                                     <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
                                 </Row>
+                                {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
+                                    <Row>
+                                        <Label>{t(`futures:${order?.type === VndcFutureOrderType.Type.LIMIT ? 'limit_price' : 'stop_price'}`)}</Label>
+                                        <Span>{formatNumber(order?.price, decimalSymbol)}</Span>
+                                    </Row>
+                                }
                                 <Row>
                                     <Label>{t('futures:order_table:open_price')}</Label>
-                                    <Span>{formatNumber(order?.open_price, 0)}</Span>
+                                    <Span>{formatNumber(order?.open_price, decimalSymbol)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:close_time')}</Label>
@@ -313,7 +319,7 @@ const OrderDetail = ({
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:order_table:close_price')}</Label>
-                                    <Span>{order?.close_price ? formatNumber(order?.close_price, 0) : '-'}</Span>
+                                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalSymbol) : '-'}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:reason_close')}</Label>

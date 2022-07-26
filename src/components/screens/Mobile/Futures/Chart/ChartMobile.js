@@ -37,14 +37,14 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
                 symbol={pairConfig?.symbol}
                 pairConfig={pairConfig}
                 initTimeFrame="15"
-                isVndcFutures={true}
+                isVndcFutures={isVndcFutures}
                 theme={themeMode}
                 mode={ChartMode.FUTURES}
                 setCollapse={setCollapse}
                 collapse={collapse}
                 isFullScreen={isFullScreen}
                 showIconGuide={!collapse}
-                styleChart={{ height: `calc(100% - 90px)` }}
+                // styleChart={{ height: `calc(100% - 90px)` }}
                 reNewComponentKey={() => setChartKey(Math.random().toString())} // Change component key will remount component
             />
         </div>

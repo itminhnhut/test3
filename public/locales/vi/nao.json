@@ -84,7 +84,8 @@
         "pending": "Đang chờ",
         "fail": "Lỗi",
         "no_transaction_history": "Không có lịch sử giao dịch",
-        "unlock_status": "Mở khóa: {{value}}"
+        "unlock_status": "Mở khóa: {{value}}",
+        "week": "Tuần {{value}}:"
     },
     "vote": {
         "title": "Biểu quyết",
@@ -111,7 +112,8 @@
             "processing": "Đang biểu quyết",
             "failed": "Không thông qua"
         },
-        "rejected_successfully": "Biểu quyết thành công"
+        "rejected_successfully": "Biểu quyết thành công",
+        "vote_rating": "Tỷ lệ bình chọn"
     },
     "nao_token": {
         "title": "Mua token NAO",

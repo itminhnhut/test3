@@ -116,14 +116,14 @@ const TabOrders = memo(({
             </Portal>
             }
             <TabMobile ref={refTabsOrder} onusMode={true} isDark={currentTheme === THEME_MODE.DARK} data-tut="order-tab">
-                {(isVndcFutures ? RECORD_TAB_VNDC_MOBILE : RECORD_TAB).map((item) => (
+                {RECORD_TAB_VNDC_MOBILE.map((item) => (
                     <TabItem key={item.code} active={tab === item.code}
                         onClick={(e) => {
                             setTab(item.code)
                             scrollHorizontal(e.target, refTabsOrder.current)
                         }}
                     >
-                        {isVndcFutures ? t(item.title) : item.title}&nbsp;{isVndcFutures &&
+                        {t(item.title)}&nbsp;{
                             (item.code === FUTURES_RECORD_CODE.openOrders || item.code === FUTURES_RECORD_CODE.position)
                             && (orderListFilter[item.code].length > 0 ? ' (' + orderListFilter[item.code].length + ')' : '')}
                     </TabItem>
@@ -131,8 +131,10 @@ const TabOrders = memo(({
                 {/* <img src="/images/icon/ic_filter.png" height={24} width={24} /> */}
             </TabMobile>
             {isAuth &&
-            <OrderBalance ordersList={ordersList} isTabHistory={tab === FUTURES_RECORD_CODE.orderHistory}
-                          visible={[FUTURES_RECORD_CODE.position, FUTURES_RECORD_CODE.openOrders].includes(tab)}/>}
+                <OrderBalance ordersList={ordersList} isTabHistory={tab === FUTURES_RECORD_CODE.orderHistory}
+                    visible={[FUTURES_RECORD_CODE.position, FUTURES_RECORD_CODE.openOrders].includes(tab)}
+                    pairConfig={pairConfig}
+                />}
             {
                 isAuth ?
                     <div className="h-full">

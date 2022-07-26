@@ -3,13 +3,13 @@ import { useTranslation } from 'next-i18next';
 import { emitWebViewEvent, formatCurrency, formatNumber, getS3Url } from 'redux/actions/utils';
 import { useDispatch } from 'react-redux';
 
-const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
+const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset, decimal }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const quoteAsset = pairConfig?.quoteAsset ?? '';
 
     const openTransferModal = () => {
-       emitWebViewEvent('deposit')
+        emitWebViewEvent('deposit')
     }
 
     const Available = () => {
@@ -20,13 +20,12 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
             </div>
         )
     }
-
     return (
         <div className="flex flex-col h-full justify-around">
             <div className="flex justify-between text-xs font-medium ">
                 <div className="mr-1 text-txtSecondary dark:text-onus-grey min-w-[50px]">{t('futures:mobile:available')}</div>
                 <div className="flex items-end justify-end text-right" style={{ wordBreak: 'break-word' }}>
-                    {formatNumber(availableAsset ?? 0, 0)}
+                    {formatNumber(availableAsset ?? 0, decimal)}
                     {/*{onMobile && <> &nbsp;&nbsp;<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} /></>}*/}
                     <> &nbsp;&nbsp;<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} /></>
                 </div>
@@ -34,9 +33,9 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset }) => {
             <div className="flex justify-between text-xs font-medium ">
                 <div className="mr-1 text-txtSecondary dark:text-onus-grey min-w-[50px]">{t('futures:margin')}</div>
                 <div className="flex items-center flex-wrap justify-end	text-right" style={{ wordBreak: 'break-word' }}>
-                    {`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin) : formatNumber(
+                    {`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin, decimal) : formatNumber(
                         marginAndValue?.margin,
-                        0
+                        decimal
                     )}`}
                 </div>
             </div>

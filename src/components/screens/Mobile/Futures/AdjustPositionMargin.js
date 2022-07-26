@@ -1,22 +1,54 @@
 import Div100vh from 'react-div-100vh';
 import NumberFormat from 'react-number-format';
-import {formatNumber, scrollFocusInput} from 'redux/actions/utils';
-import React, {useContext, useMemo, useState} from 'react';
-import {useTranslation} from 'next-i18next';
+import { formatNumber, scrollFocusInput } from 'redux/actions/utils';
+import React, { useContext, useMemo, useState } from 'react';
+import { useTranslation } from 'next-i18next';
 
 import classNames from 'classnames';
-import {X} from 'react-feather';
+import { X } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
-import {getProfitVndc, VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import axios from 'axios';
-import {API_VNDC_FUTURES_CHANGE_MARGIN} from 'redux/actions/apis';
-import {DefaultFuturesFee} from 'redux/actions/const';
-import {AlertContext} from 'components/common/layouts/LayoutMobile';
-import {IconLoading} from 'components/common/Icons';
+import { API_VNDC_FUTURES_CHANGE_MARGIN } from 'redux/actions/apis';
+import { DefaultFuturesFee } from 'redux/actions/const';
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import { IconLoading } from 'components/common/Icons';
 import WarningCircle from 'components/svg/WarningCircle';
 import floor from 'lodash/floor'
 import Modal from "components/common/ReModal";
 import { reFetchOrderListInterval } from 'redux/actions/futures';
+import { find } from 'lodash'
+import { createSelector } from 'reselect';
+
+const getPairConfig = createSelector(
+    [
+        state => state?.futures?.pairConfigs,
+        (utils, params) => params
+    ],
+    (pairConfigs, params) => {
+        return find(pairConfigs, { ...params })
+    }
+);
+
+const getAsset = createSelector(
+    [
+        state => state?.utils?.assetConfig,
+        (utils, params) => params
+    ],
+    (assetConfig, params) => {
+        return find(assetConfig, { ...params })
+    }
+);
+
+const getWallet = createSelector(
+    [
+        state => state?.wallet?.FUTURES,
+        (utils, params) => params
+    ],
+    (wallet, params) => {
+        return wallet[params]
+    }
+);
 
 const ADJUST_TYPE = {
     ADD: 'ADD',
@@ -26,16 +58,16 @@ const ADJUST_TYPE = {
 const VNDC_ID = 72
 
 const CONFIG_MIN_PROFIT = [
-    {leverage: [-Infinity, 1], minMarginRatio: .2},
-    {leverage: [1, 5], minMarginRatio: .25},
-    {leverage: [5, 10], minMarginRatio: .3},
-    {leverage: [10, 15], minMarginRatio: .4},
-    {leverage: [15, 25], minMarginRatio: .5},
-    {leverage: [25, Infinity], minMarginRatio: null},
+    { leverage: [-Infinity, 1], minMarginRatio: .2 },
+    { leverage: [1, 5], minMarginRatio: .25 },
+    { leverage: [5, 10], minMarginRatio: .3 },
+    { leverage: [10, 15], minMarginRatio: .4 },
+    { leverage: [15, 25], minMarginRatio: .5 },
+    { leverage: [25, Infinity], minMarginRatio: null },
 ]
 
 const calMinProfitAllow = (leverage) => {
-    const {minMarginRatio} = CONFIG_MIN_PROFIT.find(c => {
+    const { minMarginRatio } = CONFIG_MIN_PROFIT.find(c => {
         const [start, end] = c.leverage
         return leverage > start && leverage <= end
     })
@@ -48,7 +80,7 @@ const calLiqPrice = (side, quantity, open_price, margin, fee) => {
     return (size * open_price + fee - margin) / (quantity * (number - DefaultFuturesFee.NamiFrameOnus))
 }
 
-const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
+const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) => {
     const [adjustType, setAdjustType] = useState(ADJUST_TYPE.ADD)
     const [amount, setAmount] = useState('')
     const [submitting, setSubmitting] = useState(false)
@@ -60,23 +92,24 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
         setAmount('')
     }
 
-    const assetConfig = useSelector((state) => state.utils.assetConfig.find(({id}) => id === VNDC_ID))
-    const futuresBalance = useSelector((state) => state.wallet.FUTURES[VNDC_ID]) || {};
+    const pairConfig = useSelector(state => getPairConfig(state, { symbol: order?.symbol }));
+    const assetConfig = useSelector(state => getAsset(state, { id: pairConfig?.quoteAssetId }));
+    const futuresBalance = useSelector(state => getWallet(state, pairConfig?.quoteAssetId));
     const alertContext = useContext(AlertContext);
 
-    const {available} = useMemo(() => {
+    const { available } = useMemo(() => {
         if (!assetConfig || !futuresBalance) return {}
         return {
             available: Math.max(futuresBalance.value, 0) - Math.max(futuresBalance.locked_value, 0)
         }
     }, [assetConfig, futuresBalance])
 
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
     const lastPrice = order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask
     const profit = getProfitVndc(order, lastPrice)
 
-    const {newMargin = 0, newLiqPrice = 0, minMarginRatio, initMargin = 0, maxRemovable = 0} = useMemo(() => {
+    const { newMargin = 0, newLiqPrice = 0, minMarginRatio, initMargin = 0, maxRemovable = 0 } = useMemo(() => {
         if (!order) return {}
         const profit = getProfitVndc(order, lastPrice, true)
         const initMargin = +order.order_value / +order.leverage
@@ -125,14 +158,14 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
             if (minMarginRatio === null) {
                 return t('futures:mobile:adjust_margin:not_allow_change_margin')
             } else if (+amount > maxRemovable) {
-                return t(`futures:mobile:adjust_margin:max_removable`, {max: formatNumber(maxRemovable, assetConfig?.assetDigit || 0)})
+                return t(`futures:mobile:adjust_margin:max_removable`, { max: formatNumber(maxRemovable, assetConfig?.assetDigit || 0) })
             }
         }
     }, [adjustType, amount, maxRemovable, minMarginRatio, assetConfig])
 
     const handleConfirm = async () => {
         setSubmitting(true)
-        const {data,status} = await axios.put(API_VNDC_FUTURES_CHANGE_MARGIN, {
+        const { data, status } = await axios.put(API_VNDC_FUTURES_CHANGE_MARGIN, {
             displaying_id: order?.displaying_id,
             margin_change: amount,
             type: adjustType
@@ -150,10 +183,11 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                 [ADJUST_TYPE.ADD]: 'add_success',
                 [ADJUST_TYPE.REMOVE]: 'remove_success'
             }[adjustType]
-            }`)
+                }`)
             alertContext.alert.show('success', t('common:success'), message, null, null, onClose)
         } else {
-            alertContext.alert.show('error', t('common:failed'), t(`error:futures:${data.status || 'UNKNOWN'}`))
+            const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`
+            alertContext.alert.show('error', t('common:failed'), t(`error:futures:${data.status || 'UNKNOWN'}`), requestId)
         }
     }
 
@@ -207,7 +241,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                                 allowNegative={false}
                                 className='outline-none font-medium flex-1 py-2'
                                 value={amount}
-                                onValueChange={({value}) => setAmount(value)}
+                                onValueChange={({ value }) => setAmount(value)}
                                 decimalScale={assetConfig?.assetDigit}
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
@@ -241,7 +275,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                             <span
                                 className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:available')}</span>
                             <span className='text-onus-white font-medium'>
-                                {formatNumber(floor(+available, 0), assetConfig?.assetDigit)}
+                                {formatNumber(floor(+available, assetConfig?.assetDigit), assetConfig?.assetDigit)}
                                 <span className='ml-1'>{assetConfig?.assetCode}</span>
                             </span>
                         </div>
@@ -274,7 +308,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     }
                     <div
                         className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold mt-6', {
-                            '!bg-onus-1 !text-onus-textSecondary': !!error || !+amount || !!errorProfit
+                            '!bg-onus-base opacity-30': !!error || !+amount || !!errorProfit
                         })}
                         onClick={() => {
                             if (!error && !errorProfit && !!+amount && !submitting) {
@@ -284,7 +318,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
                     >
                         {
                             submitting
-                                ? <IconLoading color='#FFFFFF'/>
+                                ? <IconLoading color='#FFFFFF' />
                                 : <span>{t('futures:mobile:adjust_margin:confirm_btn')}</span>
                         }
                     </div>
@@ -296,7 +330,7 @@ const AdjustPositionMargin = ({order, pairPrice, onClose, forceFetchOrder}) => {
 
 export default AdjustPositionMargin
 
-const ErrorToolTip = ({children, message}) => {
+const ErrorToolTip = ({ children, message }) => {
     return <div className='relative'>
         <div className={classNames('absolute -top-1 -translate-y-full z-50 flex flex-col items-center', {
             hidden: !message
@@ -306,7 +340,7 @@ const ErrorToolTip = ({children, message}) => {
             </div>
             <div
                 className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'
-                style={{clipPath: 'polygon(50% 100%, 0 0, 100% 0)'}}
+                style={{ clipPath: 'polygon(50% 100%, 0 0, 100% 0)' }}
             />
         </div>
         {children}

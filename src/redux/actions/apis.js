@@ -239,6 +239,7 @@ export const API_CONTEST_GET_GROUP_DETAIL =
     API_PREFIX + "event/futures-contest/group-detail";
 //VOTE
 export const API_USER_VOTE = API_V3_PREFIX + "nao-dashboard/user-vote";
+export const API_USER_POOL = API_V3_PREFIX + "nao-dashboard/user-vote/getuserpool";
 
 //Luckydraw
 export const API_GET_TICKETS = API_PREFIX + "futures_reward/tickets";
