@@ -290,7 +290,6 @@ const PlaceOrder = ({
                     max: Math.min(_maxPrice, _activePrice * percentPriceFilter?.multiplierUp),
                 }
 
-
                 let bound = lowerBound
                 if (side === FuturesOrderEnum.Side.BUY) {
                     bound = mode === 'stop_loss' ? lowerBound : upperBound

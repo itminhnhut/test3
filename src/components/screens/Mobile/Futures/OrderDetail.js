@@ -289,7 +289,7 @@ const OrderDetail = ({
                                     <Row>
                                         <Label>{t('futures:mobile:realized_pnl')}</Label>
                                         <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
-                                            {formatNumber(String(order?.profit).replace(',', ''), 0, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
+                                            {formatNumber(order?.profit, assetConfig?.swap?.assetDigit ?? 0, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
                                     </Row>}
                                 <Row>
                                     <Label>{t('futures:order_table:volume')}</Label>
