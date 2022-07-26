@@ -32,13 +32,14 @@ import axios from 'axios';
 import {ApiStatus} from 'redux/actions/const';
 import SortIcon from "components/screens/Mobile/SortIcon";
 
-const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO, WalletCurrency.NAMI, WalletCurrency.ONUS];
+const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO, WalletCurrency.NAMI, WalletCurrency.ONUS, WalletCurrency.USDT];
 
 const MIN_WITHDRAWAL = {
     [WalletCurrency.VNDC]: 0,
     [WalletCurrency.NAMI]: 0,
     [WalletCurrency.NAO]: 0,
     [WalletCurrency.ONUS]: 0,
+    [WalletCurrency.USDT]: 0,
 };
 
 const MAX_WITHDRAWAL = {
@@ -46,6 +47,7 @@ const MAX_WITHDRAWAL = {
     [WalletCurrency.NAMI]: 100000,
     [WalletCurrency.NAO]: 50000,
     [WalletCurrency.ONUS]: 50000,
+    [WalletCurrency.USDT]: 5000,
 };
 
 const VNDC_WITHDRAWAL_FEE = {
@@ -53,6 +55,7 @@ const VNDC_WITHDRAWAL_FEE = {
     [WalletCurrency.NAMI]: 0,
     [WalletCurrency.NAO]: 0,
     [WalletCurrency.ONUS]: 0,
+    [WalletCurrency.USDT]: 0,
 };
 
 const DECIMAL_SCALES = {
@@ -60,6 +63,7 @@ const DECIMAL_SCALES = {
     [WalletCurrency.NAMI]: 1,
     [WalletCurrency.NAO]: 1,
     [WalletCurrency.ONUS]: 1,
+    [WalletCurrency.USDT]: 2,
 };
 
 const WDL_STATUS = {
