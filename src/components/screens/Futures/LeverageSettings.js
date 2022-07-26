@@ -98,7 +98,7 @@ const FuturesLeverageSettings = ({
                 }
                 onusMode={onusMode}
                 componentType='button'
-                className={`${onusMode ? '!text-[16px] !font-semibold !h-[48px]' : '!h-[36px]'} ${getValidator?.isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : ''}`}
+                className={`${onusMode ? '!text-[16px] !font-semibold !h-[48px]' : '!h-[36px]'} ${!onusMode && getValidator?.isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : ''}`}
                 type='primary'
                 disabled={loading || getValidator?.isError}
                 onClick={() => !loading && onSetLeverage(pair, _leverage)}

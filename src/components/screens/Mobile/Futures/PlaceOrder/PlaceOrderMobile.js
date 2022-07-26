@@ -20,7 +20,7 @@ import { createSelector } from 'reselect';
 import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
-import { getFilter, } from 'src/redux/actions/utils';
+import { getFilter, } from 'redux/actions/utils';
 // import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
 import { ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
 import EditSLTPVndcMobile from 'components/screens/Mobile/Futures/EditSLTPVndcMobile';
@@ -46,12 +46,11 @@ const PlaceOrder = ({
     pairConfig,
     isVndcFutures,
     collapse,
-    onBlurInput
+    onBlurInput,
+    decimalSymbol
 }) => {
     const lastPrice = pairPrice?.lastPrice;
-    const usdRate = useSelector((state) => state.utils.usdRate);
     const { t } = useTranslation();
-    const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0);
     const initPercent = 10;
     const [type, setType] = useState(OrderTypes.Market);
     const [leverage, setLeverage] = useState(50);
@@ -69,12 +68,6 @@ const PlaceOrder = ({
     const [showEditVolume, setShowEditVolume] = useState(false);
     const [quoteQty, setQuoteQty] = useState(0);
     const [showExpiredModal, setShowExpiredModal] = useState(false);
-
-    useEffect(() => {
-        if (usdRate) {
-            setBaseAssetUsdValue(usdRate?.[pairConfig?.baseAssetId]);
-        }
-    }, [pairConfig?.baseAssetId, usdRate]);
 
     const getMaxQuoteQty = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
         let maxBuy = 0;
@@ -103,7 +96,6 @@ const PlaceOrder = ({
         const _maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
         return isAuth ? Math.min(_maxConfig, _maxQty) : _maxConfig;
     };
-
 
     useEffect(() => {
         if (typeof window !== undefined) {
@@ -171,7 +163,7 @@ const PlaceOrder = ({
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
         const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
         let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
-            .toFixed(0);
+            .toFixed(decimalSymbol);
         // let _quoteQty = minQuoteQty
         _quoteQty = _quoteQty < minQuoteQty ? minQuoteQty : _quoteQty;
         const _size = +((_quoteQty / price) * initPercent / 100);
@@ -185,7 +177,7 @@ const PlaceOrder = ({
             autoTypeInput = JSON.parse(autoTypeInput)
             if (autoTypeInput.auto) {
                 const _sl = +(getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
-                const _tp = +(getSuggestTp(side, _lastPrice, leverage)).toFixed(decimals.decimalScalePrice);
+                const _tp = +(getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
                 if (leverage <= 10) {
                     setTp('');
                     setSl('');
@@ -214,10 +206,10 @@ const PlaceOrder = ({
     };
 
     const marginAndValue = useMemo(() => {
-        const volume = quoteQty;
-        const volumeLength = volume.toFixed(0).length;
+        const volume = quoteQty || 0;
+        const volumeLength = +Number(volume).toFixed(0).length;
         const margin = volume / leverage;
-        const marginLength = margin.toFixed(0).length;
+        const marginLength = +Number(margin).toFixed(0).length;
         return {
             volume,
             margin,
@@ -297,7 +289,6 @@ const PlaceOrder = ({
                     min: Math.max(_activePrice, _activePrice * (1 + percentPriceFilter?.minDifferenceRatio)),
                     max: Math.min(_maxPrice, _activePrice * percentPriceFilter?.multiplierUp),
                 }
-
 
                 let bound = lowerBound
                 if (side === FuturesOrderEnum.Side.BUY) {
@@ -415,13 +406,13 @@ const PlaceOrder = ({
         const not_valid = collapse ? (!inputValidator('quoteQty').isValid || !inputValidator('leverage').isValid) :
             (!inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid ||
                 !inputValidator('quoteQty').isValid || !inputValidator('leverage').isValid);
-        return !isVndcFutures ? false : not_valid;
+        return not_valid;
     }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage, quoteQty, collapse]);
 
     const canShowChangeTpSL = useMemo(() => {
         if (!isAuth) return false
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
-        if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
+        if (!inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
             return false
         }
@@ -431,7 +422,7 @@ const PlaceOrder = ({
     const onChangeTpSL = () => {
         if (!isAuth) return;
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
-        if (!isVndcFutures || !inputValidator('price', ArrStop.includes(type)).isValid ||
+        if (!inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
             const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
             const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
@@ -522,7 +513,7 @@ const PlaceOrder = ({
                     <OrderInput data-tut="order-volume">
                         {showEditVolume && <OrderVolumeMobileModal
                             size={size}
-                            decimal={0}
+                            decimal={decimalSymbol}
                             onClose={() => setShowEditVolume(false)}
                             onConfirm={onConfirmEditVolume}
                             pairConfig={pairConfig}
@@ -536,7 +527,7 @@ const PlaceOrder = ({
                             getMaxQuoteQty={getMaxQuoteQty}
                         />}
                         <OrderVolumeMobile
-                            size={size} setSize={setSize} decimals={decimals}
+                            size={size} setSize={setSize} decimal={decimalSymbol}
                             context={context}
                             pairConfig={pairConfig}
                             quoteQty={quoteQty}
@@ -573,7 +564,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput>
                         <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig}
-                            availableAsset={availableAsset} />
+                            availableAsset={availableAsset} decimal={decimalSymbol} />
                     </OrderInput>
                     <OrderInput data-tut="order-button">
                         <OrderButtonMobile
@@ -581,7 +572,7 @@ const PlaceOrder = ({
                             stopPrice={stopPrice} side={side} decimals={decimals}
                             pairConfig={pairConfig} pairPrice={pairPrice}
                             leverage={leverage} isAuth={isAuth} isError={isError}
-                            quoteQty={quoteQty}
+                            quoteQty={quoteQty} decimalSymbol={decimalSymbol}
                         />
                     </OrderInput>
                 </div>

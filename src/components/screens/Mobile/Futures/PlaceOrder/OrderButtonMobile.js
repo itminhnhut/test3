@@ -23,7 +23,8 @@ const OrderButtonMobile = ({
     tp,
     isAuth,
     isError,
-    quoteQty
+    quoteQty,
+    decimalSymbol = 0
 }) => {
     const context = useContext(AlertContext);
     const [disabled, setDisabled] = useState(false);
@@ -147,12 +148,12 @@ const OrderButtonMobile = ({
         <>
             {showConfirmModal &&
                 <OrderConfirm disabled={disabled} isShowConfirm={isShowConfirm} open={showConfirmModal}
-                              data={rowData.current}
-                              onConfirm={handlePlaceOrder}
-                              onClose={() => !disabled && setShowConfirmModal(false)}/>
+                    data={rowData.current} decimals={decimals}
+                    onConfirm={handlePlaceOrder} decimalSymbol={decimalSymbol}
+                    onClose={() => !disabled && setShowConfirmModal(false)} />
             }
             <div onClick={onHandleSave}
-                 className={`${isBuy ? 'bg-onus-green' : 'bg-onus-red'} text-white text-sm h-[56px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
+                className={`${isBuy ? 'bg-onus-green' : 'bg-onus-red'} text-white text-sm h-[56px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
                 <div
                     className="font-semibold text-center">{!isAuth ? t('futures:mobile:login_short') : (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</div>
                 <div

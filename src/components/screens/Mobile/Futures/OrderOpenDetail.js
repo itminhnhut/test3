@@ -23,10 +23,11 @@ const OrderOpenDetail = ({
     order,
     isDark,
     pairConfig,
-    decimal,
+    decimalPrice = 0,
     onClose,
     forceFetchOrder,
-    isTabHistory
+    isTabHistory,
+    decimalSymbol = 0
 }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
@@ -118,7 +119,8 @@ const OrderOpenDetail = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
+                const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`
+                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
             }
         } catch (e) {
             if (e.message === 'Network Error' || !navigator?.onLine) {
@@ -138,7 +140,7 @@ const OrderOpenDetail = ({
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus));
         if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
-        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, 0, 0, true) : '-';
+        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, decimalPrice, 0, true) : '-';
     };
 
     const renderSlTp = (value) => {
@@ -229,7 +231,7 @@ const OrderOpenDetail = ({
                         :
                         <div className="text-xs text-right" onClick={openShare}>
                             <div className="text-xs font-medium text-onus-green float-right">
-                                <OrderProfit onusMode={true} className="flex flex-col text-right"
+                                <OrderProfit onusMode={true} className="flex flex-col text-right" decimal={decimalSymbol}
                                     order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
                             </div>
                         </div>
@@ -253,21 +255,21 @@ const OrderOpenDetail = ({
                         className="flex flex-col gap-[2px]"
                         label={t('futures:order_table:open_price')}
                         valueClassName='!text-left !text-sm'
-                        value={formatNumber(price, decimal, 0, true)}
+                        value={formatNumber(price, decimalPrice, 0, true)}
                     />
                 </div>
             }
             <div className="flex flex-wrap w-full">
                 <OrderItem label={t('futures:order_table:volume')}
-                    value={formatNumber(order?.order_value, 0, 0, true)} />
+                    value={formatNumber(order?.order_value, decimalSymbol, 0, true)} />
                 {!isTabOpen ?
-                    <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimal, 0, true)} />
+                    <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimalPrice, 0, true)} />
                     :
                     <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
                 }
                 <OrderItem
                     label={t('futures:margin')}
-                    value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
+                    value={order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                 />
                 {!isTabOpen && <>
                     <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
@@ -279,7 +281,7 @@ const OrderOpenDetail = ({
                 }
                 <OrderItem label={t('futures:stop_loss')} valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'} value={renderSlTp(order?.sl)} />
                 <OrderItem label={t('common:last_price')}
-                    value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
+                    value={formatNumber(dataMarketWatch?.lastPrice, decimalPrice, 0, true)} />
                 <OrderItem label={t('futures:take_profit')} valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}
                     value={renderSlTp(order?.tp)} />
             </div>

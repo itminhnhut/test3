@@ -5,7 +5,7 @@ import { Share2 } from 'react-feather';
 import { IconArrowOnus } from "components/common/Icons";
 import colors from 'styles/colors'
 
-const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false }) => {
+const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0 }) => {
     if (!pairPrice?.lastPrice && !isTabHistory) return '-';
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
 
@@ -22,16 +22,16 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
     const ratio = profit / order.margin;
     const percent = formatNumber(((onusMode ? Math.abs(ratio) : ratio) * 100), 2, 0, true);
     return <div className='flex items-center w-full'>
-        <div className={`${getPriceColor(profit, onusMode)} ${className}`}>
+        <div className={`${getPriceColor(profit, onusMode)} ${className} ${onusMode ? 'gap-[2px]' : ''}`}>
             {profit !== 0 ? <>
                 <div className={isMobile ? 'text-[16px] font-semibold leading-[1.375rem]' : ''}>
                     {profit > 0 ? '+' : ''}
-                    {formatNumber(profit, 0, 0, true)} {!isMobile && pairPrice?.quoteAsset}
+                    {formatNumber(profit, decimal, 0, true)} {!isMobile && pairPrice?.quoteAsset}
                 </div>
-                <div className={isMobile ? 'flex items-center justify-end gap-[2px] leading-[1.125rem] font-medium' : ''}>
+                <div className={isMobile ? 'flex items-center justify-end leading-[1.125rem] font-medium' : ''}>
                     {onusMode ?
                         <>
-                            <IconArrowOnus className={profit > 0 ? '' : 'rotate-180'} color={profit > 0 ? colors.onus.green : colors.onus.red} />
+                            <IconArrowOnus className={`w-[7px] mr-[2px] ${profit > 0 ? '' : 'rotate-180'}`} color={profit > 0 ? colors.onus.green : colors.onus.red} />
                             {percent + '%'}
                         </>
                         :
