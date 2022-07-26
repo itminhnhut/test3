@@ -103,7 +103,8 @@ const TabOpenOrders = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
+                const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`
+                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
 
             }
         } catch (e) {

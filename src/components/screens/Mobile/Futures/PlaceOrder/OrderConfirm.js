@@ -6,7 +6,7 @@ import CheckBox from 'components/common/CheckBox';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber } from 'redux/actions/utils';
 
-const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, decimals }) => {
+const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, decimals, decimalSymbol }) => {
     const { t } = useTranslation();
     const [hidden, setHidden] = useState(isShowConfirm)
 
@@ -32,14 +32,14 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, 
                     <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
                     <div className="flex items-center justify-between text-sm">
                         <div className="text-onus-grey">{t('futures:price')}</div>
-                        <div>{formatNumber(data?.price, 0)} {data?.quoteAsset}</div>
+                        <div>{formatNumber(data?.price, decimalSymbol)} {data?.quoteAsset}</div>
                     </div>
                 </>
                 }
                 <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
                 <div className="flex items-center justify-between text-sm">
                     <div className="text-onus-grey">{t('futures:margin')}</div>
-                    <div>{formatNumber(data?.quoteQty / data?.leverage, 0)} {data?.quoteAsset}</div>
+                    <div>{formatNumber(data?.quoteQty / data?.leverage, decimalSymbol)} {data?.quoteAsset}</div>
                 </div>
                 {data?.sl && <>
                     <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
