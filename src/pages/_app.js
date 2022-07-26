@@ -29,7 +29,6 @@ import * as ga from 'src/utils/ga';
 import { indexingArticles } from 'utils';
 import { isMobile } from 'react-device-detect';
 import LoadingPage from 'components/screens/Mobile/LoadingPage';
-
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
 //         case 'FCP':
@@ -147,7 +146,37 @@ const App = ({
 
             //
         }
+
     }, []);
+
+    useEffect(() => {
+        const toMatch = [
+            /Android/i,
+            /webOS/i,
+            /iPhone/i,
+            /iPad/i,
+            /iPod/i,
+            /BlackBerry/i,
+            /Windows Phone/i
+        ];
+
+        const isMobile = toMatch.some((toMatchItem) => {
+            return navigator.userAgent.match(toMatchItem);
+        });
+        if (!isMobile) {
+            function initFreshChat() {
+                window.fcWidget.init({
+                    token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
+                    host: "https://wchat.freshchat.com"
+                    // config: {
+                    //     showFAQOnOpen: true,
+                    //     hideFAQ: false,
+                    // }
+                });
+            }
+            function initialize(i, t) { var e; i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e)) } function initiateCall() { initialize(document, "freshchat-js-sdk") } window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+        }
+    }, [])
 
     useEffect(() => {
         indexingArticles(language);
