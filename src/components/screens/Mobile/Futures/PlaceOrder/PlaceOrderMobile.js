@@ -384,11 +384,11 @@ const PlaceOrder = ({
                 const min = pairConfig?.leverageConfig?.min ?? 0;
                 const max = pairConfig?.leverageConfig?.max ?? 0;
                 if (min > leverage) {
-                    msg = `${t('futures:minimum_leverage')} ${_displayingMin} `;
+                    msg = `${t('futures:minimum_leverage')} ${min} `;
                     isValid = false;
                 }
                 if (max < leverage) {
-                    msg = `${t('futures:maximum_leverage')} ${_displayingMax}`;
+                    msg = `${t('futures:maximum_leverage')} ${max}`;
                     isValid = false;
                 }
                 return {
