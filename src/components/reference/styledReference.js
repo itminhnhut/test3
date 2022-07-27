@@ -52,7 +52,16 @@ export const BannerLeft = styled.div`
     color: #FFFFFF;
     text-align: center;
     padding-top: 14px;
-    min-width: 350px;
+    min-width: 250px;
+    line-height: 30px;
+
+
+    @media (max-width: 768px) {
+        line-height: 20px;
+        margin-top: -12px;
+        line-height: 35px;
+
+    }
 
     span {
         > span:last-child {
@@ -60,10 +69,12 @@ export const BannerLeft = styled.div`
             margin-top: -6px;
 
             @media (min-width: 1200px) {
+                line-height: 20px;
                 margin-top: -12px;
             }
 
             @media (min-width: 1440px) {
+                line-height: 20px;
                 margin-top: -18px;
             }
         }
@@ -158,7 +169,7 @@ export const BannerRight = styled.div`
     background: rgba(0, 0, 0, 0.9);
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.25);
     width: 100%;
-    min-width:350px;
+    min-width:250px;
     
     @media (min-width: 768px) {
         margin-top: 0;
