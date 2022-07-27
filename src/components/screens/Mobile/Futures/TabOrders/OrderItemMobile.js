@@ -25,7 +25,8 @@ const OrderItemMobile = ({
     allowButton,
     tab,
     decimalSymbol = 0,
-    decimalScalePrice = 0
+    decimalScalePrice = 0,
+    isVndcFutures
 }) => {
     const { t } = useTranslation();
     const isTabHistory = mode === 'history';
@@ -188,7 +189,7 @@ const OrderItemMobile = ({
                                 <div className="text-xs font-medium text-onus-green float-right">
                                     <OrderProfit onusMode={true} className="flex flex-col"
                                         order={order} pairPrice={dataMarketWatch} isTabHistory={isTabHistory}
-                                        isMobile decimal={decimalSymbol} />
+                                        isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2} />
                                 </div>
                             </div>
                         </>

@@ -103,13 +103,13 @@ const OrderDetail = (props) => {
 
     if (loading) return <OrderDetailLoading />
     if (!orderDetail) return null;
-
+    const isVndcFutures = pairConfigDetail?.quoteAsset === 'VNDC'
     return (
         <LayoutMobile>
             <SocketLayout pair={pair} pairConfig={pairConfigDetail}>
                 <OrderDetailComponent order={orderDetail} isMobile
                     pairConfig={pairConfigDetail}
-                    pairParent={pair} isVndcFutures={true}
+                    pairParent={pair} isVndcFutures={isVndcFutures}
                     isTabHistory={isTabHistory.current}
                     isDark={currentTheme === THEME_MODE.DARK}
                     getDetail={getDetail}

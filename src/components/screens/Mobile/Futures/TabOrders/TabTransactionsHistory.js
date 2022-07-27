@@ -32,7 +32,7 @@ const categories = [
 
 ]
 
-const ASSETS = [72, 447, 1, 86]
+const ASSETS = [72, 447, 1, 86, 22]
 
 const noteCases = [
     '^BALANCE: Swap future order (\\d+)$',
@@ -143,6 +143,8 @@ function TabTransactionsHistory({scrollSnap, active}) {
         return data.result.map(item => {
             const assetConfig = assetConfigMap[item.currency]
             const orderId = getOrderIdFromNote(item?.note)
+            const isUSDT = assetConfig.assetCode === 'USDT';
+            const assetDigit = assetConfig?.assetDigit ?? 0;
             return <div
                 key={item._id}
                 className='flex justify-between p-4 border-b border-onus-line'
@@ -164,7 +166,7 @@ function TabTransactionsHistory({scrollSnap, active}) {
                     <div
                         className='font-medium text-onus-white text-sm'
                     >
-                        <span>{item.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(item.money_use), assetConfig?.assetDigit, null)}</span>
+                        <span>{item.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(item.money_use), isUSDT ? assetDigit + 2 : assetDigit, null)}</span>
                         <span className="ml-1">{assetConfig?.assetCode}</span>
                     </div>
                     <div
@@ -287,6 +289,8 @@ const CategoryPicker = ({t, visible, onClose, value, onChange}) => {
 
 const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}}) => {
     const orderId = getOrderIdFromNote(transaction?.note) || '--'
+    const assetDigit = assetConfig?.assetDigit ?? 0;
+    const isUSDT = assetConfig.assetCode === 'USDT';
     const _renderCategory = (item) => {
         if (!item) return '-'
         const note = (item.note).toLowerCase()
@@ -301,6 +305,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
         }
         return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
     }
+    
     return <Modal
         isVisible={visible}
         onusMode
@@ -312,7 +317,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
                 {/* {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'} */}
             </div>
             <div className="text-2xl font-bold">
-                <span>{transaction?.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(transaction?.money_use), assetConfig?.assetDigit, null)}</span>
+                <span>{transaction?.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(transaction?.money_use), isUSDT ? assetDigit + 2 : assetDigit, null)}</span>
                 <span className="ml-1">{assetConfig.assetCode}</span>
             </div>
         </div>
