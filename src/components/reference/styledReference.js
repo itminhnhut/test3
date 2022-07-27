@@ -33,8 +33,8 @@ export const BannerContainer = styled.div`
 `
 
 export const BannerLeft = styled.div`
-    font-size: 26px;
-    font-weight: bold;
+    font-size: 44px;
+    font-weight: 600;
     color: #FFFFFF;
     text-align: center;
     padding-top: 14px;
@@ -77,13 +77,13 @@ export const BannerLeft = styled.div`
 export const SubParagrapgh = styled.div`
     color: #FFFFFF;
     text-align: center;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 300;
     padding-left: 1px;
     margin: 30px 0 20px;
 
     span {
-        font-weight: bold;
+        font-weight: 300;
 
         span {
             white-space: nowrap !important;
@@ -146,6 +146,7 @@ export const BannerRight = styled.div`
 
     @media (min-width: 768px) {
         margin-top: 0;
+        width: 50%;
     }
 `
 
