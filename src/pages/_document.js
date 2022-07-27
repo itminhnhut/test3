@@ -75,8 +75,6 @@ class MyDocument extends Document {
                                 `,
                         }}
                     />
-<<<<<<< HEAD
-=======
                     {/* <script
                         dangerouslySetInnerHTML={{
                             __html: `
@@ -94,7 +92,6 @@ class MyDocument extends Document {
                                 `,
                         }}
                     /> */}
->>>>>>> 5ff4cf83 (optimize init time & multi lang freshchat)
                 </Head>
                 <body>
                     <noscript>

@@ -158,9 +158,6 @@ const App = ({
                 window.fcWidget.init({
                     token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
                     host: "https://wchat.freshchat.com",
-<<<<<<< HEAD
-                    locale: language
-=======
                     locale: language,
                     // config: {
                     //     // showFAQOnOpen: true,
@@ -178,7 +175,6 @@ const App = ({
                     //         }
                     //     }
                     // }
->>>>>>> 5ff4cf83 (optimize init time & multi lang freshchat)
                 });
             }
             function initialize(i, t) { var e; i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e)) } function initiateCall() { initialize(document, "freshchat-js-sdk") } window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
