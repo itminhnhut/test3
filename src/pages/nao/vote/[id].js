@@ -245,7 +245,7 @@ export default function Vote() {
                                 </span>
                                 <div className="flex flex-row">
                                     <span className="mr-2 text-[1.1rem] font-semibold">
-                                        {totalVoteYes &&
+                                        {data?.totalVoteNo &&
                                             formatNumber(
                                                 totalVoteNo,
                                                 assetNao?.assetDigit ?? 0
