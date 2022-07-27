@@ -465,7 +465,7 @@ const PlaceOrder = ({
     return (
         <>
 
-            <div className="flex flex-wrap justify-between px-[16px] py-[10px]">
+            <div className="flex flex-wrap justify-between px-[16px] py-[10px] relative z-10 bg-onus">
                 {/* {showExpiredModal && <ExpiredModal onClose={() => setShowExpiredModal(false)} />} */}
                 {showEditSLTP &&
                     <EditSLTPVndcMobile
