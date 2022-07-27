@@ -67,6 +67,14 @@ body {
     flex-direction: column;
     height: 100%;
     //overflow-x: hidden;
+    #fc_frame {
+        opacity: 0.6;
+        height: 15px;
+        width: 15px;
+        &:hover {
+            opacity: 1;
+        }
+    }
 
     .custom_trading_record {
         > div:nth-child(2) {
