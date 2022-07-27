@@ -346,7 +346,7 @@
         "invalid_nami_frame_user": "Bạn không đủ điều kiện để tham gia chương trình này",
         "invalid_log_status": "Không tìm thấy phần thưởng của bạn vui lòng quay lại sau",
         "title_on_boarding": "Nhận thưởng",
-        "content_on_boarding": "Chúc mừng bạn đã nhận thành công {{value}} VNDC",
+        "content_on_boarding": "Chúc mừng bạn đã nhận thành công {{value}}",
         "change_24h": "24h",
         "leverage_v2": "Loại/đòn bẩy",
         "not_show_this_message": "Không hiện lại thông báo này",
