@@ -7,7 +7,7 @@ import {
     BannerButtonGroup,
     BannerContainer,
     BannerLeft,
-    BannerRight, ContainerFluid, Containerz, ContentWrapper,
+    BannerRight, Containerz, ContentWrapper,
     CopyIcon, DesktopWrapper,
     ReferralCatergories,
     ReferralCatergoriesItem,
@@ -15,7 +15,8 @@ import {
     ReferralID,
     ReferralLink,
     SubParagrapgh,
-    TextTransparent
+    TextTransparent,
+    ContentContainerz
 } from './styledReference'
 import ReferralDashboard from "./Dashboard";
 import ReferralFriendsList from "./FriendsList";
@@ -23,7 +24,6 @@ import ReferralCommission from "./Commission";
 import useWindowSize from "../../hooks/useWindowSize"
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
-import { GlobalButton } from "./style";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Copy, Check } from "react-feather";
 import Axios from 'axios';
@@ -62,11 +62,6 @@ const PCView = () => {
     const [dashboardData, setDashboardData] = useState(null)
     const [friendsListData, setFriendsListData] = useState(null)
     const [commissionData, setCommissionData] = useState(null)
-    
-    const layout = [
-        { i: "a", x: 0, y: 0, w: 5, h: 2 },
-        { i: "b", x: 6, y: 0, w: 5, h: 2 }
-    ]
 
     const user = useSelector(state => state.auth.user) || null;
 
@@ -128,7 +123,7 @@ const PCView = () => {
         return (
             <BannerContainer>
                 <Containerz>
-                    <div className='md:flex block items-center justify-around'>
+                    <div className='md:flex block items-center justify-around w-full'>
                         <BannerLeft>
                             <div>
                                 <div>{t('referral_pages.banner.title1')}</div>
@@ -139,20 +134,6 @@ const PCView = () => {
                                 <b>{t('referral_pages.banner.sub_title')}</b>
 
                             </SubParagrapgh>
-                            <BannerButtonGroup>
-                                <GlobalButton background='#000' borderWidth={'0px'} maxHeight='37px' height='37px'>
-                                    <TextTransparent>
-                                        {t('referral_pages.banner.inv_btn')}
-
-                                    </TextTransparent>
-                                </GlobalButton>
-
-                                <GlobalButton background='transparent' borderColor='#FFF' color='#FFF' borderHover='rgba(255, 255, 255, .5)'
-                                    borderWidth={'1px'} fontW='bold' maxHeight='37px' height='37px'>
-                                    {t('referral_pages.banner.detail_btn')}
-
-                                </GlobalButton>
-                            </BannerButtonGroup>
                         </BannerLeft>
                         <BannerRight>
                             <AnalyticTopLine />
@@ -255,7 +236,7 @@ const PCView = () => {
             {renderBanner()}
             {renderCategories()}
             <DesktopWrapper>
-                <Containerz>
+                <ContentContainerz>
                     <ContentWrapper id='dashboard'>
                         <ReferralDashboard data={dashboardData} width={width} typeSort={typeSort} setTypeSort={setTypeSort}
                             timeSort={timeSort} setTimeSort={setTimeSort} user={user} />
@@ -270,7 +251,7 @@ const PCView = () => {
                             state={state} setState={setState} page={pageCommission} setPage={setPageCommission}
                             typeSort={typeSort} setTypeSort={setTypeSort} user={user} />
                     </ContentWrapper>
-                </Containerz>
+                </ContentContainerz>
             </DesktopWrapper>
         </div>
     )

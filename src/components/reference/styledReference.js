@@ -1,25 +1,36 @@
 import styled from 'styled-components';
-import {Container} from 'react-grid-system';
 import colors from '../../styles/colors';
 
 export const DesktopWrapper = styled.div`
     width: 100%;
     background: #FFFFFF;
+    display:flex;
+    justify-content:center;
 `
 
-export const ContainerFluid = styled(Container)`
-    background: ${colors.dark7};
-`
-
-export const Containerz = styled(Container)`
+export const Containerz = styled.div`
     z-index: 8;
     max-width: 1145px !important;
+    display:flex;
+    justify-content:space-evenly;
+    width: 100%;
+`
+
+export const ContentContainerz = styled.div`
+    z-index: 8;
+    max-width: 1145px !important;
+    display:flex;
+    justify-content:space-evenly;
+    width: 100%;
+    flex-direction: column;
 `
 
 export const BannerContainer = styled.div`
     background: linear-gradient(274.75deg, #00B6C7 23.19%, #00DCC2 117.39%);
     padding-top: 110px;
     padding-bottom: 24px;
+    display: flex;
+    justify-content:center;
 
     @media (min-width: 1200px) {
         padding-top: 128px;
@@ -38,6 +49,7 @@ export const BannerLeft = styled.div`
     color: #FFFFFF;
     text-align: center;
     padding-top: 14px;
+    min-width: 350px;
 
     span {
         > span:last-child {
@@ -143,7 +155,8 @@ export const BannerRight = styled.div`
     background: rgba(0, 0, 0, 0.9);
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.25);
     width: 100%;
-
+    min-width:350px;
+    
     @media (min-width: 768px) {
         margin-top: 0;
         width: 50%;
@@ -264,13 +277,16 @@ export const AnalyticCommission = styled.div`
 `
 
 export const ReferralCatergories = styled.div`
+    display:flex;
+    justify-content:center;
+    width: 100%;
     background: rgba(0, 0, 0, 0.85);
     position: sticky;
     top: 0;
     z-index: 9;
 `
 
-export const ReferralCatergoriesWrapper = styled(Container)`
+export const ReferralCatergoriesWrapper = styled.div`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
