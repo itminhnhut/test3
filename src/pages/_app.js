@@ -153,21 +153,7 @@ const App = ({
     }, [language]);
     
     useEffect(() => {
-        const toMatch = [
-            /Android/i,
-            /webOS/i,
-            /iPhone/i,
-            /iPad/i,
-            /iPod/i,
-            /BlackBerry/i,
-            /Windows Phone/i
-        ];
-
-        const isMobile = toMatch.some((toMatchItem) => {
-            return navigator.userAgent.match(toMatchItem);
-        });
         if (!isMobile) {
-   
             function initFreshChat() {
                 window.fcWidget.init({
                     token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
