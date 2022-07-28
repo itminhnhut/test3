@@ -10,7 +10,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
-        isAuth && fetchLeverage(pairConfig?.pair)
+        pairConfig?.pair && isAuth && fetchLeverage(pairConfig?.pair)
     }, [pairConfig?.pair, isAuth])
 
     const fetchLeverage = async (symbol) => {
