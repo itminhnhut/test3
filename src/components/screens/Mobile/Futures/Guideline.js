@@ -142,7 +142,7 @@ const Content = ({title, text, step, onClose, top, goTo, ...props}) => {
 }
 
 const View = styled.div.attrs({
-    className: 'my-[10px] bg-onus font-inter flex flex-col justify-between'
+    className: 'my-[10px] bg-onus-bgModal3 font-inter flex flex-col justify-between'
 })`
     width: 294px;
 ${'' /* background-color:${colors.darkBlue1}; */}
