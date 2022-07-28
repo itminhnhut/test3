@@ -4,7 +4,7 @@ import TabOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/TabOrderVnd
 const SideOrder = memo(({ side, setSide }) => {
     return (
         <div data-tut="order-side">
-            <TabOrderVndc side={side} setSide={setSide} isMobile className="!text-xs dark:bg-onus-input dark:text-onus-grey !font-normal" height={32} />
+            <TabOrderVndc side={side} setSide={setSide} isMobile className="!text-xs bg-onus-input text-onus-grey !font-normal" height={32} />
         </div>
     );
 });

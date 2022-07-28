@@ -1,5 +1,5 @@
 .market-mobile {
-  @apply flex flex-col flex h-full bg-white dark:bg-onus-bgModal3;
+  @apply flex flex-col h-full bg-onus-bgModal3;
   .tab-active {
     &:before {
       content: '';

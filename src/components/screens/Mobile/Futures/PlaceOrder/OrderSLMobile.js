@@ -11,11 +11,11 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, 
         <div className="relative">
             {!isAuth && isFocus &&
                 <div className='absolute right-0 top-0 -translate-y-full z-50 flex flex-col items-center'>
-                    <div className='px-3 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4 text-xs'>
+                    <div className='px-3 py-1.5 rounded-md bg-darkBlue-4 text-xs'>
                         {t('futures:order_table:login_to_continue')}
                     </div>
                     <div
-                        className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'
+                        className='w-[8px] h-[6px] bg-darkBlue-4'
                         style={{
                             clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
                         }}
@@ -31,9 +31,9 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, 
                 allowNegative={false}
                 onValueChange={({ floatValue = '' }) => setSl(floatValue)}
                 decimalScale={decimals.decimalScalePrice}
-                labelClassName='whitespace-nowrap capitalize dark:text-onus-grey'
-                containerClassName="h-[36px] dark:bg-onus-input"
-                tailContainerClassName='flex items-center text-txtSecondary dark:text-onus-grey font-medium text-xs select-none'
+                labelClassName='whitespace-nowrap capitalize text-onus-grey'
+                containerClassName="h-[36px] bg-onus-input"
+                tailContainerClassName='flex items-center text-onus-grey font-medium text-xs select-none'
                 renderTail={() => {
                     if (!show) return null
                     return (<div className='relative group select-none' data-tut="order-adjust-btn">

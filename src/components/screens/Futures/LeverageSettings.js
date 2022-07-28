@@ -163,7 +163,7 @@ const FuturesLeverageSettings = ({
                     value={_leverage}
                     suffix={'x'}
                     decimalScale={0}
-                    containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium border-none ${onusMode ? 'h-[44px]' : 'h-[36px]'}`}
+                    containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium border-none ${onusMode ? '!bg-onus-bg2 h-[44px]' : 'h-[36px]'}`}
 
                     inputClassName="!text-center"
                     onValueChange={({ value }) => _setLeverage(value)}
