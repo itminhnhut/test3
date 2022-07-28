@@ -41,7 +41,15 @@ export default function Vote() {
     const { id } = useRouter().query;
     const auth = useSelector((state) => state.auth?.user);
     const router = useRouter();
-    const { totalVoteNo, totalVoteYes, totalPool } = data;
+    const {
+        totalVoteNo,
+        totalVoteYes,
+        totalPool,
+        status,
+        voteSummary,
+        voteName,
+        voteDescription,
+    } = data;
     const assetNao = useSelector((state) => getAssetNao(state, "NAO"));
     const {
         t,
@@ -54,13 +62,7 @@ export default function Vote() {
                 url: API_USER_VOTE + "/" + id,
                 options: { method: "GET" },
             });
-            const useVoteRes = await FetchApi({
-                url: API_USER_POOL,
-                options: { method: "GET" },
-            });
-
             setData(res);
-            setDataUserVote(useVoteRes);
         } catch (error) {
             console.log(error);
         }
@@ -68,6 +70,11 @@ export default function Vote() {
 
     async function fetchUserData() {
         try {
+            const useVoteRes = await FetchApi({
+                url: API_USER_POOL,
+                options: { method: "GET" },
+            });
+            setDataUserVote(useVoteRes);
             const res = await FetchApi({
                 url: API_USER_VOTE + "/getUserVoteInfo/" + id,
                 options: { method: "GET" },
@@ -119,8 +126,7 @@ export default function Vote() {
                         className="description text-nao-grey text-sm lg:text-[1rem] leading-7 mb-5"
                         dangerouslySetInnerHTML={{
                             __html:
-                                data?.voteDescription &&
-                                data?.voteDescription[language],
+                                voteDescription && voteDescription[language],
                         }}
                     ></div>
                     <div
@@ -137,7 +143,7 @@ export default function Vote() {
     const _renderButtonVote = () => {
         if (!data) return null;
 
-        if (data?.status !== "Processing") {
+        if (status !== "Processing") {
             return (
                 <ButtonNao
                     disabled
@@ -185,14 +191,14 @@ export default function Vote() {
     };
 
     if (!data || Object.keys(data).length < 1) return <LoadingPage />;
-    const statusText = t(`nao:vote:status:${(data?.status).toLowerCase()}`);
+    const statusText = t(`nao:vote:status:${status?.toLowerCase()}`);
 
     return (
         <LayoutNaoToken>
             <div className="grid lg:grid-cols-3 gap-8 pr-3 justify-between pt-10 items-start flex-wrap">
                 <div className="lg:col-span-2 sm:col-span-3">
                     <h3 className="lg:text-[2.125rem] lg:leading-[3rem] text-[1.625rem] leading-[2.3755rem] font-semibold pb-[6px] max-w-[700px] text-nao-white">
-                        {data?.voteName && data?.voteName[language]}
+                        {voteName && voteName[language]}
                     </h3>
 
                     <div className="hidden lg:block">{description()}</div>
@@ -206,9 +212,9 @@ export default function Vote() {
                                 </span>
                                 <div className="flex flex-row">
                                     <span className="mr-2   font-semibold">
-                                        {data?.totalVoteYes &&
+                                        {totalVoteYes &&
                                             formatNumber(
-                                                data?.totalVoteYes,
+                                                totalVoteYes,
                                                 assetNao?.assetDigit ?? 0
                                             )}
                                     </span>
@@ -221,10 +227,7 @@ export default function Vote() {
                             </div>
                             <div className="bg-black mt-3 rounded-lg mb-3">
                                 <Progressbar
-                                    percent={
-                                        (data?.totalVoteYes / data?.totalPool) *
-                                        100
-                                    }
+                                    percent={(totalVoteYes / totalPool) * 100}
                                     height={6}
                                 />
                             </div>
@@ -232,10 +235,10 @@ export default function Vote() {
                                 <span className="text-nao-grey text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem] text-nao-text">{`${(
-                                    (totalVoteNo / totalPool) *
-                                    100
-                                ).toFixed()}%`}</span>
+                                <span className="text-[0.75rem] text-nao-text">{`${formatNumber(
+                                    (totalVoteYes / totalPool) * 100,
+                                    2
+                                )}%`}</span>
                             </div>
                         </div>
                         <div>
@@ -260,10 +263,7 @@ export default function Vote() {
                             </div>
                             <div className="bg-black mt-3 rounded-lg mb-3 ">
                                 <Progressbar
-                                    percent={
-                                        (data.totalVoteNo / data.totalPool) *
-                                        100
-                                    }
+                                    percent={(totalVoteNo / totalPool) * 100}
                                     height={6}
                                     background="red"
                                 />
@@ -272,10 +272,10 @@ export default function Vote() {
                                 <span className="text-nao-grey text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem] text-nao-text">{`${(
-                                    (totalVoteNo / totalPool) *
-                                    100
-                                ).toFixed()}%`}</span>
+                                <span className="text-[0.75rem] text-nao-text">{`${formatNumber(
+                                    (totalVoteNo / totalPool) * 100,
+                                    2
+                                )}%`}</span>
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
@@ -283,14 +283,14 @@ export default function Vote() {
                                 {t("common:status")}
                             </span>
                             <div className="flex flex-row items-center">
-                                {data?.status === "Processing" && (
+                                {status === "Processing" && (
                                     <div className="flex flex-row justify-start items-center gap-2">
                                         <span className="  font-semibold">
                                             {statusText}
                                         </span>
                                     </div>
                                 )}
-                                {data?.status === "Executed" && (
+                                {status === "Executed" && (
                                     <div className="flex flex-row justify-start items-center gap-2">
                                         <img
                                             src={getS3Url(
@@ -304,7 +304,7 @@ export default function Vote() {
                                         </span>
                                     </div>
                                 )}
-                                {data?.status === "Failed" && (
+                                {status === "Failed" && (
                                     <div className="flex flex-row justify-start items-center gap-2">
                                         <SvgTimeIC />
                                         <span className="  font-semibold">
@@ -312,7 +312,7 @@ export default function Vote() {
                                         </span>
                                     </div>
                                 )}
-                                {data?.status === "Canceled" && (
+                                {status === "Canceled" && (
                                     <div className="flex flex-row justify-start items-center gap-2">
                                         <SvgCancelCircle className="w-[12px] h-[12px]" />
                                         <span className="  font-semibold">
@@ -359,7 +359,7 @@ export default function Vote() {
                             dataUserVote.amount - dataUserVote.lockAmount
                         }
                         handleSubmitVote={handleSubmitVote}
-                        summary={data?.voteSummary?.[language] ?? ""}
+                        summary={voteSummary?.[language] ?? ""}
                         type={typeModal}
                     />
                 )}
@@ -369,7 +369,7 @@ export default function Vote() {
                             setIsShowSuccessModal(false);
                         }}
                         type={typeModal}
-                        summary={data?.voteSummary?.[language] ?? ""}
+                        summary={voteSummary?.[language] ?? ""}
                     />
                 )}
             </div>
@@ -433,31 +433,28 @@ const VoteProposalModal = ({
                                 </div>
                             </div>
                         </CardNao>
-                        {
-                            numberOfNao > 0.1
-                            ? <div className=" w-full flex justify-between gap-2">
-                            <ButtonNao
-                                className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
-                                onClick={() => handleSubmitVote(false)}
-                            >
-                                {t('nao:vote:reject')}
-                            </ButtonNao>
-                            <ButtonNao
-                                className="w-full py-2 !rounded-md text-sm font-semibold leading-6"
-                                onClick={() => handleSubmitVote(true)}
-                            >
-                                {t('nao:vote:vote')}
-                            </ButtonNao>
-                        </div>
-                        : <div className=" w-full flex justify-between gap-2">
-                            <ButtonNao
-                                className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
-                            >
-                                {t('nao:vote:nao_too_small')}
-                            </ButtonNao>
-                        </div>
-
-                        }
+                        {numberOfNao > 0.1 ? (
+                            <div className=" w-full flex justify-between gap-2">
+                                <ButtonNao
+                                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
+                                    onClick={() => handleSubmitVote(false)}
+                                >
+                                    {t("nao:vote:reject")}
+                                </ButtonNao>
+                                <ButtonNao
+                                    className="w-full py-2 !rounded-md text-sm font-semibold leading-6"
+                                    onClick={() => handleSubmitVote(true)}
+                                >
+                                    {t("nao:vote:vote")}
+                                </ButtonNao>
+                            </div>
+                        ) : (
+                            <div className=" w-full flex justify-between gap-2">
+                                <ButtonNao className="w-full py-2 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]">
+                                    {t("nao:vote:nao_too_small")}
+                                </ButtonNao>
+                            </div>
+                        )}
 
                         <p className="text-nao-grey text-sm">
                             {t("nao:vote:vote_remind")}
