@@ -11,10 +11,12 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
             <div className="spot-place-orders-tabs w-full">
                 <div style={{ height: height }}
                     className={classNames(
-                        'mr-[-1px] spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--left',
+                        'mr-[-1px] spot-place-orders-tab capitalize text-txtSecondary dark:text-txtSecondary-dark block--left',
                         {
                             ' active z-[2]': side === VndcFutureOrderType.Side.BUY,
-                            '!bg-onus-green': side === VndcFutureOrderType.Side.BUY && isMobile
+                            '!bg-onus-green': side === VndcFutureOrderType.Side.BUY && isMobile,
+                            'dark:bg-bgInput-dark bg-bgInput': !isMobile,
+                            'bg-onus-input': isMobile
                         },
                         className
                     )}
@@ -24,8 +26,8 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
                 </div>
                 <svg
                     style={{ height: height }}
-                    className={`!w-[34px] spot-place-orders-tab bg-bgInput arrow z-[1] 
-                    ${side === VndcFutureOrderType.Side.SELL ? 'sell' : 'buy'} ${isMobile ? 'dark:bg-onus-input ' : 'dark:bg-bgInput-dark '}`}
+                    className={`!w-[34px] spot-place-orders-tab arrow z-[1] 
+                    ${side === VndcFutureOrderType.Side.SELL ? 'sell' : 'buy'} ${isMobile ? 'bg-onus-input ' : 'dark:bg-bgInput-dark bg-bgInput'}`}
                     preserveAspectRatio="none"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 32 32"
@@ -36,10 +38,12 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
                 <div
                     style={{ height: height }}
                     className={classNames(
-                        'ml-[-1px] spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--right',
+                        'ml-[-1px] spot-place-orders-tab capitalize text-txtSecondary dark:text-txtSecondary-dark block--right',
                         {
                             ' active z-[2]': side === VndcFutureOrderType.Side.SELL,
-                            '!bg-onus-red': side === VndcFutureOrderType.Side.SELL && isMobile
+                            '!bg-onus-red': side === VndcFutureOrderType.Side.SELL && isMobile,
+                            'dark:bg-bgInput-dark bg-bgInput': !isMobile,
+                            'bg-onus-input': isMobile
                         },
                         className
                     )}

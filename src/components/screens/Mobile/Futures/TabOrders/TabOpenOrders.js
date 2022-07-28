@@ -176,7 +176,7 @@ const TabOpenOrders = ({
                     onClick={() => setHideOther(!hideOther)}
                 >
                     <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
-                    <span className="ml-3 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-onus-gray text-xs">
+                    <span className="ml-3 whitespace-nowrap font-medium capitalize text-onus-grey text-xs">
                         {t('futures:hide_other_symbols')}
                     </span>
                 </div>

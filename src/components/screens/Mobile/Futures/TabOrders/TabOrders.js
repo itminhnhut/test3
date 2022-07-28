@@ -101,7 +101,7 @@ const TabOrders = memo(({
             {openDetailModal &&
             <Portal portalId='PORTAL_MODAL'>
                 <div className={classNames(
-                    'flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] bg-white dark:!bg-onus',
+                    'flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] !bg-onus',
                     {invisible: !openDetailModal},
                     {visible: openDetailModal}
                 )}>
@@ -166,12 +166,10 @@ const TabOrders = memo(({
 });
 
 const TabMobile = styled.div.attrs({
-    className: "flex items-center px-[16px] bg-white dark:bg-onus dark:border-onus-line h-[38px] overflow-x-auto"
+    className: "flex items-center px-[16px] bg-onus border-b border-onus-line h-[38px] overflow-x-auto"
 })`
     height: 42px;
     width: 100%;
-    border-bottom: 1px solid ${colors.grey4};
-    border-top: ${({isDark}) => isDark ? '0' : '1px solid ' + colors.grey4};
     position: sticky;
     top: 0;
     z-index: 10;
@@ -189,7 +187,7 @@ const TabMobile = styled.div.attrs({
 `
 const TabItem = styled.div.attrs(({active}) => ({
     className: classNames(
-        `text-sm relative font-semibold text-gray-1 h-full flex items-center justify-center dark:text-onus-gray mr-[32px] last:mr-0`,
+        `text-sm relative font-semibold text-gray-1 h-full flex items-center justify-center text-onus-gray mr-[32px] last:mr-0`,
         'whitespace-nowrap',
         {
             'active font-semibold text-[#418FFF]': active

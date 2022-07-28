@@ -78,10 +78,10 @@ export class MobileTradingView extends React.PureComponent {
                 this.widget.changeTheme(newTheme);
                 const isDark = this.props.theme === "dark";
                 this.widget.applyOverrides({
-                    "scalesProperties.lineColor": isDark ? "#202C4C" : "#F2F4F6",
-                    'paneProperties.background': isDark ? colors.onus.bg : colors.white,
-                    "paneProperties.vertGridProperties.color": isDark ? colors.onus.bg : colors.grey4,
-                    "paneProperties.horzGridProperties.color": isDark ? colors.onus.bg : colors.grey4,
+                    "scalesProperties.lineColor": "#202C4C",
+                    'paneProperties.background': colors.onus.bg,
+                    "paneProperties.vertGridProperties.color": colors.onus.bg,
+                    "paneProperties.horzGridProperties.color": colors.onus.bg,
                 });
                 this.theme = newTheme;
             }
@@ -415,7 +415,7 @@ export class MobileTradingView extends React.PureComponent {
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            loading_screen: {backgroundColor: this.props.theme === "dark" ? colors.onus.bg : "#fff",},
+            loading_screen: { backgroundColor: colors.onus.bg, },
             studies_overrides: {
                 "volume.volume.color.0": colors.onus.red,
                 "volume.volume.color.1": colors.onus.green,
