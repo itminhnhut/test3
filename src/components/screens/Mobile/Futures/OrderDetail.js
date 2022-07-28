@@ -292,7 +292,7 @@ const OrderDetail = ({
                                     <Row>
                                         <Label>{t('futures:mobile:realized_pnl')}</Label>
                                         <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
-                                                {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
+                                            {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
                                     </Row>}
                                 <Row>
                                     <Label>{t('futures:order_table:volume')}</Label>
@@ -314,7 +314,7 @@ const OrderDetail = ({
                                 }
                                 <Row>
                                     <Label>{t('futures:order_table:open_price')}</Label>
-                                    <Span>{formatNumber(order?.open_price, decimalSymbol)}</Span>
+                                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalSymbol) : '-'}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:close_time')}</Label>

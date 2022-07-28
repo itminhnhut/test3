@@ -95,7 +95,7 @@ const OrderVolumeMobileModal = (props) => {
                     <Minus
                         size={15}
                         className='text-onus-white cursor-pointer'
-                        onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - initValue)}
+                        onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
                     />
                 </div>
                 <TradingInput
@@ -119,7 +119,7 @@ const OrderVolumeMobileModal = (props) => {
                     <Plus
                         size={15}
                         className='text-onus-white cursor-pointer'
-                        onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + initValue)}
+                        onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
                     />
                 </div>
             </div>
