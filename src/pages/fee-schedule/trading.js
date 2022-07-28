@@ -112,7 +112,7 @@ const TradingFee = () => {
 
     // Render Handler
     const renderNamiAvailable = useCallback(() => {
-        if (!namiWallets) return <span className="ml-1.5"><Skeletor width={105}/></span>
+        if (!namiWallets) return <span className="ml-1.5"><Skeletor width={105} /></span>
 
         const available = namiWallets?.value - namiWallets?.locked_value
         return (
@@ -126,19 +126,19 @@ const TradingFee = () => {
         const nextAssetFee = state.assetFee?.feeCurrency === 1 ? 0 : 1
 
         return <Switcher active={!!state.assetFee?.feeCurrency}
-                         loading={state.loadingAssetFee}
-                         wrapperClass="mt-1"
-                         onChange={() => !state.loadingAssetFee && onUseAssetAsFee('set', nextAssetFee)}
+            loading={state.loadingAssetFee}
+            wrapperClass="mt-1"
+            onChange={() => !state.loadingAssetFee && onUseAssetAsFee('set', nextAssetFee)}
 
         />
     }, [state.assetFee, state.loadingAssetFee])
 
     const renderFeeTab = useCallback(() => {
         return TRADING_FEE_TAB.map(tab => <TabItem key={`trading_fee_Tab__${tab.dataIndex}`}
-                                                   title={tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}
-                                                   active={tab.index === state.tabIndex}
-                                                   onClick={() => setState({ tabIndex: tab.index })}
-                                                   component={TabItemComponent.Div} />)
+            title={tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}
+            active={tab.index === state.tabIndex}
+            onClick={() => setState({ tabIndex: tab.index })}
+            component={TabItemComponent.Div} />)
     }, [state.tabIndex, TRADING_FEE_TAB])
 
     const renderFuturesTableFee = useCallback(() => {
@@ -147,14 +147,24 @@ const TradingFee = () => {
         const columns = [
             { key: 'symbol', dataIndex: 'symbol', title: t('common:pair'), width: 80, fixed: 'left', align: 'left' },
             { key: 'max_leverage', dataIndex: 'max_leverage', title: t('common:max_leverage'), width: 100, align: 'left' },
-            { key: 'fee', dataIndex: 'fee', title: `${t('common:fee')} (${t('common:open')}/${t('common:close')})`, width: 100, align: 'left' },
-            { key: 'fee_promote', dataIndex: 'fee_promote',
+            {
+                key: 'fee', dataIndex: 'fee',
+                title: <span> {t('common:fee')}
+                    <span className='ml-1'>
+                        ({t('common:open')}/{t('common:close')})
+                    </span>
+                </span>,
+                width: 100, align: 'left'
+            },
+            {
+                key: 'fee_promote', dataIndex: 'fee_promote',
                 title: <span> {t('common:fee')} NAMI
-                    <span className="text-dominant ml-3">
-                                ({t('common:open')}/{t('common:close')})
-                            </span>
-                        </span>,
-                width: 100, align: 'left' },
+                    <span className='ml-1'>
+                        ({t('common:open')}/{t('common:close')})
+                    </span>
+                </span>,
+                width: 100, align: 'left'
+            },
         ]
 
         const dataFilter = state.futuresFeeConfig?.filter(e => {
@@ -175,7 +185,7 @@ const TradingFee = () => {
         })
 
         if (!data?.length) {
-            tableStatus = <Empty/>
+            tableStatus = <Empty />
         }
 
         return (
@@ -220,12 +230,14 @@ const TradingFee = () => {
             // { key: 'andor', dataIndex: 'andor', title: t('fee-structure:andor'), width: 100, align: 'left' },
             { key: 'nami_holding', dataIndex: 'nami_holding', title: 'NAMI', width: 100, align: 'left' },
             { key: 'maker_taker', dataIndex: 'maker_taker', title: 'Maker / Taker', width: 100, align: 'left' },
-            { key: 'maker_taker_deducted', dataIndex: 'maker_taker_deducted',
+            {
+                key: 'maker_taker_deducted', dataIndex: 'maker_taker_deducted',
                 title: <span>
-                            Maker / Taker
-                            <span className="text-dominant ml-3">{t('fee-structure:use_asset_deduction', { value: '25%', asset: 'NAMI' })}</span>
-                        </span>,
-                width: 100, align: 'left' },
+                    Maker / Taker
+                    <span className="text-dominant ml-3">{t('fee-structure:use_asset_deduction', { value: '25%', asset: 'NAMI' })}</span>
+                </span>,
+                width: 100, align: 'left'
+            },
         ]
         const data = dataHandler({ tabIndex: state.tabIndex, data: FEE_TABLE, loading: false, utils: { currentLevel: state.vipLevel || 0 } })
 
@@ -252,7 +264,7 @@ const TradingFee = () => {
 
     const renderExchangeDeduction = useCallback(() => {
         if (!state.assetFee && state.loadingAssetFee) {
-            return <><Skeletor width={150} height={16}/></>
+            return <><Skeletor width={150} height={16} /></>
         }
 
         const promote = state.promoteFee?.exchange
@@ -264,19 +276,19 @@ const TradingFee = () => {
         return (
             <div className="flex flex-wrap items-center">
                 {language === LANGUAGE_TAG.VI ?
-                <>
-                    Dùng <span className="text-dominant mx-1">NAMI</span> để được giảm phí <span className="whitespace-nowrap ml-1">(chiết khấu {promote * 100}%)</span>
-                </>
-                : <>
-                    Using <span className="text-dominant mx-1">NAMI</span> deduction <span className="whitespace-nowrap ml-1">({promote * 100}% discount)</span>
-                 </>}
+                    <>
+                        Dùng <span className="text-dominant mx-1">NAMI</span> để được giảm phí <span className="whitespace-nowrap ml-1">(chiết khấu {promote * 100}%)</span>
+                    </>
+                    : <>
+                        Using <span className="text-dominant mx-1">NAMI</span> deduction <span className="whitespace-nowrap ml-1">({promote * 100}% discount)</span>
+                    </>}
             </div>
         )
     }, [state.promoteFee?.exchange, state.loadingAssetFee, state.assetFee, language])
 
     const renderFuturesDeduction = useCallback(() => {
         if (!state.assetFee && state.loadingAssetFee) {
-            return <><Skeletor width={150} height={16}/></>
+            return <><Skeletor width={150} height={16} /></>
         }
 
         const promote = state.promoteFee?.futures
@@ -303,6 +315,19 @@ const TradingFee = () => {
         return <div className="mt-3 text-dominant text-sm text-xs md:text-sm">* {t('fee-structure:used_fee_deduction', { token: `${ROOT_TOKEN} tokens` })}</div>
     }, [state.assetFee?.feeCurrency])
 
+    const renderUserFeeConfig = (maker, taker) => {
+        return state.assetFee?.feeCurrency === 1 ?
+            (<>
+                <span className="text-txtPrimary dark:text-txtPrimary-dark">{maker}%</span>
+                <span className="ml-1">{taker}%</span>
+            </>)
+            :
+            (<>
+                <span>{maker}%</span>
+                <span className="ml-1 text-txtPrimary dark:text-txtPrimary-dark">{taker}%</span>
+            </>)
+    }
+
     useEffect(() => {
         getVip()
         onUseAssetAsFee('get')
@@ -320,10 +345,10 @@ const TradingFee = () => {
                 <div className="t-common">
                     {t('fee-structure:your_fee_level')} <span className="text-dominant">VIP {state.vipLevel || 0}</span>
                 </div>
-                {width <= 475 && <div className="w-full"/>}
+                {width <= 475 && <div className="w-full" />}
                 <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
                     <a className="mt-3 flex items-center text-dominant text-sm hover:!underline" target="_blank"
-                       style={width > 475 ? { marginTop: '0' } : undefined}>
+                        style={width > 475 ? { marginTop: '0' } : undefined}>
                         <TrendingUp size={16} className="mr-2.5" /> {t('fee-structure:upgrade_level_suggest')}
                     </a>
                 </Link>
@@ -332,9 +357,9 @@ const TradingFee = () => {
             <MCard addClass="relative mt-5 px-4 py-6 lg:px-7 px-4 py-6 lg:py-8 text-sm">
                 <div className="relative z-10 w-full flex flex-wrap">
                     <div className="w-full sm:w-1/2"
-                         style={width >= BREAK_POINTS.xl ? {
-                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
-                         } : undefined}
+                        style={width >= BREAK_POINTS.xl ? {
+                            width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
+                        } : undefined}
                     >
                         <div className="font-medium mb-5">
                             <div>{t('fee-structure:exchange_trading_fee')}</div>
@@ -351,8 +376,7 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.MAKER[0]}%</span>
-                                    <span className="ml-1">{FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.MAKER[1]}%</span>
+                                    {renderUserFeeConfig(FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.MAKER[0], FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.MAKER[1])}
                                 </span>
                             </div>
                         </div>
@@ -360,8 +384,7 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.TAKER[0]}%</span>
-                                    <span className="ml-1">{FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.TAKER[1]}%</span>
+                                    {renderUserFeeConfig(FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.TAKER[0], FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.TAKER[1])}
                                 </span>
                             </div>
                         </div>
@@ -371,7 +394,7 @@ const TradingFee = () => {
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('common:available_balance')}: </span>
                                 {renderNamiAvailable()}
                             </span>
-                            {width < BREAK_POINTS.md && <div className="w-full"/>}
+                            {width < BREAK_POINTS.md && <div className="w-full" />}
                             {namiWallets && <Link href={PATHS.EXCHANGE.SWAP.getSwapPair({ fromAsset: 'VNDC', toAsset: 'NAMI' })}>
                                 <a className={'mt-3 text-dominant whitespace-nowrap hover:!underline ' + (width >= BREAK_POINTS.md ? 'ml-5 mt-0' : '')}>{t('common:buy')} NAMI</a>
                             </Link>}
@@ -379,9 +402,9 @@ const TradingFee = () => {
                     </div>
 
                     <div className="w-full mt-8 sm:mt-0 sm:w-1/2 xl:pl-6"
-                         style={width >= BREAK_POINTS.xl ? {
-                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
-                         } : undefined}
+                        style={width >= BREAK_POINTS.xl ? {
+                            width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
+                        } : undefined}
                     >
                         <div className="font-medium mb-5">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
@@ -398,8 +421,7 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[0]}%</span>
-                                    <span className="ml-1">{FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[1]}%</span>
+                                    {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[0], FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[1])}
                                 </span>
                             </div>
                         </div>
@@ -407,17 +429,16 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[0]}%</span>
-                                    <span className="ml-1">{FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[1]}%</span>
+                                    {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[0], FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[1])}
                                 </span>
                             </div>
                         </div>
                     </div>
 
                     <div className="w-full mt-8 sm:w-1/2 xl:mt-0 xl:pl-6"
-                         style={width >= BREAK_POINTS.xl ? {
-                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
-                         } : undefined}
+                        style={width >= BREAK_POINTS.xl ? {
+                            width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
+                        } : undefined}
                     >
                         <div className="font-medium mb-5">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
@@ -434,8 +455,7 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[0]}%</span>
-                                    <span className="ml-1">{FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[1]}%</span>
+                                    {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[0], FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[1])}
                                 </span>
                             </div>
                         </div>
@@ -443,21 +463,20 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[0]}%</span>
-                                    <span className="ml-1">{FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[1]}%</span>
+                                    {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[0], FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[1])}
                                 </span>
                             </div>
                         </div>
                     </div>
 
                     <div className="hidden sm:flex items-center justify-center w-full mt-8 sm:mt-0 sm:w-1/2"
-                         style={width >= BREAK_POINTS.xl ? {
-                             width: '200px'
-                         } : undefined}
+                        style={width >= BREAK_POINTS.xl ? {
+                            width: '200px'
+                        } : undefined}
                     >
                         <img className="-mt-4 max-w-[200px] h-auto"
-                             src={getS3Url('/images/screen/fee-structure/pyramid.png')}
-                             alt="FEE STRUCTURE"/>
+                            src={getS3Url('/images/screen/fee-structure/pyramid.png')}
+                            alt="FEE STRUCTURE" />
                     </div>
                 </div>
                 {renderUsedNamiMsg()}
@@ -517,7 +536,7 @@ const dataHandler = (props) => {
 
     if (loading) {
         for (let i = 0; i < 10; ++i) {
-            skeleton.push({...rowLoading, key: `row_skeleton_${i}`})
+            skeleton.push({ ...rowLoading, key: `row_skeleton_${i}` })
         }
         return skeleton
     }
@@ -530,7 +549,7 @@ const dataHandler = (props) => {
                 result.push({
                     key: `trading_fee__item__${d.level}`,
                     level: <span className="text-sm inline-flex items-center">
-                        VIP {d.level} {utils?.currentLevel === d.level && <SvgCrown className="ml-2" size={16}/>}
+                        VIP {d.level} {utils?.currentLevel === d.level && <SvgCrown className="ml-2" size={16} />}
                     </span>,
                     // vol_30d: <span className="text-sm">{d.vol_30d}</span>,
                     // andor: <span className="text-sm">{d.andor}</span>,
