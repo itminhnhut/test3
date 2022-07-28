@@ -189,13 +189,11 @@ const FuturesMobile = () => {
 
     return (
         <>
-            <SocketLayout pair={state.pair} pairConfig={pairConfig}>
-                <FuturesPageTitle
-                    pair={state.pair}
-                    pricePrecision={pairConfig?.pricePrecision}
-                    pairConfig={pairConfig}
-                />
-            </SocketLayout>
+            <FuturesPageTitle
+                pair={state.pair}
+                pricePrecision={pairConfig?.pricePrecision}
+                pairConfig={pairConfig}
+            />
             <LayoutMobile>
                 {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)}/>}
                 <Container id="futures-mobile" onScroll={onScroll}>
