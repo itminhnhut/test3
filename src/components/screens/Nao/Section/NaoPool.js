@@ -56,18 +56,19 @@ const NaoPool = ({ dataSource, assetNao }) => {
         const size = 3;
         const page = Array.isArray(listHitory) && Math.ceil(listHitory.length / size)
         const result = [];
-
+        const weekNumber = listHitory.length + 1;
         for (let i = 0; i < page; i++) {
             const dataFilter = listHitory.slice(i * size, (i + 1) * size);
             result.push(<SwiperSlide key={i}>
                 <div className="flex flex-col  w-full justify-between">
                     {dataFilter.map((item, index) => {
+                        weekNumber--;
                         return (
                             <div key={index}>
                                 {index !== 0 && <Divider className="my-4 sm:my-[10px]" />}
                                 <div className='flex items-center justify-between flex-wrap gap-[0.75rem] sm:gap-2'>
                                     <span className="text-sm text-nao-grey leading-6">
-                                        {t('nao:pool:week', { value: index + 1 })} {formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}
+                                        {t('nao:pool:week', { value: weekNumber })} {formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}
                                     </span>
                                     <div className="flex items-center justify-between gap-2 sm:gap-6 w-full lg:w-max flex-wrap">
                                         <div className="flex items-center justify-between gap-6 w-full lg:w-max flex-wrap">
