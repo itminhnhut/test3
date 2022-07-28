@@ -333,6 +333,11 @@ const TradingFee = () => {
         onUseAssetAsFee('get')
     }, [])
 
+    console.log('STATE fee1', FEE_TABLE[0].maker_taker.split(" ")[0])
+    console.log('STATE fee2', FEE_TABLE[0].maker_taker.split(" ")[2])
+    console.log('STATE fee3', FEE_TABLE[0].maker_taker_deducted.split(" ")[0])
+    console.log('STATE fee4', FEE_TABLE[0].maker_taker_deducted.split(" ")[2])
+
     useEffect(() => {
         state.tabIndex !== 0 && getFuturesFeeConfigs()
     }, [state.tabIndex])
@@ -376,7 +381,9 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
-                                    {renderUserFeeConfig(FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.MAKER[0], FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.MAKER[1])}
+                                    {state.vipLevel ? 
+                                    renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(" ")[0].replace("%", ""), FEE_TABLE[state.vipLevel].maker_taker.split(" ")[0].replace("%", "")) : 
+                                    renderUserFeeConfig(FEE_TABLE[0].maker_taker_deducted.split(" ")[0].replace("%", ""), FEE_TABLE[0].maker_taker.split(" ")[0].replace("%", ""))}
                                 </span>
                             </div>
                         </div>
@@ -384,7 +391,9 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
-                                    {renderUserFeeConfig(FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.TAKER[0], FEE_STRUCTURES.EXCHANGE.MAKER_TAKER.TAKER[1])}
+                                    {state.vipLevel ? 
+                                    renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(" ")[2].replace("%", ""), FEE_TABLE[state.vipLevel].maker_taker.split(" ")[2].replace("%", "")) :
+                                    renderUserFeeConfig(FEE_TABLE[0].maker_taker_deducted.split(" ")[2].replace("%", ""), FEE_TABLE[0].maker_taker.split(" ")[2].replace("%", ""))}
                                 </span>
                             </div>
                         </div>
