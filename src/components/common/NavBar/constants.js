@@ -243,7 +243,7 @@ export const MOBILE_NAV_DATA = [
                 title: 'Referral',
                 localized: 'referral',
                 isNew: false,
-                url: 'https://nami.exchange/reference',
+                url: '/reference',
                 child_lv2: [],
             },
         ],
@@ -400,7 +400,7 @@ export const USER_CP = [
         localized: 'referral',
         // hide: true,
         isNew: true,
-        url: getV1Url('/reference'),
+        url: '/reference',
         child_lv1: [],
     },
     {
