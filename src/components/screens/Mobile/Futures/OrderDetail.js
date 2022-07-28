@@ -214,10 +214,10 @@ const OrderDetail = ({
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
     const decimalUsdt = assetConfig?.swap?.assetDigit ?? 0;
     return (
-        <div className={'bg-white dark:!bg-onus overflow-hidden'} >
+        <div className={'bg-onus overflow-hidden'} >
             <div className="relative overflow-auto h-full overflow-x-hidden">
                 <div
-                    className="relative w-full bg-white dark:bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
+                    className="relative w-full bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
                 >
                     <div className="flex items-center" onClick={() => onClose && onClose()}>
                         {/* <ChevronLeft size={24} /> */}
@@ -242,7 +242,7 @@ const OrderDetail = ({
                     />
                 </div>
 
-                <div className="shadow-order_detail py-[10px] dark:bg-onus h-full">
+                <div className="shadow-order_detail py-[10px] bg-onus h-full">
                     <div className="min-h-[350px] spot-chart max-w-full" style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
                         <MobileTradingView
                             t={t}
@@ -438,7 +438,7 @@ const Row = styled.div.attrs({
 })``;
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
-    className: `text-gray-1 text-left dark:text-onus-grey ${isTabOpen ? 'text-xs' : 'text-sm'} font-normal`
+    className: `text-gray-1 text-left text-onus-grey ${isTabOpen ? 'text-xs' : 'text-sm'} font-normal`
 }))``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({

@@ -335,11 +335,11 @@ const ErrorToolTip = ({ children, message }) => {
         <div className={classNames('absolute -top-1 -translate-y-full z-50 flex flex-col items-center', {
             hidden: !message
         })}>
-            <div className='px-2 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4 text-xs'>
+            <div className='px-2 py-1.5 rounded-md bg-darkBlue-4 text-xs'>
                 {message}
             </div>
             <div
-                className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'
+                className='w-[8px] h-[6px] bg-darkBlue-4'
                 style={{ clipPath: 'polygon(50% 100%, 0 0, 100% 0)' }}
             />
         </div>

@@ -74,7 +74,7 @@ const PlaceOrder = ({
         let maxSell = 0;
         let _price = price;
         if (Math.trunc(availableAsset) > 0) {
-            if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(type) && price) {
+            if ([OrderTypes.Limit, OrderTypes.StopMarket, OrderTypes.StopLimit].includes(type) && price) {
                 maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : price);
                 maxSell = maxBuy;
             } else if ([OrderTypes.Market].includes(type)) {
@@ -120,10 +120,10 @@ const PlaceOrder = ({
 
 
     useEffect(() => {
-        if (firstTime.current && (marketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0)) {
+        if (firstTime.current && (marketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0) && availableAsset) {
             firstTime.current = false;
         }
-    }, [marketWatch, pairPrice, firstTime.current]);
+    }, [marketWatch, pairPrice, firstTime.current, availableAsset]);
 
     useEffect(() => {
         firstTime.current = true;
