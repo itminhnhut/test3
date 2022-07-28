@@ -14,6 +14,8 @@ export const Containerz = styled.div`
     display:flex;
     justify-content:space-evenly;
     width: 100%;
+    padding: 0 10px;
+
 `
 
 export const ContentContainerz = styled.div`
@@ -23,6 +25,7 @@ export const ContentContainerz = styled.div`
     justify-content:space-evenly;
     width: 100%;
     flex-direction: column;
+    padding: 0 10px;
 `
 
 export const BannerContainer = styled.div`
