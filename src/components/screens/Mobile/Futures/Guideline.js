@@ -58,10 +58,12 @@ const Guideline = ({pair, start, setStart, isFullScreen}) => {
                 selector: '[data-tut="order-sl"]',
                 content: (props) => <Content {...props} onClose={onClose}/>,
                 highlightedSelectors: ['[data-tut="order-tp"]'],
+                position: !isFullScreen ? [15, 0] : ''
             },
             {
                 selector: '[data-tut="order-adjust-btn"]',
                 content: (props) => <Content {...props} onClose={onClose}/>,
+                position: !isFullScreen ? [15, 0] : ''
             },
             {
                 selector: '[data-tut="order-button"]',
