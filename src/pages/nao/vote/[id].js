@@ -235,10 +235,10 @@ export default function Vote() {
                                 <span className="text-nao-grey text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem] text-nao-text">{`${(
-                                    (totalVoteYes / totalPool) *
-                                    100
-                                ).toFixed()}%`}</span>
+                                <span className="text-[0.75rem] text-nao-text">{`${formatNumber(
+                                    (totalVoteYes / totalPool) * 100,
+                                    2
+                                )}%`}</span>
                             </div>
                         </div>
                         <div>
@@ -272,10 +272,10 @@ export default function Vote() {
                                 <span className="text-nao-grey text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem] text-nao-text">{`${(
-                                    (totalVoteNo / totalPool) *
-                                    100
-                                ).toFixed()}%`}</span>
+                                <span className="text-[0.75rem] text-nao-text">{`${formatNumber(
+                                    (totalVoteNo / totalPool) * 100,
+                                    2
+                                )}%`}</span>
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
