@@ -5,5 +5,3 @@ dist/**
 build/**
 
 src/components/TradingView/**
-
-src/*
