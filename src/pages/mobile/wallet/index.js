@@ -1,14 +1,15 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {NoticePopup} from 'components/screens/OnusWithdrawGate/styledExternalWdl';
-import {useSelector} from 'react-redux';
-import {Key, LogIn, X} from 'react-feather';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { NoticePopup } from 'components/screens/OnusWithdrawGate/styledExternalWdl';
+import { useSelector } from 'react-redux';
+import { Key, X } from 'react-feather';
 
-import {PulseLoader} from 'react-spinners';
+import { PulseLoader } from 'react-spinners';
 import Axios from 'axios';
-import {WalletCurrency,} from 'components/screens/OnusWithdrawGate/helper';
-import {emitWebViewEvent, formatNumber, getS3Url} from 'redux/actions/utils';
-import {useTranslation} from 'next-i18next';
-import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
+import axios from 'axios';
+import { WalletCurrency, } from 'components/screens/OnusWithdrawGate/helper';
+import { emitWebViewEvent, formatNumber } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import AssetLogo from 'components/wallet/AssetLogo';
 import NumberFormat from 'react-number-format';
 
@@ -16,21 +17,16 @@ import 'react-input-range/lib/css/index.css';
 import classNames from 'classnames';
 import Div100vh from 'react-div-100vh';
 import CheckSuccess from 'components/svg/CheckSuccess';
-import {isNumeric, log} from 'utils';
-import {format} from 'date-fns';
-import Button from 'components/common/Button';
-import Modal from 'components/common/ReModal';
+import { isNumeric } from 'utils';
 import colors from 'styles/colors';
 import Head from 'next/head';
-import {API_FUTURES_CAMPAIGN_WITHDRAW_STATUS, DIRECT_WITHDRAW_ONUS} from 'redux/actions/apis';
-import AssetName from 'components/wallet/AssetName';
+import { API_FUTURES_CAMPAIGN_WITHDRAW_STATUS, DIRECT_WITHDRAW_ONUS } from 'redux/actions/apis';
 import find from 'lodash/find';
 import floor from 'lodash/floor';
-import LayoutMobile, {AlertContext} from 'components/common/layouts/LayoutMobile';
+import LayoutMobile, { AlertContext } from 'components/common/layouts/LayoutMobile';
 import Divider from 'components/common/Divider';
-import axios from 'axios';
-import {ApiStatus} from 'redux/actions/const';
-import SortIcon from "components/screens/Mobile/SortIcon";
+import { ApiStatus } from 'redux/actions/const';
+import SortIcon from 'components/screens/Mobile/SortIcon';
 
 const ASSET_LIST = [WalletCurrency.VNDC, WalletCurrency.NAO, WalletCurrency.NAMI, WalletCurrency.ONUS, WalletCurrency.USDT];
 
@@ -81,8 +77,8 @@ const MAINTAIN = true;
 const WithdrawWrapper = () => {
     return <LayoutMobile>
         <ExternalWithdrawal/>
-    </LayoutMobile>
-}
+    </LayoutMobile>;
+};
 
 const ExternalWithdrawal = (props) => {
     // initial state
@@ -93,7 +89,7 @@ const ExternalWithdrawal = (props) => {
         isSuccessModal: false,
         isNotice: false,
     });
-    const user = useSelector((state) => state.auth.user) || null
+    const user = useSelector((state) => state.auth.user) || null;
     const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [wdlResult, setWdlResult] = useState(null);
@@ -107,14 +103,14 @@ const ExternalWithdrawal = (props) => {
     const alertContext = useContext(AlertContext);
 
     // use hooks
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const isDark = true;
 
     const assets = useMemo(() => {
         const _assets = [];
 
         ASSET_LIST.forEach(item => {
-            const _config = find(assetConfigs, {id: item});
+            const _config = find(assetConfigs, { id: item });
             if (_config) {
                 const balance = futuresBalances[_config.id] || {
                     value: 0,
@@ -128,32 +124,33 @@ const ExternalWithdrawal = (props) => {
             }
         });
 
-
         return _assets;
     }, [assetConfigs, futuresBalances]);
 
-    const getWithdrawstatusInfo = async () => {
-        const {data} = await axios.get(API_FUTURES_CAMPAIGN_WITHDRAW_STATUS)
+    const getWithdrawstatusInfo = async (currency) => {
+        const { data } = await axios.get(API_FUTURES_CAMPAIGN_WITHDRAW_STATUS, { params: { currency } });
         if (data?.status === ApiStatus.SUCCESS) {
-            const {status, value} = data.data
+            const {
+                status,
+                value
+            } = data.data;
             if (status === 'limited') {
-                setMaxValue(value)
+                setMaxValue(value);
+            } else {
+                setMaxValue(MAX_WITHDRAWAL[currency]);
             }
         }
-    }
-
-    useEffect(() => {
-        if (user) {
-
-            // call get withdraw status
-            getWithdrawstatusInfo()
-
-        }
-    }, [user]);
-
+    };
     useEffect(() => {
         setCurrentCurr(assets[0]);
     }, [assets]);
+
+    useEffect(() => {
+        if (currentCurr?.id && user) {
+            // call get withdraw status
+            getWithdrawstatusInfo(currentCurr.id);
+        }
+    }, [currentCurr]);
 
     useEffect(() => {
         setAmount('');
@@ -167,7 +164,7 @@ const ExternalWithdrawal = (props) => {
     } = useMemo(() => {
         return {
             min: MIN_WITHDRAWAL[currentCurr?.id],
-            max: currentCurr?.id === WalletCurrency.VNDC ? Math.min(MAX_WITHDRAWAL[currentCurr?.id], maxValue) : MAX_WITHDRAWAL[currentCurr?.id],
+            max: (currentCurr?.id === WalletCurrency.VNDC || currentCurr?.id === WalletCurrency.USDT) ? Math.min(MAX_WITHDRAWAL[currentCurr?.id], maxValue) : MAX_WITHDRAWAL[currentCurr?.id],
             fee: VNDC_WITHDRAWAL_FEE[currentCurr?.id],
             decimalScale: DECIMAL_SCALES[currentCurr?.id],
         };
@@ -181,7 +178,7 @@ const ExternalWithdrawal = (props) => {
         });
 
     const onAllDone = () => {
-        setModal({isSuccessModal: false});
+        setModal({ isSuccessModal: false });
         setAmount('');
         // setWdlResult(null);
         setError(null);
@@ -193,7 +190,7 @@ const ExternalWithdrawal = (props) => {
         try {
             setIsSubmitting(true);
             setError(null);
-            const {data} = await Axios.post(DIRECT_WITHDRAW_ONUS, {
+            const { data } = await Axios.post(DIRECT_WITHDRAW_ONUS, {
                 amount,
                 currency,
             });
@@ -204,13 +201,10 @@ const ExternalWithdrawal = (props) => {
                     t('common:success'),
                     t('ext_gate:wdl_success', {
                         amount: res?.amount || '--',
-                        assetCode: find(assetConfigs, {id: res?.currency})?.assetCode || '--',
-                    }))
+                        assetCode: find(assetConfigs, { id: res?.currency })?.assetCode || '--',
+                    }));
             } else {
-                // console.log('namidev-DEBUG: ERROR_OCCURED____ ', data)
                 const status = data ? data.status : WDL_STATUS.UNKNOWN;
-                // console.log('namidev-DEBUG: STATUS__ ', status)
-                // handle problem
                 switch (status) {
                     case WDL_STATUS.MINIMUM_WITHDRAW_NOT_MET:
                         setError(t('ext_gate:err.min_wdl_not_met'));
@@ -237,7 +231,7 @@ const ExternalWithdrawal = (props) => {
             console.log('Notice: ', e);
         } finally {
             setIsSubmitting(false);
-            setAmount('')
+            setAmount('');
         }
     };
 
@@ -330,7 +324,7 @@ const ExternalWithdrawal = (props) => {
                             allowNegative={false}
                             className="outline-none text-sm font-medium flex-1 py-2"
                             value={amount}
-                            onValueChange={({value}) => setAmount(value)}
+                            onValueChange={({ value }) => setAmount(value)}
                             decimalScale={decimalScale}
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
@@ -338,7 +332,7 @@ const ExternalWithdrawal = (props) => {
                         <div
                             className="flex items-center"
                             onClick={() => {
-                                setAmount(floor(Math.min(currentCurr?.available || 0, max), decimalScale))
+                                setAmount(floor(Math.min(currentCurr?.available || 0, max), decimalScale));
                             }}
                         >
                             <span className="px-4 py-2 text-onus-base font-semibold">
@@ -517,7 +511,7 @@ const ExternalWithdrawal = (props) => {
     );
 };
 
-export const getStaticProps = async ({locale}) => ({
+export const getStaticProps = async ({ locale }) => ({
     props: {
         ...(await serverSideTranslations(locale, [
             'common',
