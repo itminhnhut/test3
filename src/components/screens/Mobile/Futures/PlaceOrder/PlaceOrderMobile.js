@@ -119,7 +119,7 @@ const PlaceOrder = ({
     }, [context.alert]);
 
     useEffect(() => {
-        if (firstTime.current && (marketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0)) {
+        if (firstTime.current && (marketWatch?.lastPrice > 0)) {
             firstTime.current = false;
         }
     }, [marketWatch, pairPrice, firstTime.current]);
