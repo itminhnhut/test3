@@ -106,7 +106,6 @@ const App = ({
     // Khởi tạo access token
     useAsync(async () => {
         await store.dispatch(getMe());
-        await store.dispatch(getVip());
         store.dispatch({
             type: SET_LOADING_USER,
             payload: false,
@@ -117,25 +116,21 @@ const App = ({
     useEffect(async () => {
         if (!initConfig && !ignoreConfigUrls.includes(router.pathname)) {
             console.log('Init all configs');
+            // Get common data
+            // Init theme
+            store.dispatch(setTheme());
             store.dispatch(initPublicSocket());
             // Get config
             store.dispatch(getAssetConfig());
             store.dispatch(getExchangeConfig());
             store.dispatch(getFuturesConfigs());
-
             store.dispatch(getPaymentConfigs());
-
-            // store.dispatch(getFuturesFavoritePairs());
-            // store.dispatch(getFuturesMarketWatch());
-            // store.dispatch(getFuturesUserSettings());
             initConfig = true;
             store.dispatch({
                 type: SET_USD_RATE,
                 payload: await getUsdRate(),
             });
-            // Get common data
-            // Init theme
-            store.dispatch(setTheme());
+
 
             //
         }
@@ -155,6 +150,7 @@ const App = ({
                 lastUserId = newUserId;
                 store.dispatch(initUserSocket());
                 if(!router.pathname.includes('mobile')){
+                    store.dispatch(getVip());
                     store.dispatch(getWallet());
                 }
                 store.dispatch(getUserFuturesBalance());
