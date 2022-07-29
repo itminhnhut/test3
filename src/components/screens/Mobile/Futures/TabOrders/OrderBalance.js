@@ -25,7 +25,6 @@ const OrderBalance = ({
         let value = 0;
         if (Array.isArray(assetConfig) && assetConfig?.length) {
             const futures = assetConfig.filter(o => o?.assetCode === quoteAsset);
-            console.log(futures)
             const dataFilter = {
                 ...futures[0],
                 wallet: wallets?.[futures[0].id],

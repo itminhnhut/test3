@@ -9,7 +9,8 @@ import {
     SET_FUTURES_PRELOADED_FORM,
     SET_FUTURES_USE_SLTP,
     SET_FUTURES_ORDERS_LIST,
-    SET_MULTI_FUTURES_MARKET_WATCH
+    SET_MULTI_FUTURES_MARKET_WATCH,
+    REMOVE_FUTURES_MARKET_WATCH
 } from 'redux/actions/types';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
@@ -74,7 +75,10 @@ export default (state = initialState, { payload, type }) => {
             return { ...state, favoritePairs: payload }
         case SET_FUTURES_MARKET_WATCH:
             return { ...state, marketWatch: payload }
-
+        case REMOVE_FUTURES_MARKET_WATCH:
+            const _marketWatch = { ...state.marketWatch };
+            delete _marketWatch[payload];
+            return { ...state, marketWatch: _marketWatch }
         case SET_MULTI_FUTURES_MARKET_WATCH: {
             const data = payload || {};
             if (!state.marketWatch) {

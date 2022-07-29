@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState, useEffect } from 'react';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { OrderItem } from './TabOrders/OrderItemMobile';
 import { useSelector } from 'react-redux';
@@ -51,6 +51,16 @@ const OrderOpenDetail = ({
     const [loading, setLoading] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
     const [disabled, setDisabled] = useState(false);
+    const publicSocket = useSelector((state) => state.socket.publicSocket);
+    const checkSocket = useRef(false);
+
+    useEffect(() => {
+        if (!pairConfig || !publicSocket) return;
+        publicSocket.emit('subscribe:futures:mini_ticker', pairConfig?.symbol)
+        return () => {
+            publicSocket.emit('unsubscribe:futures:mini_ticker', pairConfig?.symbol)
+        }
+    }, [pairConfig, publicSocket])
 
     const onConfirmSLTP = (e) => {
         // setData(e);

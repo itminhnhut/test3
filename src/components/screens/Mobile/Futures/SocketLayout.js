@@ -1,23 +1,31 @@
-import React, { cloneElement, useEffect, useState } from 'react';
+import React, { cloneElement, useEffect, useRef, useState } from 'react';
 import Emitter from 'redux/actions/emitter';
 import { PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { useSelector } from 'react-redux';
 
+const isSubscribe_mini = false;
 const SocketLayout = ({ pair, children, pairConfig, pairParent }) => {
     const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const [pairPrice, setPairPrice] = useState(null);
+    const subscribeAll = useRef(false);
 
     const subscribeFuturesSocket = (pair) => {
         if (publicSocket) {
             publicSocket.emit('subscribe:futures:ticker', pair);
-            publicSocket.emit('subscribe:futures:mini_ticker', 'all')
+            // if (!isSubscribe_mini) {
+            //     isSubscribe_mini = true;
+            //     subscribeAll.current = true;
+            //     publicSocket.emit('subscribe:futures:mini_ticker', 'all')
+            // }
         }
     };
 
     const unsubscribeFuturesSocket = (pair) => {
-        publicSocket?.emit('unsubscribe:futures:ticker', 'all');
+        if (subscribeAll.current)
+            publicSocket?.emit('unsubscribe:futures:ticker', 'all');
+            // publicSocket.emit('unsubscribe:futures:mini_ticker', 'all')
     };
 
     useEffect(() => {

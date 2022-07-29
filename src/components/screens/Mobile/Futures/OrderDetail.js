@@ -16,7 +16,7 @@ import { API_ORDER_DETAIL } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { ApiStatus, ChartMode } from 'redux/actions/const';
 import colors from 'styles/colors';
-
+import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout'
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
     { ssr: false },
@@ -267,10 +267,12 @@ const OrderDetail = ({
                     </div>
                     <div className="px-[16px] bg-onus">
                         {!isTabHistory &&
-                            <OrderOpenDetail order={order} decimalPrice={decimalPrice} isDark={isDark}
-                                pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
-                                forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory} isVndcFutures={isVndcFutures}
-                            />
+                            <SocketLayout pair={pairParent} pairConfig={pairConfig}>
+                                <OrderOpenDetail order={order} decimalPrice={decimalPrice} isDark={isDark}
+                                    pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
+                                    forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory} isVndcFutures={isVndcFutures}
+                                />
+                            </SocketLayout>
                         }
                         <div className="pt-5">
                             <div className="font-semibold mb-4">{t('futures:mobile:order_detail')}</div>
