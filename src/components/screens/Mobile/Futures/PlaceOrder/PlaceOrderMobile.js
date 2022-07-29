@@ -120,10 +120,10 @@ const PlaceOrder = ({
 
 
     useEffect(() => {
-        if (firstTime.current && (marketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0) && availableAsset) {
+        if (firstTime.current && (marketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0)) {
             firstTime.current = false;
         }
-    }, [marketWatch, pairPrice, firstTime.current, availableAsset]);
+    }, [marketWatch, pairPrice, firstTime.current]);
 
     useEffect(() => {
         firstTime.current = true;

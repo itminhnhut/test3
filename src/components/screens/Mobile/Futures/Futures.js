@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState,useRef} from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {FUTURES_DEFAULT_SYMBOL} from 'pages/futures';
@@ -8,7 +8,7 @@ import {UserSocketEvent} from 'redux/actions/const';
 import {LOCAL_STORAGE_KEY} from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
-import {getOrdersList, updateSymbolView} from 'redux/actions/futures';
+import {getOrdersList, updateSymbolView,removeItemMarketWatch} from 'redux/actions/futures';
 import {VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
@@ -20,6 +20,8 @@ import {API_FUTURES_CAMPAIGN_STATUS} from 'redux/actions/apis';
 import {ApiStatus} from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import {PromotionStatus} from 'components/screens/Mobile/Futures/onboardingType';
+import _ from 'lodash';
+import {bunchUpdateFuturesMarketPrice} from 'redux/actions/publicSocket';
 
 const INITIAL_STATE = {
     loading: false,
@@ -118,11 +120,40 @@ const FuturesMobile = () => {
 
     useEffect(() => {
         if (auth && timestamp) getOrders();
-    }, [auth, timestamp]);
+    }, [auth, timestamp, publicSocket]);
 
+    const oldPairs = useRef([]);
     const getOrders = () => {
-        if (auth) dispatch(getOrdersList());
+        if (auth) dispatch(getOrdersList((orders)=>{
+            if (!publicSocket) return;
+            const pairs = _.unionBy(orders, 'symbol').map(rs => rs.symbol);
+            if (JSON.stringify(oldPairs.current) !== JSON.stringify(pairs)) {
+                const addPairs = pairs.filter(p => !oldPairs.current.find(e => e === p))
+                const removePairs= oldPairs.current.filter(p => !pairs.find(e => e === p))
+                if (addPairs.length > 0) {
+                    addPairs.map(pair => {
+                        publicSocket.emit('subscribe:futures:mini_ticker', pair)
+                    })
+                }
+                if (removePairs.length > 0) {
+                    removePairs.map(pair => {
+                        publicSocket.emit('unsubscribe:futures:mini_ticker', pair)
+                        delete bunchUpdateFuturesMarketPrice[pair];
+                        dispatch(removeItemMarketWatch(pair)) 
+                    })
+                }
+            }
+            oldPairs.current = pairs;
+        }));
     };
+
+    useEffect(() => {
+        return () => {
+            publicSocket && oldPairs.current.map(pair => {
+                publicSocket.emit('unsubscribe:futures:mini_ticker', pair)
+            })
+        };
+    }, [publicSocket]);
 
     useEffect(() => {
         if (userSocket) {
@@ -185,13 +216,11 @@ const FuturesMobile = () => {
 
     return (
         <>
-            <SocketLayout pair={state.pair} pairConfig={pairConfig}>
-                <FuturesPageTitle
-                    pair={state.pair}
-                    pricePrecision={pairConfig?.pricePrecision}
-                    pairConfig={pairConfig}
-                />
-            </SocketLayout>
+            <FuturesPageTitle
+                pair={state.pair}
+                pricePrecision={pairConfig?.pricePrecision}
+                pairConfig={pairConfig}
+            />
             <LayoutMobile>
                 {showOnBoardingModal && <EventModalMobile onClose={() => setShowOnBoardingModal(false)}/>}
                 <Container id="futures-mobile" onScroll={onScroll}>

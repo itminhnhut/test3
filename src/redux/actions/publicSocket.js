@@ -28,7 +28,7 @@ const updateMultipleMarkPrice = (() => {
     };
 })();
 
-const bunchUpdateFuturesMarketPrice = {};
+export const bunchUpdateFuturesMarketPrice = {};
 
 const updateMultipleMiniTicker = throttle((dispatch) => {
     dispatch({
