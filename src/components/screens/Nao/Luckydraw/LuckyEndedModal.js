@@ -21,7 +21,7 @@ const LuckyEndedModal = ({ visible = true, onClose }) => {
                         <label className='text-[#02FFFE] text-xl leading-7 font-semibold'>{t('nao:luckydraw:the_promotion_end_title')}</label>
                         <div className='pt-[1.125rem]'>{t('nao:luckydraw:the_promotion_end_description')}</div>
                         <div className='absolute bottom-0 right-[22px]'>
-                            <img className="w-[170px] h-[173px]" src={getS3Url('/images/nao/luckydraw/the_promotion_end.png')} />
+                            <img className="w-[170px] h-[173px]" src={getS3Url('/images/nao/luckydraw/ic_the_promotion_end.png')} />
                         </div>
                     </div>
                     <div className="absolute bottom-[3.75rem] w-full">
