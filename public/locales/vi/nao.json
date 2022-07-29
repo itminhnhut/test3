@@ -177,6 +177,8 @@
         "get_now": "Nhận ngay",
         "continue": "Tiếp tục mở",
         "conditions": "Điều kiện nhận thưởng",
-        "vol_trade": "KL giao dịch hôm nay"
+        "vol_trade": "KL giao dịch hôm nay",
+        "the_promotion_end_title": "Chương trình đã kết thúc",
+        "the_promotion_end_description": "Chương trình rút vé may mắn nhận thưởng theo khối lượng giao dịch đã kết thúc, vui lòng quay lại sau."
     }
 }

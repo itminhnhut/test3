@@ -177,6 +177,8 @@
         "get_now": "Get it now",
         "continue": "Continue",
         "conditions": "Bonus conditions",
-        "vol_trade": "Trade volume today"
+        "vol_trade": "Trade volume today",
+        "the_promotion_end_title": "The promotion has ended",
+        "the_promotion_end_description": "The Daily Trading Rewards Lucky Draw promotion has ended, please come back later."
     }
 }
