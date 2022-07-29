@@ -7,12 +7,7 @@ import 'public/css/font.css';
 import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { useAsync } from 'react-use';
-import {
-    getFuturesConfigs,
-    getFuturesFavoritePairs,
-    getFuturesMarketWatch,
-    getFuturesUserSettings,
-} from 'redux/actions/futures';
+import { getFuturesConfigs, } from 'redux/actions/futures';
 import { getAssetConfig, getExchangeConfig, getUsdRate, } from 'redux/actions/market';
 import { getPaymentConfigs } from 'redux/actions/payment';
 import { SET_LOADING_USER, SET_USD_RATE } from 'redux/actions/types';
@@ -23,12 +18,10 @@ import initPublicSocket from 'src/redux/actions/publicSocket';
 import { getMe, getUserFuturesBalance, getVip } from 'src/redux/actions/user';
 import initUserSocket from 'src/redux/actions/userSocket';
 import { useStore } from 'src/redux/store';
-// import * as fpixel from 'src/utils/fpixel';
 import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
 import { indexingArticles } from 'utils';
 import { isMobile } from 'react-device-detect';
-import LoadingPage from 'components/screens/Mobile/LoadingPage';
 
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
@@ -95,10 +88,10 @@ const App = ({
             NProgress.start();
         });
         router.events.on('routeChangeComplete', () => {
-            NProgress.done()
+            NProgress.done();
         });
         router.events.on('routeChangeError', () => {
-            NProgress.done()
+            NProgress.done();
         });
 
         const handleRouteChange = (url) => {
@@ -118,7 +111,6 @@ const App = ({
             type: SET_LOADING_USER,
             payload: false,
         });
-
 
     }, []);
 
@@ -150,7 +142,9 @@ const App = ({
     }, []);
 
     useEffect(() => {
-        indexingArticles(language);
+        if(!router.pathname.includes('mobile')){
+            indexingArticles(language);
+        }
     }, [language]);
 
     store.subscribe(() => {
@@ -170,7 +164,7 @@ const App = ({
     if (!mount && isMobile) return null;
     return (
         <>
-            <Head language={language} />
+            <Head language={language}/>
             <Provider store={store}>
                 <Tracking>
                     <Component {...pageProps} />
