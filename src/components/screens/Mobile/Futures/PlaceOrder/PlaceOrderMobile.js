@@ -119,8 +119,14 @@ const PlaceOrder = ({
     }, [context.alert]);
 
     useEffect(() => {
-        if (firstTime.current && (marketWatch?.lastPrice > 0)) {
-            firstTime.current = false;
+        if (firstTime.current) {
+            if (marketWatch?.lastPrice > 0) {
+                firstTime.current = false;
+            } else {
+                setTp('');
+                setSl('');
+                setQuoteQty(0);
+            }
         }
     }, [marketWatch, pairPrice, firstTime.current]);
 
