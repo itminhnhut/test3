@@ -154,10 +154,10 @@ const App = ({
             if (!!newUserId && newUserId !== lastUserId) {
                 lastUserId = newUserId;
                 store.dispatch(initUserSocket());
-                store.dispatch(getWallet());
+                if(!router.pathname.includes('mobile')){
+                    store.dispatch(getWallet());
+                }
                 store.dispatch(getUserFuturesBalance());
-                // store.dispatch(getUserEarnedBalance(EarnWalletType.STAKING))
-                // store.dispatch(getUserEarnedBalance(EarnWalletType.FARMING))
             }
         }
     });
