@@ -156,6 +156,15 @@ const FuturesMobile = () => {
     }, [publicSocket]);
 
     useEffect(() => {
+        const isset = oldPairs.current.find(pair => pair === state?.pair)
+        publicSocket && state?.pair && !isset && publicSocket.emit('subscribe:futures:mini_ticker', state?.pair)
+        return () => {
+            const _isset = oldPairs.current.find(pair => pair === state?.pair)
+            publicSocket && !_isset && state?.pair && publicSocket.emit('unsubscribe:futures:mini_ticker', state?.pair)
+        }
+    }, [publicSocket, state?.pair]);
+
+    useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.FUTURES_OPEN_ORDER, getOrders);
         }
