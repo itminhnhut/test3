@@ -58,7 +58,7 @@ const OrderOpenDetail = ({
         if (!pairConfig || !publicSocket) return;
         publicSocket.emit('subscribe:futures:mini_ticker', pairConfig?.symbol)
         return () => {
-            publicSocket.emit('unsubscribe:futures:mini_ticker', pairConfig?.symbol)
+            pairConfig?.symbol && publicSocket.emit('unsubscribe:futures:mini_ticker', pairConfig?.symbol)
         }
     }, [pairConfig, publicSocket])
 
