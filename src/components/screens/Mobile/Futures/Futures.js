@@ -125,44 +125,44 @@ const FuturesMobile = () => {
     const oldPairs = useRef([]);
     const getOrders = () => {
         if (auth) dispatch(getOrdersList((orders)=>{
-            if (!publicSocket) return;
-            const pairs = _.unionBy(orders, 'symbol').map(rs => rs.symbol);
-            if (JSON.stringify(oldPairs.current) !== JSON.stringify(pairs)) {
-                const addPairs = pairs.filter(p => !oldPairs.current.find(e => e === p))
-                const removePairs= oldPairs.current.filter(p => !pairs.find(e => e === p))
-                if (addPairs.length > 0) {
-                    addPairs.map(pair => {
-                        publicSocket.emit('subscribe:futures:mini_ticker', pair)
-                    })
-                }
-                if (removePairs.length > 0) {
-                    removePairs.map(pair => {
-                        publicSocket.emit('unsubscribe:futures:mini_ticker', pair)
-                        delete bunchUpdateFuturesMarketPrice[pair];
-                        dispatch(removeItemMarketWatch(pair)) 
-                    })
-                }
-            }
-            oldPairs.current = pairs;
+            // if (!publicSocket) return;
+            // const pairs = _.unionBy(orders, 'symbol').map(rs => rs.symbol);
+            // if (JSON.stringify(oldPairs.current) !== JSON.stringify(pairs)) {
+            //     const addPairs = pairs.filter(p => !oldPairs.current.find(e => e === p))
+            //     const removePairs= oldPairs.current.filter(p => !pairs.find(e => e === p))
+            //     if (addPairs.length > 0) {
+            //         addPairs.map(pair => {
+            //             publicSocket.emit('subscribe:futures:mini_ticker', pair)
+            //         })
+            //     }
+            //     if (removePairs.length > 0) {
+            //         removePairs.map(pair => {
+            //             publicSocket.emit('unsubscribe:futures:mini_ticker', pair)
+            //             delete bunchUpdateFuturesMarketPrice[pair];
+            //             dispatch(removeItemMarketWatch(pair)) 
+            //         })
+            //     }
+            // }
+            // oldPairs.current = pairs;
         }));
     };
 
-    useEffect(() => {
-        return () => {
-            publicSocket && oldPairs.current.map(pair => {
-                publicSocket.emit('unsubscribe:futures:mini_ticker', pair)
-            })
-        };
-    }, [publicSocket]);
+    // useEffect(() => {
+    //     return () => {
+    //         publicSocket && oldPairs.current.map(pair => {
+    //             publicSocket.emit('unsubscribe:futures:mini_ticker', pair)
+    //         })
+    //     };
+    // }, [publicSocket]);
 
-    useEffect(() => {
-        const isset = oldPairs.current.find(pair => pair === state?.pair)
-        publicSocket && state?.pair && !isset && publicSocket.emit('subscribe:futures:mini_ticker', state?.pair)
-        return () => {
-            const _isset = oldPairs.current.find(pair => pair === state?.pair)
-            publicSocket && !_isset && state?.pair && publicSocket.emit('unsubscribe:futures:mini_ticker', state?.pair)
-        }
-    }, [publicSocket, state?.pair]);
+    // useEffect(() => {
+    //     const isset = oldPairs.current.find(pair => pair === state?.pair)
+    //     publicSocket && state?.pair && !isset && publicSocket.emit('subscribe:futures:mini_ticker', state?.pair)
+    //     return () => {
+    //         const _isset = oldPairs.current.find(pair => pair === state?.pair)
+    //         publicSocket && !_isset && state?.pair && publicSocket.emit('unsubscribe:futures:mini_ticker', state?.pair)
+    //     }
+    // }, [publicSocket, state?.pair]);
 
     useEffect(() => {
         if (userSocket) {
@@ -243,7 +243,7 @@ const FuturesMobile = () => {
                             isFullScreen={futuresScreen.isFullScreen}
                             decimals={decimals}
                         />
-                        <SocketLayout pair={state.pair} pairConfig={pairConfig}>
+                        <SocketLayout miniTicker pair={state.pair} pairConfig={pairConfig}>
                             <PlaceOrderMobile
                                 setSide={setSide}
                                 decimals={decimals} side={side}
