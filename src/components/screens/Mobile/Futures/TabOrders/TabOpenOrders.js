@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import CheckBox from 'components/common/CheckBox';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -144,6 +144,22 @@ const TabOpenOrders = ({
         const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize)
     }
+    const renderListOrder = useCallback(()=> {
+        return dataFilter?.map((order, i) => {
+            const dataMarketWatch = marketWatch[order?.symbol];
+            const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
+            const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+            const decimalScalePrice = getDecimalPrice(symbol);
+            const isVndcFutures = symbol?.quoteAsset === 'VNDC';
+            return (
+                <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
+                                 onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
+                                 onShowDetail={onShowDetail} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
+                                 tab={tab} isVndcFutures={isVndcFutures}
+                />
+            );
+        })
+    }, [marketWatch, allPairConfigs, dataFilter, assetConfig, onShowModal, onShowDetail])
 
     if (ordersList.length <= 0) {
         return <TableNoData
@@ -151,6 +167,8 @@ const TabOpenOrders = ({
             title={t('futures:order_table:no_opening_order')}
             className="h-full min-h-[300px]" />;
     }
+
+
 
     return (
         <div className="px-[16px] pt-4 overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
@@ -183,20 +201,7 @@ const TabOpenOrders = ({
             }
 
             <div className="min-h-[100px]">
-                {dataFilter?.map((order, i) => {
-                    const dataMarketWatch = marketWatch[order?.symbol];
-                    const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
-                    const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
-                    const decimalScalePrice = getDecimalPrice(symbol);
-                    const isVndcFutures = symbol?.quoteAsset === 'VNDC';
-                    return (
-                        <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
-                            onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
-                            onShowDetail={onShowDetail} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
-                            tab={tab} isVndcFutures={isVndcFutures}
-                        />
-                    );
-                })}
+                {renderListOrder()}
             </div>
             {
                 orderEditMarginId &&
