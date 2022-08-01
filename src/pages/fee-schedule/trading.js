@@ -333,11 +333,6 @@ const TradingFee = () => {
         onUseAssetAsFee('get')
     }, [])
 
-    console.log('STATE fee1', FEE_TABLE[0].maker_taker.split(" ")[0])
-    console.log('STATE fee2', FEE_TABLE[0].maker_taker.split(" ")[2])
-    console.log('STATE fee3', FEE_TABLE[0].maker_taker_deducted.split(" ")[0])
-    console.log('STATE fee4', FEE_TABLE[0].maker_taker_deducted.split(" ")[2])
-
     useEffect(() => {
         state.tabIndex !== 0 && getFuturesFeeConfigs()
     }, [state.tabIndex])
