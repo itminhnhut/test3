@@ -131,7 +131,7 @@
     "holders_wallet": "Ví holder",
     "liq_pools": "Pool thanh khoản",
     "contest": {
-        "title": "Đua TOP giao dịch ONUS Futures mùa đầu tiên",
+        "title": "Đua TOP giao dịch ONUS Futures mùa hai",
         "description": "Tranh giải cá nhân và đội nhóm với tổng giải thưởng",
         "detail_rules": "Thể lệ chi tiết",
         "ranking": "Bảng xếp hạng",
@@ -162,7 +162,9 @@
         "pnl_ranking": "Thứ hạng LN",
         "no": "STT",
         "tooltip_personal": "Khối lượng tối thiểu để được xếp hạng cá nhận là <span class='text-nao-green'>{{value}} tỷ VNDC</span>",
-        "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}} tỷ VNDC</span>"
+        "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}} tỷ VNDC</span>",
+        "last_season":"Lich sử mùa trước",
+        "create_team":"Tạo đội"
     },
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",

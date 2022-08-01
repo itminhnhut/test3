@@ -131,7 +131,7 @@
     "holders_wallet": "Holders wallet",
     "liq_pools": "Liquidity pools",
     "contest": {
-        "title": "ONUS Futures Trading Contest Season 1",
+        "title": "ONUS Futures Trading Contest Season 2",
         "description": "Compete as an individual or team to win a reward of",
         "detail_rules": "Detail Rules",
         "ranking": "Ranking",
@@ -162,7 +162,9 @@
         "pnl_ranking": "% PnL ranking",
         "no": "No",
         "tooltip_personal": "Minimum volume for individual ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>",
-        "tooltip_team": "Minimum volume for team ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>"
+        "tooltip_team": "Minimum volume for team ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>",
+        "last_season":"Last season history",
+        "create_team":"Create team"
     },
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",
