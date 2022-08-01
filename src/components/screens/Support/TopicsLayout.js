@@ -178,7 +178,7 @@ const TopicsLayout = ({
                             ))}
                         </div>
 
-                        <div className="flex-grow px-4 pb-8 md:px-6 lg:px-8 lg:py-[40px]">
+                        <div className="flex-grow px-4 pb-8 md:px-6 lg:p-[40px]">
                             <SupportSearchBar
                                 simpleMode
                                 containerClassNames="!mt-4 lg:!mt-0 lg:hidden"
@@ -204,7 +204,7 @@ const TopicsLayout = ({
                                     width: COL_WIDTH,
                                     minWidth: COL_WIDTH
                                 }}
-                                className="hidden lg:block py-5 lg:py-[40px] pr-4 lg:pr-6 xl:pr-8"
+                                className="hidden lg:block py-5 lg:py-[40px] pr-4 lg:pr-6 xl:pr-8 lg:pl-2"
                             >
                                 <div className="px-3 text-[16px] font-bold mb-2.5">
                                     {t('support-center:lasted_articles')}
