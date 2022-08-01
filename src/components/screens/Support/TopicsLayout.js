@@ -178,7 +178,7 @@ const TopicsLayout = ({
                             ))}
                         </div>
 
-                        <div className="flex-grow px-4 pb-8 md:px-6 lg:p-[40px]">
+                        <div className="flex-grow w-full px-4 pb-8 md:px-6 lg:p-[40px]">
                             <SupportSearchBar
                                 simpleMode
                                 containerClassNames="!mt-4 lg:!mt-0 lg:hidden"
