@@ -59,7 +59,7 @@ const AnnouncementArticle = (props) => {
             >
                 <div className="mt-6 lg:mt-0 text-sm sm:text-[18px] lg:text-[20px] xl:text-[28px] leading-[24px] font-bold">
                     <span
-                        className="mt-6 lg:mt-0 text-sm sm:text-[18px] lg:text-[20px] xl:text-[28px] leading-[24px] font-bold tracking-[0.005em]"
+                        className="mt-6 lg:mt-0 text-sm sm:text-[18px] lg:text-[20px] xl:text-[28px] leading-[24px] font-bold tracking-[0.005em] lg:leading-8"
                     >
                         {props?.data?.article?.title}
                     </span>
