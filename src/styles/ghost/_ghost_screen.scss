@@ -235,7 +235,7 @@ production stylesheet in assets/built/screen.css
         padding: 0;
     }
     p {
-        text-align: justify;
+        text-align: justify; 
     }
     .gh-head-menu .nav a {
         display: inline-block;
@@ -1028,7 +1028,7 @@ production stylesheet in assets/built/screen.css
         font-family: var(--font-serif);
         font-weight: 400;
         font-size: 1rem;
-        line-height: 1.6em;
+        line-height: 1.75em;
     }
 
     .gh-content .kg-callout-card .kg-callout-text,
@@ -1130,6 +1130,7 @@ production stylesheet in assets/built/screen.css
         .gh-content .kg-toggle-card .kg-toggle-content > p {
             @apply text-sm;
             @apply font-medium;
+            line-height: 20px;
         }
 
         .gh-content .kg-product-card .kg-product-card-description > p,
