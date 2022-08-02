@@ -237,6 +237,11 @@ export const API_CONTEST_GET_RANK_GROUP_VOLUME =
     API_PREFIX + "event/futures-contest/group-volume";
 export const API_CONTEST_GET_GROUP_DETAIL =
     API_PREFIX + "event/futures-contest/group-detail";
+export const API_CONTEST_GET_INVITATIONS =
+    API_PREFIX + "event/futures-contest/invites";
+export const API_CONTEST_POST_ACCEPT_INVITATION =
+    API_PREFIX + "event/futures-contest/process-invite";
+
 //VOTE
 export const API_USER_VOTE = API_V3_PREFIX + "nao-dashboard/user-vote";
 

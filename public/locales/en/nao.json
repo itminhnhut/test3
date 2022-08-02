@@ -164,7 +164,18 @@
         "tooltip_personal": "Minimum volume for individual ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>",
         "tooltip_team": "Minimum volume for team ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>",
         "last_season":"Last season history",
-        "create_team":"Create team"
+        "create_team":"Create team",
+        "no_invitation": "You haven't has any invitation",
+        "spending_invitations": "You have {{value}} spending invitations",
+        "accept_invite": "Accept",
+        "team_detail": "Team detail",
+        "team_lead": "Leader",
+        "confirm_back": "Back",
+        "confirm_accept": "Accept",
+        "confirm_title": "Accept to join team",
+        "confirm_description": "Are you sure you want to accept this invitation to join <span class='text-nao-green font-semibold'>{{value}}</span> team? You can not leave once you joined.",
+        "confirm_close": "Close",
+        "join_success": "Joined successfully"
     },
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",
