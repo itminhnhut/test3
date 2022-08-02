@@ -237,6 +237,11 @@ export const API_CONTEST_GET_RANK_GROUP_VOLUME =
     API_PREFIX + "event/futures-contest/group-volume";
 export const API_CONTEST_GET_GROUP_DETAIL =
     API_PREFIX + "event/futures-contest/group-detail";
+export const API_CONTEST_GET_INVITATIONS =
+    API_PREFIX + "event/futures-contest/invites";
+export const API_CONTEST_POST_ACCEPT_INVITATION =
+    API_PREFIX + "event/futures-contest/process-invite";
+
 //VOTE
 export const API_USER_VOTE = API_V3_PREFIX + "nao-dashboard/user-vote";
 export const API_USER_POOL = API_V3_PREFIX + "nao-dashboard/user-vote/getuserpool";
@@ -246,8 +251,3 @@ export const API_GET_TICKETS = API_PREFIX + "futures_reward/tickets";
 export const API_GET_TICKET_DETAIL =
     API_PREFIX + "futures_reward/ticket-detail";
 export const API_CLAIM_TICKET = API_PREFIX + "futures_reward/claim";
-
-//reference
-export const API_REFERRAL_FRIENDS_LIST = API_PREFIX + "user/all_referred_users"
-export const API_REFERRAL_DASHBOARD = API_PREFIX + "user/commission_dashboard"
-export const API_REFERRAL_COMMISSION_LOG = API_PREFIX + "user/commission_log"

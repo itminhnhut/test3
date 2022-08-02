@@ -1,7 +1,7 @@
 import { PORTAL_MODAL_ID } from '../../../constants/constants';
 import { X } from 'react-feather';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import Portal from 'components/hoc/Portal';
 import hexRgb from 'utils/hexRgb';
@@ -20,6 +20,19 @@ const Modal = ({
     onusClassName = '',
     modalClassName = '',
 }) => {
+
+    const timer = useRef(null)
+
+    useEffect(() => {
+        if (isVisible) {
+            document.body.classList.add("overflow-hidden");
+        } else {
+            clearTimeout(timer.current);
+            timer.current = setTimeout(() => {
+                document.body.classList.remove("overflow-hidden");
+            }, 300);
+        }
+    }, [isVisible]);
 
     return (
         <Portal portalId={PORTAL_MODAL_ID}>

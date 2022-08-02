@@ -1,8 +1,4 @@
 const colors = {
-    mint: "#03BBCC",
-    mint3: "#0FA4B3",
-    dark7: "#1f1f1f",
-
     base: '#00C8BC',
     bg: '#eeeeee',
     lightThemeBg: '#FCFCFC',

@@ -346,7 +346,7 @@
         "invalid_nami_frame_user": "You are not eligible for this program",
         "invalid_log_status": "Your reward not found please come back later",
         "title_on_boarding": "Claim Reward",
-        "content_on_boarding": "Congratulations, you have successfully received {{value}} VNDC",
+        "content_on_boarding": "Congratulations, you have successfully received {{value}}",
         "change_24h": "24h",
         "leverage_v2": "Type/leverage",
         "not_show_this_message": "Don't show this message again",

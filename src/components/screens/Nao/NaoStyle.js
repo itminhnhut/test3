@@ -24,8 +24,7 @@ export const TextLiner = styled.div.attrs({
 
 export const CardNao = styled.div.attrs(({ noBg, customHeight }) => ({
     className: classNames(
-        `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] ${
-            customHeight ? customHeight : "sm:min-h-[180px]"
+        `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] ${customHeight ? customHeight : "sm:min-h-[180px]"
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
         { "bg-nao-bg/[0.15]": !noBg }
@@ -50,10 +49,17 @@ export const Divider = styled.div.attrs({
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%237686B1' stroke-width='2' stroke-dasharray='3 %2c 10' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");
 `;
 
-export const ButtonNao = styled.div.attrs({
-    className:
-        "text-center flex items-center justify-center bg-nao-bg4 select-none cursor-pointer",
-})`
+export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
+    className: classNames(
+        "text-center font-semibold flex items-center justify-center select-none cursor-pointer h-10",
+        {
+            'border border-nao-blue2 !bg-nao-bg3': border,
+            'text-opacity-20 text-nao-white !bg-nao-bg3': disabled,
+            'bg-nao-bg4': !disabled,
+        },
+
+    )
+}))`
     background: ${({ active, isActive }) =>
         isActive ? (active ? colors.nao.blue2 : "") : colors.nao.blue2};
     border-radius: 12px;
@@ -439,4 +445,50 @@ export const TextTicketLiner = styled.div.attrs({
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
+`;
+
+export const TextField = (props) => {
+    const { label, prefix, readOnly, className = '' } = props;
+    const [focus, setFocus] = useState(false)
+
+    const onFocus = () => {
+        if (!readOnly) setFocus(true)
+
+    }
+
+    const onBlur = () => {
+        if (!readOnly) setFocus(false)
+    }
+
+    return (
+        <div className="w-full space-y-[6px]">
+            <div className="text-xs leading-6 text-onus-grey">{label}</div>
+            <WrapInput focus={focus}>
+                <input
+                    className={`w-full text-sm ${readOnly ? 'text-onus-grey' : ''} ${className}`}
+                    onFocus={onFocus} onBlur={onBlur}
+                    readOnly={readOnly}
+                    {...props}
+                />
+                {prefix && <div className="text-sm leading-6 text-onus-grey whitespace-nowrap">{prefix}</div>}
+            </WrapInput>
+        </div>
+    )
+}
+
+export const WrapInput = styled.div.attrs({
+    className: 'w-full border-b border-nao-grey pb-[5px] relative flex items-center justify-between'
+})`
+    &::after{
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform:${({ focus }) => focus ? `scaleX(1)` : `scaleX(0)`} ;
+        height: 1px;
+        bottom: -1px;
+        left: 0;
+        background-color: ${() => colors.onus.base};
+        transform-origin: bottom left;
+        transition: all 0.3s ease-out;
+    }
 `;

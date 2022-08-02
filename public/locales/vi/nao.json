@@ -132,7 +132,7 @@
     "holders_wallet": "Ví holder",
     "liq_pools": "Pool thanh khoản",
     "contest": {
-        "title": "Đua TOP giao dịch ONUS Futures mùa đầu tiên",
+        "title": "Đua TOP giao dịch ONUS Futures mùa hai",
         "description": "Tranh giải cá nhân và đội nhóm với tổng giải thưởng",
         "detail_rules": "Thể lệ chi tiết",
         "ranking": "Bảng xếp hạng",
@@ -163,7 +163,20 @@
         "pnl_ranking": "Thứ hạng LN",
         "no": "STT",
         "tooltip_personal": "Khối lượng tối thiểu để được xếp hạng cá nhận là <span class='text-nao-green'>{{value}} tỷ VNDC</span>",
-        "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}} tỷ VNDC</span>"
+        "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}} tỷ VNDC</span>",
+        "last_season":"Lich sử mùa trước",
+        "create_team":"Tạo đội",
+        "no_invitation": "Bạn chưa có lời mời tham gia đội",
+        "spending_invitations": "Bạn có {{value}} lời mời tham gia đội",
+        "accept_invite": "Chấp nhận",
+        "team_detail": "Xem đội",
+        "team_lead": "Đội trưởng",
+        "confirm_back": "Quay lại",
+        "confirm_accept": "Chấp nhận",
+        "confirm_title": "Đồng ý tham gia đội",
+        "confirm_description": "Bạn có chắc chắn muốn chấp nhận lời mời tham gia đội <span class='text-nao-green font-semibold'>{{value}}</span> không? Bạn sẽ không thể rời đội khi đã trở thành thành viên.",
+        "confirm_close": "Đóng",
+        "join_success": "Tham gia đội thành công"
     },
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",
@@ -178,6 +191,8 @@
         "get_now": "Nhận ngay",
         "continue": "Tiếp tục mở",
         "conditions": "Điều kiện nhận thưởng",
-        "vol_trade": "KL giao dịch hôm nay"
+        "vol_trade": "KL giao dịch hôm nay",
+        "the_promotion_end_title": "Chương trình đã kết thúc",
+        "the_promotion_end_description": "Chương trình rút vé may mắn nhận thưởng theo khối lượng giao dịch đã kết thúc, vui lòng quay lại sau."
     }
 }

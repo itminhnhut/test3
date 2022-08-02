@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, {useEffect, useMemo, useState,useRef} from 'react';
+=======
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+>>>>>>> feature/contest-invitation
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {FUTURES_DEFAULT_SYMBOL} from 'pages/futures';
@@ -48,6 +52,7 @@ const FuturesMobile = () => {
     const [forceRender, setForceRender] = useState(false);
     const [showOnBoardingModal, setShowOnBoardingModal] = useState(false)
     const assetConfig = useSelector(state => state?.utils?.assetConfig)
+    const campaign = useRef(null)
 
     const pairConfig = useMemo(
         () => allPairConfigs?.find((o) => o.pair === state.pair),
@@ -95,12 +100,15 @@ const FuturesMobile = () => {
 
     const getCampaignStatus = async () => {
         try {
-            const {status, data, message} = await fetchApi({
+            const { status, data, message } = await fetchApi({
                 url: API_FUTURES_CAMPAIGN_STATUS,
-                options: {method: 'GET'},
+                options: { method: 'GET' },
             });
-            if (status === ApiStatus.SUCCESS && data.status === PromotionStatus.PENDING) {
-                setShowOnBoardingModal(true);
+            if (status === ApiStatus.SUCCESS) {
+                campaign.current = data.filter(rs => rs.status === PromotionStatus.PENDING);
+                if (Array.isArray(campaign.current) && campaign.current.length > 0) {
+                    setShowOnBoardingModal(true);
+                }
             }
         } catch (e) {
             console.log(e);
@@ -231,7 +239,7 @@ const FuturesMobile = () => {
                 pairConfig={pairConfig}
             />
             <LayoutMobile>
-                {showOnBoardingModal && <EventModalMobile onClose={() => setShowOnBoardingModal(false)}/>}
+                {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)}/>}
                 <Container id="futures-mobile" onScroll={onScroll}>
                     <Section className="form-order bg-onus"
                              style={{...futuresScreen.style}}>
