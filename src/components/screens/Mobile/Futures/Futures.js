@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, {useEffect, useMemo, useState,useRef} from 'react';
-=======
 import React, {useEffect, useMemo, useRef, useState} from 'react';
->>>>>>> feature/contest-invitation
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {FUTURES_DEFAULT_SYMBOL} from 'pages/futures';
