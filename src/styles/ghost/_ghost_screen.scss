@@ -237,6 +237,9 @@ production stylesheet in assets/built/screen.css
     p {
         text-align: justify; 
     }
+    li{
+        word-wrap: break-word;
+    }
     .gh-head-menu .nav a {
         display: inline-block;
         padding: 5px 0;
