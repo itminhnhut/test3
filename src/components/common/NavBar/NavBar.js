@@ -377,9 +377,9 @@ const NavBar = ({
                 onClick={onThemeSwitch}
             >
                 {currentTheme !== THEME_MODE.LIGHT ? (
-                    <SvgMoon size={20} color={navTheme.color} />
+                    <SvgMoon size={20} />
                 ) : (
-                    <SvgSun size={20} color={navTheme.color} />
+                    <SvgSun size={20} />
                 )}
             </a>
         )
@@ -736,7 +736,6 @@ const NavBar = ({
                                     ? 'mal-navbar__hamburger__spacing'
                                     : 'ml-3'
                                     } cursor-pointer`}
-                                color={navTheme.color}
                             />
                         </div>
                     )}
