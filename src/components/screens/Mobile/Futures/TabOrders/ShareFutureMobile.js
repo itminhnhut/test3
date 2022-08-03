@@ -29,7 +29,7 @@ export const getShareModalData = ({ order, pairPrice }) => {
         price = order?.open_price
     } else {
         closePrice = order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask
-        profit = getProfitVndc(order, closePrice)
+        profit = getProfitVndc(order, closePrice, true)
     }
     const _percent = ((isClosePrice ? order?.profit : profit) / order?.margin) * 100;
     const shareData = {

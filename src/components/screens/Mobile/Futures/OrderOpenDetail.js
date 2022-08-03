@@ -43,7 +43,7 @@ const OrderOpenDetail = ({
     });
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const dataMarketWatch = marketWatch[order?.symbol];
-    const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
+    const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask, true);
     const marginRatio = (profit / order?.margin) * 100;
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const [showEditMargin, setShowEditMargin] = useState(false);

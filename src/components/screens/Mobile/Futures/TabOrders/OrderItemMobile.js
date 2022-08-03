@@ -130,7 +130,7 @@ const OrderItemMobile = ({
         marginRatio = (profit / order?.margin) * 100;
     } else {
         if (order && dataMarketWatch) {
-            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
+            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask, true);
             marginRatio = (profit / order?.margin) * 100;
         }
     }

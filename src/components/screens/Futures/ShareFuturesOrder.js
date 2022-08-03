@@ -42,7 +42,7 @@ const ShareFuturesOrder = ({
         time = '',
     } = useMemo(() => {
         if (!order) return {}
-        const profit = getProfitVndc(order, pairPrice?.lastPrice)
+        const profit = getProfitVndc(order, pairPrice?.lastPrice, true)
         let price = {
             [PENDING]: order?.price,
             [ACTIVE]: order?.open_price,

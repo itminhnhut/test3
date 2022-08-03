@@ -107,7 +107,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
     const { t } = useTranslation()
 
     const lastPrice = order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask
-    const profit = getProfitVndc(order, lastPrice)
+    const profit = getProfitVndc(order, lastPrice, true)
 
     const { newMargin = 0, newLiqPrice = 0, minMarginRatio, initMargin = 0, maxRemovable = 0 } = useMemo(() => {
         if (!order) return {}
