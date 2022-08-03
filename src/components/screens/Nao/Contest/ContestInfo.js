@@ -2,20 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { CardNao, TextLiner, ButtonNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-
 import { getS3Url } from 'redux/actions/utils';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
-import { API_CONTEST_GET_USER_DETAIL } from 'redux/actions/apis';
-
+import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/actions/apis';
 import Tooltip from 'components/common/Tooltip';
 import CreateTeamModal from './season2/CreateTeamModal';
-
+import { ApiStatus } from 'redux/actions/const';
 
 const ContestInfo = ({ onShowDetail }) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
     const [userData, setUserData] = useState(null);
+    const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
+    const [showGroupDetail, setShowGroupDetail] = useState(false);
+
+
     useEffect(() => {
 
         if (user) {
@@ -26,23 +28,50 @@ const ContestInfo = ({ onShowDetail }) => {
 
     const getData = async (day) => {
         try {
-            const { data } = await fetchApi({
+            const { data, status } = await fetchApi({
                 url: API_CONTEST_GET_USER_DETAIL,
                 options: { method: 'GET' },
-                params: { contest_id: 4 },
+                params: { contest_id: 5 },
             });
-            setUserData(data);
+            if (status === ApiStatus.SUCCESS) {
+                data ? setUserData(data) : getInvites();
+            }
+
         } catch (e) {
             console.error('__ error', e);
         } finally {
         }
     };
 
+    const getInvites = async () => {
+        try {
+            const { data, status } = await fetchApi({
+                url: API_CONTEST_GET_INVITES,
+                options: { method: 'GET' },
+                params: { contest_id: 5 },
+            });
+            if (status === ApiStatus.SUCCESS) {
+                setUserData(data)
+            }
+        } catch (e) {
+            console.error('__ error', e);
+        } finally {
+        }
+    }
+
+    const onShowCreate = (mode) => {
+        if (mode) getData();
+        setShowCreateTeamModal(!showCreateTeamModal)
+    }
+
+    const onShowGroupDetail = () => {
+        setShowGroupDetail(!showGroupDetail)
+    }
+
     if (!(user && userData)) return null;
 
     return (
         <>
-            {/* <CreateTeamModal userData={userData} /> */}
             <section className="contest_info pt-[70px]">
                 <TextLiner>{t('nao:contest:personal')}</TextLiner>
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-8 ">
@@ -53,8 +82,8 @@ const ContestInfo = ({ onShowDetail }) => {
                             <div className="leading-6">ID: {userData?.onus_user_id}</div>
                             {/* <span className="text-nao-white mx-2 sm:hidden">•</span> */}
                             <div className="flex text-nao-grey2 leading-6 mt-1">{t('nao:contest:team_label')}:&nbsp;
-                                <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.group_displaying_id })}
-                                    className="text-nao-green font-medium cursor-pointer">{userData?.group_name || '-'}</span></div>
+                                <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.group_displaying_id, ...userData })}
+                                    className={`${userData?.group_name ? 'text-nao-green' : ''} font-medium cursor-pointer`}>{userData?.group_name || t('nao:contest:not_invited')}</span></div>
                         </div>
                     </CardNao>
                     <CardNao className="!min-h-[136px] !py-7 !px-[35px] w-full lg:w-max">
@@ -62,13 +91,14 @@ const ContestInfo = ({ onShowDetail }) => {
                             <div className="flex items-center justify-between w-full md:w-1/2">
                                 <label className="text-nao-text text-sm leading-6 ">{t('nao:contest:trades')}</label>
                                 <div
-                                    className="font-semibold leading-8 text-right">{formatNumber(userData?.total_order)}</div>
+                                    className="font-semibold leading-8 text-right">{userData?.total_order ? formatNumber(userData?.total_order) : '-'}</div>
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2 md:hidden"></div>
                             <div className="flex items-center justify-between w-full md:w-1/2">
                                 <label className="text-nao-text text-sm leading-6 ">{t('nao:contest:total_pnl')}</label>
                                 <div
-                                    className={`font-semibold leading-8 text-right ${userData?.total_pnl < 0 ? 'text-nao-red' : 'text-nao-green2'}`}>{formatNumber(userData?.total_pnl, 0, 0, true)} VNDC
+                                    className={`font-semibold leading-8 text-right ${!!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-nao-red' : 'text-nao-green2')}`}>
+                                    {userData?.total_pnl ? formatNumber(userData?.total_pnl, 0, 0, true) + ' VNDC' : '-'}
                                 </div>
                             </div>
                         </div>
@@ -77,7 +107,7 @@ const ContestInfo = ({ onShowDetail }) => {
                             <div className="flex items-center justify-between w-full md:w-1/2">
                                 <label className="text-nao-text text-sm leading-6 ">{t('nao:contest:volume')}</label>
                                 <div
-                                    className="font-semibold leading-8 text-right">{formatNumber(userData?.total_volume, 0, 0, true)} VNDC
+                                    className="font-semibold leading-8 text-right">{userData?.total_volume ? formatNumber(userData?.total_volume, 0, 0, true) + ' VNDC' : '-'}
                                 </div>
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2 md:hidden"></div>
@@ -94,7 +124,7 @@ const ContestInfo = ({ onShowDetail }) => {
 
                                 </label>
                                 <div
-                                    className={`font-semibold leading-8 text-right ${userData?.pnl < 0 ? 'text-nao-red' : 'text-nao-green2'}`}>{formatNumber(userData?.pnl, 2, 0, true)}%
+                                    className={`font-semibold leading-8 text-right ${!!userData?.pnl && (userData?.pnl < 0 ? 'text-nao-red' : 'text-nao-green2')}`}>{userData?.pnl ? formatNumber(userData?.pnl, 2, 0, true) + '%' : '-'}
                                 </div>
                             </div>
                         </div>
@@ -103,20 +133,21 @@ const ContestInfo = ({ onShowDetail }) => {
                             <div className="flex items-center justify-between w-full md:w-1/2">
                                 <label className="text-nao-text text-sm leading-6 ">{t('nao:contest:volume_rank')}</label>
                                 <div
-                                    className="font-semibold leading-8 text-right">#{userData?.individual_rank_volume}</div>
+                                    className="font-semibold leading-8 text-right">{userData?.individual_rank_volume ? '#' + userData?.individual_rank_volume : '-'}</div>
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2 md:hidden"></div>
                             <div className="flex items-center justify-between w-full md:w-1/2">
                                 <label className="text-nao-text text-sm leading-6 ">{t('nao:contest:pnl_rank')}</label>
-                                <div className="font-semibold leading-8 text-right">#{userData?.individual_rank_pnl}</div>
+                                <div className="font-semibold leading-8 text-right">{userData?.individual_rank_pnl ? '#' + userData?.individual_rank_pnl : '-'}</div>
                             </div>
                         </div>
                     </CardNao>
                 </div>
             </section>
-            <div className="bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
-                <ButtonNao className="!rounded-md">{t('nao:contest:create_team')}</ButtonNao>
-            </div>
+            {showCreateTeamModal && <CreateTeamModal userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} />}
+            {!userData?.group_name && <div className="bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
+                <ButtonNao onClick={() => onShowCreate()} className="!rounded-md">{t('nao:contest:create_team')}</ButtonNao>
+            </div>}
         </>
     );
 };

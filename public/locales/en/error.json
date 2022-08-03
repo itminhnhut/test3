@@ -250,6 +250,11 @@
     "UNKNOWN": "Something went wrong, please provide the error code below to the support team.",
     "PROCESSING_FUTURES_ORDER": "Your request failed because the order was closed",
     "PRICE_CHANGED": "Your request are expired or the current price has changed, please request new price",
-    "NETWORK_ERROR": "Network error, Please check your connection again"
+    "NETWORK_ERROR": "Network error, Please check your connection again",
+    "INVALID_IMAGE": "Image is not valid, please try again.",
+    "DUPLICATED_USER": "DUPLICATED_USER",
+    "DUPLICATE_GROUP_NAME": "DUPLICATE_GROUP_NAME",
+    "USER_HAS_BEEN_INVITED": "USER_HAS_BEEN_INVITED",
+    "GROUP_HAS_ENOUGH_MEMBERS": "GROUP_HAS_ENOUGH_MEMBERS"
   }
 }

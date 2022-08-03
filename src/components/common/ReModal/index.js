@@ -27,10 +27,10 @@ const Modal = ({
         if (isVisible) {
             document.body.classList.add("overflow-hidden");
         } else {
-            clearTimeout(timer.current);
-            timer.current = setTimeout(() => {
-                document.body.classList.remove("overflow-hidden");
-            }, 300);
+            document.body.classList.remove("overflow-hidden");
+        }
+        return () => {
+            document.body.classList.remove("overflow-hidden");
         }
     }, [isVisible]);
 

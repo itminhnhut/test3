@@ -5,9 +5,8 @@ const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/co
 
 export const getBlogApi = (apiEndpoint, params) => {
     if (!apiEndpoint) return "";
-    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${
-        process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
-    }${params || ""}`;
+    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
+        }${params || ""}`;
 };
 
 export const API_REGISTER = API_PREFIX + "user/register";
@@ -237,6 +236,15 @@ export const API_CONTEST_GET_RANK_GROUP_VOLUME =
     API_PREFIX + "event/futures-contest/group-volume";
 export const API_CONTEST_GET_GROUP_DETAIL =
     API_PREFIX + "event/futures-contest/group-detail";
+
+export const API_CONTEST_CHECK_MEMBER = API_PREFIX + "event/futures-contest/check-user";
+export const API_CONTEST_UPLOAD = API_PREFIX + "event/futures-contest/avatar";
+export const API_CONTEST_CREATE_GROUP = API_PREFIX + "event/futures-contest/group";
+export const API_CONTEST_GET_GROUP_MEMBER = API_PREFIX + "event/futures-contest/group-members";
+export const API_CONTEST_CANCEL_INVITE = API_PREFIX + "event/futures-contest/cancel-invite";
+export const API_CONTEST_GET_INVITES = API_PREFIX + "event/futures-contest/invites";
+export const API_CONTEST_SEND_INVITE = API_PREFIX + "event/futures-contest/send-invite";
+
 //VOTE
 export const API_USER_VOTE = API_V3_PREFIX + "nao-dashboard/user-vote";
 

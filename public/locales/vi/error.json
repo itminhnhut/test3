@@ -138,6 +138,11 @@
     "UNKNOWN": "Có lỗi xảy ra trong quá trình xử lý, vui lòng cung cấp mã lỗi dưới đây cho đội ngũ hỗ trợ.",
     "PROCESSING_FUTURES_ORDER": "Yêu cầu của bạn không thành công do lệnh đã đóng trước đó",
     "PRICE_CHANGED": "Yêu cầu của bạn đã hết hạn hoặc giá đã thay đổi so với báo giá cũ, vui lòng yêu cầu báo giá mới",
-    "NETWORK_ERROR": "Lỗi mạng, Vui lòng kiểm tra lại kết nối của bạn"
+    "NETWORK_ERROR": "Lỗi mạng, Vui lòng kiểm tra lại kết nối của bạn",
+    "INVALID_IMAGE": "Hình ảnh không hợp lệ, vui lòng thử lại.",
+    "DUPLICATED_USER": "DUPLICATED_USER",
+    "DUPLICATE_GROUP_NAME": "DUPLICATE_GROUP_NAME",
+    "USER_HAS_BEEN_INVITED": "USER_HAS_BEEN_INVITED",
+    "GROUP_HAS_ENOUGH_MEMBERS": "GROUP_HAS_ENOUGH_MEMBERS"
   }
 }

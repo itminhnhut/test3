@@ -34,7 +34,7 @@ const Contest = () => {
 export const getStaticProps = async ({ locale }) => ({
     props: {
         ...(await serverSideTranslations(locale, [
-            'common', 'nao'
+            'common', 'nao', 'error'
         ])),
     },
 })
