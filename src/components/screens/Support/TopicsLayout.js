@@ -1,18 +1,17 @@
-import { useRouter } from 'next/router';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import classNames from 'classnames';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import SupportBanner from 'components/screens/Support/SupportBanner';
 import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
+import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 import { PATHS } from 'constants/paths';
-import Link from 'next/link';
-import classNames from 'classnames';
+import useApp from 'hooks/useApp';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
-import useApp from 'hooks/useApp';
-import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
-import { ChevronDown, ChevronUp } from 'react-feather';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useWindowSize } from 'utils/customHooks';
+import { ChevronDown, ChevronUp } from 'react-feather';
 
 const COL_WIDTH = 304;
 
@@ -32,7 +31,6 @@ const TopicsLayout = ({
         i18n: { language }
     } = useTranslation();
     const isApp = useApp();
-    const { width } = useWindowSize();
     const baseHref = mode === 'announcement' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ;
     const queryMode = mode === 'announcement' ? 'noti' : 'faq';
     const topics =
@@ -46,9 +44,9 @@ const TopicsLayout = ({
     const handleHideScrollBar = () => {
         const body = document.querySelector('body');
         const malLayout = document.querySelector('.mal-layouts');
-        if (width < 450) {
-            body.classList.add('overflow-hidden');
-            malLayout.classList.add('!h-screen');
+        if (window.innerWidth < 450) {
+        body.classList.add('overflow-hidden');
+        malLayout.classList.add('!h-screen');
         }
         return () => {
             body.classList.remove('overflow-hidden');
