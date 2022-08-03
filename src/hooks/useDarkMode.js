@@ -8,7 +8,7 @@ export const THEME_MODE = {
 }
 
 const useDarkMode = () => {
-    const currentTheme = useSelector(state => state.user.theme)
+    const currentTheme = useSelector((state) => state.user.theme) || THEME_MODE.LIGHT;
     const dispatch = useDispatch()
 
     const setTheme = (nextTheme) => {
