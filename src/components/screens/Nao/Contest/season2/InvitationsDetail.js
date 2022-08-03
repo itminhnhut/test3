@@ -45,7 +45,7 @@ const InvitationDetail = ({ visible = true, onClose, onAccept,sortName = 'volume
                             <div className="flex flex-col">
                                 <div className="flex items-center space-x-3">
                                     <div className="text-[24px] leading-8 font-semibold capitalize">
-                                        Lời mời tham gia đội ({data.length})
+                                        {t('nao:contest:team_invitations')} ({data.length})
                                     </div>
                                 </div>
                             </div>

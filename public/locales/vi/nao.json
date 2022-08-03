@@ -175,7 +175,8 @@
         "confirm_title": "Đồng ý tham gia đội",
         "confirm_description": "Bạn có chắc chắn muốn chấp nhận lời mời tham gia đội <span class='text-nao-green font-semibold'>{{value}}</span> không? Bạn sẽ không thể rời đội khi đã trở thành thành viên.",
         "confirm_close": "Đóng",
-        "join_success": "Tham gia đội thành công"
+        "join_success": "Tham gia đội thành công",
+        "team_invitations": "Lời mời tham gia đội"
     },
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",
