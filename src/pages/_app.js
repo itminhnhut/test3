@@ -143,7 +143,7 @@ const App = ({
     }, [language]);
 
     useEffect(() => {
-        if(!router.pathname.includes('mobile')){
+        if(!router.pathname.includes('mobile') && !router.pathname.includes('nao')){
             function initFreshChat() {
                 window.fcWidget.init({
                     token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
