@@ -135,7 +135,7 @@ const PocketNavDrawer = memo(
                             className='mal-pocket-navbar__drawer__navlink__group___item mal-pocket-nabar__item___hover'
                             onClick={() => {
                                 onClose()
-                                window.fcWidget.open()
+                                window.fcWidget?.open()
                             }}
                         >
                             <div className='flex flex-row items-center'>
