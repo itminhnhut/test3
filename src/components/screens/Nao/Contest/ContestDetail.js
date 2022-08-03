@@ -271,7 +271,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                                                             {item?.name ?? t('nao:contest:member', { value: index + 1 })}
                                                         </div>
                                                     </div>
-                                                    {item?.name && <div className="bg-bgCondition rounded-[800px] px-2 mt-2 text-xs font-medium leading-6 py-[2px] whitespace-nowrap">
+                                                    {item?.name && <div className="bg-bgCondition rounded-[800px] px-2 text-xs font-medium leading-6 py-[2px] whitespace-nowrap">
                                                         {renderStatusMember(item?.status)}
                                                     </div>
                                                     }
