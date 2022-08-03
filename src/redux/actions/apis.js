@@ -245,6 +245,11 @@ export const API_CONTEST_CANCEL_INVITE = API_PREFIX + "event/futures-contest/can
 export const API_CONTEST_GET_INVITES = API_PREFIX + "event/futures-contest/invites";
 export const API_CONTEST_SEND_INVITE = API_PREFIX + "event/futures-contest/send-invite";
 
+export const API_CONTEST_GET_INVITATIONS =
+    API_PREFIX + "event/futures-contest/invites";
+export const API_CONTEST_POST_ACCEPT_INVITATION =
+    API_PREFIX + "event/futures-contest/process-invite";
+
 //VOTE
 export const API_USER_VOTE = API_V3_PREFIX + "nao-dashboard/user-vote";
 

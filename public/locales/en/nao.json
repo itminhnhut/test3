@@ -191,7 +191,19 @@
         "add_member": "Add member",
         "not_invited": "You don't have any team invitation",
         "member": "Member {{value}}",
-        "member_successfully":"Successfully added member"
+        "member_successfully":"Successfully added member",
+        "no_invitation": "You don't have any team invitation",
+        "spending_invitations": "You have {{value}} team invitations",
+        "accept_invite": "Accept",
+        "team_detail": "Team details",
+        "team_lead": "Leader",
+        "confirm_back": "Back",
+        "confirm_accept": "Accept",
+        "confirm_title": "Accept Team Invitation",
+        "confirm_description": "Are you sure to join the team <span class='text-nao-green font-semibold'>{{value}}</span>? You can not leave after this action.",
+        "confirm_close": "Close",
+        "join_success": "Successfully Joined",
+        "team_invitations": "Team Invitations"
     },
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",

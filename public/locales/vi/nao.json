@@ -191,7 +191,19 @@
         "add_member": "Thêm thành viên",
         "not_invited": "Bạn chưa có lời mời tham gia đội",
         "member": "Thành viên {{value}}",
-        "member_successfully": "Thêm thành viên thành công"
+        "member_successfully": "Thêm thành viên thành công",
+        "no_invitation": "Bạn chưa có lời mời tham gia đội",
+        "spending_invitations": "Bạn có {{value}} lời mời tham gia đội",
+        "accept_invite": "Chấp nhận",
+        "team_detail": "Xem đội",
+        "team_lead": "Đội trưởng",
+        "confirm_back": "Quay lại",
+        "confirm_accept": "Chấp nhận",
+        "confirm_title": "Đồng ý tham gia đội",
+        "confirm_description": "Bạn có chắc chắn muốn chấp nhận lời mời tham gia đội <span class='text-nao-green font-semibold'>{{value}}</span> không? Bạn sẽ không thể rời đội khi đã trở thành thành viên.",
+        "confirm_close": "Đóng",
+        "join_success": "Tham gia đội thành công",
+        "team_invitations": "Lời mời tham gia đội"
     },
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",

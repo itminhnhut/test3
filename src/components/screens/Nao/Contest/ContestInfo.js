@@ -5,23 +5,24 @@ import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
-import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/actions/apis';
+import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES, API_CONTEST_GET_INVITATIONS} from 'redux/actions/apis';
 import Tooltip from 'components/common/Tooltip';
 import CreateTeamModal from './season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
 
-const ContestInfo = ({ onShowDetail }) => {
+const ContestInfo = ({ onShowDetail, onShowInvitations }) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
     const [userData, setUserData] = useState(null);
     const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
     const [showGroupDetail, setShowGroupDetail] = useState(false);
-
+    const [invitations, setInvitations] = useState(null);
 
     useEffect(() => {
 
         if (user) {
             getData();
+            getInvitation()
         }
 
     }, [user]);
@@ -68,7 +69,20 @@ const ContestInfo = ({ onShowDetail }) => {
         setShowGroupDetail(!showGroupDetail)
     }
 
-    if (!(user && userData)) return null;
+    const getInvitation = async () => {
+        try {
+            const { data } = await fetchApi({
+                url: API_CONTEST_GET_INVITATIONS,
+                options: { method: 'GET' },
+                params: { contest_id: 5 }
+            });
+            setInvitations(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    if (!(user && invitations)) return null;
 
     return (
         <>
@@ -76,14 +90,29 @@ const ContestInfo = ({ onShowDetail }) => {
                 <TextLiner>{t('nao:contest:personal')}</TextLiner>
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-8 ">
                     <CardNao className="!min-h-[136px] !p-6 lg:!max-w-[375px]">
-                        <label className="text-2xl text-nao-green font-semibold leading-10">{userData?.name}</label>
+                        <label className="text-2xl text-nao-green font-semibold leading-10">{invitations?.name}</label>
                         <div
                             className=" text-nao-grey2 text-sm font-medium mt-1 flex flex-col items-start">
-                            <div className="leading-6">ID: {userData?.onus_user_id}</div>
+                            <div className="leading-6">ID: {invitations?.onus_user_id}</div>
                             {/* <span className="text-nao-white mx-2 sm:hidden">•</span> */}
                             <div className="flex text-nao-grey2 leading-6 mt-1">{t('nao:contest:team_label')}:&nbsp;
-                                <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.group_displaying_id, ...userData })}
-                                    className={`${userData?.group_name ? 'text-nao-green' : ''} font-medium cursor-pointer`}>{userData?.group_name || t('nao:contest:not_invited')}</span></div>
+                                {userData?.group_name ?
+                                    <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.group_displaying_id, ...userData })}
+                                          className={`${userData?.group_name ? 'text-nao-green' : ''} font-medium cursor-pointer`}>{userData?.group_name || t('nao:contest:not_invited')}</span>
+                                    :
+                                    invitations?.invites && invitations.invites.length !== 0 ?
+                                        <span className="text-nao-green font-medium cursor-pointer underline"
+                                            onClick={() => invitations && onShowInvitations(invitations.invites)}
+                                        >
+                                            {t('nao:contest:spending_invitations', { value: invitations.invites.length })}
+                                        </span>
+                                        :
+                                        <span className="font-medium">
+                                            {t('nao:contest:no_invitation')}
+                                        </span>
+
+                                }
+                            </div>
                         </div>
                     </CardNao>
                     <CardNao className="!min-h-[136px] !py-7 !px-[35px] w-full lg:w-max">
