@@ -73,7 +73,7 @@ const NavBar = ({
     const [currentTheme, onThemeSwitch] = useDarkMode()
     const [currentLocale, onChangeLang] = useLanguage()
     const router = useRouter()
-
+    const isHomePage = useMemo(() => router.pathname==="/", [router]);
     const { user: auth } = useSelector((state) => state.auth) || null
     const { width } = useWindowSize()
     const { t } = useTranslation(['navbar', 'common'])
@@ -372,17 +372,17 @@ const NavBar = ({
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null
         return (
             <a
-                href='#'
-                className='mal-navbar__hamburger__spacing mal-navbar__svg_dominant'
+                href="#"
+                className="mal-navbar__hamburger__spacing mal-navbar__svg_dominant"
                 onClick={onThemeSwitch}
             >
                 {currentTheme !== THEME_MODE.LIGHT ? (
-                    <SvgMoon size={20} />
+                    <SvgMoon size={20} color={'#f2f4f6'} />
                 ) : (
-                    <SvgSun size={20} />
+                    <SvgSun size={20} color={isHomePage ? '#f2f4f6' : '#223050'} />
                 )}
             </a>
-        )
+        );
     }, [name, currentTheme, navTheme.color])
 
     const renderUserControl = useCallback(() => {
