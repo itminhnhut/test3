@@ -92,7 +92,7 @@ const AddMemberModal = ({ onClose }) => {
         }
     }
 
-    const disabled = loading || error.error || !member
+    const disabled = loading || error.error || !member || !fullname.current
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => onClose()}
@@ -102,7 +102,7 @@ const AddMemberModal = ({ onClose }) => {
             <div className="text-2xl font-semibold leading-8 mb-6">{t('nao:contest:add_member')}</div>
             <TextField onBlur={onBlur} label={t('nao:contest:id_member')} value={member} prefix={fullname.current}
                 error={error.error} helperText={error.message} onChange={onHandleChange} />
-            <div className='!px-4 flex items-center space-x-4 mt-6'>
+            <div className='flex items-center space-x-4 mt-6'>
                 <ButtonNao onClick={() => onClose()} border className="w-full !rounded-md">{t('common:close')}</ButtonNao>
                 <ButtonNao onClick={onAddMember} disabled={disabled} className="w-full !rounded-md">
                     {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:add_member')}

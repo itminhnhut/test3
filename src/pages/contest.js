@@ -15,7 +15,7 @@ const Contest = () => {
     const [showInvitations, showShowInvitationst] = useState(false)
     const [showAccept, showShowAccept] = useState(false)
     const [inviteDetail, setInviteDetail] = useState(null)
-    
+    const refInfo = useRef(null);
 
     const sortName = useRef('volume');
     const rowData = useRef(null);
@@ -28,8 +28,8 @@ const Contest = () => {
     }
 
     const onShowInvitations = (e, data) => {
-        showShowInvitationst(true)
         invitationsData.current = e
+        showShowInvitationst(true)
     }
 
     const showAcceptForm = (data) => {
@@ -44,18 +44,31 @@ const Contest = () => {
         showShowAccept(false)
     }
 
+    const getInfo = () => {
+        if (refInfo.current) refInfo.current.onGetInfo()
+        showShowInvitationst(false);
+    }
+
+    const onCloseDetail = (key) => {
+        if (key === 'trigger') {
+            getInfo();
+        }
+        showShowDetail(false);
+    }
+
 
     return (
         <LayoutNaoToken>
-            {showDetail && <ContestDetail rowData={rowData.current} sortName={sortName.current} onClose={() => showShowDetail(false)} />}
-            {showInvitations && <InvitationsDetail onAccept={showAcceptForm} data={invitationsData.current} onClose={() => showShowInvitationst(false)} />}
-            {showAccept && <ConfirmJoiningTeam data={inviteDetail} onBack={() => backInvitationsForm()} onClose={() => {
+            {showDetail && <ContestDetail rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} />}
+            {showInvitations && <InvitationsDetail onShowDetail={onShowDetail} getInfo={getInfo} data={invitationsData.current} onClose={() => showShowInvitationst(false)} />}
+            {/* {showAccept && <ConfirmJoiningTeam data={inviteDetail} onBack={() => backInvitationsForm()} onClose={() => {
+                refInfo.current.onGetInfo()
                 showShowAccept(false)
-                window.location.reload() }
-            } />}
+            }
+            } />} */}
             <div className="nao_section">
                 <ContesRules />
-                <ContestInfo onShowDetail={onShowDetail} onShowInvitations={onShowInvitations}/>
+                <ContestInfo ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
                 <ContestPerRanks />
                 <ContestTeamRanks onShowDetail={onShowDetail} />
             </div>

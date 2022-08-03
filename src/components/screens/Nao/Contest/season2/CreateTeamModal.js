@@ -40,7 +40,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
         const file = e.target.files[0];
         const size = Math.round((file.size / 1024));
         if (size > 2048) {
-            context.alert.show('warning', 'file too big', null, null,
+            context.alert.show('warning', t(`error:futures:INVALID_IMAGE`), null, null,
                 null, () => onAddAvatar())
         } else {
             if (file) {

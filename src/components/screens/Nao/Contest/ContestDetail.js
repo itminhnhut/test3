@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import classNames from 'classnames';
 import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
-import { API_CONTEST_GET_GROUP_MEMBER, API_CONTEST_CANCEL_INVITE } from 'redux/actions/apis';
+import { API_CONTEST_GET_GROUP_MEMBER, API_CONTEST_CANCEL_INVITE, API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import useWindowSize from 'hooks/useWindowSize';
@@ -12,6 +12,8 @@ import Modal from 'components/common/ReModal';
 import { WarningIcon } from '../AlertNaoV2Modal';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import AddMemberModal from './season2/AddMemberModal';
+import { IconLoading } from 'components/common/Icons';
+import colors from 'styles/colors';
 
 const statusMember = {
     PENDING: 0, ACCEPTED: 1, DENIED: 2, CANCELED: 3,
@@ -29,7 +31,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
     const [loading, setLoading] = useState(true)
     const isLeader = rowData?.is_leader === 1;
     const [showAddMemberModal, setShowAddMemberModal] = useState(false)
-    const rowIndx = useRef(null);
+    const member = useRef(null);
 
     useEffect(() => {
         getDetail(rowData?.displaying_id);
@@ -60,6 +62,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
     }
 
     const onCancelInvite = async (id, index) => {
+        setLoading(true)
         try {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_CANCEL_INVITE,
@@ -68,6 +71,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                     invite_onus_user_id: id
                 }
             });
+            if (!index) return;
             if (status === ApiStatus.SUCCESS) {
                 const _dataSource = { ...dataSource };
                 const members = [..._dataSource?.members];
@@ -113,7 +117,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
     }
 
     const onActions = (item, index) => {
-        rowIndx.current = index;
+        member.current = { ...item, rowIndx: index };
+        if (loading) return;
         switch (item?.status) {
             case statusMember.PENDING:
                 context.alertV2.show('warning', t('nao:contest:delete_invitation'),
@@ -132,25 +137,65 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
     }
 
     const onAddMember = (data) => {
-        const _dataSource = { ...dataSource };
-        const members = [..._dataSource?.members];
-        members[rowIndx.current] = data
-        _dataSource.members = members;
-        setDataSource(_dataSource);
+        if (data) {
+            const _dataSource = { ...dataSource };
+            const members = [..._dataSource?.members];
+            members[member.current?.rowIndx] = data
+            _dataSource.members = members;
+            setDataSource(_dataSource);
+            if (member.current?.status === statusMember.DENIED) onCancelInvite(member.current?.onus_user_id);
+        }
         setShowAddMemberModal(!showAddMemberModal)
     }
 
-    console.log(dataSource)
+    const onAccept = () => {
+        if (loading) return;
+        context.alertV2.show('team', t('nao:contest:confirm_title'),
+            t('nao:contest:confirm_description', { value: dataSource.name }), null, () => {
+                acceptInvite(dataSource?.displaying_id);
+            }, null, { confirmTitle: t('nao:contest:confirm_accept') });
+    }
+
+    const acceptInvite = async (id) => {
+        setLoading(true)
+        try {
+            const { data, status } = await fetchApi({
+                url: API_CONTEST_POST_ACCEPT_INVITATION,
+                options: { method: 'POST' },
+                params: {
+                    contest_id: 5,
+                    group_displaying_id: id,
+                    action: "ACCEPT"
+                }
+            });
+            if (status === ApiStatus.SUCCESS) {
+                context.alertV2.show('success', t('nao:contest:join_success'), null, null, null, () => {
+                    onClose('trigger');
+                });
+            } else {
+                context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const isPending = useMemo(() => {
+        return dataSource?.status === statusGroup.PENDING && rowData?.isPending
+    }, [dataSource])
+
     const rank = sortName === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
     return (
         <>
             {showAddMemberModal && <AddMemberModal onClose={onAddMember} />}
             <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
                 modalClassName="z-[99999]"
-                onusClassName="min-h-[304px] rounded-t-[16px] !bg-nao-tooltip pb-[3.75rem] !px-6"
+                onusClassName="min-h-[304px] rounded-t-[16px] !bg-nao-tooltip pb-[3.75rem] !px-2 !overflow-hidden "
                 containerClassName="!bg-nao-bgModal2/[0.9]"
             >
-                <div className="">
+                <div className="px-4 scrollbar-nao overflow-y-auto h-[calc(100%-72px)]">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
                         <div className="flex flex-col items-center justify-center mb-8">
                             <div className="flex items-center space-x-[10px]">
@@ -161,9 +206,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                             </div>
                             <div className="flex items-center space-x-2 mt-2">
                                 <LeadIcon />
-                                <div className="text-xs leading-6">{t('nao:contest:captain')}: {dataSource?.leader_name}</div>
+                                <div className="text-xs leading-6">{t('nao:contest:captain')}: {dataSource?.leader_name ?? '-'}</div>
                             </div>
-                            <div className="text-lg leading-8 font-semibold">{dataSource?.name}</div>
+                            <div className="text-lg leading-8 font-semibold">{dataSource?.name ?? '-'}</div>
                             <div className="bg-bgCondition rounded-[800px] px-2 mt-2">
                                 <span className={`text-sm font-medium leading-6 ${!dataSource?.status ? 'text-onus-orange' : 'text-nao-blue3'}`}>
                                     {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
@@ -202,9 +247,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                             :
                             <CardNao noBg className="!p-4 space-x-4 !flex-row !items-center !justify-start">
                                 <div className="min-w-[32px]"><WarningIcon size={32} /></div>
-                                <div className="text-sm font-medium">
+                                <div className="text-sm">
                                     {t('nao:contest:rules_for_season_2')}
-                                    <span className="font-normal underline text-nao-green">{t('nao:contest:rules_content')}</span>
+                                    <span className="font-medium underline text-nao-green">{t('nao:contest:rules_content')}</span>
                                 </div>
                             </CardNao>
                         }
@@ -226,7 +271,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                                                             {item?.name ?? t('nao:contest:member', { value: index + 1 })}
                                                         </div>
                                                     </div>
-                                                    {item?.name && <div className="bg-bgCondition rounded-[800px] px-2 mt-2 text-xs font-medium leading-6 py-[2px]">
+                                                    {item?.name && <div className="bg-bgCondition rounded-[800px] px-2 mt-2 text-xs font-medium leading-6 py-[2px] whitespace-nowrap">
                                                         {renderStatusMember(item?.status)}
                                                     </div>
                                                     }
@@ -237,7 +282,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                                                         <div className="text-nao-grey">ID </div>
                                                         <div className="font-medium">{item?.onus_user_id ?? '-'}</div>
                                                     </div>
-                                                    {((item?.status === statusMember.PENDING && isLeader) || !item?.onus_user_id) &&
+                                                    {(((item?.status === statusMember.PENDING || item?.status === statusMember.DENIED) && isLeader) || !item?.onus_user_id) &&
                                                         <div className="flex items-center justify-between leading-6">
                                                             <div className="text-nao-grey">{t('nao:contest:action')} </div>
                                                             <div onClick={() => onActions(item, index)} className="text-onus-grey underline">{renderActions(item?.status)}</div>
@@ -282,10 +327,12 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData }
                             <Column minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                         </Table>
                     }
-
-                    <div className="w-full mt-8">
-                        <ButtonNao border onClick={onClose} className="!rounded-md font-semibold">{t('common:close')}</ButtonNao>
-                    </div>
+                </div>
+                <div className="px-4 w-full mt-8 flex space-x-4 ">
+                    <ButtonNao border onClick={onClose} className="!rounded-md font-semibold w-full">{t('common:close')}</ButtonNao>
+                    {isPending && <ButtonNao onClick={onAccept} disabled={loading} className="!rounded-md font-semibold w-full">
+                        {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:confirm_accept')}
+                    </ButtonNao>}
                 </div>
             </Modal>
         </>

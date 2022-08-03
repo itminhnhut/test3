@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import Portal from 'components/hoc/Portal';
 import classNames from 'classnames';
 import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
@@ -9,37 +9,55 @@ import { ApiStatus } from 'redux/actions/const';
 import useWindowSize from 'hooks/useWindowSize';
 import Modal from 'components/common/ReModal';
 import ConfirmJoiningTeam from './ConfirmJoiningTeam'
+import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 
-const InvitationDetail = ({ visible = true, onClose, onAccept,sortName = 'volume', data }) => {
+const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, onShowDetail, getInfo }) => {
     const { t } = useTranslation();
+    const context = useContext(AlertContext);
     const { width } = useWindowSize()
     const [dataSource, setDataSource] = useState(null)
-    const [loading, setLoading] = useState(true)
-    const wrapperRef = useRef(null);
+    const [loading, setLoading] = useState(false)
 
-    const handleOutside = () => {
-        if (visible && onClose) {
-            onClose()
+    const acceptInvite = async (id) => {
+        const contest_id = 5
+        const action = 'ACCEPT'
+        const group_displaying_id = id
+        setLoading(true)
+        try {
+            const { data, status } = await fetchApi({
+                url: API_CONTEST_POST_ACCEPT_INVITATION,
+                options: { method: 'POST' },
+                params: { contest_id, action, group_displaying_id },
+            });
+            if (status === ApiStatus.SUCCESS) {
+                getInfo();
+                context.alertV2.show('success', t('nao:contest:join_success'));
+            } else {
+                context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
+            }
+
+        } catch (error) {
+            console.log('Error when accept invite', error)
+        } finally {
+            setLoading(false)
         }
     }
 
-    console.log('INVITE', data)
+    const onAccept = (item) => {
+        if (loading) return;
+        context.alertV2.show('team', t('nao:contest:confirm_title'),
+            t('nao:contest:confirm_description', { value: item.group_name }), null,
+            () => {
+                acceptInvite(item?.group_displaying_id);
+            }, null, { confirmTitle: t('nao:contest:confirm_accept'), timer: 1000 });
+    }
 
-    useOutsideAlerter(wrapperRef, handleOutside);
-
-    useEffect(() => {
-        if (visible) {
-            document.body.classList.add('overflow-hidden')
-        }
-        return () => {
-            document.body.classList.remove('overflow-hidden')
-        }
-    }, [visible])
-   
     return (
         <>
-            <Modal onusMode={true} isVisible={true} onBackdropCb={onClose} containerClassName="!bg-nao-bgModal2/[0.9]" onusClassName="!px-6 pb-[3.75rem] !bg-nao-tooltip">
-                <div ref={wrapperRef} className="bg-[#0E1D32] w-full sm:px-10 sm:py-[11] overflow-y-auto">
+            <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
+                modalClassName="z-[99999]"
+                containerClassName="!bg-nao-bgModal2/[0.9]" onusClassName="!px-6 pb-[3.75rem] !bg-nao-tooltip">
+                <div className="bg-[#0E1D32] w-full sm:px-10 sm:py-[11] overflow-y-auto">
                     <div className="flex sm:items-center sm:justify-between min-h-[32px] mb-5 gap-2 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7">
                             <div className="flex flex-col">
@@ -60,7 +78,7 @@ const InvitationDetail = ({ visible = true, onClose, onAccept,sortName = 'volume
                                     <CardNao noBg className="mb-5 p-[4px] !max-w-[330px]" key={item._id}>
                                         <div className="flex px-3 py-[4px] gap-4 sm:gap-6 text-nao-white text-sm font-medium pb-2 border-nao-grey/[0.2] items-center w-full min-h-[56px]">
                                             <div className='h-[48px] w-[48px] flex justify-center items-center'>
-                                                <img src={item.avatar} className="rounded-[50%] h-full w-full object-cover" />
+                                                <img src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
                                                 <div className='h-auto font-normal flex items-center text-xs leading-6'>
@@ -75,7 +93,7 @@ const InvitationDetail = ({ visible = true, onClose, onAccept,sortName = 'volume
                                             <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full max-w-[250px] text-sm leading-6" onClick={() => onAccept(item)}>
                                                 {t('nao:contest:accept_invite')}
                                             </ButtonNao>
-                                            <ButtonNao border className="py-2 px-2 !rounded-md font-semibold w-full max-w-[250px] text-sm leading-6">
+                                            <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-2 px-2 !rounded-md font-semibold w-full max-w-[250px] text-sm leading-6">
                                                 {t('nao:contest:team_detail')}
                                             </ButtonNao>
                                         </div>
