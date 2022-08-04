@@ -87,7 +87,7 @@ const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
                 <div className='mb-6'>
                     {getIcon(options.current.type)}
                 </div>
-                <div className='text-2xl font-semibold leading-8 mb-6'>
+                <div className='text-2xl font-semibold leading-8 mb-6 text-center'>
                     {options.current.title}
                 </div>
                 {options.current.messages &&

@@ -10,7 +10,7 @@ import Tooltip from 'components/common/Tooltip';
 import CreateTeamModal from './season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
 
-const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations }, ref) => {
+const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id }, ref) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
     const [userData, setUserData] = useState(null);
@@ -34,7 +34,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations }, ref) => {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_GET_USER_DETAIL,
                 options: { method: 'GET' },
-                params: { contest_id: 5 },
+                params: { contest_id: contest_id },
             });
             if (status === ApiStatus.SUCCESS) {
                 data ? setUserData(data) : getInvites();
@@ -51,7 +51,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations }, ref) => {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_GET_INVITES,
                 options: { method: 'GET' },
-                params: { contest_id: 5 },
+                params: { contest_id: contest_id },
             });
             if (status === ApiStatus.SUCCESS) {
                 setUserData(data)
@@ -65,6 +65,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations }, ref) => {
 
     const onShowCreate = (mode) => {
         if (mode) getData();
+        console.log('2323232323232')
         setShowCreateTeamModal(!showCreateTeamModal)
     }
 
@@ -80,9 +81,9 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations }, ref) => {
                 <TextLiner>{t('nao:contest:personal')}</TextLiner>
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-8 ">
                     <CardNao className="!min-h-[136px] !p-6 lg:!max-w-[375px]">
-                        <label className="text-xl text-nao-green font-semibold leading-10">{userData?.name}</label>
+                        <label className="text-[1.25rem] text-nao-green font-semibold leading-8">{userData?.name}</label>
                         <div
-                            className=" text-nao-grey2 text-sm font-medium mt-1 flex flex-col items-start">
+                            className=" text-nao-grey2 text-sm font-medium flex flex-col items-start">
                             <div className="leading-6">ID: {userData?.onus_user_id}</div>
                             {/* <span className="text-nao-white mx-2 sm:hidden">•</span> */}
                             <div className="flex text-nao-grey2 leading-6 mt-1">{t('nao:contest:team_label')}:&nbsp;
@@ -105,7 +106,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations }, ref) => {
                             </div>
                         </div>
                     </CardNao>
-                    <CardNao className="!min-h-[136px] !py-7 !px-[35px] w-full lg:w-max">
+                    <CardNao className="!min-h-[136px] !p-6 w-full lg:w-max">
                         <div className="flex items-center justify-between md:space-x-[70px] flex-wrap md:flex-nowrap">
                             <div className="flex items-center justify-between w-full md:w-1/2">
                                 <label className="text-nao-text text-sm leading-6 ">{t('nao:contest:trades')}</label>
@@ -144,7 +145,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations }, ref) => {
                                 <label className="text-nao-text text-sm leading-6 ">{t('nao:contest:pnl_rank')}</label>
                                 <div className="font-semibold leading-8 text-right">{userData?.individual_rank_pnl ? '#' + userData?.individual_rank_pnl : '-'}</div>
                             </div>
-                            
+
                         </div>
                         <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2 md:hidden"></div>
                         <div className="flex items-center justify-between md:space-x-[70px] flex-wrap md:flex-nowrap">
@@ -165,7 +166,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations }, ref) => {
                 </div>
             </section>
             {showCreateTeamModal && <CreateTeamModal userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} />}
-            {!userData?.group_name && <div className="bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
+            {!userData?.group_name && !previous && <div className="sm:hidden bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
                 <ButtonNao onClick={() => onShowCreate()} className="!rounded-md">{t('nao:contest:create_team')}</ButtonNao>
             </div>}
         </>

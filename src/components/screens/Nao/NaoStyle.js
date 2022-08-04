@@ -51,7 +51,7 @@ export const Divider = styled.div.attrs({
 
 export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
     className: classNames(
-        "text-center font-semibold flex items-center justify-center select-none cursor-pointer h-10",
+        "text-center text-sm font-semibold flex items-center justify-center select-none cursor-pointer h-10",
         {
             'border border-nao-blue2 !bg-nao-bg3': border,
             'text-opacity-20 text-nao-white !bg-nao-bg3': disabled,
@@ -237,7 +237,7 @@ export const Table = ({
         <CardNao
             id="nao-table"
             noBg
-            className="mt-5 !pb-6 !pt-3 !px-3 !justify-start"
+            className="mt-8 !p-6 !justify-start"
         >
             <div
                 ref={content}

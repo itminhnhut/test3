@@ -131,7 +131,9 @@
     "holders_wallet": "Ví holder",
     "liq_pools": "Pool thanh khoản",
     "contest": {
-        "title": "Đua TOP giao dịch ONUS Futures mùa hai",
+        "title": "Đua TOP giao dịch ONUS Futures mùa {{value}}",
+        "first": "đầu tiên",
+        "second": "hai",
         "description": "Tranh giải cá nhân và đội nhóm với tổng giải thưởng",
         "detail_rules": "Thể lệ chi tiết",
         "ranking": "Bảng xếp hạng",

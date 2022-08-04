@@ -132,6 +132,8 @@
     "liq_pools": "Liquidity pools",
     "contest": {
         "title": "ONUS Futures Trading Contest Season 2",
+        "first": "1",
+        "second": "2",
         "description": "Compete as an individual or team to win a reward of",
         "detail_rules": "Detail Rules",
         "ranking": "Ranking",

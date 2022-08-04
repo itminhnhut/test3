@@ -40,7 +40,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
         const file = e.target.files[0];
         const size = Math.round((file.size / 1024));
         if (size > 2048) {
-            context.alert.show('warning', t(`error:futures:INVALID_IMAGE`), null, null,
+            context.alertV2.show('warning', t(`error:futures:INVALID_IMAGE`), null, null,
                 null, () => onAddAvatar())
         } else {
             if (file) {
@@ -62,7 +62,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
         const name = e.target.name;
         switch (key) {
             case 'name':
-                setName(value.replace(/[&#,+()$~%.'":*?<>{}@^]/g, ''))
+                setName(String(value).trimStart().replace(/[&#,+()$~%._'":*?<>{}@`|\/\\^=-]/g, ''))
                 break;
             case 'member':
                 const _value = String(value).trim().replace(/[^0-9]/g, '');
@@ -130,7 +130,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
         const formData = new FormData();
         formData?.append('image', file);
         setLoading(true);
-        return 'https://nami-dev.sgp1.digitaloceanspaces.com/upload/avatar/18-6Q0PLSxbtNTC.jpeg'
+        // return 'https://nami-dev.sgp1.digitaloceanspaces.com/upload/avatar/18-6Q0PLSxbtNTC.jpeg'
         try {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_UPLOAD,
@@ -140,19 +140,21 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
             if (status === ApiStatus.SUCCESS) {
                 return data?.avatar
             }
-            setLoading(false);
             context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
         } catch (e) {
             console.error('__ error', e);
         } finally {
-
+            setLoading(false);
         }
     }
 
     const onSubmit = async () => {
         if (disabled || loading) return;
-        const _avatar = await upload(avatar.file)
-        if (!_avatar) return;
+        let _avatar = null;
+        if (avatar.file) {
+            _avatar = await upload(avatar.file)
+            if (!_avatar) return;
+        }
         const params = {
             avatar: _avatar,
             leader_name: userData?.name,
@@ -167,12 +169,13 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
                 params: params,
             });
             if (status === ApiStatus.SUCCESS) {
-                onClose(true);
+                // onClose(true);
                 context.alertV2.show('success', t('nao:contest:team_successfully'), null, null,
                     () => { onShowDetail({ displaying_id: data?.group_displaying_id, is_leader: 1, ...data }) },
                     null,
                     { confirmTitle: t('nao:contest:team_details') });
             } else {
+                console.log('2222')
                 context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
             }
         } catch (e) {
@@ -184,8 +187,8 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
     }
 
     const disabled = useMemo(() => {
-        return !name || !avatar.url || Object.keys(member).find(rs => !member[rs]) || Object.keys(errors).find(e => errors[e]?.['error'])
-    }, [member, name, avatar, errors])
+        return !name || Object.keys(member).find(rs => !member[rs] || member[rs] === userData?.onus_user_id) || Object.keys(errors).find(e => errors[e]?.['error'])
+    }, [member, name, avatar, errors, userData])
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => onClose()}
