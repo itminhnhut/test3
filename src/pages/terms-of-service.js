@@ -5,7 +5,6 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useHideScrollbar from 'hooks/useHideScrollbar';
 
 const Terms = () => {
-    useHideScrollbar();
     return (
         <MaldivesLayout>
             <div className="nami-container my-20 policies-page">
