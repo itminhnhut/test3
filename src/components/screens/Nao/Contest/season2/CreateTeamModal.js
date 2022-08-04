@@ -64,7 +64,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
         const name = e.target.name;
         switch (key) {
             case 'name':
-                setName(String(value).trimStart().replace(/[&#,+()$~%.;_'":*?<>{}@`|\/\\^=-]/g, ''))
+                setName(String(value).trimStart().replace(/[&#,+()$~%.;_'":*?<>[\]\{}@`|\/\\^=-]/g, ''))
                 break;
             case 'member':
                 const _value = String(value).trim().replace(/[^0-9]/g, '');
