@@ -78,7 +78,10 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
     return (
         <>
             <section className="contest_info pt-[70px]">
-                <TextLiner>{t('nao:contest:personal')}</TextLiner>
+                <div className="flex items-center justify-between">
+                    <TextLiner>{t('nao:contest:personal')}</TextLiner>
+                    {!userData?.group_name && !previous && <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()} >{t('nao:contest:create_team')}</ButtonNao>}
+                </div>
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-8 ">
                     <CardNao className="!min-h-[136px] !p-6 lg:!max-w-[375px]">
                         <label className="text-[1.25rem] text-nao-green font-semibold leading-8">{userData?.name}</label>

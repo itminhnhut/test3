@@ -51,7 +51,7 @@ export const Divider = styled.div.attrs({
 
 export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
     className: classNames(
-        "text-center text-sm font-semibold flex items-center justify-center select-none cursor-pointer h-10",
+        "text-center text-sm px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10",
         {
             'border border-nao-blue2 !bg-nao-bg3': border,
             'text-opacity-20 text-nao-white !bg-nao-bg3': disabled,
@@ -62,7 +62,6 @@ export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
 }))`
     background: ${({ active, isActive }) =>
         isActive ? (active ? colors.nao.blue2 : "") : colors.nao.blue2};
-    border-radius: 12px;
 `;
 
 export const BackgroundHeader = styled.div.attrs({

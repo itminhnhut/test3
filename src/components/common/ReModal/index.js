@@ -97,7 +97,7 @@ const Modal = ({
                     {onusMode ?
                         <div className={`${center ? 'items-center justify-center' : 'justify-end'} h-full flex flex-col relative`}>
                             {!center && <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>}
-                            <div ref={wrapperRef} className={`${onusClassName} h-max w-full relative bg-onus-bgModal rounded-t-[16px] px-4 pt-11 pb-[3.25rem] max-h-[90%] overflow-y-auto`}>
+                            <div ref={wrapperRef} className={`${onusClassName} ${center ? 'rounded-xl' : 'rounded-t-xl'} h-max w-full relative bg-onus-bgModal px-4 pt-11 pb-[3.25rem] max-h-[90%] overflow-y-auto`}>
                                 {!center && <div
                                     style={{ transform: 'translate(-50%,0)' }}
                                     className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-onus-white  absolute top-2 left-1/2 "></div>}

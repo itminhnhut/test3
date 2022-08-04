@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import colors from 'styles/colors';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import { IconLoading } from 'components/common/Icons';
+import useWindowSize from 'hooks/useWindowSize';
 
 const initMember = {
     member1: '',
@@ -20,6 +21,7 @@ const initMember = {
 }
 const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
     const { t } = useTranslation();
+    const { width } = useWindowSize()
     const context = useContext(AlertContext);
     const [errors, setErros] = useState({});
     const [avatar, setAvatar] = useState({ file: null, url: null });
@@ -190,10 +192,13 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
         return !name || Object.keys(member).find(rs => !member[rs] || member[rs] === userData?.onus_user_id) || Object.keys(errors).find(e => errors[e]?.['error'])
     }, [member, name, avatar, errors, userData])
 
+    const isMobile = width <= 640;
+
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => onClose()}
-            onusClassName="!px-2 pb-[3.75rem] !bg-nao-tooltip !overflow-hidden"
+            onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[484px]'} !bg-nao-tooltip !overflow-hidden`}
             containerClassName="!bg-nao-bgModal2/[0.9]"
+            center={!isMobile}
         >
             <div className="!px-4 text-2xl leading-8 font-semibold">{t('nao:contest:create_a_team')}</div>
             <div className="!px-4 scrollbar-nao form-team mt-8 overflow-y-auto max-h-[calc(100%-136px)]">
@@ -204,7 +209,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
                             style={{ backgroundImage: avatar?.url ? `url(${avatar.url})` : null }}
                             className={classnames(
                                 `min-h-[58px] min-w-[58px] rounded-[50%] bg-onus flex flex-col items-center justify-center`,
-                                'bg-center bg-cover ',
+                                'bg-center bg-cover cursor-pointer',
                                 {
                                     'border-[1px] border-dashed border-nao-blue2': !avatar.url,
                                     'bg-origin-padding': avatar.url,
