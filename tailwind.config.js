@@ -59,6 +59,7 @@ const commonColors = {
         white: '#F6F6F6',
         blue: '#27CEE0',
         blue2: '#093DD1',
+        blue3: '#99C3FF',
         green: '#49E8D5',
         green2: '#0DB787',
         yellow: '#F3BA2F',
@@ -395,6 +396,10 @@ module.exports = {
                     DEFAULT: 'rgba(245, 245, 245, 0.5)',
                     dark: 'rgba(38, 52, 89, 0.3)',
                 },
+                bgCondition: {
+                    DEFAULT: 'rgba(255, 247, 235, 0.2)',
+                    dark: 'rgba(255, 247, 235, 0.2)',
+                }
             },
             fontWeight: { bold: 600 },
             dropShadow: {

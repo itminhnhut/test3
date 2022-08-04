@@ -741,6 +741,31 @@ input[type='number'] {
         }
     }
 }
+.scrollbar-nao{
+    &::-webkit-scrollbar {
+        width: 4px !important;
+        border-radius: 8px !important;
+        height: 0;
+        right: 8px;
+        position: relative;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #0E1D32 !important;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%) !important;
+        background-clip: padding-box;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%) !important;
+    }
+}
 .animation{
     transition: transform 0.9s
 }

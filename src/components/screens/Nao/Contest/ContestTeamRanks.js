@@ -9,7 +9,7 @@ import { getS3Url, formatNumber } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 
-const ContestTeamRanks = ({ onShowDetail }) => {
+const ContestTeamRanks = ({ onShowDetail, previous, contest_id }) => {
     const [tab, setTab] = useState('volume');
     const { t } = useTranslation();
     const { width } = useWindowSize()
@@ -27,6 +27,7 @@ const ContestTeamRanks = ({ onShowDetail }) => {
         try {
             const { data, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
+                params: { contest_id: contest_id },
             });
             if (data && status === ApiStatus.SUCCESS) {
                 const sliceIndex = data[0]?.[_rank] > 0 ? 3 : 0
@@ -79,9 +80,9 @@ const ContestTeamRanks = ({ onShowDetail }) => {
 
     return (
         <section className="contest_individual_ranks pt-[70px]">
-            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]" 
+            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-team-rank" >
-                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_team', { value: '5' }) }}>
+                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_team', { value: '50' }) }}>
                 </div>
             </Tooltip>
             <div className="flex justify-between flex-wrap gap-4">

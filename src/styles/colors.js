@@ -105,6 +105,7 @@ const colors = {
         bgShadow: '#000921',
         red: '#DC1F4E',
         tooltip: '#0E1D32',
+        tooltip2: '#071120'
     }
 };
 

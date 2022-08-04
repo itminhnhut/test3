@@ -139,6 +139,18 @@
     "UNKNOWN": "Có lỗi xảy ra trong quá trình xử lý, vui lòng cung cấp mã lỗi dưới đây cho đội ngũ hỗ trợ.",
     "PROCESSING_FUTURES_ORDER": "Yêu cầu của bạn không thành công do lệnh đã đóng trước đó",
     "PRICE_CHANGED": "Yêu cầu của bạn đã hết hạn hoặc giá đã thay đổi so với báo giá cũ, vui lòng yêu cầu báo giá mới",
-    "NETWORK_ERROR": "Lỗi mạng, Vui lòng kiểm tra lại kết nối của bạn"
+    "NETWORK_ERROR": "Lỗi mạng, Vui lòng kiểm tra lại kết nối của bạn",
+    "INVALID_IMAGE": "Hình ảnh không hợp lệ, vui lòng thử lại.",
+    "CAN_NOT_FOUND_USER": "Onus ID không hợp lệ",
+    "DUPLICATED_USER": "Thành viên đã trong đội",
+    "USER_HAS_BEEN_INVITED": "Thành viên đã được mời trước đó",
+    "UNINVITED_USER": "Bạn chưa được mời vào đội",
+    "INVALID_CONTEST_TIME": "Cuộc đua chưa bắt đầu hoặc đã kết thúc",
+    "GROUP_HAS_ENOUGH_MEMBERS": "Vượt quá số lượng thành viên tối đa",
+    "INVALID_GROUP_NAME": "Tên đội không hợp lệ",
+    "INVALID_GROUP_LEADER_NAME": "Tên đội trưởng không hợp lệ",
+    "INVALID_GROUP_MEMBER": "Số lượng thành viên trong đội chưa đủ",
+    "DUPLICATE_GROUP_NAME": "Tên đội trùng với đội khác",
+    "USER_JOIN_GROUP_CONTEST_BEFORE": "Người dùng đã tham gia đội khác"
   }
 }

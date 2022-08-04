@@ -52,7 +52,7 @@ export default function NaoProposals({
 
                 </div>
             </div>
-            {listProposal.map((proposal, index) => {
+            {Array.isArray(listProposal) && listProposal.map((proposal, index) => {
                 return (
                     <Proposal
                         key={index}
