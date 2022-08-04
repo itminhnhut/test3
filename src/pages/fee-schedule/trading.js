@@ -22,6 +22,7 @@ import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import Skeletor from 'components/common/Skeletor';
 import SvgCrown from 'components/svg/SvgCrown';
 import Empty from 'components/common/Empty';
+import useHideScrollbar from 'hooks/useHideScrollbar';
 
 const INITIAL_STATE = {
     tabIndex: 0,
@@ -54,7 +55,7 @@ const TradingFee = () => {
     // Use hooks
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
-
+    useHideScrollbar()
     // Helper
     const getFuturesFeeConfigs = async () => {
         !state.futuresFeeConfig && setState({ loadingFuturesFeeConfigs: true })

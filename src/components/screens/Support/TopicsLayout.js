@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
+import useHideScrollbar from 'hooks/useHideScrollbar';
 
 const COL_WIDTH = 304;
 
@@ -41,18 +42,7 @@ const TopicsLayout = ({
 
     const mainTopic = topics.find((o) => o?.displaySlug === router?.query?.topic);
     const subTopics = mainTopic?.subCats?.find((o) => o?.displaySlug === faqCurrentGroup) || false;
-    const handleHideScrollBar = () => {
-        const malLayout = document.querySelector('.mal-layouts');
-        if (window.innerWidth < 650) {
-            document.body.classList.add('overflow-hidden');
-            malLayout.classList.add('!h-screen');
-        }
-        return () => {
-            document.body.classList.remove('overflow-hidden');
-            malLayout.classList.remove('!h-screen');
-        };
-    };
-    useEffect(handleHideScrollBar, []);
+    useHideScrollbar();
     useEffect(() => {
         if (isFaq && router?.query?.topic) {
             setShowDropdown({ [router.query.topic]: true });
