@@ -10,8 +10,8 @@ import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamMo
 import ConfirmJoiningTeam from 'components/screens/Nao/Contest/season2/ConfirmJoiningTeam';
 
 export const seasons = [
-    { season: '1', start: '2022-07-07T17:00:00.000Z', end: '2022-07-07T17:00:00.000Z', contest_id: 4, title: 'nao:contest:last_season' },
-    { season: '2', start: '2022-08-08:00:00.000Z', end: '2022-31-27T17:00:00.000Z', contest_id: 5, },
+    { season: '1', start: '2022-07-07T17:00:00.000Z', end: '2022-07-07T17:00:00.000Z', contest_id: 4, button: 'nao:contest:last_season', title: 'first' },
+    { season: '2', start: '2022-08-08:00:00.000Z', end: '2022-31-27T17:00:00.000Z', contest_id: 5, title: 'second' },
 ]
 
 const Contest = (props) => {
