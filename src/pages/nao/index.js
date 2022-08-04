@@ -13,6 +13,7 @@ import { API_USER_VOTE } from "redux/actions/apis";
 
 import ContesRules from "components/screens/Nao/Contest/ContesRules";
 import { SectionNao } from "components/screens/Nao/NaoStyle";
+import { seasons } from 'components/screens/Nao/Contest/Contest';
 
 const getAssetNao = createSelector(
     [(state) => state.utils.assetConfig, (utils, params) => params],
@@ -87,6 +88,8 @@ const NaoDashboard = () => {
         window.open(url, "_blank");
     };
 
+    const current = seasons[seasons.length - 1];
+
     return (
         <LayoutNaoToken>
             <div className="nao_section">
@@ -104,7 +107,7 @@ const NaoDashboard = () => {
                         noBg
                         className="px-6 sm:px-10 rounded-xl min-w-full sm:min-w-[372px] flex flex-col justify-between flex-1 relative"
                     >
-                        <ContesRules inHome={true} />
+                        <ContesRules season={current?.season ?? 1} seasons={seasons} {...current} inHome={true} />
                     </SectionNao>
                 </section>
             </div>
