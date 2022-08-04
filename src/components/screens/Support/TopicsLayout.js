@@ -42,24 +42,22 @@ const TopicsLayout = ({
     const mainTopic = topics.find((o) => o?.displaySlug === router?.query?.topic);
     const subTopics = mainTopic?.subCats?.find((o) => o?.displaySlug === faqCurrentGroup) || false;
     const handleHideScrollBar = () => {
-        const body = document.querySelector('body');
         const malLayout = document.querySelector('.mal-layouts');
-        if (window.innerWidth < 450) {
-        body.classList.add('overflow-hidden');
-        malLayout.classList.add('!h-screen');
+        if (window.innerWidth < 650) {
+            document.body.classList.add('overflow-hidden');
+            malLayout.classList.add('!h-screen');
         }
         return () => {
-            body.classList.remove('overflow-hidden');
+            document.body.classList.remove('overflow-hidden');
             malLayout.classList.remove('!h-screen');
         };
     };
+    useEffect(handleHideScrollBar, []);
     useEffect(() => {
         if (isFaq && router?.query?.topic) {
             setShowDropdown({ [router.query.topic]: true });
         }
     }, [isFaq, router]);
-
-    useEffect(handleHideScrollBar, []);
 
     return (
         <MaldivesLayout>
