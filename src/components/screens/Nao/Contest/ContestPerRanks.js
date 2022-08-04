@@ -56,9 +56,9 @@ const ContestPerRanks = ({ previous, contest_id }) => {
     const renderName = (data, item) => {
         return (
             <div className='flex items-center gap-2'>
-                <div className='w-6 h-6 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                    <img className='rounded-[50%] object-cover min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px]'
-                        src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                <div className='w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center'>
+                    <img className='rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
+                        src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="32" height="32" alt="" />
                 </div>
                 <div>{data}</div>
             </div>

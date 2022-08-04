@@ -20,17 +20,19 @@ const Modal = ({
     containerStyle,
     onusClassName = '',
     modalClassName = '',
-    center = false
+    center = false,
+    isAlertModal
 }) => {
 
     const timer = useRef(null)
     const wrapperRef = useRef(null);
+    const container = useRef(null);
 
     const handleOutside = () => {
-        if (onBackdropCb && center) onBackdropCb()
+        if (onBackdropCb && center && !isAlertModal) onBackdropCb()
     }
 
-    useOutsideAlerter(wrapperRef, handleOutside);
+    useOutsideAlerter(wrapperRef, handleOutside, container);
 
     useEffect(() => {
         if (isVisible) {
@@ -52,6 +54,7 @@ const Modal = ({
                     { visible: isVisible },
                     modalClassName
                 )}
+                ref={container}
             >
                 <div
                     onClick={() => onBackdropCb && onBackdropCb()}
