@@ -55,7 +55,18 @@ const TradingFee = () => {
     // Use hooks
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
-    useHideScrollbar()
+    const handleHideScrollBar = () => {
+        const malLayout = document.querySelector('.mal-layouts');
+        if (window.innerWidth < 650) {
+            document.body.classList.add('overflow-hidden');
+            malLayout.classList.add('!h-screen');
+        }
+        return () => {
+            document.body.classList.remove('overflow-hidden');
+            malLayout.classList.remove('!h-screen');
+        };
+    };
+    useEffect(handleHideScrollBar, []);
     // Helper
     const getFuturesFeeConfigs = async () => {
         !state.futuresFeeConfig && setState({ loadingFuturesFeeConfigs: true })
