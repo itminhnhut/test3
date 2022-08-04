@@ -4,8 +4,7 @@ import classNames from "classnames";
 import CTooltip from "components/common/Tooltip";
 import { useMemo, useState } from "react";
 import useWindowSize from "hooks/useWindowSize";
-import { useEffect } from "react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "next-i18next";
 import { getS3Url, formatNumber } from "redux/actions/utils";
 import Skeletor from "components/common/Skeletor";
@@ -102,8 +101,8 @@ export const Tooltip = ({
                 `!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full ${className} `,
                 { "!-mt-5 ": place === "top" }
             )}
-            arrowColor={arrowColor ?? colors.onus.bg2}
-            backgroundColor={backgroundColor ?? colors.onus.bg2}
+            arrowColor={arrowColor ?? colors.nao.tooltip2}
+            backgroundColor={backgroundColor ?? colors.nao.tooltip2}
         >
             {children}
         </CTooltip>
@@ -231,7 +230,7 @@ export const Table = ({
         };
     }, [content.current]);
     const isScroll = checkScrollBar(content.current, "vertical");
-
+    const _children = children.filter(child => child.props?.visible === true || child.props?.visible === undefined);
     return (
         <CardNao
             id="nao-table"
@@ -251,7 +250,7 @@ export const Table = ({
                         classHeader
                     )}
                 >
-                    {children.map((item, indx) => (
+                    {_children.map((item, indx) => (
                         <Column
                             key={indx}
                             {...item.props}
@@ -259,7 +258,7 @@ export const Table = ({
                                 "whitespace-nowrap mx-2 min-h-[10px]",
                                 { "flex-1": indx !== 0 },
                                 { "ml-0": indx === 0 },
-                                { "mr-0": indx === children.length - 1 }
+                                { "mr-0": indx === _children.length - 1 }
                             )}
                         />
                     ))}
@@ -278,83 +277,47 @@ export const Table = ({
                                     key={`row_${index}`}
                                     className={classNames(
                                         "px-3 flex items-center flex-1 w-full",
-                                        {
-                                            "bg-nao/[0.15] rounded-lg":
-                                                index % 2 !== 0,
-                                        }
+                                        { "bg-nao/[0.15] rounded-lg": index % 2 !== 0, }
                                     )}
                                 >
-                                    {children.map((child, indx) => {
+                                    {_children.map((child, indx) => {
                                         const width = child?.props?.width;
                                         const minWidth = child?.props?.minWidth;
                                         const maxWidth = child?.props?.maxWidth;
-                                        const className =
-                                            child?.props?.className ?? "";
-                                        const align =
-                                            child?.props?.align ?? "left";
-                                        const _align =
-                                            align === "right"
-                                                ? "flex justify-end"
-                                                : "";
-                                        const cellRender =
-                                            child?.props?.cellRender;
+                                        const className = child?.props?.className ?? "";
+                                        const align = child?.props?.align ?? "left";
+                                        const _align = align === "right" ? "flex justify-end" : "";
+                                        const cellRender = child?.props?.cellRender;
                                         const suffix = child?.props?.suffix;
                                         const decimal = child?.props?.decimal;
-                                        const fieldName =
-                                            child?.props?.fieldName;
+                                        const fieldName = child?.props?.fieldName;
                                         const ellipsis = child?.props?.ellipsis;
-
+                                        const onCellClick = child?.props?.onCellClick;
+                                        const textItem = item?.[fieldName];
                                         return (
                                             <div
-                                                title={item[fieldName]}
-                                                style={{
-                                                    width,
-                                                    maxWidth,
-                                                    minWidth,
-                                                    textAlign: align,
-                                                }}
+                                                title={textItem}
+                                                style={{ width, maxWidth, minWidth, textAlign: align, }}
                                                 key={indx}
                                                 className={classNames(
                                                     `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
                                                     "break-words mx-2",
                                                     { "flex-1": indx !== 0 },
                                                     { "ml-0": indx === 0 },
-                                                    {
-                                                        "mr-0":
-                                                            indx ==
-                                                            children.length - 1,
-                                                    }
+                                                    { "mr-0": indx == _children.length - 1, }
                                                 )}
+                                                onClick={() => onCellClick && onCellClick(textItem, { ...item, rowIndex: index, })}
                                             >
-                                                {loading ? (
-                                                    <Skeletor
-                                                        width={minWidth ?? 50}
-                                                        height={20}
-                                                    />
-                                                ) : cellRender ? (
-                                                    cellRender(
-                                                        item[fieldName],
-                                                        {
-                                                            ...item,
-                                                            rowIndex: index,
-                                                        }
-                                                    )
-                                                ) : decimal >= 0 ? (
-                                                    formatNumber(
-                                                        item[fieldName],
-                                                        decimal,
-                                                        0,
-                                                        true
-                                                    )
-                                                ) : fieldName === "index" ? (
-                                                    index + 1
-                                                ) : ellipsis ? (
-                                                    <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
-                                                        {item[fieldName]}
-                                                    </span>
-                                                ) : (
-                                                    item[fieldName]
-                                                )}
+                                                {loading ?
+                                                    <Skeletor width={minWidth ?? 50} height={20} />
+                                                    : cellRender ? cellRender(textItem, { ...item, rowIndex: index, })
+                                                        : decimal >= 0 ? formatNumber(textItem, decimal, 0, true)
+                                                            : fieldName === "index" ? (index + 1)
+                                                                : ellipsis ? <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                                                                    {textItem}
+                                                                </span>
+                                                                    : textItem
+                                                }
                                                 {suffix ? ` ${suffix}` : ""}
                                             </div>
                                         );
@@ -399,25 +362,24 @@ export const renderPnl = (data, item) => {
     );
 };
 
-export const useOutsideAlerter = (ref, cb) => {
+export const useOutsideAlerter = (ref, cb, container) => {
     useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
         const handleClickOutside = (event, cb) => {
-            if (ref.current && !ref.current.contains(event.target)) {
+            if (ref.current && !ref.current?.contains(event.target)) {
                 cb();
             }
         };
-        // Bind the event listener
-        document.addEventListener("mousedown", (event) =>
-            handleClickOutside(event, cb)
-        );
+        if (container?.current) {
+            container?.current?.addEventListener("mousedown", (event) =>
+                handleClickOutside(event, cb)
+            );
+        }
         return () => {
-            // Unbind the event listener on clean up
-            document.removeEventListener("mousedown", handleClickOutside);
+            if (container?.current) {
+                container?.current?.removeEventListener("mousedown", handleClickOutside);
+            }
         };
-    }, [ref, cb]);
+    }, [ref, cb, container]);
 };
 
 export const TextTicket = styled.div.attrs(({ xs }) => ({

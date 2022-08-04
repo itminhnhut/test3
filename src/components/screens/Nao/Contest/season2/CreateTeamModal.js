@@ -40,10 +40,9 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
     const onChangeAvatar = (e) => {
         const reader = new FileReader();
         const file = e.target.files[0];
-        const size = Math.round((file.size / 1024));
-        if (size > 2048) {
-            context.alertV2.show('warning', t(`error:futures:INVALID_IMAGE`), null, null,
-                null, () => onAddAvatar())
+        const size = Math.round((file?.size / 1024));
+        if (size > 2048 | !file) {
+            context.alertV2.show('warning', t(`error:futures:INVALID_IMAGE`))
         } else {
             if (file) {
                 reader.onloadend = () => {
@@ -171,13 +170,12 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
                 params: params,
             });
             if (status === ApiStatus.SUCCESS) {
-                // onClose(true);
+                onClose(true);
                 context.alertV2.show('success', t('nao:contest:team_successfully'), null, null,
                     () => { onShowDetail({ displaying_id: data?.group_displaying_id, is_leader: 1, ...data }) },
                     null,
                     { confirmTitle: t('nao:contest:team_details') });
             } else {
-                console.log('2222')
                 context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
             }
         } catch (e) {
