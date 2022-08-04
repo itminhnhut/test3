@@ -7,7 +7,6 @@ import ContestTeamRanks from 'components/screens/Nao/Contest/ContestTeamRanks';
 import ContestDetail from 'components/screens/Nao/Contest/ContestDetail';
 import InvitationsDetail from 'components/screens/Nao/Contest/season2/InvitationsDetail';
 import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamModal';
-import ConfirmJoiningTeam from 'components/screens/Nao/Contest/season2/ConfirmJoiningTeam';
 
 export const seasons = [
     { season: 1, start: '2022-07-07T17:00:00.000Z', end: '2022-07-07T17:00:00.000Z', contest_id: 4, button: 'nao:contest:last_season', title: 'first' },

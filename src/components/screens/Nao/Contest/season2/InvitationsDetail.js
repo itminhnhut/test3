@@ -8,7 +8,6 @@ import { API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import useWindowSize from 'hooks/useWindowSize';
 import Modal from 'components/common/ReModal';
-import ConfirmJoiningTeam from './ConfirmJoiningTeam'
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 
 const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, onShowDetail, getInfo }) => {

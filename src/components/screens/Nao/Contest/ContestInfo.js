@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-import { CardNao, TextLiner, ButtonNao } from 'components/screens/Nao/NaoStyle';
+import { CardNao, TextLiner, ButtonNao, Tooltip } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/actions/apis';
-import Tooltip from 'components/common/Tooltip';
 import CreateTeamModal from './season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
 
@@ -131,11 +130,17 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                                     <div className="px-2 cursor-pointer" data-tip="" data-for="liquidate-fee" id="tooltip-liquidate-fee">
                                         <img src={getS3Url('/images/icon/ic_help.png')} height={16} width={16} />
                                     </div>
-                                    <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                    <Tooltip className="!p-[10px] sm:min-w-[282px] sm:!max-w-[282px]"
+                                        arrowColor="transparent" id="liquidate-fee" >
+                                        <div className="font-medium text-sm text-nao-grey2 "  >
+                                            {t('nao:contest:per_pnl_tooltip')}
+                                        </div>
+                                    </Tooltip>
+                                    {/* <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
                                         arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
                                     >
                                         <div>{t('nao:contest:per_pnl_tooltip')}</div>
-                                    </Tooltip>
+                                    </Tooltip> */}
 
                                 </label>
                                 <div
