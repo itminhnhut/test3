@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-import { CardNao, TextLiner, ButtonNao } from 'components/screens/Nao/NaoStyle';
+import { CardNao, TextLiner, ButtonNao, Tooltip } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/actions/apis';
-import Tooltip from 'components/common/Tooltip';
 import CreateTeamModal from './season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
 
@@ -65,7 +64,6 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
 
     const onShowCreate = (mode) => {
         if (mode) getData();
-        console.log('2323232323232')
         setShowCreateTeamModal(!showCreateTeamModal)
     }
 
@@ -84,7 +82,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                     <TextLiner>{t('nao:contest:personal')}</TextLiner>
                     {!userData?.group_name && !previous && <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()} >{t('nao:contest:create_team')}</ButtonNao>}
                 </div>
-                <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-8 ">
+                <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 sm:mt-6">
                     <CardNao className="!min-h-[136px] !p-6 lg:!max-w-[375px]">
                         <label className="text-[1.25rem] text-nao-green font-semibold leading-8">{userData?.name}</label>
                         <div
@@ -134,11 +132,17 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                                     <div className="px-2 cursor-pointer" data-tip="" data-for="liquidate-fee" id="tooltip-liquidate-fee">
                                         <img src={getS3Url('/images/icon/ic_help.png')} height={16} width={16} />
                                     </div>
-                                    <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                    <Tooltip className="!p-[10px] sm:min-w-[282px] sm:!max-w-[282px]"
+                                        arrowColor="transparent" id="liquidate-fee" >
+                                        <div className="font-medium text-sm text-nao-grey2 "  >
+                                            {t('nao:contest:per_pnl_tooltip')}
+                                        </div>
+                                    </Tooltip>
+                                    {/* <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
                                         arrowColor="transparent" className="!mx-[20px] !bg-darkBlue-4"
                                     >
                                         <div>{t('nao:contest:per_pnl_tooltip')}</div>
-                                    </Tooltip>
+                                    </Tooltip> */}
 
                                 </label>
                                 <div

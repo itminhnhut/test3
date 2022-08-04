@@ -4,8 +4,7 @@ import classNames from "classnames";
 import CTooltip from "components/common/Tooltip";
 import { useMemo, useState } from "react";
 import useWindowSize from "hooks/useWindowSize";
-import { useEffect } from "react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "next-i18next";
 import { getS3Url, formatNumber } from "redux/actions/utils";
 import Skeletor from "components/common/Skeletor";
@@ -102,8 +101,8 @@ export const Tooltip = ({
                 `!opacity-100 !rounded-lg max-w-[250px] sm:max-w sm:w-full ${className} `,
                 { "!-mt-5 ": place === "top" }
             )}
-            arrowColor={arrowColor ?? colors.onus.bg2}
-            backgroundColor={backgroundColor ?? colors.onus.bg2}
+            arrowColor={arrowColor ?? colors.nao.tooltip2}
+            backgroundColor={backgroundColor ?? colors.nao.tooltip2}
         >
             {children}
         </CTooltip>
@@ -231,13 +230,9 @@ export const Table = ({
         };
     }, [content.current]);
     const isScroll = checkScrollBar(content.current, "vertical");
-
+    const _children = children.filter(child => child.props?.visible === true || child.props?.visible === undefined);
     return (
-        <CardNao
-            id="nao-table"
-            noBg
-            className="mt-8 !p-6 !justify-start"
-        >
+        <CardNao id="nao-table" noBg className="mt-8 !p-6 !justify-start" >
             <div
                 ref={content}
                 className="overflow-auto nao-table-content min-h-[200px]"
@@ -251,7 +246,7 @@ export const Table = ({
                         classHeader
                     )}
                 >
-                    {children.map((item, indx) => (
+                    {_children.map((item, indx) => (
                         <Column
                             key={indx}
                             {...item.props}
@@ -259,7 +254,7 @@ export const Table = ({
                                 "whitespace-nowrap mx-2 min-h-[10px]",
                                 { "flex-1": indx !== 0 },
                                 { "ml-0": indx === 0 },
-                                { "mr-0": indx === children.length - 1 }
+                                { "mr-0": indx === _children.length - 1 }
                             )}
                         />
                     ))}
@@ -278,83 +273,47 @@ export const Table = ({
                                     key={`row_${index}`}
                                     className={classNames(
                                         "px-3 flex items-center flex-1 w-full",
-                                        {
-                                            "bg-nao/[0.15] rounded-lg":
-                                                index % 2 !== 0,
-                                        }
+                                        { "bg-nao/[0.15] rounded-lg": index % 2 !== 0, }
                                     )}
                                 >
-                                    {children.map((child, indx) => {
+                                    {_children.map((child, indx) => {
                                         const width = child?.props?.width;
                                         const minWidth = child?.props?.minWidth;
                                         const maxWidth = child?.props?.maxWidth;
-                                        const className =
-                                            child?.props?.className ?? "";
-                                        const align =
-                                            child?.props?.align ?? "left";
-                                        const _align =
-                                            align === "right"
-                                                ? "flex justify-end"
-                                                : "";
-                                        const cellRender =
-                                            child?.props?.cellRender;
+                                        const className = child?.props?.className ?? "";
+                                        const align = child?.props?.align ?? "left";
+                                        const _align = align === "right" ? "flex justify-end" : "";
+                                        const cellRender = child?.props?.cellRender;
                                         const suffix = child?.props?.suffix;
                                         const decimal = child?.props?.decimal;
-                                        const fieldName =
-                                            child?.props?.fieldName;
+                                        const fieldName = child?.props?.fieldName;
                                         const ellipsis = child?.props?.ellipsis;
-
+                                        const onCellClick = child?.props?.onCellClick;
+                                        const textItem = cellRender ? item?.[fieldName] : item?.[fieldName] ?? '-';
                                         return (
                                             <div
-                                                title={item[fieldName]}
-                                                style={{
-                                                    width,
-                                                    maxWidth,
-                                                    minWidth,
-                                                    textAlign: align,
-                                                }}
+                                                title={cellRender ? null : textItem}
+                                                style={{ width, maxWidth, minWidth, textAlign: align, }}
                                                 key={indx}
                                                 className={classNames(
-                                                    `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
+                                                    `min-h-[56px] flex items-center text-sm ${className} ${_align}`,
                                                     "break-words mx-2",
                                                     { "flex-1": indx !== 0 },
                                                     { "ml-0": indx === 0 },
-                                                    {
-                                                        "mr-0":
-                                                            indx ==
-                                                            children.length - 1,
-                                                    }
+                                                    { "mr-0": indx == _children.length - 1, }
                                                 )}
+                                                onClick={() => onCellClick && onCellClick(textItem, { ...item, rowIndex: index, })}
                                             >
-                                                {loading ? (
-                                                    <Skeletor
-                                                        width={minWidth ?? 50}
-                                                        height={20}
-                                                    />
-                                                ) : cellRender ? (
-                                                    cellRender(
-                                                        item[fieldName],
-                                                        {
-                                                            ...item,
-                                                            rowIndex: index,
-                                                        }
-                                                    )
-                                                ) : decimal >= 0 ? (
-                                                    formatNumber(
-                                                        item[fieldName],
-                                                        decimal,
-                                                        0,
-                                                        true
-                                                    )
-                                                ) : fieldName === "index" ? (
-                                                    index + 1
-                                                ) : ellipsis ? (
-                                                    <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
-                                                        {item[fieldName]}
-                                                    </span>
-                                                ) : (
-                                                    item[fieldName]
-                                                )}
+                                                {loading ?
+                                                    <Skeletor width={minWidth ?? 50} height={20} />
+                                                    : cellRender ? cellRender(textItem, { ...item, rowIndex: index, })
+                                                        : decimal >= 0 ? formatNumber(textItem, decimal, 0, true)
+                                                            : fieldName === "index" ? (index + 1)
+                                                                : ellipsis ? <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                                                                    {textItem}
+                                                                </span>
+                                                                    : textItem
+                                                }
                                                 {suffix ? ` ${suffix}` : ""}
                                             </div>
                                         );
@@ -399,22 +358,38 @@ export const renderPnl = (data, item) => {
     );
 };
 
-export const useOutsideAlerter = (ref, cb) => {
+export const useOutside = (ref, cb, container) => {
     useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
         const handleClickOutside = (event, cb) => {
-            if (ref.current && !ref.current.contains(event.target)) {
+            if (ref.current && !ref.current?.contains(event.target)) {
                 cb();
             }
         };
-        // Bind the event listener
+        if (container?.current) {
+            container?.current?.addEventListener("mousedown", (event) =>
+                handleClickOutside(event, cb)
+            );
+        }
+        return () => {
+            if (container?.current) {
+                container?.current?.removeEventListener("mousedown", handleClickOutside);
+            }
+        };
+    }, [ref, cb, container]);
+};
+
+
+export const useOutsideAlerter = (ref, cb) => {
+    useEffect(() => {
+        const handleClickOutside = (event, cb) => {
+            if (ref.current && !ref.current?.contains(event.target)) {
+                cb();
+            }
+        };
         document.addEventListener("mousedown", (event) =>
             handleClickOutside(event, cb)
         );
         return () => {
-            // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [ref, cb]);
@@ -505,7 +480,7 @@ export const WrapInput = styled.div.attrs(({ error }) => ({
 
 const WarningIcon = () => {
     return <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.8103 0C9.7077 0 10.511 0.465413 10.9561 1.24491L17.2784 12.2987C17.7209 13.072 17.7183 13.9949 17.2704 14.7665C16.8226 15.539 16.0229 16 15.1316 16H2.47752C1.58541 16 0.785671 15.539 0.337854 14.7665C-0.109963 13.9949 -0.112602 13.072 0.329936 12.2987L6.66448 1.24315C7.10966 0.464533 7.91115 0 8.80943 0H8.8103ZM8.80943 1.3197C8.39064 1.3197 8.01761 1.53613 7.80822 1.89948L1.47543 12.9541C1.26956 13.3149 1.27132 13.7451 1.47983 14.1049C1.68834 14.4648 2.06138 14.6803 2.47752 14.6803H15.1316C15.5469 14.6803 15.9199 14.4648 16.1285 14.1049C16.3379 13.7451 16.3396 13.3149 16.132 12.9541L9.81063 1.89948C9.60212 1.53613 9.22909 1.3197 8.80943 1.3197ZM8.80344 10.9966C9.28997 10.9966 9.68324 11.3899 9.68324 11.8764C9.68324 12.3629 9.28997 12.7562 8.80344 12.7562C8.31692 12.7562 7.91925 12.3629 7.91925 11.8764C7.91925 11.3899 8.309 10.9966 8.79464 10.9966H8.80344ZM8.80168 5.77499C9.16592 5.77499 9.46153 6.0706 9.46153 6.43484V9.16221C9.46153 9.52645 9.16592 9.82206 8.80168 9.82206C8.43745 9.82206 8.14183 9.52645 8.14183 9.16221V6.43484C8.14183 6.0706 8.43745 5.77499 8.80168 5.77499Z" fill="#DC1F4E" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M8.8103 0C9.7077 0 10.511 0.465413 10.9561 1.24491L17.2784 12.2987C17.7209 13.072 17.7183 13.9949 17.2704 14.7665C16.8226 15.539 16.0229 16 15.1316 16H2.47752C1.58541 16 0.785671 15.539 0.337854 14.7665C-0.109963 13.9949 -0.112602 13.072 0.329936 12.2987L6.66448 1.24315C7.10966 0.464533 7.91115 0 8.80943 0H8.8103ZM8.80943 1.3197C8.39064 1.3197 8.01761 1.53613 7.80822 1.89948L1.47543 12.9541C1.26956 13.3149 1.27132 13.7451 1.47983 14.1049C1.68834 14.4648 2.06138 14.6803 2.47752 14.6803H15.1316C15.5469 14.6803 15.9199 14.4648 16.1285 14.1049C16.3379 13.7451 16.3396 13.3149 16.132 12.9541L9.81063 1.89948C9.60212 1.53613 9.22909 1.3197 8.80943 1.3197ZM8.80344 10.9966C9.28997 10.9966 9.68324 11.3899 9.68324 11.8764C9.68324 12.3629 9.28997 12.7562 8.80344 12.7562C8.31692 12.7562 7.91925 12.3629 7.91925 11.8764C7.91925 11.3899 8.309 10.9966 8.79464 10.9966H8.80344ZM8.80168 5.77499C9.16592 5.77499 9.46153 6.0706 9.46153 6.43484V9.16221C9.46153 9.52645 9.16592 9.82206 8.80168 9.82206C8.43745 9.82206 8.14183 9.52645 8.14183 9.16221V6.43484C8.14183 6.0706 8.43745 5.77499 8.80168 5.77499Z" fill="#DC1F4E" />
     </svg>
 
 }

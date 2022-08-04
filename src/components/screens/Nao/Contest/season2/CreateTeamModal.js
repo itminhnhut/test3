@@ -31,6 +31,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
     const oldData = useRef({});
     const [flag, setFlag] = useState(false);
     const [loading, setLoading] = useState(false);
+    const isLoading = useRef(false);
 
     const onAddAvatar = () => {
         const el = document.querySelector('#avatar_team');
@@ -40,10 +41,9 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
     const onChangeAvatar = (e) => {
         const reader = new FileReader();
         const file = e.target.files[0];
-        const size = Math.round((file.size / 1024));
-        if (size > 2048) {
-            context.alertV2.show('warning', t(`error:futures:INVALID_IMAGE`), null, null,
-                null, () => onAddAvatar())
+        const size = Math.round((file?.size / 1024));
+        if (size > 2048 | !file) {
+            context.alertV2.show('warning', t(`error:futures:INVALID_IMAGE`))
         } else {
             if (file) {
                 reader.onloadend = () => {
@@ -64,10 +64,11 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
         const name = e.target.name;
         switch (key) {
             case 'name':
-                setName(String(value).trimStart().replace(/[&#,+()$~%._'":*?<>{}@`|\/\\^=-]/g, ''))
+                setName(String(value).trimStart().replace(/[&#,+()$~%.;_'":*?<>[\]\{}@`|\/\\^=-]/g, ''))
                 break;
             case 'member':
                 const _value = String(value).trim().replace(/[^0-9]/g, '');
+                isLoading.current = true;
                 setMember({ ...member, [name]: _value });
                 clearTimeout(timer.current)
                 timer.current = setTimeout(() => {
@@ -80,13 +81,17 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
 
     }
 
+    const checkDup = (value, name) => {
+        return Object.keys(member).find(rs => value === member[rs] && rs !== String(name) || value === userData?.onus_user_id);
+    }
+
     const onBlur = async (e) => {
         const value = e.target.value;
         const name = e.target.name;
         if (value === oldData.current[name]) return;
         oldData.current[name] = value;
         const _errors = { ...errors };
-        _errors[name] = { error: false, message: '' }
+        _errors[name] = { error: false, message: '', duplicate: false }
         // if (value.length <= 20 && value) {
         //     delete fullname.current[name]
         //     _errors[name]['error'] = true;
@@ -95,9 +100,23 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
         if (value) {
             await checkMember(value, (data) => {
                 if (data?.name) {
+                    Object.keys(_errors).map(key => {
+                        if (_errors[key]['duplicate']) {
+                            if (!checkDup(member[key], key)) {
+                                _errors[key]['duplicate'] = false;
+                                _errors[key]['error'] = false;
+                            }
+                        }
+                    })
                     fullname.current[name] = data?.name;
-                    _errors[name]['message'] = !data?.result ? t('nao:contest:invalid_member') : '';
-                    _errors[name]['error'] = !data?.result;
+                    if (checkDup(value, name)) {
+                        _errors[name]['duplicate'] = true;
+                        _errors[name]['error'] = true;
+                        _errors[name]['message'] = t('error:futures:DUPLICATED_USER');
+                    } else {
+                        _errors[name]['message'] = !data?.result ? t('nao:contest:invalid_member') : '';
+                        _errors[name]['error'] = !data?.result;
+                    }
                 } else {
                     _errors[name]['error'] = true;
                     _errors[name]['message'] = t('nao:contest:invalid_id');
@@ -109,6 +128,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
             delete _errors[name]
         }
         // }
+        isLoading.current = false
         setErros(_errors)
     }
 
@@ -171,13 +191,12 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
                 params: params,
             });
             if (status === ApiStatus.SUCCESS) {
-                // onClose(true);
+                onClose(true);
                 context.alertV2.show('success', t('nao:contest:team_successfully'), null, null,
                     () => { onShowDetail({ displaying_id: data?.group_displaying_id, is_leader: 1, ...data }) },
                     null,
                     { confirmTitle: t('nao:contest:team_details') });
             } else {
-                console.log('2222')
                 context.alertV2.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`));
             }
         } catch (e) {
@@ -189,8 +208,8 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
     }
 
     const disabled = useMemo(() => {
-        return !name || Object.keys(member).find(rs => !member[rs] || member[rs] === userData?.onus_user_id) || Object.keys(errors).find(e => errors[e]?.['error'])
-    }, [member, name, avatar, errors, userData])
+        return !name || Object.keys(member).find(rs => !member[rs]) || Object.keys(errors).find(e => errors[e]?.['error'])
+    }, [member, name, avatar, errors])
 
     const isMobile = width <= 640;
 
@@ -251,7 +270,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
             </div>
             <div className='!px-4 flex items-center space-x-4 mt-8'>
                 <ButtonNao onClick={() => onClose()} border className="w-full !rounded-md">{t('common:close')}</ButtonNao>
-                <ButtonNao onClick={onSubmit} disabled={disabled || loading} className="w-full !rounded-md">
+                <ButtonNao onClick={onSubmit} disabled={disabled || loading || isLoading.current} className="w-full !rounded-md">
                     {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:create_team')}
                 </ButtonNao>
             </div>

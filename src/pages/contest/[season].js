@@ -4,11 +4,12 @@ import { seasons } from 'components/screens/Nao/Contest/Contest';
 import Contest from 'components/screens/Nao/Contest/Contest';
 
 const Season = ({ season }) => {
-    return <Contest previous {...season} />
+    const current = seasons[seasons.length - 1];
+    return <Contest previous={current?.season !== season?.season} {...season} />
 };
 
 export const getServerSideProps = async (context) => {
-    const season = seasons?.find(e => e.season === context?.params?.season)
+    const season = seasons?.find(e => e.season === Number(context?.params?.season))
     if (!season) return { notFound: true }
     return {
         props: {
