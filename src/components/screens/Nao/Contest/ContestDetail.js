@@ -317,7 +317,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             :
                             loading ? <div className="w-full"><Skeletor className="!rounded-xl" onusMode height={92} width={'100%'} colors={colors.nao.grey} /></div> :
                                 <CardNao noBg className="!p-4 sm:!p-6 space-x-4 sm:space-x-8 !flex-row !items-center !justify-start !min-h-[80px]">
-                                    <div className="min-w-[32px]"><WarningIcon size={32} /></div>
+                                    <div className="min-w-[32px]"><WarningIcon size={28} /></div>
                                     <div className="text-sm">
                                         {t('nao:contest:rules_for_season_2')}
                                         <span onClick={onRedirect} className="font-medium underline text-nao-green cursor-pointer">{t('nao:contest:rules_content')}</span>

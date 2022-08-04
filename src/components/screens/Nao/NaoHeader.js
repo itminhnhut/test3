@@ -208,7 +208,7 @@ const Drawer = ({
                             alt=""
                         />
                     </div>
-                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)]">
+                    <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)] overflow-y-auto">
                         <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
                             {category.map((item) => (
                                 <div
