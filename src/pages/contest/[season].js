@@ -8,7 +8,7 @@ const Season = ({ season }) => {
 };
 
 export const getServerSideProps = async (context) => {
-    const season = seasons?.find(e => e.season === context?.params?.season)
+    const season = seasons?.find(e => e.season === Number(context?.params?.season))
     if (!season) return { notFound: true }
     return {
         props: {

@@ -30,7 +30,7 @@ const Modal = ({
         if (onBackdropCb && center) onBackdropCb()
     }
 
-    useOutsideAlerter(wrapperRef, handleOutside.bind(this));
+    useOutsideAlerter(wrapperRef, handleOutside);
 
     useEffect(() => {
         if (isVisible) {

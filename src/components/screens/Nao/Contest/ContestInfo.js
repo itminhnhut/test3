@@ -65,7 +65,6 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
 
     const onShowCreate = (mode) => {
         if (mode) getData();
-        console.log('2323232323232')
         setShowCreateTeamModal(!showCreateTeamModal)
     }
 
@@ -82,7 +81,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                     <TextLiner>{t('nao:contest:personal')}</TextLiner>
                     {!userData?.group_name && !previous && <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()} >{t('nao:contest:create_team')}</ButtonNao>}
                 </div>
-                <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-8 ">
+                <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 sm:mt-6">
                     <CardNao className="!min-h-[136px] !p-6 lg:!max-w-[375px]">
                         <label className="text-[1.25rem] text-nao-green font-semibold leading-8">{userData?.name}</label>
                         <div

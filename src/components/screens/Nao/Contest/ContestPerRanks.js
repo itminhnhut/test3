@@ -77,7 +77,7 @@ const ContestPerRanks = ({ previous, contest_id }) => {
     }
 
     return (
-        <section className="contest_individual_ranks pt-[70px]">
+        <section className="contest_individual_ranks pt-[4.125rem]">
             <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-personal-rank" >
                 <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_personal', { value: '10' }) }} >
@@ -97,52 +97,53 @@ const ContestPerRanks = ({ previous, contest_id }) => {
                         className={`px-4 py-2 !rounded-md   ${tab === 'pnl' ? 'font-semibold' : '!bg-nao-bg3'}`}>{t('nao:contest:per_pnl')}</ButtonNao>
                 </div>
             </div>
-            <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-8">
-                {top3.map((item, index) => (
-                    <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
-                        <div className="flex justify-between flex-1 mb-4 gap-5">
-                            <div className="flex flex-col">
-                                <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
-                                <div className="sm:gap-1 flex flex-col">
-                                    <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
-                                        <div>{item?.name}</div>
-                                        <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
+            {top3.length > 0 &&
+                <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-[2.75rem]">
+                    {top3.map((item, index) => (
+                        <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
+                            <div className="flex justify-between flex-1 mb-4 gap-5">
+                                <div className="flex flex-col">
+                                    <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
+                                    <div className="sm:gap-1 flex flex-col">
+                                        <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
+                                            <div>{item?.name}</div>
+                                            <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
+                                        </div>
+                                        <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
                                     </div>
-                                    <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
+                                </div>
+                                <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
+                                    <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')}
+                                        className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem] max-h-[6.375rem] rounded-[50%] object-cover" alt="" />
                                 </div>
                             </div>
-                            <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
-                                <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')}
-                                    className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem] max-h-[6.375rem] rounded-[50%] object-cover" alt="" />
-                            </div>
-                        </div>
-                        <div className="rounded-lg mt-auto">
-                            <div className="flex items-center justify-between gap-2">
-                                <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
-                                <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} VNDC</span>
-                            </div>
-                            <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2"></div>
-                            {
-                                tab === 'pnl'
-                                    ? <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</div>
-                                        <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
-                                            {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}{formatNumber(item?.pnl, 2, 0, true)}%
-                                        </span>
-                                    </div>
-                                    : <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-nao-text">{t('nao:contest:total_trades')}</div>
-                                        <span className={`font-semibold leading-8`}>
-                                            {formatNumber(item?.total_order)}
-                                        </span>
-                                    </div>
-                            }
+                            <div className="rounded-lg mt-auto">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
+                                    <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} VNDC</span>
+                                </div>
+                                <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2"></div>
+                                {
+                                    tab === 'pnl'
+                                        ? <div className="flex items-center justify-between gap-2">
+                                            <div className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</div>
+                                            <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
+                                                {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}{formatNumber(item?.pnl, 2, 0, true)}%
+                                            </span>
+                                        </div>
+                                        : <div className="flex items-center justify-between gap-2">
+                                            <div className="text-sm text-nao-text">{t('nao:contest:total_trades')}</div>
+                                            <span className={`font-semibold leading-8`}>
+                                                {formatNumber(item?.total_order)}
+                                            </span>
+                                        </div>
+                                }
 
-                        </div>
-                    </CardNao>
-                ))}
-            </div>
-
+                            </div>
+                        </CardNao>
+                    ))}
+                </div>
+            }
             {width <= 640 ?
                 <CardNao noBg className="mt-5 !py-[18px] !px-3">
                     <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">

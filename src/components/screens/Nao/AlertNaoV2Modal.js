@@ -4,6 +4,7 @@ import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 import { ButtonNao } from 'components/screens/Nao/NaoStyle';
+import useWindowSize from 'hooks/useWindowSize';
 
 const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
     const { t } = useTranslation();
@@ -11,6 +12,8 @@ const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
     const [height, setHeight] = useState(362 / 2);
     const timer = useRef(null);
     const isClose = useRef(false)
+    const { width } = useWindowSize()
+    const isMobile = width <= 640;
 
     const options = useRef({
         type: '',
@@ -80,8 +83,9 @@ const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
             modalClassName="z-[99999999999]"
-            onusClassName="min-h-[304px] rounded-t-[16px] !bg-nao-tooltip pb-[3.75rem] !px-6"
+            onusClassName={`${isMobile ? 'pb-[3.75rem] !px-6' : '!p-8 max-w-[420px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip `}
             containerClassName="!bg-nao-bgModal2/[0.9]"
+            center={!isMobile}
         >
             <div className="flex flex-col items-center justify-between h-full">
                 <div className='mb-6'>
