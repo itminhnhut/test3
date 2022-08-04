@@ -192,7 +192,7 @@ const PlaceOrder = ({
 
     const onChangeQuoteQty = (price, leverage) => {
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
-        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
+        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, _pairPrice, pairConfig, true);
         let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
             .toFixed(decimalSymbol);
         // let _quoteQty = minQuoteQty
@@ -473,7 +473,7 @@ const PlaceOrder = ({
         if (!inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
             const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
-            const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
+            const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, _pairPrice, pairConfig, true);
             const available = maxQuoteQty >= minQuoteQty;
             context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount_price') : t('futures:mobile:balance_insufficient'));
             return;
@@ -505,7 +505,7 @@ const PlaceOrder = ({
 
     const onConfirmEditVolume = (quoteQty) => {
         const _price = type === FuturesOrderTypes.Market ?
-            (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
+            (VndcFutureOrderType.Side.BUY === side ? _pairPrice?.ask : _pairPrice?.bid) :
             price;
         const _size = (quoteQty / _price);
         setSize(+_size);

@@ -41,7 +41,6 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
     if (isTabHistory) {
         profit = order?.profit
     } else {
-
         if(order.symbol !== _pairPrice.symbol) return '-'
         if (order && _pairPrice) {
             profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? _pairPrice?.bid : _pairPrice?.ask, true);
