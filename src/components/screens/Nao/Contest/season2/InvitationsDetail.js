@@ -18,6 +18,8 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
     const [dataSource, setDataSource] = useState(null)
     const [loading, setLoading] = useState(false)
 
+    const isMobile = width <= 640;
+
     const acceptInvite = async (id) => {
         const contest_id = 5
         const action = 'ACCEPT'
@@ -56,9 +58,10 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
         <>
             <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
                 modalClassName="z-[99999]"
-                containerClassName="!bg-nao-bgModal2/[0.9]" onusClassName="!px-6 pb-[3.75rem] !bg-nao-tooltip">
-                <div className="bg-[#0E1D32] w-full sm:px-10 sm:py-[11] overflow-y-auto">
-                    <div className="flex sm:items-center sm:justify-between min-h-[32px] mb-5 gap-2 flex-wrap lg:flex-row flex-col">
+                onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[979px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
+                containerClassName="!bg-nao-bgModal2/[0.9]">
+                <div className="bg-[#0E1D32] w-full h-full sm:px-10 sm:py-[11]">
+                    <div className="flex sm:items-center sm:justify-between min-h-[32px] px-4 mb-[32px] gap-2 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7">
                             <div className="flex flex-col">
                                 <div className="flex items-center space-x-3">
@@ -71,7 +74,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
 
                     </div>
 
-                    <div className="flex nao-table flex-col overflow-y-auto mt-3 max-h-[390px]">
+                    <div className="flex flex-col px-4 scrollbar-nao overflow-y-auto h-[calc(100%-124px)]">
                         {Array.isArray(data) && data.length > 0 &&
                             data?.map((item, index) => {
                                 return (
