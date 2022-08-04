@@ -17,6 +17,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
     const { width } = useWindowSize()
     const [dataSource, setDataSource] = useState(null)
     const [loading, setLoading] = useState(false)
+    const isMobile = width <= 640;
 
     const acceptInvite = async (id) => {
         const contest_id = 5
@@ -54,11 +55,12 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
 
     return (
         <>
-            <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-                modalClassName="z-[99999]"
-                containerClassName="!bg-nao-bgModal2/[0.9]" onusClassName="!px-6 pb-[3.75rem] !bg-nao-tooltip">
-                <div className="bg-[#0E1D32] w-full sm:px-10 sm:py-[11] overflow-y-auto">
-                    <div className="flex sm:items-center sm:justify-between min-h-[32px] mb-5 gap-2 flex-wrap lg:flex-row flex-col">
+            <Modal onusMode={true} center={!isMobile} isVisible={true} onBackdropCb={onClose}
+                modalClassName="z-[99999] flex justitfy-center h-full"
+                onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-[24px] !py-10 max-w-[668px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
+                containerClassName="!bg-nao-bgModal2/[0.9]">
+                <div className={`bg-[#0E1D32] h-full w-full`}>
+                    <div className="flex sm:items-center sm:justify-between min-h-[32px] !px-4 sm:px-[0px] mb-[32px] gap-2 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7">
                             <div className="flex flex-col">
                                 <div className="flex items-center space-x-3">
@@ -71,12 +73,13 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
 
                     </div>
 
-                    <div className="flex nao-table flex-col overflow-y-auto mt-3 max-h-[390px]">
+                    <div className="flex flex-col px-4 scrollbar-nao overflow-y-auto h-[calc(100%-124px)]">
                         {Array.isArray(data) && data.length > 0 &&
                             data?.map((item, index) => {
                                 return (
-                                    <CardNao noBg className="mb-5 p-[4px] !max-w-[330px]" key={item._id}>
-                                        <div className="flex px-3 py-[4px] gap-4 sm:gap-6 text-nao-white text-sm font-medium pb-2 border-nao-grey/[0.2] items-center w-full min-h-[56px]">
+                                    isMobile ? 
+                                    <CardNao noBg className="mb-[16px] px-[4px] py-[16px] !max-w-[330px]" key={item._id}>
+                                        <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle w-full h-full min-h-[56px]">
                                             <div className='h-[48px] w-[48px] flex justify-center items-center'>
                                                 <img src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
@@ -89,11 +92,35 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="flex py-[8px] min-h-[56px] px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full w-full justify-between">
-                                            <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full max-w-[250px] text-sm leading-6" onClick={() => onAccept(item)}>
+                                        <div className="flex pt-[8px] px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full w-full justify-between">
+                                            <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full text-sm leading-6" onClick={() => onAccept(item)}>
                                                 {t('nao:contest:accept_invite')}
                                             </ButtonNao>
-                                            <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-2 px-2 !rounded-md font-semibold w-full max-w-[250px] text-sm leading-6">
+                                            <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-2 px-2 w-full !rounded-md font-semibold text-sm leading-6">
+                                                {t('nao:contest:team_detail')}
+                                            </ButtonNao>
+                                        </div>
+                                    </CardNao>
+                                    :
+                                    <CardNao noBg className="!flex !flex-row mb-[16px] !min-h-[100px] !py-[8px] !px-[12px]" key={item._id}>
+                                        <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle h-full">
+                                            <div className='h-[48px] w-[48px] flex justify-center items-center'>
+                                                <img src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
+                                            </div>
+                                            <div className='items-center'>
+                                                <div className='h-auto font-normal flex items-center text-xs leading-6'>
+                                                    {LeaderFlag} {t('nao:contest:team_lead')}: {item.leader_name}
+                                                </div>
+                                                <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                    {item.group_name}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center pt-[8px] gap-[16px] text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full justify-evenly">
+                                            <ButtonNao className="py-[8px] px-[16px] !rounded-md font-semibold max-w-[250px] text-sm leading-6" onClick={() => onAccept(item)}>
+                                                {t('nao:contest:accept_invite')}
+                                            </ButtonNao>
+                                            <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-[8px] px-[16px] !rounded-md font-semibold  max-w-[250px] text-sm leading-6">
                                                 {t('nao:contest:team_detail')}
                                             </ButtonNao>
                                         </div>
@@ -104,7 +131,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                     </div>
 
 
-                    <div className="w-full mt-5 sm:mt-10 m-auto">
+                    <div className="mx-[16px] mt-5 sm:mt-10">
                         <ButtonNao onClick={onClose} border className="py-2 px-11 !rounded-md font-semibold">{t('common:close')}</ButtonNao>
                     </div>
                 </div>
