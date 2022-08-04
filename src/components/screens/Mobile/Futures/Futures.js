@@ -1,36 +1,35 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
-import {useDispatch, useSelector} from 'react-redux';
-import {FUTURES_DEFAULT_SYMBOL} from 'pages/futures';
-import {PATHS} from 'constants/paths';
-import {useRouter} from 'next/router';
-import {UserSocketEvent} from 'redux/actions/const';
-import {LOCAL_STORAGE_KEY} from 'constants/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { FUTURES_DEFAULT_SYMBOL } from 'pages/futures';
+import { PATHS } from 'constants/paths';
+import { useRouter } from 'next/router';
+import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
+import { LOCAL_STORAGE_KEY } from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
 import { getFuturesMarketWatch, getOrdersList, updateSymbolView } from 'redux/actions/futures';
-import {VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
-import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
-import {countDecimals, emitWebViewEvent} from 'redux/actions/utils';
+import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
 import EventModalMobile from './EventModalMobile';
-import {API_FUTURES_CAMPAIGN_STATUS} from 'redux/actions/apis';
-import {ApiStatus} from 'redux/actions/const';
+import { API_FUTURES_CAMPAIGN_STATUS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
-import {PromotionStatus} from 'components/screens/Mobile/Futures/onboardingType';
+import { PromotionStatus } from 'components/screens/Mobile/Futures/onboardingType';
 
 const INITIAL_STATE = {
     loading: false,
     pair: null,
     isVndcFutures: false,
+    socketStatus: false,
 };
 
 const FuturesMobile = () => {
     const [state, set] = useState(INITIAL_STATE);
     const dispatch = useDispatch();
-    const setState = (state) => set((prevState) => ({...prevState, ...state}));
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
@@ -44,9 +43,9 @@ const FuturesMobile = () => {
     const [collapse, setCollapse] = useState(false);
     const [scrollSnap, setScrollSnap] = useState(false);
     const [forceRender, setForceRender] = useState(false);
-    const [showOnBoardingModal, setShowOnBoardingModal] = useState(false)
-    const assetConfig = useSelector(state => state?.utils?.assetConfig)
-    const campaign = useRef(null)
+    const [showOnBoardingModal, setShowOnBoardingModal] = useState(false);
+    const assetConfig = useSelector(state => state?.utils?.assetConfig);
+    const campaign = useRef(null);
 
     const pairConfig = useMemo(
         () => allPairConfigs?.find((o) => o.pair === state.pair),
@@ -55,46 +54,42 @@ const FuturesMobile = () => {
 
     const asset = useMemo(() => {
         return assetConfig.find(rs => rs.id === pairConfig?.quoteAssetId);
-    }, [assetConfig, pairConfig])
+    }, [assetConfig, pairConfig]);
 
     useEffect(() => {
         if (!router?.query?.pair) return;
-        const pairConfig = allPairConfigs?.find((o) => o.pair === router?.query?.pair)
+        const pairConfig = allPairConfigs?.find((o) => o.pair === router?.query?.pair);
         if (!pairConfig && allPairConfigs?.length > 0) {
-            const newPair = allPairConfigs?.find(o => o.pair === FUTURES_DEFAULT_SYMBOL)?.pair || allPairConfigs[0].pair
+            const newPair = allPairConfigs?.find(o => o.pair === FUTURES_DEFAULT_SYMBOL)?.pair || allPairConfigs[0].pair;
             router.push(
                 `/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`,
                 undefined,
-                {shallow: true}
+                { shallow: true }
             );
         }
-    }, [router?.query?.pair, allPairConfigs])
+    }, [router?.query?.pair, allPairConfigs]);
 
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
 
     // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
-            // if (router.query.pair.indexOf('USDT') !== -1) {
-            //     router.push(
-            //         `/mobile${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
-            //         undefined,
-            //         {shallow: true}
-            //     );
-            //     return;
-            // }
-            setState({pair: router.query.pair});
+            setState({ pair: router.query.pair });
             localStorage.setItem(
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,
                 router.query.pair
             );
-            dispatch(updateSymbolView({symbol: router.query.pair}))
+            dispatch(updateSymbolView({ symbol: router.query.pair }));
         }
     }, [router]);
 
     const getCampaignStatus = async () => {
         try {
-            const { status, data, message } = await fetchApi({
+            const {
+                status,
+                data,
+                message
+            } = await fetchApi({
                 url: API_FUTURES_CAMPAIGN_STATUS,
                 options: { method: 'GET' },
             });
@@ -108,20 +103,49 @@ const FuturesMobile = () => {
             console.log(e);
         } finally {
         }
+    };
+    const subscribeFuturesSocket = (pair) => {
 
-    }
+        if (!publicSocket) {
+            setState({ socketStatus: !!publicSocket });
+        } else {
+            if (
+                !state.prevPair ||
+                state.prevPair !== pair ||
+                !!publicSocket !== state.socketStatus
+            ) {
+                publicSocket.emit('subscribe:futures:ticker', pair);
+                // publicSocket.emit('subscribe:futures:mini_ticker', 'all');
+                setState({
+                    socketStatus: !!publicSocket,
+                    prevPair: pair
+                });
+            }
+        }
+    };
 
-    useEffect(()=> {
-        dispatch(getFuturesMarketWatch())
-    }, [])
+    const unsubscribeFuturesSocket = (pair) => {
+        // publicSocket?.emit('unsubscribe:futures:mini_ticker', 'all');
+    };
 
     useEffect(() => {
-        getCampaignStatus();
-        emitWebViewEvent('nami_futures');
-    }, [])
+        if (!state.pair) return;
+
+        // ? Subscribe publicSocket
+        subscribeFuturesSocket(state.pair);
+
+        // ? Unsubscribe publicSocket
+        return () => {
+            publicSocket && unsubscribeFuturesSocket(state.pair);
+        };
+    }, [publicSocket, state.pair]);
 
     useEffect(() => {
-        setState({isVndcFutures: pairConfig?.quoteAsset === 'VNDC'});
+        dispatch(getFuturesMarketWatch());
+    }, []);
+
+    useEffect(() => {
+        setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
     }, [pairConfig, userSettings, state.layouts]);
 
     useEffect(() => {
@@ -131,6 +155,11 @@ const FuturesMobile = () => {
     const getOrders = () => {
         if (auth) dispatch(getOrdersList());
     };
+
+    useEffect(() => {
+        getCampaignStatus();
+        emitWebViewEvent('nami_futures');
+    }, []);
 
     useEffect(() => {
         if (userSocket) {
@@ -162,7 +191,7 @@ const FuturesMobile = () => {
     }, [avlbAsset, pairConfig]);
 
     const futuresScreen = useMemo(() => {
-        if (typeof window !== "undefined") {
+        if (typeof window !== 'undefined') {
             setScrollSnap(false);
             const vh = window.innerHeight * 0.01;
             const el = document.querySelector('#futures-mobile .form-order');
@@ -170,26 +199,41 @@ const FuturesMobile = () => {
                 const scrollSnap = el.clientHeight <= vh * 100;
                 if (scrollSnap) {
                     setScrollSnap(true);
-                    return {isFullScreen: true, style: {height: vh * 100, scrollSnapAlign: 'start'}}
+                    return {
+                        isFullScreen: true,
+                        style: {
+                            height: vh * 100,
+                            scrollSnapAlign: 'start'
+                        }
+                    };
                 }
-                return {isFullScreen: false, style: {height: 'max-content'}}
+                return {
+                    isFullScreen: false,
+                    style: { height: 'max-content' }
+                };
             }
-            return {isFullScreen: false, style: {height: 'max-content'}}
+            return {
+                isFullScreen: false,
+                style: { height: 'max-content' }
+            };
         } else {
-            return {isFullScreen: false, style: {height: 'max-content'}}
+            return {
+                isFullScreen: false,
+                style: { height: 'max-content' }
+            };
         }
-    }, [state.pair, typeof window])
+    }, [state.pair, typeof window]);
 
     const onBlurInput = () => {
-        const offset = document.activeElement.getBoundingClientRect()
+        const offset = document.activeElement.getBoundingClientRect();
         if (offset && offset?.top < 10) {
             document.activeElement.blur();
         }
-    }
+    };
 
     const onScroll = (e) => {
         onBlurInput();
-    }
+    };
 
     return (
         <>
@@ -201,8 +245,7 @@ const FuturesMobile = () => {
             <LayoutMobile>
                 {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)}/>}
                 <Container id="futures-mobile" onScroll={onScroll}>
-                    <Section className="form-order bg-onus"
-                             style={{...futuresScreen.style}}>
+                    <Section className="form-order bg-onus" style={{ ...futuresScreen.style }}>
                         <ChartMobile
                             pair={state.pair} pairConfig={pairConfig}
                             isVndcFutures={isVndcFutures}
@@ -211,18 +254,16 @@ const FuturesMobile = () => {
                             isFullScreen={futuresScreen.isFullScreen}
                             decimals={decimals}
                         />
-                        <SocketLayout pair={state.pair} pairConfig={pairConfig}>
-                            <PlaceOrderMobile
-                                setSide={setSide}
-                                decimals={decimals} side={side}
-                                pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
-                                pairConfig={pairConfig} isVndcFutures={isVndcFutures}
-                                collapse={collapse} onBlurInput={onBlurInput}
-                                decimalSymbol={asset?.assetDigit ?? 0}
-                            />
-                        </SocketLayout>
+                        <PlaceOrderMobile
+                            setSide={setSide}
+                            decimals={decimals} side={side}
+                            pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
+                            pairConfig={pairConfig} isVndcFutures={isVndcFutures}
+                            collapse={collapse} onBlurInput={onBlurInput}
+                            decimalSymbol={asset?.assetDigit ?? 0}
+                        />
                     </Section>
-                    <Section className="bg-onus" style={{...futuresScreen.style}}>
+                    <Section className="bg-onus" style={{ ...futuresScreen.style }}>
                         <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
                                    pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
                                    setForceRender={setForceRender} forceRender={forceRender}
@@ -235,16 +276,16 @@ const FuturesMobile = () => {
     );
 };
 const Container = styled.div`
-    scroll-snap-type: y mandatory;
-    overflow-y: scroll;
-    height: calc(var(--vh, 1vh) * 100);
-`
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: calc(var(--vh, 1vh) * 100);
+`;
 
 const Section = styled.div`
-    width: 100%;
-    height: unset;
+  width: 100%;
+  height: unset;
 ${'' /* height:calc(var(--vh, 1vh) * 100); */}
 ${'' /* scroll-snap-align:start */}
-`
+`;
 
 export default FuturesMobile;

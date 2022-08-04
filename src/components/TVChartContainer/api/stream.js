@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { ChartMode } from 'redux/actions/const';
 import historyProvider from './historyProvider';
 
 const io = require('socket.io-client');
@@ -62,9 +61,11 @@ function updateBar(data, sub) {
 
 export default class {
     mode = null;
+    isFrame = false;
 
-    constructor(mode) {
+    constructor(mode, isFrame = false) {
         this.mode = mode;
+        this.isFrame = isFrame;
     }
 
     subscribeBars(symbolInfo, resolution, updateCb, uid, resetCache) {

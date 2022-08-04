@@ -1,14 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber, getPriceColor } from 'redux/actions/utils';
 import { Share2 } from 'react-feather';
 import { IconArrowOnus } from "components/common/Icons";
 import colors from 'styles/colors'
+import Emitter from 'redux/actions/emitter';
+import { PublicSocketEvent } from 'redux/actions/const';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
-const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0 }) => {
+const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0 }) => {
+
+
+    const [pairPrice, setPairPrice] = useState(initPairPrice);
+    const {symbol} = order
+    useEffect(() => {
+        if (!symbol) return;
+        // ? Subscribe publicSocket
+        // ? Get Pair Ticker
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol, async (data) => {
+            if (symbol === data?.s && data?.p > 0) {
+                const _pairPrice = FuturesMarketWatch.create(data);
+                setPairPrice(_pairPrice);
+            }
+        });
+        return () => {
+            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
+        };
+    }, [symbol]);
+
     if (!pairPrice?.lastPrice && !isTabHistory) return '-';
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
-
     let profit = 0
     if (isTabHistory) {
         profit = order?.profit

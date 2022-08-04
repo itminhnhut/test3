@@ -1,23 +1,25 @@
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import CheckBox from 'components/common/CheckBox';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import TableNoData from 'components/common/table.old/TableNoData';
-// import OrderClose from 'components/screens/Futures/PlaceOrder/Vndc/OrderClose';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import OrderItemMobile from './OrderItemMobile';
-// import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
 import { getShareModalData } from './ShareFutureMobile';
-import { emitWebViewEvent, countDecimals } from 'redux/actions/utils';
+import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
-import { find, countBy } from 'lodash';
+import { countBy, find } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 import { reFetchOrderListInterval } from 'redux/actions/futures';
-import { faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
+import uniq from 'lodash/uniq';
+import difference from 'lodash/difference';
 
+const INITIAL_STATE = {
+    socketStatus: false,
+};
 const TabOpenOrders = ({
     ordersList,
     pair,
@@ -27,6 +29,9 @@ const TabOpenOrders = ({
     onShowDetail,
     tab
 }) => {
+
+    const [state, set] = useState(INITIAL_STATE);
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const { t } = useTranslation();
     const context = useContext(AlertContext);
     const [hideOther, setHideOther] = useState(false);
@@ -41,19 +46,20 @@ const TabOpenOrders = ({
     const [openShareModal, setOpenShareModal] = useState(false);
     const [orderEditMarginId, setOrderEditMarginId] = useState();
     const [disabled, setDisabled] = useState(false);
+    const [symbols, setSymbols] = useState([]);
     const assetConfig = useSelector(state => state.utils.assetConfig);
+    const publicSocket = useSelector((state) => state.socket.publicSocket);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const orderEditMargin = useMemo(() => {
         if (!orderEditMarginId) return;
         return find(dataFilter, { displaying_id: orderEditMarginId });
     }, [orderEditMarginId, dataFilter]);
 
-
     const needShowHideOther = useMemo(() => {
-        const totalSymbol = countBy(ordersList, 'symbol')
-        return Object.keys(totalSymbol).length > 1
+        const totalSymbol = countBy(ordersList, 'symbol');
+        return Object.keys(totalSymbol).length > 1;
     }, [ordersList]);
 
     const onShowModal = (item, key) => {
@@ -103,7 +109,7 @@ const TabOpenOrders = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                const requestId = data?.requestId && `(${data?.requestId.substring(0, 8)})`
+                const requestId = data?.requestId && `(${data?.requestId.substring(0, 8)})`;
                 context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
             }
         } catch (e) {
@@ -113,7 +119,7 @@ const TabOpenOrders = ({
         } finally {
             setOpenCloseModal(false);
             setTimeout(() => {
-                setDisabled(false)
+                setDisabled(false);
             }, 1000);
         }
     };
@@ -126,12 +132,12 @@ const TabOpenOrders = ({
         };
         fetchOrder('DELETE', params, () => {
             context.alert.show('success', t('futures:close_order:modal_title', { value: id }), t('futures:close_order:request_successfully', { value: id }));
-            dispatch(reFetchOrderListInterval(1, 10000))
+            dispatch(reFetchOrderListInterval(1, 10000));
         });
     };
 
     const onConfirmEdit = (params) => {
-        setDisabled(true)
+        setDisabled(true);
         fetchOrder('PUT', params, () => {
             localStorage.setItem('edited_id', params.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
@@ -141,33 +147,60 @@ const TabOpenOrders = ({
 
     const getDecimalPrice = (config) => {
         const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
-        return countDecimals(decimalScalePrice?.tickSize)
-    }
-    const renderListOrder = useCallback(()=> {
+        return countDecimals(decimalScalePrice?.tickSize);
+    };
+
+    useEffect(() => {
+        const _symbols = uniq([...dataFilter?.map(order => order.symbol), pair]);
+        const newSymbols = difference(_symbols, symbols);
+        if (newSymbols.length) {
+            subscribeFuturesSocket(_symbols);
+            setSymbols(_symbols);
+        }
+    }, [dataFilter]);
+
+    const subscribeFuturesSocket = (symbols) => {
+        if (!publicSocket) {
+            setState({ socketStatus: !!publicSocket });
+        } else {
+            if (
+                !state.prevPair ||
+                state.prevPair !== pair ||
+                !!publicSocket !== state.socketStatus
+            ) {
+                publicSocket.emit('subscribe:futures:ticker', symbols);
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (!state.pair) return;
+        subscribeFuturesSocket(state.pair);
+    }, [publicSocket, state.pair]);
+
+    const renderListOrder = useCallback(() => {
         return dataFilter?.map((order, i) => {
-            const dataMarketWatch = marketWatch[order?.symbol];
             const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
             const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
             const decimalScalePrice = getDecimalPrice(symbol);
             const isVndcFutures = symbol?.quoteAsset === 'VNDC';
             return (
-                <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
+                <OrderItemMobile key={i} order={order}
                                  onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
-                                 onShowDetail={onShowDetail} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
+                                 onShowDetail={onShowDetail} decimalSymbol={decimalSymbol}
+                                 decimalScalePrice={decimalScalePrice}
                                  tab={tab} isVndcFutures={isVndcFutures}
                 />
             );
-        })
-    }, [marketWatch, allPairConfigs, dataFilter, assetConfig, onShowModal, onShowDetail])
+        });
+    }, [allPairConfigs, dataFilter, assetConfig, onShowModal, onShowDetail]);
 
     if (ordersList.length <= 0) {
         return <TableNoData
             isMobile
             title={t('futures:order_table:no_opening_order')}
-            className="h-full min-h-[300px]" />;
+            className="h-full min-h-[300px]"/>;
     }
-
-
 
     return (
         <div className="px-[16px] pt-4 overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
@@ -192,7 +225,7 @@ const TabOpenOrders = ({
                     className="flex items-center text-sm font-medium select-none cursor-pointer"
                     onClick={() => setHideOther(!hideOther)}
                 >
-                    <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
+                    <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]"/>
                     <span className="ml-3 whitespace-nowrap font-medium capitalize text-onus-grey text-xs">
                         {t('futures:hide_other_symbols')}
                     </span>

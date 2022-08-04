@@ -53,7 +53,7 @@ export const getProfitVndc = (order, lastPrice = 0, isOnus) => {
     if (status === VndcFutureOrderType.Status.ACTIVE) {
         closePrice = lastPrice;
     } else if (status === VndcFutureOrderType.Status.CLOSED) {
-        closePrice = close_price;
+        return order.profit
     } else {
         return 0;
     }

@@ -143,7 +143,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
 
     useEffect(() => {
         if (!isRealtime) return
-        const intervalHandle = setInterval(() => getData(tab.tagActive), 2000)
+        const intervalHandle = setInterval(() => getData(tab.tagActive), 5000)
         return () => {
             clearInterval(intervalHandle)
         }

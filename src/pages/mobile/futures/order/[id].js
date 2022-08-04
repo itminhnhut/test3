@@ -106,15 +106,13 @@ const OrderDetail = (props) => {
     const isVndcFutures = pairConfigDetail?.quoteAsset === 'VNDC'
     return (
         <LayoutMobile>
-            <SocketLayout pair={pair} pairConfig={pairConfigDetail}>
-                <OrderDetailComponent order={orderDetail} isMobile
-                    pairConfig={pairConfigDetail}
-                    pairParent={pair} isVndcFutures={isVndcFutures}
-                    isTabHistory={isTabHistory.current}
-                    isDark={currentTheme === THEME_MODE.DARK}
-                    getDetail={getDetail}
-                />
-            </SocketLayout>
+            <OrderDetailComponent order={orderDetail} isMobile
+                                  pairConfig={pairConfigDetail}
+                                  pairParent={pair} isVndcFutures={isVndcFutures}
+                                  isTabHistory={isTabHistory.current}
+                                  isDark={currentTheme === THEME_MODE.DARK}
+                                  getDetail={getDetail}
+            />
         </LayoutMobile>
     );
 };

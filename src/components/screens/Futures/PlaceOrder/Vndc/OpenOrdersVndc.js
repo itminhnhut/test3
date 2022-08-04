@@ -113,7 +113,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             {
                 name: 'PNL (ROE%)',
                 selector: (row) => row?.pnl?.value,
-                cell: (row) => <OrderProfit order={row} pairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)} />,
+                cell: (row) => <OrderProfit order={row} initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)} />,
                 minWidth: '150px',
                 sortable: false,
             },

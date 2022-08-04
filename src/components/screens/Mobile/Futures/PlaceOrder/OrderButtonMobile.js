@@ -102,33 +102,6 @@ const OrderButtonMobile = ({
         } else {
             handlePlaceOrder();
         }
-
-        //     const typeHtml = `<span class="${isBuy ? 'text-onus-green' : 'text-onus-red'}">
-        //                         ${isBuy ? t('futures:buy') : t('futures:sell')} ${getTypesLabel(type)}
-        //                         </span>`
-
-        //     let priceFormatted = formatNumber(_price, decimals.decimalScalePrice, 0, true)
-
-        //     let msg = t('futures:mobile:confirm_order_message', {
-        //         type: typeHtml,
-        //         price: priceFormatted,
-        //         symbol: pairConfig?.symbol,
-        //     }
-        // )
-        //     if (type.includes('MARKET')) {
-        //         msg = t('futures:mobile:confirm_order_message_market', {
-        //             type: typeHtml,
-        //             price: priceFormatted,
-        //             symbol: pairConfig?.symbol,
-        //         }
-        //     )
-        //     }
-
-        //     alertContext.alert.show('success',
-        //         t('futures:preferences:order_confirm'),
-        //         msg, '',
-        //         handlePlaceOrder
-        //     )
     };
 
     const classNameError = disabled || (isAuth && isError) ? 'opacity-[0.3] cursor-not-allowed' : '';
