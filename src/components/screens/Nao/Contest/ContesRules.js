@@ -53,12 +53,13 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, cu
     }
 
     const seasonsFilter = seasons?.filter(e => e.season !== season && e.season !== currentSeason?.season)
+    const title = seasons?.find(e => String(e.season) === season)?.title ?? 'first'
     return (
         <section className='contest_rules pt-[3.375rem] flex justify-center md:justify-between flex-wrap relative text-center sm:text-left'>
             <div>
-                <label className='text-[1.75rem] text-nao-white font-semibold leading-10'>{t('nao:contest:title', { value: t(`nao:contest:${previous ? 'first' : 'second'}`) })}</label>
-                <div className='text-nao-text text-sm pt-3 sm:pt-[6px] leading-6'>{t('nao:contest:description')} <span className='text-nao-green font-semibold'>300,000,000 VNDC</span></div>
-                <div className='gap-4 flex items-center pt-9 flex-wrap justify-center sm:justify-start'>
+                <label className='text-[1.75rem] sm:text-[2.125rem] text-nao-white font-semibold leading-10'>{t('nao:contest:title', { value: t(`nao:contest:${title}`) })}</label>
+                <div className='text-nao-text text-sm sm:text-lg pt-3 sm:pt-[6px] leading-6'>{t('nao:contest:description')} <span className='text-nao-green font-semibold'>300,000,000 VNDC</span></div>
+                <div className='gap-4 flex items-center pt-9 sm:pt-6 flex-wrap justify-center sm:justify-start'>
                     {
                         inHome
                             ? <ButtonNao onClick={() => router.push('/contest')} className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:ranking')}</ButtonNao>
@@ -68,7 +69,7 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, cu
                                 {seasonsFilter.map((item, index) => (
                                     <Link key={index} href={`/contest/${item.season}`}>
                                         <a>
-                                            <ButtonNao border className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t(item?.title)}</ButtonNao>
+                                            <ButtonNao border className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t(item?.button)}</ButtonNao>
                                         </a>
                                     </Link>
                                 ))}
