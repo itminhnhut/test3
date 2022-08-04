@@ -8,11 +8,12 @@ import NaoFooter from 'components/screens/Nao/NaoFooter';
 import styled from 'styled-components';
 import { useWindowSize } from 'utils/customHooks';
 import { getS3Url } from 'redux/actions/utils';
-
+import AlertNaoV2Modal from 'components/screens/Nao/AlertNaoV2Modal';
 export const AlertContext = createContext(null);
 
 const LayoutNaoToken = ({ children, isHeader = true }) => {
     const alert = useRef(null);
+    const alertV2 = useRef(null);
     const { width } = useWindowSize();
 
     useEffect(() => {
@@ -49,6 +50,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
 
                 <AlertContext.Provider value={{
                     alert: alert.current,
+                    alertV2: alertV2.current
                 }}>
                     {isHeader ?
                         <Background width={width}>
@@ -64,6 +66,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
                 </AlertContext.Provider>
                 <div id={`${PORTAL_MODAL_ID}`} />
                 <AlertNaoModal ref={alert} />
+                <AlertNaoV2Modal ref={alertV2} />
             </div>
         </>
     );

@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import ContesRules from 'components/screens/Nao/Contest/ContesRules';
 import ContestInfo from 'components/screens/Nao/Contest/ContestInfo';
 import ContestPerRanks from 'components/screens/Nao/Contest/ContestPerRanks';
@@ -10,12 +9,17 @@ import InvitationsDetail from 'components/screens/Nao/Contest/season2/Invitation
 import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamModal';
 import ConfirmJoiningTeam from 'components/screens/Nao/Contest/season2/ConfirmJoiningTeam';
 
-const Contest = () => {
+export const seasons = [
+    { season: '1', start: '2022-07-07T17:00:00.000Z', end: '2022-07-07T17:00:00.000Z', contest_id: 4, title: 'nao:contest:last_season' },
+    { season: '2', start: '2022-08-08:00:00.000Z', end: '2022-31-27T17:00:00.000Z', contest_id: 5, },
+]
+
+const Contest = (props) => {
     const [showDetail, showShowDetail] = useState(false)
     const [showInvitations, showShowInvitationst] = useState(false)
     const [showAccept, showShowAccept] = useState(false)
     const [inviteDetail, setInviteDetail] = useState(null)
-    
+    const refInfo = useRef(null);
 
     const sortName = useRef('volume');
     const rowData = useRef(null);
@@ -28,8 +32,8 @@ const Contest = () => {
     }
 
     const onShowInvitations = (e, data) => {
-        showShowInvitationst(true)
         invitationsData.current = e
+        showShowInvitationst(true)
     }
 
     const showAcceptForm = (data) => {
@@ -44,31 +48,32 @@ const Contest = () => {
         showShowAccept(false)
     }
 
+    const getInfo = () => {
+        if (refInfo.current) refInfo.current.onGetInfo()
+        showShowInvitationst(false);
+    }
+
+    const onCloseDetail = (key) => {
+        if (key === 'trigger') {
+            getInfo();
+        }
+        showShowDetail(false);
+    }
+
+    const currentSeason = seasons[seasons.length - 1];
 
     return (
         <LayoutNaoToken>
-            {showDetail && <ContestDetail rowData={rowData.current} sortName={sortName.current} onClose={() => showShowDetail(false)} />}
-            {showInvitations && <InvitationsDetail onAccept={showAcceptForm} data={invitationsData.current} onClose={() => showShowInvitationst(false)} />}
-            {showAccept && <ConfirmJoiningTeam data={inviteDetail} onBack={() => backInvitationsForm()} onClose={() => {
-                showShowAccept(false)
-                window.location.reload() }
-            } />}
+            {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} />}
+            {showInvitations && <InvitationsDetail {...props} onShowDetail={onShowDetail} getInfo={getInfo} data={invitationsData.current} onClose={() => showShowInvitationst(false)} />}
             <div className="nao_section">
-                <ContesRules />
-                <ContestInfo onShowDetail={onShowDetail} onShowInvitations={onShowInvitations}/>
-                <ContestPerRanks />
-                <ContestTeamRanks onShowDetail={onShowDetail} />
+                <ContesRules currentSeason={currentSeason} seasons={seasons} {...props} />
+                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
+                <ContestPerRanks {...props} />
+                <ContestTeamRanks {...props} onShowDetail={onShowDetail} />
             </div>
         </LayoutNaoToken>
     );
 };
-
-export const getStaticProps = async ({ locale }) => ({
-    props: {
-        ...(await serverSideTranslations(locale, [
-            'common', 'nao'
-        ])),
-    },
-})
 
 export default Contest;

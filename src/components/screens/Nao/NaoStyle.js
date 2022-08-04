@@ -51,7 +51,7 @@ export const Divider = styled.div.attrs({
 
 export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
     className: classNames(
-        "text-center font-semibold flex items-center justify-center select-none cursor-pointer h-10",
+        "text-center text-sm font-semibold flex items-center justify-center select-none cursor-pointer h-10",
         {
             'border border-nao-blue2 !bg-nao-bg3': border,
             'text-opacity-20 text-nao-white !bg-nao-bg3': disabled,
@@ -237,7 +237,7 @@ export const Table = ({
         <CardNao
             id="nao-table"
             noBg
-            className="mt-5 !pb-6 !pt-3 !px-3 !justify-start"
+            className="mt-8 !p-6 !justify-start"
         >
             <div
                 ref={content}
@@ -448,7 +448,7 @@ export const TextTicketLiner = styled.div.attrs({
 `;
 
 export const TextField = (props) => {
-    const { label, prefix, readOnly, className = '' } = props;
+    const { label, prefix, readOnly, className = '', onBlur, error, helperText, ...propsTextField } = props;
     const [focus, setFocus] = useState(false)
 
     const onFocus = () => {
@@ -456,34 +456,44 @@ export const TextField = (props) => {
 
     }
 
-    const onBlur = () => {
+    const _onBlur = (e) => {
         if (!readOnly) setFocus(false)
+        if (onBlur) onBlur(e)
     }
 
     return (
         <div className="w-full space-y-[6px]">
             <div className="text-xs leading-6 text-onus-grey">{label}</div>
-            <WrapInput focus={focus}>
+            <WrapInput error={error} focus={focus}>
                 <input
                     className={`w-full text-sm ${readOnly ? 'text-onus-grey' : ''} ${className}`}
-                    onFocus={onFocus} onBlur={onBlur}
+                    onFocus={onFocus} onBlur={_onBlur}
                     readOnly={readOnly}
-                    {...props}
+                    {...propsTextField}
                 />
                 {prefix && <div className="text-sm leading-6 text-onus-grey whitespace-nowrap">{prefix}</div>}
             </WrapInput>
+            {error && helperText &&
+                <div className="flex items-center space-x-2 text-xs text-nao-red">
+                    <WarningIcon />
+                    <span>{helperText}</span>
+                </div>
+            }
         </div>
     )
 }
 
-export const WrapInput = styled.div.attrs({
-    className: 'w-full border-b border-nao-grey pb-[5px] relative flex items-center justify-between'
-})`
+export const WrapInput = styled.div.attrs(({ error }) => ({
+    className: classNames(
+        'w-full border-b border-nao-grey pb-[5px] relative flex items-center justify-between',
+        { 'border-b border-nao-red': error }
+    ),
+}))`
     &::after{
         content: '';
         position: absolute;
         width: 100%;
-        transform:${({ focus }) => focus ? `scaleX(1)` : `scaleX(0)`} ;
+        transform:${({ error, focus }) => !error && focus ? `scaleX(1)` : `scaleX(0)`} ;
         height: 1px;
         bottom: -1px;
         left: 0;
@@ -492,3 +502,11 @@ export const WrapInput = styled.div.attrs({
         transition: all 0.3s ease-out;
     }
 `;
+
+
+const WarningIcon = () => {
+    return <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.8103 0C9.7077 0 10.511 0.465413 10.9561 1.24491L17.2784 12.2987C17.7209 13.072 17.7183 13.9949 17.2704 14.7665C16.8226 15.539 16.0229 16 15.1316 16H2.47752C1.58541 16 0.785671 15.539 0.337854 14.7665C-0.109963 13.9949 -0.112602 13.072 0.329936 12.2987L6.66448 1.24315C7.10966 0.464533 7.91115 0 8.80943 0H8.8103ZM8.80943 1.3197C8.39064 1.3197 8.01761 1.53613 7.80822 1.89948L1.47543 12.9541C1.26956 13.3149 1.27132 13.7451 1.47983 14.1049C1.68834 14.4648 2.06138 14.6803 2.47752 14.6803H15.1316C15.5469 14.6803 15.9199 14.4648 16.1285 14.1049C16.3379 13.7451 16.3396 13.3149 16.132 12.9541L9.81063 1.89948C9.60212 1.53613 9.22909 1.3197 8.80943 1.3197ZM8.80344 10.9966C9.28997 10.9966 9.68324 11.3899 9.68324 11.8764C9.68324 12.3629 9.28997 12.7562 8.80344 12.7562C8.31692 12.7562 7.91925 12.3629 7.91925 11.8764C7.91925 11.3899 8.309 10.9966 8.79464 10.9966H8.80344ZM8.80168 5.77499C9.16592 5.77499 9.46153 6.0706 9.46153 6.43484V9.16221C9.46153 9.52645 9.16592 9.82206 8.80168 9.82206C8.43745 9.82206 8.14183 9.52645 8.14183 9.16221V6.43484C8.14183 6.0706 8.43745 5.77499 8.80168 5.77499Z" fill="#DC1F4E" />
+    </svg>
+
+}

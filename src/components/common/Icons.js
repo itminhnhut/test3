@@ -532,7 +532,7 @@ export const IconTrash = () => (
     </svg>
 );
 
-export const IconLoading = ({ color }) => (
+export const IconLoading = ({ color, className }) => (
 
     <svg
         style={{
@@ -542,6 +542,7 @@ export const IconLoading = ({ color }) => (
         height="32px"
         viewBox="0 0 100 100"
         preserveAspectRatio="xMidYMid"
+        className={className}
     >
         <rect x="18" y="32" width="10" height="36" fill={color}>
             <animate attributeName="y" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.5;1" values="14;32;32" keySplines="0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.2s" />
