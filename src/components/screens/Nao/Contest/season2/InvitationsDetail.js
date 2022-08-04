@@ -60,7 +60,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                 onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-[24px] !py-10 max-w-[668px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
                 containerClassName="!bg-nao-bgModal2/[0.9]">
                 <div className={`bg-[#0E1D32] h-full w-full`}>
-                    <div className="flex sm:items-center sm:justify-between min-h-[32px] px-4 sm:px-[0px] mb-[32px] gap-2 flex-wrap lg:flex-row flex-col">
+                    <div className="flex sm:items-center sm:justify-between min-h-[32px] !px-4 sm:px-[0px] mb-[32px] gap-2 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7">
                             <div className="flex flex-col">
                                 <div className="flex items-center space-x-3">
