@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { BREAK_POINTS } from 'constants/constants';
 import { PATHS } from 'constants/paths';
@@ -21,28 +21,40 @@ import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper'
 
 const Support = () => {
     // ? State
-    const [loading, setLoading] = useState(false)
-    const [lastedArticles, setLastedArticles] = useState([])
-    const [highlightedArticles, setHighlightedArticles] = useState([])
+    const [loading, setLoading] = useState(false);
+    const [lastedArticles, setLastedArticles] = useState([]);
+    const [highlightedArticles, setHighlightedArticles] = useState([]);
 
     // ? Use hooks
-    const { width } = useWindowSize()
+    const { width } = useWindowSize();
     let {
         t,
-        i18n: { language },
-    } = useTranslation()
-    const isApp = useApp()
+        i18n: { language }
+    } = useTranslation();
+    const isApp = useApp();
 
     // ? Memmoized
-    const sectionIconSize = useMemo(
-        () => (width >= BREAK_POINTS.lg ? 32 : 24),
-        [width]
-    )
+    const sectionIconSize = useMemo(() => (width >= BREAK_POINTS.lg ? 32 : 24), [width]);
 
     // ? Render input
     const renderInput = useCallback(() => {
-        return <SupportSearchBar simpleMode={width < BREAK_POINTS.lg} />
-    }, [width])
+        return <SupportSearchBar simpleMode={width < BREAK_POINTS.lg} />;
+    }, [width]);
+
+
+    //hide scrollbar
+    const handleHideScrollBar = () => {
+        const malLayout = document.querySelector('.mal-layouts');
+        if (window.innerWidth < 650) {
+            document.body.classList.add('overflow-hidden');
+            malLayout.classList.add('!h-screen');
+        }
+        return () => {
+            document.body.classList.remove('overflow-hidden');
+            malLayout.classList.remove('!h-screen');
+        };
+    };
+    useEffect(handleHideScrollBar, []);
 
     const renderFaqCategories = () => {
         // if (loading) {
@@ -71,12 +83,9 @@ const Support = () => {
         return SupportCategories.faq[language].map((faq) => (
             <SupportSectionItem
                 key={faq.id}
-                href={
-                    PATHS.SUPPORT.FAQ +
-                    `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
-                }
+                href={PATHS.SUPPORT.FAQ + `/${faq.displaySlug}${isApp ? '?source=app' : ''}`}
                 title={faq?.title || '--'}
-                titleClassNames='truncate'
+                titleClassNames="truncate"
                 icon={
                     <Image
                         src={getSupportCategoryIcons(faq.id)}
@@ -85,8 +94,8 @@ const Support = () => {
                     />
                 }
             />
-        ))
-    }
+        ));
+    };
 
     const renderAnnouncementCategories = () => {
         return SupportCategories.announcements[language].map((announcement) => (
@@ -97,7 +106,7 @@ const Support = () => {
                     `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
                 }
                 title={announcement?.title || '--'}
-                titleClassNames='truncate'
+                titleClassNames="truncate"
                 icon={
                     <Image
                         src={getSupportCategoryIcons(announcement.id)}
@@ -106,200 +115,175 @@ const Support = () => {
                     />
                 }
             />
-        ))
-    }
+        ));
+    };
 
     const renderLastedArticles = useCallback(() => {
         if (loading) {
             return (
                 <>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
                 </>
-            )
+            );
         }
 
         // console.log('namidev ', lastedArticles)
 
         return lastedArticles.map((article) => {
-            let mode, topic, ownedTags, _tagsLib, categories
-            const isNoti = !!article?.tags?.find((o) =>
-                o.slug?.includes('noti-')
-            )
+            let mode, topic, ownedTags, _tagsLib, categories;
+            const isNoti = !!article?.tags?.find((o) => o.slug?.includes('noti-'));
 
             if (isNoti) {
-                mode = 'announcement'
-                categories = SupportCategories.announcements[language]
+                mode = 'announcement';
+                categories = SupportCategories.announcements[language];
                 ownedTags = article.tags
                     .filter((f) => f.slug !== 'noti')
-                    ?.map((o) =>
-                        o?.slug
-                            ?.replace('noti-vi-', '')
-                            ?.replace('noti-en-', '')
-                    )
+                    ?.map((o) => o?.slug?.replace('noti-vi-', '')?.replace('noti-en-', ''));
             } else {
-                mode = 'faq'
-                categories = SupportCategories.faq[language]
+                mode = 'faq';
+                categories = SupportCategories.faq[language];
                 ownedTags = article.tags
                     .filter((f) => f.slug !== 'faq')
-                    ?.map((o) =>
-                        o?.slug?.replace('faq-vi-', '')?.replace('faq-en-', '')
-                    )
+                    ?.map((o) => o?.slug?.replace('faq-vi-', '')?.replace('faq-en-', ''));
             }
 
-            _tagsLib = categories.map((o) => o.displaySlug)
+            _tagsLib = categories.map((o) => o.displaySlug);
 
             ownedTags.forEach((e) => {
-                if (_tagsLib.includes(e)) topic = e
-            })
+                if (_tagsLib.includes(e)) topic = e;
+            });
 
             return (
                 <SupportSectionItem
                     key={article.id}
                     href={
                         PATHS.SUPPORT.DEFAULT +
-                        `/${mode}/${topic}/${article.slug.toString()}${
-                            isApp ? '?source=app' : ''
-                        }`
+                        `/${mode}/${topic}/${article.slug.toString()}${isApp ? '?source=app' : ''}`
                     }
                     title={
                         <>
-                            <span className='mr-2'>{article.title}</span>
-                            <span className='text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap'>
+                            <span className="mr-2">{article.title}</span>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
                                 {formatTime(article.created_at, 'dd-MM-yyyy')}
                             </span>
                         </>
                     }
-                    containerClassNames='lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0'
-                    classNames='active:!bg-transparent hover:!underline hover:!text-dominant'
+                    containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
+                    classNames="active:!bg-transparent hover:!underline hover:!text-dominant"
                 />
-            )
-        })
-    }, [lastedArticles, loading, language])
+            );
+        });
+    }, [lastedArticles, loading, language]);
 
     const renderHighlightedArticles = useCallback(() => {
         if (loading) {
             return (
                 <>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
+                    <div className="mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3">
+                        <Skeletor className="!w-full !h-full" />
                     </div>
                 </>
-            )
+            );
         }
 
         return highlightedArticles.map((article) => {
-            let mode, topic, ownedTags, _tagsLib, categories
-            const isNoti = !!article?.tags?.find((o) =>
-                o.slug?.includes('noti-')
-            )
+            let mode, topic, ownedTags, _tagsLib, categories;
+            const isNoti = !!article?.tags?.find((o) => o.slug?.includes('noti-'));
 
             if (isNoti) {
-                mode = 'announcement'
-                categories = SupportCategories.announcements[language]
+                mode = 'announcement';
+                categories = SupportCategories.announcements[language];
                 ownedTags = article.tags
                     .filter((f) => f.slug !== 'noti')
-                    ?.map((o) =>
-                        o?.slug
-                            ?.replace('noti-vi-', '')
-                            ?.replace('noti-en-', '')
-                    )
+                    ?.map((o) => o?.slug?.replace('noti-vi-', '')?.replace('noti-en-', ''));
             } else {
-                mode = 'faq'
-                categories = SupportCategories.faq[language]
+                mode = 'faq';
+                categories = SupportCategories.faq[language];
                 ownedTags = article.tags
                     .filter((f) => f.slug !== 'faq')
-                    ?.map((o) =>
-                        o?.slug?.replace('faq-vi-', '')?.replace('faq-en-', '')
-                    )
+                    ?.map((o) => o?.slug?.replace('faq-vi-', '')?.replace('faq-en-', ''));
             }
 
-            _tagsLib = categories.map((o) => o.displaySlug)
+            _tagsLib = categories.map((o) => o.displaySlug);
 
             ownedTags.forEach((e) => {
-                if (_tagsLib.includes(e)) topic = e
-            })
+                if (_tagsLib.includes(e)) topic = e;
+            });
 
             return (
                 <SupportSectionItem
                     key={article.id}
                     href={
                         PATHS.SUPPORT.DEFAULT +
-                        `/${mode}/${topic}/${article.slug}${
-                            isApp ? '?source=app' : ''
-                        }`
+                        `/${mode}/${topic}/${article.slug}${isApp ? '?source=app' : ''}`
                     }
                     title={
                         <>
-                            <span className='mr-2'>{article.title}</span>
-                            <span className='text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap'>
+                            <span className="mr-2">{article.title}</span>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap">
                                 {formatTime(article.created_at, 'dd-MM-yyyy')}
                             </span>
                         </>
                     }
-                    containerClassNames='lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0'
-                    classNames='active:!bg-transparent hover:!underline hover:!text-dominant'
+                    containerClassNames="lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0"
+                    classNames="active:!bg-transparent hover:!underline hover:!text-dominant"
                 />
-            )
-        })
-    }, [highlightedArticles, loading, language])
+            );
+        });
+    }, [highlightedArticles, loading, language]);
 
     useAsync(async () => {
-        setLoading(true)
+        setLoading(true);
 
-        const lastedArticles = await getLastedArticles(undefined, 5, language)
-        const highlightedArticles = await getLastedArticles(
-            undefined,
-            5,
-            language,
-            true
-        )
+        const lastedArticles = await getLastedArticles(undefined, 5, language);
+        const highlightedArticles = await getLastedArticles(undefined, 5, language, true);
 
-        setLastedArticles(lastedArticles)
-        setHighlightedArticles(highlightedArticles)
+        setLastedArticles(lastedArticles);
+        setHighlightedArticles(highlightedArticles);
 
         // const a = await ghost.tags.browse({ limit: 'all' })
         // console.log('namidev ', a)
 
-        setLoading(false)
-    }, [language])
+        setLoading(false);
+    }, [language]);
 
     return (
         <MaldivesLayout>
@@ -361,16 +345,12 @@ const Support = () => {
             </div>
         </MaldivesLayout>
     );
-}
+};
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, [
-            'common',
-            'navbar',
-            'support-center',
-        ])),
-    },
-})
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'support-center']))
+    }
+});
 
-export default Support
+export default Support;

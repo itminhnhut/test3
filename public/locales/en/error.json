@@ -250,6 +250,18 @@
     "UNKNOWN": "Something went wrong, please provide the error code below to the support team.",
     "PROCESSING_FUTURES_ORDER": "Your request failed because the order was closed",
     "PRICE_CHANGED": "Your request are expired or the current price has changed, please request new price",
-    "NETWORK_ERROR": "Network error, Please check your connection again"
+    "NETWORK_ERROR": "Network error, Please check your connection again",
+    "INVALID_IMAGE": "Image is not valid, please try again.",
+    "CAN_NOT_FOUND_USER": "Invalid Onus ID",
+    "DUPLICATED_USER": "Member already in your team",
+    "USER_HAS_BEEN_INVITED": "Previously invited member",
+    "UNINVITED_USER": "You have not been invited to your team",
+    "INVALID_CONTEST_TIME": "The Contest has not started or has ended",
+    "GROUP_HAS_ENOUGH_MEMBERS": "Maximum number of members exceeded",
+    "INVALID_GROUP_NAME": "Invalid team name",
+    "INVALID_GROUP_LEADER_NAME": "Invalid captain name",
+    "INVALID_GROUP_MEMBER": "Insufficient number of team members",
+    "DUPLICATE_GROUP_NAME": "Same team name as another team",
+    "USER_JOIN_GROUP_CONTEST_BEFORE": "User joined another team"
   }
 }
