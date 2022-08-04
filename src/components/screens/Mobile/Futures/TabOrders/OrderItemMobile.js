@@ -32,7 +32,16 @@ const OrderItemMobile = ({
     const isTabOpen = tab === FUTURES_RECORD_CODE.openOrders;
     const [pairPrice, setPairPrice] = useState(null);
     const marketWatch = useSelector((state) => state.futures.marketWatch);
+    const [lastSymbol, setLastSymbol] = useState(null);
     const dataMarketWatch = marketWatch[order?.symbol];
+    const _pairPrice = pairPrice || dataMarketWatch
+    useEffect(() => {
+        if (order?.symbol !== lastSymbol) {
+            setLastSymbol(order?.symbol);
+            setPairPrice(null);
+        }
+    }, [order]);
+
 
     useEffect(() => {
         if (!order.symbol || order.status === VndcFutureOrderType.Status.CLOSED) return;
@@ -214,7 +223,7 @@ const OrderItemMobile = ({
                             <div className="text-xs text-right" onClick={() => canShare && actions('modal', 'share')}>
                                 <div className="text-xs font-medium text-onus-green float-right">
                                     <OrderProfit onusMode={true} className="flex flex-col"
-                                                 order={order} initPairPrice={pairPrice} isTabHistory={isTabHistory}
+                                                 order={order} initPairPrice={dataMarketWatch} isTabHistory={isTabHistory}
                                                  isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}/>
                                 </div>
                             </div>

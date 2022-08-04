@@ -9,10 +9,17 @@ import { PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
 const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0 }) => {
-
-
-    const [pairPrice, setPairPrice] = useState(initPairPrice);
+    const [pairPrice, setPairPrice] = useState(null);
+    const [lastSymbol, setLastSymbol] = useState(null);
+    const _pairPrice = pairPrice || initPairPrice
     const {symbol} = order
+    useEffect(() => {
+        if (order?.symbol !== lastSymbol) {
+            setLastSymbol(order?.symbol);
+            setPairPrice(null);
+        }
+    }, [order]);
+
     useEffect(() => {
         if (!symbol) return;
         // ? Subscribe publicSocket
@@ -28,14 +35,16 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
         };
     }, [symbol]);
 
-    if (!pairPrice?.lastPrice && !isTabHistory) return '-';
+    if (!_pairPrice?.lastPrice && !isTabHistory) return '-';
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
     let profit = 0
     if (isTabHistory) {
         profit = order?.profit
     } else {
-        if (order && pairPrice) {
-            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask, true);
+
+        if(order.symbol !== _pairPrice.symbol) return '-'
+        if (order && _pairPrice) {
+            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? _pairPrice?.bid : _pairPrice?.ask, true);
         }
     }
 
@@ -47,7 +56,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
             {profit !== 0 ? <>
                 <div className={isMobile ? 'text-[16px] font-semibold leading-[1.375rem]' : ''}>
                     {profit > 0 ? '+' : ''}
-                    {formatNumber(profit, decimal, 0, true)} {!isMobile && pairPrice?.quoteAsset}
+                    {formatNumber(profit, decimal, 0, true)} {!isMobile && _pairPrice?.quoteAsset}
                 </div>
                 <div className={isMobile ? 'flex items-center justify-end leading-[1.125rem] font-medium' : ''}>
                     {onusMode ?

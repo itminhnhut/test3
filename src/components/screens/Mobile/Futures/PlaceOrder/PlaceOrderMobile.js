@@ -81,7 +81,6 @@ const PlaceOrder = ({
     const _pairPrice = pairPrice || priceFromMarketWatch;
 
     useEffect(() => {
-        if (!pairConfig) return;
         if (pairConfig?.symbol !== lastSymbol) {
             setLastSymbol(pairConfig?.symbol);
             setPairPrice(null);

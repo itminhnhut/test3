@@ -10,6 +10,7 @@ const MiniTickerData = ({
     initPairPrice,
 }) => {
     const [pairPrice, setPairPrice] = useState(null);
+
     useEffect(() => {
         if (!symbol) return;
         // ? Subscribe publicSocket
@@ -25,7 +26,9 @@ const MiniTickerData = ({
         };
     }, [symbol]);
 
-    if (!symbol || !(pairPrice?.[dataKey] && initPairPrice?.[dataKey])) return '-';
+    const _pairPrice = pairPrice || initPairPrice
+    if(symbol !== _pairPrice?.symbol) return '-'
+    if (!symbol || !(pairPrice?.[dataKey] || initPairPrice?.[dataKey])) return '-';
     return (
         formatNumber((pairPrice || initPairPrice)?.[dataKey], 8)
     );

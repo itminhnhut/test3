@@ -120,6 +120,13 @@ const Change24h = ({
     isVndcFutures
 }) => {
     const [pairPrice, setPairPrice] = useState(null);
+    const [lastSymbol, setLastSymbol] = useState(null);
+    useEffect(() => {
+        if (pairConfig?.symbol !== lastSymbol) {
+            setLastSymbol(pairConfig?.symbol);
+            setPairPrice(null);
+        }
+    }, [pairConfig]);
     useEffect(() => {
         if (!pairConfig) return;
         // ? Subscribe publicSocket

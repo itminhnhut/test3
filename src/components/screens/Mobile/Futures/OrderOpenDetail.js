@@ -312,8 +312,7 @@ const OrderOpenDetail = ({
                            value={renderSlTp(order?.sl)}/>
                 <OrderItem label={t('common:last_price')}
                            value={
-                               <MiniTickerData initPairPrice={dataMarketWatch} dataKey={'lastPrice'}
-                                               symbol={order.symbol}/>}
+                               <MiniTickerData initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order.symbol}/>}
                 />
                 <OrderItem label={t('futures:take_profit')}
                            valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}
