@@ -35,13 +35,15 @@ const Modal = ({
     useOutsideAlerter(wrapperRef, handleOutside, container);
 
     useEffect(() => {
+        const hidding = document.body.classList.contains('overflow-hidden');
+        if (hidding) return;
         if (isVisible) {
             document.body.classList.add("overflow-hidden");
         } else {
             document.body.classList.remove("overflow-hidden");
         }
         return () => {
-            document.body.classList.remove("overflow-hidden");
+            if (!hidding) document.body.classList.remove("overflow-hidden");
         }
     }, [isVisible]);
 

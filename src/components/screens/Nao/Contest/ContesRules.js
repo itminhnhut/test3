@@ -6,6 +6,7 @@ import { getS3Url } from 'redux/actions/utils';
 import Countdown from 'react-countdown';
 import { useMemo } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const ContesRules = ({ inHome = false, previous, season, start, end, seasons, title }) => {
     const { t } = useTranslation();

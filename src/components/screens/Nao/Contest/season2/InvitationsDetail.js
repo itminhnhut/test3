@@ -148,20 +148,20 @@ const LeaderFlag = <svg className="mr-1" width="14" height="16" viewBox="0 0 14 
     <path d="M1.02351 1.75734C1.50866 1.75734 1.90194 1.36405 1.90194 0.878906H0.145081C0.145081 1.36405 0.538367 1.75734 1.02351 1.75734Z" fill="url(#paint3_linear_14907_6988)" />
     <defs>
         <linearGradient id="paint0_linear_14907_6988" x1="0.526894" y1="1.7257" x2="17.3724" y2="6.24598" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#093DD1" />
-            <stop offset="1" stop-color="#49E8D5" />
+            <stop stopColor="#093DD1" />
+            <stop offset="1" stopColor="#49E8D5" />
         </linearGradient>
         <linearGradient id="paint1_linear_14907_6988" x1="1.02351" y1="1.44336" x2="1.02351" y2="16.0002" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFFBD5" />
-            <stop offset="1" stop-color="#49E8D5" />
+            <stop stopColor="#FFFBD5" />
+            <stop offset="1" stopColor="#49E8D5" />
         </linearGradient>
         <linearGradient id="paint2_linear_14907_6988" x1="1.02351" y1="0" x2="1.02351" y2="1.75686" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFFBD5" />
-            <stop offset="1" stop-color="#49E8D5" />
+            <stop stopColor="#FFFBD5" />
+            <stop offset="1" stopColor="#49E8D5" />
         </linearGradient>
         <linearGradient id="paint3_linear_14907_6988" x1="1.02351" y1="0.878906" x2="1.02351" y2="1.75734" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFFBD5" />
-            <stop offset="1" stop-color="#49E8D5" />
+            <stop stopColor="#FFFBD5" />
+            <stop offset="1" stopColor="#49E8D5" />
         </linearGradient>
     </defs>
 </svg>
