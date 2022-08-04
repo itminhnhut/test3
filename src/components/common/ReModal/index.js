@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import Portal from 'components/hoc/Portal';
 import hexRgb from 'utils/hexRgb';
 import colors from '../../../styles/colors';
-import { useOutsideAlerter } from "components/screens/Nao/NaoStyle";
+import { useOutside } from "components/screens/Nao/NaoStyle";
 
 const Modal = ({
     isVisible,
@@ -32,7 +32,7 @@ const Modal = ({
         if (onBackdropCb && center && !isAlertModal) onBackdropCb()
     }
 
-    useOutsideAlerter(wrapperRef, handleOutside, container);
+    useOutside(wrapperRef, handleOutside, container);
 
     useEffect(() => {
         const hidding = document.body.classList.contains('overflow-hidden');

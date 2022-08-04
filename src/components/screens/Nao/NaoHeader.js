@@ -86,11 +86,10 @@ const NaoHeader = memo(({ onDownload }) => {
                 className="min-w-[2.5rem]"
             />
             <div
-                className={`flex items-center text-nao-text font-medium ${
-                    width > 800 ? "space-x-10" : "space-x-4"
-                }`}
+                className={`flex items-center text-nao-text font-medium ${width > 820 ? "space-x-10" : "space-x-4"
+                    }`}
             >
-                {width > 800 && (
+                {width > 820 && (
                     <>
                         {category.map((item) => (
                             <div
@@ -123,7 +122,7 @@ const NaoHeader = memo(({ onDownload }) => {
                         </div>
                     </>
                 )}
-                {width <= 800 && (
+                {width <= 820 && (
                     <>
                         <ButtonNao
                             onClick={() => router.push("/nao/stake")}

@@ -3,24 +3,8 @@ import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
-import { ButtonNao } from 'components/screens/Nao/NaoStyle';
+import { ButtonNao, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 import useWindowSize from 'hooks/useWindowSize';
-
-const useOutsideAlerter = (ref, cb) => {
-    useEffect(() => {
-        const handleClickOutside = (event, cb) => {
-            if (ref.current && !ref.current?.contains(event.target)) {
-                cb();
-            }
-        };
-        document.addEventListener("mousedown", (event) =>
-            handleClickOutside(event, cb)
-        );
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref, cb]);
-};
 
 const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
     const { t } = useTranslation();
