@@ -72,7 +72,6 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
     }
 
     // Temp hide
-    return null
     if (!(user && userData)) return null;
 
     return (
