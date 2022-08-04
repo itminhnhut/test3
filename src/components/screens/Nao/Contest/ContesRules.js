@@ -93,7 +93,7 @@ const ContesRules = ({
                                          className="px-[18px] text-sm font-semibold w-max !rounded-md">{t('nao:contest:ranking')}</ButtonNao>
                             :
                             <ButtonNao
-                                onClick={() => router.push('https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien')}
+                                onClick={() => router.push('https://goonus.io/onus-x-nami-dua-top-giao-dich-onus-futures-mua-02')}
                                 className="px-[18px] text-sm font-semibold w-max !rounded-md">{t('nao:contest:detail_rules')}</ButtonNao>
                     }
                     {seasonsFilter.map((item, index) => (
