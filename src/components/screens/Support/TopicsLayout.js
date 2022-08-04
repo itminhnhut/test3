@@ -42,7 +42,18 @@ const TopicsLayout = ({
 
     const mainTopic = topics.find((o) => o?.displaySlug === router?.query?.topic);
     const subTopics = mainTopic?.subCats?.find((o) => o?.displaySlug === faqCurrentGroup) || false;
-    useHideScrollbar();
+    const handleHideScrollBar = () => {
+        const malLayout = document.querySelector('.mal-layouts');
+        if (window.innerWidth < 650) {
+            document.body.classList.add('overflow-hidden');
+            malLayout.classList.add('!h-screen');
+        }
+        return () => {
+            document.body.classList.remove('overflow-hidden');
+            malLayout.classList.remove('!h-screen');
+        };
+    };
+    useEffect(handleHideScrollBar, []);
     useEffect(() => {
         if (isFaq && router?.query?.topic) {
             setShowDropdown({ [router.query.topic]: true });
