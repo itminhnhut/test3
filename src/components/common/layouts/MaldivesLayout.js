@@ -1,14 +1,15 @@
 import Footer from 'src/components/common/Footer/Footer';
 import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT, } from 'src/components/common/NavBar/constants';
 import NavBar from 'src/components/common/NavBar/NavBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactNotifications } from 'react-notifications-component'
 import { useWindowSize } from 'utils/customHooks';
 import TransferModal from 'components/wallet/TransferModal';
 import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
-
+import { useStore } from 'src/redux/store';
+import {setTheme } from 'redux/actions/user';
 const MadivesLayout = ({
     navOverComponent,
     navMode = false,
@@ -45,6 +46,10 @@ const MadivesLayout = ({
         top: 0,
         left: 0,
     }
+    const store = useStore();
+    useEffect(() => {
+        store.dispatch(setTheme());
+    }, []);
 
     return (
         <>

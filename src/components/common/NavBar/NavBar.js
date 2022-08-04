@@ -113,7 +113,6 @@ const NavBar = ({
 
         return result
     }, [useOnly, currentTheme])
-    console.log(currentTheme);
 
     // * Helper
     const onDrawerAction = (status) => {

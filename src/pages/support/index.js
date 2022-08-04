@@ -16,6 +16,7 @@ import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
 import Skeletor from 'components/common/Skeletor';
 import useApp from 'hooks/useApp';
+import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar';
 import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 
 const Support = () => {
@@ -302,56 +303,53 @@ const Support = () => {
 
     return (
         <MaldivesLayout>
-            <div className='bg-[#F8F9FA] dark:bg-darkBlue-1'>
-                <div className='container pt-6 max-w-[1400px]'>
-                    <div className='font-bold px-4 text-[20px] mt-8 lg:mt-[40px] lg:text-[26px]'>
+            <div className="bg-[#F8F9FA] dark:bg-darkBlue-1">
+                <div className="container pt-6 max-w-[1400px]">
+                    <div className="font-bold px-4 text-[20px] mt-8 lg:mt-[40px] lg:text-[26px]">
                         {t('support-center:title')}
                     </div>
-                    <div className='mt-8 pt-4 pb-[80px] px-4 h-full bg-[#FCFCFC] dark:bg-darkBlue-2 rounded-t-[20px] drop-shadow-onlyLight lg:!bg-transparent'>
-                        <div className='text-[16px] font-medium'>
+                    <div className="mt-8 pt-4 pb-[80px] px-4 h-full bg-[#FCFCFC] dark:bg-darkBlue-2 rounded-t-[20px] drop-shadow-onlyLight lg:!bg-transparent">
+                        <div className="text-[16px] font-medium">
                             {t('support-center:search_faq')}
                         </div>
                         {renderInput()}
 
-                        <div className='mt-6 lg:mt-8'>
+                        <div className="mt-6 lg:mt-8">
                             <SupportSection
                                 title={t('support-center:faq')}
-                                mode='faq'
-                                containerClassNames='lg:pb-[32px]'
+                                mode="faq"
+                                containerClassNames="lg:pb-[32px]"
                             >
                                 {renderFaqCategories()}
                             </SupportSection>
                         </div>
 
-                        <div className='mt-6 lg:mt-8'>
+                        <div className="mt-6 lg:mt-8">
                             <SupportSection
                                 title={t('support-center:announcement')}
-                                mode='announcement'
-                                containerClassNames='lg:pb-[32px]'
+                                mode="announcement"
+                                containerClassNames="lg:pb-[32px]"
                             >
                                 {renderAnnouncementCategories()}
                             </SupportSection>
                         </div>
 
-                        <div className='mt-6 lg:mt-8'>
-                            <div className='lg:bg-bgPrimary dark:bg-bgPrimary-dark lg:rounded-xl lg:flex lg:mt-4'>
+                        <div className="mt-6 lg:mt-8">
+                            <div className="lg:bg-bgPrimary dark:bg-bgPrimary-dark lg:rounded-xl lg:flex lg:mt-4">
                                 <SupportSection
                                     title={t('support-center:lasted_articles')}
-                                    contentContainerClassName='lg:!py-0 lg:!pb-6 lg:!mt-4'
+                                    contentContainerClassName="lg:!py-0 lg:!pb-6 lg:!mt-4"
                                     containerClassNames={classNames({
-                                        'lg:w-1/2':
-                                            !!highlightedArticles.length,
+                                        'lg:w-1/2': !!highlightedArticles.length
                                     })}
                                 >
                                     {renderLastedArticles()}
                                 </SupportSection>
                                 {highlightedArticles?.length ? (
                                     <SupportSection
-                                        title={t(
-                                            'support-center:highlight_articles'
-                                        )}
-                                        contentContainerClassName='lg:!py-0 lg:!pb-6 lg:!mt-4'
-                                        containerClassNames='mt-6 lg:mt-0 lg:w-1/2'
+                                        title={t('support-center:highlight_articles')}
+                                        contentContainerClassName="lg:!py-0 lg:!pb-6 lg:!mt-4"
+                                        containerClassNames="mt-6 lg:mt-0 lg:w-1/2"
                                     >
                                         {renderHighlightedArticles()}
                                     </SupportSection>
@@ -362,7 +360,7 @@ const Support = () => {
                 </div>
             </div>
         </MaldivesLayout>
-    )
+    );
 }
 
 export const getStaticProps = async ({ locale }) => ({
