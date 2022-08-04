@@ -94,6 +94,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
     }
 
     const renderStatusMember = (status) => {
+        if (status === undefined) return '-'
         let html = '';
         switch (status) {
             case statusMember.PENDING:
@@ -119,7 +120,13 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
         )
     }
 
+    const validatorLeader = (item) => {
+        return ((item?.status === statusMember.PENDING || item?.status === statusMember.DENIED) && isLeader) || !item?.onus_user_id
+    }
+
     const renderActions = (e, item) => {
+        const invalid = !validatorLeader(item)
+        if (invalid) return;
         switch (item?.status) {
             case statusMember.PENDING:
                 return t('nao:contest:delete_invitation')
@@ -261,10 +268,10 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     <div className="flex flex-col">
                                         <div className="flex items-center space-x-2">
                                             <LeadIcon />
-                                            <div className="text-xs leading-6">{t('nao:contest:captain')}: {loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.leader_name ?? '-'}</div>
+                                            <div className="text-sm leading-6">{t('nao:contest:captain')}: {loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.leader_name ?? '-'}</div>
                                         </div>
                                         <div className="flex items-center space-x-3">
-                                            <div className="text-lg leading-8 font-semibold">
+                                            <div className="text-2xl leading-8 font-semibold">
                                                 {loading ? <Skeletor onusMode width={100} height={24} /> : dataSource?.name ?? '-'}
                                             </div>
                                             {loading ? <Skeletor onusMode width={50} height={24} /> :
@@ -343,7 +350,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                         <div className="text-nao-grey">ID </div>
                                                         <div className="font-medium">{item?.onus_user_id ?? '-'}</div>
                                                     </div>
-                                                    {(((item?.status === statusMember.PENDING || item?.status === statusMember.DENIED) && isLeader) || !item?.onus_user_id) &&
+                                                    {validatorLeader(item) &&
                                                         <div className="flex items-center justify-between leading-6">
                                                             <div className="text-nao-grey">{t('nao:contest:action')} </div>
                                                             <div onClick={() => onActions(item, index)} className="text-onus-grey underline cursor-pointer">{renderActions(item)}</div>
@@ -383,12 +390,12 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:no')} fieldName={"index"} />
                             <Column minWidth={180} ellipsis className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                             <Column minWidth={200} ellipsis className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
-                            <Column minWidth={70} title={t('common:status')} fieldName="status" cellRender={renderStatusMember} />
+                            <Column minWidth={isPending.group ? 100 : 120} title={t('common:status')} fieldName="status" cellRender={renderStatusMember} />
                             <Column visible={!isPending.group} minWidth={70} className="text-onus-grey" title={t('nao:contest:trades')} fieldName="total_order" />
                             <Column visible={!isPending.group} minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
                             <Column visible={!isPending.group} minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                             <Column visible={isPending.group} minWidth={200} align="right" className="text-onus-grey underline cursor-pointer"
-                                fieldName="pnl" cellRender={renderActions} onCellClick={(e, item) => onActions(item, item?.rowIndex)} />
+                                fieldName="pnl" cellRender={renderActions} onCellClick={(e, item) => validatorLeader(item) && onActions(item, item?.rowIndex)} />
 
                         </Table>
                     }

@@ -232,11 +232,7 @@ export const Table = ({
     const isScroll = checkScrollBar(content.current, "vertical");
     const _children = children.filter(child => child.props?.visible === true || child.props?.visible === undefined);
     return (
-        <CardNao
-            id="nao-table"
-            noBg
-            className="mt-8 !p-6 !justify-start"
-        >
+        <CardNao id="nao-table" noBg className="mt-8 !p-6 !justify-start" >
             <div
                 ref={content}
                 className="overflow-auto nao-table-content min-h-[200px]"
@@ -293,14 +289,14 @@ export const Table = ({
                                         const fieldName = child?.props?.fieldName;
                                         const ellipsis = child?.props?.ellipsis;
                                         const onCellClick = child?.props?.onCellClick;
-                                        const textItem = item?.[fieldName];
+                                        const textItem = cellRender ? item?.[fieldName] : item?.[fieldName] ?? '-';
                                         return (
                                             <div
                                                 title={textItem}
                                                 style={{ width, maxWidth, minWidth, textAlign: align, }}
                                                 key={indx}
                                                 className={classNames(
-                                                    `min-h-[48px] flex items-center text-sm ${className} ${_align}`,
+                                                    `min-h-[56px] flex items-center text-sm ${className} ${_align}`,
                                                     "break-words mx-2",
                                                     { "flex-1": indx !== 0 },
                                                     { "ml-0": indx === 0 },
