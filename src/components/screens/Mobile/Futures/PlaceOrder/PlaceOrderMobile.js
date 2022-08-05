@@ -77,8 +77,8 @@ const PlaceOrder = ({
     const [showExpiredModal, setShowExpiredModal] = useState(false);
     const [pairPrice, setPairPrice] = useState(null);
     const [lastSymbol, setLastSymbol] = useState(null);
-    const lastPrice = pairPrice?.lastPrice;
     const _pairPrice = pairPrice || priceFromMarketWatch;
+    const lastPrice = _pairPrice?.lastPrice;
 
     useEffect(() => {
         if (pairConfig?.symbol !== lastSymbol) {
@@ -152,10 +152,10 @@ const PlaceOrder = ({
     }, [context.alert]);
 
     useEffect(() => {
-        if (firstTime.current && (_pairPrice?.lastPrice > 0 || pairPrice?.lastPrice > 0) && availableAsset) {
+        if (firstTime.current && (_pairPrice?.lastPrice > 0) && availableAsset) {
             firstTime.current = false;
         }
-    }, [priceFromMarketWatch, pairPrice, firstTime.current]);
+    }, [_pairPrice, firstTime.current]);
 
     useEffect(() => {
         firstTime.current = true;
