@@ -141,9 +141,9 @@ const PlaceOrder = ({
     useEffect(() => {
         if (firstTime.current) return;
         const _lastPrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
-        onChangeSlTp(leverage, _lastPrice)
-    }, [side, type, decimals, leverage]);
-
+        const _price = type === FuturesOrderTypes.Limit ? price : stopPrice
+        onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? _lastPrice : _price)
+    }, [side, type, decimals, leverage, stopPrice, price]);
 
     useEffect(() => {
         if (firstTime.current) return;
