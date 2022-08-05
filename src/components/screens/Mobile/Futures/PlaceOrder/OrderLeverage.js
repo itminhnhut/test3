@@ -4,8 +4,9 @@ import FuturesLeverageSettings from 'components/screens/Futures/LeverageSettings
 import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import axios from 'axios';
 import { ApiStatus } from 'redux/actions/const';
+import classnames from 'classnames';
 
-const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, context, getLeverage }) => {
+const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, context, getLeverage, inputValidator }) => {
     const { t } = useTranslation();
     const [openModal, setOpenModal] = useState(false);
 
@@ -44,7 +45,12 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
             <div
                 onClick={() => setOpenModal(true)}
                 data-tut="order-leverage"
-                className="flex items-center justify-center h-[32px] w-12 text-onus-white border-onus-white leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium">{leverage}x
+                className={classnames(
+                    "flex items-center justify-center h-[32px] w-12 text-onus-white border-onus-white leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium",
+                    { '!border-onus-red': !inputValidator('leverage').isValid }
+                    
+                )}>
+                {leverage}x
             </div>
             {openModal &&
                 <FuturesLeverageSettings

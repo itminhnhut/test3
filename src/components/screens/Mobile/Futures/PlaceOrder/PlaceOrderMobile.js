@@ -155,7 +155,7 @@ const PlaceOrder = ({
         if (firstTime.current && (_pairPrice?.lastPrice > 0 || pairPrice?.lastPrice > 0) && availableAsset) {
             firstTime.current = false;
         }
-    }, [priceFromMarketWatch, pairPrice, firstTime.current, availableAsset]);
+    }, [priceFromMarketWatch, pairPrice, firstTime.current]);
 
     useEffect(() => {
         firstTime.current = true;
@@ -173,8 +173,9 @@ const PlaceOrder = ({
     useEffect(() => {
         if (firstTime.current) return;
         const _lastPrice = _pairPrice?.lastPrice ?? lastPrice;
-        onChangeSlTp(leverage, _lastPrice);
-    }, [side, type, decimals, leverage]);
+        const _price = type === FuturesOrderTypes.Limit ? price : stopPrice
+        onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? _lastPrice : _price)
+    }, [side, type, decimals, leverage, stopPrice, price]);
 
     useEffect(() => {
         if (firstTime.current) return;
@@ -423,11 +424,11 @@ const PlaceOrder = ({
                 const min = pairConfig?.leverageConfig?.min ?? 0;
                 const max = pairConfig?.leverageConfig?.max ?? 0;
                 if (min > leverage) {
-                    msg = `${t('futures:minimum_leverage')} ${_displayingMin} `;
+                    msg = `${t('futures:minimum_leverage')} ${min} `;
                     isValid = false;
                 }
                 if (max < leverage) {
-                    msg = `${t('futures:maximum_leverage')} ${_displayingMax}`;
+                    msg = `${t('futures:maximum_leverage')} ${max}`;
                     isValid = false;
                 }
                 return {
