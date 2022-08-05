@@ -23,7 +23,7 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset, decimal
     return (
         <div className="flex flex-col h-full justify-around">
             <div className="flex justify-between text-xs font-medium ">
-                <div className="mr-1 text-txtSecondary dark:text-onus-grey min-w-[50px]">{t('futures:mobile:available')}</div>
+                <div className="mr-1 text-onus-grey min-w-[50px]">{t('futures:mobile:available')}</div>
                 <div className="flex items-end justify-end text-right" style={{ wordBreak: 'break-word' }}>
                     {formatNumber(availableAsset ?? 0, decimal)}
                     {/*{onMobile && <> &nbsp;&nbsp;<img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' onClick={openTransferModal} /></>}*/}
@@ -31,7 +31,7 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset, decimal
                 </div>
             </div>
             <div className="flex justify-between text-xs font-medium ">
-                <div className="mr-1 text-txtSecondary dark:text-onus-grey min-w-[50px]">{t('futures:margin')}</div>
+                <div className="mr-1 text-onus-grey min-w-[50px]">{t('futures:margin')}</div>
                 <div className="flex items-center flex-wrap justify-end	text-right" style={{ wordBreak: 'break-word' }}>
                     {`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin, decimal) : formatNumber(
                         marginAndValue?.margin,

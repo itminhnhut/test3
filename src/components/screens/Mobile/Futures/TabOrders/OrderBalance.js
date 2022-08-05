@@ -46,7 +46,7 @@ const OrderBalance = ({
         dataFilter.forEach((item) => {
             const refPrice = item?.side === VndcFutureOrderType.Side.BUY ? futuresMarketWatch?.[item.symbol]?.bid : futuresMarketWatch?.[item.symbol]?.ask
             const lastPrice = refPrice || 0;
-            _totalProfit += getProfitVndc(item, lastPrice);
+            _totalProfit += getProfitVndc(item, lastPrice, true);
         });
         return _totalProfit;
     }, [ordersList, futuresMarketWatch, pairConfig]);
@@ -83,13 +83,13 @@ const OrderBalance = ({
             <TradingLabel
                 label={t('futures:mobile:pnl')}
                 value={dataFormat.pnl}
-                labelClassName="dark:text-onus-grey"
+                labelClassName="text-onus-grey"
                 containerClassName={`text-xs flex justify-between w-1/2 pb-[6px] pr-[8px]`}
             />
             <TradingLabel
                 label={t('futures:mobile:equity')}
                 value={dataFormat.equity}
-                labelClassName="dark:text-onus-grey"
+                labelClassName="text-onus-grey"
                 containerClassName='text-xs flex justify-between w-1/2 pb-[6px]'
             />
         </div>

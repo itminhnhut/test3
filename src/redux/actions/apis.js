@@ -5,9 +5,8 @@ const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/co
 
 export const getBlogApi = (apiEndpoint, params) => {
     if (!apiEndpoint) return "";
-    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${
-        process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
-    }${params || ""}`;
+    return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
+        }${params || ""}`;
 };
 
 export const API_REGISTER = API_PREFIX + "user/register";
@@ -237,6 +236,20 @@ export const API_CONTEST_GET_RANK_GROUP_VOLUME =
     API_PREFIX + "event/futures-contest/group-volume";
 export const API_CONTEST_GET_GROUP_DETAIL =
     API_PREFIX + "event/futures-contest/group-detail";
+
+export const API_CONTEST_CHECK_MEMBER = API_PREFIX + "event/futures-contest/check-user";
+export const API_CONTEST_UPLOAD = API_PREFIX + "event/futures-contest/avatar";
+export const API_CONTEST_CREATE_GROUP = API_PREFIX + "event/futures-contest/group";
+export const API_CONTEST_GET_GROUP_MEMBER = API_PREFIX + "event/futures-contest/group-members";
+export const API_CONTEST_CANCEL_INVITE = API_PREFIX + "event/futures-contest/cancel-invite";
+export const API_CONTEST_GET_INVITES = API_PREFIX + "event/futures-contest/invites";
+export const API_CONTEST_SEND_INVITE = API_PREFIX + "event/futures-contest/send-invite";
+
+export const API_CONTEST_GET_INVITATIONS =
+    API_PREFIX + "event/futures-contest/invites";
+export const API_CONTEST_POST_ACCEPT_INVITATION =
+    API_PREFIX + "event/futures-contest/process-invite";
+
 //VOTE
 export const API_USER_VOTE = API_V3_PREFIX + "nao-dashboard/user-vote";
 
@@ -245,3 +258,8 @@ export const API_GET_TICKETS = API_PREFIX + "futures_reward/tickets";
 export const API_GET_TICKET_DETAIL =
     API_PREFIX + "futures_reward/ticket-detail";
 export const API_CLAIM_TICKET = API_PREFIX + "futures_reward/claim";
+
+//reference
+export const API_REFERRAL_FRIENDS_LIST = API_PREFIX + "user/all_referred_users"
+export const API_REFERRAL_DASHBOARD = API_PREFIX + "user/commission_dashboard"
+export const API_REFERRAL_COMMISSION_LOG = API_PREFIX + "user/commission_log"

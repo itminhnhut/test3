@@ -67,6 +67,14 @@ body {
     flex-direction: column;
     height: 100%;
     //overflow-x: hidden;
+    #fc_frame {
+        opacity: 0.6;
+        height: 15px;
+        width: 15px;
+        &:hover {
+            opacity: 1;
+        }
+    }
 
     .custom_trading_record {
         > div:nth-child(2) {
@@ -651,7 +659,7 @@ input[type='number'] {
 
 .guideline {
     rect:not(.reactour__mask--disable-interaction) {
-        fill: #263459;
+        fill: #1E1E1E;
         opacity: 0.8;
     }
 
@@ -731,6 +739,31 @@ input[type='number'] {
         &::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%) !important;
         }
+    }
+}
+.scrollbar-nao{
+    &::-webkit-scrollbar {
+        width: 4px !important;
+        border-radius: 8px !important;
+        height: 0;
+        right: 8px;
+        position: relative;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #0E1D32 !important;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%) !important;
+        background-clip: padding-box;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%) !important;
     }
 }
 .animation{

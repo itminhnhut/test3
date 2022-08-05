@@ -1,4 +1,8 @@
 const colors = {
+    mint: "#03BBCC",
+    mint3: "#0FA4B3",
+    dark7: "#1f1f1f",
+
     base: '#00C8BC',
     bg: '#eeeeee',
     lightThemeBg: '#FCFCFC',
@@ -101,6 +105,7 @@ const colors = {
         bgShadow: '#000921',
         red: '#DC1F4E',
         tooltip: '#0E1D32',
+        tooltip2: '#071120'
     }
 };
 

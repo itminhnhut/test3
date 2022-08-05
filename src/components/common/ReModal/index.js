@@ -1,11 +1,12 @@
 import { PORTAL_MODAL_ID } from '../../../constants/constants';
 import { X } from 'react-feather';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import Portal from 'components/hoc/Portal';
 import hexRgb from 'utils/hexRgb';
 import colors from '../../../styles/colors';
+import { useOutsideAlerter } from "components/screens/Nao/NaoStyle";
 
 const Modal = ({
     isVisible,
@@ -19,7 +20,28 @@ const Modal = ({
     containerStyle,
     onusClassName = '',
     modalClassName = '',
+    center = false
 }) => {
+
+    const timer = useRef(null)
+    const wrapperRef = useRef(null);
+
+    const handleOutside = () => {
+        if (onBackdropCb && center) onBackdropCb()
+    }
+
+    useOutsideAlerter(wrapperRef, handleOutside.bind(this));
+
+    useEffect(() => {
+        if (isVisible) {
+            document.body.classList.add("overflow-hidden");
+        } else {
+            document.body.classList.remove("overflow-hidden");
+        }
+        return () => {
+            document.body.classList.remove("overflow-hidden");
+        }
+    }, [isVisible]);
 
     return (
         <Portal portalId={PORTAL_MODAL_ID}>
@@ -73,12 +95,12 @@ const Modal = ({
                         </div>
                     )}
                     {onusMode ?
-                        <div className="h-full flex flex-col justify-between relative">
-                            <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>
-                            <div className={`${onusClassName} h-max w-full relative bg-onus-bgModal rounded-t-[16px] px-4 pt-11 pb-[3.25rem] max-h-[90%] overflow-y-auto`}>
-                                <div
+                        <div className={`${center ? 'items-center justify-center' : 'justify-end'} h-full flex flex-col relative`}>
+                            {!center && <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>}
+                            <div ref={wrapperRef} className={`${onusClassName} ${center ? 'rounded-xl' : 'rounded-t-xl'} h-max w-full relative bg-onus-bgModal px-4 pt-11 pb-[3.25rem] max-h-[90%] overflow-y-auto`}>
+                                {!center && <div
                                     style={{ transform: 'translate(-50%,0)' }}
-                                    className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-onus-white  absolute top-2 left-1/2 "></div>
+                                    className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-onus-white  absolute top-2 left-1/2 "></div>}
                                 {children}
                             </div>
                         </div>

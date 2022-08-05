@@ -280,7 +280,7 @@ const EditSLTPVndcMobile = ({
             //                 onSetValuePercent(i * size, key)
             //             }}
             //             className={classNames(
-            //                 'block absolute text-xs dark:text-onus-grey select-none cursor-pointer',
+            //                 'block absolute text-xs text-onus-grey select-none cursor-pointer',
             //                 {
             //                     'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
             //                     '-left-1/2 translate-x-[-80%]': i === dotStep.current,
@@ -373,14 +373,14 @@ const EditSLTPVndcMobile = ({
                 </div>
                 <div className="border border-onus-bg2 px-[15px] py-[10px] rounded-lg pt-[21px]">
                     <div className="text-sm flex items-center justify-between">
-                        <span className="text-txtSecondary dark:text-onus-grey">
+                        <span className="text-onus-grey">
                             {t('futures:order_table:open_price')}
                         </span>
                         <span className="font-medium">{formatNumber(data.price, 2, 0, true)}</span>
                     </div>
                     <div className="h-[1px] bg-onus-bg2 w-full my-[10px]"></div>
                     <div className="text-sm flex items-center justify-between">
-                        <span className="text-txtSecondary dark:text-onus-grey">
+                        <span className="text-onus-grey">
                             {t('futures:tp_sl:mark_price')}
                         </span>
                         <span className="font-medium">{formatNumber(_lastPrice, 2, 0, true)}</span>
@@ -402,7 +402,7 @@ const EditSLTPVndcMobile = ({
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:stop_loss')}</label>
-                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                        <Switcher onusMode addClass="!bg-onus-white w-[22px] h-[22px]" wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
                             active={show.sl} onChange={() => onSwitch('sl')} />
                     </div>
                     {show.sl && <div className="text-xs flex items-center ">
@@ -424,7 +424,7 @@ const EditSLTPVndcMobile = ({
                             placeholder={placeholder('stop_loss')}
                             labelClassName="hidden"
                             className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full `}
-                            containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
+                            containerClassName={`w-full !px-3 border-none ${isMobile ? '!bg-onus-bg2' : ''}`}
                             value={data.sl}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('sl', e)}
@@ -460,7 +460,7 @@ const EditSLTPVndcMobile = ({
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:take_profit')}</label>
-                        <Switcher onusMode addClass="dark:!bg-onus-white w-[22px] h-[22px]" wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                        <Switcher onusMode addClass="!bg-onus-white w-[22px] h-[22px]" wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
                             active={show.tp} onChange={() => onSwitch('tp')} />
                     </div>
                     {show.tp && <div className="text-xs flex items-center">
@@ -481,7 +481,7 @@ const EditSLTPVndcMobile = ({
                             placeholder={placeholder('take_profit')}
                             labelClassName="hidden"
                             className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full `}
-                            containerClassName={`w-full !px-3 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
+                            containerClassName={`w-full !px-3 border-none ${isMobile ? '!bg-onus-bg2' : ''}`}
                             value={data.tp}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}

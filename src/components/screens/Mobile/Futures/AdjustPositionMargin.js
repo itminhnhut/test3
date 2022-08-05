@@ -107,7 +107,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
     const { t } = useTranslation()
 
     const lastPrice = order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask
-    const profit = getProfitVndc(order, lastPrice)
+    const profit = getProfitVndc(order, lastPrice, true)
 
     const { newMargin = 0, newLiqPrice = 0, minMarginRatio, initMargin = 0, maxRemovable = 0 } = useMemo(() => {
         if (!order) return {}
@@ -335,11 +335,11 @@ const ErrorToolTip = ({ children, message }) => {
         <div className={classNames('absolute -top-1 -translate-y-full z-50 flex flex-col items-center', {
             hidden: !message
         })}>
-            <div className='px-2 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4 text-xs'>
+            <div className='px-2 py-1.5 rounded-md bg-darkBlue-4 text-xs'>
                 {message}
             </div>
             <div
-                className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'
+                className='w-[8px] h-[6px] bg-darkBlue-4'
                 style={{ clipPath: 'polygon(50% 100%, 0 0, 100% 0)' }}
             />
         </div>

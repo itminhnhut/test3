@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import CheckBox from 'components/common/CheckBox';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -103,9 +103,8 @@ const TabOpenOrders = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`
+                const requestId = data?.requestId && `(${data?.requestId.substring(0, 8)})`
                 context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
-
             }
         } catch (e) {
             if (e.message === 'Network Error' || !navigator?.onLine) {
@@ -144,6 +143,22 @@ const TabOpenOrders = ({
         const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize)
     }
+    const renderListOrder = useCallback(()=> {
+        return dataFilter?.map((order, i) => {
+            const dataMarketWatch = marketWatch[order?.symbol];
+            const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
+            const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+            const decimalScalePrice = getDecimalPrice(symbol);
+            const isVndcFutures = symbol?.quoteAsset === 'VNDC';
+            return (
+                <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
+                                 onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
+                                 onShowDetail={onShowDetail} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
+                                 tab={tab} isVndcFutures={isVndcFutures}
+                />
+            );
+        })
+    }, [marketWatch, allPairConfigs, dataFilter, assetConfig, onShowModal, onShowDetail])
 
     if (ordersList.length <= 0) {
         return <TableNoData
@@ -151,6 +166,8 @@ const TabOpenOrders = ({
             title={t('futures:order_table:no_opening_order')}
             className="h-full min-h-[300px]" />;
     }
+
+
 
     return (
         <div className="px-[16px] pt-4 overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
@@ -176,27 +193,14 @@ const TabOpenOrders = ({
                     onClick={() => setHideOther(!hideOther)}
                 >
                     <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
-                    <span className="ml-3 whitespace-nowrap text-gray-1 font-medium capitalize dark:text-onus-gray text-xs">
+                    <span className="ml-3 whitespace-nowrap font-medium capitalize text-onus-grey text-xs">
                         {t('futures:hide_other_symbols')}
                     </span>
                 </div>
             }
 
             <div className="min-h-[100px]">
-                {dataFilter?.map((order, i) => {
-                    const dataMarketWatch = marketWatch[order?.symbol];
-                    const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
-                    const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
-                    const decimalScalePrice = getDecimalPrice(symbol);
-                    const isVndcFutures = symbol?.quoteAsset === 'VNDC';
-                    return (
-                        <OrderItemMobile key={i} order={order} dataMarketWatch={dataMarketWatch}
-                            onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
-                            onShowDetail={onShowDetail} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
-                            tab={tab} isVndcFutures={isVndcFutures}
-                        />
-                    );
-                })}
+                {renderListOrder()}
             </div>
             {
                 orderEditMarginId &&

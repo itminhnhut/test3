@@ -14,6 +14,8 @@ import { ArrowLeft } from 'react-feather';
 import { Tooltip } from 'components/screens/Nao/NaoStyle'
 import { useTranslation } from 'next-i18next'
 import LuckyInfoModal from 'components/screens/Nao/Luckydraw/LuckyInfoModal'
+import LuckyEndedModal from 'components/screens/Nao/Luckydraw/LuckyEndedModal'
+
 
 const Luckydraw = () => {
     const { t } = useTranslation();
@@ -28,7 +30,7 @@ const Luckydraw = () => {
     const volume = useRef(0)
 
     useEffect(() => {
-        getTickets();
+        // getTickets();
     }, [])
 
     const onClaim = async (code) => {
@@ -87,6 +89,7 @@ const Luckydraw = () => {
     return (
         <LayoutNaoToken isHeader={false}>
             {showInfo && <LuckyInfoModal volume={volume.current} onClose={() => setShowInfo(false)} />}
+            <LuckyEndedModal onClose={() => emitWebViewEvent('back')} />
             <Background>
                 <BackgroundImage width={width} className="text-center !pt-12">
                     <div className="flex items-center justify-between relative top-0">

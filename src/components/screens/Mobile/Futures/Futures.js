@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import {useDispatch, useSelector} from 'react-redux';
 import {FUTURES_DEFAULT_SYMBOL} from 'pages/futures';
@@ -8,7 +8,7 @@ import {UserSocketEvent} from 'redux/actions/const';
 import {LOCAL_STORAGE_KEY} from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
-import {getOrdersList, updateSymbolView} from 'redux/actions/futures';
+import { getFuturesMarketWatch, getOrdersList, updateSymbolView } from 'redux/actions/futures';
 import {VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
@@ -46,6 +46,7 @@ const FuturesMobile = () => {
     const [forceRender, setForceRender] = useState(false);
     const [showOnBoardingModal, setShowOnBoardingModal] = useState(false)
     const assetConfig = useSelector(state => state?.utils?.assetConfig)
+    const campaign = useRef(null)
 
     const pairConfig = useMemo(
         () => allPairConfigs?.find((o) => o.pair === state.pair),
@@ -93,12 +94,15 @@ const FuturesMobile = () => {
 
     const getCampaignStatus = async () => {
         try {
-            const {status, data, message} = await fetchApi({
+            const { status, data, message } = await fetchApi({
                 url: API_FUTURES_CAMPAIGN_STATUS,
-                options: {method: 'GET'},
+                options: { method: 'GET' },
             });
-            if (status === ApiStatus.SUCCESS && data.status === PromotionStatus.PENDING) {
-                setShowOnBoardingModal(true);
+            if (status === ApiStatus.SUCCESS) {
+                campaign.current = data.filter(rs => rs.status === PromotionStatus.PENDING);
+                if (Array.isArray(campaign.current) && campaign.current.length > 0) {
+                    setShowOnBoardingModal(true);
+                }
             }
         } catch (e) {
             console.log(e);
@@ -106,6 +110,10 @@ const FuturesMobile = () => {
         }
 
     }
+
+    useEffect(()=> {
+        dispatch(getFuturesMarketWatch())
+    }, [])
 
     useEffect(() => {
         getCampaignStatus();
@@ -185,15 +193,13 @@ const FuturesMobile = () => {
 
     return (
         <>
-            <SocketLayout pair={state.pair} pairConfig={pairConfig}>
-                <FuturesPageTitle
-                    pair={state.pair}
-                    pricePrecision={pairConfig?.pricePrecision}
-                    pairConfig={pairConfig}
-                />
-            </SocketLayout>
+            <FuturesPageTitle
+                pair={state.pair}
+                pricePrecision={pairConfig?.pricePrecision}
+                pairConfig={pairConfig}
+            />
             <LayoutMobile>
-                {showOnBoardingModal && <EventModalMobile onClose={() => setShowOnBoardingModal(false)}/>}
+                {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)}/>}
                 <Container id="futures-mobile" onScroll={onScroll}>
                     <Section className="form-order bg-onus"
                              style={{...futuresScreen.style}}>

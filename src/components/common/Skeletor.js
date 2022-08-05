@@ -7,7 +7,8 @@ import colors from 'styles/colors';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 const Skeletor = (props) => {
-    const [currentTheme, ] = useDarkMode()
+    const { onusMode } = props;
+    const [currentTheme,] = useDarkMode()
     const _ = useMemo(() => {
         switch (currentTheme) {
             case THEME_MODE.DARK:
@@ -19,7 +20,7 @@ const Skeletor = (props) => {
         }
     }, [currentTheme])
 
-    return <Skeleton width={45} height={20} baseColor={_?.base} highlightColor={_?.highlight} {...props}/>
+    return <Skeleton width={45} height={20} baseColor={onusMode ? colors.darkBlue3 : _?.base} highlightColor={onusMode ? colors.darkBlue4 : _?.highlight} {...props} />
 }
 
 export default Skeletor

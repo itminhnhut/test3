@@ -79,7 +79,7 @@ const OrderVolumeMobileModal = (props) => {
 
     const available = maxQuoteQty >= minQuoteQty;
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
-    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg3 dark:hover:bg-onus-bg3' : 'hover:bg-bgHover dark:hover:bg-bgHover-dark'}`
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg3 hover:bg-onus-bg3' : 'hover:bg-bgHover hover:bg-bgHover-dark'}`
     return (
         <Modal
             onusMode={true}
@@ -90,12 +90,12 @@ const OrderVolumeMobileModal = (props) => {
                 {t('futures:mobile:adjust_volume')}
             </div>
             <div className='text-xs uppercase text-onus-grey leading-[1.125rem] mb-2'>{t('futures:order_table:volume')}</div>
-            <div className='px-2 mb-5 h-[44px] flex items-center bg-gray-4 dark:bg-onus-bg2 rounded-[4px]'>
+            <div className='px-2 mb-5 h-[44px] flex items-center bg-onus-bg2 rounded-[4px]'>
                 <div className={changeClass}>
                     <Minus
                         size={15}
                         className='text-onus-white cursor-pointer'
-                        onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - initValue)}
+                        onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
                     />
                 </div>
                 <TradingInput
@@ -105,7 +105,7 @@ const OrderVolumeMobileModal = (props) => {
                     decimalScale={decimal}
                     allowNegative={false}
                     thousandSeparator={true}
-                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] dark:bg-onus-bg2'
+                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-onus-bg2'
                     inputClassName="!text-center"
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}
@@ -119,7 +119,7 @@ const OrderVolumeMobileModal = (props) => {
                     <Plus
                         size={15}
                         className='text-onus-white cursor-pointer'
-                        onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + initValue)}
+                        onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
                     />
                 </div>
             </div>

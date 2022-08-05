@@ -130,7 +130,7 @@ const OrderItemMobile = ({
         marginRatio = (profit / order?.margin) * 100;
     } else {
         if (order && dataMarketWatch) {
-            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
+            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask, true);
             marginRatio = (profit / order?.margin) * 100;
         }
     }
@@ -154,7 +154,7 @@ const OrderItemMobile = ({
     // const profit = isTabHistory ? order?.profit : dataMarketWatch && getProfitVndc(order, dataMarketWatch?.lastPrice)
 
     return (
-        <div className="flex flex-col mx-[-16px] p-[16px] border-b-[1px] border-b-gray-4 dark:border-onus-line"
+        <div className="flex flex-col mx-[-16px] p-[16px] border-b-[1px] border-onus-line"
             onClick={() => onShowDetail && actions('detail')}
         >
             <div className="flex items-center justify-between">
@@ -275,14 +275,14 @@ const OrderItemMobile = ({
                     {
                         order.status === VndcFutureOrderType.Status.ACTIVE &&
                         <Button
-                            className="dark:bg-onus-bg3 dark:text-onus-gray !h-[36px]"
+                            className="bg-onus-bg3 text-onus-gray !h-[36px]"
                             onClick={() => actions('modal', 'edit-margin')}> {t('futures:mobile.adjust_margin.button_title')}</Button>
                     }
                     <Button
-                        className="dark:bg-onus-bg3 dark:text-onus-gray !h-[36px]"
+                        className="bg-onus-bg3 text-onus-gray !h-[36px]"
                         onClick={() => actions('modal', 'edit')}> {t('futures:tp_sl:modify_tpsl')}</Button>
                     <Button
-                        className="dark:bg-onus-bg3 dark:text-onus-gray !h-[36px]"
+                        className="bg-onus-bg3 text-onus-gray !h-[36px]"
                         onClick={() => actions('delete')}>{t('common:close')}</Button>
                 </div>
             }
@@ -315,11 +315,11 @@ const Row = styled.div.attrs({
 `
 
 const Label = styled.div.attrs({
-    className: `text-gray-1 text-xs dark:text-onus-grey min-w-[50px] leading-[1.25rem]`
+    className: `text-xs text-onus-grey min-w-[50px] leading-[1.25rem]`
 })``
 
 const Button = styled.div.attrs({
-    className: `text-gray-1 bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-semibold`
+    className: `text-onus-grey bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-semibold`
 })`
     width: calc(50% - 4px)
 `

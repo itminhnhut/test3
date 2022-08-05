@@ -142,7 +142,7 @@ export const MenuTime = ({ value, onChange, options, label, keyValue, displayVal
         <Popover className="relative">
             {({ open, close }) => (
                 <>
-                    <Popover.Button className={`items-center flex ${classNameButton} text-gray-1 dark:text-txtSecondary-dark`}>
+                    <Popover.Button className={`items-center flex ${classNameButton} text-txtSecondary-dark`}>
                         {label}
                     </Popover.Button>
                     <Transition
@@ -164,9 +164,9 @@ export const MenuTime = ({ value, onChange, options, label, keyValue, displayVal
                                             close()
                                         }}
                                             className={classNames(
-                                                'pb-2 w-max text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
+                                                'pb-2 w-max text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
                                                 {
-                                                    '!text-txtPrimary dark:!text-txtPrimary-dark':
+                                                    'text-txtPrimary-dark':
                                                         item[keyValue] === value,
                                                 }
                                             )}

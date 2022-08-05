@@ -43,7 +43,7 @@ const OrderOpenDetail = ({
     });
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const dataMarketWatch = marketWatch[order?.symbol];
-    const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
+    const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask, true);
     const marginRatio = (profit / order?.margin) * 100;
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const [showEditMargin, setShowEditMargin] = useState(false);
@@ -182,7 +182,7 @@ const OrderOpenDetail = ({
     }, [order])
 
     return (
-        <div className="p-6 py-5 mx-[-24px] border-b dark:border-onus-line">
+        <div className="p-6 py-5 mx-[-24px] border-b border-onus-line">
             {showEditSLTP &&
                 <EditSLTPVndcMobile
                     onusMode={true}
@@ -292,7 +292,7 @@ const OrderOpenDetail = ({
                     <div className="w-full">
                         <Button
                             title={t('futures:mobile.adjust_margin.button_title')}
-                            className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"
+                            className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={() => setShowEditMargin(true)}
@@ -302,7 +302,7 @@ const OrderOpenDetail = ({
                 <div className="w-full">
                     <Button
                         title={t('futures:tp_sl:modify_tpsl')}
-                        className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"
+                        className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={onOpenModify}
@@ -311,7 +311,7 @@ const OrderOpenDetail = ({
                 <div className="w-full">
                     <Button
                         title={t(`common:close`)}
-                        className="!h-[36px] dark:bg-onus-bg3 dark:text-onus-grey !font-semibold"
+                        className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions()}
