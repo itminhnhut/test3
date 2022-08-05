@@ -9,6 +9,7 @@ import { ApiStatus } from 'redux/actions/const';
 import useWindowSize from 'hooks/useWindowSize';
 import Modal from 'components/common/ReModal';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
+import { getS3Url } from 'redux/actions/utils';
 
 const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, onShowDetail, getInfo }) => {
     const { t } = useTranslation();
@@ -80,7 +81,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                     <CardNao noBg className="mb-[16px] px-[4px] py-[16px] !max-w-[330px]" key={item._id}>
                                         <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle w-full h-full min-h-[56px]">
                                             <div className='h-[48px] w-[48px] flex justify-center items-center'>
-                                                <img src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
+                                                <img src={item.group_avatar ?? getS3Url('/images/nao/ic_nao_large.png')} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
                                                 <div className='h-auto font-normal flex items-center text-xs leading-6'>
@@ -104,7 +105,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                     <CardNao noBg className="!flex !flex-row mb-[16px] !min-h-[100px] !py-[8px] !px-[12px]" key={item._id}>
                                         <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle h-full">
                                             <div className='h-[48px] w-[48px] flex justify-center items-center'>
-                                                <img src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
+                                                <img src={item.group_avatar ?? getS3Url('/images/nao/ic_nao_large.png')} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
                                                 <div className='h-auto font-normal flex items-center text-xs leading-6'>
