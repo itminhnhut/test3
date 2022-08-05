@@ -124,6 +124,7 @@
     "PERCENT_SL_TP_PRICE": "Giá SL/TP không được cao hoặc thấp hơn quá 2 lần.",
     "MIN_DIFFERENCE_ACTIVE_PRICE": "Chênh lệch giá chờ và giá hiện tại không được nhỏ hơn 0.5%",
     "MIN_DIFFERENCE_SL_TP_PRICE": "Chênh lệch giá SL/TP và giá hiện tại không được nhỏ hơn 0.5%",
+    "SL_FILTER_MARGIN_CALL": "Khi vị thế thua lỗ quá 80% kí quỹ, người dùng không được chỉnh sửa SL hoặc cài SL mới",
     "LOT_SIZE": "Khối lượng giao dịch quá cao, quá thấp hoặc không tuân theo quy tắc bước nhảy về khối lượng cho cặp giao dịch.",
     "MIN_NOTIONAL": "Giá * số lượng quá thấp để là đơn đặt hàng hợp lệ cho cặp giao dịch. Tiểu biểu tối thiểu là 100,000 VNDC",
     "ICEBERG_PARTS": "Đơn đặt hàng ICEBERG sẽ chia thành quá nhiều phần; icebergQty quá nhỏ.",

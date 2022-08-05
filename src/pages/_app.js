@@ -171,7 +171,7 @@ const App = ({
     }, [language])
 
     useEffect(() => {
-        if(!isMobile){
+        if(!router.pathname.includes('mobile') && !router.pathname.includes('nao')){
             function initFreshChat() {
                 window.fcWidget.init({
                     token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
@@ -195,7 +195,7 @@ const App = ({
                     // }
                 });
             }
-            // function initialize(i, t) { var e; i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e)) } function initiateCall() { initialize(document, "freshchat-js-sdk") } window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+            function initialize(i, t) { var e; i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e)) } function initiateCall() { initialize(document, "freshchat-js-sdk") } window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
         }
     }, [language])
 

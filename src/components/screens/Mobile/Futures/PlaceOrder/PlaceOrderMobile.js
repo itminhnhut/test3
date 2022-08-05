@@ -63,7 +63,7 @@ const PlaceOrder = ({
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const firstTime = useRef(true);
     const context = useContext(AlertContext);
-    const marketWatch = useSelector(state => getPairPrice(state, pair));
+    const priceFromMarketWatch = useSelector(state => getPairPrice(state, pair));
     const newDataLeverage = useRef(0);
     const [showEditVolume, setShowEditVolume] = useState(false);
     const [quoteQty, setQuoteQty] = useState(0);
@@ -118,11 +118,12 @@ const PlaceOrder = ({
         }
     }, [context.alert]);
 
+
     useEffect(() => {
-        if (firstTime.current && (marketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0)) {
+        if (firstTime.current && (priceFromMarketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0) && availableAsset) {
             firstTime.current = false;
         }
-    }, [marketWatch, pairPrice, firstTime.current]);
+    }, [priceFromMarketWatch, pairPrice, firstTime.current, availableAsset]);
 
     useEffect(() => {
         firstTime.current = true;
@@ -139,10 +140,10 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
-        onChangeSlTp(leverage, _lastPrice)
-    }, [side, type, decimals, leverage]);
-
+        const _lastPrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
+        const _price = type === FuturesOrderTypes.Limit ? price : stopPrice
+        onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? _lastPrice : _price)
+    }, [side, type, decimals, leverage, stopPrice, price]);
 
     useEffect(() => {
         if (firstTime.current) return;
@@ -153,7 +154,7 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
+        const _lastPrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
         setPrice(_lastPrice);
         setStopPrice(_lastPrice);
     }, [firstTime.current, decimals]);
@@ -194,7 +195,7 @@ const PlaceOrder = ({
     useEffect(() => {
         if (firstTime.current) return;
         if (newDataLeverage.current) {
-            const _lastPrice = marketWatch?.lastPrice ?? lastPrice;
+            const _lastPrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
             onChangeQuoteQty(_lastPrice, newDataLeverage?.current);
             onChangeSlTp(newDataLeverage.current, _lastPrice)
         }
@@ -269,7 +270,7 @@ const PlaceOrder = ({
                 const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
-                let _activePrice = marketWatch?.lastPrice ?? lastPrice;
+                let _activePrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
                 if (mode !== 'price') {
                     if (type === 'LIMIT') {
                         _activePrice = price
@@ -383,11 +384,11 @@ const PlaceOrder = ({
                 const min = pairConfig?.leverageConfig?.min ?? 0;
                 const max = pairConfig?.leverageConfig?.max ?? 0;
                 if (min > leverage) {
-                    msg = `${t('futures:minimum_leverage')} ${_displayingMin} `;
+                    msg = `${t('futures:minimum_leverage')} ${min} `;
                     isValid = false;
                 }
                 if (max < leverage) {
-                    msg = `${t('futures:maximum_leverage')} ${_displayingMax}`;
+                    msg = `${t('futures:maximum_leverage')} ${max}`;
                     isValid = false;
                 }
                 return {
@@ -480,7 +481,7 @@ const PlaceOrder = ({
                 }
                 {collapse &&
                     <OrderCollapse
-                        side={side} pairPrice={pairPrice} type={type} size={size}
+                        side={side} pairPrice={pairPrice || priceFromMarketWatch} type={type} size={size}
                         price={price} stopPrice={stopPrice} pairConfig={pairConfig}
                         decimals={decimals} leverage={leverage} isAuth={isAuth}
                         marginAndValue={marginAndValue} availableAsset={availableAsset}
@@ -520,7 +521,7 @@ const PlaceOrder = ({
                             side={side}
                             quoteQty={quoteQty}
                             price={price}
-                            pairPrice={pairPrice}
+                            pairPrice={pairPrice || priceFromMarketWatch}
                             leverage={leverage}
                             availableAsset={availableAsset}
                             getMaxQuoteQty={getMaxQuoteQty}
@@ -569,7 +570,7 @@ const PlaceOrder = ({
                         <OrderButtonMobile
                             tp={tp} sl={sl} type={type} size={size} price={price}
                             stopPrice={stopPrice} side={side} decimals={decimals}
-                            pairConfig={pairConfig} pairPrice={pairPrice}
+                            pairConfig={pairConfig} pairPrice={pairPrice || priceFromMarketWatch}
                             leverage={leverage} isAuth={isAuth} isError={isError}
                             quoteQty={quoteQty} decimalSymbol={decimalSymbol}
                         />

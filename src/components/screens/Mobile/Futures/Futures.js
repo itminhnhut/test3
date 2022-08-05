@@ -8,7 +8,7 @@ import {UserSocketEvent} from 'redux/actions/const';
 import {LOCAL_STORAGE_KEY} from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
-import {getOrdersList, updateSymbolView,removeItemMarketWatch} from 'redux/actions/futures';
+import { getFuturesMarketWatch, getOrdersList, updateSymbolView } from 'redux/actions/futures';
 import {VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
@@ -20,8 +20,6 @@ import {API_FUTURES_CAMPAIGN_STATUS} from 'redux/actions/apis';
 import {ApiStatus} from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import {PromotionStatus} from 'components/screens/Mobile/Futures/onboardingType';
-import _ from 'lodash';
-import {bunchUpdateFuturesMarketPrice} from 'redux/actions/publicSocket';
 
 const INITIAL_STATE = {
     loading: false,
@@ -113,6 +111,10 @@ const FuturesMobile = () => {
 
     }
 
+    useEffect(()=> {
+        dispatch(getFuturesMarketWatch())
+    }, [])
+
     useEffect(() => {
         getCampaignStatus();
         emitWebViewEvent('nami_futures');
@@ -124,49 +126,11 @@ const FuturesMobile = () => {
 
     useEffect(() => {
         if (auth && timestamp) getOrders();
-    }, [auth, timestamp, publicSocket]);
+    }, [auth, timestamp]);
 
-    const oldPairs = useRef([]);
     const getOrders = () => {
-        if (auth) dispatch(getOrdersList((orders)=>{
-            // if (!publicSocket) return;
-            // const pairs = _.unionBy(orders, 'symbol').map(rs => rs.symbol);
-            // if (JSON.stringify(oldPairs.current) !== JSON.stringify(pairs)) {
-            //     const addPairs = pairs.filter(p => !oldPairs.current.find(e => e === p))
-            //     const removePairs= oldPairs.current.filter(p => !pairs.find(e => e === p))
-            //     if (addPairs.length > 0) {
-            //         addPairs.map(pair => {
-            //             publicSocket.emit('subscribe:futures:mini_ticker', pair)
-            //         })
-            //     }
-            //     if (removePairs.length > 0) {
-            //         removePairs.map(pair => {
-            //             publicSocket.emit('unsubscribe:futures:mini_ticker', pair)
-            //             delete bunchUpdateFuturesMarketPrice[pair];
-            //             dispatch(removeItemMarketWatch(pair)) 
-            //         })
-            //     }
-            // }
-            // oldPairs.current = pairs;
-        }));
+        if (auth) dispatch(getOrdersList());
     };
-
-    // useEffect(() => {
-    //     return () => {
-    //         publicSocket && oldPairs.current.map(pair => {
-    //             publicSocket.emit('unsubscribe:futures:mini_ticker', pair)
-    //         })
-    //     };
-    // }, [publicSocket]);
-
-    // useEffect(() => {
-    //     const isset = oldPairs.current.find(pair => pair === state?.pair)
-    //     publicSocket && state?.pair && !isset && publicSocket.emit('subscribe:futures:mini_ticker', state?.pair)
-    //     return () => {
-    //         const _isset = oldPairs.current.find(pair => pair === state?.pair)
-    //         publicSocket && !_isset && state?.pair && publicSocket.emit('unsubscribe:futures:mini_ticker', state?.pair)
-    //     }
-    // }, [publicSocket, state?.pair]);
 
     useEffect(() => {
         if (userSocket) {
@@ -247,7 +211,7 @@ const FuturesMobile = () => {
                             isFullScreen={futuresScreen.isFullScreen}
                             decimals={decimals}
                         />
-                        <SocketLayout miniTicker pair={state.pair} pairConfig={pairConfig}>
+                        <SocketLayout pair={state.pair} pairConfig={pairConfig}>
                             <PlaceOrderMobile
                                 setSide={setSide}
                                 decimals={decimals} side={side}

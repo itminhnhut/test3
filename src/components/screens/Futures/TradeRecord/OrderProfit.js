@@ -14,7 +14,7 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
         profit = order?.profit
     } else {
         if (order && pairPrice) {
-            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask);
+            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask, true);
         }
     }
 

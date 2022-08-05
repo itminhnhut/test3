@@ -388,8 +388,8 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
-                                    {state.vipLevel ? 
-                                    renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(" ")[0].replace("%", ""), FEE_TABLE[state.vipLevel].maker_taker.split(" ")[0].replace("%", "")) : 
+                                    {state.vipLevel ?
+                                    renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(" ")[0].replace("%", ""), FEE_TABLE[state.vipLevel].maker_taker.split(" ")[0].replace("%", "")) :
                                     renderUserFeeConfig(FEE_TABLE[0].maker_taker_deducted.split(" ")[0].replace("%", ""), FEE_TABLE[0].maker_taker.split(" ")[0].replace("%", ""))}
                                 </span>
                             </div>
@@ -398,7 +398,7 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
-                                    {state.vipLevel ? 
+                                    {state.vipLevel ?
                                     renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(" ")[2].replace("%", ""), FEE_TABLE[state.vipLevel].maker_taker.split(" ")[2].replace("%", "")) :
                                     renderUserFeeConfig(FEE_TABLE[0].maker_taker_deducted.split(" ")[2].replace("%", ""), FEE_TABLE[0].maker_taker.split(" ")[2].replace("%", ""))}
                                 </span>

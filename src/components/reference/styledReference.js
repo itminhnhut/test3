@@ -170,7 +170,7 @@ export const BannerRight = styled.div`
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.25);
     width: 100%;
     min-width:250px;
-    
+
     @media (min-width: 768px) {
         margin-top: 0;
         width: 50%;
