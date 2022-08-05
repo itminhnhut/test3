@@ -9,8 +9,17 @@ import InvitationsDetail from 'components/screens/Nao/Contest/season2/Invitation
 import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamModal';
 
 export const seasons = [
-    { season: 1, start: '2022-07-07T17:00:00.000Z', end: '2022-07-07T17:00:00.000Z', contest_id: 4, button: 'nao:contest:last_season', title: 'first' },
-    { season: 2, start: '2022-08-07T17:00:00.000Z', end: '2022-08-30T17:00:00.000Z', contest_id: 5, title: 'second' },
+    {
+        season: 1, start: '2022-07-07T17:00:00.000Z', end: '2022-07-27T17:00:00.000Z',
+        contest_id: 4, button: 'nao:contest:last_season', title: 'first', minVolumeInd: 1, minVolumeTeam: 5,
+        rules: 'https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien'
+    },
+    {
+        season: 2, start: '2022-08-07T17:00:00.000Z', end: '2022-08-30T17:00:00.000Z',
+        contest_id: 5, title: 'second', minVolumeInd: 10, minVolumeTeam: 50,
+        rules: 'https://goonus.io/onus-x-nami-dua-top-giao-dich-onus-futures-mua-02'
+
+    },
 ]
 
 const Contest = (props) => {

@@ -23,7 +23,7 @@ const statusGroup = {
     PENDING: 0, ENABLE: 1
 }
 
-const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id }) => {
+const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules }) => {
     const context = useContext(AlertContext);
     const { t } = useTranslation();
     const { width } = useWindowSize()
@@ -216,7 +216,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
     }
 
     const onRedirect = () => {
-        window.open('https://goonus.io/onus-x-nami-dua-top-giao-dich-onus-futures-mua-02', '_blank')
+        window.open(rules, '_blank')
     }
 
     const isPending = useMemo(() => {

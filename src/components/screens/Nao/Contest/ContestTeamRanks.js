@@ -9,7 +9,7 @@ import { getS3Url, formatNumber } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 
-const ContestTeamRanks = ({ onShowDetail, previous, contest_id }) => {
+const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam }) => {
     const [tab, setTab] = useState('volume');
     const { t } = useTranslation();
     const { width } = useWindowSize()
@@ -82,7 +82,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id }) => {
         <section className="contest_individual_ranks pt-[4.125rem]">
             <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-team-rank" >
-                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_team', { value: '50' }) }}>
+                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_team', { value: minVolumeTeam }) }}>
                 </div>
             </Tooltip>
             <div className="flex justify-between flex-wrap gap-4">

@@ -6,15 +6,7 @@ import { getS3Url } from 'redux/actions/utils';
 import Countdown from 'react-countdown';
 import { useRouter } from 'next/router';
 
-const ContesRules = ({
-    inHome = false,
-    previous,
-    season,
-    start,
-    end,
-    seasons,
-    title
-}) => {
+const ContesRules = ({ inHome = false, previous, season, start, end, seasons, title, rules }) => {
     const { t } = useTranslation();
     const router = useRouter();
     const renderCountDown = () => {
@@ -92,9 +84,7 @@ const ContesRules = ({
                             ? <ButtonNao onClick={() => router.push('/contest')}
                                          className="px-[18px] text-sm font-semibold w-max !rounded-md">{t('nao:contest:ranking')}</ButtonNao>
                             :
-                            <ButtonNao
-                                onClick={() => router.push('https://goonus.io/onus-x-nami-dua-top-giao-dich-onus-futures-mua-02')}
-                                className="px-[18px] text-sm font-semibold w-max !rounded-md">{t('nao:contest:detail_rules')}</ButtonNao>
+                            <ButtonNao onClick={() => router.push(rules)} className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:detail_rules')}</ButtonNao>
                     }
                     {seasonsFilter.map((item, index) => (
                         <ButtonNao key={index} onClick={() => router.push(`/contest/${item.season}`)} border
