@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-const ContesRules = ({ inHome = false, previous, season, start, end, seasons, title }) => {
+const ContesRules = ({ inHome = false, previous, season, start, end, seasons, title, rules }) => {
     const { t } = useTranslation();
     const router = useRouter();
     const renderCountDown = () => {
@@ -65,7 +65,7 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
                         inHome
                             ? <ButtonNao onClick={() => router.push('/contest')} className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:ranking')}</ButtonNao>
                             :
-                            <ButtonNao onClick={() => router.push('https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien')} className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:detail_rules')}</ButtonNao>
+                            <ButtonNao onClick={() => router.push(rules)} className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:detail_rules')}</ButtonNao>
                     }
                     {seasonsFilter.map((item, index) => (
                         <ButtonNao key={index} onClick={() => router.push(`/contest/${item.season}`)} border className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t(item?.button)}</ButtonNao>
