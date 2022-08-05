@@ -240,7 +240,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 <div className="px-4 scrollbar-nao overflow-y-auto h-[calc(100%-72px)]">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
                         {isMobile ?
-                            <div className="flex flex-col items-center justify-center mb-8">
+                            <div className="flex flex-col items-center justify-center">
                                 <div className="flex items-center space-x-[10px]">
                                     {dataSource?.[rank] ? <TextLiner className="!text-[2rem] !leading-[2.375rem] !pb-0" liner>#{dataSource?.[rank]}</TextLiner> : null}
                                     <div className="w-[58px] h-[58px] rounded-[50%] bg-onus-bgModal">
@@ -252,15 +252,16 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     <div className="text-xs leading-6">{t('nao:contest:captain')}: {dataSource?.leader_name ?? '-'}</div>
                                 </div>
                                 <div className="text-lg leading-8 font-semibold">{loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}</div>
-                                {loading ? <Skeletor onusMode width={50} height={24} /> : <div className="bg-bgCondition rounded-[800px] px-2 mt-2">
-                                    <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-onus-orange' : 'text-nao-blue3'}`}>
-                                        {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
-                                    </span>
-                                </div>
-                                }
+                                {/* {loading ? <Skeletor onusMode width={50} height={24} /> :
+                                    <div className="bg-bgCondition rounded-[800px] px-2 mt-2">
+                                        <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-onus-orange' : 'text-nao-blue3'}`}>
+                                            {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
+                                        </span>
+                                    </div>
+                                } */}
                             </div>
                             :
-                            <div className="flex items-center justify-between mb-8 w-full">
+                            <div className="flex items-center justify-between w-full">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[58px] h-[58px] rounded-[50%] bg-onus-bgModal">
                                         <img className="rounded-[50%] min-w-[58px] min-h-[58px] max-w-[58px] max-h-[58px] object-cover" src={dataSource?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />
@@ -274,13 +275,13 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                             <div className="text-2xl leading-8 font-semibold">
                                                 {loading ? <Skeletor onusMode width={100} height={24} /> : dataSource?.name ?? '-'}
                                             </div>
-                                            {loading ? <Skeletor onusMode width={50} height={24} /> :
+                                            {/* {loading ? <Skeletor onusMode width={50} height={24} /> :
                                                 <div className="bg-bgCondition rounded-[800px] px-2">
                                                     <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-onus-orange' : 'text-nao-blue3'}`}>
                                                         {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
                                                     </span>
                                                 </div>
-                                            }
+                                            } */}
                                         </div>
                                     </div>
                                 </div>
@@ -288,8 +289,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             </div>
                         }
 
-                        {!isPending.group ?
-                            <CardNao className="!py-5 !px-[26px] !min-h-[92px] sm:flex-row w-full sm:min-w-[577px]">
+                        {!isPending.group &&
+                            <CardNao className="!py-5 !px-[26px] mt-8 !min-h-[92px] sm:flex-row w-full sm:min-w-[577px]">
                                 <div className="flex sm:flex-row sm:justify-around flex-col w-full">
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
                                         <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
@@ -314,22 +315,23 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     </div>
                                 </div>
                             </CardNao>
-                            :
-                            loading ? <div className="w-full"><Skeletor className="!rounded-xl" onusMode height={92} width={'100%'} colors={colors.nao.grey} /></div> :
-                                <CardNao noBg className="!p-4 sm:!p-6 space-x-4 sm:space-x-8 !flex-row !items-center !justify-start !min-h-[80px]">
+                        }
+                        {/* loading ? <div className="w-full"><Skeletor className="!rounded-xl" onusMode height={92} width={'100%'} colors={colors.nao.grey} /></div> :
+                                !isPending.group &&
+                                <CardNao noBg className="!p-4 mt-8 sm:!p-6 space-x-4 sm:space-x-8 !flex-row !items-center !justify-start !min-h-[80px]">
                                     <div className="min-w-[32px]"><WarningIcon size={28} /></div>
                                     <div className="text-sm">
                                         {t('nao:contest:rules_for_season_2')}
                                         <span onClick={onRedirect} className="font-medium underline text-nao-green cursor-pointer">{t('nao:contest:rules_content')}</span>
                                     </div>
-                                </CardNao>
-                        }
+                                </CardNao> */}
                     </div>
                     {isMobile ?
                         <CardNao noBg className="mt-8 !py-6 !px-4">
                             <div className="flex flex-col overflow-y-auto space-y-4">
                                 {Array.isArray(dataSource?.members) && dataSource?.members?.length > 0 ?
                                     dataSource?.members.map((item, index) => {
+                                        console.log(item)
                                         return (
                                             <div key={index} className={'p-4 rounded-xl border border-nao-grey/[0.2]'}>
                                                 <div className="flex items-center justify-between">
@@ -353,7 +355,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                     {validatorLeader(item) &&
                                                         <div className="flex items-center justify-between leading-6">
                                                             <div className="text-nao-grey">{t('nao:contest:action')} </div>
-                                                            <div onClick={() => onActions(item, index)} className="text-onus-grey underline cursor-pointer">{renderActions(item)}</div>
+                                                            <div onClick={() => onActions(item, index)} className="text-onus-grey underline cursor-pointer">{renderActions(null, item)}</div>
                                                         </div>
                                                     }
                                                     {dataSource?.status === statusGroup.ENABLE && <>
