@@ -84,7 +84,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 <img src={item.group_avatar ?? getS3Url('/images/nao/ic_nao_large.png')} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
-                                                <div className='h-auto font-normal flex items-center text-xs leading-6'>
+                                                <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
                                                     {LeaderFlag} {t('nao:contest:team_lead')}: {item.leader_name}
                                                 </div>
                                                 <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
@@ -108,7 +108,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 <img src={item.group_avatar ?? getS3Url('/images/nao/ic_nao_large.png')} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
-                                                <div className='h-auto font-normal flex items-center text-xs leading-6'>
+                                                <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
                                                     {LeaderFlag} {t('nao:contest:team_lead')}: {item.leader_name}
                                                 </div>
                                                 <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
