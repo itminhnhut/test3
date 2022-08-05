@@ -19,6 +19,7 @@ import useApp from 'hooks/useApp';
 import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar';
 import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 import useHideScrollbar from 'hooks/useHideScrollbar';
+import { handleHideScrollBar } from 'utils/helpers';
 
 const Support = () => {
     // ? State
@@ -44,17 +45,6 @@ const Support = () => {
 
 
     //hide scrollbar
-    const handleHideScrollBar = () => {
-        const malLayout = document.querySelector('.mal-layouts');
-        if (window.innerWidth < 650) {
-            document.body.classList.add('overflow-hidden');
-            malLayout.classList.add('!h-screen');
-        }
-        return () => {
-            document.body.classList.remove('overflow-hidden');
-            malLayout.classList.remove('!h-screen');
-        };
-    };
     useEffect(handleHideScrollBar, []);
 
     const renderFaqCategories = () => {

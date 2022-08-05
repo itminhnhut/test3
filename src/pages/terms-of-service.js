@@ -1,22 +1,10 @@
 /* eslint-disable */
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Footer from 'src/components/common/Footer';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import useHideScrollbar from 'hooks/useHideScrollbar';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect } from 'react';
+import { handleHideScrollBar } from 'utils/helpers';
 
 const Terms = () => {
-    const handleHideScrollBar = () => {
-        const malLayout = document.querySelector('.mal-layouts');
-        if (window.innerWidth < 650) {
-            document.body.classList.add('overflow-hidden');
-            malLayout.classList.add('!h-screen');
-        }
-        return () => {
-            document.body.classList.remove('overflow-hidden');
-            malLayout.classList.remove('!h-screen');
-        };
-    };
     useEffect(handleHideScrollBar, []);
     return (
         <MaldivesLayout>
@@ -1325,7 +1313,7 @@ const Terms = () => {
                     </div>
                 </>
             </div>
-            <Footer/>
+            {/* <Footer/> */}
         </MaldivesLayout>
     )
 }

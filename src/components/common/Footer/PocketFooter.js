@@ -36,12 +36,12 @@ const PocketFooter = ({ active, parentState }) => {
                                      ${active.about ?
             'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
-                        <Link href="https://nami.exchange/terms-of-service">
+                        <Link href="/terms-of-service">
                             <a>
                                 {language === LANGUAGE_TAG.VI ? 'Điều khoản' : 'Terms of Services'}
                             </a>
                         </Link>
-                        <Link href={PATHS.FEE_STRUCTURES.DEFAULT}>
+                        <Link href={"/fee-schedule/trading"}>
                             <a>
                                 {t('navbar:menu.fee')}
                             </a>
