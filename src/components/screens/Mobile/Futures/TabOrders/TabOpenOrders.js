@@ -46,7 +46,6 @@ const TabOpenOrders = ({
     const [openShareModal, setOpenShareModal] = useState(false);
     const [orderEditMarginId, setOrderEditMarginId] = useState();
     const [disabled, setDisabled] = useState(false);
-    const [symbols, setSymbols] = useState([]);
     const assetConfig = useSelector(state => state.utils.assetConfig);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
 
@@ -151,32 +150,23 @@ const TabOpenOrders = ({
     };
 
     useEffect(() => {
-        const _symbols = uniq([...dataFilter?.map(order => order.symbol), pair]);
-        const newSymbols = difference(_symbols, symbols);
-        if (newSymbols.length) {
-            subscribeFuturesSocket(_symbols);
-            setSymbols(_symbols);
-        }
-    }, [dataFilter]);
-
-    const subscribeFuturesSocket = (symbols) => {
         if (!publicSocket) {
-            setState({ socketStatus: !!publicSocket });
+            setState({
+                socketStatus: !!publicSocket,
+            });
         } else {
-            if (
-                !state.prevPair ||
-                state.prevPair !== pair ||
-                !!publicSocket !== state.socketStatus
-            ) {
-                publicSocket.emit('subscribe:futures:ticker', symbols);
+            const _symbols = uniq([...dataFilter?.map(order => order.symbol), pair]);
+            const newSymbols = difference(_symbols, state.symbols || []);
+            if (!state.socketStatus || newSymbols.length) {
+                publicSocket.emit('subscribe:futures:ticker', _symbols);
+                setState({
+                    socketStatus: !!publicSocket,
+                    symbols: _symbols
+                });
             }
         }
-    };
 
-    useEffect(() => {
-        if (!state.pair) return;
-        subscribeFuturesSocket(state.pair);
-    }, [publicSocket, state.pair]);
+    }, [dataFilter, pair, publicSocket]);
 
     const renderListOrder = useCallback(() => {
         return dataFilter?.map((order, i) => {
