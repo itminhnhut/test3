@@ -6,7 +6,7 @@ import { getS3Url } from 'redux/actions/utils';
 import fetchApi from 'utils/fetch-api';
 import { formatNumber } from 'redux/actions/utils';
 import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/actions/apis';
-import CreateTeamModal from './season2/CreateTeamModal';
+import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
 
 const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id }, ref) => {
@@ -70,6 +70,15 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
     const onShowGroupDetail = () => {
         setShowGroupDetail(!showGroupDetail)
     }
+
+    useEffect(() => {
+        if (previous) return;
+        const el = document.querySelector('.nao_footer')
+        if (el) {
+            el.classList[userData?.group_name ? 'remove' : 'add']('sm:mb-0')
+            el.classList[userData?.group_name ? 'remove' : 'add']('mb-[88px]')
+        }
+    }, [userData, previous])
 
     if (!(user && userData)) return null;
 
