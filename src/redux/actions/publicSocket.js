@@ -76,6 +76,7 @@ function initPublicSocket() {
             WS.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, (data) => {
                 futuresLastPrice = data?.c;
                 Emitter.emit(PublicSocketEvent.FUTURES_TICKER_UPDATE + data.s, data);
+                Emitter.emit(PublicSocketEvent.FUTURES_TICKER_UPDATE, data);
                 bunchUpdateFuturesMarketPrice[data.s] = data;
                 updateMultipleMiniTicker(dispatch);
                 // updateMultipleMarkPrice(data);
