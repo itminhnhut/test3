@@ -111,7 +111,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                                             <div>{capitalize(item?.name)}</div>
                                             <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
                                         </div>
-                                        <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{item?.leader_name}</span>
+                                        <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
                                     </div>
                                 </div>
                                 <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
@@ -167,7 +167,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                                             <div className="flex items-center justify-between">
                                                 <div>
                                                     <div className="font-semibold leading-6 capitalize">{capitalize(item?.name)} </div>
-                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{item?.leader_name}</div>
+                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{capitalize(item?.leader_name)}</div>
                                                 </div>
                                                 <div className=''>
                                                     <img className="rounded-[50%] object-cover min-w-[2.275rem] min-h-[2.275rem] max-w-[2.275rem] max-h-[2.275rem]" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
