@@ -491,3 +491,20 @@ const WarningIcon = () => {
 export const capitalize = (text) => {
     return text ? String(text).toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()) : null
 }
+
+export const ImageNao = ({ src, fallBack, ...props }) => {
+    const fallBackSrc = fallBack ?? getS3Url('/images/nao/ic_nao_large.png')
+    const [image, setImage] = useState(src ?? fallBackSrc);
+
+    useEffect(() => {
+        if (src !== image) setImage(src ?? fallBackSrc);
+    }, [src])
+
+    return <img
+        src={image}
+        {...props}
+        onError={(e) => {
+            if (e.type === 'error') setImage(fallBackSrc)
+        }}
+    />
+}

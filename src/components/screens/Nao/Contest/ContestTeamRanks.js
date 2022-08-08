@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
@@ -54,7 +54,8 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
         return (
             <div className='flex items-center gap-2'>
                 <div className='w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                    <img className='object-cover rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="32" height="32" alt="" />
+                    <ImageNao className='object-cover rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
+                        src={item?.avatar} width="32" height="32" alt="" />
                 </div>
                 <div>{data}</div>
             </div>
@@ -115,7 +116,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                                     </div>
                                 </div>
                                 <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
-                                    <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')}
+                                    <ImageNao src={item?.avatar}
                                         className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem max-h-[6.375rem] rounded-[50%] object-cover" alt="" />
                                 </div>
                             </div>
@@ -170,7 +171,8 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                                                     <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{capitalize(item?.leader_name)}</div>
                                                 </div>
                                                 <div className=''>
-                                                    <img className="rounded-[50%] object-cover min-w-[2.275rem] min-h-[2.275rem] max-w-[2.275rem] max-h-[2.275rem]" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
+                                                    <ImageNao className="rounded-[50%] object-cover min-w-[2.275rem] min-h-[2.275rem] max-w-[2.275rem] max-h-[2.275rem]"
+                                                        src={item?.avatar} width="24" height="24" alt="" />
                                                 </div>
                                             </div>
 

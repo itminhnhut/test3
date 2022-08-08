@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
@@ -57,8 +57,8 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
         return (
             <div className='flex items-center gap-2'>
                 <div className='w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                    <img className='rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
-                        src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="32" height="32" alt="" />
+                    <ImageNao className='rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
+                        src={item?.avatar} width="32" height="32" alt="" />
                 </div>
                 <div>{capitalize(data)}</div>
             </div>
@@ -113,7 +113,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                                     </div>
                                 </div>
                                 <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
-                                    <img src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')}
+                                    <ImageNao src={item?.avatar}
                                         className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem] max-h-[6.375rem] rounded-[50%] object-cover" alt="" />
                                 </div>
                             </div>
@@ -169,7 +169,8 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                                                     <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
                                                 </div>
                                                 <div className=''>
-                                                    <img className='rounded-[50%] object-cover min-w-[2.75rem] min-h-[2.75rem] max-w-[2.75rem] max-h-[2.75rem]' src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} alt="" />
+                                                    <ImageNao className='rounded-[50%] object-cover min-w-[2.75rem] min-h-[2.75rem] max-w-[2.75rem] max-h-[2.75rem]'
+                                                        src={item?.avatar} alt="" />
                                                 </div>
                                             </div>
                                             <div className="flex items-center font-medium justify-between pt-2">
