@@ -8,7 +8,7 @@ import { ApiStatus, UserSocketEvent } from 'redux/actions/const';
 import { LOCAL_STORAGE_KEY } from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
-import { getFuturesMarketWatch, getOrdersList, updateSymbolView } from 'redux/actions/futures';
+import { fetchFuturesSetting, getFuturesMarketWatch, getOrdersList, updateSymbolView } from 'redux/actions/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
