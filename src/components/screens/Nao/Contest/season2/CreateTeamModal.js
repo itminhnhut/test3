@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext } from 'react';
 import Modal from 'components/common/ReModal';
-import { TextField, ButtonNao, Tooltip } from 'components/screens/Nao/NaoStyle';
+import { TextField, ButtonNao, Tooltip, capitalize } from 'components/screens/Nao/NaoStyle';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import _ from 'lodash';
@@ -256,13 +256,14 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
                         <img data-tip={''} data-for="tooltip-list-team" className="cursor-pointer" src={getS3Url('/images/nao/ic_info.png')} width="16" height="16" alt="" />
                     </div>
                     <div className="flex flex-col space-y-4 mt-4">
-                        <TextField label={t('nao:contest:captain_id')} value={userData?.onus_user_id} prefix={userData?.name} readOnly />
+                        <TextField label={t('nao:contest:captain_id')} value={userData?.onus_user_id}
+                            prefix={capitalize(userData?.name)} readOnly />
                         {Object.keys(initMember).map((m, idx) => (
                             <TextField key={idx}
                                 label={t(`nao:contest:id_member`, { value: idx + 1 })}
                                 error={errors?.[m]?.['error']} helperText={errors?.[m]?.['message']}
-                                onBlur={onBlur}
-                                value={member[m]} prefix={fullname.current[m]} name={m}
+                                onBlur={onBlur} name={m}
+                                value={member[m]} prefix={capitalize(fullname.current[m])}
                                 onChange={(e) => onHandleChange(e, 'member')} />
                         ))}
                     </div>

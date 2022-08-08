@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-import { CardNao, TextLiner, ButtonNao, Tooltip } from 'components/screens/Nao/NaoStyle';
+import { CardNao, TextLiner, ButtonNao, Tooltip, capitalize } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';
@@ -91,7 +91,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                 </div>
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 sm:mt-6">
                     <CardNao className="!min-h-[136px] !p-6 lg:!max-w-[375px]">
-                        <label className="text-[1.25rem] text-nao-green font-semibold leading-8">{userData?.name}</label>
+                        <label className="text-[1.25rem] text-nao-green font-semibold leading-8">{capitalize(userData?.name)}</label>
                         <div
                             className=" text-nao-grey2 text-sm font-medium flex flex-col items-start">
                             <div className="leading-6">ID: {userData?.onus_user_id}</div>
