@@ -24,16 +24,17 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
     const getRanks = async (tab) => {
-        if (Date.now() < new Date('2022-07-07T17:00:00.000Z').getTime()) {
-            return
-        }
+        const _rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
+        // if (Date.now() < new Date('2022-07-07T17:00:00.000Z').getTime()) {
+        //     return
+        // }
         try {
             const { data, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
                 params: { contest_id: contest_id },
             });
             if (data && status === ApiStatus.SUCCESS) {
-                const sliceIndex = data[0]?.[rank] > 0 ? 3 : 0
+                const sliceIndex = data[0]?.[_rank] > 0 ? 3 : 0
                 const _top3 = data.slice(0, sliceIndex);
                 const _dataSource = data.slice(sliceIndex)
                 setTop3(_top3);
