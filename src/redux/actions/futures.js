@@ -12,7 +12,8 @@ import {
     API_GET_FUTURES_USER_SETTINGS,
     API_SET_FUTURES_MARGIN_MODE,
     API_SET_FUTURES_POSITION_MODE,
-    API_UPDATE_FUTURES_SYMBOL_VIEW
+    API_UPDATE_FUTURES_SYMBOL_VIEW,
+    API_GET_FUTURES_SETTING
 } from './apis';
 import { ApiStatus, TRADING_MODE } from './const';
 import {
@@ -24,7 +25,9 @@ import {
     SET_FUTURES_PAIR_CONFIGS,
     SET_FUTURES_USE_SLTP,
     SET_FUTURES_ORDERS_LIST,
-    REMOVE_FUTURES_MARKET_WATCH
+    REMOVE_FUTURES_MARKET_WATCH,
+    GET_FUTURES_SETTING,
+    SET_FUTURES_SETTING
 } from './types';
 import { favoriteAction } from './user';
 
@@ -307,3 +310,12 @@ export const updateSymbolView = ({ symbol }) => async (dispatch) => {
     });
 };
 
+export const fetchFuturesSetting = (params) => async (dispatch) => {
+    const { data } = await Axios[params ? 'post' : 'get'](API_GET_FUTURES_SETTING, { ...params });
+    if (data?.status === ApiStatus.SUCCESS) {
+        dispatch({
+            type: params ? SET_FUTURES_SETTING : GET_FUTURES_SETTING,
+            payload: params ? params : data?.data,
+        });
+    }
+};

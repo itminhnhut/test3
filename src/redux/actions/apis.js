@@ -264,3 +264,6 @@ export const API_CLAIM_TICKET = API_PREFIX + "futures_reward/claim";
 export const API_REFERRAL_FRIENDS_LIST = API_PREFIX + "user/all_referred_users"
 export const API_REFERRAL_DASHBOARD = API_PREFIX + "user/commission_dashboard"
 export const API_REFERRAL_COMMISSION_LOG = API_PREFIX + "user/commission_log"
+
+//setting futures
+export const API_GET_FUTURES_SETTING = API_PREFIX + "futures/setting";
