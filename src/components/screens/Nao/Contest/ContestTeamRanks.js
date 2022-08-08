@@ -62,6 +62,10 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
         )
     }
 
+    const renderLeader = (data) => {
+        return capitalize(data)
+    }
+
     const renderActions = (e) => {
         return (
             <div className="text-nao-grey underline text-xs cursor-pointer">{t('nao:contest:details')}</div>
@@ -106,11 +110,11 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                         <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
                             <div className="flex justify-between flex-1 mb-4 gap-5">
                                 <div className="flex flex-col">
-                                    <TextLiner className="!text-[3rem] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
+                                    <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
                                     <div className="sm:gap-1 flex flex-col">
                                         <div className="text-lg font-semibold leading-8 uppercase flex items-center gap-2">
                                             <div>{item?.name}</div>
-                                            <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
+                                            {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}
                                         </div>
                                         <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
                                     </div>
@@ -213,7 +217,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                 <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)} >
                     <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
-                    <Column minWidth={150} capitalize className="text-nao-text" title={t('nao:contest:captain')} fieldName="leader_name" />
+                    <Column minWidth={150} className="text-nao-text capitalize" title={t('nao:contest:captain')} fieldName="leader_name" cellRender={renderLeader} />
                     <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
 
                     {
