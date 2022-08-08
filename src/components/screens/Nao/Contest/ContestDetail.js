@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import classNames from 'classnames';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_GROUP_MEMBER, API_CONTEST_CANCEL_INVITE, API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
@@ -207,8 +207,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
         return (
             <div className='flex items-center space-x-2'>
                 <div className='w-8 h-8 rounded-[50%] bg-onus-bgModal flex items-center justify-center'>
-                    {item?.onus_user_id && <img className='rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
-                        src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />}
+                    {item?.onus_user_id && <ImageNao className='rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
+                        src={item?.avatar} width="24" height="24" alt="" />}
                 </div>
                 <div>{capitalize(data) ?? t('nao:contest:member', { value: item?.rowIndex + 1 })}</div>
             </div>
@@ -244,14 +244,15 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 <div className="flex items-center space-x-[10px]">
                                     {dataSource?.[rank] ? <TextLiner className="!text-[2rem] !leading-[2.375rem] !pb-0" liner>#{dataSource?.[rank]}</TextLiner> : null}
                                     <div className="w-[58px] h-[58px] rounded-[50%] bg-onus-bgModal">
-                                        <img className="rounded-[50%] min-w-[58px] min-h-[58px] max-w-[58px] max-h-[58px] object-cover" src={dataSource?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />
+                                        <ImageNao className="rounded-[50%] min-w-[58px] min-h-[58px] max-w-[58px] max-h-[58px] object-cover"
+                                            src={dataSource?.avatar} />
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-2 mt-2">
                                     <LeadIcon />
                                     <div className="text-xs leading-6 capitalize">{t('nao:contest:captain')}: {capitalize(dataSource?.leader_name) ?? '-'}</div>
                                 </div>
-                                <div className="text-lg leading-8 font-semibold">{loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}</div>
+                                <div className="text-lg leading-8 font-semibold uppercase">{loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}</div>
                                 {/* {loading ? <Skeletor onusMode width={50} height={24} /> :
                                     <div className="bg-bgCondition rounded-[800px] px-2 mt-2">
                                         <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-onus-orange' : 'text-nao-blue3'}`}>
@@ -264,7 +265,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <div className="flex items-center justify-between w-full">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[58px] h-[58px] rounded-[50%] bg-onus-bgModal">
-                                        <img className="rounded-[50%] min-w-[58px] min-h-[58px] max-w-[58px] max-h-[58px] object-cover" src={dataSource?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />
+                                        <ImageNao className="rounded-[50%] min-w-[58px] min-h-[58px] max-w-[58px] max-h-[58px] object-cover"
+                                            src={dataSource?.avatar} />
                                     </div>
                                     <div className="flex flex-col">
                                         <div className="flex items-center space-x-2">
@@ -273,7 +275,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                 : capitalize(dataSource?.leader_name) ?? '-'}</div>
                                         </div>
                                         <div className="flex items-center space-x-3">
-                                            <div className="text-2xl leading-8 font-semibold">
+                                            <div className="text-2xl leading-8 font-semibold uppercase">
                                                 {loading ? <Skeletor onusMode width={100} height={24} /> : dataSource?.name ?? '-'}
                                             </div>
                                             {/* {loading ? <Skeletor onusMode width={50} height={24} /> :
@@ -337,8 +339,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center space-x-4">
                                                         <div className='bg-onus-bgModal rounded-[50%] min-w-[36px] min-h-[36px]'>
-                                                            {item?.name && <img className="rounded-[50%] min-w-[36px] min-h-[36px] max-w-[36px] max-h-[36px] object-cover"
-                                                                src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />}
+                                                            {item?.name && <ImageNao className="rounded-[50%] min-w-[36px] min-h-[36px] max-w-[36px] max-h-[36px] object-cover"
+                                                                src={item?.avatar} />}
                                                         </div>
                                                         <div className="text-sm font-semibold leading-5">
                                                             {capitalize(item?.name) ?? t('nao:contest:member', { value: index + 1 })}

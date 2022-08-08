@@ -307,7 +307,7 @@ export const Table = ({
                                                 onClick={() => onCellClick && onCellClick(textItem, { ...item, rowIndex: index, })}
                                             >
                                                 {loading ?
-                                                    <Skeletor width={minWidth ?? 50} height={20} />
+                                                    <Skeletor onusMode width={minWidth ?? 50} height={20} />
                                                     : cellRender ? cellRender(textItem, { ...item, rowIndex: index, })
                                                         : decimal >= 0 ? formatNumber(textItem, decimal, 0, true)
                                                             : fieldName === "index" ? (index + 1)
@@ -490,4 +490,21 @@ const WarningIcon = () => {
 
 export const capitalize = (text) => {
     return text ? String(text).toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()) : null
+}
+
+export const ImageNao = ({ src, fallBack, ...props }) => {
+    const fallBackSrc = fallBack ?? getS3Url('/images/nao/ic_nao_large.png')
+    const [image, setImage] = useState(src ?? fallBackSrc);
+
+    useEffect(() => {
+        if (src !== image) setImage(src ?? fallBackSrc);
+    }, [src])
+
+    return <img
+        src={image}
+        {...props}
+        onError={(e) => {
+            if (e.type === 'error') setImage(fallBackSrc)
+        }}
+    />
 }

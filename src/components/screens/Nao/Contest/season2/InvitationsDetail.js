@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import Portal from 'components/hoc/Portal';
 import classNames from 'classnames';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
@@ -81,13 +81,13 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                     <CardNao noBg className="mb-[16px] px-[4px] py-[16px] !max-w-[330px]" key={item._id}>
                                         <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle w-full h-full min-h-[56px]">
                                             <div className='h-[48px] w-[48px] flex justify-center items-center'>
-                                                <img src={item.group_avatar ?? getS3Url('/images/nao/ic_nao_large.png')} className="rounded-[50%] h-full w-full object-cover" />
+                                                <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
                                                 <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
                                                     {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                 </div>
-                                                <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
                                                     {item.group_name}
                                                 </div>
                                             </div>
@@ -105,13 +105,13 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                     <CardNao noBg className="!flex !flex-row mb-[16px] !min-h-[100px] !py-[8px] !px-[12px]" key={item._id}>
                                         <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle h-full">
                                             <div className='h-[48px] w-[48px] flex justify-center items-center'>
-                                                <img src={item.group_avatar ?? getS3Url('/images/nao/ic_nao_large.png')} className="rounded-[50%] h-full w-full object-cover" />
+                                                <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
                                                 <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
                                                     {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                 </div>
-                                                <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
                                                     {item.group_name}
                                                 </div>
                                             </div>
