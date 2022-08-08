@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext } from 'react';
 import Modal from 'components/common/ReModal';
-import { TextField, ButtonNao } from 'components/screens/Nao/NaoStyle';
+import { TextField, ButtonNao, capitalize } from 'components/screens/Nao/NaoStyle';
 import { IconLoading } from 'components/common/Icons';
 import { useTranslation } from 'next-i18next';
 import colors from 'styles/colors';
@@ -103,7 +103,8 @@ const AddMemberModal = ({ onClose }) => {
             center={!isMobile}
         >
             <div className="text-2xl font-semibold leading-8 mb-6">{t('nao:contest:add_member')}</div>
-            <TextField onBlur={onBlur} label={t('nao:contest:id_member')} value={member} prefix={fullname.current}
+            <TextField onBlur={onBlur} label={t('nao:contest:id_member')} value={member}
+                prefix={capitalize(fullname.current)}
                 error={error.error} helperText={error.message} onChange={onHandleChange} />
             <div className='flex items-center space-x-4 mt-6'>
                 <ButtonNao onClick={() => onClose()} border className="w-full !rounded-md">{t('common:close')}</ButtonNao>
