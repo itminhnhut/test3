@@ -68,6 +68,7 @@ const PlaceOrder = ({
     const [showEditVolume, setShowEditVolume] = useState(false);
     const [quoteQty, setQuoteQty] = useState(0);
     const [showExpiredModal, setShowExpiredModal] = useState(false);
+    const [flag, setFlag] = useState(false);
 
     const getMaxQuoteQty = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
         let maxBuy = 0;
@@ -191,10 +192,11 @@ const PlaceOrder = ({
             onChangeQuoteQty(_lastPrice, newDataLeverage?.current);
             onChangeSlTp(newDataLeverage.current, _lastPrice)
         }
-    }, [firstTime.current, newDataLeverage.current]);
+    }, [firstTime.current, newDataLeverage.current, flag]);
 
     const getLeverage = (_leverage) => {
         newDataLeverage.current = _leverage;
+        setFlag(!flag)
     };
 
     const marginAndValue = useMemo(() => {
@@ -212,7 +214,6 @@ const PlaceOrder = ({
 
     const awaitValidator = useRef(false);
     const timerValidator = useRef(null);
-    const [flag, setFlag] = useState(false);
     useEffect(() => {
         awaitValidator.current = true;
         clearTimeout(timerValidator.current)
