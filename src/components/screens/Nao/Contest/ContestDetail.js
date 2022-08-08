@@ -252,7 +252,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     <LeadIcon />
                                     <div className="text-xs leading-6 capitalize">{t('nao:contest:captain')}: {capitalize(dataSource?.leader_name) ?? '-'}</div>
                                 </div>
-                                <div className="text-lg leading-8 font-semibold">{loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}</div>
+                                <div className="text-lg leading-8 font-semibold uppercase">{loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}</div>
                                 {/* {loading ? <Skeletor onusMode width={50} height={24} /> :
                                     <div className="bg-bgCondition rounded-[800px] px-2 mt-2">
                                         <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-onus-orange' : 'text-nao-blue3'}`}>
@@ -275,7 +275,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                 : capitalize(dataSource?.leader_name) ?? '-'}</div>
                                         </div>
                                         <div className="flex items-center space-x-3">
-                                            <div className="text-2xl leading-8 font-semibold">
+                                            <div className="text-2xl leading-8 font-semibold uppercase">
                                                 {loading ? <Skeletor onusMode width={100} height={24} /> : dataSource?.name ?? '-'}
                                             </div>
                                             {/* {loading ? <Skeletor onusMode width={50} height={24} /> :

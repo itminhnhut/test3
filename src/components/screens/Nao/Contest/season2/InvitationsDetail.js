@@ -87,7 +87,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
                                                     {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                 </div>
-                                                <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
                                                     {item.group_name}
                                                 </div>
                                             </div>
@@ -111,7 +111,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
                                                     {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                 </div>
-                                                <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
                                                     {item.group_name}
                                                 </div>
                                             </div>
