@@ -33,7 +33,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                 const sliceIndex = data[0]?.[_rank] > 0 ? 3 : 0
                 const _top3 = data.slice(0, sliceIndex);
                 const _dataSource = data.slice(sliceIndex)
-                setTop3(data);
+                setTop3(_top3);
                 setDataSource(_dataSource);
             }
         } catch (e) {
