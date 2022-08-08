@@ -91,7 +91,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                 </div>
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 sm:mt-6">
                     <CardNao className="!min-h-[136px] !p-6 lg:!max-w-[375px]">
-                        <label className="text-[1.25rem] text-nao-green font-semibold leading-8">{capitalize(userData?.name)}</label>
+                        <label className="text-[1.25rem] text-nao-green font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
                         <div
                             className=" text-nao-grey2 text-sm font-medium flex flex-col items-start">
                             <div className="leading-6">ID: {userData?.onus_user_id}</div>
