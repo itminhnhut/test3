@@ -78,21 +78,13 @@ const PlaceOrder = ({
                 maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : price);
                 maxSell = maxBuy;
             } else if ([OrderTypes.Market].includes(type)) {
-                price = side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
+                _price = side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
                 maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : pairPrice?.ask);
                 maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : pairPrice?.bid);
             }
         }
-        const lotSize =
-            pairConfig?.filters?.find((o) =>
-                [
-                    FuturesOrderTypes.Market,
-                    FuturesOrderTypes.StopMarket,
-                ].includes(type)
-                    ? o?.filterType === 'MARKET_LOT_SIZE'
-                    : o?.filterType === 'LOT_SIZE'
-            ) || {};
-        const _maxConfig = lotSize?.maxQty * (isQuoteQty ? price : 1); //maxConfig quoteQty
+        const lotSize = pairConfig?.filters?.find((o) => o?.filterType === 'LOT_SIZE') || {};
+        const _maxConfig = lotSize?.maxQty * (isQuoteQty ? _price : 1); //maxConfig quoteQty
         const _maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
         return isAuth ? Math.min(_maxConfig, _maxQty) : _maxConfig;
     };
@@ -161,7 +153,7 @@ const PlaceOrder = ({
 
     const onChangeQuoteQty = (price, leverage) => {
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
-        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
+        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice || priceFromMarketWatch, pairConfig, true);
         let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
             .toFixed(decimalSymbol);
         // let _quoteQty = minQuoteQty
@@ -425,7 +417,7 @@ const PlaceOrder = ({
         if (!inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
             const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
-            const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true);
+            const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice || priceFromMarketWatch, pairConfig, true);
             const available = maxQuoteQty >= minQuoteQty;
             context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount_price') : t('futures:mobile:balance_insufficient'));
             return;
