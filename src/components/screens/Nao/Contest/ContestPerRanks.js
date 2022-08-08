@@ -34,7 +34,8 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                 params: { contest_id: contest_id },
             });
             if (data && status === ApiStatus.SUCCESS) {
-                const sliceIndex = data[0]?.[_rank] > 0 ? 3 : 0
+                const dataFilter = data.filter(rs => rs?.[_rank] > 0);
+                const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length
                 const _top3 = data.slice(0, sliceIndex);
                 const _dataSource = data.slice(sliceIndex)
                 setTop3(_top3);
