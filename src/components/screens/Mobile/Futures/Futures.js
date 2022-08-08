@@ -141,8 +141,11 @@ const FuturesMobile = () => {
     }, [publicSocket, state.pair]);
 
     useEffect(() => {
-        dispatch(getFuturesMarketWatch());
-    }, []);
+        dispatch(getFuturesMarketWatch())
+        dispatch(fetchFuturesSetting())
+        getCampaignStatus();
+        emitWebViewEvent('nami_futures');
+    }, [])
 
     useEffect(() => {
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
@@ -156,10 +159,6 @@ const FuturesMobile = () => {
         if (auth) dispatch(getOrdersList());
     };
 
-    useEffect(() => {
-        getCampaignStatus();
-        emitWebViewEvent('nami_futures');
-    }, []);
 
     useEffect(() => {
         if (userSocket) {
@@ -243,7 +242,8 @@ const FuturesMobile = () => {
                 pairConfig={pairConfig}
             />
             <LayoutMobile>
-                {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)}/>}
+                {showOnBoardingModal &&
+                    <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)}/>}
                 <Container id="futures-mobile" onScroll={onScroll}>
                     <Section className="form-order bg-onus" style={{ ...futuresScreen.style }}>
                         <ChartMobile

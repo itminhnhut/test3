@@ -1,13 +1,14 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useTranslation } from 'next-i18next';
 import { emitWebViewEvent, formatNumber } from 'redux/actions/utils';
-import { FuturesOrderTypes, FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
+import { FuturesOrderTypes, FuturesOrderTypes as OrderTypes, FuturesSettings } from 'redux/reducers/futures';
 import { getPrice, getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { placeFuturesOrder, reFetchOrderListInterval } from 'redux/actions/futures';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import OrderConfirm from 'components/screens/Mobile/Futures/PlaceOrder/OrderConfirm';
+import _ from 'lodash';
 
 const OrderButtonMobile = ({
     side,
@@ -35,6 +36,7 @@ const OrderButtonMobile = ({
     const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const rowData = useRef(null);
+    const settings = useSelector(state => state.futures.settings)
 
     const getTypesLabel = (type) => {
         switch (type) {
@@ -84,7 +86,7 @@ const OrderButtonMobile = ({
             return;
         }
         if (isError) return;
-        if (!isShowConfirm) {
+        if (settings?.user_setting?.[FuturesSettings.order_confirm] || _.isEmpty(settings)) {
             rowData.current = {
                 baseAsset: pairConfig?.baseAsset,
                 quoteAsset: pairConfig?.quoteAsset,
@@ -107,20 +109,20 @@ const OrderButtonMobile = ({
     const classNameError = disabled || (isAuth && isError) ? 'opacity-[0.3] cursor-not-allowed' : '';
     const title = type === FuturesOrderTypes.Limit ? t('futures:mobile:limit') : type === FuturesOrderTypes.StopMarket ? 'stop market' : type === FuturesOrderTypes.StopLimit ? 'stop limit' : '';
 
-    const isShowConfirm = useMemo(() => {
-        if (typeof window === 'undefined') return false;
-        let isShowConfirm = localStorage.getItem('show_order_confirm');
-        if (isShowConfirm) {
-            isShowConfirm = JSON.parse(isShowConfirm);
-            return isShowConfirm.hidden;
-        }
-        return false;
-    }, [showConfirmModal]);
+    // const isShowConfirm = useMemo(() => {
+    //     if (typeof window === 'undefined') return false;
+    //     let isShowConfirm = localStorage.getItem('show_order_confirm');
+    //     if (isShowConfirm) {
+    //         isShowConfirm = JSON.parse(isShowConfirm);
+    //         return isShowConfirm.hidden;
+    //     }
+    //     return false;
+    // }, [showConfirmModal]);
 
     return (
         <>
             {showConfirmModal &&
-                <OrderConfirm disabled={disabled} isShowConfirm={isShowConfirm} open={showConfirmModal}
+                <OrderConfirm disabled={disabled} isShowConfirm={false} open={showConfirmModal}
                     data={rowData.current} decimals={decimals}
                     onConfirm={handlePlaceOrder} decimalSymbol={decimalSymbol}
                     onClose={() => !disabled && setShowConfirmModal(false)} />

@@ -5,13 +5,25 @@ import { useTranslation } from 'next-i18next';
 import CheckBox from 'components/common/CheckBox';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber } from 'redux/actions/utils';
+import { fetchFuturesSetting } from 'redux/actions/futures';
+import { useDispatch, useSelector } from 'react-redux';
+import { FuturesSettings } from 'redux/reducers/futures';
 
 const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, decimals, decimalSymbol }) => {
     const { t } = useTranslation();
     const [hidden, setHidden] = useState(isShowConfirm)
+    const auth = useSelector(state => state.auth?.user) || null
+    const dispatch = useDispatch()
 
     const onHandleHidden = () => {
-        localStorage.setItem('show_order_confirm', JSON.stringify({ hidden: !hidden }))
+        // localStorage.setItem('show_order_confirm', JSON.stringify({ hidden: !hidden }))
+        const params = {
+            onusId: auth?.onus_user_id,
+            setting: {
+                [FuturesSettings.order_confirm]: hidden
+            }
+        }
+        dispatch(fetchFuturesSetting(params))
         setHidden(!hidden)
     }
 
