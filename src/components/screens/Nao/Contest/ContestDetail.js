@@ -342,7 +342,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                             {item?.name && <ImageNao className="rounded-[50%] min-w-[36px] min-h-[36px] max-w-[36px] max-h-[36px] object-cover"
                                                                 src={item?.avatar} />}
                                                         </div>
-                                                        <div className="text-sm font-semibold leading-5">
+                                                        <div className="text-sm font-semibold leading-5 capitalize">
                                                             {capitalize(item?.name) ?? t('nao:contest:member', { value: index + 1 })}
                                                         </div>
                                                     </div>

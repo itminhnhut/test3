@@ -24,16 +24,18 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
     const getRanks = async (tab) => {
-        if (Date.now() < new Date('2022-07-07T17:00:00.000Z').getTime()) {
-            return
-        }
+        const _rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
+        // if (Date.now() < new Date('2022-07-07T17:00:00.000Z').getTime()) {
+        //     return
+        // }
         try {
             const { data, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
                 params: { contest_id: contest_id },
             });
             if (data && status === ApiStatus.SUCCESS) {
-                const sliceIndex = data[0]?.[rank] > 0 ? 3 : 0
+                const dataFilter = data.filter(rs => rs?.[_rank] > 0);
+                const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length
                 const _top3 = data.slice(0, sliceIndex);
                 const _dataSource = data.slice(sliceIndex)
                 setTop3(_top3);
@@ -103,11 +105,11 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                         <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
                             <div className="flex justify-between flex-1 mb-4 gap-5">
                                 <div className="flex flex-col">
-                                    <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
+                                    <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
                                     <div className="sm:gap-1 flex flex-col">
                                         <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
                                             <div>{capitalize(item?.name)}</div>
-                                            <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
+                                            {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}
                                         </div>
                                         <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
                                     </div>
