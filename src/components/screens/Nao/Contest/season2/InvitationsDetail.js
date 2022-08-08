@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import Portal from 'components/hoc/Portal';
 import classNames from 'classnames';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
@@ -84,8 +84,8 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 <img src={item.group_avatar ?? getS3Url('/images/nao/ic_nao_large.png')} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
-                                                <div className='h-auto font-normal flex items-center text-xs leading-6'>
-                                                    {LeaderFlag} {t('nao:contest:team_lead')}: {item.leader_name}
+                                                <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
+                                                    {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                 </div>
                                                 <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
                                                     {item.group_name}
@@ -108,8 +108,8 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 <img src={item.group_avatar ?? getS3Url('/images/nao/ic_nao_large.png')} className="rounded-[50%] h-full w-full object-cover" />
                                             </div>
                                             <div className='items-center'>
-                                                <div className='h-auto font-normal flex items-center text-xs leading-6'>
-                                                    {LeaderFlag} {t('nao:contest:team_lead')}: {item.leader_name}
+                                                <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
+                                                    {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                 </div>
                                                 <div className='h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
                                                     {item.group_name}

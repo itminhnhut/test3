@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import classNames from 'classnames';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_GROUP_MEMBER, API_CONTEST_CANCEL_INVITE, API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
@@ -207,10 +207,10 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
         return (
             <div className='flex items-center space-x-2'>
                 <div className='w-8 h-8 rounded-[50%] bg-onus-bgModal flex items-center justify-center'>
-                    {item?.avatar && <img className='rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
+                    {item?.onus_user_id && <img className='rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
                         src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />}
                 </div>
-                <div>{data ?? t('nao:contest:member', { value: item?.rowIndex + 1 })}</div>
+                <div>{capitalize(data) ?? t('nao:contest:member', { value: item?.rowIndex + 1 })}</div>
             </div>
         )
     }
@@ -249,7 +249,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 </div>
                                 <div className="flex items-center space-x-2 mt-2">
                                     <LeadIcon />
-                                    <div className="text-xs leading-6">{t('nao:contest:captain')}: {dataSource?.leader_name ?? '-'}</div>
+                                    <div className="text-xs leading-6 capitalize">{t('nao:contest:captain')}: {capitalize(dataSource?.leader_name) ?? '-'}</div>
                                 </div>
                                 <div className="text-lg leading-8 font-semibold">{loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}</div>
                                 {/* {loading ? <Skeletor onusMode width={50} height={24} /> :
@@ -269,7 +269,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     <div className="flex flex-col">
                                         <div className="flex items-center space-x-2">
                                             <LeadIcon />
-                                            <div className="text-sm leading-6">{t('nao:contest:captain')}: {loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.leader_name ?? '-'}</div>
+                                            <div className="text-sm leading-6 capitalize">{t('nao:contest:captain')}: {loading ? <Skeletor onusMode width={100} height={10} />
+                                                : capitalize(dataSource?.leader_name) ?? '-'}</div>
                                         </div>
                                         <div className="flex items-center space-x-3">
                                             <div className="text-2xl leading-8 font-semibold">
@@ -331,7 +332,6 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <div className="flex flex-col overflow-y-auto space-y-4">
                                 {Array.isArray(dataSource?.members) && dataSource?.members?.length > 0 ?
                                     dataSource?.members.map((item, index) => {
-                                        console.log(item)
                                         return (
                                             <div key={index} className={'p-4 rounded-xl border border-nao-grey/[0.2]'}>
                                                 <div className="flex items-center justify-between">
@@ -341,7 +341,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                                 src={item?.avatar ?? getS3Url('/images/nao/ic_nao_large.png')} />}
                                                         </div>
                                                         <div className="text-sm font-semibold leading-5">
-                                                            {item?.name ?? t('nao:contest:member', { value: index + 1 })}
+                                                            {capitalize(item?.name) ?? t('nao:contest:member', { value: index + 1 })}
                                                         </div>
                                                     </div>
                                                     {item?.name && renderStatusMember(item?.status)}

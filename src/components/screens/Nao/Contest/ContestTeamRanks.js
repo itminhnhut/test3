@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
@@ -108,10 +108,10 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                                     <TextLiner className="!text-[3rem] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
                                     <div className="sm:gap-1 flex flex-col">
                                         <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
-                                            <div>{item?.name}</div>
+                                            <div>{capitalize(item?.name)}</div>
                                             <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
                                         </div>
-                                        <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{item?.leader_name}</span>
+                                        <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
                                     </div>
                                 </div>
                                 <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
@@ -166,8 +166,8 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                                         <div className="text-sm flex-1">
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <div className="font-semibold leading-6 capitalize">{item?.name} </div>
-                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{item?.leader_name}</div>
+                                                    <div className="font-semibold leading-6 capitalize">{capitalize(item?.name)} </div>
+                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{capitalize(item?.leader_name)}</div>
                                                 </div>
                                                 <div className=''>
                                                     <img className="rounded-[50%] object-cover min-w-[2.275rem] min-h-[2.275rem] max-w-[2.275rem] max-h-[2.275rem]" src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="24" height="24" alt="" />
@@ -211,7 +211,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                 <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)} >
                     <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
-                    <Column minWidth={150} className="text-nao-text capitalize" title={t('nao:contest:captain')} fieldName="leader_name" />
+                    <Column minWidth={150} capitalize className="text-nao-text" title={t('nao:contest:captain')} fieldName="leader_name" />
                     <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
 
                     {

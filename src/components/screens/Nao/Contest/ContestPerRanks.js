@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
@@ -60,7 +60,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                     <img className='rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
                         src={item?.avatar ?? getS3Url('/images/nao/ic_nao.png')} width="32" height="32" alt="" />
                 </div>
-                <div>{data}</div>
+                <div>{capitalize(data)}</div>
             </div>
         )
     }
@@ -106,7 +106,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                                     <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>#{index + 1}</TextLiner>
                                     <div className="sm:gap-1 flex flex-col">
                                         <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
-                                            <div>{item?.name}</div>
+                                            <div>{capitalize(item?.name)}</div>
                                             <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />
                                         </div>
                                         <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
@@ -165,7 +165,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                                         <div className="text-sm flex-1">
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <label className="font-semibold leading-6 capitalize">{item?.name}</label>
+                                                    <label className="font-semibold leading-6 capitalize">{capitalize(item?.name)}</label>
                                                     <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
                                                 </div>
                                                 <div className=''>
