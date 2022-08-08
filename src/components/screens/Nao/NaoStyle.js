@@ -307,7 +307,7 @@ export const Table = ({
                                                 onClick={() => onCellClick && onCellClick(textItem, { ...item, rowIndex: index, })}
                                             >
                                                 {loading ?
-                                                    <Skeletor width={minWidth ?? 50} height={20} />
+                                                    <Skeletor onusMode width={minWidth ?? 50} height={20} />
                                                     : cellRender ? cellRender(textItem, { ...item, rowIndex: index, })
                                                         : decimal >= 0 ? formatNumber(textItem, decimal, 0, true)
                                                             : fieldName === "index" ? (index + 1)
