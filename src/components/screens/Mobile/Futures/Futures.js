@@ -8,7 +8,7 @@ import {UserSocketEvent} from 'redux/actions/const';
 import {LOCAL_STORAGE_KEY} from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
-import { getFuturesMarketWatch, getOrdersList, updateSymbolView } from 'redux/actions/futures';
+import { getFuturesMarketWatch, getOrdersList, updateSymbolView, fetchFuturesSetting } from 'redux/actions/futures';
 import {VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
@@ -111,11 +111,9 @@ const FuturesMobile = () => {
 
     }
 
-    useEffect(()=> {
-        dispatch(getFuturesMarketWatch())
-    }, [])
-
     useEffect(() => {
+        dispatch(getFuturesMarketWatch())
+        dispatch(fetchFuturesSetting())
         getCampaignStatus();
         emitWebViewEvent('nami_futures');
     }, [])
