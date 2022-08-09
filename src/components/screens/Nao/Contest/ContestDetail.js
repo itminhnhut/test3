@@ -395,7 +395,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <Column minWidth={180} ellipsis className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                             <Column minWidth={200} ellipsis className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                             <Column visible={!previous} minWidth={isPending.group ? 100 : 120} title={t('common:status')} fieldName="status" cellRender={renderStatusMember} />
-                            <Column visible={!isPending.group} minWidth={70} className="text-onus-grey" title={t('nao:contest:trades')} fieldName="total_order" />
+                            <Column visible={!isPending.group} minWidth={70} align="right" className="text-onus-grey" title={t('nao:contest:trades')} fieldName="total_order" />
                             <Column visible={!isPending.group} minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
                             <Column visible={!isPending.group} minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                             <Column visible={isPending.group} minWidth={200} align="right" className="text-onus-grey underline cursor-pointer"
