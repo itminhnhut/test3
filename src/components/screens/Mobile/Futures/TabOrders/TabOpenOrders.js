@@ -168,6 +168,17 @@ const TabOpenOrders = ({
 
     }, [dataFilter, pair, publicSocket]);
 
+    useEffect(() => {
+        let interval
+        interval = setInterval(() => {
+            const _symbols = uniq([...dataFilter?.map(order => order.symbol), pair]);
+            if (publicSocket && _symbols.length) {
+                publicSocket.emit('subscribe:futures:ticker', _symbols);
+            }
+        }, 10000)
+        return () => interval && clearInterval(interval)
+    }, [dataFilter, pair, publicSocket])
+
     const renderListOrder = useCallback(() => {
         return dataFilter?.map((order, i) => {
             const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
