@@ -237,7 +237,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[979px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
                 containerClassName="!bg-nao-bgModal2/[0.9]"
             >
-                <div className="px-4 scrollbar-nao overflow-y-auto h-[calc(100%-72px)]">
+                <div className="pb-3 sm:pb-0 px-4 scrollbar-nao overflow-y-auto h-[calc(100%-72px)]">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
                         {isMobile ?
                             <div className="flex flex-col items-center justify-center">
