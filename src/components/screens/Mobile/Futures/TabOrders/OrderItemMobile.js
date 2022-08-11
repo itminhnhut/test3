@@ -222,7 +222,7 @@ const OrderItemMobile = ({
                         <>
                             <div className="text-xs text-right" onClick={() => canShare && actions('modal', 'share')}>
                                 <div className="text-xs font-medium text-onus-green float-right">
-                                    <OrderProfit onusMode={true} className="flex flex-col"
+                                    <OrderProfit key={order.displaying_id} onusMode={true} className="flex flex-col"
                                                  order={order} initPairPrice={dataMarketWatch} isTabHistory={isTabHistory}
                                                  isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}/>
                                 </div>

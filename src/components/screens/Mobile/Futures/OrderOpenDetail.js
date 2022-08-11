@@ -255,7 +255,7 @@ const OrderOpenDetail = ({
                         :
                         <div className="text-xs text-right" onClick={openShare}>
                             <div className="text-xs font-medium text-onus-green float-right">
-                                <OrderProfit onusMode={true} className="flex flex-col text-right"
+                                <OrderProfit key={order.displaying_id} onusMode={true} className="flex flex-col text-right"
                                              decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
                                              order={order} initPairPrice={dataMarketWatch} isTabHistory={false}
                                              isMobile/>
