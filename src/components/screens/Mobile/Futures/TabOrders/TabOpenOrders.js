@@ -179,7 +179,7 @@ const TabOpenOrders = ({
         return () => interval && clearInterval(interval)
     }, [dataFilter, pair, publicSocket])
 
-    const renderListOrder = useCallback(() => {
+    const renderListOrder = () => {
         return dataFilter?.map((order, i) => {
             const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
             const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
@@ -194,7 +194,7 @@ const TabOpenOrders = ({
                 />
             );
         });
-    }, [allPairConfigs, dataFilter, assetConfig, onShowModal, onShowDetail]);
+    }
 
     if (ordersList.length <= 0) {
         return <TableNoData
