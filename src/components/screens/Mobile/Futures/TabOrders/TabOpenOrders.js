@@ -1,5 +1,4 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import CheckBox from 'components/common/CheckBox';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import TableNoData from 'components/common/table.old/TableNoData';
@@ -11,7 +10,7 @@ import OrderItemMobile from './OrderItemMobile';
 import { getShareModalData } from './ShareFutureMobile';
 import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
-import { countBy, find } from 'lodash';
+import { find } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 import { reFetchOrderListInterval } from 'redux/actions/futures';
 import uniq from 'lodash/uniq';
@@ -23,18 +22,18 @@ const INITIAL_STATE = {
 const TabOpenOrders = ({
     ordersList,
     pair,
-    isAuth,
+    mode,
     isDark,
     pairConfig,
     onShowDetail,
-    tab
+    tab,
+    hideOther
 }) => {
 
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const { t } = useTranslation();
     const context = useContext(AlertContext);
-    const [hideOther, setHideOther] = useState(false);
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const dataFilter = useMemo(() => {
         return hideOther ? ordersList.filter(order => order?.symbol === pair) : ordersList;
@@ -55,11 +54,6 @@ const TabOpenOrders = ({
         if (!orderEditMarginId) return;
         return find(dataFilter, { displaying_id: orderEditMarginId });
     }, [orderEditMarginId, dataFilter]);
-
-    const needShowHideOther = useMemo(() => {
-        const totalSymbol = countBy(ordersList, 'symbol');
-        return Object.keys(totalSymbol).length > 1;
-    }, [ordersList]);
 
     const onShowModal = (item, key) => {
         rowData.current = item;
@@ -186,7 +180,7 @@ const TabOpenOrders = ({
             const decimalScalePrice = getDecimalPrice(symbol);
             const isVndcFutures = symbol?.quoteAsset === 'VNDC';
             return (
-                <OrderItemMobile key={i} order={order}
+                <OrderItemMobile key={i} order={order} mode={mode}
                                  onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
                                  onShowDetail={onShowDetail} decimalSymbol={decimalSymbol}
                                  decimalScalePrice={decimalScalePrice}
@@ -204,7 +198,7 @@ const TabOpenOrders = ({
     }
 
     return (
-        <div className="px-[16px] pt-4 overflow-x-auto" style={{ height: 'calc(100% - 114px)' }}>
+        <div className="px-4 overflow-x-auto" style={{ height: 'calc(100% - 173px)' }}>
             {openEditModal &&
                 <EditSLTPVndcMobile
                     onusMode={true}
@@ -219,20 +213,6 @@ const TabOpenOrders = ({
                     disabled={disabled}
                 />
             }
-            {
-                needShowHideOther
-                &&
-                <div
-                    className="flex items-center text-sm font-medium select-none cursor-pointer"
-                    onClick={() => setHideOther(!hideOther)}
-                >
-                    <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]"/>
-                    <span className="ml-3 whitespace-nowrap font-medium capitalize text-onus-grey text-xs">
-                        {t('futures:hide_other_symbols')}
-                    </span>
-                </div>
-            }
-
             <div className="min-h-[100px]">
                 {renderListOrder()}
             </div>

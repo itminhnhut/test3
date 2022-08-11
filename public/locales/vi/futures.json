@@ -87,6 +87,7 @@
     },
     "tp_sl": {
         "adjust_margin": "Thêm kí quỹ",
+        "add_tpsl": "Thêm SL-TP",
         "modify_tpsl": "Sửa SL-TP",
         "perpetual": "Vĩnh cửu",
         "when": "Khi",
@@ -311,7 +312,7 @@
         "open_time": "Thời gian mở",
         "close_time": "Thời gian đóng",
         "realized_pnl": "Lợi nhuận",
-        "reason_close": "Lý do",
+        "reason_close": "Nguyên nhân",
         "stop_loss": "Cắt lỗ",
         "market_price": "Giá thị trường",
         "balance_insufficient": "Số dư của bạn không đủ, vui lòng nạp thêm.",
@@ -351,7 +352,8 @@
         "leverage_v2": "Loại/đòn bẩy",
         "not_show_this_message": "Không hiện lại thông báo này",
         "quote_price": "Giá thị trường",
-        "adjust_volume":"Điều chỉnh khối lượng"
+        "adjust_volume": "Điều chỉnh khối lượng",
+        "shortcut": "Rút gọn"
     },
     "orders_history": "Lịch sử lệnh",
     "minimum_leverage": "Đòn bẩy tối thiểu",

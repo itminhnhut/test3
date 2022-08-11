@@ -84,6 +84,7 @@
         "leverage": "Leverage"
     },
     "tp_sl": {
+        "add_tpsl": "Add SL-TP",
         "modify_tpsl": "Modify SL-TP",
         "perpetual": "Perpetual",
         "when": "When",

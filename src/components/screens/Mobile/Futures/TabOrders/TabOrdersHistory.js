@@ -3,9 +3,8 @@ import fetchApi from 'utils/fetch-api';
 import { API_GET_FUTURES_ORDER_HISTORY } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import TableNoData from 'components/common/table.old/TableNoData';
-import OrderItemMobile from './OrderItemMobile';
+import OrderItemMobile from 'components/screens/Mobile/Futures/TabOrders/OrderItemMobile';
 import { useSelector } from 'react-redux';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { getShareModalData } from './ShareFutureMobile';
 import { useTranslation } from 'next-i18next';
 import Skeletor from 'components/common/Skeletor';
@@ -13,7 +12,7 @@ import { emitWebViewEvent, countDecimals } from 'redux/actions/utils';
 import { IconLoading } from 'src/components/common/Icons';
 import colors from 'styles/colors'
 
-const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onShowDetail }) => {
+const TabOrdersHistory = ({ isDark, scrollSnap, pair, tab, active, onShowDetail, hideOther }) => {
     const { t } = useTranslation();
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const timestamp = useSelector((state) => state.heath.timestamp);
@@ -135,6 +134,11 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
         return countDecimals(decimalScalePrice?.tickSize)
     }
 
+    const dataFilter = useMemo(() => {
+        return hideOther ? dataSource.filter(order => order?.symbol === pair) : dataSource;
+    }, [hideOther, dataSource, pair]);
+
+
     if (loading && isLoading.current) return (<div className="min-h-screen px-[10px]">{getLoading()}</div>)
     if (dataSource.length <= 0 && !loading) return <TableNoData isMobile
         title={t('futures:order_table:no_history_order')}
@@ -142,15 +146,15 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, isVndcFutures, active, onS
 
     return (
         <div className="min-h-screen">
-            <div className={scrollSnap ? 'h-[calc(100vh-42px)] overflow-y-auto' : ''}>
+            <div className={scrollSnap ? 'h-[calc(100vh-100px)] overflow-y-auto' : ''}>
                 <div className="px-[16px]">
-                    {dataSource?.map((order, i) => {
+                    {dataFilter?.map((order, i) => {
                         const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
                         const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
                         const decimalScalePrice = getDecimalPrice(symbol);
                         const isVndcFutures = symbol?.quoteAsset === 'VNDC';
                         return (
-                            <OrderItemMobile key={i} order={order} mode="history"
+                            <OrderItemMobile key={i} order={order} tab={tab}
                                 isDark={isDark} onShowDetail={onShowDetail} symbol={symbol}
                                 onShowModal={onShowModal} decimalSymbol={decimalSymbol} decimalScalePrice={decimalScalePrice}
                                 isVndcFutures={isVndcFutures}

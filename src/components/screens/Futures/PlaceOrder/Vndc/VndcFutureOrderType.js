@@ -1,4 +1,5 @@
 import { useTranslation } from 'next-i18next';
+import { DefaultFuturesFee } from 'redux/actions/const';
 
 export const VndcFutureOrderType = {
     GroupStatus: {
@@ -81,3 +82,31 @@ export const renderCellTable = (key, rowData) => {
         default:
     }
 };
+
+
+export const getRatioProfit = (sltp, order) => {
+    let { leverage, side, order_value, margin, open_price } = order;
+    if (order_value && margin) leverage = order_value / margin;
+    let formatX = 0;
+    if (side == VndcFutureOrderType.Side.BUY) {
+        formatX = (sltp * (1 - DefaultFuturesFee.NamiFrameOnus) - open_price * (1 + DefaultFuturesFee.NamiFrameOnus)) * leverage / open_price * 100
+    } else {
+        formatX = (sltp * (-1 - DefaultFuturesFee.NamiFrameOnus) + open_price * (1 - DefaultFuturesFee.NamiFrameOnus)) * leverage / open_price * 100
+    }
+    const percent = (formatX <= -100 ? -1 : Math.abs(formatX > 0 ? 50 + formatX / 2 : -50 - formatX / 2)).toFixed(0);
+    const result = percent === 50 ? 0 : percent > 50 ? (percent - 50) * 2 : -(50 - percent) * 2;
+    return result < 0 ? result : '+' + result;
+};
+
+export const fees = [
+    { assetId: 447, assetCode: 'NAO', ratio: '0.036%' },
+    { assetId: 1, assetCode: 'NAMI', ratio: '0.045%' },
+    { assetId: 86, assetCode: 'ONUS', ratio: '0.045%' },
+    { assetId: 72, assetCode: 'VNDC', ratio: '0.06%' },
+    { assetId: 22, assetCode: 'USDT', ratio: '0.06%' },
+];
+
+export const modeOrders = {
+    detail: 'detail',
+    shortcut: 'shortcut'
+}

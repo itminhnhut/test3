@@ -11,10 +11,12 @@ import { emitWebViewEvent, scrollHorizontal } from 'redux/actions/utils';
 import OrderBalance from 'components/screens/Mobile/Futures/TabOrders/OrderBalance';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OrderDetail from 'components/screens/Mobile/Futures/OrderDetail';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType, modeOrders } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useRouter } from 'next/router';
 import Portal from 'components/hoc/Portal';
 import TabTransactionsHistory from 'components/screens/Mobile/Futures/TabOrders/TabTransactionsHistory';
+import { countBy } from 'lodash';
+import CheckBox from 'components/common/CheckBox';
 
 const TabOrders = memo(({
     isVndcFutures,
@@ -37,6 +39,14 @@ const TabOrders = memo(({
     const oldDetail = useRef({});
     const isModal = +router.query?.v > 1;
     const refTabsOrder = useRef(null);
+    const [mode, setMode] = useState(modeOrders.detail)
+    const [openCloseModal, setOpenCloseModal] = useState(false);
+    const [hideOther, setHideOther] = useState(false);
+
+    const needShowHideOther = useMemo(() => {
+        const totalSymbol = countBy(ordersList, 'symbol')
+        return Object.keys(totalSymbol).length > 1
+    }, [ordersList]);
 
     const onShowDetail = (row, isTabHistory) => {
         if (isModal) {
@@ -88,62 +98,89 @@ const TabOrders = memo(({
                         { visible: openDetailModal }
                     )}>
                         <OrderDetail order={orderDetail} onClose={onShowDetail} isMobile
-                                     pairConfig={pairConfigDetail}
-                                     pairParent={pair} isVndcFutures={isVndcFutures}
-                                     isTabHistory={orderDetail?.isTabHistory}
-                                     isDark={currentTheme === THEME_MODE.DARK}
-                                     isModal={isModal}
+                            pairConfig={pairConfigDetail}
+                            pairParent={pair} isVndcFutures={isVndcFutures}
+                            isTabHistory={orderDetail?.isTabHistory}
+                            isDark={currentTheme === THEME_MODE.DARK}
+                            isModal={isModal}
                         />
                     </div>
                 </Portal>
             }
             <TabMobile ref={refTabsOrder} onusMode={true} isDark={currentTheme === THEME_MODE.DARK}
-                       data-tut="order-tab">
+                data-tut="order-tab">
                 {RECORD_TAB_VNDC_MOBILE.map((item) => (
                     <TabItem key={item.code} active={tab === item.code}
-                             onClick={(e) => {
-                                 setTab(item.code);
-                                 scrollHorizontal(e.target, refTabsOrder.current);
-                             }}
+                        onClick={(e) => {
+                            setTab(item.code);
+                            scrollHorizontal(e.target, refTabsOrder.current);
+                        }}
                     >
                         {t(item.title)}&nbsp;{
-                        (item.code === FUTURES_RECORD_CODE.openOrders || item.code === FUTURES_RECORD_CODE.position)
-                        && (orderListFilter[item.code].length > 0 ? ' (' + orderListFilter[item.code].length + ')' : '')}
+                            (item.code === FUTURES_RECORD_CODE.openOrders || item.code === FUTURES_RECORD_CODE.position)
+                            && (orderListFilter[item.code].length > 0 ? ' (' + orderListFilter[item.code].length + ')' : '')}
                     </TabItem>
                 ))}
                 {/* <img src="/images/icon/ic_filter.png" height={24} width={24} /> */}
             </TabMobile>
             {isAuth &&
                 <OrderBalance ordersList={ordersList} isTabHistory={tab === FUTURES_RECORD_CODE.orderHistory}
-                              visible={[FUTURES_RECORD_CODE.position, FUTURES_RECORD_CODE.openOrders].includes(tab)}
-                              pairConfig={pairConfig}
+                    visible={[FUTURES_RECORD_CODE.position, FUTURES_RECORD_CODE.openOrders].includes(tab)}
+                    pairConfig={pairConfig}
                 />}
             {
                 isAuth ?
                     <div className="h-full">
+                        <div className="sticky top-[108px] bg-onus z-[10] flex items-center justify-between py-4 px-4">
+                            {tab !== FUTURES_RECORD_CODE.orderHistory &&
+                                <div className="flex items-center text-xs font-medium leading-[1.375rem]">
+                                    <div onClick={() => setMode(modeOrders.detail)}
+                                        className={`py-[2px] px-3 rounded-l ${mode === modeOrders.detail ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
+                                        {t('common:details')}
+                                    </div>
+                                    <div onClick={() => setMode(modeOrders.shortcut)}
+                                        className={`py-[2px] px-3 rounded-r ${mode === modeOrders.shortcut ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
+                                        {t('futures:mobile:shortcut')}
+                                    </div>
+                                </div>
+                            }
+                            {needShowHideOther &&
+                                <div
+                                    className="flex items-center text-sm font-medium select-none cursor-pointer"
+                                    onClick={() => setHideOther(!hideOther)}
+                                >
+                                    <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
+                                    <span className="ml-3 whitespace-nowrap font-medium capitalize text-onus-grey text-xs">
+                                        {t('futures:hide_other_symbols')}
+                                    </span>
+                                </div>
+                            }
+                        </div>
                         <TabContent
                             active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position}>
                             <TabOpenOrders
                                 isDark={currentTheme === THEME_MODE.DARK}
-                                tab={tab}
+                                tab={tab} hideOther={hideOther}
                                 ordersList={orderListFilter.orderList} pair={pair} pairConfig={pairConfig}
-                                onShowDetail={onShowDetail}/>
+                                onShowDetail={onShowDetail} mode={mode}
+                            />
                         </TabContent>
                         <TabContent active={tab === FUTURES_RECORD_CODE.orderHistory}>
                             <TabOrdersHistory
                                 forceRender={forceRender} setForceRender={setForceRender} scrollSnap={scrollSnap}
                                 isDark={currentTheme === THEME_MODE.DARK} pair={pair}
                                 isVndcFutures={isVndcFutures}
+                                tab={tab} hideOther={hideOther}
                                 active={tab === FUTURES_RECORD_CODE.orderHistory}
                                 onShowDetail={onShowDetail}
                             />
                         </TabContent>
                         <TabContent active={tab === FUTURES_RECORD_CODE.tradingHistory}>
                             <TabTransactionsHistory scrollSnap={scrollSnap}
-                                                    active={tab === FUTURES_RECORD_CODE.tradingHistory}/>
+                                active={tab === FUTURES_RECORD_CODE.tradingHistory} />
                         </TabContent>
                     </div>
-                    : <LoginOrder/>
+                    : <LoginOrder />
             }
         </div>
     );
@@ -194,7 +231,7 @@ export const LoginOrder = () => {
     return (
         <div className="cursor-pointer flex items-center justify-center h-full text-sm py-[10px] min-h-[300px]">
             <div onClick={() => emitWebViewEvent('login')}
-                 className="w-[200px] bg-onus-base !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80">
+                className="w-[200px] bg-onus-base !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80">
                 {t('futures:mobile:login_short')}
             </div>
         </div>
