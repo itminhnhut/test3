@@ -42,7 +42,7 @@ const SocketLayout = ({
         return () => {
             if (pairParent) return;
             publicSocket && unsubscribeFuturesSocket(pair);
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol);
         };
     }, [publicSocket, pair, pairConfig]);
     // console.log(pairPrice)

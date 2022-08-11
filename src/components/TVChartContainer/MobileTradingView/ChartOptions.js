@@ -189,7 +189,7 @@ const Change24h = ({
             }
         });
         return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.symbol);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.symbol);
         };
     }, [pairConfig]);
 
