@@ -141,11 +141,11 @@ const FuturesMobile = () => {
     }, [publicSocket, state.pair]);
 
     useEffect(() => {
-        dispatch(getFuturesMarketWatch())
-        dispatch(fetchFuturesSetting())
+        dispatch(getFuturesMarketWatch());
+        dispatch(fetchFuturesSetting());
         getCampaignStatus();
         emitWebViewEvent('nami_futures');
-    }, [])
+    }, []);
 
     useEffect(() => {
         setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
@@ -158,7 +158,6 @@ const FuturesMobile = () => {
     const getOrders = () => {
         if (auth) dispatch(getOrdersList());
     };
-
 
     useEffect(() => {
         if (userSocket) {
@@ -247,6 +246,7 @@ const FuturesMobile = () => {
                 <Container id="futures-mobile" onScroll={onScroll}>
                     <Section className="form-order bg-onus" style={{ ...futuresScreen.style }}>
                         <ChartMobile
+                            key={'ChartMobile' + state.pair}
                             pair={state.pair} pairConfig={pairConfig}
                             isVndcFutures={isVndcFutures}
                             setCollapse={setCollapse} collapse={collapse}
@@ -255,6 +255,7 @@ const FuturesMobile = () => {
                             decimals={decimals}
                         />
                         <PlaceOrderMobile
+                            key={'PlaceOrderMobile' + state.pair}
                             setSide={setSide}
                             decimals={decimals} side={side}
                             pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
@@ -265,7 +266,8 @@ const FuturesMobile = () => {
                     </Section>
                     <Section className="bg-onus" style={{ ...futuresScreen.style }}>
                         <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
-                                   pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
+                                   key={'TabOrders' + state.pair} pair={state.pair} pairConfig={pairConfig}
+                                   isAuth={!!auth}
                                    setForceRender={setForceRender} forceRender={forceRender}
                                    isFullScreen={futuresScreen.isFullScreen}
                         />

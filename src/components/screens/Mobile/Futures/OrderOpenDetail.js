@@ -191,8 +191,8 @@ const OrderOpenDetail = ({
 
     const renderQuoteprice = useCallback(() => {
         return order?.side === VndcFutureOrderType.Side.BUY
-            ? <MiniTickerData initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol}/>
-            : <MiniTickerData initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol}/>;
+            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol}/>
+            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol}/>;
     }, [order]);
 
     const orderStatus = useMemo(() => {
@@ -312,7 +312,7 @@ const OrderOpenDetail = ({
                            value={renderSlTp(order?.sl)}/>
                 <OrderItem label={t('common:last_price')}
                            value={
-                               <MiniTickerData initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order.symbol}/>}
+                               <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order.symbol}/>}
                 />
                 <OrderItem label={t('futures:take_profit')}
                            valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}
