@@ -168,9 +168,9 @@ const OrderOpenDetail = ({
         return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, decimalPrice, 0, true) : '-';
     };
 
-    const renderSlTp = (value) => {
+    const renderSlTp = (value, ratio = false) => {
         if (value) {
-            return formatNumber(value) + ' (' + getRatioProfit(value, order) + '%)'
+            return formatNumber(value) + (ratio ? ' (' + getRatioProfit(value, order) + '%)' : '')
         }
         return '-';
     };
@@ -201,7 +201,7 @@ const OrderOpenDetail = ({
     }, [order]);
 
     const renderFee = (order) => {
-        const assetId = order?.fee_metadata?.place_order?.currency ?? 72;
+        const assetId = order?.fee_metadata?.close_order?.currency ?? 72;
         const ratio = fees.find(rs => rs.assetId === assetId)?.ratio;
         return (
             <div className="flex items-center justify-end space-x-1">
@@ -288,17 +288,17 @@ const OrderOpenDetail = ({
                     }
                 </div>
             </div>
-            {isModify &&
+            {(isModify || isTabOpen) &&
                 <div className="flex rounded-md border border-onus-bg3 p-2 mt-3">
                     <OrderItem
                         label={isTabOpen ? t('futures:mobile:quote_price') : t('futures:stop_loss')}
-                        value={isTabOpen ? renderQuoteprice() : renderSlTp(order?.sl)}
+                        value={isTabOpen ? renderQuoteprice() : renderSlTp(order?.sl, !isTabOpen)}
                         className="text-center border-r border-onus-bg3 !w-full"
                         valueClassName={`!text-sm ${!isTabOpen ? 'text-onus-red' : ''}`}
                     />
                     <OrderItem
                         label={isTabOpen ? t('futures:order_table:open_price') : t('futures:take_profit')}
-                        value={isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.tp)}
+                        value={isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.tp, !isTabOpen)}
                         className="text-center !w-full"
                         valueClassName={`!text-sm ${!isTabOpen ? 'text-onus-green' : ''}`}
                     />

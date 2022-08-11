@@ -183,7 +183,7 @@ const OrderItemMobile = ({
     }, [order]);
 
     const renderFee = (order) => {
-        const assetId = order?.fee_metadata?.place_order?.currency ?? 72;
+        const assetId = order?.fee_metadata?.close_order?.currency ?? 72;
         const ratio = fees.find(rs => rs.assetId === assetId)?.ratio
         if (isTabHistory) return order?.close_price ? formatNumber(order?.close_price) : '-';
         return (
