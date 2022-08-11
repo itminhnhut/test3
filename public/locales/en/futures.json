@@ -352,7 +352,8 @@
         "leverage_v2": "Type/leverage",
         "not_show_this_message": "Don't show this message again",
         "quote_price": "Quote price",
-        "adjust_volume":"Adjust Volume"
+        "adjust_volume":"Adjust Volume",
+        "shortcut": "Shortcut"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

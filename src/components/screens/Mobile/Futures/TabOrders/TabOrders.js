@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState } from 'react';
+import React, { memo, useMemo, useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import classNames from 'classnames';
@@ -43,10 +43,10 @@ const TabOrders = memo(({
     const [openCloseModal, setOpenCloseModal] = useState(false);
     const [hideOther, setHideOther] = useState(false);
 
-    const needShowHideOther = useMemo(() => {
-        const totalSymbol = countBy(ordersList, 'symbol')
-        return Object.keys(totalSymbol).length > 1
-    }, [ordersList]);
+    useEffect(() => {
+        const modeOrder = localStorage.getItem('MODE_ORDER');
+        if (modeOrder) setMode(modeOrder);
+    }, [])
 
     const onShowDetail = (row, isTabHistory) => {
         if (isModal) {
@@ -87,6 +87,18 @@ const TabOrders = memo(({
             orderList: isPositions ? position : openOrders
         };
     }, [tab, ordersList]);
+
+    const needShowHideOther = useMemo(() => {
+        if (tab === FUTURES_RECORD_CODE.orderHistory) return true;
+        const totalSymbol = countBy(orderListFilter.orderList, 'symbol')
+        return Object.keys(totalSymbol).length > 1
+    }, [orderListFilter, tab]);
+
+    const onChangeMode = (key) => {
+        if (key === mode) return;
+        localStorage.setItem('MODE_ORDER', key)
+        setMode(key)
+    }
 
     return (
         <div className={`h-full ${isFullScreen ? 'overflow-hidden' : ''}`}>
@@ -131,31 +143,39 @@ const TabOrders = memo(({
             {
                 isAuth ?
                     <div className="h-full">
-                        <div className="sticky top-[108px] bg-onus z-[10] flex items-center justify-between py-4 px-4">
-                            {tab !== FUTURES_RECORD_CODE.orderHistory &&
-                                <div className="flex items-center text-xs font-medium leading-[1.375rem]">
-                                    <div onClick={() => setMode(modeOrders.detail)}
-                                        className={`py-[2px] px-3 rounded-l ${mode === modeOrders.detail ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
-                                        {t('common:details')}
+                        {tab !== FUTURES_RECORD_CODE.tradingHistory &&
+                            <div className={classNames(
+                                "sticky bg-onus z-[10] flex items-center justify-between py-4 px-4",
+                                {
+                                    'top-[108px]': tab !== FUTURES_RECORD_CODE.orderHistory,
+                                    'top-[42px]': tab === FUTURES_RECORD_CODE.orderHistory,
+                                }
+                            )}>
+                                {tab !== FUTURES_RECORD_CODE.orderHistory &&
+                                    <div className="flex items-center text-xs font-medium leading-[1.375rem]">
+                                        <div onClick={() => onChangeMode(modeOrders.detail)}
+                                            className={`py-[2px] px-3 rounded-l ${mode === modeOrders.detail ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
+                                            {t('common:details')}
+                                        </div>
+                                        <div onClick={() => onChangeMode(modeOrders.shortcut)}
+                                            className={`py-[2px] px-3 rounded-r ${mode === modeOrders.shortcut ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
+                                            {t('futures:mobile:shortcut')}
+                                        </div>
                                     </div>
-                                    <div onClick={() => setMode(modeOrders.shortcut)}
-                                        className={`py-[2px] px-3 rounded-r ${mode === modeOrders.shortcut ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
-                                        {t('futures:mobile:shortcut')}
+                                }
+                                {needShowHideOther &&
+                                    <div
+                                        className="flex items-center text-sm font-medium select-none cursor-pointer"
+                                        onClick={() => setHideOther(!hideOther)}
+                                    >
+                                        <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
+                                        <span className="ml-3 whitespace-nowrap font-medium capitalize text-onus-grey text-xs">
+                                            {t('futures:hide_other_symbols')}
+                                        </span>
                                     </div>
-                                </div>
-                            }
-                            {needShowHideOther &&
-                                <div
-                                    className="flex items-center text-sm font-medium select-none cursor-pointer"
-                                    onClick={() => setHideOther(!hideOther)}
-                                >
-                                    <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
-                                    <span className="ml-3 whitespace-nowrap font-medium capitalize text-onus-grey text-xs">
-                                        {t('futures:hide_other_symbols')}
-                                    </span>
-                                </div>
-                            }
-                        </div>
+                                }
+                            </div>
+                        }
                         <TabContent
                             active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position}>
                             <TabOpenOrders
