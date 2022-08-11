@@ -22,9 +22,9 @@ const MiniTickerData = ({
             }
         });
         return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
         };
-    }, [symbol]);
+    }, []);
 
     const _pairPrice = pairPrice || initPairPrice
     if(symbol !== _pairPrice?.symbol) return '-'

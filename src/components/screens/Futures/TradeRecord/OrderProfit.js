@@ -31,7 +31,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
             }
         });
         return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
         };
     }, [symbol]);
 

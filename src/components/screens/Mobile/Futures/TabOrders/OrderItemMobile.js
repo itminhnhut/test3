@@ -52,7 +52,7 @@ const OrderItemMobile = ({
             }
         });
         return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + order.symbol);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + order.symbol);
         };
     }, [order?.symbol]);
 
@@ -163,15 +163,15 @@ const OrderItemMobile = ({
 
     const renderQuoteprice = () => {
         return order?.side === VndcFutureOrderType.Side.BUY
-            ? <MiniTickerData initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol}/>
-            : <MiniTickerData initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol}/>;
+            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol}/>
+            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol}/>;
     };
 
     const _renderLastPrice = (isTabHistory) => {
         if (isTabHistory) {
             return order?.close_price ? formatNumber(order?.close_price) : '-';
         } else {
-            return <MiniTickerData initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order?.symbol}/>;
+            return <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order?.symbol}/>;
         }
     };
 

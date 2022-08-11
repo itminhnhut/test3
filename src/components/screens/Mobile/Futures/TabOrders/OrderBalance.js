@@ -36,7 +36,7 @@ const OrderBalance = ({
             }
         });
         return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
         };
     }, []);
 
