@@ -170,7 +170,7 @@ const OrderOpenDetail = ({
 
     const renderSlTp = (value) => {
         if (value) {
-            return formatNumber(value) + ' (' + getRatioProfit(value, order) + ')%'
+            return formatNumber(value) + ' (' + getRatioProfit(value, order) + '%)'
         }
         return '-';
     };

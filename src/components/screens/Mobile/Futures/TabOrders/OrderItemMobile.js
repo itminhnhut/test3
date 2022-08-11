@@ -119,7 +119,7 @@ const OrderItemMobile = ({
 
     const renderSlTp = (value, ratio = false) => {
         if (value) {
-            return formatNumber(value) + (ratio ? ' (' + getRatioProfit(value, order) + ')%' : '')
+            return formatNumber(value) + (ratio ? ' (' + getRatioProfit(value, order) + '%)' : '')
         }
         return '-';
     };
