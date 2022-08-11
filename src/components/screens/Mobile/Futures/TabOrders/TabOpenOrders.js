@@ -47,8 +47,13 @@ const TabOpenOrders = ({
     const [disabled, setDisabled] = useState(false);
     const assetConfig = useSelector(state => state.utils.assetConfig);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
+    const [collapse, setCollapse] = useState(null);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        setCollapse(null)
+    }, [tab])
 
     const orderEditMargin = useMemo(() => {
         if (!orderEditMarginId) return;
@@ -181,10 +186,11 @@ const TabOpenOrders = ({
             const isVndcFutures = symbol?.quoteAsset === 'VNDC';
             return (
                 <OrderItemMobile key={i} order={order} mode={mode}
-                                 onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
-                                 onShowDetail={onShowDetail} decimalSymbol={decimalSymbol}
-                                 decimalScalePrice={decimalScalePrice}
-                                 tab={tab} isVndcFutures={isVndcFutures}
+                    onShowModal={onShowModal} allowButton isDark={isDark} symbol={symbol}
+                    onShowDetail={onShowDetail} decimalSymbol={decimalSymbol}
+                    decimalScalePrice={decimalScalePrice}
+                    tab={tab} isVndcFutures={isVndcFutures}
+                    collapse={collapse} setCollapse={setCollapse}
                 />
             );
         });
@@ -194,7 +200,7 @@ const TabOpenOrders = ({
         return <TableNoData
             isMobile
             title={t('futures:order_table:no_opening_order')}
-            className="h-full min-h-[300px]"/>;
+            className="h-full min-h-[300px]" />;
     }
 
     return (

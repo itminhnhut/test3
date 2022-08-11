@@ -155,11 +155,11 @@ const TabOrders = memo(({
                                     <div className="flex items-center text-xs font-medium leading-[1.375rem]">
                                         <div onClick={() => onChangeMode(modeOrders.detail)}
                                             className={`py-[2px] px-3 rounded-l ${mode === modeOrders.detail ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
-                                            {t('common:details')}
+                                            {t('futures:mobile:full')}
                                         </div>
                                         <div onClick={() => onChangeMode(modeOrders.shortcut)}
                                             className={`py-[2px] px-3 rounded-r ${mode === modeOrders.shortcut ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
-                                            {t('futures:mobile:shortcut')}
+                                            {t('futures:mobile:simple')}
                                         </div>
                                     </div>
                                 }

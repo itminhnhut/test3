@@ -353,7 +353,8 @@
         "not_show_this_message": "Không hiện lại thông báo này",
         "quote_price": "Giá thị trường",
         "adjust_volume": "Điều chỉnh khối lượng",
-        "shortcut": "Rút gọn"
+        "full": "Đầy đủ",
+        "simple": "Rút gọn"
     },
     "orders_history": "Lịch sử lệnh",
     "minimum_leverage": "Đòn bẩy tối thiểu",

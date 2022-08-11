@@ -25,6 +25,8 @@ const OrderItemMobile = ({
     decimalSymbol = 0,
     decimalScalePrice = 0,
     isVndcFutures,
+    collapse,
+    setCollapse
 }) => {
     const { t } = useTranslation();
     const isTabHistory = tab === FUTURES_RECORD_CODE.orderHistory;
@@ -34,7 +36,6 @@ const OrderItemMobile = ({
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const [lastSymbol, setLastSymbol] = useState(null);
     const dataMarketWatch = marketWatch[order?.symbol];
-    const [showDetail, setShowDetail] = useState(false);
 
     useEffect(() => {
         if (order?.symbol !== lastSymbol) {
@@ -146,7 +147,15 @@ const OrderItemMobile = ({
             }
             onShowDetail(order, isTabHistory);
         }
-
+        if (action === 'expand' && isShortcut) {
+            if (isModal.current) {
+                isModal.current = false;
+                return;
+            }
+            if (setCollapse) {
+                setCollapse(order?.displaying_id !== collapse ? order?.displaying_id : null)
+            }
+        }
     };
 
     let profit = 0;
@@ -201,7 +210,7 @@ const OrderItemMobile = ({
         <div className="flex flex-col -mx-4 p-4 border-b-[1px] border-onus-line"
             onClick={() => !isShortcut && onShowDetail && actions('detail')}
         >
-            <div onClick={() => isShortcut && setShowDetail(!showDetail)}
+            <div onClick={() => actions('expand')}
                 className="flex items-center justify-between mb-3">
                 <div className="flex items-center text-[10px] font-medium text-onus-grey leading-[1.125rem]">
                     <div>ID #{order?.displaying_id}</div>
@@ -211,10 +220,10 @@ const OrderItemMobile = ({
                     <div>{formatTime(order?.created_at, 'HH:mm:ss')}</div>
                 </div>
                 {isShortcut && !isTabHistory &&
-                    (!showDetail ? <ChevronDown size={12} color={colors.onus.grey} /> : <ChevronUp size={12} color={colors.onus.grey} />)
+                    (!collapse ? <ChevronDown size={12} color={colors.onus.grey} /> : <ChevronUp size={12} color={colors.onus.grey} />)
                 }
             </div>
-            <div onClick={() => isShortcut && setShowDetail(!showDetail)}
+            <div onClick={() => actions('expand')}
                 className="flex items-center justify-between">
                 <div className="flex flex-col gap-[2px]">
                     <div className="flex items-center">
@@ -256,9 +265,9 @@ const OrderItemMobile = ({
                     }
                 </div>
             </div>
-            {(!isShortcut || showDetail) &&
+            {(!isShortcut || collapse === order?.displaying_id) &&
                 <div onClick={() => isShortcut && onShowDetail && actions('detail')}>
-                    {!isTabHistory && isModify &&
+                    {!isTabHistory && (isModify || isTabOpen) &&
                         <div className="flex rounded-md border border-onus-bg3 p-2 mt-3">
                             <OrderItem
                                 label={isTabOpen ? t('futures:mobile:quote_price') : t('futures:stop_loss')}
