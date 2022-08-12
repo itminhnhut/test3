@@ -14,6 +14,7 @@ import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/S
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
 import EditSLTPVndcMobile from './EditSLTPVndcMobile';
 import MiniTickerData from 'components/screens/Futures/MiniTickerData';
+import CurrencyPopup from 'components/screens/Mobile/Futures/CurrencyPopup';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -52,6 +53,8 @@ const OrderOpenDetail = ({
     const [openShareModal, setOpenShareModal] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
+    const [visibleModalFees, setVisibleModalFees] = useState(false);
+
 
     const subscribeFuturesSocket = (symbol) => {
         if (!publicSocket) {
@@ -212,13 +215,20 @@ const OrderOpenDetail = ({
     }
 
     const onModifyFee = () => {
-        console.log('edit-fee')
+        setVisibleModalFees(true);
     }
 
     const isModify = order?.sl > 0 || order?.tp > 0;
 
     return (
         <div className="p-6 py-5 -mx-6 border-b border-onus-line">
+             {visibleModalFees && <CurrencyPopup 
+                visibleModalFees={visibleModalFees}
+                setVisibleModalFees={setVisibleModalFees}
+                forceFetchOrder={forceFetchOrder}
+                dataRow={order}
+                />
+            }
             {showEditSLTP &&
                 <EditSLTPVndcMobile
                     onusMode={true}

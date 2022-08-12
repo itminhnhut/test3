@@ -163,6 +163,7 @@ const OrderDetail = ({
     }, [pairConfig]);
 
     const forceFetchOrder = (data) => {
+        console.log(isModal)
         if (!isModal) {
             getDetail();
         }
