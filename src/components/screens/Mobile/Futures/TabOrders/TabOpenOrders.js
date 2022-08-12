@@ -15,6 +15,7 @@ import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 import { reFetchOrderListInterval } from 'redux/actions/futures';
 import uniq from 'lodash/uniq';
 import difference from 'lodash/difference';
+import CurrencyPopup from 'components/screens/Mobile/Futures/CurrencyPopup';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -48,6 +49,7 @@ const TabOpenOrders = ({
     const assetConfig = useSelector(state => state.utils.assetConfig);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const [collapse, setCollapse] = useState(null);
+    const [visibleModalFees, setVisibleModalFees] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -79,6 +81,9 @@ const TabOpenOrders = ({
                 break;
             case 'edit-margin':
                 setOrderEditMarginId(item.displaying_id);
+                break;
+            case 'edit-fee':
+                setVisibleModalFees(true);
                 break;
             default:
                 if (!openShareModal) {
@@ -205,6 +210,12 @@ const TabOpenOrders = ({
 
     return (
         <div className="px-4 overflow-x-auto" style={{ height: 'calc(100% - 173px)' }}>
+           {visibleModalFees&& <CurrencyPopup 
+                visibleModalFees={visibleModalFees}
+                setVisibleModalFees={setVisibleModalFees}
+                dataRow={rowData.current}
+                />
+            }
             {openEditModal &&
                 <EditSLTPVndcMobile
                     onusMode={true}

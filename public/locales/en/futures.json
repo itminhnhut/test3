@@ -352,9 +352,13 @@
         "leverage_v2": "Type/leverage",
         "not_show_this_message": "Don't show this message again",
         "quote_price": "Quote price",
-        "adjust_volume":"Adjust Volume",
+        "adjust_volume": "Adjust Volume",
         "full": "Full",
-        "simple": "Simple"
+        "simple": "Simple",
+        "change_success": "Changed successfully",
+        "tooltip_popup": "Choose asset for closing fee to get a corresponding discount and set a default asset for next orders by checking the box below.",
+        "trading_fees": "Trading Fees",
+        "set_as_default_trading_fee": "Set as default trading fee"
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

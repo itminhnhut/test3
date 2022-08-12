@@ -354,7 +354,11 @@
         "quote_price": "Giá thị trường",
         "adjust_volume": "Điều chỉnh khối lượng",
         "full": "Đầy đủ",
-        "simple": "Rút gọn"
+        "simple": "Rút gọn",
+        "change_success": "Thay đổi thành công",
+        "tooltip_popup": "Lựa chọn tài sản để thanh toán phí đóng lệnh nhận chiết khấu tương ứng và cài đặt tài sản thanh toán phí mặc định cho các lệnh tiếp theo ở dòng chọn bên dưới.",
+        "trading_fees": "Phí giao dịch",
+        "set_as_default_trading_fee": "Chọn làm phí giao dịch mặc định"
     },
     "orders_history": "Lịch sử lệnh",
     "minimum_leverage": "Đòn bẩy tối thiểu",

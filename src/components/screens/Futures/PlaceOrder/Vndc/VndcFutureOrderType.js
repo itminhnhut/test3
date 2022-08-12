@@ -99,10 +99,10 @@ export const getRatioProfit = (sltp, order) => {
 };
 
 export const fees = [
+    { assetId: 72, assetCode: 'VNDC', ratio: '0.06%' },
     { assetId: 447, assetCode: 'NAO', ratio: '0.036%' },
     { assetId: 1, assetCode: 'NAMI', ratio: '0.045%' },
     { assetId: 86, assetCode: 'ONUS', ratio: '0.045%' },
-    { assetId: 72, assetCode: 'VNDC', ratio: '0.06%' },
     { assetId: 22, assetCode: 'USDT', ratio: '0.06%' },
 ];
 

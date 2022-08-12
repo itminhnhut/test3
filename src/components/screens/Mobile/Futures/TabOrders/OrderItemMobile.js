@@ -130,11 +130,7 @@ const OrderItemMobile = ({
     const actions = (action, key) => {
         if (action === 'modal') {
             isModal.current = true;
-            if (key === 'edit-fee') {
-                console.log('edit-fee')
-            } else {
-                onShowModal(order, key)
-            }
+           onShowModal(order, key)
         }
         if (action === 'delete') {
             isModal.current = true;
@@ -205,7 +201,6 @@ const OrderItemMobile = ({
 
     const isModify = order?.sl > 0 || order?.tp > 0;
     const isShortcut = mode === modeOrders.shortcut;
-
     return (
         <div className="flex flex-col -mx-4 p-4 border-b-[1px] border-onus-line"
             onClick={() => !isShortcut && onShowDetail && actions('detail')}
