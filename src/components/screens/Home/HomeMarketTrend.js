@@ -110,7 +110,7 @@ const HomeMarketTrend = () => {
         const { pairs } = data
 
         return pairs.map(pair => {
-            let sparkLineColor
+            let sparkLineColor = colors.teal;
             const _ = initMarketWatchItem(pair)
             const _24hChange = getExchange24hPercentageChange(pair)
 
