@@ -8,7 +8,7 @@ import Emitter from 'redux/actions/emitter';
 import { PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
-const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0 }) => {
+const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0,mode }) => {
     const [pairPrice, setPairPrice] = useState(null);
     const [lastSymbol, setLastSymbol] = useState(null);
     const _pairPrice = pairPrice || initPairPrice
@@ -33,7 +33,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
         return () => {
             Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
         };
-    }, [symbol]);
+    }, [symbol, mode]);
 
     if (!_pairPrice?.lastPrice && !isTabHistory) return '-';
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask

@@ -253,7 +253,8 @@ const OrderItemMobile = ({
                                 <div className="text-xs font-medium text-onus-green float-right">
                                     <OrderProfit onusMode={true} className="flex flex-col"
                                         order={order} initPairPrice={dataMarketWatch} isTabHistory={isTabHistory}
-                                        isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2} />
+                                        isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
+                                        mode={mode} />
                                 </div>
                             </div>
                         </>
