@@ -7,7 +7,7 @@ import { debounce } from 'lodash/function';
 import { useTranslation } from 'next-i18next';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY, } from 'redux/actions/apis';
-import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, scrollHorizontal } from 'redux/actions/utils';
+import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, scrollHorizontal, formatNumber } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import usePrevious from 'hooks/usePrevious';
 import SortIcon from 'components/screens/Mobile/SortIcon';
@@ -18,7 +18,7 @@ import { Search } from 'react-feather';
 import { useRef } from 'react';
 import { orderBy } from 'lodash';
 import Tag from 'components/common/Tag'
-
+import { roundTo } from 'round-to';
 const TABS = {
     FAVOURITE: 'FAVOURITE',
     FUTURES: 'FUTURES',
@@ -172,7 +172,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                         view: item.vc ?? 0,
                         change24hRaw: getExchange24hPercentageChange(item),
                         change24h: formatPercentage(
-                            getExchange24hPercentageChange(item),
+                            roundTo(getExchange24hPercentageChange(item),2),
                             2,
                             true
                         ),
@@ -294,7 +294,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                             )}
                         >
                             {item.change24h > 0 && '+'}
-                            {item.change24h} %
+                            {formatNumber(item.change24h, 2, 2, true)} %
                         </div>
                     </div>
                 </div>
