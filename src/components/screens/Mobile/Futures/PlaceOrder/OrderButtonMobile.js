@@ -85,7 +85,7 @@ const OrderButtonMobile = ({
             emitWebViewEvent('login');
             return;
         }
-        if (isError) return;
+        if (isError || disabled) return;
         if (settings?.user_setting?.[FuturesSettings.order_confirm] || _.isEmpty(settings)) {
             rowData.current = {
                 baseAsset: pairConfig?.baseAsset,
