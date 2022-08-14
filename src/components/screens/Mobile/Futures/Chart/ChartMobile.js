@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import useDarkMode from 'hooks/useDarkMode';
 
 import dynamic from 'next/dynamic';
@@ -13,7 +13,7 @@ const MobileTradingView = dynamic(
 
 // import {MobileTradingView} from "components/TVChartContainer/MobileTradingView";
 
-const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, forceRender, isFullScreen, decimals }) => {
+const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, forceRender, isFullScreen, decimals,isShowChartFullScreen }) => {
     const [chartKey, setChartKey] = useState('nami-mobile-chart')
     const [themeMode] = useDarkMode()
     const { t } = useTranslation();
@@ -23,11 +23,13 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
     const style = useMemo(() => {
         if (typeof window !== "undefined") {
             const vh = window.innerHeight * 0.01;
+            // if(window.orientation!==0) return {height: `calc(var(--vh, 1vh) * 100)`}
             return { height: !isFullScreen ? (collapse ? (vh * 100 - 100) : 400) : `calc(100% - ${collapse ? 120 : 230}px)` }
         } else {
             return { height: `calc(100% - ${collapse ? 120 : 230}px)` }
         }
     }, [isFullScreen, collapse, typeof window])
+
 
     return (
         <div className='spot-chart h-full max-w-full' style={style}>
@@ -43,6 +45,7 @@ const ChartMobile = memo(({ pairConfig, isVndcFutures, setCollapse, collapse, fo
                 setCollapse={setCollapse}
                 collapse={collapse}
                 isFullScreen={isFullScreen}
+                isShowChartFullScreen={isShowChartFullScreen}
                 showIconGuide={!collapse}
                 styleChart={{ minHeight: `calc(100% - 90px)` }}
                 reNewComponentKey={() => setChartKey(Math.random().toString())} // Change component key will remount component

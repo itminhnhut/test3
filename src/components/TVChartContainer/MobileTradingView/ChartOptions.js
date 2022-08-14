@@ -15,7 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Guideline from 'components/screens/Mobile/Futures/Guideline';
 import styled from 'styled-components';
 import useWindowSize from 'hooks/useWindowSize'
-
+import TimeWhite from 'components/svg/SvgTimeWhite';
+import Reload from 'components/svg/Reload';
+import SvgActivity from 'components/svg/Activity';
 const listChartType = [
     { text: 'Bar', value: 0, icon: BarsChart },
     { text: 'Candle', value: 1, icon: CandleChartOnus },
@@ -39,7 +41,7 @@ export const listTimeFrame = [
 const ChartOptions = ({
     pairConfig, pair, isVndcFutures, resolution, setResolution,
     chartType, setChartType, className = '', isFullScreen, showSymbol = true,
-    showIconGuide = true, pairParent
+    showIconGuide = true, pairParent, handleFullScreenChart, isShowChartFullScreen, handleOpenIndicatorModal
 }) => {
     const { width } = useWindowSize()
     const xs = width < 390;
@@ -91,12 +93,20 @@ const ChartOptions = ({
                     classNamePanel="rounded-md left-[-20px]"
                     label={<Svg>{labelCandle.icon}</Svg>}
                 />
-                {showIconGuide &&
+                {/* {showIconGuide &&
                     <div className="" onClick={() => setStart(true)}>
                         <IconHelper />
                     </div>
+                } */}
+                {/* onClick={resetComponent} color={collapse ? colors.onus.white : colors.onus.gray}  */}
+                {isShowChartFullScreen ?
+(                    <div onClick={handleOpenIndicatorModal}>
+                        <SvgActivity color={colors.onus.grey} />
+                    </div>)
+                     : <Reload color={colors.onus.grey} />
                 }
                 <FavouriteButton pair={pair} pairConfig={pairConfig} />
+                {isShowChartFullScreen && <TimeWhite className={"!ml-10"} onClick={handleFullScreenChart} />}
             </div>
             <ModelMarketMobile
                 pairConfig={pairConfig}

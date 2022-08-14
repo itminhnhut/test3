@@ -1,6 +1,7 @@
-import React, { useState, useTransition } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import SvgActivity from 'components/svg/Activity';
 import colors from 'styles/colors';
+import FullScreen from 'components/svg/FullScreen';
 import Reload from 'components/svg/Reload';
 
 export const mainIndicators = [
@@ -41,7 +42,9 @@ const IndicatorBars = ({
     mainIndicator,
     setSubIndicator,
     subIndicator,
-    resetComponent
+    resetComponent,
+    handleFullScreenChart,
+    isShowChartFullScreen
 }) => {
     const setIndicator = (item, key) => {
         let value = '';
@@ -59,7 +62,10 @@ const IndicatorBars = ({
             setCollapse(!collapse);
         }, 300);
     };
+    useEffect(() => {
+        console.log(screen.orientation);
 
+    }, [screen.orientation]);
     return (
         <div
             className="h-[38px] flex items-center justify-between px-4 border-b border-t border-onus-line">
@@ -79,9 +85,14 @@ const IndicatorBars = ({
                     <div
                         key={item.value}
                         className={subIndicator === item.value ? 'text-onus-white' : ''}
+
                         onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
                 ))}
-                <Reload onClick={resetComponent} color={collapse ? colors.onus.white : colors.onus.gray}/>
+                
+                {isShowChartFullScreen? <Reload onClick={resetComponent} color={collapse ? colors.onus.white : colors.onus.gray}/>:
+                <FullScreen onClick={handleFullScreenChart} color={collapse ? colors.onus.white : colors.onus.gray}/>
+                }
+                
             </div>
         </div>
     );

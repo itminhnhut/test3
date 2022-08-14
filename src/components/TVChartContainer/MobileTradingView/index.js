@@ -1,19 +1,20 @@
 import * as React from 'react';
-import {IconLoading} from 'components/common/Icons';
+import { IconLoading } from 'components/common/Icons';
 import NamiExchangeSvg from 'components/svg/NamiExchangeSvg';
-import {formatNumber, getTradingViewTimezone} from 'redux/actions/utils';
+import { formatNumber, getTradingViewTimezone } from 'redux/actions/utils';
 import colors from '../../../styles/colors';
-import {widget} from '../../TradingView/charting_library/charting_library.min';
+import { widget } from '../../TradingView/charting_library/charting_library.min';
 import Datafeed from '../api';
-import {ChartMode} from 'redux/actions/const';
-import {VndcFutureOrderType} from '../../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
+import { ChartMode } from 'redux/actions/const';
+import { VndcFutureOrderType } from '../../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import ChartOptions from "components/TVChartContainer/MobileTradingView/ChartOptions";
 import classNames from "classnames";
 import IndicatorBars, {
     mainIndicators,
     subIndicators
 } from "components/TVChartContainer/MobileTradingView/IndicatorBars";
-import {find, get, set} from "lodash";
+import { find, get, set } from "lodash";
+// import styles from 'mobile-safari-fullscreen/index.module.css'
 
 const CONTAINER_ID = "nami-mobile-tv";
 const CHART_VERSION = "1.0.8";
@@ -32,7 +33,9 @@ export class MobileTradingView extends React.PureComponent {
         studies: [],
         priceChartType: 1,
         mainIndicator: null,
-        subIndicator: null
+        subIndicator: null,
+        isShowChartFullScreen: false,
+        isLandscape:window.innerWidth > window.innerHeight,
     };
 
     tvWidget = null;
@@ -59,6 +62,7 @@ export class MobileTradingView extends React.PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        window.addEventListener('resize', this.handleResize)
         if (
             this.props.symbol !== prevProps.symbol ||
             this.props.chartSize !== prevProps.chartSize
@@ -94,9 +98,11 @@ export class MobileTradingView extends React.PureComponent {
         if ((prevProps.ordersList !== this.props.ordersList) && !this.firstTime) {
             this.rawOrders();
         }
+        
     }
 
     componentWillUnmount() {
+        window.removeEventListener('resize', this.handleResize)
         if (this.tvWidget !== null) {
             this.tvWidget.remove();
             this.tvWidget = null;
@@ -104,18 +110,27 @@ export class MobileTradingView extends React.PureComponent {
         clearInterval(this.intervalSaveChart);
     }
 
+    handleResize = () => {
+        const width = window.innerWidth
+        const height = window.innerHeight
+        const isLandscape = width > height
+        if(isLandscape!== this.state.isLandscape){
+            this.setState({...this.state, isLandscape})
+        }
+    };
+
     handleActiveTime = (value) => {
         if (this?.widget) {
             this.widget.setSymbol(this.props.symbol, value, () => {
             });
-            this.setState({interval: value});
+            this.setState({ interval: value });
         }
     };
 
     handleChangeChartType = (type) => {
         if (this?.widget) {
             this.widget.chart().setChartType(type);
-            this.setState({priceChartType: type});
+            this.setState({ priceChartType: type });
         }
     };
 
@@ -131,11 +146,11 @@ export class MobileTradingView extends React.PureComponent {
             this.createIndicator(value, (id) => {
                 this.setState({
                     ...this.state,
-                    [indicatorStateKey]: {id, name: value}
+                    [indicatorStateKey]: { id, name: value }
                 })
             })
         } else {
-            this.setState({...this.state, [indicatorStateKey]: null})
+            this.setState({ ...this.state, [indicatorStateKey]: null })
         }
     }
 
@@ -191,7 +206,7 @@ export class MobileTradingView extends React.PureComponent {
         return `${order.side} ${orderType}`.toUpperCase();
     };
 
-    getTicket = ({displaying_id: displayingId}) => {
+    getTicket = ({ displaying_id: displayingId }) => {
         return displayingId;
     }
 
@@ -470,13 +485,13 @@ export class MobileTradingView extends React.PureComponent {
 
                 "volumePaneSize": "tiny"
             });
-            this.setState({chartStatus: ChartStatus.LOADED});
+            this.setState({ chartStatus: ChartStatus.LOADED });
             // if (this.props.isVndcFutures) {
-                if (this.timer) clearTimeout(this.timer)
-                this.timer = setTimeout(() => {
-                    this.rawOrders();
-                    this.firstTime = false;
-                }, 2000);
+            if (this.timer) clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                this.rawOrders();
+                this.firstTime = false;
+            }, 2000);
             // }
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(this.saveChart, 5000);
@@ -487,8 +502,8 @@ export class MobileTradingView extends React.PureComponent {
         const currentStudies = this.widget.activeChart().getAllStudies();
         this.setState({
             ...this.state,
-            mainIndicator: find(currentStudies, s => !!find(mainIndicators, {value: s.name})),
-            subIndicator: find(currentStudies, s => !!find(subIndicators, {value: s.name})),
+            mainIndicator: find(currentStudies, s => !!find(mainIndicators, { value: s.name })),
+            subIndicator: find(currentStudies, s => !!find(subIndicators, { value: s.name })),
         })
     }
 
@@ -497,62 +512,108 @@ export class MobileTradingView extends React.PureComponent {
             this.widget.chart().executeActionById("insertIndicator");
         }
     };
+    handleFullScreenChart = () => {
+        this.setState(
+            {
+                ...this.state,
+                isShowChartFullScreen: !this.state.isShowChartFullScreen,
+            }
+        )
+
+        // handle by screen window
+        // const element = document.querySelector("#chart-container")
+        // const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+        // if(isSafari) return
+        // if (typeof screen === undefined) return
+
+        // if (this.state.isShowChartFullScreen) {
+        //     screen.orientation.lock("portrait-primary")
+        //     screen.orientation.unlock()
+        //     document.exitFullscreen()
+        // }
+        // else {
+        //     if (
+        //         element.webkitRequestFullScreen
+        //     ) {
+
+        //         element?.webkitRequestFullScreen();
+        //     }
+        //     if(element.requestFullscreen) {
+        //         element.requestFullscreen();
+        //     }
+        //     else return
+        //     screen.orientation.lock("landscape-primary")
+        // }
+
+    };
 
     resetComponent = () => {
         localStorage.removeItem(this.getChartKey);
         if (this.props.reNewComponentKey) this.props.reNewComponentKey()
     }
 
+
     render() {
+        {/* bg-onus relative flex flex-grow flex-col h-full  */}
         return (
             <>
                 <div
-                    className="relative flex flex-grow flex-col h-full bg-onus"
+                    className={classNames("flex flex-grow flex-col ",
+                    this.state.isShowChartFullScreen&&!this.state.isLandscape&&
+                     "full_screen_modal h-[100vw] w-[100vh] left-[50%] relative z-[9999999]",
+                     this.state.isLandscape?"!fixed top-0 bottom-0 left-0 right-0":"relative h-full",
+                     )}
                     id="chart-container"
                 >
+                    <div>{this.state.orientation}</div>
                     <div
-                        className={classNames(`absolute w-full h-full flex justify-center items-center`, {
+                        className={classNames(` absolute w-full flex justify-center items-center`, {
                             "hidden": this.state.chartStatus === ChartStatus.LOADED
                         })}
                     >
-                        <IconLoading color={colors.onus.green}/>
+                        <IconLoading color={colors.onus.green} />
                     </div>
                     {this.props.showTimeFrame &&
-                    <div className="w-full border-b border-onus-line py-2 dragHandleArea z-10">
-                        <ChartOptions
-                            pair={this.props.symbol}
-                            pairConfig={this.props.pairConfig}
-                            isVndcFutures={this.props.isVndcFutures}
-                            resolution={this.state.interval}
-                            setResolution={this.handleActiveTime}
-                            isFullScreen={this.props.isFullScreen}
-                            chartType={this.state.priceChartType}
-                            setChartType={this.handleChangeChartType}
-                            showSymbol={this.props.showSymbol}
-                            showIconGuide={this.props.showIconGuide}
-                        />
-                    </div>
+                        <div className="w-full border-b border-onus-line py-2 dragHandleArea z-10">
+                            <ChartOptions
+                                pair={this.props.symbol}
+                                pairConfig={this.props.pairConfig}
+                                isVndcFutures={this.props.isVndcFutures}
+                                resolution={this.state.interval}
+                                setResolution={this.handleActiveTime}
+                                isFullScreen={this.props.isFullScreen}
+                                chartType={this.state.priceChartType}
+                                setChartType={this.handleChangeChartType}
+                                showSymbol={this.props.showSymbol}
+                                showIconGuide={this.props.showIconGuide}
+                                handleFullScreenChart={this.handleFullScreenChart}
+                                isShowChartFullScreen={this.state.isShowChartFullScreen}
+                                handleOpenIndicatorModal={this.handleOpenIndicatorModal}
+                            />
+                        </div>
                     }
+
                     <div
                         id={this.containerId}
-                        className={`h-full pr-2 ${this.props.classNameChart}`}
-                        style={this.props.styleChart}
+                        className={`pr-2 flex-1 h-full ${this.props.classNameChart}`}
+                        style={this.state.isShowChartFullScreen || this.state.isLandscape ? { ...this.props.styleChart,minHeight:0} : this.props.styleChart}
                     />
-                    <div>
-                        {
-                            this.state.chartStatus === ChartStatus.LOADED &&
-                            <IndicatorBars
-                                handleOpenIndicatorModal={this.handleOpenIndicatorModal}
-                                setMainIndicator={this.handleChangeIndicator('main')}
-                                setSubIndicator={this.handleChangeIndicator('sub')}
-                                mainIndicator={this.state.mainIndicator?.name}
-                                subIndicator={this.state.subIndicator?.name}
-                                setCollapse={this.props.setCollapse}
-                                collapse={this.props.collapse}
-                                resetComponent={this.resetComponent}
-                            />
-                        }
-                    </div>
+                    {
+                        this.state.chartStatus === ChartStatus.LOADED &&
+
+                        <IndicatorBars
+                            handleOpenIndicatorModal={this.handleOpenIndicatorModal}
+                            setMainIndicator={this.handleChangeIndicator('main')}
+                            setSubIndicator={this.handleChangeIndicator('sub')}
+                            mainIndicator={this.state.mainIndicator?.name}
+                            subIndicator={this.state.subIndicator?.name}
+                            setCollapse={this.props.setCollapse}
+                            collapse={this.props.collapse}
+                            resetComponent={this.resetComponent}
+                            isShowChartFullScreen={this.state.isShowChartFullScreen}
+                            handleFullScreenChart={this.handleFullScreenChart}
+                        />
+                    }
                     {/*<div className="!w-32 cheat-watermark">*/}
                     {/*    <NamiExchangeSvg color={colors.grey4}/>*/}
                     {/*</div>*/}

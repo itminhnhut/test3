@@ -1,25 +1,25 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
-import {useDispatch, useSelector} from 'react-redux';
-import {FUTURES_DEFAULT_SYMBOL} from 'pages/futures';
-import {PATHS} from 'constants/paths';
-import {useRouter} from 'next/router';
-import {UserSocketEvent} from 'redux/actions/const';
-import {LOCAL_STORAGE_KEY} from 'constants/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { FUTURES_DEFAULT_SYMBOL } from 'pages/futures';
+import { PATHS } from 'constants/paths';
+import { useRouter } from 'next/router';
+import { UserSocketEvent } from 'redux/actions/const';
+import { LOCAL_STORAGE_KEY } from 'constants/constants';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import TabOrders from 'components/screens/Mobile/Futures/TabOrders/TabOrders';
 import { getFuturesMarketWatch, getOrdersList, updateSymbolView, fetchFuturesSetting } from 'redux/actions/futures';
-import {VndcFutureOrderType} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import PlaceOrderMobile from 'components/screens/Mobile/Futures/PlaceOrder/PlaceOrderMobile';
 import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
 import ChartMobile from 'components/screens/Mobile/Futures/Chart/ChartMobile';
 import styled from 'styled-components';
-import {countDecimals, emitWebViewEvent} from 'redux/actions/utils';
+import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
 import EventModalMobile from './EventModalMobile';
-import {API_FUTURES_CAMPAIGN_STATUS} from 'redux/actions/apis';
-import {ApiStatus} from 'redux/actions/const';
+import { API_FUTURES_CAMPAIGN_STATUS } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
-import {PromotionStatus} from 'components/screens/Mobile/Futures/onboardingType';
+import { PromotionStatus } from 'components/screens/Mobile/Futures/onboardingType';
 
 const INITIAL_STATE = {
     loading: false,
@@ -30,7 +30,7 @@ const INITIAL_STATE = {
 const FuturesMobile = () => {
     const [state, set] = useState(INITIAL_STATE);
     const dispatch = useDispatch();
-    const setState = (state) => set((prevState) => ({...prevState, ...state}));
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const userSocket = useSelector((state) => state.socket.userSocket);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
@@ -65,7 +65,7 @@ const FuturesMobile = () => {
             router.push(
                 `/mobile${PATHS.FUTURES_V2.DEFAULT}/${newPair}`,
                 undefined,
-                {shallow: true}
+                { shallow: true }
             );
         }
     }, [router?.query?.pair, allPairConfigs])
@@ -83,12 +83,12 @@ const FuturesMobile = () => {
             //     );
             //     return;
             // }
-            setState({pair: router.query.pair});
+            setState({ pair: router.query.pair });
             localStorage.setItem(
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,
                 router.query.pair
             );
-            dispatch(updateSymbolView({symbol: router.query.pair}))
+            dispatch(updateSymbolView({ symbol: router.query.pair }))
         }
     }, [router]);
 
@@ -119,7 +119,7 @@ const FuturesMobile = () => {
     }, [])
 
     useEffect(() => {
-        setState({isVndcFutures: pairConfig?.quoteAsset === 'VNDC'});
+        setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
     }, [pairConfig, userSettings, state.layouts]);
 
     useEffect(() => {
@@ -168,13 +168,13 @@ const FuturesMobile = () => {
                 const scrollSnap = el.clientHeight <= vh * 100;
                 if (scrollSnap) {
                     setScrollSnap(true);
-                    return {isFullScreen: true, style: {height: vh * 100, scrollSnapAlign: 'start'}}
+                    return { isFullScreen: true, style: { height: vh * 100, scrollSnapAlign: 'start' } }
                 }
-                return {isFullScreen: false, style: {height: 'max-content'}}
+                return { isFullScreen: false, style: { height: 'max-content' } }
             }
-            return {isFullScreen: false, style: {height: 'max-content'}}
+            return { isFullScreen: false, style: { height: 'max-content' } }
         } else {
-            return {isFullScreen: false, style: {height: 'max-content'}}
+            return { isFullScreen: false, style: { height: 'max-content' } }
         }
     }, [state.pair, typeof window])
 
@@ -197,10 +197,11 @@ const FuturesMobile = () => {
                 pairConfig={pairConfig}
             />
             <LayoutMobile>
-                {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)}/>}
+
+                {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)} />}
                 <Container id="futures-mobile" onScroll={onScroll}>
                     <Section className="form-order bg-onus"
-                             style={{...futuresScreen.style}}>
+                        style={{ ...futuresScreen.style }}>
                         <ChartMobile
                             pair={state.pair} pairConfig={pairConfig}
                             isVndcFutures={isVndcFutures}
@@ -220,14 +221,31 @@ const FuturesMobile = () => {
                             />
                         </SocketLayout>
                     </Section>
-                    <Section className="bg-onus" style={{...futuresScreen.style}}>
+                    
+                    <Section className="bg-onus" style={{ ...futuresScreen.style }}>
                         <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
-                                   pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
-                                   setForceRender={setForceRender} forceRender={forceRender}
-                                   isFullScreen={futuresScreen.isFullScreen}
+                            pair={state.pair} pairConfig={pairConfig} isAuth={!!auth}
+                            setForceRender={setForceRender} forceRender={forceRender}
+                            isFullScreen={futuresScreen.isFullScreen}
                         />
                     </Section>
+
+                  
                 </Container>
+                  {/* <div className='fixed top-0 left-0 right-0 bottom-0 bg-red'>
+                        <Section className="form-order bg-onus"
+                            style={{ ...futuresScreen.style }}>
+                            <ChartMobile
+                                pair={state.pair} pairConfig={pairConfig}
+                                isVndcFutures={isVndcFutures}
+                                setCollapse={setCollapse} collapse={collapse}
+                                forceRender={forceRender}
+                                isFullScreen={futuresScreen.isFullScreen}
+                                decimals={decimals}
+                            />
+
+                        </Section>
+                    </div> */}
             </LayoutMobile>
         </>
     );
