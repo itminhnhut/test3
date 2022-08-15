@@ -16,7 +16,7 @@ import Guideline from 'components/screens/Mobile/Futures/Guideline';
 import styled from 'styled-components';
 import useWindowSize from 'hooks/useWindowSize'
 import TimeWhite from 'components/svg/SvgTimeWhite';
-import Reload from 'components/svg/Reload';
+import ReloadThin from 'components/svg/ReloadThin';
 import SvgActivity from 'components/svg/Activity';
 const listChartType = [
     { text: 'Bar', value: 0, icon: BarsChart },
@@ -41,7 +41,8 @@ export const listTimeFrame = [
 const ChartOptions = ({
     pairConfig, pair, isVndcFutures, resolution, setResolution,
     chartType, setChartType, className = '', isFullScreen, showSymbol = true,
-    showIconGuide = true, pairParent, handleFullScreenChart, isShowChartFullScreen, handleOpenIndicatorModal
+    showIconGuide = true, pairParent, handleFullScreenChart, isShowChartFullScreen, 
+    handleOpenIndicatorModal, resetComponent
 }) => {
     const { width } = useWindowSize()
     const xs = width < 390;
@@ -103,7 +104,7 @@ const ChartOptions = ({
 (                    <div onClick={handleOpenIndicatorModal}>
                         <SvgActivity color={colors.onus.grey} />
                     </div>)
-                     : <Reload color={colors.onus.grey} />
+                     : <ReloadThin onClick={resetComponent}/>
                 }
                 <FavouriteButton pair={pair} pairConfig={pairConfig} />
                 {isShowChartFullScreen && <TimeWhite className={"!ml-10"} onClick={handleFullScreenChart} />}
@@ -221,5 +222,7 @@ const FavouriteButton = ({ pairConfig }) => {
         <IconStarOnus stroke={isFavorite ? colors.onus.orange : colors.onus.grey} color={isFavorite ? colors.onus.orange : ''} />
     </div>
 }
+
+
 
 export default ChartOptions;

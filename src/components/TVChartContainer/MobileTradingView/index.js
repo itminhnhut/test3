@@ -599,6 +599,7 @@ export class MobileTradingView extends React.PureComponent {
                                 handleFullScreenChart={this.handleFullScreenChart}
                                 isShowChartFullScreen={this.state.isShowChartFullScreen}
                                 handleOpenIndicatorModal={this.handleOpenIndicatorModal}
+                                resetComponent={this.resetComponent}
                             />
                         </div>
                     }
