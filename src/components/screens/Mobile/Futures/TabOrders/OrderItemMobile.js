@@ -57,7 +57,7 @@ const OrderItemMobile = ({
     }, [order?.symbol]);
 
     const getOpenPrice = (row, pairPrice) => {
-        let text = row?.price ? formatNumber(row?.price, 8, 0, true) : 0;
+        let text = row?.price ? formatNumber(row?.price, decimalScalePrice, 0, true) : 0;
         switch (row.status) {
             case VndcFutureOrderType.Status.PENDING:
                 let bias = null;
@@ -80,15 +80,15 @@ const OrderItemMobile = ({
                             </span>
                         );
                 }
-                text = row.price ? formatNumber(row.price, 8) : '';
+                text = row.price ? formatNumber(row.price, decimalScalePrice) : '';
                 return <div className="flex items-center text-right ">
                     <div>{text}</div>
                 </div>;
             case VndcFutureOrderType.Status.ACTIVE:
-                text = row.open_price ? formatNumber(row.open_price, 8) : '';
+                text = row.open_price ? formatNumber(row.open_price, decimalScalePrice) : '';
                 return <div>{text}</div>;
             case VndcFutureOrderType.Status.CLOSED:
-                text = row.close_price ? formatNumber(row.close_price, 8) : '';
+                text = row.close_price ? formatNumber(row.close_price, decimalScalePrice) : '';
                 return <div>{text}</div>;
             default:
                 return <div>{text}</div>;
@@ -120,7 +120,7 @@ const OrderItemMobile = ({
 
     const renderSlTp = (value) => {
         if (value) {
-            return formatNumber(value);
+            return formatNumber(value, decimalScalePrice, 0, true);
         }
         return t('futures:not_set');
     };
@@ -169,7 +169,7 @@ const OrderItemMobile = ({
 
     const _renderLastPrice = (isTabHistory) => {
         if (isTabHistory) {
-            return order?.close_price ? formatNumber(order?.close_price) : '-';
+            return order?.close_price ? formatNumber(order?.close_price, decimalScalePrice, 0, true) : '-';
         } else {
             return <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order?.symbol}/>;
         }
@@ -265,7 +265,7 @@ const OrderItemMobile = ({
                         :
                         <OrderItem
                             label={t('futures:order_table:open_price')}
-                            value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : getOpenPrice(order, pairPrice)}
+                            value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, decimalScalePrice, 0, false) : '-' : getOpenPrice(order, pairPrice)}
                         />
                     }
                     <OrderItem

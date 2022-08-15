@@ -92,14 +92,14 @@ const OrderDetail = ({
 
     const getValue = (number) => {
         if (number) {
-            return formatNumber(number, decimalSymbol, 0, true);
+            return formatNumber(number, decimalPrice, 0, true);
         } else {
             return t('futures:not_set');
         }
     };
     const renderSlTp = (value) => {
         if (value) {
-            return formatNumber(value);
+            return formatNumber(value, decimalPrice, 0, true);
         }
         return t('futures:not_set');
     };
@@ -303,11 +303,11 @@ const OrderDetail = ({
                                     </Row>}
                                 <Row>
                                     <Label>{t('futures:order_table:volume')}</Label>
-                                    <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
+                                    <Span>{`${formatNumber(order?.order_value, decimalSymbol)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:margin')}</Label>
-                                    <Span>{formatNumber(order?.margin, assetConfig?.swap?.assetDigit ?? 0)}</Span>
+                                    <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:open_time')}</Label>
@@ -316,12 +316,12 @@ const OrderDetail = ({
                                 {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
                                     <Row>
                                         <Label>{t(`futures:${order?.type === VndcFutureOrderType.Type.LIMIT ? 'limit_price' : 'stop_price'}`)}</Label>
-                                        <Span>{formatNumber(order?.price, decimalSymbol)}</Span>
+                                        <Span>{formatNumber(order?.price, decimalPrice)}</Span>
                                     </Row>
                                 }
                                 <Row>
                                     <Label>{t('futures:order_table:open_price')}</Label>
-                                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalSymbol) : '-'}</Span>
+                                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalPrice) : '-'}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:close_time')}</Label>
@@ -329,7 +329,7 @@ const OrderDetail = ({
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:order_table:close_price')}</Label>
-                                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalSymbol) : '-'}</Span>
+                                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalPrice) : '-'}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:reason_close')}</Label>

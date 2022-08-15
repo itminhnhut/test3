@@ -170,7 +170,7 @@ const OrderOpenDetail = ({
 
     const renderSlTp = (value) => {
         if (value) {
-            return formatNumber(value);
+            return formatNumber(value, decimalPrice, 0, true);
         }
         return t('futures:not_set');
     };
@@ -191,8 +191,8 @@ const OrderOpenDetail = ({
 
     const renderQuoteprice = useCallback(() => {
         return order?.side === VndcFutureOrderType.Side.BUY
-            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol}/>
-            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol}/>;
+            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol} />
+            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol} />;
     }, [order]);
 
     const orderStatus = useMemo(() => {
@@ -235,8 +235,8 @@ const OrderOpenDetail = ({
                         </div>
                         {canShare ?
                             <img className="ml-2"
-                                 onClick={openShare} src={getS3Url('/images/icon/ic_share_onus.png')} height={20}
-                                 width={20}/>
+                                onClick={openShare} src={getS3Url('/images/icon/ic_share_onus.png')} height={20}
+                                width={20} />
                             : null
                         }
                     </div>
@@ -256,9 +256,9 @@ const OrderOpenDetail = ({
                         <div className="text-xs text-right" onClick={openShare}>
                             <div className="text-xs font-medium text-onus-green float-right">
                                 <OrderProfit key={order.displaying_id} onusMode={true} className="flex flex-col text-right"
-                                             decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
-                                             order={order} initPairPrice={dataMarketWatch} isTabHistory={false}
-                                             isMobile/>
+                                    decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
+                                    order={order} initPairPrice={dataMarketWatch} isTabHistory={false}
+                                    isMobile />
                             </div>
                         </div>
                     }
@@ -288,19 +288,19 @@ const OrderOpenDetail = ({
             }
             <div className="flex flex-wrap w-full">
                 <OrderItem label={t('futures:order_table:volume')}
-                           value={formatNumber(order?.order_value, decimalSymbol, 0, true)}/>
+                    value={formatNumber(order?.order_value, decimalSymbol, 0, true)} />
                 {!isTabOpen ?
                     <OrderItem label={t('futures:order_table:open_price')}
-                               value={formatNumber(price, decimalPrice, 0, true)}/>
+                        value={formatNumber(price, decimalPrice, 0, true)} />
                     :
-                    <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)}/>
+                    <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
                 }
                 <OrderItem
                     label={t('futures:margin')}
                     value={order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                 />
                 {!isTabOpen && <>
-                    <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)}/>
+                    <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
                     <OrderItem
                         label={t('futures:mobile:quote_price')}
                         value={renderQuoteprice()}
@@ -308,15 +308,15 @@ const OrderOpenDetail = ({
                 </>
                 }
                 <OrderItem label={t('futures:stop_loss')}
-                           valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}
-                           value={renderSlTp(order?.sl)}/>
+                    valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}
+                    value={renderSlTp(order?.sl)} />
                 <OrderItem label={t('common:last_price')}
-                           value={
-                               <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order.symbol}/>}
+                    value={
+                        <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order.symbol} />}
                 />
                 <OrderItem label={t('futures:take_profit')}
-                           valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}
-                           value={renderSlTp(order?.tp)}/>
+                    valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}
+                    value={renderSlTp(order?.tp)} />
             </div>
             <div className="flex w-full mt-4 space-x-2">
                 {
