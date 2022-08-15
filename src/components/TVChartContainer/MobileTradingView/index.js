@@ -98,7 +98,6 @@ export class MobileTradingView extends React.PureComponent {
         if ((prevProps.ordersList !== this.props.ordersList) && !this.firstTime) {
             this.rawOrders();
         }
-        
     }
 
     componentWillUnmount() {
@@ -114,8 +113,8 @@ export class MobileTradingView extends React.PureComponent {
         const width = window.innerWidth
         const height = window.innerHeight
         const isLandscape = width > height
-        if(isLandscape!== this.state.isLandscape){
-            this.setState({...this.state, isLandscape})
+        if (isLandscape !== this.state.isLandscape) {
+            this.setState({ ...this.state, isLandscape })
         }
     };
 
@@ -375,7 +374,7 @@ export class MobileTradingView extends React.PureComponent {
         this.oldOrdersList = this.props?.ordersList.map(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && order.displaying_id)
     };
 
-    initWidget = (symbol) => {
+    initWidget = (symbol,_,isShowChartFullScreen) => {
         if (!symbol) return;
 
         const datafeed = new Datafeed(this.props.mode || ChartMode.SPOT)
@@ -423,6 +422,7 @@ export class MobileTradingView extends React.PureComponent {
             enabled_features: [
                 "move_logo_to_main_pane",
                 "edit_buttons_in_legend",
+                isShowChartFullScreen?'left_toolbar':null
             ],
             charts_storage_url: this.props.chartsStorageUrl,
             charts_storage_api_version: this.props.chartsStorageApiVersion,
@@ -460,6 +460,7 @@ export class MobileTradingView extends React.PureComponent {
         if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
 
         // eslint-disable-next-line new-cap
+        console.log(widgetOptions);
         this.widget = new widget(widgetOptions);
         this.widget.onChartReady(() => {
 
@@ -513,6 +514,7 @@ export class MobileTradingView extends React.PureComponent {
         }
     };
     handleFullScreenChart = () => {
+        this.initWidget(this.props.symbol,'',!this.state.isShowChartFullScreen)
         this.setState(
             {
                 ...this.state,
@@ -552,17 +554,25 @@ export class MobileTradingView extends React.PureComponent {
         if (this.props.reNewComponentKey) this.props.reNewComponentKey()
     }
 
-
+    style = () => {
+        if (this.state.isShowChartFullScreen && !this.state.isLandscape)
+            return ({
+                width: window.innerHeight,
+                transform: `translate(-50%, calc((${window.innerHeight}px - 100vw)/2)) rotate(90deg)`
+            })
+        else return {}
+    }
     render() {
-        {/* bg-onus relative flex flex-grow flex-col h-full  */}
+        {/* bg-onus relative flex flex-grow flex-col h-full  */ }
         return (
             <>
                 <div
-                    className={classNames("flex flex-grow flex-col ",
-                    this.state.isShowChartFullScreen&&!this.state.isLandscape&&
-                     "full_screen_modal h-[100vw] w-[100vh] left-[50%] relative z-[9999999]",
-                     this.state.isLandscape?"!fixed top-0 bottom-0 left-0 right-0":"relative h-full",
-                     )}
+                    className={classNames("flex flex-grow flex-col bg-onus",
+                        this.state.isShowChartFullScreen && !this.state.isLandscape &&
+                        "full_screen_modal h-[100vw] left-[50%] relative z-[9999999]",
+                        this.state.isLandscape ? "!fixed top-0 bottom-0 left-0 right-0" : "relative h-full",
+                    )}
+                    style={this.state.isShowChartFullScreen && !this.state.isLandscape ? this.style() : {}}
                     id="chart-container"
                 >
                     <div>{this.state.orientation}</div>
@@ -596,7 +606,7 @@ export class MobileTradingView extends React.PureComponent {
                     <div
                         id={this.containerId}
                         className={`pr-2 flex-1 h-full ${this.props.classNameChart}`}
-                        style={this.state.isShowChartFullScreen || this.state.isLandscape ? { ...this.props.styleChart,minHeight:0} : this.props.styleChart}
+                        style={this.state.isShowChartFullScreen || this.state.isLandscape ? { ...this.props.styleChart, minHeight: 0 } : this.props.styleChart}
                     />
                     {
                         this.state.chartStatus === ChartStatus.LOADED &&
