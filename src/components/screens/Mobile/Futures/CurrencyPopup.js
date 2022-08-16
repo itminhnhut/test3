@@ -25,15 +25,15 @@ const CurrencyPopup = (props) => {
     const assetId=useRef(null);
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
     const [disableForAvailable, setDisableForAvailable] = useState(false);
-
+    const currency = dataRow?.fee_metadata?.close_order?.currency ?? dataRow?.fee_metadata?.place_order?.currency 
     const alertContext = useContext(AlertContext);
 
-    useMemo(() => {
+    useEffect(() => {
         if (dataRow) {
             const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
             const codeOfAsset = [72, 447, 1, 86, 22];
             codeOfAsset.forEach((item, index) => {
-                if (dataRow?.fee_metadata?.close_order?.currency === item) {
+                if (currency === item) {
                     setHoverItemsChose(assetCodeArray[index]);
                 }
             });
@@ -63,6 +63,7 @@ const CurrencyPopup = (props) => {
             Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0);
         return (
             <div className="w-full relative"
+            key={index}
             >
                 <div className={`${
                     hoverItemsChose === item.assetCode
@@ -126,21 +127,21 @@ const CurrencyPopup = (props) => {
         const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
         const codeOfAsset = [72, 447, 1, 86, 22];
         codeOfAsset.forEach((item, index) => {
-            if (dataRow?.fee_metadata?.close_order?.currency === item) {
+            if (currency === item) {
                 setHoverItemsChose(assetCodeArray[index]);
             }
         });
     };
 
-    useMemo(() => {
+    useEffect(() => {
         const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
         const codeOfAsset = [72, 447, 1, 86, 22];
-       if (dataRow?.fee_metadata?.close_order?.currency === codeOfAsset[assetCodeArray.indexOf(hoverItemsChose)]) {
+       if (currency === codeOfAsset[assetCodeArray.indexOf(hoverItemsChose)]) {
         setdDisabledButton(true);
        } else {
         setdDisabledButton(false);
        }
-    }, [hoverItemsChose])
+    }, [hoverItemsChose, currency])
 
     const HandleConfirmModal = async () => {
         setSubmitting(true);
