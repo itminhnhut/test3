@@ -237,7 +237,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[979px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
                 containerClassName="!bg-nao-bgModal2/[0.9]"
             >
-                <div className="px-4 scrollbar-nao overflow-y-auto h-[calc(100%-72px)]">
+                <div className="pb-3 sm:pb-0 px-4 scrollbar-nao overflow-y-auto h-[calc(100%-72px)]">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
                         {isMobile ?
                             <div className="flex flex-col items-center justify-center">
@@ -342,7 +342,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                             {item?.name && <ImageNao className="rounded-[50%] min-w-[36px] min-h-[36px] max-w-[36px] max-h-[36px] object-cover"
                                                                 src={item?.avatar} />}
                                                         </div>
-                                                        <div className="text-sm font-semibold leading-5">
+                                                        <div className="text-sm font-semibold leading-5 capitalize">
                                                             {capitalize(item?.name) ?? t('nao:contest:member', { value: index + 1 })}
                                                         </div>
                                                     </div>
@@ -395,7 +395,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <Column minWidth={180} ellipsis className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                             <Column minWidth={200} ellipsis className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                             <Column visible={!previous} minWidth={isPending.group ? 100 : 120} title={t('common:status')} fieldName="status" cellRender={renderStatusMember} />
-                            <Column visible={!isPending.group} minWidth={70} className="text-onus-grey" title={t('nao:contest:trades')} fieldName="total_order" />
+                            <Column visible={!isPending.group} minWidth={70} align="right" className="text-onus-grey" title={t('nao:contest:trades')} fieldName="total_order" />
                             <Column visible={!isPending.group} minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
                             <Column visible={!isPending.group} minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                             <Column visible={isPending.group} minWidth={200} align="right" className="text-onus-grey underline cursor-pointer"
