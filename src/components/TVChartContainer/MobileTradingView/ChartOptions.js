@@ -143,7 +143,7 @@ const ChartOptions = ({
                     options={listTimeFrame}
                     classNamePanel="rounded-md"
                     label={<div
-                        className="text-[0.9375rem] text-onus-grey font-medium leading-[1.25rem]">{resolutionLabel}</div>}
+                        className="text-[0.9375rem] text-onus-grey leading-[1.25rem]">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={chartType}

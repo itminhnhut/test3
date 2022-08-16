@@ -54,7 +54,7 @@ export class MobileTradingView extends React.PureComponent {
 
     componentDidMount() {
         if (this.props?.refChart) this.props?.refChart(this);
-        this.initWidget(this.props.symbol);
+        this.initWidget(this.props.symbol, this.props.fullChart);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

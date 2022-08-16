@@ -64,14 +64,14 @@ const ChartMobile = memo(({
                 mode={ChartMode.FUTURES}
                 isFullScreen={isFullScreen}
                 showIconGuide={!fullChart}
-                styleChart={{ minHeight: `calc(100% - ${fullChart ? '56' : '90'}px)` }}
+                styleChart={{ minHeight: `calc(100% - ${fullChart ? '58' : '90'}px)` }}
                 reNewComponentKey={() => setChartKey(Math.random()
                     .toString())} // Change component key will remount component
                 fullChart={fullChart}
                 setFullChart={setFullChart}
             />
             {fullChart &&
-                <div className="absolute right-4 bottom-3" onClick={() => refChart.current.resetComponent()}>
+                <div className="absolute right-4 bottom-2" onClick={() => refChart.current.resetComponent()}>
                     <IconRefresh color={colors.onus.white} />
                 </div>
             }

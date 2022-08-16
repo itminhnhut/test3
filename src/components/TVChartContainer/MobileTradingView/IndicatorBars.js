@@ -41,6 +41,7 @@ const IndicatorBars = ({
     setSubIndicator,
     subIndicator,
     resetComponent,
+    fullChart,
     setFullChart,
     isDetail
 }) => {
@@ -57,7 +58,7 @@ const IndicatorBars = ({
 
     return (
         <div
-            className="h-[38px] flex items-center justify-between px-4 border-b border-t border-onus-line">
+            className={`h-[38px] flex items-center justify-between px-4 ${!fullChart ? 'border-b border-t border-onus-line' : ''}`}>
             <div
                 className="flex items-center text-xs text-onus-grey font-medium justify-between w-full">
                 <div onClick={handleOpenIndicatorModal}>
