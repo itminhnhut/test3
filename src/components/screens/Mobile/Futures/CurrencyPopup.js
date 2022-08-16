@@ -3,7 +3,7 @@ import Modal from "components/common/ReModal";
 import Button from "components/common/Button";
 import colors from "styles/colors";
 import CheckBox from "components/common/CheckBox";
-import { getS3Url,formatCurrency } from "redux/actions/utils";
+import { getS3Url,formatCurrency, formatNumber } from "redux/actions/utils";
 import { fees } from "components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType";
 import { API_POST_CHANGE_FEES_CURRENCY_ORDER } from "redux/actions/apis";
 import axios from "axios";
@@ -11,6 +11,7 @@ import { useTranslation } from "next-i18next";
 import { AlertContext } from "components/common/layouts/LayoutMobile";
 import Tooltip from "components/common/Tooltip";
 import { useSelector } from "react-redux";
+import { isNumber } from "lodash";
 
 const CurrencyPopup = (props) => {
     const { visibleModalFees, dataRow, setVisibleModalFees,forceFetchOrder } = props;
@@ -21,17 +22,18 @@ const CurrencyPopup = (props) => {
     const avlbAsset = useSelector((state) => state.wallet?.FUTURES);
     const { t } = useTranslation();
     const [disabledButton, setdDisabledButton] = useState(false);
-    const assetId=useRef(null)
-
+    const assetId=useRef(null);
+    const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
+    const [disableForAvailable, setDisableForAvailable] = useState(false);
+    const currency = dataRow?.fee_metadata?.close_order?.currency ?? dataRow?.fee_metadata?.place_order?.currency 
     const alertContext = useContext(AlertContext);
 
-    useMemo(() => {
+    useEffect(() => {
         if (dataRow) {
-            console.log(dataRow, "dq1")
             const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
             const codeOfAsset = [72, 447, 1, 86, 22];
             codeOfAsset.forEach((item, index) => {
-                if (dataRow?.fee_metadata?.close_order?.currency === item) {
+                if (currency === item) {
                     setHoverItemsChose(assetCodeArray[index]);
                 }
             });
@@ -50,19 +52,28 @@ const CurrencyPopup = (props) => {
         }
     }, [dataRow]);
 
+    const handleDisableBTN = (availableAsset, _assetConfigs) => {
+        setDisableForAvailable(formatNumber(availableAsset, _assetConfigs.assetDigit) === "0"? true : false)
+    }
+
     const renderAllCurrency = feesFor?.map((item, index) => {
         const _avlb = avlbAsset?.[item.assetId];
+        const _assetConfigs = assetConfigs.find(e => e.id === item.assetId);
         const availableAsset =
             Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0);
         return (
-            <div className="w-full relative">
+            <div className="w-full relative"
+            key={index}
+            >
                 <div className={`${
                     hoverItemsChose === item.assetCode
                         ? "border-[1px] border-[#0068FF]"
                         : "" } w-[100%] h-[62px] absolute rounded-md`}
                     onClick={() => {
-                        assetId.current=item.assetId
-                        setHoverItemsChose(item.assetCode)
+                        assetId.current=item.assetId;
+                        setHoverItemsChose(item.assetCode);
+                        handleDisableBTN(availableAsset, _assetConfigs);
+                        // console.log()
                         }}>
                 </div>
                 <div
@@ -102,7 +113,7 @@ const CurrencyPopup = (props) => {
                             )}
                         </div>
                         <p className="leading-5 font-normal text-onus-grey text-xs">
-                           {t(`futures:mobile:adjust_margin:available`)} {formatCurrency(availableAsset,4)? formatCurrency(availableAsset,4) : "0.000M"}
+                           {t(`futures:mobile:adjust_margin:available`)} {formatNumber(availableAsset, _assetConfigs.assetDigit)}
                         </p>
                     </div>
                 </div>
@@ -116,21 +127,21 @@ const CurrencyPopup = (props) => {
         const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
         const codeOfAsset = [72, 447, 1, 86, 22];
         codeOfAsset.forEach((item, index) => {
-            if (dataRow?.fee_metadata?.close_order?.currency === item) {
+            if (currency === item) {
                 setHoverItemsChose(assetCodeArray[index]);
             }
         });
     };
 
-    useMemo(() => {
+    useEffect(() => {
         const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
         const codeOfAsset = [72, 447, 1, 86, 22];
-       if (dataRow?.fee_metadata?.close_order?.currency === codeOfAsset[assetCodeArray.indexOf(hoverItemsChose)]) {
+       if (currency === codeOfAsset[assetCodeArray.indexOf(hoverItemsChose)]) {
         setdDisabledButton(true);
        } else {
         setdDisabledButton(false);
        }
-    }, [hoverItemsChose])
+    }, [hoverItemsChose, currency])
 
     const HandleConfirmModal = async () => {
         setSubmitting(true);
@@ -173,7 +184,7 @@ const CurrencyPopup = (props) => {
                 t(`error:futures:${data.status || "UNKNOWN"}`),
                 requestId
             );
-        }       
+        }
         onClose();
     };
 
@@ -196,13 +207,13 @@ const CurrencyPopup = (props) => {
                         {t(`futures:mobile:trading_fees`)}
                     </h4>
                     <div
-                        className="flex items-center justify-center rounded-full 
+                        className="flex items-center justify-center rounded-full
                         w-4 h-4 cursor-pointer"
                         data-tip=""
                         data-for="header-tooltip"
                         id="header-tooltip-id"
                     >
-                        <img src={getS3Url("/images/nao/ic_info.png")} width={16} height={16} />
+                        <img src={"/images/screen/futures/logoguide.png"}/>
                     </div>
                     <Tooltip
                         id="header-tooltip"
@@ -216,7 +227,7 @@ const CurrencyPopup = (props) => {
                             top: e.top,
                         })}
                     >
-                        <div className="font-medium w-[186px] text-xs leading-[18px] text-nao-grey2">
+                        <div className="font-medium w-[186px] text-xs leading-[18px] text-[#7586AD]">
                             {t('futures:mobile:tooltip_popup')}
                         </div>
                     </Tooltip>
@@ -233,14 +244,14 @@ const CurrencyPopup = (props) => {
                         className="mb-6"
                         onChange={() => {}}
                     />
-                </div> 
+                </div>
                 <Button
                     onusMode={true}
                     title={t(`futures:mobile:adjust_margin:confirm_btn`)}
                     componentType="button"
                     className={`!text-base !h-12 !font-semibold`}
                     type="primary"
-                    disabled={submitting || disabledButton}
+                    disabled={ disabledButton || submitting || disableForAvailable}
                     onClick={HandleConfirmModal}
                 />
             </div>
