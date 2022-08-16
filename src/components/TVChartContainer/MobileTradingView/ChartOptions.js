@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Popover, Transition } from '@headlessui/react';
 import ModelMarketMobile from 'components/screens/Mobile/Market/ModelMarket';
 import { AreaChart, BarsChart, BaseLineChart, CandleChartOnus, LineChart } from '../timeFrame';
-import { IconHelper, IconStarOnus } from 'components/common/Icons';
+import { IconStarOnus, IconRefresh } from 'components/common/Icons';
 import colors from 'styles/colors';
 import { PublicSocketEvent, TRADING_MODE } from 'redux/actions/const';
 import { favoriteAction } from 'redux/actions/user';
@@ -16,7 +16,8 @@ import styled from 'styled-components';
 import useWindowSize from 'hooks/useWindowSize';
 import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
-
+import SvgActivity from 'components/svg/Activity';
+import { X } from 'react-feather';
 const listChartType = [
     {
         text: 'Bar',
@@ -96,7 +97,11 @@ const ChartOptions = ({
     isFullScreen,
     showSymbol = true,
     showIconGuide = true,
-    pairParent
+    pairParent,
+    fullChart,
+    setFullChart,
+    resetComponent,
+    handleOpenIndicatorModal
 }) => {
     const { width } = useWindowSize();
     const xs = width < 390;
@@ -112,19 +117,19 @@ const ChartOptions = ({
 
     return (
         <div className={`${className} chart-timer flex items-center justify-between px-4`}>
-            <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen}/>
+            <Guideline pair={pair} start={start} setStart={setStart} isFullScreen={isFullScreen} />
             <div className="flex items-center">
                 {showSymbol &&
                     <div className="flex items-center flex-wrap gap-2">
                         <div className="flex items-center cursor-pointer" data-tut="order-symbol"
-                             onClick={() => setShowModelMarket(true)}>
+                            onClick={() => setShowModelMarket(true)}>
                             {!xs && <img className="mr-2 min-w-[24px] min-h-[24px]"
-                                         src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24}
-                                         width={24}/>}
+                                src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24}
+                                width={24} />}
                             <div
                                 className="font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         </div>
-                        <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures}/>
+                        <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
                     </div>
                 }
             </div>
@@ -149,12 +154,26 @@ const ChartOptions = ({
                     classNamePanel="rounded-md left-[-20px]"
                     label={<Svg>{labelCandle.icon}</Svg>}
                 />
-                {showIconGuide &&
+                {/* {showIconGuide &&
                     <div className="" onClick={() => setStart(true)}>
                         <IconHelper/>
                     </div>
+                } */}
+                <div className="" onClick={fullChart ? handleOpenIndicatorModal : resetComponent}>
+                    {!fullChart ?
+                        <IconRefresh />
+                        :
+                        <SvgActivity color={colors.onus.grey} />
+                    }
+                </div>
+                <FavouriteButton pair={pair} pairConfig={pairConfig} />
+                {fullChart &&
+                    <X
+                        size={20}
+                        onClick={() => setFullChart(false)}
+                        className='cursor-pointer !ml-10'
+                    />
                 }
-                <FavouriteButton pair={pair} pairConfig={pairConfig}/>
             </div>
             <ModelMarketMobile
                 pairConfig={pairConfig}
@@ -257,13 +276,13 @@ export const MenuTime = ({
                                             onChange(item[keyValue]);
                                             close();
                                         }}
-                                             className={classNames(
-                                                 'pb-2 w-max text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
-                                                 {
-                                                     'text-txtPrimary-dark':
-                                                         item[keyValue] === value,
-                                                 }
-                                             )}
+                                            className={classNames(
+                                                'pb-2 w-max text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
+                                                {
+                                                    'text-txtPrimary-dark':
+                                                        item[keyValue] === value,
+                                                }
+                                            )}
                                         >
                                             <Svg>{item?.icon}</Svg>
                                             {item[displayValue]}
@@ -303,7 +322,7 @@ const FavouriteButton = ({ pairConfig }) => {
 
     return <div className="cursor-pointer flex items-center " onClick={handleSetFavorite}>
         <IconStarOnus stroke={isFavorite ? colors.onus.orange : colors.onus.grey}
-                      color={isFavorite ? colors.onus.orange : ''}/>
+            color={isFavorite ? colors.onus.orange : ''} />
     </div>;
 };
 

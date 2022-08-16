@@ -53,7 +53,8 @@ export class MobileTradingView extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.initWidget(this.props.symbol, this.props.initTimeFrame);
+        if (this.props?.refChart) this.props?.refChart(this);
+        this.initWidget(this.props.symbol);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -91,6 +92,9 @@ export class MobileTradingView extends React.PureComponent {
 
         if ((prevProps.ordersList !== this.props.ordersList) && !this.firstTime) {
             this.rawOrders();
+        }
+        if (prevProps.fullChart !== this.props.fullChart) {
+            this.initWidget(this.props.symbol, this.props.fullChart);
         }
     }
 
@@ -369,10 +373,45 @@ export class MobileTradingView extends React.PureComponent {
         this.oldOrdersList = this.props?.ordersList.map(order => (order.status === VndcFutureOrderType.Status.ACTIVE || order.status === VndcFutureOrderType.Status.PENDING) && order.displaying_id);
     };
 
-    initWidget = (symbol) => {
+    initWidget = (symbol, isFullChart = false) => {
         if (!symbol) return;
 
         const datafeed = new Datafeed(this.props.mode || ChartMode.SPOT, true);
+        const _disabled_features = [
+            'legend_context_menu',
+            'symbol_search_hot_key',
+            'legend_widget',
+            'timeframes_toolbar',
+            'study_templates',
+            'header_saveload',
+            'caption_buttons_text_if_possible',
+            'context_menus',
+            'symbol_info', // Header
+            'header_widget_dom_node',
+            'header_symbol_search',
+            'symbol_search_hot_key',
+            'header_interval_dialog_button',
+            'show_interval_dialog_on_key_press',
+            'header_settings',
+            'header_compare',
+            'header_undo_redo',
+            'header_screenshot',
+            'header_fullscreen_button',
+            'main_series_scale_menu',
+            // 'left_toolbar',
+            'volume_force_overlay',
+            'use_localstorage_for_settings',
+            'compare_symbol',
+            'display_market_status',
+            'go_to_date',
+            'source_selection_markers',
+            'popup_hints',
+            'header_widget',
+            'axis_pressed_mouse_move_scale',
+        ];
+        if (!isFullChart) {
+            _disabled_features.push('left_toolbar')
+        }
         const widgetOptions = {
             symbol,
             datafeed,
@@ -381,39 +420,7 @@ export class MobileTradingView extends React.PureComponent {
             container_id: this.containerId,
             library_path: this.props.libraryPath,
             locale: 'en',
-            disabled_features: [
-                'legend_context_menu',
-                'symbol_search_hot_key',
-                'legend_widget',
-                'timeframes_toolbar',
-                'study_templates',
-                'header_saveload',
-                'caption_buttons_text_if_possible',
-                'context_menus',
-                'symbol_info', // Header
-                'header_widget_dom_node',
-                'header_symbol_search',
-                'symbol_search_hot_key',
-                'header_interval_dialog_button',
-                'show_interval_dialog_on_key_press',
-                'header_settings',
-                'header_compare',
-                'header_undo_redo',
-                'header_screenshot',
-                'header_fullscreen_button',
-                'main_series_scale_menu',
-                'left_toolbar',
-                'volume_force_overlay',
-                'use_localstorage_for_settings',
-
-                'compare_symbol',
-                'display_market_status',
-                'go_to_date',
-                'source_selection_markers',
-                'popup_hints',
-                'header_widget',
-                'axis_pressed_mouse_move_scale',
-            ],
+            disabled_features: _disabled_features,
             enabled_features: [
                 'move_logo_to_main_pane',
                 'edit_buttons_in_legend',
@@ -514,6 +521,10 @@ export class MobileTradingView extends React.PureComponent {
         if (this.props.reNewComponentKey) this.props.reNewComponentKey();
     };
 
+    setFullChart = (data) => {
+        if (this.props.setFullChart) this.props.setFullChart(data);
+    }
+
     render() {
         return (
             <>
@@ -526,7 +537,7 @@ export class MobileTradingView extends React.PureComponent {
                             'hidden': this.state.chartStatus === ChartStatus.LOADED
                         })}
                     >
-                        <IconLoading color={colors.onus.green}/>
+                        <IconLoading color={colors.onus.green} />
                     </div>
                     {this.props.showTimeFrame &&
                         <div className="w-full border-b border-onus-line py-2 dragHandleArea z-10">
@@ -541,6 +552,10 @@ export class MobileTradingView extends React.PureComponent {
                                 setChartType={this.handleChangeChartType}
                                 showSymbol={this.props.showSymbol}
                                 showIconGuide={this.props.showIconGuide}
+                                resetComponent={this.resetComponent}
+                                fullChart={this.props.fullChart}
+                                setFullChart={this.setFullChart}
+                                handleOpenIndicatorModal={this.handleOpenIndicatorModal}
                             />
                         </div>
                     }
@@ -558,9 +573,10 @@ export class MobileTradingView extends React.PureComponent {
                                 setSubIndicator={this.handleChangeIndicator('sub')}
                                 mainIndicator={this.state.mainIndicator?.name}
                                 subIndicator={this.state.subIndicator?.name}
-                                setCollapse={this.props.setCollapse}
-                                collapse={this.props.collapse}
                                 resetComponent={this.resetComponent}
+                                fullChart={this.props.fullChart}
+                                setFullChart={this.setFullChart}
+                                isDetail={this.props.isDetail}
                             />
                         }
                     </div>

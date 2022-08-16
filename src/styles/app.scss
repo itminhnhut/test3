@@ -816,3 +816,17 @@ input[type='number'] {
     26%{opacity: 0; transform:translateY(10px) scale(0.9);}
     55% {opacity: 1; transform: translateY(0px) scale(1);}
   }
+
+#chart-mobile{
+    transition: height 0.3s;
+}
+.chart-full-screen {
+    z-index: 9999;
+    // height: 100vw;
+    position: relative;
+    width: calc(var(--vh, 1vh) * 100);
+    transform: rotate(90deg) translateY(-100%);
+    transform-origin: top left;
+    transition-duration: .4s;
+    transition: height 0.4s ease !important;
+}

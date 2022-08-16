@@ -28,7 +28,7 @@ import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
 // import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
-import { ExchangeOrderEnum, FuturesOrderEnum, PublicSocketEvent } from 'redux/actions/const';
+import { ExchangeOrderEnum, FuturesOrderEnum, PublicSocketEvent, DefaultFuturesFee } from 'redux/actions/const';
 import EditSLTPVndcMobile from 'components/screens/Mobile/Futures/EditSLTPVndcMobile';
 import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
@@ -108,12 +108,12 @@ const PlaceOrder = ({
         let _price = price;
         if (Math.trunc(availableAsset) > 0) {
             if ([OrderTypes.Limit, OrderTypes.StopMarket, OrderTypes.StopLimit].includes(type) && price) {
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : price);
+                maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : price);
                 maxSell = maxBuy;
             } else if ([OrderTypes.Market].includes(type)) {
                 price = side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : pairPrice?.ask);
-                maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : pairPrice?.bid);
+                maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : pairPrice?.ask);
+                maxSell = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : pairPrice?.bid);
             }
         }
         const lotSize =
