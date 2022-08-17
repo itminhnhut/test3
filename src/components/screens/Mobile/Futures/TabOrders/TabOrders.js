@@ -171,7 +171,7 @@ const TabOrders = memo(({
                                         onClick={() => setHideOther(!hideOther)}
                                     >
                                         <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
-                                        <span className="ml-3 whitespace-nowrap font-medium capitalize text-onus-grey text-xs">
+                                        <span className="ml-3 whitespace-nowrap font-medium  text-onus-grey text-xs">
                                             {t('futures:hide_other_symbols')}
                                         </span>
                                     </div>
@@ -281,7 +281,7 @@ const TabModeContainer = styled.div.attrs(({ active }) => ({
 
 const TabMode = styled.div.attrs(({ active }) => ({
     className: classNames(
-        'py-[5px] px-5 relative z-[10]',
+        'py-[5px] relative z-[10] min-w-[5rem] text-center',
         {
             'text-onus-grey': !active
         }
