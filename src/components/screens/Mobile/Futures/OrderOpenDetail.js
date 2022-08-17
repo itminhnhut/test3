@@ -343,7 +343,7 @@ const OrderOpenDetail = ({
                 />
                 <OrderItem
                     center
-                    label={t('futures:calulator:liq_price')}
+                    label={t('futures:mobile:liq_price')}
                     className="py-[2px] space-y-[2px]"
                     value={renderLiqPrice(order)}
                 />
