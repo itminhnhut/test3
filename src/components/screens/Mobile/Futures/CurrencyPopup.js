@@ -214,7 +214,7 @@ const CurrencyPopup = (props) => {
                         data-for="header-tooltip"
                         id="header-tooltip-id"
                     >
-                        <img src={"/images/screen/futures/logoguide.png"} />
+                        <img src={getS3Url("/images/screen/futures/logoguide.png")} />
                     </div>
                     <Tooltip
                         id="header-tooltip"
