@@ -66,11 +66,11 @@ const filterFeeAsset = [
         label: 'VNDC',
         ratio: '0.06'
     },
-    // {
-    //     id: WalletCurrency.USDT,
-    //     label: 'USDT',
-    //     ratio: '0.06'
-    // },
+    {
+        id: WalletCurrency.USDT,
+        label: 'USDT',
+        ratio: '0.06'
+    },
 ];
 
 const NaoPerformance = memo(() => {
