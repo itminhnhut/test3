@@ -208,7 +208,7 @@ const OrderItemMobile = ({
         >
             <div onClick={() => actions('expand')}
                 className="flex items-center justify-between mb-3">
-                <div className="flex items-center text-[10px] font-medium text-onus-grey leading-[1.125rem]">
+                <div className="flex items-center text-[10px] font-medium text-onus-grey leading-6">
                     <div>ID #{order?.displaying_id}</div>
                     <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
                     <div>{formatTime(order?.created_at, 'yyyy-MM-dd')}</div>
@@ -216,7 +216,7 @@ const OrderItemMobile = ({
                     <div>{formatTime(order?.created_at, 'HH:mm:ss')}</div>
                 </div>
                 {isShortcut && !isTabHistory &&
-                    (!collapse ? <ChevronDown size={24} color={colors.onus.grey} /> : <ChevronUp size={24} color={colors.onus.grey} />)
+                    (collapse !== order?.displaying_id ? <ChevronDown size={24} color={colors.onus.grey} /> : <ChevronUp size={24} color={colors.onus.grey} />)
                 }
             </div>
             <div onClick={() => actions('expand')}
@@ -378,7 +378,7 @@ export const OrderItem = (props) => {
     return (
         <Row onClick={onClick} className={classnames(
             {
-                'items-center': center,
+                'px-5': center,
                 '!w-full': fullWidth
             }
         )}>
