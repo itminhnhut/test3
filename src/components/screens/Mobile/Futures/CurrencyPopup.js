@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import Modal from "components/common/ReModal";
 import Button from "components/common/Button";
 import colors from "styles/colors";
 import CheckBox from "components/common/CheckBox";
-import { getS3Url,formatCurrency, formatNumber } from "redux/actions/utils";
+import { getS3Url, formatCurrency, formatNumber, emitWebViewEvent } from "redux/actions/utils";
 import { fees } from "components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType";
 import { API_POST_CHANGE_FEES_CURRENCY_ORDER } from "redux/actions/apis";
 import axios from "axios";
@@ -11,10 +11,12 @@ import { useTranslation } from "next-i18next";
 import { AlertContext } from "components/common/layouts/LayoutMobile";
 import Tooltip from "components/common/Tooltip";
 import { useSelector } from "react-redux";
-import { isNumber } from "lodash";
+import classnames from 'classnames'
+import { PlusCircle } from 'react-feather';
+
 
 const CurrencyPopup = (props) => {
-    const { visibleModalFees, dataRow, setVisibleModalFees,forceFetchOrder } = props;
+    const { visibleModalFees, dataRow, setVisibleModalFees, forceFetchOrder } = props;
     const [hoverItemsChose, setHoverItemsChose] = useState("");
     const [feesFor, setFees] = useState([]);
     const [checkBox, setCheckBox] = useState(false);
@@ -22,10 +24,10 @@ const CurrencyPopup = (props) => {
     const avlbAsset = useSelector((state) => state.wallet?.FUTURES);
     const { t } = useTranslation();
     const [disabledButton, setdDisabledButton] = useState(false);
-    const assetId=useRef(null);
+    const assetId = useRef(null);
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
     const [disableForAvailable, setDisableForAvailable] = useState(false);
-    const currency = dataRow?.fee_metadata?.close_order?.currency ?? dataRow?.fee_metadata?.place_order?.currency 
+    const currency = dataRow?.fee_metadata?.close_order?.currency ?? dataRow?.fee_metadata?.place_order?.currency
     const alertContext = useContext(AlertContext);
 
     useEffect(() => {
@@ -53,7 +55,16 @@ const CurrencyPopup = (props) => {
     }, [dataRow]);
 
     const handleDisableBTN = (availableAsset, _assetConfigs) => {
-        setDisableForAvailable(formatNumber(availableAsset, _assetConfigs.assetDigit) === "0"? true : false)
+        setDisableForAvailable(formatNumber(availableAsset, _assetConfigs.assetDigit) === "0" ? true : false)
+    }
+
+    const onChangeCurrency = (item, assets, availableAsset) => {
+        assetId.current = item.assetId;
+        setHoverItemsChose(item.assetCode);
+        handleDisableBTN(availableAsset, assets);
+    }
+
+    const onBuyToken = (item) => {
     }
 
     const renderAllCurrency = feesFor?.map((item, index) => {
@@ -63,58 +74,54 @@ const CurrencyPopup = (props) => {
             Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0);
         return (
             <div className="w-full relative"
-            key={index}
+                key={index}
             >
-                <div className={`${
-                    hoverItemsChose === item.assetCode
-                        ? "border-[1px] border-[#0068FF]"
-                        : "" } w-[100%] h-[62px] absolute rounded-md`}
-                    onClick={() => {
-                        assetId.current=item.assetId;
-                        setHoverItemsChose(item.assetCode);
-                        handleDisableBTN(availableAsset, _assetConfigs);
-                        // console.log()
-                        }}>
-                </div>
                 <div
-                    className="flex items-center justify-between w-full h-[62px] bg-onus-bg rounded-md px-4 my-4"
+                    onClick={() => onChangeCurrency(item, _assetConfigs, availableAsset)}
+                    className={classnames(
+                        "flex items-center justify-between w-full border bg-onus-bg rounded-md px-4 py-[7px]",
+                        {
+                            'border-onus-base': hoverItemsChose === item.assetCode,
+                            'border-onus-bg': hoverItemsChose !== item.assetCode,
+                        }
+                    )}
                 >
-                    <div className="py-[18px] flex items-center">
-                        <div className="w-6 h-6">
-                            <img
-                                src={getS3Url(
-                                    `/images/coins/64/${item.assetId}.png`
-                                )}
-                            />
+                    <div className="flex items-center space-x-3">
+                        <div className="w-9 h-9">
+                            <img src={getS3Url(`/images/coins/64/${item.assetId}.png`)} />
                         </div>
-                        <p className="leading-6 font-medium text-base mx-2">
-                            {item.assetCode}
-                        </p>
-                        {item?.assetCode === "NAO" && (
-                            <img
-                                className="w-4 h-4"
-                                src={getS3Url(`/images/screen/futures/ic_star.png`)}
-                            />
-                        )}
+                        <div className="flex flex-col space-y-[2px]">
+                            <div className="flex items-center space-x-2">
+                                <div className="leading-6 font-medium">  {item.assetCode} </div>
+                                {item?.assetCode === "NAO" && (
+                                    <img
+                                        className="w-4 h-4"
+                                        src={getS3Url(`/images/screen/futures/ic_star.png`)}
+                                    />
+                                )}
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <div className="leading-5 text-onus-grey text-xs">
+                                    {t(`futures:mobile:adjust_margin:available`)} {formatNumber(availableAsset, _assetConfigs.assetDigit)}
+                                </div>
+                                {/* <PlusCircle onClick={() => onBuyToken(item)} size={12} color={colors.onus.base} /> */}
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex items-end flex-col text-center text-xs py-2">
-                        <div className="flex jutify-center items-center mb-[2px]">
-                            <p
-                                className={`${
-                                    item.ratio !== "0.06%"
-                                        ? "text-onus-grey text-center line-through text-xs font-normal"
-                                        : "text-base font-medium"
-                                } leading-5`}
+                    <div className="flex items-end flex-col text-center">
+                        <div className="flex jutify-center items-center space-x-1">
+                            <div
+                                className={`${item.ratio !== "0.06%"
+                                    ? "text-onus-grey text-center line-through text-xs"
+                                    : "text-base font-medium"
+                                    } leading-5`}
                             >
                                 0.06%
-                            </p>
+                            </div>
                             {item.ratio !== "0.06%" && (
-                                <p className={`${item?.assetCode === "NAO"? "text-onus-base" : ""} leading-5 ml-1 font-medium text-base`}>{item.ratio}</p>
+                                <div className={`${item?.assetCode === "NAO" ? "text-onus-base" : ""} leading-5 font-medium `}>{item.ratio}</div>
                             )}
                         </div>
-                        <p className="leading-5 font-normal text-onus-grey text-xs">
-                           {t(`futures:mobile:adjust_margin:available`)} {formatNumber(availableAsset, _assetConfigs.assetDigit)}
-                        </p>
                     </div>
                 </div>
             </div>
@@ -123,7 +130,7 @@ const CurrencyPopup = (props) => {
 
     const onClose = () => {
         setVisibleModalFees(false);
-        if(forceFetchOrder)forceFetchOrder()
+        if (forceFetchOrder) forceFetchOrder()
         const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
         const codeOfAsset = [72, 447, 1, 86, 22];
         codeOfAsset.forEach((item, index) => {
@@ -136,11 +143,11 @@ const CurrencyPopup = (props) => {
     useEffect(() => {
         const assetCodeArray = ["VNDC", "NAO", "NAMI", "ONUS", "USDT"];
         const codeOfAsset = [72, 447, 1, 86, 22];
-       if (currency === codeOfAsset[assetCodeArray.indexOf(hoverItemsChose)]) {
-        setdDisabledButton(true);
-       } else {
-        setdDisabledButton(false);
-       }
+        if (currency === codeOfAsset[assetCodeArray.indexOf(hoverItemsChose)]) {
+            setdDisabledButton(true);
+        } else {
+            setdDisabledButton(false);
+        }
     }, [hoverItemsChose, currency])
 
     const HandleConfirmModal = async () => {
@@ -193,13 +200,7 @@ const CurrencyPopup = (props) => {
             onusMode={true}
             isVisible={visibleModalFees}
             onBackdropCb={onClose}
-            modalClassName="z-[99999999999]"
-            containerStyle={{
-                width: "100vw",
-                transform: "translate(-50%,0)",
-                left: "50%",
-            }}
-            onusClassName="min-h-[334px] rounded-2xl bg-onus-bgModal !px-4"
+            onusClassName="min-h-[334px]"
         >
             <div className="w-full" style={{ color: colors.wildSand }}>
                 <div className="flex items-center w-full">
@@ -213,7 +214,7 @@ const CurrencyPopup = (props) => {
                         data-for="header-tooltip"
                         id="header-tooltip-id"
                     >
-                        <img src={"/images/screen/futures/logoguide.png"}/>
+                        <img src={"/images/screen/futures/logoguide.png"} />
                     </div>
                     <Tooltip
                         id="header-tooltip"
@@ -232,18 +233,14 @@ const CurrencyPopup = (props) => {
                         </div>
                     </Tooltip>
                 </div>
-                <div className="!pt-2 w-full">
+                <div className="pt-6 pb-4 w-full flex flex-col space-y-2">
                     {renderAllCurrency}
                 </div>
-                <div className="w-full" onClick={() => setCheckBox(!checkBox)}>
-                    <CheckBox
-                        active={checkBox}
-                        label={t(`futures:mobile:set_as_default_trading_fee`)}
-                        boxContainerClassName={`${checkBox? "!bg-onus-base" : "!bg-onus-bg2"} border-none rounded-sm mr-[6px]`}
-                        labelClassName="leading-[18px] font-medium text-xs text-onus-grey"
-                        className="mb-6"
-                        onChange={() => {}}
-                    />
+                <div className="flex items-center space-x-2 pb-6" onClick={() => setCheckBox(!checkBox)}>
+                    <CheckBox onusMode={true} active={checkBox} boxContainerClassName="rounded-[2px]" />
+                    <span className="whitespace-nowrap font-medium text-onus-grey text-xs">
+                        {t(`futures:mobile:set_as_default_trading_fee`)}
+                    </span>
                 </div>
                 <Button
                     onusMode={true}
@@ -251,7 +248,7 @@ const CurrencyPopup = (props) => {
                     componentType="button"
                     className={`!text-base !h-12 !font-semibold`}
                     type="primary"
-                    disabled={ disabledButton || submitting || disableForAvailable}
+                    disabled={disabledButton || submitting || disableForAvailable}
                     onClick={HandleConfirmModal}
                 />
             </div>

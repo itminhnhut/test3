@@ -13,6 +13,7 @@ import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { useSelector } from 'react-redux';
 import { ChevronDown, ChevronUp } from 'react-feather';
+import classnames from 'classnames'
 
 const OrderItemMobile = ({
     order,
@@ -130,7 +131,7 @@ const OrderItemMobile = ({
     const actions = (action, key) => {
         if (action === 'modal') {
             isModal.current = true;
-           onShowModal(order, key)
+            onShowModal(order, key)
         }
         if (action === 'delete') {
             isModal.current = true;
@@ -188,7 +189,7 @@ const OrderItemMobile = ({
     }, [order]);
 
     const renderFee = (order) => {
-        const assetId = order?.fee_metadata?.close_order?.currency ??  order?.fee_metadata?.place_order?.currency ;
+        const assetId = order?.fee_metadata?.close_order?.currency ?? order?.fee_metadata?.place_order?.currency;
         const ratio = fees.find(rs => rs.assetId === assetId)?.ratio
         if (isTabHistory) return order?.close_price ? formatNumber(order?.close_price) : '-';
         return (
@@ -223,12 +224,13 @@ const OrderItemMobile = ({
                 <div className="flex flex-col gap-[2px]">
                     <div className="flex items-center">
                         <div
-                            className="font-semibold leading-[1.375rem] mr-[5px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
+                            className="font-semibold leading-[1.375rem] mr-[6px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
                         <div
-                            className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
+                            className="text-onus-white bg-onus-bg3 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
+                            {order?.leverage}x
                         </div>
                         {canShare ?
-                            <img className="ml-2"
+                            <img className="ml-3"
                                 onClick={() => actions('modal', 'share')}
                                 src={getS3Url('/images/icon/ic_share_onus.png')} height={20} width={20} />
                             : null
@@ -266,21 +268,23 @@ const OrderItemMobile = ({
                     {!isTabHistory && (isModify || isTabOpen) &&
                         <div className="flex rounded-md border border-onus-bg3 p-2 mt-3">
                             <OrderItem
+                                fullWidth
                                 label={isTabOpen ? t('futures:mobile:quote_price') : t('futures:stop_loss')}
                                 value={isTabOpen ? renderQuoteprice() : renderSlTp(order?.sl, true)}
-                                className="text-center border-r border-onus-bg3 !w-full"
-                                valueClassName={`!text-sm ${!isTabOpen ? 'text-onus-red' : ''}`}
+                                className="text-center border-r border-onus-bg3"
+                                valueClassName={`${!isTabOpen ? 'text-onus-red' : ''}`}
                             />
                             <OrderItem
+                                fullWidth
                                 label={isTabOpen ? t('futures:order_table:open_price') : t('futures:take_profit')}
                                 value={isTabOpen ? getOpenPrice(order, dataMarketWatch) : renderSlTp(order?.tp, true)}
-                                className="text-center !w-full"
-                                valueClassName={`!text-sm ${!isTabOpen ? 'text-onus-green' : ''}`}
+                                className="text-center"
+                                valueClassName={`${!isTabOpen ? 'text-onus-green' : ''}`}
                             />
                         </div>
                     }
 
-                    <div className="flex flex-wrap w-full mt-5">
+                    <div className="flex flex-wrap w-full mt-5 justify-between">
                         <OrderItem
                             label={isTabPosition ? t('futures:order_table:open_price') : t('futures:stop_loss')}
                             value={isTabPosition ? getOpenPrice(order, dataMarketWatch) : renderSlTp(order?.sl)}
@@ -288,8 +292,9 @@ const OrderItemMobile = ({
                             valueClassName={`${!isTabPosition ? order?.sl > 0 ? 'text-onus-red' : 'text-onus-white' : ''}`}
                         />
                         <OrderItem
+                            center
                             label={t('futures:order_table:volume')}
-                            className="py-[2px] space-y-[2px] text-center mb-2"
+                            className="py-[2px] space-y-[2px] mb-2"
                             value={order?.order_value ? formatNumber(order?.order_value, decimalSymbol, 0, true) : '-'}
                         />
                         <OrderItem
@@ -300,12 +305,13 @@ const OrderItemMobile = ({
                         <OrderItem
                             label={isTabPosition ? t('futures:mobile:quote_price') : t('futures:take_profit')}
                             value={isTabPosition ? renderQuoteprice() : renderSlTp(order?.tp)}
-                            className="py-[2px] space-y-[2px] "
+                            className="py-[2px] space-y-[2px]"
                             valueClassName={`${!isTabPosition ? order?.tp > 0 ? 'text-onus-green' : 'text-onus-white' : ''}`}
                         />
                         <OrderItem
+                            center
                             label={t(isTabHistory ? 'futures:order_table:open_price' : `futures:mobile:liq_price`)}
-                            className="py-[2px] space-y-[2px] text-center"
+                            className="py-[2px] space-y-[2px]"
                             value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : renderLiqPrice(order)}
                         />
                         <OrderItem
@@ -354,7 +360,7 @@ export const SideComponent = styled.div.attrs(({ isBuy }) => ({
 const Row = styled.div.attrs({
     className: `flex flex-col justify-between`
 })`
-    width: calc(100% / 3);
+    width: calc(100% / 3 - 8px);
 `
 
 const Label = styled.div.attrs({
@@ -367,18 +373,26 @@ const Button = styled.div.attrs({
   width: calc(50% - 4px)
 `;
 
-export const OrderItem = ({ label, value, className = '', valueClassName = '', dropdown, onClick }) => {
+export const OrderItem = (props) => {
+    const { label, value, className = '', valueClassName = '', dropdown, onClick, center, fullWidth } = props;
     return (
-        <Row className={`${className}`} onClick={onClick}>
-            {dropdown ?
-                <div className="flex items-center space-x-1 justify-end">
-                    <Label>{label} </Label>
-                    <ChevronDown size={12} color={colors.onus.grey} />
-                </div>
-                :
-                <Label>{label} </Label>
+        <Row onClick={onClick} className={classnames(
+            {
+                'items-center': center,
+                '!w-full': fullWidth
             }
-            <div className={`leading-[1.25rem] text-xs font-medium ${valueClassName}`}>{value}</div>
+        )}>
+            <div className={`${className}`} >
+                {dropdown ?
+                    <div className="flex items-center space-x-1 justify-end">
+                        <Label>{label} </Label>
+                        <ChevronDown size={12} color={colors.onus.grey} />
+                    </div>
+                    :
+                    <Label>{label} </Label>
+                }
+                <div className={`leading-[1.25rem] text-xs font-medium ${valueClassName}`}>{value}</div>
+            </div>
         </Row>
     )
 }

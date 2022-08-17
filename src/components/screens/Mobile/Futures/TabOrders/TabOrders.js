@@ -152,13 +152,13 @@ const TabOrders = memo(({
                                 }
                             )}>
                                 {tab !== FUTURES_RECORD_CODE.orderHistory &&
-                                    <div className="flex items-center text-xs font-medium leading-[1.375rem]">
+                                    <div className="p-[2px] flex items-center text-xs font-semibold leading-[1.125rem] bg-onus-bg3 rounded-lg">
                                         <div onClick={() => onChangeMode(modeOrders.detail)}
-                                            className={`py-[2px] px-3 rounded-l ${mode === modeOrders.detail ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
+                                            className={`py-[5px] px-5 ${mode === modeOrders.detail ? 'rounded-lg bg-onus-bg2' : 'text-onus-grey'}`}>
                                             {t('futures:mobile:full')}
                                         </div>
                                         <div onClick={() => onChangeMode(modeOrders.shortcut)}
-                                            className={`py-[2px] px-3 rounded-r ${mode === modeOrders.shortcut ? 'bg-onus-base' : 'bg-onus-bg3'}`}>
+                                            className={`py-[5px] px-5 ${mode === modeOrders.shortcut ? 'rounded-lg bg-onus-bg2' : 'text-onus-grey'}`}>
                                             {t('futures:mobile:simple')}
                                         </div>
                                     </div>
@@ -207,7 +207,7 @@ const TabOrders = memo(({
 });
 
 const TabMobile = styled.div.attrs({
-    className: 'flex items-center px-[16px] bg-onus border-b border-onus-line h-[38px] overflow-x-auto'
+    className: 'flex items-center px-4 bg-onus border-b border-onus-line h-[38px] overflow-x-auto'
 })`
   height: 42px;
   width: 100%;
@@ -228,7 +228,7 @@ const TabMobile = styled.div.attrs({
 `;
 const TabItem = styled.div.attrs(({ active }) => ({
     className: classNames(
-        `text-sm relative font-semibold h-full flex items-center justify-center text-onus-grey mr-[32px] last:mr-0`,
+        `text-sm relative font-semibold h-full flex items-center justify-center text-onus-grey mr-8 last:mr-0`,
         'whitespace-nowrap',
         {
             'active font-semibold text-[#418FFF]': active
