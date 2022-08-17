@@ -216,7 +216,7 @@ const OrderItemMobile = ({
                     <div>{formatTime(order?.created_at, 'HH:mm:ss')}</div>
                 </div>
                 {isShortcut && !isTabHistory &&
-                    (!collapse ? <ChevronDown size={12} color={colors.onus.grey} /> : <ChevronUp size={12} color={colors.onus.grey} />)
+                    (!collapse ? <ChevronDown size={24} color={colors.onus.grey} /> : <ChevronUp size={24} color={colors.onus.grey} />)
                 }
             </div>
             <div onClick={() => actions('expand')}
