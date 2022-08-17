@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { OrderItem } from './TabOrders/OrderItemMobile';
 import { useSelector } from 'react-redux';
-import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { renderCellTable, VndcFutureOrderType, getRatioProfit, fees } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import Button from 'components/common/Button';
@@ -14,6 +14,7 @@ import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/S
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
 import EditSLTPVndcMobile from './EditSLTPVndcMobile';
 import MiniTickerData from 'components/screens/Futures/MiniTickerData';
+import CurrencyPopup from 'components/screens/Mobile/Futures/CurrencyPopup';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -52,6 +53,8 @@ const OrderOpenDetail = ({
     const [openShareModal, setOpenShareModal] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
+    const [visibleModalFees, setVisibleModalFees] = useState(false);
+
 
     const subscribeFuturesSocket = (symbol) => {
         if (!publicSocket) {
@@ -168,11 +171,11 @@ const OrderOpenDetail = ({
         return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, decimalPrice, 0, true) : '-';
     };
 
-    const renderSlTp = (value) => {
+    const renderSlTp = (value, ratio = false) => {
         if (value) {
-            return formatNumber(value, decimalPrice, 0, true);
+            return formatNumber(value, decimalPrice, 0, true) + (ratio ? ' (' + getRatioProfit(value, order) + '%)' : '')
         }
-        return t('futures:not_set');
+        return '-';
     };
 
     const price = useMemo(() => {
@@ -200,8 +203,32 @@ const OrderOpenDetail = ({
         return { pending };
     }, [order]);
 
+    const renderFee = (order) => {
+        const assetId = order?.fee_metadata?.close_order?.currency ?? 72;
+        const ratio = fees.find(rs => rs.assetId === assetId)?.ratio;
+        return (
+            <div className="flex items-center justify-end space-x-1">
+                <span>{ratio}</span>
+                <img src={getS3Url(`/images/coins/64/${assetId}.png`)} width={16} height={16} />
+            </div>
+        )
+    }
+
+    const onModifyFee = () => {
+        setVisibleModalFees(true);
+    }
+
+    const isModify = order?.sl > 0 || order?.tp > 0;
+
     return (
-        <div className="p-6 py-5 mx-[-24px] border-b border-onus-line">
+        <div className="p-6 py-5 -mx-6 border-b border-onus-line">
+            {visibleModalFees && <CurrencyPopup
+                visibleModalFees={visibleModalFees}
+                setVisibleModalFees={setVisibleModalFees}
+                forceFetchOrder={forceFetchOrder}
+                dataRow={order}
+            />
+            }
             {showEditSLTP &&
                 <EditSLTPVndcMobile
                     onusMode={true}
@@ -224,6 +251,13 @@ const OrderOpenDetail = ({
                     forceFetchOrder={forceFetchOrder}
                 />
             }
+            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 leading-[1.125rem]">
+                <div>ID #{order?.displaying_id}</div>
+                <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
+                <div>{formatTime(order?.created_at, 'yyyy-MM-dd')}</div>
+                <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
+                <div>{formatTime(order?.created_at, 'HH:mm:ss')}</div>
+            </div>
             <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-[2px]">
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
@@ -231,7 +265,8 @@ const OrderOpenDetail = ({
                         <div
                             className="font-semibold leading-[1.375rem] mr-[5px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         <div
-                            className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
+                            className="text-onus-white bg-onus-bg3 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
+                            {order?.leverage}x
                         </div>
                         {canShare ?
                             <img className="ml-2"
@@ -264,59 +299,61 @@ const OrderOpenDetail = ({
                     }
                 </div>
             </div>
-            <div
-                className="mt-2 flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6] leading-[1.125rem]">
-                <div>ID #{order?.displaying_id}</div>
-                <div className="bg-[#535D6D] h-[2px] w-[2px] rounded-[50%] mx-1.5"></div>
-                <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
-            </div>
-            {isTabOpen &&
-                <div className="flex items-center justify-between mb-2">
+            {(isModify || isTabOpen) &&
+                <div className="flex rounded-md border border-onus-bg3 p-2 mt-3">
                     <OrderItem
-                        className="flex flex-col gap-[2px]"
-                        valueClassName="!text-left !text-sm"
-                        label={t('futures:mobile:quote_price')}
-                        value={renderQuoteprice()}
+                        fullWidth
+                        label={isTabOpen ? t('futures:mobile:quote_price') : t('futures:stop_loss')}
+                        value={isTabOpen ? renderQuoteprice() : renderSlTp(order?.sl, !isTabOpen)}
+                        className="text-center border-r border-onus-bg3"
+                        valueClassName={`${!isTabOpen ? 'text-onus-red' : ''}`}
                     />
                     <OrderItem
-                        className="flex flex-col gap-[2px]"
-                        label={t('futures:order_table:open_price')}
-                        valueClassName="!text-left !text-sm"
-                        value={formatNumber(price, decimalPrice, 0, true)}
+                        fullWidth
+                        label={isTabOpen ? t('futures:order_table:open_price') : t('futures:take_profit')}
+                        value={isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.tp, !isTabOpen)}
+                        className="text-center"
+                        valueClassName={`${!isTabOpen ? 'text-onus-green' : ''}`}
                     />
                 </div>
             }
-            <div className="flex flex-wrap w-full">
-                <OrderItem label={t('futures:order_table:volume')}
-                    value={formatNumber(order?.order_value, decimalSymbol, 0, true)} />
-                {!isTabOpen ?
-                    <OrderItem label={t('futures:order_table:open_price')}
-                        value={formatNumber(price, decimalPrice, 0, true)} />
-                    :
-                    <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
-                }
+            <div className="flex flex-wrap w-full mt-5 justify-between">
+                <OrderItem
+                    label={!isTabOpen ? t('futures:order_table:open_price') : t('futures:stop_loss')}
+                    value={!isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.sl)}
+                    className="py-[2px] space-y-[2px] mb-2"
+                    valueClassName={`${isTabOpen ? order?.sl > 0 ? 'text-onus-red' : 'text-onus-white' : ''}`}
+                />
+                <OrderItem
+                    center
+                    label={t('futures:order_table:volume')}
+                    className="py-[2px] space-y-[2px] mb-2"
+                    value={formatNumber(order?.order_value, decimalSymbol, 0, true)}
+                />
                 <OrderItem
                     label={t('futures:margin')}
+                    className="py-[2px] space-y-[2px] text-right mb-2"
                     value={order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                 />
-                {!isTabOpen && <>
-                    <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
-                    <OrderItem
-                        label={t('futures:mobile:quote_price')}
-                        value={renderQuoteprice()}
-                    />
-                </>
-                }
-                <OrderItem label={t('futures:stop_loss')}
-                    valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}
-                    value={renderSlTp(order?.sl)} />
-                <OrderItem label={t('common:last_price')}
-                    value={
-                        <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order.symbol} />}
+                <OrderItem
+                    label={!isTabOpen ? t('futures:mobile:quote_price') : t('futures:take_profit')}
+                    value={!isTabOpen ? renderQuoteprice() : renderSlTp(order?.tp)}
+                    className="py-[2px] space-y-[2px] "
+                    valueClassName={`${isTabOpen ? order?.tp > 0 ? 'text-onus-green' : 'text-onus-white' : ''}`}
                 />
-                <OrderItem label={t('futures:take_profit')}
-                    valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}
-                    value={renderSlTp(order?.tp)} />
+                <OrderItem
+                    center
+                    label={t('futures:calulator:liq_price')}
+                    className="py-[2px] space-y-[2px]"
+                    value={renderLiqPrice(order)}
+                />
+                <OrderItem
+                    dropdown
+                    label={t('common:fee')}
+                    className="py-[2px] space-y-[2px] text-right"
+                    value={renderFee(order)}
+                    onClick={onModifyFee}
+                />
             </div>
             <div className="flex w-full mt-4 space-x-2">
                 {
@@ -333,7 +370,7 @@ const OrderOpenDetail = ({
                 }
                 <div className="w-full">
                     <Button
-                        title={t('futures:tp_sl:modify_tpsl')}
+                        title={t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}
                         className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"

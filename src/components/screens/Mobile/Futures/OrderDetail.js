@@ -119,7 +119,7 @@ const OrderDetail = ({
                 value = metadata?.modify_price ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_price?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right"> {getValue(metadata?.modify_price?.after)}</div>
                     </div> : getValue(metadata?.price);
                 return value;
@@ -128,7 +128,7 @@ const OrderDetail = ({
                     <div className="flex items-center justify-between">
                         <div className={`text-left ${getColor('tp', metadata?.modify_tp?.before)}`}>
                             {getValue(metadata?.modify_tp?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className={`text-right ${getColor('tp', metadata?.modify_tp?.after)}`}>
                             {getValue(metadata?.modify_tp?.after)}</div>
                     </div> : null;
@@ -138,7 +138,7 @@ const OrderDetail = ({
                     <div className="flex items-center justify-between">
                         <div className={`text-left ${getColor('sl', metadata?.modify_sl?.before)}`}>
                             {getValue(metadata?.modify_sl?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className={`text-right ${getColor('sl', metadata?.modify_sl?.after)}`}>
                             {getValue(metadata?.modify_sl?.after)} </div>
                     </div> : null;
@@ -147,7 +147,7 @@ const OrderDetail = ({
                 value = metadata?.modify_margin ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_margin?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right">{getValue(metadata?.modify_margin?.after)} </div>
                     </div> : null;
                 return value;
@@ -163,6 +163,7 @@ const OrderDetail = ({
     }, [pairConfig]);
 
     const forceFetchOrder = (data) => {
+        console.log(isModal)
         if (!isModal) {
             getDetail();
         }
@@ -247,7 +248,7 @@ const OrderDetail = ({
 
                 <div className="shadow-order_detail py-[10px] bg-onus h-full">
                     <div className="min-h-[350px] spot-chart max-w-full"
-                         style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
+                        style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
                         <MobileTradingView
                             t={t}
                             key={chartKey}
@@ -273,9 +274,9 @@ const OrderDetail = ({
                     <div className="px-[16px] bg-onus">
                         {!isTabHistory &&
                             <OrderOpenDetail order={order} decimalPrice={decimalPrice} isDark={isDark}
-                                             pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
-                                             forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory}
-                                             isVndcFutures={isVndcFutures}
+                                pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
+                                forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory}
+                                isVndcFutures={isVndcFutures}
                             />
                         }
                         <div className="pt-5">
@@ -284,9 +285,9 @@ const OrderDetail = ({
                                 <Row>
                                     <Label>ID</Label>
                                     <Span className="flex items-center"
-                                          onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
+                                        onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
                                         {order?.displaying_id}
-                                        <Copy color={colors.onus.grey} size={16} className="ml-2 "/>
+                                        <Copy color={colors.onus.grey} size={16} className="ml-2 " />
                                     </Span>
                                 </Row>
                                 <Row>
@@ -354,11 +355,11 @@ const OrderDetail = ({
                                     <Span>{renderFee(order, 'close_order')}</Span>
                                 </Row>
                                 <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
-                                         overridePosition={(e) => ({
-                                             left: 0,
-                                             top: e.top
-                                         })}
+                                    className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                                    overridePosition={(e) => ({
+                                        left: 0,
+                                        top: e.top
+                                    })}
                                 >
                                     <div>
                                         <label
@@ -370,18 +371,18 @@ const OrderDetail = ({
                                     <Label className="flex">
                                         {t('futures:mobile:liquidate_fee')}
                                         <div className="px-2" data-tip="" data-for="liquidate-fee"
-                                             id="tooltip-liquidate-fee">
-                                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                                            id="tooltip-liquidate-fee">
+                                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
                                         </div>
                                     </Label>
                                     <Span>{renderFee(order, 'liquidate_order')}</Span>
                                 </Row>
                                 <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
-                                         overridePosition={(e) => ({
-                                             left: 0,
-                                             top: e.top
-                                         })}
+                                    className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                                    overridePosition={(e) => ({
+                                        left: 0,
+                                        top: e.top
+                                    })}
                                 >
                                     <div>
                                         <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
@@ -392,7 +393,7 @@ const OrderDetail = ({
                                     <Label className="flex">
                                         {t('futures:mobile:swap_fee')}
                                         <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
-                                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
                                         </div>
                                     </Label>
                                     <Span>{renderFee(order, 'swap')}</Span>
@@ -405,7 +406,7 @@ const OrderDetail = ({
                                     className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
                                 {dataSource.map((item, index) => (
                                     <div key={index}
-                                         className="bg-onus-bg3 px-3 rounded-lg mb-3">
+                                        className="bg-onus-bg3 px-3 rounded-lg mb-3">
                                         <Row>
                                             <Label>{t('common:time')}</Label>
                                             <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>

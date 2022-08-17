@@ -81,7 +81,7 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, 
                 <Button
                     onusMode={true}
                     title={t('futures:cancel')}
-                    className={`!h-[50px] !text-[16px] !font-semibold`}
+                    className={`!h-[3rem] !text-[1rem] !font-semibold`}
                     componentType="button"
                     onClick={onClose}
                 />
@@ -89,7 +89,7 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, 
                     onusMode={true}
                     title={t('futures:leverage:confirm')}
                     type="primary"
-                    className={`ml-[7px] !h-[50px] !text-[16px] !font-semibold`}
+                    className={`ml-[7px] !h-[3rem] !text-[1rem] !font-semibold`}
                     componentType="button"
                     disabled={disabled}
                     onClick={() => !disabled && onConfirm()}

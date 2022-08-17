@@ -151,6 +151,9 @@
     "INVALID_GROUP_LEADER_NAME": "Tên đội trưởng không hợp lệ",
     "INVALID_GROUP_MEMBER": "Số lượng thành viên trong đội chưa đủ",
     "DUPLICATE_GROUP_NAME": "Tên đội trùng với đội khác",
-    "USER_JOIN_GROUP_CONTEST_BEFORE": "Người dùng đã tham gia đội khác"
+    "USER_JOIN_GROUP_CONTEST_BEFORE": "Người dùng đã tham gia đội khác",
+    "MODIFY_FUTURES_MARGIN_INVALID_LEVERAGE": "Để đảm bảo an toàn cho vị thế của bạn, tính năng này không hỗ trợ với đòn bẩy hiện tại.",
+    "REMOVE_FUTURES_MARGIN_INVALID_AMOUNT": "Số lượng bạn muốn rút vượt quá lượng kí quỹ khả dụng",
+    "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "Để đảm bảo an toàn cho vị thế của bạn, tính năng này không hỗ trợ với tỉ lệ lợi nhuận hiện tại."
   }
 }

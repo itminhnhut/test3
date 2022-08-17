@@ -8,7 +8,7 @@ import Emitter from 'redux/actions/emitter';
 import { PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
-const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0 }) => {
+const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0,mode }) => {
     const [pairPrice, setPairPrice] = useState(null);
     const [lastSymbol, setLastSymbol] = useState(null);
     const _pairPrice = pairPrice || initPairPrice
@@ -33,7 +33,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
         return () => {
             // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
         };
-    }, [symbol]);
+    }, [symbol, mode]);
 
     if (!_pairPrice?.lastPrice && !isTabHistory) return '-';
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
@@ -53,7 +53,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
     return <div className='flex items-center w-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className} ${onusMode ? 'gap-[2px]' : ''}`}>
             {profit !== 0 ? <>
-                <div className={isMobile ? 'text-[16px] font-semibold leading-[1.375rem]' : ''}>
+                <div className={isMobile ? 'text-[1rem] font-semibold leading-[1.375rem]' : ''}>
                     {profit > 0 ? '+' : ''}
                     {formatNumber(profit, decimal, 0, true)} {!isMobile && _pairPrice?.quoteAsset}
                 </div>

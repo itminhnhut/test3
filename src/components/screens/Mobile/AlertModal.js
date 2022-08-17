@@ -92,7 +92,7 @@ const AlertModal = forwardRef((props, ref) => {
                     && <Button
                         onusMode={true}
                         title={options.current.closeTitle || t('common:close')}
-                        className={`!h-[3rem] !text-[16px] !font-semibold`}
+                        className={`!h-[3rem] !text-[1rem] !font-semibold`}
                         componentType="button"
                         onClick={onCancel}
                     />
@@ -102,7 +102,7 @@ const AlertModal = forwardRef((props, ref) => {
                         onusMode={true}
                         title={options.current?.confirmTitle || t('futures:leverage:confirm')}
                         type="primary"
-                        className={`ml-[7px] !h-[3rem] !text-[16px] !font-semibold`}
+                        className={`ml-[7px] !h-[3rem] !text-[1rem] !font-semibold`}
                         componentType="button"
                         onClick={onConfirm}
                     />

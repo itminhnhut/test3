@@ -263,6 +263,9 @@
     "INVALID_GROUP_LEADER_NAME": "Invalid captain name",
     "INVALID_GROUP_MEMBER": "Insufficient number of team members",
     "DUPLICATE_GROUP_NAME": "Same team name as another team",
-    "USER_JOIN_GROUP_CONTEST_BEFORE": "User joined another team"
+    "USER_JOIN_GROUP_CONTEST_BEFORE": "User joined another team",
+    "MODIFY_FUTURES_MARGIN_INVALID_LEVERAGE": "For the safety of your position, this feature is not available with current leverage.",
+    "REMOVE_FUTURES_MARGIN_INVALID_AMOUNT": "The amount you want to withdraw exceeds the available margin",
+    "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "For the safety of your position, this feature is not supported with the current rate of return."
   }
 }

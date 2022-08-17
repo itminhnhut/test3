@@ -517,7 +517,7 @@ const EditSLTPVndcMobile = ({
                 onusMode={true}
                 title={t('futures:leverage:confirm')}
                 type="primary"
-                className={`!h-[50px] !text-[16px] !font-semibold`}
+                className={`!h-[3rem] !text-[1rem] !font-semibold`}
                 componentType="button"
                 disabled={disabled}
                 onClick={() => {
