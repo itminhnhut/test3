@@ -60,7 +60,7 @@ const OrderItemMobile = ({
     }, [order?.symbol]);
 
     const getOpenPrice = (row, pairPrice) => {
-        let text = row?.price ? formatNumber(row?.price, 8, 0, true) : 0;
+        let text = row?.price ? formatNumber(row?.price, decimalScalePrice, 0, true) : 0;
         switch (row.status) {
             case VndcFutureOrderType.Status.PENDING:
                 let bias = null;
@@ -71,7 +71,7 @@ const OrderItemMobile = ({
                 if (pairPrice?.lastPrice > 0 && value > 0) {
                     let biasValue = +Big(value)
                         .minus(openPrice);
-                    const formatedBias = formatNumber(biasValue, 8, 0, true);
+                    const formatedBias = formatNumber(biasValue, decimalScalePrice, 0, true);
                     bias =
                         biasValue > 0 ? (
                             <span>
@@ -83,13 +83,13 @@ const OrderItemMobile = ({
                             </span>
                         );
                 }
-                text = row.price ? formatNumber(row.price, 8) : '';
+                text = row.price ? formatNumber(row.price, decimalScalePrice, 0, true) : '';
                 return <div>{text}</div>;
             case VndcFutureOrderType.Status.ACTIVE:
-                text = row.open_price ? formatNumber(row.open_price, 8) : '';
+                text = row.open_price ? formatNumber(row.open_price, decimalScalePrice, 0, true) : '';
                 return <div>{text}</div>;
             case VndcFutureOrderType.Status.CLOSED:
-                text = row.close_price ? formatNumber(row.close_price, 8) : '';
+                text = row.close_price ? formatNumber(row.close_price, decimalScalePrice, 0, true) : '';
                 return <div>{text}</div>;
             default:
                 return <div>{text}</div>;
@@ -121,7 +121,7 @@ const OrderItemMobile = ({
 
     const renderSlTp = (value, ratio = false) => {
         if (value) {
-            return formatNumber(value) + (ratio ? ' (' + getRatioProfit(value, order) + '%)' : '')
+            return formatNumber(value, decimalScalePrice, 0, true) + (ratio ? ' (' + getRatioProfit(value, order) + '%)' : '')
         }
         return '-';
     };
@@ -191,7 +191,7 @@ const OrderItemMobile = ({
     const renderFee = (order) => {
         const assetId = order?.fee_metadata?.close_order?.currency ?? order?.fee_metadata?.place_order?.currency;
         const ratio = fees.find(rs => rs.assetId === assetId)?.ratio
-        if (isTabHistory) return order?.close_price ? formatNumber(order?.close_price) : '-';
+        if (isTabHistory) return order?.close_price ? formatNumber(order?.close_price, decimalScalePrice, 0, true) : '-';
         return (
             <div className="flex items-center justify-end space-x-1">
                 <span>{ratio}</span>
@@ -312,7 +312,7 @@ const OrderItemMobile = ({
                             center
                             label={t(isTabHistory ? 'futures:order_table:open_price' : `futures:mobile:liq_price`)}
                             className="py-[2px] space-y-[2px]"
-                            value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, 8, 0, false) : '-' : renderLiqPrice(order)}
+                            value={isTabHistory ? order?.open_price ? formatNumber(order?.open_price, decimalScalePrice, 0, true) : '-' : renderLiqPrice(order)}
                         />
                         <OrderItem
                             dropdown={!isTabHistory}
