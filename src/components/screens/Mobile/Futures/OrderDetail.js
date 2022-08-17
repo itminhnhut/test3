@@ -264,6 +264,7 @@ const OrderDetail = ({
                             showSymbol={false}
                             showIconGuide={false}
                             showTimeFrame={false}
+                            isDetail={true}
                             // classNameChart="!h-[350px]"
                             styleChart={{ height: `calc(100% - 40px)` }}
                             renderProfit={order.status === VndcFutureOrderType.Status.CLOSED}
