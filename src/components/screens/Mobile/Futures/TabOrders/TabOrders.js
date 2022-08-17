@@ -152,16 +152,18 @@ const TabOrders = memo(({
                                 }
                             )}>
                                 {tab !== FUTURES_RECORD_CODE.orderHistory &&
-                                    <div className="p-[2px] flex items-center text-xs font-semibold leading-[1.125rem] bg-onus-bg3 rounded-lg">
-                                        <div onClick={() => onChangeMode(modeOrders.detail)}
-                                            className={`py-[5px] px-5 ${mode === modeOrders.detail ? 'rounded-lg bg-onus-bg2' : 'text-onus-grey'}`}>
+                                    <TabModeContainer tab={mode === modeOrders.detail ? 0 : 1}>
+                                        <TabMode onClick={() => onChangeMode(modeOrders.detail)}
+                                            active={mode === modeOrders.detail}
+                                        >
                                             {t('futures:mobile:full')}
-                                        </div>
-                                        <div onClick={() => onChangeMode(modeOrders.shortcut)}
-                                            className={`py-[5px] px-5 ${mode === modeOrders.shortcut ? 'rounded-lg bg-onus-bg2' : 'text-onus-grey'}`}>
+                                        </TabMode>
+                                        <TabMode onClick={() => onChangeMode(modeOrders.shortcut)}
+                                            active={mode === modeOrders.shortcut}
+                                        >
                                             {t('futures:mobile:simple')}
-                                        </div>
-                                    </div>
+                                        </TabMode>
+                                    </TabModeContainer>
                                 }
                                 {needShowHideOther &&
                                     <div
@@ -257,5 +259,34 @@ export const LoginOrder = () => {
         </div>
     );
 };
+
+const TabModeContainer = styled.div.attrs(({ active }) => ({
+    className: "p-[2px] flex items-center text-xs font-semibold leading-[1.125rem] bg-onus-bg3 rounded-lg relative",
+
+}))`
+ ::after {
+        width:calc(100% / 2 - 2px);
+        height: calc(100% - 4px);
+        content: '';
+        position: absolute;
+        bottom:0;
+        left: 0;
+        transform:${({ tab }) => `translate(${tab * 100}%,0)`};
+        background-color: ${() => colors.onus.bg2};
+        border-radius:8px;
+        transition: all 0.2s ease-out;
+        margin:2px
+    }
+`
+
+const TabMode = styled.div.attrs(({ active }) => ({
+    className: classNames(
+        'py-[5px] px-5 relative z-[10]',
+        {
+            'text-onus-grey': !active
+        }
+    )
+}))`
+`;
 
 export default TabOrders;
