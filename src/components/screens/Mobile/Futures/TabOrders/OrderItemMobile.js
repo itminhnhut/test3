@@ -378,7 +378,7 @@ export const OrderItem = (props) => {
     return (
         <Row onClick={onClick} className={classnames(
             {
-                'px-5': center,
+                'px-3 xxs:px-5': center,
                 '!w-full': fullWidth
             }
         )}>

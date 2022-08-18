@@ -299,6 +299,7 @@ module.exports = {
         extend: {
             screens: {
                 'nao': '1160px',
+                'xxs': '360px'
             },
             spacing: {
                 128: '32rem',
