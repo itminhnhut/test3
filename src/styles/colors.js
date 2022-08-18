@@ -1,4 +1,8 @@
 const colors = {
+    mint: "#03BBCC",
+    mint3: "#0FA4B3",
+    dark7: "#1f1f1f",
+
     base: '#00C8BC',
     bg: '#eeeeee',
     lightThemeBg: '#FCFCFC',
@@ -59,27 +63,50 @@ const colors = {
     overlayDark: 'rgba(0, 0, 0, 0.45)',
 
     onus: {
-        bg: '#090D17',
+        bg: '#1B222D',
         bg2: '#36445A',
         bg3: '#243042',
+        bgModal: '#243042',
+        bgModal2: '#1e1e1e',
+        bgModal3: '#090D17',
         base: '#0068FF',
         green: '#0DB787',
         red: '#DC1F4E',
-        line: '#1B222D',
-        input: '#192231',
+        line: '#2B3247',
+        input: '#243042',
         input2: '#36445A',
         white: '#F6F6F6',
+        textPrimary: '#F6F6F6',
         grey: '#8492A7',
         grey2: '#445571',
+        textSecondary: '#8492A7',
         orange: '#FF9F1A',
         slider: '#418FFF'
     },
-    // onus: '#090D17', //background main
-    // onus1: '#192231',//background input
-    // greenOnus: '#0DB787',
-    // redOnus: '#DC1F4E',
-    // grayOnus: '#8492A7',
-    // whiteOnus: '#F6F6F6'
+    nao: {
+        bg: '#619095',
+        bg2: '#12182B',
+        bg3: '#192138',
+        bg4: '#202E42',
+        text: '#B9CCFF',
+        grey: '#7686B1',
+        grey2: '#7586AD',
+        white: '#F6F6F6',
+        blue: '#27CEE0',
+        blue2: '#093DD1',
+        green: '#49E8D5',
+        green2: '#0DB787',
+        yellow: '#F3BA2F',
+        line: '#1C2644',
+        border: '#4AEDFF',
+        border2: '#18223E',
+        bgModal: '#161D32',
+        bgModal2: '#00030D',
+        bgShadow: '#000921',
+        red: '#DC1F4E',
+        tooltip: '#0E1D32',
+        tooltip2: '#071120'
+    }
 };
 
 export default colors;

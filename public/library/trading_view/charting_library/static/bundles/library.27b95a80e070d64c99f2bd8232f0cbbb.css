@@ -9463,7 +9463,10 @@ html.feature-no-touch.theme-dark .container-3_8ayT2Q-:hover .arrow-WcYWFXUn-{ st
     background-color: #ffffff;
 }
 
-html.theme-dark .drawingToolbar-U3_QXRof-{ background-color: #101621; }
+html.theme-dark .drawingToolbar-U3_QXRof-{ 
+    background-color: #1B222D;
+    border-right: 3px solid #2B3247;
+ }
 
 .drawingToolbar-U3_QXRof-.isHidden-2d-PYkzV- {
     background-color: transparent;
@@ -9511,7 +9514,7 @@ html.theme-dark .inner-1xuW-gY4-{ background-color: #2f3241; }
 html.theme-dark .group-2JyOhh7Z-{
     /* background-color: #00091F; */
     /*background-color: #1f1f1f;*/
-    background-color: #00091F;
+    background-color: #1B222D;
 }
 
 .group-2JyOhh7Z-+.group-2JyOhh7Z- {

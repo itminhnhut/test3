@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { ChartMode } from 'redux/actions/const';
 import historyProvider from './historyProvider';
 
 const io = require('socket.io-client');
@@ -62,9 +61,11 @@ function updateBar(data, sub) {
 
 export default class {
     mode = null;
+    isFrame = false;
 
-    constructor(mode) {
+    constructor(mode, isFrame = false) {
         this.mode = mode;
+        this.isFrame = isFrame;
     }
 
     subscribeBars(symbolInfo, resolution, updateCb, uid, resetCache) {
@@ -133,7 +134,7 @@ socket.on('futures:ticker:update', (update) => {
     const sub = _subs.find(e => e.symbol === symbol && e.exchange === 'NAMI_FUTURES');
     const data = {
         ts: Math.floor(time / 1000),
-        price: symbol.indexOf('VNDC') >= 0 ? +price : +closePrice,
+        price: price,
     };
     if (sub) {
         if (!sub?.lastBar?.time) return;

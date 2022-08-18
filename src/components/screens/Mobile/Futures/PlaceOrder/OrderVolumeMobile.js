@@ -3,7 +3,7 @@ import TradingInput from '../../../../trade/TradingInput';
 import { useTranslation } from 'next-i18next';
 
 const initPercent = 25;
-const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quoteQty }) => {
+const OrderVolumeMobile = memo(({ decimal, pairConfig, setShowEditVolume, quoteQty }) => {
     const { t } = useTranslation();
 
     return (
@@ -16,12 +16,12 @@ const OrderVolumeMobile = memo(({ decimals, pairConfig, setShowEditVolume, quote
                 allowNegative={false}
                 // onValueChange={({ floatValue = '' }) => setSize(floatValue)}
                 // validator={getValidator('quantity')}
-                decimalScale={0}
-                labelClassName='whitespace-nowrap capitalize dark:text-onus-grey'
-                containerClassName="h-[36px] dark:bg-onus-input"
-                tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
+                decimalScale={decimal}
+                labelClassName='whitespace-nowrap capitalize text-onus-grey'
+                containerClassName="h-[36px] bg-onus-input"
+                tailContainerClassName='flex items-center text-onus-grey font-medium text-xs select-none'
                 renderTail={() => (
-                    <div className='relative group select-none dark:text-onus-grey'>
+                    <div className='relative group select-none text-onus-grey'>
                         <div className='flex items-center'>
                             {pairConfig?.quoteAsset ?? ''}
                         </div>

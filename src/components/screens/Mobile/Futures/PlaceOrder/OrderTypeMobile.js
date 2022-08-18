@@ -27,16 +27,16 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
     }
 
     const typeList = useMemo(() => {
-        return isVndcFutures ? orderTypes : orderTypes?.filter((o) => o === OrderTypes.Limit || o === OrderTypes.Market)
+        return orderTypes
     }, [orderTypes, isVndcFutures])
 
     return (
-        <Popover className="relative pr-3" style={{flexGrow: 1}}>
+        <Popover className="relative mr-2" style={{flexGrow: 1}}>
             {({ open, close }) => (
                 <>
-                    <Popover.Button data-tut="order-type" className='w-full h-[36px] border-b-2 dark:border-onus-input'>
+                    <Popover.Button data-tut="order-type" className='w-full h-[32px] border-b-2 border-onus-input'>
                         <div className="flex items-center justify-between text-xs font-medium">
-                            <div className="w-full">
+                            <div className="w-full text-left">
                                 {getTypesLabel(type)}
                             </div>
                             <ChevronDown color={colors.grey1} size={16} className="ml-1" />
@@ -51,7 +51,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="w-full absolute z-50 bg-white dark:bg-bgPrimary-dark rounded-md">
+                        <Popover.Panel className="w-full absolute z-50 bg-onus-bg3 rounded-md">
                             <div
                                 className="overflow-y-auto overflow-x-hidden px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col ">
                                 {typeList?.map(o => {
@@ -61,9 +61,9 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                                             close()
                                         }}
                                             className={classNames(
-                                                'pb-2 w-full min-w-[78px] text-txtSecondary dark:text-onus-grey font-medium text-xs cursor-pointer border-b-[2px] border-transparent',
+                                                'pb-2 w-full min-w-[78px] text-onus-grey font-medium text-xs cursor-pointer border-b-[2px] border-transparent',
                                                 {
-                                                    '!text-txtPrimary dark:!text-onus-white':
+                                                    'text-onus-white':
                                                         o === type,
                                                 }
                                             )}

@@ -50,6 +50,10 @@ const LayoutMobile = ({
     useEffect(() => {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
+        let vw = window.innerWidth;
+        if (vw <= 360) {
+            document.documentElement.style.setProperty('font-size', '14px');
+        }
         document.body.classList.add('hidden-scrollbar');
         // document.body.classList.add('!bg-onus');
         setTimeout(() => {

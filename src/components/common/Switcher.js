@@ -28,7 +28,7 @@ const Switcher = memo(({ active, loading = false, onChange, wrapperClass = '', a
                 backgroundColor: onusMode ? colors.onus.base : currentTheme === THEME_MODE.DARK ? 'rgba(0, 200, 188, 0.5)' : colors.lightTeal
             }}
             onClick={() => onChange && onChange()}>
-            <div className={active ? `${className} ${onusMode ? 'top-[1px] left-[3px]' : ''} translate-x-full` : `${className} ${onusMode ? 'top-[1px] left-[1px]' : ''} translate-x-0 !bg-gray-2 dark:!bg-darkBlue-5`} />
+            <div className={active ? `${className} ${onusMode ? 'top-[1px] left-[3px]' : ''} translate-x-full` : `${className} ${onusMode ? 'top-[1px] left-[1px]' : ''} translate-x-0 ${onusMode ? 'bg-onus-white' : '!bg-gray-2 dark:!bg-darkBlue-5'} `} />
         </div>
     )
 })

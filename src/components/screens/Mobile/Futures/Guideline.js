@@ -58,10 +58,12 @@ const Guideline = ({pair, start, setStart, isFullScreen}) => {
                 selector: '[data-tut="order-sl"]',
                 content: (props) => <Content {...props} onClose={onClose}/>,
                 highlightedSelectors: ['[data-tut="order-tp"]'],
+                position: !isFullScreen ? [15, 0] : ''
             },
             {
                 selector: '[data-tut="order-adjust-btn"]',
                 content: (props) => <Content {...props} onClose={onClose}/>,
+                position: !isFullScreen ? [15, 0] : ''
             },
             {
                 selector: '[data-tut="order-button"]',
@@ -142,7 +144,7 @@ const Content = ({title, text, step, onClose, top, goTo, ...props}) => {
 }
 
 const View = styled.div.attrs({
-    className: 'my-[10px] bg-onus font-inter flex flex-col justify-between'
+    className: 'my-[10px] bg-onus-bgModal3 font-inter flex flex-col justify-between'
 })`
     width: 294px;
 ${'' /* background-color:${colors.darkBlue1}; */}

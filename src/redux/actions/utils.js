@@ -27,6 +27,25 @@ import { FuturesOrderTypes } from 'redux/reducers/futures';
 const WAValidator = require('multicoin-address-validator')
 const EthereumAddress = require('ethereum-address')
 
+export function scrollHorizontal(el, parentEl) {
+    if (!parentEl || !el) return;
+
+    const style = el.currentStyle || window.getComputedStyle(el),
+        margin = parseFloat(style.marginLeft) + parseFloat(style.marginRight),
+        padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight),
+        border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+
+    const rect = el.getBoundingClientRect();
+    const { left, right, bottom, top, width } = parentEl.getBoundingClientRect();
+    // const inView = rect.left >= left && rect.right <= right
+    // const position = rect.left < left ? 0 : rect.right;
+    const center = (rect.left + parentEl.scrollLeft + margin + padding + border) - (width / 2);
+    parentEl.scrollTo({
+        left: center,
+        behavior: 'smooth'
+    })
+}
+
 export function getFilter(filterType, config) {
     const filter = find(config?.filters, { filterType })
     return filter || ExchangeFilterDefault[filterType]
@@ -292,7 +311,7 @@ export function formatNumber(
     )
 }
 
-export function scrollFocusInput(){
+export function scrollFocusInput() {
     if (typeof window !== 'undefined') {
         window.scrollTo(0, window.innerHeight);
     }
@@ -301,9 +320,9 @@ export function scrollFocusInput(){
 export function getExchange24hPercentageChange(price) {
     let change24h
     if (price) {
-        const { p: lastPrice, ld: lastPrice24h } = price
+        const { p: lastPrice, ld: lastPrice24h, q: quoteAsset } = price
         if (lastPrice && lastPrice24h) {
-            change24h = ((lastPrice - lastPrice24h) / lastPrice24h) * 100
+            change24h = ((lastPrice - lastPrice24h) / lastPrice24h) * (quoteAsset === 'USDT' ? 1 : 100)
         } else if (lastPrice && !lastPrice24h) {
             change24h = 100
         } else if (!lastPrice && lastPrice24h) {

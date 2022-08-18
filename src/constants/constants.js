@@ -51,15 +51,15 @@ export const FEE_STRUCTURES = {
         VNDC: {
             DEDUCTION: 13,
             MAKER_TAKER: {
-                MAKER: ['0.075000', '0.10000'],
-                TAKER: ['0.075000', '0.10000'],
+                MAKER: ['0.087000', '0.10000'],
+                TAKER: ['0.087000', '0.10000'],
             },
         },
         USDT: {
             DEDUCTION: 13,
             MAKER_TAKER: {
-                MAKER: ['0.075000', '0.10000'],
-                TAKER: ['0.075000', '0.10000'],
+                MAKER: ['0.087000', '0.10000'],
+                TAKER: ['0.087000', '0.10000'],
             },
         },
     },

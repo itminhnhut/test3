@@ -7,7 +7,7 @@ import { debounce } from 'lodash/function';
 import { useTranslation } from 'next-i18next';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY, } from 'redux/actions/apis';
-import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, } from 'redux/actions/utils';
+import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, scrollHorizontal, formatNumber } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import usePrevious from 'hooks/usePrevious';
 import SortIcon from 'components/screens/Mobile/SortIcon';
@@ -15,41 +15,49 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFuturesFavoritePairs } from 'redux/actions/futures';
 import { Search } from 'react-feather';
-
+import { useRef } from 'react';
+import { orderBy } from 'lodash';
+import Tag from 'components/common/Tag'
+import { roundTo } from 'round-to';
 const TABS = {
     FAVOURITE: 'FAVOURITE',
     FUTURES: 'FUTURES',
+    TRENDING: 'TRENDING',
+    GAINERS: 'GAINERS',
+    LOSERS: 'LOSERS',
     // EXCHANGE: 'EXCHANGE'
 }
 
+const initTags = {
+    VNDC: 'VNDC',
+    USDT: 'USDT',
+}
+
 const TAGS = {
-    [TABS.FAVOURITE]: {
-        FUTURES: 2,
-        // EXCHANGE: 1,
-    },
-    [TABS.FUTURES]: {
-        VNDC: 'VNDC',
-        // USDT: 'USDT',
-    },
+    [TABS.FAVOURITE]: initTags,
+    [TABS.FUTURES]: initTags,
+    [TABS.TRENDING]: initTags,
+    [TABS.GAINERS]: initTags,
+    [TABS.LOSERS]: initTags,
 }
 
 const defaultFavoritePairs = [
-    'BTC_VNDC',
-    'BCH_VNDC',
-    'ETH_VNDC',
-    'ETC_VNDC',
-    'LTC_VNDC',
-    'BNB_VNDC',
-    'EOS_VNDC',
+    'BTC',
+    'BCH',
+    'ETH',
+    'ETC',
+    'LTC',
+    'BNB',
+    'EOS',
 ]
 
 let loading = false
 
-export default ({isRealtime = true}) => {
+export default ({ isRealtime = true, pair, pairConfig }) => {
     // * Initial State
     const [tab, setTab] = useState({
         active: TABS.FAVOURITE,
-        tagActive: TAGS[TABS.FAVOURITE].FUTURES,
+        tagActive: pairConfig?.quoteAsset || TAGS[TABS.FAVOURITE].VNDC,
     })
     const [data, setData] = useState([])
     const [sort, setSort] = useState({
@@ -58,20 +66,22 @@ export default ({isRealtime = true}) => {
     })
     const [search, setSearch] = useState('')
     const [referencePrice, setReferencePrice] = useState([])
+    const refTabsMarkets = useRef(null);
 
     const dispatch = useDispatch()
     const favoritePairRaws = useSelector((state) => state.futures.favoritePairs) || []
+    // const marketWatch = useSelector((state) => state.futures.marketWatch);
 
     const favoritePairs = useMemo(() => {
-        const favoritePairVNDC = favoritePairRaws.filter(f => f.split('_')[1] === 'VNDC')
-        if (!favoritePairVNDC || favoritePairVNDC.length <= 0) {
-            return defaultFavoritePairs
+        const favoritePair = favoritePairRaws.filter(f => f.split('_')[1] === tab.tagActive)
+        if (!favoritePair || favoritePair.length <= 0) {
+            return defaultFavoritePairs.map(i => i + `_${tab.tagActive}`)
         }
         return favoritePairRaws
-    })
+    }, [tab, favoritePairRaws])
 
     const router = useRouter()
-    const {t} = useTranslation(['common'])
+    const { t } = useTranslation(['common'])
 
     const changeSearch = useCallback(
         debounce((value) => {
@@ -82,22 +92,25 @@ export default ({isRealtime = true}) => {
 
     const tabTitles = {
         [TABS.FAVOURITE]: t('markets:favourite'),
-        [TABS.FUTURES]: 'Futures',
+        [TABS.FUTURES]: t('common:all'),
+        [TABS.TRENDING]: t('markets:trending'),
+        [TABS.GAINERS]: t('markets:gainers'),
+        [TABS.LOSERS]: t('markets:losers'),
     }
 
     const changeSort = (field) => () => {
         if (field !== sort.field) {
-            setSort({field, direction: 'asc'})
+            setSort({ field, direction: 'asc' })
         } else {
             switch (sort.direction) {
                 case 'asc':
-                    setSort({field, direction: 'desc'})
+                    setSort({ field, direction: 'desc' })
                     break
                 case 'desc':
-                    setSort({field: '', direction: ''})
+                    setSort({ field: '', direction: '' })
                     break
                 default:
-                    setSort({field, direction: 'asc'})
+                    setSort({ field, direction: 'asc' })
                     break
             }
         }
@@ -108,9 +121,9 @@ export default ({isRealtime = true}) => {
         // TODO: move this logic to redux store
         fetchAPI({
             url: API_GET_REFERENCE_CURRENCY,
-            params: {base: 'VNDC,USDT', quote: 'USD'},
+            params: { base: 'VNDC,USDT', quote: 'USD' },
         })
-            .then(({data = []}) => {
+            .then(({ data = [] }) => {
                 setReferencePrice(
                     data.reduce((acm, current) => {
                         return {
@@ -125,28 +138,28 @@ export default ({isRealtime = true}) => {
 
     useEffect(() => {
         if (!tab.active || !tab.tagActive) return
-        getData()
+        getData(tab.tagActive)
     }, [tab])
 
     useEffect(() => {
         if (!isRealtime) return
-        const intervalHandle = setInterval(() => getData(), 2000)
+        const intervalHandle = setInterval(() => getData(tab.tagActive), 5000)
         return () => {
             clearInterval(intervalHandle)
         }
-    }, [isRealtime])
+    }, [isRealtime, tab])
 
-    const getData = async () => {
+    const getData = async (tag) => {
         if (loading) return
         loading = true
         await fetchAPI({
             url: API_GET_FUTURES_MARKET_WATCH,
         })
-            .then(({data = []}) => {
+            .then(({ data = [] }) => {
                 const newData = data
                     .filter((item) => {
                         // Add more filter before store if needed
-                        return item.q === 'VNDC'
+                        return item.q === tag
                     })
                     .map((item = {}) => ({
                         symbol: item.s,
@@ -155,9 +168,11 @@ export default ({isRealtime = true}) => {
                         volume24h: item.vq,
                         quoteAsset: item.q,
                         baseAsset: item.b,
+                        leverageMax: item.lbl,
+                        view: item.vc ?? 0,
                         change24hRaw: getExchange24hPercentageChange(item),
                         change24h: formatPercentage(
-                            getExchange24hPercentageChange(item),
+                            roundTo(getExchange24hPercentageChange(item),2),
                             2,
                             true
                         ),
@@ -168,119 +183,159 @@ export default ({isRealtime = true}) => {
         loading = false
     }
 
-    const listItem = data
-        .filter((item) => {
-            if (search) {
+    const filter = useRef({ field: '', direction: '' })
+
+    const dataFilter = useMemo(() => {
+        if (!Array.isArray(data)) return [];
+        // if (data.length <= 0) {
+        //     const sub = []
+        //     favoritePairs.map(item => {
+        //         const _item = marketWatch[String(item).replace('_', '')];
+        //         sub.push({
+        //             symbol: _item.symbol,
+        //             lastPrice: _item.priceChange,
+        //             lastPrice24h: _item.lastPrice,
+        //             volume24h: 0,
+        //             quoteAsset: _item.quoteAsset,
+        //             baseAsset: _item.baseAsset,
+        //             leverageMax: 0,
+        //             view: 0,
+        //             change24hRaw: _item.priceChangePercent * 100,
+        //             change24h: _item.priceChangePercent * 100,
+        //         })
+        //     });
+        //     return sub;
+        // }
+        if (search) {
+            return data.filter((item) => {
                 return item.baseAsset.includes(search?.toUpperCase() || '')
-            }
-
-            const cond = []
+            })
+        }
+        return orderBy(data, [filter.current.field], [filter.current.direction]).filter(((item, index) => {
             if (tab.active === TABS.FAVOURITE) {
-                cond.push(
-                    favoritePairs.includes(
-                        item.baseAsset + '_' + item.quoteAsset
-                    )
-                )
+                return favoritePairs.includes(item.baseAsset + '_' + item.quoteAsset)
             }
-            cond.push()
+            if (tab.active === TABS.TRENDING || tab.active === TABS.GAINERS || tab.active === TABS.LOSERS) {
+                return index < 10;
+            }
+            return item;
+        }));
+    }, [tab, data, search])
 
-            return cond.every((e) => e)
+    const dataSource = useMemo(() => {
+        return orderBy(dataFilter, [sort.field], [sort.direction])
+    }, [sort, dataFilter])
+
+    const onChangeTab = (t) => {
+        switch (t) {
+            case TABS.TRENDING:
+                filter.current = { field: 'view', direction: 'desc' }
+                break
+            case TABS.GAINERS:
+                filter.current = { field: 'change24hRaw', direction: 'desc' }
+                break
+            case TABS.LOSERS:
+                filter.current = { field: 'change24hRaw', direction: 'asc' }
+                break
+            default:
+                filter.current = { field: 'volume24h', direction: 'desc' }
+                break
+        }
+        setSort(filter.current)
+        setTab({
+            ...tab,
+            active: t,
         })
-        .sort((a, b) => {
-            if (!sort.field || !sort.direction) return 0
-            if (a[sort.field] > b[sort.field]) {
-                return sort.direction === 'asc' ? 1 : -1
-            } else {
-                return sort.direction === 'asc' ? -1 : 1
-            }
-        })
-        .map((item) => {
-            return (
-                <div
-                    key={item.symbol}
-                    className='flex justify-between mb-6'
-                    onClick={() => {
-                        router.push(`/mobile/futures/${item.symbol}`)
-                    }}
-                >
-                    <div className='flex flex-1 items-center'>
-                        <AssetLogo assetCode={item.baseAsset} size={30}/>
-                        <div className='ml-3'>
-                            <div className='flex items-center text-sm whitespace-nowrap leading-5'>
-                                <span className='font-semibold'>{item.baseAsset}</span>
-                                {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+    }
+
+    const renderItem = (listItem) => {
+        return listItem.map((item) => (
+            <div
+                key={item.symbol}
+                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-onus-bg2' : ''}`}
+                onClick={() => {
+                    router.push(`/mobile/futures/${item.symbol}`)
+                }}
+            >
+                <div className='flex flex-1 items-center'>
+                    <AssetLogo assetCode={item.baseAsset} size={30} />
+                    <div className='ml-3'>
+                        <div className='flex items-center text-sm whitespace-nowrap leading-5 mr-2'>
+                            <span className='font-semibold text-onus-white'>{item.baseAsset}</span>
+                            {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                                     /{item.quoteAsset}
                                 </span> */}
-                            </div>
-                            <p className='text-xs font-medium text-txtSecondary leading-4'>
-                                $
-                                {formatCurrency(item.volume24h, 1)}
-                            </p>
+                            {item.leverageMax && <div className="ml-2 bg-onus-bg3 rounded-[2px] px-[0.375rem] h-[18px] text-xs font-medium">{item.leverageMax}</div>}
                         </div>
+                        <p className='text-xs text-onus-grey'>
+                            $
+                            {formatCurrency(item.volume24h, 1)}
+                        </p>
                     </div>
-                    <div className='flex items-start justify-end'>
-                        <div className='flex flex-col font-medium text-right'>
-                            <LastPrice price={item.lastPrice}/>
-                            <span className='text-xs text-gray-1 leading-4 whitespace-nowrap'>
-                                ${formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
-                            </span>
-                        </div>
-                        <div className='flex justify-end w-24'>
-                            <div
-                                className={cn(
-                                    'h-9 w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium',
-                                    {
-                                        'bg-onus-red':
-                                            item.change24h < 0,
-                                        'bg-onus-green':
-                                            item.change24h >= 0,
-                                    }
-                                )}
-                            >
-                                {item.change24h > 0 && '+'}
-                                {item.change24h} %
-                            </div>
+
+                </div>
+                <div className='flex items-start justify-end'>
+                    <div className='flex flex-col text-right'>
+                        <LastPrice price={item.lastPrice} />
+                        <span className='text-xs text-onus-grey leading-[1.125rem] whitespace-nowrap'>
+                            ${formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
+                        </span>
+                    </div>
+                    <div className='flex justify-end ml-6'>
+                        <div
+                            className={cn(
+                                'h-9 min-w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium',
+                                {
+                                    'bg-onus-red':
+                                        item.change24h < 0,
+                                    'bg-onus-green':
+                                        item.change24h >= 0,
+                                }
+                            )}
+                        >
+                            {item.change24h > 0 && '+'}
+                            {formatNumber(item.change24h, 2, 2, true)} %
                         </div>
                     </div>
                 </div>
-            )
-        })
+            </div>
+        ))
+
+    }
 
     return (
-        <div className='market-mobile bg-onus'>
-            <div className='mt-12 px-4'>
-                <InputSearch onChange={changeSearch}/>
+        <div className='market-mobile'>
+            <div className='mt-4 px-4'>
+                <InputSearch onChange={changeSearch} />
             </div>
             <div className='border-b border-onus-line'>
-                <div className='flex space-x-8 px-4 mt-6'>
+                <div ref={refTabsMarkets} className='flex space-x-5 px-4 mt-6 overflow-x-auto overflow-y-hidden'>
                     {Object.values(TABS).map((t) => {
                         return (
                             <div
                                 key={t}
                                 className={cn(
-                                    'flex cursor-pointer text-onus-grey'
+                                    'flex cursor-pointer text-onus-grey whitespace-nowrap'
                                 )}
-                                onClick={() =>
-                                    setTab({
-                                        active: t,
-                                        tagActive: Object.values(TAGS[t])[0],
-                                    })
-                                }
+                                onClick={(e) => {
+                                    onChangeTab(t)
+                                    scrollHorizontal(e.target, refTabsMarkets.current)
+                                }}
                             >
                                 {t === TABS.FAVOURITE && (
-                                    <span>
+                                    <span className="mt-0.5">
                                         <IconStarFilled
                                             size={16}
-                                            color={colors.yellow}
+                                            color={'#F3BA2F'}
                                         />
                                     </span>
                                 )}
                                 <span
                                     className={cn(
-                                        `text-sm ml-2 pb-3 relative ${t === tab.active ? 'font-semibold': 'font-medium'}`,
+                                        `text-sm pb-3 relative font-semibold`,
                                         {
-                                            'tab-active text-onus-white':
-                                                t === tab.active,
+                                            'tab-active text-onus-white': t === tab.active,
+                                            'ml-2': t === TABS.FAVOURITE
                                         }
                                     )}
                                 >
@@ -291,8 +346,29 @@ export default ({isRealtime = true}) => {
                     })}
                 </div>
             </div>
-            <div className='flex flex-col flex-1 min-h-0 px-1 pt-6 pb-3'>
-                <div className='flex justify-between mb-6 px-3'>
+            <div className='flex gap-[0.375rem] mt-5 px-4'>
+                {Object.keys(TAGS[tab.active]).map((tag) => {
+                    return (
+                        <div
+                            className={classNames(
+                                'min-h-[2rem] flex items-center justify-center px-3 rounded text-sm font-medium',
+                                { 'bg-onus-base': TAGS[tab.active][tag] === tab.tagActive },
+                                { 'bg-onus-bg3': TAGS[tab.active][tag] !== tab.tagActive }
+                            )}
+                            onClick={() => {
+                                setTab({
+                                    ...tab,
+                                    tagActive: TAGS[tab.active][tag],
+                                })
+                            }}
+                        >
+                            {tag}
+                        </div>
+                    )
+                })}
+            </div>
+            <div className='flex flex-col flex-1 min-h-0 pt-4 pb-3'>
+                <div className='flex justify-between mb-2 px-4'>
                     <div className='flex flex-1 space-x-1'>
                         <TitleHeadList
                             title={t('markets:pair')}
@@ -303,7 +379,7 @@ export default ({isRealtime = true}) => {
                         />
                         <span className='text-xs text-gray-1'>/</span>
                         <TitleHeadList
-                            title={t('common:volume')}
+                            title={t('futures:volume')}
                             onClick={changeSort('volume24h')}
                             sortDirection={
                                 sort.field === 'volume24h' && sort.direction
@@ -312,14 +388,14 @@ export default ({isRealtime = true}) => {
                     </div>
                     <div className='flex justify-end'>
                         <TitleHeadList
-                            title={t('common:price')}
+                            title={t('common:last_price')}
                             onClick={changeSort('lastPrice')}
                             sortDirection={
                                 sort.field === 'lastPrice' && sort.direction
                             }
                         />
                         <TitleHeadList
-                            title={t('common:change_24h')}
+                            title={t('futures:mobile:change_24h')}
                             onClick={changeSort('change24hRaw')}
                             className='w-24'
                             sortDirection={
@@ -328,29 +404,31 @@ export default ({isRealtime = true}) => {
                         />
                     </div>
                 </div>
-                <div className='flex-1 overflow-y-auto pt-1 px-3'>{listItem}</div>
+                <div className='flex-1 overflow-y-auto flex flex-col space-y-3'>{renderItem(dataSource)}</div>
             </div>
         </div>
     )
 }
 
-const InputSearch = ({onChange}) => {
-    const {t} = useTranslation()
+const InputSearch = ({ onChange }) => {
+    const { t } = useTranslation()
     const [value, setValue] = useState('')
 
     const handleChange = (_value) => {
+        const str = _value.normalize('NFD');
+        _value = str.replace(/[\u0300-\u036f]/g, '')
         setValue(_value)
         onChange(_value)
     }
-    return <div className='flex flex-1 items-center bg-onus-input rounded-md py-2 px-3'>
+    return <div className='flex flex-1 items-center bg-onus-input rounded-md py-2 px-4'>
         <Search
             size={20}
             className='text-onus-grey'
             strokeWidth={1}
         />
         <input
-            className='flex-1 ml-2 outline-none placeholder-onus-grey placeholder:font-medium text-sm'
-            onChange={({target: {value: v}}) => handleChange(v?.replace(/[^\w\s]/gi, ""))}
+            className='flex-1 ml-2 outline-none !placeholder-onus-grey placeholder:font-medium text-sm'
+            onChange={({ target: { value: v } }) => handleChange(v)}
             value={value}
             placeholder={t('markets:search_placeholder')}
             type='text'
@@ -361,16 +439,16 @@ const InputSearch = ({onChange}) => {
             })}
             onClick={() => handleChange('')}
         >
-            <IconClose size={10}/>
+            <IconClose size={10} />
         </div>
     </div>
 }
 
-const LastPrice = ({price}) => {
+const LastPrice = ({ price }) => {
     const prevPrice = usePrevious(price)
     return (
         <span
-            className={cn('text-sm leading-5', {
+            className={cn('text-sm leading-5 font-medium', {
                 'text-onus-red': price < prevPrice,
                 'text-onus-green': price >= prevPrice,
             })}
@@ -380,7 +458,7 @@ const LastPrice = ({price}) => {
     )
 }
 
-const TitleHeadList = ({title, className = '', onClick, sortDirection}) => {
+const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
     return (
         <div
             className={
@@ -389,7 +467,7 @@ const TitleHeadList = ({title, className = '', onClick, sortDirection}) => {
             onClick={onClick}
         >
             <span className='text-onus-grey text-xs leading-4'>{title}</span>
-            <SortIcon color={colors.onus.grey} activeColor={colors.onus.base} direction={sortDirection}/>
+            <SortIcon color={colors.onus.grey} activeColor={colors.onus.base} direction={sortDirection} />
         </div>
     )
 }

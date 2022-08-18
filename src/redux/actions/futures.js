@@ -12,6 +12,8 @@ import {
     API_GET_FUTURES_USER_SETTINGS,
     API_SET_FUTURES_MARGIN_MODE,
     API_SET_FUTURES_POSITION_MODE,
+    API_UPDATE_FUTURES_SYMBOL_VIEW,
+    API_GET_FUTURES_SETTING
 } from './apis';
 import { ApiStatus, TRADING_MODE } from './const';
 import {
@@ -23,6 +25,8 @@ import {
     SET_FUTURES_PAIR_CONFIGS,
     SET_FUTURES_USE_SLTP,
     SET_FUTURES_ORDERS_LIST,
+    GET_FUTURES_SETTING,
+    SET_FUTURES_SETTING
 } from './types';
 import { favoriteAction } from './user';
 
@@ -38,10 +42,10 @@ export const setFuturesOrderTypes =
             payload,
         });
         isAdvance &&
-                dispatch({
-                    type: SET_FUTURES_ORDER_ADVANCE_TYPES,
-                    payload,
-                });
+            dispatch({
+                type: SET_FUTURES_ORDER_ADVANCE_TYPES,
+                payload,
+            });
     };
 
 export const getFuturesFavoritePairs = () => async (dispatch) => {
@@ -179,8 +183,8 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             // handle multi language
             log.i('placeFuturesOrder result: ', data);
             let message = data?.message;
-            if (t(`error:futures.${data?.status}`)) {
-                message = t(`error:futures.${data?.status}`);
+            if (t(`error:futures${data?.status}`)) {
+                message = t(`error:futures:${data?.status || 'UNKNOWN'}`);
             }
             if (utils?.alert) {
                 utils.alert.show('error', t('futures:place_order'), message, data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`);
@@ -200,7 +204,11 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
     } catch (e) {
         console.log('Can\'t place order ', e?.message);
         if (utils?.alert) {
-            utils.alert.show('error', t('futures:place_order'), e?.message);
+            if (e.message === 'Network Error' || !navigator?.onLine) {
+                utils.alert.show('error', t('common:failed'), t('error:futures:NETWORK_ERROR'));
+            } else {
+                utils.alert.show('error', t('common:failed'), e?.message);
+            }
         } else {
             showNotification(
                 {
@@ -274,6 +282,31 @@ export const getOrdersList = () => async (dispatch) => {
         dispatch({
             type: SET_FUTURES_ORDERS_LIST,
             payload: data?.data?.orders || [],
+        });
+    }
+};
+
+export const reFetchOrderListInterval = (times = 1, duration = 5000) => (dispatch) => {
+    for (let i = 0; i < times; i++) {
+        console.log(`call ${i}`.repeat(10));
+        setTimeout(() => {
+            dispatch(getOrdersList());
+        }, duration * (i + 1));
+    }
+};
+
+export const updateSymbolView = ({ symbol }) => async (dispatch) => {
+    const { data } = await Axios.post(API_UPDATE_FUTURES_SYMBOL_VIEW, {
+        symbol
+    });
+};
+
+export const fetchFuturesSetting = (params) => async (dispatch) => {
+    const { data } = await Axios[params ? 'post' : 'get'](API_GET_FUTURES_SETTING, { ...params });
+    if (data?.status === ApiStatus.SUCCESS) {
+        dispatch({
+            type: params ? SET_FUTURES_SETTING : GET_FUTURES_SETTING,
+            payload: params ? params : data?.data,
         });
     }
 };

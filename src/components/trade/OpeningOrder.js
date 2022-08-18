@@ -14,6 +14,7 @@ import fetchAPI from 'utils/fetch-api';
 import showNotification from 'utils/notificationService';
 import TableNoData from '../common/table.old/TableNoData';
 import TableLoader from '../loader/TableLoader';
+import Link from 'next/link';
 
 const SpotOrderList = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -232,6 +233,13 @@ const SpotOrderList = (props) => {
             selector: 'symbol',
             ignoreRowClick: true,
             minWidth: '100px',
+            cell: (row) => currentPair !== `${row?.baseAsset}-${row?.quoteAsset}` ?
+                <Link href={`/trade/${row?.baseAsset}-${row?.quoteAsset}`}>
+                    <a className='dark:text-white text-darkBlue'>
+                        {row?.symbol}
+                    </a>
+                </Link>
+                : row?.symbol,
         },
         {
             name: t('common:order_type'),
@@ -299,7 +307,7 @@ const SpotOrderList = (props) => {
             ),
         },
 
-    ], [toggle]);
+    ], [toggle, currentPair]);
 
     const getOrderList = async () => {
         setLoading(true);

@@ -41,5 +41,8 @@
     "pair": "Pair",
     "vol": "VOL",
     "favourite": "Favourite",
-    "search_placeholder": "Search for coin pairs"
+    "search_placeholder": "Search for coin pairs",
+    "gainers": "Gainers",
+    "losers": "Losers",
+    "change_24h": "24h"
 }

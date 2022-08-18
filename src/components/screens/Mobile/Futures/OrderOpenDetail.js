@@ -1,13 +1,8 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import { OrderItem } from './TabOrders/OrderItemMobile';
 import { useSelector } from 'react-redux';
-import {
-    getProfitVndc,
-    renderCellTable,
-    VndcFutureOrderType
-} from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-// import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
+import { renderCellTable, VndcFutureOrderType, getRatioProfit, fees } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import Button from 'components/common/Button';
@@ -18,18 +13,29 @@ import fetchApi from 'utils/fetch-api';
 import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
 import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
 import EditSLTPVndcMobile from './EditSLTPVndcMobile';
+import MiniTickerData from 'components/screens/Futures/MiniTickerData';
+import CurrencyPopup from 'components/screens/Mobile/Futures/CurrencyPopup';
 
+const INITIAL_STATE = {
+    socketStatus: false,
+};
 const OrderOpenDetail = ({
     order,
     isDark,
     pairConfig,
-    decimal,
+    decimalPrice = 0,
     onClose,
-    forceFetchOrder
+    forceFetchOrder,
+    isTabHistory,
+    decimalSymbol = 0,
+    isVndcFutures
 }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
+    const [state, set] = useState(INITIAL_STATE);
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const status = order?.status;
+    const isTabOpen = status === 0 || status === 3;
     const oldOrder = useRef(order);
     const [data, setData] = useState({
         displaying_id: order?.displaying_id,
@@ -39,16 +45,43 @@ const OrderOpenDetail = ({
     });
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const dataMarketWatch = marketWatch[order?.symbol];
-    const profit = dataMarketWatch && getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? dataMarketWatch?.bid : dataMarketWatch?.ask);
-    const marginRatio = (profit / order?.margin) * 100;
+
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const [showEditMargin, setShowEditMargin] = useState(false);
     const rowData = useRef(null);
     const [loading, setLoading] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
+    const [disabled, setDisabled] = useState(false);
+    const publicSocket = useSelector((state) => state.socket.publicSocket);
+    const [visibleModalFees, setVisibleModalFees] = useState(false);
+
+
+    const subscribeFuturesSocket = (symbol) => {
+        if (!publicSocket) {
+            setState({ socketStatus: !!publicSocket });
+        } else {
+            if (
+                !state.prevPair ||
+                state.prevPair !== symbol ||
+                !!publicSocket !== state.socketStatus
+            ) {
+                publicSocket.emit('subscribe:futures:ticker', symbol);
+                setState({
+                    socketStatus: !!publicSocket,
+                    prevPair: symbol
+                });
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (!order.symbol || order.status === VndcFutureOrderType.Status.CLOSED) return;
+        subscribeFuturesSocket(order.symbol);
+    }, [publicSocket, order.symbol]);
 
     const onConfirmSLTP = (e) => {
         // setData(e);
+        setDisabled(true);
         fetchOrder('PUT', e, () => {
             localStorage.setItem('edited_id', e.displaying_id);
             context.alert.show('success', t('common:success'), t('futures:modify_order_success'));
@@ -70,8 +103,7 @@ const OrderOpenDetail = ({
         if (!isDiff) {
             context.alert.show('warning',
                 t('futures:close_order:modal_title', { value: order?.displaying_id }),
-                <div
-                    dangerouslySetInnerHTML={{ __html: t('futures:close_order:confirm_message', { value: order?.displaying_id }) }}></div>,
+                t('futures:close_order:confirm_message', { value: order?.displaying_id }),
                 null,
                 () => {
                     const params = {
@@ -115,12 +147,19 @@ const OrderOpenDetail = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                context.alert.show('error', t('commom:failed'), message);
+                const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`;
+                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
             }
         } catch (e) {
+            if (e.message === 'Network Error' || !navigator?.onLine) {
+                context.alert.show('error', t('common:failed'), t('error:futures:NETWORK_ERROR'));
+            }
             console.log(e);
         } finally {
             setLoading(false);
+            setTimeout(() => {
+                setDisabled(false);
+            }, 1000);
         }
     };
 
@@ -129,48 +168,78 @@ const OrderOpenDetail = ({
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus));
         if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
-        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, 0, 0, true) : '-';
+        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, decimalPrice, 0, true) : '-';
     };
 
-    const renderSlTp = (value) => {
+    const renderSlTp = (value, ratio = false) => {
         if (value) {
-            return formatNumber(value);
+            return formatNumber(value, decimalPrice, 0, true) + (ratio ? ' (' + getRatioProfit(value, order) + '%)' : '')
         }
-        return t('futures:not_set');
+        return '-';
     };
-
-    // const isDiff = useMemo(() => {
-    //     return oldOrder.current?.sl !== data.sl || oldOrder.current?.tp !== data.tp || (status === VndcFutureOrderType.Status.PENDING && oldOrder.current?.price !== data.price)
-    // }, [data, oldOrder.current])
 
     const price = useMemo(() => {
         return +(status === VndcFutureOrderType.Status.PENDING ? order?.price : status === VndcFutureOrderType.Status.ACTIVE ? order?.open_price : order?.close_price);
     }, [order]);
 
+    const canShare = [VndcFutureOrderType.Status.ACTIVE, VndcFutureOrderType.Status.CLOSED].includes(order.status);
     const openShare = () => {
-        if (!profit) return null;
-        const emitData = getShareModalData({ order, pairPrice: dataMarketWatch })
-        emitWebViewEvent(JSON.stringify(emitData))
+        if (!canShare) return null;
+        const emitData = getShareModalData({
+            order,
+            pairPrice: dataMarketWatch
+        });
+        emitWebViewEvent(JSON.stringify(emitData));
+    };
+
+    const renderQuoteprice = useCallback(() => {
+        return order?.side === VndcFutureOrderType.Side.BUY
+            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol} />
+            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol} />;
+    }, [order]);
+
+    const orderStatus = useMemo(() => {
+        const pending = !isTabHistory && order.status === VndcFutureOrderType.Status.PENDING || order.status === VndcFutureOrderType.Status.REQUESTING;
+        return { pending };
+    }, [order]);
+
+    const renderFee = (order) => {
+        const assetId = order?.fee_metadata?.close_order?.currency ?? 72;
+        const ratio = fees.find(rs => rs.assetId === assetId)?.ratio;
+        return (
+            <div className="flex items-center justify-end space-x-1">
+                <span>{ratio}</span>
+                <img src={getS3Url(`/images/coins/64/${assetId}.png`)} width={16} height={16} />
+            </div>
+        )
     }
 
-
-    const renderColorMarginRatio = () => {
-        const _marginRatio = Math.abs(marginRatio);
-        return marginRatio < 0 && `text-onus-${_marginRatio <= 20 ? 'green' : _marginRatio > 20 && _marginRatio <= 60 ? 'orange' : 'red'}`
+    const onModifyFee = () => {
+        setVisibleModalFees(true);
     }
+
+    const isModify = order?.sl > 0 || order?.tp > 0;
 
     return (
-        <div className="p-6 py-4 mx-[-24px] border-b dark:border-onus-line">
+        <div className="p-6 py-5 -mx-6 border-b border-onus-line">
+            {visibleModalFees && <CurrencyPopup
+                visibleModalFees={visibleModalFees}
+                setVisibleModalFees={setVisibleModalFees}
+                forceFetchOrder={forceFetchOrder}
+                dataRow={order}
+            />
+            }
             {showEditSLTP &&
                 <EditSLTPVndcMobile
                     onusMode={true}
                     isVisible={showEditSLTP}
                     order={rowData.current}
-                    onClose={() => setShowEditSLTP(false)}
+                    onClose={() => !disabled && setShowEditSLTP(false)}
                     status={rowData.current.status}
                     onConfirm={onConfirmSLTP}
                     lastPrice={dataMarketWatch?.lastPrice}
                     isMobile
+                    disabled={disabled}
                 />
             }
             {
@@ -182,18 +251,27 @@ const OrderOpenDetail = ({
                     forceFetchOrder={forceFetchOrder}
                 />
             }
+            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 leading-[1.125rem]">
+                <div>ID #{order?.displaying_id}</div>
+                <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
+                <div>{formatTime(order?.created_at, 'yyyy-MM-dd')}</div>
+                <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
+                <div>{formatTime(order?.created_at, 'HH:mm:ss')}</div>
+            </div>
             <div className="flex items-center justify-between">
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-[2px]">
                     {/* <SideComponent isDark={isDark} isBuy={order.side === VndcFutureOrderType.Side.BUY}>{renderCellTable('side', order)}</SideComponent> */}
                     <div className="flex items-center">
                         <div
-                            className="font-semibold text-sm mr-[10px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                            className="font-semibold leading-[1.375rem] mr-[5px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         <div
-                            className="text-onus-white bg-onus-bg3 text-[10px] font-medium leading-3 py-[2px] px-[10px] rounded-[2px]">{order?.leverage}x
+                            className="text-onus-white bg-onus-bg3 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
+                            {order?.leverage}x
                         </div>
-                        {profit ?
+                        {canShare ?
                             <img className="ml-2"
-                                onClick={openShare} src={getS3Url("/images/icon/ic_share_onus.png")} height={20} width={20} />
+                                onClick={openShare} src={getS3Url('/images/icon/ic_share_onus.png')} height={20}
+                                width={20} />
                             : null
                         }
                     </div>
@@ -204,115 +282,105 @@ const OrderOpenDetail = ({
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <div className="text-xs text-right" onClick={openShare}>
-                        <div className="text-xs font-medium text-onus-green float-right">
-                            <OrderProfit onusMode={true} className="flex flex-col text-right"
-                                order={order} pairPrice={dataMarketWatch} isTabHistory={false} isMobile />
+                    {orderStatus.pending ?
+                        <div
+                            className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-onus-orange bg-onus-orange/[0.1]'}`}>
+                            {t(`futures:mobile:${orderStatus.cancelled ? 'cancelled_order' : 'pending_order'}`)}
                         </div>
-                    </div>
+                        :
+                        <div className="text-xs text-right" onClick={openShare}>
+                            <div className="text-xs font-medium text-onus-green float-right">
+                                <OrderProfit key={order.displaying_id} onusMode={true} className="flex flex-col text-right"
+                                    decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
+                                    order={order} initPairPrice={dataMarketWatch} isTabHistory={false}
+                                    isMobile />
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
-            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 opacity-[0.6] leading-tight">
-                <div>ID #{order?.displaying_id}</div>
-                <div className="bg-[#535D6D] h-[2px] w-[2px] rounded-[50%] mx-1.5"></div>
-                <div>{formatTime(order?.created_at, 'yyyy-MM-dd HH:mm:ss')}</div>
-            </div>
-            <div className="flex flex-wrap w-full">
-                <OrderItem label={t('futures:order_table:volume')}
-                    value={formatNumber(order?.order_value, 0, 0, true)} />
-                <OrderItem label={t('futures:order_table:open_price')} value={formatNumber(price, decimal, 0, true)} />
+            {(isModify || isTabOpen) &&
+                <div className="flex rounded-md border border-onus-bg3 p-2 mt-3">
+                    <OrderItem
+                        fullWidth
+                        label={isTabOpen ? t('futures:mobile:quote_price') : t('futures:stop_loss')}
+                        value={isTabOpen ? renderQuoteprice() : renderSlTp(order?.sl, !isTabOpen)}
+                        className="text-center border-r border-onus-bg3"
+                        valueClassName={`${!isTabOpen ? 'text-onus-red' : ''}`}
+                    />
+                    <OrderItem
+                        fullWidth
+                        label={isTabOpen ? t('futures:order_table:open_price') : t('futures:take_profit')}
+                        value={isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.tp, !isTabOpen)}
+                        className="text-center"
+                        valueClassName={`${!isTabOpen ? 'text-onus-green' : ''}`}
+                    />
+                </div>
+            }
+            <div className="flex flex-wrap w-full mt-5 justify-between">
+                <OrderItem
+                    label={!isTabOpen ? t('futures:order_table:open_price') : t('futures:stop_loss')}
+                    value={!isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.sl)}
+                    className="py-[2px] space-y-[2px] mb-2"
+                    valueClassName={`${isTabOpen ? order?.sl > 0 ? 'text-onus-red' : 'text-onus-white' : ''}`}
+                />
+                <OrderItem
+                    center
+                    label={t('futures:order_table:volume')}
+                    className="py-[2px] space-y-[2px] mb-2"
+                    value={formatNumber(order?.order_value, decimalSymbol, 0, true)}
+                />
                 <OrderItem
                     label={t('futures:margin')}
-                    value={order?.margin ? formatNumber(order?.margin, 0, 0, false) : '-'}
+                    className="py-[2px] space-y-[2px] text-right mb-2"
+                    value={order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                 />
-                <OrderItem label={t('futures:tp_sl:mark_price')}
-                    value={formatNumber(dataMarketWatch?.lastPrice, decimal, 0, true)} />
                 <OrderItem
-                    label={t('futures:mobile:margin_ratio')}
-                    value={marginRatio > 0 ? '-' : formatNumber(marginRatio, 2, 0, true).replace('-', '') + '%'}
-                    valueClassName={renderColorMarginRatio()}
+                    label={!isTabOpen ? t('futures:mobile:quote_price') : t('futures:take_profit')}
+                    value={!isTabOpen ? renderQuoteprice() : renderSlTp(order?.tp)}
+                    className="py-[2px] space-y-[2px] "
+                    valueClassName={`${isTabOpen ? order?.tp > 0 ? 'text-onus-green' : 'text-onus-white' : ''}`}
                 />
-                <OrderItem label={t('futures:stop_loss')} valueClassName={order?.sl > 0 ? 'text-onus-red' : 'text-onus-grey'} value={renderSlTp(order?.sl)} />
-                <OrderItem label={t('futures:calulator:liq_price')} value={renderLiqPrice(order)} />
-                <OrderItem label={t('futures:take_profit')} valueClassName={order?.tp > 0 ? 'text-onus-green' : 'text-onus-grey'}
-                    value={renderSlTp(order?.tp)} />
-                {/* <OrderItem label={t('futures:margin')} value={formatNumber(order?.margin, 0, 0, true)} /> */}
+                <OrderItem
+                    center
+                    label={t('futures:mobile:liq_price')}
+                    className="py-[2px] space-y-[2px]"
+                    value={renderLiqPrice(order)}
+                />
+                <OrderItem
+                    dropdown
+                    label={t('common:fee')}
+                    className="py-[2px] space-y-[2px] text-right"
+                    value={renderFee(order)}
+                    onClick={onModifyFee}
+                />
             </div>
-            {/* <div className="flex gap-x-[10px] w-full">
-                <div style={{ width: 'calc(50% - 5px)' }}>
-                    <TradingInput
-                        thousandSeparator={true}
-                        label={'SL'}
-                        value={data?.sl}
-                        allowNegative={false}
-                        onValueChange={({ floatValue = '' }) => setData({ ...data, sl: floatValue })}
-                        decimalScale={decimal}
-                        labelClassName='whitespace-nowrap capitalize'
-                        containerClassName="h-[36px]"
-                        tailContainerClassName='flex items-center text-txtSecondary dark:text-onus-grey font-medium text-xs select-none'
-                        renderTail={() => (
-                            <div className='relative group select-none' onClick={onOpenModify}>
-                                <div className='flex items-center'>
-                                    <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
-                                </div>
-                            </div>
-                        )}
-                        inputClassName="text-xs !text-center"
-                        inputMode="decimal"
-                        allowedDecimalSeparators={[',', '.']}
-                    />
-                </div>
-                <div style={{ width: 'calc(50% - 5px)' }}>
-                    <TradingInput
-                        thousandSeparator={true}
-                        label={'TP'}
-                        value={data?.tp}
-                        allowNegative={false}
-                        onValueChange={({ floatValue = '' }) => setData({ ...data, tp: floatValue })}
-                        decimalScale={decimal}
-                        labelClassName='whitespace-nowrap capitalize'
-                        containerClassName="h-[36px]"
-                        tailContainerClassName='flex items-center text-txtSecondary dark:text-onus-grey font-medium text-xs select-none'
-                        renderTail={() => (
-                            <div className='relative group select-none' onClick={onOpenModify}>
-                                <div className='flex items-center'>
-                                    <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
-                                </div>
-                            </div>
-                        )}
-                        inputClassName="text-xs !text-center"
-                        inputMode="decimal"
-                        allowedDecimalSeparators={[',', '.']}
-                    />
-                </div>
-            </div> */}
-
-            <div className="flex w-full mt-4">
+            <div className="flex w-full mt-4 space-x-2">
                 {
                     order.status === VndcFutureOrderType.Status.ACTIVE &&
-                    <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
+                    <div className="w-full">
                         <Button
                             title={t('futures:mobile.adjust_margin.button_title')}
-                            className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
+                            className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={() => setShowEditMargin(true)}
                         />
                     </div>
                 }
-                <div style={{ width: 'calc(50% - 5px)' }} className="mr-[10px]">
+                <div className="w-full">
                     <Button
-                        title={t('futures:tp_sl:modify_tpsl')}
-                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
+                        title={t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}
+                        className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={onOpenModify}
                     />
                 </div>
-                <div style={{ width: 'calc(50% - 5px)' }}>
+                <div className="w-full">
                     <Button
                         title={t(`common:close`)}
-                        className="!h-[36px] dark:bg-onus-line dark:text-onus-grey !font-semibold"
+                        className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions()}

@@ -17,26 +17,26 @@ export const Track = styled.div`
 
 export const Active = styled.div`
     position: absolute;
-    background-color:${({ bgColorSlide }) =>
+    background:${({ bgColorSlide }) =>
         bgColorSlide ? bgColorSlide : colors.teal};
     border-radius: 4px;
     user-select: none;
     box-sizing: border-box;
-    height:${({ onusMode }) => onusMode ? '5px' : '2.5px'};
+    height:${({ onusMode, height }) => height ? `${height}px`  : onusMode ? '5px' : '2.5px'};
     top: 6.5px;
     z-index: 11;
 `
 
 export const SliderBackground = styled.div`
     position: absolute;
-    background-color: ${({ isDark, BgColorLine, onusMode }) => onusMode ? colors.onus.bg2 : BgColorLine ? BgColorLine :
+    background-color: ${({ isDark, BgColorLine, onusMode }) => BgColorLine ? BgColorLine : onusMode ? colors.onus.bg2 :
         isDark ? colors.darkBlue4 : colors.grey5};
     border-radius: 4px;
     user-select: none;
     box-sizing: border-box;
     width: 100%;
     top: 6.5px;
-    height:${({ onusMode }) => onusMode ? '5px' : '2.5px'};
+    height:${({ onusMode, height }) => height ? `${height}px` : onusMode ? '5px' : '2.5px'};
     z-index: 10;
 `
 
@@ -50,7 +50,7 @@ export const Dot = styled.span`
     position: absolute;
     top: ${({ onusMode, active }) => onusMode ? '-6.5px' : '-4px'};
     //top: 10px;
-    left: ${({ percentage }) => `calc(${percentage}% - 4.5px)`};
+    left: ${({ percentage }) => `calc(${percentage}% - 6.5px)`};
     clip-path:${({ onusMode }) => onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'};
     border-radius:${({ onusMode }) => onusMode ? '50%' : '0'};
     width: ${({ onusMode, active }) => onusMode ? (active ? '15px' : '9px') : '9px'};
@@ -73,14 +73,14 @@ export const Thumb = styled.div`
     display: block;
     content: '';
     top: ${({ onusMode }) => onusMode ? '1px' : '0'};
-    width: ${({ onusMode }) => onusMode ? '20px' : '14px'};
-    height: ${({ onusMode }) => onusMode ? '20px' : '12px'};
+    width: ${({ onusMode, naoMode }) => naoMode ? '32px' : onusMode ? '20px' : '14px'};
+    height: ${({ onusMode, naoMode }) => naoMode ? '32px' : onusMode ? '20px' : '12px'};
     clip-path:${({ onusMode }) => onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'};
     border-radius:${({ onusMode }) => onusMode ? '50%' : '0'};
-    border:${({ onusMode }) => onusMode ? '4px solid #76AEFF' : 'none'};
-    background-color: ${({ isZero, isDark, bgColorActive }) =>
-        isZero ? (isDark ? colors.darkBlue4 : bgColorActive ? bgColorActive : colors.grey5) : bgColorActive ? bgColorActive : colors.teal};
-
+    border:${({ onusMode, naoMode }) => onusMode && !naoMode ? '4px solid #76AEFF' : 'none'};
+    background: ${({ isZero, isDark, bgColorActive, naoMode }) =>
+        naoMode ? 'linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%)' :
+            isZero ? (isDark ? colors.darkBlue4 : bgColorActive ? bgColorActive : colors.grey5) : bgColorActive ? bgColorActive : colors.teal};
     user-select: none;
     cursor: pointer;
     pointer-events: none;
@@ -96,6 +96,6 @@ export const ThumbLabel = styled.div`
     font-size: 12px;
     font-style: normal;
     font-weight:${({ onusMode }) => onusMode ? '400' : '600'};
-    margin-top:${({ onusMode }) => onusMode ? '-2px' : '0'};
+    margin-top:${({ onusMode }) => onusMode ? '-3px' : '0'};
     line-height: 18px;
 `

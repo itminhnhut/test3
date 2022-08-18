@@ -78,14 +78,13 @@ const Futures = () => {
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
-    const ordersList = useSelector(state => state?.futures?.ordersList)
-
+    const ordersList = useSelector(state => state?.futures?.ordersList);
 
     const router = useRouter();
     const { width } = useWindowSize();
     const isMediumDevices = width >= BREAK_POINTS.md;
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
-    const [filterLayout, setFilterLayout] = useState({ ...initFuturesComponent })
+    const [filterLayout, setFilterLayout] = useState({ ...initFuturesComponent });
 
     // Memmoized Variable
     const pairConfig = useMemo(
@@ -127,7 +126,7 @@ const Futures = () => {
                 publicSocket.emit('subscribe:futures:mark_price', pair);
                 publicSocket.emit('subscribe:futures:ticker', pair);
                 // emit socket all
-                publicSocket.emit('subscribe:futures:mini_ticker', 'all')
+                publicSocket.emit('subscribe:futures:mini_ticker', 'all');
 
                 setState({
                     socketStatus: !!publicSocket,
@@ -146,12 +145,12 @@ const Futures = () => {
     };
 
     useEffect(() => {
-        if (auth) getOrders()
-    }, [auth])
+        if (auth) getOrders();
+    }, [auth]);
 
     const getOrders = () => {
-        if (auth) dispatch(getOrdersList())
-    }
+        if (auth) dispatch(getOrdersList());
+    };
 
     useEffect(() => {
         if (userSocket) {
@@ -178,7 +177,7 @@ const Futures = () => {
             }
         }
         return item;
-    }
+    };
 
     const setItemLayoutUsdt = (item, layout) => {
         const _item = futuresGridConfig.layouts[layout].find(i => i.i === item.i);
@@ -189,13 +188,13 @@ const Futures = () => {
             item.y = _item.y;
         }
         return item;
-    }
+    };
 
     const reloadLayouts = useRef(true);
 
     useEffect(() => {
         reloadLayouts.current = true;
-    }, [isVndcFutures, filterLayout])
+    }, [isVndcFutures, filterLayout]);
 
     useEffect(() => {
         if (!reloadLayouts.current) return;
@@ -205,7 +204,7 @@ const Futures = () => {
             layouts: _layouts,
             forceUpdateState: state.forceUpdateState + 1,
         });
-    }, [reloadLayouts.current])
+    }, [reloadLayouts.current]);
 
     const getLayouts = (layouts) => {
         const oldLayouts = JSON.parse(JSON.stringify(layouts));
@@ -242,9 +241,12 @@ const Futures = () => {
         });
     };
 
-    const setOrderInput = (depth = { rate: 0, amount: 0 }) => {
-        console.log('Set Input ', depth)
-    }
+    const setOrderInput = (depth = {
+        rate: 0,
+        amount: 0
+    }) => {
+        console.log('Set Input ', depth);
+    };
 
     // ? Init Price and MarkPrice
     useEffect(() => {
@@ -263,7 +265,7 @@ const Futures = () => {
 
     useEffect(() => {
         let originLayouts = getLayoutFromLS(isVndcFutures ? 'VNDC' : 'USDT');
-        const settingLayoutFutures = localStorage.getItem('settingLayoutFutures')
+        const settingLayoutFutures = localStorage.getItem('settingLayoutFutures');
         if (!settingLayoutFutures) {
             localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
         } else {
@@ -297,7 +299,7 @@ const Futures = () => {
                     `${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
                     undefined,
                     { shallow: true }
-                )
+                );
                 return;
             }
             setState({ pair: router.query.pair });
@@ -315,7 +317,7 @@ const Futures = () => {
         subscribeFuturesSocket(state.pair);
 
         // ? Get Pair Ticker
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol, async (data) => {
             const pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
             // console.log('__ check pairPrice', pairPrice.symbol, state.pair, pairPrice);
             if (state.pair === pairPrice?.symbol && pairPrice?.lastPrice > 0) {
@@ -340,7 +342,7 @@ const Futures = () => {
         // ? Unsubscribe publicSocket
         return () => {
             publicSocket && unsubscribeFuturesSocket(state.pair);
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
+            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol);
             Emitter.off(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE);
         };
     }, [publicSocket, state.pair]);
@@ -351,8 +353,8 @@ const Futures = () => {
 
     const resetDefault = () => {
         localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
-        setFilterLayout({ ...initFuturesComponent })
-    }
+        setFilterLayout({ ...initFuturesComponent });
+    };
 
     return (
         <>
@@ -534,7 +536,7 @@ const Futures = () => {
                 </MaldivesLayout>
             </DynamicNoSsr>
 
-            <FuturesProfitEarned isVisible={false} />
+            <FuturesProfitEarned isVisible={false}/>
         </>
     );
 };

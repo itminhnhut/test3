@@ -19,7 +19,7 @@
     "see_more": "See more",
     "see_less": "See less",
     "max_opt": "Max",
-    "wdl_success": "Successful Withdrawal",
+    "wdl_success": "You have successfully withdrawn {{amount}} {{assetCode}}",
     "time": "Trading hours",
     "remain_balance": "Remaining balance",
     "tips": "Assets will be withdrawn to your ONUS wallet in a short time.",
