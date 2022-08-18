@@ -28,7 +28,7 @@ import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
 // import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
-import { ExchangeOrderEnum, FuturesOrderEnum, PublicSocketEvent, DefaultFuturesFee } from 'redux/actions/const';
+import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum, PublicSocketEvent } from 'redux/actions/const';
 import EditSLTPVndcMobile from 'components/screens/Mobile/Futures/EditSLTPVndcMobile';
 import Emitter from 'redux/actions/emitter';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
@@ -173,8 +173,8 @@ const PlaceOrder = ({
     useEffect(() => {
         if (firstTime.current) return;
         const _lastPrice = _pairPrice?.lastPrice ?? lastPrice;
-        const _price = type === FuturesOrderTypes.Limit ? price : stopPrice
-        onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? _lastPrice : _price)
+        const _price = type === FuturesOrderTypes.Limit ? price : stopPrice;
+        onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? _lastPrice : _price);
     }, [side, type, decimals, leverage, stopPrice, price]);
 
     useEffect(() => {
@@ -273,8 +273,7 @@ const PlaceOrder = ({
             case 'quoteQty':
                 const _min = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
                 const _decimals = 0;
-                const _max = +Number(availableAsset / (1 / leverage + DefaultFuturesFee.NamiFrameOnus))
-                    .toFixed(0);
+                const _max = availableAsset / (1 / leverage + DefaultFuturesFee.NamiFrameOnus);
                 const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
                 const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
                 if (quoteQty < +_min) {
