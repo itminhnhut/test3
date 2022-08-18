@@ -15,7 +15,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import colors from 'styles/colors';
 import { Check } from 'react-feather';
-import { WalletCurrency } from 'utils/reference-utils';
+import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
 
 const days = [
     {
@@ -196,9 +196,9 @@ const NaoPerformance = memo(() => {
                         className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
                     <div className="pt-4">
                         <div
-                            className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.notionalValue, 0) + ' VNDC' : '-'}</div>
+                            className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}</div>
                         <span
-                            className="text-sm text-nao-grey">{dataSource ? '$' + formatPrice(referencePrice[`VNDC/USD`] * dataSource?.notionalValue, 3) : '-'} </span>
+                            className="text-sm text-nao-grey">{dataSource ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3) : '-'} </span>
                     </div>
                 </CardNao>
                 <CardNao>

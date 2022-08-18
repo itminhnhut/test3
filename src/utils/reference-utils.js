@@ -11,7 +11,7 @@ import moment from "moment-timezone";
 import numeral from "numeral";
 
 import React from "react";
-import _, { defaults } from "lodash";
+import { defaults, findKey } from "lodash";
 
 export const WalletCurrency = {
     NAMI: 1,
@@ -372,6 +372,9 @@ export const WalletCurrency = {
     NA0: 447
 };
 
+export function assetCodeFromId(assetId) {
+    return findKey(WalletCurrency, id => id === assetId)
+}
 
 export function formatNumber(
     value,
