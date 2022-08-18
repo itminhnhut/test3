@@ -402,7 +402,7 @@ const PlaceOrder = ({
                         quoteQty,
                         leverage
                     }, _activePrice);
-                    const bias = 0.1 / 100;
+                    const bias = DefaultFuturesFee.NamiFrameOnus;
                     const liquidatePriceBound = {
                         upper: liquidatePrice * (1 - bias),
                         lower: liquidatePrice * (1 + bias)
