@@ -57,7 +57,6 @@ export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
             'text-opacity-20 text-nao-white !bg-nao-bg3': disabled,
             'bg-nao-bg4': !disabled,
         },
-
     )
 }))`
     background: ${({ active, isActive }) =>

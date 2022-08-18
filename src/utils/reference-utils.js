@@ -87,7 +87,7 @@ export const WalletCurrency = {
     KAI: 84,
     OLA: 85,
     OLC: 85,
-    VIDB: 86,
+    ONUS: 86,
     "1INCH": 87,
     WHC: 88,
     ELD: 89,
@@ -367,7 +367,9 @@ export const WalletCurrency = {
     RABBIT: 368,
     LAZIO: 369,
     CHESS: 370,
-    AUCTION: 371
+    AUCTION: 371,
+
+    NA0: 447
 };
 
 
