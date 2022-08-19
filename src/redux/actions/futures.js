@@ -76,28 +76,17 @@ export const getFuturesMarketWatch = () => async (dispatch) => {
     }
 };
 
-export const getFuturesConfigs = (isMobile) => async (dispatch) => {
+export const getFuturesConfigs = () => async (dispatch) => {
     try {
         const { data } = await Axios.get(API_GET_FUTURES_CONFIGS);
-
-        if (data?.status === ApiStatus.SUCCESS && listData.length > 0 && isMobile === false) {
-            let listData = [];
-            await data?.data.map((e) => {
-                if (e?.quoteAsset === "VNDC") return listData.push(e);
-            });
-            dispatch({
-                type: SET_FUTURES_PAIR_CONFIGS,
-                payload: listData || [],
-            });
-        }
-        console.log(data&& data, 'thuc 2')
-        if(data?.status === ApiStatus.SUCCESS && isMobile === true){
+        if(data?.status === ApiStatus.SUCCESS ){
             dispatch({
                 type: SET_FUTURES_PAIR_CONFIGS,
                 payload: data?.data || [],
             });
         }
     } catch (e) {
+        console.log('Can\'t get Futures Configs ', e);
     }
 };
 

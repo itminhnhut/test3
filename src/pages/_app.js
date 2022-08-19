@@ -123,12 +123,7 @@ const App = ({
             // Get config
             store.dispatch(getAssetConfig());
             store.dispatch(getExchangeConfig());
-            if(router?.pathname === '/mobile/futures/[pair]'){
-                store.dispatch(getFuturesConfigs( true))
-            }else {
-                store.dispatch(getFuturesConfigs( false))
-            }
-
+            store.dispatch(getFuturesConfigs())
             store.dispatch(getPaymentConfigs());
             initConfig = true;
             store.dispatch({
