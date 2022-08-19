@@ -12,10 +12,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { ghost } from 'utils';
 import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
+import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
+
 
 const FaqTopics = (props) => {
     const [currentGroup, setCurrentGroup] = useState(null)
     const { articles } = props?.data || []
+    const [theme, , setTheme] = useDarkMode();
+
 
     const router = useRouter()
     const isApp = useApp()
@@ -144,6 +148,13 @@ const FaqTopics = (props) => {
             setCurrentGroup(router?.query?.group)
         } else {
             setCurrentGroup(null)
+        }
+
+        const themeLocal = localStorage.getItem("theme");
+        if (themeLocal === "dark") {
+            setTheme(THEME_MODE.DARK);
+        } else {
+            setTheme(THEME_MODE.LIGHT);
         }
     }, [router?.query])
 

@@ -17,12 +17,29 @@ import classNames from 'classnames';
 import Skeletor from 'components/common/Skeletor';
 import useApp from 'hooks/useApp';
 import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
+import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
+import React from "react";
+
 
 const Support = () => {
     // ? State
     const [loading, setLoading] = useState(false)
     const [lastedArticles, setLastedArticles] = useState([])
     const [highlightedArticles, setHighlightedArticles] = useState([])
+    const [currentTheme, onThemeSwitch, setTheme] = useDarkMode();
+
+
+    React.useEffect(() => {
+        const themeInLocalStorage = localStorage.getItem("theme");
+        const root = document.querySelector(":root");
+        if (themeInLocalStorage === "dark") {
+            root.classList.add("dark");
+            setTheme(THEME_MODE.DARK);
+        } else {
+            root.classList.add("light");
+            setTheme(THEME_MODE.LIGHT);
+        }
+    }, [currentTheme]);
 
     // ? Use hooks
     const { width } = useWindowSize()

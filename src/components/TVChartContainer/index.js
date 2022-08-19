@@ -401,8 +401,8 @@ export class TVChartContainer extends React.PureComponent {
             autosize: true,
             loading_screen: { backgroundColor: this.props.theme === "dark" ? "#00091F" : "#fff", },
             studies_overrides: {
-                "volume.volume.color.0": colors.teal,
-                "volume.volume.color.1": colors.red2,
+                "volume.volume.color.1": colors.teal,
+                "volume.volume.color.0": colors.red2,
                 "volume.volume ma.color": colors.red2,
                 "volume.volume ma.linewidth": 5,
                 "volume.volume ma.visible": true,

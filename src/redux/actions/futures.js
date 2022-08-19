@@ -80,10 +80,15 @@ export const getFuturesConfigs = () => async (dispatch) => {
     try {
         const { data } = await Axios.get(API_GET_FUTURES_CONFIGS);
 
-        if (data?.status === ApiStatus.SUCCESS) {
+        let listData = [];
+        await data?.data.map((e) => {
+            if (e?.quoteAsset === "VNDC") return listData.push(e);
+        });
+
+        if (data?.status === ApiStatus.SUCCESS && listData.length > 0) {
             dispatch({
                 type: SET_FUTURES_PAIR_CONFIGS,
-                payload: data?.data || [],
+                payload: listData || [],
             });
         }
     } catch (e) {
