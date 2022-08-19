@@ -11,6 +11,7 @@ import styles from './tradingview.module.scss';
 import { ChartMode } from 'redux/actions/const';
 import { VndcFutureOrderType } from '../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import { isMobile } from 'react-device-detect';
+import { useTimeout } from 'react-use';
 
 const CONTAINER_ID = "nami-tv";
 const CHART_VERSION = "1.0.6";
@@ -159,11 +160,33 @@ export class TVChartContainer extends React.PureComponent {
         }
     };
 
+    createIndicator = () => {
+        // const listStudies = this.widget.chart().getAllStudies()
+        // if(listStudies.length > 0) {
+        //     listStudies.map(e => {
+        //         this.widget.chart()
+        //             .removeEntity(e.id)
+        //         this.widget.chart()
+        //             .createStudy(e.name, false, false, undefined)
+        //     })
+        // }
+        this.widget.subscribe('study',() =>{
+            const listStudies = this.widget.chart().getAllStudies()
+            console.log(listStudies)
+        })
+
+        this.widget.unsubscribe('study',{})
+    }
+
+
     handleOpenStudty = () => {
         if (this?.widget) {
-            this.widget.chart().executeActionById("insertIndicator");
+            this.widget.chart().executeActionById("insertIndicator")
+           this.createIndicator()
         }
     };
+
+
 
     handleChangeChartType = (type) => {
         if (this?.widget) {
@@ -406,6 +429,7 @@ export class TVChartContainer extends React.PureComponent {
                 "volume.volume ma.color": colors.red2,
                 "volume.volume ma.linewidth": 5,
                 "volume.volume ma.visible": true,
+                'volume_force_overlay': false
             },
             timezone: getTradingViewTimezone(),
             overrides: {

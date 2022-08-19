@@ -19,6 +19,7 @@ import { useRef } from 'react';
 import { orderBy } from 'lodash';
 import Tag from 'components/common/Tag'
 import { roundTo } from 'round-to';
+import dynamic from 'next/dynamic';
 const TABS = {
     FAVOURITE: 'FAVOURITE',
     FUTURES: 'FUTURES',
@@ -59,6 +60,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         active: TABS.FAVOURITE,
         tagActive: pairConfig?.quoteAsset || TAGS[TABS.FAVOURITE].VNDC,
     })
+
     const [data, setData] = useState([])
     const [sort, setSort] = useState({
         field: 'volume24h',
@@ -115,6 +117,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
             }
         }
     }
+
 
     useEffect(() => {
         dispatch(getFuturesFavoritePairs())
@@ -348,23 +351,46 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
             </div>
             <div className='flex gap-[0.375rem] mt-5 px-4'>
                 {Object.keys(TAGS[tab.active]).map((tag) => {
-                    return (
-                        <div
-                            className={classNames(
-                                'min-h-[2rem] flex items-center justify-center px-3 rounded text-sm font-medium',
-                                { 'bg-onus-base': TAGS[tab.active][tag] === tab.tagActive },
-                                { 'bg-onus-bg3': TAGS[tab.active][tag] !== tab.tagActive }
-                            )}
-                            onClick={() => {
-                                setTab({
-                                    ...tab,
-                                    tagActive: TAGS[tab.active][tag],
-                                })
-                            }}
-                        >
-                            {tag}
-                        </div>
-                    )
+                    if(router?.route){
+                        if(router?.pathname !== '/mobile/futures/[pair]'){
+                            return (
+                                <div
+                                    className={classNames(
+                                        'min-h-[2rem] flex items-center justify-center px-3 rounded text-sm font-medium',
+                                        { 'bg-onus-base': TAGS[tab.active][tag] === tab.tagActive },
+                                        { 'bg-onus-bg3': TAGS[tab.active][tag] !== tab.tagActive }
+                                    )}
+                                    onClick={() => {
+                                        setTab({
+                                            ...tab,
+                                            tagActive: TAGS[tab.active][tag],
+                                        })
+                                    }}
+                                >
+                                    {tag}
+                                </div>
+                            )
+                        }else {
+                            return tag !== 'USDT' && (
+                                <div
+                                className={classNames(
+                                    'min-h-[2rem] flex items-center justify-center px-3 rounded text-sm font-medium',
+                                    { 'bg-onus-base': TAGS[tab.active][tag] === tab.tagActive },
+                                    { 'bg-onus-bg3': TAGS[tab.active][tag] !== tab.tagActive }
+                                )}
+                                onClick={() => {
+                                    setTab({
+                                        ...tab,
+                                        tagActive: TAGS[tab.active][tag],
+                                    })
+                                }}
+                            >
+                                {tag}
+                            </div>
+                            )
+                        }
+                    }
+
                 })}
             </div>
             <div className='flex flex-col flex-1 min-h-0 pt-4 pb-3'>

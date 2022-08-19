@@ -59,6 +59,7 @@ const FuturesMobile = () => {
     useEffect(() => {
         if (!router?.query?.pair) return;
         const pairConfig = allPairConfigs?.find((o) => o.pair === router?.query?.pair);
+        console.log(pairConfig, 'thuc')
         if (!pairConfig && allPairConfigs?.length > 0) {
             const newPair = allPairConfigs?.find(o => o.pair === FUTURES_DEFAULT_SYMBOL)?.pair || allPairConfigs[0].pair;
             router.push(
@@ -68,6 +69,8 @@ const FuturesMobile = () => {
             );
         }
     }, [router?.query?.pair, allPairConfigs]);
+
+
 
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
 
