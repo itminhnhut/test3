@@ -138,7 +138,7 @@ export class TVChartContainer extends React.PureComponent {
         if (this?.widget) {
             this.widget
                 .activeChart()
-                .createStudy(studyId, false, false)
+                .createStudy(studyId, false, false, undefined)
                 .then((id) => {
                     this.timeFrame.current.syncStudies(studyId, id);
                 });
@@ -160,29 +160,15 @@ export class TVChartContainer extends React.PureComponent {
         }
     };
 
-    createIndicator = () => {
-        // const listStudies = this.widget.chart().getAllStudies()
-        // if(listStudies.length > 0) {
-        //     listStudies.map(e => {
-        //         this.widget.chart()
-        //             .removeEntity(e.id)
-        //         this.widget.chart()
-        //             .createStudy(e.name, false, false, undefined)
-        //     })
-        // }
-        this.widget.subscribe('study',() =>{
-            const listStudies = this.widget.chart().getAllStudies()
-            console.log(listStudies)
-        })
-
-        this.widget.unsubscribe('study',{})
-    }
-
-
     handleOpenStudty = () => {
         if (this?.widget) {
             this.widget.chart().executeActionById("insertIndicator")
-           this.createIndicator()
+            // this.widget.subscribe('study',(study) =>{
+            //     const listStudies = this.widget.chart().getAllStudies()
+            //     console.log(listStudies)
+            // })
+            //
+            // this.widget.unsubscribe('study',{})
         }
     };
 
@@ -429,7 +415,6 @@ export class TVChartContainer extends React.PureComponent {
                 "volume.volume ma.color": colors.red2,
                 "volume.volume ma.linewidth": 5,
                 "volume.volume ma.visible": true,
-                'volume_force_overlay': false
             },
             timezone: getTradingViewTimezone(),
             overrides: {
