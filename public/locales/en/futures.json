@@ -340,7 +340,7 @@
         "stop_loss_input": "Input stop loss",
         "profit_input": "Input profit",
         "margin_ratio": "Risk",
-        "auto_type_sltp": "Auto type SL-TP",
+        "auto_type_sltp": "Suggested SL-TP",
         "pnl_estimate": "Estimate PNL",
         "modify_tpsl_title": "Modify SL-TP",
         "get_now": "Get it now",

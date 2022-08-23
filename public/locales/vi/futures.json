@@ -340,7 +340,7 @@
         "stop_loss_input": "Nhập giá cắt lỗ",
         "profit_input": "Nhập lợi nhuận",
         "margin_ratio": "Rủi ro",
-        "auto_type_sltp": "Tự động nhập SL-TP",
+        "auto_type_sltp": "Gợi ý SL-TP",
         "pnl_estimate": "Lời/lỗ ước tính",
         "modify_tpsl_title": "Chỉnh sửa SL-TP",
         "get_now": "Nhận ngay",
