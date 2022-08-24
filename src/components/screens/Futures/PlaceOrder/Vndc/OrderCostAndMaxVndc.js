@@ -159,11 +159,11 @@ const FuturesOrderCostAndMaxVndc = ({
                     <div className="p-[10px]">
                         <div className="flex items-center justify-between">
                             <label className="text-gray-1 dark:text-txtSecondary-dark font-medium">{t('futures:taker')}:</label>
-                            <span className="font-medium">0.1%</span>
+                            <span className="font-medium">{DefaultFuturesFee.Nami*100}%</span>
                         </div>
                         <div className="flex items-center justify-between">
                             <label className="text-gray-1 dark:text-txtSecondary-dark font-medium">{t('futures:maker')}:</label>
-                            <span className="font-medium">0.1%</span>
+                            <span className="font-medium">{DefaultFuturesFee.Nami*100}%</span>
                         </div>
                     </div>
                 </div>
