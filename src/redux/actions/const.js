@@ -844,7 +844,7 @@ export const ChartMode = {
 };
 
 export const DefaultFuturesFee = {
-    Nami: 0.1 / 100,
+    Nami: 0.06 / 100,
     NamiFrameOnus: 0.06 / 100,
 };
 
