@@ -2,13 +2,9 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import { useWindowSize } from 'utils/customHooks';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const Terms = () => {
     const { width } = useWindowSize()
-    const [currentTheme, onThemeSwitch] = useDarkMode()
-    // const localTheme = localStorage.getItem(LOCAL_STORAGE_KEY.THEME)
-    console.log(currentTheme)
 
     return (
         <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
