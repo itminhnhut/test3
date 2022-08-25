@@ -2,10 +2,28 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import { useWindowSize } from 'utils/customHooks';
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
+import { useEffect } from 'react';
 
 const Terms = () => {
     const { width } = useWindowSize()
+    const dispath = useDispatch();
 
+    useEffect(() => {
+        document.body.classList.add('hidden-scrollbar');
+        // document.body.classList.add('!bg-onus');
+
+        const intervalReloadData = setInterval(() => {
+            dispath(reloadData());
+        }, 5 * 60 * 1000);
+
+        return () => {
+            document.body.classList.remove('hidden-scrollbar');
+            // document.body.classList.remove('bg-onus');
+            clearInterval(intervalReloadData);
+        };
+    }, []);
     return (
         <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
             <div className="nami-container my-20 policies-page">
