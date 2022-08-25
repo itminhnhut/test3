@@ -3,7 +3,7 @@ import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import { FuturesOrderTypes as OrderTypes, FuturesStopOrderMode, } from 'redux/reducers/futures';
 import { roundToDown } from 'round-to';
 import { useSelector } from 'react-redux';
-import { ApiStatus } from 'redux/actions/const';
+import { ApiStatus, DefaultFuturesFee} from 'redux/actions/const';
 import FuturesOrderModule from 'components/screens/Futures/PlaceOrder/OrderModule';
 import FuturesOrderTypes from 'components/screens/Futures/PlaceOrder/OrderTypes';
 import PlaceConfigs from 'components/screens/Futures/PlaceOrder/PlaceConfigs';
@@ -146,11 +146,11 @@ const FuturesPlaceOrderVndc = ({
             let maxBuy = 0;
             let maxSell = 0;
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType) && _price) {
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / _price;
+                maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.Nami) / _price;
                 maxSell = maxBuy;
             } else if ([OrderTypes.Market].includes(currentType)) {
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / ask;
-                maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / bid;
+                maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.Nami) / ask;
+                maxSell = availableAsset / ((1 / leverage) + DefaultFuturesFee.Nami) / bid;
             }
             setMaxBuy(maxBuy.toFixed(countDecimals(decimalScaleQtyLimit?.stepSize)))
             setMaxSell(maxSell.toFixed(countDecimals(decimalScaleQtyLimit?.stepSize)))
