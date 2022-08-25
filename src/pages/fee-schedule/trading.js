@@ -57,6 +57,7 @@ const TradingFee = () => {
     // Use hooks
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
+    const dispath = useDispatch();
 
     useEffect(() => {
         document.body.classList.add('hidden-scrollbar');
