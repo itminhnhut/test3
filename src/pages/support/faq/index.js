@@ -22,6 +22,7 @@ const SupportAnnouncement = () => {
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
+    const dispath = useDispatch();
 
     let {
         t,
