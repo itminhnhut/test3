@@ -1,11 +1,17 @@
 /* eslint-disable */
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Footer from 'src/components/common/Footer';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import { useWindowSize } from 'utils/customHooks';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const Terms = () => {
+    const { width } = useWindowSize()
+    const [currentTheme, onThemeSwitch] = useDarkMode()
+    // const localTheme = localStorage.getItem(LOCAL_STORAGE_KEY.THEME)
+    console.log(currentTheme)
+
     return (
-        <MaldivesLayout>
+        <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
             <div className="nami-container my-20 policies-page">
                 <>
                     <div className="text-center">
@@ -13,7 +19,7 @@ const Terms = () => {
                             Terms of Service
                         </h1>
                     </div>
-                    <div className="bg-Container dark:bg-Container-dark text-sm">
+                    <div className={`bg-Container dark:bg-Container-dark text-sm text-justify ${width <= 640 && 'term-mobile-view' }`}>
                         <p className="text-right pb-5">
                             <strong>Last revised: Jan 10th 2021</strong>
                         </p>
@@ -1311,7 +1317,6 @@ const Terms = () => {
                     </div>
                 </>
             </div>
-            <Footer/>
         </MaldivesLayout>
     )
 }

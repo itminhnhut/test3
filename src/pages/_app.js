@@ -147,6 +147,7 @@ const App = ({
             && !router.pathname.includes('nao')
             && !router.pathname.includes('contest')
             && !router.pathname.includes('stake')
+            && !router.pathname.includes('terms-of-service')
             && !router.pathname.includes('luckydraw')
         ){
             function initFreshChat() {

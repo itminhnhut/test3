@@ -29,3 +29,8 @@
     min-width: 320px;
     overflow-x: hidden;
 }
+.term-mobile-view {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  padding: 0 15px;
+}
