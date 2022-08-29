@@ -910,3 +910,26 @@ export const IconRefresh = ({ size = 5, color = '', className = '' }) => (
         <path style={{ fill: color }} d="M8.05448 17.0543C5.81712 17.0543 3.91537 16.2712 2.34922 14.705C0.783074 13.1389 0 11.2371 0 8.99979C0 6.76244 0.783074 4.86068 2.34922 3.29454C3.91537 1.72839 5.81712 0.945312 8.05448 0.945312C9.50428 0.945312 10.7975 1.26302 11.9341 1.89843C13.0706 2.53383 14.0237 3.4064 14.7934 4.51613V0.945312H16.0016V7.01302H9.9607V5.778H14.2027C13.5584 4.68617 12.7127 3.80913 11.6656 3.14687C10.6185 2.48461 9.41479 2.15348 8.05448 2.15348C6.1393 2.15348 4.51946 2.81574 3.19494 4.14026C1.87043 5.46477 1.20817 7.08462 1.20817 8.99979C1.20817 10.915 1.87043 12.5348 3.19494 13.8593C4.51946 15.1838 6.1393 15.8461 8.05448 15.8461C9.50428 15.8461 10.8288 15.4299 12.028 14.5977C13.2272 13.7654 14.0685 12.6601 14.5518 11.2819H15.8136C15.3125 13.0181 14.3459 14.4142 12.914 15.4702C11.4821 16.5263 9.86226 17.0543 8.05448 17.0543Z" fill="#8492A7" />
     </svg>
 );
+
+export const Spinner = ({ className, color = "#0068FF", height = "14px", width = "14px" }) => (
+    <svg width={width} height={height} className={className} viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 33 33;270 33 33" begin="0s" dur="1.4s" fill="freeze" repeatCount="indefinite" />
+            <circle fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30" stroke-dasharray="187" stroke-dashoffset="610">
+                <animate attributeName="stroke" values={color} begin="0s" dur="5.6s" fill="freeze" repeatCount="indefinite" />
+                <animateTransform attributeName="transform" type="rotate" values="0 33 33;135 33 33;450 33 33" begin="0s" dur="1.4s" fill="freeze" repeatCount="indefinite" />
+                <animate attributeName="stroke-dashoffset" values="187;46.75;187" begin="0s" dur="1.4s" fill="freeze" repeatCount="indefinite" />
+            </circle>
+        </g>
+    </svg>
+)
+
+
+
+export const DangerIcon = ({height = "14", width = "14"}) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.00016 0.333496C10.6762 0.333496 13.6668 3.32416 13.6668 7.00016C13.6668 10.6762 10.6762 13.6668 7.00016 13.6668C3.32416 13.6668 0.333496 10.6762 0.333496 7.00016C0.333496 3.32416 3.32416 0.333496 7.00016 0.333496ZM7.00016 1.3335C3.8755 1.3335 1.3335 3.8755 1.3335 7.00016C1.3335 10.1248 3.8755 12.6668 7.00016 12.6668C10.1248 12.6668 12.6668 10.1248 12.6668 7.00016C12.6668 3.8755 10.1248 1.3335 7.00016 1.3335ZM7.00276 8.8641C7.37143 8.8641 7.66943 9.1621 7.66943 9.53076C7.66943 9.89943 7.37143 10.1974 7.00276 10.1974C6.6341 10.1974 6.33276 9.89943 6.33276 9.53076C6.33276 9.1621 6.6281 8.8641 6.9961 8.8641H7.00276ZM6.99623 3.9695C7.27223 3.9695 7.49623 4.1935 7.49623 4.4695V7.4155C7.49623 7.6915 7.27223 7.9155 6.99623 7.9155C6.72023 7.9155 6.49623 7.6915 6.49623 7.4155V4.4695C6.49623 4.1935 6.72023 3.9695 6.99623 3.9695Z" fill="#FF9F1A" />
+        </svg>
+    )
+}

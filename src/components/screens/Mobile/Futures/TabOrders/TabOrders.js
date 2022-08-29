@@ -17,6 +17,13 @@ import Portal from 'components/hoc/Portal';
 import TabTransactionsHistory from 'components/screens/Mobile/Futures/TabOrders/TabTransactionsHistory';
 import { countBy } from 'lodash';
 import CheckBox from 'components/common/CheckBox';
+import CloseOrdersByCondtionMobile from 'components/screens/Mobile/Futures/CloseOrders/CloseOrdersByCondtionMobile';
+import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
+import { Spinner } from 'src/components/common/Icons';
+
+const Button = styled.div.attrs({
+    className: `text-onus-grey bg-gray-4 rounded-[4px] flex items-center justify-center text-xs font-semibold px-3 py-[6px]`
+})``;
 
 const TabOrders = memo(({
     isVndcFutures,
@@ -42,11 +49,32 @@ const TabOrders = memo(({
     const [mode, setMode] = useState(modeOrders.detail)
     const [openCloseModal, setOpenCloseModal] = useState(false);
     const [hideOther, setHideOther] = useState(false);
+    const [isClosingOrders, setIsClosingOrders] = useState({ isClosing: 'false', timeout: 0 });
+
+    const userSocket = useSelector((state) => state.socket.userSocket);
 
     useEffect(() => {
         const modeOrder = localStorage.getItem('MODE_ORDER');
         if (modeOrder) setMode(modeOrder);
     }, [])
+
+    useEffect(() => {
+        if (userSocket) {
+            userSocket.on(UserSocketEvent.FUTURE_DONE_CLOSING_ALL_ORDERS, (data) => {
+                if (data === 'done') setIsClosingOrders({ isClosing: 'done', timeout: 0 })
+                setTimeout(() => setIsClosingOrders({ isClosing: 'false', timeout: 0 }), 2000)
+            });
+        }
+        return () => {
+            if (userSocket) {
+                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER);
+            }
+        };
+    }, [userSocket]);
+
+    // useEffect(() => {
+    //     if(isClosingOrders.isClosing === 'true') setTimeout(() => setIsClosingOrders({ isClosing: 'false', timeout: 0 }), isClosingOrders.timeout * 1000) 
+    // }, [isClosingOrders])
 
     const onShowDetail = (row, isTabHistory) => {
         if (isModal) {
@@ -100,6 +128,44 @@ const TabOrders = memo(({
         setMode(key)
     }
 
+    const handleCloseAll = () => {
+        setOpenCloseModal(true)
+    }
+
+    const renderCloseAllButton = () => {
+        let button
+        switch (isClosingOrders.isClosing) {
+            case 'false':
+                button = (<Button
+                    className="bg-onus-bg3 text-onus-gray !h-[32px]"
+                    onClick={() => handleCloseAll()}
+                >
+                    {t('futures:mobile.close_all_positions.title')}
+                </Button>)
+                break;
+            case 'true':
+                button = (<Button
+                    className="bg-onus-bg3 text-onus-gray !h-[32px]"
+                >
+                    <Spinner className="w-4 h-4" color="#0068FF" />
+                    <div className='w-[8px]'></div> {t('futures:mobile.close_all_positions.processing')}
+                </Button>)
+                break;
+            case 'done':
+                button = (<Button
+                    className="bg-onus-bg3 text-onus-gray !h-[32px]"
+                >
+                    {doneIcon} <div className='w-[10px]'></div> {t('futures:mobile.close_all_positions.done')}
+                </Button>)
+                break;
+            default:
+                break
+        }
+        return orderListFilter.orderList.length > 0 ? button : null
+    }
+
+    console.log('LIST', orderListFilter.orderList.length)
+
     return (
         <div className={`h-full ${isFullScreen ? 'overflow-hidden' : ''}`}>
             {openDetailModal &&
@@ -118,6 +184,13 @@ const TabOrders = memo(({
                         />
                     </div>
                 </Portal>
+            }
+            {openCloseModal &&
+                <CloseOrdersByCondtionMobile 
+                    orderList={orderListFilter.orderList}
+                    tab={tab} onClose={() => setOpenCloseModal(false)} isClosing={setIsClosingOrders}
+                    pair={pair} pairConfig={pairConfig}
+                />
             }
             <TabMobile ref={refTabsOrder} onusMode={true} isDark={currentTheme === THEME_MODE.DARK}
                 data-tut="order-tab">
@@ -152,22 +225,29 @@ const TabOrders = memo(({
                                 }
                             )}>
                                 {tab !== FUTURES_RECORD_CODE.orderHistory &&
-                                    <TabModeContainer tab={mode === modeOrders.detail ? 0 : 1}>
-                                        <TabMode onClick={() => onChangeMode(modeOrders.detail)}
-                                            active={mode === modeOrders.detail}
-                                        >
-                                            {t('futures:mobile:full')}
-                                        </TabMode>
-                                        <TabMode onClick={() => onChangeMode(modeOrders.shortcut)}
-                                            active={mode === modeOrders.shortcut}
-                                        >
-                                            {t('futures:mobile:simple')}
-                                        </TabMode>
-                                    </TabModeContainer>
+                                    <>
+                                        <TabModeContainer tab={mode === modeOrders.detail ? 0 : 1}>
+                                            <TabMode onClick={() => onChangeMode(modeOrders.detail)}
+                                                active={mode === modeOrders.detail}
+                                            >
+                                                {t('futures:mobile:full')}
+                                            </TabMode>
+                                            <TabMode onClick={() => onChangeMode(modeOrders.shortcut)}
+                                                active={mode === modeOrders.shortcut}
+                                            >
+                                                {t('futures:mobile:simple')}
+                                            </TabMode>
+                                        </TabModeContainer>
+                                        <div>
+                                            {renderCloseAllButton()}
+                                        </div>
+                                    </>
                                 }
+                            </div>
+                        }
                                 {needShowHideOther &&
                                     <div
-                                        className="flex items-center text-sm font-medium select-none cursor-pointer"
+                                        className="flex items-center text-sm font-medium select-none cursor-pointer px-4"
                                         onClick={() => setHideOther(!hideOther)}
                                     >
                                         <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
@@ -176,8 +256,6 @@ const TabOrders = memo(({
                                         </span>
                                     </div>
                                 }
-                            </div>
-                        }
                         <TabContent
                             active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position}>
                             <TabOpenOrders
@@ -288,5 +366,9 @@ const TabMode = styled.div.attrs(({ active }) => ({
     )
 }))`
 `;
+
+const doneIcon = <svg className='nao-spinner' width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4.00024 6.79988L1.66691 4.46655C1.40691 4.20655 0.993574 4.20655 0.733574 4.46655C0.473574 4.72655 0.473574 5.13988 0.733574 5.39988L3.52691 8.19322C3.78691 8.45322 4.20691 8.45322 4.46691 8.19322L11.5336 1.13322C11.7936 0.873216 11.7936 0.459883 11.5336 0.199883C11.2736 -0.0601172 10.8602 -0.0601172 10.6002 0.199883L4.00024 6.79988Z" fill="#0DB787" />
+</svg>
 
 export default TabOrders;
