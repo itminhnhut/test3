@@ -165,7 +165,7 @@
         "no": "STT",
         "tooltip_personal": "Khối lượng tối thiểu để được xếp hạng cá nhận là <span class='text-nao-green'>{{value}} tỷ VNDC</span>",
         "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}} tỷ VNDC</span>",
-        "last_season": "Lich sử mùa trước",
+        "last_season": "Lịch sử mùa trước",
         "create_team": "Tạo đội",
         "create_a_team": "Tạo đội đua TOP",
         "team_information": "Thông tin đội",
