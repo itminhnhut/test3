@@ -142,7 +142,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                 return;
             }
             case 'confirm': {
-                if (options.type.type === 'ALL_PENDING') {
+                if (options.type === 'ALL_PENDING') {
                     setShowConfirmAllPending(true)
                     setShowChooseType(false)
                     setShowConfirm(false)
