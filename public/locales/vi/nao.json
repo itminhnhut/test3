@@ -132,8 +132,10 @@
     "liq_pools": "Pool thanh khoản",
     "contest": {
         "title": "Đua TOP giao dịch ONUS Futures mùa {{value}}",
+        "season": "Mùa {{value}}",
         "first": "đầu tiên",
         "second": "hai",
+        "third": "ba",
         "description": "Tranh giải cá nhân và đội nhóm với tổng giải thưởng ",
         "detail_rules": "Thể lệ chi tiết",
         "ranking": "Bảng xếp hạng",
@@ -163,8 +165,8 @@
         "volume_ranking": "Thứ hạng KL",
         "pnl_ranking": "Thứ hạng LN",
         "no": "STT",
-        "tooltip_personal": "Khối lượng tối thiểu để được xếp hạng cá nhận là <span class='text-nao-green'>{{value}} tỷ VNDC</span>",
-        "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}} tỷ VNDC</span>",
+        "tooltip_personal": "Khối lượng tối thiểu để được xếp hạng cá nhận là <span class='text-nao-green'>{{value}}</span>",
+        "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}}</span>",
         "last_season": "Lịch sử mùa trước",
         "create_team": "Tạo đội",
         "create_a_team": "Tạo đội đua TOP",
@@ -205,7 +207,8 @@
         "confirm_description": "Bạn có chắc chắn muốn chấp nhận lời mời tham gia đội <span class='text-nao-green font-semibold'>{{value}}</span> không? Bạn sẽ không thể rời đội khi đã trở thành thành viên.",
         "confirm_close": "Đóng",
         "join_success": "Tham gia đội thành công",
-        "team_invitations": "Lời mời tham gia đội"
+        "team_invitations": "Lời mời tham gia đội",
+        "date_2": "<div class='font-semibold'>{{days}}&nbsp;ngày&nbsp;{{hours}}&nbsp;giờ&nbsp;{{minutes}}&nbsp;phút</div>"
     },
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",

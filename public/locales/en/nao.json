@@ -132,8 +132,10 @@
     "liq_pools": "Liquidity pools",
     "contest": {
         "title": "ONUS Futures Trading Contest Season {{value}}",
+        "season": "Season {{value}}",
         "first": "1",
         "second": "2",
+        "third": "3",
         "description": "Compete as an individual or team to win a reward of ",
         "detail_rules": "Detail Rules",
         "ranking": "Ranking",
@@ -163,8 +165,8 @@
         "volume_ranking": "Volume ranking",
         "pnl_ranking": "% PnL ranking",
         "no": "No",
-        "tooltip_personal": "Minimum volume for individual ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>",
-        "tooltip_team": "Minimum volume for team ranking is <span class='text-nao-green'>&nbsp;{{value}} billion VNDC</span>",
+        "tooltip_personal": "Minimum volume for individual ranking is <span class='text-nao-green'>&nbsp;{{value}}</span>",
+        "tooltip_team": "Minimum volume for team ranking is <span class='text-nao-green'>&nbsp;{{value}}</span>",
         "last_season": "Previous Season",
         "create_team": "Create a team",
         "create_a_team": "Create a team",
@@ -193,7 +195,7 @@
         "add_member": "Add member",
         "not_invited": "You don't have any team invitation",
         "member": "Member {{value}}",
-        "member_successfully":"Successfully added member",
+        "member_successfully": "Successfully added member",
         "no_invitation": "You don't have any team invitation",
         "spending_invitations": "You have {{value}} team invitations",
         "accept_invite": "Accept",
@@ -205,7 +207,8 @@
         "confirm_description": "Are you sure to join the team <span class='text-nao-green font-semibold'>{{value}}</span>? You can not leave after this action.",
         "confirm_close": "Close",
         "join_success": "Successfully Joined",
-        "team_invitations": "Team Invitations"
+        "team_invitations": "Team Invitations",
+        "date_2": "<div class='font-semibold'>{{days}}&nbsp;days&nbsp;{{hours}}&nbsp;hours&nbsp;{{minutes}}&nbsp;minutes</div>"
     },
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",

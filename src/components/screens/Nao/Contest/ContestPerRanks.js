@@ -9,9 +9,9 @@ import { formatNumber, getS3Url, getLoginUrl } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 
-const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
+const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset }) => {
     const [tab, setTab] = useState('volume');
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const { width } = useWindowSize()
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
@@ -82,7 +82,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
         <section className="contest_individual_ranks pt-[4.125rem]">
             <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-personal-rank" >
-                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_personal', { value: minVolumeInd }) }} >
+                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) }} >
                 </div>
             </Tooltip>
             <div className="flex justify-between flex-wrap gap-4">
@@ -105,8 +105,8 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                         <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
                             <div className="flex justify-between flex-1 mb-4 gap-5">
                                 <div className="flex flex-col">
-                                    <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
-                                    <div className="sm:gap-1 flex flex-col">
+                                    <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
+                                    <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
                                             <div>{capitalize(item?.name)}</div>
                                             {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}
@@ -114,15 +114,15 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                                         <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
                                     </div>
                                 </div>
-                                <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
+                                <div className="w-[4.25rem] h-[4.25rem] rounded-[50%]">
                                     <ImageNao src={item?.avatar}
-                                        className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem] max-h-[6.375rem] rounded-[50%] object-cover" alt="" />
+                                        className="min-w-[4.25rem] min-h-[4.25rem] max-w-[4.25rem] max-h-[4.25rem] rounded-[50%] object-cover" alt="" />
                                 </div>
                             </div>
                             <div className="rounded-lg mt-auto">
                                 <div className="flex items-center justify-between gap-2">
                                     <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} VNDC</span>
+                                    <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                 </div>
                                 <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2"></div>
                                 {
@@ -177,7 +177,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                                             </div>
                                             <div className="flex items-center font-medium justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
-                                                <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
+                                                <span className="text-right">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                             </div>
                                             <div className="flex items-center font-medium justify-between pt-1">
                                                 <label className="leading-6 text-nao-grey">{t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}</label>
@@ -208,7 +208,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd }) => {
                     <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                     <Column minWidth={150} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
-                    <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
+                    <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (${quoteAsset})`} decimal={0} fieldName="total_volume" />
                     {
                         tab === 'pnl'
                             ? <Column maxWidth={120} minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
