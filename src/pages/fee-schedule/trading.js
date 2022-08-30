@@ -164,7 +164,7 @@ const TradingFee = () => {
         let tableStatus
 
         const columns = [
-            { key: 'symbol', dataIndex: 'symbol', title: t('common:pair'), width: 80, fixed: 'left', align: 'left' },
+            { key: 'symbol', dataIndex: 'symbol', title: t('common:pair'), width: 60, fixed: 'left', align: 'left' },
             { key: 'max_leverage', dataIndex: 'max_leverage', title: t('common:max_leverage'), width: 100, align: 'left' },
             {
                 key: 'fee', dataIndex: 'fee',
