@@ -10,7 +10,7 @@ import fetchApi from 'utils/fetch-api';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import useWindowSize from 'hooks/useWindowSize';
 
-const AddMemberModal = ({ onClose }) => {
+const AddMemberModal = ({ onClose, contest_id }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
     const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ const AddMemberModal = ({ onClose }) => {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_CHECK_MEMBER,
                 options: { method: 'GET' },
-                params: { contest_id: 5, onus_user_id: id },
+                params: { contest_id: contest_id, onus_user_id: id },
             });
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data)
@@ -77,7 +77,7 @@ const AddMemberModal = ({ onClose }) => {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_SEND_INVITE,
                 options: { method: 'POST' },
-                params: { contest_id: 5, invite_onus_user_id: member },
+                params: { contest_id: contest_id, invite_onus_user_id: member },
             });
             if (status === ApiStatus.SUCCESS) {
                 context.alertV2.show('success', t('nao:contest:member_successfully'), null, null, null, () => {

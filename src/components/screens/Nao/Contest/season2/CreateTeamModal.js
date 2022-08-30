@@ -182,7 +182,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
             leader_name: userData?.name,
             name: name.toUpperCase(),
             list_member_id: Object.keys(member).map(rs => member[rs]),
-            contest_id: 5
+            contest_id: contest_id
         }
         try {
             const { data, status } = await fetchApi({

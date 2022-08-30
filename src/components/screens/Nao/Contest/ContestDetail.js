@@ -231,7 +231,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
 
     return (
         <>
-            {showAddMemberModal && <AddMemberModal onClose={onAddMember} />}
+            {showAddMemberModal && <AddMemberModal onClose={onAddMember} contest_id={contest_id} />}
             <Modal onusMode={true} center={!isMobile} isVisible={true} onBackdropCb={onClose}
                 modalClassName="z-[99999]"
                 onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[979px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
