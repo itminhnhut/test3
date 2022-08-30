@@ -8,6 +8,7 @@ import Link from 'next/link';
 import ChevronDown from 'src/components/svg/ChevronDown';
 import { useSelector } from 'react-redux';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { DefaultFuturesFee } from 'redux/actions/const';
 
 const FuturesOrderCostAndMaxVndc = ({
     selectedAsset,
@@ -109,11 +110,11 @@ const FuturesOrderCostAndMaxVndc = ({
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType)) {
                 const _price = currentType === OrderTypes.Limit ? price : stopPrice;
                 const notional = +_price * _size;
-                const fee = notional * (0.1 / 100);
+                const fee = notional * DefaultFuturesFee.Nami;
                 cost = (notional / leverage) + fee;
             } else if ([OrderTypes.Market].includes(currentType)) {
-                cost = VndcFutureOrderType.Side.BUY === side ? ((ask * _size) / leverage) + (_size * ask * (0.1 / 100)) :
-                    ((bid * _size) / leverage) + (_size * bid * (0.1 / 100));
+                cost = VndcFutureOrderType.Side.BUY === side ? ((ask * _size) / leverage) + (_size * ask * DefaultFuturesFee.Nami) :
+                    ((bid * _size) / leverage) + (_size * bid * DefaultFuturesFee.Nami);
             }
             setCost(cost)
         } else {
@@ -158,11 +159,11 @@ const FuturesOrderCostAndMaxVndc = ({
                     <div className="p-[10px]">
                         <div className="flex items-center justify-between">
                             <label className="text-gray-1 dark:text-txtSecondary-dark font-medium">{t('futures:taker')}:</label>
-                            <span className="font-medium">0.1%</span>
+                            <span className="font-medium">{DefaultFuturesFee.Nami*100}%</span>
                         </div>
                         <div className="flex items-center justify-between">
                             <label className="text-gray-1 dark:text-txtSecondary-dark font-medium">{t('futures:maker')}:</label>
-                            <span className="font-medium">0.1%</span>
+                            <span className="font-medium">{DefaultFuturesFee.Nami*100}%</span>
                         </div>
                     </div>
                 </div>

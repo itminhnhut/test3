@@ -11,7 +11,7 @@ import Modal from 'components/common/ReModal';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import { getS3Url } from 'redux/actions/utils';
 
-const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, onShowDetail, getInfo }) => {
+const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, onShowDetail, getInfo, contest_id }) => {
     const { t } = useTranslation();
     const context = useContext(AlertContext);
     const { width } = useWindowSize()
@@ -20,7 +20,6 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
     const isMobile = width <= 640;
 
     const acceptInvite = async (id) => {
-        const contest_id = 5
         const action = 'ACCEPT'
         const group_displaying_id = id
         setLoading(true)
@@ -28,7 +27,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
             const { data, status } = await fetchApi({
                 url: API_CONTEST_POST_ACCEPT_INVITATION,
                 options: { method: 'POST' },
-                params: { contest_id, action, group_displaying_id },
+                params: { contest_id: contest_id, action, group_displaying_id },
             });
             if (status === ApiStatus.SUCCESS) {
                 getInfo();
@@ -77,54 +76,54 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                         {Array.isArray(data) && data.length > 0 &&
                             data?.map((item, index) => {
                                 return (
-                                    isMobile ? 
-                                    <CardNao noBg className="mb-[16px] px-[4px] py-[16px] !max-w-[330px]" key={item._id}>
-                                        <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle w-full h-full min-h-[56px]">
-                                            <div className='h-[48px] w-[48px] flex justify-center items-center'>
-                                                <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
-                                            </div>
-                                            <div className='items-center'>
-                                                <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
-                                                    {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
+                                    isMobile ?
+                                        <CardNao noBg className="mb-[16px] px-[4px] py-[16px] !max-w-[330px]" key={item._id}>
+                                            <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle w-full h-full min-h-[56px]">
+                                                <div className='h-[48px] w-[48px] flex justify-center items-center'>
+                                                    <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                                 </div>
-                                                <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
-                                                    {item.group_name}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex pt-[8px] px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full w-full justify-between">
-                                            <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full text-sm leading-6" onClick={() => onAccept(item)}>
-                                                {t('nao:contest:accept_invite')}
-                                            </ButtonNao>
-                                            <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-2 px-2 w-full !rounded-md font-semibold text-sm leading-6">
-                                                {t('nao:contest:team_detail')}
-                                            </ButtonNao>
-                                        </div>
-                                    </CardNao>
-                                    :
-                                    <CardNao noBg className="!flex !flex-row mb-[16px] !min-h-[100px] !py-[8px] !px-[12px]" key={item._id}>
-                                        <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle h-full">
-                                            <div className='h-[48px] w-[48px] flex justify-center items-center'>
-                                                <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
-                                            </div>
-                                            <div className='items-center'>
-                                                <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
-                                                    {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
-                                                </div>
-                                                <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
-                                                    {item.group_name}
+                                                <div className='items-center'>
+                                                    <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
+                                                        {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
+                                                    </div>
+                                                    <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                        {item.group_name}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="flex items-center pt-[8px] gap-[16px] text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full justify-evenly">
-                                            <ButtonNao className="py-[8px] px-[16px] !rounded-md font-semibold max-w-[250px] text-sm leading-6" onClick={() => onAccept(item)}>
-                                                {t('nao:contest:accept_invite')}
-                                            </ButtonNao>
-                                            <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-[8px] px-[16px] !rounded-md font-semibold  max-w-[250px] text-sm leading-6">
-                                                {t('nao:contest:team_detail')}
-                                            </ButtonNao>
-                                        </div>
-                                    </CardNao>
+                                            <div className="flex pt-[8px] px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full w-full justify-between">
+                                                <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full text-sm leading-6" onClick={() => onAccept(item)}>
+                                                    {t('nao:contest:accept_invite')}
+                                                </ButtonNao>
+                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-2 px-2 w-full !rounded-md font-semibold text-sm leading-6">
+                                                    {t('nao:contest:team_detail')}
+                                                </ButtonNao>
+                                            </div>
+                                        </CardNao>
+                                        :
+                                        <CardNao noBg className="!flex !flex-row mb-[16px] !min-h-[100px] !py-[8px] !px-[12px]" key={item._id}>
+                                            <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle h-full">
+                                                <div className='h-[48px] w-[48px] flex justify-center items-center'>
+                                                    <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
+                                                </div>
+                                                <div className='items-center'>
+                                                    <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
+                                                        {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
+                                                    </div>
+                                                    <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                        {item.group_name}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center pt-[8px] gap-[16px] text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full justify-evenly">
+                                                <ButtonNao className="py-[8px] px-[16px] !rounded-md font-semibold max-w-[250px] text-sm leading-6" onClick={() => onAccept(item)}>
+                                                    {t('nao:contest:accept_invite')}
+                                                </ButtonNao>
+                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-[8px] px-[16px] !rounded-md font-semibold  max-w-[250px] text-sm leading-6">
+                                                    {t('nao:contest:team_detail')}
+                                                </ButtonNao>
+                                            </div>
+                                        </CardNao>
                                 )
                             })
                         }
