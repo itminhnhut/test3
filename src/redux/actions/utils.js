@@ -320,7 +320,7 @@ export function scrollFocusInput() {
 export function getExchange24hPercentageChange(price) {
     let change24h
     if (price) {
-        const { p: lastPrice, ld: lastPrice24h } = price
+        const { p: lastPrice, ld: lastPrice24h, q: quoteAsset } = price
         if (lastPrice && lastPrice24h) {
             change24h = ((lastPrice - lastPrice24h) / lastPrice24h) * 100
         } else if (lastPrice && !lastPrice24h) {

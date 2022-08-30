@@ -11,6 +11,7 @@ import styles from './tradingview.module.scss';
 import { ChartMode } from 'redux/actions/const';
 import { VndcFutureOrderType } from '../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import { isMobile } from 'react-device-detect';
+import { useTimeout } from 'react-use';
 
 const CONTAINER_ID = "nami-tv";
 const CHART_VERSION = "1.0.6";
@@ -137,7 +138,7 @@ export class TVChartContainer extends React.PureComponent {
         if (this?.widget) {
             this.widget
                 .activeChart()
-                .createStudy(studyId, false, false)
+                .createStudy(studyId, false, false, undefined)
                 .then((id) => {
                     this.timeFrame.current.syncStudies(studyId, id);
                 });
@@ -161,9 +162,17 @@ export class TVChartContainer extends React.PureComponent {
 
     handleOpenStudty = () => {
         if (this?.widget) {
-            this.widget.chart().executeActionById("insertIndicator");
+            this.widget.chart().executeActionById("insertIndicator")
+            // this.widget.subscribe('study',(study) =>{
+            //     const listStudies = this.widget.chart().getAllStudies()
+            //     console.log(listStudies)
+            // })
+            //
+            // this.widget.unsubscribe('study',{})
         }
     };
+
+
 
     handleChangeChartType = (type) => {
         if (this?.widget) {
@@ -401,8 +410,8 @@ export class TVChartContainer extends React.PureComponent {
             autosize: true,
             loading_screen: { backgroundColor: this.props.theme === "dark" ? "#00091F" : "#fff", },
             studies_overrides: {
-                "volume.volume.color.0": colors.red2,
                 "volume.volume.color.1": colors.teal,
+                "volume.volume.color.0": colors.red2,
                 "volume.volume ma.color": colors.red2,
                 "volume.volume ma.linewidth": 5,
                 "volume.volume ma.visible": true,

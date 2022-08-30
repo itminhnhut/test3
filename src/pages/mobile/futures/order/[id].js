@@ -9,6 +9,7 @@ import { ApiStatus, ChartMode } from 'redux/actions/const';
 import { useEffect } from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout'
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import { UserSocketEvent } from 'redux/actions/const';
 import { getOrdersList } from 'redux/actions/futures';
@@ -22,7 +23,7 @@ const OrderDetailComponent = dynamic(
 const OrderDetail = (props) => {
     const [currentTheme] = useDarkMode()
     const router = useRouter();
-    const id = router.query.id;
+    const pair = router.query.id;
     const dispatch = useDispatch();
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const ordersList = useSelector(state => state?.futures?.ordersList)
@@ -71,7 +72,7 @@ const OrderDetail = (props) => {
                 url: API_ORDER_DETAIL,
                 options: { method: 'GET' },
                 params: {
-                    orderId: id
+                    orderId: pair
                 },
             });
             if (status === ApiStatus.SUCCESS) {
@@ -106,11 +107,11 @@ const OrderDetail = (props) => {
     return (
         <LayoutMobile>
             <OrderDetailComponent order={orderDetail} isMobile
-                pairConfig={pairConfigDetail}
-                pairParent={pairConfigDetail?.symbol} isVndcFutures={isVndcFutures}
-                isTabHistory={isTabHistory.current}
-                isDark={currentTheme === THEME_MODE.DARK}
-                getDetail={getDetail}
+                                  pairConfig={pairConfigDetail}
+                                  pairParent={pair} isVndcFutures={isVndcFutures}
+                                  isTabHistory={isTabHistory.current}
+                                  isDark={currentTheme === THEME_MODE.DARK}
+                                  getDetail={getDetail}
             />
         </LayoutMobile>
     );

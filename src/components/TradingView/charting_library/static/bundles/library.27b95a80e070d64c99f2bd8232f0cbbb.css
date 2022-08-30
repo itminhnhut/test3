@@ -9458,7 +9458,10 @@ html.feature-no-touch.theme-dark .container-3_8ayT2Q-:hover .arrow-WcYWFXUn-{ st
 	background-color: #ffffff;
 }
 
-html.theme-dark .drawingToolbar-U3_QXRof-{ background-color: #131722; }
+html.theme-dark .drawingToolbar-U3_QXRof- {
+  background-color: #1B222D;
+  border-right: 3px solid #2B3247;
+}
 
 .drawingToolbar-U3_QXRof-.isHidden-2d-PYkzV- {
 		background-color: transparent;

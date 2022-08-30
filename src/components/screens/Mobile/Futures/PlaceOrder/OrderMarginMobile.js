@@ -33,10 +33,10 @@ const OrderMarginMobile = ({ marginAndValue, pairConfig, availableAsset, decimal
             <div className="flex justify-between text-xs font-medium ">
                 <div className="mr-1 text-onus-grey min-w-[50px]">{t('futures:margin')}</div>
                 <div className="flex items-center flex-wrap justify-end	text-right" style={{ wordBreak: 'break-word' }}>
-                    {`${marginAndValue?.marginLength > 7 ? formatCurrency(marginAndValue?.margin, decimal) : formatNumber(
+                    {formatNumber(
                         marginAndValue?.margin,
                         decimal
-                    )}`}
+                    )}
                 </div>
             </div>
         </div>

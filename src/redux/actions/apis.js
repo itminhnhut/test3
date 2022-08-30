@@ -89,6 +89,12 @@ export const API_VNDC_FUTURES_CHANGE_MARGIN =
     API_V3_PREFIX + "futures/vndc/edit-margin";
 export const API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES =
     API_V3_PREFIX + "futures/vndc/transactions";
+export const API_POST_CHANGE_FEES_CURRENCY_ORDER = 
+    API_V3_PREFIX + "futures/vndc/change-fee-currency";
+export const API_GET_ALL_ORDERS_BY_CONDTION = 
+    API_V3_PREFIX + "futures/vndc/find-all-by-condition";
+export const API_CLOSE_ALL_ORDERS_BY_CONDTION = 
+    API_V3_PREFIX + "futures/vndc/close-all-by-condition";
 
 // Swap
 export const SWAP_ESTIMATE_PRICE = API_V3_PREFIX + "swap/estimate_price";

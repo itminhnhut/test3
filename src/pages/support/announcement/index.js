@@ -15,7 +15,7 @@ import useApp from 'hooks/useApp';
 import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 
 const SupportAnnouncement = () => {
-    const [theme] = useDarkMode()
+    const [theme, , setTheme] = useDarkMode()
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
@@ -27,6 +27,13 @@ const SupportAnnouncement = () => {
 
         setCategories(categories.announcementCategories)
         setLastedArticles(lastedArticles)
+
+        const themeLocal = localStorage.getItem("theme");
+        if (themeLocal === "dark") {
+            setTheme(THEME_MODE.DARK);
+        } else {
+            setTheme(THEME_MODE.LIGHT);
+        }
         setLoading(false)
     }
 

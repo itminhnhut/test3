@@ -80,14 +80,14 @@ export const getFuturesMarketWatch = () => async (dispatch) => {
 export const getFuturesConfigs = () => async (dispatch) => {
     try {
         const { data } = await Axios.get(API_GET_FUTURES_CONFIGS);
-
-        if (data?.status === ApiStatus.SUCCESS) {
+        if(data?.status === ApiStatus.SUCCESS ){
             dispatch({
                 type: SET_FUTURES_PAIR_CONFIGS,
                 payload: data?.data || [],
             });
         }
     } catch (e) {
+        console.log('Can\'t get Futures Configs ', e);
     }
 };
 

@@ -122,7 +122,7 @@ const App = ({
             // Get config
             store.dispatch(getAssetConfig());
             store.dispatch(getExchangeConfig());
-            store.dispatch(getFuturesConfigs());
+            store.dispatch(getFuturesConfigs())
             store.dispatch(getPaymentConfigs());
             initConfig = true;
             store.dispatch({
@@ -171,7 +171,12 @@ const App = ({
     }, [language])
 
     useEffect(() => {
-        if(!router.pathname.includes('mobile') && !router.pathname.includes('nao')){
+        if(!router.pathname.includes('mobile')
+            && !router.pathname.includes('nao')
+            && !router.pathname.includes('contest')
+            && !router.pathname.includes('stake')
+            && !router.pathname.includes('luckydraw')
+        ){
             function initFreshChat() {
                 window.fcWidget.init({
                     token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",

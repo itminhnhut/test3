@@ -10,7 +10,14 @@ import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reduce
 import OrderTypeMobile from './OrderTypeMobile';
 import OrderMarginMobile from './OrderMarginMobile';
 import OrderButtonMobile from './OrderButtonMobile';
-import { emitWebViewEvent, formatNumber, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import {
+    emitWebViewEvent,
+    formatNumber,
+    getFilter,
+    getLiquidatePrice,
+    getSuggestSl,
+    getSuggestTp
+} from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import OrderCollapse from './OrderCollapse';
 // import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
@@ -20,10 +27,11 @@ import { createSelector } from 'reselect';
 import OrderVolumeMobileModal from './OrderVolumeMobileModal';
 import SideOrder from 'components/screens/Mobile/Futures/SideOrder';
 import OrderLeverage from 'components/screens/Mobile/Futures/PlaceOrder/OrderLeverage';
-import { getFilter, } from 'redux/actions/utils';
 // import ExpiredModal from 'components/screens/Mobile/ExpiredModal'
-import { ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
+import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum, PublicSocketEvent } from 'redux/actions/const';
 import EditSLTPVndcMobile from 'components/screens/Mobile/Futures/EditSLTPVndcMobile';
+import Emitter from 'redux/actions/emitter';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
 const getPairPrice = createSelector(
     [
@@ -39,7 +47,6 @@ const PlaceOrder = ({
     decimals,
     side,
     setSide,
-    pairPrice,
     pair,
     isAuth,
     availableAsset,
@@ -49,7 +56,7 @@ const PlaceOrder = ({
     onBlurInput,
     decimalSymbol
 }) => {
-    const lastPrice = pairPrice?.lastPrice;
+
     const { t } = useTranslation();
     const initPercent = 10;
     const [type, setType] = useState(OrderTypes.Market);
@@ -68,7 +75,32 @@ const PlaceOrder = ({
     const [showEditVolume, setShowEditVolume] = useState(false);
     const [quoteQty, setQuoteQty] = useState(0);
     const [showExpiredModal, setShowExpiredModal] = useState(false);
-    const [flag, setFlag] = useState(false);
+    const [pairPrice, setPairPrice] = useState(null);
+    const [lastSymbol, setLastSymbol] = useState(null);
+    const _pairPrice = pairPrice || priceFromMarketWatch;
+    const lastPrice = _pairPrice?.lastPrice;
+
+    useEffect(() => {
+        if (pairConfig?.symbol !== lastSymbol) {
+            setLastSymbol(pairConfig?.symbol);
+            setPairPrice(null);
+        }
+    }, [pairConfig]);
+
+    useEffect(() => {
+        if (!pairConfig) return;
+        // ? Subscribe publicSocket
+        // ? Get Pair Ticker
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol, async (data) => {
+            if (pairConfig.symbol === data?.s && data?.p > 0) {
+                const _pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
+                setPairPrice(_pairPrice);
+            }
+        });
+        return () => {
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol);
+        };
+    }, [pairConfig]);
 
     const getMaxQuoteQty = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
         let maxBuy = 0;
@@ -76,23 +108,31 @@ const PlaceOrder = ({
         let _price = price;
         if (Math.trunc(availableAsset) > 0) {
             if ([OrderTypes.Limit, OrderTypes.StopMarket, OrderTypes.StopLimit].includes(type) && price) {
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : price);
+                maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : price);
                 maxSell = maxBuy;
             } else if ([OrderTypes.Market].includes(type)) {
-                _price = side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
-                maxBuy = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : pairPrice?.ask);
-                maxSell = availableAsset / ((1 / leverage) + (0.1 / 100)) / (isQuoteQty ? 1 : pairPrice?.bid);
+                price = side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
+                maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : pairPrice?.ask);
+                maxSell = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : pairPrice?.bid);
             }
         }
-        const lotSize = pairConfig?.filters?.find((o) => o?.filterType === 'LOT_SIZE') || {};
-        const _maxConfig = lotSize?.maxQty * (isQuoteQty ? _price : 1); //maxConfig quoteQty
+        const lotSize =
+            pairConfig?.filters?.find((o) =>
+                [
+                    FuturesOrderTypes.Market,
+                    FuturesOrderTypes.StopMarket,
+                ].includes(type)
+                    ? o?.filterType === 'MARKET_LOT_SIZE'
+                    : o?.filterType === 'LOT_SIZE'
+            ) || {};
+        const _maxConfig = lotSize?.maxQty * (isQuoteQty ? price : 1); //maxConfig quoteQty
         const _maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
         return isAuth ? Math.min(_maxConfig, _maxQty) : _maxConfig;
     };
 
     useEffect(() => {
         if (typeof window !== undefined) {
-            const search = new URLSearchParams(window.location.search)
+            const search = new URLSearchParams(window.location.search);
             if (search && search.get('need_login') === 'true' && context?.alert) {
                 // setShowExpiredModal(true);
                 context.alert.show('expired',
@@ -103,25 +143,24 @@ const PlaceOrder = ({
                         emitWebViewEvent('login');
                     },
                     null, {
-                    confirmTitle: t('futures:mobile.invalid_session_button'),
-                    hideCloseButton: true
-                }
-                )
+                        confirmTitle: t('futures:mobile.invalid_session_button'),
+                        hideCloseButton: true
+                    }
+                );
             }
         }
     }, [context.alert]);
 
-
     useEffect(() => {
-        if (firstTime.current && (priceFromMarketWatch?.lastPrice > 0 || pairPrice?.lastPrice > 0)) {
+        if (firstTime.current && (_pairPrice?.lastPrice > 0) && availableAsset) {
             firstTime.current = false;
         }
-    }, [priceFromMarketWatch, pairPrice, firstTime.current]);
+    }, [_pairPrice, firstTime.current]);
 
     useEffect(() => {
         firstTime.current = true;
         if (!localStorage.getItem('auto_type_tp_sl')) {
-            localStorage.setItem('auto_type_tp_sl', JSON.stringify({ auto: true }))
+            localStorage.setItem('auto_type_tp_sl', JSON.stringify({ auto: true }));
         }
     }, [pair]);
 
@@ -133,9 +172,9 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _lastPrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
-        const _price = type === FuturesOrderTypes.Limit ? price : stopPrice
-        onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? _lastPrice : _price)
+        const _lastPrice = _pairPrice?.lastPrice ?? lastPrice;
+        const _price = type === FuturesOrderTypes.Limit ? price : stopPrice;
+        onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? _lastPrice : _price);
     }, [side, type, decimals, leverage, stopPrice, price]);
 
     useEffect(() => {
@@ -147,14 +186,14 @@ const PlaceOrder = ({
 
     useEffect(() => {
         if (firstTime.current) return;
-        const _lastPrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
+        const _lastPrice = _pairPrice?.lastPrice ?? lastPrice;
         setPrice(_lastPrice);
         setStopPrice(_lastPrice);
     }, [firstTime.current, decimals]);
 
     const onChangeQuoteQty = (price, leverage) => {
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
-        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, priceFromMarketWatch || pairPrice, pairConfig, true);
+        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, _pairPrice, pairConfig, true);
         let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
             .toFixed(decimalSymbol);
         // let _quoteQty = minQuoteQty
@@ -167,7 +206,7 @@ const PlaceOrder = ({
     const onChangeSlTp = (leverage, _lastPrice) => {
         let autoTypeInput = localStorage.getItem('auto_type_tp_sl');
         if (autoTypeInput) {
-            autoTypeInput = JSON.parse(autoTypeInput)
+            autoTypeInput = JSON.parse(autoTypeInput);
             if (autoTypeInput.auto) {
                 const _sl = +(getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
                 const _tp = +(getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6)).toFixed(decimals.decimalScalePrice);
@@ -177,33 +216,35 @@ const PlaceOrder = ({
                 } else if (leverage <= 20) {
                     setSl(_sl);
                     setTp('');
-                } if (leverage > 20) {
+                }
+                if (leverage > 20) {
                     setSl(_sl);
                     setTp(_tp);
                 }
             }
         }
-    }
+    };
 
     useEffect(() => {
         if (firstTime.current) return;
         if (newDataLeverage.current) {
-            const _lastPrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
+            const _lastPrice = _pairPrice?.lastPrice ?? lastPrice;
             onChangeQuoteQty(_lastPrice, newDataLeverage?.current);
-            onChangeSlTp(newDataLeverage.current, _lastPrice)
+            onChangeSlTp(newDataLeverage.current, _lastPrice);
         }
-    }, [firstTime.current, newDataLeverage.current, flag]);
+    }, [firstTime.current, newDataLeverage.current]);
 
     const getLeverage = (_leverage) => {
         newDataLeverage.current = _leverage;
-        setFlag(!flag)
     };
 
     const marginAndValue = useMemo(() => {
         const volume = quoteQty || 0;
-        const volumeLength = +Number(volume).toFixed(0).length;
+        const volumeLength = +Number(volume)
+            .toFixed(0).length;
         const margin = volume / leverage;
-        const marginLength = +Number(margin).toFixed(0).length;
+        const marginLength = +Number(margin)
+            .toFixed(0).length;
         return {
             volume,
             margin,
@@ -214,25 +255,25 @@ const PlaceOrder = ({
 
     const awaitValidator = useRef(false);
     const timerValidator = useRef(null);
+    const [flag, setFlag] = useState(false);
     useEffect(() => {
         awaitValidator.current = true;
-        clearTimeout(timerValidator.current)
+        clearTimeout(timerValidator.current);
         timerValidator.current = setTimeout(() => {
             awaitValidator.current = false;
             setFlag(!flag);
         }, 500);
         setFlag(!flag);
-    }, [side])
+    }, [side]);
 
     const inputValidator = (mode) => {
         let isValid = true;
         let msg = null;
         switch (mode) {
             case 'quoteQty':
-                const _min = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
+                const _min = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
                 const _decimals = 0;
-                const _max = +Number(availableAsset / (1 / leverage + (0.1 / 100)))
-                    .toFixed(0);
+                const _max = availableAsset / (1 / leverage + DefaultFuturesFee.NamiFrameOnus);
                 const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
                 const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
                 if (quoteQty < +_min) {
@@ -263,12 +304,12 @@ const PlaceOrder = ({
                 const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
-                let _activePrice = priceFromMarketWatch?.lastPrice ?? lastPrice;
+                let _activePrice = _pairPrice?.lastPrice ?? lastPrice;
                 if (mode !== 'price') {
                     if (type === 'LIMIT') {
-                        _activePrice = price
+                        _activePrice = price;
                     } else if (type === 'STOP_MARKET') {
-                        _activePrice = stopPrice
+                        _activePrice = stopPrice;
                     }
                 }
 
@@ -276,75 +317,75 @@ const PlaceOrder = ({
                 const lowerBound = {
                     min: Math.max(_minPrice, _activePrice * percentPriceFilter?.multiplierDown),
                     max: Math.min(_activePrice, _activePrice * (1 - percentPriceFilter?.minDifferenceRatio)),
-                }
+                };
 
                 const upperBound = {
                     min: Math.max(_activePrice, _activePrice * (1 + percentPriceFilter?.minDifferenceRatio)),
                     max: Math.min(_maxPrice, _activePrice * percentPriceFilter?.multiplierUp),
-                }
+                };
 
-                let bound = lowerBound
+                let bound = lowerBound;
                 if (side === FuturesOrderEnum.Side.BUY) {
-                    bound = mode === 'stop_loss' ? lowerBound : upperBound
+                    bound = mode === 'stop_loss' ? lowerBound : upperBound;
                 } else {
-                    bound = mode === 'stop_loss' ? upperBound : lowerBound
+                    bound = mode === 'stop_loss' ? upperBound : lowerBound;
                 }
 
                 if (mode === 'stop_loss') {
-                    bound = side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound
+                    bound = side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound;
                     // Modify bound base on type
                     if (sl < bound.min) {
-                        isValid = false
+                        isValid = false;
                         msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.decimalScalePrice, 0, true)}`;
                     } else if (sl > bound.max) {
-                        isValid = false
+                        isValid = false;
                         msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
                     }
                 } else if (mode === 'take_profit') {
-                    bound = side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound
+                    bound = side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
                     if (tp < bound.min) {
-                        isValid = false
+                        isValid = false;
                         msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.decimalScalePrice, 0, true)}`;
                     } else if (tp > bound.max) {
-                        isValid = false
+                        isValid = false;
                         msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
                     }
                 } else if (mode === 'price' && (type === 'STOP_MARKET' || type === 'LIMIT')) {
-                    const _checkPrice = type === 'STOP_MARKET' ? stopPrice : price
+                    const _checkPrice = type === 'STOP_MARKET' ? stopPrice : price;
                     if (side === FuturesOrderEnum.Side.BUY) {
                         // Truong hop la buy thi gia limit phai nho hon gia hien tai
                         if (type === 'LIMIT') {
                             if (price < lowerBound.min) {
-                                isValid = false
+                                isValid = false;
                                 msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.decimalScalePrice, 0, true)}`;
                             } else if (price > lowerBound.max) {
-                                isValid = false
+                                isValid = false;
                                 msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
                             }
                         } else if (type === 'STOP_MARKET') {
                             if (stopPrice < upperBound.min) {
-                                isValid = false
+                                isValid = false;
                                 msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.decimalScalePrice, 0, true)}`;
                             } else if (stopPrice > upperBound.max) {
-                                isValid = false
+                                isValid = false;
                                 msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.decimalScalePrice, 0, true)}`;
                             }
                         }
                     } else if (side === FuturesOrderEnum.Side.SELL) {
                         if (type === 'LIMIT') {
                             if (price < upperBound.min) {
-                                isValid = false
+                                isValid = false;
                                 msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.decimalScalePrice, 0, true)}`;
                             } else if (price > upperBound.max) {
-                                isValid = false
+                                isValid = false;
                                 msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.decimalScalePrice, 0, true)}`;
                             }
                         } else if (type === 'STOP_MARKET') {
                             if (stopPrice < lowerBound.min) {
-                                isValid = false
+                                isValid = false;
                                 msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.decimalScalePrice, 0, true)}`;
                             } else if (stopPrice > lowerBound.max) {
-                                isValid = false
+                                isValid = false;
                                 msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
                             }
                         }
@@ -354,17 +395,22 @@ const PlaceOrder = ({
                 if (mode === 'stop_loss' && isValid) {
                     //  Kiểm tra hợp lệ giá liquidate không
                     // const size = size
-                    const liquidatePrice = getLiquidatePrice({ quantity: size, side, quoteQty, leverage }, _activePrice)
-                    const bias = 0.1 / 100
+                    const liquidatePrice = getLiquidatePrice({
+                        quantity: size,
+                        side,
+                        quoteQty,
+                        leverage
+                    }, _activePrice);
+                    const bias = DefaultFuturesFee.NamiFrameOnus;
                     const liquidatePriceBound = {
                         upper: liquidatePrice * (1 - bias),
                         lower: liquidatePrice * (1 + bias)
-                    }
+                    };
                     if (side === VndcFutureOrderType.Side.SELL && sl > liquidatePriceBound.upper) {
-                        isValid = false
+                        isValid = false;
                         msg = `${t('futures:liquidate_alert_less')} ${formatNumber(liquidatePriceBound.upper, decimals.decimalScalePrice, 0, true)}`;
                     } else if (side === VndcFutureOrderType.Side.BUY && sl < liquidatePriceBound.lower) {
-                        isValid = false
+                        isValid = false;
                         msg = `${t('futures:liquidate_alert_greater')} ${formatNumber(liquidatePriceBound.lower, decimals.decimalScalePrice, 0, true)}`;
                     }
                 }
@@ -399,17 +445,26 @@ const PlaceOrder = ({
         const not_valid = collapse ? (!inputValidator('quoteQty').isValid || !inputValidator('leverage').isValid) :
             (!inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid ||
                 !inputValidator('quoteQty').isValid || !inputValidator('leverage').isValid);
+        // console.log('__ check not valid', not_valid,
+        //     {
+        //         price: !inputValidator('price', ArrStop.includes(type)).isValid,
+        //         stop_loss: !inputValidator('stop_loss').isValid,
+        //         take_profit: !inputValidator('take_profit').isValid,
+        //         quoteQty: !inputValidator('quoteQty').isValid,
+        //         leverage: !inputValidator('leverage').isValid
+        //     }
+        // )
         return not_valid;
     }, [price, size, type, stopPrice, sl, tp, isVndcFutures, leverage, quoteQty, collapse]);
 
     const canShowChangeTpSL = useMemo(() => {
-        if (!isAuth) return false
+        if (!isAuth) return false;
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
         if (!inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
-            return false
+            return false;
         }
-        return true
+        return true;
     }, [isAuth, type, pairConfig, price, side, leverage, availableAsset, pairPrice]);
 
     const onChangeTpSL = () => {
@@ -418,7 +473,7 @@ const PlaceOrder = ({
         if (!inputValidator('price', ArrStop.includes(type)).isValid ||
             !inputValidator('quoteQty').isValid) {
             const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
-            const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, priceFromMarketWatch || pairPrice, pairConfig, true);
+            const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, _pairPrice, pairConfig, true);
             const available = maxQuoteQty >= minQuoteQty;
             context.alert.show('error', t('futures:invalid_amount'), available ? t('futures:invalid_amount_price') : t('futures:mobile:balance_insufficient'));
             return;
@@ -432,8 +487,10 @@ const PlaceOrder = ({
             price: _price,
             quoteAsset: pairConfig?.quoteAsset,
             symbol: pairConfig?.symbol,
-            sl: sl ? +Number(sl).toFixed(decimals?.decimalScalePrice ?? 0) : 0,
-            tp: tp ? +Number(tp).toFixed(decimals?.decimalScalePrice ?? 0) : 0,
+            sl: sl ? +Number(sl)
+                .toFixed(decimals?.decimalScalePrice ?? 0) : 0,
+            tp: tp ? +Number(tp)
+                .toFixed(decimals?.decimalScalePrice ?? 0) : 0,
             leverage,
             side,
         };
@@ -448,13 +505,14 @@ const PlaceOrder = ({
 
     const onConfirmEditVolume = (quoteQty) => {
         const _price = type === FuturesOrderTypes.Market ?
-            (VndcFutureOrderType.Side.BUY === side ? pairPrice?.ask : pairPrice?.bid) :
+            (VndcFutureOrderType.Side.BUY === side ? _pairPrice?.ask : _pairPrice?.bid) :
             price;
-        const _size = (quoteQty / _price)
+        const _size = (quoteQty / _price);
         setSize(+_size);
         setQuoteQty(quoteQty);
         setShowEditVolume(false);
     };
+
     return (
         <>
 
@@ -474,7 +532,7 @@ const PlaceOrder = ({
                 }
                 {collapse &&
                     <OrderCollapse
-                        side={side} pairPrice={pairPrice || priceFromMarketWatch} type={type} size={size}
+                        side={side} pairPrice={_pairPrice} type={type} size={size}
                         price={price} stopPrice={stopPrice} pairConfig={pairConfig}
                         decimals={decimals} leverage={leverage} isAuth={isAuth}
                         marginAndValue={marginAndValue} availableAsset={availableAsset}
@@ -485,7 +543,7 @@ const PlaceOrder = ({
                     <OrderInput>
                         <div className="flex flex-row justify-between">
                             <OrderTypeMobile type={type} setType={setType}
-                                orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
+                                             orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures}/>
 
                             <OrderLeverage
                                 leverage={leverage} setLeverage={setLeverage}
@@ -500,7 +558,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     {!collapse &&
                         <OrderInput>
-                            <SideOrder side={side} setSide={setSide} />
+                            <SideOrder side={side} setSide={setSide}/>
                         </OrderInput>
                     }
                     <OrderInput data-tut="order-volume">
@@ -514,7 +572,7 @@ const PlaceOrder = ({
                             side={side}
                             quoteQty={quoteQty}
                             price={price}
-                            pairPrice={pairPrice || priceFromMarketWatch}
+                            pairPrice={_pairPrice}
                             leverage={leverage}
                             availableAsset={availableAsset}
                             getMaxQuoteQty={getMaxQuoteQty}
@@ -557,13 +615,13 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput>
                         <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig}
-                            availableAsset={availableAsset} decimal={decimalSymbol} />
+                                           availableAsset={availableAsset} decimal={decimalSymbol}/>
                     </OrderInput>
                     <OrderInput data-tut="order-button">
                         <OrderButtonMobile
                             tp={tp} sl={sl} type={type} size={size} price={price}
                             stopPrice={stopPrice} side={side} decimals={decimals}
-                            pairConfig={pairConfig} pairPrice={pairPrice || priceFromMarketWatch}
+                            pairConfig={pairConfig} pairPrice={_pairPrice}
                             leverage={leverage} isAuth={isAuth} isError={isError}
                             quoteQty={quoteQty} decimalSymbol={decimalSymbol}
                         />

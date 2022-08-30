@@ -415,7 +415,9 @@ export default class TimeFrame extends Component {
                     className="mx-2 cursor-pointer"
                     color={colors.darkBlue5}
                     size={20}
-                    onClick={() => this.props.handleOpenStudty()}
+                    onClick={() => {
+                        this.props.handleOpenStudty()
+                    }}
                 />
             </div>
         );

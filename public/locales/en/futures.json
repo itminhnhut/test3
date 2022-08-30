@@ -84,6 +84,7 @@
         "leverage": "Leverage"
     },
     "tp_sl": {
+        "add_tpsl": "Add SL-TP",
         "modify_tpsl": "Modify SL-TP",
         "perpetual": "Perpetual",
         "when": "When",
@@ -339,7 +340,7 @@
         "stop_loss_input": "Input stop loss",
         "profit_input": "Input profit",
         "margin_ratio": "Risk",
-        "auto_type_sltp": "Auto type SL-TP",
+        "auto_type_sltp": "Suggested SL-TP",
         "pnl_estimate": "Estimate PNL",
         "modify_tpsl_title": "Modify SL-TP",
         "get_now": "Get it now",
@@ -351,7 +352,43 @@
         "leverage_v2": "Type/leverage",
         "not_show_this_message": "Don't show this message again",
         "quote_price": "Quote price",
-        "adjust_volume":"Adjust Volume"
+        "adjust_volume": "Adjust Volume",
+        "full": "Full",
+        "simple": "Simple",
+        "change_success": "Changed successfully",
+        "tooltip_popup": "Choose asset for closing fee to get a corresponding discount and set a default asset for next orders by checking the box below.",
+        "trading_fees": "Trading Fees",
+        "set_as_default_trading_fee": "Set as default trading fee",
+        "close_all_positions": {
+            "title": "Close all positions",
+            "processing": "Closing",
+            "done": "Completed",
+            "close_type": {
+                "close_all": "Close all positions",
+                "close_all_profit": "Close all profit positions",
+                "close_all_loss": "Close all loss positions",
+                "close_all_pair": "Close all {{pair}} positions",
+                "close_all_pending": "Cancel all",
+                "close_all_pair_pending": "Cancel all {{pair}} orders"
+            },
+            "confirm_title": {
+                "close_all_ALL": "Confirm close all positions",
+                "close_all_PROFIT": "Confirm close all profit positions",
+                "close_all_LOSS": "Confirm close all loss positions",
+                "close_all_PAIR": "Confirm close all {{pair}} positions",
+                "close_all_ALL_PENDING": "Confirm cancelling all pending positions",
+                "close_all_ALL_PAIR_PENDING": "Cancel all {{pair}} orders"
+            },
+            "confirm_description": "This is the estimated number of positions and profit. Market price will affect the actual number of closed positions and profit.",
+            "confirm_close_pending_description": "All pending positions will be cancelled. Are you sure?",
+            "estimated_pnl": "Total Unrealized PnL",
+            "estimated_time": "Estimated close time",
+            "estimated_orders": "Estimated closed positions",
+            "position_list": "Position List",
+            "orders": "orders",
+            "order": "order",
+            "preview": "Preview"
+        }
     },
     "orders_history": "Order History",
     "minimum_leverage": "Minimum Leverage is",

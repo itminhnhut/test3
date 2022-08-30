@@ -16,7 +16,7 @@ import { API_ORDER_DETAIL } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { ApiStatus, ChartMode } from 'redux/actions/const';
 import colors from 'styles/colors';
-import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout'
+
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
     { ssr: false },
@@ -63,8 +63,8 @@ const OrderDetail = ({
     }));
     const decimalSymbol = assetConfig?.['order_value']?.assetDigit ?? 0;
     const [resolution, setResolution] = useState('15');
-    const [dataSource, setDataSource] = useState([])
-    const [chartKey, setChartKey] = useState('nami-mobile-chart')
+    const [dataSource, setDataSource] = useState([]);
+    const [chartKey, setChartKey] = useState('nami-mobile-chart');
 
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
@@ -83,7 +83,7 @@ const OrderDetail = ({
 
     const renderFee = (order, key) => {
         if (!order) return '-';
-        const assetDigit = assetConfig ? assetConfig[key]?.assetDigit : 0
+        const assetDigit = assetConfig ? assetConfig[key]?.assetDigit : 0;
         const decimal = isVndcFutures ? assetDigit : assetDigit + 2;
         const assetCode = assetConfig ? assetConfig[key]?.assetCode : '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];
@@ -92,26 +92,25 @@ const OrderDetail = ({
 
     const getValue = (number) => {
         if (number) {
-            return formatNumber(number, decimalSymbol, 0, true);
+            return formatNumber(number, decimalPrice, 0, true);
         } else {
-            return t('futures:not_set')
+            return t('futures:not_set');
         }
     };
     const renderSlTp = (value) => {
         if (value) {
-            return formatNumber(value)
+            return formatNumber(value, decimalPrice, 0, true);
         }
-        return t('futures:not_set')
-    }
+        return t('futures:not_set');
+    };
 
     const getColor = (key, value) => {
         if (key === 'tp') {
-            return value > 0 ? '' : '!text-onus-white'
+            return value > 0 ? '' : '!text-onus-white';
         } else {
-            return value > 0 ? '' : '!text-onus-white'
+            return value > 0 ? '' : '!text-onus-white';
         }
-    }
-
+    };
 
     const renderModify = (metadata, key) => {
         let value = null;
@@ -164,6 +163,7 @@ const OrderDetail = ({
     }, [pairConfig]);
 
     const forceFetchOrder = (data) => {
+        console.log(isModal)
         if (!isModal) {
             getDetail();
         }
@@ -173,48 +173,52 @@ const OrderDetail = ({
         if (isModal) {
             getAdjustmentDetail();
         } else {
-            emitWebViewEvent('order_detail')
+            emitWebViewEvent('order_detail');
         }
-    }, [])
+    }, []);
 
     const oldOrder = useRef(null);
     useEffect(() => {
         if (!isModal) {
-            setDataSource(order?.futuresorderlogs ?? [])
+            setDataSource(order?.futuresorderlogs ?? []);
         } else {
             if (JSON.stringify(oldOrder.current) === JSON.stringify(order)) return;
             oldOrder.current = order;
             getAdjustmentDetail();
         }
-    }, [order, isModal])
+    }, [order, isModal]);
 
     const getAdjustmentDetail = async () => {
         try {
-            const { status, data, message } = await fetchApi({
+            const {
+                status,
+                data,
+                message
+            } = await fetchApi({
                 url: API_ORDER_DETAIL,
                 options: { method: 'GET' },
                 params: {
                     orderId: order.displaying_id
                 },
-            })
+            });
             if (status === ApiStatus.SUCCESS) {
-                setDataSource(data?.futuresorderlogs ?? [])
+                setDataSource(data?.futuresorderlogs ?? []);
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
         } finally {
         }
-    }
+    };
 
     const resolutionLabel = useMemo(() => {
         return listTimeFrame.find(item => item.value === resolution)?.text;
     }, [resolution]);
 
-    const orderList = useMemo(() => [order], [order])
+    const orderList = useMemo(() => [order], [order]);
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
     const decimalUsdt = assetConfig?.swap?.assetDigit ?? 0;
     return (
-        <div className={'bg-onus overflow-hidden'} >
+        <div className={'bg-onus overflow-hidden'}>
             <div className="relative overflow-auto h-full overflow-x-hidden">
                 <div
                     className="relative w-full bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
@@ -243,7 +247,8 @@ const OrderDetail = ({
                 </div>
 
                 <div className="shadow-order_detail py-[10px] bg-onus h-full">
-                    <div className="min-h-[350px] spot-chart max-w-full" style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
+                    <div className="min-h-[350px] spot-chart max-w-full"
+                        style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
                         <MobileTradingView
                             t={t}
                             key={chartKey}
@@ -259,27 +264,29 @@ const OrderDetail = ({
                             showSymbol={false}
                             showIconGuide={false}
                             showTimeFrame={false}
+                            isDetail={true}
                             // classNameChart="!h-[350px]"
                             styleChart={{ height: `calc(100% - 40px)` }}
                             renderProfit={order.status === VndcFutureOrderType.Status.CLOSED}
-                            reNewComponentKey={() => setChartKey(Math.random().toString())} // Change component key will remount component
+                            reNewComponentKey={() => setChartKey(Math.random()
+                                .toString())} // Change component key will remount component
                         />
                     </div>
                     <div className="px-[16px] bg-onus">
                         {!isTabHistory &&
-                            <SocketLayout pair={pairParent} pairConfig={pairConfig}>
-                                <OrderOpenDetail order={order} decimalPrice={decimalPrice} isDark={isDark}
-                                    pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
-                                    forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory} isVndcFutures={isVndcFutures}
-                                />
-                            </SocketLayout>
+                            <OrderOpenDetail order={order} decimalPrice={decimalPrice} isDark={isDark}
+                                pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
+                                forceFetchOrder={forceFetchOrder} isTabHistory={isTabHistory}
+                                isVndcFutures={isVndcFutures}
+                            />
                         }
                         <div className="pt-5">
                             <div className="font-semibold mb-4">{t('futures:mobile:order_detail')}</div>
-                            <div className='bg-onus-bg3 px-3 rounded-lg'>
+                            <div className="bg-onus-bg3 px-3 rounded-lg">
                                 <Row>
                                     <Label>ID</Label>
-                                    <Span className="flex items-center" onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
+                                    <Span className="flex items-center"
+                                        onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
                                         {order?.displaying_id}
                                         <Copy color={colors.onus.grey} size={16} className="ml-2 " />
                                     </Span>
@@ -298,11 +305,11 @@ const OrderDetail = ({
                                     </Row>}
                                 <Row>
                                     <Label>{t('futures:order_table:volume')}</Label>
-                                    <Span>{`${formatNumber(order?.order_value, assetConfig?.order_value?.assetDigit ?? 0)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
+                                    <Span>{`${formatNumber(order?.order_value, decimalSymbol)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:margin')}</Label>
-                                    <Span>{formatNumber(order?.margin, assetConfig?.swap?.assetDigit ?? 0)}</Span>
+                                    <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:open_time')}</Label>
@@ -311,12 +318,12 @@ const OrderDetail = ({
                                 {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
                                     <Row>
                                         <Label>{t(`futures:${order?.type === VndcFutureOrderType.Type.LIMIT ? 'limit_price' : 'stop_price'}`)}</Label>
-                                        <Span>{formatNumber(order?.price, decimalSymbol)}</Span>
+                                        <Span>{formatNumber(order?.price, decimalPrice)}</Span>
                                     </Row>
                                 }
                                 <Row>
                                     <Label>{t('futures:order_table:open_price')}</Label>
-                                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalSymbol) : '-'}</Span>
+                                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalPrice) : '-'}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:close_time')}</Label>
@@ -324,7 +331,7 @@ const OrderDetail = ({
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:order_table:close_price')}</Label>
-                                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalSymbol) : '-'}</Span>
+                                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalPrice) : '-'}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:reason_close')}</Label>
@@ -332,11 +339,13 @@ const OrderDetail = ({
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:take_profit')}</Label>
-                                    <Span className={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}>{renderSlTp(order?.tp)}</Span>
+                                    <Span
+                                        className={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}>{renderSlTp(order?.tp)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:stop_loss')}</Label>
-                                    <Span className={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}>{renderSlTp(order?.sl)}</Span>
+                                    <Span
+                                        className={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}>{renderSlTp(order?.sl)}</Span>
                                 </Row>
                                 <Row>
                                     <Label>{t('futures:mobile:open_fee')}</Label>
@@ -354,14 +363,16 @@ const OrderDetail = ({
                                     })}
                                 >
                                     <div>
-                                        <label className="text-sm font-semibold">{t('futures:mobile:liquidate_fee')}</label>
+                                        <label
+                                            className="text-sm font-semibold">{t('futures:mobile:liquidate_fee')}</label>
                                         <div className="text-sm mt-3">{t('futures:mobile:info_liquidate_fee')}</div>
                                     </div>
                                 </Tooltip>
                                 <Row>
                                     <Label className="flex">
                                         {t('futures:mobile:liquidate_fee')}
-                                        <div className="px-2" data-tip="" data-for="liquidate-fee" id="tooltip-liquidate-fee">
+                                        <div className="px-2" data-tip="" data-for="liquidate-fee"
+                                            id="tooltip-liquidate-fee">
                                             <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
                                         </div>
                                     </Label>
@@ -392,7 +403,8 @@ const OrderDetail = ({
                         </div>
                         {dataSource.length > 0 &&
                             <div className="pb-2.5 pt-8">
-                                <div className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
+                                <div
+                                    className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
                                 {dataSource.map((item, index) => (
                                     <div key={index}
                                         className="bg-onus-bg3 px-3 rounded-lg mb-3">
@@ -403,13 +415,15 @@ const OrderDetail = ({
                                         {item?.metadata?.modify_tp &&
                                             <Row>
                                                 <Label>{t('futures:take_profit')}</Label>
-                                                <Span className="text-onus-green">{renderModify(item?.metadata, 'take_profit')}</Span>
+                                                <Span
+                                                    className="text-onus-green">{renderModify(item?.metadata, 'take_profit')}</Span>
                                             </Row>
                                         }
                                         {item?.metadata?.modify_sl &&
                                             <Row>
                                                 <Label>{t('futures:stop_loss')}</Label>
-                                                <Span className="text-onus-red">{renderModify(item?.metadata, 'stop_loss')}</Span>
+                                                <Span
+                                                    className="text-onus-red">{renderModify(item?.metadata, 'stop_loss')}</Span>
                                             </Row>
                                         }
                                         {item?.metadata?.modify_price &&

@@ -1,10 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { formatCurrency, formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import TradingLabel from 'components/trade/TradingLabel';
 import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import isNil from 'lodash/isNil';
+import Emitter from 'redux/actions/emitter';
+import { PublicSocketEvent } from 'redux/actions/const';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
 const OrderBalance = ({
     ordersList,
@@ -16,9 +19,27 @@ const OrderBalance = ({
     const { t } = useTranslation();
     const quoteAsset = pairConfig?.quoteAsset ?? 'VNDC';
 
+    const [state, set] = useState();
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const wallets = useSelector(state => state.wallet.FUTURES);
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
     const futuresMarketWatch = useSelector((state) => state?.futures?.marketWatch) || null;
+
+    // Handle socket here
+    useEffect(() => {
+        // ? Subscribe publicSocket
+        // ? Get Pair Ticker
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
+            if (data?.s && data?.p > 0) {
+                const _pairPrice = FuturesMarketWatch.create(data);
+                setState({ [data.s]: _pairPrice });
+            }
+        });
+        return () => {
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
+        };
+    }, []);
+
 
     const balance = useMemo(() => {
         if (!wallets || !assetConfig) return;
@@ -43,12 +64,13 @@ const OrderBalance = ({
         let _totalProfit = 0;
         const dataFilter = ordersList.filter(order => order.symbol.includes(quoteAsset))
         dataFilter.forEach((item) => {
-            const refPrice = item?.side === VndcFutureOrderType.Side.BUY ? futuresMarketWatch?.[item.symbol]?.bid : futuresMarketWatch?.[item.symbol]?.ask
+            const _priceData = state?.[item.symbol] || futuresMarketWatch?.[item.symbol]
+            const refPrice = item?.side === VndcFutureOrderType.Side.BUY ? _priceData?.bid : _priceData?.ask
             const lastPrice = refPrice || 0;
             _totalProfit += getProfitVndc(item, lastPrice, true);
         });
         return _totalProfit;
-    }, [ordersList, futuresMarketWatch, pairConfig]);
+    }, [ordersList, futuresMarketWatch, state, pairConfig]);
 
     const volume = useMemo(() => {
         const dataFilter = ordersList.filter(order => order.symbol.includes(quoteAsset))
@@ -95,7 +117,7 @@ const OrderBalance = ({
     }
     return (
         <div
-            className="sticky top-[42px] border-b border-onus bg-onus z-[10] flex flex-wrap px-[16px] pt-4">
+            className="sticky top-[42px] border-b border-onus bg-onus z-[10] flex flex-wrap px-4 pt-4">
             <div className="bg-onus-bg3 rounded-[6px] w-full text-xs py-[9px] flex items-center">
                 <div className="flex flex-col items-center w-1/3 border-r border-onus-bg2">
                     <div className="font-normal text-onus-grey pb-[2px]">{t('futures:mobile:balance')}</div>

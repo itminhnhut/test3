@@ -9,6 +9,7 @@ import TradingInput from 'components/trade/TradingInput';
 import TradingLabel from 'components/trade/TradingLabel';
 import SvgWarning from 'components/svg/SvgWarning';
 import colors from 'styles/colors';
+import floor from 'lodash/floor'
 
 const initValue = 100000;
 const OrderVolumeMobileModal = (props) => {
@@ -29,7 +30,7 @@ const OrderVolumeMobileModal = (props) => {
     const maxQuoteQty = useMemo(() => {
         const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true)
         const max = Math.min(leverage * availableAsset, _maxQuoteQty)
-        return +Number(max).toFixed(decimal);
+        return floor(max, decimal)
     }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig])
 
     const marginAndValue = useMemo(() => {

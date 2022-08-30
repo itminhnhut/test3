@@ -40,7 +40,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
 
         return data?.map((pair) => {
             const isFavorite = favoritePairs.find(rs => rs.replace('_', '') === pair.symbol);
-            return (
+            return pair.quoteAsset === 'VNDC' &&(
                 <FuturesPairListItems
                     key={`futures_pairListItems_${pair?.pair}`}
                     pairConfig={pair}

@@ -1,60 +1,119 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
 import classNames from 'classnames';
-import { Popover, Transition } from "@headlessui/react";
-import ModelMarketMobile from "components/screens/Mobile/Market/ModelMarket";
-import { AreaChart, BarsChart, BaseLineChart, CandleChartOnus, LineChart } from '../timeFrame'
-import { IconStar, IconStarFilled, IconStarOnus, IconHelper } from "components/common/Icons";
-import colors from "styles/colors";
-import { TRADING_MODE } from "redux/actions/const";
-import { favoriteAction } from "redux/actions/user";
-import { getFuturesFavoritePairs } from "redux/actions/futures";
-import { useDispatch, useSelector } from "react-redux";
+import { Popover, Transition } from '@headlessui/react';
+import ModelMarketMobile from 'components/screens/Mobile/Market/ModelMarket';
+import { AreaChart, BarsChart, BaseLineChart, CandleChartOnus, LineChart } from '../timeFrame';
+import { IconStarOnus, IconRefresh } from 'components/common/Icons';
+import colors from 'styles/colors';
+import { PublicSocketEvent, TRADING_MODE } from 'redux/actions/const';
+import { favoriteAction } from 'redux/actions/user';
+import { getFuturesFavoritePairs } from 'redux/actions/futures';
+import { useDispatch, useSelector } from 'react-redux';
 import Guideline from 'components/screens/Mobile/Futures/Guideline';
 import styled from 'styled-components';
-import useWindowSize from 'hooks/useWindowSize'
-import TimeWhite from 'components/svg/SvgTimeWhite';
-import ReloadThin from 'components/svg/ReloadThin';
+import useWindowSize from 'hooks/useWindowSize';
+import Emitter from 'redux/actions/emitter';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import SvgActivity from 'components/svg/Activity';
+import { X } from 'react-feather';
 const listChartType = [
-    { text: 'Bar', value: 0, icon: BarsChart },
-    { text: 'Candle', value: 1, icon: CandleChartOnus },
-    { text: 'Line', value: 2, icon: LineChart },
-    { text: 'Area', value: 3, icon: AreaChart },
-    { text: 'Base Line', value: 10, icon: BaseLineChart },
+    {
+        text: 'Bar',
+        value: 0,
+        icon: BarsChart
+    },
+    {
+        text: 'Candle',
+        value: 1,
+        icon: CandleChartOnus
+    },
+    {
+        text: 'Line',
+        value: 2,
+        icon: LineChart
+    },
+    {
+        text: 'Area',
+        value: 3,
+        icon: AreaChart
+    },
+    {
+        text: 'Base Line',
+        value: 10,
+        icon: BaseLineChart
+    },
 ];
 
 export const listTimeFrame = [
-    { value: '1', text: '1m' },
-    { value: '5', text: '5m' },
-    { value: '15', text: '15m' },
-    { value: '30', text: '30m' },
-    { value: '60', text: '1h' },
-    { value: '240', text: '4h' },
-    { value: '1D', text: '1D' },
-    { value: '1W', text: '1W' },
-    { value: '1M', text: '1M' },
+    {
+        value: '1',
+        text: '1m'
+    },
+    {
+        value: '5',
+        text: '5m'
+    },
+    {
+        value: '15',
+        text: '15m'
+    },
+    {
+        value: '30',
+        text: '30m'
+    },
+    {
+        value: '60',
+        text: '1h'
+    },
+    {
+        value: '240',
+        text: '4h'
+    },
+    {
+        value: '1D',
+        text: '1D'
+    },
+    {
+        value: '1W',
+        text: '1W'
+    },
+    {
+        value: '1M',
+        text: '1M'
+    },
 ];
 
 const ChartOptions = ({
-    pairConfig, pair, isVndcFutures, resolution, setResolution,
-    chartType, setChartType, className = '', isFullScreen, showSymbol = true,
-    showIconGuide = true, pairParent, handleFullScreenChart, isShowChartFullScreen, 
-    handleOpenIndicatorModal, resetComponent
+    pairConfig,
+    pair,
+    isVndcFutures,
+    resolution,
+    setResolution,
+    chartType,
+    setChartType,
+    className = '',
+    isFullScreen,
+    showSymbol = true,
+    showIconGuide = true,
+    pairParent,
+    fullChart,
+    setFullChart,
+    resetComponent,
+    handleOpenIndicatorModal
 }) => {
-    const { width } = useWindowSize()
+    const { width } = useWindowSize();
     const xs = width < 390;
     // if (!pairConfig) return null;
-    const [showModelMarket, setShowModelMarket] = useState(false)
+    const [showModelMarket, setShowModelMarket] = useState(false);
     const [start, setStart] = useState(false);
 
     const labelCandle = listChartType.find(item => item.value === chartType) || '';
 
     const resolutionLabel = useMemo(() => {
-        return listTimeFrame.find(item => item.value == resolution)?.text
-    }, [resolution])
+        return listTimeFrame.find(item => item.value == resolution)?.text;
+    }, [resolution]);
 
     return (
         <div className={`${className} chart-timer flex items-center justify-between px-4`}>
@@ -64,12 +123,13 @@ const ChartOptions = ({
                     <div className="flex items-center flex-wrap gap-2">
                         <div className="flex items-center cursor-pointer" data-tut="order-symbol"
                             onClick={() => setShowModelMarket(true)}>
-                            {!xs && <img className="mr-2 min-w-[24px] min-h-[24px]" src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24} width={24} />}
-                            <div className="font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
+                            {!xs && <img className="mr-2 min-w-[24px] min-h-[24px]"
+                                src={getS3Url(`/images/coins/64/${pairConfig?.baseAssetId}.png`)} height={24}
+                                width={24} />}
+                            <div
+                                className="font-semibold text-onus-white ">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         </div>
-                        <SocketLayout pairConfig={pairConfig} pair={pair} pairParent={pairParent}>
-                            <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
-                        </SocketLayout>
+                        <Change24h pairConfig={pairConfig} isVndcFutures={isVndcFutures} />
                     </div>
                 }
             </div>
@@ -83,7 +143,7 @@ const ChartOptions = ({
                     options={listTimeFrame}
                     classNamePanel="rounded-md"
                     label={<div
-                        className="text-[0.9375rem] text-onus-grey font-medium leading-[1.25rem]">{resolutionLabel}</div>}
+                        className="text-[0.9375rem] text-onus-grey leading-[1.25rem]">{resolutionLabel}</div>}
                 />
                 <MenuTime
                     value={chartType}
@@ -96,18 +156,24 @@ const ChartOptions = ({
                 />
                 {/* {showIconGuide &&
                     <div className="" onClick={() => setStart(true)}>
-                        <IconHelper />
+                        <IconHelper/>
                     </div>
                 } */}
-                {/* onClick={resetComponent} color={collapse ? colors.onus.white : colors.onus.gray}  */}
-                {isShowChartFullScreen ?
-(                    <div onClick={handleOpenIndicatorModal}>
+                <div className="" onClick={fullChart ? handleOpenIndicatorModal : resetComponent}>
+                    {!fullChart ?
+                        <IconRefresh />
+                        :
                         <SvgActivity color={colors.onus.grey} />
-                    </div>)
-                     : <ReloadThin onClick={resetComponent}/>
-                }
+                    }
+                </div>
                 <FavouriteButton pair={pair} pairConfig={pairConfig} />
-                {isShowChartFullScreen && <TimeWhite className={"!ml-10"} onClick={handleFullScreenChart} />}
+                {fullChart &&
+                    <X
+                        size={20}
+                        onClick={() => setFullChart(false)}
+                        className='cursor-pointer !ml-10'
+                    />
+                }
             </div>
             <ModelMarketMobile
                 pairConfig={pairConfig}
@@ -119,10 +185,35 @@ const ChartOptions = ({
     );
 };
 
-const Change24h = ({ pairPrice, isVndcFutures }) => {
+const Change24h = ({
+    pairConfig,
+    isVndcFutures
+}) => {
+    const [pairPrice, setPairPrice] = useState(null);
+    const [lastSymbol, setLastSymbol] = useState(null);
+    useEffect(() => {
+        if (pairConfig?.symbol !== lastSymbol) {
+            setLastSymbol(pairConfig?.symbol);
+            setPairPrice(null);
+        }
+    }, [pairConfig]);
+    useEffect(() => {
+        if (!pairConfig) return;
+        // ? Subscribe publicSocket
+        // ? Get Pair Ticker
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.symbol, async (data) => {
+            const _pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
+            if (pairConfig.symbol === _pairPrice?.symbol && _pairPrice?.lastPrice > 0) {
+                setPairPrice(_pairPrice);
+            }
+        });
+        return () => {
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.symbol);
+        };
+    }, [pairConfig]);
 
     return (
-        <div className='flex items-center'>
+        <div className="flex items-center">
             <div
                 className={classNames('pr-2 min-w-[5rem] text-onus-green font-medium',
                     {
@@ -133,7 +224,7 @@ const Change24h = ({ pairPrice, isVndcFutures }) => {
                 {pairPrice?.priceChangePercent < 0 ? '' : '+'}
                 {formatNumber(
                     roundTo(
-                        pairPrice?.priceChangePercent * (isVndcFutures ? 100 : 1) || 0,
+                        pairPrice?.priceChangePercent * 100 || 0,
                         2
                     ),
                     2,
@@ -143,15 +234,26 @@ const Change24h = ({ pairPrice, isVndcFutures }) => {
                 %
             </div>
         </div>
-    )
+    );
 
-}
+};
 
-
-export const MenuTime = ({ value, onChange, options, label, keyValue, displayValue, classNameButton, classNamePanel }) => {
+export const MenuTime = ({
+    value,
+    onChange,
+    options,
+    label,
+    keyValue,
+    displayValue,
+    classNameButton,
+    classNamePanel
+}) => {
     return (
         <Popover className="relative">
-            {({ open, close }) => (
+            {({
+                open,
+                close
+            }) => (
                 <>
                     <Popover.Button className={`items-center flex ${classNameButton} text-txtSecondary-dark`}>
                         {label}
@@ -171,8 +273,8 @@ export const MenuTime = ({ value, onChange, options, label, keyValue, displayVal
                                 {options?.map(item => {
                                     return (
                                         <div onClick={() => {
-                                            onChange(item[keyValue])
-                                            close()
+                                            onChange(item[keyValue]);
+                                            close();
                                         }}
                                             className={classNames(
                                                 'pb-2 w-max text-txtSecondary-dark font-medium text-xs cursor-pointer flex items-center',
@@ -185,7 +287,7 @@ export const MenuTime = ({ value, onChange, options, label, keyValue, displayVal
                                             <Svg>{item?.icon}</Svg>
                                             {item[displayValue]}
                                         </div>
-                                    )
+                                    );
                                 })}
                             </div>
                         </Popover.Panel>
@@ -193,36 +295,35 @@ export const MenuTime = ({ value, onChange, options, label, keyValue, displayVal
                 </>
             )}
         </Popover>
-    )
-}
+    );
+};
 
 const Svg = styled.div.attrs({
     className: ''
 })`
-    svg {
-        height: 20px;
-        width: 20px;
-        fill: ${colors.onus.grey}
-    }
-`
+  svg {
+    height: 20px;
+    width: 20px;
+    fill: ${colors.onus.grey}
+  }
+`;
 
 const FavouriteButton = ({ pairConfig }) => {
-    const favoritePairs = useSelector((state) => state.futures.favoritePairs)
+    const favoritePairs = useSelector((state) => state.futures.favoritePairs);
     const dispatch = useDispatch();
 
-    const pair = pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset
-    const isFavorite = useMemo(() => favoritePairs.includes(pair), [favoritePairs, pairConfig])
+    const pair = pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset;
+    const isFavorite = useMemo(() => favoritePairs.includes(pair), [favoritePairs, pairConfig]);
 
     const handleSetFavorite = async () => {
-        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pair)
-        dispatch(getFuturesFavoritePairs())
-    }
+        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pair);
+        dispatch(getFuturesFavoritePairs());
+    };
 
-    return <div className='cursor-pointer flex items-center ' onClick={handleSetFavorite}>
-        <IconStarOnus stroke={isFavorite ? colors.onus.orange : colors.onus.grey} color={isFavorite ? colors.onus.orange : ''} />
-    </div>
-}
-
-
+    return <div className="cursor-pointer flex items-center " onClick={handleSetFavorite}>
+        <IconStarOnus stroke={isFavorite ? colors.onus.orange : colors.onus.grey}
+            color={isFavorite ? colors.onus.orange : ''} />
+    </div>;
+};
 
 export default ChartOptions;

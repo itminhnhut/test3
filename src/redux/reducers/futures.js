@@ -1,6 +1,7 @@
 import {
     SET_FUTURES_FAVORITE_PAIRS,
     SET_FUTURES_MARKET_WATCH,
+    SET_OPEN_FUTURES_MARKET_WATCH,
     SET_FUTURES_USER_SETTINGS,
     SET_FUTURES_ORDER_ADVANCE_TYPES,
     SET_FUTURES_ORDER_TYPES,
@@ -10,7 +11,6 @@ import {
     SET_FUTURES_USE_SLTP,
     SET_FUTURES_ORDERS_LIST,
     SET_MULTI_FUTURES_MARKET_WATCH,
-    REMOVE_FUTURES_MARKET_WATCH,
     GET_FUTURES_SETTING,
     SET_FUTURES_SETTING
 } from 'redux/actions/types';
@@ -83,10 +83,9 @@ export default (state = initialState, { payload, type }) => {
             return { ...state, favoritePairs: payload }
         case SET_FUTURES_MARKET_WATCH:
             return { ...state, marketWatch: payload }
-        case REMOVE_FUTURES_MARKET_WATCH:
-            const _marketWatch = { ...state.marketWatch };
-            delete _marketWatch[payload];
-            return { ...state, marketWatch: _marketWatch }
+        case SET_OPEN_FUTURES_MARKET_WATCH:
+            return { ...state, openMarketWatch: payload }
+
         case SET_MULTI_FUTURES_MARKET_WATCH: {
             const data = payload || {};
             if (!state.marketWatch) {
@@ -101,9 +100,7 @@ export default (state = initialState, { payload, type }) => {
                     }
                 }
             }
-            ;
-
-            const newMarketWatch = { ...state.marketWatch, ...data }
+            const newMarketWatch = {...state.marketWatch, ...data}
             return { ...state, marketWatch: newMarketWatch }
         }
         case SET_FUTURES_USER_SETTINGS:

@@ -10,6 +10,8 @@ import { SupportCategories } from 'constants/faqHelper';
 import { useTranslation } from 'next-i18next';
 import SupportCenterHead from 'components/common/SupportCenterHead';
 import { useEffect } from 'react';
+import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
+
 
 const FaqArticle = (props) => {
     const router = useRouter()
@@ -17,6 +19,16 @@ const FaqArticle = (props) => {
     const {
         i18n: { language },
     } = useTranslation()
+    const [theme, , setTheme] = useDarkMode();
+
+    useEffect(() => {
+        const themeLocal = localStorage.getItem("theme");
+        if (themeLocal === "dark") {
+            setTheme(THEME_MODE.DARK);
+        } else {
+            setTheme(THEME_MODE.LIGHT);
+        }
+    }, [router?.query]);
 
     const renderAppHeader = () => {
         if (!isApp) return null

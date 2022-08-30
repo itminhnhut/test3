@@ -1,20 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber, getPriceColor } from 'redux/actions/utils';
 import { Share2 } from 'react-feather';
 import { IconArrowOnus } from "components/common/Icons";
 import colors from 'styles/colors'
+import Emitter from 'redux/actions/emitter';
+import { PublicSocketEvent } from 'redux/actions/const';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
-const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0 }) => {
-    if (!pairPrice?.lastPrice && !isTabHistory) return '-';
+const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0,mode }) => {
+    const [pairPrice, setPairPrice] = useState(null);
+    const [lastSymbol, setLastSymbol] = useState(null);
+    const _pairPrice = pairPrice || initPairPrice
+    const {symbol} = order
+    useEffect(() => {
+        if (order?.symbol !== lastSymbol) {
+            setLastSymbol(order?.symbol);
+            setPairPrice(null);
+        }
+    }, [order]);
+
+    useEffect(() => {
+        if (!symbol) return;
+        // ? Subscribe publicSocket
+        // ? Get Pair Ticker
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol, async (data) => {
+            if (symbol === data?.s && data?.p > 0) {
+                const _pairPrice = FuturesMarketWatch.create(data);
+                setPairPrice(_pairPrice);
+            }
+        });
+        return () => {
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
+        };
+    }, [symbol, mode]);
+
+    if (!_pairPrice?.lastPrice && !isTabHistory) return '-';
     // Lệnh đang mở, khi ước tính profit thì buy lấy giá bid, sell lấy giá ask
-
     let profit = 0
     if (isTabHistory) {
         profit = order?.profit
     } else {
-        if (order && pairPrice) {
-            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask, true);
+        if(order.symbol !== _pairPrice.symbol) return '-'
+        if (order && _pairPrice) {
+            profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? _pairPrice?.bid : _pairPrice?.ask, true);
         }
     }
 
@@ -24,9 +53,9 @@ const OrderProfit = ({ order, pairPrice, setShareOrderModal, className = '', isM
     return <div className='flex items-center w-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className} ${onusMode ? 'gap-[2px]' : ''}`}>
             {profit !== 0 ? <>
-                <div className={isMobile ? 'text-[16px] font-semibold leading-[1.375rem]' : ''}>
+                <div className={isMobile ? 'text-[1rem] font-semibold leading-[1.375rem]' : ''}>
                     {profit > 0 ? '+' : ''}
-                    {formatNumber(profit, decimal, 0, true)} {!isMobile && pairPrice?.quoteAsset}
+                    {formatNumber(profit, decimal, 0, true)} {!isMobile && _pairPrice?.quoteAsset}
                 </div>
                 <div className={isMobile ? 'flex items-center justify-end leading-[1.125rem] font-medium' : ''}>
                     {onusMode ?
