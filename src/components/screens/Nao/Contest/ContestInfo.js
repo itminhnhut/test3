@@ -9,7 +9,7 @@ import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/acti
 import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
 
-const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, quoteAsset }, ref) => {
+const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, quoteAsset, season }, ref) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
     const [userData, setUserData] = useState(null);
@@ -209,7 +209,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                     </CardNao>
                 </div>
             </section>
-            {showCreateTeamModal && <CreateTeamModal userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} />}
+            {showCreateTeamModal && <CreateTeamModal contest_id={contest_id} userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} />}
             {
                 !userData?.group_name && !previous && <div className="sm:hidden bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
                     <ButtonNao onClick={() => onShowCreate()} className="!rounded-md">{t('nao:contest:create_team')}</ButtonNao>
