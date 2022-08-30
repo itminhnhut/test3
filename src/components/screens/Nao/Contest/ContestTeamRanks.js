@@ -9,9 +9,9 @@ import { getS3Url, formatNumber } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 
-const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam }) => {
+const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset }) => {
     const [tab, setTab] = useState('volume');
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const { width } = useWindowSize()
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
@@ -88,7 +88,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
         <section className="contest_individual_ranks pt-[4.125rem]">
             <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-team-rank" >
-                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_team', { value: minVolumeTeam }) }}>
+                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_team', { value: minVolumeTeam[language] }) }}>
                 </div>
             </Tooltip>
             <div className="flex justify-between flex-wrap gap-4">
@@ -111,8 +111,8 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                         <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
                             <div className="flex justify-between flex-1 mb-4 gap-5">
                                 <div className="flex flex-col">
-                                    <TextLiner className="!text-[48px] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
-                                    <div className="sm:gap-1 flex flex-col">
+                                    <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
+                                    <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="text-lg font-semibold leading-8 uppercase flex items-center gap-2">
                                             <div>{item?.name}</div>
                                             {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}
@@ -120,15 +120,15 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                                         <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
                                     </div>
                                 </div>
-                                <div className="w-[6.375rem] h-[6.375rem] rounded-[50%]">
+                                <div className="w-[4.25rem] h-[4.25rem] rounded-[50%]">
                                     <ImageNao src={item?.avatar}
-                                        className="min-w-[6.375rem] min-h-[6.375rem] max-w-[6.375rem max-h-[6.375rem] rounded-[50%] object-cover" alt="" />
+                                        className="min-w-[4.25rem] min-h-[4.25rem] max-w-[4.25rem max-h-[4.25rem] rounded-[50%] object-cover" alt="" />
                                 </div>
                             </div>
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
                                     <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} VNDC</span>
+                                    <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                 </div>
                                 <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2"></div>
                                 {
@@ -183,7 +183,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
 
                                             <div className="flex items-center font-medium justify-between pt-2">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
-                                                <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
+                                                <span className="text-right">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                             </div>
                                             <div className="flex items-center font-medium justify-between pt-1">
                                                 <label className="leading-6 text-nao-grey">{t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}</label>
@@ -219,7 +219,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam })
                     <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column minWidth={150} className="text-nao-text capitalize" title={t('nao:contest:captain')} fieldName="leader_name" cellRender={renderLeader} />
-                    <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
+                    <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (${quoteAsset})`} decimal={0} fieldName="total_volume" />
 
                     {
                         tab === 'pnl'

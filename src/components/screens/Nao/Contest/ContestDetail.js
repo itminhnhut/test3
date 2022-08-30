@@ -23,7 +23,7 @@ const statusGroup = {
     PENDING: 0, ENABLE: 1
 }
 
-const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules }) => {
+const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, quoteAsset }) => {
     const context = useContext(AlertContext);
     const { t } = useTranslation();
     const { width } = useWindowSize()
@@ -231,7 +231,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
 
     return (
         <>
-            {showAddMemberModal && <AddMemberModal onClose={onAddMember} />}
+            {showAddMemberModal && <AddMemberModal onClose={onAddMember} contest_id={contest_id} />}
             <Modal onusMode={true} center={!isMobile} isVisible={true} onBackdropCb={onClose}
                 modalClassName="z-[99999]"
                 onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[979px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
@@ -313,7 +313,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     </div>
                                     <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
-                                        <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume')} (VNDC)</label>
+                                        <label className="text-sm text-nao-text leading-6 whitespace-nowrap">{t('nao:contest:volume')} ({quoteAsset})</label>
                                         <span className="font-semibold break-all text-right">{formatNumber(dataSource?.total_volume, 0)}</span>
                                     </div>
                                 </div>
@@ -367,7 +367,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                         </div>
                                                         <div className="flex items-center justify-between leading-6">
                                                             <div className="text-nao-grey">{t('nao:contest:volume')}</div>
-                                                            <span className="text-right">{formatNumber(item?.total_volume, 0)} VNDC</span>
+                                                            <span className="text-right">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                                         </div>
                                                         <div className="flex items-center justify-between leading-6">
                                                             <div className="text-nao-grey">{t('nao:contest:per_pnl')}</div>
@@ -396,7 +396,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <Column minWidth={200} ellipsis className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                             <Column visible={!previous} minWidth={isPending.group ? 100 : 120} title={t('common:status')} fieldName="status" cellRender={renderStatusMember} />
                             <Column visible={!isPending.group} minWidth={70} align="right" className="text-onus-grey" title={t('nao:contest:trades')} fieldName="total_order" />
-                            <Column visible={!isPending.group} minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (VNDC)`} decimal={0} fieldName="total_volume" />
+                            <Column visible={!isPending.group} minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (${quoteAsset})`} decimal={0} fieldName="total_volume" />
                             <Column visible={!isPending.group} minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                             <Column visible={isPending.group} minWidth={200} align="right" className="text-onus-grey underline cursor-pointer"
                                 fieldName="pnl" cellRender={renderActions} onCellClick={(e, item) => validatorLeader(item) && onActions(item, item?.rowIndex)} />

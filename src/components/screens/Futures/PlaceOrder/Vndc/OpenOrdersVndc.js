@@ -13,7 +13,7 @@ import { FilterTradeOrder } from 'components/screens/Futures/FilterTradeOrder';
 
 import { useSelector } from 'react-redux';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
+import { ApiStatus, DefaultFuturesFee } from 'redux/actions/const';
 
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
@@ -227,7 +227,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
     const renderLiqPrice = (row, returnNumber) => {
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
-        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - 0.1 / 100))
+        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.Nami))
         if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
         return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, 0, 0, false) : '-'
     }

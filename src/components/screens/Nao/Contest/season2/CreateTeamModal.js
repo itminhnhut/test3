@@ -19,7 +19,7 @@ const initMember = {
     member2: '',
     member3: ''
 }
-const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
+const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_id }) => {
     const { t } = useTranslation();
     const { width } = useWindowSize()
     const context = useContext(AlertContext);
@@ -137,7 +137,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_CHECK_MEMBER,
                 options: { method: 'GET' },
-                params: { contest_id: 5, onus_user_id: id },
+                params: { contest_id: contest_id, onus_user_id: id },
             });
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data)
@@ -182,7 +182,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail }) => {
             leader_name: userData?.name,
             name: name.toUpperCase(),
             list_member_id: Object.keys(member).map(rs => member[rs]),
-            contest_id: 5
+            contest_id: contest_id
         }
         try {
             const { data, status } = await fetchApi({
