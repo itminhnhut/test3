@@ -6,6 +6,8 @@ import { getS3Url } from 'redux/actions/utils';
 import Countdown from 'react-countdown';
 import { useRouter } from 'next/router';
 import { Popover, Transition } from '@headlessui/react';
+import { Check } from 'react-feather';
+import colors from 'styles/colors';
 
 const ContesRules = ({ inHome = false, previous, season, start, end, seasons, title, rules, total_rewards }) => {
     const { t } = useTranslation();
@@ -68,7 +70,7 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
     };
 
     const current = seasons[seasons.length - 1];
-    const seasonsFilter = seasons?.filter(e => e.season !== season && e?.season !== current?.season);
+    const seasonsFilter = seasons?.filter(e => e?.season !== current?.season);
     const subTitle = seasons?.find(e => e.season === season)?.title ?? title;
 
     return (
@@ -88,7 +90,7 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
                             :
                             <ButtonNao onClick={() => router.push(rules)} className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:detail_rules')}</ButtonNao>
                     }
-                    <DropdownPreSeason t={t} seasonsFilter={seasonsFilter} router={router} />
+                    <DropdownPreSeason t={t} seasonsFilter={seasonsFilter} router={router} season={season} />
                     <CardNao customHeight={'sm:min-h-[40px] lg:min-h-[40] min-h-[50px]'} noBg
                         className="flex !flex-row !justify-center md:!justify-start !py-3 items-center gap-3 sm:!bg-none flex-wrap">
                         {renderCountDown()}
@@ -103,7 +105,7 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
 };
 
 
-const DropdownPreSeason = ({ t, seasonsFilter, router }) => {
+const DropdownPreSeason = ({ t, seasonsFilter, router, season }) => {
     return (
         <Popover className="relative flex">
             {({ open, close }) => (
@@ -126,12 +128,13 @@ const DropdownPreSeason = ({ t, seasonsFilter, router }) => {
                             className="absolute top-12 left-0 z-50 bg-nao-bg3 rounded-xl w-full">
                             <div
                                 className="py-1 shadow-onlyLight font-medium text-sm flex flex-col rounded-xl overflow-hidden">
-                                {seasonsFilter.map((season, index) => (
+                                {seasonsFilter.map((item, index) => (
                                     <div onClick={() => {
-                                        router.push(`/contest/${season.season}`)
+                                        router.push(`/contest/${item.season}`)
                                         close()
-                                    }} key={index} className="px-4 py-2 hover:bg-onus-bg2 cursor-pointer">
-                                        {t('nao:contest:season', { value: season.season })}
+                                    }} key={index} className="px-4 py-2 hover:bg-onus-bg2 cursor-pointer flex items-center justify-between">
+                                        {t('nao:contest:season', { value: item.season })}
+                                        {item.season === season && <Check size={14} color={colors.onus.base} />}
                                     </div>
                                 ))}
                             </div>
