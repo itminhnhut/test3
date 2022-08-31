@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { formatNumber, getPriceColor } from 'redux/actions/utils';
 import Emitter from 'redux/actions/emitter';
-import { PublicSocketEvent } from 'redux/actions/const';
+import { FuturesOrderEnum, PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { getProfitVndc, renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 
-const CloseProfit = ({length ,order, initPairPrice, doShow, calculatePnL, isMobile, isTabHistory, onusMode = false, decimal = 0, mode, index }) => {
+const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMobile, isTabHistory, onusMode = false, decimal = 0, mode, index }) => {
     const [pairPrice, setPairPrice] = useState(null);
     const [lastSymbol, setLastSymbol] = useState(null);
     const _pairPrice = pairPrice || initPairPrice
     const publicSocket = useSelector((state) => state.socket.publicSocket);
-    const { t } = useTranslation();
-
+    const { t, i18n: { language } } = useTranslation();
     const { symbol } = order
     useEffect(() => {
         if (order?.symbol !== lastSymbol) {
@@ -48,7 +47,7 @@ const CloseProfit = ({length ,order, initPairPrice, doShow, calculatePnL, isMobi
     const ratio = profit / order.margin;
     const percent = formatNumber(((onusMode ? Math.abs(ratio) : ratio) * 100), 2, 0, true);
 
-    useEffect(() => {calculatePnL({[`${order.displaying_id}`]: profit})}, [pairPrice])
+    useEffect(() => { calculatePnL({ [`${order.displaying_id}`]: profit }) }, [pairPrice])
 
     return (
         <div className={`${index != length - 1 && 'border-b items-center h-[66px]'} border-onus-bg2 flex w-full h-[50px] items-end`}>
@@ -72,7 +71,12 @@ const CloseProfit = ({length ,order, initPairPrice, doShow, calculatePnL, isMobi
                 <div className="flex w-full justify-between">
                     <div className="flex w-full justify-start">
                         <div className="text-onus-green font-medium text-xs leading-[18px]">
-                            {`${order.side === 'Buy' ? t('futures:buy_order') : t('futures:sell_order')} / ${order.type === 'Market' ? t('futures:market') : t('futures:limit')}`}
+                            {/* {`${order.side === 'Buy' ? t('futures:buy_order') : t('futures:sell_order')} / ${order.type === 'Market' ? t('futures:market') : t('futures:limit')}`} */}
+                            <div
+                                className={`text-xs font-medium leading-[18px] ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
+                                <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
+                                <span>{renderCellTable('type', order, t, language)}</span>
+                            </div>
                         </div>
                         <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-darkBlue-5">
                             &nbsp;· ID #{order.displaying_id}
