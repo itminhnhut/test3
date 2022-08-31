@@ -224,7 +224,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         }} active={showPositionList} />
                     </div>
                 </div>
-                <div className="w-full mt-3" style={{ display: `${showPositionList ? 'block' : 'none'}` }}>
+                <div className="w-full mt-3 max-h-72 overflow-y-auto scrollbar-nao" style={{ display: `${showPositionList ? 'block' : 'none'}` }}>
                     {state?.orders && renderPositionList()}
                 </div>
                 <div className="w-full flex justify-between mt-8 gap-[10px] h-12">

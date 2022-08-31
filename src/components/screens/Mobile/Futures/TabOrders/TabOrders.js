@@ -164,8 +164,6 @@ const TabOrders = memo(({
         return orderListFilter.orderList.length > 0 ? button : null
     }
 
-    console.log('LIST', orderListFilter.orderList.length)
-
     return (
         <div className={`h-full ${isFullScreen ? 'overflow-hidden' : ''}`}>
             {openDetailModal &&
