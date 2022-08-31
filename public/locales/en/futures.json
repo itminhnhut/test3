@@ -361,6 +361,7 @@
         "set_as_default_trading_fee": "Set as default trading fee",
         "close_all_positions": {
             "title": "Close all positions",
+            "title_pending": "Cancel all",
             "processing": "Closing",
             "done": "Completed",
             "close_type": {
