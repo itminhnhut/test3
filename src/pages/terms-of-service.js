@@ -11,7 +11,8 @@ const Terms = () => {
     const dispath = useDispatch();
 
     useEffect(() => {
-        document.body.classList.add('hidden-scrollbar');
+        // document.body.classList.add('hidden-scrollbar');
+        document.body.classList.add('no-scrollbar');
         // document.body.classList.add('!bg-onus');
 
         const intervalReloadData = setInterval(() => {
