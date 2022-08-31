@@ -408,7 +408,7 @@ const OrderDetail = ({
                     <Span>{renderFee(order, 'close_order')}</Span>
                 </Row>
                 <Row>
-                    <Label>{t('futures:mobile:realized_pnl')}</Label>
+                    <Label>PNL</Label>
                     <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
                         {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
                 </Row>
@@ -435,7 +435,7 @@ const OrderDetail = ({
                     isTabHistory
                     &&
                     <Row>
-                        <Label>{t('futures:mobile:realized_pnl')}</Label>
+                        <Label>PNL</Label>
                         <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
                             {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
                     </Row>}
