@@ -19,6 +19,8 @@ import useApp from 'hooks/useApp';
 import { getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
 import React from "react";
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
 
 
 const Support = () => {
@@ -27,7 +29,22 @@ const Support = () => {
     const [lastedArticles, setLastedArticles] = useState([])
     const [highlightedArticles, setHighlightedArticles] = useState([])
     const [currentTheme, onThemeSwitch, setTheme] = useDarkMode();
+    const dispath = useDispatch();
 
+    React.useEffect(() => {
+        document.body.classList.add('hidden-scrollbar');
+        // document.body.classList.add('!bg-onus');
+
+        const intervalReloadData = setInterval(() => {
+            dispath(reloadData());
+        }, 5 * 60 * 1000);
+
+        return () => {
+            document.body.classList.remove('hidden-scrollbar');
+            // document.body.classList.remove('bg-onus');
+            clearInterval(intervalReloadData);
+        };
+    }, []);
 
     React.useEffect(() => {
         const themeInLocalStorage = localStorage.getItem("theme");

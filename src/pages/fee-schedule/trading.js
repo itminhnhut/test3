@@ -23,6 +23,9 @@ import Skeletor from 'components/common/Skeletor';
 import SvgCrown from 'components/svg/SvgCrown';
 import Empty from 'components/common/Empty';
 
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
+
 const INITIAL_STATE = {
     tabIndex: 0,
     loading: false,
@@ -54,6 +57,22 @@ const TradingFee = () => {
     // Use hooks
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
+    const dispath = useDispatch();
+
+    useEffect(() => {
+        document.body.classList.add('hidden-scrollbar');
+        // document.body.classList.add('!bg-onus');
+
+        const intervalReloadData = setInterval(() => {
+            dispath(reloadData());
+        }, 5 * 60 * 1000);
+
+        return () => {
+            document.body.classList.remove('hidden-scrollbar');
+            // document.body.classList.remove('bg-onus');
+            clearInterval(intervalReloadData);
+        };
+    }, []);
 
     // Helper
     const getFuturesFeeConfigs = async () => {
