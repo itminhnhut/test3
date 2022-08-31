@@ -51,7 +51,7 @@ const CloseProfit = ({length ,order, initPairPrice, doShow, calculatePnL, isMobi
     useEffect(() => {calculatePnL({[`${order.displaying_id}`]: profit})}, [pairPrice])
 
     return (
-        <div className={`h-[60px] ${index != length - 1 && 'border-b'} border-onus-bg2 flex items-center w-full`}>
+        <div className={`${index != length - 1 && 'border-b items-center h-[66px]'} border-onus-bg2 flex w-full h-[50px] items-end`}>
             <div className="w-full">
                 <div className="flex w-full justify-between">
                     <div className="font-semibold text-sm leading-[22px]">

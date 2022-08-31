@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function useOnScreen(ref, rootMargin = '0px') {
     // State and setter for storing whether element is visible
@@ -13,6 +13,9 @@ function useOnScreen(ref, rootMargin = '0px') {
                 rootMargin
             }
         )
+        if(!React.isValidElement(observer)) {
+            return
+        }
         if (ref.current) {
             observer.observe(ref.current)
         }
