@@ -35,8 +35,9 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
             if (scrollTop + clientHeight === scrollHeight) {
                 setIsMore(false)
             } else {
-                if (isMore) return
+                if (isMore) return setTimeout(() => setIsMore(false), 3000)
                 setIsMore(true)
+               
             }
         }
     };
@@ -253,7 +254,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                 {state?.orders.length > 5 && <div className='text-onus-base w-full flex justify-center h-4 items-end'>
                     {showPositionList && isMore && IsMoreIcon}
                 </div>}
-                <div className={`w-full flex justify-between gap-[10px] mt-8 h-12 ${state?.orders.length > 5 && '!mt-6'}`}>
+                <div className="w-full flex justify-between gap-[10px] mt-8 h-12">
                     <Button
                         onusMode
                         onClick={() => doShow('choose')}
@@ -390,7 +391,8 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
 
 export default CloseOrdersByCondtionMobile
 
-const IsMoreIcon = <svg width="8" height="5" viewBox="0 0 8 5" fill="#0068FF" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4.37796 4.81356C4.17858 5.04379 3.82142 5.04379 3.62204 4.81356L0.819372 1.57733C0.538934 1.2535 0.768961 0.749999 1.19734 0.749999L6.80267 0.75C7.23104 0.75 7.46107 1.2535 7.18063 1.57733L4.37796 4.81356Z" fill="#8492A7" />
+const IsMoreIcon = <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6.28138 5.7215C6.12551 5.87578 5.87449 5.87578 5.71862 5.7215L0.629212 0.684296C0.375223 0.432913 0.553236 -1.08813e-06 0.910592 -1.05689e-06L11.0894 -1.67029e-07C11.4468 -1.35788e-07 11.6248 0.432913 11.3708 0.684297L6.28138 5.7215Z" fill="#8492A7"/>
 </svg>
+
 
