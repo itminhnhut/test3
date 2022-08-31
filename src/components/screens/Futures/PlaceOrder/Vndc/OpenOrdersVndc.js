@@ -27,7 +27,7 @@ import Link from 'next/link';
 import OrderClose from './OrderClose';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const publicSocket = useSelector((state) => state.futures.publicSocket)
     const marketWatch = useSelector((state) => state.futures.marketWatch)
@@ -67,14 +67,14 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             {
                 name: t('futures:order_table:type'),
                 selector: (row) => row?.type,
-                cell: (row) => renderCellTable('type', row),
+                cell: (row) => renderCellTable('type', row, t, language),
                 sortable: false,
             },
             {
                 name: t('futures:side'),
                 selector: (row) => row?.side,
                 cell: (row) => <span
-                    className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row)}</span>,
+                    className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row, t, language)}</span>,
                 sortable: false,
             },
             {

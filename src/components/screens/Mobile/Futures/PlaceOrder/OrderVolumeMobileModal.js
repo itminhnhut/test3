@@ -15,7 +15,7 @@ const initValue = 100000;
 const OrderVolumeMobileModal = (props) => {
     const { onClose, size, decimal, getMaxQuoteQty, pairConfig,
         type, onConfirm, availableAsset, side, pairPrice, price,
-        leverage, getValidator, quoteQty
+        leverage, getValidator, quoteQty, isAuth
     } = props;
     const onusMode = true
     const { t } = useTranslation();
@@ -28,7 +28,7 @@ const OrderVolumeMobileModal = (props) => {
     }, [pairConfig])
 
     const maxQuoteQty = useMemo(() => {
-        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true)
+        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth)
         const max = Math.min(leverage * availableAsset, _maxQuoteQty)
         return floor(max, decimal)
     }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig])

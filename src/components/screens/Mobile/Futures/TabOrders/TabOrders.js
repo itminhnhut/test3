@@ -26,7 +26,7 @@ const TabOrders = memo(({
     scrollSnap,
     setForceRender,
     forceRender,
-    isFullScreen
+    isFullScreen,
 }) => {
     const { t } = useTranslation();
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);

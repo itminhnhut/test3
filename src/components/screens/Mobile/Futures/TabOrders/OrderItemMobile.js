@@ -14,6 +14,7 @@ import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { useSelector } from 'react-redux';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import classnames from 'classnames'
+import SortIcon from 'components/screens/Mobile/SortIcon';
 
 const OrderItemMobile = ({
     order,
@@ -29,7 +30,7 @@ const OrderItemMobile = ({
     collapse,
     setCollapse
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const isTabHistory = tab === FUTURES_RECORD_CODE.orderHistory;
     const isTabOpen = tab === FUTURES_RECORD_CODE.openOrders;
     const isTabPosition = tab === FUTURES_RECORD_CODE.position;
@@ -114,6 +115,8 @@ const OrderItemMobile = ({
                 return t('futures:order_history:hit_tp');
             case 3:
                 return t('futures:order_history:liquidate');
+            case 6:
+                return t('futures:mobile:adjust_margin:close_partially');
             default:
                 return '';
         }
@@ -166,15 +169,15 @@ const OrderItemMobile = ({
 
     const renderQuoteprice = () => {
         return order?.side === VndcFutureOrderType.Side.BUY
-            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol}/>
-            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol}/>;
+            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol} />
+            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol} />;
     };
 
     const _renderLastPrice = (isTabHistory) => {
         if (isTabHistory) {
             return order?.close_price ? formatNumber(order?.close_price, decimalScalePrice, 0, true) : '-';
         } else {
-            return <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order?.symbol}/>;
+            return <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order?.symbol} />;
         }
     };
 
@@ -196,6 +199,15 @@ const OrderItemMobile = ({
             <div className="flex items-center justify-end space-x-1">
                 <span>{ratio}</span>
                 <img src={getS3Url(`/images/coins/64/${assetId}.png`)} width={16} height={16} />
+            </div>
+        )
+    }
+
+    const renderMargin = () => {
+        return (
+            <div className="flex items-center justify-end space-x-1" onClick={() => actions('modal', 'edit-margin')}>
+                <span>{t('futures:margin')}</span>
+                <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
             </div>
         )
     }
@@ -238,8 +250,10 @@ const OrderItemMobile = ({
                     </div>
                     <div
                         className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
-                        <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
-                        <span>{renderCellTable('type', order)}</span>
+                        {order?.metadata?.dca_order_metadata && orderStatus.pending && <span>{t('futures:mobile:adjust_margin:added_volume')}&nbsp;/&nbsp;</span>}
+                        {order?.metadata?.partial_close_metadata && orderStatus.pending && <span>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</span>}
+                        <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
+                        <span>{renderCellTable('type', order, t, language)}</span>
                     </div>
 
                 </div>
@@ -254,8 +268,8 @@ const OrderItemMobile = ({
                             <div className="text-xs text-right" onClick={() => canShare && actions('modal', 'share')}>
                                 <div className="text-xs font-medium text-onus-green float-right">
                                     <OrderProfit key={order.displaying_id} onusMode={true} className="flex flex-col"
-                                                 order={order} initPairPrice={dataMarketWatch} isTabHistory={isTabHistory}
-                                                 isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}  mode={mode} />
+                                        order={order} initPairPrice={dataMarketWatch} isTabHistory={isTabHistory}
+                                        isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2} mode={mode} />
                                 </div>
                             </div>
                         </>
@@ -297,7 +311,7 @@ const OrderItemMobile = ({
                             value={order?.order_value ? formatNumber(order?.order_value, decimalSymbol, 0, true) : '-'}
                         />
                         <OrderItem
-                            label={t(isTabHistory ? 'futures:mobile:reason_close' : 'futures:margin')}
+                            label={isTabHistory ? t('futures:mobile:reason_close') : renderMargin()}
                             className="py-[2px] space-y-[2px] text-right mb-2"
                             value={isTabHistory ? renderReasonClose(order) : order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                         />
@@ -327,11 +341,13 @@ const OrderItemMobile = ({
                                 order.status === VndcFutureOrderType.Status.ACTIVE &&
                                 <Button
                                     className="bg-onus-bg3 text-onus-gray !h-[36px]"
-                                    onClick={() => actions('modal', 'edit-margin')}> {t('futures:mobile.adjust_margin.button_title')}</Button>
+                                    onClick={() => actions('modal', 'add-vol')}> {t('futures:mobile:adjust_margin:added_volume')}</Button>
                             }
-                            <Button
-                                className="bg-onus-bg3 text-onus-gray !h-[36px]"
-                                onClick={() => actions('modal', 'edit')}> {t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}</Button>
+                            {!((order?.metadata?.dca_order_metadata || order?.metadata?.partial_close_metadata) && orderStatus.pending) &&
+                                <Button
+                                    className="bg-onus-bg3 text-onus-gray !h-[36px]"
+                                    onClick={() => actions('modal', 'edit')}> {t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}</Button>
+                            }
                             <Button
                                 className="bg-onus-bg3 text-onus-gray !h-[36px]"
                                 onClick={() => actions('delete')}>{t('common:close')}</Button>
@@ -367,9 +383,9 @@ const Label = styled.div.attrs({
 })``;
 
 const Button = styled.div.attrs({
-    className: `text-onus-grey bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-semibold`
+    className: `text-onus-grey bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-semibold w-full`
 })`
-  width: calc(50% - 4px)
+  ${'' /* width: calc(50% - 4px) */}
 `;
 
 export const OrderItem = (props) => {
@@ -385,7 +401,8 @@ export const OrderItem = (props) => {
                 {dropdown ?
                     <div className="flex items-center space-x-1 justify-end">
                         <Label>{label} </Label>
-                        <ChevronDown size={12} color={colors.onus.grey} />
+                        <SortIcon size={16} color={colors.onus.grey} activeColor={colors.onus.grey} />
+                        {/* <ChevronDown size={12} color={colors.onus.grey} /> */}
                     </div>
                     :
                     <Label>{label} </Label>
