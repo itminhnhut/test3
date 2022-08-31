@@ -29,7 +29,7 @@ export const seasons = [
         contest_id: 6, title: 'third',
         minVolumeInd: { vi: '50,000 USDT', en: '50,000 USDT' },
         minVolumeTeam: { vi: '50,000 USDT', en: '50,000 USDT' },
-        rules: 'https://goonus.io/onus-x-nami-dua-top-giao-dich-onus-futures-mua-03',
+        rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-usdt-nami-championship-mua-1',
         total_rewards: '30,000 USDT', quoteAsset: 'USDT'
     },
 ]
