@@ -115,6 +115,8 @@ const OrderItemMobile = ({
                 return t('futures:order_history:hit_tp');
             case 3:
                 return t('futures:order_history:liquidate');
+            case 5:
+                return t('futures:mobile:adjust_margin:added_volume');
             case 6:
                 return t('futures:mobile:adjust_margin:close_partially');
             default:
@@ -212,6 +214,17 @@ const OrderItemMobile = ({
         )
     }
 
+    const renderStatus = (row) => {
+        const bg = row?.reason_close_code === 5 ? 'text-onus-green' : orderStatus.cancelled ? 'text-onus-grey' : 'text-onus-orange bg-onus-orange/[0.1]'
+        const text = row?.reason_close_code === 5 ? 'adjust_margin:order_completed' : orderStatus.cancelled ? 'cancelled_order' : 'pending_order'
+        return (
+            <div
+                className={`bg-onus-bg3 py-1 px-3 rounded-[20px] font-semibold text-xs ${bg}`}>
+                {t(`futures:mobile:${text}`)}
+            </div>
+        )
+    }
+
     const isModify = order?.sl > 0 || order?.tp > 0;
     const isShortcut = mode === modeOrders.shortcut;
     return (
@@ -258,11 +271,8 @@ const OrderItemMobile = ({
 
                 </div>
                 <div className="flex items-center">
-                    {orderStatus.cancelled || orderStatus.pending ?
-                        <div
-                            className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-onus-orange bg-onus-orange/[0.1]'}`}>
-                            {t(`futures:mobile:${orderStatus.cancelled ? 'cancelled_order' : 'pending_order'}`)}
-                        </div>
+                    {orderStatus.cancelled || orderStatus.pending || order?.reason_close_code === 5 ?
+                        renderStatus(order)
                         :
                         <>
                             <div className="text-xs text-right" onClick={() => canShare && actions('modal', 'share')}>
