@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect } from 'react';
+import React, { useState, memo, useEffect, useRef } from 'react';
 import Modal from 'components/common/ReModal';
 import { useTranslation } from 'next-i18next';
 import Button from "components/common/Button";
@@ -10,6 +10,8 @@ import CloseProfit from 'components/screens/Mobile/Futures/CloseOrders/CloseProf
 import numeral from 'numeral';
 import { DangerIcon } from 'src/components/common/Icons';
 import RadioBox from 'components/common/RadioBox';
+import useOnScreen from 'hooks/useOnScreen';
+import { set } from 'lodash';
 
 const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair, tab }) => {
     const { t } = useTranslation();
@@ -22,6 +24,22 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
     const [state, setState] = useState({ isLoading: false, orders: null })
     const [PnLObject, setPnLObject] = useState({})
     const [totalPnL, setTotalPnL] = useState("")
+    const [isMore, setIsMore] = useState(false)
+
+    const listInnerRef = useRef()
+
+    const onScroll = () => {
+        if (state?.orders?.length <= 5) return
+        if (listInnerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+            if (scrollTop + clientHeight === scrollHeight) {
+                setIsMore(false)
+            } else {
+                if (isMore) return
+                setIsMore(true)
+            }
+        }
+    };
 
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
@@ -42,6 +60,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
             });
             if (response.status === 'ok' && response.data) {
                 setState({ orders: response.data, isLoading: false })
+                if (response.data.length > 5) setIsMore(true)
             }
         } catch (error) {
             console.log('Error when get orders by close type', error)
@@ -173,11 +192,11 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
             >
                 <div>
                     {types.map((closeType, index) => (
-                        <div className={`h-12 rounded-md mt-2 bg-onus-bg flex items-center w-full py-3 px-4 justify-between ${closeType.type === type && '!border-onus-base border' }`} onClick={() => setType(closeType.type)}>
+                        <div className={`h-12 rounded-md mt-2 bg-onus-bg flex items-center w-full py-3 px-4 justify-between ${closeType.type === type && '!border-onus-base border'}`} onClick={() => setType(closeType.type)}>
                             <div className="font-normal text-base leading-6">
                                 {closeType.value}
                             </div>
-                           
+
                         </div>
                     ))}
                     <Button
@@ -186,7 +205,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         type='primary'
                         componentType='button'
                         title={t(`futures:mobile.close_all_positions.preview`)}
-                        className={`!rounded-md text-nao-white! !h-12 mt-8 !text-base !font-semibold !leading-[22px] !tracking-[-0.02em] ${!type &&  '!bg-onus-gray !dark:bg-darkBlue-3 opacity-30'}`}
+                        className={`!rounded-md text-nao-white! !h-12 mt-8 !text-base !font-semibold !leading-[22px] !tracking-[-0.02em] ${!type && '!bg-onus-gray !dark:bg-darkBlue-3 opacity-30'}`}
                     />
                 </div>
             </Modal>
@@ -224,10 +243,17 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         }} active={showPositionList} />
                     </div>
                 </div>
-                <div className="w-full mt-3 max-h-72 overflow-y-auto scrollbar-nao" style={{ display: `${showPositionList ? 'block' : 'none'}` }}>
+                <div className="w-full mt-2 max-h-[329px] overflow-y-auto scrollbar-nao"
+                    style={{ display: `${showPositionList ? 'block' : 'none'}` }}
+                    ref={listInnerRef}
+                    onScroll={onScroll}
+                >
                     {state?.orders && renderPositionList()}
                 </div>
-                <div className="w-full flex justify-between mt-8 gap-[10px] h-12">
+                {state?.orders.length > 5 && <div className='text-onus-base w-full flex justify-center h-4 items-end'>
+                    {showPositionList && isMore && IsMoreIcon}
+                </div>}
+                <div className={`w-full flex justify-between gap-[10px] mt-8 h-12 ${state?.orders.length > 5 && '!mt-6'}`}>
                     <Button
                         onusMode
                         onClick={() => doShow('choose')}
@@ -298,9 +324,12 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
             const symbol = allPairConfigs.find(rs => rs.symbol === order.symbol);
             const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
             const isVndcFutures = symbol?.quoteAsset === 'VNDC';
-
             return (
-                <div key={order.displaying_id} style={{ display: `${showPositionList && state?.orders?.length > 0 ? 'block' : 'none'}` }}>
+                <div
+                    key={order.displaying_id}
+                    style={{ display: `${showPositionList && state?.orders?.length > 0 ? 'block' : 'none'}` }}
+                // ref={index === state?.orders?.length - 1 ? ref : undefined}
+                >
                     <CloseProfit key={order.displaying_id} onusMode={true} className="flex flex-col" index={index} length={state?.orders?.length} doShow={() => doShow('confirm', type)} calculatePnL={calculatePnL}
                         order={order} initPairPrice={dataMarketWatch} isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
                     />
@@ -360,3 +389,8 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
 })
 
 export default CloseOrdersByCondtionMobile
+
+const IsMoreIcon = <svg width="8" height="5" viewBox="0 0 8 5" fill="#0068FF" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4.37796 4.81356C4.17858 5.04379 3.82142 5.04379 3.62204 4.81356L0.819372 1.57733C0.538934 1.2535 0.768961 0.749999 1.19734 0.749999L6.80267 0.75C7.23104 0.75 7.46107 1.2535 7.18063 1.57733L4.37796 4.81356Z" fill="#8492A7" />
+</svg>
+
