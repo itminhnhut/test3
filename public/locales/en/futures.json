@@ -285,7 +285,8 @@
             "closed_volume": "Closed volume",
             "added_volume_2": "Added volume",
             "partially_closed_success_message": "your partial position have been closed successfully",
-            "remaining_volume": "Remaining volume"
+            "remaining_volume": "Remaining volume",
+            "order_completed": "Completed"
         },
         "transaction_histories": {
             "id": "ID",

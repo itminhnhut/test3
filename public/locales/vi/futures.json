@@ -285,7 +285,8 @@
             "closed_volume": "Khối lượng đóng",
             "added_volume_2": "Khối lượng tăng thêm",
             "partially_closed_success_message": "Bạn đã đóng một phần lệnh thành công",
-            "remaining_volume": "Khối lượng còn lại"
+            "remaining_volume": "Khối lượng còn lại",
+            "order_completed": "Lệnh hoàn tất"
         },
         "transaction_histories": {
             "id": "Id",
