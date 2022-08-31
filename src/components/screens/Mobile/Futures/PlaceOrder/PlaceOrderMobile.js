@@ -5,7 +5,7 @@ import OrderTPMobile from './OrderTPMobile';
 import OrderSLMobile from './OrderSLMobile';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType, getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { FuturesOrderTypes as OrderTypes, FuturesOrderTypes } from 'redux/reducers/futures';
 import OrderTypeMobile from './OrderTypeMobile';
 import OrderMarginMobile from './OrderMarginMobile';
@@ -102,34 +102,6 @@ const PlaceOrder = ({
         };
     }, [pairConfig]);
 
-    const getMaxQuoteQty = (price, type, side, leverage, availableAsset, pairPrice, pairConfig, isQuoteQty) => {
-        let maxBuy = 0;
-        let maxSell = 0;
-        let _price = price;
-        if (Math.trunc(availableAsset) > 0) {
-            if ([OrderTypes.Limit, OrderTypes.StopMarket, OrderTypes.StopLimit].includes(type) && price) {
-                maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : price);
-                maxSell = maxBuy;
-            } else if ([OrderTypes.Market].includes(type)) {
-                price = side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
-                maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : pairPrice?.ask);
-                maxSell = availableAsset / ((1 / leverage) + DefaultFuturesFee.NamiFrameOnus) / (isQuoteQty ? 1 : pairPrice?.bid);
-            }
-        }
-        const lotSize =
-            pairConfig?.filters?.find((o) =>
-                [
-                    FuturesOrderTypes.Market,
-                    FuturesOrderTypes.StopMarket,
-                ].includes(type)
-                    ? o?.filterType === 'MARKET_LOT_SIZE'
-                    : o?.filterType === 'LOT_SIZE'
-            ) || {};
-        const _maxConfig = lotSize?.maxQty * (isQuoteQty ? price : 1); //maxConfig quoteQty
-        const _maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
-        return isAuth ? Math.min(_maxConfig, _maxQty) : _maxConfig;
-    };
-
     useEffect(() => {
         if (typeof window !== undefined) {
             const search = new URLSearchParams(window.location.search);
@@ -143,9 +115,9 @@ const PlaceOrder = ({
                         emitWebViewEvent('login');
                     },
                     null, {
-                        confirmTitle: t('futures:mobile.invalid_session_button'),
-                        hideCloseButton: true
-                    }
+                    confirmTitle: t('futures:mobile.invalid_session_button'),
+                    hideCloseButton: true
+                }
                 );
             }
         }
@@ -193,7 +165,7 @@ const PlaceOrder = ({
 
     const onChangeQuoteQty = (price, leverage) => {
         const minQuoteQty = pairConfig?.filters.find(item => item.filterType === 'MIN_NOTIONAL')?.notional ?? 100000;
-        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, _pairPrice, pairConfig, true);
+        const maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, _pairPrice, pairConfig, true, isAuth);
         let _quoteQty = +Number(maxQuoteQty * (initPercent / 100))
             .toFixed(decimalSymbol);
         // let _quoteQty = minQuoteQty
@@ -543,7 +515,7 @@ const PlaceOrder = ({
                     <OrderInput>
                         <div className="flex flex-row justify-between">
                             <OrderTypeMobile type={type} setType={setType}
-                                             orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures}/>
+                                orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
 
                             <OrderLeverage
                                 leverage={leverage} setLeverage={setLeverage}
@@ -558,7 +530,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     {!collapse &&
                         <OrderInput>
-                            <SideOrder side={side} setSide={setSide}/>
+                            <SideOrder side={side} setSide={setSide} />
                         </OrderInput>
                     }
                     <OrderInput data-tut="order-volume">
@@ -576,6 +548,7 @@ const PlaceOrder = ({
                             leverage={leverage}
                             availableAsset={availableAsset}
                             getMaxQuoteQty={getMaxQuoteQty}
+                            isAuth={isAuth}
                         />}
                         <OrderVolumeMobile
                             size={size} setSize={setSize} decimal={decimalSymbol}
@@ -615,7 +588,7 @@ const PlaceOrder = ({
                     </OrderInput>
                     <OrderInput>
                         <OrderMarginMobile marginAndValue={marginAndValue} pairConfig={pairConfig}
-                                           availableAsset={availableAsset} decimal={decimalSymbol}/>
+                            availableAsset={availableAsset} decimal={decimalSymbol} />
                     </OrderInput>
                     <OrderInput data-tut="order-button">
                         <OrderButtonMobile

@@ -11,10 +11,11 @@ import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus, DefaultFuturesFee, FuturesOrderEnum } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
-import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
 import EditSLTPVndcMobile from './EditSLTPVndcMobile';
 import MiniTickerData from 'components/screens/Futures/MiniTickerData';
 import CurrencyPopup from 'components/screens/Mobile/Futures/CurrencyPopup';
+import ModifyOrder from './ModifyOrder';
+import CloseOrderModalMobile from './CloseOrderModalMobile';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -30,7 +31,7 @@ const OrderOpenDetail = ({
     decimalSymbol = 0,
     isVndcFutures
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const context = useContext(AlertContext);
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -50,11 +51,10 @@ const OrderOpenDetail = ({
     const [showEditMargin, setShowEditMargin] = useState(false);
     const rowData = useRef(null);
     const [loading, setLoading] = useState(false);
-    const [openShareModal, setOpenShareModal] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const [visibleModalFees, setVisibleModalFees] = useState(false);
-
+    const [openCloseOrderModal, setOpenCloseOrderModal] = useState(false);
 
     const subscribeFuturesSocket = (symbol) => {
         if (!publicSocket) {
@@ -101,27 +101,28 @@ const OrderOpenDetail = ({
 
     const onActions = (isDiff) => {
         if (!isDiff) {
-            context.alert.show('warning',
-                t('futures:close_order:modal_title', { value: order?.displaying_id }),
-                t('futures:close_order:confirm_message', { value: order?.displaying_id }),
-                null,
-                () => {
-                    const params = {
-                        displaying_id: order?.displaying_id,
-                        special_mode: 1
-                    };
-                    fetchOrder('DELETE', params, () => {
-                        context.alert.show('success', t('common:success'),
-                            t('futures:close_order:request_successfully', { value: order?.displaying_id }),
-                            undefined,
-                            undefined,
-                            () => {
-                                if (onClose) onClose();
-                            }
-                        );
-                    });
-                }
-            );
+            setOpenCloseOrderModal(true)
+            // context.alert.show('warning',
+            //     t('futures:close_order:modal_title', { value: order?.displaying_id }),
+            //     t('futures:close_order:confirm_message', { value: order?.displaying_id }),
+            //     null,
+            //     () => {
+            //         const params = {
+            //             displaying_id: order?.displaying_id,
+            //             special_mode: 1
+            //         };
+            //         fetchOrder('DELETE', params, () => {
+            //             context.alert.show('success', t('common:success'),
+            //                 t('futures:close_order:request_successfully', { value: order?.displaying_id }),
+            //                 undefined,
+            //                 undefined,
+            //                 () => {
+            //                     if (onClose) onClose();
+            //                 }
+            //             );
+            //         });
+            //     }
+            // );
         } else {
             fetchOrder('PUT', data, () => {
                 oldOrder.current = { ...oldOrder.current, ...data };
@@ -244,11 +245,21 @@ const OrderOpenDetail = ({
             }
             {
                 showEditMargin &&
-                <AdjustPositionMargin
+                <ModifyOrder
                     order={order}
                     pairPrice={dataMarketWatch}
                     onClose={() => setShowEditMargin(false)}
+                    pairConfig={pairConfig}
                     forceFetchOrder={forceFetchOrder}
+                />
+            }
+            {openCloseOrderModal &&
+                <CloseOrderModalMobile
+                    onClose={() => setOpenCloseOrderModal(false)}
+                    order={order}
+                    pairPrice={dataMarketWatch}
+                    forceFetchOrder={forceFetchOrder}
+
                 />
             }
             <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 leading-[1.125rem]">
@@ -277,8 +288,10 @@ const OrderOpenDetail = ({
                     </div>
                     <div
                         className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
-                        <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
-                        <span>{renderCellTable('type', order)}</span>
+                        {order?.metadata?.dca_order_metadata && orderStatus.pending && <span>{t('futures:mobile:adjust_margin:added_volume')}&nbsp;/&nbsp;</span>}
+                        {order?.metadata?.partial_close_metadata && orderStatus.pending && <span>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</span>}
+                        <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
+                        <span>{renderCellTable('type', order, t, language)}</span>
                     </div>
                 </div>
                 <div className="flex items-center">
@@ -360,7 +373,7 @@ const OrderOpenDetail = ({
                     order.status === VndcFutureOrderType.Status.ACTIVE &&
                     <div className="w-full">
                         <Button
-                            title={t('futures:mobile.adjust_margin.button_title')}
+                            title={t('futures:mobile.modify_order')}
                             className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
@@ -368,15 +381,17 @@ const OrderOpenDetail = ({
                         />
                     </div>
                 }
-                <div className="w-full">
-                    <Button
-                        title={t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}
-                        className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
-                        componentType="button"
-                        type="primary"
-                        onClick={onOpenModify}
-                    />
-                </div>
+                {!((order?.metadata?.dca_order_metadata || order?.metadata?.partial_close_metadata) && orderStatus.pending) &&
+                    <div className="w-full">
+                        <Button
+                            title={t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}
+                            className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
+                            componentType="button"
+                            type="primary"
+                            onClick={onOpenModify}
+                        />
+                    </div>
+                }
                 <div className="w-full">
                     <Button
                         title={t(`common:close`)}

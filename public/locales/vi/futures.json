@@ -244,6 +244,7 @@
         },
         "adjust_margin": {
             "button_title": "Thêm ký quỹ",
+            "remove_margin": "Rút ký quỹ",
             "adjust_position_margin": "Điều chỉnh ký quỹ",
             "add": "Thêm",
             "remove": "Rút",
@@ -270,7 +271,21 @@
                 "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "Để đảm bảo an toàn cho vị thế của bạn, tính năng này không hỗ trợ với tỉ lệ lợi nhuận hiện tại.",
                 "UNKNOWN": "Lỗi không xác định",
                 "error": "Lỗi không xác định"
-            }
+            },
+            "added_volume": "Tăng khối lượng",
+            "current_volume": "Khối lượng hiện tại",
+            "advanced_custom": "Tùy chỉnh nâng cao",
+            "average_open_price": "Giá mở trung bình:",
+            "add_volume_success": "Hoàn tất!",
+            "add_volume_success_message": "Bạn đã tăng khối lượng thành công",
+            "adjustment_type": "Loại điều chỉnh",
+            "open_price": "Giá mở lệnh",
+            "est_pnl": "PnL tạm tính",
+            "close_partially": "Đóng một phần lệnh",
+            "closed_volume": "Khối lượng đóng",
+            "added_volume_2": "Khối lượng tăng thêm",
+            "partially_closed_success_message": "Bạn đã đóng một phần lệnh thành công",
+            "remaining_volume": "Khối lượng còn lại"
         },
         "transaction_histories": {
             "id": "Id",
@@ -358,6 +373,8 @@
         "change_success": "Thay đổi thành công",
         "tooltip_popup": "Lựa chọn tài sản để thanh toán phí đóng lệnh nhận chiết khấu tương ứng và cài đặt tài sản thanh toán phí mặc định cho các lệnh tiếp theo ở dòng chọn bên dưới.",
         "trading_fees": "Phí giao dịch",
+        "set_as_default_trading_fee": "Chọn làm phí giao dịch mặc định",
+        "modify_order": "Điều chỉnh lệnh",
         "set_as_default_trading_fee": "Chọn làm phí giao dịch mặc định",
         "close_all_positions": {
             "title": "Đóng tất cả vị thế",

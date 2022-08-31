@@ -276,7 +276,7 @@ const Slider = ({
         const size = 100 / _dots
 
         for (let i = 0; i <= _dots; ++i) {
-            const labelX = (i === 0 ? 1 : i * (dots ? (xmax / dots) : dotStep)).toFixed(0)
+            const labelX = (i === 0 ? 0 : i * (dots ? (xmax / dots) : dotStep)).toFixed(0)
             const valueX = (i * (dots ? (xmax / dots) : dotStep)).toFixed(0)
             dot.push(
                 <Dot

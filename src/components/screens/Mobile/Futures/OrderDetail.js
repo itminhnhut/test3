@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { ArrowRight, Copy } from 'react-feather';
-import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { renderCellTable, VndcFutureOrderType, getTypesLabel } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
 import { countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import { API_ORDER_DETAIL } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { ApiStatus, ChartMode } from 'redux/actions/const';
 import colors from 'styles/colors';
+import { getType } from "components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc";
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
@@ -55,7 +56,7 @@ const OrderDetail = ({
     isVndcFutures
 }) => {
     const router = useRouter();
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const assetConfig = useSelector(state => getAssets(state, {
         ...order?.fee_metadata,
         swap: { currency: order?.margin_currency },
@@ -76,6 +77,8 @@ const OrderDetail = ({
                 return t('futures:order_history:hit_tp');
             case 3:
                 return t('futures:order_history:liquidate');
+            case 6:
+                return t('futures:mobile:adjust_margin:close_partially');
             default:
                 return '-';
         }
@@ -90,9 +93,9 @@ const OrderDetail = ({
         return data ? formatNumber(data, decimal) + ' ' + assetCode : '-';
     };
 
-    const getValue = (number) => {
+    const getValue = (number, symbol = false) => {
         if (number) {
-            return formatNumber(number, decimalPrice, 0, true);
+            return formatNumber(number, symbol ? decimalSymbol : decimalPrice, 0, true);
         } else {
             return t('futures:not_set');
         }
@@ -146,12 +149,43 @@ const OrderDetail = ({
             case 'margin':
                 value = metadata?.modify_margin ?
                     <div className="flex items-center justify-between">
-                        <div className="text-left">{getValue(metadata?.modify_margin?.before)}</div>
+                        <div className="text-left">{getValue(metadata?.modify_margin?.before, true)}</div>
                         &nbsp;<ArrowRight size={14} />&nbsp;
-                        <div className="text-right">{getValue(metadata?.modify_margin?.after)} </div>
+                        <div className="text-right">{getValue(metadata?.modify_margin?.after, true)} </div>
                     </div> : null;
                 return value;
-
+            case 'volume':
+                value = metadata?.modify_order_value ?
+                    <div className="flex items-center justify-between">
+                        <div className="text-left">{getValue(metadata?.modify_order_value?.before, true)}</div>
+                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        <div className="text-right">{getValue(metadata?.modify_order_value?.after, true)} </div>
+                    </div> : null;
+                return value;
+            case 'leverage':
+                value = metadata?.modify_leverage ?
+                    <div className="flex items-center justify-between">
+                        <div className="text-left text-onus-green">{getValue(metadata?.modify_leverage?.before, true)}</div>
+                        &nbsp;<ArrowRight size={14} color={colors.onus.green} />&nbsp;
+                        <div className="text-right text-onus-green">{getValue(metadata?.modify_leverage?.after, true)} </div>
+                    </div> : null;
+                return value;
+            case 'open_price':
+                value = metadata?.modify_open_price ?
+                    <div className="flex items-center justify-between">
+                        <div className="text-left">{getValue(metadata?.modify_open_price?.before)}</div>
+                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        <div className="text-right">{getValue(metadata?.modify_open_price?.after)} </div>
+                    </div> : null;
+                return value;
+            case 'liq_price':
+                value = metadata?.modify_liq_price ?
+                    <div className="flex items-center justify-between">
+                        <div className="text-left">{getValue(metadata?.modify_liq_price?.before)}</div>
+                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        <div className="text-right">{getValue(metadata?.modify_liq_price?.after)} </div>
+                    </div> : null;
+                return value;
             default:
                 return value;
         }
@@ -163,7 +197,6 @@ const OrderDetail = ({
     }, [pairConfig]);
 
     const forceFetchOrder = (data) => {
-        console.log(isModal)
         if (!isModal) {
             getDetail();
         }
@@ -210,6 +243,302 @@ const OrderDetail = ({
         }
     };
 
+    const renderModifyMargin = (item) => {
+        return (
+            <>
+                <Row>
+                    <Label>{t('futures:mobile:adjust_margin:adjustment_type')}</Label>
+                    <Span>{t('futures:mobile:adjust_margin:adjust_position_margin')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:time')}</Label>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:margin')}</Label>
+                    <Span>{renderModify(item?.metadata, 'margin')}</Span>
+                </Row>
+            </>
+        )
+    }
+
+    const renderModifySlTp = (item) => {
+        return (
+            <>
+                <Row>
+                    <Label>{t('futures:mobile:adjust_margin:adjustment_type')}</Label>
+                    <Span>{t('futures:tp_sl:modify_tpsl')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:time')}</Label>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                </Row>
+                {item?.metadata?.modify_tp &&
+                    <Row>
+                        <Label>{t('futures:take_profit')}</Label>
+                        <Span
+                            className="text-onus-green">{renderModify(item?.metadata, 'take_profit')}</Span>
+                    </Row>
+                }
+                {item?.metadata?.modify_sl &&
+                    <Row>
+                        <Label>{t('futures:stop_loss')}</Label>
+                        <Span
+                            className="text-onus-red">{renderModify(item?.metadata, 'stop_loss')}</Span>
+                    </Row>
+                }
+                {item?.metadata?.modify_price &&
+                    <Row>
+                        <Label>{t('futures:price')}</Label>
+                        <Span>{renderModify(item?.metadata, 'price')}</Span>
+                    </Row>
+                }
+                {item?.metadata?.modify_margin &&
+                    <Row>
+                        <Label>{t('futures:margin')}</Label>
+                        <Span>{renderModify(item?.metadata, 'margin')}</Span>
+                    </Row>
+                }
+            </>
+        )
+    }
+
+    const renderAddVolume = (item) => {
+        return (
+            <>
+                <Row>
+                    <Label>{t('futures:mobile:adjust_margin:adjustment_type')}</Label>
+                    <Span>{t('futures:mobile:adjust_margin:added_volume')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:from')}</Label>
+                    <Span>{`#${item.orderId}`}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:time')}</Label>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:order_table:volume')}</Label>
+                    <Span>{renderModify(item?.metadata, 'volume')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:order_type')}</Label>
+                    <Span>{renderCellTable('type', item.metadata, t, language)}</Span>
+                </Row>
+                {item?.metadata?.modify_leverage &&
+                    <Row>
+                        <Label>{t('futures:leverage:leverage')}</Label>
+                        <Span>{renderModify(item.metadata, 'leverage')}</Span>
+                    </Row>
+                }
+                <Row>
+                    <Label>{t('futures:margin')}</Label>
+                    <Span>{renderModify(item?.metadata, 'margin')}</Span>
+                </Row>
+                {item?.metadata?.modify_open_price &&
+                    <Row>
+                        <Label>{t('futures:mobile:adjust_margin:open_price')}</Label>
+                        <Span>{renderModify(item?.metadata, 'open_price')}</Span>
+                    </Row>
+                }
+                {item?.metadata?.modify_liq_price &&
+                    <Row>
+                        <Label>{t('futures:mobile:liq_price')}</Label>
+                        <Span>{renderModify(item?.metadata, 'liq_price')}</Span>
+                    </Row>
+                }
+                <Row>
+                    <Label>{t('futures:mobile:open_fee')}</Label>
+                    <Span>{renderFee(order, 'place_order')}</Span>
+                </Row>
+            </>
+        )
+    }
+
+    const renderDetailPartialClose = () => {
+        return (
+            <>
+                <Row>
+                    <Label>ID</Label>
+                    <Span className="flex items-center"
+                        onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
+                        {order?.displaying_id}
+                        <Copy color={colors.onus.grey} size={16} className="ml-2 " />
+                    </Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:open_time')}</Label>
+                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:reason_close')}</Label>
+                    <Span>{renderReasonClose(order)}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:from')}</Label>
+                    <Span>#{order?.metadata?.partial_close_metadata?.partial_close_from}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:order_type')}</Label>
+                    <Span>{getTypesLabel(String(order?.type).toUpperCase(), t)}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:order_table:close_price')}</Label>
+                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalPrice) : '-'}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:order_table:open_price')}</Label>
+                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalPrice) : '-'}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:order_table:volume')}</Label>
+                    <Span>{`${formatNumber(order?.order_value, decimalSymbol)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:leverage:leverage')}</Label>
+                    <Span className="text-onus-green">{order?.leverage}x</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:margin')}</Label>
+                    <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:close_fee')}</Label>
+                    <Span>{renderFee(order, 'close_order')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:realized_pnl')}</Label>
+                    <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
+                        {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
+                </Row>
+            </>
+        )
+    }
+
+    const renderDetail = () => {
+        return (
+            <>
+                <Row>
+                    <Label>ID</Label>
+                    <Span className="flex items-center"
+                        onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
+                        {order?.displaying_id}
+                        <Copy color={colors.onus.grey} size={16} className="ml-2 " />
+                    </Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:leverage:leverage')}</Label>
+                    <Span className="text-onus-green">{order?.leverage}x</Span>
+                </Row>
+                {
+                    isTabHistory
+                    &&
+                    <Row>
+                        <Label>{t('futures:mobile:realized_pnl')}</Label>
+                        <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
+                            {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
+                    </Row>}
+                <Row>
+                    <Label>{t('futures:order_table:volume')}</Label>
+                    <Span>{`${formatNumber(order?.order_value, decimalSymbol)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:margin')}</Label>
+                    <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:open_time')}</Label>
+                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                </Row>
+                {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
+                    <Row>
+                        <Label>{t(`futures:${order?.type === VndcFutureOrderType.Type.LIMIT ? 'limit_price' : 'stop_price'}`)}</Label>
+                        <Span>{formatNumber(order?.price, decimalPrice)}</Span>
+                    </Row>
+                }
+                <Row>
+                    <Label>{t('futures:order_table:open_price')}</Label>
+                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalPrice) : '-'}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:close_time')}</Label>
+                    <Span>{order?.closed_at ? formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss') : '-'}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:order_table:close_price')}</Label>
+                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalPrice) : '-'}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:reason_close')}</Label>
+                    <Span>{renderReasonClose(order)}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:take_profit')}</Label>
+                    <Span
+                        className={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}>{renderSlTp(order?.tp)}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:stop_loss')}</Label>
+                    <Span
+                        className={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}>{renderSlTp(order?.sl)}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:open_fee')}</Label>
+                    <Span>{renderFee(order, 'place_order')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:close_fee')}</Label>
+                    <Span>{renderFee(order, 'close_order')}</Span>
+                </Row>
+                <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                    className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                    overridePosition={(e) => ({
+                        left: 0,
+                        top: e.top
+                    })}
+                >
+                    <div>
+                        <label
+                            className="text-sm font-semibold">{t('futures:mobile:liquidate_fee')}</label>
+                        <div className="text-sm mt-3">{t('futures:mobile:info_liquidate_fee')}</div>
+                    </div>
+                </Tooltip>
+                <Row>
+                    <Label className="flex">
+                        {t('futures:mobile:liquidate_fee')}
+                        <div className="px-2" data-tip="" data-for="liquidate-fee"
+                            id="tooltip-liquidate-fee">
+                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
+                        </div>
+                    </Label>
+                    <Span>{renderFee(order, 'liquidate_order')}</Span>
+                </Row>
+                <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                    className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                    overridePosition={(e) => ({
+                        left: 0,
+                        top: e.top
+                    })}
+                >
+                    <div>
+                        <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
+                        <div className="text-sm mt-3">{t('futures:mobile:info_swap_fee')}</div>
+                    </div>
+                </Tooltip>
+                <Row>
+                    <Label className="flex">
+                        {t('futures:mobile:swap_fee')}
+                        <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
+                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
+                        </div>
+                    </Label>
+                    <Span>{renderFee(order, 'swap')}</Span>
+                </Row>
+            </>
+        )
+    }
+
     const resolutionLabel = useMemo(() => {
         return listTimeFrame.find(item => item.value === resolution)?.text;
     }, [resolution]);
@@ -231,7 +560,7 @@ const OrderDetail = ({
                         className="flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2">
                         <span className="font-semibold">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
                         <span
-                            className={`text-xs font-medium ${classNameSide}`}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
+                            className={`text-xs font-medium ${classNameSide}`}>{renderCellTable('side', order, t, language)} / {renderCellTable('type', order, t, language)}</span>
                     </div>
                     <MenuTime
                         value={resolution}
@@ -283,122 +612,7 @@ const OrderDetail = ({
                         <div className="pt-5">
                             <div className="font-semibold mb-4">{t('futures:mobile:order_detail')}</div>
                             <div className="bg-onus-bg3 px-3 rounded-lg">
-                                <Row>
-                                    <Label>ID</Label>
-                                    <Span className="flex items-center"
-                                        onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
-                                        {order?.displaying_id}
-                                        <Copy color={colors.onus.grey} size={16} className="ml-2 " />
-                                    </Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:leverage:leverage')}</Label>
-                                    <Span className="text-onus-green">{order?.leverage}x</Span>
-                                </Row>
-                                {
-                                    isTabHistory
-                                    &&
-                                    <Row>
-                                        <Label>{t('futures:mobile:realized_pnl')}</Label>
-                                        <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
-                                            {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
-                                    </Row>}
-                                <Row>
-                                    <Label>{t('futures:order_table:volume')}</Label>
-                                    <Span>{`${formatNumber(order?.order_value, decimalSymbol)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:margin')}</Label>
-                                    <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:open_time')}</Label>
-                                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
-                                </Row>
-                                {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
-                                    <Row>
-                                        <Label>{t(`futures:${order?.type === VndcFutureOrderType.Type.LIMIT ? 'limit_price' : 'stop_price'}`)}</Label>
-                                        <Span>{formatNumber(order?.price, decimalPrice)}</Span>
-                                    </Row>
-                                }
-                                <Row>
-                                    <Label>{t('futures:order_table:open_price')}</Label>
-                                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalPrice) : '-'}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:close_time')}</Label>
-                                    <Span>{order?.closed_at ? formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss') : '-'}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:order_table:close_price')}</Label>
-                                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalPrice) : '-'}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:reason_close')}</Label>
-                                    <Span>{renderReasonClose(order)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:take_profit')}</Label>
-                                    <Span
-                                        className={order?.tp > 0 ? 'text-onus-green' : 'text-onus-white'}>{renderSlTp(order?.tp)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:stop_loss')}</Label>
-                                    <Span
-                                        className={order?.sl > 0 ? 'text-onus-red' : 'text-onus-white'}>{renderSlTp(order?.sl)}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:open_fee')}</Label>
-                                    <Span>{renderFee(order, 'place_order')}</Span>
-                                </Row>
-                                <Row>
-                                    <Label>{t('futures:mobile:close_fee')}</Label>
-                                    <Span>{renderFee(order, 'close_order')}</Span>
-                                </Row>
-                                <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                    className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
-                                    overridePosition={(e) => ({
-                                        left: 0,
-                                        top: e.top
-                                    })}
-                                >
-                                    <div>
-                                        <label
-                                            className="text-sm font-semibold">{t('futures:mobile:liquidate_fee')}</label>
-                                        <div className="text-sm mt-3">{t('futures:mobile:info_liquidate_fee')}</div>
-                                    </div>
-                                </Tooltip>
-                                <Row>
-                                    <Label className="flex">
-                                        {t('futures:mobile:liquidate_fee')}
-                                        <div className="px-2" data-tip="" data-for="liquidate-fee"
-                                            id="tooltip-liquidate-fee">
-                                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
-                                        </div>
-                                    </Label>
-                                    <Span>{renderFee(order, 'liquidate_order')}</Span>
-                                </Row>
-                                <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                    className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
-                                    overridePosition={(e) => ({
-                                        left: 0,
-                                        top: e.top
-                                    })}
-                                >
-                                    <div>
-                                        <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
-                                        <div className="text-sm mt-3">{t('futures:mobile:info_swap_fee')}</div>
-                                    </div>
-                                </Tooltip>
-                                <Row>
-                                    <Label className="flex">
-                                        {t('futures:mobile:swap_fee')}
-                                        <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
-                                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
-                                        </div>
-                                    </Label>
-                                    <Span>{renderFee(order, 'swap')}</Span>
-                                </Row>
+                                {order?.reason_close_code !== 6 ? renderDetail() : renderDetailPartialClose()}
                             </div>
                         </div>
                         {dataSource.length > 0 &&
@@ -406,38 +620,10 @@ const OrderDetail = ({
                                 <div
                                     className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
                                 {dataSource.map((item, index) => (
-                                    <div key={index}
-                                        className="bg-onus-bg3 px-3 rounded-lg mb-3">
-                                        <Row>
-                                            <Label>{t('common:time')}</Label>
-                                            <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
-                                        </Row>
-                                        {item?.metadata?.modify_tp &&
-                                            <Row>
-                                                <Label>{t('futures:take_profit')}</Label>
-                                                <Span
-                                                    className="text-onus-green">{renderModify(item?.metadata, 'take_profit')}</Span>
-                                            </Row>
-                                        }
-                                        {item?.metadata?.modify_sl &&
-                                            <Row>
-                                                <Label>{t('futures:stop_loss')}</Label>
-                                                <Span
-                                                    className="text-onus-red">{renderModify(item?.metadata, 'stop_loss')}</Span>
-                                            </Row>
-                                        }
-                                        {item?.metadata?.modify_price &&
-                                            <Row>
-                                                <Label>{t('futures:price')}</Label>
-                                                <Span>{renderModify(item?.metadata, 'price')}</Span>
-                                            </Row>
-                                        }
-                                        {item?.metadata?.modify_margin &&
-                                            <Row>
-                                                <Label>{t('futures:margin')}</Label>
-                                                <Span>{renderModify(item?.metadata, 'margin')}</Span>
-                                            </Row>
-                                        }
+                                    <div key={index} className="bg-onus-bg3 px-3 rounded-lg mb-3">
+                                        {item?.type === 'MODIFY_MARGIN' && renderModifyMargin(item)}
+                                        {item?.type === 'MODIFY' && renderModifySlTp(item)}
+                                        {item?.type === 'ADD_VOLUME' && renderAddVolume(item)}
                                     </div>
                                 ))}
                             </div>

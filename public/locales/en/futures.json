@@ -244,6 +244,7 @@
         },
         "adjust_margin": {
             "button_title": "Add margin",
+            "remove_margin": "Remove margin",
             "adjust_position_margin": "Adjust position margin",
             "add": "Add",
             "remove": "Remove",
@@ -270,7 +271,21 @@
                 "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "For the safety of your position, this feature is not supported with the current rate of return.",
                 "UNKNOWN": "Unknown",
                 "error": "Unknown"
-            }
+            },
+            "added_volume": "Added volume",
+            "current_volume": "Current volume",
+            "advanced_custom": "Customized",
+            "average_open_price": "Average open price:",
+            "add_volume_success": "Success!",
+            "add_volume_success_message": "Your volume has been added successfully",
+            "adjustment_type": "Adjustment type",
+            "open_price": "Open price",
+            "est_pnl": "Est. PnL",
+            "close_partially": "Close partially",
+            "closed_volume": "Closed volume",
+            "added_volume_2": "Added volume",
+            "partially_closed_success_message": "your partial position have been closed successfully",
+            "remaining_volume": "Remaining volume"
         },
         "transaction_histories": {
             "id": "ID",
@@ -358,6 +373,8 @@
         "change_success": "Changed successfully",
         "tooltip_popup": "Choose asset for closing fee to get a corresponding discount and set a default asset for next orders by checking the box below.",
         "trading_fees": "Trading Fees",
+        "set_as_default_trading_fee": "Set as default trading fee",
+        "modify_order": "Modify order",
         "set_as_default_trading_fee": "Set as default trading fee",
         "close_all_positions": {
             "title": "Close all positions",
