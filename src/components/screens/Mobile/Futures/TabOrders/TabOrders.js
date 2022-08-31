@@ -140,7 +140,7 @@ const TabOrders = memo(({
                     className="bg-onus-bg3 text-onus-gray !h-[32px]"
                     onClick={() => handleCloseAll()}
                 >
-                    {t('futures:mobile.close_all_positions.title')}
+                    {tab === FUTURES_RECORD_CODE.position ? t('futures:mobile.close_all_positions.title') : t('futures:mobile.close_all_positions.title_pending')}
                 </Button>)
                 break;
             case 'true':

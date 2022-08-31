@@ -361,6 +361,7 @@
         "set_as_default_trading_fee": "Chọn làm phí giao dịch mặc định",
         "close_all_positions": {
             "title": "Đóng tất cả vị thế",
+            "title_pending": "Huỷ tất cả",
             "processing": "Đang đóng lệnh",
             "done": "Hoàn tất đóng",
             "close_type": {
