@@ -36,7 +36,8 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                 params: { contest_id: contest_id },
             });
             if (status === ApiStatus.SUCCESS) {
-                data ? setUserData(data) : getInvites();
+                setUserData(data);
+                getInvites(data)
             }
 
         } catch (e) {
@@ -45,7 +46,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
         }
     };
 
-    const getInvites = async () => {
+    const getInvites = async (user) => {
         try {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_GET_INVITES,
@@ -53,7 +54,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                 params: { contest_id: contest_id },
             });
             if (status === ApiStatus.SUCCESS) {
-                setUserData(data)
+                if (!user) setUserData(data)
                 setInvitations(data);
             }
         } catch (e) {
