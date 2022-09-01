@@ -10,7 +10,7 @@ import { Check } from 'react-feather';
 import colors from 'styles/colors';
 
 const ContesRules = ({ inHome = false, previous, season, start, end, seasons, title, rules, total_rewards }) => {
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const router = useRouter();
     const renderCountDown = () => {
         const CONTEST_TIME = {
@@ -71,14 +71,13 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
 
     const current = seasons[seasons.length - 1];
     const seasonsFilter = seasons?.filter(e => e?.season !== current?.season);
-    const subTitle = seasons?.find(e => e.season === season)?.title ?? title;
 
     return (
         <section
             className="contest_rules pt-[3.375rem] flex justify-center md:justify-between flex-wrap relative text-center sm:text-left">
             <div>
                 <label
-                    className="text-[1.75rem] sm:text-[2.125rem] text-nao-white font-semibold leading-10">{t('nao:contest:title', { value: t(`nao:contest:${subTitle}`) })}</label>
+                    className="text-[1.75rem] sm:text-[2.125rem] text-nao-white font-semibold leading-10">{title?.[language]}</label>
                 <div
                     className="text-nao-text text-sm sm:text-lg pt-3 sm:pt-[6px] leading-6">{t('nao:contest:description')}
                     <span className="text-nao-green font-semibold">{total_rewards}</span></div>

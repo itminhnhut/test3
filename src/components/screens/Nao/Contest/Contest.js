@@ -10,7 +10,8 @@ import InvitationsDetail from 'components/screens/Nao/Contest/season2/Invitation
 export const seasons = [
     {
         season: 1, start: '2022-07-07T17:00:00.000Z', end: '2022-07-27T17:00:00.000Z',
-        contest_id: 4, button: 'nao:contest:last_season', title: 'first',
+        contest_id: 4, button: 'nao:contest:last_season',
+        title: { vi: 'Đua TOP giao dịch ONUS Futures mùa đầu tiên', en: 'ONUS Futures Trading Contest Season 1' },
         minVolumeInd: { vi: '1 tỷ VNDC', en: '1 billion VNDC' },
         minVolumeTeam: { vi: '5 tỷ VNDC', en: '5 billion VNDC' },
         rules: 'https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien',
@@ -18,7 +19,8 @@ export const seasons = [
     },
     {
         season: 2, start: '2022-08-07T17:00:00.000Z', end: '2022-08-30T17:00:00.000Z',
-        contest_id: 5, title: 'second',
+        contest_id: 5,
+        title: { vi: 'Đua TOP giao dịch ONUS Futures mùa hai', en: 'ONUS Futures Trading Contest Season 2' },
         minVolumeInd: { vi: '10 tỷ VNDC', en: '10 billion VNDC' },
         minVolumeTeam: { vi: '50 tỷ VNDC', en: '50 billion VNDC' },
         rules: 'https://goonus.io/onus-x-nami-dua-top-giao-dich-onus-futures-mua-02',
@@ -26,7 +28,8 @@ export const seasons = [
     },
     {
         season: 3, start: '2022-09-04T17:00:00.000Z', end: '2022-10-02T17:00:00.000Z',
-        contest_id: 6, title: 'third',
+        contest_id: 6,
+        title: { vi: 'Giải đấu ONUS Futures USDT – Nami Championship mùa 1', en: 'ONUS Futures USDT – Nami Championship season 1' },
         minVolumeInd: { vi: '50,000 USDT', en: '50,000 USDT' },
         minVolumeTeam: { vi: '50,000 USDT', en: '50,000 USDT' },
         rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-usdt-nami-championship-mua-1',
