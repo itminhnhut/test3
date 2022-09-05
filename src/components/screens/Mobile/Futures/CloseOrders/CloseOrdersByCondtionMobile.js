@@ -201,12 +201,13 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         </div>
                     ))}
                     <Button
+                        disabled={!type}
                         onusMode
                         onClick={() => doShow('confirm', { type })}
                         type='primary'
                         componentType='button'
                         title={t(`futures:mobile.close_all_positions.preview`)}
-                        className={`!rounded-md text-nao-white! !h-12 mt-8 !text-base !font-semibold !leading-[22px] !tracking-[-0.02em] ${!type && '!bg-onus-gray !dark:bg-darkBlue-3 opacity-30'}`}
+                        className="!rounded-md text-nao-white! !h-12 mt-8 !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
                     />
                 </div>
             </Modal>
