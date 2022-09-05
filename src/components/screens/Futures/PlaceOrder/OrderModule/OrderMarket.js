@@ -43,39 +43,8 @@ const FuturesOrderMarket = ({
                     renderTail={() => (
                         <div className='relative group select-none'>
                             <div className='flex items-center'>
-                                {isVndcFutures ? 'VNDC' : <>
-                                    {getOrderStopModeLabel(stopOrderMode)}
-                                    <ChevronDown
-                                        size={12}
-                                        className='ml-1 group-hover:rotate-180'
-                                    />
-                                </>
-                                }
+                                {pairConfig?.quoteAsset}
                             </div>
-                            {!isVndcFutures &&
-                                <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
-                                    <div
-                                        className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                        onClick={() =>
-                                            setStopOrderMode(
-                                                FuturesStopOrderMode.lastPrice
-                                            )
-                                        }
-                                    >
-                                        Last
-                                    </div>
-                                    <div
-                                        className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                        onClick={() =>
-                                            setStopOrderMode(
-                                                FuturesStopOrderMode.markPrice
-                                            )
-                                        }
-                                    >
-                                        Mark
-                                    </div>
-                                </div>
-                            }
                         </div>
                     )}
                 />
@@ -94,40 +63,8 @@ const FuturesOrderMarket = ({
                 renderTail={() => (
                     <div className='relative group select-none'>
                         <div className='flex items-center'>
-                            {selectedAsset}{' '}
-                            {!isVndcFutures &&
-                                <ChevronDown
-                                    size={12}
-                                    className='ml-1 group-hover:rotate-180'
-                                />
-                            }
+                            {selectedAsset}
                         </div>
-                        {!isVndcFutures &&
-                            <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
-                                <div
-                                    className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                    onClick={() =>
-                                        onReverseAsset(
-                                            selectedAsset,
-                                            pairConfig?.quoteAsset
-                                        )
-                                    }
-                                >
-                                    {pairConfig?.quoteAsset}
-                                </div>
-                                <div
-                                    className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer'
-                                    onClick={() =>
-                                        onReverseAsset(
-                                            selectedAsset,
-                                            pairConfig?.baseAsset
-                                        )
-                                    }
-                                >
-                                    {pairConfig?.baseAsset}
-                                </div>
-                            </div>
-                        }
                     </div>
                 )}
             />

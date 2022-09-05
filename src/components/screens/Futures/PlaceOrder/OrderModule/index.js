@@ -84,19 +84,6 @@ const FuturesOrderModule = ({
         }
     }, [currentType, side, pair, lastPrice, firstTime.current])
 
-    // ? Data helper
-    const getLastedLastPrice = async (symbol) => {
-        if (isVndcFutures) return;
-        const { data } = await axios.get(API_GET_FUTURES_MARKET_WATCH, {
-            params: { symbol },
-        })
-        if (data?.status === ApiStatus.SUCCESS) {
-            const lastedLastPrice = FuturesMarketWatch.create(
-                data?.data?.[0]
-            )?.lastPrice
-            handlePrice(lastedLastPrice)
-        }
-    }
 
     const inputValidator = (type, isStop) => {
         let isValid = true,
@@ -153,12 +140,12 @@ const FuturesOrderModule = ({
                 const _price = isStop ? stopPrice : type === 'price' ? price : type === 'stop_loss' ? orderSlTp.sl : orderSlTp.tp
                 if (+_price < +_minPrice) {
                     isValid = false
-                    msg = `${t('futures:minimum_price')} ${!isVndcFutures ? _minPrice : formatNumber(_minPrice, 0, 0, true)}`
+                    msg = `${t('futures:minimum_price')} ${formatNumber(_minPrice, 0, 0, true)}`
                 }
 
                 if (+_price > +_maxPrice) {
                     isValid = false
-                    msg = `${t('futures:maximum_price')} ${!isVndcFutures ? _maxPrice : formatNumber(_maxPrice, 0, 0, true)}`
+                    msg = `${t('futures:maximum_price')} ${formatNumber(_maxPrice, 0, 0, true)}`
                 }
 
                 return { isValid, msg }
@@ -192,23 +179,18 @@ const FuturesOrderModule = ({
         return (
             <>
                 <TradingLabel
-                    label={t(isVndcFutures ? 'futures:volume' : 'common:buy')}
-                    value={`${isVndcFutures ? volume : _buy} ${selectedAsset}`}
+                    label={t('futures:volume')}
+                    value={`${volume} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
                 <TradingLabel
-                    label={t(isVndcFutures ? 'common:max' : 'common:sell')}
-                    value={`${isVndcFutures ? _maxSize : _sell} ${selectedAsset}`}
+                    label={t('common:max')}
+                    value={`${_maxSize} ${selectedAsset}`}
                     containerClassName='text-xs'
                 />
             </>
         )
     }, [size, pairConfig, selectedAsset, quantity, side])
-
-    // ? Init lastPrice
-    useEffect(() => {
-        getLastedLastPrice(pairConfig?.pair)
-    }, [pairConfig?.pair])
 
     useEffect(() => {
         if (usdRate) {
@@ -229,7 +211,7 @@ const FuturesOrderModule = ({
                 quoteAsset={pairConfig?.quoteAsset}
                 quoteAssetId={pairConfig?.quoteAssetId}
                 isAuth={isAuth}
-                isVndcFutures={isVndcFutures}
+                isVndcFutures={true}
             />
 
             {/* Order Input Scenario */}
@@ -329,41 +311,25 @@ const FuturesOrderModule = ({
 
             <Divider className='my-5' />
 
-            {/* Buttons Group */}
-            {isVndcFutures ?
-                <FuturesOrderButtonsGroupVndc
-                    pairConfig={pairConfig}
-                    positionMode={positionMode}
-                    type={currentType}
-                    quantity={quantity}
-                    price={price}
-                    stopPrice={stopPrice}
-                    stopOrderMode={stopOrderMode}
-                    leverage={currentLeverage}
-                    orderSlTp={orderSlTp}
-                    size={size}
-                    isError={isError}
-                    ask={ask}
-                    bid={bid}
-                    isAuth={isAuth}
-                    decimalScaleQty={countDecimals(decimalScaleQtyMarket?.stepSize)}
-                    decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
-                    side={side}
-                />
-                :
-                <FuturesOrderButtonsGroup
-                    pairConfig={pairConfig}
-                    positionMode={positionMode}
-                    type={currentType}
-                    quantity={quantity}
-                    price={price}
-                    stopPrice={stopPrice}
-                    lastPrice={lastPrice}
-                    currentType={currentType}
-                    stopOrderMode={stopOrderMode}
-                    isAuth={isAuth}
-                />
-            }
+            <FuturesOrderButtonsGroupVndc
+                pairConfig={pairConfig}
+                positionMode={positionMode}
+                type={currentType}
+                quantity={quantity}
+                price={price}
+                stopPrice={stopPrice}
+                stopOrderMode={stopOrderMode}
+                leverage={currentLeverage}
+                orderSlTp={orderSlTp}
+                size={size}
+                isError={isError}
+                ask={ask}
+                bid={bid}
+                isAuth={isAuth}
+                decimalScaleQty={countDecimals(decimalScaleQtyMarket?.stepSize)}
+                decimalScalePrice={countDecimals(decimalScalePrice?.tickSize)}
+                side={side}
+            />
         </div>
     )
 }

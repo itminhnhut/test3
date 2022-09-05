@@ -33,6 +33,7 @@ import { getOrdersList } from 'redux/actions/futures';
 import { PATHS } from 'constants/paths';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import FuturesMarkPrice from 'models/FuturesMarkPrice';
+import { countDecimals } from 'redux/actions/utils';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -79,7 +80,7 @@ const Futures = () => {
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
     const ordersList = useSelector(state => state?.futures?.ordersList);
-
+    const assetConfig = useSelector(state => state.utils.assetConfig);
     const router = useRouter();
     const { width } = useWindowSize();
     const isMediumDevices = width >= BREAK_POINTS.md;
@@ -345,9 +346,9 @@ const Futures = () => {
         };
     }, [publicSocket, state.pair]);
 
-    // useEffect(() => {
-    //     setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
-    // }, [pairConfig, userSettings, state.layouts]);
+    useEffect(() => {
+        setState({ isVndcFutures: pairConfig?.quoteAsset === 'VNDC' });
+    }, [pairConfig, userSettings, state.layouts]);
 
     const resetDefault = () => {
         localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
@@ -504,11 +505,11 @@ const Futures = () => {
                                         key={futuresGridKey.marginRatio}
                                         className={`border border-divider dark:border-divider-dark`}
                                     >
-                                            <FuturesMarginRatioVndc
-                                                pairConfig={pairConfig}
-                                                auth={auth}
-                                                lastPrice={state.pairPrice?.lastPrice}
-                                            />
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            auth={auth}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                        />
                                     </div>
                                 }
                             </GridLayout>

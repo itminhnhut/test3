@@ -4,23 +4,17 @@ import Slider from 'components/trade/InputSlider';
 const initPercent = 25;
 
 const FuturesOrderSlider = ({ size, onChange, isVndcFutures, side, currentType, pair, isAuth, maxSize, decimalScaleQty }) => {
-    const [percent, setPercent] = useState(isAuth && isVndcFutures ? initPercent : 0)
+    const [percent, setPercent] = useState(isAuth && initPercent)
     const timer = useRef(null);
     const onPercentChange = ({ x }) => {
         const _size = (+maxSize * x / 100).toFixed(decimalScaleQty);
-        onChange(isVndcFutures ? _size : `${x}%`)
+        onChange(_size)
         setPercent(x)
     }
 
     useEffect(() => {
-        if (isVndcFutures) {
-            const _size = +String(size).replace(/,/g, '')
-            setPercent(_size * 100 / maxSize);
-            return;
-        }
-        if (!size || !String(size)?.includes('%')) {
-            setPercent(0)
-        }
+        const _size = +String(size).replace(/,/g, '')
+        setPercent(_size * 100 / maxSize);
     }, [size, isVndcFutures])
 
     const refresh = useRef(false);
