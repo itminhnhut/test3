@@ -174,31 +174,6 @@ const FuturesPairDetail = ({
                     const _priceChangeVndc = pairPrice?.lastPrice - pairPrice?.priceChange;
                     value = (
                         <div className='flex items-center'>
-                            {/* <div
-                                style={{
-                                    minWidth: changeWidth,
-                                }}
-                                className={classNames(
-                                    'min-w-1/2 text-dominant',
-                                    {
-                                        '!text-red': pairPrice?.priceChange < 0 || _priceChangeVndc < 0,
-                                    }
-                                )}
-                            >
-
-                                {
-                                    isVndcFutures ? formatNumber(_priceChangeVndc, pricePrecision, 0, true)
-                                        :
-                                        formatNumber(
-                                            roundTo(
-                                                pairPrice?.priceChange || 0,
-                                                pricePrecision
-                                            ),
-                                            pricePrecision,
-                                            0,
-                                            true
-                                        )}
-                            </div> */}
                             <div
                                 className={classNames('pl-2 text-dominant', {
                                     '!text-red':
@@ -220,18 +195,7 @@ const FuturesPairDetail = ({
                     )
                     minWidth = itemsPriceMinW + 36
                     break
-                case 'bestBid':
-                    if (!isVndcFutures) return;
-                    minWidth = itemsPriceMinW + 41
-                    value = <div className="text-red">{formatNumber(pairPrice?.bid, pricePrecision, 0, true)}</div>
-                    break
-                case 'bestAsk':
-                    if (!isVndcFutures) return;
-                    minWidth = itemsPriceMinW + 41
-                    value = <div className="text-dominant">{formatNumber(pairPrice?.ask, pricePrecision, 0, true)}</div>
-                    break
                 case '24hBaseVolume':
-                    if (isVndcFutures) return;
                     localized += ` (${pairPrice?.baseAsset})`
                     minWidth = itemsPriceMinW + 41
                     value = formatNumber(
@@ -240,7 +204,6 @@ const FuturesPairDetail = ({
                     )
                     break
                 case '24hQuoteVolume':
-                    if (isVndcFutures) return;
                     localized += ` (${pairPrice?.quoteAsset})`
                     minWidth = itemsPriceMinW + 50
                     value = formatNumber(
@@ -259,7 +222,7 @@ const FuturesPairDetail = ({
                 >
                     <FuturesPairDetailItem
                         label={localized}
-                        containerClassName={`${className} ${isVndcFutures ? 'mr-[20px]' : ''}`}
+                        containerClassName={`${className} mr-5`}
                         value={value}
                     />
                 </div>
@@ -349,16 +312,6 @@ const FuturesPairDetail = ({
 
             {/* Details */}
             <InfoSlider forceUpdateState={forceUpdateState} className='ml-2'>
-                {!isVndcFutures && <>
-                    <div
-                        ref={itemsPriceRef}
-                        style={{ minWidth: itemsPriceMinW || 0 }}
-                    >
-                        {renderMarkPrice()}
-                    </div>
-
-                    {renderMarkPriceItems()}
-                </>}
                 {renderPairPriceItems()}
             </InfoSlider>
         </div>

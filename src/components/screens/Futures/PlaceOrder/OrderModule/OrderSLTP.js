@@ -32,7 +32,7 @@ const FuturesOrderSLTP = ({
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
         const not_valid = !size || !getValidator('price', ArrStop.includes(currentType)).isValid || !getValidator('quantity').isValid;
-        return !isVndcFutures ? false : not_valid
+        return not_valid
     }, [price, size, currentType, stopPrice, orderSlTp])
 
     const isDisabled = !+size || !_price || isError || !isAuth;
@@ -45,7 +45,7 @@ const FuturesOrderSLTP = ({
     }
 
     const onChangeTpSL = (key) => {
-        if (!isVndcFutures || isDisabled) return;
+        if (isDisabled) return;
         rowData.current = {
             fee: 0,
             side: side,
@@ -98,84 +98,44 @@ const FuturesOrderSLTP = ({
                     lastPrice={lastPrice}
                 />
             }
-            {!isVndcFutures &&
-                <CheckBox
-                    label='TP-SL'
-                    active={useSltp}
-                    onChange={() => setSLTP(useSltp)}
-                />
-            }
-            {(useSltp || isVndcFutures) && (
-                <>
-                    <TradingInput
-                        containerClassName='mt-[12px]'
-                        label={t('futures:take_profit')}
-                        allowNegative={false}
-                        value={orderSlTp.tp}
-                        decimalScale={decimalScalePrice}
-                        // validator={getValidator('take_profit')}
-                        onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, tp: value })}
-                        labelClassName='whitespace-nowrap capitalize'
-                        tailContainerClassName='flex items-center font-medium text-xs select-none'
-                        renderTail={() => (
-                            <div className='relative group select-none ' >
-                                <div data-tip="" data-for="tooltipTPSL" className=' flex items-center cursor-pointer' onClick={() => onChangeTpSL('tp')} >
-                                    {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' /> : 'Mark'}
-                                    {!isVndcFutures && <ChevronDown
-                                        size={12}
-                                        className='ml-1 group-hover:rotate-180'
-                                    />
-                                    }
-                                </div>
-                                {!isVndcFutures &&
-                                    <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
-                                        <div className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer whitespace-nowrap'>
-                                            {t('futures:last_price')}
-                                        </div>
-                                        <div className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer whitespace-nowrap'>
-                                            Mark
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        )}
-                    />
 
-                    <TradingInput
-                        containerClassName='mt-[12px]'
-                        label={t('futures:stop_loss')}
-                        allowNegative={false}
-                        value={orderSlTp.sl}
-                        decimalScale={decimalScalePrice}
-                        // validator={getValidator('stop_loss')}
-                        onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: value })}
-                        labelClassName='whitespace-nowrap capitalize'
-                        tailContainerClassName='flex items-center font-medium text-xs select-none'
-                        renderTail={() => (
-                            <div className='relative group select-none'>
-                                <div data-tip="" data-for="tooltipTPSL" className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('sl')} >
-                                    {isVndcFutures ? <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' /> : 'Mark'}
-                                    {!isVndcFutures && <ChevronDown
-                                        size={12}
-                                        className='ml-1 group-hover:rotate-180'
-                                    />
-                                    }
-                                </div>
-                                {!isVndcFutures &&
-                                    <div className='overflow-hidden hidden group-hover:block absolute z-30 min-w-[55px] top-full right-0 text-txtPrimary dark:text-txtPrimary-dark rounded-md bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4'>
-                                        <div className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer whitespace-nowrap'>
-                                            {t('futures:last_price')}
-                                        </div>
-                                        <div className='px-3 py-1.5 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity cursor-pointer whitespace-nowrap'>
-                                            Mark
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        )}
-                    />
-                </>
-            )}
+            <TradingInput
+                containerClassName='mt-[12px]'
+                label={t('futures:take_profit')}
+                allowNegative={false}
+                value={orderSlTp.tp}
+                decimalScale={decimalScalePrice}
+                // validator={getValidator('take_profit')}
+                onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, tp: value })}
+                labelClassName='whitespace-nowrap capitalize'
+                tailContainerClassName='flex items-center font-medium text-xs select-none'
+                renderTail={() => (
+                    <div className='relative group select-none ' >
+                        <div data-tip="" data-for="tooltipTPSL" className=' flex items-center cursor-pointer' onClick={() => onChangeTpSL('tp')} >
+                            <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
+                        </div>
+                    </div>
+                )}
+            />
+
+            <TradingInput
+                containerClassName='mt-[12px]'
+                label={t('futures:stop_loss')}
+                allowNegative={false}
+                value={orderSlTp.sl}
+                decimalScale={decimalScalePrice}
+                // validator={getValidator('stop_loss')}
+                onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: value })}
+                labelClassName='whitespace-nowrap capitalize'
+                tailContainerClassName='flex items-center font-medium text-xs select-none'
+                renderTail={() => (
+                    <div className='relative group select-none'>
+                        <div data-tip="" data-for="tooltipTPSL" className='flex items-center cursor-pointer' onClick={() => onChangeTpSL('sl')} >
+                            <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
+                        </div>
+                    </div>
+                )}
+            />
         </>
     )
 }

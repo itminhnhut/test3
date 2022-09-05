@@ -38,7 +38,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
             const quoteAsset = allPairConfigs.find(i => i.pair === o.s)?.quoteAsset
             return FuturesMarketWatch.create(o, quoteAsset)
         })
-        const pairs = mergeFuturesFavoritePairs(favoritePairs, marketWatch)?.filter(i => i?.quoteAsset !== 'USDT')
+        const pairs = mergeFuturesFavoritePairs(favoritePairs, marketWatch)
         return pairs?.map((pair) => (
             <FuturesFavoritePairItem key={pair?.symbol} pair={pair} />
         ))

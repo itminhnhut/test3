@@ -6,7 +6,7 @@ import fetchApi from 'utils/fetch-api';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import Skeletor from 'src/components/common/Skeletor';
-import { formatNumber, formatTime, getLoginUrl, getPriceColor, getS3Url } from 'redux/actions/utils';
+import { formatNumber, formatTime, getLoginUrl, getPriceColor, getS3Url, countDecimals } from 'redux/actions/utils';
 import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import FuturesTimeFilter2 from 'components/screens/Futures/TradeRecord/FuturesTimeFilter2';
 import { FilterTradeOrder } from 'components/screens/Futures/FilterTradeOrder';
@@ -20,10 +20,17 @@ import Link from 'next/link';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t, i18n: { language } } = useTranslation()
+    const assetConfig = useSelector(state => state.utils.assetConfig);
+    const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false)
     const [shareOrder, setShareOrder] = useState(null)
     const [resetPage, setResetPage] = useState(false);
+    const darkMode = useSelector(state => state.user.theme === 'dark');
+    const [showDetail, setShowDetail] = useState(false);
+    const rowData = useRef(null);
+    const TimeFilterRef = useRef(null);
+
 
     const columns = useMemo(() => [
         {
@@ -87,13 +94,13 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         {
             name: t('futures:order_table:open_price'),
             selector: (row) => row?.open_price,
-            cell: (row) => loading ? <Skeletor width={100} /> : row?.open_price ? formatNumber(row?.open_price, 0, 0, true) : '-',
+            cell: (row) => loading ? <Skeletor width={100} /> : row?.open_price ? formatNumber(row?.open_price, row?.decimalScalePrice, 0, true) : '-',
             sortable: true,
         },
         {
             name: t('futures:order_table:close_price'),
             selector: (row) => row?.close_price,
-            cell: (row) => loading ? <Skeletor width={100} /> : row?.close_price ? formatNumber(row?.close_price, 0, 0, true) : '-',
+            cell: (row) => loading ? <Skeletor width={100} /> : row?.close_price ? formatNumber(row?.close_price, row?.decimalScalePrice, 0, true) : '-',
             sortable: true,
         },
         {
@@ -101,8 +108,8 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             cell: (row) => loading ? <Skeletor width={100} /> : (
                 <div className='flex items-center'>
                     <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                        <div>{formatNumber(row?.tp, 0, 0, true)}/</div>
-                        <div>{formatNumber(row?.sl, 0, 0, true)}</div>
+                        <div>{formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}/</div>
+                        <div>{formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}</div>
                     </div>
                 </div>
             ),
@@ -148,12 +155,6 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         pageSize: 10
     })
 
-    const darkMode = useSelector(state => state.user.theme === 'dark');
-    const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
-    const [showDetail, setShowDetail] = useState(false);
-    const rowData = useRef(null);
-    const TimeFilterRef = useRef(null);
-
     const symbolOptions = useMemo(() => {
         return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }))
     }, [allPairConfigs])
@@ -166,6 +167,11 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     useEffect(() => {
         getOrders();
     }, [pagination.page, pagination.pageSize])
+
+    const getDecimalPrice = (config) => {
+        const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
+        return countDecimals(decimalScalePrice?.tickSize);
+    };
 
     const getOrders = async () => {
         setLoading(true)
@@ -184,6 +190,15 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             })
 
             if (status === ApiStatus.SUCCESS) {
+                data?.orders.map(item => {
+                    const symbol = allPairConfigs.find(rs => rs.symbol === item.symbol);
+                    const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+                    const decimalScalePrice = getDecimalPrice(symbol);
+                    item['decimalSymbol'] = decimalSymbol;
+                    item['decimalScalePrice'] = decimalScalePrice;
+                    item['quoteAsset'] = symbol?.quoteAsset;
+                    return item;
+                })
                 setDataSource(data?.orders)
                 setPagination({ ...pagination, total: data?.total })
             } else {
@@ -199,13 +214,14 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     }
 
     const cellRenderRevenue = (row) => {
-        const profit = formatNumber(String(row?.profit).replace(',', ''), 0, 0, true)
+        const isVndc = row?.symbol.indexOf('VNDC') !== -1
+        const profit = formatNumber(row?.profit, isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2, 0, true)
         const percent = formatNumber(((row?.profit / row?.margin) * 100), 2, 0, true);
         if (!row?.profit) return '-'
         return <div className='flex flex-row'>
             <div className={getPriceColor(Number(row?.profit))}>
                 <div>
-                    {profit} {pairConfig.quoteAsset}
+                    {profit} {row?.quoteAsset}
                 </div>
                 <div>
                     ({percent > 0 ? '+' : ''}

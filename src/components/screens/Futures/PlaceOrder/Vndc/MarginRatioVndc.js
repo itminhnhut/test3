@@ -37,7 +37,6 @@ const FuturesMarginRatioVndc = ({
                         wallet: allWallet?.[item?.id]
                     }));
         }
-        console.log(mapper);
         const dataFilter = orderBy(mapper, ['assetCode', 'VNDC'], ['desc']);
         if (Array.isArray(dataFilter) && dataFilter.length > 0) {
             setBalance(dataFilter);
@@ -51,9 +50,11 @@ const FuturesMarginRatioVndc = ({
     useEffect(() => {
         let _totalProfit = 0;
         ordersList.forEach((item) => {
-            const dataKey = item.side === 'Buy' ? 'bid' : 'ask';
-            const lastPrice = futuresMarketWatch?.[item.symbol]?.[dataKey] || 0;
-            _totalProfit += getProfitVndc(item, lastPrice, true);
+            if (item.symbol.includes(pairConfig?.quoteAsset)) {
+                const dataKey = item.side === 'Buy' ? 'bid' : 'ask';
+                const lastPrice = futuresMarketWatch?.[item.symbol]?.[dataKey] || 0;
+                _totalProfit += getProfitVndc(item, lastPrice, true);
+            }
         });
         setTotalProfit(_totalProfit);
     }, [ordersList, futuresMarketWatch]);
