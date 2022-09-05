@@ -5,6 +5,25 @@ import { useEffect } from 'react';
 import { handleHideScrollBar } from 'utils/helpers';
 
 const Terms = () => {
+    const { width } = useWindowSize()
+    const dispath = useDispatch();
+
+    useEffect(() => {
+        // document.body.classList.add('hidden-scrollbar');
+        document.body.classList.add('no-scrollbar');
+        // document.body.classList.add('!bg-onus');
+
+        const intervalReloadData = setInterval(() => {
+            dispath(reloadData());
+        }, 5 * 60 * 1000);
+
+        return () => {
+            document.body.classList.remove('hidden-scrollbar');
+            // document.body.classList.remove('bg-onus');
+            clearInterval(intervalReloadData);
+        };
+    }, []);
+
     useEffect(handleHideScrollBar, []);
     return (
         <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
