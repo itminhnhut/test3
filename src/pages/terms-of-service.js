@@ -1,8 +1,10 @@
 /* eslint-disable */
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import { useWindowSize } from 'utils/customHooks';
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
 import { useEffect } from 'react';
-import { handleHideScrollBar } from 'utils/helpers';
 
 const Terms = () => {
     const { width } = useWindowSize()
@@ -24,7 +26,6 @@ const Terms = () => {
         };
     }, []);
 
-    useEffect(handleHideScrollBar, []);
     return (
         <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
             <div className="nami-container my-20 policies-page">
