@@ -126,7 +126,7 @@ const TabOpenOrders = ({
                 context.alert.show('error', t('common:failed'), t('error:futures:NETWORK_ERROR'));
             }
         } finally {
-            setOpenCloseModal(false);
+            // setOpenCloseModal(false);
             setTimeout(() => {
                 setDisabled(false);
             }, 1000);
