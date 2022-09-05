@@ -207,7 +207,7 @@ const FuturesPairDetail = ({
                             >
                                 {formatNumber(
                                     roundTo(
-                                        pairPrice?.priceChangePercent * (isVndcFutures ? 100 : 1) || 0,
+                                        pairPrice?.priceChangePercent * 100 || 0,
                                         2
                                     ),
                                     2,

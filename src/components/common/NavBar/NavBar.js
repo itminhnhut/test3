@@ -105,9 +105,9 @@ const NavBar = ({
                 result.wrapper = 'mal-navbar__wrapper__no__blur'
                 result.text = 'text-txtPrimary dark:text-txtPrimary-dark'
                 result.color =
-                    currentTheme === THEME_MODE.LIGHT
-                        ? colors.darkBlue
-                        : colors.grey4
+                    currentTheme === THEME_MODE.DARK
+                        ? colors.grey4
+                        : colors.darkBlue
                 break
         }
 

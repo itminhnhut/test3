@@ -24,6 +24,9 @@ import SvgCrown from 'components/svg/SvgCrown';
 import Empty from 'components/common/Empty';
 import useHideScrollbar from 'hooks/useHideScrollbar';
 
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
+
 const INITIAL_STATE = {
     tabIndex: 0,
     loading: false,
@@ -157,7 +160,7 @@ const TradingFee = () => {
         let tableStatus
 
         const columns = [
-            { key: 'symbol', dataIndex: 'symbol', title: t('common:pair'), width: 80, fixed: 'left', align: 'left' },
+            { key: 'symbol', dataIndex: 'symbol', title: t('common:pair'), width: 60, fixed: 'left', align: 'left' },
             { key: 'max_leverage', dataIndex: 'max_leverage', title: t('common:max_leverage'), width: 100, align: 'left' },
             {
                 key: 'fee', dataIndex: 'fee',

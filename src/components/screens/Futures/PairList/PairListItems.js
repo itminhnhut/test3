@@ -90,7 +90,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
             >
                 {pairTicker?.priceChangePercent
                     ? formatNumber(
-                        roundTo(pairTicker.priceChangePercent * (pairTicker?.quoteAsset === 'VNDC' ? 100 : 1), 2),
+                        roundTo(pairTicker.priceChangePercent * 100, 2),
                         2,
                         2,
                         true

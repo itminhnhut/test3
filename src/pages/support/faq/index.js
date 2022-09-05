@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { PATHS } from 'constants/paths';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { getLastedArticles, getSupportCategories } from 'utils';
 import { useAsync } from 'react-use';
 import { useTranslation } from 'next-i18next';
@@ -14,18 +14,37 @@ import { formatTime } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import useApp from 'hooks/useApp';
 import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
 
 const SupportAnnouncement = () => {
     const [theme ,, setTheme] = useDarkMode()
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
+    const dispath = useDispatch();
 
     let {
         t,
         i18n: { language }
     } = useTranslation()
     const isApp = useApp()
+
+    useEffect(() => {
+        // document.body.classList.add('hidden-scrollbar');
+        document.body.classList.add('no-scrollbar');
+        // document.body.classList.add('!bg-onus');
+
+        const intervalReloadData = setInterval(() => {
+            dispath(reloadData());
+        }, 5 * 60 * 1000);
+
+        return () => {
+            document.body.classList.remove('hidden-scrollbar');
+            // document.body.classList.remove('bg-onus');
+            clearInterval(intervalReloadData);
+        };
+    }, []);
 
     const renderTopics = useCallback(() => {
         if (loading) {

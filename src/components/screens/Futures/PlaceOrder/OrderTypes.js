@@ -47,7 +47,7 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes, isVndcFutures }) => {
 
     // ? Render handler
     const renderCommonTypes = () => {
-        const orderFilter = isVndcFutures ? orderTypes : orderTypes?.filter((o) => o === OrderTypes.Limit || o === OrderTypes.Market)
+        const orderFilter = orderTypes
         return orderFilter?.map((o) => (
             <div
                 key={`futures_margin_mode_${o}`}

@@ -22,6 +22,23 @@ const FaqArticle = (props) => {
     const [theme, , setTheme] = useDarkMode();
 
     useEffect(() => {
+        // document.body.classList.add('hidden-scrollbar');
+        document.body.classList.add('no-scrollbar');
+        // document.body.classList.add('!bg-onus');
+
+        const intervalReloadData = setInterval(() => {
+            dispath(reloadData());
+        }, 5 * 60 * 1000);
+
+        return () => {
+            document.body.classList.remove('hidden-scrollbar');
+            // document.body.classList.remove('bg-onus');
+            clearInterval(intervalReloadData);
+        };
+    }, []);
+
+
+    useEffect(() => {
         const themeLocal = localStorage.getItem("theme");
         if (themeLocal === "dark") {
             setTheme(THEME_MODE.DARK);

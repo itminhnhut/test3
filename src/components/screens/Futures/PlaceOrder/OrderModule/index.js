@@ -45,7 +45,8 @@ const FuturesOrderModule = ({
     bid,
     isAuth,
     side,
-    pair
+    pair,
+    maxSize
 }) => {
     // ? Use hooks
     const [baseAssetUsdValue, setBaseAssetUsdValue] = useState(0)
@@ -177,23 +178,6 @@ const FuturesOrderModule = ({
         }
     }
 
-    const maxSize = useMemo(() => {
-        const lotSize =
-            pairConfig?.filters?.find((o) =>
-                [
-                    FuturesOrderTypes.Market,
-                    FuturesOrderTypes.StopMarket,
-                ].includes(currentType)
-                    ? o?.filterType === 'MARKET_LOT_SIZE'
-                    : o?.filterType === 'LOT_SIZE'
-            ) || {}
-        const _maxConfig = isReversedAsset
-            ? lotSize?.maxQty * baseAssetUsdValue
-            : lotSize?.maxQty
-        const maxAvl = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
-        return isAuth ? Math.min(_maxConfig, maxAvl) : _maxConfig;
-    }, [side, pairConfig, pair, isAuth, isReversedAsset, maxBuy, maxSell])
-
     const renderBuySellByPercent = useCallback(() => {
         const _buy =
             String(size)?.includes('%')
@@ -235,7 +219,7 @@ const FuturesOrderModule = ({
     const isError = useMemo(() => {
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit]
         const not_valid = !size || !inputValidator('price', ArrStop.includes(currentType)).isValid || !inputValidator('quantity').isValid || !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
-        return !isVndcFutures ? false : not_valid
+        return not_valid
     }, [price, size, currentType, stopPrice, orderSlTp])
 
     return (

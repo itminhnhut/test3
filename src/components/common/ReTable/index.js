@@ -349,9 +349,16 @@ const ReTableWrapper = styled.div`
     z-index: 15;
     ::after {
       visibility: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'visible' : 'hidden'};
+      box-shadow: none;
+    }
+  }
+
+  .before-remove-box-shadow {
       box-shadow: ${({ isDark }) => isDark ? 'inset 10px 0 8px -8px #263459' : 'inset 10px 0 8px -8px #f2f4f6'} !important;
     }
   }
+
+  class="rc-table-cell rc-table-cell-fix-left rc-table-cell-fix-left-last"
 
   .rc-table-expanded-row-fixed {
     min-height: 300px;
