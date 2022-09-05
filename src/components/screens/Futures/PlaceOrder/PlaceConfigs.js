@@ -19,7 +19,7 @@ const PlaceConfigs = ({ pairConfig, userSettings, leverage, setLeverage, isVndcF
 
     return (
         <>
-            <div className='pt-5 pb-3 flex items-center w-full'>
+            <div className='mt-5 mb-3 flex items-center w-full'>
                 <div className='flex-grow flex items-center w-full'>
                     <div
                         onClick={() => !isVndcFutures && openPopup('marginMode')}

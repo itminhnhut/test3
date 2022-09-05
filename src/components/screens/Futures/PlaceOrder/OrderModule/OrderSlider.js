@@ -3,7 +3,7 @@ import Slider from 'components/trade/InputSlider';
 
 const initPercent = 25;
 
-const FuturesOrderSlider = ({ size, onChange, isVndcFutures, maxBuy, maxSell, side, currentType, pair, isAuth, maxSize, decimalScaleQty }) => {
+const FuturesOrderSlider = ({ size, onChange, isVndcFutures, side, currentType, pair, isAuth, maxSize, decimalScaleQty }) => {
     const [percent, setPercent] = useState(isAuth && isVndcFutures ? initPercent : 0)
     const timer = useRef(null);
     const onPercentChange = ({ x }) => {

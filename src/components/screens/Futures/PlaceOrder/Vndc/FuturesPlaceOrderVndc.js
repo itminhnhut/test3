@@ -3,7 +3,7 @@ import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import { FuturesOrderTypes as OrderTypes, FuturesStopOrderMode, } from 'redux/reducers/futures';
 import { roundToDown } from 'round-to';
 import { useSelector } from 'react-redux';
-import { ApiStatus, DefaultFuturesFee} from 'redux/actions/const';
+import { ApiStatus, DefaultFuturesFee } from 'redux/actions/const';
 import FuturesOrderModule from 'components/screens/Futures/PlaceOrder/OrderModule';
 import FuturesOrderTypes from 'components/screens/Futures/PlaceOrder/OrderTypes';
 import PlaceConfigs from 'components/screens/Futures/PlaceOrder/PlaceConfigs';
@@ -138,13 +138,12 @@ const FuturesPlaceOrderVndc = ({
         return value.toString().split(".")[1]?.length || 0;
     }
 
-    useEffect(() => {
+    const maxSize = useMemo(() => {
         const decimalScaleQtyLimit = pairConfig?.filters.find(rs => rs.filterType === 'LOT_SIZE');
-        const _size = isNaN(size) ? Number(String(size).substring(0, String(size).indexOf('%'))) / 100 : size;
+        let maxBuy = 0;
+        let maxSell = 0;
         const _price = currentType === OrderTypes.Limit ? price : stopPrice;
-        if ((availableAsset)) {
-            let maxBuy = 0;
-            let maxSell = 0;
+        if (Math.trunc(availableAsset) > 0) {
             if ([OrderTypes.Limit, OrderTypes.StopMarket].includes(currentType) && _price) {
                 maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.Nami) / _price;
                 maxSell = maxBuy;
@@ -152,14 +151,21 @@ const FuturesPlaceOrderVndc = ({
                 maxBuy = availableAsset / ((1 / leverage) + DefaultFuturesFee.Nami) / ask;
                 maxSell = availableAsset / ((1 / leverage) + DefaultFuturesFee.Nami) / bid;
             }
-            setMaxBuy(maxBuy.toFixed(countDecimals(decimalScaleQtyLimit?.stepSize)))
-            setMaxSell(maxSell.toFixed(countDecimals(decimalScaleQtyLimit?.stepSize)))
-        } else {
-            setMaxBuy(0)
-            setMaxSell(0)
         }
-    }, [
-        availableAsset,
+
+        const lotSize = pairConfig?.filters?.find((o) => [
+            FuturesOrderTypes.Market,
+            FuturesOrderTypes.StopMarket,
+        ].includes(currentType)
+            ? o?.filterType === 'MARKET_LOT_SIZE'
+            : o?.filterType === 'LOT_SIZE'
+        ) || {}
+        const _maxConfig = assetReversed
+            ? lotSize?.maxQty * baseAssetUsdValue
+            : lotSize?.maxQty
+        const maxAvl = Number(side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell).toFixed(countDecimals(decimalScaleQtyLimit?.stepSize));
+        return isAuth ? Math.min(_maxConfig, maxAvl) : _maxConfig;
+    }, [availableAsset,
         price,
         size,
         leverage,
@@ -167,7 +173,8 @@ const FuturesPlaceOrderVndc = ({
         assetReversed,
         ask,
         bid,
-        stopPrice
+        stopPrice,
+        pairConfig
     ])
 
     return (
@@ -178,7 +185,7 @@ const FuturesPlaceOrderVndc = ({
                     setLeverage={setLeverage}
                     pairConfig={pairConfig}
                     userSettings={userSettings}
-                    isVndcFutures={isVndcFutures}
+                    isVndcFutures={true}
                     isAuth={isAuth}
                 />
                 <div className='absolute left-0 -bottom-5 w-full h-5 ' />
@@ -190,7 +197,7 @@ const FuturesPlaceOrderVndc = ({
                 <FuturesOrderTypes
                     currentType={currentType}
                     orderTypes={pairConfig?.orderTypes}
-                    isVndcFutures={isVndcFutures}
+                    isVndcFutures={true}
                 />
             </div>
 
@@ -219,9 +226,8 @@ const FuturesPlaceOrderVndc = ({
                 bid={bid}
                 isAuth={isAuth}
                 side={side}
-                maxBuy={maxBuy}
-                maxSell={maxSell}
                 pair={pair}
+                maxSize={maxSize}
             />
 
             <FuturesOrderCostAndMaxVndc
@@ -237,8 +243,6 @@ const FuturesPlaceOrderVndc = ({
                 isAssetReversed={assetReversed}
                 availableAsset={availableAsset}
                 lastPrice={lastPrice}
-                maxBuy={maxBuy}
-                maxSell={maxSell}
                 ask={ask}
                 bid={bid}
                 stopPrice={stopPrice}

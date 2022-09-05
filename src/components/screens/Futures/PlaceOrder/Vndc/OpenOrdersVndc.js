@@ -330,7 +330,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         });
 
         return filters.symbol ? items.filter(item => item?.symbol === filters.symbol) : items;
-    }, [hideOther, ordersList, filters])
+    }, [hideOther, ordersList, filters, pair])
 
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
         <Link href={getLoginUrl('sso', 'login')} locale={false}>
