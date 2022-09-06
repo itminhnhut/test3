@@ -167,20 +167,13 @@ const AddVolume = ({
     }, [pairConfig, t]);
 
     const general = useMemo(() => {
-        const _price =
-            type === FuturesOrderTypes.Market || !showCustomized
-                ? lastPrice
-                : price;
-        const _margin = margin + volume / leverage;
+        const _price = type === FuturesOrderTypes.Market || !showCustomized ? lastPrice : price;
+        const _margin = leverage ? margin + volume / leverage : 0;
         const _quantity = volume / _price + quantity;
-        const AvePrice =
-            ((volume / _price) * _price + quantity * order.price) / _quantity;
-        const size =
-            side === VndcFutureOrderType.Side.SELL ? -_quantity : _quantity;
+        const AvePrice = ((volume / _price) * _price + quantity * order.price) / _quantity;
+        const size = side === VndcFutureOrderType.Side.SELL ? -_quantity : _quantity;
         const number = side === VndcFutureOrderType.Side.SELL ? -1 : 1;
-        const liqPrice =
-            (size * AvePrice + fee - _margin) /
-            (_quantity * (number - DefaultFuturesFee.NamiFrameOnus));
+        const liqPrice = (size * AvePrice + fee - _margin) / (_quantity * (number - DefaultFuturesFee.NamiFrameOnus));
         return {
             margin: _margin,
             AvePrice: AvePrice,
