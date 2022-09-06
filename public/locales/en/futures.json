@@ -273,6 +273,7 @@
                 "error": "Unknown"
             },
             "added_volume": "Added Volume",
+            "add_volume": "Add Volume",
             "current_volume": "Current Volume",
             "advanced_custom": "Customized",
             "average_open_price": "Average Open Price:",

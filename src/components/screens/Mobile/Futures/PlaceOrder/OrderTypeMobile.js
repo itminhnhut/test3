@@ -5,6 +5,7 @@ import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import colors from "styles/colors";
+import SortIcon from 'components/screens/Mobile/SortIcon';
 
 const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
     const { t } = useTranslation();
@@ -39,7 +40,8 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                             <div className="w-full text-left">
                                 {getTypesLabel(type)}
                             </div>
-                            <ChevronDown color={colors.grey1} size={16} className="ml-1" />
+                            <SortIcon size={20} color={colors.onus.grey} activeColor={colors.onus.grey} />
+                            {/* <ChevronDown color={colors.grey1} size={16} className="ml-1" /> */}
                         </div>
                     </Popover.Button>
                     <Transition
