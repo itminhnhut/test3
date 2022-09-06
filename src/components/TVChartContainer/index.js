@@ -202,7 +202,7 @@ export class TVChartContainer extends React.PureComponent {
         const url = `${PRICE_URL}/api/v1/chart/history`;
         const { data } = await axios.get(url, {
             params: {
-                broker: 'NAMI_FUTURES',
+                broker: `NAMI_${this.props.mode || ChartMode.SPOT}`,
                 symbol: this.props.symbol,
                 from,
                 to,
@@ -532,6 +532,12 @@ export class TVChartContainer extends React.PureComponent {
                     })
                 }, 2000);
             }
+            setTimeout(() => {
+                this.drawHighLowArrows()
+                this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {
+                    this.drawHighLowArrows()
+                })
+            }, 1000);
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(() => this.saveChart(), 5000);
         });
