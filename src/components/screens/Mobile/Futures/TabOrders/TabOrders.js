@@ -216,10 +216,10 @@ const TabOrders = memo(({
                     <div className="h-full">
                         {tab !== FUTURES_RECORD_CODE.tradingHistory &&
                             <div className={classNames(
-                                "sticky bg-onus z-[10] flex items-center justify-between py-4 px-4",
+                                "sticky bg-onus z-[10] flex items-center justify-between px-4",
                                 {
-                                    'top-[108px]': tab !== FUTURES_RECORD_CODE.orderHistory,
-                                    'top-[42px]': tab === FUTURES_RECORD_CODE.orderHistory,
+                                    'top-[108px] py-4': tab !== FUTURES_RECORD_CODE.orderHistory,
+                                    'top-[42px] py-2': tab === FUTURES_RECORD_CODE.orderHistory,
                                 }
                             )}>
                                 {tab !== FUTURES_RECORD_CODE.orderHistory &&
@@ -245,7 +245,7 @@ const TabOrders = memo(({
                         }
                                 {needShowHideOther &&
                                     <div
-                                        className="flex items-center text-sm font-medium select-none cursor-pointer px-4"
+                                        className="flex items-center text-sm font-medium select-none cursor-pointer px-4 pb-4"
                                         onClick={() => setHideOther(!hideOther)}
                                     >
                                         <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
