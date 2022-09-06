@@ -29,7 +29,7 @@ const OrderItemMobile = ({
     collapse,
     setCollapse
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const isTabHistory = tab === FUTURES_RECORD_CODE.orderHistory;
     const isTabOpen = tab === FUTURES_RECORD_CODE.openOrders;
     const isTabPosition = tab === FUTURES_RECORD_CODE.position;
@@ -166,15 +166,15 @@ const OrderItemMobile = ({
 
     const renderQuoteprice = () => {
         return order?.side === VndcFutureOrderType.Side.BUY
-            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol}/>
-            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol}/>;
+            ? <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={dataMarketWatch} dataKey={'bid'} symbol={order?.symbol} />
+            : <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={dataMarketWatch} dataKey={'ask'} symbol={order?.symbol} />;
     };
 
     const _renderLastPrice = (isTabHistory) => {
         if (isTabHistory) {
             return order?.close_price ? formatNumber(order?.close_price, decimalScalePrice, 0, true) : '-';
         } else {
-            return <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order?.symbol}/>;
+            return <MiniTickerData key={order?.displaying_id + 'lastPrice'} initPairPrice={dataMarketWatch} dataKey={'lastPrice'} symbol={order?.symbol} />;
         }
     };
 
@@ -238,8 +238,8 @@ const OrderItemMobile = ({
                     </div>
                     <div
                         className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
-                        <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
-                        <span>{renderCellTable('type', order)}</span>
+                        <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
+                        <span>{renderCellTable('type', order, t, language)}</span>
                     </div>
 
                 </div>
@@ -254,8 +254,8 @@ const OrderItemMobile = ({
                             <div className="text-xs text-right" onClick={() => canShare && actions('modal', 'share')}>
                                 <div className="text-xs font-medium text-onus-green float-right">
                                     <OrderProfit key={order.displaying_id} onusMode={true} className="flex flex-col"
-                                                 order={order} initPairPrice={dataMarketWatch} isTabHistory={isTabHistory}
-                                                 isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}  mode={mode} />
+                                        order={order} initPairPrice={dataMarketWatch} isTabHistory={isTabHistory}
+                                        isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2} mode={mode} />
                                 </div>
                             </div>
                         </>

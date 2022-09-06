@@ -55,7 +55,7 @@ const OrderDetail = ({
     isVndcFutures
 }) => {
     const router = useRouter();
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const assetConfig = useSelector(state => getAssets(state, {
         ...order?.fee_metadata,
         swap: { currency: order?.margin_currency },
@@ -231,7 +231,7 @@ const OrderDetail = ({
                         className="flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2">
                         <span className="font-semibold">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
                         <span
-                            className={`text-xs font-medium ${classNameSide}`}>{renderCellTable('side', order)} / {renderCellTable('type', order)}</span>
+                            className={`text-xs font-medium ${classNameSide}`}>{renderCellTable('side', order, t, language)} / {renderCellTable('type', order, t, language)}</span>
                     </div>
                     <MenuTime
                         value={resolution}

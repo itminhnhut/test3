@@ -19,7 +19,7 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair, }) => {
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const assetConfig = useSelector(state => state.utils.assetConfig);
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const [dataSource, setDataSource] = useState([])
@@ -75,14 +75,14 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         },
         {
             name: t('futures:order_table:type'),
-            cell: (row) => loading ? <Skeletor width={65} /> : renderCellTable('type', row),
+            cell: (row) => loading ? <Skeletor width={65} /> : renderCellTable('type', row, t, language),
             selector: (row) => row?.type,
             sortable: false,
         },
         {
             name: t('futures:side'),
             selector: (row) => row?.sdie,
-            cell: (row) => loading ? <Skeletor width={65} /> : <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row)}</span>,
+            cell: (row) => loading ? <Skeletor width={65} /> : <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row, t, language)}</span>,
             sortable: false,
         },
         {

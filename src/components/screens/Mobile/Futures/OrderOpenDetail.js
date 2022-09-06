@@ -30,7 +30,7 @@ const OrderOpenDetail = ({
     decimalSymbol = 0,
     isVndcFutures
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const context = useContext(AlertContext);
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -277,8 +277,8 @@ const OrderOpenDetail = ({
                     </div>
                     <div
                         className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
-                        <span>{renderCellTable('side', order)}</span>&nbsp;/&nbsp;
-                        <span>{renderCellTable('type', order)}</span>
+                        <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
+                        <span>{renderCellTable('type', order, t, language)}</span>
                     </div>
                 </div>
                 <div className="flex items-center">

@@ -70,12 +70,10 @@ export const getProfitVndc = (order, lastPrice = 0, isOnus) => {
     return profitVNDC;
 };
 
-export const renderCellTable = (key, rowData) => {
-    const { t, i18n: { language } } = useTranslation();
+export const renderCellTable = (key, rowData, t, language) => {
     switch (key) {
         case 'side':
             return language === 'vi' ? rowData[key] === 'Sell' ? t('common:sell') : t('common:buy') : rowData[key];
-            return;
         case 'type':
             return language === 'vi' ?
                 (rowData[key] === 'Market' ? t('futures:market') : rowData[key] === 'Limit' ? t('futures:limit') : rowData[key]) : rowData[key];
