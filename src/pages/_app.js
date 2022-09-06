@@ -144,7 +144,7 @@ const App = ({
     useEffect(() => {
         if (!isMobile) {
             function initFreshChat() {
-                window.fcWidget.init({
+                window.fcWidget?.init({
                     token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
                     host: "https://wchat.freshchat.com",
                     locale: language,
