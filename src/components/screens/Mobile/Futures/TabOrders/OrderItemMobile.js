@@ -312,7 +312,7 @@ const OrderItemMobile = ({
                             label={isTabPosition ? t('futures:order_table:open_price') : t('futures:stop_loss')}
                             value={isTabPosition ? getOpenPrice(order, dataMarketWatch) : renderSlTp(order?.sl)}
                             className="py-[2px] space-y-[2px] mb-2"
-                            valueClassName={`${!isTabPosition ? order?.sl > 0 ? 'text-onus-red' : 'text-onus-white' : ''}`}
+                            valueClassName={`${!isTabPosition ? 'text-onus-red' : ''}`}
                         />
                         <OrderItem
                             center
@@ -329,7 +329,7 @@ const OrderItemMobile = ({
                             label={isTabPosition ? t('futures:mobile:quote_price') : t('futures:take_profit')}
                             value={isTabPosition ? renderQuoteprice() : renderSlTp(order?.tp)}
                             className="py-[2px] space-y-[2px]"
-                            valueClassName={`${!isTabPosition ? order?.tp > 0 ? 'text-onus-green' : 'text-onus-white' : ''}`}
+                            valueClassName={`${!isTabPosition ? 'text-onus-green' : ''}`}
                         />
                         <OrderItem
                             center
