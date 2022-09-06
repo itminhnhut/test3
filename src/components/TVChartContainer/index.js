@@ -229,7 +229,7 @@ export class TVChartContainer extends React.PureComponent {
                 // .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setTooltip(high[3].toString())
                 .setArrowColor(!isDark ? colors.darkBlue2 : colors.grey4)
-                .setTextColor(isDark ? colors.darkBlue2 : colors.grey4)
+                .setTextColor(!isDark ? colors.darkBlue2 : colors.grey4)
                 .setArrowHeight(7)
 
             this.drawnHighLowArrows = { highArrow, lowArrow };
