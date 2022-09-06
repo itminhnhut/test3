@@ -197,18 +197,11 @@ export class TVChartContainer extends React.PureComponent {
         delete this.drawnHighLowArrows?.lowArrow
 
         const { from, to } = this.widget.chart().getVisibleRange()
-        const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
-        const url = `${PRICE_URL}/api/v1/chart/history`;
-        const { data } = await axios.get(url, {
-            params: {
-                broker: `NAMI_${this.props.mode || ChartMode.SPOT}`,
-                symbol: this.props.symbol,
-                from,
-                to,
-                resolution: this.getInterval(this.state.interval.toString()),
-            },
-        });
-        if (data && data.length) {
+        const { data } = await this.widget.chart().exportData({
+            from,
+            to
+        })
+        if (data) {
             const high = data.reduce((prev, current) => (prev[2] > current[2]) ? prev : current)
             const low = data.reduce((prev, current) => (prev[3] < current[3]) ? prev : current)
             // const base = this.props.symbol.includes('VNDC') ? this.props.symbol.replace('VNDC', '') : this.props.symbol.replace('USDT', '')

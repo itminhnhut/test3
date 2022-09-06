@@ -517,18 +517,10 @@ export class MobileTradingView extends React.PureComponent {
         delete this.drawnHighLowArrows?.lowArrow
     
         const { from, to } = this.widget.chart().getVisibleRange()
-        const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
-
-        const url = `${PRICE_URL}/api/v1/chart/history`;
-        const { data } = await axios.get(url, {
-            params: {
-                broker: 'NAMI_FUTURES',
-                symbol: this.props.symbol,
-                from,
-                to,
-                resolution: this.getInterval(this.state.interval.toString()),
-            },
-        });
+        const { data } = await this.widget.chart().exportData({
+            from,
+            to
+        })
         if (data && data.length) {
             const high = data.reduce((prev, current) => (prev[2] > current[2]) ? prev : current)
             const low = data.reduce((prev, current) => (prev[3] < current[3]) ? prev : current)
