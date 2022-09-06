@@ -27,7 +27,7 @@ import Link from 'next/link';
 import OrderClose from './OrderClose';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair }) => {
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const ordersList = useSelector(state => state?.futures?.ordersList)
     const marketWatch = useSelector((state) => state.futures.marketWatch)
     const assetConfig = useSelector(state => state.utils.assetConfig);

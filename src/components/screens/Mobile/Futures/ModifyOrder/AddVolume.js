@@ -167,20 +167,13 @@ const AddVolume = ({
     }, [pairConfig, t]);
 
     const general = useMemo(() => {
-        const _price =
-            type === FuturesOrderTypes.Market || !showCustomized
-                ? lastPrice
-                : price;
-        const _margin = margin + volume / leverage;
+        const _price = type === FuturesOrderTypes.Market || !showCustomized ? lastPrice : price;
+        const _margin = leverage ? margin + volume / leverage : 0;
         const _quantity = volume / _price + quantity;
-        const AvePrice =
-            ((volume / _price) * _price + quantity * order.price) / _quantity;
-        const size =
-            side === VndcFutureOrderType.Side.SELL ? -_quantity : _quantity;
+        const AvePrice = ((volume / _price) * _price + quantity * order.price) / _quantity;
+        const size = side === VndcFutureOrderType.Side.SELL ? -_quantity : _quantity;
         const number = side === VndcFutureOrderType.Side.SELL ? -1 : 1;
-        const liqPrice =
-            (size * AvePrice + fee - _margin) /
-            (_quantity * (number - DefaultFuturesFee.NamiFrameOnus));
+        const liqPrice = (size * AvePrice + fee - _margin) / (_quantity * (number - DefaultFuturesFee.NamiFrameOnus));
         return {
             margin: _margin,
             AvePrice: AvePrice,
@@ -254,13 +247,18 @@ const AddVolume = ({
         return validator('price', price, type, side, lastPrice, pairConfig, configSymbol.decimalScalePrice, t)
     }
 
-    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md hover:bg-onus-bg3 hover:bg-onus-bg3`;
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
     const isError =
         (available && (volume < +minQuoteQty || volume > +maxQuoteQty)) ||
         leverage > pairConfig?.leverageConfig.max ||
         leverage < pairConfig?.leverageConfig.min ||
         (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market) ||
         loading;
+
+    const getLabel = (type) => {
+        if (type !== FuturesOrderTypes.Market) return t('common:price')
+        return t('common:price') + ' ' + String(getTypesLabel(type, t)).toLowerCase()
+    }
 
     return (
         <div className="px-4 mt-3">
@@ -313,7 +311,7 @@ const AddVolume = ({
                     </div>
                     <TradingInput
                         onusMode={true}
-                        label=" "
+                        label={' '}
                         value={volume}
                         decimalScale={configSymbol.decimalSymbol}
                         allowNegative={false}
@@ -322,7 +320,6 @@ const AddVolume = ({
                         inputClassName="!text-center"
                         onValueChange={({ value }) => onChangeVolume(value)}
                         disabled={!available}
-                        placeholder={t('common:price') + ' ' + String(getTypesLabel(type, t)).toLowerCase()}
                         autoFocus
                         inputMode="decimal"
                         allowedDecimalSeparators={[",", "."]}
@@ -380,7 +377,7 @@ const AddVolume = ({
                                 displayExpr="title"
                                 className="max-w-[8.75rem]"
                             />
-                            <div className="px-4 h-[44px] flex items-center bg-onus-bg2 rounded-md  max-w-[200px]">
+                            <div className="px-4 h-[44px] flex items-center justify-between bg-onus-bg2 rounded-md w-[calc(100%-8.75rem)]">
                                 <div className={changeClass}>
                                     <Minus
                                         size={15}
@@ -398,12 +395,13 @@ const AddVolume = ({
                                     decimalScale={0}
                                     allowNegative={false}
                                     thousandSeparator={true}
-                                    containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-onus-bg2 min-w-[50px]"
+                                    containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-onus-bg2 max-w-[6.25rem] min-w-[50px]"
                                     inputClassName="!text-center"
                                     onValueChange={({ value }) => setLeverage(value)}
                                     disabled={!available}
                                     autoFocus
                                     inputMode="decimal"
+                                    suffix={'x'}
                                     allowedDecimalSeparators={[",", "."]}
                                 />
                                 <div className={changeClass}>
@@ -424,14 +422,14 @@ const AddVolume = ({
                             decimalScale={configSymbol.decimalScalePrice}
                             allowNegative={false}
                             thousandSeparator={true}
-                            containerClassName="px-2.5 flex-grow text-sm font-medium h-[44px] !bg-onus-bg2 min-w-[50px]"
+                            containerClassName="px-2.5 flex-grow text-sm font-medium h-[44px] border-none !bg-onus-bg2 min-w-[50px]"
                             inputClassName="!text-center"
                             onValueChange={({ value }) => setPrice(value)}
                             disabled={type === FuturesOrderTypes.Market}
                             autoFocus
                             validator={_validator()}
-                            labelClassName="!text-sm"
-                            label={t("common:price")}
+                            labelClassName="!text-sm capitalize"
+                            label={getLabel(type)}
                             renderTail={() => (
                                 <span className={`font-medium pl-2 text-onus-grey`}>
                                     {configSymbol?.quoteAsset}

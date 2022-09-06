@@ -189,7 +189,7 @@ export const validator = (key, price, type, side, lastPrice, pairConfig, decimal
                         isValid = false;
                         msg = `${t("futures:maximum_price")} ${formatNumber(lowerBound.max, decimal, 0, true)}`;
                     }
-                } else if (type === "STOP") {
+                } else if (type === "STOP_MARKET") {
                     if (price < upperBound.min) {
                         isValid = false;
                         msg = `${t("futures:minimum_price")} ${formatNumber(upperBound.min, decimal, 0, true)}`;
@@ -207,7 +207,7 @@ export const validator = (key, price, type, side, lastPrice, pairConfig, decimal
                         isValid = false;
                         msg = `${t("futures:maximum_price")} ${formatNumber(upperBound.max, decimal, 0, true)}`;
                     }
-                } else if (type === "STOP") {
+                } else if (type === "STOP_MARKET") {
                     if (price < lowerBound.min) {
                         isValid = false;
                         msg = `${t("futures:minimum_price")} ${formatNumber(lowerBound.min, decimal, 0, true)}`;
