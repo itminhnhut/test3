@@ -12,6 +12,9 @@ import { ChartMode } from 'redux/actions/const';
 import { VndcFutureOrderType } from '../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType'
 import { isMobile } from 'react-device-detect';
 import { useTimeout } from 'react-use';
+import { formatPrice } from 'redux/actions/utils';
+import { debounce } from 'lodash';
+import axios from 'axios';
 
 const CONTAINER_ID = "nami-tv";
 const CHART_VERSION = "1.0.6";
@@ -44,6 +47,7 @@ export class TVChartContainer extends React.PureComponent {
     timer = null;
     firstTime = true;
     oldOrdersList = [];
+    drawnHighLowArrows = {}
 
     constructor(props) {
         super(props);
@@ -172,7 +176,71 @@ export class TVChartContainer extends React.PureComponent {
         }
     };
 
+    getInterval(resolution) {
+        if (resolution.includes('D') || resolution.includes('W') || resolution.includes('M')) {
+            return '1d';
+        }
+        if (resolution.includes('S')) {
+            return '1m';
+        }
+        // minutes and hour
+        if (+resolution < 60) {
+            return '1m';
+        }
+        return '1h';
+    }
 
+    drawHighLowArrows = debounce(async () => {
+        if (this.drawnHighLowArrows.highArrow && this.drawnHighLowArrows.lowArrow) {
+            this.drawnHighLowArrows.highArrow.remove()
+            this.drawnHighLowArrows.lowArrow.remove()
+            delete this.drawnHighLowArrows.highArrow
+            delete this.drawnHighLowArrows.lowArrow
+        }
+        const { from, to } = this.widget.chart().getVisibleRange()
+        const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
+        const url = `${PRICE_URL}/api/v1/chart/history`;
+        const { data } = await axios.get(url, {
+            params: {
+                broker: `NAMI_${this.props.mode || ChartMode.SPOT}`,
+                symbol: this.props.symbol,
+                from,
+                to,
+                resolution: this.getInterval(this.state.interval.toString()),
+            },
+        });
+        if (data && data.length) {
+            const high = data.reduce((prev, current) => (prev[2] > current[2]) ? prev : current)
+            const low = data.reduce((prev, current) => (prev[3] < current[3]) ? prev : current)
+            // const base = this.props.symbol.includes('VNDC') ? this.props.symbol.replace('VNDC', '') : this.props.symbol.replace('USDT', '')
+            const highArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
+                .setPrice(high[2])
+                .setTime(high[0])
+                .setDirection('sell')
+                // .setText(formatPrice(high[2], this.props.exchangeConfig, base).toString())
+                .setText(high[2].toString())
+                // .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
+                .setTooltip(high[2].toString())
+                .setArrowColor('rgb(0,0,0)')
+                .setTextColor('rgb(0,0,0)')
+                .setArrowHeight(7)
+            const lowArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
+                .setPrice(low[3])
+                .setTime(low[0])
+                .setDirection('buy')
+                // .setText(formatPrice(low[3], this.props.exchangeConfig, base).toString())
+                .setText(high[3].toString())
+                // .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
+                .setTooltip(high[3].toString())
+                .setArrowColor('rgb(0,0,0)')
+                .setTextColor('rgb(0,0,0)')
+                .setArrowHeight(7)
+
+            this.drawnHighLowArrows = { highArrow, lowArrow };
+        }
+    }, 200)
+
+ 
 
     handleChangeChartType = (type) => {
         if (this?.widget) {
@@ -460,6 +528,12 @@ export class TVChartContainer extends React.PureComponent {
                     this.firstTime = false;
                 }, 2000);
             }
+            setTimeout(() => {
+                this.drawHighLowArrows()
+                this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {
+                    this.drawHighLowArrows()
+                })
+            }, 1000);
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(() => this.saveChart(), 5000);
         });
