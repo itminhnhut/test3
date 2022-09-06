@@ -6,6 +6,7 @@ import { ChartMode } from 'redux/actions/const';
 import { IconRefresh } from 'components/common/Icons';
 import colors from 'styles/colors';
 import { useRef } from 'react';
+import { useSelector } from 'react-redux';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView/').then(mod => mod.MobileTradingView),
@@ -26,6 +27,8 @@ const ChartMobile = memo(({
     const { t } = useTranslation();
     const [fullChart, setFullChart] = useState(false);
     const refChart = useRef(null);
+    const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
+
 
     const style = useMemo(() => {
         if (fullChart) return { height: '100vw' };
@@ -69,6 +72,7 @@ const ChartMobile = memo(({
                     .toString())} // Change component key will remount component
                 fullChart={fullChart}
                 setFullChart={setFullChart}
+                exchangeConfig={exchangeConfig}
             />
             {fullChart &&
                 <div className="absolute right-4 bottom-2" onClick={() => refChart.current.resetComponent()}>
