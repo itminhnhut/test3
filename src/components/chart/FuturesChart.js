@@ -15,5 +15,6 @@ const FuturesChart = dynamic(
 
 export default (props) => {
     const [currentTheme,] = useDarkMode();
-    return <FuturesChart {...props} theme={currentTheme} mode={ChartMode.FUTURES}/>;
+    const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
+    return <FuturesChart {...props} theme={currentTheme} mode={ChartMode.FUTURES}  exchangeConfig={exchangeConfig}/>;
 };

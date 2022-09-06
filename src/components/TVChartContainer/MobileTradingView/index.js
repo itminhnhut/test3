@@ -527,7 +527,7 @@ export class MobileTradingView extends React.PureComponent {
                 symbol: this.props.symbol,
                 from,
                 to,
-                resolution: this.getInterval(this.state.interval),
+                resolution: this.getInterval(this.state.interval.toString()),
             },
         });
         if (data && data.length) {
