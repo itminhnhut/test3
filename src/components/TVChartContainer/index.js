@@ -230,9 +230,9 @@ export class TVChartContainer extends React.PureComponent {
 
             this.drawnHighLowArrows = { highArrow, lowArrow };
         }
-    }, 200)
+    }, 100)
 
- 
+
 
     handleChangeChartType = (type) => {
         if (this?.widget) {

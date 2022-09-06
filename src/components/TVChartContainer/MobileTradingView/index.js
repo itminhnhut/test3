@@ -515,7 +515,7 @@ export class MobileTradingView extends React.PureComponent {
         this.drawnHighLowArrows?.lowArrow?.remove()
         delete this.drawnHighLowArrows?.highArrow
         delete this.drawnHighLowArrows?.lowArrow
-    
+
         const { from, to } = this.widget.chart().getVisibleRange()
         const { data } = await this.widget.chart().exportData({
             from,
@@ -546,7 +546,7 @@ export class MobileTradingView extends React.PureComponent {
 
             this.drawnHighLowArrows = { highArrow, lowArrow };
         }
-    }, 200)
+    }, 100)
 
     getInterval(resolution) {
         if (resolution.includes('D') || resolution.includes('W') || resolution.includes('M')) {
