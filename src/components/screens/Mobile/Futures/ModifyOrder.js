@@ -49,7 +49,7 @@ const ModifyOrder = ({
             <div className="relative bg-onus-bgModal w-full rounded-t-2xl">
                 <div className="flex justify-between items-center px-4">
                     <span className="text-lg text-onus-white font-bold leading-6">
-                        {t("futures:mobile:adjust_margin:added_volume")}
+                        {t("futures:mobile:adjust_margin:add_volume")}
                     </span>
                 </div>
                 {/* <div className="grid grid-cols-2 font-bold">

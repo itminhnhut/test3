@@ -351,7 +351,7 @@ const OrderItemMobile = ({
                                 order.status === VndcFutureOrderType.Status.ACTIVE &&
                                 <Button
                                     className="bg-onus-bg3 text-onus-gray !h-[36px]"
-                                    onClick={() => actions('modal', 'add-vol')}> {t('futures:mobile:adjust_margin:added_volume')}</Button>
+                                    onClick={() => actions('modal', 'add-vol')}> {t('futures:mobile:adjust_margin:add_volume')}</Button>
                             }
                             {!((order?.metadata?.dca_order_metadata || order?.metadata?.partial_close_metadata) && orderStatus.pending) &&
                                 <Button
