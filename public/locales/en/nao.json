@@ -209,7 +209,8 @@
         "confirm_close": "Close",
         "join_success": "Successfully Joined",
         "team_invitations": "Team Invitations",
-        "date_2": "<div class='font-semibold'>{{days}}&nbsp;days&nbsp;{{hours}}&nbsp;hours&nbsp;{{minutes}}&nbsp;minutes</div>"
+        "date_2": "<div class='font-semibold'>{{days}}&nbsp;days&nbsp;{{hours}}&nbsp;hours&nbsp;{{minutes}}&nbsp;minutes</div>",
+        "last_updated_time": "Last updated"
     },
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",

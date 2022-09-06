@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken'
 import ContesRules from 'components/screens/Nao/Contest/ContesRules';
 import ContestInfo from 'components/screens/Nao/Contest/ContestInfo';
@@ -6,6 +6,9 @@ import ContestPerRanks from 'components/screens/Nao/Contest/ContestPerRanks';
 import ContestTeamRanks from 'components/screens/Nao/Contest/ContestTeamRanks';
 import ContestDetail from 'components/screens/Nao/Contest/ContestDetail';
 import InvitationsDetail from 'components/screens/Nao/Contest/season2/InvitationsDetail';
+import { API_CONTEST_LAST_TIME_SCAN } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import FetchApi from 'utils/fetch-api';
 
 export const seasons = [
     {
@@ -42,6 +45,7 @@ const Contest = (props) => {
     const [showInvitations, showShowInvitationst] = useState(false)
     const [showAccept, showShowAccept] = useState(false)
     const [inviteDetail, setInviteDetail] = useState(null)
+    const [lastUpdatedTime, setLastUpdatedTime] = useState(null)
     const refInfo = useRef(null);
 
     const sortName = useRef('volume');
@@ -83,15 +87,30 @@ const Contest = (props) => {
         showShowDetail(false);
     }
 
+    const renderLastUpdated = async (season) => {
+        const { data, status } = await FetchApi({
+            url: API_CONTEST_LAST_TIME_SCAN,
+            params: { contest_id: season },
+        });
+        if (data?.time && status === ApiStatus.SUCCESS) {
+            console.log('CONTEST DATA)_______',data)
+            setLastUpdatedTime(data.time)
+        }
+    }
+
+    useEffect(() => {
+        renderLastUpdated(6)
+    })
+
     return (
         <LayoutNaoToken>
             {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} />}
             {showInvitations && <InvitationsDetail {...props} onShowDetail={onShowDetail} getInfo={getInfo} data={invitationsData.current} onClose={() => showShowInvitationst(false)} />}
             <div className="nao_section">
                 <ContesRules seasons={seasons} {...props} />
-                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
-                <ContestPerRanks {...props} />
-                <ContestTeamRanks {...props} onShowDetail={onShowDetail} />
+                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations}/>
+                <ContestPerRanks {...props}  lastUpdatedTime={lastUpdatedTime}/>
+                <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime}/>
             </div>
         </LayoutNaoToken>
     );

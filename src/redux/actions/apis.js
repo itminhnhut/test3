@@ -253,6 +253,7 @@ export const API_CONTEST_GET_GROUP_MEMBER = API_PREFIX + "event/futures-contest/
 export const API_CONTEST_CANCEL_INVITE = API_PREFIX + "event/futures-contest/cancel-invite";
 export const API_CONTEST_GET_INVITES = API_PREFIX + "event/futures-contest/invites";
 export const API_CONTEST_SEND_INVITE = API_PREFIX + "event/futures-contest/send-invite";
+export const API_CONTEST_LAST_TIME_SCAN = API_PREFIX + "event/futures-contest/last-time-scan";
 
 export const API_CONTEST_GET_INVITATIONS =
     API_PREFIX + "event/futures-contest/invites";
