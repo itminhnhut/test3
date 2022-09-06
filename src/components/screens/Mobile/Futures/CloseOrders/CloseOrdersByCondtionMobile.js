@@ -219,7 +219,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
         return (
             <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
                 modalClassName="z-[99999] flex justitfy-center h-full"
-                onusClassName={"!px-4 pb-13 min-h-[304px] rounded-t-[16px] !bg-onus-bg3 !overflow-hidden !pt-11"}
+                onusClassName={"!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-onus-bg3 !overflow-hidden !pt-11"}
                 containerClassName="!bg-nao-bgModal2/[0.6]"
             >
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-[20px] mb-3">
@@ -252,7 +252,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                 >
                     {state?.orders && renderPositionList()}
                 </div>
-                {state?.orders.length > 5 && <div className='text-onus-base w-full flex justify-center h-4 items-end'>
+                {state?.orders?.length > 5 && <div className='text-onus-base w-full flex justify-center h-4 items-end'>
                     {showPositionList && isMore && IsMoreIcon}
                 </div>}
                 <div className="w-full flex justify-between gap-[10px] mt-8 h-12">
@@ -264,12 +264,13 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         className="!rounded-md text-nao-white! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
                     />
                     <Button
+                        disabled={state?.orders?.length === 0}
                         onusMode
                         onClick={() => closeOrdersByCloseType()}
                         type='primary'
                         componentType='button'
                         title={t('common:confirm')}
-                        className={`!rounded-md text-nao-white! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em] ${state.orders.length === 0 && '!bg-onus-gray !dark:bg-darkBlue-3 opacity-30'}`}
+                        className={`!rounded-md text-nao-white! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]`}
                     />
                 </div>
             </Modal>
@@ -301,7 +302,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                             {t('futures:mobile.close_all_positions.estimated_time')}
                         </div>
                         <div>
-                            {state.orders.length * 2}s
+                            {state?.orders?.length * 2}s
                         </div>
                     </div>
                 </div>
@@ -312,7 +313,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                             {t('futures:mobile.close_all_positions.estimated_orders')}
                         </div>
                         <div>
-                            {state.orders.length} {state.orders.length > 1 ? t('futures:mobile.close_all_positions.orders') : t('futures:mobile.close_all_positions.order')}
+                            {state?.orders?.length} {state?.orders?.length > 1 ? t('futures:mobile.close_all_positions.orders') : t('futures:mobile.close_all_positions.order')}
                         </div>
                     </div>
                 </div>
