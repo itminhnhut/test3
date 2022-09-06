@@ -24,7 +24,7 @@ const OrderVolumeMobileModal = (props) => {
     const firstTime = useRef(true);
 
     const minQuoteQty = useMemo(() => {
-        return pairConfig ? pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : initValue
+        return pairConfig ? +pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : initValue
     }, [pairConfig])
 
     const maxQuoteQty = useMemo(() => {
@@ -80,7 +80,7 @@ const OrderVolumeMobileModal = (props) => {
 
     const available = maxQuoteQty >= minQuoteQty;
     const isError = available && (volume < +minQuoteQty || volume > +maxQuoteQty)
-    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? 'hover:bg-onus-bg3 hover:bg-onus-bg3' : 'hover:bg-bgHover hover:bg-bgHover-dark'}`
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${onusMode ? '' : 'hover:bg-bgHover hover:bg-bgHover-dark'}`
     return (
         <Modal
             onusMode={true}
