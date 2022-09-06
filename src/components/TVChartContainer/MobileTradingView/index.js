@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IconLoading } from 'components/common/Icons';
-import { getTradingViewTimezone } from 'redux/actions/utils';
+import { getTradingViewTimezone, formatNumber } from 'redux/actions/utils';
 import colors from '../../../styles/colors';
 import { widget } from '../../TradingView/charting_library/charting_library.min';
 import Datafeed from '../api';
@@ -22,6 +22,9 @@ const ChartStatus = {
     RECONNECTING: 3,
     UNABLE_TO_CONNECT: 4,
 };
+import { formatPrice } from 'src/redux/actions/utils';
+import axios from 'axios';
+import debounce from 'lodash/debounce';
 
 export class MobileTradingView extends React.PureComponent {
     state = {
@@ -43,6 +46,7 @@ export class MobileTradingView extends React.PureComponent {
     timer = null;
     firstTime = true;
     oldOrdersList = [];
+    drawnHighLowArrows = {}
 
     containerId = `${this.props.containerId || CONTAINER_ID}-${this.props.symbol}`;
 
@@ -55,6 +59,7 @@ export class MobileTradingView extends React.PureComponent {
     componentDidMount() {
         if (this.props?.refChart) this.props?.refChart(this);
         this.initWidget(this.props.symbol, this.props.fullChart);
+
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -96,6 +101,7 @@ export class MobileTradingView extends React.PureComponent {
         if (prevProps.fullChart !== this.props.fullChart) {
             this.initWidget(this.props.symbol, this.props.fullChart);
         }
+
     }
 
     componentWillUnmount() {
@@ -491,13 +497,79 @@ export class MobileTradingView extends React.PureComponent {
             if (this.timer) clearTimeout(this.timer);
             this.timer = setTimeout(() => {
                 this.rawOrders();
+                this.drawHighLowArrows()
                 this.firstTime = false;
+                this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {
+                    this.drawHighLowArrows()
+                })
             }, 2000);
             // }
             if (this?.intervalSaveChart) clearInterval(this.intervalSaveChart);
             this.intervalSaveChart = setInterval(this.saveChart, 5000);
         });
+
     };
+
+    drawHighLowArrows = debounce(async () => {
+        if (this.drawnHighLowArrows.highArrow && this.drawnHighLowArrows.lowArrow) {
+            this.drawnHighLowArrows.highArrow.remove()
+            this.drawnHighLowArrows.lowArrow.remove()
+            delete this.drawnHighLowArrows.highArrow
+            delete this.drawnHighLowArrows.lowArrow
+        }
+        const { from, to } = this.widget.chart().getVisibleRange()
+        const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
+
+        const url = `${PRICE_URL}/api/v1/chart/history`;
+        const { data } = await axios.get(url, {
+            params: {
+                broker: 'NAMI_FUTURES',
+                symbol: this.props.symbol,
+                from,
+                to,
+                resolution: this.getInterval(this.state.interval),
+            },
+        });
+        if (data && data.length) {
+            const high = data.reduce((prev, current) => (prev[2] > current[2]) ? prev : current)
+            const low = data.reduce((prev, current) => (prev[3] < current[3]) ? prev : current)
+            const base = this.props.symbol.includes('VNDC') ? this.props.symbol.replace('VNDC', '') : this.props.symbol.replace('USDT', '')
+            const highArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
+                .setPrice(high[2])
+                .setTime(high[0])
+                .setDirection('sell')
+                .setText(formatPrice(high[2], this.props.exchangeConfig, base).toString())
+                .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
+                .setArrowColor('rgb(187,187,187)')
+                .setTextColor(colors.onus.grey)
+                .setArrowHeight(7)
+            const lowArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
+                .setPrice(low[3])
+                .setTime(low[0])
+                .setDirection('buy')
+                .setText(formatPrice(low[3], this.props.exchangeConfig, base).toString())
+                .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
+                .setArrowColor('rgb(187,187,187)')
+                .setTextColor(colors.onus.grey)
+                .setArrowHeight(7)
+
+            this.drawnHighLowArrows = { highArrow, lowArrow };
+        }
+    }, 200)
+
+    getInterval(resolution) {
+        if (resolution.includes('D') || resolution.includes('W') || resolution.includes('M')) {
+            return '1d';
+        }
+        if (resolution.includes('S')) {
+            return '1m';
+        }
+        // minutes and hour
+        if (+resolution < 60) {
+            return '1m';
+        }
+        return '1h';
+    }
 
     syncIndicators = () => {
         const currentStudies = this.widget.activeChart()
