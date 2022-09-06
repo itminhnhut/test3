@@ -8,8 +8,9 @@ import { ApiStatus } from 'redux/actions/const';
 import { formatNumber, getS3Url, getLoginUrl } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
+import { formatTime } from 'utils/reference-utils';
 
-const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset }) => {
+const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset,  lastUpdatedTime }) => {
     const [tab, setTab] = useState('volume');
     const { t, i18n: { language } } = useTranslation();
     const { width } = useWindowSize()
@@ -216,6 +217,8 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset }) => 
                     }
                 </Table>
             }
+
+            <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div>
         </section>
     );
 };
