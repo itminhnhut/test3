@@ -211,7 +211,12 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
         }
     }
 
-    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md hover:bg-onus-bg3 hover:bg-onus-bg3`;
+    const getLabel = (type) => {
+        if (type !== FuturesOrderTypes.Market) return t('common:price')
+        return t('common:price') + ' ' + String(getTypesLabel(type, t)).toLowerCase()
+    }
+
+    const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
     const isError = partialClose && (volume > order_value || (!volume && partialClose) ||
         (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market)) || loading;
 
@@ -349,14 +354,14 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                                             decimalScale={configSymbol.decimalScalePrice}
                                             allowNegative={false}
                                             thousandSeparator={true}
-                                            containerClassName="px-2.5 flex-grow text-sm font-medium h-[44px] !bg-onus-bg2 w-[200px]"
+                                            containerClassName="px-2.5 flex-grow text-sm font-medium h-[44px] !bg-onus-bg2 w-[calc(100%-8.75rem)]"
                                             inputClassName="!text-left"
-                                            placeholder={t('common:price') + ' ' + String(getTypesLabel(type, t)).toLowerCase()}
+                                            placeholder={getLabel(type)}
                                             onValueChange={({ value }) => setPrice(value)}
                                             disabled={type === FuturesOrderTypes.Market}
                                             autoFocus
                                             validator={_validator()}
-                                            labelClassName="!text-sm"
+                                            labelClassName="!text-sm capitalize"
                                             label={' '}
                                             renderTail={() => (
                                                 <span className={`font-medium pl-2 text-onus-grey`}>

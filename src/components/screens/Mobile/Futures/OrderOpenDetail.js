@@ -373,7 +373,7 @@ const OrderOpenDetail = ({
                     order.status === VndcFutureOrderType.Status.ACTIVE &&
                     <div className="w-full">
                         <Button
-                            title={t('futures:mobile.modify_order')}
+                            title={t('futures:mobile:adjust_margin:added_volume')}
                             className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
