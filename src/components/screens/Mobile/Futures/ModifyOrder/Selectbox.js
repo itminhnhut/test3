@@ -24,7 +24,7 @@ const Selectbox = ({
                         className={`w-full h-[44px] bg-onus-bg2 rounded-md px-4 ${className}`}
                     >
                         <div className="flex items-center justify-between text-sm font-medium">
-                            <div className="w-full text-left">{title}</div>
+                            <div className="w-full text-left whitespace-nowrap">{title}</div>
                             <SortIcon size={20} color={colors.onus.grey} activeColor={colors.onus.grey} />
                             {/* <ChevronDown
                                 color={colors.onus.grey}
