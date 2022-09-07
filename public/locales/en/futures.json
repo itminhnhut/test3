@@ -288,7 +288,9 @@
             "partially_closed_success_message": "your partial position have been closed successfully",
             "remaining_volume": "Remaining Volume",
             "order_completed": "Completed",
-            "close_position": "Close Position"
+            "close_position": "Close Position",
+            "pending_closed_volume": "Pending closed volume",
+            "tooltip_pending_close_volume": "Total pending partially closed orders"
         },
         "transaction_histories": {
             "id": "ID",

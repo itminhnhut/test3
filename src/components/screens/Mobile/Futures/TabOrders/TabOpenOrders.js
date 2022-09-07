@@ -207,6 +207,13 @@ const TabOpenOrders = ({
         });
     }
 
+    useEffect(() => {
+        if (rowData.current && openCloseOrderModal) {
+            rowData.current = ordersList.find(rs => rs.displaying_id === rowData.current?.displaying_id)
+        }
+
+    }, [ordersList, rowData.current, openCloseOrderModal])
+
     if (ordersList.length <= 0) {
         return <TableNoData
             isMobile
