@@ -35,10 +35,21 @@ const getPairConfig = createSelector(
         return find(pairConfigs, { ...params })
     }
 );
+
+const getAvailable = createSelector(
+    [
+        state => state.wallet?.FUTURES,
+        (utils, params) => params
+    ],
+    (wallet, params) => {
+        const _avlb = wallet?.[params.assetId]
+        return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
+    }
+);
+
 const AddVolume = ({
     order,
     pairPrice,
-    available,
     onClose,
     forceFetchOrder
 }) => {
@@ -57,6 +68,7 @@ const AddVolume = ({
     const isChangeSlide = useRef(false);
     const [loading, setLoading] = useState(false);
     const context = useContext(AlertContext);
+    const available = useSelector(state => getAvailable(state, { assetId: pairConfig?.quoteAssetId }));
 
     const getDecimalPrice = (config) => {
         const decimalScalePrice =
@@ -147,12 +159,12 @@ const AddVolume = ({
         price,
         side,
         leverage,
-        available,
         pairPrice,
         pairConfig,
         configSymbol,
         type,
         showCustomized,
+        available
     ]);
 
     const optionsTypes = useMemo(() => {

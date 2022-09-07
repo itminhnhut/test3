@@ -225,7 +225,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
         >
             <div className="flex flex-col ">
-                <div className="text-lg text-onus-white font-bold leading-6">
+                <div className="text-lg text-onus-white font-bold leading-6 mb-3">
                     {t("futures:mobile:adjust_margin:close_position")}
                 </div>
                 <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">
