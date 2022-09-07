@@ -152,7 +152,8 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     }, [volume, order, percent, pairPrice, configSymbol])
 
     const _validator = () => {
-        return validator('price', price, type, side, lastPrice, pairConfig, configSymbol.decimalScalePrice, t)
+        const _side = side === VndcFutureOrderType.Side.BUY ? VndcFutureOrderType.Side.SELL : VndcFutureOrderType.Side.BUY
+        return validator('price', price, type, _side, lastPrice, pairConfig, configSymbol.decimalScalePrice, t)
     }
 
     const onConfirm = async () => {
@@ -217,13 +218,16 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     }
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
-    const isError = partialClose && (volume > order_value || (!volume && partialClose) ||
+    const isError = partialClose && (volume > order_value || (!volume && partialClose) || volume < minQuoteQty ||
         (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market)) || loading;
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
         >
             <div className="flex flex-col ">
+                <div className="text-lg text-onus-white font-bold leading-6">
+                    {t("futures:mobile:adjust_margin:close_position")}
+                </div>
                 <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">
                     {order?.symbol} {order?.leverage}x
                 </div>
@@ -354,7 +358,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                                             decimalScale={configSymbol.decimalScalePrice}
                                             allowNegative={false}
                                             thousandSeparator={true}
-                                            containerClassName="px-2.5 flex-grow text-sm font-medium h-[44px] !bg-onus-bg2 w-[calc(100%-8.75rem)]"
+                                            containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-onus-bg2 w-[calc(100%-9.75rem)]"
                                             inputClassName="!text-left"
                                             placeholder={getLabel(type)}
                                             onValueChange={({ value }) => setPrice(value)}

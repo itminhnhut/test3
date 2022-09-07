@@ -304,6 +304,51 @@ const OrderDetail = ({
         )
     }
 
+    const renderLogPartialClose = (item) => {
+        const ratio = Math.abs(item?.metadata?.profit / (item?.metadata?.modify_margin?.before - item?.metadata?.modify_margin?.after)) * 100
+        return (
+            <>
+                <Row>
+                    <Label>{t('futures:mobile:adjust_margin:adjustment_type')}</Label>
+                    <Span>{t('futures:mobile:adjust_margin:close_partially')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:to')}</Label>
+                    <Span>{`#${item?.metadata?.child_id}`}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:time')}</Label>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:order_type')}</Label>
+                    <Span>{renderCellTable('type', item.metadata, t, language)}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:order_table:volume')}</Label>
+                    <Span>{renderModify(item?.metadata, 'volume')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:margin')}</Label>
+                    <Span>{renderModify(item?.metadata, 'margin')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:adjust_margin:open_price')}</Label>
+                    <Span>{formatNumber(item?.metadata?.open_price, decimalPrice)}</Span>
+                </Row>
+                <Row>
+                    <Label>PNL</Label>
+                    <Span className={+item?.metadata?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
+                        {formatNumber(item?.metadata?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(ratio, 2, 0, true)}%)</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:close_fee')}</Label>
+                    <Span>{renderFee(item?.metadata, 'close_order')}</Span>
+                </Row>
+            </>
+        )
+    }
+
     const renderLogAddVolume = (item) => {
         return (
             <>
@@ -473,7 +518,7 @@ const OrderDetail = ({
                 <Row>
                     <Label>PNL</Label>
                     <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
-                        {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
+                        {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(Math.abs(order?.profit / order?.margin) * 100, 2, 0, true)}%)</Span>
                 </Row>
             </>
         )
@@ -694,6 +739,7 @@ const OrderDetail = ({
                                         {item?.type === 'MODIFY_MARGIN' && renderLogModifyMargin(item)}
                                         {item?.type === 'MODIFY' && renderLogModifySlTp(item)}
                                         {item?.type === 'ADD_VOLUME' && renderLogAddVolume(item)}
+                                        {item?.type === 'PARTIAL_CLOSE' && renderLogPartialClose(item)}
                                     </div>
                                 ))}
                             </div>
