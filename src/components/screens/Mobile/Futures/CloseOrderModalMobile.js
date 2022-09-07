@@ -166,15 +166,16 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
             closeVolume: +volume,
             special_mode: 1
         };
+        const isPartialClose = partialClose && percent < 100
         setLoading(true)
         try {
             const { status, data, message } = await fetchApi({
-                url: partialClose ? API_PARTIAL_CLOSE_ORDER : API_GET_FUTURES_ORDER,
-                options: { method: partialClose ? "POST" : "DELETE" },
+                url: isPartialClose ? API_PARTIAL_CLOSE_ORDER : API_GET_FUTURES_ORDER,
+                options: { method: isPartialClose ? "POST" : "DELETE" },
                 params: params,
             });
             if (status === ApiStatus.SUCCESS) {
-                if (partialClose) {
+                if (isPartialClose) {
                     context.alert.show("success",
                         t("futures:mobile:adjust_margin:add_volume_success"),
                         t("futures:mobile:adjust_margin:partially_closed_success_message"),
