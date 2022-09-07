@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect, useContext } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, countDecimals } from "redux/actions/utils";
+import { formatNumber, countDecimals, getS3Url } from "redux/actions/utils";
 import { useSelector } from 'react-redux';
 import Switcher from 'components/common/Switcher';
 import TradingInput from "components/trade/TradingInput";
@@ -21,6 +21,7 @@ import { ApiStatus } from "redux/actions/const";
 import fetchApi from "utils/fetch-api";
 import { createSelector } from 'reselect';
 import find from 'lodash/find';
+import Tooltip from 'components/common/Tooltip';
 
 const getPairConfig = createSelector(
     [
@@ -142,12 +143,17 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
         const formatProfit = formatNumber(profit, configSymbol.isVndcFutures ? configSymbol.decimalSymbol : configSymbol.decimalSymbol + 2, 0, true)
         const totalPercent = (formatProfit > 0 ? '+' : '-') + formatNumber(Math.abs(profit / order.margin) * 100, 2, 0, true)
         const est_pnl = (percent / 100) * profit;
+        const pendingVol = order?.metadata?.partial_close_metadata?.partial_close_orders?.reduce((pre, { close_volume = 0, status }) => {
+            return pre + (status === VndcFutureOrderType.Status.PENDING ? close_volume : 0)
+        }, 0)
+
         return {
             remaining_volume: order_value - volume,
             percent: totalPercent,
             profit: +profit,
             formatProfit: formatProfit,
-            est_pnl: est_pnl
+            est_pnl: est_pnl,
+            pendingVol: pendingVol
         }
     }, [volume, order, percent, pairPrice, configSymbol])
 
@@ -378,12 +384,30 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                                     </div>
                                 }
                             </div>
+                            <Tooltip id="pending-vol" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                className="!mx-7 !-mt-2 !px-3 !py-2 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                                overridePosition={(e) => ({
+                                    left: 0,
+                                    top: e.top
+                                })}
+                            >
+                            </Tooltip>
                             <div className="mt-8 flex flex-col space-y-2 text-xs">
                                 <div className="flex items-center">
                                     <span className="text-onus-grey">{t("futures:mobile:adjust_margin:closed_volume")}:</span>&nbsp;
                                     <span className="font-medium">
                                         {formatNumber(volume, configSymbol.decimalSymbol, 0, true)}&nbsp;{configSymbol?.quoteAsset}
                                     </span>
+                                </div>
+                                <div className="flex items-center">
+                                    <span className="text-onus-grey"> {t("futures:mobile:adjust_margin:pending_closed_volume")}:</span>&nbsp;
+                                    <span className="font-medium">
+                                        {formatNumber(general.pendingVol, configSymbol.decimalSymbol, 0, true)}&nbsp;
+                                        {configSymbol?.quoteAsset}
+                                    </span>
+                                    <div className="px-2" data-tip={t('futures:mobile:adjust_margin:tooltip_pending_close_volume')} data-for="pending-vol" id="tooltip-pending-vol">
+                                        <img src={getS3Url('/images/icon/ic_help.png')} height={16} width={16} />
+                                    </div>
                                 </div>
                                 <div className="flex items-center">
                                     <span className="text-onus-grey"> {t("futures:mobile:adjust_margin:remaining_volume")}:</span>&nbsp;

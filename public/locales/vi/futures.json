@@ -288,7 +288,9 @@
             "partially_closed_success_message": "Bạn đã đóng một phần lệnh thành công",
             "remaining_volume": "Khối lượng còn lại",
             "order_completed": "Lệnh hoàn tất",
-            "close_position": "Đóng lệnh"
+            "close_position": "Đóng lệnh",
+            "pending_closed_volume": "Khối lượng chờ đóng",
+            "tooltip_pending_close_volume": "Tổng KL các lệnh đang chờ đóng một phần"
         },
         "transaction_histories": {
             "id": "Id",
