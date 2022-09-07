@@ -93,7 +93,7 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                     onClick={hideOtherToggle}
                 >
                     <CheckBox active={hideOther} />{' '}
-                    <span className='ml-1 whitespace-nowrap text-gray dark:text-txtSecondary-dark font-medium capitalize'>
+                    <span className='ml-1 whitespace-nowrap text-gray dark:text-txtSecondary-dark font-medium'>
                         {t('futures:hide_other_symbols')}
                     </span>
                 </div>

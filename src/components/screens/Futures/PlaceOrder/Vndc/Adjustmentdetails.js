@@ -80,7 +80,7 @@ const Adjustmentdetails = memo(({ onClose, rowData, isMobile }) => {
             containerClassName={`top-[50%] ${isMobile ? classMobile : 'w-[390px]'}`}
         >
             <div>
-                <div className="flex items-center justify-between font-bold capitalize">
+                <div className="flex items-center justify-between font-bold">
                     {t('futures:order_history:adjustment_detail')}
                     <X
                         size={20}
