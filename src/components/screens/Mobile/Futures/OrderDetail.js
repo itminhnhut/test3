@@ -333,7 +333,7 @@ const OrderDetail = ({
                     <Span>{renderModify(item?.metadata, 'margin')}</Span>
                 </Row>
                 <Row>
-                    <Label>{t('futures:mobile:adjust_margin:open_price')}</Label>
+                    <Label>{t('futures:order_table:open_price')}</Label>
                     <Span>{formatNumber(item?.metadata?.open_price, decimalPrice)}</Span>
                 </Row>
                 <Row>
@@ -384,7 +384,7 @@ const OrderDetail = ({
                 </Row>
                 {item?.metadata?.modify_open_price &&
                     <Row>
-                        <Label>{t('futures:mobile:adjust_margin:open_price')}</Label>
+                        <Label>{t('futures:order_table:open_price')}</Label>
                         <Span>{renderModify(item?.metadata, 'open_price')}</Span>
                     </Row>
                 }
