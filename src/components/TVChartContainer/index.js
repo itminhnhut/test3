@@ -108,7 +108,7 @@ export class TVChartContainer extends React.PureComponent {
                 this.theme = newTheme;
             }
         }
-        if ((prevProps.ordersList !== this.props.ordersList) && this.props.isVndcFutures && !this.firstTime) {
+        if ((prevProps.ordersList !== this.props.ordersList) && !this.firstTime) {
             this.rawOrders();
         }
     }
@@ -240,7 +240,7 @@ export class TVChartContainer extends React.PureComponent {
         }
     }, 200)
 
- 
+
 
     handleChangeChartType = (type) => {
         if (this?.widget) {
@@ -521,17 +521,15 @@ export class TVChartContainer extends React.PureComponent {
                 "paneProperties.horzGridProperties.color": isDark ? colors.darkBlue2 : colors.grey4,
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
-            if (this.props.isVndcFutures) {
-                if (this.timer) clearTimeout(this.timer)
-                this.timer = setTimeout(() => {
-                    this.rawOrders();
+            if (this.timer) clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                this.rawOrders();
+                this.drawHighLowArrows()
+                this.firstTime = false;
+                this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {
                     this.drawHighLowArrows()
-                    this.firstTime = false;
-                    this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {
-                        this.drawHighLowArrows()
-                    })
-                }, 2000);
-            }
+                })
+            }, 2000);
             setTimeout(() => {
                 this.drawHighLowArrows()
                 this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {

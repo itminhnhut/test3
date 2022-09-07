@@ -22,8 +22,8 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList }) => {
     const onSort = (field, value) => setSortBy({ field, value })
 
     const renderPairListItems = useCallback(() => {
-        const dataFilter = pairConfigs.filter(rs => rs.quoteAsset !== 'USDT');
-        let data = mode === '' ? dataFilter : dataFilter?.filter(i => {
+
+        let data = mode === '' ? pairConfigs : pairConfigs?.filter(i => {
             if (mode === 'Starred') return favoritePairs.find(rs => rs.replace('_', '') === i.symbol);
             return i.quoteAsset === mode
         })

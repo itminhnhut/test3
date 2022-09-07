@@ -156,7 +156,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     })
 
     const symbolOptions = useMemo(() => {
-        return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }))
+        return allPairConfigs?.map(e => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }))
     }, [allPairConfigs])
 
     useEffect(() => {
