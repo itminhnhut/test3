@@ -10,8 +10,8 @@ import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 
-const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset,  lastUpdatedTime }) => {
-    const [tab, setTab] = useState('volume');
+const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastUpdatedTime, sort }) => {
+    const [tab, setTab] = useState(sort);
     const { t, i18n: { language } } = useTranslation();
     const { width } = useWindowSize()
     const [dataSource, setDataSource] = useState([]);
@@ -19,7 +19,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset,  last
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        getRanks();
+        getRanks(tab);
     }, [])
 
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
@@ -35,7 +35,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset,  last
                 params: { contest_id: contest_id },
             });
             if (data && status === ApiStatus.SUCCESS) {
-                const dataFilter = data.filter(rs => rs?.[_rank] > 0);
+                const dataFilter = data.filter(rs => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length
                 const _top3 = data.slice(0, sliceIndex);
                 const _dataSource = data.slice(sliceIndex)
