@@ -78,7 +78,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     }, [pairConfig, configSymbol]);
 
     useEffect(() => {
-        setVolume(minQuoteQty);
+        setVolume(order_value < minQuoteQty ? order_value : minQuoteQty);
     }, [minQuoteQty]);
 
     useEffect(() => {
@@ -225,8 +225,8 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     }
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
-    const isError = partialClose && (volume > order_value || (!volume && partialClose) || volume < minQuoteQty ||
-        (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market)) || loading;
+    const isError = ((order_value > volume || volume > order_value) && partialClose && (volume > order_value || !volume || volume < minQuoteQty ||
+        (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market))) || loading;
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
