@@ -10,8 +10,8 @@ import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 
-const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime }) => {
-    const [tab, setTab] = useState('volume');
+const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort }) => {
+    const [tab, setTab] = useState(sort);
     const { t, i18n: { language } } = useTranslation();
     const { width } = useWindowSize()
     const [dataSource, setDataSource] = useState([]);
@@ -19,7 +19,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        getRanks();
+        getRanks(tab);
     }, [])
 
     const rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
@@ -31,7 +31,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                 params: { contest_id: contest_id },
             });
             if (data && status === ApiStatus.SUCCESS) {
-                const dataFilter = data.filter(rs => rs?.[_rank] > 0);
+                const dataFilter = data.filter(rs => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length
                 const _top3 = data.slice(0, sliceIndex);
                 const _dataSource = data.slice(sliceIndex)
@@ -230,7 +230,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                     <Column maxWidth={100} minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
                 </Table>
             }
-        <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div>
+            <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div>
         </section>
     );
 };

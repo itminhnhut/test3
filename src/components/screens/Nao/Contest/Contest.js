@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken'
 import ContesRules from 'components/screens/Nao/Contest/ContesRules';
 import ContestInfo from 'components/screens/Nao/Contest/ContestInfo';
@@ -93,7 +93,6 @@ const Contest = (props) => {
             params: { contest_id: season },
         });
         if (data?.time && status === ApiStatus.SUCCESS) {
-            console.log('CONTEST DATA)_______',data)
             setLastUpdatedTime(data.time)
         }
     }
@@ -102,15 +101,24 @@ const Contest = (props) => {
         renderLastUpdated(6)
     })
 
+    const params = useMemo(() => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return {
+            sort: urlParams.get('s') !== 'pnl' ? 'volume' : 'pnl',
+            mode: urlParams.get('m')
+        }
+    }, [])
+
     return (
         <LayoutNaoToken>
             {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} />}
             {showInvitations && <InvitationsDetail {...props} onShowDetail={onShowDetail} getInfo={getInfo} data={invitationsData.current} onClose={() => showShowInvitationst(false)} />}
             <div className="nao_section">
                 <ContesRules seasons={seasons} {...props} />
-                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations}/>
-                <ContestPerRanks {...props}  lastUpdatedTime={lastUpdatedTime}/>
-                <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime}/>
+                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
+                <ContestPerRanks  {...props} lastUpdatedTime={lastUpdatedTime} sort={params.mode === 'individual' ? params.sort : 'volume'} />
+                <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort={params.mode === 'team' ? params.sort : 'volume'} />
             </div>
         </LayoutNaoToken>
     );

@@ -1,8 +1,10 @@
 import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { seasons } from 'components/screens/Nao/Contest/Contest';
-import Contest from 'components/screens/Nao/Contest/Contest';
-
+import dynamic from 'next/dynamic'
+const Contest = dynamic(() => import('components/screens/Nao/Contest/Contest'), {
+    ssr: false,
+})
 const Season = ({ season }) => {
     const current = seasons[seasons.length - 1];
     return <Contest previous={current?.season !== season?.season} {...season} />
