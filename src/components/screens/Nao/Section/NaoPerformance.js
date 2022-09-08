@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import colors from 'styles/colors';
 import { Check } from 'react-feather';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
+import { useRouter } from 'next/router';
 
 const days = [
     {
@@ -78,6 +79,7 @@ const NaoPerformance = memo(() => {
         t,
         i18n: { language }
     } = useTranslation();
+    const router =  useRouter()
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState({
@@ -86,7 +88,15 @@ const NaoPerformance = memo(() => {
     });
     const [fee, setFee] = useState(WalletCurrency.VNDC);
     const [referencePrice, setReferencePrice] = useState({});
+
     const assetConfig = useSelector(state => state.utils.assetConfig);
+
+    // const [getQueryByName , updateQuery] = useAddQuery('date')
+
+    useEffect(()=> {
+        const { date } = router.query;
+        if (date) setFilter({...filter, day: date});
+    }, [router.isReady])
 
     useEffect(() => {
         getRef();
@@ -169,6 +179,23 @@ const NaoPerformance = memo(() => {
         setFee(currency)
     }
 
+   
+    const updateDateRangeUrl = (dateValue) => {
+        router.push({
+            pathname: router.pathname,
+            query: {
+                date: dateValue,    
+            }
+        })
+    }   
+
+    const handleChangeDateRange = (day) => {
+        if (day !== filter.day) {
+            setFilter({...filter, day})
+            updateDateRangeUrl(day)
+        }
+    }
+
     return (
         <section id="nao_performance" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-5">
@@ -179,7 +206,7 @@ const NaoPerformance = memo(() => {
                 </div>
                 <div className="flex flex-wrap gap-2">
                     <RangePopover language={language} active={days.find(d => d.value === filter.day)}
-                                  onChange={day => { setFilter({...filter, day}) }}/>
+                                  onChange={handleChangeDateRange}/>
                     <ButtonNao
                         className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC})}
                         onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
