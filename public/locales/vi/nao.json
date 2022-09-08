@@ -209,7 +209,7 @@
         "confirm_close": "Đóng",
         "join_success": "Tham gia đội thành công",
         "team_invitations": "Lời mời tham gia đội",
-        "date_2": "<div class='font-semibold'>{{days}}&nbsp;ngày&nbsp;{{hours}}&nbsp;giờ&nbsp;{{minutes}}&nbsp;phút</div>",
+        "date_2": "<div class='font-semibold'>{{hours}}&nbsp;giờ&nbsp;{{minutes}}&nbsp;phút</div>",
         "last_updated_time": "Cập nhật lần cuối vào"
     },
     "luckydraw": {

@@ -82,11 +82,10 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
     }, [userData, previous])
 
     const convertHours = (number) => {
-        const days = Math.floor(number / 24);
-        const remainder = number % 24;
+        const remainder = number
         const hours = Math.floor(remainder);
         const minutes = Math.floor(60 * (remainder - hours));
-        return { days, hours, minutes }
+        return { hours, minutes }
     }
 
     const timer = useMemo(() => {
@@ -141,7 +140,6 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                                     <label className="text-nao-text/[0.6] text-sm leading-6 ">{t('common:ext_gate:time')}</label>
                                     <div className={`font-semibold leading-8 text-right`} dangerouslySetInnerHTML={{
                                         __html: t('nao:contest:date_2', {
-                                            days: timer?.days,
                                             hours: timer?.hours,
                                             minutes: timer?.minutes
                                         })
