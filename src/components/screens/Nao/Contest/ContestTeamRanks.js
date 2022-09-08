@@ -9,6 +9,7 @@ import { getS3Url, formatNumber } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
+import { useRouter } from 'next/router'
 
 const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort }) => {
     const [tab, setTab] = useState(sort);
@@ -17,10 +18,19 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         getRanks(tab);
     }, [])
+
+    useEffect(() => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const individual = urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl'
+        const url = `${router.asPath}?individual=${individual}&team=${tab === 'pnl' ? 'pnl' : 'volume'}`;
+        window.history.pushState(null, null, url);
+    }, [tab, router])
 
     const rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
     const getRanks = async (tab) => {

@@ -369,6 +369,12 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                             <div className="text-nao-grey">{t('nao:contest:volume')}</div>
                                                             <span className="text-right">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                                         </div>
+                                                        {!previous &&
+                                                            <div className="flex items-center justify-between leading-6">
+                                                                <div className="text-nao-grey">{t('common:ext_gate:time')}</div>
+                                                                <span className="text-right">{formatNumber(item?.time, 2)} {t('common:hours')}</span>
+                                                            </div>
+                                                        }
                                                         <div className="flex items-center justify-between leading-6">
                                                             <div className="text-nao-grey">{t('nao:contest:per_pnl')}</div>
                                                             <span className={`text-right ${getColor(item?.pnl)}`}>
@@ -397,6 +403,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             <Column visible={!previous} minWidth={isPending.group ? 100 : 120} title={t('common:status')} fieldName="status" cellRender={renderStatusMember} />
                             <Column visible={!isPending.group} minWidth={70} align="right" className="text-onus-grey" title={t('nao:contest:trades')} fieldName="total_order" />
                             <Column visible={!isPending.group} minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (${quoteAsset})`} decimal={0} fieldName="total_volume" />
+                            <Column minWidth={150} align="right" visible={!previous} className="font-medium" title={t('common:ext_gate:time')} decimal={2} fieldName="time" suffix={t('common:hours')} />
                             <Column visible={!isPending.group} minWidth={100} align="right" className="font-medium" title={t('nao:contest:per_pnl')} fieldName="pnl" cellRender={renderPnl} />
                             <Column visible={isPending.group} minWidth={200} align="right" className="text-onus-grey underline cursor-pointer"
                                 fieldName="pnl" cellRender={renderActions} onCellClick={(e, item) => validatorLeader(item) && onActions(item, item?.rowIndex)} />
