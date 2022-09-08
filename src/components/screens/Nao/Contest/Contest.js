@@ -105,8 +105,8 @@ const Contest = (props) => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         return {
-            sort: urlParams.get('s') !== 'pnl' ? 'volume' : 'pnl',
-            mode: urlParams.get('m')
+            individual: urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl',
+            team: urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl'
         }
     }, [])
 
@@ -117,8 +117,8 @@ const Contest = (props) => {
             <div className="nao_section">
                 <ContesRules seasons={seasons} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
-                <ContestPerRanks  {...props} lastUpdatedTime={lastUpdatedTime} sort={params.mode === 'individual' ? params.sort : 'volume'} />
-                <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort={params.mode === 'team' ? params.sort : 'volume'} />
+                <ContestPerRanks  {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} />
+                <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.team} />
             </div>
         </LayoutNaoToken>
     );

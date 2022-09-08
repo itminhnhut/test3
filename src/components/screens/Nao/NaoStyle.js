@@ -315,7 +315,7 @@ export const Table = ({
                                                                 </span>
                                                                     : _capitalize ? capitalize(textItem) : textItem
                                                 }
-                                                {suffix ? ` ${suffix}` : ""}
+                                                {!loading && suffix ? ` ${suffix}` : ""}
                                             </div>
                                         );
                                     })}
