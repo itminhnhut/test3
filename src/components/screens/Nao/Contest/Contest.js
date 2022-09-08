@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import LayoutNaoToken from 'components/common/layouts/LayoutNaoToken'
 import ContesRules from 'components/screens/Nao/Contest/ContesRules';
 import ContestInfo from 'components/screens/Nao/Contest/ContestInfo';
@@ -6,6 +6,9 @@ import ContestPerRanks from 'components/screens/Nao/Contest/ContestPerRanks';
 import ContestTeamRanks from 'components/screens/Nao/Contest/ContestTeamRanks';
 import ContestDetail from 'components/screens/Nao/Contest/ContestDetail';
 import InvitationsDetail from 'components/screens/Nao/Contest/season2/InvitationsDetail';
+import { API_CONTEST_LAST_TIME_SCAN } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import FetchApi from 'utils/fetch-api';
 
 export const seasons = [
     {
@@ -42,6 +45,7 @@ const Contest = (props) => {
     const [showInvitations, showShowInvitationst] = useState(false)
     const [showAccept, showShowAccept] = useState(false)
     const [inviteDetail, setInviteDetail] = useState(null)
+    const [lastUpdatedTime, setLastUpdatedTime] = useState(null)
     const refInfo = useRef(null);
 
     const sortName = useRef('volume');
@@ -83,6 +87,29 @@ const Contest = (props) => {
         showShowDetail(false);
     }
 
+    const renderLastUpdated = async (season) => {
+        const { data, status } = await FetchApi({
+            url: API_CONTEST_LAST_TIME_SCAN,
+            params: { contest_id: season },
+        });
+        if (data?.time && status === ApiStatus.SUCCESS) {
+            setLastUpdatedTime(data.time)
+        }
+    }
+
+    useEffect(() => {
+        renderLastUpdated(6)
+    })
+
+    const params = useMemo(() => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return {
+            sort: urlParams.get('s') !== 'pnl' ? 'volume' : 'pnl',
+            mode: urlParams.get('m')
+        }
+    }, [])
+
     return (
         <LayoutNaoToken>
             {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} />}
@@ -90,8 +117,8 @@ const Contest = (props) => {
             <div className="nao_section">
                 <ContesRules seasons={seasons} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
-                <ContestPerRanks {...props} />
-                <ContestTeamRanks {...props} onShowDetail={onShowDetail} />
+                <ContestPerRanks  {...props} lastUpdatedTime={lastUpdatedTime} sort={params.mode === 'individual' ? params.sort : 'volume'} />
+                <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort={params.mode === 'team' ? params.sort : 'volume'} />
             </div>
         </LayoutNaoToken>
     );
