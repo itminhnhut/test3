@@ -243,7 +243,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                 </Table>
             }
 
-            <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div>
+            {/* <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
         </section>
     );
 };

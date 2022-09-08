@@ -8,7 +8,7 @@ import ContestDetail from 'components/screens/Nao/Contest/ContestDetail';
 import InvitationsDetail from 'components/screens/Nao/Contest/season2/InvitationsDetail';
 import { API_CONTEST_LAST_TIME_SCAN } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import FetchApi from 'utils/fetch-api';
+import fetchApi from 'utils/fetch-api';
 
 export const seasons = [
     {
@@ -88,7 +88,10 @@ const Contest = (props) => {
     }
 
     const renderLastUpdated = async (season) => {
-        const { data, status } = await FetchApi({
+        const {
+            data,
+            status
+        } = await fetchApi({
             url: API_CONTEST_LAST_TIME_SCAN,
             params: { contest_id: season },
         });
@@ -97,9 +100,9 @@ const Contest = (props) => {
         }
     }
 
-    useEffect(() => {
-        renderLastUpdated(6)
-    })
+    // useEffect(() => {
+    //     renderLastUpdated(6);
+    // });
 
     const params = useMemo(() => {
         const queryString = window.location.search;
