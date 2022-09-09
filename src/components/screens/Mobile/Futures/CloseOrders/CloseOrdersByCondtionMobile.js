@@ -231,7 +231,7 @@ const CloseOrdersByCondtionMobile = memo(({
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-[20px] mb-3">
                     <div>{type.includes('PAIR') ? t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) }) : t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })}</div>
                 </div>
-                <div className='w-full h-full max-h-[calc(100%-108px)] overflow-y-auto'>
+                <div className='w-full max-h-[calc(100%-108px)] overflow-y-auto'>
                     {state?.orders && renderCloseInfo()}
                     <div className="mt-3 flex w-full">
                         <div className="w-[22px]">
