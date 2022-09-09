@@ -182,7 +182,7 @@ const AddVolume = ({
         const _price = type === FuturesOrderTypes.Market || !showCustomized ? lastPrice : price;
         const _margin = leverage ? margin + volume / leverage : 0;
         const _quantity = volume / _price + quantity;
-        const AvePrice = ((volume / _price) * _price + quantity * order.price) / _quantity;
+        const AvePrice = ((volume / _price) * _price + quantity * order.open_price) / _quantity;
         const size = side === VndcFutureOrderType.Side.SELL ? -_quantity : _quantity;
         const number = side === VndcFutureOrderType.Side.SELL ? -1 : 1;
         const liqPrice = (size * AvePrice + fee - _margin) / (_quantity * (number - DefaultFuturesFee.NamiFrameOnus));
@@ -284,7 +284,7 @@ const AddVolume = ({
                     </span>
                     <span className="font-medium">
                         {formatNumber(
-                            order?.price,
+                            order?.open_price,
                             configSymbol.decimalScalePrice,
                             0,
                             true
