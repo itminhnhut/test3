@@ -30,19 +30,19 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
 
     const listInnerRef = useRef()
 
-    const onScroll = () => {
-        if (state?.orders?.length <= 5) return
-        if (listInnerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
-            if (scrollTop + clientHeight === scrollHeight) {
-                setIsMore(false)
-            } else {
-                if (isMore) return setTimeout(() => setIsMore(false), 3000)
-                setIsMore(true)
+    // const onScroll = () => {
+    //     if (state?.orders?.length <= 5) return
+    //     if (listInnerRef.current) {
+    //         const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+    //         if (scrollTop + clientHeight === scrollHeight) {
+    //             setIsMore(false)
+    //         } else {
+    //             if (isMore) return setTimeout(() => setIsMore(false), 3000)
+    //             setIsMore(true)
 
-            }
-        }
-    };
+    //         }
+    //     }
+    // };
 
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
@@ -228,36 +228,38 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-[20px] mb-3">
                     <div>{type.includes('PAIR') ? t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) }) : t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })}</div>
                 </div>
-                {state?.orders && renderCloseInfo()}
-                <div className="mt-3 flex w-full">
-                    <div className="w-[22px]">
-                        {DangerIcon({ height: "14", width: "14" })}
+                <div className='w-full h-full max-h-[calc(100%-112px)] overflow-y-auto'>
+                    {state?.orders && renderCloseInfo()}
+                    <div className="mt-3 flex w-full">
+                        <div className="w-[22px]">
+                            {DangerIcon({ height: "14", width: "14" })}
+                        </div>
+                        <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-onus-orange w-full">
+                            {t('futures:mobile.close_all_positions.confirm_description')}
+                        </div>
                     </div>
-                    <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-onus-orange w-full">
-                        {t('futures:mobile.close_all_positions.confirm_description')}
-                    </div>
-                </div>
 
-                <div className="flex mt-8 h-6 gap-2" style={{ display: `${state?.orders?.length > 0 && type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
-                    <div className="text-base font-semibold leading-[22px] tracking-[-0.02em]">
-                        {t('futures:mobile.close_all_positions.position_list')}
+                    <div className="flex mt-8 h-6 gap-2" style={{ display: `${state?.orders?.length > 0 && type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
+                        <div className="text-base font-semibold leading-[22px] tracking-[-0.02em]">
+                            {t('futures:mobile.close_all_positions.position_list')}
+                        </div>
+                        <div>
+                            <Switcher addClass="!w-[24px] !h-[24px] top-[0px] left-[0px] !bg-white" wrapperClass="!bg-onus-gray !h-[24px] !w-[48px]" onusMode onChange={() => {
+                                setShowPositionList(!showPositionList)
+                            }} active={showPositionList} />
+                        </div>
                     </div>
-                    <div>
-                        <Switcher addClass="!w-[24px] !h-[24px] top-[0px] left-[0px] !bg-white" wrapperClass="!bg-onus-gray !h-[24px] !w-[48px]" onusMode onChange={() => {
-                            setShowPositionList(!showPositionList)
-                        }} active={showPositionList} />
+                    <div className="w-full mt-2"
+                        style={{ display: `${showPositionList ? 'block' : 'none'}` }}
+                        ref={listInnerRef}
+                        // onScroll={onScroll}
+                    >
+                        {state?.orders && renderPositionList()}
                     </div>
+                    {/* {state?.orders?.length > 5 && <div className='text-onus-base w-full flex justify-center h-4 items-end'>
+                        {showPositionList && isMore && IsMoreIcon}
+                    </div>} */}
                 </div>
-                <div className="w-full mt-2 max-h-[calc(100%-394px)] overflow-y-auto scrollbar-nao"
-                    style={{ display: `${showPositionList ? 'block' : 'none'}` }}
-                    ref={listInnerRef}
-                    onScroll={onScroll}
-                >
-                    {state?.orders && renderPositionList()}
-                </div>
-                {state?.orders?.length > 5 && <div className='text-onus-base w-full flex justify-center h-4 items-end'>
-                    {showPositionList && isMore && IsMoreIcon}
-                </div>}
                 <div className="w-full flex justify-between gap-[10px] mt-8 h-12">
                     <Button
                         onusMode
@@ -276,6 +278,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         className={`!rounded-md text-nao-white! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]`}
                     />
                 </div>
+
             </Modal>
         )
     }
