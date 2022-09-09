@@ -28,7 +28,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const individual = urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl'
-        const url = `/contest${router.query.season ? '/' + router.query.season : ''}?individual=${individual}&team=${tab === 'pnl' ? 'pnl' : 'volume'}`;
+        const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?individual=${individual}&team=${tab === 'pnl' ? 'pnl' : 'volume'}`;
         window.history.pushState(null, null, url);
     }, [tab, router])
 
