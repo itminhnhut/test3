@@ -351,7 +351,7 @@ const CloseOrdersByCondtionMobile = memo(({
                             {t('futures:mobile.close_all_positions.estimated_time')}
                         </div>
                         <div>
-                            {state?.orders?.length * 2}s
+                            {state?.orders?.length * 0.5}s
                         </div>
                     </div>
                 </div>
