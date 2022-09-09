@@ -129,11 +129,11 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
             },
             {
                 type: 'PROFIT',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_profit',  { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
+                value: t('futures:mobile.close_all_positions.close_type.close_all_profit', { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
             },
             {
                 type: 'LOSS',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_loss',  { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
+                value: t('futures:mobile.close_all_positions.close_type.close_all_loss', { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
             },
             {
                 type: 'PAIR',
@@ -143,7 +143,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
         openOrders: [
             {
                 type: 'ALL_PENDING',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_pending',  { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
+                value: t('futures:mobile.close_all_positions.close_type.close_all_pending', { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
             },
             {
                 type: 'ALL_PAIR_PENDING',
@@ -226,7 +226,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                 containerClassName="!bg-nao-bgModal2/[0.6]"
             >
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-[20px] mb-3">
-                    <div>{t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) })}</div>
+                    <div>{type.includes('PAIR') ? t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) }) : t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })}</div>
                 </div>
                 {state?.orders && renderCloseInfo()}
                 <div className="mt-3 flex w-full">
