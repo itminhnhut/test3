@@ -14,7 +14,7 @@ import useOnScreen from 'hooks/useOnScreen';
 import { set } from 'lodash';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 
-const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair, tab }) => {
+const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair, tab, isMobile }) => {
     const { t } = useTranslation();
 
     const [showChooseType, setShowChooseType] = useState(true)
@@ -104,14 +104,14 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
     }, [type])
 
     useEffect(() => {
-        if (!PnLObject || !state.orders || showChooseType) return
+        if (!PnLObject || !state.orders || showChooseType || !pair) return
         let pnl = 0
         for (const property in PnLObject) {
             pnl += PnLObject[property]
         }
         let totalPnl
         setTotalPnL(numeral(+pnl).format(
-            `0,0.${'0'.repeat(0)}`,
+            `0,0.${'0'.repeat(pair.includes('VNDC') ? 0 : 4)}`,
             Math.floor
         ))
         if (Object.keys(PnLObject).length !== state.orders.length) setTotalPnL("-")
@@ -248,7 +248,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         }} active={showPositionList} />
                     </div>
                 </div>
-                <div className="w-full mt-2 max-h-[calc(100%-426px)] overflow-y-auto scrollbar-nao"
+                <div className="w-full mt-2 max-h-[calc(100%-400px)] overflow-y-auto scrollbar-nao"
                     style={{ display: `${showPositionList ? 'block' : 'none'}` }}
                     ref={listInnerRef}
                     onScroll={onScroll}
@@ -285,34 +285,34 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
             <div className="font-normal text-sm leading-5 w-full">
                 <div className={`h-11 min-h-full border-b border-onus-bg2 flex items-center w-full`} style={{ display: `${type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
                     <div className="w-full flex justify-between">
-                        <div className='text-darkBlue-5'>
+                        <div className='text-onus-grey'>
                             {t('futures:mobile.close_all_positions.estimated_pnl')}
                         </div>
                         {!totalPnL.includes('-') ? (
                             <div className='text-onus-green'>
-                                {totalPnL ? '+' : '-'}{totalPnL}
+                                {totalPnL ? '+' : '-'}{totalPnL} {pair.includes('VNDC') ? 'VNDC' : 'USDT'}
                             </div>
                         ) : (
                             <div className='text-onus-red'>
-                                {totalPnL}
+                                {totalPnL} {pair.includes('VNDC') ? 'VNDC' : 'USDT'}
                             </div>
                         )}
                     </div>
                 </div>
                 <div className={`h-11 min-h-full border-b border-onus-bg2 flex items-center w-full`}>
                     <div className="w-full flex justify-between">
-                        <div className='text-darkBlue-5'>
+                        <div className='text-onus-grey'>
                             {t('futures:mobile.close_all_positions.estimated_time')}
                         </div>
                         <div>
-                            {state?.orders?.length * 2}s
+                            {state?.orders?.length * 0.5}s
                         </div>
                     </div>
                 </div>
 
                 <div className={`h-11 min-h-full flex items-center w-full`}>
                     <div className="w-full flex justify-between">
-                        <div className='text-darkBlue-5'>
+                        <div className='text-onus-grey'>
                             {t('futures:mobile.close_all_positions.estimated_orders')}
                         </div>
                         <div>
@@ -364,7 +364,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-lg mb-3 text-center">
                     <div>{t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) })}</div>
                 </div>
-                <div className="w-full leading-[22ox] font-normal tracking-[-0.02em] !text-base text-center text-darkBlue-5">
+                <div className="w-full leading-[22ox] font-normal tracking-[-0.02em] !text-base text-center text-onus-grey">
                     <div>{t(`futures:mobile.close_all_positions.confirm_close_pending_description`)}</div>
                 </div>
 
