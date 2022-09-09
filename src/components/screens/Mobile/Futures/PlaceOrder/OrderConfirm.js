@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FuturesSettings } from 'redux/reducers/futures';
 
 const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, decimals, decimalSymbol }) => {
-    const { t } = useTranslation();
+    const { t, i18n: { language } } = useTranslation();
     const [hidden, setHidden] = useState(isShowConfirm)
     const auth = useSelector(state => state.auth?.user) || null
     const dispatch = useDispatch()
@@ -38,7 +38,7 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, 
                 <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
                 <div className="flex items-center justify-between text-sm">
                     <div className="text-onus-grey">{t('futures:order_table:type')}</div>
-                    <div>{renderCellTable('type', data)}</div>
+                    <div>{renderCellTable('type', data, t, language)}</div>
                 </div>
                 {data?.type !== VndcFutureOrderType.Type.MARKET && <>
                     <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>

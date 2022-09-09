@@ -9,13 +9,15 @@ import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import OrderItemMobile from './OrderItemMobile';
 import { getShareModalData } from './ShareFutureMobile';
 import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
-import AdjustPositionMargin from 'components/screens/Mobile/Futures/AdjustPositionMargin';
+import ModifyOrder from '../ModifyOrder';
 import { find } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
 import { reFetchOrderListInterval } from 'redux/actions/futures';
 import uniq from 'lodash/uniq';
 import difference from 'lodash/difference';
 import CurrencyPopup from 'components/screens/Mobile/Futures/CurrencyPopup';
+import CloseOrderModalMobile from '../CloseOrderModalMobile';
+import AdjustPositionMargin from '../AdjustPositionMargin';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -28,7 +30,7 @@ const TabOpenOrders = ({
     pairConfig,
     onShowDetail,
     tab,
-    hideOther
+    hideOther,
 }) => {
 
     const [state, set] = useState(INITIAL_STATE);
@@ -41,7 +43,7 @@ const TabOpenOrders = ({
     }, [hideOther, ordersList, pair]);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const rowData = useRef(null);
-    const [openCloseModal, setOpenCloseModal] = useState(false);
+    const [openCloseOrderModal, setOpenCloseOrderModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
     const [orderEditMarginId, setOrderEditMarginId] = useState();
@@ -50,6 +52,7 @@ const TabOpenOrders = ({
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const [collapse, setCollapse] = useState(null);
     const [visibleModalFees, setVisibleModalFees] = useState(false);
+    const [openAddVol, setOpenAddVol] = useState(false)
 
     const dispatch = useDispatch();
 
@@ -66,15 +69,15 @@ const TabOpenOrders = ({
         rowData.current = item;
         switch (key) {
             case 'delete':
-                context.alert.show('warning',
-                    t('futures:close_order:modal_title', { value: item?.displaying_id }),
-                    t('futures:close_order:confirm_message', { value: item?.displaying_id }),
-                    null,
-                    () => {
-                        onConfirmDelete(item);
-                    }
-                );
-                // setOpenCloseModal(!openCloseModal);
+                setOpenCloseOrderModal(!openCloseOrderModal)
+                // context.alert.show('warning',
+                //     t('futures:close_order:modal_title', { value: item?.displaying_id }),
+                //     t('futures:close_order:confirm_message', { value: item?.displaying_id }),
+                //     null,
+                //     () => {
+                //         onConfirmDelete(item);
+                //     }
+                // );
                 break;
             case 'edit':
                 setOpenEditModal(!openEditModal);
@@ -84,6 +87,9 @@ const TabOpenOrders = ({
                 break;
             case 'edit-fee':
                 setVisibleModalFees(true);
+                break;
+            case 'add-vol':
+                setOpenAddVol(true);
                 break;
             default:
                 if (!openShareModal) {
@@ -120,7 +126,7 @@ const TabOpenOrders = ({
                 context.alert.show('error', t('common:failed'), t('error:futures:NETWORK_ERROR'));
             }
         } finally {
-            setOpenCloseModal(false);
+            // setOpenCloseModal(false);
             setTimeout(() => {
                 setDisabled(false);
             }, 1000);
@@ -201,6 +207,13 @@ const TabOpenOrders = ({
         });
     }
 
+    useEffect(() => {
+        if (rowData.current && openCloseOrderModal) {
+            rowData.current = ordersList.find(rs => rs.displaying_id === rowData.current?.displaying_id)
+        }
+
+    }, [ordersList, rowData.current, openCloseOrderModal])
+
     if (ordersList.length <= 0) {
         return <TableNoData
             isMobile
@@ -210,11 +223,11 @@ const TabOpenOrders = ({
 
     return (
         <div className="px-4 overflow-x-auto" style={{ height: 'calc(100% - 173px)' }}>
-           {visibleModalFees&& <CurrencyPopup 
+            {visibleModalFees && <CurrencyPopup
                 visibleModalFees={visibleModalFees}
                 setVisibleModalFees={setVisibleModalFees}
                 dataRow={rowData.current}
-                />
+            />
             }
             {openEditModal &&
                 <EditSLTPVndcMobile
@@ -239,6 +252,22 @@ const TabOpenOrders = ({
                     order={orderEditMargin}
                     pairPrice={marketWatch[orderEditMargin?.symbol]}
                     onClose={() => setOrderEditMarginId()}
+                />
+            }
+            {openAddVol &&
+                <ModifyOrder
+                    order={rowData.current}
+                    pairPrice={marketWatch[rowData.current?.symbol]}
+                    onClose={() => setOpenAddVol(false)}
+                    pairConfig={pairConfig}
+                />
+            }
+            {openCloseOrderModal &&
+                <CloseOrderModalMobile
+                    onClose={() => setOpenCloseOrderModal(false)} order={rowData.current}
+                    pairPrice={marketWatch[rowData.current?.symbol]}
+                    pairConfig={pairConfig}
+
                 />
             }
         </div>

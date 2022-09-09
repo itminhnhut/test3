@@ -178,7 +178,6 @@
     "MULTIPLIER_DECIMAL_LESS_THAN_ZERO": "MULTIPLIER_DECIMAL_LESS_THAN_ZERO",
     "COMMISSION_INVALID": "COMMISSION_INVALID",
     "INVALID_ACCOUNT_TYPE": "INVALID_ACCOUNT_TYPE",
-    "INVALID_LEVERAGE": "INVALID_LEVERAGE",
     "INVALID_TICK_SIZE_PRECISION": "INVALID_TICK_SIZE_PRECISION",
     "INVALID_STEP_SIZE_PRECISION": "INVALID_STEP_SIZE_PRECISION",
     "INVALID_WORKING_TYPE": "INVALID_WORKING_TYPE",
@@ -266,6 +265,8 @@
     "USER_JOIN_GROUP_CONTEST_BEFORE": "User joined another team",
     "MODIFY_FUTURES_MARGIN_INVALID_LEVERAGE": "For the safety of your position, this feature is not available with current leverage.",
     "REMOVE_FUTURES_MARGIN_INVALID_AMOUNT": "The amount you want to withdraw exceeds the available margin",
-    "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "For the safety of your position, this feature is not supported with the current rate of return."
+    "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "For the safety of your position, this feature is not supported with the current rate of return.",
+    "INVALID_CLOSE_VOLUME": "Invalid partial closed volume",
+    "INVALID_LEVERAGE": "Invalid Leverage"
   }
 }
