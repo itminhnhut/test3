@@ -117,10 +117,10 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                         <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
                             <div className="flex items-center justify-between flex-1 mb-4 gap-5">
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-[4.25rem] h-[4.25rem] rounded-[50%] relative">
+                                    <div className="w-[2.875rem] h-[2.875rem] rounded-[50%] relative">
                                         <ImageNao src={item?.avatar}
-                                            className="min-w-[4.25rem] min-h-[4.25rem] max-w-[4.25rem] max-h-[4.25rem] rounded-[50%] object-cover" alt="" />
-                                        {item?.[rank] > 0 && <img className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-3" src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}
+                                            className="min-w-[2.875rem] min-h-[2.875rem] max-w-[2.875rem] max-h-[2.875rem] rounded-[50%] object-cover" alt="" />
+                                        {/*{item?.[rank] > 0 && <img className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-3" src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}*/}
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
