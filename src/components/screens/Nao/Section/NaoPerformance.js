@@ -17,6 +17,7 @@ import colors from 'styles/colors';
 import { Check } from 'react-feather';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
+import useWindowSize from 'hooks/useWindowSize';
 
 const days = [
     {
@@ -79,6 +80,7 @@ const NaoPerformance = memo(() => {
         t,
         i18n: { language }
     } = useTranslation();
+    const { width } = useWindowSize()
     const router =  useRouter()
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -179,15 +181,15 @@ const NaoPerformance = memo(() => {
         setFee(currency)
     }
 
-   
+
     const updateDateRangeUrl = (dateValue) => {
         router.push({
             pathname: router.pathname,
             query: {
-                date: dateValue,    
+                date: dateValue,
             }
         })
-    }   
+    }
 
     const handleChangeDateRange = (day) => {
         if (day !== filter.day) {
@@ -200,21 +202,23 @@ const NaoPerformance = memo(() => {
         <section id="nao_performance" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-5">
                 <div>
-                    <TextLiner>{t('nao:onus_performance:title')}</TextLiner>
+                    <TextLiner liner={width < 992 } className='text-nao lg:text-white'>{t('nao:onus_performance:title')}</TextLiner>
                     <span
                         className="text-sm sm:text-[1rem] text-nao-grey">{t('nao:onus_performance:description')}</span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
                     <RangePopover language={language} active={days.find(d => d.value === filter.day)}
-                                  onChange={handleChangeDateRange}/>
-                    <ButtonNao
-                        className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC})}
-                        onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
-                    >Futures VNDC</ButtonNao>
-                    <ButtonNao
-                        className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.USDT})}
-                        onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
-                    >Futures USDT</ButtonNao>
+                                  onChange={handleChangeDateRange} className="flex order-last lg:order-first" popoverClassName={'lg:mr-2 '}/>
+                    <div className='order-first gap-2 lg:order-last flex gap-last'>
+                        <ButtonNao
+                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC})}
+                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
+                        >Futures VNDC</ButtonNao>
+                        <ButtonNao
+                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.USDT})}
+                            onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
+                        >Futures USDT</ButtonNao>
+                    </div>
                 </div>
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
@@ -297,9 +301,11 @@ const NaoPerformance = memo(() => {
 const RangePopover = ({
     language,
     active = {},
-    onChange
+    onChange,
+    popoverClassName='',
 }) => {
-    return <Popover className="relative flex">
+    const popOverClasses = classNames('relative flex', popoverClassName);
+    return <Popover className={popOverClasses}>
         {({
             open,
             close
