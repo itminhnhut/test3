@@ -248,7 +248,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         }} active={showPositionList} />
                     </div>
                 </div>
-                <div className="w-full mt-2 max-h-[calc(100%-400px)] overflow-y-auto scrollbar-nao"
+                <div className="w-full mt-2 max-h-[calc(100%-394px)] overflow-y-auto scrollbar-nao"
                     style={{ display: `${showPositionList ? 'block' : 'none'}` }}
                     ref={listInnerRef}
                     onScroll={onScroll}
