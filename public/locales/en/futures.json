@@ -379,8 +379,6 @@
         "tooltip_popup": "Choose asset for closing fee to get a corresponding discount and set a default asset for next orders by checking the box below.",
         "trading_fees": "Trading Fees",
         "set_as_default_trading_fee": "Set as default trading fee",
-        "modify_order": "Modify order",
-        "set_as_default_trading_fee": "Set as default trading fee",
         "close_all_positions": {
             "title": "Close all positions",
             "title_pending": "Cancel all",
