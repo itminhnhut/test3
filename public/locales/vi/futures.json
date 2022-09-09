@@ -366,16 +366,16 @@
             "done": "Hoàn tất đóng",
             "close_type": {
                 "close_all": "Đóng tất cả vị thế",
-                "close_all_profit": "Đóng tất cả vị thế Lãi",
-                "close_all_loss": "Đóng tất cả vị thế Lỗ",
+                "close_all_profit": "Đóng tất cả vị thế lãi",
+                "close_all_loss": "Đóng tất cả vị thế lỗ",
                 "close_all_pair": "Đóng tất cả vị thế {{pair}}",
                 "close_all_pending": "Huỷ tất cả",
                 "close_all_pair_pending": "Huỷ tất cả lệnh {{pair}}"
             },
             "confirm_title": {
                 "close_all_ALL": "Xác nhận đóng tất cả vị thế",
-                "close_all_PROFIT": "Xác nhận đóng tất cả vị thế Lãi",
-                "close_all_LOSS": "Xác nhận đóng tất cả vị thế Lỗ",
+                "close_all_PROFIT": "Xác nhận đóng tất cả vị thế lãi",
+                "close_all_LOSS": "Xác nhận đóng tất cả vị thế lỗ",
                 "close_all_PAIR": "Xác nhận đóng tất cả vị thế {{pair}}",
                 "close_all_ALL_PENDING": "Xác nhận huỷ lệnh chờ",
                 "close_all_ALL_PAIR_PENDING": "Huỷ tất cả lệnh {{pair}}"
