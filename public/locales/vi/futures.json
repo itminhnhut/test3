@@ -399,7 +399,7 @@
                 "close_all_PROFIT": "Xác nhận đóng tất cả vị thế lãi {{pair}}",
                 "close_all_LOSS": "Xác nhận đóng tất cả vị thế lỗ {{pair}}",
                 "close_all_PAIR": "Xác nhận đóng tất cả vị thế {{pair}}",
-                "close_all_ALL_PENDING": "Xác nhận huỷ lệnh chờ {{pair}}",
+                "close_all_ALL_PENDING": "Xác nhận huỷ tất cả lệnh chờ {{pair}}",
                 "close_all_ALL_PAIR_PENDING": "Huỷ tất cả lệnh {{pair}}"
             },
             "confirm_description": "Đây là số lệnh dự kiến đóng và tổng lợi nhuận dự kiến bạn nhận được. Số lệnh đóng và lợi nhuận thực tế có thể thay đổi theo giá thị trường.",
