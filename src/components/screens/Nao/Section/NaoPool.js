@@ -266,7 +266,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 <div className="flex items-center justify-between flex-wrap gap-[0.75rem]">
                     <div className="flex-col flex">
                         <div className='space-x-3 flex items-center '>
-                            <span className="font-medium text-nao-gradient lg:text-white">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</span>
+                            <span className="text-nao-blue font-medium sm:text-lg">{t('nao:pool:estimated_revenue_share', { value: '(20%)' })}</span>
                             <div data-tip={t('nao:pool:tooltip_revenue_history')} data-for="tooltip-revenue-history" >
                                 <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help_blue.png')} height={20} width={20} />
                             </div>
