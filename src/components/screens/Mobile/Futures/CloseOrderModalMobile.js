@@ -35,7 +35,6 @@ const getPairConfig = createSelector(
 
 const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) => {
     const { t } = useTranslation();
-    const { order_value = 0, side } = order;
     const lastPrice = pairPrice?.lastPrice;
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const pairConfig = useSelector(state => getPairConfig(state, { pair: order?.symbol }));
@@ -49,6 +48,9 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     const [showCustomized, setShowCustomized] = useState(false);
     const [loading, setLoading] = useState(false);
     const context = useContext(AlertContext);
+
+    const order_value = order?.order_value || 0
+    const side = order?.side
 
     const getDecimalPrice = (config) => {
         const decimalScalePrice =
