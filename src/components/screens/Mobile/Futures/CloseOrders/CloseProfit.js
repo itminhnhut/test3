@@ -78,7 +78,7 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
                                 <span>{renderCellTable('type', order, t, language)}</span>
                             </div>
                         </div>
-                        <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-darkBlue-5">
+                        <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-onus-grey">
                             &nbsp;· ID #{order.displaying_id}
                         </div>
                     </div>
