@@ -133,7 +133,8 @@ const TabOrders = memo(({
     }
 
     const currrencyFilter = useMemo(() => {
-        return ordersList.filter(order => order?.symbol.includes(pair.includes('VNDC') ? 'VNDC' : 'USDT'))
+        if(!ordersList) return false 
+        return ordersList.filter(order => order?.symbol?.includes(pair?.includes('VNDC') ? 'VNDC' : 'USDT'))
     }, [hideOther, ordersList, pair]);
 
     const renderCloseAllButton = () => {
