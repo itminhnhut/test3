@@ -397,7 +397,7 @@ const OrderOpenDetail = ({
                             className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
-                            onClick={() => setShowEditMargin(true)}
+                            onClick={() => setShowAddVol(true)}
                         />
                     </div>
                 }
