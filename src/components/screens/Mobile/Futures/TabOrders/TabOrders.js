@@ -133,7 +133,7 @@ const TabOrders = memo(({
     }
 
     const currrencyFilter = useMemo(() => {
-        if(!ordersList) return false 
+        if (!ordersList) return false
         return ordersList.filter(order => order?.symbol?.includes(pair?.includes('VNDC') ? 'VNDC' : 'USDT'))
     }, [hideOther, ordersList, pair]);
 
@@ -189,7 +189,7 @@ const TabOrders = memo(({
                 </Portal>
             }
             {openCloseModal &&
-                <CloseOrdersByCondtionMobile 
+                <CloseOrdersByCondtionMobile
                     orderList={orderListFilter.orderList}
                     tab={tab} onClose={() => setOpenCloseModal(false)} isClosing={setIsClosingOrders}
                     pair={pair} pairConfig={pairConfig}
@@ -242,23 +242,23 @@ const TabOrders = memo(({
                                             </TabMode>
                                         </TabModeContainer>
                                         <div>
-                                            { tab === FUTURES_RECORD_CODE.openOrders ? currrencyFilter?.length > 1 && renderCloseAllButton() : renderCloseAllButton()}
+                                            {renderCloseAllButton()}
                                         </div>
                                     </>
                                 }
                             </div>
                         }
-                                {needShowHideOther &&
-                                    <div
-                                        className="flex items-center text-sm font-medium select-none cursor-pointer px-4 pb-4"
-                                        onClick={() => setHideOther(!hideOther)}
-                                    >
-                                        <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
-                                        <span className="ml-3 whitespace-nowrap font-medium  text-onus-grey text-xs">
-                                            {t('futures:hide_other_symbols')}
-                                        </span>
-                                    </div>
-                                }
+                        {needShowHideOther &&
+                            <div
+                                className="flex items-center text-sm font-medium select-none cursor-pointer px-4 pb-4"
+                                onClick={() => setHideOther(!hideOther)}
+                            >
+                                <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
+                                <span className="ml-3 whitespace-nowrap font-medium  text-onus-grey text-xs">
+                                    {t('futures:hide_other_symbols')}
+                                </span>
+                            </div>
+                        }
                         <TabContent
                             active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position}>
                             <TabOpenOrders
