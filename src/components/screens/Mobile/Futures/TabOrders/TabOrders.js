@@ -242,7 +242,7 @@ const TabOrders = memo(({
                                             </TabMode>
                                         </TabModeContainer>
                                         <div>
-                                            { tab === FUTURES_RECORD_CODE.openOrders ? currrencyFilter.length > 1 && renderCloseAllButton() : renderCloseAllButton()}
+                                            { tab === FUTURES_RECORD_CODE.openOrders ? currrencyFilter?.length > 1 && renderCloseAllButton() : renderCloseAllButton()}
                                         </div>
                                     </>
                                 }
