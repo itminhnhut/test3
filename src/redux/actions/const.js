@@ -829,7 +829,7 @@ export const UserSocketEvent = {
     EXCHANGE_PLACE_MARKET_ORDER_RESULT: 'exchange:place_market_order_result',
     UPDATE_BALANCE: 'user:update_balance',
     FUTURES_OPEN_ORDER: 'future:update_opening_order',
-
+    FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders'
 };
 
 export const EarnOrder_Status = {

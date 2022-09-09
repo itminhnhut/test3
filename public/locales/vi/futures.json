@@ -380,6 +380,37 @@
         "tooltip_popup": "Lựa chọn tài sản để thanh toán phí đóng lệnh nhận chiết khấu tương ứng và cài đặt tài sản thanh toán phí mặc định cho các lệnh tiếp theo ở dòng chọn bên dưới.",
         "trading_fees": "Phí giao dịch",
         "set_as_default_trading_fee": "Chọn làm phí giao dịch mặc định",
+        "close_all_positions": {
+            "title": "Đóng tất cả vị thế",
+            "title_pending": "Huỷ tất cả",
+            "processing": "Đang đóng lệnh",
+            "done": "Hoàn tất đóng",
+            "close_type": {
+                "close_all": "Đóng tất cả vị thế",
+                "close_all_profit": "Đóng tất cả vị thế Lãi",
+                "close_all_loss": "Đóng tất cả vị thế Lỗ",
+                "close_all_pair": "Đóng tất cả vị thế {{pair}}",
+                "close_all_pending": "Huỷ tất cả",
+                "close_all_pair_pending": "Huỷ tất cả lệnh {{pair}}"
+            },
+            "confirm_title": {
+                "close_all_ALL": "Xác nhận đóng tất cả vị thế",
+                "close_all_PROFIT": "Xác nhận đóng tất cả vị thế Lãi",
+                "close_all_LOSS": "Xác nhận đóng tất cả vị thế Lỗ",
+                "close_all_PAIR": "Xác nhận đóng tất cả vị thế {{pair}}",
+                "close_all_ALL_PENDING": "Xác nhận huỷ lệnh chờ",
+                "close_all_ALL_PAIR_PENDING": "Huỷ tất cả lệnh {{pair}}"
+            },
+            "confirm_description": "Đây là số lệnh dự kiến đóng và tổng lợi nhuận dự kiến bạn nhận được. Số lệnh đóng và lợi nhuận thực tế có thể thay đổi theo giá thị trường.",
+            "confirm_close_pending_description": "Bạn có chắc muốn hủy tất cả các lệnh đang chờ?",
+            "estimated_pnl": "Tổng PnL tạm tính",
+            "estimated_time": "Thời gian đóng dự kiến",
+            "estimated_orders": "Số vị thế đóng dự kiến",
+            "position_list": "Danh sách lệnh",
+            "orders": "lệnh",
+            "order": "lệnh",
+            "preview": "Xem trước"
+        },
         "modify_order": "Điều chỉnh lệnh"
     },
     "orders_history": "Lịch sử lệnh",

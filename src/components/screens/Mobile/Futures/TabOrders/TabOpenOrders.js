@@ -222,8 +222,8 @@ const TabOpenOrders = ({
     }
 
     return (
-        <div className="px-4 overflow-x-auto" style={{ height: 'calc(100% - 173px)' }}>
-            {visibleModalFees && <CurrencyPopup
+        <div className="px-4 overflow-x-auto" style={{ height: 'calc(100% - 207px)' }}>
+           {visibleModalFees&& <CurrencyPopup
                 visibleModalFees={visibleModalFees}
                 setVisibleModalFees={setVisibleModalFees}
                 dataRow={rowData.current}

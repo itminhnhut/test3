@@ -72,7 +72,6 @@ export const getProfitVndc = (order, lastPrice = 0, isOnus) => {
 };
 
 export const renderCellTable = (key, rowData, t, language) => {
-    // const { t, i18n: { language } } = useTranslation();
     switch (key) {
         case 'side':
             return language === 'vi' ? rowData[key] === 'Sell' ? t('common:sell') : t('common:buy') : rowData[key];
@@ -110,6 +109,7 @@ export const modeOrders = {
     detail: 'detail',
     shortcut: 'shortcut'
 }
+
 
 export const getTypesLabel = (mode, t) => {
     switch (mode) {
@@ -179,7 +179,7 @@ export const validator = (key, price, type, side, lastPrice, pairConfig, decimal
                 min: Math.max(_activePrice, _activePrice * (1 + percentPriceFilter?.minDifferenceRatio)),
                 max: Math.min(_maxPrice, _activePrice * percentPriceFilter?.multiplierUp),
             };
-            
+
             if (side === FuturesOrderEnum.Side.BUY) {
                 // Truong hop la buy thi gia limit phai nho hon gia hien tai
                 if (type === "LIMIT") {
