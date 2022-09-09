@@ -25,14 +25,14 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
         if (!symbol) return;
         // ? Subscribe publicSocket
         // ? Get Pair Ticker
-        Emitter.once(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol, async (data) => {
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol, async (data) => {
             if (symbol === data?.s && data?.p > 0) {
                 const _pairPrice = FuturesMarketWatch.create(data);
                 setPairPrice(_pairPrice);
             }
         });
         return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
         };
     }, [symbol]);
 
