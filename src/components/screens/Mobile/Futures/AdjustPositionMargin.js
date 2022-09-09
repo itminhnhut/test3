@@ -246,7 +246,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
-                                onFocus={scrollFocusInput}
+                                // onFocus={scrollFocusInput}
                             />
                             <div
                                 className='flex items-center'

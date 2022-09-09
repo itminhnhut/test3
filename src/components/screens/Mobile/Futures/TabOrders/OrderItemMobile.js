@@ -206,10 +206,11 @@ const OrderItemMobile = ({
     }
 
     const renderMargin = () => {
+        const visible = !((order?.metadata?.dca_order_metadata || order?.metadata?.partial_close_metadata) && orderStatus.pending)
         return (
-            <div className="flex items-center justify-end space-x-1" onClick={() => actions('modal', 'edit-margin')}>
+            <div className="flex items-center justify-end space-x-1" onClick={() => visible && actions('modal', 'edit-margin')}>
                 <span>{t('futures:margin')}</span>
-                <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />
+                {visible && <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />}
             </div>
         )
     }

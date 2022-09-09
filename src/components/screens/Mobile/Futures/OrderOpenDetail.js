@@ -16,6 +16,7 @@ import MiniTickerData from 'components/screens/Futures/MiniTickerData';
 import CurrencyPopup from 'components/screens/Mobile/Futures/CurrencyPopup';
 import ModifyOrder from './ModifyOrder';
 import CloseOrderModalMobile from './CloseOrderModalMobile';
+import AdjustPositionMargin from './AdjustPositionMargin';
 
 const INITIAL_STATE = {
     socketStatus: false,
@@ -54,6 +55,7 @@ const OrderOpenDetail = ({
     const [disabled, setDisabled] = useState(false);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const [visibleModalFees, setVisibleModalFees] = useState(false);
+    const [showAddVol, setShowAddVol] = useState(false);
     const [openCloseOrderModal, setOpenCloseOrderModal] = useState(false);
 
     const subscribeFuturesSocket = (symbol) => {
@@ -215,6 +217,16 @@ const OrderOpenDetail = ({
         )
     }
 
+    const renderMargin = () => {
+        const visible = !((order?.metadata?.dca_order_metadata || order?.metadata?.partial_close_metadata) && orderStatus.pending)
+        return (
+            <div className="flex items-center justify-end space-x-1" onClick={() => visible && setShowEditMargin(true)}>
+                <span>{t('futures:margin')}</span>
+                {visible && <img src={getS3Url('/images/icon/ic_add.png')} height={16} width={16} className='min-w-[16px]' />}
+            </div>
+        )
+    }
+
     const onModifyFee = () => {
         setVisibleModalFees(true);
     }
@@ -245,10 +257,18 @@ const OrderOpenDetail = ({
             }
             {
                 showEditMargin &&
+                <AdjustPositionMargin
+                    order={order}
+                    pairPrice={dataMarketWatch}
+                    onClose={() => setShowEditMargin()}
+                />
+            }
+            {
+                showAddVol &&
                 <ModifyOrder
                     order={order}
                     pairPrice={dataMarketWatch}
-                    onClose={() => setShowEditMargin(false)}
+                    onClose={() => setShowAddVol(false)}
                     pairConfig={pairConfig}
                     forceFetchOrder={forceFetchOrder}
                 />
@@ -344,7 +364,7 @@ const OrderOpenDetail = ({
                     value={formatNumber(order?.order_value, decimalSymbol, 0, true)}
                 />
                 <OrderItem
-                    label={t('futures:margin')}
+                    label={renderMargin()}
                     className="py-[2px] space-y-[2px] text-right mb-2"
                     value={order?.margin ? formatNumber(order?.margin, decimalSymbol, 0, false) : '-'}
                 />
@@ -377,7 +397,7 @@ const OrderOpenDetail = ({
                             className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
-                            onClick={() => setShowEditMargin(true)}
+                            onClick={() => setShowAddVol(true)}
                         />
                     </div>
                 }

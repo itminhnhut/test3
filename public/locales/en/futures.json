@@ -379,6 +379,7 @@
         "change_success": "Changed successfully",
         "tooltip_popup": "Choose asset for closing fee to get a corresponding discount and set a default asset for next orders by checking the box below.",
         "trading_fees": "Trading Fees",
+        "modify_order": "Modify order",
         "set_as_default_trading_fee": "Set as default trading fee",
         "close_all_positions": {
             "title": "Close All Positions",
@@ -398,7 +399,7 @@
                 "close_all_PROFIT": "Confirm Close All Profit {{pair}} Positions",
                 "close_all_LOSS": "Confirm Close All Loss {{pair}} Positions",
                 "close_all_PAIR": "Confirm Close All {{pair}} Positions",
-                "close_all_ALL_PENDING": "Confirm Cancelling All {{pair}} Pending Positions",
+                "close_all_ALL_PENDING": "Confirm Cancelling All {{pair}} Orders",
                 "close_all_ALL_PAIR_PENDING": "Cancel All {{pair}} Orders"
             },
             "confirm_description": "This is the estimated number of positions and profit. Market price will affect the actual number of closed positions and profit.",

@@ -73,7 +73,7 @@ const TabOrders = memo(({
     }, [userSocket]);
 
     // useEffect(() => {
-    //     if(isClosingOrders.isClosing === 'true') setTimeout(() => setIsClosingOrders({ isClosing: 'false', timeout: 0 }), isClosingOrders.timeout * 1000) 
+    //     if(isClosingOrders.isClosing === 'true') setTimeout(() => setIsClosingOrders({ isClosing: 'false', timeout: 0 }), isClosingOrders.timeout * 1000)
     // }, [isClosingOrders])
 
     const onShowDetail = (row, isTabHistory) => {
@@ -243,17 +243,17 @@ const TabOrders = memo(({
                                 }
                             </div>
                         }
-                                {needShowHideOther &&
-                                    <div
-                                        className="flex items-center text-sm font-medium select-none cursor-pointer px-4 pb-4"
-                                        onClick={() => setHideOther(!hideOther)}
-                                    >
-                                        <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
-                                        <span className="ml-3 whitespace-nowrap font-medium  text-onus-grey text-xs">
-                                            {t('futures:hide_other_symbols')}
-                                        </span>
-                                    </div>
-                                }
+                        {needShowHideOther &&
+                            <div
+                                className="flex items-center text-sm font-medium select-none cursor-pointer px-4 pb-4"
+                                onClick={() => setHideOther(!hideOther)}
+                            >
+                                <CheckBox onusMode={true} active={hideOther} boxContainerClassName="rounded-[2px]" />
+                                <span className="ml-3 whitespace-nowrap font-medium  text-onus-grey text-xs">
+                                    {t('futures:hide_other_symbols')}
+                                </span>
+                            </div>
+                        }
                         <TabContent
                             active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position}>
                             <TabOpenOrders
