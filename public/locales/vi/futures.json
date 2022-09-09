@@ -386,19 +386,19 @@
             "processing": "Đang đóng lệnh",
             "done": "Hoàn tất đóng",
             "close_type": {
-                "close_all": "Đóng tất cả vị thế",
-                "close_all_profit": "Đóng tất cả vị thế lãi",
-                "close_all_loss": "Đóng tất cả vị thế lỗ",
+                "close_all": "Đóng tất cả vị thế {{pair}}",
+                "close_all_profit": "Đóng tất cả vị thế lãi {{pair}}",
+                "close_all_loss": "Đóng tất cả vị thế lỗ {{pair}}",
                 "close_all_pair": "Đóng tất cả vị thế {{pair}}",
-                "close_all_pending": "Huỷ tất cả",
+                "close_all_pending": "Huỷ tất cả {{pair}}",
                 "close_all_pair_pending": "Huỷ tất cả lệnh {{pair}}"
             },
             "confirm_title": {
-                "close_all_ALL": "Xác nhận đóng tất cả vị thế",
-                "close_all_PROFIT": "Xác nhận đóng tất cả vị thế lãi",
-                "close_all_LOSS": "Xác nhận đóng tất cả vị thế lỗ",
+                "close_all_ALL": "Xác nhận đóng tất cả vị thế {{pair}}",
+                "close_all_PROFIT": "Xác nhận đóng tất cả vị thế lãi {{pair}}",
+                "close_all_LOSS": "Xác nhận đóng tất cả vị thế lỗ {{pair}}",
                 "close_all_PAIR": "Xác nhận đóng tất cả vị thế {{pair}}",
-                "close_all_ALL_PENDING": "Xác nhận huỷ lệnh chờ",
+                "close_all_ALL_PENDING": "Xác nhận huỷ lệnh chờ {{pair}}",
                 "close_all_ALL_PAIR_PENDING": "Huỷ tất cả lệnh {{pair}}"
             },
             "confirm_description": "Đây là số lệnh dự kiến đóng và tổng lợi nhuận dự kiến bạn nhận được. Số lệnh đóng và lợi nhuận thực tế có thể thay đổi theo giá thị trường.",

@@ -385,19 +385,19 @@
             "processing": "Closing",
             "done": "Completed",
             "close_type": {
-                "close_all": "Close All Positions",
-                "close_all_profit": "Close All Profit Positions",
-                "close_all_loss": "Close All Loss Positions",
+                "close_all": "Close All {{pair}} Positions",
+                "close_all_profit": "Close All Profit {{pair}} Positions",
+                "close_all_loss": "Close All Loss {{pair}} Positions",
                 "close_all_pair": "Close All {{pair}} positions",
-                "close_all_pending": "Cancel All",
+                "close_all_pending": "Cancel All {{pair}} Orders",
                 "close_all_pair_pending": "Cancel All {{pair}} Orders"
             },
             "confirm_title": {
-                "close_all_ALL": "Confirm Close All Positions",
-                "close_all_PROFIT": "Confirm Close All Profit Positions",
-                "close_all_LOSS": "Confirm Close All Loss Positions",
+                "close_all_ALL": "Confirm Close All {{pair}} Positions",
+                "close_all_PROFIT": "Confirm Close All Profit {{pair}} Positions",
+                "close_all_LOSS": "Confirm Close All Loss {{pair}} Positions",
                 "close_all_PAIR": "Confirm Close All {{pair}} Positions",
-                "close_all_ALL_PENDING": "Confirm Cancelling All Pending Positions",
+                "close_all_ALL_PENDING": "Confirm Cancelling All {{pair}} Pending Positions",
                 "close_all_ALL_PAIR_PENDING": "Cancel All {{pair}} Orders"
             },
             "confirm_description": "This is the estimated number of positions and profit. Market price will affect the actual number of closed positions and profit.",

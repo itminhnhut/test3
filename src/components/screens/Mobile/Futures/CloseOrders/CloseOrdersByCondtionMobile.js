@@ -125,15 +125,15 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
         position: [
             {
                 type: 'ALL',
-                value: t('futures:mobile.close_all_positions.close_type.close_all')
+                value: t('futures:mobile.close_all_positions.close_type.close_all', { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
             },
             {
                 type: 'PROFIT',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_profit')
+                value: t('futures:mobile.close_all_positions.close_type.close_all_profit',  { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
             },
             {
                 type: 'LOSS',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_loss')
+                value: t('futures:mobile.close_all_positions.close_type.close_all_loss',  { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
             },
             {
                 type: 'PAIR',
@@ -143,7 +143,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
         openOrders: [
             {
                 type: 'ALL_PENDING',
-                value: t('futures:mobile.close_all_positions.close_type.close_all_pending')
+                value: t('futures:mobile.close_all_positions.close_type.close_all_pending',  { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })
             },
             {
                 type: 'ALL_PAIR_PENDING',
@@ -164,13 +164,13 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                 return;
             }
             case 'confirm': {
-                if (options.type === 'ALL_PENDING') {
-                    setShowConfirmAllPending(true)
-                    // renderCloseAllPendingModal(type)
-                    setShowChooseType(false)
-                    setShowConfirm(false)
-                    return
-                }
+                // if (options.type === 'ALL_PENDING') {
+                //     setShowConfirmAllPending(true)
+                //     // renderCloseAllPendingModal(type)
+                //     setShowChooseType(false)
+                //     setShowConfirm(false)
+                //     return
+                // }
                 setShowConfirmAllPending(false)
                 setShowChooseType(false)
                 setShowConfirm(true)
@@ -238,7 +238,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                     </div>
                 </div>
 
-                <div className="flex mt-8 h-6 gap-2" style={{ display: `${state?.orders?.length > 0 && type !== 'ALL_PAIR_PENDING' ? 'flex' : 'none'}` }}>
+                <div className="flex mt-8 h-6 gap-2" style={{ display: `${state?.orders?.length > 0 && type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
                     <div className="text-base font-semibold leading-[22px] tracking-[-0.02em]">
                         {t('futures:mobile.close_all_positions.position_list')}
                     </div>
@@ -248,7 +248,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
                         }} active={showPositionList} />
                     </div>
                 </div>
-                <div className="w-full mt-2 max-h-[329px] overflow-y-auto scrollbar-nao"
+                <div className="w-full mt-2 max-h-[calc(100%-426px)] overflow-y-auto scrollbar-nao"
                     style={{ display: `${showPositionList ? 'block' : 'none'}` }}
                     ref={listInnerRef}
                     onScroll={onScroll}
@@ -283,7 +283,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
     const renderCloseInfo = () => {
         return (
             <div className="font-normal text-sm leading-5 w-full">
-                <div className={`h-11 min-h-full border-b border-onus-bg2 flex items-center w-full`} style={{ display: `${type !== 'ALL_PAIR_PENDING' ? 'flex' : 'none'}` }}>
+                <div className={`h-11 min-h-full border-b border-onus-bg2 flex items-center w-full`} style={{ display: `${type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
                     <div className="w-full flex justify-between">
                         <div className='text-darkBlue-5'>
                             {t('futures:mobile.close_all_positions.estimated_pnl')}
