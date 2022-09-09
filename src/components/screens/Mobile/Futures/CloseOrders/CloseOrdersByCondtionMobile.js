@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect, useRef } from 'react';
+import React, { useState, memo, useEffect, useRef, useContext } from 'react';
 import Modal from 'components/common/ReModal';
 import { useTranslation } from 'next-i18next';
 import Button from "components/common/Button";
@@ -12,6 +12,7 @@ import { DangerIcon } from 'src/components/common/Icons';
 import RadioBox from 'components/common/RadioBox';
 import useOnScreen from 'hooks/useOnScreen';
 import { set } from 'lodash';
+import { AlertContext } from 'components/common/layouts/LayoutMobile';
 
 const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair, tab }) => {
     const { t } = useTranslation();
@@ -25,6 +26,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
     const [PnLObject, setPnLObject] = useState({})
     const [totalPnL, setTotalPnL] = useState("")
     const [isMore, setIsMore] = useState(false)
+    const context = useContext(AlertContext);
 
     const listInnerRef = useRef()
 
@@ -37,7 +39,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
             } else {
                 if (isMore) return setTimeout(() => setIsMore(false), 3000)
                 setIsMore(true)
-               
+
             }
         }
     };
@@ -164,6 +166,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
             case 'confirm': {
                 if (options.type === 'ALL_PENDING') {
                     setShowConfirmAllPending(true)
+                    // renderCloseAllPendingModal(type)
                     setShowChooseType(false)
                     setShowConfirm(false)
                     return
@@ -342,11 +345,16 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
     }
 
     const renderCloseAllPendingModal = (type) => {
+        // context.alert.show('warning',
+        //     t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) }),
+        //     t(`futures:mobile.close_all_positions.confirm_close_pending_description`),
+        //     null,
+        //     () => closeOrdersByCloseType(),
+        // );
         return (
             <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-                center={true}
                 modalClassName="z-[99999] flex justitfy-center h-full"
-                onusClassName={"!px-9 pb-13 min-h-[304px] rounded-t-[16px] !bg-onus-bg3 !overflow-hidden !pt-11"}
+                onusClassName={"!px-9 pb-13 min-h-[304px] !bg-onus-bg3 !overflow-hidden !pt-11 !bottom-[52px] rounded-[16px]"}
                 containerClassName="!bg-nao-bgModal2/[0.6] !px-4"
             >
                 <div className='w-full flex justify-center mb-8'>
@@ -394,7 +402,7 @@ const CloseOrdersByCondtionMobile = memo(({ onClose, onConfirm, isClosing, pair,
 export default CloseOrdersByCondtionMobile
 
 const IsMoreIcon = <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M6.28138 5.7215C6.12551 5.87578 5.87449 5.87578 5.71862 5.7215L0.629212 0.684296C0.375223 0.432913 0.553236 -1.08813e-06 0.910592 -1.05689e-06L11.0894 -1.67029e-07C11.4468 -1.35788e-07 11.6248 0.432913 11.3708 0.684297L6.28138 5.7215Z" fill="#8492A7"/>
+    <path d="M6.28138 5.7215C6.12551 5.87578 5.87449 5.87578 5.71862 5.7215L0.629212 0.684296C0.375223 0.432913 0.553236 -1.08813e-06 0.910592 -1.05689e-06L11.0894 -1.67029e-07C11.4468 -1.35788e-07 11.6248 0.432913 11.3708 0.684297L6.28138 5.7215Z" fill="#8492A7" />
 </svg>
 
 

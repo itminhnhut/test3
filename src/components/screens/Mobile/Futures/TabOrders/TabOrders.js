@@ -132,6 +132,10 @@ const TabOrders = memo(({
         setOpenCloseModal(true)
     }
 
+    const currrencyFilter = useMemo(() => {
+        return ordersList.filter(order => order?.symbol.includes(pair.includes('VNDC') ? 'VNDC' : 'USDT'))
+    }, [hideOther, ordersList, pair]);
+
     const renderCloseAllButton = () => {
         let button
         switch (isClosingOrders.isClosing) {
@@ -237,7 +241,7 @@ const TabOrders = memo(({
                                             </TabMode>
                                         </TabModeContainer>
                                         <div>
-                                            {renderCloseAllButton()}
+                                            { tab === FUTURES_RECORD_CODE.openOrders ? currrencyFilter.length > 1 && renderCloseAllButton() : renderCloseAllButton()}
                                         </div>
                                     </>
                                 }
