@@ -184,7 +184,7 @@ const TabOrders = memo(({
                 </Portal>
             }
             {openCloseModal &&
-                <CloseOrdersByCondtionMobile 
+                <CloseOrdersByCondtionMobile
                     orderList={orderListFilter.orderList}
                     tab={tab} onClose={() => setOpenCloseModal(false)} isClosing={setIsClosingOrders}
                     pair={pair} pairConfig={pairConfig}
