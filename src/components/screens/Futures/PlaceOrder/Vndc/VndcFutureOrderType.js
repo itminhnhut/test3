@@ -62,12 +62,15 @@ export const getProfitVndc = (order, lastPrice = 0, isOnus) => {
     if (isOnus) {
         fee += quantity * closePrice * (0.06 / 100);
     }
+    const swap = order?.swap || 0
+    fee += swap
     try {
         let buyProfitVNDC = 0;
         buyProfitVNDC = quantity * (closePrice - open_price);
         profitVNDC = side === VndcFutureOrderType.Side.BUY ? buyProfitVNDC - fee : -buyProfitVNDC - fee;
     } catch (e) {
     }
+
     return profitVNDC;
 };
 
