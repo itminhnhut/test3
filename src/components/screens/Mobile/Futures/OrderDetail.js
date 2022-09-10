@@ -399,12 +399,12 @@ const OrderDetail = ({
                         <Span>{renderModify(item?.metadata, 'open_price')}</Span>
                     </Row>
                 }
-                {item?.metadata?.modify_liq_price &&
-                    <Row>
-                        <Label>{t('futures:mobile:liq_price')}</Label>
-                        <Span>{renderModify(item?.metadata, 'liq_price')}</Span>
-                    </Row>
-                }
+                {/* {item?.metadata?.modify_liq_price && */}
+                {/*     <Row> */}
+                {/*         <Label>{t('futures:mobile:liq_price')}</Label> */}
+                {/*         <Span>{renderModify(item?.metadata, 'liq_price')}</Span> */}
+                {/*     </Row> */}
+                {/* } */}
                 <Row>
                     <Label>{t('futures:mobile:open_fee')}</Label>
                     <Span>{renderFee(item?.metadata, 'place_order')}</Span>
