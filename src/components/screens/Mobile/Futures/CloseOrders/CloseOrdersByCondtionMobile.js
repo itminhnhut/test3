@@ -10,6 +10,7 @@ import CloseProfit from 'components/screens/Mobile/Futures/CloseOrders/CloseProf
 import numeral from 'numeral';
 import { DangerIcon } from 'src/components/common/Icons';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
+import { getOrdersList } from 'redux/actions/futures';
 
 const CloseOrdersByCondtionMobile = memo(({
     onClose,
@@ -93,6 +94,7 @@ const CloseOrdersByCondtionMobile = memo(({
                     orders: response.data,
                     isLoading: false
                 });
+                await getOrdersList()
             }
         } catch (error) {
             console.log('Error when get orders by close type', error);
@@ -229,7 +231,7 @@ const CloseOrdersByCondtionMobile = memo(({
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-[20px] mb-3">
                     <div>{type.includes('PAIR') ? t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) }) : t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })}</div>
                 </div>
-                <div className='w-full h-full max-h-[calc(100%-112px)] overflow-y-auto'>
+                <div className='w-full max-h-[calc(100%-108px)] overflow-y-auto'>
                     {state?.orders && renderCloseInfo()}
                     <div className="mt-3 flex w-full">
                         <div className="w-[22px]">
@@ -261,7 +263,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         {showPositionList && isMore && IsMoreIcon}
                     </div>} */}
                 </div>
-                <div className="w-full flex justify-between gap-[10px] mt-6 h-12">
+                <div className="w-full flex justify-between gap-[10px] mt-8 h-12">
                     <Button
                         onusMode
                         onClick={() => doShow('choose')}
@@ -293,11 +295,11 @@ const CloseOrdersByCondtionMobile = memo(({
                         </div>
                         {!totalPnL.includes('-') ? (
                             <div className='text-onus-green'>
-                                {totalPnL ? '+' : '-'}{totalPnL} {pair.includes('VNDC') ? 'VNDC' : 'USDT'}
+                                {totalPnL ? '+' : '-'}{totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && pair.includes('VNDC') ? 'VNDC' : 'USDT' : ''}
                             </div>
                         ) : (
                             <div className='text-onus-red'>
-                                {totalPnL} {pair.includes('VNDC') ? 'VNDC' : 'USDT'}
+                                {totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && pair.includes('VNDC') ? 'VNDC' : 'USDT' : ''}
                             </div>
                         )}
                     </div>
