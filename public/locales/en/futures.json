@@ -285,7 +285,7 @@
             "close_partially": "Close Partially",
             "closed_volume": "Closed Volume",
             "added_volume_2": "Added Volume",
-            "partially_closed_success_message": "your partial position have been closed successfully",
+            "partially_closed_success_message": "Your partial position have been closed successfully",
             "remaining_volume": "Remaining Volume",
             "order_completed": "Completed",
             "close_position": "Close Position",
