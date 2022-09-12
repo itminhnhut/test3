@@ -264,8 +264,8 @@ const OrderItemMobile = ({
                     </div>
                     <div
                         className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
-                        {order?.metadata?.dca_order_metadata && orderStatus.pending && <span>{t('futures:mobile:adjust_margin:added_volume')}&nbsp;/&nbsp;</span>}
-                        {order?.metadata?.partial_close_metadata && orderStatus.pending && <span>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</span>}
+                        {order?.metadata?.dca_order_metadata && !order?.metadata?.dca_order_metadata?.is_main_order && <span>{t('futures:mobile:adjust_margin:added_volume')}&nbsp;/&nbsp;</span>}
+                        {order?.metadata?.partial_close_metadata && !order?.metadata?.dca_order_metadata?.is_main_order && <span>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</span>}
                         <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
                         <span>{renderCellTable('type', order, t, language)}</span>
                     </div>

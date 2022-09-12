@@ -60,7 +60,7 @@ const OrderDetail = (props) => {
 
     useEffect(() => {
         getDetail();
-    }, [])
+    }, [pair])
 
     const getDetail = async () => {
         try {
