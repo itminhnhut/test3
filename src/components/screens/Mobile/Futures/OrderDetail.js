@@ -413,10 +413,10 @@ const OrderDetail = ({
     }
 
     const renderDetails = (order) => {
-        const mainOrder = order?.metadata?.dca_order_metadata?.is_main_order
-        if (order?.reason_close_code === 5 || order?.metadata?.dca_order_metadata && !mainOrder) {
+        const mainOrder = order?.metadata?.dca_order_metadata?.is_main_order || order?.metadata?.partial_close_metadata?.is_main_order
+        if ((order?.reason_close_code === 5 || order?.metadata?.dca_order_metadata) && !mainOrder) {
             return renderDetailAddedVol()
-        } else if (order?.reason_close_code === 6 || order?.metadata?.partial_close_metadata && !mainOrder) {
+        } else if ((order?.reason_close_code === 6 || order?.metadata?.partial_close_metadata) && !mainOrder) {
             return renderDetailPartialClose()
         } else {
             return renderDetail()
@@ -688,7 +688,7 @@ const OrderDetail = ({
                         <span className="font-semibold">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
                         <div className={`text-xs font-medium whitespace-nowrap ${classNameSide}`}>
                             {order?.metadata?.dca_order_metadata && !order?.metadata?.dca_order_metadata?.is_main_order && <>{t('futures:mobile:adjust_margin:added_volume')}&nbsp;/&nbsp;</>}
-                            {order?.metadata?.partial_close_metadata && !order?.metadata?.dca_order_metadata?.is_main_order && <>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</>}
+                            {order?.metadata?.partial_close_metadata && !order?.metadata?.partial_close_metadata?.is_main_order && <>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</>}
                             {renderCellTable('side', order, t, language)} / {renderCellTable('type', order, t, language)}
                         </div>
                     </div>
