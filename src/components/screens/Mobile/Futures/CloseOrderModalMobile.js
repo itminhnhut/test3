@@ -17,7 +17,7 @@ import { AlertContext } from "components/common/layouts/LayoutMobile";
 import { getType } from "components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc";
 import { IconLoading } from "components/common/Icons";
 import { API_PARTIAL_CLOSE_ORDER, API_GET_FUTURES_ORDER } from "redux/actions/apis";
-import { ApiStatus } from "redux/actions/const";
+import { ApiStatus, DefaultFuturesFee } from "redux/actions/const";
 import fetchApi from "utils/fetch-api";
 import { createSelector } from 'reselect';
 import find from 'lodash/find';
@@ -35,7 +35,8 @@ const getPairConfig = createSelector(
 
 const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) => {
     const { t } = useTranslation();
-    const { order_value = 0, side } = order;
+    const side = order?.side;
+    const order_value = order?.order_value ?? 0;
     const lastPrice = pairPrice?.lastPrice;
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const pairConfig = useSelector(state => getPairConfig(state, { pair: order?.symbol }));
@@ -57,7 +58,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     };
 
     const configSymbol = useMemo(() => {
-        const symbol = allPairConfigs.find((rs) => rs.symbol === order.symbol);
+        const symbol = allPairConfigs.find((rs) => rs.symbol === order?.symbol);
         const isVndcFutures = symbol?.quoteAsset === "VNDC";
         const decimalSymbol =
             assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)
@@ -77,17 +78,21 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
             : initValue;
     }, [pairConfig, configSymbol]);
 
+    const maxQuoteQty = useMemo(() => {
+        const pendingVol = order?.metadata?.partial_close_metadata?.partial_close_orders?.reduce((pre, { close_volume = 0, status }) => {
+            return pre + (status === VndcFutureOrderType.Status.PENDING ? close_volume : 0)
+        }, 0)
+        return order_value - (pendingVol ?? 0);
+
+    }, [order]);
+
     useEffect(() => {
-        setVolume(order_value < minQuoteQty ? order_value : minQuoteQty);
-    }, [minQuoteQty]);
+        setVolume(maxQuoteQty < minQuoteQty ? maxQuoteQty : minQuoteQty);
+    }, [minQuoteQty, maxQuoteQty]);
 
     useEffect(() => {
         setShowCustomized(false);
     }, [partialClose])
-
-    useEffect(() => {
-        setPercent((volume * 100) / order_value);
-    }, [volume]);
 
     useEffect(() => {
         setPrice(lastPrice);
@@ -109,6 +114,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
             return;
         }
         setVolume(+value);
+        setPercent((value * 100) / maxQuoteQty);
     };
 
     const onChangePercent = (x) => {
@@ -120,7 +126,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
             }
             return i;
         });
-        const value = ((+order_value * (_x ? _x : x)) / 100).toFixed(
+        const value = ((+maxQuoteQty * (_x ? _x : x)) / 100).toFixed(
             configSymbol.decimalSymbol
         );
         setVolume(+value);
@@ -141,21 +147,28 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     const general = useMemo(() => {
         const profit = getProfitVndc(order, side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask, true);
         const formatProfit = formatNumber(profit, configSymbol.isVndcFutures ? configSymbol.decimalSymbol : configSymbol.decimalSymbol + 2, 0, true)
-        const totalPercent = (formatProfit > 0 ? '+' : '-') + formatNumber(Math.abs(profit / order.margin) * 100, 2, 0, true)
-        const est_pnl = (percent / 100) * profit;
-        const pendingVol = order?.metadata?.partial_close_metadata?.partial_close_orders?.reduce((pre, { close_volume = 0, status }) => {
-            return pre + (status === VndcFutureOrderType.Status.PENDING ? close_volume : 0)
-        }, 0)
-
+        const totalPercent = (formatProfit > 0 ? '+' : '-') + formatNumber(Math.abs(profit / order?.margin) * 100, 2, 0, true)
+        let est_pnl = 0;
+        if (type !== FuturesOrderTypes.Market) {
+            const _price = +price
+            const size = volume / _price;
+            if (side === VndcFutureOrderType.Side.BUY) {
+                est_pnl = size * (_price - order?.open_price) - size * (_price + order?.open_price) * DefaultFuturesFee.NamiFrameOnus
+            } else {
+                est_pnl = size * (order?.open_price - _price) - size * (_price + order?.open_price) * DefaultFuturesFee.NamiFrameOnus
+            }
+        } else {
+            est_pnl = (percent / 100) * profit;
+        }
         return {
-            remaining_volume: order_value - volume,
+            remaining_volume: maxQuoteQty - volume,
             percent: totalPercent,
             profit: +profit,
             formatProfit: formatProfit,
             est_pnl: est_pnl,
-            pendingVol: pendingVol
+            pendingVol: order_value - maxQuoteQty
         }
-    }, [volume, order, percent, pairPrice, configSymbol])
+    }, [volume, order, percent, pairPrice, configSymbol, price, type, maxQuoteQty])
 
     const _validator = () => {
         const _side = side === VndcFutureOrderType.Side.BUY ? VndcFutureOrderType.Side.SELL : VndcFutureOrderType.Side.BUY
@@ -225,7 +238,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     }
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
-    const isError = ((order_value > volume || volume > order_value) && partialClose && (volume > order_value || !volume || volume < minQuoteQty ||
+    const isError = ((maxQuoteQty > volume || volume > maxQuoteQty) && partialClose && (volume > maxQuoteQty || !volume || volume < minQuoteQty ||
         (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market))) || loading;
 
     return (
