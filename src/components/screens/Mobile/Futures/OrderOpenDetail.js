@@ -261,6 +261,7 @@ const OrderOpenDetail = ({
                     order={order}
                     pairPrice={dataMarketWatch}
                     onClose={() => setShowEditMargin()}
+                    forceFetchOrder={forceFetchOrder}
                 />
             }
             {
