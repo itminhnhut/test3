@@ -226,7 +226,7 @@ const OrderDetail = ({
     useEffect(() => {
         setChartKey(Math.random()
             .toString())
-    }, [order])
+    }, [pairParent])
 
     const redirect = (url) => {
         router.push(url)
@@ -424,6 +424,7 @@ const OrderDetail = ({
     }
 
     const renderDetailAddedVol = () => {
+        const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
         const id_to = order?.metadata?.dca_order_metadata?.dca_order?.[0]?.displaying_id;
         return (
             <>
@@ -449,7 +450,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:open_price')}</Label>
-                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalPrice) : '-'}</Span>
+                    <Span>{price ? formatNumber(price, decimalPrice) : '-'}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:order_type')}</Label>
@@ -476,6 +477,7 @@ const OrderDetail = ({
     }
 
     const renderDetailPartialClose = () => {
+        const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
         const from_id = order?.metadata?.partial_close_metadata?.partial_close_from;
         return (
             <>
@@ -505,7 +507,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:close_price')}</Label>
-                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalPrice) : '-'}</Span>
+                    <Span>{price ? formatNumber(price, decimalPrice) : '-'}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:open_price')}</Label>
