@@ -58,7 +58,11 @@ const AddVolume = ({
     const pairConfig = useSelector(state => getPairConfig(state, { pair: order?.symbol }));
     const assetConfig = useSelector((state) => state.utils.assetConfig);
     const lastPrice = pairPrice?.lastPrice ?? 0;
-    const { margin = 0, order_value = 0, side, quantity = 0, fee = 0 } = order;
+    const order_value = order?.order_value ?? 0;
+    const side = order?.side
+    const margin = order?.margin ?? 0;
+    const quantity = order?.quantity ?? 0;
+    const fee = order?.fee ?? 0;
     const [volume, setVolume] = useState();
     const [leverage, setLeverage] = useState(order?.leverage);
     const [type, setType] = useState(String(order?.type).toUpperCase());
@@ -77,7 +81,7 @@ const AddVolume = ({
     };
 
     const configSymbol = useMemo(() => {
-        const symbol = allPairConfigs.find((rs) => rs.symbol === order.symbol);
+        const symbol = allPairConfigs.find((rs) => rs.symbol === order?.symbol);
         const isVndcFutures = symbol?.quoteAsset === "VNDC";
         const decimalSymbol =
             assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)
@@ -182,7 +186,7 @@ const AddVolume = ({
         const _price = type === FuturesOrderTypes.Market || !showCustomized ? lastPrice : price;
         const _margin = leverage ? margin + volume / leverage : 0;
         const _quantity = volume / _price + quantity;
-        const AvePrice = ((volume / _price) * _price + quantity * order.open_price) / _quantity;
+        const AvePrice = ((volume / _price) * _price + quantity * order?.open_price) / _quantity;
         const size = side === VndcFutureOrderType.Side.SELL ? -_quantity : _quantity;
         const number = side === VndcFutureOrderType.Side.SELL ? -1 : 1;
         const liqPrice = (size * AvePrice + fee - _margin) / (_quantity * (number - DefaultFuturesFee.NamiFrameOnus));
@@ -206,7 +210,7 @@ const AddVolume = ({
 
     useEffect(() => {
         setPrice(lastPrice);
-        setLeverage(order.leverage);
+        setLeverage(order?.leverage);
         setType(String(order?.type).toUpperCase());
     }, [showCustomized]);
 
