@@ -5,11 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router'
 import { API_ORDER_DETAIL } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
-import { ApiStatus, ChartMode } from 'redux/actions/const';
+import { ApiStatus } from 'redux/actions/const';
 import { useEffect } from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import SocketLayout from 'components/screens/Mobile/Futures/SocketLayout'
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import { UserSocketEvent } from 'redux/actions/const';
 import { getOrdersList } from 'redux/actions/futures';
@@ -60,7 +59,7 @@ const OrderDetail = (props) => {
 
     useEffect(() => {
         getDetail();
-    }, [])
+    }, [pair])
 
     const getDetail = async () => {
         try {
@@ -86,9 +85,8 @@ const OrderDetail = (props) => {
         }
     };
 
-    const oldData = useRef(false);
     useEffect(() => {
-        if (!mount.current && Array.isArray(ordersList) && ordersList.length > 0) {
+        if (!mount.current && Array.isArray(ordersList) && ordersList.length > 0 && orderDetail) {
             mount.current = true;
             return;
         }
@@ -96,6 +94,11 @@ const OrderDetail = (props) => {
             const detail = ordersList.find(item => item.displaying_id === orderDetail?.displaying_id);
             if (!detail) {
                 router.back();
+            } else {
+                const mainOrder = detail?.metadata?.dca_order_metadata?.is_main_order || detail?.metadata?.partial_close_metadata?.is_main_order
+                if (Number(detail?.order_value) !== Number(orderDetail?.order_value) && mainOrder) {
+                    getDetail()
+                }
             }
         }
 
@@ -107,11 +110,11 @@ const OrderDetail = (props) => {
     return (
         <LayoutMobile>
             <OrderDetailComponent order={orderDetail} isMobile
-                                  pairConfig={pairConfigDetail}
-                                  pairParent={pair} isVndcFutures={isVndcFutures}
-                                  isTabHistory={isTabHistory.current}
-                                  isDark={currentTheme === THEME_MODE.DARK}
-                                  getDetail={getDetail}
+                pairConfig={pairConfigDetail}
+                pairParent={pair} isVndcFutures={isVndcFutures}
+                isTabHistory={isTabHistory.current}
+                isDark={currentTheme === THEME_MODE.DARK}
+                getDetail={getDetail}
             />
         </LayoutMobile>
     );

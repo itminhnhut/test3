@@ -65,6 +65,7 @@ const OrderDetail = ({
     const [resolution, setResolution] = useState('15');
     const [dataSource, setDataSource] = useState([]);
     const [chartKey, setChartKey] = useState('nami-mobile-chart');
+    const router = useRouter();
 
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
@@ -233,6 +234,15 @@ const OrderDetail = ({
         }
     }, [order, isModal]);
 
+    useEffect(() => {
+        setChartKey(Math.random()
+            .toString())
+    }, [pairParent])
+
+    const redirect = (url) => {
+        router.push(url)
+    }
+
     const getAdjustmentDetail = async () => {
         try {
             const {
@@ -325,7 +335,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span>{`#${item?.metadata?.child_id}`}</Span>
+                    <Span onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
@@ -369,7 +379,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span>{`#${item?.metadata?.child_id}`}</Span>
+                    <Span onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
@@ -413,18 +423,20 @@ const OrderDetail = ({
         )
     }
 
-    const renderDetails = (code) => {
-        switch (code) {
-            case 5:
-                return renderDetailAddedVol()
-            case 6:
-                return renderDetailPartialClose()
-            default:
-                return renderDetail()
+    const renderDetails = (order) => {
+        const mainOrder = order?.metadata?.dca_order_metadata?.is_main_order || order?.metadata?.partial_close_metadata?.is_main_order
+        if ((order?.reason_close_code === 5 || order?.metadata?.dca_order_metadata) && !mainOrder) {
+            return renderDetailAddedVol()
+        } else if ((order?.reason_close_code === 6 || order?.metadata?.partial_close_metadata) && !mainOrder) {
+            return renderDetailPartialClose()
+        } else {
+            return renderDetail()
         }
     }
 
     const renderDetailAddedVol = () => {
+        const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
+        const id_to = order?.metadata?.dca_order_metadata?.dca_order?.[0]?.displaying_id;
         return (
             <>
                 <Row>
@@ -445,11 +457,11 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span>#{order?.metadata?.dca_order_metadata?.dca_order?.[0]?.displaying_id}</Span>
+                    <Span onClick={() => redirect(`/mobile/futures/order/${id_to}`)}>#{id_to}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:open_price')}</Label>
-                    <Span>{order?.open_price ? formatNumber(order?.open_price, decimalPrice) : '-'}</Span>
+                    <Span>{price ? formatNumber(price, decimalPrice) : '-'}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:order_type')}</Label>
@@ -476,6 +488,8 @@ const OrderDetail = ({
     }
 
     const renderDetailPartialClose = () => {
+        const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
+        const from_id = order?.metadata?.partial_close_metadata?.partial_close_from;
         return (
             <>
                 <Row>
@@ -496,7 +510,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span>#{order?.metadata?.partial_close_metadata?.partial_close_from}</Span>
+                    <Span onClick={() => redirect(`/mobile/futures/order/${from_id}`)}>#{from_id}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:order_type')}</Label>
@@ -504,7 +518,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:close_price')}</Label>
-                    <Span>{order?.close_price ? formatNumber(order?.close_price, decimalPrice) : '-'}</Span>
+                    <Span>{price ? formatNumber(price, decimalPrice) : '-'}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:open_price')}</Label>
@@ -685,8 +699,11 @@ const OrderDetail = ({
                     <div
                         className="flex flex-col justify-center items-center mt-[10px] absolute translate-x-[-50%] left-1/2">
                         <span className="font-semibold">{pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}</span>
-                        <span
-                            className={`text-xs font-medium ${classNameSide}`}>{renderCellTable('side', order, t, language)} / {renderCellTable('type', order, t, language)}</span>
+                        <div className={`text-xs font-medium whitespace-nowrap ${classNameSide}`}>
+                            {order?.metadata?.dca_order_metadata && !order?.metadata?.dca_order_metadata?.is_main_order && <>{t('futures:mobile:adjust_margin:added_volume')}&nbsp;/&nbsp;</>}
+                            {order?.metadata?.partial_close_metadata && !order?.metadata?.partial_close_metadata?.is_main_order && <>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</>}
+                            {renderCellTable('side', order, t, language)} / {renderCellTable('type', order, t, language)}
+                        </div>
                     </div>
                     <MenuTime
                         value={resolution}
@@ -738,7 +755,7 @@ const OrderDetail = ({
                         <div className="pt-5">
                             <div className="font-semibold mb-4">{t('futures:mobile:order_detail')}</div>
                             <div className="bg-onus-bg3 px-3 rounded-lg">
-                                {renderDetails(order?.reason_close_code)}
+                                {renderDetails(order)}
                             </div>
                         </div>
                         {dataSource.length > 0 &&

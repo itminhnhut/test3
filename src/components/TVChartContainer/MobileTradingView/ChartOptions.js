@@ -270,9 +270,9 @@ export const MenuTime = ({
                         <Popover.Panel className={`absolute z-50 bg-onus-bg3 ${classNamePanel}`}>
                             <div
                                 className="overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
-                                {options?.map(item => {
+                                {options?.map((item, index) => {
                                     return (
-                                        <div onClick={() => {
+                                        <div key={index} onClick={() => {
                                             onChange(item[keyValue]);
                                             close();
                                         }}
