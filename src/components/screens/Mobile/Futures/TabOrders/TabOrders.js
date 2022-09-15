@@ -74,7 +74,7 @@ const TabOrders = memo(({
         }
         return () => {
             if (userSocket) {
-                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER);
+                userSocket.removeListener(UserSocketEvent.FUTURE_DONE_CLOSING_ALL_ORDERS);
             }
         };
     }, [userSocket]);
