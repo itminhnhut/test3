@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { ArrowRight, Copy } from 'react-feather';
-import { renderCellTable, VndcFutureOrderType, getTypesLabel } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { renderCellTable, VndcFutureOrderType, getTypesLabel, fees } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
 import { countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
@@ -44,6 +44,26 @@ const getAssets = createSelector(
     }
 );
 
+const getAllAssets = createSelector(
+    [
+        state => state.utils,
+        (utils, params) => params
+    ],
+    (utils, params) => {
+        const assets = {};
+        return fees.reduce((newItem, item) => {
+            const asset = utils.assetConfig.find(rs => rs.id === item?.assetId);
+            if (asset) {
+                assets[item?.assetId] = {
+                    assetCode: asset?.assetCode,
+                    assetDigit: asset?.assetDigit
+                };
+            }
+            return assets;
+        }, {});
+    }
+);
+
 const OrderDetail = ({
     order,
     pairConfig,
@@ -56,12 +76,15 @@ const OrderDetail = ({
     isVndcFutures
 }) => {
     const { t, i18n: { language } } = useTranslation();
-    const assetConfig = useSelector(state => getAssets(state, {
-        ...order?.fee_metadata,
-        swap: { currency: order?.margin_currency },
-        order_value: { currency: order?.order_value_currency }
-    }));
-    const decimalSymbol = assetConfig?.['order_value']?.assetDigit ?? 0;
+    // const assetConfig = useSelector(state => getAssets(state, {
+    //     ...order?.fee_metadata,
+    //     swap: { currency: order?.margin_currency },
+    //     order_value: { currency: order?.order_value_currency }
+    // }));
+
+    const allAssets = useSelector(state => getAllAssets(state));
+    const decimalSymbol = allAssets?.[order?.fee_metadata?.place_order?.currency]?.assetDigit ?? 0;
+    const decimalUsdt = allAssets?.[order?.margin_currency]?.assetDigit ?? 0;
     const [resolution, setResolution] = useState('15');
     const [dataSource, setDataSource] = useState([]);
     const [chartKey, setChartKey] = useState('nami-mobile-chart');
@@ -88,11 +111,13 @@ const OrderDetail = ({
 
     const renderFee = (order, key) => {
         if (!order) return '-';
-        const assetDigit = assetConfig ? assetConfig[key]?.assetDigit : 0;
+        const currency = order?.fee_metadata[key]?.currency ?? order?.margin_currency
+        const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
         const decimal = isVndcFutures ? assetDigit : assetDigit + 2;
-        const assetCode = assetConfig ? assetConfig[key]?.assetCode : '';
+        const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];
         return data ? formatNumber(data, decimal) + ' ' + assetCode : '-';
+
     };
 
     const getValue = (number, symbol = false) => {
@@ -674,7 +699,7 @@ const OrderDetail = ({
 
     const orderList = useMemo(() => [order], [order]);
     const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
-    const decimalUsdt = assetConfig?.swap?.assetDigit ?? 0;
+
     return (
         <div className={'bg-onus overflow-hidden'}>
             <div className="relative overflow-auto h-full overflow-x-hidden">
