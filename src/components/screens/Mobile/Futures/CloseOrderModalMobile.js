@@ -202,7 +202,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                         null, null,
                         () => {
                             onClose()
-                            if (forceFetchOrder) forceFetchOrder()
+                            // if (forceFetchOrder) forceFetchOrder()
                         }
                     );
                 } else {

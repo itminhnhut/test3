@@ -33,6 +33,7 @@ const OrderDetail = (props) => {
     const isTabHistory = useRef(true);
     const [loading, setLoading] = useState(true);
     const mount = useRef(false);
+    const checking = useRef(false);
 
     const pairConfigDetail = useMemo(() => {
         return allPairConfigs.find(rs => rs.symbol === orderDetail?.symbol)
@@ -81,6 +82,7 @@ const OrderDetail = (props) => {
         } catch (e) {
             console.log(e);
         } finally {
+            checking.current = false;
             setLoading(false);
         }
     };
@@ -96,7 +98,8 @@ const OrderDetail = (props) => {
                 router.back();
             } else {
                 const mainOrder = detail?.metadata?.dca_order_metadata?.is_main_order || detail?.metadata?.partial_close_metadata?.is_main_order
-                if (Number(detail?.order_value) !== Number(orderDetail?.order_value) && mainOrder) {
+                if (Number(detail?.order_value) !== Number(orderDetail?.order_value) && mainOrder && !checking.current) {
+                    checking.current = true;
                     getDetail()
                 }
             }
