@@ -311,7 +311,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                                     </div>
                                     <div className="flex items-center text-xs">
                                         <span className="text-onus-grey">{t("futures:mobile:adjust_margin:est_pnl")}:</span>&nbsp;
-                                        <span onClick={openShare} className={general.est_pnl > 0 ? "text-onus-green" : "text-onus-red"}>{formatNumber(general.est_pnl, 4, 0, true)}</span>
+                                        <span className={general.est_pnl > 0 ? "text-onus-green" : "text-onus-red"}>{formatNumber(general.est_pnl, 4, 0, true)}</span>
                                     </div>
                                 </div>
                                 <div className="px-4 mb-3 h-[44px] flex items-center bg-onus-bg2 rounded-md">
