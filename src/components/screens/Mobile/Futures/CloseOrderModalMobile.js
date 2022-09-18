@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect, useContext } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, countDecimals, getS3Url } from "redux/actions/utils";
+import { formatNumber, countDecimals, getS3Url, emitWebViewEvent } from "redux/actions/utils";
 import { useSelector } from 'react-redux';
 import Switcher from 'components/common/Switcher';
 import TradingInput from "components/trade/TradingInput";
@@ -22,6 +22,7 @@ import fetchApi from "utils/fetch-api";
 import { createSelector } from 'reselect';
 import find from 'lodash/find';
 import Tooltip from 'components/common/Tooltip';
+import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
 
 const getPairConfig = createSelector(
     [
@@ -237,6 +238,20 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
         return t('common:price') + ' ' + String(getTypesLabel(type, t)).toLowerCase()
     }
 
+    const openShare = () => {
+        const shareData = {
+            ...order,
+            side: side === VndcFutureOrderType.Side.BUY ? VndcFutureOrderType.Side.SELL : VndcFutureOrderType.Side.BUY,
+            profit: general?.est_pnl,
+            status: VndcFutureOrderType.Status.CLOSED
+        }
+        const emitData = getShareModalData({
+            order: shareData,
+            pairPrice: pairPrice
+        });
+        emitWebViewEvent(JSON.stringify(emitData));
+    };
+
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
     const isError = ((maxQuoteQty > volume || volume > maxQuoteQty) && partialClose && (volume > maxQuoteQty || !volume || volume < minQuoteQty ||
         (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market))) || loading;
@@ -296,7 +311,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                                     </div>
                                     <div className="flex items-center text-xs">
                                         <span className="text-onus-grey">{t("futures:mobile:adjust_margin:est_pnl")}:</span>&nbsp;
-                                        <span className={general.est_pnl > 0 ? "text-onus-green" : "text-onus-red"}>{formatNumber(general.est_pnl, 4, 0, true)}</span>
+                                        <span onClick={openShare} className={general.est_pnl > 0 ? "text-onus-green" : "text-onus-red"}>{formatNumber(general.est_pnl, 4, 0, true)}</span>
                                     </div>
                                 </div>
                                 <div className="px-4 mb-3 h-[44px] flex items-center bg-onus-bg2 rounded-md">
