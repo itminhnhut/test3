@@ -503,7 +503,7 @@ const AddVolume = ({
                     <span className="font-medium">
                         {formatNumber(
                             general.liqPrice,
-                            configSymbol.decimalSymbol,
+                            configSymbol.decimalScalePrice,
                             0,
                             true
                         )}
