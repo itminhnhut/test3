@@ -11,6 +11,7 @@ import Skeletor from 'components/common/Skeletor';
 import { emitWebViewEvent, countDecimals } from 'redux/actions/utils';
 import { IconLoading } from 'src/components/common/Icons';
 import colors from 'styles/colors'
+import { VndcFutureOrderType } from "components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType";
 
 const TabOrdersHistory = ({ isDark, scrollSnap, pair, tab, active, onShowDetail, hideOther }) => {
     const { t } = useTranslation();
@@ -40,7 +41,12 @@ const TabOrdersHistory = ({ isDark, scrollSnap, pair, tab, active, onShowDetail,
     }, [active, timestamp])
 
     const onShowModal = (item, key) => {
-        rowData.current = item;
+        rowData.current = {
+            ...item,
+            side: item?.reason_close_code === 6 ?
+                item?.side === VndcFutureOrderType.Side.BUY ? VndcFutureOrderType.Side.SELL : VndcFutureOrderType.Side.BUY
+                : item?.side,
+        }
         if (!openShareModal) {
             const shareModalData = getShareModalData({ order: rowData.current, pairPrice: pairConfigDetail })
             emitWebViewEvent(JSON.stringify(shareModalData))
