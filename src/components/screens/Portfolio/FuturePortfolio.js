@@ -23,9 +23,10 @@ const gridTemplate = {
     display: 'grid',
     gridTemplateAreas: `
                     'chart1 chart1 chart4'
-                    'chart2  chart2 chart4'
-                    'chart3  chart3 chart4'
+                    'chart2 chart2 chart4'
+                    'chart3 chart3 chart4'
                     'chart5 chart5 chart5'
+                    'chart6 chart6 chart6'
                 `,
     gap: '32px'
 }
@@ -37,6 +38,7 @@ const anotherGridTemplate = {
                     'chart3'
                     'chart4'
                     'chart5'
+                    'chart6'
                 `,
     gap: '32px'
 }
@@ -51,6 +53,7 @@ const FuturePortfolio = (props) => {
     })
     const [chart5Data, setChart5Data] = useState(null)
     const [userData, setUserData] = useState(null)
+    const [chart3Current, setChart3Current] = useState(false)
     const user = useSelector(state => state?.auth?.user)
 
     console.log(chart5Data)
@@ -311,7 +314,7 @@ const FuturePortfolio = (props) => {
                 { type: 'price', title: 'Tổng nạp', value: +userData.total_deposit },
                 { type: 'string', title: 'Đòn bẩy thường sử dụng', value: `${userData.max_count_leverage || 0}x` },
                 { type: 'price', title: 'Số lệnh trung bình/tuần', value: +userData.avg_order_week?.total },
-                { type: 'percentage', title: 'Balance drawdown', value: +userData.drawdown?.entity }
+                { type: 'popover', title: ['Balance drawdown', 'Equity drawdown'], value: [+userData.drawdown?.balance, +userData.drawdown?.equity] }
             ],
             [
                 { type: 'price', title: 'Tổng rút', value: +userData.total_withdraw },
@@ -330,7 +333,7 @@ const FuturePortfolio = (props) => {
                         {data.map((group, groupIndex) =>
                             <div className={`flex justify-center items-center gap-6 ${width < 640 && 'flex-col !gap-2 mt-5'}`}>
                                 {group.map((e, index) =>
-                                    renderInlineText(e.type, e.title, e.value, width < 640 ? (groupIndex + 1) === data.length ? 'true' : ((index + 1) % 4 === 0 ? 'lowheight' : 'true') : groupIndex + 1 === 3 ? 'min-h' : 'false')
+                                    renderInlineText(e.type, e.title, e.value, width < 640 ? (groupIndex + 1) === data.length ? 'true' : ((index + 1) % 4 === 0 ? 'lowheight' : 'true') : groupIndex + 1 === 3 ? 'min-h' : 'false', setChart3Current, chart3Current)
                                 )}
                             </div>
                         )}
@@ -492,7 +495,7 @@ const FuturePortfolio = (props) => {
                             })}
                         </div>
                     </div>
-                    <div className='mt-6 flex w-full max-h-[600px] items-center justify-center'>
+                    <div className='flex w-full max-h-[600px] items-center justify-center'>
                         <ChartJS data={data} />
                     </div>
                 </div>
@@ -559,10 +562,9 @@ const FuturePortfolio = (props) => {
                                     </>
                                 )}
                             </Popover>
-
                         </div>
                     </div>
-                    <div className='mt-6 max-h-[600px] flex w-full items-center justify-center'>
+                    <div className='max-h-[600px] flex w-full items-center justify-center'>
                         <ChartJS data={data} />
                     </div>
                 </div>
@@ -581,9 +583,9 @@ const FuturePortfolio = (props) => {
             },
         ]
         return (
-            <div className='w-full h-full' >
+            <div className='w-full h-full' style={{ gridArea: 'chart6' }} >
                 {renderTabs(tabs, profitType, setProfitType, false)}
-                <ChartLayout area={gridArea}>
+                <ChartLayout>
                     <div className='p-6'>
                         <div className={`${titleText}`}>
 
@@ -601,8 +603,7 @@ const FuturePortfolio = (props) => {
             {user && userData ? renderChart3('chart3') : loadingPlaceHolder('chart3')}
             {user && userData ? renderChart4('chart4') : loadingPlaceHolder('chart4')}
             {user && userData ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
-            {/* {user && renderChart5('chart5')} */}
-            {/* {user && renderChart6('chart6')} */}
+            {user && userData ? renderChart6('chart6') : loadingPlaceHolder('chart6')}
         </div>
 
     )
@@ -610,7 +611,7 @@ const FuturePortfolio = (props) => {
 
 export default FuturePortfolio
 
-export const renderInlineText = (type, label, value, noUnderline = 'false') => {
+export const renderInlineText = (type, label, value, noUnderline = 'false', onClick, current) => {
     switch (type) {
         case 'price':
             value = <span className=''>{formatPrice(value, 0)}</span>
@@ -619,26 +620,46 @@ export const renderInlineText = (type, label, value, noUnderline = 'false') => {
             value = <span className={`${value >= 0 ? 'text-teal' : 'text-red'}`}>{formatPrice(value, 2)}%</span>
             break
         case 'popover':
-            value = <span className={`${value >= 0 ? 'text-teal' : 'text-red'}`}>{formatPrice(value, 2)}%</span>
-            label =
-                <Popover className="relative">
-                    <Popover.Button>{label}</Popover.Button>
-
-                    <Popover.Panel className="absolute z-10">
-                        <div className="grid grid-cols-2">
-                            {value.map(e => {
-                                return (
-                                    <div>
-                                        Hi
+            return (
+                <Popover className="relative w-full">
+                    {({ open, close }) => (
+                        <>
+                            <Popover.Button className={`w-full ${noUnderline === 'lowheight' ? 'pb-5' : 'min-h-[52px]'} border-b-[1px] border-gray-2 border-opacity-20`}>
+                                <div className="w-full py-1 flex items-center justify-between text-sm font-medium leading-6 cursor-pointer hover:opacity-80 rounded-md text-darkBlue-5">
+                                    <div className='flex h-full text-center items-center'>
+                                        {current ? label[0] : label[1]}
+                                        <ChevronDown size={16} className="ml-1" />
                                     </div>
-                                )
-                            })}
-                        </div>
-
-                        <img src="/solutions.jpg" alt="" />
-                    </Popover.Panel>
+                                    <div>
+                                        {<span className={`${(current ? value[0] : value[1]) >= 0 ? 'text-teal' : 'text-red'}`}>{formatPrice(current ? value[0] : value[1], 2)}%</span>}
+                                    </div>
+                                </div>
+                            </Popover.Button>
+                            <Transition
+                                enter="transition ease-out duration-200"
+                                enterFrom="opacity-0 translate-y-1"
+                                enterTo="opacity-100 translate-y-0"
+                                leave="transition ease-in duration-150"
+                                leaveFrom="opacity-100 translate-y-0"
+                                leaveTo="opacity-0 translate-y-1"
+                            >
+                                <Popover.Panel className="absolute z-50 bg-white dark:bg-bgPrimary-dark px-1 py-2 w-full border-[1px] rounded-lg">
+                                    <div className="w-full h-10 px-2 py-1 flex items-center justify-between text-sm font-medium leading-6 cursor-pointer hover:bg-teal-600/[.05] rounded-md text-darkBlue-5  border-b-[1px] border-gray-2 border-opacity-20"
+                                        onClick={() => onClick(true)}
+                                    >
+                                        {label[0]} <span className={`${value[0] >= 0 ? 'text-teal' : 'text-red'}`}>{formatPrice(value[0], 2)}%</span>
+                                    </div>
+                                    <div className="w-full h-10 px-2 py-1 flex items-center justify-between text-sm font-medium leading-6 cursor-pointer hover:bg-teal-600/[.05] rounded-md text-darkBlue-5"
+                                        onClick={() => onClick(false)}
+                                    >
+                                        {label[1]} <span className={`${value[1] >= 0 ? 'text-teal' : 'text-red'}`}>{formatPrice(value[1], 2)}%</span>
+                                    </div>
+                                </Popover.Panel>
+                            </Transition>
+                        </>
+                    )}
                 </Popover>
-            break
+            )
         case 'line':
             return (
                 <div className='my-4 border-b-[1px] border-gray-2 h-[1px]' >
