@@ -10,7 +10,8 @@ import { useEffect } from 'react';
 import { Progressbar } from './styledPortfolio';
 import { FEE_TABLE } from 'constants/constants';
 import { PulseLoader } from 'react-spinners';
-import { Popover } from '@headlessui/react';
+import { Popover, Transition } from '@headlessui/react';
+import { ChevronDown } from 'react-feather';
 
 const headerText = 'text-2xl leading-[30px] font-semibold'
 const subHeaderText = 'text-base leading-6 font-medium'
@@ -40,52 +41,16 @@ const anotherGridTemplate = {
     gap: '32px'
 }
 
-const chart5Tabs = [
-    {
-        title: 'PNL',
-        value: 1
-    },
-    {
-        title: 'Tài sản và vốn',
-        value: 2
-    },
-    {
-        title: 'Nạp và rút',
-        value: 3
-    },
-    {
-        title: 'Drawdown',
-        value: 4
-    },
-]
-
-const chart5TimeTabs = [
-    {
-        title: '1 Ngày',
-        value: 1
-    },
-    {
-        title: '1 Tuần',
-        value: 2
-    },
-    {
-        title: '1 Tháng',
-        value: 3
-    },
-    {
-        title: '3 Tháng',
-        value: 4
-    },
-]
-
 
 const FuturePortfolio = (props) => {
     const [chart2Tab, setChart2Tab] = useState(1)
-    const [chart5Tab, setChart5Tab] = useState(1)
-    const [chart5TimeTab, setChart5TimeTab] = useState(1)
-    const [chart5TypeTab, setChart5TypeTab] = useState('number')
-    const [userData, setUserData] = useState(null)
+    const [chart5Config, setChart5Config] = useState({
+        tab: 1,
+        time: 1,
+        type: 'number'
+    })
     const [chart5Data, setChart5Data] = useState(null)
+    const [userData, setUserData] = useState(null)
     const user = useSelector(state => state?.auth?.user)
 
     console.log(chart5Data)
@@ -98,6 +63,8 @@ const FuturePortfolio = (props) => {
     const displayByWidth = useCallback(() => {
         return width > 1169 ? 'flex' : 'flex flex-col'
     }, [width])
+
+    console.log(userData)
 
     useEffect(() => {
         FetchApi({
@@ -123,33 +90,33 @@ const FuturePortfolio = (props) => {
                 setUserData(null)
             }
         });
-    }, [chart5Tab, ])
+    }, [chart5Config])
 
     useEffect(() => {
         const date = new Date()
-        switch (chart5TimeTab) {
-            case 1: 
+        switch (chart5Config.time) {
+            case 1:
                 date.setDate(date.getDate() - 1);
                 break;
-            case 2: 
+            case 2:
                 date.setDate(date.getDate() - 7);
                 break;
-            case 3: 
+            case 3:
                 date.setDate(date.getDate() - 30);
                 break;
-            case 4: 
+            case 4:
                 date.setDate(date.getDate() - 90);
                 break;
-            default: 
+            default:
                 break
         }
         date.toLocaleDateString();
 
         const chartIds = {
-            '1': 1, 
-            '2': 5, 
-            '3': 6, 
-            '4': 4, 
+            '1': 1,
+            '2': 5,
+            '3': 6,
+            '4': 4,
         }
 
         FetchApi({
@@ -159,9 +126,9 @@ const FuturePortfolio = (props) => {
             },
             params: {
                 currency: props.currency === 'VNDC' ? 72 : 22,
-                chart_id: chartIds[chart5Tab],
+                chart_id: chartIds[chart5Config.tab],
                 timeFrame: 'H',
-                value_type: chart5TypeTab,
+                value_type: 'number',
                 from: date,
                 to: new Date()
             },
@@ -172,7 +139,7 @@ const FuturePortfolio = (props) => {
                 setChart5Data(null)
             }
         });
-    }, [chart5TimeTab, chart5Tab ,chart5TypeTab])
+    }, [chart5Config])
 
     const renderChart1 = (gridArea) => {
         return width >= 664 ? (
@@ -187,8 +154,8 @@ const FuturePortfolio = (props) => {
                                 {user.name || 'Unknown'}
                                 <div className='w-full h-full mt-[14px]' >
                                     {renderInlineText(null, 'Nami ID', user.code)}
-                                    {renderInlineText(null, 'Bắt đầu giao dịch từ', formatTime(new Date(userData.trading_from * 1000), 'dd/MM/yyyy').toString())}
-                                    {renderInlineText(null, 'Kinh nghiệm giao dịch', `${(Math.round(userData.trading_exp / 3600)).toString()} giờ`)}
+                                    {renderInlineText(null, 'Bắt đầu giao dịch từ', userData.trading_from ? formatTime(new Date(userData.trading_from * 1000), 'dd/MM/yyyy').toString() : 'Chưa thực hiện giao dịch')}
+                                    {renderInlineText(null, 'Kinh nghiệm giao dịch', userData.trading_exp ? `${(Math.round(userData.trading_exp / 3600)).toString()} giờ` : 'Không có kinh nghiệm')}
                                 </div>
                             </div>
                         </div>
@@ -246,10 +213,10 @@ const FuturePortfolio = (props) => {
                             {renderInlineText(null, 'Nami ID', user.code, 'true')}
                         </div>
                         <div className='mt-1'>
-                            {renderInlineText(null, 'Bắt đầu giao dịch từ', formatTime(new Date(userData.trading_from * 1000), 'dd/MM/yyyy').toString(), 'true')}
+                            {renderInlineText(null, 'Bắt đầu giao dịch từ', userData.trading_from ? formatTime(new Date(userData.trading_from * 1000), 'dd/MM/yyyy').toString() : 'Chưa thực hiện giao dịch', 'true')}
                         </div>
                         <div className='mt-1'>
-                            {renderInlineText(null, 'Kinh nghiệm giao dịch', `${(Math.round(userData.trading_exp / 3600)).toString()} giờ`, 'true')}
+                            {renderInlineText(null, 'Kinh nghiệm giao dịch', userData.trading_exp ? `${(Math.round(userData.trading_exp / 3600)).toString()} giờ` : 'Không có kinh nghiệm', 'true')}
                         </div>
                     </div>
                     <div className='mt-[18px] border-t-[1px] border-gray-2 border-opacity-20 pt-[18px] w-full h-full'>
@@ -342,14 +309,14 @@ const FuturePortfolio = (props) => {
             ],
             [
                 { type: 'price', title: 'Tổng nạp', value: +userData.total_deposit },
-                { type: 'string', title: 'Đòn bẩy thường sử dụng', value: `${userData.max_count_leverage}x` },
+                { type: 'string', title: 'Đòn bẩy thường sử dụng', value: `${userData.max_count_leverage || 0}x` },
                 { type: 'price', title: 'Số lệnh trung bình/tuần', value: +userData.avg_order_week?.total },
                 { type: 'percentage', title: 'Balance drawdown', value: +userData.drawdown?.entity }
             ],
             [
                 { type: 'price', title: 'Tổng rút', value: +userData.total_withdraw },
                 { type: 'percentage', title: '% lợi nhuận cao nhất', value: +userData.max_profit > 0 ? +userData.max_profit : 0 },
-                { type: 'string', title: 'Thời gian giữ trung bình', value: `${Math.round(+userData.avg_duration / 3600000)} giờ` },
+                { type: 'string', title: 'Thời gian giữ trung bình', value: `${Math.round((+userData.avg_duration || 0) / 3600000)} giờ` },
                 { type: 'percentage', title: 'Profit factor', value: +userData.profit_factor }
             ],
         ]
@@ -417,10 +384,26 @@ const FuturePortfolio = (props) => {
         )
     }
     const renderChart5 = (gridArea) => {
+        const chart5Tabs = [
+            { title: 'PNL', value: 1 },
+            { title: 'Tài sản và vốn', value: 2 },
+            { title: 'Nạp và rút', value: 3 },
+            { title: 'Drawdown', value: 4 },
+        ]
+        const chart5TimeTabs = [
+            { title: '1 Ngày', value: 1 },
+            { title: '1 Tuần', value: 2 },
+            { title: '1 Tháng', value: 3 },
+            { title: '3 Tháng', value: 4 },
+        ]
+        const chart5TypeTabs = [
+            { title: 'Số tiền', value: 'number' },
+            { title: 'Phần trăm', value: 'percent' }
+        ]
         const chartData = []
         const labels = chart5Data.map(e => formatTime(e.time, 'dd/MM'))
-        switch (chart5Tab) {
-            case 1: 
+        switch (chart5Config.tab) {
+            case 1:
                 chartData.push(chart5Data.map(e => Math.round(e.profit)))
                 break
             case 2:
@@ -435,13 +418,11 @@ const FuturePortfolio = (props) => {
                 chartData.push(chart5Data.map(e => Math.round(e.balance)))
                 chartData.push(chart5Data.map(e => Math.round(e.equity)))
                 break
-            
-        }
 
+        }
         const data = {
             labels,
-            datasets: chartData.length === 1 ? [
-              {
+            datasets: chartData.length === 1 ? [{
                 fill: true,
                 label: false,
                 data: chartData[0],
@@ -451,30 +432,27 @@ const FuturePortfolio = (props) => {
                 borderWidth: 1.5,
                 pointRadius: 4,
                 pointBackgroundColor: colors.teal,
-              }
-            ] : [
-            {
-              fill: false,
-              label: false,
-              data: chartData[0],
-              lineTension: 0.2,
-              borderColor: colors.teal,
-              borderWidth: 1.5,
-              pointRadius: 4,
-              pointBackgroundColor: colors.teal,
+            }] : [{
+                fill: false,
+                label: false,
+                data: chartData[0],
+                lineTension: 0.2,
+                borderColor: colors.teal,
+                borderWidth: 1.5,
+                pointRadius: 4,
+                pointBackgroundColor: colors.teal,
             },
             {
-              fill: false,
-              label: false,
-              data: chartData[1],
-              lineTension: 0.2,
-              borderColor: '#80FFEA',
-              borderWidth: 1.5,
-              pointRadius: 4,
-              pointBackgroundColor: '#80FFEA',
-            },
-          ],
-          };
+                fill: false,
+                label: false,
+                data: chartData[1],
+                lineTension: 0.2,
+                borderColor: '#80FFEA',
+                borderWidth: 1.5,
+                pointRadius: 4,
+                pointBackgroundColor: '#80FFEA',
+            },],
+        };
 
         return width > 640 ? (
             <ChartLayout area={gridArea}>
@@ -483,23 +461,31 @@ const FuturePortfolio = (props) => {
                         Thống kê biến động
                     </div>
                     <div className='flex p-2 item-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
-                        {chart5Tabs.map((tab, index) => {
-                            return (
-                                <div className={`flex items-center justify-center w-full h-full text-base font-medium leading-8 cursor-pointer ${chart5Tab === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`} 
-                                    onClick={() => setChart5Tab(tab.value)}>
-                                    {tab.title}
-                                </div>
-                            )
-                        })}
+                        {chart5Tabs.map((tab, index) =>
+                            <div className={`flex items-center justify-center w-full h-full text-base font-medium leading-8 cursor-pointer ${chart5Config.tab === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`}
+                                onClick={() => setChart5Config({
+                                    ...chart5Config,
+                                    tab: tab.value
+                                })}>
+                                {tab.title}
+                            </div>
+                        )}
                     </div>
                     <div className='w-full flex items-center justify-between'>
-                        <div className='h-7 my-6 px-2 py-1 rounded-md bg-gray-4 text-sm leading-5 font-medium'>
-                            Số tiền
+                        <div className='w-fit flex gap-2 items-center justify-between'>
+
+                            {chart5TypeTabs.map((tab) =>
+                                <div className={`h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer text-gray-2 ${tab.value === chart5Config.type && 'bg-gray-4 !text-darkBlue'}`}
+
+                                >
+                                    {tab.title}
+                                </div>
+                            )}
                         </div>
                         <div className='flex gap-3'>
                             {chart5TimeTabs.map((tab, index) => {
                                 return (
-                                    <div className={`flex item-center justify-center h-7 my-6 px-2 py-1 rounded-md ${chart5TimeTab === index + 1 && 'bg-gray-4'} text-sm leading-5 font-medium w-[65px] cursor-pointer`} onClick={() => setChart5TimeTab(tab.value)}>
+                                    <div className={`flex item-center justify-center h-7 my-6 px-2 py-1 rounded-md ${chart5Config.time === index + 1 && 'bg-gray-4'} text-sm leading-5 font-medium w-[65px] cursor-pointer`} onClick={() => setChart5Config({ ...chart5Config, time: tab.value })}>
                                         {tab.title}
                                     </div>
                                 )
@@ -520,24 +506,60 @@ const FuturePortfolio = (props) => {
                     <div className='flex p-2 item-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
                         {chart5Tabs.map((tab, index) => {
                             return (
-                                <div className={`flex items-center justify-center w-full h-full text-xs font-medium leading-5 cursor-pointer ${chart5Tab === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`} onClick={() => setChart5Tab(tab.value)}>
+                                <div className={`flex items-center justify-center w-full h-full text-xs font-medium leading-5 cursor-pointer ${chart5Config.tab === index + 1 ? 'bg-white rounded-xl !text-darkBlue' : 'text-darkBlue-5'}`}
+                                    onClick={() => setChart5Config({ ...chart5Config, tab: tab.value })}>
                                     {tab.title}
                                 </div>
                             )
                         })}
                     </div>
                     <div className='w-full flex items-center justify-between'>
-                        <div className='min-h-7 my-6 px-2 py-1 rounded-md bg-gray-4 text-sm leading-5 font-medium'>
-                            Số tiền
+                        <div className='h-full flex w-fit justify-between gap-2'>
+                            {chart5TypeTabs.map((tab) =>
+                                <div className={`h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer text-gray-2 ${tab.value === chart5Config.type && 'bg-gray-4 !text-darkBlue'}`}
+
+                                >
+                                    {tab.title}
+                                </div>
+                            )}
                         </div>
                         <div className='flex gap-3'>
-                            {chart5TimeTabs.map((tab, index) => {
-                                return (
-                                    <div className={`flex item-center justify-center min-h-7 my-6 px-2 py-1 rounded-md ${chart5TimeTab === index + 1 && 'bg-gray-4'} text-sm leading-5 font-medium w-[65px] cursor-pointer`} onClick={() => setChart5TimeTab(tab.value)}>
-                                        {tab.title}
-                                    </div>
-                                )
-                            })}
+                            <Popover className="relative">
+                                {({ open, close }) => (
+                                    <>
+                                        <Popover.Button >
+                                            <div
+                                                className="px-2 py-1 min-h-7 flex items-center bg-gray-4 text-xs font-medium leading-5 cursor-pointer hover:opacity-80 rounded-md text-darkBlue">
+                                                {chart5TimeTabs.find(e => e.value === chart5Config.time).title}
+                                                <ChevronDown size={16} className="ml-1" />
+                                            </div>
+                                        </Popover.Button>
+                                        <Transition
+                                            enter="transition ease-out duration-200"
+                                            enterFrom="opacity-0 translate-y-1"
+                                            enterTo="opacity-100 translate-y-0"
+                                            leave="transition ease-in duration-150"
+                                            leaveFrom="opacity-100 translate-y-0"
+                                            leaveTo="opacity-0 translate-y-1"
+                                        >
+                                            <Popover.Panel className="absolute z-50 bg-white dark:bg-bgPrimary-dark">
+                                                <div
+                                                    className="max-h-[204px] overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
+                                                    {chart5TimeTabs.map((tab, index) => {
+                                                        return (
+                                                            <div className={`flex items-center justify-end w-full h-full text-xs font-medium leading-5 cursor-pointer ${chart5Config.time === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`}
+                                                                onClick={() => setChart5Config({ ...chart5Config, time: tab.value })}>
+                                                                {tab.title}
+                                                            </div>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </Popover.Panel>
+                                        </Transition>
+                                    </>
+                                )}
+                            </Popover>
+
                         </div>
                     </div>
                     <div className='mt-6 max-h-[600px] flex w-full items-center justify-center'>
@@ -578,7 +600,7 @@ const FuturePortfolio = (props) => {
             {user && userData ? renderChart2('chart2') : loadingPlaceHolder('chart2')}
             {user && userData ? renderChart3('chart3') : loadingPlaceHolder('chart3')}
             {user && userData ? renderChart4('chart4') : loadingPlaceHolder('chart4')}
-            {user && userData && chart5Data ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
+            {user && userData ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
             {/* {user && renderChart5('chart5')} */}
             {/* {user && renderChart6('chart6')} */}
         </div>
