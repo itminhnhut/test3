@@ -5,7 +5,7 @@ import ChartLayout from './charts/ChartLayout'
 import { renderApexChart, renderTabs } from './Portfolio';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
-import { API_GET_VIP, API_PORTFOLIO_OVERVIEW } from 'redux/actions/apis';
+import { API_GET_VIP, API_PORTFOLIO_OVERVIEW, API_PORTFOLIO_ACCOUNT } from 'redux/actions/apis';
 import { useEffect } from 'react';
 import { Progressbar } from './styledPortfolio';
 import { FEE_TABLE } from 'constants/constants';
@@ -42,10 +42,13 @@ const FuturePortfolio = (props) => {
     const [chart2Tab, setChart2Tab] = useState(1)
     const [chart5Tab, setChart5Tab] = useState(1)
     const [chart5TimeTab, setChart5TimeTab] = useState(1)
+    const [chart5TypeTab, setChart5TypeTab] = useState('number')
     const [userData, setUserData] = useState(null)
+    const [chat5Data, setChart5Data] = useState(null)
     const user = useSelector(state => state?.auth?.user)
 
-    console.log(userData)
+    console.log(chat5Data)
+
 
     const [profitType, setProfitType] = useState(1)
 
@@ -63,7 +66,6 @@ const FuturePortfolio = (props) => {
             },
             params: {
                 currency: props.currency === 'VNDC' ? 72 : 22,
-                // currency: 22
             },
         }).then(async ({ data, status }) => {
             if (status === 200) {
@@ -80,7 +82,48 @@ const FuturePortfolio = (props) => {
                 setUserData(null)
             }
         });
-    }, [props.currency])
+    }, [chart5Tab, ])
+
+    useEffect(() => {
+        const date = new Date()
+        switch (chart5TimeTab) {
+            case 1: 
+                date.setDate(date.getDate() - 1);
+                break;
+            case 2: 
+                date.setDate(date.getDate() - 7);
+                break;
+            case 3: 
+                date.setDate(date.getDate() - 30);
+                break;
+            case 4: 
+                date.setDate(date.getDate() - 90);
+                break;
+            default: 
+                break
+        }
+        date.toLocaleDateString();
+        FetchApi({
+            url: API_PORTFOLIO_ACCOUNT,
+            options: {
+                method: 'GET',
+            },
+            params: {
+                currency: props.currency === 'VNDC' ? 72 : 22,
+                chart_id: chart5Tab,
+                timeFrame: 'D',
+                value_type: chart5TypeTab,
+                from: date,
+                to: new Date()
+            },
+        }).then(async ({ data, status }) => {
+            if (status === 200) {
+                setChart5Data(data)
+            } else {
+                setChart5Data(null)
+            }
+        });
+    }, [chart5TimeTab, chart5Tab ,chart5TypeTab])
 
     const renderUser = (gridArea) => {
         return width >= 664 ? (
@@ -91,7 +134,7 @@ const FuturePortfolio = (props) => {
                             <div className='max-w-[136px] w-full'>
                                 <img className='w-full h-auto rounded-full min-w-[136px]' src={user.avatar} />
                             </div>
-                            <div className='ml-8 ${headerText} w-full h-full min-w-[224px]'>
+                            <div className={`ml-8 ${headerText} w-full h-full min-w-[224px]`}>
                                 {user.name || 'Unknown'}
                                 <div className='w-full h-full mt-[14px]' >
                                     {renderInlineText(null, 'Nami ID', user.code)}
@@ -396,7 +439,8 @@ const FuturePortfolio = (props) => {
                         show: false
                     },
                     zoom: {
-                        enabled: true
+                        enabled: true,
+                        autoScaleYaxis: true
                     }
                 },
                 stroke: {
@@ -467,13 +511,13 @@ const FuturePortfolio = (props) => {
                         })}
                     </div>
                     <div className='w-full flex items-center justify-between'>
-                        <div className='h-7 my-6 px-2 py-1 rounded-md bg-gray-4 text-sm leading-5 font-medium'>
+                        <div className='min-h-7 my-6 px-2 py-1 rounded-md bg-gray-4 text-sm leading-5 font-medium'>
                             Số tiền
                         </div>
                         <div className='flex gap-3'>
                             {timeTabs.map((tab, index) => {
                                 return (
-                                    <div className={`flex item-center justify-center h-7 my-6 px-2 py-1 rounded-md ${chart5TimeTab === index + 1 && 'bg-gray-4'} text-sm leading-5 font-medium w-[65px] cursor-pointer`} onClick={() => setChart5TimeTab(tab.value)}>
+                                    <div className={`flex item-center justify-center min-h-7 my-6 px-2 py-1 rounded-md ${chart5TimeTab === index + 1 && 'bg-gray-4'} text-sm leading-5 font-medium w-[65px] cursor-pointer`} onClick={() => setChart5TimeTab(tab.value)}>
                                         {tab.title}
                                     </div>
                                 )
@@ -518,6 +562,7 @@ const FuturePortfolio = (props) => {
             {user && userData ? renderChart2('chart2') : loadingPlaceHolder('chart2')}
             {user && userData ? renderChart3('chart3') : loadingPlaceHolder('chart3')}
             {user && userData ? renderChart4('chart4') : loadingPlaceHolder('chart4')}
+            {user && userData ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
             {/* {user && renderChart5('chart5')} */}
             {/* {user && renderChart6('chart6')} */}
         </div>
