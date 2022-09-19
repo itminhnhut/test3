@@ -268,3 +268,6 @@ export const API_REFERRAL_COMMISSION_LOG = API_PREFIX + "user/commission_log"
 
 //setting futures
 export const API_GET_FUTURES_SETTING = API_PREFIX + "futures/setting";
+
+//portfolio
+export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + "portfolio/futures/overview";
