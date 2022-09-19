@@ -2,7 +2,7 @@ import useWindowSize from 'hooks/useWindowSize'
 import React, { memo, Suspense, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ChartLayout from './charts/ChartLayout'
-import { renderApexChart, renderTabs } from './Portfolio';
+import { renderApexChart, renderReChart, renderTabs } from './Portfolio';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_VIP, API_PORTFOLIO_OVERVIEW, API_PORTFOLIO_ACCOUNT } from 'redux/actions/apis';
@@ -15,6 +15,8 @@ import { Popover } from '@headlessui/react';
 const headerText = 'text-2xl leading-[30px] font-semibold'
 const subHeaderText = 'text-base leading-6 font-medium'
 const titleText = 'text-[20px] leading-10 font-semibold'
+import ChartJS from './charts/ChartJS'
+import colors from 'styles/colors';
 
 const gridTemplate = {
     display: 'grid',
@@ -38,16 +40,55 @@ const anotherGridTemplate = {
     gap: '32px'
 }
 
+const chart5Tabs = [
+    {
+        title: 'PNL',
+        value: 1
+    },
+    {
+        title: 'Tài sản và vốn',
+        value: 2
+    },
+    {
+        title: 'Nạp và rút',
+        value: 3
+    },
+    {
+        title: 'Drawdown',
+        value: 4
+    },
+]
+
+const chart5TimeTabs = [
+    {
+        title: '1 Ngày',
+        value: 1
+    },
+    {
+        title: '1 Tuần',
+        value: 2
+    },
+    {
+        title: '1 Tháng',
+        value: 3
+    },
+    {
+        title: '3 Tháng',
+        value: 4
+    },
+]
+
+
 const FuturePortfolio = (props) => {
     const [chart2Tab, setChart2Tab] = useState(1)
     const [chart5Tab, setChart5Tab] = useState(1)
     const [chart5TimeTab, setChart5TimeTab] = useState(1)
     const [chart5TypeTab, setChart5TypeTab] = useState('number')
     const [userData, setUserData] = useState(null)
-    const [chat5Data, setChart5Data] = useState(null)
+    const [chart5Data, setChart5Data] = useState(null)
     const user = useSelector(state => state?.auth?.user)
 
-    console.log(chat5Data)
+    console.log(chart5Data)
 
 
     const [profitType, setProfitType] = useState(1)
@@ -103,6 +144,14 @@ const FuturePortfolio = (props) => {
                 break
         }
         date.toLocaleDateString();
+
+        const chartIds = {
+            '1': 1, 
+            '2': 5, 
+            '3': 6, 
+            '4': 4, 
+        }
+
         FetchApi({
             url: API_PORTFOLIO_ACCOUNT,
             options: {
@@ -110,8 +159,8 @@ const FuturePortfolio = (props) => {
             },
             params: {
                 currency: props.currency === 'VNDC' ? 72 : 22,
-                chart_id: chart5Tab,
-                timeFrame: 'D',
+                chart_id: chartIds[chart5Tab],
+                timeFrame: 'H',
                 value_type: chart5TypeTab,
                 from: date,
                 to: new Date()
@@ -125,7 +174,7 @@ const FuturePortfolio = (props) => {
         });
     }, [chart5TimeTab, chart5Tab ,chart5TypeTab])
 
-    const renderUser = (gridArea) => {
+    const renderChart1 = (gridArea) => {
         return width >= 664 ? (
             <ChartLayout area={gridArea}>
                 <div className='w-full h-full px-8 py-6'>
@@ -368,98 +417,64 @@ const FuturePortfolio = (props) => {
         )
     }
     const renderChart5 = (gridArea) => {
-        const tabs = [
-            {
-                title: 'PNL',
-                value: 1
-            },
-            {
-                title: 'Tài sản và vốn',
-                value: 2
-            },
-            {
-                title: 'Nạp và rút',
-                value: 3
-            },
-            {
-                title: 'Drawdown',
-                value: 4
-            },
-        ]
-
-        const timeTabs = [
-            {
-                title: '1 Ngày',
-                value: 1
-            },
-            {
-                title: '1 Tuần',
-                value: 2
-            },
-            {
-                title: '1 Tháng',
-                value: 3
-            },
-            {
-                title: '3 Tháng',
-                value: 4
-            },
-        ]
+        const chartData = []
+        const labels = chart5Data.map(e => formatTime(e.time, 'dd/MM'))
+        switch (chart5Tab) {
+            case 1: 
+                chartData.push(chart5Data.map(e => Math.round(e.profit)))
+                break
+            case 2:
+                chartData.push(chart5Data.map(e => Math.round(e.balance)))
+                chartData.push(chart5Data.map(e => Math.round(e.equity)))
+                break
+            case 3:
+                chartData.push(chart5Data.map(e => Math.round(e.deposit)))
+                chartData.push(chart5Data.map(e => Math.round(e.withdraw)))
+                break
+            case 4:
+                chartData.push(chart5Data.map(e => Math.round(e.balance)))
+                chartData.push(chart5Data.map(e => Math.round(e.equity)))
+                break
+            
+        }
 
         const data = {
-            series: [{
-                name: 'series-5',
-                data: [{
-                    x: new Date('2018-02-12').getTime(),
-                    y: 76
-                }, {
-                    x: new Date('2018-02-13').getTime(),
-                    y: 80
-                }, {
-                    x: new Date('2018-02-14').getTime(),
-                    y: 70
-                }, {
-                    x: new Date('2018-02-15').getTime(),
-                    y: 50
-                }, {
-                    x: new Date('2018-02-16').getTime(),
-                    y: 100
-                }, {
-                    x: new Date('2018-02-17').getTime(),
-                    y: 80
-                }, {
-                    x: new Date('2018-02-18').getTime(),
-                    y: 67
-                }]
-            }],
-            options: {
-                chart: {
-                    id: 'chart5',
-                    toolbar: {
-                        show: false
-                    },
-                    zoom: {
-                        enabled: true,
-                        autoScaleYaxis: true
-                    }
-                },
-                stroke: {
-                    curve: 'smooth',
-                    width: 1.5,
-                },
-                xaxis: {
-                    type: 'datetime'
-                },
-                yaxis: {
-                    show: false
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                colors: ['#00C8BC']
+            labels,
+            datasets: chartData.length === 1 ? [
+              {
+                fill: true,
+                label: false,
+                data: chartData[0],
+                lineTension: 0.2,
+                borderColor: colors.teal,
+                backgroundColor: 'rgba(0, 201, 189, 0.08)',
+                borderWidth: 1.5,
+                pointRadius: 4,
+                pointBackgroundColor: colors.teal,
+              }
+            ] : [
+            {
+              fill: false,
+              label: false,
+              data: chartData[0],
+              lineTension: 0.2,
+              borderColor: colors.teal,
+              borderWidth: 1.5,
+              pointRadius: 4,
+              pointBackgroundColor: colors.teal,
             },
-            type: 'area',
-        }
+            {
+              fill: false,
+              label: false,
+              data: chartData[1],
+              lineTension: 0.2,
+              borderColor: '#80FFEA',
+              borderWidth: 1.5,
+              pointRadius: 4,
+              pointBackgroundColor: '#80FFEA',
+            },
+          ],
+          };
 
         return width > 640 ? (
             <ChartLayout area={gridArea}>
@@ -468,9 +483,10 @@ const FuturePortfolio = (props) => {
                         Thống kê biến động
                     </div>
                     <div className='flex p-2 item-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
-                        {tabs.map((tab, index) => {
+                        {chart5Tabs.map((tab, index) => {
                             return (
-                                <div className={`flex items-center justify-center w-full h-full text-base font-medium leading-8 cursor-pointer ${chart5Tab === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`} onClick={() => setChart5Tab(tab.value)}>
+                                <div className={`flex items-center justify-center w-full h-full text-base font-medium leading-8 cursor-pointer ${chart5Tab === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`} 
+                                    onClick={() => setChart5Tab(tab.value)}>
                                     {tab.title}
                                 </div>
                             )
@@ -481,7 +497,7 @@ const FuturePortfolio = (props) => {
                             Số tiền
                         </div>
                         <div className='flex gap-3'>
-                            {timeTabs.map((tab, index) => {
+                            {chart5TimeTabs.map((tab, index) => {
                                 return (
                                     <div className={`flex item-center justify-center h-7 my-6 px-2 py-1 rounded-md ${chart5TimeTab === index + 1 && 'bg-gray-4'} text-sm leading-5 font-medium w-[65px] cursor-pointer`} onClick={() => setChart5TimeTab(tab.value)}>
                                         {tab.title}
@@ -490,8 +506,8 @@ const FuturePortfolio = (props) => {
                             })}
                         </div>
                     </div>
-                    <div className='mt-6 flex w-full items-center justify-center'>
-                        {renderApexChart(data, { height: 'auto', width: '100%' })}
+                    <div className='mt-6 flex w-full max-h-[600px] items-center justify-center'>
+                        <ChartJS data={data} />
                     </div>
                 </div>
             </ChartLayout>
@@ -502,7 +518,7 @@ const FuturePortfolio = (props) => {
                         Thống kê biến động
                     </div>
                     <div className='flex p-2 item-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
-                        {tabs.map((tab, index) => {
+                        {chart5Tabs.map((tab, index) => {
                             return (
                                 <div className={`flex items-center justify-center w-full h-full text-xs font-medium leading-5 cursor-pointer ${chart5Tab === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`} onClick={() => setChart5Tab(tab.value)}>
                                     {tab.title}
@@ -515,7 +531,7 @@ const FuturePortfolio = (props) => {
                             Số tiền
                         </div>
                         <div className='flex gap-3'>
-                            {timeTabs.map((tab, index) => {
+                            {chart5TimeTabs.map((tab, index) => {
                                 return (
                                     <div className={`flex item-center justify-center min-h-7 my-6 px-2 py-1 rounded-md ${chart5TimeTab === index + 1 && 'bg-gray-4'} text-sm leading-5 font-medium w-[65px] cursor-pointer`} onClick={() => setChart5TimeTab(tab.value)}>
                                         {tab.title}
@@ -524,8 +540,8 @@ const FuturePortfolio = (props) => {
                             })}
                         </div>
                     </div>
-                    <div className='mt-6 flex w-full items-center justify-center'>
-                        {renderApexChart(data, { height: 'auto', width: '100%' })}
+                    <div className='mt-6 max-h-[600px] flex w-full items-center justify-center'>
+                        <ChartJS data={data} />
                     </div>
                 </div>
             </ChartLayout>
@@ -558,11 +574,11 @@ const FuturePortfolio = (props) => {
 
     return (
         <div className='w-auto h-auto' style={width > 960 ? gridTemplate : anotherGridTemplate}>
-            {user && userData ? renderUser('chart1') : loadingPlaceHolder('chart1')}
+            {user && userData ? renderChart1('chart1') : loadingPlaceHolder('chart1')}
             {user && userData ? renderChart2('chart2') : loadingPlaceHolder('chart2')}
             {user && userData ? renderChart3('chart3') : loadingPlaceHolder('chart3')}
             {user && userData ? renderChart4('chart4') : loadingPlaceHolder('chart4')}
-            {user && userData ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
+            {user && userData && chart5Data ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
             {/* {user && renderChart5('chart5')} */}
             {/* {user && renderChart6('chart6')} */}
         </div>

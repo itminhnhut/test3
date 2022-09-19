@@ -91,4 +91,4 @@ export const renderTabs = (tabs, tabType, setTabType, haveUnderline = true) => {
     )
 }
 
-export const renderApexChart = (data, { height = '100%', width = '100%' }) => <Chart options={data.options} series={data.series} type={data.type} height={height} width={width} />
+export const renderApexChart = (data, { height = '100%', width }) => <Chart key='nami' options={data.options} series={data.series} type={data.type} height={height} width='100%' />
