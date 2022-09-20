@@ -13,7 +13,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const Portfolio = () => {
     const [type, setType] = useState(1)
-    const [currency, setCurrency] = useState('USDT')
+    const [currency, setCurrency] = useState('VNDC')
 
     const mainTabs = [
         {
