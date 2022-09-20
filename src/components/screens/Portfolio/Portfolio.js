@@ -35,7 +35,7 @@ const Portfolio = () => {
                 <div className='flex h-9'>
                     <Button
                         className="px-4 py-[6px] mr-3"
-                        onClick={() => setCurrency(currency === 'USDT' ? 'VNDC' : 'USDT')}
+                        onClick={() => setCurrency('VNDC')}
                         title='VNDC'
                         type={currency === 'VNDC' && 'primary'}
                         style={currency !== 'VNDC' && { color: '#718096' }}
@@ -43,7 +43,7 @@ const Portfolio = () => {
                     />
                     <Button
                         className="px-4 py-[6px]"
-                        onClick={() => setCurrency(currency === 'USDT' ? 'VNDC' : 'USDT')}
+                        onClick={() => setCurrency('USDT')}
                         title='USDT'
                         type={currency === 'USDT' && 'primary'}
                         style={currency !== 'USDT' && { color: '#718096' }}
