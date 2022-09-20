@@ -687,21 +687,25 @@ const FuturePortfolio = (props) => {
             { title: 'Theo tháng', value: 2 },
         ]
         const labels = []
+        const datasetLabel = {
+            wl: ['Tổng số lệnh lời: ', 'Tổng số lệnh lỗ: '],
+            bs: ['Tổng số lệnh mua: ', 'Tổng số lệnh bán: ']
+        }
         const totalWin = []
         const totalLoss = []
         const winProfit = []
         const lossProfit = []
         chart6Data.map(e => {
             labels.push(formatTime(e.time, 'dd/MM'))
-            totalWin.push(+e.win?.total)
-            totalLoss.push(-e.loss?.total)
-            winProfit.push(+e.win?.profit_rate)
-            lossProfit.push(+e.loss?.profit_rate)
+            totalWin.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.total)
+            totalLoss.push(-e[chart6Config.type === 1 ? 'loss' : 'sell']?.total)
+            winProfit.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.profit_rate)
+            lossProfit.push(+e[chart6Config.type === 1 ? 'loss' : 'sell']?.profit_rate)
         })
         const data = {
             labels,
             datasets: [{
-                label: 'Tổng số lệnh lời: ',
+                label: datasetLabel[chart6Config.type === 1 ? 'wl' : 'bs'][0],
                 data: totalWin,
                 backgroundColor: '#52EAD1',
                 borderColor: '#52EAD1',
@@ -709,7 +713,7 @@ const FuturePortfolio = (props) => {
                 stack: 'combined',
             },
             {
-                label: 'Tổng số lệnh lỗ: ',
+                label: datasetLabel[chart6Config.type === 1 ? 'wl' : 'bs'][1],
                 data: totalLoss,
                 backgroundColor: '#C0F9EE',
                 borderColor: '#C0F9EE',
@@ -747,8 +751,9 @@ const FuturePortfolio = (props) => {
                     callbacks: {
                         label: function (context) {
                             const label = context.dataset.label
-                            const value = +context.formattedValue || 0;
-                            return '  ' + label + formatPrice(Math.abs(+value), 2) + (label.includes('%') ? '%' : '');
+                            const value = +context.raw || 0;
+                            console.log(context)
+                            return '  ' + label + formatPrice(Math.abs(value), 2) + (label.includes('%') ? '%' : '');
                         },
                         labelPointStyle: function (context) {
                             return {
@@ -761,7 +766,7 @@ const FuturePortfolio = (props) => {
                     },
                     backgroundColor: colors.white,
                     titleColor: colors.grey2,
-                }
+                },
             },
             scales: {
                 x: {
@@ -807,7 +812,7 @@ const FuturePortfolio = (props) => {
                         <div className='max-h-[600px] flex w-full items-center justify-center'>
                             <ChartJS type='stackedBar' data={data} options={options} height='450px' />
                         </div>
-                        <div className='flex items-center gap-4'>
+                        <div className='flex items-center gap-4 mt-6'>
                             <div className='flex items-center gap-1 h-full'>
                                 <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="3.5" cy="4" r="3.5" fill="#52EAD1" />
