@@ -121,14 +121,7 @@ const FuturePortfolio = (props) => {
                 break
         }
         date.toLocaleDateString();
-
-        const chartIds = {
-            '1': 1,
-            '2': 5,
-            '3': 6,
-            '4': 4,
-        }
-
+        const chartIds = { '1': 1, '2': 5, '3': 6, '4': 4, }
         FetchApi({
             url: API_PORTFOLIO_ACCOUNT,
             options: {
@@ -170,10 +163,7 @@ const FuturePortfolio = (props) => {
                 break
         }
         date.toLocaleDateString();
-        const chartIds = {
-            '1': 2,
-            '2': 3,
-        }
+        const chartIds = { '1': 2, '2': 3, }
         FetchApi({
             url: API_PORTFOLIO_ACCOUNT,
             options: {
@@ -196,10 +186,7 @@ const FuturePortfolio = (props) => {
     }, [props.currency, chart6Config])
 
     useEffect(() => {
-        const orderBy = {
-            '1': 'W',
-            '2': 'M',
-        }
+        const orderBy = { '1': 'W', '2': 'M', }
         FetchApi({
             url: API_PORTFOLIO_ACCOUNT,
             options: {
@@ -663,34 +650,6 @@ const FuturePortfolio = (props) => {
                             )}
                         </div>
                         <div className='flex gap-3'>
-                            {/* <Popover className="relative">
-                                {({ open, close }) => (
-                                    <>
-                                        <Popover.Button >
-                                            <div
-                                                className="px-2 py-1 min-h-7 flex items-center bg-gray-4 text-xs font-medium leading-5 cursor-pointer hover:opacity-80 rounded-md text-darkBlue">
-                                                {chart5TimeTabs.find(e => e.value === chart5Config.time).title}
-                                                <ChevronDown size={16} className="ml-1" />
-                                            </div>
-                                        </Popover.Button>
-                                        <Transition
-                                            enter="transition ease-out duration-200"
-                                            enterFrom="opacity-0 translate-y-1"
-                                            enterTo="opacity-100 translate-y-0"
-                                            leave="transition ease-in duration-150"
-                                            leaveFrom="opacity-100 translate-y-0"
-                                            leaveTo="opacity-0 translate-y-1"
-                                        >
-                                            <Popover.Panel className="absolute z-50 bg-white dark:bg-bgPrimary-dark">
-                                                <div
-                                                    className="max-h-[204px] overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
-                                                    {renderChartTabs(chart5TimeTabs, 'time', chart5Config, setChart5Config)}
-                                                </div>
-                                            </Popover.Panel>
-                                        </Transition>
-                                    </>
-                                )}
-                            </Popover> */}
                             {renderTimePopover(chart5Config, setChart5Config)}
                         </div>
                     </div>
@@ -710,7 +669,28 @@ const FuturePortfolio = (props) => {
                 <span className='text-teal text-sm leading-6 font-medium'>+{formatPrice(profit, 0)} &nbsp; (+{formatPrice(roe, 2)}%)</span> :
                 <span className='text-red text-sm leading-6 font-medium'>{formatPrice(profit, 0)} &nbsp; ({formatPrice(roe, 2)}%)</span>
         }
-
+        if (width < 640) {
+            return chart6PNLData.map(data => {
+                return (
+                    <div className='font-semibold text-sm leading-[17px] mb-6'>
+                        Tháng {data.key}
+                        <div className='mt-2'>
+                            {data.data?.map((e, index) => {
+                                const myData = {
+                                    title: 'Tuần ' + e.key,
+                                    value: renderTableData(e.data?.profit, e.data?.roe)
+                                }
+                                return (
+                                    <div>
+                                        {renderInlineText(null, myData.title, myData.value, index + 1 === data.data.length ? 'min-h' : undefined)}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                )
+            })
+        }
         const mappedData = []
         chart6PNLData.map(e => {
             console.log(e)
@@ -732,25 +712,24 @@ const FuturePortfolio = (props) => {
             { key: 'week4', dataIndex: 'week4', title: 'Tuần 4', width: 100, align: 'left' },
             { key: 'week5', dataIndex: 'week5', title: 'Tuần 5', width: 100, align: 'left' },
         ]
-        return (
-            <ReTable
-                // useRowHover
-                sort
-                data={mappedData}
-                columns={columns}
-                rowKey={item => item?.key}
-                scroll={{ x: true }}
-                tableStyle={{
-                    tableStyle: { minWidth: '560 !important' },
-                    headerStyle: {},
-                    rowStyle: {},
-                    shadowWithFixedCol: width < 1024,
-                    noDataStyle: {
-                        minHeight: '280px'
-                    }
-                }}
-            />
-        )
+        return <ReTable
+            // useRowHover
+            sort
+            data={mappedData}
+            columns={columns}
+            rowKey={item => item?.key}
+            scroll={{ x: true }}
+            tableStyle={{
+                tableStyle: { minWidth: '560 !important' },
+                headerStyle: {},
+                rowStyle: {},
+                shadowWithFixedCol: width < 1024,
+                noDataStyle: {
+                    minHeight: '280px'
+                }
+            }}
+        />
+
     }, [props.currency, chart6PNLData])
 
     const renderChart6Account = () => {
@@ -962,7 +941,7 @@ const FuturePortfolio = (props) => {
                     </div>
                 </div>
                 <div className='mt-6 px-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                    <div className={`${titleText}`}>
+                    <div className={`${titleText} mb-4`}>
                         Thống kê PNL (%ROI)
                     </div>
                     <div>
@@ -970,7 +949,7 @@ const FuturePortfolio = (props) => {
                             {renderChartTabs(chart6OrderByTabs, 'orderBy', chart6PNLConfig, setChart6PNLConfig, true, true)}
                         </div>
                     </div>
-                    <div className=''>
+                    <div className='mt-5'>
                         {renderChart6PNLTable()}
                     </div>
                 </div>
