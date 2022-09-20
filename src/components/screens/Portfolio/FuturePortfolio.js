@@ -18,6 +18,7 @@ const subHeaderText = 'text-base leading-6 font-medium'
 const titleText = 'text-[20px] leading-10 font-semibold'
 import ChartJS from './charts/ChartJS'
 import colors from 'styles/colors';
+import _ from 'lodash'
 
 const gridTemplate = {
     display: 'grid',
@@ -45,19 +46,28 @@ const anotherGridTemplate = {
 
 
 const FuturePortfolio = (props) => {
-    const [chart2Tab, setChart2Tab] = useState(1)
+    const [chart3Current, setChart3Current] = useState(true)
     const [chart5Config, setChart5Config] = useState({
         tab: 1,
         time: 1,
         type: 'number'
     })
+    const [chart6Config, setChart6Config] = useState({
+        tab: 1,
+        time: 1,
+        type: 1,
+        orderBy: 1,
+    })
+    const [chart6PNLConfig, setChart6PNLConfig] = useState({
+        orderBy: 1,
+    })
     const [chart5Data, setChart5Data] = useState(null)
+    const [chart6Data, setChart6Data] = useState(null)
+    const [chart6PNLData, setChart6PNLData] = useState(null)
     const [userData, setUserData] = useState(null)
-    const [chart3Current, setChart3Current] = useState(false)
     const user = useSelector(state => state?.auth?.user)
 
-    console.log(chart5Data)
-
+    console.log(chart6Data)
 
     const [profitType, setProfitType] = useState(1)
 
@@ -93,7 +103,7 @@ const FuturePortfolio = (props) => {
                 setUserData(null)
             }
         });
-    }, [chart5Config])
+    }, [props.currency])
 
     useEffect(() => {
         const date = new Date()
@@ -142,7 +152,108 @@ const FuturePortfolio = (props) => {
                 setChart5Data(null)
             }
         });
-    }, [chart5Config])
+    }, [props.currency, chart5Config])
+
+    useEffect(() => {
+        const date = new Date()
+        switch (chart6Config.time) {
+            case 1:
+                date.setDate(date.getDate() - 1);
+                break;
+            case 2:
+                date.setDate(date.getDate() - 7);
+                break;
+            case 3:
+                date.setDate(date.getDate() - 30);
+                break;
+            case 4:
+                date.setDate(date.getDate() - 90);
+                break;
+            default:
+                break
+        }
+        date.toLocaleDateString();
+        const chartIds = {
+            '1': 2,
+            '2': 3,
+        }
+        FetchApi({
+            url: API_PORTFOLIO_ACCOUNT,
+            options: {
+                method: 'GET',
+            },
+            params: {
+                currency: props.currency === 'VNDC' ? 72 : 22,
+                chart_id: chartIds[chart6Config.type],
+                timeFrame: 'D',
+                from: date,
+                to: new Date()
+            },
+        }).then(async ({ data, status }) => {
+            if (status === 200) {
+                setChart6Data(data)
+            } else {
+                setChart6Data(null)
+            }
+        });
+    }, [props.currency, chart6Config])
+
+    useEffect(() => {
+        const orderBy = {
+            '1': 'W',
+            '2': 'M',
+        }
+        FetchApi({
+            url: API_PORTFOLIO_ACCOUNT,
+            options: {
+                method: 'GET',
+            },
+            params: {
+                currency: props.currency === 'VNDC' ? 72 : 22,
+                chart_id: 7,
+                timeFrame: orderBy[chart6PNLConfig.orderBy],
+            },
+        }).then(async ({ data, status }) => {
+            if (status === 200) {
+                setChart6PNLData(data)
+            } else {
+                setChart6PNLData(null)
+            }
+        });
+    }, [props.currency, chart6PNLConfig])
+
+    const renderChartTabs = (tabs, type, config, setConfig, reversed = false) => {
+        const bgColor = reversed ? 'bg-white' : 'bg-gray-4'
+        return width >= 640 ? (
+            <>
+                {tabs.map((tab, index) => {
+                    return (
+                        <div className={`flex item-center justify-center min-h-[28px] my-6 px-2 py-1 rounded-md ${config[type] === index + 1 ? `${bgColor} rounded-md text-darkBlue` : 'text-darkBlue-5'} text-sm leading-5 font-medium min-w-[65px] cursor-pointer`}
+                            onClick={_.debounce(() => {
+                                setConfig({ ...config, [type]: tab.value }), 200
+                                close()
+                            })}>
+                            {tab.title}
+                        </div>
+                    )
+                })}
+            </>
+        ) : (
+            <>
+                {tabs.map((tab, index) => {
+                    return (
+                        <div className={`flex items-center justify-end w-full h-full text-xs font-medium leading-5 cursor-pointer ${config[type] === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`}
+                            onClick={_.debounce(() => {
+                                setConfig({ ...config, [type]: tab.value }), 200
+                                close()
+                            })}>
+                            {tab.title}
+                        </div>
+                    )
+                })}
+            </>
+        )
+    }
 
     const renderChart1 = (gridArea) => {
         return width >= 664 ? (
@@ -386,6 +497,7 @@ const FuturePortfolio = (props) => {
             </ChartLayout>
         )
     }
+
     const renderChart5 = (gridArea) => {
         const chart5Tabs = [
             { title: 'PNL', value: 1 },
@@ -466,37 +578,29 @@ const FuturePortfolio = (props) => {
                     <div className='flex p-2 item-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
                         {chart5Tabs.map((tab, index) =>
                             <div className={`flex items-center justify-center w-full h-full text-base font-medium leading-8 cursor-pointer ${chart5Config.tab === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`}
-                                onClick={() => setChart5Config({
+                                onClick={_.debounce(() => setChart5Config({
                                     ...chart5Config,
                                     tab: tab.value
-                                })}>
+                                }), 200)}>
                                 {tab.title}
                             </div>
                         )}
                     </div>
                     <div className='w-full flex items-center justify-between'>
                         <div className='w-fit flex gap-2 items-center justify-between'>
-
                             {chart5TypeTabs.map((tab) =>
                                 <div className={`h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer text-gray-2 ${tab.value === chart5Config.type && 'bg-gray-4 !text-darkBlue'}`}
-
                                 >
                                     {tab.title}
                                 </div>
                             )}
                         </div>
                         <div className='flex gap-3'>
-                            {chart5TimeTabs.map((tab, index) => {
-                                return (
-                                    <div className={`flex item-center justify-center h-7 my-6 px-2 py-1 rounded-md ${chart5Config.time === index + 1 && 'bg-gray-4'} text-sm leading-5 font-medium w-[65px] cursor-pointer`} onClick={() => setChart5Config({ ...chart5Config, time: tab.value })}>
-                                        {tab.title}
-                                    </div>
-                                )
-                            })}
+                            {renderChartTabs(chart5TimeTabs, 'time', chart5Config, setChart5Config)}
                         </div>
                     </div>
                     <div className='flex w-full max-h-[600px] items-center justify-center'>
-                        <ChartJS data={data} />
+                        <ChartJS type='area' data={data} height='450px' />
                     </div>
                 </div>
             </ChartLayout>
@@ -510,7 +614,7 @@ const FuturePortfolio = (props) => {
                         {chart5Tabs.map((tab, index) => {
                             return (
                                 <div className={`flex items-center justify-center w-full h-full text-xs font-medium leading-5 cursor-pointer ${chart5Config.tab === index + 1 ? 'bg-white rounded-xl !text-darkBlue' : 'text-darkBlue-5'}`}
-                                    onClick={() => setChart5Config({ ...chart5Config, tab: tab.value })}>
+                                    onClick={_.debounce(() => setChart5Config({ ...chart5Config, tab: tab.value }), 200)}>
                                     {tab.title}
                                 </div>
                             )
@@ -519,9 +623,7 @@ const FuturePortfolio = (props) => {
                     <div className='w-full flex items-center justify-between'>
                         <div className='h-full flex w-fit justify-between gap-2'>
                             {chart5TypeTabs.map((tab) =>
-                                <div className={`h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer text-gray-2 ${tab.value === chart5Config.type && 'bg-gray-4 !text-darkBlue'}`}
-
-                                >
+                                <div className={`h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer text-gray-2 ${tab.value === chart5Config.type && 'bg-gray-4 !text-darkBlue'}`} >
                                     {tab.title}
                                 </div>
                             )}
@@ -548,14 +650,7 @@ const FuturePortfolio = (props) => {
                                             <Popover.Panel className="absolute z-50 bg-white dark:bg-bgPrimary-dark">
                                                 <div
                                                     className="max-h-[204px] overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
-                                                    {chart5TimeTabs.map((tab, index) => {
-                                                        return (
-                                                            <div className={`flex items-center justify-end w-full h-full text-xs font-medium leading-5 cursor-pointer ${chart5Config.time === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`}
-                                                                onClick={() => setChart5Config({ ...chart5Config, time: tab.value })}>
-                                                                {tab.title}
-                                                            </div>
-                                                        )
-                                                    })}
+                                                    {renderChartTabs(chart5TimeTabs, 'time', chart5Config, setChart5Config)}
                                                 </div>
                                             </Popover.Panel>
                                         </Transition>
@@ -565,30 +660,178 @@ const FuturePortfolio = (props) => {
                         </div>
                     </div>
                     <div className='max-h-[600px] flex w-full items-center justify-center'>
-                        <ChartJS data={data} />
+                        <ChartJS type='area' data={data} height='450px' />
                     </div>
                 </div>
             </ChartLayout>
         )
     }
+
     const renderChart6 = (gridArea) => {
-        const tabs = [
-            {
-                content: 'Tài khoản',
-                value: 1
-            },
-            {
-                content: 'Tóm tắt',
-                value: 2
-            },
+        const chart6Tabs = [
+            { content: 'Tài khoản', value: 1 },
+            { content: 'Tóm tắt', value: 2 }
         ]
+        const chart6TimeTabs = [
+            { title: '1 Ngày', value: 1 },
+            { title: '1 Tuần', value: 2 },
+            { title: '1 Tháng', value: 3 },
+            { title: '3 Tháng', value: 4 },
+        ]
+        const chart6TypeTabs = [
+            { title: 'Lời/Lỗ', value: 1 },
+            { title: 'Mua/Bán', value: 2 },
+        ]
+        const chart6OrderByTabs = [
+            { title: 'Theo tuần', value: 1 },
+            { title: 'Theo tháng', value: 2 },
+        ]
+        const labels = []
+        const totalWin = []
+        const totalLoss = []
+        const winProfit = []
+        const lossProfit = []
+        chart6Data.map(e => {
+            labels.push(formatTime(e.time, 'dd/MM'))
+            totalWin.push(+e.win?.total)
+            totalLoss.push(-e.loss?.total)
+            winProfit.push(+e.win?.profit_rate)
+            lossProfit.push(+e.loss?.profit_rate)
+        })
+        const data = {
+            labels,
+            datasets: [{
+                label: 'Tổng số lệnh lời: ',
+                data: totalWin,
+                backgroundColor: '#52EAD1',
+                borderColor: '#52EAD1',
+                type: 'bar',
+                stack: 'combined',
+            },
+            {
+                label: 'Tổng số lệnh lỗ: ',
+                data: totalLoss,
+                backgroundColor: '#C0F9EE',
+                borderColor: '#C0F9EE',
+                type: 'bar',
+                stack: 'combined',
+            },
+            {
+                label: '% lệnh lời: ',
+                data: winProfit,
+                backgroundColor: '#52EAD1',
+                borderColor: '#52EAD1',
+                fill: false,
+                borderDash: [5, 5],
+                borderWidth: 1.5,
+                type: 'line',
+                stack: 'combined',
+            }, {
+                label: '% lệnh lỗ:  ',
+                data: lossProfit,
+                backgroundColor: '#C0F9EE',
+                borderColor: '#C0F9EE',
+                fill: false,
+                borderDash: [5, 5],
+                borderWidth: 1.5,
+                type: 'line',
+                stack: 'combined',
+            }]
+        };
+        const options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    usePointStyle: true,
+                    callbacks: {
+                        label: function (context) {
+                            const label = context.dataset.label
+                            const value = +context.formattedValue || 0;
+                            return '  ' + label + formatPrice(Math.abs(+value), 2) + (label.includes('%') ? '%' : '');
+                        },
+                        labelPointStyle: function (context) {
+                            return {
+                                pointStyle: 'circle',
+                            };
+                        },
+                        labelTextColor: function (context) {
+                            return colors.darkBlue
+                        }
+                    },
+                    backgroundColor: colors.white,
+                    titleColor: colors.grey2,
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    combined: true
+                },
+                y: {
+                    stacked: true,
+                    ticks: {
+                        callback: function (value, index, values) {
+                            return Math.abs(value);
+                        }
+                    }
+                },
+            },
+            // elements: {
+            //     point:{
+            //         radius: 
+            //     }
+            // }
+        }
+
+        console.log('asdflskadfsldf', winProfit, totalWin)
+
         return (
             <div className='w-full h-full' style={{ gridArea: 'chart6' }} >
-                {renderTabs(tabs, profitType, setProfitType, false)}
-                <ChartLayout>
-                    <div className='p-6'>
-                        <div className={`${titleText}`}>
-
+                {renderTabs(chart6Tabs, profitType, setProfitType, false)}
+                <ChartLayout className='p-6'>
+                    <div className='p-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
+                        <div className='flex items-center justify-between'>
+                            <div className={`${titleText}`}>
+                                Thống kê số lệnh lời/lỗ
+                            </div>
+                            <div>
+                                <div className='flex items-center w-fit h-fit gap-4'>
+                                    {renderChartTabs(chart6TimeTabs, 'time', chart6Config, setChart6Config)}
+                                    <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
+                                        {renderChartTabs(chart6TypeTabs, 'type', chart6Config, setChart6Config, true)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='max-h-[600px] flex w-full items-center justify-center'>
+                            <ChartJS type='stackedBar' data={data} options={options} height='450px' />
+                        </div>
+                        <div className='flex items-center gap-4'>
+                            <div className='flex items-center gap-1 h-full'>
+                                <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="3.5" cy="4" r="3.5" fill="#52EAD1" />
+                                </svg>
+                                Lệnh lời
+                            </div>
+                            <div className='flex items-center  gap-1 h-full'>
+                                <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="3.5" cy="4" r="3.5" fill="#C0F9EE" />
+                                </svg>
+                                Lệnh lỗ
+                            </div>
+                        </div>
+                    </div>
+                    <div className='mt-6 p-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
+                        <div className='flex items-center justify-between'>
+                            <div className={`${titleText}`}>
+                                Thống kê PNL (%ROI)
+                            </div>
+                            <div>
+                                <div className='flex items-center w-fit h-fit gap-4'>
+                                    {renderChartTabs(chart6OrderByTabs, 'orderBy', chart6PNLConfig, setChart6PNLConfig)}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </ChartLayout>
@@ -602,8 +845,8 @@ const FuturePortfolio = (props) => {
             {user && userData ? renderChart2('chart2') : loadingPlaceHolder('chart2')}
             {user && userData ? renderChart3('chart3') : loadingPlaceHolder('chart3')}
             {user && userData ? renderChart4('chart4') : loadingPlaceHolder('chart4')}
-            {user && userData ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
-            {user && userData ? renderChart6('chart6') : loadingPlaceHolder('chart6')}
+            {user && userData && chart5Data ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
+            {user && userData && chart6Data ? renderChart6('chart6') : loadingPlaceHolder('chart6')}
         </div>
 
     )
