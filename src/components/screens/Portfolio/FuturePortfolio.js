@@ -12,6 +12,7 @@ import { FEE_TABLE } from 'constants/constants';
 import { PulseLoader } from 'react-spinners';
 import { Popover, Transition } from '@headlessui/react';
 import { ChevronDown } from 'react-feather';
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 
 const headerText = 'text-2xl leading-[30px] font-semibold'
 const subHeaderText = 'text-base leading-6 font-medium'
@@ -67,8 +68,6 @@ const FuturePortfolio = (props) => {
     const [userData, setUserData] = useState(null)
     const user = useSelector(state => state?.auth?.user)
 
-    console.log(chart6Data)
-
     const [profitType, setProfitType] = useState(1)
 
     const { width } = useWindowSize()
@@ -76,8 +75,6 @@ const FuturePortfolio = (props) => {
     const displayByWidth = useCallback(() => {
         return width > 1169 ? 'flex' : 'flex flex-col'
     }, [width])
-
-    console.log(userData)
 
     useEffect(() => {
         FetchApi({
@@ -385,7 +382,6 @@ const FuturePortfolio = (props) => {
                 profit: <span className={`${userData.one_day_before?.growth_rate >= 0 ? 'text-teal' : 'text-red'}`} >{userData.one_day_before?.growth_rate >= 0 ? '▴' : '▾'} {formatPrice(userData.one_day_before?.growth_rate, 0)}%</span>
             },
         ]
-
         return (
             <ChartLayout area={gridArea} className="!bg-[#F8F9FA]">
                 <div className={`w-full h-full min-h-[126px] flex gap-4 ${width < 640 && '!rounded-xl flex-col gap-0 bg-white'}`}>
@@ -667,6 +663,58 @@ const FuturePortfolio = (props) => {
         )
     }
 
+    const renderChart6PNLTable = useCallback(() => {
+        const renderTableData = (profit, roe) => {
+            if (!profit || !roe) return <span className='text-sm leading-6 font-medium'>+0 &nbsp; (+0%)</span>
+
+            return profit >= 0 ?
+                <span className='text-teal text-sm leading-6 font-medium'>+{formatPrice(profit, 0)} &nbsp; (+{formatPrice(roe, 2)}%)</span> :
+                <span className='text-red text-sm leading-6 font-medium'>{formatPrice(profit, 0)} &nbsp; ({formatPrice(roe, 2)}%)</span>
+        }
+
+        const mappedData = []
+        chart6PNLData.map(e => {
+            console.log(e)
+            mappedData.push({
+                key: e.key,
+                week1: renderTableData(e.data[0]?.data?.profit, e.data[0]?.data?.roe),
+                week2: renderTableData(e.data[1]?.data?.profit, e.data[1]?.data?.roe),
+                week3: renderTableData(e.data[2]?.data?.profit, e.data[2]?.data?.roe),
+                week4: renderTableData(e.data[3]?.data?.profit, e.data[3]?.data?.roe),
+                week5: renderTableData(e.data[4]?.data?.profit, e.data[4]?.data?.roe),
+            })
+        })
+
+        const columns = [
+            { key: 'time', dataIndex: 'key', title: 'Thời gian', width: 60, fixed: 'left', align: 'left' },
+            { key: 'week1', dataIndex: 'week1', title: 'Tuần 1', width: 100, align: 'left' },
+            { key: 'week2', dataIndex: 'week2', title: 'Tuần 2', width: 100, align: 'left' },
+            { key: 'week3', dataIndex: 'week3', title: 'Tuần 3', width: 100, align: 'left' },
+            { key: 'week4', dataIndex: 'week4', title: 'Tuần 4', width: 100, align: 'left' },
+            { key: 'week5', dataIndex: 'week5', title: 'Tuần 5', width: 100, align: 'left' },
+        ]
+        return (
+            <ReTable
+                // useRowHover
+                sort
+                data={mappedData}
+                columns={columns}
+                rowKey={item => item?.key}
+                scroll={{ x: true }}
+                tableStyle={{
+                    // paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                    tableStyle: { minWidth: '768px !important' },
+                    headerStyle: {},
+                    rowStyle: {},
+                    shadowWithFixedCol: width < 1024,
+                    noDataStyle: {
+                        minHeight: '280px'
+                    }
+                }}
+            />
+        )
+    }, [props.currency, chart6PNLData])
+
     const renderChart6 = (gridArea) => {
         const chart6Tabs = [
             { content: 'Tài khoản', value: 1 },
@@ -705,6 +753,7 @@ const FuturePortfolio = (props) => {
         const data = {
             labels,
             datasets: [{
+                // yAxisID: 'A',
                 label: datasetLabel[chart6Config.type === 1 ? 'wl' : 'bs'][0],
                 data: totalWin,
                 backgroundColor: '#52EAD1',
@@ -742,6 +791,7 @@ const FuturePortfolio = (props) => {
                 stack: 'combined',
             }]
         };
+
         const options = {
             responsive: true,
             maintainAspectRatio: false,
@@ -752,7 +802,6 @@ const FuturePortfolio = (props) => {
                         label: function (context) {
                             const label = context.dataset.label
                             const value = +context.raw || 0;
-                            console.log(context)
                             return '  ' + label + formatPrice(Math.abs(value), 2) + (label.includes('%') ? '%' : '');
                         },
                         labelPointStyle: function (context) {
@@ -782,17 +831,10 @@ const FuturePortfolio = (props) => {
                     }
                 },
             },
-            // elements: {
-            //     point:{
-            //         radius: 
-            //     }
-            // }
         }
 
-        console.log('asdflskadfsldf', winProfit, totalWin)
-
         return (
-            <div className='w-full h-full' style={{ gridArea: 'chart6' }} >
+            <div className='w-full h-full' style={{ gridArea }} >
                 {renderTabs(chart6Tabs, profitType, setProfitType, false)}
                 <ChartLayout className='p-6'>
                     <div className='p-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
@@ -838,6 +880,9 @@ const FuturePortfolio = (props) => {
                                 </div>
                             </div>
                         </div>
+                        <div className=''>
+                            {renderChart6PNLTable()}
+                        </div>
                     </div>
                 </ChartLayout>
             </div>
@@ -851,7 +896,7 @@ const FuturePortfolio = (props) => {
             {user && userData ? renderChart3('chart3') : loadingPlaceHolder('chart3')}
             {user && userData ? renderChart4('chart4') : loadingPlaceHolder('chart4')}
             {user && userData && chart5Data ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
-            {user && userData && chart6Data ? renderChart6('chart6') : loadingPlaceHolder('chart6')}
+            {user && userData && chart6Data && chart6PNLData ? renderChart6('chart6') : loadingPlaceHolder('chart6')}
         </div>
 
     )
@@ -911,7 +956,6 @@ export const renderInlineText = (type, label, value, noUnderline = 'false', onCl
         case 'line':
             return (
                 <div className='my-4 border-b-[1px] border-gray-2 h-[1px]' >
-
                 </div>
             )
         default:
