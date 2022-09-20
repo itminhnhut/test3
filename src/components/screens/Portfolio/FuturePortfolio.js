@@ -219,7 +219,7 @@ const FuturePortfolio = (props) => {
         });
     }, [props.currency, chart6PNLConfig])
 
-    const renderChartTabs = (tabs, type, config, setConfig, reversed = false) => {
+    const renderChartTabs = (tabs, type, config, setConfig, reversed = false, isCenter = false) => {
         const bgColor = reversed ? 'bg-white' : 'bg-gray-4'
         return width >= 640 ? (
             <>
@@ -239,7 +239,7 @@ const FuturePortfolio = (props) => {
             <>
                 {tabs.map((tab, index) => {
                     return (
-                        <div className={`flex items-center justify-end w-full h-full text-xs font-medium leading-5 cursor-pointer ${config[type] === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`}
+                        <div className={`flex items-center justify-end ${isCenter && '!justify-center'} w-full h-full text-xs font-medium leading-5 cursor-pointer ${config[type] === index + 1 ? `${isCenter && bgColor} rounded-md text-darkBlue` : 'text-darkBlue-5'}`}
                             onClick={_.debounce(() => {
                                 setConfig({ ...config, [type]: tab.value }), 200
                                 close()
@@ -250,6 +250,44 @@ const FuturePortfolio = (props) => {
                 })}
             </>
         )
+    }
+
+    const renderTimePopover = (config, setConfig) => {
+        const timeTabs = [
+            { title: '1 Ngày', value: 1 },
+            { title: '1 Tuần', value: 2 },
+            { title: '1 Tháng', value: 3 },
+            { title: '3 Tháng', value: 4 },
+        ]
+
+        return <Popover className="relative">
+            {({ open, close }) => (
+                <>
+                    <Popover.Button >
+                        <div
+                            className="px-2 py-1 min-h-7 flex items-center bg-gray-4 text-xs font-medium leading-5 cursor-pointer hover:opacity-80 rounded-md text-darkBlue">
+                            {timeTabs.find(e => e.value === config.time).title}
+                            <ChevronDown size={16} className="ml-1" />
+                        </div>
+                    </Popover.Button>
+                    <Transition
+                        enter="transition ease-out duration-200"
+                        enterFrom="opacity-0 translate-y-1"
+                        enterTo="opacity-100 translate-y-0"
+                        leave="transition ease-in duration-150"
+                        leaveFrom="opacity-100 translate-y-0"
+                        leaveTo="opacity-0 translate-y-1"
+                    >
+                        <Popover.Panel className="absolute z-50 bg-white dark:bg-bgPrimary-dark">
+                            <div
+                                className="max-h-[204px] overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
+                                {renderChartTabs(timeTabs, 'time', config, setConfig)}
+                            </div>
+                        </Popover.Panel>
+                    </Transition>
+                </>
+            )}
+        </Popover>
     }
 
     const renderChart1 = (gridArea) => {
@@ -625,7 +663,7 @@ const FuturePortfolio = (props) => {
                             )}
                         </div>
                         <div className='flex gap-3'>
-                            <Popover className="relative">
+                            {/* <Popover className="relative">
                                 {({ open, close }) => (
                                     <>
                                         <Popover.Button >
@@ -652,7 +690,8 @@ const FuturePortfolio = (props) => {
                                         </Transition>
                                     </>
                                 )}
-                            </Popover>
+                            </Popover> */}
+                            {renderTimePopover(chart5Config, setChart5Config)}
                         </div>
                     </div>
                     <div className='max-h-[600px] flex w-full items-center justify-center'>
@@ -702,8 +741,7 @@ const FuturePortfolio = (props) => {
                 rowKey={item => item?.key}
                 scroll={{ x: true }}
                 tableStyle={{
-                    // paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                    tableStyle: { minWidth: '768px !important' },
+                    tableStyle: { minWidth: '560 !important' },
                     headerStyle: {},
                     rowStyle: {},
                     shadowWithFixedCol: width < 1024,
@@ -715,11 +753,7 @@ const FuturePortfolio = (props) => {
         )
     }, [props.currency, chart6PNLData])
 
-    const renderChart6 = (gridArea) => {
-        const chart6Tabs = [
-            { content: 'Tài khoản', value: 1 },
-            { content: 'Tóm tắt', value: 2 }
-        ]
+    const renderChart6Account = () => {
         const chart6TimeTabs = [
             { title: '1 Ngày', value: 1 },
             { title: '1 Tuần', value: 2 },
@@ -742,13 +776,17 @@ const FuturePortfolio = (props) => {
         const totalWin = []
         const totalLoss = []
         const winProfit = []
+        const originWinProfit = []
         const lossProfit = []
+        const originLossProfit = []
         chart6Data.map(e => {
             labels.push(formatTime(e.time, 'dd/MM'))
             totalWin.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.total)
-            totalLoss.push(-e[chart6Config.type === 1 ? 'loss' : 'sell']?.total)
-            winProfit.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.profit_rate)
-            lossProfit.push(+e[chart6Config.type === 1 ? 'loss' : 'sell']?.profit_rate)
+            totalLoss.push(chart6Config.type === 1 ? -e['loss']?.total : e['sell']?.total)
+            winProfit.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.profit_rate / 5 + +e[chart6Config.type === 1 ? 'win' : 'buy']?.total)
+            originWinProfit.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.profit_rate)
+            lossProfit.push(+e[chart6Config.type === 1 ? 'loss' : 'sell']?.profit_rate / 5 - +e[chart6Config.type === 1 ? 'loss' : 'sell']?.total)
+            originLossProfit.push(+e[chart6Config.type === 1 ? 'loss' : 'sell']?.profit_rate)
         })
         const data = {
             labels,
@@ -759,7 +797,19 @@ const FuturePortfolio = (props) => {
                 backgroundColor: '#52EAD1',
                 borderColor: '#52EAD1',
                 type: 'bar',
-                stack: 'combined',
+                maxBarThickness: width >= 640 ? 200 : 20,
+                order: 4
+            },
+            {
+                label: '% lệnh lời: ',
+                data: winProfit,
+                backgroundColor: '#00C8BC',
+                borderColor: '#00C8BC',
+                fill: false,
+                borderDash: [5, 5],
+                borderWidth: 1.5,
+                type: 'line',
+                order: 3
             },
             {
                 label: datasetLabel[chart6Config.type === 1 ? 'wl' : 'bs'][1],
@@ -767,31 +817,21 @@ const FuturePortfolio = (props) => {
                 backgroundColor: '#C0F9EE',
                 borderColor: '#C0F9EE',
                 type: 'bar',
-                stack: 'combined',
+                maxBarThickness: width >= 640 ? 200 : 20,
+                order: 2
             },
             {
-                label: '% lệnh lời: ',
-                data: winProfit,
+                label: '% lệnh lỗ:  ',
+                data: lossProfit,
                 backgroundColor: '#52EAD1',
                 borderColor: '#52EAD1',
                 fill: false,
                 borderDash: [5, 5],
                 borderWidth: 1.5,
                 type: 'line',
-                stack: 'combined',
-            }, {
-                label: '% lệnh lỗ:  ',
-                data: lossProfit,
-                backgroundColor: '#C0F9EE',
-                borderColor: '#C0F9EE',
-                fill: false,
-                borderDash: [5, 5],
-                borderWidth: 1.5,
-                type: 'line',
-                stack: 'combined',
+                order: 1,
             }]
         };
-
         const options = {
             responsive: true,
             maintainAspectRatio: false,
@@ -802,7 +842,8 @@ const FuturePortfolio = (props) => {
                         label: function (context) {
                             const label = context.dataset.label
                             const value = +context.raw || 0;
-                            return '  ' + label + formatPrice(Math.abs(value), 2) + (label.includes('%') ? '%' : '');
+                            const percentage = value === 0 ? 0 : value > 0 ? originWinProfit[context.dataIndex] : originLossProfit[context.dataIndex]
+                            return '  ' + label + formatPrice(Math.abs(label.includes('%') ? percentage : value), 2) + (label.includes('%') ? '%' : '');
                         },
                         labelPointStyle: function (context) {
                             return {
@@ -820,10 +861,10 @@ const FuturePortfolio = (props) => {
             scales: {
                 x: {
                     stacked: true,
-                    combined: true
+                    // combined: true,
                 },
                 y: {
-                    stacked: true,
+                    // stacked: true,
                     ticks: {
                         callback: function (value, index, values) {
                             return Math.abs(value);
@@ -832,61 +873,120 @@ const FuturePortfolio = (props) => {
                 },
             },
         }
-
-        return (
-            <div className='w-full h-full' style={{ gridArea }} >
-                {renderTabs(chart6Tabs, profitType, setProfitType, false)}
-                <ChartLayout className='p-6'>
-                    <div className='p-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                        <div className='flex items-center justify-between'>
-                            <div className={`${titleText}`}>
-                                Thống kê số lệnh lời/lỗ
-                            </div>
-                            <div>
-                                <div className='flex items-center w-fit h-fit gap-4'>
-                                    {renderChartTabs(chart6TimeTabs, 'time', chart6Config, setChart6Config)}
-                                    <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
-                                        {renderChartTabs(chart6TypeTabs, 'type', chart6Config, setChart6Config, true)}
-                                    </div>
+        return width >= 640 ?
+            <ChartLayout className='p-6'>
+                <div className='px-6 pb-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
+                    <div className='flex items-center justify-between'>
+                        <div className={`${titleText}`}>
+                            Thống kê số lệnh lời/lỗ
+                        </div>
+                        <div>
+                            <div className='flex items-center w-fit h-fit gap-4'>
+                                {renderChartTabs(chart6TimeTabs, 'time', chart6Config, setChart6Config)}
+                                <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
+                                    {renderChartTabs(chart6TypeTabs, 'type', chart6Config, setChart6Config, true)}
                                 </div>
                             </div>
                         </div>
-                        <div className='max-h-[600px] flex w-full items-center justify-center'>
-                            <ChartJS type='stackedBar' data={data} options={options} height='450px' />
+                    </div>
+                    <div className='max-h-[600px] flex w-full items-center justify-center'>
+                        <ChartJS type='stackedBar' data={data} options={options} height='450px' />
+                    </div>
+                    <div className='flex items-center gap-4 mt-6'>
+                        <div className='flex items-center gap-1 h-full'>
+                            <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="3.5" cy="4" r="3.5" fill="#52EAD1" />
+                            </svg>
+                            {chart6Config.type === 1 ? 'Lệnh lời' : 'Lệnh mua'}
                         </div>
-                        <div className='flex items-center gap-4 mt-6'>
+                        <div className='flex items-center  gap-1 h-full'>
+                            <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="3.5" cy="4" r="3.5" fill="#C0F9EE" />
+                            </svg>
+                            {chart6Config.type === 1 ? 'Lệnh lỗ' : 'Lệnh bán'}
+                        </div>
+                    </div>
+                </div>
+                <div className='mt-6 px-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
+                    <div className='flex items-center justify-between'>
+                        <div className={`${titleText}`}>
+                            Thống kê PNL (%ROI)
+                        </div>
+                        <div>
+                            <div className='flex items-center w-fit h-fit gap-4'>
+                                {renderChartTabs(chart6OrderByTabs, 'orderBy', chart6PNLConfig, setChart6PNLConfig)}
+                            </div>
+                        </div>
+                    </div>
+                    <div className=''>
+                        {renderChart6PNLTable()}
+                    </div>
+                </div>
+            </ChartLayout>
+            :
+            <ChartLayout className='py-6 px-4'>
+                <div className='p-4 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
+                    <div className='flex items-center justify-between'>
+                        <div className={`${titleText}`}>
+                            Thống kê số lệnh lời/lỗ
+                        </div>
+                    </div>
+                    <div>
+                        <div className='flex items-center w-full h-fit mb-6'>
+                            <div className='bg-gray-4 w-full flex items-center justify-between h-9 rounded-md p-1'>
+                                {renderChartTabs(chart6TypeTabs, 'type', chart6Config, setChart6Config, true, true)}
+                            </div>
+                        </div>
+                    </div>
+                    <div className='flex items-center w-full justify-between'>
+                        <div>
+                            {renderTimePopover(chart6Config, setChart6Config)}
+                        </div>
+                        <div className='flex items-center gap-4'>
                             <div className='flex items-center gap-1 h-full'>
                                 <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="3.5" cy="4" r="3.5" fill="#52EAD1" />
                                 </svg>
-                                Lệnh lời
+                                {chart6Config.type === 1 ? 'Lệnh lời' : 'Lệnh mua'}
                             </div>
                             <div className='flex items-center  gap-1 h-full'>
                                 <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="3.5" cy="4" r="3.5" fill="#C0F9EE" />
                                 </svg>
-                                Lệnh lỗ
+                                {chart6Config.type === 1 ? 'Lệnh lỗ' : 'Lệnh bán'}
                             </div>
                         </div>
                     </div>
-                    <div className='mt-6 p-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                        <div className='flex items-center justify-between'>
-                            <div className={`${titleText}`}>
-                                Thống kê PNL (%ROI)
-                            </div>
-                            <div>
-                                <div className='flex items-center w-fit h-fit gap-4'>
-                                    {renderChartTabs(chart6OrderByTabs, 'orderBy', chart6PNLConfig, setChart6PNLConfig)}
-                                </div>
-                            </div>
-                        </div>
-                        <div className=''>
-                            {renderChart6PNLTable()}
+                    <div className='max-h-[600px] flex w-full items-center justify-center mt-6'>
+                        <ChartJS type='stackedBar' data={data} options={options} height='450px' />
+                    </div>
+                </div>
+                <div className='mt-6 px-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
+                    <div className={`${titleText}`}>
+                        Thống kê PNL (%ROI)
+                    </div>
+                    <div>
+                        <div className='flex items-center w-full h-fit bg-gray-4 p-1 h-9 rounded-md'>
+                            {renderChartTabs(chart6OrderByTabs, 'orderBy', chart6PNLConfig, setChart6PNLConfig, true, true)}
                         </div>
                     </div>
-                </ChartLayout>
-            </div>
-        )
+                    <div className=''>
+                        {renderChart6PNLTable()}
+                    </div>
+                </div>
+            </ChartLayout>
+    }
+
+    const renderChart6 = (gridArea) => {
+        const chart6Tabs = [
+            { content: 'Tài khoản', value: 1 },
+            { content: 'Tóm tắt', value: 2 }
+        ]
+        return <div className='w-full h-full' style={{ gridArea }} >
+            {renderTabs(chart6Tabs, profitType, setProfitType, false)}
+            {renderChart6Account()}
+        </div>
+
     }
 
     return (
