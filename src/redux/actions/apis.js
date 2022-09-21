@@ -272,3 +272,4 @@ export const API_GET_FUTURES_SETTING = API_PREFIX + "futures/setting";
 //portfolio
 export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + "portfolio/futures/overview";
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + "portfolio/futures/account";
+export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + "portfolio/futures/summary";

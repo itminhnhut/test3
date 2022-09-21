@@ -64,7 +64,6 @@ const Portfolio = () => {
             </div>
         )
     }
-
     return (
         <div className='w-full h-full px-5 py-8 text-darkBlue'>
             {renderTabs(mainTabs, type, setType)}

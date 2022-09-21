@@ -2,7 +2,7 @@ import useWindowSize from 'hooks/useWindowSize'
 import React, { memo, Suspense, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ChartLayout from './charts/ChartLayout'
-import { renderApexChart, renderReChart, renderTabs } from './Portfolio';
+import { renderApexChart, renderTabs } from './Portfolio';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_VIP, API_PORTFOLIO_OVERVIEW, API_PORTFOLIO_ACCOUNT } from 'redux/actions/apis';
@@ -12,14 +12,16 @@ import { FEE_TABLE } from 'constants/constants';
 import { PulseLoader } from 'react-spinners';
 import { Popover, Transition } from '@headlessui/react';
 import { ChevronDown } from 'react-feather';
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import colors from 'styles/colors';
+import _ from 'lodash'
+import Account from './sections/Account'
+import Summary from './sections/Summary'
+import ChartJS from './charts/ChartJS'
+import Orders from './sections/Orders';
 
 const headerText = 'text-2xl leading-[30px] font-semibold'
 const subHeaderText = 'text-base leading-6 font-medium'
 const titleText = 'text-[20px] leading-10 font-semibold'
-import ChartJS from './charts/ChartJS'
-import colors from 'styles/colors';
-import _ from 'lodash'
 
 const gridTemplate = {
     display: 'grid',
@@ -29,6 +31,7 @@ const gridTemplate = {
                     'chart3 chart3 chart4'
                     'chart5 chart5 chart5'
                     'chart6 chart6 chart6'
+                    'chart7 chart7 chart7'
                 `,
     gap: '32px'
 }
@@ -41,6 +44,7 @@ const anotherGridTemplate = {
                     'chart4'
                     'chart5'
                     'chart6'
+                    'chart7'
                 `,
     gap: '32px'
 }
@@ -53,23 +57,12 @@ const FuturePortfolio = (props) => {
         time: 1,
         type: 'number'
     })
-    const [chart6Config, setChart6Config] = useState({
-        tab: 1,
-        time: 1,
-        type: 1,
-        orderBy: 1,
-    })
-    const [chart6PNLConfig, setChart6PNLConfig] = useState({
-        orderBy: 1,
-    })
     const [chart5Data, setChart5Data] = useState(null)
-    const [chart6Data, setChart6Data] = useState(null)
-    const [chart6PNLData, setChart6PNLData] = useState(null)
     const [userData, setUserData] = useState(null)
+    const [chart6Tab, setChart6Tab] = useState(1)
+    const [chart7Tab, setChart7Tab] = useState(1)
+
     const user = useSelector(state => state?.auth?.user)
-
-    const [profitType, setProfitType] = useState(1)
-
     const { width } = useWindowSize()
 
     const displayByWidth = useCallback(() => {
@@ -144,67 +137,6 @@ const FuturePortfolio = (props) => {
         });
     }, [props.currency, chart5Config])
 
-    useEffect(() => {
-        const date = new Date()
-        switch (chart6Config.time) {
-            case 1:
-                date.setDate(date.getDate() - 1);
-                break;
-            case 2:
-                date.setDate(date.getDate() - 7);
-                break;
-            case 3:
-                date.setDate(date.getDate() - 30);
-                break;
-            case 4:
-                date.setDate(date.getDate() - 90);
-                break;
-            default:
-                break
-        }
-        date.toLocaleDateString();
-        const chartIds = { '1': 2, '2': 3, }
-        FetchApi({
-            url: API_PORTFOLIO_ACCOUNT,
-            options: {
-                method: 'GET',
-            },
-            params: {
-                currency: props.currency === 'VNDC' ? 72 : 22,
-                chart_id: chartIds[chart6Config.type],
-                timeFrame: 'D',
-                from: date,
-                to: new Date()
-            },
-        }).then(async ({ data, status }) => {
-            if (status === 200) {
-                setChart6Data(data)
-            } else {
-                setChart6Data(null)
-            }
-        });
-    }, [props.currency, chart6Config])
-
-    useEffect(() => {
-        const orderBy = { '1': 'W', '2': 'M', }
-        FetchApi({
-            url: API_PORTFOLIO_ACCOUNT,
-            options: {
-                method: 'GET',
-            },
-            params: {
-                currency: props.currency === 'VNDC' ? 72 : 22,
-                chart_id: 7,
-                timeFrame: orderBy[chart6PNLConfig.orderBy],
-            },
-        }).then(async ({ data, status }) => {
-            if (status === 200) {
-                setChart6PNLData(data)
-            } else {
-                setChart6PNLData(null)
-            }
-        });
-    }, [props.currency, chart6PNLConfig])
 
     const renderChartTabs = (tabs, type, config, setConfig, reversed = false, isCenter = false) => {
         const bgColor = reversed ? 'bg-white' : 'bg-gray-4'
@@ -267,7 +199,7 @@ const FuturePortfolio = (props) => {
                     >
                         <Popover.Panel className="absolute z-50 bg-white dark:bg-bgPrimary-dark">
                             <div
-                                className="max-h-[204px] overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
+                                className="git reset --soft HEAD^ overflow-y-auto px-[12px] py-[8px] shadow-onlyLight font-medium text-xs flex flex-col">
                                 {renderChartTabs(timeTabs, 'time', config, setConfig)}
                             </div>
                         </Popover.Panel>
@@ -536,6 +468,12 @@ const FuturePortfolio = (props) => {
             { title: 'Số tiền', value: 'number' },
             { title: 'Phần trăm', value: 'percent' }
         ]
+        const chart5Descriptions = {
+            '1': 'Số tiền',
+            '2': ['Tài sản', 'Vốn'],
+            '3': ['Lượng tiền nạp', 'Lượng tiền rút'],
+            '4': ['Tài sản', 'Vốn'],
+        }
         const chartData = []
         const labels = chart5Data.map(e => formatTime(e.time, 'dd/MM'))
         switch (chart5Config.tab) {
@@ -563,10 +501,10 @@ const FuturePortfolio = (props) => {
                 label: false,
                 data: chartData[0],
                 lineTension: 0.2,
-                borderColor: colors.teal,
                 backgroundColor: 'rgba(0, 201, 189, 0.08)',
+                borderColor: colors.teal,
                 borderWidth: 1.5,
-                pointRadius: 4,
+                pointRadius: 0,
                 pointBackgroundColor: colors.teal,
             }] : [{
                 fill: false,
@@ -575,8 +513,9 @@ const FuturePortfolio = (props) => {
                 lineTension: 0.2,
                 borderColor: colors.teal,
                 borderWidth: 1.5,
-                pointRadius: 4,
+                pointRadius: 0,
                 pointBackgroundColor: colors.teal,
+
             },
             {
                 fill: false,
@@ -585,7 +524,7 @@ const FuturePortfolio = (props) => {
                 lineTension: 0.2,
                 borderColor: '#80FFEA',
                 borderWidth: 1.5,
-                pointRadius: 4,
+                pointRadius: 0,
                 pointBackgroundColor: '#80FFEA',
             },],
         };
@@ -609,12 +548,26 @@ const FuturePortfolio = (props) => {
                     </div>
                     <div className='w-full flex items-center justify-between'>
                         <div className='w-fit flex gap-2 items-center justify-between'>
-                            {chart5TypeTabs.map((tab) =>
-                                <div className={`h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer text-gray-2 ${tab.value === chart5Config.type && 'bg-gray-4 !text-darkBlue'}`}
-                                >
-                                    {tab.title}
+                            {chart5Config.tab !== 1 ?
+                                <div className='flex items-center gap-4'>
+                                    <div className='flex gap-2 h-full items-center text-gray-2 text-sm font-medium leading-6'>
+                                        <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="3.5" cy="4" r="3.5" fill="#00C8BC" />
+                                        </svg>
+                                        {chart5Descriptions[chart5Config.tab]?.[0]}
+                                    </div>
+                                    <div className='flex gap-2 h-full items-center text-gray-2 text-sm font-medium leading-6'>
+                                        <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="3.5" cy="4" r="3.5" fill="#80FFEA" />
+                                        </svg>
+                                        {chart5Descriptions[chart5Config.tab]?.[1]}
+                                    </div>
                                 </div>
-                            )}
+                                :
+                                <div className='h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer bg-gray-4 !text-darkBlue'
+                                >
+                                    {chart5Descriptions[chart5Config.tab]}
+                                </div>}
                         </div>
                         <div className='flex gap-3'>
                             {renderChartTabs(chart5TimeTabs, 'time', chart5Config, setChart5Config)}
@@ -661,321 +614,59 @@ const FuturePortfolio = (props) => {
         )
     }
 
-    const renderChart6PNLTable = useCallback(() => {
-        const renderTableData = (profit, roe) => {
-            if (!profit || !roe) return <span className='text-sm leading-6 font-medium'>+0 &nbsp; (+0%)</span>
-
-            return profit >= 0 ?
-                <span className='text-teal text-sm leading-6 font-medium'>+{formatPrice(profit, 0)} &nbsp; (+{formatPrice(roe, 2)}%)</span> :
-                <span className='text-red text-sm leading-6 font-medium'>{formatPrice(profit, 0)} &nbsp; ({formatPrice(roe, 2)}%)</span>
-        }
-        if (width < 640) {
-            return chart6PNLData.map(data => {
-                return (
-                    <div className='font-semibold text-sm leading-[17px] mb-6'>
-                        Tháng {data.key}
-                        <div className='mt-2'>
-                            {data.data?.map((e, index) => {
-                                const myData = {
-                                    title: 'Tuần ' + e.key,
-                                    value: renderTableData(e.data?.profit, e.data?.roe)
-                                }
-                                return (
-                                    <div>
-                                        {renderInlineText(null, myData.title, myData.value, index + 1 === data.data.length ? 'min-h' : undefined)}
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </div>
-                )
-            })
-        }
-        const mappedData = []
-        chart6PNLData.map(e => {
-            console.log(e)
-            mappedData.push({
-                key: e.key,
-                week1: renderTableData(e.data[0]?.data?.profit, e.data[0]?.data?.roe),
-                week2: renderTableData(e.data[1]?.data?.profit, e.data[1]?.data?.roe),
-                week3: renderTableData(e.data[2]?.data?.profit, e.data[2]?.data?.roe),
-                week4: renderTableData(e.data[3]?.data?.profit, e.data[3]?.data?.roe),
-                week5: renderTableData(e.data[4]?.data?.profit, e.data[4]?.data?.roe),
-            })
-        })
-
-        const columns = [
-            { key: 'time', dataIndex: 'key', title: 'Thời gian', width: 60, fixed: 'left', align: 'left' },
-            { key: 'week1', dataIndex: 'week1', title: 'Tuần 1', width: 100, align: 'left' },
-            { key: 'week2', dataIndex: 'week2', title: 'Tuần 2', width: 100, align: 'left' },
-            { key: 'week3', dataIndex: 'week3', title: 'Tuần 3', width: 100, align: 'left' },
-            { key: 'week4', dataIndex: 'week4', title: 'Tuần 4', width: 100, align: 'left' },
-            { key: 'week5', dataIndex: 'week5', title: 'Tuần 5', width: 100, align: 'left' },
-        ]
-        return <ReTable
-            // useRowHover
-            sort
-            data={mappedData}
-            columns={columns}
-            rowKey={item => item?.key}
-            scroll={{ x: true }}
-            tableStyle={{
-                tableStyle: { minWidth: '560 !important' },
-                headerStyle: {},
-                rowStyle: {},
-                shadowWithFixedCol: width < 1024,
-                noDataStyle: {
-                    minHeight: '280px'
-                }
-            }}
-        />
-
-    }, [props.currency, chart6PNLData])
-
-    const renderChart6Account = () => {
-        const chart6TimeTabs = [
-            { title: '1 Ngày', value: 1 },
-            { title: '1 Tuần', value: 2 },
-            { title: '1 Tháng', value: 3 },
-            { title: '3 Tháng', value: 4 },
-        ]
-        const chart6TypeTabs = [
-            { title: 'Lời/Lỗ', value: 1 },
-            { title: 'Mua/Bán', value: 2 },
-        ]
-        const chart6OrderByTabs = [
-            { title: 'Theo tuần', value: 1 },
-            { title: 'Theo tháng', value: 2 },
-        ]
-        const labels = []
-        const datasetLabel = {
-            wl: ['Tổng số lệnh lời: ', 'Tổng số lệnh lỗ: '],
-            bs: ['Tổng số lệnh mua: ', 'Tổng số lệnh bán: ']
-        }
-        const totalWin = []
-        const totalLoss = []
-        const winProfit = []
-        const originWinProfit = []
-        const lossProfit = []
-        const originLossProfit = []
-        chart6Data.map(e => {
-            labels.push(formatTime(e.time, 'dd/MM'))
-            totalWin.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.total)
-            totalLoss.push(chart6Config.type === 1 ? -e['loss']?.total : e['sell']?.total)
-            winProfit.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.profit_rate / 5 + +e[chart6Config.type === 1 ? 'win' : 'buy']?.total)
-            originWinProfit.push(+e[chart6Config.type === 1 ? 'win' : 'buy']?.profit_rate)
-            lossProfit.push(+e[chart6Config.type === 1 ? 'loss' : 'sell']?.profit_rate / 5 - +e[chart6Config.type === 1 ? 'loss' : 'sell']?.total)
-            originLossProfit.push(+e[chart6Config.type === 1 ? 'loss' : 'sell']?.profit_rate)
-        })
-        const data = {
-            labels,
-            datasets: [{
-                // yAxisID: 'A',
-                label: datasetLabel[chart6Config.type === 1 ? 'wl' : 'bs'][0],
-                data: totalWin,
-                backgroundColor: '#52EAD1',
-                borderColor: '#52EAD1',
-                type: 'bar',
-                maxBarThickness: width >= 640 ? 200 : 20,
-                order: 4
-            },
-            {
-                label: '% lệnh lời: ',
-                data: winProfit,
-                backgroundColor: '#00C8BC',
-                borderColor: '#00C8BC',
-                fill: false,
-                borderDash: [5, 5],
-                borderWidth: 1.5,
-                type: 'line',
-                order: 3
-            },
-            {
-                label: datasetLabel[chart6Config.type === 1 ? 'wl' : 'bs'][1],
-                data: totalLoss,
-                backgroundColor: '#C0F9EE',
-                borderColor: '#C0F9EE',
-                type: 'bar',
-                maxBarThickness: width >= 640 ? 200 : 20,
-                order: 2
-            },
-            {
-                label: '% lệnh lỗ:  ',
-                data: lossProfit,
-                backgroundColor: '#52EAD1',
-                borderColor: '#52EAD1',
-                fill: false,
-                borderDash: [5, 5],
-                borderWidth: 1.5,
-                type: 'line',
-                order: 1,
-            }]
-        };
-        const options = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    usePointStyle: true,
-                    callbacks: {
-                        label: function (context) {
-                            const label = context.dataset.label
-                            const value = +context.raw || 0;
-                            const percentage = value === 0 ? 0 : value > 0 ? originWinProfit[context.dataIndex] : originLossProfit[context.dataIndex]
-                            return '  ' + label + formatPrice(Math.abs(label.includes('%') ? percentage : value), 2) + (label.includes('%') ? '%' : '');
-                        },
-                        labelPointStyle: function (context) {
-                            return {
-                                pointStyle: 'circle',
-                            };
-                        },
-                        labelTextColor: function (context) {
-                            return colors.darkBlue
-                        }
-                    },
-                    backgroundColor: colors.white,
-                    titleColor: colors.grey2,
-                },
-            },
-            scales: {
-                x: {
-                    stacked: true,
-                    // combined: true,
-                },
-                y: {
-                    // stacked: true,
-                    ticks: {
-                        callback: function (value, index, values) {
-                            return Math.abs(value);
-                        }
-                    }
-                },
-            },
-        }
-        return width >= 640 ?
-            <ChartLayout className='p-6'>
-                <div className='px-6 pb-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                    <div className='flex items-center justify-between'>
-                        <div className={`${titleText}`}>
-                            Thống kê số lệnh lời/lỗ
-                        </div>
-                        <div>
-                            <div className='flex items-center w-fit h-fit gap-4'>
-                                {renderChartTabs(chart6TimeTabs, 'time', chart6Config, setChart6Config)}
-                                <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
-                                    {renderChartTabs(chart6TypeTabs, 'type', chart6Config, setChart6Config, true)}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='max-h-[600px] flex w-full items-center justify-center'>
-                        <ChartJS type='stackedBar' data={data} options={options} height='450px' />
-                    </div>
-                    <div className='flex items-center gap-4 mt-6'>
-                        <div className='flex items-center gap-1 h-full'>
-                            <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="3.5" cy="4" r="3.5" fill="#52EAD1" />
-                            </svg>
-                            {chart6Config.type === 1 ? 'Lệnh lời' : 'Lệnh mua'}
-                        </div>
-                        <div className='flex items-center  gap-1 h-full'>
-                            <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="3.5" cy="4" r="3.5" fill="#C0F9EE" />
-                            </svg>
-                            {chart6Config.type === 1 ? 'Lệnh lỗ' : 'Lệnh bán'}
-                        </div>
-                    </div>
-                </div>
-                <div className='mt-6 px-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                    <div className='flex items-center justify-between'>
-                        <div className={`${titleText}`}>
-                            Thống kê PNL (%ROI)
-                        </div>
-                        <div>
-                            <div className='flex items-center w-fit h-fit gap-4'>
-                                {renderChartTabs(chart6OrderByTabs, 'orderBy', chart6PNLConfig, setChart6PNLConfig)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className=''>
-                        {renderChart6PNLTable()}
-                    </div>
-                </div>
-            </ChartLayout>
-            :
-            <ChartLayout className='py-6 px-4'>
-                <div className='p-4 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                    <div className='flex items-center justify-between'>
-                        <div className={`${titleText}`}>
-                            Thống kê số lệnh lời/lỗ
-                        </div>
-                    </div>
-                    <div>
-                        <div className='flex items-center w-full h-fit mb-6'>
-                            <div className='bg-gray-4 w-full flex items-center justify-between h-9 rounded-md p-1'>
-                                {renderChartTabs(chart6TypeTabs, 'type', chart6Config, setChart6Config, true, true)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className='flex items-center w-full justify-between'>
-                        <div>
-                            {renderTimePopover(chart6Config, setChart6Config)}
-                        </div>
-                        <div className='flex items-center gap-4'>
-                            <div className='flex items-center gap-1 h-full'>
-                                <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="3.5" cy="4" r="3.5" fill="#52EAD1" />
-                                </svg>
-                                {chart6Config.type === 1 ? 'Lệnh lời' : 'Lệnh mua'}
-                            </div>
-                            <div className='flex items-center  gap-1 h-full'>
-                                <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="3.5" cy="4" r="3.5" fill="#C0F9EE" />
-                                </svg>
-                                {chart6Config.type === 1 ? 'Lệnh lỗ' : 'Lệnh bán'}
-                            </div>
-                        </div>
-                    </div>
-                    <div className='max-h-[600px] flex w-full items-center justify-center mt-6'>
-                        <ChartJS type='stackedBar' data={data} options={options} height='450px' />
-                    </div>
-                </div>
-                <div className='mt-6 px-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                    <div className={`${titleText} mb-4`}>
-                        Thống kê PNL (%ROI)
-                    </div>
-                    <div>
-                        <div className='flex items-center w-full h-fit bg-gray-4 p-1 h-9 rounded-md'>
-                            {renderChartTabs(chart6OrderByTabs, 'orderBy', chart6PNLConfig, setChart6PNLConfig, true, true)}
-                        </div>
-                    </div>
-                    <div className='mt-5'>
-                        {renderChart6PNLTable()}
-                    </div>
-                </div>
-            </ChartLayout>
-    }
-
     const renderChart6 = (gridArea) => {
         const chart6Tabs = [
             { content: 'Tài khoản', value: 1 },
             { content: 'Tóm tắt', value: 2 }
         ]
-        return <div className='w-full h-full' style={{ gridArea }} >
-            {renderTabs(chart6Tabs, profitType, setProfitType, false)}
-            {renderChart6Account()}
+        return <div className='w-full h-auto' style={{ gridArea }} >
+            {renderTabs(chart6Tabs, chart6Tab, setChart6Tab, false)}
+            {chart6Tab === 1 ?
+                <Account
+                    currency={props.currency}
+                    renderChartTabs={renderChartTabs}
+                    renderTimePopover={renderTimePopover}
+                    loadingPlaceHolder={loadingPlaceHolder}
+                    width={width}
+                />
+                :
+                <Summary
+                    currency={props.currency}
+                    renderChartTabs={renderChartTabs}
+                    renderTimePopover={renderTimePopover}
+                    loadingPlaceHolder={loadingPlaceHolder}
+                    width={width}
+                />
+            }
         </div>
 
     }
 
+    const renderChart7 = (gridArea) => {
+        const chart7Tabs = [
+            { content: 'Lịch sử lệnh đang mở', value: 1 },
+            { content: 'Lịch sử lệnh đã đóng', value: 2 },
+            { content: 'Tổng quan lịch sử giao dịch', value: 3 }
+        ]
+        return <div className='w-full h-full' style={{ gridArea }} >
+            <div className='overflow-hidden'>
+                {renderTabs(chart7Tabs, chart7Tab, setChart7Tab, false)}
+            </div>
+            <div>
+                <Orders tab={chart7Tab} width={width} />
+            </div>
+        </div>
+    }
+
     return (
-        <div className='w-auto h-auto' style={width > 960 ? gridTemplate : anotherGridTemplate}>
+        <div className='w-auto h-auto !bg-[#F8F9FA]' style={width > 960 ? gridTemplate : anotherGridTemplate}>
             {user && userData ? renderChart1('chart1') : loadingPlaceHolder('chart1')}
             {user && userData ? renderChart2('chart2') : loadingPlaceHolder('chart2')}
             {user && userData ? renderChart3('chart3') : loadingPlaceHolder('chart3')}
             {user && userData ? renderChart4('chart4') : loadingPlaceHolder('chart4')}
             {user && userData && chart5Data ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
-            {user && userData && chart6Data && chart6PNLData ? renderChart6('chart6') : loadingPlaceHolder('chart6')}
+            {user && userData ? renderChart6('chart6') : loadingPlaceHolder('chart6')}
+            {user && userData ? renderChart7('chart7') : loadingPlaceHolder('chart7')}
         </div>
 
     )

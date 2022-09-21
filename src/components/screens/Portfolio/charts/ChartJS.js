@@ -5,12 +5,13 @@ import {
     PointElement,
     LineElement,
     BarElement,
+    ArcElement,
     Title,
     Tooltip,
     Filler,
     Legend,
 } from 'chart.js';
-import { Line, Bar } from 'react-chartjs-2';
+import { Line, Bar, Doughnut, Bubble } from 'react-chartjs-2';
 
 Chart.register(
     CategoryScale,
@@ -18,6 +19,7 @@ Chart.register(
     PointElement,
     LineElement,
     BarElement,
+    ArcElement,
     Title,
     Tooltip,
     Filler,
@@ -36,8 +38,14 @@ const ChartJS = memo(({ type, data, height = '100%', width = '100%', options = {
         case 'area':
             chart = <Line options={options} data={data} width={width} height={height} />
             break
-        case 'stackedBar':
+        case 'bar':
             chart = <Bar options={options} data={data} width={width} height={height} />
+            break
+        case 'doughnut':
+            chart = <Doughnut options={options} data={data} width={width} height={height} />
+            break
+        case 'bubble':
+            chart = <Bubble options={options} data={data} width={width} height={height} />
             break
     }
 
