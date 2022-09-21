@@ -106,6 +106,16 @@ const colors = {
         red: '#DC1F4E',
         tooltip: '#0E1D32',
         tooltip2: '#071120'
+    },
+    portfolio: {
+        teal: [
+            '#52EAD1',
+            '#33FFDD',
+            '#80FFEA',
+            '#B3FFF2',
+            '#D9FFF8',
+        ]
+
     }
 };
 

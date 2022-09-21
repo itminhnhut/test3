@@ -192,9 +192,14 @@ export function getSymbolString(symbol = {}) {
 }
 
 export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
-    if (value) {
-        const date = value instanceof Date ? value : new Date(value)
-        return format(date, f)
+    try {
+        if (value) {
+            const date = value instanceof Date ? value : new Date(value)
+            return format(date, f)
+        }
+    } catch (error) {
+        console.error(error)
+        return value
     }
 }
 
