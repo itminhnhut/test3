@@ -195,22 +195,30 @@ const FuturesPairDetail = ({
                     )
                     minWidth = itemsPriceMinW + 36
                     break
-                case '24hBaseVolume':
-                    localized += ` (${pairPrice?.baseAsset})`
+                case 'bestBid':
                     minWidth = itemsPriceMinW + 41
-                    value = formatNumber(
-                        roundTo(pairPrice?.baseAssetVolume || 0, 3),
-                        3
-                    )
+                    value = <div className="text-red">{formatNumber(pairPrice?.bid, pricePrecision, 0, true)}</div>
                     break
-                case '24hQuoteVolume':
-                    localized += ` (${pairPrice?.quoteAsset})`
-                    minWidth = itemsPriceMinW + 50
-                    value = formatNumber(
-                        roundTo(pairPrice?.quoteAssetVolume || 0, 3),
-                        3
-                    )
+                case 'bestAsk':
+                    minWidth = itemsPriceMinW + 41
+                    value = <div className="text-dominant">{formatNumber(pairPrice?.ask, pricePrecision, 0, true)}</div>
                     break
+                // case '24hBaseVolume':
+                //     localized += ` (${pairPrice?.baseAsset})`
+                //     minWidth = itemsPriceMinW + 41
+                //     value = formatNumber(
+                //         roundTo(pairPrice?.baseAssetVolume || 0, 3),
+                //         3
+                //     )
+                //     break
+                // case '24hQuoteVolume':
+                //     localized += ` (${pairPrice?.quoteAsset})`
+                //     minWidth = itemsPriceMinW + 50
+                //     value = formatNumber(
+                //         roundTo(pairPrice?.quoteAssetVolume || 0, 3),
+                //         3
+                //     )
+                //     break
                 default:
                     return null
             }
