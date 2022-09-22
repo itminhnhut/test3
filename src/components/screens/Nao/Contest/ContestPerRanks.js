@@ -179,7 +179,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                                         <div className="min-w-[31px] text-nao-grey text-sm font-medium">
                                             {loading ? <Skeletor width={24} height={24} circle /> :
                                                 item?.[rank] && item?.[rank] <= 20 ?
-                                                    <img src={getS3Url(`/images/nao/contest/ic_top_${item?.[rank]}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
+                                                    <img src={getS3Url(`/images/nao/contest/ic_top_${index + 4}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
                                                     : item?.[rank] || '-'
                                             }
                                         </div>
