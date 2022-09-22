@@ -271,9 +271,9 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
             </div>
             <div className='!px-4 flex items-center space-x-4 mt-8'>
                 <ButtonNao onClick={() => onClose()} border className="w-full !rounded-md">{t('common:close')}</ButtonNao>
-                <ButtonNao onClick={onSubmit} disabled={disabled || loading || isLoading.current} className="w-full !rounded-md">
-                    {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:create_team')}
-                </ButtonNao>
+                {/* <ButtonNao onClick={onSubmit} disabled={disabled || loading || isLoading.current} className="w-full !rounded-md"> */}
+                {/*     {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:create_team')} */}
+                {/* </ButtonNao> */}
             </div>
         </Modal>
     );

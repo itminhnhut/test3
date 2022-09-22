@@ -89,7 +89,6 @@ export default class {
         } catch (e) {
             console.error('__ subscribeBars e', e);
         }
-        console.log(_subs, 'SUBLIST');
     }
 
     unsubscribeBars(uid) {
@@ -100,7 +99,6 @@ export default class {
         }
         // socket.emit('unsubscribe:recent_trade', lastSymbol);
         _subs.splice(subIndex, 1);
-        console.log(_subs, 'SUBLIST');
     }
 }
 socket.on('connect', () => {

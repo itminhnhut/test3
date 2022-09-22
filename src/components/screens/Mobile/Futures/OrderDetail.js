@@ -149,7 +149,7 @@ const OrderDetail = ({
                 value = metadata?.modify_price ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_price?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className="text-right"> {getValue(metadata?.modify_price?.after)}</div>
                     </div> : getValue(metadata?.price);
                 return value;
@@ -158,7 +158,7 @@ const OrderDetail = ({
                     <div className="flex items-center justify-between">
                         <div className={`text-left ${getColor('tp', metadata?.modify_tp?.before)}`}>
                             {getValue(metadata?.modify_tp?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className={`text-right ${getColor('tp', metadata?.modify_tp?.after)}`}>
                             {getValue(metadata?.modify_tp?.after)}</div>
                     </div> : null;
@@ -168,7 +168,7 @@ const OrderDetail = ({
                     <div className="flex items-center justify-between">
                         <div className={`text-left ${getColor('sl', metadata?.modify_sl?.before)}`}>
                             {getValue(metadata?.modify_sl?.before)}</div>
-                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        &nbsp;<ArrowRight size={14}/>&nbsp;
                         <div className={`text-right ${getColor('sl', metadata?.modify_sl?.after)}`}>
                             {getValue(metadata?.modify_sl?.after)} </div>
                     </div> : null;
@@ -218,6 +218,17 @@ const OrderDetail = ({
         }
     };
 
+    const renderSwapHours = (order) => {
+        if (order.opened_at) {
+            let closeTime = Date.now();
+            if (order.closed_at) {
+                closeTime = new Date(order.closed_at);
+            }
+            const time = Math.floor((closeTime - new Date(order.opened_at).getTime()) / (60 * 60 * 1000));
+            return `(${time} ${t('futures:mobile:hours')})`;
+        }
+        return null;
+    };
     const decimalPrice = useMemo(() => {
         const decimalScalePrice = pairConfig?.filters.find(rs => rs.filterType === 'PRICE_FILTER');
         return countDecimals(decimalScalePrice?.tickSize) ?? 0;

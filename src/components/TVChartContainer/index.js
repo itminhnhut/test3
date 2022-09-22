@@ -106,6 +106,7 @@ export class TVChartContainer extends React.PureComponent {
                     "paneProperties.horzGridProperties.color": isDark ? colors.darkBlue2 : colors.grey4,
                 });
                 this.theme = newTheme;
+                this.drawHighLowArrows()
             }
         }
         if ((prevProps.ordersList !== this.props.ordersList) && !this.firstTime) {
@@ -191,28 +192,23 @@ export class TVChartContainer extends React.PureComponent {
     }
 
     drawHighLowArrows = debounce(async () => {
-        if (this.drawnHighLowArrows.highArrow && this.drawnHighLowArrows.lowArrow) {
-            this.drawnHighLowArrows.highArrow.remove()
-            this.drawnHighLowArrows.lowArrow.remove()
-            delete this.drawnHighLowArrows.highArrow
-            delete this.drawnHighLowArrows.lowArrow
-        }
+        this.drawnHighLowArrows?.highArrow?.remove()
+        this.drawnHighLowArrows?.lowArrow?.remove()
+        delete this.drawnHighLowArrows?.highArrow
+        delete this.drawnHighLowArrows?.lowArrow
+
         const { from, to } = this.widget.chart().getVisibleRange()
-        const PRICE_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
-        const url = `${PRICE_URL}/api/v1/chart/history`;
-        const { data } = await axios.get(url, {
-            params: {
-                broker: `NAMI_${this.props.mode || ChartMode.SPOT}`,
-                symbol: this.props.symbol,
-                from,
-                to,
-                resolution: this.getInterval(this.state.interval.toString()),
-            },
-        });
-        if (data && data.length) {
+        const { data } = await this.widget.chart().exportData({
+            from,
+            to
+        })
+        if (data) {
             const high = data.reduce((prev, current) => (prev[2] > current[2]) ? prev : current)
             const low = data.reduce((prev, current) => (prev[3] < current[3]) ? prev : current)
             // const base = this.props.symbol.includes('VNDC') ? this.props.symbol.replace('VNDC', '') : this.props.symbol.replace('USDT', '')
+
+            const isDark = this.props?.theme === "dark";
+
             const highArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
                 .setPrice(high[2])
                 .setTime(high[0])
@@ -221,24 +217,24 @@ export class TVChartContainer extends React.PureComponent {
                 .setText(high[2].toString())
                 // .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setTooltip(high[2].toString())
-                .setArrowColor('rgb(0,0,0)')
-                .setTextColor('rgb(0,0,0)')
+                .setArrowColor(!isDark ? colors.darkBlue2 : colors.grey4)
+                .setTextColor(!isDark ? colors.darkBlue2 : colors.grey4)
                 .setArrowHeight(7)
             const lowArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
                 .setPrice(low[3])
                 .setTime(low[0])
                 .setDirection('buy')
                 // .setText(formatPrice(low[3], this.props.exchangeConfig, base).toString())
-                .setText(high[3].toString())
+                .setText(low[3].toString())
                 // .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
-                .setTooltip(high[3].toString())
-                .setArrowColor('rgb(0,0,0)')
-                .setTextColor('rgb(0,0,0)')
+                .setTooltip(low[3].toString())
+                .setArrowColor(!isDark ? colors.darkBlue2 : colors.grey4)
+                .setTextColor(!isDark ? colors.darkBlue2 : colors.grey4)
                 .setArrowHeight(7)
 
             this.drawnHighLowArrows = { highArrow, lowArrow };
         }
-    }, 200)
+    }, 100)
 
 
 

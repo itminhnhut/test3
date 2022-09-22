@@ -31,6 +31,6 @@
     "maker_taker_description": "\"Taker\" là lệnh giao dịch ở giá thị trường (market price).",
     "maker_taker_description_2": "\"Maker\" là lệnh giao dịch ở giá giới hạn (limited price).",
     "referral_description_value": "Giới thiệu bạn bè cùng giao dịch để nhận hoa hồng {{ value }}.",
-    "swap_fee_description": "Với mỗi lệnh Futures đang mở, Nami Exchange áp dụng mức phí duy trì lệnh là 0.002% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì lệnh.",
+    "swap_fee_description": "Với mỗi lệnh Futures đang mở, Nami Exchange áp dụng mức phí duy trì lệnh là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì lệnh.",
     "used_fee_deduction": "Bạn đang được hưởng ưu đãi phí giao dịch từ {{ token }}."
 }

@@ -88,7 +88,7 @@ const NaoDashboard = () => {
         window.open(url, "_blank");
     };
 
-    const current = seasons[seasons.length - 1];
+    const current = seasons.find(season => season.active)
 
     return (
         <LayoutNaoToken>

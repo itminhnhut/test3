@@ -169,6 +169,7 @@
         "tooltip_personal": "Minimum volume for individual ranking is <span class='text-nao-green'>&nbsp;{{value}}</span>",
         "tooltip_team": "Minimum volume for team ranking is <span class='text-nao-green'>&nbsp;{{value}}</span>",
         "last_season": "Previous Season",
+        "season_details": "Season details",
         "create_team": "Create a team",
         "create_a_team": "Create a team",
         "team_information": "Team information",

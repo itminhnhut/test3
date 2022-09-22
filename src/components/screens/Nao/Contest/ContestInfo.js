@@ -99,7 +99,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
             <section className="contest_info pt-[70px]">
                 <div className="flex items-center justify-between">
                     <TextLiner>{t('nao:contest:personal')}</TextLiner>
-                    {!userData?.group_name && !previous && <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()} >{t('nao:contest:create_team')}</ButtonNao>}
+                    {/* {!userData?.group_name && !previous && <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()} >{t('nao:contest:create_team')}</ButtonNao>} */}
                 </div>
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 sm:mt-6">
                     <CardNao className={`!min-h-[136px] !p-6 lg:!max-w-[375px] ${previous ? '' : '!justify-center space-y-3'}`}>
@@ -209,11 +209,11 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                 </div>
             </section>
             {showCreateTeamModal && <CreateTeamModal contest_id={contest_id} userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} />}
-            {
-                !userData?.group_name && !previous && <div className="sm:hidden bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
-                    <ButtonNao onClick={() => onShowCreate()} className="!rounded-md">{t('nao:contest:create_team')}</ButtonNao>
-                </div>
-            }
+            {/* { */}
+            {/*     !userData?.group_name && !previous && <div className="sm:hidden bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full"> */}
+            {/*         <ButtonNao onClick={() => onShowCreate()} className="!rounded-md">{t('nao:contest:create_team')}</ButtonNao> */}
+            {/*     </div> */}
+            {/* } */}
         </>
     );
 });
