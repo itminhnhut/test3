@@ -2,7 +2,7 @@ import useWindowSize from 'hooks/useWindowSize'
 import React, { memo, Suspense, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ChartLayout from './charts/ChartLayout'
-import { renderApexChart, renderReChart, renderTabs } from './Portfolio';
+import { renderApexChart, renderTabs } from './Portfolio';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_VIP, API_PORTFOLIO_OVERVIEW, API_PORTFOLIO_ACCOUNT } from 'redux/actions/apis';
@@ -14,9 +14,10 @@ import { Popover, Transition } from '@headlessui/react';
 import { ChevronDown } from 'react-feather';
 import colors from 'styles/colors';
 import _ from 'lodash'
-import Account from './charts/Account'
-import Summary from './charts/Summary'
+import Account from './sections/Account'
+import Summary from './sections/Summary'
 import ChartJS from './charts/ChartJS'
+import Orders from './sections/Orders';
 
 const headerText = 'text-2xl leading-[30px] font-semibold'
 const subHeaderText = 'text-base leading-6 font-medium'
@@ -30,6 +31,7 @@ const gridTemplate = {
                     'chart3 chart3 chart4'
                     'chart5 chart5 chart5'
                     'chart6 chart6 chart6'
+                    'chart7 chart7 chart7'
                 `,
     gap: '32px'
 }
@@ -42,6 +44,7 @@ const anotherGridTemplate = {
                     'chart4'
                     'chart5'
                     'chart6'
+                    'chart7'
                 `,
     gap: '32px'
 }
@@ -56,9 +59,10 @@ const FuturePortfolio = (props) => {
     })
     const [chart5Data, setChart5Data] = useState(null)
     const [userData, setUserData] = useState(null)
-    const [chart6Tab, setChart6Tab] = useState(2)
-    const user = useSelector(state => state?.auth?.user)
+    const [chart6Tab, setChart6Tab] = useState(1)
+    const [chart7Tab, setChart7Tab] = useState(1)
 
+    const user = useSelector(state => state?.auth?.user)
     const { width } = useWindowSize()
 
     const displayByWidth = useCallback(() => {
@@ -464,6 +468,12 @@ const FuturePortfolio = (props) => {
             { title: 'Số tiền', value: 'number' },
             { title: 'Phần trăm', value: 'percent' }
         ]
+        const chart5Descriptions = {
+            '1': 'Số tiền',
+            '2': ['Tài sản', 'Vốn'],
+            '3': ['Lượng tiền nạp', 'Lượng tiền rút'],
+            '4': ['Tài sản', 'Vốn'],
+        }
         const chartData = []
         const labels = chart5Data.map(e => formatTime(e.time, 'dd/MM'))
         switch (chart5Config.tab) {
@@ -491,10 +501,10 @@ const FuturePortfolio = (props) => {
                 label: false,
                 data: chartData[0],
                 lineTension: 0.2,
-                borderColor: colors.teal,
                 backgroundColor: 'rgba(0, 201, 189, 0.08)',
+                borderColor: colors.teal,
                 borderWidth: 1.5,
-                pointRadius: 4,
+                pointRadius: 0,
                 pointBackgroundColor: colors.teal,
             }] : [{
                 fill: false,
@@ -503,8 +513,9 @@ const FuturePortfolio = (props) => {
                 lineTension: 0.2,
                 borderColor: colors.teal,
                 borderWidth: 1.5,
-                pointRadius: 4,
+                pointRadius: 0,
                 pointBackgroundColor: colors.teal,
+
             },
             {
                 fill: false,
@@ -513,7 +524,7 @@ const FuturePortfolio = (props) => {
                 lineTension: 0.2,
                 borderColor: '#80FFEA',
                 borderWidth: 1.5,
-                pointRadius: 4,
+                pointRadius: 0,
                 pointBackgroundColor: '#80FFEA',
             },],
         };
@@ -537,12 +548,26 @@ const FuturePortfolio = (props) => {
                     </div>
                     <div className='w-full flex items-center justify-between'>
                         <div className='w-fit flex gap-2 items-center justify-between'>
-                            {chart5TypeTabs.map((tab) =>
-                                <div className={`h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer text-gray-2 ${tab.value === chart5Config.type && 'bg-gray-4 !text-darkBlue'}`}
-                                >
-                                    {tab.title}
+                            {chart5Config.tab !== 1 ?
+                                <div className='flex items-center gap-4'>
+                                    <div className='flex gap-2 h-full items-center text-gray-2 text-sm font-medium leading-6'>
+                                        <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="3.5" cy="4" r="3.5" fill="#00C8BC" />
+                                        </svg>
+                                        {chart5Descriptions[chart5Config.tab]?.[0]}
+                                    </div>
+                                    <div className='flex gap-2 h-full items-center text-gray-2 text-sm font-medium leading-6'>
+                                        <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="3.5" cy="4" r="3.5" fill="#80FFEA" />
+                                        </svg>
+                                        {chart5Descriptions[chart5Config.tab]?.[1]}
+                                    </div>
                                 </div>
-                            )}
+                                :
+                                <div className='h-7 my-6 px-2 py-1 rounded-md text-sm leading-5 font-medium cursor-pointer bg-gray-4 !text-darkBlue'
+                                >
+                                    {chart5Descriptions[chart5Config.tab]}
+                                </div>}
                         </div>
                         <div className='flex gap-3'>
                             {renderChartTabs(chart5TimeTabs, 'time', chart5Config, setChart5Config)}
@@ -594,7 +619,7 @@ const FuturePortfolio = (props) => {
             { content: 'Tài khoản', value: 1 },
             { content: 'Tóm tắt', value: 2 }
         ]
-        return <div className='w-full h-full' style={{ gridArea }} >
+        return <div className='w-full h-auto' style={{ gridArea }} >
             {renderTabs(chart6Tabs, chart6Tab, setChart6Tab, false)}
             {chart6Tab === 1 ?
                 <Account
@@ -617,14 +642,31 @@ const FuturePortfolio = (props) => {
 
     }
 
+    const renderChart7 = (gridArea) => {
+        const chart7Tabs = [
+            { content: 'Lịch sử lệnh đang mở', value: 1 },
+            { content: 'Lịch sử lệnh đã đóng', value: 2 },
+            { content: 'Tổng quan lịch sử giao dịch', value: 3 }
+        ]
+        return <div className='w-full h-full' style={{ gridArea }} >
+            <div className='overflow-hidden'>
+                {renderTabs(chart7Tabs, chart7Tab, setChart7Tab, false)}
+            </div>
+            <div>
+                <Orders tab={chart7Tab} width={width} />
+            </div>
+        </div>
+    }
+
     return (
-        <div className='w-auto h-auto' style={width > 960 ? gridTemplate : anotherGridTemplate}>
+        <div className='w-auto h-auto !bg-[#F8F9FA]' style={width > 960 ? gridTemplate : anotherGridTemplate}>
             {user && userData ? renderChart1('chart1') : loadingPlaceHolder('chart1')}
             {user && userData ? renderChart2('chart2') : loadingPlaceHolder('chart2')}
             {user && userData ? renderChart3('chart3') : loadingPlaceHolder('chart3')}
             {user && userData ? renderChart4('chart4') : loadingPlaceHolder('chart4')}
             {user && userData && chart5Data ? renderChart5('chart5') : loadingPlaceHolder('chart5')}
             {user && userData ? renderChart6('chart6') : loadingPlaceHolder('chart6')}
+            {user && userData ? renderChart7('chart7') : loadingPlaceHolder('chart7')}
         </div>
 
     )

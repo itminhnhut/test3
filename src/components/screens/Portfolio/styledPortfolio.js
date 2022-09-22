@@ -3,11 +3,19 @@ import colors from "../../../styles/colors";
 
 export const ComponentTabWrapper = styled.div`
     width: 100%;
+    max-width: 90vw;
     border-bottom: ${({ haveUnderline }) => haveUnderline ? '1px solid #E5E5E5' : 'none'};
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
     padding-bottom: 8px;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+    
+    &::-webkit-scrollbar { 
+        display: none; 
+    }
 `
 
 export const ComponentTabItem = styled.div`
