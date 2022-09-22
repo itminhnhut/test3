@@ -9,7 +9,7 @@ import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/acti
 import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
 
-const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, quoteAsset, season }, ref) => {
+const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, quoteAsset, time_to_create }, ref) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
     const [userData, setUserData] = useState(null);
@@ -92,6 +92,14 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
         return convertHours(userData?.time ?? 0)
     }, [userData])
 
+    const isValidCreate = useMemo(() => {
+        if (!time_to_create) return false
+        const start = new Date(time_to_create?.start).getTime()
+        const end = new Date(time_to_create?.end).getTime()
+        const now = new Date().getTime()
+        return start <= now && end >= now
+    }, [time_to_create])
+
     if (!(user && userData)) return null;
 
     return (
@@ -99,7 +107,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
             <section className="contest_info pt-[70px]">
                 <div className="flex items-center justify-between">
                     <TextLiner>{t('nao:contest:personal')}</TextLiner>
-                    {/* {!userData?.group_name && !previous && <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()} >{t('nao:contest:create_team')}</ButtonNao>} */}
+                    {!userData?.group_name && isValidCreate && <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()} >{t('nao:contest:create_team')}</ButtonNao>}
                 </div>
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 sm:mt-6">
                     <CardNao className={`!min-h-[136px] !p-6 lg:!max-w-[375px] ${previous ? '' : '!justify-center space-y-3'}`}>
