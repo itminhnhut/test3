@@ -168,6 +168,7 @@
         "tooltip_personal": "Khối lượng tối thiểu để được xếp hạng cá nhận là <span class='text-nao-green'>{{value}}</span>",
         "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}}</span>",
         "last_season": "Lịch sử mùa trước",
+        "season_details": "Chi tiết các mùa",
         "create_team": "Tạo đội",
         "create_a_team": "Tạo đội đua TOP",
         "team_information": "Thông tin đội",

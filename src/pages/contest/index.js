@@ -8,7 +8,8 @@ const Contest = dynamic(() => import('components/screens/Nao/Contest/Contest'), 
 })
 
 const index = () => {
-    return <Contest {...seasons[seasons.length - 1]} />
+    const season = seasons.find(season => season.active)
+    return <Contest {...season} />
 };
 
 export const getStaticProps = async ({ locale }) => ({
