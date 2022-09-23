@@ -4,7 +4,6 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export class ApexChart extends React.Component {
     constructor(props) {
-        console.log('PROPS',props)
         super(props);
         this.state = {
             series: props.series,
@@ -14,8 +13,6 @@ export class ApexChart extends React.Component {
             style: props.style
         }
     }
-
-
 
     render() {
         return (
