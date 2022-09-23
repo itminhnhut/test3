@@ -114,7 +114,6 @@ const NaoPerformance = memo(() => {
     const [referencePrice, setReferencePrice] = useState({});
     const assetConfig = useSelector(state => state.utils.assetConfig);
     const [showFilterModal, setShowFilterModal] = useState(false)
-    const [customTime, setCustomTime] = useState(false)
     const [date, setDate] = useState({
         startDate: new Date(),
         endDate: new Date(),
@@ -204,11 +203,11 @@ const NaoPerformance = memo(() => {
     }
 
     const renderLabel = () => (
-        <div className={classNames('py-2 px-4 cursor-pointer leading-6 bg-onus-bg3 rounded-md relative', { 'bg-nao-blue2 font-medium': customTime || !filter?.id })}>
+        <div className={classNames('py-2 px-4 cursor-pointer leading-6 bg-nao-bg3 rounded-md relative', { 'bg-nao-blue2 font-medium': !filter?.id })}>
             <div className="flex items-center space-x-3">
                 <CalenderIcon />
                 <div>
-                    {t('common:custom')}: {date.startDate ? formatTime(date.startDate, 'dd/MM/yyyy') + '-' + formatTime(date.endDate, 'dd/MM/yyyy') : null}
+                    {t('common:custom')}: {date.startDate ? formatTime(date.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(date.endDate, 'dd/MM/yyyy') : null}
                 </div>
             </div>
         </div>
@@ -224,7 +223,6 @@ const NaoPerformance = memo(() => {
     const onChangePicker = (e) => {
         getDatePicker(e)
         setDate(e)
-        setCustomTime(true)
     }
 
     const onConfirmFilter = (dataFilter, range) => {
@@ -233,10 +231,22 @@ const NaoPerformance = memo(() => {
         setShowFilterModal(false)
     }
 
+    const onReset = () => {
+        setFilter({
+            marginCurrency: WalletCurrency.VNDC,
+            ...days[0]
+        })
+        setDate({
+            startDate: new Date(),
+            endDate: new Date(),
+            key: 'selection',
+        })
+    }
+
     const timelLabel = useMemo(() => {
         const day = days.find(rs => rs.id === filter.id);
         return day ? day[language] : formatTime(date.startDate, 'dd/MM/yyyy') + '-' + formatTime(date.endDate, 'dd/MM/yyyy')
-    }, [filter, customTime, date])
+    }, [filter, date])
 
     return (
         <section id="nao_performance" className="pt-10 sm:pt-20">
@@ -246,10 +256,10 @@ const NaoPerformance = memo(() => {
                     <span
                         className="text-sm sm:text-[1rem] text-nao-grey">{t('nao:onus_performance:description')}</span>
                 </div>
-                <div className="flex flex-wrap space-x-2 justify-between sm:justify-start w-full">
+                <div className="flex flex-wrap space-x-2 justify-between lg:justify-start w-full">
                     {/* <RangePopover language={language} active={days.find(d => d.value === filter.day)}
                                   onChange={day => { setFilter({...filter, day}) }}/> */}
-                    <div className="items-center space-x-2 hidden sm:flex">
+                    <div className="items-center space-x-2 hidden lg:flex">
                         <ButtonNao
                             className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC })}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
@@ -259,12 +269,12 @@ const NaoPerformance = memo(() => {
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
                         >Futures USDT</ButtonNao>
                     </div>
-                    <div className="flex items-center space-x-2 sm:hidden">
+                    <div className="flex items-center space-x-2 lg:hidden">
                         <ButtonNao>{filter.marginCurrency === WalletCurrency.VNDC ? 'Futures VNDC' : 'Futures USDT'}</ButtonNao>
                         <ButtonNao> {timelLabel} </ButtonNao>
                     </div>
                     <div className={!filter?.id ? 'mt-2' : ''}>
-                        <div onClick={() => setShowFilterModal(true)} className="flex items-center sm:hidden space-x-1 bg-nao-bg3 p-2 rounded-md">
+                        <div onClick={() => setShowFilterModal(true)} className="flex items-center lg:hidden space-x-1 bg-nao-bg3 p-2 rounded-md">
                             <FilterIcon />
                             <span>{t('common:filter')}</span>
                         </div>
@@ -272,7 +282,7 @@ const NaoPerformance = memo(() => {
                     </div>
                 </div>
             </div>
-            <div className="mt-10 hidden sm:flex">
+            <div className="mt-10 hidden lg:flex items-center justify-between">
                 <div className="flex items-center text-sm space-x-2">
                     {days.map((day, index) => {
                         return (
@@ -280,9 +290,8 @@ const NaoPerformance = memo(() => {
                                 key={day.id}
                                 onClick={() => {
                                     setFilter({ ...filter, ...day })
-                                    setCustomTime(false)
                                 }}
-                                className={classNames('py-2 px-4 cursor-pointer leading-6 bg-onus-bg3 rounded-md', { 'bg-nao-blue2 font-medium': day?.id === filter?.id })}>
+                                className={classNames('py-2 px-4 cursor-pointer leading-6 bg-nao-bg3 rounded-md', { 'bg-nao-blue2 font-medium': day?.id === filter?.id })}>
                                 <span>{day[language]}</span>
                             </div>
                         );
@@ -290,10 +299,10 @@ const NaoPerformance = memo(() => {
                     <DateRangePicker
                         date={date}
                         onChange={onChangePicker}
-                        onClose={() => !date?.startDate && setCustomTime(false)}
                         customLabel={renderLabel} />
 
                 </div>
+                <div onClick={onReset} className="px-4 py-2 text-nao-blue2 text-sm bg-nao-bg3 rounded-md cursor-pointer">{t('common:reset')}</div>
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
                 <CardNao>

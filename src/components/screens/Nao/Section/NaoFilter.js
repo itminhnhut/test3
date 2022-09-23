@@ -17,7 +17,6 @@ import { navigatorRenderer } from './DateRangePicker'
 const NaoFilter = ({ onCancel, onConfirm, filter, days, range }) => {
     const { t, i18n: { language } } = useTranslation();
     const [data, setData] = useState(filter);
-    const [customTime, setCustomTime] = useState(false)
     const [date, setDate] = useState(range)
     const [showPicker, setShowPicker] = useState(false)
 
@@ -31,7 +30,6 @@ const NaoFilter = ({ onCancel, onConfirm, filter, days, range }) => {
         const end = new Date(e?.endDate).getTime()
         setData({ ...data, from: start, to: end, id: null })
         setDate(e)
-        setCustomTime(true)
     }
 
     const _onConfirm = () => {
@@ -71,17 +69,14 @@ const NaoFilter = ({ onCancel, onConfirm, filter, days, range }) => {
                                     return (
                                         <div
                                             key={day.id}
-                                            onClick={() => {
-                                                setData({ ...data, ...day })
-                                                setCustomTime(false)
-                                            }}
-                                            className={classNames('py-2 px-4 cursor-pointer leading-6 bg-onus-bg3 rounded-md text-center', { 'bg-nao-blue2 font-medium': day?.id === data?.id })}>
+                                            onClick={() => setData({ ...data, ...day })}
+                                            className={classNames('py-2 px-4 cursor-pointer leading-6 bg-nao-bg3 rounded-md text-center', { 'bg-nao-blue2 font-medium': day?.id === data?.id })}>
                                             <span>{day[language]}</span>
                                         </div>
                                     );
                                 })}
                                 <div onClick={() => setShowPicker(true)}
-                                    className={classNames('py-2 px-4 cursor-pointer leading-6 bg-onus-bg3 rounded-md relative col-span-3', { 'bg-nao-blue2 font-medium': customTime || !data?.id })}>
+                                    className={classNames('py-2 px-4 cursor-pointer leading-6 bg-nao-bg3 rounded-md relative col-span-3', { 'bg-nao-blue2 font-medium': !data?.id })}>
                                     <div className="flex items-center space-x-3 justify-center">
                                         <CalenderIcon />
                                         <div>{formatTime(date.startDate, 'dd/MM/yyyy')}</div>
