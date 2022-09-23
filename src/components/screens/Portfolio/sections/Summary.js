@@ -310,8 +310,6 @@ const Summary = (props) => {
         });
     }, [currency, section9Config])
 
-    console.log(section9Data)
-
     const renderSection1 = (gridArea) => {
         section1Data.data?.sort((a, b) => b.key_count - a.key_count);
         const top = section1Data.data.slice(0, section1Data.length < 5 ? section1Data.length : 5);
@@ -547,6 +545,25 @@ const Summary = (props) => {
                 // radius: 200,
             }]
         };
+
+        const middleText = {
+            id: 'middleText',
+            afterDraw (chart, args, options) {
+                const { ctx, chartArea: { left, right, top, bottom, width, height } } = chart
+                ctx.save()
+                ctx.font = 'bold 26px Barlow'
+                ctx.fillStyle = '#00C8BC'
+                ctx.textAlign = 'center'
+                ctx.fillText( (section3Data[0]?.total_pnl >= 0 ? '+' : '') + formatPrice(section3Data[0]?.total_pnl, 0), width/2, height/2 + top)
+                ctx.font = 'normal 12px Barlow'
+                ctx.fillStyle = '#A0AEC0'
+                ctx.textAlign = 'center'
+                ctx.fillText('Total PNL', width/2, height/2 + 24)
+            }
+        }
+
+        const plugins = [middleText]
+
         const options = {
             responsive: true,
             maintainAspectRatio: true,
@@ -563,7 +580,7 @@ const Summary = (props) => {
                     },
                     backgroundColor: colors.white,
                     displayColors: false
-                },
+                }, 
             },
         }
         return width >= 640 ? (
@@ -602,17 +619,17 @@ const Summary = (props) => {
             </ChartLayout>
         ) : (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-auto' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
+                <div className='w-full h-auto'>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className={`${titleText}`}>
                             Tỷ lệ lời/lỗ
                         </div>
-                        <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
+                        <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1 my-4'>
                             {renderChartTabs(section3TypeTabs, 'type', section3Config, setSection3Config, true, true)}
                         </div>
                         <div className='w-full flex justify-center h-full items-center mt-6'>
-                            <div className='w-[300px]'>
-                                <ChartJS type='doughnut' data={data} options={options} />
+                            <div className='max-w-[300px] w-full'>
+                                <ChartJS type='doughnut' data={data} options={options} plugins={plugins} />
                                 <div className='flex items-center justify-center gap-4 mt-6'>
                                     <div className='flex items-center gap-2'>
                                         <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -782,10 +799,10 @@ const Summary = (props) => {
             <ChartLayout area={gridArea} >
                 <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
-                        <div className={titleText} >
+                        <div className={`${titleText} h-auto`}>
                             Thống kê thời gian giữ lệnh
                         </div>
-                        <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
+                        <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1 my-4'>
                             {renderChartTabs(section6TypeTabs, 'type', section6Config, setSection6Config, true, true)}
                         </div>
                         <div className='flex items-center justify-between my-4'>
@@ -972,7 +989,7 @@ const Summary = (props) => {
             <ChartLayout area={gridArea}>
                 <div className='px-6 pb-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
                     <div className='flex items-center justify-between'>
-                        <div className={`${titleText}`}>
+                        <div className={`${titleText} h-auto`}>
                             Thống kê đòn bẩy theo giá ký quỹ
                         </div>
                         <div>
@@ -1007,12 +1024,12 @@ const Summary = (props) => {
             <ChartLayout area={gridArea}>
                 <div className='p-4 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
                     <div className='flex items-center justify-between'>
-                        <div className={`${titleText}`}>
+                        <div className={`${titleText} h-auto`}>
                             Thống kê đòn bẩy theo giá ký quỹ
                         </div>
                     </div>
                     <div>
-                        <div className='flex items-center w-full h-fit mb-6'>
+                        <div className='flex items-center w-full h-fit mb-6 mt-4'>
                             <div className='bg-gray-4 w-full flex items-center justify-between h-9 rounded-md p-1'>
                                 {renderChartTabs(section9TypeTabs, 'type', section9Config, setSection9Config, true, true)}
                             </div>

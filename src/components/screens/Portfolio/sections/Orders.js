@@ -239,7 +239,7 @@ const Orders = (props) => {
     }
 
     const renderOrdersMobile = useCallback(() => {
-        if (!orderList) return
+        if (!orderList || orderList.length === 0) return <div className='w-full py-6'>No data</div>
         const shownOrders = orderList.slice(0, numberOfOrdersToShow)
         return (
             <div>

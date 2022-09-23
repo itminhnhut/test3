@@ -28,7 +28,7 @@ Chart.register(
 
 import React, { memo } from 'react'
 
-const ChartJS = memo(({ type, data, height = '100%', width = '100%', options = {
+const ChartJS = memo(({ type, data, height = '100%', width = '100%', plugins, options = {
     responsive: true,
     maintainAspectRatio: false,
 } }) => {
@@ -42,7 +42,7 @@ const ChartJS = memo(({ type, data, height = '100%', width = '100%', options = {
             chart = <Bar options={options} data={data} width={width} height={height} />
             break
         case 'doughnut':
-            chart = <Doughnut options={options} data={data} width={width} height={height} />
+            chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} />
             break
         case 'bubble':
             chart = <Bubble options={options} data={data} width={width} height={height} />
