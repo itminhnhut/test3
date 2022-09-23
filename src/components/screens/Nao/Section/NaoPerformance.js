@@ -21,6 +21,8 @@ import CalenderIcon from 'components/svg/CalenderIcon';
 import FilterIcon from 'components/svg/FilterIcon'
 import { startOfDay, endOfDay, subDays, addWeeks, addMonths } from 'date-fns'
 import NaoFilter from 'components/screens/Nao/Section/NaoFilter'
+import { useRouter } from 'next/router';
+import useWindowSize from 'hooks/useWindowSize';
 
 const filterFeeAsset = [
     {
