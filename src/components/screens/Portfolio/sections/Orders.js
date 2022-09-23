@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useState } from 'react';
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { API_GET_FUTURES_ORDER, API_PORTFOLIO_SUMMARY } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import ReTable from 'components/common/ReTable';
@@ -13,13 +13,17 @@ const Orders = (props) => {
     } = props
 
     const [orderList, setOrderList] = useState(null)
+    const [ordersOverviewList, setOrdersOverviewList] = useState(null)
     const [currentPage, setCurrentPage] = useState(null)
     const [numberOfOrdersToShow, setNumberOfOrdersToShow] = useState(5)
 
     useEffect(() => {
+        setNumberOfOrdersToShow(5)
+        setCurrentPage(1)
+        if (tab === 3) return
         const statuses = {
             '1': 0,
-            '2': 1
+            '2': 1,
         }
         FetchApi({
             url: API_GET_FUTURES_ORDER,
@@ -39,7 +43,27 @@ const Orders = (props) => {
         });
     }, [tab])
 
-    console.log(orderList)
+    useEffect(() => {
+        if (tab !== 3 || ordersOverviewList) return
+        FetchApi({
+            url: API_PORTFOLIO_SUMMARY,
+            options: {
+                method: 'GET',
+            },
+            params: {
+                currency: props.currency === 'VNDC' ? 72 : 22,
+                chart_id: 13,
+                timeFrame: 'M'
+            },
+        }).then(async ({ data, status }) => {
+            if (status === 200) {
+                setOrdersOverviewList(data)
+            } else {
+                setOrdersOverviewList(null)
+            }
+        });
+    }, [tab])
+
     const renderTableData = (data, isRed = false) => {
         return isRed ?
             <span className='text-red text-sm leading-6 font-medium'>{data}</span> :
@@ -113,6 +137,55 @@ const Orders = (props) => {
         />
     }, [currency, orderList, currentPage])
 
+    console.log(ordersOverviewList)
+
+    const renderHistoryTable = useCallback(() => {
+        if (!ordersOverviewList) return
+        const mappedData = ordersOverviewList.map(e => {
+            return {
+                time: formatTime(e.time, 'MM/yyyy'),
+                total_buy: e.total_buy,
+                total_sell: e.total_sell,
+                most_used_leverage: e.max_count_leverage + 'x',
+                pnl: <span className={`${e.profit >= 0 ? 'text-teal' : 'text-red'}`}>{e.profit >= 0 ? '+' : ''}{formatPrice(e.profit, 0)}</span>,
+                win_rate: formatPrice(e.win_rate, 0) + '%',
+                profit_factor: formatPrice(e.profit_factor, 0)
+            }
+        })
+        const columns = [
+            { key: 'time', dataIndex: 'time', title: 'Thời gian', width: 80, fixed: 'left', align: 'left' },
+            { key: 'total_buy', dataIndex: 'total_buy', title: 'Tổng lệnh mở', width: 70, align: 'left' },
+            { key: 'total_sell', dataIndex: 'total_sell', title: 'Tổng lệnh đóng', width: 70, align: 'left' },
+            { key: 'most_used_leverage', dataIndex: 'most_used_leverage', title: 'Đòn bẩy thường dùng', width: 100, align: 'left' },
+            { key: 'pnl', dataIndex: 'pnl', title: 'PNL', width: 100, align: 'left' },
+            { key: 'win_rate', dataIndex: 'win_rate', title: 'Tỷ lệ lãi', width: 100, align: 'left' },
+            { key: 'profit_factor', dataIndex: 'profit_factor', title: 'Profit factor', width: 100, align: 'left' },
+        ]
+        return <ReTable
+            // useRowHover
+            sort
+            data={mappedData}
+            columns={columns}
+            rowKey={item => item?.key}
+            scroll={{ x: true }}
+            tableStyle={{
+                tableStyle: {},
+                headerStyle: {},
+                rowStyle: { paddingLeft: '32px !important' },
+                shadowWithFixedCol: width < 1024,
+                noDataStyle: {
+                    minHeight: '280px'
+                }
+            }}
+            paginationProps={{
+                hide: mappedData.length <= 10,
+                current: currentPage,
+                pageSize: 10,
+                onChange: (currentPage) => setCurrentPage(currentPage)
+            }}
+        />
+    }, [currency, ordersOverviewList, currentPage])
+
     const renderInlineText = (text1, text2) => {
         return (
             <div className='w-full flex items-center justify-between'>
@@ -127,6 +200,7 @@ const Orders = (props) => {
     }
 
     const renderClosedOrders = (order, noUnderline = false) => {
+        if (!order) return
         const sl_rate = formatPrice(Math.abs(order.sl / order.order_value - 100), 2)
         const profit_rate = formatPrice((order.profit / order.order_value), 2)
         const mappedData = {
@@ -175,7 +249,7 @@ const Orders = (props) => {
         )
     }
 
-    const renderOpengingOrders = (order, noUnderline = false) => {
+    const renderOpeningOrders = (order, noUnderline = false) => {
         const sl_rate = formatPrice(Math.abs(order.sl / order.order_value - 100), 2)
         return (
             <div className={`w-full h-auto py-6 border-b-[1px] border-gray-2 border-opacity-20 ${noUnderline ? '!border-b-0' : ''}`}>
@@ -229,13 +303,45 @@ const Orders = (props) => {
         )
     }
 
+    const renderOrdersOverviewHistory = (order, noUnderline) => {
+        const profit = <span className={`${order.profit >= 0 ? 'text-teal' : 'text-red'}`}>{order.profit >= 0 ? '+' : ''}{formatPrice(order.profit, 0)}</span>
+        return (
+            <div className={`w-full h-auto py-6 border-b-[1px] border-gray-2 border-opacity-20 ${noUnderline ? '!border-b-0' : ''}`}>
+                <div className='flex w-full justify-between items-center'>
+                    <div className='font-semibold text-sm leading-[17px] mb-2'>
+                        Tháng {formatTime(order.time, 'MM/yyyy')}
+                    </div>
+                </div>
+                <div className='w-full rounded-md py-2 flex items-center gap-5'>
+                    <div className='w-full flex flex-col gap-2'>
+                        {renderInlineText('Tổng lệnh mở', order.total_buy + 'x')}
+                        {renderInlineText('Đòn bẩy thường dùng', order.max_count_leverage + 'x')}
+                        {renderInlineText('Tỉ lệ lãi', formatPrice(order.win_rate, 0))}
+                    </div>
+                    <div className='w-full flex flex-col gap-2'>
+                        {renderInlineText('Tổng lệnh đóng', order.total_sell)}
+                        {renderInlineText('PNL', profit)}
+                        {renderInlineText('Profit factor', formatPrice(order.profit_factor, 0))}
+                    </div>
+                </div>
+
+            </div>
+        )
+    }
+
     const renderOrderBlock = (order, noUnderline = false) => {
         if (!order) return
-        const dataToRender = {
-            '1': renderOpengingOrders(order, noUnderline),
-            '2': renderClosedOrders(order, noUnderline)
+        switch (tab) {
+            case 1:
+                return renderOpeningOrders(order, noUnderline)
+            case 2:
+                return renderClosedOrders(order, noUnderline)
+            case 3:
+                return renderOrdersOverviewHistory(order, noUnderline)
+            default:
+                return <div>Invalid tab</div>
         }
-        return dataToRender[tab]
+
     }
 
     const renderOrdersMobile = useCallback(() => {
@@ -271,30 +377,42 @@ const Orders = (props) => {
                 <div className='px-4'>
                     {renderOrdersMobile()}
                 </div>
-
             </div>
         )
     }
 
     const renderTransactionHistory = () => {
-        return (
+        if (!ordersOverviewList) return <div className='w-full py-6'>No data</div>
+        const shownOrders = ordersOverviewList.slice(0, numberOfOrdersToShow)
+        return width >= 640 ? (
             <div>
-                <div className='p-8 text-[20px] leading-10 font-semibold'>
+                <div className='px-8 pt-8 text-[20px] leading-10 font-semibold'>
                     Lịch sử giao dịch
                 </div>
+                <div className='w-full px-8 pb-6'>
+                    {renderHistoryTable()}
+                </div>
             </div>
+        ) : (
+            <div>
+                <div className='px-8 pt-8 text-[20px] leading-10 font-semibold'>
+                    Lịch sử giao dịch
+                </div>
+                <div className='w-full px-8'>
+                    {shownOrders.map((e, index) => renderOrderBlock(e, index + 1 === shownOrders.length))}
+                </div>
+            </div>
+
         )
     }
 
-    const renderByTab = {
-        '1': renderOrdersTab(),
-        '2': renderOrdersTab(),
-        '3': renderTransactionHistory()
-    }
-
-    return orderList && (
+    return tab !== 3 ? (
         <div className='bg-white w-full rounded-xl'>
-            {renderByTab[tab]}
+            {renderOrdersTab()}
+        </div>
+    ) : (
+        <div className='bg-white w-full rounded-xl'>
+            {renderTransactionHistory()}
         </div>
     )
 }
