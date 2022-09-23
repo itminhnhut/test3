@@ -23,7 +23,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
 
     useEffect(() => {
         getRanks(tab);
-    }, [])
+    }, [contest_id])
 
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
