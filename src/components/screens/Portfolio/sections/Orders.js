@@ -137,8 +137,6 @@ const Orders = (props) => {
         />
     }, [currency, orderList, currentPage])
 
-    console.log(ordersOverviewList)
-
     const renderHistoryTable = useCallback(() => {
         if (!ordersOverviewList) return
         const mappedData = ordersOverviewList.map(e => {

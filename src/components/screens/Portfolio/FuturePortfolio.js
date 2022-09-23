@@ -210,6 +210,8 @@ const FuturePortfolio = (props) => {
     }
 
     const renderChart1 = (gridArea) => {
+        const level = +userData?.nami?.level || 0
+        const nextLevel = level >= 9 ? 9 : level + 1
         return width >= 664 ? (
             <ChartLayout area={gridArea}>
                 <div className='w-full h-full px-8 py-6'>
@@ -229,7 +231,7 @@ const FuturePortfolio = (props) => {
                         </div>
                         <div className={`w-full h-full min-w-[224px] ${displayByWidth() !== 'flex' && 'pl-[168px] mt-2'}`}>
                             <div className={`${subHeaderText} w-full h-full`}>
-                                Tài khoản đạt cấp VIP {userData.nami?.level || 0}
+                                Tài khoản đạt cấp VIP {level}
                                 <div className='w-full h-full mt-4'>
                                     <div className='w-full h-6 flex justify-between items-center'>
                                         <div className='text-darkBlue-5 text-sm font-medium'>
@@ -243,17 +245,17 @@ const FuturePortfolio = (props) => {
                                         <Progressbar
                                             background='#00C8BC'
                                             percent={
-                                                ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[(userData.nami?.level || 0) + 1].nami_holding) * 100
+                                                ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100
                                             }
                                             height={10}
                                         />
                                     </div>
                                     <div className='w-full h-6 flex justify-between items-center'>
                                         <div className='text-darkBlue-5 text-sm font-medium'>
-                                            VIP {userData.nami?.level || 0} <span className='text-darkBlue ml-2'>{formatPrice(userData?.nami?.metadata?.namiBalance || 0, 0)} NAMI / {Math.round(((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[userData.nami?.level + 1 || 1].nami_holding) * 100)}%</span>
+                                            VIP {level} <span className='text-darkBlue ml-2'>{formatPrice(userData?.nami?.metadata?.namiBalance || 0, 0)} NAMI / {Math.round(((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100)}%</span>
                                         </div>
                                         <div className='text-sm font-medium'>
-                                            {formatPrice(FEE_TABLE[userData.nami?.level + 1 || 1].nami_holding || 0, 0)} NAMI <span className='text-darkBlue-5 ml-2'>VIP {userData.nami?.level + 1 || 1}</span>
+                                            {formatPrice(FEE_TABLE[nextLevel]?.nami_holding || 0, 0)} NAMI <span className='text-darkBlue-5 ml-2'>VIP {nextLevel}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -273,7 +275,7 @@ const FuturePortfolio = (props) => {
                             {user.name || 'Unknown'}
                         </div>
                         <div className='text-sm text-gray-2 leading-6 font-medium w-full h-full mt-[6px]'>
-                            TÀI KHOẢN <span className='text-teal font-semibold'>VIP {userData.nami?.level || 0}</span>
+                            TÀI KHOẢN <span className='text-teal font-semibold'>VIP {level}</span>
                         </div>
                     </div>
                     <div className='mt-[18px] border-t-[1px] border-gray-2 border-opacity-20 pt-[18px] w-full h-full'>
@@ -301,17 +303,17 @@ const FuturePortfolio = (props) => {
                                 <Progressbar
                                     background='#00C8BC'
                                     percent={
-                                        ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[userData.nami?.level + 1 || 1].nami_holding) * 100
+                                        ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[(level === 9 ? 8 : 9) + 1].nami_holding) * 100
                                     }
                                     height={10}
                                 />
                             </div>
                             <div className='w-full h-6 flex justify-between items-center'>
                                 <div className='text-darkBlue-5 text-sm font-medium'>
-                                    VIP {userData.nami?.level || 0} <span className='text-darkBlue ml-2'>{formatPrice(userData?.nami?.metadata?.namiBalance || 0, 0)} NAMI / {Math.round(((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[userData.nami?.level + 1 || 1].nami_holding) * 100)}%</span>
+                                    VIP {level} <span className='text-darkBlue ml-2'>{formatPrice(userData?.nami?.metadata?.namiBalance || 0, 0)} NAMI / {Math.round(((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100)}%</span>
                                 </div>
                                 <div className='text-sm font-medium'>
-                                    {formatPrice(FEE_TABLE[userData.nami?.level + 1 || 1].nami_holding || 0, 0)} NAMI <span className='text-darkBlue-5 ml-2'>VIP {userData.nami?.level + 1 || 1}</span>
+                                    {formatPrice(FEE_TABLE[nextLevel].nami_holding || 0, 0)} NAMI <span className='text-darkBlue-5 ml-2'>VIP {nextLevel}</span>
                                 </div>
                             </div>
                         </div>
