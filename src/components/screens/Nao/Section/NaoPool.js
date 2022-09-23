@@ -300,7 +300,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             <PoolPriceItem
                                 digitsPrice={assetConfig[86]?.assetDigit ?? 0}
                                 s3Url={'/images/nao/ic_onus.png'}
-                                price={assetConfig[86]?.assetDigit ?? 0}
+                                price={data.estimate?.[86]}
                                 usdPrice={data.estimateUsd?.[86]}
                             />
                         </div>
@@ -309,7 +309,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                             <PoolPriceItem
                                 digitsPrice={assetConfig[22]?.assetDigit ?? 0}
                                 s3Url={'/images/nao/ic_onus.png'}
-                                price={assetConfig[22]?.assetDigit ?? 0}
+                                price={data.estimate?.[22]}
                                 usdPrice={data.estimateUsd?.[22]}
                                 isUSDT
                             />
