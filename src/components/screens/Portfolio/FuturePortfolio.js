@@ -243,7 +243,7 @@ const FuturePortfolio = (props) => {
                                         <Progressbar
                                             background='#00C8BC'
                                             percent={
-                                                ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[userData.nami?.level + 1 || 1].nami_holding) * 100
+                                                ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[(userData.nami?.level || 0) + 1].nami_holding) * 100
                                             }
                                             height={10}
                                         />

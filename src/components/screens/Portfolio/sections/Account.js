@@ -104,6 +104,7 @@ const Account = (props) => {
                 <span className='text-red text-sm leading-6 font-medium'>{formatPrice(profit, 0)} &nbsp; ({formatPrice(roe, 2)}%)</span>
         }
         if (width < 640) {
+            if(PNLData.length === 0) return <div className='w-full flex justify-center pb-6'>No data</div>
             return PNLData.map(data => {
                 const title = PNLConfig.orderBy === 1 ? `Tháng ${formatTime(data.key, 'MM/yyyy')}` : `Năm ${formatTime(data.key, 'yyyy')}`
                 return (
