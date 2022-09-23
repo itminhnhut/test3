@@ -27,3 +27,15 @@ export const getDownloadAppLinkForWebView = () => {
     const ios = /iphone|ipod|ipad/.test(userAgent);
     return ios ? DOWNLOAD_APP_LINK.IOS : DOWNLOAD_APP_LINK.ANDROID;
 };
+
+export const handleHideScrollBar = () => {
+    const malLayout = document.querySelector('.mal-layouts');
+    if (window.innerWidth < 650) {
+        document.body.classList.add('overflow-hidden');
+        malLayout.classList.add('!h-screen');
+    }
+    return () => {
+        document.body.classList.remove('overflow-hidden');
+        malLayout.classList.remove('!h-screen');
+    };
+};

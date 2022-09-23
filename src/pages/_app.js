@@ -22,7 +22,6 @@ import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
 import { indexingArticles } from 'utils';
 import { isMobile } from 'react-device-detect';
-
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
 //         case 'FCP':
@@ -141,6 +140,35 @@ const App = ({
             indexingArticles(language);
         }
     }, [language]);
+    
+    useEffect(() => {
+        if (!isMobile) {
+            function initFreshChat() {
+                window.fcWidget?.init({
+                    token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
+                    host: "https://wchat.freshchat.com",
+                    locale: language,
+                    // config: {
+                    //     // showFAQOnOpen: true,
+                    //     // hideFAQ: false,
+                    //     content: {
+                    //         actions: {
+                
+                    //             tab_faq: 'Solutions',
+                        
+                    //           },
+                    //         headers: {
+                    //             chat: currentLocale === 'en' ? 'Message us': 'Liên hệ với chúng tôi',
+                    //             faq: currentLocale === 'en' ? 'FAQs': 'Hướng dẫn',
+                    //             faq_see_more: currentLocale === 'en' ? 'Show more categories': 'Xem nhiều danh mục hơn',
+                    //         }
+                    //     }
+                    // }
+                });
+            }
+            function initialize(i, t) { var e; i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e)) } function initiateCall() { initialize(document, "freshchat-js-sdk") } window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+        }
+    }, [language])
 
     useEffect(() => {
         if(!router.pathname.includes('mobile')

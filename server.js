@@ -8,34 +8,37 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-app.prepare().then(() => {
-    const server = express();
+app.prepare()
+    .then(() => {
+        const server = express();
 
-    if (isDevelopment) {
-        server.use([
-            '/authenticated/',
-            '/api/',
-            '/login/',
-            '/register/',
-            '/logout/',
-            '/referral/',
-        ], createProxyMiddleware({
-            target: process.env.NEXT_PUBLIC_API_URL,
-            changeOrigin: true,
-            headers: { nami_product: 'exchange' },
-            'secure': false,
-            logLevel: 'debug',
-        }));
-    }
+        if (isDevelopment) {
+            server.use([
+                '/authenticated/',
+                '/api/v\\d+/',
+                // '/api/',
+                '/login/',
+                '/register/',
+                '/logout/',
+                '/referral/',
+            ], createProxyMiddleware({
+                target: process.env.NEXT_PUBLIC_API_URL,
+                changeOrigin: true,
+                headers: { nami_product: 'exchange' },
+                'secure': false,
+                logLevel: 'debug',
+            }));
+        }
 
-    server.all('*', (req, res) => {
-        return handle(req, res);
+        server.all('*', (req, res) => {
+            return handle(req, res);
+        });
+
+        server.listen(port, (err) => {
+            if (err) throw err;
+            console.log(`> Ready on http://localhost:${port}`);
+        });
+    })
+    .catch(err => {
+        console.log('Error:::::', err);
     });
-
-    server.listen(port, (err) => {
-        if (err) throw err;
-        console.log(`> Ready on http://localhost:${port}`);
-    });
-}).catch(err => {
-    console.log('Error:::::', err);
-});

@@ -295,7 +295,12 @@ body {
 //    background-color: #445271;
 //  }
 //}
+@media only screen and (orientation: landscape) {
 
+}
+.full_screen_modal{
+    // transform: translate(-50%, calc((100vh - 100vw)/2)) rotate(90deg);
+}
 canvas {
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -690,6 +695,18 @@ input[type='number'] {
     //     z-index:100000;
     //     left:50%;
     // }
+}
+body{
+    // display: none;
+    -webkit-overflow-scrolling: touch;
+    ::-webkit-scrollbar {
+        width: 0 !important;
+        display: none !important;
+    }
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
 }
 
 .hidden-scrollbar {

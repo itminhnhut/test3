@@ -26,7 +26,7 @@ const FuturesMarginRatioVndc = ({
     const walletMapper = (allWallet, assetConfig) => {
         if (!allWallet || !assetConfig) return;
         const mapper = [];
-        const FUTURES_ASSET = ['VNDC', 'NAMI'];
+        const FUTURES_ASSET = ['VNDC', 'USDT', 'NAMI'];
         if (Array.isArray(assetConfig) && assetConfig?.length) {
             const futures = assetConfig.filter(o => FUTURES_ASSET.includes(o?.assetCode));
             futures && futures.forEach(item => allWallet?.[item.id]
@@ -37,7 +37,6 @@ const FuturesMarginRatioVndc = ({
                         wallet: allWallet?.[item?.id]
                     }));
         }
-        console.log(mapper);
         const dataFilter = orderBy(mapper, ['assetCode', 'VNDC'], ['desc']);
         if (Array.isArray(dataFilter) && dataFilter.length > 0) {
             setBalance(dataFilter);
@@ -51,9 +50,11 @@ const FuturesMarginRatioVndc = ({
     useEffect(() => {
         let _totalProfit = 0;
         ordersList.forEach((item) => {
-            const dataKey = item.side === 'Buy' ? 'bid' : 'ask';
-            const lastPrice = futuresMarketWatch?.[item.symbol]?.[dataKey] || 0;
-            _totalProfit += getProfitVndc(item, lastPrice, true);
+            if (item.symbol.includes(pairConfig?.quoteAsset)) {
+                const dataKey = item.side === 'Buy' ? 'bid' : 'ask';
+                const lastPrice = futuresMarketWatch?.[item.symbol]?.[dataKey] || 0;
+                _totalProfit += getProfitVndc(item, lastPrice, true);
+            }
         });
         setTotalProfit(_totalProfit);
     }, [ordersList, futuresMarketWatch]);
@@ -71,18 +72,18 @@ const FuturesMarginRatioVndc = ({
                 <div className="mt-4 flex items-center">
                     <Link href="/trade">
                         <a target="_blank"
-                           className="!text-darkBlue dark:!text-txtSecondary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
+                            className="!text-darkBlue dark:!text-txtSecondary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
                             {t('futures:spot_trading')}
                         </a>
                     </Link>
                     <Link href="/swap">
                         <a target="_blank"
-                           className="!text-darkBlue dark:!text-txtSecondary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
+                            className="!text-darkBlue dark:!text-txtSecondary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
                             {t('futures:convert')}
                         </a>
                     </Link>
                     <div onClick={onOpenTransfer}
-                         className="cursor-pointer px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 dark:!text-txtSecondary-dark rounded-[4px]">
+                        className="cursor-pointer px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 dark:!text-txtSecondary-dark rounded-[4px]">
                         {t('common:transfer')}
                     </div>
                 </div>

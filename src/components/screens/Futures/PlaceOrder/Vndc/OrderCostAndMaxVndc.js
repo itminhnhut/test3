@@ -21,8 +21,6 @@ const FuturesOrderCostAndMaxVndc = ({
     leverage,
     isAssetReversed,
     availableAsset,
-    maxBuy,
-    maxSell,
     ask,
     bid,
     stopPrice,
@@ -74,29 +72,6 @@ const FuturesOrderCostAndMaxVndc = ({
                         pairConfig?.pricePrecision || 2
                     )} ${pairConfig?.quoteAsset}`}
                     containerClassName='text-md flex flex-wrap justify-end'
-                />
-            </>
-        )
-    }
-
-    const renderMax = () => {
-        return (
-            <>
-                <TradingLabel
-                    label={t('common:max')}
-                    value={`${formatNumber(
-                        maxBuy,
-                        pairConfig?.quantityPrecision
-                    )} ${selectedAsset}`}
-                    containerClassName='text-md'
-                />
-                <TradingLabel
-                    label={t('common:max')}
-                    value={`${formatNumber(
-                        maxSell,
-                        pairConfig?.quantityPrecision
-                    )} ${selectedAsset}`}
-                    containerClassName='text-md'
                 />
             </>
         )

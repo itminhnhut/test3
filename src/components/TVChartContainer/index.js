@@ -109,7 +109,7 @@ export class TVChartContainer extends React.PureComponent {
                 this.drawHighLowArrows()
             }
         }
-        if ((prevProps.ordersList !== this.props.ordersList) && this.props.isVndcFutures && !this.firstTime) {
+        if ((prevProps.ordersList !== this.props.ordersList) && !this.firstTime) {
             this.rawOrders();
         }
     }
@@ -206,7 +206,7 @@ export class TVChartContainer extends React.PureComponent {
             const high = data.reduce((prev, current) => (prev[2] > current[2]) ? prev : current)
             const low = data.reduce((prev, current) => (prev[3] < current[3]) ? prev : current)
             // const base = this.props.symbol.includes('VNDC') ? this.props.symbol.replace('VNDC', '') : this.props.symbol.replace('USDT', '')
-            
+
             const isDark = this.props?.theme === "dark";
 
             const highArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
@@ -517,13 +517,15 @@ export class TVChartContainer extends React.PureComponent {
                 "paneProperties.horzGridProperties.color": isDark ? colors.darkBlue2 : colors.grey4,
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
-            if (this.props.isVndcFutures) {
-                if (this.timer) clearTimeout(this.timer)
-                this.timer = setTimeout(() => {
-                    this.rawOrders();
-                    this.firstTime = false;
-                }, 2000);
-            }
+            if (this.timer) clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                this.rawOrders();
+                this.drawHighLowArrows()
+                this.firstTime = false;
+                this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {
+                    this.drawHighLowArrows()
+                })
+            }, 2000);
             setTimeout(() => {
                 this.drawHighLowArrows()
                 this.widget.chart().onVisibleRangeChanged().subscribe({}, () => {

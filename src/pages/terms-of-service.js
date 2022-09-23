@@ -25,6 +25,7 @@ const Terms = () => {
             clearInterval(intervalReloadData);
         };
     }, []);
+
     return (
         <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
             <div className="nami-container my-20 policies-page">
@@ -1332,6 +1333,7 @@ const Terms = () => {
                     </div>
                 </>
             </div>
+            {/* <Footer/> */}
         </MaldivesLayout>
     )
 }

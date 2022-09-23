@@ -33,6 +33,7 @@ import { getOrdersList } from 'redux/actions/futures';
 import { PATHS } from 'constants/paths';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import FuturesMarkPrice from 'models/FuturesMarkPrice';
+import { countDecimals } from 'redux/actions/utils';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -53,7 +54,7 @@ const INITIAL_STATE = {
     favoritePairLayout: null,
     orderBookLayout: null,
     tradeRecordLayout: null,
-    isVndcFutures: false,
+    isVndcFutures: true,
     assumingPrice: null,
 };
 
@@ -79,11 +80,11 @@ const Futures = () => {
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
     const ordersList = useSelector(state => state?.futures?.ordersList);
-
+    const assetConfig = useSelector(state => state.utils.assetConfig);
     const router = useRouter();
     const { width } = useWindowSize();
     const isMediumDevices = width >= BREAK_POINTS.md;
-    const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
+    const isVndcFutures = true;
     const [filterLayout, setFilterLayout] = useState({ ...initFuturesComponent });
 
     // Memmoized Variable
@@ -212,15 +213,13 @@ const Futures = () => {
             .map(layout => {
                 return oldLayouts[layout].map(item => {
                     if (reloadLayouts.current) {
-                        return isVndcFutures ? setItemLayoutVndc(item, layout) : setItemLayoutUsdt(item, layout);
+                        return setItemLayoutVndc(item, layout)
                     }
-                    if (isVndcFutures) {
-                        item.h = item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades ? 0 : item.h;
-                    }
+                    item.h = item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades ? 0 : item.h;
                     return item;
                 });
             });
-        setLayoutToLS(isVndcFutures ? 'VNDC' : 'USDT', oldLayouts);
+        setLayoutToLS('VNDC');
         return oldLayouts;
     };
 
@@ -294,14 +293,14 @@ const Futures = () => {
     // Re-load Previous Pair
     useEffect(() => {
         if (router?.query?.pair) {
-            if (router.query.pair.indexOf('USDT') !== -1) {
-                router.push(
-                    `${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
-                    undefined,
-                    { shallow: true }
-                );
-                return;
-            }
+            // if (router.query.pair.indexOf('USDT') !== -1) {
+            //     router.push(
+            //         `${PATHS.FUTURES_V2.DEFAULT}/${FUTURES_DEFAULT_SYMBOL}`,
+            //         undefined,
+            //         { shallow: true }
+            //     );
+            //     return;
+            // }
             setState({ pair: router.query.pair });
             localStorage.setItem(
                 LOCAL_STORAGE_KEY.PreviousFuturesPair,
@@ -440,7 +439,7 @@ const Futures = () => {
                                         />
                                     </div>
                                 }
-                                {filterLayout.isShowOrderBook &&
+                                {/* {filterLayout.isShowOrderBook &&
                                     <div
                                         key={futuresGridKey.orderBook}
                                         className={`border z-20 border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
@@ -466,14 +465,14 @@ const Futures = () => {
                                             pairConfig={pairConfig}
                                         />
                                     </div>
-                                }
+                                } */}
                                 {filterLayout.isShowOpenOrders &&
                                     <div
                                         key={futuresGridKey.tradeRecord}
                                         className={`border border-divider dark:border-divider-dark`}
                                     >
                                         <FuturesTradeRecord
-                                            isVndcFutures={state.isVndcFutures}
+                                            isVndcFutures={true}
                                             layoutConfig={state.tradeRecordLayout}
                                             pairConfig={pairConfig}
                                             pairPrice={state.pairPrice}
@@ -487,29 +486,18 @@ const Futures = () => {
                                         key={futuresGridKey.placeOrder}
                                         className={`border border-divider dark:border-divider-dark`}
                                     >
-                                        {state.isVndcFutures ?
-                                            <FuturesPlaceOrderVndc
-                                                isAuth={!!auth}
-                                                markPrice={state.markPrice?.markPrice}
-                                                lastPrice={state.pairPrice?.lastPrice}
-                                                pairConfig={pairConfig}
-                                                userSettings={userSettings}
-                                                assumingPrice={state.assumingPrice}
-                                                isVndcFutures={state.isVndcFutures}
-                                                ask={state.pairPrice?.ask}
-                                                bid={state.pairPrice?.bid}
-                                                pair={state.pair}
-                                            />
-                                            :
-                                            <FuturesPlaceOrder
-                                                isAuth={!!auth}
-                                                markPrice={state.markPrice?.markPrice}
-                                                lastPrice={state.pairPrice?.lastPrice}
-                                                pairConfig={pairConfig}
-                                                userSettings={userSettings}
-                                                assumingPrice={state.assumingPrice}
-                                            />
-                                        }
+                                        <FuturesPlaceOrderVndc
+                                            isAuth={!!auth}
+                                            markPrice={state.markPrice?.markPrice}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                            pairConfig={pairConfig}
+                                            userSettings={userSettings}
+                                            assumingPrice={state.assumingPrice}
+                                            isVndcFutures={true}
+                                            ask={state.pairPrice?.ask}
+                                            bid={state.pairPrice?.bid}
+                                            pair={state.pair}
+                                        />
                                     </div>
                                 }
                                 {filterLayout.isShowAssets &&
@@ -517,17 +505,11 @@ const Futures = () => {
                                         key={futuresGridKey.marginRatio}
                                         className={`border border-divider dark:border-divider-dark`}
                                     >
-                                        {state.isVndcFutures ?
-                                            <FuturesMarginRatioVndc
-                                                pairConfig={pairConfig}
-                                                auth={auth}
-                                                lastPrice={state.pairPrice?.lastPrice}
-                                            />
-                                            :
-                                            <FuturesMarginRatio
-                                                pairConfig={pairConfig}
-                                            />
-                                        }
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            auth={auth}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                        />
                                     </div>
                                 }
                             </GridLayout>
@@ -536,7 +518,7 @@ const Futures = () => {
                 </MaldivesLayout>
             </DynamicNoSsr>
 
-            <FuturesProfitEarned isVisible={false}/>
+            <FuturesProfitEarned isVisible={false} />
         </>
     );
 };

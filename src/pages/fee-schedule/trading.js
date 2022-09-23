@@ -22,6 +22,7 @@ import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import Skeletor from 'components/common/Skeletor';
 import SvgCrown from 'components/svg/SvgCrown';
 import Empty from 'components/common/Empty';
+import useHideScrollbar from 'hooks/useHideScrollbar';
 
 import { useDispatch } from 'react-redux';
 import { reloadData } from 'redux/actions/heath';
@@ -57,23 +58,18 @@ const TradingFee = () => {
     // Use hooks
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
-    const dispath = useDispatch();
-
-    useEffect(() => {
-        // document.body.classList.add('hidden-scrollbar');
-        document.body.classList.add('no-scrollbar');
-        // document.body.classList.add('!bg-onus');
-
-        const intervalReloadData = setInterval(() => {
-            dispath(reloadData());
-        }, 5 * 60 * 1000);
-
+    const handleHideScrollBar = () => {
+        const malLayout = document.querySelector('.mal-layouts');
+        if (window.innerWidth < 650) {
+            document.body.classList.add('overflow-hidden');
+            malLayout.classList.add('!h-screen');
+        }
         return () => {
-            document.body.classList.remove('hidden-scrollbar');
-            // document.body.classList.remove('bg-onus');
-            clearInterval(intervalReloadData);
+            document.body.classList.remove('overflow-hidden');
+            malLayout.classList.remove('!h-screen');
         };
-    }, []);
+    };
+    useEffect(handleHideScrollBar, []);
     // Helper
     const getFuturesFeeConfigs = async () => {
         !state.futuresFeeConfig && setState({ loadingFuturesFeeConfigs: true })
@@ -334,7 +330,7 @@ const TradingFee = () => {
         return <div className="mt-3 text-dominant text-sm text-xs md:text-sm">* {t('fee-structure:used_fee_deduction', { token: `${ROOT_TOKEN} tokens` })}</div>
     }, [state.assetFee?.feeCurrency])
 
-    const renderUserFeeConfig = (maker, taker) => {
+    const renderUserFeeConfig = useCallback((maker, taker) => {
         return state.assetFee?.feeCurrency === 1 ?
             (<>
                 <span className="text-txtPrimary dark:text-txtPrimary-dark">{maker}%</span>
@@ -345,7 +341,7 @@ const TradingFee = () => {
                 <span>{maker}%</span>
                 <span className="ml-1 text-txtPrimary dark:text-txtPrimary-dark">{taker}%</span>
             </>)
-    }
+    },[state.assetFee?.feeCurrency])
 
     useEffect(() => {
         getVip()
@@ -395,8 +391,8 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
-                                    {state.vipLevel ? 
-                                    renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(" ")[0].replace("%", ""), FEE_TABLE[state.vipLevel].maker_taker.split(" ")[0].replace("%", "")) : 
+                                    {state.vipLevel ?
+                                    renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(" ")[0].replace("%", ""), FEE_TABLE[state.vipLevel].maker_taker.split(" ")[0].replace("%", "")) :
                                     renderUserFeeConfig(FEE_TABLE[0].maker_taker_deducted.split(" ")[0].replace("%", ""), FEE_TABLE[0].maker_taker.split(" ")[0].replace("%", ""))}
                                 </span>
                             </div>
@@ -405,7 +401,7 @@ const TradingFee = () => {
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
-                                    {state.vipLevel ? 
+                                    {state.vipLevel ?
                                     renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(" ")[2].replace("%", ""), FEE_TABLE[state.vipLevel].maker_taker.split(" ")[2].replace("%", "")) :
                                     renderUserFeeConfig(FEE_TABLE[0].maker_taker_deducted.split(" ")[2].replace("%", ""), FEE_TABLE[0].maker_taker.split(" ")[2].replace("%", ""))}
                                 </span>

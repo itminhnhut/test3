@@ -39,6 +39,8 @@ const NaoFooter = memo(() => {
                     <div className="hidden sm:flex">|</div>
                     <div onClick={() => onRedirect('privacy')} className="py-3 border-b border-nao-line w-full sm:border-none whitespace-nowrap sm:p-0 cursor-pointer">{t('nao:privacy_policy')}</div>
                 </div>
+                
+                
                 <div className='nao_footer_center text-nao-text font-medium pt-6 pb-4 sm:p-0 mx-11 sm:mx-0'>Copyright © 2022 Nami Foundation. All rights reserved.</div>
                 <div className='nao_footer_right items-center gap-5 flex'>
                     <img className="cursor-pointer" onClick={() => onRedirect('facebook')} src={getS3Url("/images/nao/ic_facebook.png")} alt="" height={24} width={24} />

@@ -1,25 +1,39 @@
 import styled from 'styled-components';
-import {Container} from 'react-grid-system';
 import colors from '../../styles/colors';
 
 export const DesktopWrapper = styled.div`
     width: 100%;
     background: #FFFFFF;
+    display:flex;
+    justify-content:center;
 `
 
-export const ContainerFluid = styled(Container)`
-    background: ${colors.dark7};
-`
-
-export const Containerz = styled(Container)`
+export const Containerz = styled.div`
     z-index: 8;
     max-width: 1145px !important;
+    display:flex;
+    justify-content:space-evenly;
+    width: 100%;
+    padding: 0 10px;
+
+`
+
+export const ContentContainerz = styled.div`
+    z-index: 8;
+    max-width: 1145px !important;
+    display:flex;
+    justify-content:space-evenly;
+    width: 100%;
+    flex-direction: column;
+    padding: 0 10px;
 `
 
 export const BannerContainer = styled.div`
     background: linear-gradient(274.75deg, #00B6C7 23.19%, #00DCC2 117.39%);
     padding-top: 110px;
     padding-bottom: 24px;
+    display: flex;
+    justify-content:center;
 
     @media (min-width: 1200px) {
         padding-top: 128px;
@@ -33,11 +47,21 @@ export const BannerContainer = styled.div`
 `
 
 export const BannerLeft = styled.div`
-    font-size: 26px;
-    font-weight: bold;
+    font-size: 44px;
+    font-weight: 600;
     color: #FFFFFF;
     text-align: center;
     padding-top: 14px;
+    min-width: 250px;
+    line-height: 30px;
+
+
+    @media (max-width: 768px) {
+        line-height: 20px;
+        margin-top: -12px;
+        line-height: 35px;
+
+    }
 
     span {
         > span:last-child {
@@ -45,10 +69,12 @@ export const BannerLeft = styled.div`
             margin-top: -6px;
 
             @media (min-width: 1200px) {
+                line-height: 20px;
                 margin-top: -12px;
             }
 
             @media (min-width: 1440px) {
+                line-height: 20px;
                 margin-top: -18px;
             }
         }
@@ -77,13 +103,13 @@ export const BannerLeft = styled.div`
 export const SubParagrapgh = styled.div`
     color: #FFFFFF;
     text-align: center;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 300;
     padding-left: 1px;
     margin: 30px 0 20px;
 
     span {
-        font-weight: bold;
+        font-weight: 300;
 
         span {
             white-space: nowrap !important;
@@ -143,9 +169,11 @@ export const BannerRight = styled.div`
     background: rgba(0, 0, 0, 0.9);
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.25);
     width: 100%;
+    min-width:250px;
 
     @media (min-width: 768px) {
         margin-top: 0;
+        width: 50%;
     }
 `
 
@@ -263,13 +291,16 @@ export const AnalyticCommission = styled.div`
 `
 
 export const ReferralCatergories = styled.div`
+    display:flex;
+    justify-content:center;
+    width: 100%;
     background: rgba(0, 0, 0, 0.85);
     position: sticky;
     top: 0;
     z-index: 9;
 `
 
-export const ReferralCatergoriesWrapper = styled(Container)`
+export const ReferralCatergoriesWrapper = styled.div`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;

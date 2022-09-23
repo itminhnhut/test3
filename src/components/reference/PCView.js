@@ -7,7 +7,7 @@ import {
     BannerButtonGroup,
     BannerContainer,
     BannerLeft,
-    BannerRight, ContainerFluid, Containerz, ContentWrapper,
+    BannerRight, Containerz, ContentWrapper,
     CopyIcon, DesktopWrapper,
     ReferralCatergories,
     ReferralCatergoriesItem,
@@ -15,16 +15,15 @@ import {
     ReferralID,
     ReferralLink,
     SubParagrapgh,
-    TextTransparent
+    TextTransparent,
+    ContentContainerz
 } from './styledReference'
 import ReferralDashboard from "./Dashboard";
 import ReferralFriendsList from "./FriendsList";
 import ReferralCommission from "./Commission";
 import useWindowSize from "../../hooks/useWindowSize"
 import { useSelector } from 'react-redux';
-import { Row, Col } from 'react-grid-system';
-import { Trans, useTranslation } from 'next-i18next';
-import { GlobalButton, GlobalRoot, HR, MobileContentWrapper, PageMain } from "./style";
+import { useTranslation } from 'next-i18next';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Copy, Check } from "react-feather";
 import Axios from 'axios';
@@ -51,6 +50,7 @@ const Type = {
     FUTURES: 'FUTURES',
 }
 
+
 const PCView = () => {
     const [mode, setMode] = useState(0) // 0 dashboard, 1 friendslist, 2 commission history
     const [clipboard, setClipboard] = useState({ referralId: false, referralLink: false, referralCode: false })
@@ -63,11 +63,9 @@ const PCView = () => {
     const [friendsListData, setFriendsListData] = useState(null)
     const [commissionData, setCommissionData] = useState(null)
 
-
     const user = useSelector(state => state.auth.user) || null;
 
     const { t } = useTranslation('reference')
-
 
     const { width } = useWindowSize();
 
@@ -76,14 +74,11 @@ const PCView = () => {
         fetchDashboard()
     }, []);
 
-
     useEffect(() => {
         const { pageSize } = state
         fetchFriendList(pageFriendList, pageSize)
         fetchCommissionHistory(pageCommission, pageSize, typeSort.commissionHistory === 2 ? Type.SPOT : Type.FUTURES)
     }, [pageCommission, pageFriendList, state, typeSort.commissionHistory])
-
-
 
     const fetchDashboard = () => {
         Axios.get(API_REFERRAL_DASHBOARD)
@@ -96,7 +91,7 @@ const PCView = () => {
     }
 
     const fetchFriendList = (page, pageSize, type) => {
-        Axios.get(API_REFERRAL_FRIENDS_LIST, {params: {page, pageSize, type}})
+        Axios.get(API_REFERRAL_FRIENDS_LIST, { params: { page, pageSize, type } })
             .then(response => {
                 const { status, data } = response.data
                 if (status === 'ok') setFriendsListData(data)
@@ -105,7 +100,7 @@ const PCView = () => {
     }
 
     const fetchCommissionHistory = (page, pageSize, type) => {
-        Axios.get(API_REFERRAL_COMMISSION_LOG, {params: {page, pageSize, type}})
+        Axios.get(API_REFERRAL_COMMISSION_LOG, { params: { page, pageSize, type } })
             .then(response => {
                 const { status, data } = response.data
                 if (status === 'ok') setCommissionData(data)
@@ -128,102 +123,84 @@ const PCView = () => {
         return (
             <BannerContainer>
                 <Containerz>
-                    <Row style={{ alignItems: 'center' }}>
-                        <Col sm={12} md={6}>
-                            <BannerLeft>
-                                <div>
-                                    <div>{t('referral_pages.banner.title1')}</div>
-                                    <br />
-                                    <div className='mt-2'>{t('referral_pages.banner.title2')}</div>
-                                </div>
-                                <SubParagrapgh>
-                                    <b>{t('referral_pages.banner.sub_title')}</b>
+                    <div className='md:flex block items-center justify-around w-full'>
+                        <BannerLeft>
+                            <div>
+                                <div>{t('referral_pages.banner.title1')}</div>
+                                <br />
+                                <div className='mt-2'>{t('referral_pages.banner.title2')}</div>
+                            </div>
+                            <SubParagrapgh>
+                                <b>{t('referral_pages.banner.sub_title')}</b>
 
-                                </SubParagrapgh>
-                                <BannerButtonGroup>
-                                    <GlobalButton background='#000' borderWidth={'0px'} maxHeight='37px' height='37px'>
-                                        <TextTransparent>
-                                            {t('referral_pages.banner.inv_btn')}
+                            </SubParagrapgh>
+                        </BannerLeft>
+                        <BannerRight>
+                            <AnalyticTopLine />
+                            <AnalyticWrapper>
+                                <AnalyticTitle>
+                                    {t('referral_pages.banner.referral_code')}
 
-                                        </TextTransparent>
-                                    </GlobalButton>
+                                </AnalyticTitle>
+                                <ReferralID>
+                                    <div>{code_refer || '---'}</div>
+                                    <CopyToClipboard text={code_refer}
+                                        onCopy={() => handleCopy('referralCode')}>
+                                        <CopyIcon>
+                                            {clipboard.referralCode ? <Check /> : <Copy />}
+                                        </CopyIcon>
+                                    </CopyToClipboard>
+                                </ReferralID>
+                                {/*<Row>*/}
+                                {/*    <Col style={{paddingRight: 0}}>*/}
+                                <AnalyticTitle>
 
-                                    <GlobalButton background='transparent' borderColor='#FFF' color='#FFF' borderHover='rgba(255, 255, 255, .5)'
-                                        borderWidth={'1px'} fontW='bold' maxHeight='37px' height='37px'>
-                                        {t('referral_pages.banner.detail_btn')}
+                                    {t('referral_pages.banner.referral_link')}
 
-                                    </GlobalButton>
-                                </BannerButtonGroup>
-                            </BannerLeft>
-                        </Col>
-                        <Col sm={12} md={6}>
-                            <BannerRight>
-                                <AnalyticTopLine />
-                                <AnalyticWrapper>
-                                    <AnalyticTitle>
-                                        {t('referral_pages.banner.referral_code')}
-
-                                    </AnalyticTitle>
-                                    <ReferralID>
-                                        <div>{code_refer || '---'}</div>
-                                        <CopyToClipboard text={code_refer}
-                                            onCopy={() => handleCopy('referralCode')}>
-                                            <CopyIcon>
-                                                {clipboard.referralCode ? <Check /> : <Copy />}
-                                            </CopyIcon>
-                                        </CopyToClipboard>
-                                    </ReferralID>
-                                    {/*<Row>*/}
-                                    {/*    <Col style={{paddingRight: 0}}>*/}
-                                    <AnalyticTitle>
-
-                                        {t('referral_pages.banner.referral_link')}
-
-                                    </AnalyticTitle>
-                                    <ReferralLink>
-                                        {code_refer ? handleCompactLink(link_refer, 15, 10) : '---'}
-                                        <CopyToClipboard text={link_refer}
-                                            onCopy={() => handleCopy('referralLink')}>
-                                            <CopyIcon>
-                                                {clipboard.referralLink ? <Check /> : <Copy />}
-                                            </CopyIcon>
-                                        </CopyToClipboard>
-                                    </ReferralLink>
-                                    {/*</Col>*/}
-                                    {/*{width >= 414 ? null : <div className='w-100'/>}*/}
-                                    {/*<Col style={width > 414 ? {paddingLeft: 0} : {marginTop: 15}}>*/}
-                                    {/*    <AnalyticTitle><Translate*/}
-                                    {/*        id='referral_pages.banner.referral_code'/></AnalyticTitle>*/}
-                                    {/*    <ReferralLink>*/}
-                                    {/*        {code_refer}*/}
-                                    {/*        <CopyToClipboard text={code_refer}*/}
-                                    {/*                         onCopy={() => handleCopy('referralCode')}>*/}
-                                    {/*            <CopyIcon>*/}
-                                    {/*                {clipboard.referralCode ? <Check/> : <Copy/>}*/}
-                                    {/*            </CopyIcon>*/}
-                                    {/*        </CopyToClipboard>*/}
-                                    {/*    </ReferralLink>*/}
-                                    {/*</Col>*/}
-                                    {/*</Row>*/}
-                                    <AnalyticCommission>
+                                </AnalyticTitle>
+                                <ReferralLink>
+                                    {code_refer ? handleCompactLink(link_refer, 15, 10) : '---'}
+                                    <CopyToClipboard text={link_refer}
+                                        onCopy={() => handleCopy('referralLink')}>
+                                        <CopyIcon>
+                                            {clipboard.referralLink ? <Check /> : <Copy />}
+                                        </CopyIcon>
+                                    </CopyToClipboard>
+                                </ReferralLink>
+                                {/*</Col>*/}
+                                {/*{width >= 414 ? null : <div className='w-100'/>}*/}
+                                {/*<Col style={width > 414 ? {paddingLeft: 0} : {marginTop: 15}}>*/}
+                                {/*    <AnalyticTitle><Translate*/}
+                                {/*        id='referral_pages.banner.referral_code'/></AnalyticTitle>*/}
+                                {/*    <ReferralLink>*/}
+                                {/*        {code_refer}*/}
+                                {/*        <CopyToClipboard text={code_refer}*/}
+                                {/*                         onCopy={() => handleCopy('referralCode')}>*/}
+                                {/*            <CopyIcon>*/}
+                                {/*                {clipboard.referralCode ? <Check/> : <Copy/>}*/}
+                                {/*            </CopyIcon>*/}
+                                {/*        </CopyToClipboard>*/}
+                                {/*    </ReferralLink>*/}
+                                {/*</Col>*/}
+                                {/*</Row>*/}
+                                <AnalyticCommission>
+                                    <div>
                                         <div>
-                                            <div>
-                                                {t('referral_pages.banner.exchange_commission')}
-                                            </div>
-                                            <div>20%</div>
+                                            {t('referral_pages.banner.exchange_commission')}
                                         </div>
+                                        <div>20%</div>
+                                    </div>
+                                    <div>
                                         <div>
-                                            <div>
 
-                                                {t('referral_pages.banner.futures_commission')}
-                                            </div>
-                                            <div>20%</div>
+                                            {t('referral_pages.banner.futures_commission')}
                                         </div>
-                                    </AnalyticCommission>
-                                </AnalyticWrapper>
-                            </BannerRight>
-                        </Col>
-                    </Row>
+                                        <div>20%</div>
+                                    </div>
+                                </AnalyticCommission>
+                            </AnalyticWrapper>
+                        </BannerRight>
+                    </div>
                 </Containerz>
             </BannerContainer>
         )
@@ -259,7 +236,7 @@ const PCView = () => {
             {renderBanner()}
             {renderCategories()}
             <DesktopWrapper>
-                <Containerz>
+                <ContentContainerz>
                     <ContentWrapper id='dashboard'>
                         <ReferralDashboard data={dashboardData} width={width} typeSort={typeSort} setTypeSort={setTypeSort}
                             timeSort={timeSort} setTimeSort={setTimeSort} user={user} />
@@ -274,7 +251,7 @@ const PCView = () => {
                             state={state} setState={setState} page={pageCommission} setPage={setPageCommission}
                             typeSort={typeSort} setTypeSort={setTypeSort} user={user} />
                     </ContentWrapper>
-                </Containerz>
+                </ContentContainerz>
             </DesktopWrapper>
         </div>
     )

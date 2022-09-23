@@ -8,14 +8,14 @@ export const THEME_MODE = {
 }
 
 const useDarkMode = () => {
-    const currentTheme = useSelector(state => state.user.theme)
-    const dispatch = useDispatch()
+    const currentTheme = useSelector((state) => state.user.theme);
+    const user = useSelector((state) => state.user);
 
+    const dispatch = useDispatch()
     const setTheme = (nextTheme) => {
         const root = window.document.documentElement
         root.classList.remove(nextTheme === THEME_MODE.LIGHT ? THEME_MODE.DARK : THEME_MODE.LIGHT)
         root.classList.add(nextTheme)
-
         localStorage.setItem(LOCAL_STORAGE_KEY.THEME, nextTheme)
         dispatch({
             type: SET_THEME,

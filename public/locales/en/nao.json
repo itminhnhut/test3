@@ -112,7 +112,8 @@
             "failed": "Failed"
         },
         "vote_notice": "Voting Rules for NAO Governance Pool:<br/> - Each user has only 1 vote, the decision will be reserved until the end of the voting period<br/> - The amount of NAO users added to the Pool after voting will be automatically updated accordingto the voting decision<br/> - Voting rate based on NAO contribution in Governance Pool<br/> - Each proposal needs to be supported by more than 50% of the Total NAO in the Governance Pool to be approved and executed",
-        "rejected_successfully": "Rejected successfully"
+        "rejected_successfully": "Rejected successfully",
+        "vote_rating": "Vote rating"
     },
     "nao_token": {
         "title": "Buy NAO token",

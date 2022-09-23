@@ -34,7 +34,7 @@ const NaoDashboard = () => {
                 url: API_USER_VOTE,
                 options: { method: "GET" },
             });
-            setListProposal(res);
+            if (res.isArray) setListProposal(res);
         } catch (error) {
             console.log(error);
         }

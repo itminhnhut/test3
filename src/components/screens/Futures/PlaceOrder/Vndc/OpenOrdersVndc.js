@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { formatNumber, formatTime, getLoginUrl } from 'redux/actions/utils';
+import { formatNumber, formatTime, getLoginUrl, countDecimals } from 'redux/actions/utils';
 import { customTableStyles } from 'components/screens/Futures/TradeRecord/index';
 import { ChevronDown, Edit } from 'react-feather';
 
@@ -26,11 +26,34 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
 import OrderClose from './OrderClose';
 
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
+const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair }) => {
     const { t, i18n: { language } } = useTranslation()
     const ordersList = useSelector(state => state?.futures?.ordersList)
-    const publicSocket = useSelector((state) => state.futures.publicSocket)
     const marketWatch = useSelector((state) => state.futures.marketWatch)
+    const assetConfig = useSelector(state => state.utils.assetConfig);
+    const [showModalDelete, setShowModalDelete] = useState(false)
+    const rowData = useRef(null);
+    const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
+    const [showModalEdit, setShowModalEdit] = useState(false)
+    const [shareOrder, setShareOrder] = useState(null)
+    const [filters, setFilters] = useState({
+        timeRange: [],
+        symbol: '',
+        status: '',
+        side: '',
+    })
+
+    const TimeFilterRef = useRef(null)
+
+    const symbolOptions = useMemo(() => {
+        return allPairConfigs?.map(e => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }))
+    }, [allPairConfigs])
+
+    const getDecimalPrice = (config) => {
+        const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
+        return countDecimals(decimalScalePrice?.tickSize);
+    };
+
     const columns = useMemo(
         () => [
             {
@@ -99,7 +122,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             {
                 name: t('futures:order_table:last_price2'),
                 selector: (row) => marketWatch[row?.symbol]?.lastPrice ?? 0,
-                cell: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, 0, 0, true),
+                cell: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
                 minWidth: '150px',
                 sortable: true,
             },
@@ -113,7 +136,13 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             {
                 name: 'PNL (ROE%)',
                 selector: (row) => row?.pnl?.value,
-                cell: (row) => <OrderProfit key={row.displaying_id} order={row} initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)} />,
+                cell: (row) => {
+                    const isVndc = row?.symbol.indexOf('VNDC') !== -1
+                    return <OrderProfit
+                        key={row.displaying_id} order={row}
+                        initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)}
+                        decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
+                },
                 minWidth: '150px',
                 sortable: false,
             },
@@ -122,8 +151,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 cell: (row) => (
                     <div className='flex items-center'>
                         <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div>{formatNumber(row?.tp, 0, 0, true)}/</div>
-                            <div>{formatNumber(row?.sl, 0, 0, true)}</div>
+                            <div>{formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}/</div>
+                            <div>{formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}</div>
                         </div>
                         {row.status !== VndcFutureOrderType.Status.CLOSED &&
                             <Edit onClick={() => onOpenModify(row)}
@@ -143,27 +172,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 ),
             },
         ],
-        [marketWatch, pair]
+        [marketWatch, pair, dataFilter]
     )
-    const [loading, setLoading] = useState(false)
-    const [showModalDelete, setShowModalDelete] = useState(false)
-    const rowData = useRef(null);
-    const userSocket = useSelector((state) => state.socket.userSocket);
-    const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
-    const [showModalEdit, setShowModalEdit] = useState(false)
-    const [shareOrder, setShareOrder] = useState(null)
-    const [filters, setFilters] = useState({
-        timeRange: [],
-        symbol: '',
-        status: '',
-        side: '',
-    })
-
-    const TimeFilterRef = useRef(null)
-
-    const symbolOptions = useMemo(() => {
-        return allPairConfigs?.filter(e => e.quoteAsset === 'VNDC')?.map(e => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }))
-    }, [allPairConfigs])
 
     const fetchOrder = async (method = 'GET', params, cb) => {
         try {
@@ -230,7 +240,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         const swap = row?.swap || 0
         const liqPrice = (size * row?.open_price + row?.fee + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.Nami))
         if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
-        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, 0, 0, false) : '-'
+        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, row?.decimalScalePrice, 0, false) : '-'
     }
 
     const getSelectorOpenPrice = (row) => {
@@ -271,16 +281,16 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                             </span>
                         );
                 }
-                text = row.price ? formatNumber(row.price, 8) : '';
+                text = row.price ? formatNumber(row.price, row?.decimalScalePrice) : '';
                 return <div className="flex items-center ">
                     <div>{text}<br />{bias}</div>
                     <Edit onClick={() => onOpenModify(row)} className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
                 </div>;
             case VndcFutureOrderType.Status.ACTIVE:
-                text = row.open_price ? formatNumber(row.open_price, 8) : '';
+                text = row.open_price ? formatNumber(row.open_price, row?.decimalScalePrice) : '';
                 return <div>{text}</div>;
             case VndcFutureOrderType.Status.CLOSED:
-                text = row.close_price ? formatNumber(row.close_price, 8) : '';
+                text = row.close_price ? formatNumber(row.close_price, row?.decimalScalePrice) : '';
                 return <div>{text}</div>;
             default:
                 return <div>{text}</div>;
@@ -308,8 +318,21 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
             )
         });
     }
-    const _dataSource = useMemo(() => {
-        const items = ordersList.filter(o => {
+
+    const dataSource = useMemo(() => {
+        return ordersList.map(item => {
+            const symbol = allPairConfigs.find(rs => rs.symbol === item.symbol);
+            const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+            const decimalScalePrice = getDecimalPrice(symbol);
+            item['decimalSymbol'] = decimalSymbol;
+            item['decimalScalePrice'] = decimalScalePrice;
+            return item;
+        })
+    }, [ordersList])
+
+
+    const dataFilter = useMemo(() => {
+        const items = dataSource.filter(o => {
             const conditions = []
             if (hideOther) {
                 conditions.push(o.symbol === pairConfig?.symbol)
@@ -331,7 +354,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
         });
 
         return filters.symbol ? items.filter(item => item?.symbol === filters.symbol) : items;
-    }, [hideOther, ordersList, filters])
+    }, [hideOther, dataSource, filters, pair])
 
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
         <Link href={getLoginUrl('sso', 'login')} locale={false}>
@@ -416,7 +439,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, o
                 responsive
                 fixedHeader
                 sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-                data={_dataSource}
+                data={dataFilter}
                 columns={columns}
                 customStyles={customTableStyles}
                 noDataComponent={<TableNoData title={t('futures:order_table:no_opening_order')} />}

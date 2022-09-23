@@ -25,6 +25,7 @@ import {
     SET_FUTURES_PAIR_CONFIGS,
     SET_FUTURES_USE_SLTP,
     SET_FUTURES_ORDERS_LIST,
+    REMOVE_FUTURES_MARKET_WATCH,
     GET_FUTURES_SETTING,
     SET_FUTURES_SETTING
 } from './types';
@@ -274,7 +275,7 @@ const placeFuturesOrderValidator = (params, utils) => {
     return _validator;
 };
 
-export const getOrdersList = () => async (dispatch) => {
+export const getOrdersList = (cb) => async (dispatch) => {
     const { data } = await Axios.get(API_GET_FUTURES_ORDER, {
         params: { status: 0 },
     });
@@ -283,7 +284,15 @@ export const getOrdersList = () => async (dispatch) => {
             type: SET_FUTURES_ORDERS_LIST,
             payload: data?.data?.orders || [],
         });
+        if (cb) cb(data?.data?.orders || [])
     }
+};
+
+export const removeItemMarketWatch = (pair) => async (dispatch) => {
+    dispatch({
+        type: REMOVE_FUTURES_MARKET_WATCH,
+        payload: pair
+    });
 };
 
 export const reFetchOrderListInterval = (times = 1, duration = 5000) => (dispatch) => {

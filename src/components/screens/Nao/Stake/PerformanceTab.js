@@ -166,7 +166,9 @@ const PerformanceTab = ({ isSmall, dataSource, assetNao, onShowLock }) => {
                                         <Fragment key={index}>
                                             {index !== 0 && <Divider className="w-full !my-4" />}
                                             <div>
-                                                <div className="text-nao-grey text-sm">{formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}</div>
+                                                <div className="text-nao-grey text-sm">
+                                                    {t('nao:pool:week', { value: listHitory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}
+                                                </div>
                                                 <div className="mt-1">
                                                     <div className="flex items-center justify-between flex-wrap">
                                                         <div className="flex items-center">
