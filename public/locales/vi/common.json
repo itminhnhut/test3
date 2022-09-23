@@ -318,5 +318,11 @@
         "markets": "Thị trường",
         "wallets": "Ví"
     },
-    "collapse":"Thu gọn"
+    "collapse": "Thu gọn",
+    "confirm_2": "Chọn",
+    "one_day": "Một ngày",
+    "several_days": "Nhiều ngày",
+    "filter": "Lọc",
+    "custom": "Tùy chỉnh",
+    "custom_date": "Tùy chỉnh"
 }
