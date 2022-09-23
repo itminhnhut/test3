@@ -322,5 +322,11 @@
         "markets": "Markets",
         "wallets": "Wallets"
     },
-    "collapse":"Collapse"
+    "collapse": "Collapse",
+    "confirm_2": "Confirm",
+    "one_day": "One Day",
+    "several_days": "Several Days",
+    "filter": "Filter",
+    "custom": "Custom",
+    "custom_date": "Custom Date"
 }

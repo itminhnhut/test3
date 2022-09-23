@@ -6,7 +6,7 @@ const Contest = dynamic(() => import('components/screens/Nao/Contest/Contest'), 
     ssr: false,
 })
 const Season = ({ season }) => {
-    const current = seasons[seasons.length - 1];
+    const current = seasons.find(season => season.active)
     return <Contest previous={current?.season !== season?.season} {...season} />
 };
 

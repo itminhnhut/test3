@@ -1,0 +1,161 @@
+$width: 42px;
+$height: 32px;
+.date-range-picker {
+    display: flex;
+    align-items: center;
+
+    .rdrCalendarWrapper,
+    .rdrDateRangeWrapper {
+        @apply relative bg-transparent sm:bg-nao-bg3 rounded-xl;
+        box-shadow: 0px 8px 5px rgba(23, 43, 77, 0.04), 0px 15px 12px rgba(23, 43, 77, 0.08);
+        // @apply shadow-subMenu rounded-xl;
+    }
+
+    .rdrDefinedRangesWrapper,
+    .rdrDateDisplayWrapper {
+        display: none;
+    }
+
+    .rdrMonth {
+        @apply p-0 sm:p-5;
+        .rdrMonthName {
+            @apply text-white font-semibold flex items-center justify-center text-base p-0 mb-[10px];
+        }
+    }
+
+    .single-select {
+        .rdrInRange,
+        .rdrDayInPreview {
+            background: none !important;
+        }
+        .rdrDay:not(.rdrDayPassive) .rdrInRange ~ .rdrDayNumber span,
+        .rdrDayInPreview ~ .rdrDayNumber span {
+            color: #fff !important;
+        }
+
+        .rdrDayHovered {
+            border-radius: 3px !important;
+            border: none !important;
+            @apply bg-nao-blue2 text-white;
+            .rdrDayNumber {
+                span {
+                    color: white !important;
+                }
+                &::after {
+                    display: none !important;
+                }
+            }
+        }
+        .rdrDayEndPreview,
+        .rdrDayInPreview,
+        .rdrDayStartPreview {
+            @apply invisible;
+            background: none !important;
+        }
+        .rdrSelected {
+            @apply inset-0 bg-nao-blue2 relative z-0 w-full max-w-[3rem] sm:w-[42px];
+            border-radius: 3px;
+            height: $height;
+            border: none;
+        }
+    }
+
+    .rdrDays {
+        .rdrDay {
+            max-height: $height;
+            @apply flex items-center justify-center max-w-[3rem];
+            width: calc(100% / 7) !important;
+        }
+        button {
+            margin-bottom: 10px !important;
+        }
+        .rdrDayNumber {
+            width: 100%;
+            height: 100%;
+            font-weight: 400;
+            @apply font-inter text-sm top-0 bottom-0 flex;
+            span {
+                @apply text-white;
+            }
+        }
+        .rdrDayPassive {
+            span {
+                @apply text-onus-bg2;
+            }
+        }
+        .rdrDayHovered {
+            border-radius: 3px;
+            border: none;
+        }
+        .rdrStartEdge,
+        .rdrEndEdge {
+            border-radius: 3px;
+            height: $height;
+            border: none;
+            @apply inset-0 max-w-[3rem] sm:w-[42px];
+        }
+        .rdrInRange,
+        .rdrDayInPreview {
+            @apply inset-0 text-nao-blue2 relative z-0 w-full max-w-[3rem] sm:w-[42px];
+            height: $height;
+            border: none;
+            background: rgba(9, 61, 209, 0.1);
+        }
+
+        .rdrDay:not(.rdrDayPassive) .rdrInRange ~ .rdrDayNumber span,
+        .rdrDayInPreview ~ .rdrDayNumber span {
+            @apply text-nao-blue2;
+        }
+
+        .rdrDayStartPreview,
+        .rdrDayEndPreview {
+            border: none;
+            @apply inset-0 max-w-[3rem] sm:w-[42px];
+        }
+
+        .rdrDayStartOfMonth .rdrInRange,
+        .rdrDayStartOfMonth .rdrEndEdge,
+        .rdrDayStartOfWeek .rdrInRange,
+        .rdrDayStartOfWeek .rdrEndEdge,
+        .rdrDayEndOfMonth .rdrInRange,
+        .rdrDayEndOfMonth .rdrStartEdge,
+        .rdrDayEndOfWeek .rdrInRange,
+        .rdrDayEndOfWeek .rdrStartEdge,
+        .rdrDayStartOfMonth .rdrDayInPreview,
+        .rdrDayStartOfMonth .rdrDayEndPreview,
+        .rdrDayStartOfWeek .rdrDayInPreview,
+        .rdrDayStartOfWeek .rdrDayEndPreview,
+        .rdrDayEndOfMonth .rdrDayInPreview,
+        .rdrDayEndOfMonth .rdrDayStartPreview,
+        .rdrDayEndOfWeek .rdrDayInPreview,
+        .rdrDayEndOfWeek .rdrDayStartPreview {
+            border-radius: 3px !important;
+            border: none;
+            @apply text-nao-blue2 inset-0;
+        }
+        .rdrDayToday {
+            .rdrDayNumber {
+                span {
+                    @apply text-nao-blue2;
+                    font-weight: bold;
+                }
+                span:after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .rdrWeekDays {
+        margin-bottom: 10px;
+        border: none !important;
+        .rdrWeekDay {
+            height: $height;
+            width: $width;
+            @apply max-w-[3rem] sm:min-w-[42px] text-xs font-semibold text-onus-bg2 flex items-center justify-center uppercase;
+        }
+    }
+    .rdrMonthAndYearPickers {
+        display: none;
+    }
+}

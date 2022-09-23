@@ -9,43 +9,20 @@ import { API_NAO_DASHBOARD_STATISTIC, API_GET_REFERENCE_CURRENCY } from 'redux/a
 import { ApiStatus } from 'redux/actions/const';
 import { useRef } from 'react';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, formatPrice, getS3Url } from 'redux/actions/utils';
+import { formatNumber, formatPrice, formatTime, getS3Url } from 'redux/actions/utils';
 import { DefaultFuturesFee } from 'redux/actions/const';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import colors from 'styles/colors';
 import { Check } from 'react-feather';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
+import DateRangePicker from 'components/screens/Nao/Section/DateRangePicker'
+import CalenderIcon from 'components/svg/CalenderIcon';
+import FilterIcon from 'components/svg/FilterIcon'
+import { startOfDay, endOfDay, subDays, addWeeks, addMonths } from 'date-fns'
+import NaoFilter from 'components/screens/Nao/Section/NaoFilter'
 import { useRouter } from 'next/router';
 import useWindowSize from 'hooks/useWindowSize';
-
-const days = [
-    {
-        en: 'Today',
-        vi: 'Hôm nay',
-        value: 'd'
-    },
-    {
-        en: 'Yesterday',
-        vi: 'Hôm qua',
-        value: '-d'
-    },
-    {
-        en: '7 days',
-        vi: '7 ngày',
-        value: 'w'
-    },
-    {
-        en: '30 days',
-        vi: '30 ngày',
-        value: 'm'
-    },
-    {
-        en: '60 days',
-        vi: '60 ngày',
-        value: '2m'
-    }
-];
 
 const filterFeeAsset = [
     {
@@ -76,6 +53,55 @@ const filterFeeAsset = [
 ];
 
 const NaoPerformance = memo(() => {
+
+    const days = useMemo(() => {
+        const now = new Date();
+        return [
+            {
+                id: 'today',
+                en: 'Today',
+                vi: 'Hôm nay',
+                from: startOfDay(now).valueOf(),
+                to: endOfDay(now).valueOf(),
+            },
+            {
+                id: 'yesterday',
+                en: 'Yesterday',
+                vi: 'Hôm qua',
+                from: startOfDay(subDays(now, 1)).valueOf(),
+                to: endOfDay(subDays(now, 1)).valueOf(),
+            },
+            {
+                id: '7days',
+                en: '7 days',
+                vi: '7 ngày',
+                from: startOfDay(addWeeks(now, -1)).valueOf(),
+                to: endOfDay(now).valueOf(),
+            },
+            {
+                id: '30days',
+                en: '30 days',
+                vi: '30 ngày',
+                from: startOfDay(addMonths(now, -1)).valueOf(),
+                to: endOfDay(now).valueOf(),
+            },
+            {
+                id: '60days',
+                en: '60 days',
+                vi: '60 ngày',
+                from: startOfDay(addMonths(now, -2)).valueOf(),
+                to: endOfDay(now).valueOf(),
+            },
+            {
+                id: 'all',
+                en: 'All Time',
+                vi: 'Tất cả',
+                from: null,
+                to: null,
+            }
+        ];
+    }, [])
+
     const {
         t,
         i18n: { language }
@@ -85,13 +111,20 @@ const NaoPerformance = memo(() => {
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState({
-        day: 'd',
-        marginCurrency: WalletCurrency.VNDC
+        marginCurrency: WalletCurrency.VNDC,
+        ...days[0]
     });
     const [fee, setFee] = useState(WalletCurrency.VNDC);
     const [referencePrice, setReferencePrice] = useState({});
 
     const assetConfig = useSelector(state => state.utils.assetConfig);
+    const [showFilterModal, setShowFilterModal] = useState(false)
+    const [customTime, setCustomTime] = useState(false)
+    const [date, setDate] = useState({
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection',
+    })
 
     // const [getQueryByName , updateQuery] = useAddQuery('date')
 
@@ -115,7 +148,8 @@ const NaoPerformance = memo(() => {
                 url: API_NAO_DASHBOARD_STATISTIC,
                 options: { method: 'GET' },
                 params: {
-                    range: filter.day,
+                    from: filter?.from,
+                    to: filter?.to,
                     marginCurrency: filter.marginCurrency
                 },
             });
@@ -177,26 +211,44 @@ const NaoPerformance = memo(() => {
     }, [fee, assets]);
 
     const handleChangeMarginCurrency = (currency) => {
-        setFilter({...filter, marginCurrency: currency})
+        setFilter({ ...filter, marginCurrency: currency })
         setFee(currency)
     }
 
+    const renderLabel = () => (
+        <div className={classNames('py-2 px-4 cursor-pointer leading-6 bg-onus-bg3 rounded-md relative', { 'bg-nao-blue2 font-medium': customTime || !filter?.id })}>
+            <div className="flex items-center space-x-3">
+                <CalenderIcon />
+                <div>
+                    {t('common:custom')}: {date.startDate ? formatTime(date.startDate, 'dd/MM/yyyy') + '-' + formatTime(date.endDate, 'dd/MM/yyyy') : null}
+                </div>
+            </div>
+        </div>
 
-    const updateDateRangeUrl = (dateValue) => {
-        router.push({
-            pathname: router.pathname,
-            query: {
-                date: dateValue,
-            }
-        })
+    )
+
+    const getDatePicker = (e) => {
+        const start = new Date(e?.startDate).getTime()
+        const end = new Date(e?.endDate).getTime()
+        setFilter({ ...filter, from: start, to: end, id: null })
     }
 
-    const handleChangeDateRange = (day) => {
-        if (day !== filter.day) {
-            setFilter({...filter, day})
-            updateDateRangeUrl(day)
-        }
+    const onChangePicker = (e) => {
+        getDatePicker(e)
+        setDate(e)
+        setCustomTime(true)
     }
+
+    const onConfirmFilter = (dataFilter, range) => {
+        setFilter({ ...filter, ...dataFilter })
+        setDate(range)
+        setShowFilterModal(false)
+    }
+
+    const timelLabel = useMemo(() => {
+        const day = days.find(rs => rs.id === filter.id);
+        return day ? day[language] : formatTime(date.startDate, 'dd/MM/yyyy') + '-' + formatTime(date.endDate, 'dd/MM/yyyy')
+    }, [filter, customTime, date])
 
     return (
         <section id="nao_performance" className="pt-10 sm:pt-20">
@@ -206,19 +258,53 @@ const NaoPerformance = memo(() => {
                     <span
                         className="text-sm sm:text-[1rem] text-nao-grey">{t('nao:onus_performance:description')}</span>
                 </div>
-                <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
-                    <RangePopover language={language} active={days.find(d => d.value === filter.day)}
-                                  onChange={handleChangeDateRange} className="flex order-last lg:order-first" popoverClassName={'lg:mr-2 '}/>
-                    <div className='order-first gap-2 lg:order-last flex gap-last'>
+                <div className="flex flex-wrap space-x-2 justify-between sm:justify-start w-full">
+                    {/* <RangePopover language={language} active={days.find(d => d.value === filter.day)}
+                                  onChange={day => { setFilter({...filter, day}) }}/> */}
+                    <div className="items-center space-x-2 hidden sm:flex">
                         <ButtonNao
-                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC})}
+                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC })}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
                         >Futures VNDC</ButtonNao>
                         <ButtonNao
-                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.USDT})}
+                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.USDT })}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
                         >Futures USDT</ButtonNao>
                     </div>
+                    <div className="flex items-center space-x-2 sm:hidden">
+                        <ButtonNao>{filter.marginCurrency === WalletCurrency.VNDC ? 'Futures VNDC' : 'Futures USDT'}</ButtonNao>
+                        <ButtonNao> {timelLabel} </ButtonNao>
+                    </div>
+                    <div className={!filter?.id ? 'mt-2' : ''}>
+                        <div onClick={() => setShowFilterModal(true)} className="flex items-center sm:hidden space-x-1 bg-nao-bg3 p-2 rounded-md">
+                            <FilterIcon />
+                            <span>{t('common:filter')}</span>
+                        </div>
+                        {showFilterModal && <NaoFilter days={days} filter={filter} onConfirm={onConfirmFilter} range={date} onCancel={() => setShowFilterModal(false)} />}
+                    </div>
+                </div>
+            </div>
+            <div className="mt-10 hidden sm:flex">
+                <div className="flex items-center text-sm space-x-2">
+                    {days.map((day, index) => {
+                        return (
+                            <div
+                                key={day.id}
+                                onClick={() => {
+                                    setFilter({ ...filter, ...day })
+                                    setCustomTime(false)
+                                }}
+                                className={classNames('py-2 px-4 cursor-pointer leading-6 bg-onus-bg3 rounded-md', { 'bg-nao-blue2 font-medium': day?.id === filter?.id })}>
+                                <span>{day[language]}</span>
+                            </div>
+                        );
+                    })}
+                    <DateRangePicker
+                        date={date}
+                        onChange={onChangePicker}
+                        onClose={() => !date?.startDate && setCustomTime(false)}
+                        customLabel={renderLabel} />
+
                 </div>
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
@@ -257,7 +343,7 @@ const NaoPerformance = memo(() => {
                                             className="text-sm px-2 py-1 bg-nao-bg3 rounded-md flex items-center justify-between text-nao-white min-w-[72px]">
                                             {filterFeeAsset.find(a => a.id === fee)?.label || '--'}
                                             <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16"
-                                                 width="16"/>
+                                                width="16" />
                                         </div>
                                     </Popover.Button>
                                     <Transition
@@ -278,7 +364,7 @@ const NaoPerformance = memo(() => {
                                                         setFee(item?.id);
                                                         close();
                                                     }} key={index}
-                                                          className={`py-[1px] my-[2px] cursor-pointer ${item?.assetCode === fee ? 'text-nao-white' : 'text-nao-text'}`}>{item?.assetCode}</span>
+                                                        className={`py-[1px] my-[2px] cursor-pointer ${item?.assetCode === fee ? 'text-nao-white' : 'text-nao-text'}`}>{item?.assetCode}</span>
                                                 ))}
                                             </div>
                                         </Popover.Panel>
@@ -315,7 +401,7 @@ const RangePopover = ({
                     <div
                         className="text-sm pl-4 pr-2 h-10 bg-nao-bg3 rounded-md flex items-center justify-between text-nao-white min-w-[72px]">
                         <span className="mr-1">{active[language]}</span>
-                        <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16" width="16"/>
+                        <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16" width="16" />
                     </div>
                 </Popover.Button>
                 <Transition
@@ -343,7 +429,7 @@ const RangePopover = ({
                                             'first:rounded-t-xl last:rounded-b-xl hover:bg-onus-2',
                                         )}>
                                         <span>{day[language]}</span>
-                                        {isActive && <Check size={16} color={colors.onus.base}/>}
+                                        {isActive && <Check size={16} color={colors.onus.base} />}
                                     </div>
                                 );
                             })}
