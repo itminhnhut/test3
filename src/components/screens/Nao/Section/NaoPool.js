@@ -87,7 +87,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
     }
 
     const renderSlide = () => {
-        const size = 3;
+        const size = 1;
         const page = Array.isArray(listHitory) && Math.ceil(listHitory.length / size)
         const result = [];
         const weekNumber = listHitory.length + 1;
