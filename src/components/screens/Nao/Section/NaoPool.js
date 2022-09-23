@@ -106,7 +106,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                         <span className="text-sm text-nao-grey leading-6">
                                             {t('nao:pool:week', { value: weekNumber })} {formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}
                                         </span>
-                                        <SubPrice price={formatNumber(sumUSDT, 3)} digitsPrice={assetConfig[22]?.assetDigit ?? 3}/>
+                                        <SubPrice price={sumUSDT} digitsPrice={assetConfig[22]?.assetDigit ?? 3}/>
                                         {width < 992 && <Divider/>}
                                     </div>
                                     <div className="flex items-center lg:gap-0 sm:gap-6 w-full lg:w-max flex-wrap">
