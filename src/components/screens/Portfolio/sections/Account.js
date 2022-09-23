@@ -112,7 +112,7 @@ const Account = (props) => {
                         <div className='mt-2'>
                             {data.data?.map((e, index) => {
                                 const myData = {
-                                    title: 'Tuần ' + e.key,
+                                    title: (PNLConfig.orderBy === 1 ? 'Tuần ' : 'Tháng ') + e.key,
                                     value: renderTableData(e.data?.profit, e.data?.roe)
                                 }
                                 return (
@@ -203,6 +203,7 @@ const Account = (props) => {
             lossProfit.push(+e[winlossConfig.type === 1 ? 'loss' : 'sell']?.profit_rate / 5 - +e[winlossConfig.type === 1 ? 'loss' : 'sell']?.total)
             originLossProfit.push(+e[winlossConfig.type === 1 ? 'loss' : 'sell']?.profit_rate)
         })
+        console.log('data', winlossData)
         const data = {
             labels,
             datasets: [{
@@ -260,10 +261,20 @@ const Account = (props) => {
                     usePointStyle: true,
                     callbacks: {
                         label: function (context) {
-                            const label = context.dataset.label
-                            const value = +context.raw || 0;
-                            const percentage = value === 0 ? 0 : value > 0 ? originWinProfit[context.dataIndex] : originLossProfit[context.dataIndex]
-                            return '  ' + label + formatPrice(Math.abs(label.includes('%') ? percentage : value), 2) + (label.includes('%') ? '%' : '');
+                            const index = context.dataIndex
+                            if (winlossConfig.type === 1) {
+                                const win = winlossData[index]['win']
+                                const loss = winlossData[index]['loss']
+                                const text1 = 'Tổng số lệnh lời: ' + win.total
+                                const text2 = 'Tổng PNL lệnh lời: ' + '+' + formatPrice(win.profit, 0) + ' ' + props.currency + ` (+${formatPrice(win.profit_rate, 0)}%)`
+                                const text3 = 'Tổng số lệnh lỗ: ' + loss.total
+                                const text4 = 'Tổng PNL lệnh lỗ: ' + formatPrice(loss.profit, 0) + ' ' + props.currency + ` (${formatPrice(loss.profit_rate, 0)}%)`
+                                return [text1, text2, text3, text4]
+                            }
+                            const text1 = 'Tổng số lệnh: ' + winlossData[index].total
+                            const text2 = 'Tổng số lệnh mua: ' + winlossData[index]['buy'].total
+                            const text3  = 'Tổng số lệnh bán: ' + winlossData[index]['sell'].total
+                            return [text1, text2, text3]
                         },
                         labelPointStyle: function (context) {
                             return {
@@ -276,6 +287,7 @@ const Account = (props) => {
                     },
                     backgroundColor: colors.white,
                     titleColor: colors.grey2,
+                    displayColors: false,
                 },
             },
             scales: {

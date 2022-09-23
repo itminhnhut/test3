@@ -528,6 +528,44 @@ const FuturePortfolio = (props) => {
                 pointBackgroundColor: '#80FFEA',
             },],
         };
+        const options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const descriptions = {
+                                '1': 'Mức PNL: ',
+                                '2': ['Tài sản :', 'Vốn: '],
+                                '3': ['Lượng tiền nạp: ', 'Lượng tiền rút: '],
+                                '4': ['Tài sản: ', 'Vốn: '],
+                            }
+                            const index = context.dataIndex
+                            const text1 = descriptions[chart5Config.tab] + (chartData[0][index] >= 0 ? '+' : '') + formatPrice(chartData[0][index], 0) + ' ' + props.currency
+                            if (chart5Config.tab === 1) return text1
+                            const text2 = descriptions[chart5Config.tab][0] + formatPrice(chartData[0][index], 0) + ' ' + props.currency ?? null
+                            const text3 = descriptions[chart5Config.tab][1] + formatPrice(chartData[1][index], 0) + ' ' + props.currency ?? null
+                            return [text2, text3]
+                        },
+                        // filter: function (context) {
+                        //     return context.datasetIndex === 0
+                        // },
+                        labelTextColor: function (context) {
+                            return colors.darkBlue
+                        },
+                    },
+                    backgroundColor: colors.white,
+                    displayColors: false,
+                    titleColor: colors.grey2,
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        }
 
         return width > 640 ? (
             <ChartLayout area={gridArea}>
@@ -574,7 +612,7 @@ const FuturePortfolio = (props) => {
                         </div>
                     </div>
                     <div className='flex w-full max-h-[600px] items-center justify-center'>
-                        <ChartJS type='area' data={data} height='450px' />
+                        <ChartJS type='area' data={data} options={options} height='450px' />
                     </div>
                 </div>
             </ChartLayout>

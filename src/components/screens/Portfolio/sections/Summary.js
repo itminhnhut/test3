@@ -326,7 +326,7 @@ const Summary = (props) => {
             { title: '3 Tháng', value: 4 },
         ]
         const bgcolors = ['bg-teal-800', 'bg-teal-900', 'bg-teal-1000', 'bg-teal-1100', 'bg-teal-1200']
-        return (
+        return width >= 640 ? (
             <ChartLayout area={gridArea} >
                 <div className='w-full h-full'>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
@@ -350,7 +350,51 @@ const Summary = (props) => {
                                     )
                                 })}
                             </div>
-                            <div className='flex w-full justify-between'>
+                            <div className='flex w-full h-auto justify-between flex-wrap'>
+                                {top.map((e, index) => {
+                                    return (
+                                        <div className='flex gap-2 items-center justify-center text-gray-2 font-medium text-sm leading-6'>
+                                            <svg width="9" height="8" viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="4.60156" cy="4" r="4" fill={colors.portfolio.teal[index]} />
+                                            </svg>
+                                            {e.key} <span className='text-darkBlue'>{formatPrice(e.key_count / e.total * 100, 2)}%</span>
+                                        </div>
+                                    )
+                                })}
+                                {others.length > 0 && <div className='flex gap-2 items-center justify-center text-gray-2 font-medium text-sm leading-6'>
+                                    <svg width="9" height="8" viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="4.60156" cy="4" r="4" fill='#F2F4F7' />
+                                    </svg>
+                                    Others <span className='text-darkBlue'>{formatPrice(totalOthers, 2)}%</span>
+                                </div>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ChartLayout>
+        ) : (
+            <ChartLayout area={gridArea} >
+                <div className='w-full h-full'>
+                    <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
+                        <div className={`${titleText}`}>
+                            Thống kê tài sản
+                        </div>
+                        <div className='flex gap-3 bg-gray-4 p-1 rounded-md h-8 items-center my-4'>
+                            {renderChartTabs(timeTabs, 'time', section1Config, setSection1Config, true, true)}
+                        </div>
+                        <div className='w-full'>
+                            <div className='font-semibold text-4xl leading-10'>
+                                100%  <span className='font-medium text-lg leading-10 text-gray-2'>({section1Data.buy} lệnh mua và {section1Data.sell} lệnh bán)</span>
+                            </div>
+                            <div className='flex w-full bg-[#F2F4F7] h-4 rounded transition-all my-6'>
+                                {top.map((e, index) => {
+                                    return (
+                                        <div className={`${bgcolors[index]} h-4`} style={{ width: (e.key_count / e.total) * 100 + '%' }}>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            <div className='flex w-full h-auto justify-between flex-wrap'>
                                 {top.map((e, index) => {
                                     return (
                                         <div className='flex gap-2 items-center justify-center text-gray-2 font-medium text-sm leading-6'>
@@ -442,7 +486,7 @@ const Summary = (props) => {
             },
         }
 
-        return (
+        return width >= 640 ? (
             <ChartLayout area={gridArea} >
                 <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }} >
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
@@ -453,6 +497,22 @@ const Summary = (props) => {
                             <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
                                 {renderChartTabs(section2TypeTabs, 'type', section2Config, setSection2Config, true)}
                             </div>
+                        </div>
+                        <div className='w-full mt-6'>
+                            <ChartJS type='bar' data={data} options={options} height='400px' />
+                        </div>
+                    </div>
+                </div>
+            </ChartLayout>
+        ) : (
+            <ChartLayout area={gridArea} >
+                <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }} >
+                    <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
+                        <div className={`${titleText}`}>
+                            Thống kê tổng số lệnh theo giờ
+                        </div>
+                        <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1 my-4'>
+                            {renderChartTabs(section2TypeTabs, 'type', section2Config, setSection2Config, true, true)}
                         </div>
                         <div className='w-full mt-6'>
                             <ChartJS type='bar' data={data} options={options} height='400px' />
@@ -506,7 +566,7 @@ const Summary = (props) => {
                 },
             },
         }
-        return (
+        return width >= 640 ? (
             <ChartLayout area={gridArea} >
                 <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
@@ -519,6 +579,38 @@ const Summary = (props) => {
                             </div>
                         </div>
                         <div className='w-full flex justify-center h-full items-center'>
+                            <div className='w-[300px]'>
+                                <ChartJS type='doughnut' data={data} options={options} />
+                                <div className='flex items-center justify-center gap-4 mt-6'>
+                                    <div className='flex items-center gap-2'>
+                                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="4" cy="4" r="3.5" fill="#52EAD1" />
+                                        </svg>
+                                        {section3Config.type === 1 ? 'Lệnh lời' : 'Lệnh mua'}
+                                    </div>
+                                    <div className='flex items-center gap-2'>
+                                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="4" cy="4" r="3.5" fill="#C0F9EE" />
+                                        </svg>
+                                        {section3Config.type === 1 ? 'Lệnh lỗ' : 'Lệnh bán'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ChartLayout>
+        ) : (
+            <ChartLayout area={gridArea} >
+                <div className='w-full h-auto' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
+                    <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
+                        <div className={`${titleText}`}>
+                            Tỷ lệ lời/lỗ
+                        </div>
+                        <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
+                            {renderChartTabs(section3TypeTabs, 'type', section3Config, setSection3Config, true, true)}
+                        </div>
+                        <div className='w-full flex justify-center h-full items-center mt-6'>
                             <div className='w-[300px]'>
                                 <ChartJS type='doughnut' data={data} options={options} />
                                 <div className='flex items-center justify-center gap-4 mt-6'>
@@ -690,36 +782,33 @@ const Summary = (props) => {
             <ChartLayout area={gridArea} >
                 <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
-                        <div className='flex w-full items-center justify-between'>
-                            <div className={titleText} >
-                                Thống kê thời gian giữ lệnh
-                            </div>
-                            <div className='flex items-center w-fit h-fit gap-4'>
-                                <div className='flex items-center justify-between'>
-                                    {renderChartTabs(section6TimeTabs, 'time', section6Config, setSection6Config)}
+                        <div className={titleText} >
+                            Thống kê thời gian giữ lệnh
+                        </div>
+                        <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
+                            {renderChartTabs(section6TypeTabs, 'type', section6Config, setSection6Config, true, true)}
+                        </div>
+                        <div className='flex items-center justify-between my-4'>
+                            <div className='flex items-center gap-4'>
+                                <div className='flex items-center gap-1 h-full'>
+                                    <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="3.5" cy="4" r="3.5" fill="#52EAD1" />
+                                    </svg>
+                                    Lệnh lời
                                 </div>
-                                <div className='bg-gray-4 flex items-center justify-between h-9 rounded-md p-1'>
-                                    {renderChartTabs(section6TypeTabs, 'type', section6Config, setSection6Config, true)}
+                                <div className='flex items-center gap-1 h-full'>
+                                    <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="3.5" cy="4" r="3.5" fill="#C0F9EE" />
+                                    </svg>
+                                    Lệnh lỗ
                                 </div>
                             </div>
+                            {renderTimePopover(section6Config, setSection6Config)}
                         </div>
                         <div className='w-full relative'>
                             <ChartJS type='bubble' data={data} options={options} height='400px' />
                         </div>
-                        <div className='flex items-center gap-4 mt-6'>
-                            <div className='flex items-center gap-1 h-full'>
-                                <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="3.5" cy="4" r="3.5" fill="#52EAD1" />
-                                </svg>
-                                Lệnh lời
-                            </div>
-                            <div className='flex items-center gap-1 h-full'>
-                                <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="3.5" cy="4" r="3.5" fill="#C0F9EE" />
-                                </svg>
-                                Lệnh lỗ
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </ChartLayout>
@@ -778,14 +867,12 @@ const Summary = (props) => {
             <ChartLayout area={gridArea} >
                 <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
-                        <div className='flex w-full items-center justify-between'>
                             <div className={titleText} >
                                 Biến động khối lượng
                             </div>
-                            <div className='flex items-center justify-between'>
-                                {renderChartTabs(section7TimeTabs, 'time', section7Config, setSection7Config)}
+                            <div className='flex items-center justify-between bg-gray-4 p-1 h-8 my-6 rounded-md'>
+                                {renderChartTabs(section7TimeTabs, 'time', section7Config, setSection7Config, true, true)}
                             </div>
-                        </div>
                         <div className='w-full relative'>
                             <ChartJS type='bar' data={data} options={options} height='400px' />
                         </div>
@@ -810,7 +897,7 @@ const Summary = (props) => {
         const buy = []
         const sell = []
         section9Data.map(e => {
-            labels.push(e.leverage)
+            labels.push(e.leverage + 'x')
             buy.push(e.total_buy)
             sell.push(e.total_sell)
         })
@@ -846,22 +933,39 @@ const Summary = (props) => {
                 tooltip: {
                     callbacks: {
                         label: function (context) {
-                            return 'hello'
+                            const index = context.dataIndex
+                            const text1 = 'Mức đòn bẩy: ' + labels[index]
+                            const text2 = 'Giá ký quỹ tổng: ' + formatPrice(section9Data[index].total, 0) + ' ' + currency
+                            const text3 = 'Giá ký quỹ lệnh mua: ' + formatPrice(section9Data[index].total_buy, 0) + ' ' + currency
+                            const text4 = 'Giá ký quỹ lệnh bán: ' + formatPrice(section9Data[index].total_sell, 0) + ' ' + currency
+                            return [text1, text2, text3, text4]
                         },
-
                         labelTextColor: function (context) {
                             return colors.darkBlue
                         }
                     },
                     backgroundColor: colors.white,
                     titleColor: colors.grey2,
+                    displayColors: false,
                 },
             },
             scales: {
                 x: {
                     stacked: true,
                     // combined: true,
+
                 },
+                y: {
+                    ticks: {
+                        callback: function (label, index, labels) {
+                            return label / 1000 + 'K';
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: '1k = 1000'
+                    }
+                }
             },
         }
         return width >= 640 ?
