@@ -90,17 +90,17 @@ const PerformanceTab = ({
         assetId,
         logoPath
     }) => {
-        return <div className="flex items-start">
-            <div>
+        return <div>
+            <div className="flex items-center">
                 <div
                     className="text-lg font-semibold leading-7 mr-2">
                     {formatNumber((data.estimate?.[assetId] || 0) * (data.percent / 100 || 0), assetConfig[assetId]?.assetDigit ?? 8)}
                 </div>
-                <span className="text-sm text-nao-grey leading-6">
+                <img src={getS3Url(logoPath)} width={20} height={20} alt=""/>
+            </div>
+            <span className="text-sm text-nao-grey leading-6">
                     ${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 0)}
                 </span>
-            </div>
-            <img src={getS3Url(logoPath)} width={20} height={20} alt=""/>
         </div>;
     };
 
@@ -198,7 +198,8 @@ const PerformanceTab = ({
                                                         <FeeCurrency assetId={86} logoPath={'/images/nao/ic_onus.png'}/>
                                                     </div>
                                                     <div className="flex items-center justify-between w-full flex-wrap">
-                                                        <FeeCurrency assetId={22} logoPath={`/images/coins/64/${22}.png`}/>
+                                                        <FeeCurrency assetId={22}
+                                                                     logoPath={`/images/coins/64/${22}.png`}/>
                                                     </div>
                                                 </div>
                                             </div>
