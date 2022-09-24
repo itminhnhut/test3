@@ -98,7 +98,7 @@ const PerformanceTab = ({
                 </div>
                 <img src={getS3Url(logoPath)} width={20} height={20} alt=""/>
             </div>
-            <span className="text-sm text-nao-grey leading-6">
+            <span className={`text-sm text-nao-grey leading-6 ${[72, 86].includes(assetId) ? 'float-right': ''}`}>
                     ${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 0)}
                 </span>
         </div>;
@@ -156,7 +156,7 @@ const PerformanceTab = ({
                             <div className="flex items-center justify-between mt-4 flex-wrap">
                                 <div className="flex items-center justify-between w-full flex-wrap">
                                     <FeeCurrency assetId={447} logoPath="/images/nao/ic_nao.png"/>
-                                    <FeeCurrency assetId={72} logoPath="/images/nao/ic_vndc.png"/>
+                                    <FeeCurrency assetId={72} logoPath="/images/nao/ic_vndc.png" />
                                 </div>
                                 <div className="flex items-center justify-between w-full flex-wrap">
                                     <FeeCurrency assetId={1} logoPath={`/images/coins/64/${1}.png`}/>
