@@ -3,7 +3,7 @@ import colors from 'styles/colors'
 import FetchApi from 'utils/fetch-api'
 import ChartLayout from '../charts/ChartLayout'
 import { API_PORTFOLIO_SUMMARY } from 'redux/actions/apis';
-import { formatPrice, formatTime } from 'src/redux/actions/utils';
+import { formatPrice, formatTime } from 'redux/actions/utils';
 import ChartJS from '../charts/ChartJS';
 
 const chart6SectionsTemplate = {
@@ -548,17 +548,17 @@ const Summary = (props) => {
 
         const middleText = {
             id: 'middleText',
-            afterDraw (chart, args, options) {
+            afterDraw(chart, args, options) {
                 const { ctx, chartArea: { left, right, top, bottom, width, height } } = chart
                 ctx.save()
                 ctx.font = 'bold 26px Barlow'
                 ctx.fillStyle = '#00C8BC'
                 ctx.textAlign = 'center'
-                ctx.fillText( (section3Data[0]?.total_pnl >= 0 ? '+' : '') + formatPrice(section3Data[0]?.total_pnl, 0), width/2, height/2 + top)
+                ctx.fillText((section3Data[0]?.total_pnl >= 0 ? '+' : '') + formatPrice(section3Data[0]?.total_pnl, 0), width / 2, height / 2 + top)
                 ctx.font = 'normal 12px Barlow'
                 ctx.fillStyle = '#A0AEC0'
                 ctx.textAlign = 'center'
-                ctx.fillText('Total PNL', width/2, height/2 + 24)
+                ctx.fillText('Total PNL', width / 2, height / 2 + 24)
             }
         }
 
@@ -580,7 +580,7 @@ const Summary = (props) => {
                     },
                     backgroundColor: colors.white,
                     displayColors: false
-                }, 
+                },
             },
         }
         return width >= 640 ? (
@@ -597,7 +597,7 @@ const Summary = (props) => {
                         </div>
                         <div className='w-full flex justify-center h-full items-center'>
                             <div className='w-[300px]'>
-                                <ChartJS type='doughnut' data={data} options={options} plugins={plugins}/>
+                                <ChartJS type='doughnut' data={data} options={options} plugins={plugins} />
                                 <div className='flex items-center justify-center gap-4 mt-6'>
                                     <div className='flex items-center gap-2'>
                                         <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -884,12 +884,12 @@ const Summary = (props) => {
             <ChartLayout area={gridArea} >
                 <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
-                            <div className={titleText} >
-                                Biến động khối lượng
-                            </div>
-                            <div className='flex items-center justify-between bg-gray-4 p-1 h-8 my-6 rounded-md'>
-                                {renderChartTabs(section7TimeTabs, 'time', section7Config, setSection7Config, true, true)}
-                            </div>
+                        <div className={titleText} >
+                            Biến động khối lượng
+                        </div>
+                        <div className='flex items-center justify-between bg-gray-4 p-1 h-8 my-6 rounded-md'>
+                            {renderChartTabs(section7TimeTabs, 'time', section7Config, setSection7Config, true, true)}
+                        </div>
                         <div className='w-full relative'>
                             <ChartJS type='bar' data={data} options={options} height='400px' />
                         </div>

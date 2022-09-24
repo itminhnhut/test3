@@ -4,6 +4,10 @@ import { API_GET_FUTURES_ORDER, API_PORTFOLIO_SUMMARY } from 'redux/actions/apis
 import FetchApi from 'utils/fetch-api';
 import { formatPrice, formatTime } from 'src/redux/actions/utils';
 import ReTable from 'components/common/ReTable';
+import { getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import CalculatePNL from '../CalculatePNL';
+import { useDispatch, useSelector } from 'react-redux';
+import {  getFuturesMarketWatch } from 'redux/actions/futures';
 
 const Orders = (props) => {
     const {
@@ -11,11 +15,16 @@ const Orders = (props) => {
         currency,
         width
     } = props
-
     const [orderList, setOrderList] = useState(null)
     const [ordersOverviewList, setOrdersOverviewList] = useState(null)
     const [currentPage, setCurrentPage] = useState(null)
     const [numberOfOrdersToShow, setNumberOfOrdersToShow] = useState(5)
+    const dispatch = useDispatch();
+    
+    useEffect(() => {
+        dispatch(getFuturesMarketWatch());
+    }, []);
+    const marketWatch = useSelector((state) => state.futures.marketWatch);
 
     useEffect(() => {
         setNumberOfOrdersToShow(5)
@@ -69,10 +78,12 @@ const Orders = (props) => {
             <span className='text-red text-sm leading-6 font-medium'>{data}</span> :
             <span className='text-teal text-sm leading-6 font-medium'>{data}</span>
     }
-
+    
     const renderOrdersTable = useCallback(() => {
-        if (!orderList) return
+        if (!orderList || !marketWatch) return
         const mappedData = orderList.map(e => {
+            const dataMarketWatch = marketWatch[e?.symbol];
+            console.log(marketWatch)
             const sl_rate = formatPrice(Math.abs(e.sl / e.order_value - 100), 2)
             const profit_rate = formatPrice((e.profit / e.order_value), 2)
             return {
@@ -80,7 +91,7 @@ const Orders = (props) => {
                 volume: formatPrice(e.order_value, 0),
                 price: formatPrice(e.price, 0),
                 open_price: formatPrice(e.open_price, 0),
-                unpnl: renderTableData(123),
+                unpnl: <CalculatePNL key={e.displaying_id} order={e} initPairPrice={dataMarketWatch} isMobile decimal={0} />,
                 type: renderTableData(e.side + '/' + e.type, e.side === 'Buy' ? false : true),
                 leverage: e.leverage + 'x',
                 sl: e.sl ? renderTableData(`${formatPrice(e.sl, 0)} (-${sl_rate})%`, true) : '',
@@ -135,7 +146,7 @@ const Orders = (props) => {
                 onChange: (currentPage) => setCurrentPage(currentPage)
             }}
         />
-    }, [currency, orderList, currentPage])
+    }, [currency, orderList, currentPage, marketWatch])
 
     const renderHistoryTable = useCallback(() => {
         if (!ordersOverviewList) return
