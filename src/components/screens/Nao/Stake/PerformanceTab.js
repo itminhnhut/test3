@@ -86,7 +86,7 @@ const PerformanceTab = ({
         };
     }, [dataSource]);
 
-    const FeeCurrency = ({
+    const EstimateInterest = ({
         assetId,
         logoPath
     }) => {
@@ -103,6 +103,26 @@ const PerformanceTab = ({
                 </span>
         </div>;
     };
+
+    const HistoryInterest = ({
+        assetId,
+        item,
+        logoPath
+    }) => {
+        return <div>
+            <div className="flex items-center">
+                <div
+                    className="text-lg font-semibold leading-7 mr-2">
+                    {formatNumber((item.interest?.[assetId] || 0), assetConfig[assetId]?.assetDigit ?? 8)}
+                </div>
+                <img src={getS3Url(logoPath)} width={20} height={20} alt=""/>
+            </div>
+            <span className={`text-sm text-nao-grey leading-6 ${[72, 86].includes(assetId) ? 'float-right': ''}`}>
+                    ${formatNumber((item.interestUSD?.[assetId] || 0), 0)}
+                </span>
+        </div>;
+    };
+
 
     return (
         !dataSource?.isNewUser ?
@@ -155,15 +175,15 @@ const PerformanceTab = ({
                             </div>
                             <div className="flex items-center justify-between mt-4 flex-wrap">
                                 <div className="flex items-center justify-between w-full flex-wrap">
-                                    <FeeCurrency assetId={447} logoPath="/images/nao/ic_nao.png"/>
-                                    <FeeCurrency assetId={72} logoPath="/images/nao/ic_vndc.png" />
+                                    <EstimateInterest assetId={447} logoPath="/images/nao/ic_nao.png"/>
+                                    <EstimateInterest assetId={72} logoPath="/images/nao/ic_vndc.png" />
                                 </div>
                                 <div className="flex items-center justify-between w-full flex-wrap">
-                                    <FeeCurrency assetId={1} logoPath={`/images/coins/64/${1}.png`}/>
-                                    <FeeCurrency assetId={86} logoPath={'/images/nao/ic_onus.png'}/>
+                                    <EstimateInterest assetId={1} logoPath={`/images/coins/64/${1}.png`}/>
+                                    <EstimateInterest assetId={86} logoPath={'/images/nao/ic_onus.png'}/>
                                 </div>
                                 <div className="flex items-center justify-between w-full flex-wrap">
-                                    <FeeCurrency assetId={22} logoPath={`/images/coins/64/${22}.png`}/>
+                                    <EstimateInterest assetId={22} logoPath={`/images/coins/64/${22}.png`}/>
                                 </div>
                             </div>
                         </div>
@@ -189,16 +209,16 @@ const PerformanceTab = ({
                                                 </div>
                                                 <div className="mt-1">
                                                     <div className="flex items-center justify-between flex-wrap">
-                                                        <FeeCurrency assetId={447} logoPath="/images/nao/ic_nao.png"/>
-                                                        <FeeCurrency assetId={72} logoPath="/images/nao/ic_vndc.png"/>
+                                                        <HistoryInterest item={item} assetId={447} logoPath="/images/nao/ic_nao.png"/>
+                                                        <HistoryInterest item={item} assetId={72} logoPath="/images/nao/ic_vndc.png"/>
                                                     </div>
                                                     <div className="flex items-center justify-between flex-wrap">
-                                                        <FeeCurrency assetId={1}
+                                                        <HistoryInterest item={item} assetId={1}
                                                                      logoPath={`/images/coins/64/${1}.png`}/>
-                                                        <FeeCurrency assetId={86} logoPath={'/images/nao/ic_onus.png'}/>
+                                                        <HistoryInterest item={item} assetId={86} logoPath={'/images/nao/ic_onus.png'}/>
                                                     </div>
                                                     <div className="flex items-center justify-between w-full flex-wrap">
-                                                        <FeeCurrency assetId={22}
+                                                        <HistoryInterest item={item} assetId={22}
                                                                      logoPath={`/images/coins/64/${22}.png`}/>
                                                     </div>
                                                 </div>
