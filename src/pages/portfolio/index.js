@@ -15,7 +15,7 @@ const index = () => {
                 hideFooter
                 page="portfolio"
             >
-                <div className="w-full h-full bg-[#F8F9FA]">
+                <div className="w-full h-full bg-[#F8F9FA] flex justify-center">
                     <Portfolio /> 
                 </div>
             </MaldivesLayout>
