@@ -227,8 +227,8 @@ const NaoPerformance = memo(() => {
     )
 
     const getDatePicker = (e) => {
-        const start = new Date(e?.startDate).getTime()
-        const end = new Date(e?.endDate).getTime()
+        const start = startOfDay(e?.startDate).valueOf()
+        const end = endOfDay(e?.endDate).valueOf()
         setFilter({ ...filter, from: start, to: end, id: null })
     }
 
