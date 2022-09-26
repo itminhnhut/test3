@@ -13,6 +13,7 @@ import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import colors from 'styles/colors';
 import { navigatorRenderer } from './DateRangePicker'
+import { startOfDay, endOfDay } from 'date-fns'
 
 const NaoFilter = ({ onCancel, onConfirm, filter, days, range }) => {
     const { t, i18n: { language } } = useTranslation();
@@ -26,8 +27,8 @@ const NaoFilter = ({ onCancel, onConfirm, filter, days, range }) => {
     }
 
     const onChangePicker = (e) => {
-        const start = new Date(e?.startDate).getTime()
-        const end = new Date(e?.endDate).getTime()
+        const start = startOfDay(e?.startDate).valueOf()
+        const end = endOfDay(e?.endDate).valueOf()
         setData({ ...data, from: start, to: end, id: null })
         setDate(e)
     }
