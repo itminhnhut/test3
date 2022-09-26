@@ -50,17 +50,17 @@ const Orders = (props) => {
                 setOrderList(null)
             }
         });
-    }, [tab])
+    }, [tab, currency])
 
     useEffect(() => {
-        if (tab !== 3 || ordersOverviewList) return
+        if (tab !== 3) return
         FetchApi({
             url: API_PORTFOLIO_SUMMARY,
             options: {
                 method: 'GET',
             },
             params: {
-                currency: props.currency === 'VNDC' ? 72 : 22,
+                currency: currency === 'VNDC' ? 72 : 22,
                 chart_id: 13,
                 timeFrame: 'M'
             },
@@ -71,7 +71,7 @@ const Orders = (props) => {
                 setOrdersOverviewList(null)
             }
         });
-    }, [tab])
+    }, [tab, currency])
 
     const renderTableData = (data, isRed = false) => {
         return isRed ?
@@ -103,21 +103,21 @@ const Orders = (props) => {
         })
         const columns = tab === 1 ? [
             { key: 'pair', dataIndex: 'pair', title: 'Cặp', width: 60, fixed: 'left', align: 'left' },
-            { key: 'volume', dataIndex: 'volume', title: 'Volume', width: 100, align: 'left' },
+            { key: 'volume', dataIndex: 'volume', title: 'Volume', width: 90, align: 'left' },
             { key: 'price', dataIndex: 'price', title: 'Giá', width: 100, align: 'left' },
-            { key: 'open_price', dataIndex: 'open_price', title: 'Giá mở', width: 100, align: 'left' },
-            { key: 'unpnl', dataIndex: 'unpnl', title: 'UnPNL', width: 100, align: 'left' },
-            { key: 'type', dataIndex: 'type', title: 'Loại lệnh', width: 100, align: 'left' },
+            { key: 'open_price', dataIndex: 'open_price', title: 'Giá mở', width: 90, align: 'left' },
+            { key: 'unpnl', dataIndex: 'unpnl', title: 'UnPNL', width: 80, align: 'left' },
+            { key: 'type', dataIndex: 'type', title: 'Loại lệnh', width: 70, align: 'left' },
             { key: 'leverage', dataIndex: 'leverage', title: 'Mức đòn bẩy', width: 70, align: 'left' },
             { key: 'sl', dataIndex: 'sl', title: 'Cắt lỗ', width: 80, align: 'left' },
             { key: 'opened_at', dataIndex: 'opened_at', title: 'Thời gian mở lệnh', width: 100, align: 'left' },
         ] : [
             { key: 'pair', dataIndex: 'pair', title: 'Cặp', width: 60, fixed: 'left', align: 'left' },
-            { key: 'volume', dataIndex: 'volume', title: 'Volume', width: 100, align: 'left' },
-            { key: 'close_price', dataIndex: 'close_price', title: 'Giá đóng', width: 100, align: 'left' },
-            { key: 'open_price', dataIndex: 'open_price', title: 'Giá mở', width: 100, align: 'left' },
-            { key: 'pnl', dataIndex: 'pnl', title: 'PNL', width: 100, align: 'left' },
-            { key: 'type', dataIndex: 'type', title: 'Loại lệnh', width: 100, align: 'left' },
+            { key: 'volume', dataIndex: 'volume', title: 'Volume', width: 90, align: 'left' },
+            { key: 'close_price', dataIndex: 'close_price', title: 'Giá đóng', width: 90, align: 'left' },
+            { key: 'open_price', dataIndex: 'open_price', title: 'Giá mở', width: 90, align: 'left' },
+            { key: 'pnl', dataIndex: 'pnl', title: 'PNL', width: 80, align: 'left' },
+            { key: 'type', dataIndex: 'type', title: 'Loại lệnh', width: 60, align: 'left' },
             { key: 'leverage', dataIndex: 'leverage', title: 'Mức đòn bẩy', width: 70, align: 'left' },
             { key: 'sl', dataIndex: 'sl', title: 'Cắt lỗ', width: 100, align: 'left' },
             { key: 'opened_at', dataIndex: 'opened_at', title: 'Thời gian mở lệnh', width: 70, align: 'left' },
@@ -156,15 +156,15 @@ const Orders = (props) => {
                 total_buy: e.total_buy,
                 total_sell: e.total_sell,
                 most_used_leverage: e.max_count_leverage + 'x',
-                pnl: <span className={`${e.profit >= 0 ? 'text-teal' : 'text-red'}`}>{e.profit >= 0 ? '+' : ''}{formatPrice(e.profit, 0)}</span>,
+                pnl: <span className={`${e.profit >= 0 ? 'text-teal' : 'text-red'}`}>{e.profit >= 0 ? '+' : ''}{formatPrice(e.profit, currency === 'VNDC' ? 0 : 2)} ({e.profit_rate >= 0 ? '+' : ''}{formatPrice(e.profit_rate, 2)}%)</span>,
                 win_rate: formatPrice(e.win_rate, 0) + '%',
                 profit_factor: formatPrice(e.profit_factor, 0)
             }
         })
         const columns = [
             { key: 'time', dataIndex: 'time', title: 'Thời gian', width: 80, fixed: 'left', align: 'left' },
-            { key: 'total_buy', dataIndex: 'total_buy', title: 'Tổng lệnh mở', width: 70, align: 'left' },
-            { key: 'total_sell', dataIndex: 'total_sell', title: 'Tổng lệnh đóng', width: 70, align: 'left' },
+            { key: 'total_buy', dataIndex: 'total_buy', title: 'Tổng lệnh mua', width: 70, align: 'left' },
+            { key: 'total_sell', dataIndex: 'total_sell', title: 'Tổng lệnh bán', width: 70, align: 'left' },
             { key: 'most_used_leverage', dataIndex: 'most_used_leverage', title: 'Đòn bẩy thường dùng', width: 100, align: 'left' },
             { key: 'pnl', dataIndex: 'pnl', title: 'PNL', width: 100, align: 'left' },
             { key: 'win_rate', dataIndex: 'win_rate', title: 'Tỷ lệ lãi', width: 100, align: 'left' },

@@ -308,8 +308,8 @@ const Account = (props) => {
         }
         return width >= 640 ?
             <ChartLayout className='p-6 !h-auto'>
-                <div className='px-6 pb-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                    <div className='flex items-center justify-between'>
+                <div className='p-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
+                    <div className='flex items-center justify-between mb-6'>
                         <div className={`${titleText}`}>
                             Thống kê số lệnh lời/lỗ
                         </div>
@@ -340,13 +340,13 @@ const Account = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className='mt-6 px-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
-                    <div className='flex items-center justify-between'>
+                <div className='mt-6 p-6 w-full rounded-xl border-[1px] border-[#E2E8F0] '>
+                    <div className='flex items-center justify-between mb-6'>
                         <div className={`${titleText}`}>
                             Thống kê PNL (%ROI)
                         </div>
                         <div>
-                            <div className='flex items-center w-fit h-fit gap-4'>
+                            <div className='flex items-center w-auto h-auto gap-4'>
                                 {renderChartTabs(chart6OrderByTabs, 'orderBy', PNLConfig, setPNLConfig)}
                             </div>
                         </div>
@@ -365,7 +365,7 @@ const Account = (props) => {
                         </div>
                     </div>
                     <div>
-                        <div className='flex items-center w-full h-fit mb-6'>
+                        <div className='flex items-center w-full h-fit mb-6 mt-4'>
                             <div className='bg-gray-4 w-full flex items-center justify-between h-9 rounded-md p-1'>
                                 {renderChartTabs(chart6TypeTabs, 'type', winlossConfig, setWinLossConfig, true, true)}
                             </div>

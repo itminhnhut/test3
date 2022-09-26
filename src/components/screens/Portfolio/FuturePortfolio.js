@@ -49,7 +49,6 @@ const anotherGridTemplate = {
     gap: '32px'
 }
 
-
 const FuturePortfolio = (props) => {
     const [chart3Current, setChart3Current] = useState(true)
     const [chart5Config, setChart5Config] = useState({
@@ -57,8 +56,8 @@ const FuturePortfolio = (props) => {
         time: 1,
         type: 'number'
     })
-    const [chart5Data, setChart5Data] = useState(null)
     const [userData, setUserData] = useState(null)
+    const [chart5Data, setChart5Data] = useState(null)
     const [chart6Tab, setChart6Tab] = useState(1)
     const [chart7Tab, setChart7Tab] = useState(1)
 
@@ -144,10 +143,9 @@ const FuturePortfolio = (props) => {
             <>
                 {tabs.map((tab, index) => {
                     return (
-                        <div className={`flex item-center justify-center min-h-[28px] my-6 px-2 py-1 rounded-md ${config[type] === index + 1 ? `${bgColor} rounded-md text-darkBlue` : 'text-darkBlue-5'} text-sm leading-5 font-medium min-w-[65px] cursor-pointer`}
+                        <div className={`flex items-center w-auto justify-center min-h-[28px] px-2 py-1 rounded-md ${config[type] === index + 1 ? `${bgColor} rounded-md text-darkBlue` : 'text-darkBlue-5'} text-sm leading-5 font-medium cursor-pointer`}
                             onClick={_.debounce(() => {
                                 setConfig({ ...config, [type]: tab.value }), 200
-                                close()
                             })}>
                             {tab.title}
                         </div>
@@ -161,7 +159,6 @@ const FuturePortfolio = (props) => {
                         <div className={`flex items-center justify-end ${isCenter && '!justify-center'} w-full h-full text-xs font-medium leading-5 cursor-pointer ${config[type] === index + 1 ? `${isCenter && bgColor} rounded-md text-darkBlue` : 'text-darkBlue-5'}`}
                             onClick={_.debounce(() => {
                                 setConfig({ ...config, [type]: tab.value }), 200
-                                close()
                             })}>
                             {tab.title}
                         </div>
@@ -303,7 +300,7 @@ const FuturePortfolio = (props) => {
                                 <Progressbar
                                     background='#00C8BC'
                                     percent={
-                                        ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[(level === 9 ? 8 : 9) + 1].nami_holding) * 100
+                                        ((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100
                                     }
                                     height={10}
                                 />
@@ -328,7 +325,7 @@ const FuturePortfolio = (props) => {
             {
                 title: 'Tổng tài sản',
                 value: formatPrice(userData.total_balance, props.currency === 'VNDC' ? 0 : 2),
-                profit: <span className={`${userData.total_balance >= 0 ? 'text-teal' : 'text-red'}`} >{userData.one_day_before?.total_balance >= 0 && '+'}{formatPrice(userData.one_day_before?.total_balance, props.currency === 'VNDC' ? 0 : 0)}</span>
+                profit: <span className={`${userData.one_day_before?.total_balance >= 0 ? 'text-teal' : 'text-red'}`} >{userData.one_day_before?.total_balance >= 0 && '+'}{formatPrice(userData.one_day_before?.total_balance, props.currency === 'VNDC' ? 0 : 0)}</span>
             },
             {
                 title: 'Tổng PNL',
@@ -351,7 +348,7 @@ const FuturePortfolio = (props) => {
                                     <div className={`${subHeaderText} w-1/2 pt-2 pb-3 !leading-8 ${width >= 640 && 'border-t-2'} border-[#52EAD1]`}>
                                         {tab.title}
                                     </div>
-                                    <div className='flex justify-between item-center'>
+                                    <div className='flex justify-between items-center'>
                                         <div className='text-[20px] leading-6 font-medium '>
                                             {tab.value}
                                         </div>
@@ -575,7 +572,7 @@ const FuturePortfolio = (props) => {
                     <div className={`${titleText}`}>
                         Thống kê biến động
                     </div>
-                    <div className='flex p-2 item-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
+                    <div className='flex p-2 items-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
                         {chart5Tabs.map((tab, index) =>
                             <div className={`flex items-center justify-center w-full h-full text-base font-medium leading-8 cursor-pointer ${chart5Config.tab === index + 1 ? 'bg-white rounded-xl text-darkBlue' : 'text-darkBlue-5'}`}
                                 onClick={_.debounce(() => setChart5Config({
@@ -624,7 +621,7 @@ const FuturePortfolio = (props) => {
                     <div className={`${titleText}`}>
                         Thống kê biến động
                     </div>
-                    <div className='flex p-2 item-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
+                    <div className='flex p-2 items-center mt-6 justify-center rounded-xl bg-gray-4 h-14'>
                         {chart5Tabs.map((tab, index) => {
                             return (
                                 <div className={`flex items-center justify-center w-full h-full text-xs font-medium leading-5 cursor-pointer ${chart5Config.tab === index + 1 ? 'bg-white rounded-xl !text-darkBlue' : 'text-darkBlue-5'}`}
@@ -693,7 +690,7 @@ const FuturePortfolio = (props) => {
                 {renderTabs(chart7Tabs, chart7Tab, setChart7Tab, false)}
             </div>
             <div>
-                <Orders tab={chart7Tab} width={width} />
+                <Orders tab={chart7Tab} width={width} currency={props.currency} />
             </div>
         </div>
     }
