@@ -65,7 +65,7 @@ const Portfolio = () => {
         )
     }
     return (
-        <div className='w-full h-full px-5 py-8 text-darkBlue'>
+        <div className='w-full h-full px-5 py-8 text-darkBlue max-w-[1440px]'>
             {renderTabs(mainTabs, type, setType)}
             {renderHeader()}
             {renderContent()}

@@ -58,7 +58,7 @@ const FuturePortfolio = (props) => {
     })
     const [userData, setUserData] = useState(null)
     const [chart5Data, setChart5Data] = useState(null)
-    const [chart6Tab, setChart6Tab] = useState(1)
+    const [chart6Tab, setChart6Tab] = useState(2)
     const [chart7Tab, setChart7Tab] = useState(1)
 
     const user = useSelector(state => state?.auth?.user)

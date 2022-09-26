@@ -524,10 +524,10 @@ const Summary = (props) => {
                 },
             },
         }
-
+        const contentWidth = width >= 1440 ? 1440 : width
         return width >= 640 ? (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }} >
+                <div className='h-full' style={{ width: `${(contentWidth - 96 - 24) / 2}px`}} >
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className='flex w-full justify-between items-center mb-6'>
                             <div className={`${titleText}`}>
@@ -545,7 +545,7 @@ const Summary = (props) => {
             </ChartLayout>
         ) : (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }} >
+                <div className='w-full h-full' >
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className={`${titleText}`}>
                             Thống kê tổng số lệnh theo giờ
@@ -625,9 +625,10 @@ const Summary = (props) => {
                 },
             },
         }
+        const contentWidth = width >= 1440 ? 1440 : width
         return width >= 640 ? (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
+                <div className='w-auto h-full' style={{ width: `${(contentWidth - 96 - 24) / 2}px`}}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className='flex w-full justify-between items-center '>
                             <div className={`${titleText}`}>
@@ -836,10 +837,10 @@ const Summary = (props) => {
                 },
             },
         }
-
+        const contentWidth = width >= 1440 ? 1440 : width
         return width >= 1280 ? (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
+                <div className='w-full h-full' style={{ width: width >= 640 ? `${(contentWidth - 96 - 24) / 2}px` : 'w-full' }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className='w-full items-center justify-between flex mb-6'>
                             <div className={`${titleText} h-auto`}>
@@ -876,7 +877,7 @@ const Summary = (props) => {
             </ChartLayout>
         ) : (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
+                <div className='w-full h-full' style={{ width: width >= 640 ? `${(contentWidth - 96 - 24) / 2}px` : 'w-full' }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className={`${titleText} h-auto`}>
                             Thống kê thời gian giữ lệnh
@@ -959,9 +960,10 @@ const Summary = (props) => {
                 },
             },
         }
+        const contentWidth = width >= 1440 ? 1440 : width
         return width >= 640 ? (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
+                <div className='w-full h-full' style={{ width:`${(contentWidth - 96 - 24) / 2}px`}}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className='flex items-center justify-between w-full mb-6'>
                             <div className={titleText} >
@@ -979,7 +981,7 @@ const Summary = (props) => {
             </ChartLayout>
         ) : (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width: width >= 640 ? `${(width - 96 - 24) / 2}px` : 'w-full' }}>
+                <div className='w-full h-full' style={{ width: '100%'}}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className={titleText} >
                             Biến động khối lượng
@@ -1166,7 +1168,7 @@ const Summary = (props) => {
             {section6Data ? renderSection6('section6') : loadingPlaceHolder('section6')}
             {section7Data ? renderSection7('section7') : loadingPlaceHolder('section7')}
             {/* {true ? renderSection8('section8') : loadingPlaceHolder('section8')} */}
-            {section9Data ? renderSection9('section9') : loadingPlaceHolder('section9')}
+            {section9Data ? renderSection9('section9') : loadingPlaceHolder('section9')}    
         </div>
     )
 }
