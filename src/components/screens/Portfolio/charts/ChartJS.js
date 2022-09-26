@@ -42,7 +42,7 @@ const ChartJS = memo(({ type, data, height = '100%', width = '100%', plugins, op
             chart = <Bar options={options} data={data} width={width} height={height} />
             break
         case 'doughnut':
-            chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} />
+            chart = <Doughnut options={options} data={data} width={width} height={height} plugins={plugins} redraw={true}/>
             break
         case 'bubble':
             chart = <Bubble options={options} data={data} width={width} height={height} />

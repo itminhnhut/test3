@@ -83,7 +83,6 @@ const Orders = (props) => {
         if (!orderList || !marketWatch) return
         const mappedData = orderList.map(e => {
             const dataMarketWatch = marketWatch[e?.symbol];
-            console.log(marketWatch)
             const sl_rate = formatPrice(Math.abs(e.sl / e.order_value - 100), 2)
             const profit_rate = formatPrice((e.profit / e.order_value), 2)
             return {

@@ -204,7 +204,6 @@ const Account = (props) => {
             lossProfit.push(+e[winlossConfig.type === 1 ? 'loss' : 'sell']?.profit_rate / 5 - +e[winlossConfig.type === 1 ? 'loss' : 'sell']?.total)
             originLossProfit.push(+e[winlossConfig.type === 1 ? 'loss' : 'sell']?.profit_rate)
         })
-        console.log('data', winlossData)
         const data = {
             labels,
             datasets: [{

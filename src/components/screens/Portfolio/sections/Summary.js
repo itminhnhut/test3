@@ -587,11 +587,10 @@ const Summary = (props) => {
             }]
         };
 
-        const pnl = formatPrice(section3Data[0]?.total_pnl, 0)
-
+        const pnl = formatPrice(section3Data[0]?.total_pnl, currency === 'VNDC' ? 0 : 2)
         const middleText = {
             id: 'middleText',
-            afterDraw(chart, args, options) {
+            afterDatasetsDraw(chart, args, options) {
                 const { ctx, chartArea: { left, right, top, bottom, width, height } } = chart
                 ctx.save()
                 ctx.font = 'bold 26px Barlow'
