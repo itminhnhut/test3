@@ -267,6 +267,7 @@
     "REMOVE_FUTURES_MARGIN_INVALID_AMOUNT": "The amount you want to withdraw exceeds the available margin",
     "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "For the safety of your position, this feature is not supported with the current rate of return.",
     "INVALID_CLOSE_VOLUME": "Invalid partial closed volume",
-    "INVALID_LEVERAGE": "Invalid Leverage"
+    "INVALID_LEVERAGE": "Invalid Leverage",
+    "MAINTAIN":"This function is under maintenance, please come back later"
   }
 }

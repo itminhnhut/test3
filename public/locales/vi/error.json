@@ -156,6 +156,7 @@
     "REMOVE_FUTURES_MARGIN_INVALID_AMOUNT": "Số lượng bạn muốn rút vượt quá lượng kí quỹ khả dụng",
     "REMOVE_FUTURES_MARGIN_INVALID_PROFIT_RATIO": "Để đảm bảo an toàn cho vị thế của bạn, tính năng này không hỗ trợ với tỉ lệ lợi nhuận hiện tại.",
     "INVALID_CLOSE_VOLUME": "Khối lượng đóng từng phần không hợp lệ",
-    "INVALID_LEVERAGE": "Đòn bẩy không hợp lệ"
+    "INVALID_LEVERAGE": "Đòn bẩy không hợp lệ",
+    "MAINTAIN": "Tính năng này hiện đang bảo trì, vui lòng thử lại sau"
   }
 }
