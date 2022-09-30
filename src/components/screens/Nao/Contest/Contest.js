@@ -45,7 +45,7 @@ export const seasons = [
         active: true
     },
     {
-        season: 4, start: '2022-10-09T17:00:00.000Z', end: '2022-10-28T17:00:00.000Z',
+        season: 4, start: '2022-09-30T17:00:00.000Z', end: '2022-10-28T17:00:00.000Z',
         contest_id: 7,
         title_detail: { vi: 'ONUS Futures VNDC – Nami Championship mùa 1 (sắp diễn ra)', en: 'ONUS Futures VNDC – Nami Championship Season 1 (Coming soon)' },
         title: { vi: 'Giải đấu ONUS Futures VNDC – Nami Championship mùa 1', en: 'ONUS Futures VNDC – Nami Championship Season 1' },
