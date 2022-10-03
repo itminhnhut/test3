@@ -388,6 +388,10 @@ const OrderDetail = ({
                         {formatNumber(item?.metadata?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(ratio, 2, 0, true)}%)</Span>
                 </Row>
                 <Row>
+                    <Label>{t('futures:mobile:open_fee')}</Label>
+                    <Span>{renderFee(item?.metadata, 'place_order')}</Span>
+                </Row>
+                <Row>
                     <Label>{t('futures:mobile:close_fee')}</Label>
                     <Span>{renderFee(item?.metadata, 'close_order')}</Span>
                 </Row>
@@ -561,6 +565,15 @@ const OrderDetail = ({
                     <Label>{t('futures:margin')}</Label>
                     <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
                 </Row>
+                <Row className="flex-col items-start w-full">
+                    <FeeMeta
+                        mode="open_fee"
+                        order={order}
+                        allAssets={allAssets}
+                        t={t}
+                        isVndcFutures={isVndcFutures}
+                    />
+                </Row>
                 <Row>
                     <Label>{t('futures:mobile:close_fee')}</Label>
                     <Span>{renderFee(order, 'close_order')}</Span>
@@ -655,14 +668,9 @@ const OrderDetail = ({
                     />
                 </Row>
                 {!isAddedVolOrClose && <>
-                    <Row className="flex-col items-start w-full">
-                        <FeeMeta
-                            mode="close_fee"
-                            order={order}
-                            allAssets={allAssets}
-                            t={t}
-                            isVndcFutures={isVndcFutures}
-                        />
+                    <Row>
+                        <Label>{t('futures:mobile:close_fee')}</Label>
+                        <Span>{renderFee(order, 'close_order')}</Span>
                     </Row>
                     <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
