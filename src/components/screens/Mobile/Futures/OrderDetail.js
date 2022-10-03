@@ -387,9 +387,14 @@ const OrderDetail = ({
                     <Span className={+item?.metadata?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
                         {formatNumber(item?.metadata?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(ratio, 2, 0, true)}%)</Span>
                 </Row>
-                <Row>
-                    <Label>{t('futures:mobile:open_fee')}</Label>
-                    <Span>{renderFee(item?.metadata, 'place_order')}</Span>
+                <Row className="flex-col items-start w-full">
+                    <FeeMeta
+                        mode="open_fee"
+                        order={item?.metadata}
+                        allAssets={allAssets}
+                        t={t}
+                        isVndcFutures={isVndcFutures}
+                    />
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:close_fee')}</Label>
