@@ -143,6 +143,12 @@ const AvatarModal = ({ isVisible, onCloseModal }) => {
                 setTimeout(() => {
                     setState({ uploading: UPLOADING_STATUS.IDLE })
                 }, UPLOAD_TIMEOUT)
+            }else{
+                setState({
+                    completeFlag: null,
+                    uploading: UPLOADING_STATUS.FAILURE,
+                    notice: { message: t('common:uploader.failure'), style: '!visible text-red' }
+                })
             }
         } catch (e) {
             console.log(`Can't set custom avatar `, e)
