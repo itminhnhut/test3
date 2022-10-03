@@ -831,26 +831,22 @@ const FeeMeta = ({ order, mode = 'open_fee', allAssets, t, isVndcFutures }) => {
     const [visible, setVisible] = useState(false);
 
     const convertObject = (obj) => {
-        const asset = obj?.currency ?? Object.keys(obj)[0];
-        return { asset: +asset, value: obj?.currency ? (obj?.value ?? 0) : obj[asset] }
+        if (obj?.currency) {
+            return [{ asset: +obj?.currency, value: obj?.value ?? 0 }]
+        } else {
+            const arr = []
+            Object.keys(obj).map(key => {
+                arr.push({ asset: +key, value: obj[key] })
+            })
+            return arr
+        }
+
     }
 
     const fee_metadata = useMemo(() => {
         const metadata = order?.fee_data ?? order?.fee_metadata
         const feeFilter = metadata?.[mode === 'open_fee' ? 'place_order' : 'close_order']
-        const fee = feeFilter ? [convertObject(feeFilter)] : []
-        order?.futuresorderlogs.map(rs => {
-            const subMetadata = rs.metadata?.fee_data ?? rs.metadata?.fee_metadata
-            const subFeeFilter = subMetadata?.[mode === 'open_fee' ? 'place_order' : 'close_order']
-            if (subFeeFilter) {
-                const isAsset = fee.findIndex(item => subFeeFilter?.currency ? subFeeFilter?.currency === item?.asset : subFeeFilter[item?.asset])
-                if (isAsset !== -1) {
-                    fee[isAsset].value += subFeeFilter?.value ?? subFeeFilter[fee[isAsset].asset]
-                } else {
-                    fee.push(convertObject(subFeeFilter))
-                }
-            }
-        })
+        const fee = feeFilter ? convertObject(feeFilter) : []
         return fee
     }, [order])
 
