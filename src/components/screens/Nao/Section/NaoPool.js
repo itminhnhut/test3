@@ -45,7 +45,7 @@ const getAssets = createSelector(
     }
 );
 
-const SubPrice = ({ price, digitsPrice = 3, isShowLabel = true }) =>  <span className="text-sm text-nao-grey leading-6"> {isShowLabel ?`Equivalent: `: null }${formatNumber(price, digitsPrice)}</span>
+const SubPrice = ({ price, digitsPrice = 3, isShowLabel = true }) =>  <span className="text-sm text-nao-grey leading-6"> {isShowLabel ?``: null }${formatNumber(price, digitsPrice)}</span>
 
 const NaoPool = ({ dataSource, assetNao }) => {
     const { t } = useTranslation();
