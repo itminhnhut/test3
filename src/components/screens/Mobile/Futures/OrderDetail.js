@@ -83,7 +83,7 @@ const OrderDetail = ({
     // }));
 
     const allAssets = useSelector(state => getAllAssets(state));
-    const decimalSymbol = allAssets?.[order?.fee_metadata?.place_order?.currency]?.assetDigit ?? 0;
+    const decimalSymbol = allAssets?.[order?.margin_currency]?.assetDigit ?? 0;
     const decimalUsdt = allAssets?.[order?.margin_currency]?.assetDigit ?? 0;
     const [resolution, setResolution] = useState('15');
     const [dataSource, setDataSource] = useState([]);
