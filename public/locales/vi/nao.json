@@ -229,5 +229,8 @@
         "vol_trade": "KL giao dịch hôm nay",
         "the_promotion_end_title": "Chương trình đã kết thúc",
         "the_promotion_end_description": "Chương trình rút vé may mắn nhận thưởng theo khối lượng giao dịch đã kết thúc, vui lòng quay lại sau."
-    }
+    },
+    "ended": "đã kết thúc",
+    "going_on": "đang diễn ra",
+    "coming_soon_2": "sắp diễn mắt"
 }

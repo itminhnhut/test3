@@ -229,5 +229,8 @@
         "vol_trade": "Trade volume today",
         "the_promotion_end_title": "The promotion has ended",
         "the_promotion_end_description": "The Daily Trading Rewards Lucky Draw promotion has ended, please come back later."
-    }
+    },
+    "ended": "Ended",
+    "going_on": "Going on",
+    "coming_soon_2": "Coming soon"
 }
