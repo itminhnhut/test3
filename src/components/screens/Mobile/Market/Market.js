@@ -175,7 +175,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                         view: item.vc ?? 0,
                         change24hRaw: getExchange24hPercentageChange(item),
                         change24h: formatPercentage(
-                            roundTo(getExchange24hPercentageChange(item),2),
+                            roundTo(getExchange24hPercentageChange(item), 2),
                             2,
                             true
                         ),
@@ -281,7 +281,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                     <div className='flex flex-col text-right'>
                         <LastPrice price={item.lastPrice} />
                         <span className='text-xs text-onus-grey leading-[1.125rem] whitespace-nowrap'>
-                            ${formatPrice(referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
+                            ${formatPrice(item?.quoteAsset === 'VNDC' ? item.lastPrice / 23415 : referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
                         </span>
                     </div>
                     <div className='flex justify-end ml-6'>
