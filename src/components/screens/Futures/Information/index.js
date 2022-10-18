@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import Tooltip from 'components/common/Tooltip';
-import { countDecimals, formatPrice, getFilter, getS3Url } from 'redux/actions/utils';
+import { countDecimals, formatBalance, formatPrice, formatWallet, getFilter, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ExchangeOrderEnum, PublicSocketEvent } from 'redux/actions/const';
 import Emitter from 'redux/actions/emitter';
