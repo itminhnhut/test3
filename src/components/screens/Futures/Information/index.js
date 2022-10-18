@@ -172,13 +172,13 @@ export default function OrderInformation({ pair }) {
                     min: Math.max(_activePrice, _activePrice * (1 + currentExchangeConfig?.percentPriceFilter?.minDifferenceRatio)),
                     max: Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp)
                 };
-                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown),currentAssetConfig.assetDigit) + ' ' + quoteAsset;
+                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown),currentAssetConfig?.assetDigit  || 0) + ' ' + quoteAsset;
             }
             case 'max_limit_order_price': {
                 const _maxPrice = currentExchangeConfig.priceFilter?.maxPrice;
                 const _minPrice = currentExchangeConfig.priceFilter?.minPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp),currentAssetConfig?.assetDigit) + ' ' + quoteAsset;
+                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp),currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
             }
             case 'max_leverage':
                 return (currentExchangeConfig.exchange?.leverageConfig?.max || '-') + 'x';
