@@ -9,27 +9,28 @@ import {
     API_GET_FUTURES_CONFIGS,
     API_GET_FUTURES_MARKET_WATCH,
     API_GET_FUTURES_ORDER,
+    API_GET_FUTURES_SETTING,
     API_GET_FUTURES_USER_SETTINGS,
     API_SET_FUTURES_MARGIN_MODE,
     API_SET_FUTURES_POSITION_MODE,
-    API_UPDATE_FUTURES_SYMBOL_VIEW,
-    API_GET_FUTURES_SETTING
+    API_UPDATE_FUTURES_SYMBOL_VIEW
 } from './apis';
 import { ApiStatus, TRADING_MODE } from './const';
 import {
+    GET_FUTURES_SETTING,
+    REMOVE_FUTURES_MARKET_WATCH,
     SET_FUTURES_FAVORITE_PAIRS,
     SET_FUTURES_MARKET_WATCH,
-    SET_FUTURES_USER_SETTINGS,
     SET_FUTURES_ORDER_ADVANCE_TYPES,
     SET_FUTURES_ORDER_TYPES,
-    SET_FUTURES_PAIR_CONFIGS,
-    SET_FUTURES_USE_SLTP,
     SET_FUTURES_ORDERS_LIST,
-    REMOVE_FUTURES_MARKET_WATCH,
-    GET_FUTURES_SETTING,
-    SET_FUTURES_SETTING
+    SET_FUTURES_PAIR_CONFIGS,
+    SET_FUTURES_SETTING,
+    SET_FUTURES_USE_SLTP,
+    SET_FUTURES_USER_SETTINGS
 } from './types';
 import { favoriteAction } from './user';
+import { formatNumber } from 'redux/actions/utils';
 
 export const setUsingSltp = (payload) => (dispatch) => dispatch({
     type: SET_FUTURES_USE_SLTP,
@@ -43,10 +44,10 @@ export const setFuturesOrderTypes =
             payload,
         });
         isAdvance &&
-            dispatch({
-                type: SET_FUTURES_ORDER_ADVANCE_TYPES,
-                payload,
-            });
+        dispatch({
+            type: SET_FUTURES_ORDER_ADVANCE_TYPES,
+            payload,
+        });
     };
 
 export const getFuturesFavoritePairs = () => async (dispatch) => {
@@ -80,7 +81,7 @@ export const getFuturesMarketWatch = () => async (dispatch) => {
 export const getFuturesConfigs = () => async (dispatch) => {
     try {
         const { data } = await Axios.get(API_GET_FUTURES_CONFIGS);
-        if(data?.status === ApiStatus.SUCCESS ){
+        if (data?.status === ApiStatus.SUCCESS) {
             dispatch({
                 type: SET_FUTURES_PAIR_CONFIGS,
                 payload: data?.data || [],
@@ -182,10 +183,14 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             }
         } else {
             // handle multi language
-            log.i('placeFuturesOrder result: ', data);
             let message = data?.message;
             if (t(`error:futures${data?.status}`)) {
-                message = t(`error:futures:${data?.status || 'UNKNOWN'}`);
+                if (data.status === 'MAX_TOTAL_VOLUME') {
+                    message = t(`error:futures:MAX_TOTAL_VOLUME`, { value: `${formatNumber(data?.data?.notional)} ${params.symbol.includes('VNDC') ? 'VNDC' : 'USDT'}` });
+                } else {
+                    message = t(`error:futures:${data?.status || 'UNKNOWN'}`);
+                }
+
             }
             if (utils?.alert) {
                 utils.alert.show('error', t('futures:place_order'), message, data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`);
@@ -284,7 +289,7 @@ export const getOrdersList = (cb) => async (dispatch) => {
             type: SET_FUTURES_ORDERS_LIST,
             payload: data?.data?.orders || [],
         });
-        if (cb) cb(data?.data?.orders || [])
+        if (cb) cb(data?.data?.orders || []);
     }
 };
 
