@@ -71,13 +71,13 @@ export default function OrderInformation({ pair }) {
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const assetConfig = useSelector(state => state.utils.assetConfig);
 
+
     const getDecimalPrice = (config) => {
         const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
     const [pairPrice, setPairPrice] = useState(null);
-    const [lastSymbol, setLastSymbol] = useState(null);
     const priceFromMarketWatch = useSelector(state => getPairPrice(state, pair));
     const _pairPrice = pairPrice || priceFromMarketWatch;
     const lastPrice = _pairPrice?.lastPrice;
@@ -117,13 +117,6 @@ export default function OrderInformation({ pair }) {
         const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, exchange || []);
         const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, exchange || []);
 
-        // const minNotionalFilter = getFilter(
-        //     ExchangeOrderEnum.Filter.,
-        //     currentExchangeConfig || [],
-        // );
-        const baseAssetId = currentExchangeConfig?.baseAssetId || 0;
-        const quoteAssetId = currentExchangeConfig?.quoteAssetId || 0;
-
         return {
             priceFilter,
             exchange,
@@ -145,13 +138,13 @@ export default function OrderInformation({ pair }) {
 
     const renderContent = (title) => {
         const quoteAsset = currentExchangeConfig?.exchange?.quoteAsset || '';
-        // const formatPriceOpts = getDecimalScale(+currentExchangeConfig.priceFilter?.tickSize) || 6;
+        const currentAssetConfig =  assetConfig?.find(item => item.assetCode === quoteAsset);
         switch (title) {
             case 'min_order_size': {
                 return formatPrice(currentExchangeConfig.minNotionalFilter?.notional,) + ' ' + quoteAsset;
             }
             case 'max_order_size': {
-                return formatPrice(currentExchangeConfig.quantityFilter.maxQty * pairPrice?.lastPrice,) + ' ' + quoteAsset;
+                return formatPrice(currentExchangeConfig.quantityFilter.maxQty * _pairPrice?.lastPrice) + ' ' + quoteAsset;
             }
             case 'total_max_trading_volumn':
                 return formatPrice(currentExchangeConfig.maxNumberVolumeFilter?.notional || 0) + ' ' + quoteAsset;
@@ -179,13 +172,13 @@ export default function OrderInformation({ pair }) {
                     min: Math.max(_activePrice, _activePrice * (1 + currentExchangeConfig?.percentPriceFilter?.minDifferenceRatio)),
                     max: Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp)
                 };
-                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown)) + ' ' + quoteAsset;
+                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown),currentAssetConfig.assetDigit) + ' ' + quoteAsset;
             }
             case 'max_limit_order_price': {
                 const _maxPrice = currentExchangeConfig.priceFilter?.maxPrice;
                 const _minPrice = currentExchangeConfig.priceFilter?.minPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp)) + ' ' + quoteAsset;
+                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp),currentAssetConfig?.assetDigit) + ' ' + quoteAsset;
             }
             case 'max_leverage':
                 return (currentExchangeConfig.exchange?.leverageConfig?.max || '-') + 'x';
