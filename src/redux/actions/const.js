@@ -590,6 +590,7 @@ export const ExchangeOrderEnum = {
         MARKET_LOT_SIZE: 'MARKET_LOT_SIZE',
         MAX_NUM_ORDERS: 'MAX_NUM_ORDERS',
         MAX_NUM_ALGO_ORDERS: 'MAX_NUM_ALGO_ORDERS',
+        MAX_TOTAL_VOLUME: 'MAX_TOTAL_VOLUME',
     },
 };
 
