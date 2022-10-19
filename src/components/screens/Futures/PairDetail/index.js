@@ -490,7 +490,7 @@ const FuturesPairDetail = ({
                     {/* Select */}
                     <div className="flex-1">
                         <div
-                            className="relative cursor-pointer group"
+                            className="relative cursor-pointer group max-w-[100px]"
                             onMouseOver={() => setIsShowModalPriceList(true)}
                             onMouseLeave={() => setIsShowModalPriceList(false)}
                         >
