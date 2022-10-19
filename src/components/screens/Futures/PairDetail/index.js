@@ -54,7 +54,7 @@ const FuturesPairDetail = ({
     const assetConfig = useSelector((state) => state.utils.assetConfig);
     const pair = currentSelectedPair?.symbol || currentSelectedPair;
     const priceFromMarketWatch = useSelector((state) => getPairPrice(state, pair));
-    const _pairPrice =  priceFromMarketWatch || pairPrice ;
+    const _pairPrice = priceFromMarketWatch || pairPrice;
     const lastPrice = _pairPrice?.lastPrice;
 
     const router = useRouter();
@@ -69,7 +69,6 @@ const FuturesPairDetail = ({
     const prevLastPriceModal = usePrevious(priceFromMarketWatch?.lastPrice);
 
     const currentExchangeConfig = useMemo(() => {
-
         if (!currentSelectedPair && !currentSelectedPair?.symbol) return;
         const symbol = currentSelectedPair?.symbol || currentSelectedPair;
         const config = allPairConfigs.find((e) => e.symbol === symbol);
@@ -460,7 +459,7 @@ const FuturesPairDetail = ({
                 </div>
             ));
         };
-
+        
         return (
             <Modal
                 isVisible={isShowModalInfo}
@@ -475,12 +474,17 @@ const FuturesPairDetail = ({
                     >
                         {t('futures:trading_rules')}
                     </p>
-                    <X size={16} strokeWidth={1.2} className="text-darkBlue dark:text-darkBlue-5" />
+                    <X
+                        onClick={() => handleToggleModalInfo(false)}
+                        size={16}
+                        strokeWidth={1.2}
+                        className="cursor-pointer text-darkBlue dark:text-darkBlue-5"
+                    />
                 </div>
 
                 <div className="w-full h-[1px] bg-divider dark:bg-divider-dark"></div>
 
-                <div className={'pb-[16px] pt-[20px] relative flex justify-between'}>
+                <div className={'pb-[16px] pt-[24px] relative flex justify-between'}>
                     {/* Select */}
                     <div className="flex-1">
                         <div
@@ -488,7 +492,7 @@ const FuturesPairDetail = ({
                             onMouseOver={() => setIsShowModalPriceList(true)}
                             onMouseLeave={() => setIsShowModalPriceList(false)}
                         >
-                            <div className="relative z-10 flex items-center font-bold text-[18px]">
+                            <div className="relative z-10 flex items-center text-lg font-bold leading-6 ">
                                 {currentExchangeConfig?.config?.baseAsset
                                     ? currentExchangeConfig?.config?.baseAsset +
                                       '/' +
@@ -504,7 +508,7 @@ const FuturesPairDetail = ({
                                     )}
                                 />
                             </div>
-                            <div className="relative z-10 text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="relative z-10 text-xs font-medium leading-5 text-txtSecondary dark:text-txtSecondary-dark">
                                 {t('futures:tp_sl:perpetual')}
                             </div>
                             <div
@@ -524,7 +528,7 @@ const FuturesPairDetail = ({
                     <div className="flex flex-col items-end justify-end flex-1">
                         {renderLastPrice(true)}
                         <div
-                            className={classNames('text-dominant text-xs leading-5', {
+                            className={classNames('text-dominant text-xs ', {
                                 '!text-red': priceFromMarketWatch?.priceChangePercent < 0
                             })}
                         >
@@ -553,9 +557,11 @@ const FuturesPairDetail = ({
         );
     };
 
-    const handleOpenModal = () => {
-        setCurrentSelectedPair(pairConfig);
-        setIsShowModalInfo(true);
+    const handleToggleModalInfo = (state = true) => {
+        if (state) {
+            setCurrentSelectedPair(pairConfig);
+        }
+        setIsShowModalInfo(state);
     };
 
     return (
@@ -579,7 +585,7 @@ const FuturesPairDetail = ({
                 </div>
                 <div className="relative z-10 flex items-center text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark">
                     {t('futures:tp_sl:perpetual')}
-                    <div onClick={handleOpenModal} className={'ml-1'}>
+                    <div onClick={handleToggleModalInfo} className={'ml-1'}>
                         <img
                             src={getS3Url('/images/icon/ic_book-open.png')}
                             height={14}
