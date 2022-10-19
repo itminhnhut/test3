@@ -46,6 +46,7 @@ const FuturesPairDetail = ({
     const [activePairList, setActivePairList] = useState(false);
     const [pairListMode, setPairListMode] = useState('');
     const [isShowModalInfo, setIsShowModalInfo] = useState(false);
+    const [isShowModalPriceList, setIsShowModalPriceList] = useState(false);
 
     // state, vars for information modal (Trading rules)
     const [currentSelectedPair, setCurrentSelectedPair] = useState(pairConfig);
@@ -484,8 +485,8 @@ const FuturesPairDetail = ({
                     <div className="flex-1">
                         <div
                             className="relative cursor-pointer group"
-                            onMouseOver={() => setActivePairList(true)}
-                            onMouseLeave={() => setActivePairList(false)}
+                            onMouseOver={() => setIsShowModalPriceList(true)}
+                            onMouseLeave={() => setIsShowModalPriceList(false)}
                         >
                             <div className="relative z-10 flex items-center font-bold text-[18px]">
                                 {currentExchangeConfig?.config?.baseAsset
@@ -498,7 +499,7 @@ const FuturesPairDetail = ({
                                     className={classNames(
                                         'mt-1 ml-2 transition-transform duration-75',
                                         {
-                                            'rotate-180': activePairList
+                                            'rotate-180': isShowModalPriceList
                                         }
                                     )}
                                 />
@@ -514,7 +515,7 @@ const FuturesPairDetail = ({
                                     mode={pairListMode}
                                     setMode={setPairListMode}
                                     isAuth={isAuth}
-                                    activePairList={activePairList}
+                                    activePairList={isShowModalPriceList}
                                     onSelectPair={onSelectPair}
                                 />
                             </div>
@@ -690,7 +691,7 @@ const Row = styled.div.attrs({
 })``;
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
-    className: `text-gray-1 text-left text-gray1 font-medium text-sm leading-6 text-gray font-medium flex items-center`
+    className: `text-gray-1 text-left text-gray1 dark:text-darkBlue5 font-medium text-sm leading-6 text-gray font-medium flex items-center`
 }))``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({
