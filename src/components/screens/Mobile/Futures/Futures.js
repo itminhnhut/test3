@@ -181,7 +181,7 @@ const FuturesMobile = () => {
             decimalScaleQtyLimit: countDecimals(decimalScaleQtyLimit?.stepSize),
             decimalScaleQtyMarket: countDecimals(decimalScaleQtyMarket?.stepSize)
         };
-    }, [pairConfig]);
+    }, [pairConfig?.baseAsset]);
 
     useEffect(() => {
         if (avlbAsset) {
