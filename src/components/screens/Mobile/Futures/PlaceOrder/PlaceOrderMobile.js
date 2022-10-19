@@ -154,7 +154,7 @@ const PlaceOrder = ({
         if (type === OrderTypes.Market) {
             onChangeQuoteQty(lastPrice, leverage);
         }
-    }, [decimals, leverage]);
+    }, [leverage]);
 
     useEffect(() => {
         if (firstTime.current) return;
