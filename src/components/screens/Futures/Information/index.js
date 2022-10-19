@@ -81,20 +81,20 @@ export default function OrderInformation({ pair }) {
     const priceFromMarketWatch = useSelector(state => getPairPrice(state, pair));
     const _pairPrice = pairPrice || priceFromMarketWatch;
     const lastPrice = _pairPrice?.lastPrice;
-    useEffect(() => {
-        if (!symbolOptions?.symbol) return;
-        // ? Subscribe publicSocket
-        // ? Get Pair Ticker
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbolOptions.symbol, async (data) => {
-            if (symbolOptions.symbol === data?.s && data?.p > 0) {
-                const _pairPrice = FuturesMarketWatch.create(data);
-                setPairPrice(_pairPrice);
-            }
-        });
-        return () => {
-            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
-        };
-    }, [symbolOptions?.symbol]);
+    // useEffect(() => {
+    //     if (!symbolOptions?.symbol) return;
+    //     // ? Subscribe publicSocket
+    //     // ? Get Pair Ticker
+    //     Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbolOptions.symbol, async (data) => {
+    //         if (symbolOptions.symbol === data?.s && data?.p > 0) {
+    //             const _pairPrice = FuturesMarketWatch.create(data);
+    //             setPairPrice(_pairPrice);
+    //         }
+    //     });
+    //     return () => {
+    //         // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
+    //     };
+    // }, [symbolOptions?.symbol]);
 
     const currentExchangeConfig = useMemo(() => {
         const exchange = allPairConfigs.find(
@@ -128,13 +128,13 @@ export default function OrderInformation({ pair }) {
         };
     }, [allPairConfigs, pair]);
 
-    const priceFilter = getFilter(
-        ExchangeOrderEnum.Filter.PRICE_FILTER,
-        currentExchangeConfig || []
-    );
-    const symbolOptions = useMemo(() => {
-        return allPairConfigs.find(rs => rs.symbol === pair);
-    }, [pair, allPairConfigs]);
+    // const priceFilter = getFilter(
+    //     ExchangeOrderEnum.Filter.PRICE_FILTER,
+    //     currentExchangeConfig || []
+    // );
+    // const symbolOptions = useMemo(() => {
+    //     return allPairConfigs.find(rs => rs.symbol === pair);
+    // }, [pair, allPairConfigs]);
 
     const renderContent = (title) => {
         const quoteAsset = currentExchangeConfig?.exchange?.quoteAsset || '';
@@ -151,32 +151,12 @@ export default function OrderInformation({ pair }) {
             case 'max_number_order':
                 return (currentExchangeConfig?.maxNumOrderFilter?.limit || 0) + ' ' + t('futures:order');
             case 'min_limit_order_price': {
-                const _maxPrice = currentExchangeConfig.priceFilter?.maxPrice;
                 const _minPrice = currentExchangeConfig.priceFilter?.minPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                // if (mode !== 'price') {
-                //     if (type === 'LIMIT') {
-                //         _activePrice = price;
-                //     } else if (type === 'STOP_MARKET') {
-                //         _activePrice = stopPrice;
-                //     }
-                // }
-
-                // Truong hop dat lenh market
-                const lowerBound = {
-                    min: Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown),
-                    max: Math.min(_activePrice, _activePrice * (1 - currentExchangeConfig?.percentPriceFilter?.minDifferenceRatio))
-                };
-
-                const upperBound = {
-                    min: Math.max(_activePrice, _activePrice * (1 + currentExchangeConfig?.percentPriceFilter?.minDifferenceRatio)),
-                    max: Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp)
-                };
                 return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown),currentAssetConfig?.assetDigit  || 0) + ' ' + quoteAsset;
             }
             case 'max_limit_order_price': {
                 const _maxPrice = currentExchangeConfig.priceFilter?.maxPrice;
-                const _minPrice = currentExchangeConfig.priceFilter?.minPrice;
                 let _activePrice = _pairPrice?.lastPrice;
                 return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp),currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
             }
@@ -225,7 +205,7 @@ export default function OrderInformation({ pair }) {
                             <Row>
                                 <Label className="">
                                     {t('futures:' + title)}
-                                    <div className="px-2 flex" data-tip="" data-for={title} id={tooltip}>
+                                    <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
                                         <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14}/>
                                     </div>
                                 </Label>
