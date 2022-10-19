@@ -350,6 +350,9 @@ module.exports = {
                     DEFAULT: commonColors.onus.white,
                     secondary: commonColors.onus.grey,
                 },
+                txtDarkBlue: {
+                    DEFAULT: commonColors.darkBlue5,
+                },
             },
             backgroundColor: {
                 bgTabInactive: {
