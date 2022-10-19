@@ -442,7 +442,9 @@ const FuturesPairDetail = ({
                         </div>
                     </Tooltip>
                     <Row>
-                        <Label>
+                        <div
+                            className={`flex items-center text-sm font-medium leading-6 text-left  dark:text-txtDarkBlue `}
+                        >
                             {t('futures:' + title)}
                             <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
                                 {/* <img src={getS3Url("/images/nao/ic_info.png")} height={"10"} width={"10"} alt="" className="mx-auto" /> */}
@@ -452,7 +454,7 @@ const FuturesPairDetail = ({
                                     width={14}
                                 />
                             </div>
-                        </Label>
+                        </div>
                         <Span>{renderContent(title)}</Span>
                     </Row>
                     {/* <div className="divide-y divide-[#36445A]"></div> */}
@@ -695,10 +697,6 @@ const RIGHT_ITEMS_WITH_TOOLTIPS = [
 const Row = styled.div.attrs({
     className: 'flex items-center justify-between border-b border-onus-input2 last:border-0 w-full'
 })``;
-
-const Label = styled.div.attrs(({ isTabOpen }) => ({
-    className: `text-gray-1 text-left text-gray1 dark:text-darkBlue5 font-medium text-sm leading-6 text-gray font-medium flex items-center`
-}))``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({
     className: `font-medium text-darkBlue dark:text-white leading-[22px] text-sm text-right `
