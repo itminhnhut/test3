@@ -313,7 +313,8 @@
                 "1019": "Staking Interest",
                 "open_fee": "Order Opening Fee",
                 "close_fee": "Order Closing Fee",
-                "refund_of_open_fee": "Refund Of Opening Fee"
+                "refund_of_open_fee": "Refund Of Opening Fee",
+                "611": "Funding Fee"
             },
             "close": "Close"
         },
@@ -420,5 +421,11 @@
     "positions": "Positions",
     "open_orders": "Open Orders",
     "load_more": "Load more",
-    "transaction_histories": "Transaction History"
+    "transaction_histories": "Transaction History",
+    "countdown": "Countdown",
+    "funding_fee": "Funding Fee",
+    "funding_rate": "Funding Rate",
+    "funding_rate_des": "The payment rate exchanged between the long and short positions for the next funding. If the funding rate is positive, longs pay shorts. If negative, shorts pay longs.",
+    "funding_history": "Funding History",
+    "information": "Information"
 }

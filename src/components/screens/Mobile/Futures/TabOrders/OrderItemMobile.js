@@ -102,7 +102,8 @@ const OrderItemMobile = ({
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity);
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const swap = row?.swap || 0
-        const liqPrice = (size * row?.open_price + row?.fee + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus));
+        const funding = row?.funding || 0
+        const liqPrice = (size * row?.open_price + row?.fee + funding + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus));
         return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, decimalScalePrice, 0, false) : '-';
     };
 
