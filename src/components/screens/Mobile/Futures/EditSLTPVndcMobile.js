@@ -71,10 +71,11 @@ const EditSLTPVndcMobile = ({
             price,
             size
         } = order;
+        const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
         const isBuy = side === VndcFutureOrderType.Side.BUY;
         const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
         let total = quantity * (isBuy ? sltp - openPrice : openPrice - sltp);
-        const _fee = quantity * (sltp + openPrice) * DefaultFuturesFee.NamiFrameOnus;
+        const _fee = quantity * (sltp + openPrice) * DefaultFuturesFee.NamiFrameOnus + funding;
         let profit = total - _fee;
         return profit;
     };
