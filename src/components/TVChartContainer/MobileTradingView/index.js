@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IconLoading } from 'components/common/Icons';
-import { getTradingViewTimezone, getS3Url, Countdown } from 'redux/actions/utils';
+import { getTradingViewTimezone, getS3Url, Countdown, formatNumber } from 'redux/actions/utils';
 import colors from '../../../styles/colors';
 import { widget } from '../../TradingView/charting_library/charting_library.min';
 import Datafeed from '../api';
@@ -674,7 +674,7 @@ const Funding = ({ symbol }) => {
                             <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
                         </div>
                     </div>
-                    <div>{marketWatch[symbol]?.fundingRate}%</div>
+                    <div>{marketWatch[symbol]?.fundingRate ? formatNumber(marketWatch[symbol]?.fundingRate * 100, 4, 0, true) : 0}%</div>
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
@@ -687,7 +687,7 @@ const Funding = ({ symbol }) => {
 }
 
 const ModalFundingRate = ({ onClose, t }) => {
-    
+
     const onRedirect = () => {
         window.open('/futures/funding-history')
     }

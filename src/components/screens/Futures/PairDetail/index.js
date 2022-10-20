@@ -157,7 +157,7 @@ const FuturesPairDetail = ({
 
             switch (code) {
                 case 'fundingCountdown':
-                    value = <div><span>{pairPrice?.fundingRate}%</span> / <Countdown date={pairPrice?.fundingTime} /></div>
+                    value = <div><span>{pairPrice?.fundingRate ? formatNumber(pairPrice?.fundingRate * 100, 4, 0, true) : 0}%</span> / <Countdown date={pairPrice?.fundingTime} /></div>
                     break
                 case '24hHigh':
                     value = formatNumber(
