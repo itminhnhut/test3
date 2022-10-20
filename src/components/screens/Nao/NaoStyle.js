@@ -136,7 +136,8 @@ export const Table = ({
     onRowClick,
     noItemsMessage,
     loading = false,
-}) => {
+    classWrapper=''
+    }) => {
     const mouseDown = useRef(false);
     const startX = useRef(null);
     const scrollLeft = useRef(null);
@@ -232,10 +233,12 @@ export const Table = ({
     const isScroll = checkScrollBar(content.current, "vertical");
     const _children = children.filter(child => child.props?.visible === true || child.props?.visible === undefined);
     return (
-        <CardNao id="nao-table" noBg className="mt-8 !p-6 !justify-start" >
+        <CardNao id="nao-table" noBg className={
+            classNames("mt-8 !p-6 !justify-start bg-nao-bg4", classWrapper)
+        }>
             <div
                 ref={content}
-                className="overflow-auto nao-table-content min-h-[200px]"
+                className={classNames("overflow-auto nao-table-content min-h-[200px]")}
             >
                 <div
                     ref={header}

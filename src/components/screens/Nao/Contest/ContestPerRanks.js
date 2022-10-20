@@ -94,10 +94,10 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
         <section className="contest_individual_ranks pt-[4.125rem]">
             <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-personal-rank" >
-                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) }} >
+                <div className="text-sm font-medium text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) }} >
                 </div>
             </Tooltip>
-            <div className="flex justify-between flex-wrap gap-4">
+            <div className="flex flex-wrap justify-between gap-4">
                 <div className="flex items-center space-x-4">
                     <TextLiner>{t('nao:contest:individual_ranking')}</TextLiner>
                     <img data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer" src={getS3Url('/images/nao/ic_info.png')} width="20" height="20" alt="" />
@@ -115,25 +115,25 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                 <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-[2.75rem]">
                     {top3.map((item, index) => (
                         <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
-                            <div className="flex items-center justify-between flex-1 mb-4 gap-5">
+                            <div className="flex items-center justify-between flex-1 gap-5 mb-4">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[2.875rem] h-[2.875rem] rounded-[50%] relative">
                                         <ImageNao src={item?.avatar}
                                             className="min-w-[2.875rem] min-h-[2.875rem] max-w-[2.875rem] max-h-[2.875rem] rounded-[50%] object-cover" alt="" />
-                                        {/*{item?.[rank] > 0 && <img className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-3" src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}*/}
+                                        {/*{item?.[rank] > 0 && <img className="absolute bottom-0 -translate-x-1/2 translate-y-3 left-1/2" src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}*/}
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
-                                        <div className="text-lg font-semibold leading-8 capitalize flex items-center gap-2">
+                                        <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
                                             {capitalize(item?.name)}
                                         </div>
-                                        <span className="text-nao-grey text-sm font-medium cursor-pointer">{item?.onus_user_id}</span>
+                                        <span className="text-sm font-medium cursor-pointer text-nao-grey">{item?.onus_user_id}</span>
                                     </div>
                                 </div>
                                 <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
 
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
-                            <div className="rounded-lg mt-auto flex flex-col space-y-1">
+                            <div className="flex flex-col mt-auto space-y-1 rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
                                     <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
                                     <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
@@ -183,28 +183,28 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                                                     : item?.[rank] || '-'
                                             }
                                         </div>
-                                        <div className="text-sm flex-1">
+                                        <div className="flex-1 text-sm">
                                             <div className="flex items-center justify-between">
                                                 <div>
                                                     <label className="font-semibold leading-6 capitalize">{capitalize(item?.name)}</label>
-                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer">ID: {item?.onus_user_id}</div>
+                                                    <div className="font-medium leading-6 cursor-pointer text-nao-grey">ID: {item?.onus_user_id}</div>
                                                 </div>
                                                 <div className=''>
                                                     <ImageNao className='rounded-[50%] object-cover min-w-[2.75rem] min-h-[2.75rem] max-w-[2.75rem] max-h-[2.75rem]'
                                                         src={item?.avatar} alt="" />
                                                 </div>
                                             </div>
-                                            <div className="flex items-center font-medium justify-between pt-2">
+                                            <div className="flex items-center justify-between pt-2 font-medium">
                                                 <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                             </div>
                                             {!previous &&
-                                                <div className="flex items-center font-medium justify-between pt-1">
+                                                <div className="flex items-center justify-between pt-1 font-medium">
                                                     <label className="leading-6 text-nao-grey">{t('common:ext_gate:time')}</label>
                                                     <span className="text-right">{formatNumber(item?.time, 2)} {t('common:hours')}</span>
                                                 </div>
                                             }
-                                            <div className="flex items-center font-medium justify-between pt-1">
+                                            <div className="flex items-center justify-between pt-1 font-medium">
                                                 <label className="leading-6 text-nao-grey">{t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}</label>
                                                 {tab === 'pnl' ?
                                                     <span className={`text-right ${getColor(item?.pnl)}`}>
@@ -223,14 +223,14 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                             :
                             <div className={`flex items-center justify-center flex-col m-auto`}>
                                 <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                                <div className="text-xs text-nao-grey mt-1">{t('nao:contest:no_rank')}</div>
+                                <div className="mt-1 text-xs text-nao-grey">{t('nao:contest:no_rank')}</div>
                             </div>
                         }
                     </div>
                 </CardNao>
                 :
                 <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} >
-                    <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
+                    <Column minWidth={50} className="font-medium text-nao-grey" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
                     <Column minWidth={150} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
                     <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (${quoteAsset})`} decimal={0} fieldName="total_volume" />
@@ -243,7 +243,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                 </Table>
             }
 
-            {/* <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
+            {/* <div className='mt-6 text-sm font-medium leading-6 text-nao-grey'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
         </section>
     );
 };

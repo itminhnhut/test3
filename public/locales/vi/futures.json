@@ -420,5 +420,34 @@
     "positions": "Vị thế",
     "open_orders": "Lệnh mở",
     "load_more": "Xem thêm",
-    "transaction_histories": "Lịch sử giao dịch"
+    "transaction_histories": "Lịch sử giao dịch",
+    "funding": "Funding",
+    "funding_rate_tooltip": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
+    "count_down": "đếm ngược",
+    "funding_fee": "Phí funding",
+    "funding_rate": "Tỷ lệ funding",
+    "funding_history":{
+        "tab_ratio_realtime":"Tỷ lệ funding theo thời gian thực",
+        "tab_history":"Lịch sử phí funding",
+
+        "find_pair":"Tìm cặp giao dịch",
+
+        "opt_order_default": "Sắp xếp theo mặc định",
+        "opt_default":"Sắp xếp theo mặc định",
+        "opt_contract_a_z":"Theo tên hợp đồng (A->Z)",
+        "opt_contract_z_a":"Theo tên hợp đồng (Z->A)",
+        "opt_rate_inc":"Theo tỷ lệ funding tăng dần",
+        "opt_rate_desc":"Theo tỷ lệ funding giảm dần",
+        "contract":"Hợp đồng",
+
+        "link_overview": "Giới thiệu tỷ lệ funding trong Nami Future",
+        "pair":"Cặp",
+        "time_left_to_next_funding":"Thời gian đến funding tiếp theo",
+        "funding_rate":"Tỷ lệ funding",
+        "days": "ngày",
+        "more": "Xem thêm",
+        "hours": "giờ",
+
+        "funding_range":"Khoảng funding"
+    }
 }
