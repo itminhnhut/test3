@@ -14,7 +14,7 @@ import { isMobile } from 'react-device-detect';
 import { Search, X } from 'react-feather';
 import { useSelector } from 'react-redux';
 import { usePrevious } from 'react-use';
-import { getS3Url } from 'redux/actions/utils'; 
+import { getS3Url } from 'redux/actions/utils';
 
 export const CURRENCIES = [
     {
@@ -132,7 +132,7 @@ export default function FundingHistory({ currency }) {
                         ),
                         symbol: data?.baseAsset,
                         key: value,
-                        fundingRate: data?.fundingRate,
+                        fundingRate: data?.fundingRate * 100,
                         fundingTime: data?.fundingTime
                     }
                 ];
