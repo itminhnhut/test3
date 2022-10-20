@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState, } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, getDecimalScale, getS3Url, secondToMinutesAndSeconds } from 'redux/actions/utils';
+import { formatNumber, getDecimalScale, secondToMinutesAndSeconds, } from 'redux/actions/utils';
 import { usePrevious } from 'react-use';
 import { ChevronDown } from 'react-feather';
 import { roundTo } from 'round-to';
@@ -10,17 +10,15 @@ import FuturesPairDetailItem from './PairDetailItem';
 import FuturesPairList from '../PairList';
 import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
-import { Tooltip } from 'components/screens/Nao/NaoStyle';
-import { useCountdown } from 'hooks/useCountdown';
 
 const FuturesPairDetail = ({
-    pairPrice,
-    markPrice,
-    pairConfig,
-    forceUpdateState,
-    isVndcFutures,
-    isAuth
-}) => {
+                               pairPrice,
+                               markPrice,
+                               pairConfig,
+                               forceUpdateState,
+                               isVndcFutures,
+                               isAuth
+                           }) => {
     // ? Xử lí minW để khi giá thay đổi, giao diện này sẽ không bị xê dịch.
     // ? Nguyên nhân: Font sida (;_;)
     const [itemsPriceMinW, setItemsPriceMinW] = useState(0)
@@ -197,10 +195,23 @@ const FuturesPairDetail = ({
                     )
                     minWidth = itemsPriceMinW + 36
                     break
+                case '24hBaseVolume':
+                    localized += ` (${pairPrice?.baseAsset})`
                 case 'bestBid':
                     minWidth = itemsPriceMinW + 41
+                    value = formatNumber(
+                        roundTo(pairPrice?.baseAssetVolume || 0, 3),
+                        3
+                    )
                     value = <div className="text-red">{formatNumber(pairPrice?.bid, pricePrecision, 0, true)}</div>
                     break
+                case '24hQuoteVolume':
+                    localized += ` (${pairPrice?.quoteAsset})`
+                    minWidth = itemsPriceMinW + 50
+                    value = formatNumber(
+                        roundTo(pairPrice?.quoteAssetVolume || 0, 3),
+                        3
+                    )
                 case 'bestAsk':
                     minWidth = itemsPriceMinW + 41
                     value = <div className="text-dominant">{formatNumber(pairPrice?.ask, pricePrecision, 0, true)}</div>
@@ -281,67 +292,6 @@ const FuturesPairDetail = ({
         itemsPriceMinW,
     ])
 
-    const time = useCountdown(pairPrice?.fundingTime);
-    const handleClickFRTooltip = () =>{
-        window.open('https://www.binance.com/en/support/faq/360039999992', '_blank');
-
-    }
-
-    const renderFundingRate = () => {
-        console.log(pairPrice?.fundingTime);
-        console.log({ time });
-        const addPadString = (time) =>{
-            return time < 10 ? '0' + time : time;
-        }
-        const timeLeft = `${addPadString(time?.hours)}:${addPadString(time?.minutes)}:${addPadString(time?.seconds)}`;
-       return (
-           <div className={classNames(`w-auto font-medium mr-5`,)}>
-                <div
-                    className={classNames(
-                        'font-medium flex items-center text-[10px] text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap select-none',
-                    )}
-                >
-                    {`${t('futures:funding')}/${t('futures:count_down')}`}
-                    <Tooltip id="tooltip-auto"
-                             place={"bottom"}
-                             effect='solid'
-                             delayHide={500}
-                             delayShow={500}
-                             delayUpdate={500}
-                             place={'right'}
-                             // className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
-                             overridePosition={(e) => ({
-                                 left: 0,
-                                 top: e.top
-                             })}
-                             className="!p-[40px] !z-10 !w-[500px] sm:min-w-[282px] sm:!max-w-[282px] h-auto"
-                    >
-                        <div className={'bg-auto w-full flex flex-col'}>
-                            <p className={'w-100'}>
-                                {t('futures:funding_rate_tooltip')}
-                            </p>
-                            <div
-                                onClick={handleClickFRTooltip}
-                                className={" bg-primary-500 bg-dominant " +
-                                "cursor-pointer text-white font-semibold leading-[40px] text-[26px] h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-sm font-normal leading-6"}>
-                                asdljlasd
-                            </div>
-                        </div>
-                    </Tooltip>
-                    <div data-event='click focus' data-tip={''} data-for="tooltip-auto" >
-                        <img className="min-w-[10px] ml-[5px]" src={getS3Url('/images/icon/ic_mobile_tooltip.png')} height={10} width={10} />
-                    </div>
-                </div>
-                <div
-                    className={classNames(
-                        'text-xs whitespace-nowrap text-txtPrimary dark:text-txtPrimary-dark leading-5',
-                    )}
-                >
-                    {`${pairPrice?.fundingRate}% / ${timeLeft}`}
-                </div>
-        </div>)
-    }
-
     return (
         <div className='h-full pl-5 flex items-center'>
             {/* Pair */}
@@ -383,7 +333,6 @@ const FuturesPairDetail = ({
 
             {/* Details */}
             <InfoSlider forceUpdateState={forceUpdateState} className='ml-2'>
-                {renderFundingRate()}
                 {renderPairPriceItems()}
             </InfoSlider>
         </div>
@@ -413,3 +362,4 @@ const PAIR_PRICE_DETAIL_ITEMS = [
 ]
 
 export default FuturesPairDetail
+

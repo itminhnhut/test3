@@ -21,56 +21,6 @@ export const CURRENCIES = [
     }
 ];
 
-const sortAscending = (arr, key) =>
-    arr.sort(function (a, b) {
-        return a[key] - b[key];
-    });
-const sortDescending = (arr, key) =>
-    arr.sort(function (a, b) {
-        return b[key] - a[key];
-    });
-
-const FILTER_OPTS = [
-    {
-        label: 'futures:funding_history:opt_default',
-        index: 0,
-        keySort: 'symbol',
-        sort: (arr, key) => arr
-    },
-    {
-        label: 'futures:funding_history:opt_contract_a_z',
-        index: 1,
-        keySort: 'symbol',
-        sort: (data, key) => {
-            return sortAscending(data, key);
-        }
-    },
-    {
-        label: 'futures:funding_history:opt_contract_z_a',
-        index: 2,
-        keySort: 'symbol',
-        sort: (data, key) => {
-            return sortDescending(data, key);
-        }
-    },
-    {
-        label: 'futures:funding_history:opt_rate_inc',
-        index: 3,
-        keySort: 'fundingRate',
-        sort: (data, key) => {
-            return sortAscending(data, key);
-        }
-    },
-    {
-        label: 'futures:funding_history:opt_rate_desc',
-        index: 4,
-        keySort: 'fundingRate',
-        sort: (data, key) => {
-            return sortDescending(data, key);
-        }
-    }
-];
-
 export default function FundingHistory(props) {
     const [currentTheme] = useDarkMode();
     const { t } = useTranslation();
@@ -135,7 +85,7 @@ export default function FundingHistory(props) {
                 <Background isDark={currentTheme === THEME_MODE.DARK}>
                     <div className={'px-[20px] pt-[40px]'}>
                         {renderHeading()}
-                        <div className="mb-[3rem]">{renderScreenTab()}</div>
+                        <div className="mb-[2rem] lg:mb-[3rem]">{renderScreenTab()}</div>
                         {/* Content Tab */}
                         {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : null}
                     </div>

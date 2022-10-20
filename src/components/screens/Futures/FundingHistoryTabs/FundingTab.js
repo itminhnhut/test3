@@ -1,32 +1,20 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import DynamicNoSsr from 'components/DynamicNoSsr';
-import { NAVBAR_USE_TYPE } from 'components/common/NavBar/NavBar';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import styled from 'styled-components';
-import colors from 'styles/colors';
-import { Button } from 'antd';
-import { useTranslation } from 'next-i18next';
-import Tab from 'components/common/Tab';
-import { PATHS } from 'constants/paths';
-import { WALLET_SCREENS } from 'pages/wallet';
-import { getS3Url, renderName } from 'redux/actions/utils';
-import { Column, renderPnl, Table } from '../../Nao/NaoStyle';
-import useWindowSize from 'hooks/useWindowSize';
-import classNames from 'classnames';
-import { Search, X } from 'react-feather';
-import Link from 'next/link';
-import { useSelector } from 'react-redux';
-import Emitter from 'redux/actions/emitter';
-import { PublicSocketEvent } from 'redux/actions/const';
-import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import { useCountdown } from 'hooks/useCountdown';
-import ReTable from 'components/common/ReTable';
-import AssetLogo from 'components/wallet/AssetLogo';
 import { Popover, Transition } from '@headlessui/react';
+import classNames from 'classnames';
 import Divider from 'components/common/Divider';
+import ReTable from 'components/common/ReTable';
 import RePagination from 'components/common/ReTable/RePagination';
+import ListFundingMobile from 'components/screens/Futures/FundingHistoryTabs/components/ListFundingMobile';
+import AssetLogo from 'components/wallet/AssetLogo';
+import useDarkMode from 'hooks/useDarkMode';
+import useWindowSize from 'hooks/useWindowSize';
+import { useTranslation } from 'next-i18next';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { load } from 'react-cookies';
+import { isMobile } from 'react-device-detect';
+import { Search, X } from 'react-feather';
+import { useSelector } from 'react-redux';
+import { usePrevious } from 'react-use';
+import { getS3Url } from 'redux/actions/utils'; 
 
 export const CURRENCIES = [
     {
@@ -89,10 +77,13 @@ const FILTER_OPTS = [
     }
 ];
 
-export default function FundingHistory(props) {
+export const DEFAULT_FUNDING_TIME_NULL = '00:00:00';
+
+export default function FundingHistory({ currency }) {
     const [currentTheme] = useDarkMode();
     const { t } = useTranslation();
     const { width } = useWindowSize();
+    const prevCurrency = usePrevious(currency);
 
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
@@ -100,10 +91,9 @@ export default function FundingHistory(props) {
     const allPairConfig = useSelector((state) => state.futures.pairConfigs);
 
     const [dataTable, setDataTable] = useState([]);
-    const [selectedTab, setSelectedTab] = React.useState(0);
-    const [selectedCurrency, setSelectedCurrency] = React.useState(CURRENCIES[0].value);
-    const [selectedSymbol, setSelectedSymbol] = useState('BTCUSDT');
+    const [selectedSymbol, setSelectedSymbol] = useState('');
     const [selectedFilter, setSelectedFilter] = useState(FILTER_OPTS[0]);
+    const [filteredDataTable, setFilteredDataTable] = useState([]);
 
     const subscribeFuturesSocket = (pair) => {
         publicSocket.emit('subscribe:futures:ticker' + 'all');
@@ -112,129 +102,106 @@ export default function FundingHistory(props) {
 
     useEffect(() => {
         if (!publicSocket) return;
-        // ? Get Pair Ticker
         subscribeFuturesSocket();
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + 'all', async (data) => {
-            console.log('data', data);
-        });
-        return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
-        };
     }, [publicSocket]);
 
     useEffect(() => {
         if (!marketWatch || !allAssetConfig) return;
-        const res = Object.entries(marketWatch).map(([value, data]) => {
-            const config = allAssetConfig?.find((item) => item.baseAsset === value.assetCode);
-            return {
-                asset: (
-                    <div className="flex items-center">
-                        <AssetLogo assetCode={config?.assetCode} size={32} />
-                        <div className="ml-2 text-sm">
-                            <div className="font-medium text-txtPrimary dark:text-txtPrimary-dark">
-                                {data?.baseAsset + '/' + data?.quoteAsset}
+        if (currency !== prevCurrency) {
+            setCurrentPage(1);
+        }
+
+        const res = Object.entries(marketWatch).reduce((pre, currentValue) => {
+            const [value, data] = currentValue;
+            if (data?.quoteAsset === currency) {
+                const config = allAssetConfig?.find((item) => item?.baseAsset === value?.assetCode);
+                return [
+                    ...pre,
+                    {
+                        asset: (
+                            <div className="flex items-center">
+                                <AssetLogo assetCode={config?.assetCode} size={32} />
+                                <div className="ml-2 ">
+                                    <p className="text-base font-medium leading-6 text-txtPrimary dark:text-txtPrimary-dark">
+                                        {`${data?.baseAsset + '/' + data?.quoteAsset} ${t(
+                                            'futures:funding_history:perpetual'
+                                        )}`}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                ),
-                symbol: data?.baseAsset,
-                key: value,
-                fundingRate: data.fundingRate,
-                fundingTime: data.fundingTime
-            };
-        });
+                        ),
+                        symbol: data?.baseAsset,
+                        key: value,
+                        fundingRate: data?.fundingRate,
+                        fundingTime: data?.fundingTime
+                    }
+                ];
+            } else return pre;
+        }, []);
         const sorted = selectedFilter.sort(res, selectedFilter.keySort);
         setDataTable(sorted);
-    }, [marketWatch, selectedFilter]);
-
-    // const allPairConfig =
-
-    const renderScreenTab = useCallback(() => {
-        return (
-            <Tab
-                series={SCREEN_TAB_SERIES}
-                currentIndex={selectedTab}
-                onChangeTab={(screenIndex) => {
-                    const current = SCREEN_TAB_SERIES.find((o) => o?.key === screenIndex);
-                    setSelectedTab(current.key);
-                    setCurrentPage(1);
-                }}
-                tArr={['common']}
-            />
-        );
-    }, [selectedTab]);
-
-    const renderHeading = () => {
-        const selectedClassName = 'text-white bg-primary-500 bg-dominant';
-        const unselectedClassName = 'text-primary-500 bg-white bg-opacity-10';
-        const defaultClassName =
-            'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-sm font-normal leading-6';
-        return (
-            <div className="flex justify-between mb-[40px]">
-                <div>
-                    <p
-                        className={
-                            'text-txtPrimary  dark:text-txtPrimary-dark font-semibold leading-[40px] text-[26px]'
-                        }
-                    >
-                        Thông tin
-                    </p>
-                </div>
-                <div className={'flex gap-[6px]'}>
-                    {CURRENCIES.map(({ name, value }, index) => {
-                        return (
-                            <div
-                                key={value}
-                                onClick={() => setSelectedCurrency(value)}
-                                className={classNames(defaultClassName, {
-                                    [selectedClassName]: selectedCurrency === value,
-                                    [unselectedClassName]: selectedCurrency !== value
-                                })}
-                            >
-                                {name}
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        );
-    };
+    }, [marketWatch, selectedFilter, currency, prevCurrency]);
 
     const handleChangeFilter = (item) => {
         setSelectedFilter(item);
         setCurrentPage(1);
     };
 
+    /**
+     * It takes a search value, sets the selected symbol to the search value, and then filters the data
+     * table based on the search value
+     * @param searchValue - The value that the user has entered in the search box.
+     * @returns The filtered data table is being returned.
+     */
+    const handleSearch = (searchValue) => {
+        setSelectedSymbol(searchValue);
+        if (!searchValue) {
+            setFilteredDataTable([]);
+        } else {
+            const filterData = dataTable.filter(function (item) {
+                return item?.symbol.toLowerCase().includes(searchValue.toLowerCase());
+            });
+            setFilteredDataTable(filterData);
+        }
+        setCurrentPage(1);
+    };
+
     const renderSearch = () => {
         return (
-            <div className="flex justify-between mb-[40px]">
-                <div className="flex gap-6">
-                    <div className="flex items-center px-3 py-2 mt-4 rounded-md h-9 lg:mt-0 lg:py-3 lg:px-5 bg-gray-5 dark:bg-darkBlue-4">
+            <div className="flex flex-col justify-between mb-8 lg:flex-row  lg:mb-[40px]">
+                <div className="flex items-center justify-between gap-6 mb-6 mb:justify-end">
+                    <div className="flex items-center order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5 bg-gray-5 dark:bg-darkBlue-4">
                         <Search
                             size={width >= 768 ? 20 : 16}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
                         />
                         <input
-                            className="text-sm w-full px-2.5 text-txtSecondary dark:text-txtSecondary-dark"
+                            className="text-sm px-2.5 text-txtSecondary dark:text-txtSecondary-dark"
                             value={selectedSymbol}
-                            onChange={(e) => setSelectedSymbol(e?.target?.value)}
-                            placeholder={t('common:search')}
+                            onChange={(e) => handleSearch(e?.target?.value)}
+                            placeholder={t('futures:funding_history:find_pair')}
                         />
                         {selectedSymbol && (
                             <X
                                 size={width >= 768 ? 20 : 16}
                                 className="cursor-pointer"
-                                onClick={() => setSelectedSymbol('')}
+                                onClick={() => {
+                                    setFilteredDataTable([]);
+                                    setSelectedSymbol('');
+                                    setCurrentPage(1);
+                                }}
                             />
                         )}
                     </div>
                     <div>
-                        <Popover className="relative">
+                        <Popover className="relative order-1 lg:order-2">
                             {({ open, close }) => (
                                 <>
                                     <Popover.Button>
-                                        <div className="text-sm px-2 py-1 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between min-w-[169px] h-9 text-txtSecondary dark:text-txtSecondary-dark">
-                                            {t(selectedFilter.label)}
+                                        <div className="px-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between min-w-[169px] lg:w-[210px] h-9">
+                                            <p className="text-sm truncate text-txtSecondary dark:text-txtSecondary-dark">
+                                                {t(selectedFilter.label)}
+                                            </p>
                                             <img
                                                 alt=""
                                                 src={getS3Url('/images/nao/ic_arrow_bottom.png')}
@@ -264,7 +231,7 @@ export default function FundingHistory(props) {
                                                                 close();
                                                             }}
                                                             className={classNames(
-                                                                'cursor-pointer px-3 py-3 min-w-[169px] text-sm shadow-onlyLight font-medium flex flex-col',
+                                                                'cursor-pointer px-3 py-3 min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col',
                                                                 {
                                                                     'text-dominant':
                                                                         selectedFilter.index ===
@@ -285,11 +252,12 @@ export default function FundingHistory(props) {
                         </Popover>
                     </div>
                 </div>
-
-                <div>
-                    <Link to={''} href={''} className={'underline'}>
-                        {t('futures:funding_history:link_overview')}
-                    </Link>
+                <div
+                    className={
+                        'underline flex text-sm leading-6 text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
+                    }
+                >
+                    {t('futures:funding_history:link_overview')}
                 </div>
             </div>
         );
@@ -302,7 +270,8 @@ export default function FundingHistory(props) {
         return (
             <div className="flex items-center justify-center mt-10 mb-20">
                 <RePagination
-                    total={dataTable?.length}
+                    fromZero
+                    total={filteredDataTable?.length || dataTable?.length}
                     current={currentPage}
                     pageSize={10}
                     onChange={(currentPage) => setCurrentPage(currentPage)}
@@ -316,7 +285,7 @@ export default function FundingHistory(props) {
         {
             key: 'asset',
             dataIndex: 'asset',
-            title: t('futures:funding_history:pair'),
+            title: t('futures:funding_history:contract'),
             align: 'left',
             width: 200,
             sorter: false,
@@ -330,7 +299,7 @@ export default function FundingHistory(props) {
             width: 120,
             sorter: false,
             fixed: width >= 992 ? 'none' : 'left',
-            render: (data) => <TimeLeft targetDate={data} />
+            render: (data) => renderTimeLeft({ targetDate: data })
         },
         {
             key: 'fundingRate',
@@ -347,45 +316,48 @@ export default function FundingHistory(props) {
     return (
         <>
             {renderSearch()}
-            <>
-                <ReTable
-                    // defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                    useRowHover
-                    data={dataTable || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    loading={!dataTable?.length}
-                    scroll={{ x: true }}
-                    // tableStatus={}
-                    tableStyle={{
-                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                        tableStyle: { minWidth: '1300px !important' },
-                        headerStyle: {},
-                        rowStyle: {},
-                        shadowWithFixedCol: width < 1366,
-                        noDataStyle: {
-                            minHeight: '480px'
-                        }
-                    }}
-                    paginationProps={{
-                        hide: true,
-                        current: currentPage,
-                        pageSize: 10,
-                        onChange: (currentPage) => setCurrentPage(currentPage)
-                    }}
+            {isMobile ? (
+                <ListFundingMobile
+                    dataTable={selectedSymbol ? filteredDataTable : dataTable || []}
                 />
-            </>
-            {renderPagination()}
+            ) : (
+                <>
+                    <ReTable
+                        useRowHover
+                        data={selectedSymbol ? filteredDataTable : dataTable || []}
+                        columns={columns}
+                        rowKey={(item) => item?.key}
+                        loading={!dataTable?.length}
+                        scroll={{ x: true }}
+                        // tableStatus={}
+                        tableStyle={{
+                            paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                            tableStyle: { minWidth: '1300px !important' },
+                            headerStyle: {
+                                fontSize: '0.75rem !important'
+                            },
+                            rowStyle: {},
+                            shadowWithFixedCol: width < 1366,
+                            noDataStyle: {
+                                minHeight: '480px'
+                            }
+                        }}
+                        paginationProps={{
+                            hide: true,
+                            current: currentPage,
+                            pageSize: 10,
+                            onChange: (currentPage) => setCurrentPage(currentPage)
+                        }}
+                    />
+                    {renderPagination()}
+                </>
+            )}
         </>
     );
 }
 
-export const TimeLeft = ({ targetDate }) => {
+export const renderTimeLeft = ({ targetDate }) => {
     const countDownDate = new Date(targetDate).getTime();
-    // const intervalRef = useRef()
-    const stopTimer = () => {
-        // if (intervalRef.current) clearInterval(intervalRef.current)
-    };
 
     const [countDown, setCountDown] = useState(countDownDate - new Date().getTime());
 
@@ -413,40 +385,3 @@ export const TimeLeft = ({ targetDate }) => {
         result?.minutes
     )}:${addPaddingString(result?.seconds)}`;
 };
-
-const CustomContainer = styled.div.attrs({ className: 'mal-container px-4' })`
-    @media (min-width: 1024px) {
-        max-width: 1000px !important;
-    }
-
-    @media (min-width: 1280px) {
-        max-width: 1260px !important;
-    }
-
-    @media (min-width: 1440px) {
-        max-width: 1400px !important;
-    }
-
-    @media (min-width: 1920px) {
-        max-width: 1440px !important;
-    }
-`;
-
-const Background = styled.div.attrs({ className: 'w-full h-full pt-5' })`
-    background-color: ${({ isDark }) => (isDark ? colors.darkBlue1 : '#F8F9FA')};
-`;
-
-const SCREEN_TAB_SERIES = [
-    {
-        key: 0,
-        code: WALLET_SCREENS.OVERVIEW,
-        title: 'Overview',
-        localized: 'futures:funding_history:tab_ratio_realtime'
-    },
-    {
-        key: 1,
-        code: WALLET_SCREENS.EXCHANGE,
-        title: 'Exchange',
-        localized: 'futures:funding_history:tab_history'
-    }
-];
