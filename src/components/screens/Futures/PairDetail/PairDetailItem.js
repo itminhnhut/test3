@@ -6,16 +6,18 @@ const FuturesPairDetailItem = ({
     containerClassName,
     labelClassName,
     valueClassName,
+    icon
 }) => {
     return (
         <div className={classNames('w-auto font-medium', containerClassName)}>
             <div
                 className={classNames(
-                    'font-medium text-[10px] text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap select-none',
+                    'font-medium text-[10px] text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap select-none flex items-center space-x-1',
                     labelClassName
                 )}
             >
-                {label}
+                <span>{label}</span>
+                {icon && icon}
             </div>
             <div
                 className={classNames(
