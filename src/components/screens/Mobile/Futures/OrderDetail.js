@@ -16,7 +16,7 @@ import { API_ORDER_DETAIL } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { ApiStatus, ChartMode } from 'redux/actions/const';
 import colors from 'styles/colors';
-import { getType } from "components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc";
+import get from 'lodash/get';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
@@ -115,7 +115,7 @@ const OrderDetail = ({
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
         const decimal = currency === 72 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
-        const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];
+        const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : get(order, key, 0);
         return data ? formatNumber(data, decimal) + ' ' + assetCode : '-';
 
     };
@@ -743,7 +743,7 @@ const OrderDetail = ({
                                 <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
                             </div>
                         </Label>
-                        <Span>{renderFee(order, 'funding')}</Span>
+                        <Span>{renderFee(order, 'funding_fee.total')}</Span>
                     </Row>
                 </>
                 }

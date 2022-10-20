@@ -687,6 +687,11 @@ const Funding = ({ symbol }) => {
 }
 
 const ModalFundingRate = ({ onClose, t }) => {
+    
+    const onRedirect = () => {
+        window.open('/futures/funding-history')
+    }
+
     return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
     >
         <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
@@ -695,7 +700,7 @@ const ModalFundingRate = ({ onClose, t }) => {
         </div>
         <div className="flex items-center space-x-4 pt-8 text-center">
             <div onClick={onClose} className="w-full bg-onus-bg2 rounded-md px-5 py-3">{t('common:close')}</div>
-            <div className="w-full bg-onus-base rounded-md px-5 py-3">{t('futures:funding_history')}</div>
+            <div onClick={onRedirect} className="w-full bg-onus-base rounded-md px-5 py-3">{t('futures:funding_history')}</div>
         </div>
     </Modal>
 }

@@ -63,7 +63,8 @@ export const getProfitVndc = (order, lastPrice = 0, isOnus) => {
         fee += quantity * closePrice * (0.06 / 100);
     }
     const swap = order?.swap || 0
-    fee += swap
+    const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
+    fee += swap + funding
     try {
         let buyProfitVNDC = 0;
         buyProfitVNDC = quantity * (closePrice - open_price);
