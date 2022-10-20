@@ -8,13 +8,14 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import useDarkMode from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState, useRef } from 'react';
 import { load } from 'react-cookies';
 import { isMobile } from 'react-device-detect';
 import { Search, X } from 'react-feather';
 import { useSelector } from 'react-redux';
 import { usePrevious } from 'react-use';
 import { getS3Url } from 'redux/actions/utils';
+import Skeletor from 'components/common/Skeletor';
 
 export const CURRENCIES = [
     {
@@ -27,14 +28,18 @@ export const CURRENCIES = [
     }
 ];
 
-const sortAscending = (arr, key) =>
-    arr.sort(function (a, b) {
+const sortAscending = (arr, key, isString) => {
+    if (isString) return arr.sort((a, b) => a[key].localeCompare(b[key]));
+    return arr.sort(function (a, b) {
         return a[key] - b[key];
     });
-const sortDescending = (arr, key) =>
-    arr.sort(function (a, b) {
+};
+const sortDescending = (arr, key, isString) => {
+    if (isString) return arr.sort((a, b) => b[key].localeCompare(a[key]));
+    return arr.sort(function (a, b) {
         return b[key] - a[key];
     });
+};
 
 const FILTER_OPTS = [
     {
@@ -48,7 +53,7 @@ const FILTER_OPTS = [
         index: 1,
         keySort: 'symbol',
         sort: (data, key) => {
-            return sortAscending(data, key);
+            return sortAscending(data, key, true);
         }
     },
     {
@@ -56,7 +61,7 @@ const FILTER_OPTS = [
         index: 2,
         keySort: 'symbol',
         sort: (data, key) => {
-            return sortDescending(data, key);
+            return sortDescending(data, key, true);
         }
     },
     {
@@ -85,6 +90,8 @@ export default function FundingHistory({ currency }) {
     const { width } = useWindowSize();
     const prevCurrency = usePrevious(currency);
 
+    const [isLoading, setIsLoading] = useState(true);
+
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allAssetConfig = useSelector((state) => state.utils.assetConfig);
@@ -94,6 +101,7 @@ export default function FundingHistory({ currency }) {
     const [selectedSymbol, setSelectedSymbol] = useState('');
     const [selectedFilter, setSelectedFilter] = useState(FILTER_OPTS[0]);
     const [filteredDataTable, setFilteredDataTable] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const subscribeFuturesSocket = (pair) => {
         publicSocket.emit('subscribe:futures:ticker' + 'all');
@@ -106,12 +114,14 @@ export default function FundingHistory({ currency }) {
     }, [publicSocket]);
 
     useEffect(() => {
-        if (!marketWatch || !allAssetConfig) return;
+        const marketWatchKies = Object.entries(marketWatch || {});
+
+        if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 20) return;
         if (currency !== prevCurrency) {
+            setIsLoading(true);
             setCurrentPage(1);
         }
-
-        const res = Object.entries(marketWatch).reduce((pre, currentValue) => {
+        const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
             if (data?.quoteAsset === currency) {
                 const config = allAssetConfig?.find((item) => item?.baseAsset === value?.assetCode);
@@ -138,8 +148,8 @@ export default function FundingHistory({ currency }) {
                 ];
             } else return pre;
         }, []);
-        const sorted = selectedFilter.sort(res, selectedFilter.keySort);
-        setDataTable(sorted);
+        setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+        setIsLoading(false);
     }, [marketWatch, selectedFilter, currency, prevCurrency]);
 
     const handleChangeFilter = (item) => {
@@ -170,7 +180,7 @@ export default function FundingHistory({ currency }) {
         return (
             <div className="flex flex-col justify-between mb-8 lg:flex-row  lg:mb-[40px]">
                 <div className="flex items-center justify-between gap-6 mb-6 mb:justify-end">
-                    <div className="flex items-center order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5 bg-gray-5 dark:bg-darkBlue-4">
+                    <div className="flex items-center w-[177px] order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5 bg-gray-5 dark:bg-darkBlue-4">
                         <Search
                             size={width >= 768 ? 20 : 16}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
@@ -198,7 +208,7 @@ export default function FundingHistory({ currency }) {
                             {({ open, close }) => (
                                 <>
                                     <Popover.Button>
-                                        <div className="px-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between min-w-[169px] lg:w-[210px] h-9">
+                                        <div className="px-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between w-[129px] lg:w-[210px] h-9">
                                             <p className="text-sm truncate text-txtSecondary dark:text-txtSecondary-dark">
                                                 {t(selectedFilter.label)}
                                             </p>
@@ -219,7 +229,7 @@ export default function FundingHistory({ currency }) {
                                         leaveFrom="opacity-100 translate-y-0"
                                         leaveTo="opacity-0 translate-y-1"
                                     >
-                                        <Popover.Panel className="absolute left-0 z-50 mt-1 rounded-md top-8 bg-nao-bg3">
+                                        <Popover.Panel className="absolute left-0 z-50 mt-1 rounded-md top-8 bg-bgInput dark:bg-bgInput-dark">
                                             {FILTER_OPTS.map((item) => {
                                                 const { label, index } = item;
                                                 return (
@@ -231,7 +241,7 @@ export default function FundingHistory({ currency }) {
                                                                 close();
                                                             }}
                                                             className={classNames(
-                                                                'cursor-pointer px-3 py-3 min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col',
+                                                                'cursor-pointer px-3 py-3 w-[129px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col',
                                                                 {
                                                                     'text-dominant':
                                                                         selectedFilter.index ===
@@ -263,8 +273,6 @@ export default function FundingHistory({ currency }) {
         );
     };
 
-    const [currentPage, setCurrentPage] = useState(1);
-
     const renderPagination = useCallback(() => {
         if (dataTable?.length === 0) return null;
         return (
@@ -287,31 +295,40 @@ export default function FundingHistory({ currency }) {
             dataIndex: 'asset',
             title: t('futures:funding_history:contract'),
             align: 'left',
-            width: 200,
+            width: '60%',
             sorter: false,
             fixed: width >= 992 ? 'none' : 'left'
+            // sorter:  (a, b) => b.symbol - a.symbol
         },
         {
             key: 'fundingTime',
             dataIndex: 'fundingTime',
             title: t('futures:funding_history:time_left_to_next_funding'),
             align: 'left',
-            width: 120,
+            width: '20%',
             sorter: false,
+            // sorter:  (a, b) => b.fundingTime - a.fundingTime,
             fixed: width >= 992 ? 'none' : 'left',
-            render: (data) => renderTimeLeft({ targetDate: data })
+            render: (data, item) =>
+                !item?.isSkeleton ? renderTimeLeft({ targetDate: data }) : '00:00:00'
         },
         {
             key: 'fundingRate',
             dataIndex: 'fundingRate',
             title: t('futures:funding_history:funding_rate'),
             align: 'left',
-            width: 120,
+            width: '20%',
+            // sorter:  (a, b) => a.fundingRate - b.fundingRate,
             sorter: false,
             fixed: width >= 992 ? 'none' : 'left',
-            render: (data, item) => data + '%'
+            render: (data, item) => (!item?.isSkeleton ? data + '%' : '-%')
         }
     ];
+
+    const skeletons = [];
+    for (let i = 0; i < 10; ++i) {
+        skeletons.push({ ...ROW_SKELETON, isSkeleton: true, key: `asset__skeleton__${i}` });
+    }
 
     return (
         <>
@@ -319,22 +336,26 @@ export default function FundingHistory({ currency }) {
             {isMobile ? (
                 <ListFundingMobile
                     dataTable={selectedSymbol ? filteredDataTable : dataTable || []}
+                    currency={currency}
                 />
             ) : (
                 <>
                     <ReTable
                         useRowHover
-                        data={selectedSymbol ? filteredDataTable : dataTable || []}
+                        data={
+                            selectedSymbol ? filteredDataTable : isLoading ? skeletons : dataTable
+                        }
+                        sort
                         columns={columns}
                         rowKey={(item) => item?.key}
-                        loading={!dataTable?.length}
+                        loading={!dataTable?.length || isLoading}
                         scroll={{ x: true }}
-                        // tableStatus={}
+                        tableStatus={!!isLoading}
                         tableStyle={{
                             paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
                             tableStyle: { minWidth: '1300px !important' },
                             headerStyle: {
-                                fontSize: '0.75rem !important'
+                                fontSize: '0.875rem !important'
                             },
                             rowStyle: {},
                             shadowWithFixedCol: width < 1366,
@@ -384,4 +405,10 @@ export const renderTimeLeft = ({ targetDate }) => {
     return `${addPaddingString(result?.hours)}:${addPaddingString(
         result?.minutes
     )}:${addPaddingString(result?.seconds)}`;
+};
+
+const ROW_SKELETON = {
+    asset: <Skeletor width={200} />,
+    fundingTime: <Skeletor width={65} />,
+    fundingRate: <Skeletor width={65} />
 };

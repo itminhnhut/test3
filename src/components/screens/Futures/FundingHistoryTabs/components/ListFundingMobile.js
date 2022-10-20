@@ -2,11 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import Divider from 'components/common/Divider';
 import { renderTimeLeft } from '../FundingTab';
+import { useFavicon, usePrevious } from 'react-use';
 
-export default function ModalFundingTabMobile({ dataTable }) {
+export default function ModalFundingTabMobile({ dataTable, currency }) {
     const { t } = useTranslation();
+    const prevCurrency = usePrevious(currency)
 
     const [loadedNumber, setLoadedNumber] = useState(10);
+
+    useEffect(()=> {
+        if(currency !== prevCurrency) {
+            setLoadedNumber(10)
+        }
+    },[currency, prevCurrency])
 
     const handleLoadMore = () => {
         setLoadedNumber(loadedNumber + 10);
