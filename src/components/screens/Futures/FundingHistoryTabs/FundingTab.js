@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { usePrevious } from 'react-use';
 import { getS3Url } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
+import { THEME_MODE } from 'hooks/useDarkMode';
 
 export const CURRENCIES = [
     {
@@ -124,18 +125,20 @@ export default function FundingHistory({ currency }) {
         const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
             if (data?.quoteAsset === currency) {
-                const config = allAssetConfig?.find((item) => item?.baseAsset === value?.assetCode);
+
+                // const config = allAssetConfig?.find((item) => item?.baseAsset === data?.baseAsset);                // console.log("config", config);
                 return [
                     ...pre,
                     {
                         asset: (
                             <div className="flex items-center">
-                                <AssetLogo assetCode={config?.assetCode} size={32} />
-                                <div className="ml-2 ">
-                                    <p className="text-base font-medium leading-6 text-txtPrimary dark:text-txtPrimary-dark">
-                                        {`${data?.baseAsset + '/' + data?.quoteAsset} ${t(
-                                            'futures:funding_history:perpetual'
-                                        )}`}
+                                <AssetLogo assetCode={data?.baseAsset} size={32} />
+                                <div className="ml-3 lg:ml-4">
+                                    <p className="text-base font-semibold lg:font-medium leading-[22px] lg:leading-6 text-txtPrimary dark:text-txtPrimary-dark">
+                                        {`${data?.baseAsset + '/' + data?.quoteAsset} `}
+                                        <span className="ml-2 lg:ml-[5px]">
+                                            {t('futures:funding_history:perpetual')}
+                                        </span>
                                     </p>
                                 </div>
                             </div>
@@ -178,9 +181,9 @@ export default function FundingHistory({ currency }) {
 
     const renderSearch = () => {
         return (
-            <div className="flex flex-col justify-between mb-8 lg:flex-row  lg:mb-[40px]">
-                <div className="flex items-center justify-between gap-6 mb-6 mb:justify-end">
-                    <div className="flex items-center w-[177px] order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5 bg-gray-5 dark:bg-darkBlue-4">
+            <div className="flex flex-col justify-between mb-8 lg:flex-row lg:mb-[40px] px-4 lg:px-0">
+                <div className="flex items-center justify-between gap-6 mb-6 lg:mb-0 mb:justify-end">
+                    <div className="flex items-center w-[185px] order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5  bg-gray-5 dark:bg-darkBlue-4">
                         <Search
                             size={width >= 768 ? 20 : 16}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
@@ -264,7 +267,7 @@ export default function FundingHistory({ currency }) {
                 </div>
                 <div
                     className={
-                        'underline flex text-sm leading-6 text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
+                        'underline cursor-pointer flex text-sm leading-6 text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
                     }
                 >
                     {t('futures:funding_history:link_overview')}
@@ -276,7 +279,7 @@ export default function FundingHistory({ currency }) {
     const renderPagination = useCallback(() => {
         if (dataTable?.length === 0) return null;
         return (
-            <div className="flex items-center justify-center mt-10 mb-20">
+            <div className="flex items-center justify-center mt-8">
                 <RePagination
                     fromZero
                     total={filteredDataTable?.length || dataTable?.length}
@@ -295,7 +298,7 @@ export default function FundingHistory({ currency }) {
             dataIndex: 'asset',
             title: t('futures:funding_history:contract'),
             align: 'left',
-            width: '60%',
+            width: '50%',
             sorter: false,
             fixed: width >= 992 ? 'none' : 'left'
             // sorter:  (a, b) => b.symbol - a.symbol
@@ -331,7 +334,7 @@ export default function FundingHistory({ currency }) {
     }
 
     return (
-        <>
+        <div className="lg:px-12">
             {renderSearch()}
             {isMobile ? (
                 <ListFundingMobile
@@ -345,7 +348,7 @@ export default function FundingHistory({ currency }) {
                         data={
                             selectedSymbol ? filteredDataTable : isLoading ? skeletons : dataTable
                         }
-                        sort
+                        // sort
                         columns={columns}
                         rowKey={(item) => item?.key}
                         loading={!dataTable?.length || isLoading}
@@ -353,7 +356,10 @@ export default function FundingHistory({ currency }) {
                         tableStatus={!!isLoading}
                         tableStyle={{
                             paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                            tableStyle: { minWidth: '1300px !important' },
+                            tableStyle: {
+                                minWidth: '1300px !important',
+                                borderRadius: '20px !important'
+                            },
                             headerStyle: {
                                 fontSize: '0.875rem !important'
                             },
@@ -363,6 +369,7 @@ export default function FundingHistory({ currency }) {
                                 minHeight: '480px'
                             }
                         }}
+                        className="rounded-[20px]"
                         paginationProps={{
                             hide: true,
                             current: currentPage,
@@ -373,7 +380,7 @@ export default function FundingHistory({ currency }) {
                     {renderPagination()}
                 </>
             )}
-        </>
+        </div>
     );
 }
 

@@ -39,24 +39,26 @@ export default function FundingHistory(props) {
                     setSelectedTab(current.key);
                 }}
                 tArr={['common']}
+                isBorderBottom={false}
             />
         );
     }, [selectedTab]);
 
     const renderHeading = () => {
         const selectedClassName = 'text-white bg-primary-500 bg-dominant';
-        const unselectedClassName = 'text-primary-500 bg-white bg-opacity-10';
+        const unselectedClassName =
+            'text-txtSecondary dark:text-txtSecondary-dark bg-white bg-opacity-10';
         const defaultClassName =
             'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-sm font-normal leading-6';
         return (
-            <div className="flex justify-between mb-[40px]">
+            <div className="flex justify-between mb-[40px] px-4">
                 <div>
                     <p
                         className={
                             'text-txtPrimary  dark:text-txtPrimary-dark font-semibold leading-[40px] text-[26px]'
                         }
                     >
-                        Thông tin
+                        {t('futures:funding_history:information')}
                     </p>
                 </div>
                 <div className={'flex gap-[6px]'}>
@@ -83,11 +85,19 @@ export default function FundingHistory(props) {
         <>
             <MaldivesLayout>
                 <Background isDark={currentTheme === THEME_MODE.DARK}>
-                    <div className={'px-[20px] pt-[40px]'}>
+                    <div className={'pt-[40px]'}>
                         {renderHeading()}
-                        <div className="mb-[2rem] lg:mb-[3rem]">{renderScreenTab()}</div>
+                        <div className="px-4">{renderScreenTab()}</div>
                         {/* Content Tab */}
-                        {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : null}
+                        <div
+                            className="rounded-[20px] pt-[2rem] lg:pt-[3rem] lg:mx-4 pb-12  lg:pb-8"
+                            style={{
+                                backgroundColor:
+                                    currentTheme === THEME_MODE.DARK ? '#071026' : '#FCFCFC'
+                            }}
+                        >
+                            {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : null}
+                        </div>
                     </div>
                 </Background>
             </MaldivesLayout>
