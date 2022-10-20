@@ -83,7 +83,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
         const _rank = data || '-';
         return (
             <div className="min-w-[24px] text-center">
-                {data && data <= 10 ?
+                {data && data <= 20 ?
                     <img src={getS3Url(`/images/nao/contest/ic_top_${item?.rowIndex + 4}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
                     : <span >{_rank}</span>}
             </div>
@@ -178,8 +178,8 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                                     <div key={index} className={`flex gap-4 sm:gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
                                         <div className="min-w-[31px] text-nao-grey text-sm font-medium">
                                             {loading ? <Skeletor width={24} height={24} circle /> :
-                                                item?.[rank] && item?.[rank] <= 10 ?
-                                                    <img src={getS3Url(`/images/nao/contest/ic_top_${item?.[rank]}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
+                                                item?.[rank] && item?.[rank] <= 20 ?
+                                                    <img src={getS3Url(`/images/nao/contest/ic_top_${index + 4}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
                                                     : item?.[rank] || '-'
                                             }
                                         </div>

@@ -304,6 +304,7 @@
                 "602": "Lợi nhuận",
                 "606": "Phí thanh lý",
                 "603": "Phí swap",
+                "610": "Phí swap",
                 "4": "Nạp tiền",
                 "5": "Rút tiền",
                 "723": "Rút tiền",
@@ -312,7 +313,8 @@
                 "1019": "Lãi Staking",
                 "open_fee": "Phí mở lệnh",
                 "close_fee": "Phí đóng lệnh",
-                "refund_of_open_fee": "Hoàn phí mở lệnh"
+                "refund_of_open_fee": "Hoàn phí mở lệnh",
+                "611": "Phí funding"
             },
             "close": "Đóng"
         },
@@ -342,7 +344,7 @@
         "close_now": "Đóng ngay",
         "back_to_list": "Quay lại",
         "modify": "Chỉnh sửa",
-        "info_swap_fee": "Với mỗi lệnh Futures đang mở, Nami Exchange áp dụng mức phí duy trì lệnh là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì lệnh và được thanh toán bằng số dư tài khoản Futures.",
+        "info_swap_fee": "Với mỗi vị thế Futures đang mở, Nami Exchange áp dụng mức phí duy trì vị thế là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì vị thế và được tính vào lợi nhuận dự kiến của vị thế.",
         "hours": "giờ",
         "info_liquidate_fee": "Với mỗi lệnh bị thanh lý, phí thanh lý được tính bằng 1% khối lượng giao dịch và được thanh toán bằng số dư tài khoản Futures",
         "invalid_session_title": "Phiên làm việc hết hạn",
@@ -379,8 +381,8 @@
         "change_success": "Thay đổi thành công",
         "tooltip_popup": "Lựa chọn tài sản để thanh toán phí đóng lệnh nhận chiết khấu tương ứng và cài đặt tài sản thanh toán phí mặc định cho các lệnh tiếp theo ở dòng chọn bên dưới.",
         "trading_fees": "Phí giao dịch",
-        "set_as_default_trading_fee": "Chọn làm phí giao dịch mặc định",
         "modify_order": "Điều chỉnh lệnh",
+        "set_as_default_trading_fee": "Chọn làm phí giao dịch mặc định",
         "close_all_positions": {
             "title": "Đóng tất cả vị thế",
             "title_pending": "Huỷ tất cả",
@@ -399,7 +401,7 @@
                 "close_all_PROFIT": "Xác nhận đóng tất cả vị thế lãi {{pair}}",
                 "close_all_LOSS": "Xác nhận đóng tất cả vị thế lỗ {{pair}}",
                 "close_all_PAIR": "Xác nhận đóng tất cả vị thế {{pair}}",
-                "close_all_ALL_PENDING": "Xác nhận huỷ lệnh chờ {{pair}}",
+                "close_all_ALL_PENDING": "Xác nhận huỷ tất cả lệnh chờ {{pair}}",
                 "close_all_ALL_PAIR_PENDING": "Huỷ tất cả lệnh {{pair}}"
             },
             "confirm_description": "Đây là số lệnh dự kiến đóng và tổng lợi nhuận dự kiến bạn nhận được. Số lệnh đóng và lợi nhuận thực tế có thể thay đổi theo giá thị trường.",
@@ -419,5 +421,11 @@
     "positions": "Vị thế",
     "open_orders": "Lệnh mở",
     "load_more": "Xem thêm",
-    "transaction_histories": "Lịch sử giao dịch"
+    "transaction_histories": "Lịch sử giao dịch",
+    "countdown": "Đếm ngược",
+    "funding_fee": "Phí funding",
+    "funding_rate": "Tỉ lệ funding",
+    "funding_rate_des": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
+    "funding_history": "Lịch sử funding",
+    "information": "Thông tin"
 }

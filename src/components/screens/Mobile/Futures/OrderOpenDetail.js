@@ -169,7 +169,9 @@ const OrderOpenDetail = ({
     const renderLiqPrice = (row, returnNumber) => {
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity);
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
-        const liqPrice = (size * row?.open_price + row?.fee - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus));
+        const swap = row?.swap || 0
+        const funding = row?.funding || 0
+        const liqPrice = (size * row?.open_price + row?.fee + funding + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.NamiFrameOnus));
         if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
         return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, decimalPrice, 0, true) : '-';
     };

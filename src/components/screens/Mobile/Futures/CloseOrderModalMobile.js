@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect, useContext } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, countDecimals, getS3Url, emitWebViewEvent } from "redux/actions/utils";
+import { formatNumber, countDecimals, getS3Url } from "redux/actions/utils";
 import { useSelector } from 'react-redux';
 import Switcher from 'components/common/Switcher';
 import TradingInput from "components/trade/TradingInput";
@@ -22,7 +22,6 @@ import fetchApi from "utils/fetch-api";
 import { createSelector } from 'reselect';
 import find from 'lodash/find';
 import Tooltip from 'components/common/Tooltip';
-import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
 
 const getPairConfig = createSelector(
     [
@@ -36,8 +35,6 @@ const getPairConfig = createSelector(
 
 const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) => {
     const { t } = useTranslation();
-    const side = order?.side;
-    const order_value = order?.order_value ?? 0;
     const lastPrice = pairPrice?.lastPrice;
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const pairConfig = useSelector(state => getPairConfig(state, { pair: order?.symbol }));
@@ -51,6 +48,9 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
     const [showCustomized, setShowCustomized] = useState(false);
     const [loading, setLoading] = useState(false);
     const context = useContext(AlertContext);
+
+    const order_value = order?.order_value || 0
+    const side = order?.side
 
     const getDecimalPrice = (config) => {
         const decimalScalePrice =
@@ -237,20 +237,6 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
         if (type !== FuturesOrderTypes.Market) return t('common:price')
         return t('common:price') + ' ' + String(getTypesLabel(type, t)).toLowerCase()
     }
-
-    const openShare = () => {
-        const shareData = {
-            ...order,
-            side: side === VndcFutureOrderType.Side.BUY ? VndcFutureOrderType.Side.SELL : VndcFutureOrderType.Side.BUY,
-            profit: general?.est_pnl,
-            status: VndcFutureOrderType.Status.CLOSED
-        }
-        const emitData = getShareModalData({
-            order: shareData,
-            pairPrice: pairPrice
-        });
-        emitWebViewEvent(JSON.stringify(emitData));
-    };
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
     const isError = ((maxQuoteQty > volume || volume > maxQuoteQty) && partialClose && (volume > maxQuoteQty || !volume || volume < minQuoteQty ||
@@ -474,3 +460,4 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
 };
 
 export default CloseOrderModalMobile;
+

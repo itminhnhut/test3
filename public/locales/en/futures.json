@@ -285,7 +285,7 @@
             "close_partially": "Close Partially",
             "closed_volume": "Closed Volume",
             "added_volume_2": "Added Volume",
-            "partially_closed_success_message": "your partial position have been closed successfully",
+            "partially_closed_success_message": "Your partial position have been closed successfully",
             "remaining_volume": "Remaining Volume",
             "order_completed": "Completed",
             "close_position": "Close Position",
@@ -304,6 +304,7 @@
                 "602": "Profit",
                 "606": "Liquidate Fee",
                 "603": "Swap Fee",
+                "610": "Swap Fee",
                 "4": "Deposit",
                 "5": "Withdraw",
                 "723": "Withdraw",
@@ -312,7 +313,8 @@
                 "1019": "Staking Interest",
                 "open_fee": "Order Opening Fee",
                 "close_fee": "Order Closing Fee",
-                "refund_of_open_fee": "Refund Of Opening Fee"
+                "refund_of_open_fee": "Refund Of Opening Fee",
+                "611": "Funding Fee"
             },
             "close": "Close"
         },
@@ -342,7 +344,7 @@
         "close_now": "Close now",
         "back_to_list": "Back to list",
         "modify": "Modify",
-        "info_swap_fee": "For every opening futures order, Nami Exchange applies a swap fee of 0.0015% of order’s volume minus margin for every maintaining hour and is paid by the Futures account balance.",
+        "info_swap_fee": "For every active futures position, Nami Exchange applies a swap fee of 0.0015% of position’s volume minus margin for every maintaining hour and is calculated to the position’s PnL",
         "hours": "hours",
         "info_liquidate_fee": "For each order liquidated, the liquidation fee is calculated at 1% of the volume and is paid by the Futures account balance.",
         "invalid_session_title": "Session expired",
@@ -379,6 +381,7 @@
         "change_success": "Changed successfully",
         "tooltip_popup": "Choose asset for closing fee to get a corresponding discount and set a default asset for next orders by checking the box below.",
         "trading_fees": "Trading Fees",
+        "modify_order": "Modify order",
         "set_as_default_trading_fee": "Set as default trading fee",
         "close_all_positions": {
             "title": "Close All Positions",
@@ -398,7 +401,7 @@
                 "close_all_PROFIT": "Confirm Close All Profit {{pair}} Positions",
                 "close_all_LOSS": "Confirm Close All Loss {{pair}} Positions",
                 "close_all_PAIR": "Confirm Close All {{pair}} Positions",
-                "close_all_ALL_PENDING": "Confirm Cancelling All {{pair}} Pending Positions",
+                "close_all_ALL_PENDING": "Confirm Cancelling All {{pair}} Orders",
                 "close_all_ALL_PAIR_PENDING": "Cancel All {{pair}} Orders"
             },
             "confirm_description": "This is the estimated number of positions and profit. Market price will affect the actual number of closed positions and profit.",
@@ -418,5 +421,11 @@
     "positions": "Positions",
     "open_orders": "Open Orders",
     "load_more": "Load more",
-    "transaction_histories": "Transaction History"
+    "transaction_histories": "Transaction History",
+    "countdown": "Countdown",
+    "funding_fee": "Funding Fee",
+    "funding_rate": "Funding Rate",
+    "funding_rate_des": "The payment rate exchanged between the long and short positions for the next funding. If the funding rate is positive, longs pay shorts. If negative, shorts pay longs.",
+    "funding_history": "Funding History",
+    "information": "Information"
 }

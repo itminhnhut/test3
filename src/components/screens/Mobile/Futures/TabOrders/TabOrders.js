@@ -20,6 +20,7 @@ import CheckBox from 'components/common/CheckBox';
 import CloseOrdersByCondtionMobile from 'components/screens/Mobile/Futures/CloseOrders/CloseOrdersByCondtionMobile';
 import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
 import { Spinner } from 'src/components/common/Icons';
+import { getOrdersList } from 'redux/actions/futures';
 
 const Button = styled.div.attrs({
     className: `text-onus-grey bg-gray-4 rounded-[4px] flex items-center justify-center text-xs font-semibold px-3 py-[6px]`
@@ -60,20 +61,26 @@ const TabOrders = memo(({
 
     useEffect(() => {
         if (userSocket) {
-            userSocket.on(UserSocketEvent.FUTURE_DONE_CLOSING_ALL_ORDERS, (data) => {
-                if (data === 'done') setIsClosingOrders({ isClosing: 'done', timeout: 0 })
-                setTimeout(() => setIsClosingOrders({ isClosing: 'false', timeout: 0 }), 2000)
+            userSocket.on(UserSocketEvent.FUTURE_DONE_CLOSING_ALL_ORDERS, async (data) => {
+                if (data === 'done') {
+                    setIsClosingOrders({ isClosing: 'done', timeout: 0 })
+                    await getOrdersList()
+                }
+                setTimeout(async () => {
+                    await getOrdersList()
+                    setIsClosingOrders({ isClosing: 'false', timeout: 0 })
+                }, 2000)
             });
         }
         return () => {
             if (userSocket) {
-                userSocket.removeListener(UserSocketEvent.FUTURES_OPEN_ORDER);
+                userSocket.removeListener(UserSocketEvent.FUTURE_DONE_CLOSING_ALL_ORDERS);
             }
         };
     }, [userSocket]);
 
     // useEffect(() => {
-    //     if(isClosingOrders.isClosing === 'true') setTimeout(() => setIsClosingOrders({ isClosing: 'false', timeout: 0 }), isClosingOrders.timeout * 1000) 
+    //     if(isClosingOrders.isClosing === 'true') setTimeout(() => setIsClosingOrders({ isClosing: 'false', timeout: 0 }), isClosingOrders.timeout * 1000)
     // }, [isClosingOrders])
 
     const onShowDetail = (row, isTabHistory) => {
@@ -131,11 +138,6 @@ const TabOrders = memo(({
     const handleCloseAll = () => {
         setOpenCloseModal(true)
     }
-
-    const currrencyFilter = useMemo(() => {
-        if (!ordersList) return false
-        return ordersList.filter(order => order?.symbol?.includes(pair?.includes('VNDC') ? 'VNDC' : 'USDT'))
-    }, [hideOther, ordersList, pair]);
 
     const renderCloseAllButton = () => {
         let button

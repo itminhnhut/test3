@@ -3,6 +3,7 @@ import SvgActivity from 'components/svg/Activity';
 import colors from 'styles/colors';
 import Reload from 'components/svg/Reload';
 import { IconFullScreenChart } from 'components/common/Icons';
+import classnames from 'classnames'
 
 export const mainIndicators = [
     {
@@ -58,7 +59,7 @@ const IndicatorBars = ({
 
     return (
         <div
-            className={`h-[38px] flex items-center justify-between px-4 ${!fullChart ? 'border-b border-t border-onus-line' : ''}`}>
+            className={classnames(`h-[38px] flex items-center justify-between px-4`, { 'border-t border-onus-line': !fullChart, 'border-b': isDetail })}>
             <div
                 className="flex items-center text-xs text-onus-grey font-medium justify-between w-full">
                 <div onClick={handleOpenIndicatorModal}>

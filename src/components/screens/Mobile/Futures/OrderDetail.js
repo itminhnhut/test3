@@ -83,7 +83,7 @@ const OrderDetail = ({
     // }));
 
     const allAssets = useSelector(state => getAllAssets(state));
-    const decimalSymbol = allAssets?.[order?.fee_metadata?.place_order?.currency]?.assetDigit ?? 0;
+    const decimalSymbol = allAssets?.[order?.margin_currency]?.assetDigit ?? 0;
     const decimalUsdt = allAssets?.[order?.margin_currency]?.assetDigit ?? 0;
     const [resolution, setResolution] = useState('15');
     const [dataSource, setDataSource] = useState([]);
@@ -113,7 +113,7 @@ const OrderDetail = ({
         if (!order) return '-';
         const currency = order?.fee_metadata[key]?.currency ?? order?.margin_currency
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
-        const decimal = isVndcFutures ? assetDigit : assetDigit + 2;
+        const decimal = currency === 72 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];
         return data ? formatNumber(data, decimal) + ' ' + assetCode : '-';
@@ -149,7 +149,7 @@ const OrderDetail = ({
                 value = metadata?.modify_price ?
                     <div className="flex items-center justify-between">
                         <div className="text-left">{getValue(metadata?.modify_price?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className="text-right"> {getValue(metadata?.modify_price?.after)}</div>
                     </div> : getValue(metadata?.price);
                 return value;
@@ -158,7 +158,7 @@ const OrderDetail = ({
                     <div className="flex items-center justify-between">
                         <div className={`text-left ${getColor('tp', metadata?.modify_tp?.before)}`}>
                             {getValue(metadata?.modify_tp?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className={`text-right ${getColor('tp', metadata?.modify_tp?.after)}`}>
                             {getValue(metadata?.modify_tp?.after)}</div>
                     </div> : null;
@@ -168,7 +168,7 @@ const OrderDetail = ({
                     <div className="flex items-center justify-between">
                         <div className={`text-left ${getColor('sl', metadata?.modify_sl?.before)}`}>
                             {getValue(metadata?.modify_sl?.before)}</div>
-                        &nbsp;<ArrowRight size={14}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} />&nbsp;
                         <div className={`text-right ${getColor('sl', metadata?.modify_sl?.after)}`}>
                             {getValue(metadata?.modify_sl?.after)} </div>
                     </div> : null;
@@ -360,7 +360,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
+                    <Span className="text-onus-base" onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
@@ -387,6 +387,15 @@ const OrderDetail = ({
                     <Span className={+item?.metadata?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
                         {formatNumber(item?.metadata?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(ratio, 2, 0, true)}%)</Span>
                 </Row>
+                <Row className="flex-col items-start w-full">
+                    <FeeMeta
+                        mode="open_fee"
+                        order={item?.metadata}
+                        allAssets={allAssets}
+                        t={t}
+                        isVndcFutures={isVndcFutures}
+                    />
+                </Row>
                 <Row>
                     <Label>{t('futures:mobile:close_fee')}</Label>
                     <Span>{renderFee(item?.metadata, 'close_order')}</Span>
@@ -404,7 +413,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
+                    <Span className="text-onus-base" onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
@@ -434,12 +443,12 @@ const OrderDetail = ({
                         <Span>{renderModify(item?.metadata, 'open_price')}</Span>
                     </Row>
                 }
-                {item?.metadata?.modify_liq_price &&
-                    <Row>
-                        <Label>{t('futures:mobile:liq_price')}</Label>
-                        <Span>{renderModify(item?.metadata, 'liq_price')}</Span>
-                    </Row>
-                }
+                {/* {item?.metadata?.modify_liq_price && */}
+                {/*     <Row> */}
+                {/*         <Label>{t('futures:mobile:liq_price')}</Label> */}
+                {/*         <Span>{renderModify(item?.metadata, 'liq_price')}</Span> */}
+                {/*     </Row> */}
+                {/* } */}
                 <Row>
                     <Label>{t('futures:mobile:open_fee')}</Label>
                     <Span>{renderFee(item?.metadata, 'place_order')}</Span>
@@ -482,7 +491,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span onClick={() => redirect(`/mobile/futures/order/${id_to}`)}>#{id_to}</Span>
+                    <Span className="text-onus-base" onClick={() => redirect(`/mobile/futures/order/${id_to}`)}>#{id_to}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:open_price')}</Label>
@@ -535,7 +544,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span onClick={() => redirect(`/mobile/futures/order/${from_id}`)}>#{from_id}</Span>
+                    <Span className="text-onus-base" onClick={() => redirect(`/mobile/futures/order/${from_id}`)}>#{from_id}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:order_type')}</Label>
@@ -560,6 +569,15 @@ const OrderDetail = ({
                 <Row>
                     <Label>{t('futures:margin')}</Label>
                     <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
+                </Row>
+                <Row className="flex-col items-start w-full">
+                    <FeeMeta
+                        mode="open_fee"
+                        order={order}
+                        allAssets={allAssets}
+                        t={t}
+                        isVndcFutures={isVndcFutures}
+                    />
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:close_fee')}</Label>
@@ -645,9 +663,14 @@ const OrderDetail = ({
                     </Row>
                 </>
                 }
-                <Row>
-                    <Label>{t('futures:mobile:open_fee')}</Label>
-                    <Span>{renderFee(order, 'place_order')}</Span>
+                <Row className="flex-col items-start w-full">
+                    <FeeMeta
+                        mode="open_fee"
+                        order={order}
+                        allAssets={allAssets}
+                        t={t}
+                        isVndcFutures={isVndcFutures}
+                    />
                 </Row>
                 {!isAddedVolOrClose && <>
                     <Row>
@@ -677,7 +700,31 @@ const OrderDetail = ({
                         </Label>
                         <Span>{renderFee(order, 'liquidate_order')}</Span>
                     </Row>
-                    <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                    {!!order?.swap && <>
+                        <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                            className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                            overridePosition={(e) => ({
+                                left: 0,
+                                top: e.top
+                            })}
+                        >
+                            <div>
+                                <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
+                                <div className="text-sm mt-3">{t('futures:mobile:info_swap_fee')}</div>
+                            </div>
+                        </Tooltip>
+                        <Row>
+                            <Label className="flex">
+                                {t('futures:mobile:swap_fee')}
+                                <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
+                                    <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
+                                </div>
+                            </Label>
+                            <Span>{renderFee(order, 'swap')} {renderSwapHours(order)}</Span>
+                        </Row>
+                    </>
+                    }
+                    <Tooltip id="funding-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
                         overridePosition={(e) => ({
                             left: 0,
@@ -685,18 +732,18 @@ const OrderDetail = ({
                         })}
                     >
                         <div>
-                            <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
-                            <div className="text-sm mt-3">{t('futures:mobile:info_swap_fee')}</div>
+                            <label className="text-sm font-semibold">{t('futures:funding_rate')}</label>
+                            <div className="text-sm mt-3">{t('futures:funding_rate_des')}</div>
                         </div>
                     </Tooltip>
                     <Row>
                         <Label className="flex">
-                            {t('futures:mobile:swap_fee')}
-                            <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
+                            {t('futures:funding_fee')}
+                            <div className="px-2" data-tip="" data-for="funding-fee" id="tooltip-funding-fee">
                                 <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
                             </div>
                         </Label>
-                        <Span>{renderFee(order, 'swap')}</Span>
+                        <Span>{renderFee(order, 'funding')}</Span>
                     </Row>
                 </>
                 }
@@ -815,5 +862,57 @@ const Label = styled.div.attrs(({ isTabOpen }) => ({
 const Span = styled.div.attrs(({ isTabOpen }) => ({
     className: `text-sm text-right font-medium ${isTabOpen ? 'text-xs' : 'text-sm'}`
 }))``;
+
+
+const FeeMeta = ({ order, mode = 'open_fee', allAssets, t, isVndcFutures }) => {
+    const [visible, setVisible] = useState(false);
+
+    const convertObject = (obj) => {
+        if (obj?.currency) {
+            return [{ asset: +obj?.currency, value: obj?.value ?? 0 }]
+        } else {
+            const arr = []
+            Object.keys(obj).map(key => {
+                arr.push({ asset: +key, value: obj[key] })
+            })
+            return arr
+        }
+
+    }
+
+    const fee_metadata = useMemo(() => {
+        const metadata = order?.fee_data ?? order?.fee_metadata
+        const feeFilter = metadata?.[mode === 'open_fee' ? 'place_order' : 'close_order']
+        const fee = feeFilter ? convertObject(feeFilter) : []
+        return fee
+    }, [order])
+
+    const decimal = fee_metadata[0]?.asset === 72 ? allAssets[fee_metadata[0]?.asset]?.assetDigit : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
+
+    return (
+        <>
+            <div className="flex items-center justify-between w-full">
+                <Label>{t(`futures:mobile:${mode}`)}</Label>
+                <Span
+                    className={fee_metadata.length > 1 ? 'text-onus-base' : ''}
+                    onClick={() => fee_metadata.length > 1 && setVisible(!visible)}>
+                    {fee_metadata.length > 1 ? visible ? t('common:global_btn:close') : t('common:view_all') :
+                        !fee_metadata[0]?.value ? '-' :
+                            formatNumber(fee_metadata[0]?.value, decimal)
+                            + ' ' + allAssets[fee_metadata[0]?.asset]?.assetCode
+                    }
+                </Span>
+            </div>
+            {visible && <div className="mt-3 text-sm font-medium w-full grid grid-cols-2 gap-2">
+                {fee_metadata.map((rs, idx) => (
+                    <div className={idx % 2 === 0 ? 'text-left' : 'text-right'} key={idx}>
+                        {formatNumber(rs.value, rs.asset === 72 ? allAssets[rs.asset].assetDigit : allAssets[rs.asset].assetDigit + 2)} {allAssets[rs.asset].assetCode}
+                    </div>
+                ))}
+            </div>
+            }
+        </>
+    )
+}
 
 export default OrderDetail;

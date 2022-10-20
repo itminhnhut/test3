@@ -43,6 +43,7 @@ const noteCases = [
     '^BALANCE: Liquidate active position (\\d+) liquidate fee$',
     '^BALANCE: Liquidate active position (\\d+) close fee$',
     '^BALANCE: Liquidate active position (\\d+) raw profit$',
+    '^BALANCE: Close future order (\\d+) swap fee$'
 ]
 
 const getOrderIdFromNote = (note) => {
@@ -305,7 +306,7 @@ const TransactionDetail = ({t, visible, onClose, transaction, assetConfig = {}})
         }
         return categories.includes(item.category) ? t(`futures:mobile:transaction_histories:categories:${item.category}`) : '--'
     }
-    
+
     return <Modal
         isVisible={visible}
         onusMode

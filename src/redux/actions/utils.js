@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect } from 'react'
 import qs from 'qs';
 import format from 'date-fns/format';
 import numeral from 'numeral';
@@ -988,4 +989,52 @@ export const getSuggestTp = (side, activePrice = 0, leverage = 10, profitRatio =
     } else {
         return (profitRatio * activePrice / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus)
     }
+}
+
+
+export const Countdown = ({ date, onEnded }) => {
+    const timer = useRef(null)
+    const [count, setCount] = useState({
+        days: 0,
+        hours: '00',
+        minutes: '00',
+        seconds: '00',
+    })
+
+    const formatN = (number) => {
+        return number > 0 ? number > 9 ? number : `0${number}` : 0
+    }
+
+    const startCountDown = (date) => {
+        if (!date) return
+        const countDownDate = new Date(date).getTime()
+        const now = new Date().getTime()
+        const distance = countDownDate - now
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24))
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000)
+        setCount({ days: formatN(days), hours: formatN(hours), minutes: formatN(minutes), seconds: formatN(seconds) })
+        if (distance < 0) {
+            clearInterval(timer.current)
+            setCount({ days: 0, hours: '00', minutes: '00', seconds: '00' })
+            if (onEnded) onEnded()
+        }
+    }
+
+    useEffect(() => {
+        if (!date) return
+        timer.current = setInterval(() => {
+            startCountDown(date)
+        }, 1000)
+        return () => {
+            clearInterval(timer.current)
+        }
+    }, [date])
+
+    return (
+        <>
+            {count?.days ? count?.days + 'D' : ''} {count?.hours}:{count?.minutes}:{count?.seconds}
+        </>
+    )
 }

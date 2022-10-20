@@ -32,7 +32,7 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
             }
         });
         return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
         };
     }, [symbol]);
 

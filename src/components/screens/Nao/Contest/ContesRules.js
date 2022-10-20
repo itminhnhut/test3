@@ -105,6 +105,20 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
 
 
 const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
+
+    const progress = (item) => {
+        const now = new Date().getTime()
+        const start = new Date(item?.start).getTime()
+        const end = new Date(item?.end).getTime()
+        if (now < start && now < end) {
+            return t('nao:coming_soon_2')
+        } else if (now > start && now < end) {
+            return t('nao:going_on')
+        } else {
+            return t('nao:ended')
+        }
+    }
+
     return (
         <Popover className="relative flex">
             {({ open, close }) => (
@@ -132,10 +146,11 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                                         router.push(`/contest/${item.season}`)
                                         close()
                                     }} key={index} className="px-4 space-x-2 py-2 hover:bg-onus-bg2 cursor-pointer flex items-center justify-between">
-                                        <span>{item?.title_detail?.[language]}</span>
+                                        <span>{item?.title_detail?.[language]} ({progress(item)})</span>
                                         <span>{item.season === season && <Check size={14} color={colors.onus.base} />}</span>
                                     </div>
-                                ))}
+                                )
+                                )}
                             </div>
                         </Popover.Panel>
                     </Transition>

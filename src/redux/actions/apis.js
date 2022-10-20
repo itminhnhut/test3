@@ -91,9 +91,9 @@ export const API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES =
     API_V3_PREFIX + "futures/vndc/transactions";
 export const API_POST_CHANGE_FEES_CURRENCY_ORDER =
     API_V3_PREFIX + "futures/vndc/change-fee-currency";
-export const API_GET_ALL_ORDERS_BY_CONDTION = 
+export const API_GET_ALL_ORDERS_BY_CONDTION =
     API_V3_PREFIX + "futures/vndc/find-all-by-condition";
-export const API_CLOSE_ALL_ORDERS_BY_CONDTION = 
+export const API_CLOSE_ALL_ORDERS_BY_CONDTION =
     API_V3_PREFIX + "futures/vndc/close-all-by-condition";
 
 export const API_DCA_ORDER = API_V3_PREFIX + "futures/vndc/dca-order";
@@ -282,3 +282,4 @@ export const API_GET_FUTURES_SETTING = API_PREFIX + "futures/setting";
 export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + "portfolio/futures/overview";
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + "portfolio/futures/account";
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + "portfolio/futures/summary";
+

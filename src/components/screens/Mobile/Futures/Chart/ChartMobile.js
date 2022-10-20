@@ -34,9 +34,9 @@ const ChartMobile = memo(({
         if (fullChart) return { height: '100vw' };
         if (typeof window !== 'undefined') {
             const vh = window.innerHeight * 0.01;
-            return { height: !isFullScreen ? 400 : `calc(100% - 230px)` };
+            return { height: !isFullScreen ? 400 : `calc(100% - 240px)` };
         } else {
-            return { height: `calc(100% - 230px)` };
+            return { height: `calc(100% - 240px)` };
         }
     }, [isFullScreen, typeof window, fullChart]);
 
@@ -67,7 +67,7 @@ const ChartMobile = memo(({
                 mode={ChartMode.FUTURES}
                 isFullScreen={isFullScreen}
                 showIconGuide={!fullChart}
-                styleChart={{ minHeight: `calc(100% - ${fullChart ? '58' : '90'}px)` }}
+                styleChart={{ minHeight: `calc(100% - ${fullChart ? '58' : '140'}px)` }}
                 reNewComponentKey={() => setChartKey(Math.random()
                     .toString())} // Change component key will remount component
                 fullChart={fullChart}

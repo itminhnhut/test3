@@ -25,14 +25,13 @@ export default function NaoProposals({ listProposal, assetNao }) {
                 url: API_USER_POOL,
                 options: { method: "GET" },
             });
-
             setDataUserVote(useVoteRes ?? []);
         } catch (error) {
             console.log(error);
         }
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         fetchData();
     }, []);
 
