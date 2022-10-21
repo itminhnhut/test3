@@ -428,4 +428,42 @@
     "funding_rate_des": "The payment rate exchanged between the long and short positions for the next funding. If the funding rate is positive, longs pay shorts. If negative, shorts pay longs.",
     "funding_history": "Funding History",
     "information": "Information"
+    "transaction_histories": "Transaction History",
+    "funding": "Funding",
+    "funding_fee": "Funding fee",
+    "funding_rate": "Funding Rate",
+    "funding_history":{
+        "tab_ratio_realtime":"Real-Time Funding Rate",
+        "tab_history":"Funding History",
+
+        "find_pair":"Search",
+
+        "opt_order_default": "Sort by default",
+        "opt_default":"Sort by default",
+        "opt_contract_a_z":"Sort by contract (A to Z)",
+        "opt_contract_z_a":"Sort by contract (Z to A)",
+        "opt_rate_inc":"Sort by funding rate (Ascending)",
+        "opt_rate_desc":"Sort by funding rate (Descending)",
+
+        "opt_order_default_place": "Default",
+        "opt_default_place":"Default",
+        "opt_contract_a_z_place":"Contract (A to Z)",
+        "opt_contract_z_a_place":"Contract (Z to A)",
+        "opt_rate_inc_place":"Funding rate (Ascending)",
+        "opt_rate_desc_place":"Funding rate (Descending)",
+
+        "contract":"Contract",
+
+        "link_overview": "Learn more about funding rate",
+        "pair":"pair",
+        "time_left_to_next_funding":"Time to next funding",
+        "funding_rate":"Funding rate",
+        "days": "days",
+        "more": "More",
+        "hours": "hours",
+
+        "funding_range":"Funding interval",
+        "perpetual":"Perpetual",
+        "information":"Information"
+    }
 }

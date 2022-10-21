@@ -13,13 +13,13 @@ import classNames from 'classnames';
 import Modal from 'components/common/ReModal';
 
 const FuturesPairDetail = ({
-    pairPrice,
-    markPrice,
-    pairConfig,
-    forceUpdateState,
-    isVndcFutures,
-    isAuth
-}) => {
+                               pairPrice,
+                               markPrice,
+                               pairConfig,
+                               forceUpdateState,
+                               isVndcFutures,
+                               isAuth
+                           }) => {
     // ? Xử lí minW để khi giá thay đổi, giao diện này sẽ không bị xê dịch.
     // ? Nguyên nhân: Font sida (;_;)
     const [itemsPriceMinW, setItemsPriceMinW] = useState(0)
@@ -199,10 +199,23 @@ const FuturesPairDetail = ({
                     )
                     minWidth = itemsPriceMinW + 36
                     break
+                case '24hBaseVolume':
+                    localized += ` (${pairPrice?.baseAsset})`
                 case 'bestBid':
                     minWidth = itemsPriceMinW + 41
+                    value = formatNumber(
+                        roundTo(pairPrice?.baseAssetVolume || 0, 3),
+                        3
+                    )
                     value = <div className="text-red">{formatNumber(pairPrice?.bid, pricePrecision, 0, true)}</div>
                     break
+                case '24hQuoteVolume':
+                    localized += ` (${pairPrice?.quoteAsset})`
+                    minWidth = itemsPriceMinW + 50
+                    value = formatNumber(
+                        roundTo(pairPrice?.quoteAssetVolume || 0, 3),
+                        3
+                    )
                 case 'bestAsk':
                     minWidth = itemsPriceMinW + 41
                     value = <div className="text-dominant">{formatNumber(pairPrice?.ask, pricePrecision, 0, true)}</div>
@@ -384,3 +397,4 @@ const PAIR_PRICE_DETAIL_ITEMS = [
 
 
 export default FuturesPairDetail
+

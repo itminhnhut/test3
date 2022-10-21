@@ -26,6 +26,7 @@ const Tab = memo(({
                       onChangeTab,
                       tArr = [],
                       itemStyles = null,
+                      isBorderBottom=true,
                       itemClassName = null }) => {
 
     if (!Array.isArray(series)) {
@@ -42,7 +43,7 @@ const Tab = memo(({
 
     const render = useCallback(() => {
         if (type === TAB_TYPE.TYPE1) {
-            let className = 'relative cursor-pointer mr-7 pb-4 whitespace-nowrap font-medium hover:text-txtPrimary dark:hover:text-txtPrimary-dark '
+            let className = 'relative pb-4 font-medium cursor-pointer mr-7 whitespace-nowrap hover:text-txtPrimary dark:hover:text-txtPrimary-dark '
             if (itemClassName) {
                 className = className + itemClassName
             }
@@ -53,7 +54,7 @@ const Tab = memo(({
             return series.map(s => {
                 return (
                     <div key={`tab_${name}__${s?.key}`}
-                         style={itemStyles ? {...itemStyle} : undefined}
+                         style={itemStyles ? {...itemStyles} : undefined}
                          onClick={() => {
                              onChangeTab && onChangeTab(s?.key)
                          }}>
@@ -69,13 +70,19 @@ const Tab = memo(({
         }
     }, [name, type, itemStyles, itemClassName, currentIndex])
 
-    return <TabWrapper>{render()}</TabWrapper>
+    return <TabWrapper isBorderBottom={isBorderBottom}>{render()}</TabWrapper>
 })
 
-const TabWrapper = styled.div.attrs({ className: 'flex items-center select-none border-b border-divider dark:border-divider-dark overflow-y-hidden overflow-x-auto' })`
+const TabWrapper = styled.div.attrs(({ isBorderBottom }) =>({
+    className: `flex items-center select-none  overflow-y-hidden overflow-x-auto ${isBorderBottom ? 'border-b border-divider dark:border-divider-dark' :''}` }))`
   ::-webkit-scrollbar {
     display: none;
   }
 `
+
+// const Label = styled.div.attrs(({ isTabOpen }) => ({
+//     className: `text-gray-1 text-left text-onus-grey ${isTabOpen ? 'text-xs' : 'text-sm'} font-normal`
+// }))``;
+
 
 export default Tab
