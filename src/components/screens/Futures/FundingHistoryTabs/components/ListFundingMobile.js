@@ -4,7 +4,7 @@ import Divider from 'components/common/Divider';
 import { renderTimeLeft } from '../FundingTab';
 import { useFavicon, usePrevious } from 'react-use';
 
-export default function ModalFundingTabMobile({ dataTable, currency }) {
+export default function ListFundingMobile({ dataTable, currency }) {
     const { t } = useTranslation();
     const prevCurrency = usePrevious(currency);
 
@@ -23,7 +23,7 @@ export default function ModalFundingTabMobile({ dataTable, currency }) {
     const Item = ({ item, index, isLastItem, hasMore }) => {
         return (
             <>
-                <div className="flex flex-col items-start justify-between w-full px-4 py-6">
+                <div className="flex flex-col items-start justify-between w-full px-4 py-6" key={item.asset}>
                     <div className="mb-[10px]">{item.asset}</div>
                     <div className="flex justify-between w-full mb-1">
                         <p className="text-sm leading-5 text-txtTabInactive dark:text-txtTabInactive-dark">

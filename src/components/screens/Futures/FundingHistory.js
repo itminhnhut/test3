@@ -9,6 +9,7 @@ import { WALLET_SCREENS } from 'pages/wallet';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
+import { TAB_TYPE } from '../../common/Tab';
 
 export const CURRENCIES = [
     {
@@ -39,7 +40,9 @@ export default function FundingHistory(props) {
                     setSelectedTab(current.key);
                 }}
                 tArr={['common']}
+                type={TAB_TYPE.TYPE1}
                 isBorderBottom={false}
+                itemClassName='!font-semibold '
             />
         );
     }, [selectedTab]);
@@ -47,11 +50,11 @@ export default function FundingHistory(props) {
     const renderHeading = () => {
         const selectedClassName = 'text-white bg-primary-500 bg-dominant';
         const unselectedClassName =
-            'text-txtSecondary dark:text-txtSecondary-dark bg-white bg-opacity-10';
+            'text-txtSecondary dark:text-txtSecondary-dark bg-opacity-10 bg-bgTabInactive dark:bg-bgTabInactive-dark';
         const defaultClassName =
             'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-sm font-normal leading-6';
         return (
-            <div className="flex justify-between mb-[40px] px-4">
+            <div className="flex justify-between mb-[40px] px-4 items-center">
                 <div>
                     <p
                         className={
@@ -61,7 +64,7 @@ export default function FundingHistory(props) {
                         {t('futures:funding_history:information')}
                     </p>
                 </div>
-                <div className={'flex gap-[6px]'}>
+                <div className={'flex lg:gap-[6px] gap-3'}>
                     {CURRENCIES.map(({ name, value }, index) => {
                         return (
                             <div

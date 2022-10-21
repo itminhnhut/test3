@@ -19,6 +19,7 @@ import Skeletor from 'components/common/Skeletor';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
 import MCard from 'components/common/MCard';
+import { ChevronDown } from 'react-feather';
 
 export const CURRENCIES = [
     {
@@ -31,13 +32,13 @@ export const CURRENCIES = [
     }
 ];
 
-const sortAscending = (arr, key, isString) => {
+const sortDescending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => a[key].localeCompare(b[key]));
     return arr.sort(function (a, b) {
         return a[key] - b[key];
     });
 };
-const sortDescending = (arr, key, isString) => {
+const sortAscending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => b[key].localeCompare(a[key]));
     return arr.sort(function (a, b) {
         return b[key] - a[key];
@@ -102,7 +103,7 @@ export default function FundingHistory({ currency }) {
     const prevCurrency = usePrevious(currency);
 
     const [isLoading, setIsLoading] = useState(true);
-    const tableRef =  useRef(null)
+    const tableRef = useRef(null);
 
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
@@ -224,13 +225,13 @@ export default function FundingHistory({ currency }) {
         return (
             <div className="flex flex-col justify-between mb-8 lg:flex-row lg:mb-[40px] px-4 lg:px-0">
                 <div className="flex items-center justify-between gap-6 mb-6 lg:mb-0 mb:justify-end">
-                    <div className="flex items-center w-[165px] lg:w-[224px] order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5  bg-gray-5 dark:bg-darkBlue-4">
+                    <div className="flex items-center w-[165px] lg:w-[224px] px-3 rounded-md h-9 lg:mt-0 lg:px-5 bg-bgTabInactive dark:bg-bgTabInactive-dark">
                         <Search
                             size={width >= 768 ? 16 : 16}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
                         />
                         <input
-                            className="text-sm p-[8px] font-medium leading-6 text-txtSecondary dark:text-txtSecondary-dark"
+                            className="py-[6px] p-4  text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark leading-6 placeholder:text-txtSecondary placeholder:dark:text-txtSecondary-dark bg-bgTabInactive dark:bg-bgTabInactive-dark"
                             value={selectedSymbol}
                             onChange={(e) => handleSearch(e?.target?.value)}
                             placeholder={t('futures:funding_history:find_pair')}
@@ -238,7 +239,7 @@ export default function FundingHistory({ currency }) {
                         {selectedSymbol && (
                             <X
                                 size={width >= 768 ? 16 : 16}
-                                className="cursor-pointer"
+                                className="mx-0 cursor-pointer"
                                 onClick={() => {
                                     setFilteredDataTable([]);
                                     setSelectedSymbol('');
@@ -249,21 +250,20 @@ export default function FundingHistory({ currency }) {
                     </div>
                     {isMobile ? (
                         <div>
-                            <Popover className="relative order-1 lg:order-2">
+                            <Popover className="relative">
                                 {({ open, close }) => (
                                     <>
                                         <Popover.Button>
                                             <div className="px-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between w-[170px] lg:w-[210px] h-9">
-                                                <p className="text-sm truncate text-txtSecondary dark:text-txtSecondary-dark">
+                                                <p className="text-sm font-medium leading-5 truncate text-txtPrimary dark:text-txtPrimary-dark">
                                                     {t(selectedFilter.placeholder)}
                                                 </p>
-                                                <img
-                                                    alt=""
-                                                    src={getS3Url(
-                                                        '/images/nao/ic_arrow_bottom.png'
+                                                <ChevronDown
+                                                    size={16}
+                                                    className={classNames(
+                                                        'mt-1 ml-2 transition-transform duration-75 text-txtSecondary dark:txtSecondary-dark',
+                                                        { 'rotate-180': open }
                                                     )}
-                                                    height="16"
-                                                    width="16"
                                                 />
                                             </div>
                                         </Popover.Button>
@@ -276,7 +276,7 @@ export default function FundingHistory({ currency }) {
                                             leaveFrom="opacity-100 translate-y-0"
                                             leaveTo="opacity-0 translate-y-1"
                                         >
-                                            <Popover.Panel className="absolute left-0 z-50 mt-1 rounded-md top-8 bg-bgInput dark:bg-bgInput-dark">
+                                            <Popover.Panel className="absolute left-0 z-50 mt-2 rounded-md top-8 bg-bgPrimary dark:bg-bgPrimary-dark dark:border dark:border-darkBlue">
                                                 {FILTER_OPTS.map((item) => {
                                                     const { label, index } = item;
                                                     return (
@@ -288,7 +288,7 @@ export default function FundingHistory({ currency }) {
                                                                     close();
                                                                 }}
                                                                 className={classNames(
-                                                                    'cursor-pointer px-3 py-3 w-[170px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col',
+                                                                    'cursor-pointer px-3 py-3 w-[170px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col font-base leading-5',
                                                                     {
                                                                         'text-dominant':
                                                                             selectedFilter.index ===
@@ -298,7 +298,9 @@ export default function FundingHistory({ currency }) {
                                                             >
                                                                 {t(label)}
                                                             </div>
-                                                            <Divider />
+                                                            <div className="px-3">
+                                                                <Divider />
+                                                            </div>
                                                         </>
                                                     );
                                                 })}
@@ -425,8 +427,8 @@ export default function FundingHistory({ currency }) {
                                 },
                                 headerStyle: {
                                     fontSize: '0.875rem !important',
-                                    color:"red !important",
-                                    paddingTop: '20px !important',
+                                    color: 'red !important',
+                                    paddingTop: '20px !important'
                                 },
                                 rowStyle: {},
                                 shadowWithFixedCol: width < 1366,
