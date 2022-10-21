@@ -149,7 +149,7 @@ const ReTable = memo(({
         if (!paginationProps || paginationProps?.hide) return null
 
         return (
-            <div className="py-8 flex items-center justify-center">
+            <div className="flex items-center justify-center py-8">
                 <RePagination total={data?.length}
                               current={current}
                               pageSize={pageSize}

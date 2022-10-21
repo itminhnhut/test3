@@ -21,56 +21,6 @@ export const CURRENCIES = [
     }
 ];
 
-const sortAscending = (arr, key) =>
-    arr.sort(function (a, b) {
-        return a[key] - b[key];
-    });
-const sortDescending = (arr, key) =>
-    arr.sort(function (a, b) {
-        return b[key] - a[key];
-    });
-
-const FILTER_OPTS = [
-    {
-        label: 'futures:funding_history:opt_default',
-        index: 0,
-        keySort: 'symbol',
-        sort: (arr, key) => arr
-    },
-    {
-        label: 'futures:funding_history:opt_contract_a_z',
-        index: 1,
-        keySort: 'symbol',
-        sort: (data, key) => {
-            return sortAscending(data, key);
-        }
-    },
-    {
-        label: 'futures:funding_history:opt_contract_z_a',
-        index: 2,
-        keySort: 'symbol',
-        sort: (data, key) => {
-            return sortDescending(data, key);
-        }
-    },
-    {
-        label: 'futures:funding_history:opt_rate_inc',
-        index: 3,
-        keySort: 'fundingRate',
-        sort: (data, key) => {
-            return sortAscending(data, key);
-        }
-    },
-    {
-        label: 'futures:funding_history:opt_rate_desc',
-        index: 4,
-        keySort: 'fundingRate',
-        sort: (data, key) => {
-            return sortDescending(data, key);
-        }
-    }
-];
-
 export default function FundingHistory(props) {
     const [currentTheme] = useDarkMode();
     const { t } = useTranslation();
@@ -89,24 +39,26 @@ export default function FundingHistory(props) {
                     setSelectedTab(current.key);
                 }}
                 tArr={['common']}
+                isBorderBottom={false}
             />
         );
     }, [selectedTab]);
 
     const renderHeading = () => {
         const selectedClassName = 'text-white bg-primary-500 bg-dominant';
-        const unselectedClassName = 'text-primary-500 bg-white bg-opacity-10';
+        const unselectedClassName =
+            'text-txtSecondary dark:text-txtSecondary-dark bg-white bg-opacity-10';
         const defaultClassName =
             'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-sm font-normal leading-6';
         return (
-            <div className="flex justify-between mb-[40px]">
+            <div className="flex justify-between mb-[40px] px-4">
                 <div>
                     <p
                         className={
                             'text-txtPrimary  dark:text-txtPrimary-dark font-semibold leading-[40px] text-[26px]'
                         }
                     >
-                        Thông tin
+                        {t('futures:funding_history:information')}
                     </p>
                 </div>
                 <div className={'flex gap-[6px]'}>
@@ -133,9 +85,9 @@ export default function FundingHistory(props) {
         <>
             <MaldivesLayout>
                 <Background isDark={currentTheme === THEME_MODE.DARK}>
-                    <div className={'px-[20px] pt-[40px]'}>
+                    <div className={'pt-[40px]'}>
                         {renderHeading()}
-                        <div>{renderScreenTab()}</div>
+                        <div className="px-4">{renderScreenTab()}</div>
                         {/* Content Tab */}
                         {/* {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />} */}
                         <FundingHistoryTable currency={selectedCurrency} />

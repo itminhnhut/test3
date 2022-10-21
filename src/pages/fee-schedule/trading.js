@@ -228,6 +228,7 @@ const TradingFee = () => {
                     pageSize: 10,
                     onChange: (currentFuturesFeePage) => setState({ currentFuturesFeePage })
                 }}
+                className="rounded-md border-top"
             />
         )
 
@@ -249,7 +250,7 @@ const TradingFee = () => {
                 key: 'maker_taker_deducted', dataIndex: 'maker_taker_deducted',
                 title: <span>
                     Maker / Taker
-                    <span className="text-dominant ml-3">{t('fee-structure:use_asset_deduction', { value: '25%', asset: 'NAMI' })}</span>
+                    <span className="ml-3 text-dominant">{t('fee-structure:use_asset_deduction', { value: '25%', asset: 'NAMI' })}</span>
                 </span>,
                 width: 100, align: 'left'
             },
@@ -292,10 +293,10 @@ const TradingFee = () => {
             <div className="flex flex-wrap items-center">
                 {language === LANGUAGE_TAG.VI ?
                     <>
-                        Dùng <span className="text-dominant mx-1">NAMI</span> để được giảm phí <span className="whitespace-nowrap ml-1">(chiết khấu {promote * 100}%)</span>
+                        Dùng <span className="mx-1 text-dominant">NAMI</span> để được giảm phí <span className="ml-1 whitespace-nowrap">(chiết khấu {promote * 100}%)</span>
                     </>
                     : <>
-                        Using <span className="text-dominant mx-1">NAMI</span> deduction <span className="whitespace-nowrap ml-1">({promote * 100}% discount)</span>
+                        Using <span className="mx-1 text-dominant">NAMI</span> deduction <span className="ml-1 whitespace-nowrap">({promote * 100}% discount)</span>
                     </>}
             </div>
         )
@@ -316,10 +317,10 @@ const TradingFee = () => {
             <div className="flex flex-wrap items-center">
                 {language === LANGUAGE_TAG.VI ?
                     <>
-                        Dùng <span className="text-dominant mx-1">NAMI</span> để được giảm phí <span className="whitespace-nowrap ml-1">(chiết khấu {promote * 100}%)</span>
+                        Dùng <span className="mx-1 text-dominant">NAMI</span> để được giảm phí <span className="ml-1 whitespace-nowrap">(chiết khấu {promote * 100}%)</span>
                     </>
                     : <>
-                        Using <span className="text-dominant mx-1">NAMI</span> deduction <span className="whitespace-nowrap ml-1">({promote * 100}% discount)</span>
+                        Using <span className="mx-1 text-dominant">NAMI</span> deduction <span className="ml-1 whitespace-nowrap">({promote * 100}% discount)</span>
                     </>}
             </div>
         )
@@ -327,7 +328,7 @@ const TradingFee = () => {
 
     const renderUsedNamiMsg = useCallback(() => {
         if (state.assetFee?.feeCurrency !== 1) return null
-        return <div className="mt-3 text-dominant text-sm text-xs md:text-sm">* {t('fee-structure:used_fee_deduction', { token: `${ROOT_TOKEN} tokens` })}</div>
+        return <div className="mt-3 text-xs text-sm text-dominant md:text-sm">* {t('fee-structure:used_fee_deduction', { token: `${ROOT_TOKEN} tokens` })}</div>
     }, [state.assetFee?.feeCurrency])
 
     const renderUserFeeConfig = useCallback((maker, taker) => {
@@ -370,13 +371,13 @@ const TradingFee = () => {
             </div>
 
             <MCard addClass="relative mt-5 px-4 py-6 lg:px-7 px-4 py-6 lg:py-8 text-sm">
-                <div className="relative z-10 w-full flex flex-wrap">
+                <div className="relative z-10 flex flex-wrap w-full">
                     <div className="w-full sm:w-1/2"
                         style={width >= BREAK_POINTS.xl ? {
                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
                         } : undefined}
                     >
-                        <div className="font-medium mb-5">
+                        <div className="mb-5 font-medium">
                             <div>{t('fee-structure:exchange_trading_fee')}</div>
                         </div>
 
@@ -387,7 +388,7 @@ const TradingFee = () => {
                             </span>
                         </div>
 
-                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark mb-2">
+                        <div className="mb-2 font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
@@ -397,7 +398,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark mb-2">
+                        <div className="mb-2 font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
@@ -408,7 +409,7 @@ const TradingFee = () => {
                             </div>
                         </div>
 
-                        <div className="mt-5 font-medium flex flex-wrap items-center">
+                        <div className="flex flex-wrap items-center mt-5 font-medium">
                             <span className="flex items-center">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('common:available_balance')}: </span>
                                 {renderNamiAvailable()}
@@ -425,7 +426,7 @@ const TradingFee = () => {
                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
                         } : undefined}
                     >
-                        <div className="font-medium mb-5">
+                        <div className="mb-5 font-medium">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
                         </div>
 
@@ -436,7 +437,7 @@ const TradingFee = () => {
                             </span>
                         </div>
 
-                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark mb-2">
+                        <div className="mb-2 font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
@@ -444,7 +445,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark mb-2">
+                        <div className="mb-2 font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
@@ -459,7 +460,7 @@ const TradingFee = () => {
                             width: `calc((100% - ${GRAPHICS_WIDTH}) / 3)`
                         } : undefined}
                     >
-                        <div className="font-medium mb-5">
+                        <div className="mb-5 font-medium">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
                         </div>
 
@@ -470,7 +471,7 @@ const TradingFee = () => {
                             </span>
                         </div>
 
-                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark mb-2">
+                        <div className="mb-2 font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Maker</span>
                                 <span>
@@ -478,7 +479,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark mb-2">
+                        <div className="mb-2 font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span>
@@ -488,7 +489,7 @@ const TradingFee = () => {
                         </div>
                     </div>
 
-                    <div className="hidden sm:flex items-center justify-center w-full mt-8 sm:mt-0 sm:w-1/2"
+                    <div className="items-center justify-center hidden w-full mt-8 sm:flex sm:mt-0 sm:w-1/2"
                         style={width >= BREAK_POINTS.xl ? {
                             width: '200px'
                         } : undefined}
@@ -501,7 +502,7 @@ const TradingFee = () => {
                 {renderUsedNamiMsg()}
             </MCard>
 
-            <div className="t-common mt-10 mb-5">
+            <div className="mt-10 mb-5 t-common">
                 {t('fee-structure:fee_rate')}
             </div>
 
@@ -513,20 +514,20 @@ const TradingFee = () => {
                 {state.tabIndex !== 0 && renderFuturesTableFee()}
             </MCard>
 
-            <div className="mt-6 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
+            <div className="mt-6 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                 {t('fee-structure:maker_taker_description')}<span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
                 <Link href={PATHS.REFERENCE.MAKER_TAKER}>
                     <a className="ml-3 text-dominant hover:!underline" target="_blank">{t('common:read_more')}</a>
                 </Link>
             </div>
 
-            <div className="mt-3 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
+            <div className="mt-3 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                 {t('fee-structure:referral_description_value', { value: '20%' })}
                 <Link href={PATHS.ACCOUNT.REFERRAL}>
                     <a className="ml-3 text-dominant hover:!underline">{t('common:read_more')}</a>
                 </Link>
             </div>
-            <div className="mt-3 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
+            <div className="mt-3 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                 {t('fee-structure:swap_fee_description')}
             </div>
         </>
@@ -567,7 +568,7 @@ const dataHandler = (props) => {
             data.forEach(d => {
                 result.push({
                     key: `trading_fee__item__${d.level}`,
-                    level: <span className="text-sm inline-flex items-center">
+                    level: <span className="inline-flex items-center text-sm">
                         VIP {d.level} {utils?.currentLevel === d.level && <SvgCrown className="ml-2" size={16} />}
                     </span>,
                     // vol_30d: <span className="text-sm">{d.vol_30d}</span>,
