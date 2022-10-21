@@ -93,8 +93,15 @@ export default function FundingHistory(props) {
                         {renderHeading()}
                         <div className="px-4">{renderScreenTab()}</div>
                         {/* Content Tab */}
-                        {/* {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />} */}
-                        <FundingHistoryTable currency={selectedCurrency} />
+                        <div
+                            className="rounded-[20px] pt-[2rem] lg:pt-[3rem] shadow-funding lg:mx-4 pb-12  lg:pb-8"
+                            style={{
+                                backgroundColor:
+                                    currentTheme === THEME_MODE.DARK ? '#071026' : '#FCFCFC'
+                            }}
+                        >
+                            {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />} 
+                        </div>
                     </div>
                 </Background>
             </MaldivesLayout>
