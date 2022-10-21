@@ -14,9 +14,10 @@ import { isMobile } from 'react-device-detect';
 import { Search, X } from 'react-feather';
 import { useSelector } from 'react-redux';
 import { usePrevious } from 'react-use';
-import { getS3Url } from 'redux/actions/utils';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import { THEME_MODE } from 'hooks/useDarkMode';
+import { RETABLE_SORTBY } from 'components/common/ReTable';
 
 export const CURRENCIES = [
     {
@@ -45,12 +46,14 @@ const sortDescending = (arr, key, isString) => {
 const FILTER_OPTS = [
     {
         label: 'futures:funding_history:opt_default',
+        placeholder: 'futures:funding_history:opt_default_place',
         index: 0,
         keySort: 'symbol',
         sort: (arr, key) => arr
     },
     {
         label: 'futures:funding_history:opt_contract_a_z',
+        placeholder: 'futures:funding_history:opt_contract_a_z_place',
         index: 1,
         keySort: 'symbol',
         sort: (data, key) => {
@@ -59,6 +62,7 @@ const FILTER_OPTS = [
     },
     {
         label: 'futures:funding_history:opt_contract_z_a',
+        placeholder: 'futures:funding_history:opt_contract_z_a_place',
         index: 2,
         keySort: 'symbol',
         sort: (data, key) => {
@@ -67,6 +71,7 @@ const FILTER_OPTS = [
     },
     {
         label: 'futures:funding_history:opt_rate_inc',
+        placeholder: 'futures:funding_history:opt_rate_inc_place',
         index: 3,
         keySort: 'fundingRate',
         sort: (data, key) => {
@@ -75,6 +80,7 @@ const FILTER_OPTS = [
     },
     {
         label: 'futures:funding_history:opt_rate_desc',
+        placeholder: 'futures:funding_history:opt_rate_desc_place',
         index: 4,
         keySort: 'fundingRate',
         sort: (data, key) => {
@@ -87,7 +93,10 @@ export const DEFAULT_FUNDING_TIME_NULL = '00:00:00';
 
 export default function FundingHistory({ currency }) {
     const [currentTheme] = useDarkMode();
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const { width } = useWindowSize();
     const prevCurrency = usePrevious(currency);
 
@@ -96,7 +105,6 @@ export default function FundingHistory({ currency }) {
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allAssetConfig = useSelector((state) => state.utils.assetConfig);
-    const allPairConfig = useSelector((state) => state.futures.pairConfigs);
 
     const [dataTable, setDataTable] = useState([]);
     const [selectedSymbol, setSelectedSymbol] = useState('');
@@ -109,23 +117,14 @@ export default function FundingHistory({ currency }) {
         publicSocket.emit('subscribe:futures:mini_ticker', 'all');
     };
 
-    useEffect(() => {
-        if (!publicSocket) return;
-        subscribeFuturesSocket();
-    }, [publicSocket]);
-
-    useEffect(() => {
+    /**
+     * It generates the data table for the funding history page.
+     */
+    const generateDataTable = () => {
         const marketWatchKies = Object.entries(marketWatch || {});
-
-        if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 20) return;
-        if (currency !== prevCurrency) {
-            setIsLoading(true);
-            setCurrentPage(1);
-        }
         const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
             if (data?.quoteAsset === currency) {
-
                 // const config = allAssetConfig?.find((item) => item?.baseAsset === data?.baseAsset);                // console.log("config", config);
                 return [
                     ...pre,
@@ -144,18 +143,88 @@ export default function FundingHistory({ currency }) {
                             </div>
                         ),
                         symbol: data?.baseAsset,
-                        key: value,
-                        fundingRate: data?.fundingRate * 100,
-                        fundingTime: data?.fundingTime
+                        key: data?.baseAsset,
+                        fundingRate: +formatNumber(data?.fundingRate * 100, 0, 4, true),
+                        fundingTime: data?.fundingTime,
+                        [RETABLE_SORTBY]: {
+                            asset: data?.baseAsset,
+                            fundingRate: +formatNumber(data?.fundingRate * 100, 0, 4, true)
+                        }
                     }
                 ];
             } else return pre;
         }, []);
+        // setDataTable(res);
         setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
         setIsLoading(false);
-    }, [marketWatch, selectedFilter, currency, prevCurrency]);
+    };
 
+    useEffect(() => {
+        if (!publicSocket) return;
+        subscribeFuturesSocket();
+    }, [publicSocket]);
+
+    useEffect(() => {
+        const marketWatchKies = Object.entries(marketWatch || {});
+        if (dataTable?.length) return;
+
+        if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 20) return;
+        if (currency !== prevCurrency) {
+            setIsLoading(true);
+            setCurrentPage(1);
+        }
+        generateDataTable();
+        // const res = marketWatchKies.reduce((pre, currentValue) => {
+        //     const [value, data] = currentValue;
+        //     if (data?.quoteAsset === currency) {
+        //         // const config = allAssetConfig?.find((item) => item?.baseAsset === data?.baseAsset);                // console.log("config", config);
+        //         return [
+        //             ...pre,
+        //             {
+        //                 asset: (
+        //                     <div className="flex items-center">
+        //                         <AssetLogo assetCode={data?.baseAsset} size={32} />
+        //                         <div className="ml-3 lg:ml-4">
+        //                             <p className="text-base font-semibold lg:font-medium leading-[22px] lg:leading-6 text-txtPrimary dark:text-txtPrimary-dark">
+        //                                 {`${data?.baseAsset + '/' + data?.quoteAsset} `}
+        //                                 <span className="ml-2 lg:ml-[5px]">
+        //                                     {t('futures:funding_history:perpetual')}
+        //                                 </span>
+        //                             </p>
+        //                         </div>
+        //                     </div>
+        //                 ),
+        //                 symbol: data?.baseAsset,
+        //                 key: data?.baseAsset,
+        //                 fundingRate: +formatNumber(data?.fundingRate * 100, 0, 4, true),
+        //                 fundingTime: data?.fundingTime,
+        //                 [RETABLE_SORTBY]: {
+        //                     asset: data?.baseAsset,
+        //                     fundingRate: +formatNumber(data?.fundingRate * 100, 0, 4, true)
+        //                 }
+        //             }
+        //         ];
+        //     } else return pre;
+        // }, []);
+        // setDataTable(res);
+        // // setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+        // setIsLoading(false);
+    }, [marketWatch, currency, prevCurrency, dataTable]);
+
+    useEffect(() => {
+        if (prevCurrency !== currency && dataTable?.length) {
+            setCurrentPage(1);
+            generateDataTable();
+        }
+    }, [dataTable, prevCurrency, currency]);
+
+    /**
+     * It takes in an item, sets the selected filter to that item, and then calls the generateDataTable
+     * function
+     * @param item - The item that was selected from the dropdown.
+     */
     const handleChangeFilter = (item) => {
+        generateDataTable();
         setSelectedFilter(item);
         setCurrentPage(1);
     };
@@ -179,24 +248,29 @@ export default function FundingHistory({ currency }) {
         setCurrentPage(1);
     };
 
+    /**
+     * It renders a search bar and a link to the overview page
+     * @returns A div with a className of "flex flex-col justify-between mb-8 lg:flex-row lg:mb-[40px]
+     * px-4 lg:px-0"
+     */
     const renderSearch = () => {
         return (
             <div className="flex flex-col justify-between mb-8 lg:flex-row lg:mb-[40px] px-4 lg:px-0">
                 <div className="flex items-center justify-between gap-6 mb-6 lg:mb-0 mb:justify-end">
-                    <div className="flex items-center w-[185px] order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5  bg-gray-5 dark:bg-darkBlue-4">
+                    <div className="flex items-center w-[165px] lg:w-[224px] order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5  bg-gray-5 dark:bg-darkBlue-4">
                         <Search
-                            size={width >= 768 ? 20 : 16}
+                            size={width >= 768 ? 16 : 16}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
                         />
                         <input
-                            className="text-sm px-2.5 text-txtSecondary dark:text-txtSecondary-dark"
+                            className="text-sm p-[8px] text-txtSecondary dark:text-txtSecondary-dark"
                             value={selectedSymbol}
                             onChange={(e) => handleSearch(e?.target?.value)}
                             placeholder={t('futures:funding_history:find_pair')}
                         />
                         {selectedSymbol && (
                             <X
-                                size={width >= 768 ? 20 : 16}
+                                size={width >= 768 ? 16 : 16}
                                 className="cursor-pointer"
                                 onClick={() => {
                                     setFilteredDataTable([]);
@@ -206,64 +280,68 @@ export default function FundingHistory({ currency }) {
                             />
                         )}
                     </div>
-                    <div>
-                        <Popover className="relative order-1 lg:order-2">
-                            {({ open, close }) => (
-                                <>
-                                    <Popover.Button>
-                                        <div className="px-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between w-[129px] lg:w-[210px] h-9">
-                                            <p className="text-sm truncate text-txtSecondary dark:text-txtSecondary-dark">
-                                                {t(selectedFilter.label)}
-                                            </p>
-                                            <img
-                                                alt=""
-                                                src={getS3Url('/images/nao/ic_arrow_bottom.png')}
-                                                height="16"
-                                                width="16"
-                                            />
-                                        </div>
-                                    </Popover.Button>
-                                    <Transition
-                                        as={Fragment}
-                                        enter="transition ease-out duration-200"
-                                        enterFrom="opacity-0 translate-y-1"
-                                        enterTo="opacity-100 translate-y-0"
-                                        leave="transition ease-in duration-150"
-                                        leaveFrom="opacity-100 translate-y-0"
-                                        leaveTo="opacity-0 translate-y-1"
-                                    >
-                                        <Popover.Panel className="absolute left-0 z-50 mt-1 rounded-md top-8 bg-bgInput dark:bg-bgInput-dark">
-                                            {FILTER_OPTS.map((item) => {
-                                                const { label, index } = item;
-                                                return (
-                                                    <>
-                                                        <div
-                                                            key={index}
-                                                            onClick={() => {
-                                                                handleChangeFilter(item);
-                                                                close();
-                                                            }}
-                                                            className={classNames(
-                                                                'cursor-pointer px-3 py-3 w-[129px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col',
-                                                                {
-                                                                    'text-dominant':
-                                                                        selectedFilter.index ===
-                                                                        index
-                                                                }
-                                                            )}
-                                                        >
-                                                            {t(label)}
-                                                        </div>
-                                                        <Divider />
-                                                    </>
-                                                );
-                                            })}
-                                        </Popover.Panel>
-                                    </Transition>
-                                </>
-                            )}
-                        </Popover>
-                    </div>
+                    {isMobile ? (
+                        <div>
+                            <Popover className="relative order-1 lg:order-2">
+                                {({ open, close }) => (
+                                    <>
+                                        <Popover.Button>
+                                            <div className="px-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between w-[170px] lg:w-[210px] h-9">
+                                                <p className="text-sm truncate text-txtSecondary dark:text-txtSecondary-dark">
+                                                    {t(selectedFilter.placeholder)}
+                                                </p>
+                                                <img
+                                                    alt=""
+                                                    src={getS3Url(
+                                                        '/images/nao/ic_arrow_bottom.png'
+                                                    )}
+                                                    height="16"
+                                                    width="16"
+                                                />
+                                            </div>
+                                        </Popover.Button>
+                                        <Transition
+                                            as={Fragment}
+                                            enter="transition ease-out duration-200"
+                                            enterFrom="opacity-0 translate-y-1"
+                                            enterTo="opacity-100 translate-y-0"
+                                            leave="transition ease-in duration-150"
+                                            leaveFrom="opacity-100 translate-y-0"
+                                            leaveTo="opacity-0 translate-y-1"
+                                        >
+                                            <Popover.Panel className="absolute left-0 z-50 mt-1 rounded-md top-8 bg-bgInput dark:bg-bgInput-dark">
+                                                {FILTER_OPTS.map((item) => {
+                                                    const { label, index } = item;
+                                                    return (
+                                                        <>
+                                                            <div
+                                                                key={index}
+                                                                onClick={() => {
+                                                                    handleChangeFilter(item);
+                                                                    close();
+                                                                }}
+                                                                className={classNames(
+                                                                    'cursor-pointer px-3 py-3 w-[170px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col',
+                                                                    {
+                                                                        'text-dominant':
+                                                                            selectedFilter.index ===
+                                                                            index
+                                                                    }
+                                                                )}
+                                                            >
+                                                                {t(label)}
+                                                            </div>
+                                                            <Divider />
+                                                        </>
+                                                    );
+                                                })}
+                                            </Popover.Panel>
+                                        </Transition>
+                                    </>
+                                )}
+                            </Popover>
+                        </div>
+                    ) : null}
                 </div>
                 <div
                     className={
@@ -299,9 +377,8 @@ export default function FundingHistory({ currency }) {
             title: t('futures:funding_history:contract'),
             align: 'left',
             width: '50%',
-            sorter: false,
+            // sorter: false,
             fixed: width >= 992 ? 'none' : 'left'
-            // sorter:  (a, b) => b.symbol - a.symbol
         },
         {
             key: 'fundingTime',
@@ -309,7 +386,9 @@ export default function FundingHistory({ currency }) {
             title: t('futures:funding_history:time_left_to_next_funding'),
             align: 'left',
             width: '20%',
-            sorter: false,
+            preventSort: true,
+            /* Telling the table to not sort the data in the column. */
+            // sorter: false,
             // sorter:  (a, b) => b.fundingTime - a.fundingTime,
             fixed: width >= 992 ? 'none' : 'left',
             render: (data, item) =>
@@ -321,8 +400,6 @@ export default function FundingHistory({ currency }) {
             title: t('futures:funding_history:funding_rate'),
             align: 'left',
             width: '20%',
-            // sorter:  (a, b) => a.fundingRate - b.fundingRate,
-            sorter: false,
             fixed: width >= 992 ? 'none' : 'left',
             render: (data, item) => (!item?.isSkeleton ? data + '%' : '-%')
         }
@@ -348,7 +425,8 @@ export default function FundingHistory({ currency }) {
                         data={
                             selectedSymbol ? filteredDataTable : isLoading ? skeletons : dataTable
                         }
-                        // sort
+                        sort={!isMobile}
+                        defaultSort={{ key: 'symbol', direction: 'asc' }}
                         columns={columns}
                         rowKey={(item) => item?.key}
                         loading={!dataTable?.length || isLoading}
