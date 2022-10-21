@@ -277,6 +277,7 @@ module.exports = {
                 lightTeal: '#E2F6F5',
                 opacity: 'rgba(0, 200, 188, 0.5)',
                 opacitier: 'rgba(0, 200, 188, 0.1)',
+
             },
             green: {
                 DEFAULT: '#22B02E',
@@ -418,7 +419,8 @@ module.exports = {
                 'features': '0px 10px 30px rgba(89, 111, 153, 0.05)',
                 mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
-                nao: '0px 4px 4px rgba(0, 0, 0, 0.25)'
+                nao: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                funding: '0px -4px 10px rgba(0, 0, 0, 0.05)'
             },
             cursor: {
                 grabbing: 'grabbing'
