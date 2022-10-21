@@ -55,7 +55,7 @@ export default function FundingHistory(props) {
         const unselectedClassName =
             'text-txtSecondary dark:text-txtSecondary-dark bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark';
         const defaultClassName =
-            'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-xs lg:text-sm font-normal leading-6';
+            'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-[12px] lg:text-sm font-normal !leading-6';
         return (
             <div className="flex justify-between mb-[40px] px-4 items-center">
                 <div>
@@ -96,8 +96,14 @@ export default function FundingHistory(props) {
                         {renderHeading()}
                         <div className="px-4">{renderScreenTab()}</div>
                         {/* Content Tab */}
-                         {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />}
-                        {/*<FundingHistoryTable currency={selectedCurrency} />*/}
+                        <div
+                            className="rounded-[20px] pt-[2rem] lg:pt-[3rem] lg:mx-4 pb-12  lg:pb-8"
+                            style={{
+                                backgroundColor:
+                                    currentTheme === THEME_MODE.DARK ? '#071026' : '#FCFCFC'
+                            }}
+                        >
+                            {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />}                        </div>
                     </div>
                 </Background>
             </Wrapper>
