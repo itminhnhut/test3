@@ -104,6 +104,7 @@ export default function FundingHistory({ currency }) {
 
     const [isLoading, setIsLoading] = useState(true);
     const tableRef = useRef(null);
+    const firstLoadRef =  useRef(true)
 
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
@@ -157,9 +158,17 @@ export default function FundingHistory({ currency }) {
                 ];
             } else return pre;
         }, []);
-        // setDataTable(res);
-        setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-        setIsLoading(false);
+        if(firstLoadRef.current){
+            setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+            setIsLoading(false);
+            firstLoadRef.current = false
+        }else{
+            setTimeout(() => {
+                setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+                setIsLoading(false);
+            }, 700);
+        }
+
     };
 
     useEffect(() => {
@@ -169,7 +178,7 @@ export default function FundingHistory({ currency }) {
 
     useEffect(() => {
         const marketWatchKies = Object.entries(marketWatch || {});
-        if (dataTable?.length) return;
+        // if (dataTable?.length) return;
 
         if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 20) return;
         if (currency !== prevCurrency) {
@@ -434,7 +443,9 @@ export default function FundingHistory({ currency }) {
                                     color: 'red !important',
                                     paddingTop: '20px !important'
                                 },
-                                rowStyle: {},
+                                rowStyle: {
+                                    // fontSize: '0.875rem !important',
+                                },
                                 shadowWithFixedCol: width < 1366,
                                 noDataStyle: {
                                     minHeight: '480px'
