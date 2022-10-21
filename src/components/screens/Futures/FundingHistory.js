@@ -135,7 +135,7 @@ export default function FundingHistory(props) {
                 <Background isDark={currentTheme === THEME_MODE.DARK}>
                     <div className={'px-[20px] pt-[40px]'}>
                         {renderHeading()}
-                        <div className="mb-[3rem]">{renderScreenTab()}</div>
+                        <div>{renderScreenTab()}</div>
                         {/* Content Tab */}
                         {/* {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />} */}
                         <FundingHistoryTable currency={selectedCurrency} />

@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import useDarkMode from 'hooks/useDarkMode';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import useWindowSize from 'hooks/useWindowSize';
@@ -25,6 +25,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_FUNDING_RATE_HISTORY } from 'redux/actions/apis';
+import colors from 'styles/colors';
 
 ChartJS.register(
     CategoryScale,
@@ -101,7 +102,6 @@ export default function FundingHistoryTable(props) {
     const [currentTheme] = useDarkMode();
     const { t } = useTranslation();
     const { width } = useWindowSize();
-
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const allAssetConfig = useSelector((state) => state.utils.assetConfig);
     const [dataTable, setDataTable] = useState([]);
@@ -313,18 +313,23 @@ export default function FundingHistoryTable(props) {
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
+        plugins: {legend: {display: false}},
         scales: {
             y: {
+                ticks: {color: colors.darkBlue5},
                 display: true,
                 title: {
                     display: true,
-                    text: '% Funding Rate'
+                    text: '% Funding Rate',
+                    color: colors.darkBlue5,
                 },
                 grid: {
                     display: false,
                 }
             },
             x: {
+                ticks: {color: colors.darkBlue5},
                 grid: {
                     display: false
                 }
@@ -353,45 +358,57 @@ export default function FundingHistoryTable(props) {
         ],
     };
 
-    console.log('__ data.line', dataLine);
-
+    const backgroundColor =  currentTheme === THEME_MODE.DARK ? '#071026' : '#FCFCFC'
     return (
-        <>
+        <div className={`rounded-[20px] bg-[${backgroundColor}] p-4 lg:p-12 `}>
             {renderSearch()}
             <>
-                <div >
-                    <Line options={options} data={dataLine}/>
+                <div className='w-full mb-12'>
+                    <div className='flex items-center justify-between mb-6'>
+                        <div className='flex items-center w-fit h-fit gap-4'>
+                            {/* {renderChartTabs(section9TimeTabs, 'time', section9Config, setSection9Config)} */}
+                        </div>
+                    </div>
+                    <div className='flex w-full items-center justify-center'>
+                        <Line options={options} data={dataLine} height='330'/>
+                    </div>
                 </div>
 
-                <ReTable
-                    // defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                    useRowHover
-                    data={data || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    loading={!data?.length}
-                    scroll={{ x: true }}
-                    // tableStatus={}
-                    tableStyle={{
-                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                        tableStyle: { minWidth: '1300px !important' },
-                        headerStyle: {},
-                        rowStyle: {},
-                        shadowWithFixedCol: width < 1366,
-                        noDataStyle: {
-                            minHeight: '480px'
-                        }
-                    }}
-                    paginationProps={{
-                        hide: true,
-                        current: currentPage,
-                        pageSize: 10,
-                        onChange: (currentPage) => setCurrentPage(currentPage)
-                    }}
-                />
+
+                <div className="w-full">
+                    <div className="text-[28px] text-txtPrimary dark:text-txtPrimary-dark font-semibold mb-6">
+                        Lịch sử funding
+                    </div>
+                    <ReTable
+                        // defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                        useRowHover
+                        data={data || []}
+                        columns={columns}
+                        rowKey={(item) => item?.key}
+                        loading={!data?.length}
+                        scroll={{ x: true }}
+                        // tableStatus={}
+                        tableStyle={{
+                            paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                            tableStyle: { minWidth: '1300px !important' },
+                            headerStyle: {},
+                            rowStyle: {},
+                            shadowWithFixedCol: width < 1366,
+                            noDataStyle: {
+                                minHeight: '480px'
+                            }
+                        }}
+                        paginationProps={{
+                            hide: true,
+                            current: currentPage,
+                            pageSize: 10,
+                            onChange: (currentPage) => setCurrentPage(currentPage)
+                        }}
+                    />
+                </div>
             </>
             {renderPagination()}
-        </>
+        </div>
     );
 }
 
