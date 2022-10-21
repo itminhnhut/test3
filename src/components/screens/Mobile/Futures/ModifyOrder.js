@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import Modal from "components/common/ReModal";
 import { useTranslation } from "next-i18next";
-import AdjustPositionMargin from "./ModifyOrder/AdjustPositionMargin";
 import classNames from "classnames";
 import AddVolume from "./ModifyOrder/AddVolume";
 import { createSelector } from "reselect";
@@ -82,8 +81,7 @@ const ModifyOrder = ({
                         {t("futures:margin")}
                     </div>
                 </div> */}
-                {tab === 0 ? (
-                    <AddVolume
+                <AddVolume
                         onClose={onClose}
                         order={order}
                         pairPrice={pairPrice}
@@ -91,15 +89,6 @@ const ModifyOrder = ({
                         pairConfig={pairConfig}
                         available={available}
                     />
-                ) : (
-                    <AdjustPositionMargin
-                        onClose={onClose}
-                        order={order}
-                        pairPrice={pairPrice}
-                        forceFetchOrder={forceFetchOrder}
-                        available={available}
-                    />
-                )}
             </div>
         </Modal>
     );

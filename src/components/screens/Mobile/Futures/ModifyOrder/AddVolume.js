@@ -62,7 +62,7 @@ const AddVolume = ({
     const side = order?.side
     const margin = order?.margin ?? 0;
     const quantity = order?.quantity ?? 0;
-    const fee = order?.fee ?? 0;
+
     const [volume, setVolume] = useState();
     const [leverage, setLeverage] = useState(order?.leverage);
     const [type, setType] = useState(String(order?.type).toUpperCase());
@@ -79,6 +79,12 @@ const AddVolume = ({
             config?.filters.find((rs) => rs.filterType === "PRICE_FILTER") ?? 1;
         return countDecimals(decimalScalePrice?.tickSize);
     };
+
+    const fee = useMemo(() => {
+        const _fee = order?.fee ?? 0;
+        const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
+        return funding + _fee
+    }, [order])
 
     const configSymbol = useMemo(() => {
         const symbol = allPairConfigs.find((rs) => rs.symbol === order?.symbol);
