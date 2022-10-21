@@ -365,7 +365,7 @@ const PopoverFunding = () => {
             >
                 <div className="font-semibold">{t('futures:funding_countdown')}</div>
                 <div className="text-gray4 text-sm pt-4"> {t('futures:funding_rate_des')} <span className="text-teal font-semibold cursor-pointer">{t('common:read_more')}</span></div>
-                <div onClick={onRedirect} className="bg-teal pd-[10px] text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center">{t('futures:funding_history')}</div>
+                <div onClick={onRedirect} className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center">{t('futures:funding_history')}</div>
             </Modal>
         </>
     )
