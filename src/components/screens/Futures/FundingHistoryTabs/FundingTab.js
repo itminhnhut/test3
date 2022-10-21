@@ -33,15 +33,16 @@ export const CURRENCIES = [
 ];
 
 const sortDescending = (arr, key, isString) => {
-    if (isString) return arr.sort((a, b) => a[key].localeCompare(b[key]));
-    return arr.sort(function (a, b) {
-        return a[key] - b[key];
-    });
-};
-const sortAscending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => b[key].localeCompare(a[key]));
     return arr.sort(function (a, b) {
         return b[key] - a[key];
+    });
+
+};
+const sortAscending = (arr, key, isString) => {
+    if (isString) return arr.sort((a, b) => a[key].localeCompare(b[key]));
+    return arr.sort(function (a, b) {
+        return a[key] - b[key];
     });
 };
 
@@ -233,8 +234,8 @@ export default function FundingHistory({ currency }) {
     const renderSearch = () => {
         return (
             <div className="flex flex-col justify-between px-4 lg:mb-8 lg:flex-row lg:px-0">
-                <div className="flex items-center justify-between gap-6 mb-6 lg:mb-0 mb:justify-end">
-                    <div className="flex items-center w-[165px] lg:w-[224px] px-3 rounded-md h-9 lg:mt-0 lg:px-5 bg-bgTabInactive dark:bg-bgTabInactive-dark">
+                <div className="flex items-center justify-between gap-[22px] mb-6 lg:mb-0 mb:justify-end">
+                    <div className="flex items-center w-[165px] lg:w-[224px] pl-3 rounded-md h-9 lg:mt-0 lg:px-5 bg-bgInput dark:bg-bgInput-dark">
                         <Search
                             size={width >= 768 ? 20 : 16}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
@@ -263,7 +264,7 @@ export default function FundingHistory({ currency }) {
                                 {({ open, close }) => (
                                     <>
                                         <Popover.Button>
-                                            <div className="px-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between w-[170px] lg:w-[210px] h-9">
+                                            <div className="p-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between w-[130px] xs:w-[160px] xxs:w-[170px] lg:w-[210px] h-9">
                                                 <p className="text-sm font-medium leading-5 truncate text-txtPrimary dark:text-txtPrimary-dark">
                                                     {t(selectedFilter.placeholder)}
                                                 </p>
@@ -297,7 +298,7 @@ export default function FundingHistory({ currency }) {
                                                                     close();
                                                                 }}
                                                                 className={classNames(
-                                                                    'cursor-pointer px-3 py-3 w-[170px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col font-base leading-5',
+                                                                    'cursor-pointer px-3 py-3 w-[120px] xs:w-[160px] xxs:w-[170px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col font-base leading-5',
                                                                     {
                                                                         'text-dominant':
                                                                             selectedFilter.index ===
@@ -337,7 +338,6 @@ export default function FundingHistory({ currency }) {
         return (
             <div className="flex items-center justify-center mt-8">
                 <RePagination
-                    fromZero
                     total={
                         selectedSymbol
                             ? filteredDataTable?.length
@@ -347,6 +347,7 @@ export default function FundingHistory({ currency }) {
                     }
                     current={currentPage}
                     pageSize={10}
+                    showTitle={false}
                     onChange={(currentPage) => setCurrentPage(currentPage)}
                     name="market_table___list"
                 />
@@ -440,11 +441,16 @@ export default function FundingHistory({ currency }) {
                                 },
                                 headerStyle: {
                                     fontSize: '0.875rem !important',
-                                    color: 'red !important',
-                                    paddingTop: '20px !important'
+                                    'margin-top': '24px !important',
+                                },
+                                headerFontStyle:{
+                                },
+                                // custom last row
+                                lastRowStyle:{
+                                    'padding-bottom':'42px'
                                 },
                                 rowStyle: {
-                                    // fontSize: '0.875rem !important',
+                                    'font-size': '14px !important',
                                 },
                                 shadowWithFixedCol: width < 1366,
                                 noDataStyle: {

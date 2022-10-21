@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
-const defaultTheme = require("tailwindcss/defaultTheme");
-
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 // Common colors
 const commonColors = {
@@ -71,7 +70,7 @@ const commonColors = {
         bgShadow: '#000921',
         red: '#DC1F4E',
         tooltip: '#0E1D32',
-    }
+    },
 };
 
 module.exports = {
@@ -304,6 +303,7 @@ module.exports = {
         extend: {
             screens: {
                 'nao': '1160px',
+                'xsm': '320px',
                 'xxs': '360px'
             },
             spacing: {
@@ -405,7 +405,11 @@ module.exports = {
                 bgCondition: {
                     DEFAULT: 'rgba(255, 247, 235, 0.2)',
                     dark: 'rgba(255, 247, 235, 0.2)',
-                }
+                },
+                bgButtonDisabled: {
+                    DEFAULT: '#ebedf3',
+                    dark: commonColors.darkBlue3,
+                },
             },
             fontWeight: { bold: 600 },
             dropShadow: {
@@ -418,11 +422,11 @@ module.exports = {
                 'features': '0px 10px 30px rgba(89, 111, 153, 0.05)',
                 mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
-                nao: '0px 4px 4px rgba(0, 0, 0, 0.25)'
+                nao: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             },
             cursor: {
-                grabbing: 'grabbing'
-            }
+                grabbing: 'grabbing',
+            },
         },
     },
     variants: {
