@@ -58,13 +58,13 @@ const sortDescending = (arr, key) =>
 
 const FILTER_OPTS = [
     {
-        label: 'futures:funding_history:opt_default',
+        label: 'futures:funding_history_tab:opt_default',
         index: 0,
         keySort: 'symbol',
         sort: (arr, key) => arr
     },
     {
-        label: 'futures:funding_history:opt_contract_a_z',
+        label: 'futures:funding_history_tab:opt_contract_a_z',
         index: 1,
         keySort: 'symbol',
         sort: (data, key) => {
@@ -72,7 +72,7 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_contract_z_a',
+        label: 'futures:funding_history_tab:opt_contract_z_a',
         index: 2,
         keySort: 'symbol',
         sort: (data, key) => {
@@ -80,7 +80,7 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_rate_inc',
+        label: 'futures:funding_history_tab:opt_rate_inc',
         index: 3,
         keySort: 'fundingRate',
         sort: (data, key) => {
@@ -88,7 +88,7 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_rate_desc',
+        label: 'futures:funding_history_tab:opt_rate_desc',
         index: 4,
         keySort: 'fundingRate',
         sort: (data, key) => {
@@ -212,7 +212,7 @@ export default function FundingHistoryTable({ currency }) {
         {
             key: 'fundingIntervalHours',
             dataIndex: 'fundingIntervalHours',
-            title: t('futures:funding_history:funding_range'),
+            title: t('futures:funding_history_tab:funding_range'),
             align: 'right',
             width: 120,
             sorter: false,
@@ -342,7 +342,7 @@ export default function FundingHistoryTable({ currency }) {
                 {!isMobile ? <>
                     <div className="w-full">
                         <div className="text-[28px] text-txtPrimary dark:text-txtPrimary-dark font-semibold mb-6">
-                            {t('futures:funding_history:funding_history')}
+                            {t('futures:funding_history_tab:funding_history')}
                         </div>
                         <ReTable
                             // defaultSort={{ key: 'btc_value', direction: 'desc' }}
@@ -385,7 +385,7 @@ export default function FundingHistoryTable({ currency }) {
                                             <div className="font-semibold">{formatTime(item?.calcTime, 'yyyy/MM/dd  HH:mm:ss')}</div>
                                             <div className="text-sm mt-2">
                                                 <div className="flex items-center justify-between">
-                                                    <div className="dark:text-darkBlue-5">{t('futures:funding_history:funding_range')}</div>
+                                                    <div className="dark:text-darkBlue-5">{t('futures:funding_history_tab:funding_range')}</div>
                                                     <div>{item?.fundingIntervalHours} {t('common:hours')}</div>
                                                 </div>
                                                 <div className="flex items-center justify-between">
@@ -444,7 +444,7 @@ const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency }
                         <input
                             value={keyword}
                             onChange={(e) => setKeyWord(e.target?.value.trim())}
-                            placeholder={t('futures:funding_history:find_pair')}
+                            placeholder={t('futures:funding_history_tab:find_pair')}
                             className='mx-2.5 text-xs flex-grow'
                         />
                         {keyword && (
