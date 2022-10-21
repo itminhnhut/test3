@@ -18,6 +18,7 @@ import { formatNumber, getS3Url } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
+import MCard from 'components/common/MCard';
 
 export const CURRENCIES = [
     {
@@ -101,6 +102,7 @@ export default function FundingHistory({ currency }) {
     const prevCurrency = usePrevious(currency);
 
     const [isLoading, setIsLoading] = useState(true);
+    const tableRef =  useRef(null)
 
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
@@ -174,41 +176,6 @@ export default function FundingHistory({ currency }) {
             setCurrentPage(1);
         }
         generateDataTable();
-        // const res = marketWatchKies.reduce((pre, currentValue) => {
-        //     const [value, data] = currentValue;
-        //     if (data?.quoteAsset === currency) {
-        //         // const config = allAssetConfig?.find((item) => item?.baseAsset === data?.baseAsset);                // console.log("config", config);
-        //         return [
-        //             ...pre,
-        //             {
-        //                 asset: (
-        //                     <div className="flex items-center">
-        //                         <AssetLogo assetCode={data?.baseAsset} size={32} />
-        //                         <div className="ml-3 lg:ml-4">
-        //                             <p className="text-base font-semibold lg:font-medium leading-[22px] lg:leading-6 text-txtPrimary dark:text-txtPrimary-dark">
-        //                                 {`${data?.baseAsset + '/' + data?.quoteAsset} `}
-        //                                 <span className="ml-2 lg:ml-[5px]">
-        //                                     {t('futures:funding_history:perpetual')}
-        //                                 </span>
-        //                             </p>
-        //                         </div>
-        //                     </div>
-        //                 ),
-        //                 symbol: data?.baseAsset,
-        //                 key: data?.baseAsset,
-        //                 fundingRate: +formatNumber(data?.fundingRate * 100, 0, 4, true),
-        //                 fundingTime: data?.fundingTime,
-        //                 [RETABLE_SORTBY]: {
-        //                     asset: data?.baseAsset,
-        //                     fundingRate: +formatNumber(data?.fundingRate * 100, 0, 4, true)
-        //                 }
-        //             }
-        //         ];
-        //     } else return pre;
-        // }, []);
-        // setDataTable(res);
-        // // setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-        // setIsLoading(false);
     }, [marketWatch, currency, prevCurrency, dataTable]);
 
     useEffect(() => {
@@ -263,7 +230,7 @@ export default function FundingHistory({ currency }) {
                             className="text-txtSecondary dark:text-txtSecondary-dark"
                         />
                         <input
-                            className="text-sm p-[8px] text-txtSecondary dark:text-txtSecondary-dark"
+                            className="text-sm p-[8px] font-medium leading-6 text-txtSecondary dark:text-txtSecondary-dark"
                             value={selectedSymbol}
                             onChange={(e) => handleSearch(e?.target?.value)}
                             placeholder={t('futures:funding_history:find_pair')}
@@ -360,7 +327,13 @@ export default function FundingHistory({ currency }) {
             <div className="flex items-center justify-center mt-8">
                 <RePagination
                     fromZero
-                    total={filteredDataTable?.length || dataTable?.length}
+                    total={
+                        selectedSymbol
+                            ? filteredDataTable?.length
+                            : isLoading
+                            ? skeletons?.length
+                            : dataTable?.length
+                    }
                     current={currentPage}
                     pageSize={10}
                     onChange={(currentPage) => setCurrentPage(currentPage)}
@@ -409,7 +382,6 @@ export default function FundingHistory({ currency }) {
     for (let i = 0; i < 10; ++i) {
         skeletons.push({ ...ROW_SKELETON, isSkeleton: true, key: `asset__skeleton__${i}` });
     }
-
     return (
         <div className="lg:px-12">
             {renderSearch()}
@@ -420,41 +392,57 @@ export default function FundingHistory({ currency }) {
                 />
             ) : (
                 <>
-                    <ReTable
-                        useRowHover
-                        data={
-                            selectedSymbol ? filteredDataTable : isLoading ? skeletons : dataTable
+                    <MCard
+                        getRef={(ref) => (tableRef.current = ref)}
+                        style={
+                            currentTheme === THEME_MODE.LIGHT
+                                ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' }
+                                : {}
                         }
-                        sort={!isMobile}
-                        defaultSort={{ key: 'symbol', direction: 'asc' }}
-                        columns={columns}
-                        rowKey={(item) => item?.key}
-                        loading={!dataTable?.length || isLoading}
-                        scroll={{ x: true }}
-                        tableStatus={!!isLoading}
-                        tableStyle={{
-                            paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                            tableStyle: {
-                                minWidth: '1300px !important',
-                                borderRadius: '20px !important'
-                            },
-                            headerStyle: {
-                                fontSize: '0.875rem !important'
-                            },
-                            rowStyle: {},
-                            shadowWithFixedCol: width < 1366,
-                            noDataStyle: {
-                                minHeight: '480px'
+                        addClass="relative mt-5 pt-0 pb-0 px-0 overflow-hidden"
+                    >
+                        <ReTable
+                            useRowHover
+                            data={
+                                selectedSymbol
+                                    ? filteredDataTable
+                                    : isLoading
+                                    ? skeletons
+                                    : dataTable
                             }
-                        }}
-                        className="rounded-[20px]"
-                        paginationProps={{
-                            hide: true,
-                            current: currentPage,
-                            pageSize: 10,
-                            onChange: (currentPage) => setCurrentPage(currentPage)
-                        }}
-                    />
+                            sort={!isMobile}
+                            defaultSort={{ key: 'symbol', direction: 'asc' }}
+                            columns={columns}
+                            rowKey={(item) => item?.key}
+                            loading={!dataTable?.length || isLoading}
+                            scroll={{ x: true }}
+                            tableStatus={!!isLoading}
+                            tableStyle={{
+                                paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                                tableStyle: {
+                                    minWidth: '1300px !important'
+                                    // borderRadius: '20px !important'
+                                },
+                                headerStyle: {
+                                    fontSize: '0.875rem !important',
+                                    color:"red !important",
+                                    paddingTop: '20px !important',
+                                },
+                                rowStyle: {},
+                                shadowWithFixedCol: width < 1366,
+                                noDataStyle: {
+                                    minHeight: '480px'
+                                }
+                            }}
+                            paginationProps={{
+                                hide: true,
+                                current: currentPage,
+                                pageSize: 10,
+                                onChange: (currentPage) => setCurrentPage(currentPage)
+                            }}
+                        />
+                    </MCard>
+
                     {renderPagination()}
                 </>
             )}
