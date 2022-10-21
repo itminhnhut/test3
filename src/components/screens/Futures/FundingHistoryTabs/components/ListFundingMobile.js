@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import Divider from 'components/common/Divider';
 import { renderTimeLeft } from '../FundingTab';
 import { useFavicon, usePrevious } from 'react-use';
+import Skeletor from 'components/common/Skeletor';
 
 export default function ListFundingMobile({ dataTable, currency }) {
     const { t } = useTranslation();
@@ -23,14 +24,19 @@ export default function ListFundingMobile({ dataTable, currency }) {
     const Item = ({ item, index, isLastItem, hasMore }) => {
         return (
             <>
-                <div className="flex flex-col items-start justify-between w-full px-4 py-6" key={item.asset}>
+                <div
+                    className="flex flex-col items-start justify-between w-full px-4 py-6"
+                    key={item.asset}
+                >
                     <div className="mb-[10px]">{item.asset}</div>
                     <div className="flex justify-between w-full mb-1">
                         <p className="text-sm leading-5 text-txtTabInactive dark:text-txtTabInactive-dark">
                             {t('futures:funding_history:time_left_to_next_funding')}
                         </p>
                         <p className="text-sm leading-5 text-txtPrimary dark:text-txtPrimary-dark">
-                            {renderTimeLeft({ targetDate: item?.fundingTime })}
+                            {item?.isSkeleton
+                                ? item.fundingTime
+                                : renderTimeLeft({ targetDate: item?.fundingTime })}
                         </p>
                     </div>
                     {/*  */}
@@ -39,7 +45,7 @@ export default function ListFundingMobile({ dataTable, currency }) {
                             {t('futures:funding_history:funding_rate')}
                         </p>
                         <p className="text-sm leading-5 text-txtPrimary dark:text-txtPrimary-dark">
-                            {`${item.fundingRate}%`}
+                            {item?.isSkeleton ? item.fundingTime : `${item.fundingRate}%`}
                         </p>
                     </div>
                 </div>
@@ -54,26 +60,45 @@ export default function ListFundingMobile({ dataTable, currency }) {
                         {t('futures:funding_history:more')}
                     </div>
                 ) : (
-                   <div className='px-4'>
-                     <Divider className={'px-4'}/>
-                   </div>
+                    <div className="px-4">
+                        <Divider className={'px-4'} />
+                    </div>
                 )}
             </>
         );
     };
 
-    if (dataTable?.length === 0) return null;
+    const skeletons = useMemo(() => {
+        const skeletons = [];
+        for (let i = 0; i < 10; ++i) {
+            skeletons.push({ ...ROW_SKELETON, isSkeleton: true, key: `asset__skeleton__${i}` });
+        }
+        return skeletons;
+    }, []);
+
+    if(!skeletons?.length) return null
+
     return (
         <>
-            {dataTable?.slice(0, loadedNumber)?.map((item, index) => {
-                return (
-                    <Item
-                        item={item}
-                        isLastItem={index === dataTable?.length - 1 || loadedNumber - 1 === index}
-                        hasMore={dataTable?.length > loadedNumber}
-                    />
-                );
-            })}
+            {(dataTable?.length ? dataTable : skeletons)
+                ?.slice(0, loadedNumber)
+                ?.map((item, index) => {
+                    return (
+                        <Item
+                            item={item}
+                            isLastItem={
+                                index === dataTable?.length - 1 || loadedNumber - 1 === index
+                            }
+                            hasMore={dataTable?.length > loadedNumber}
+                        />
+                    );
+                })}
         </>
     );
 }
+
+const ROW_SKELETON = {
+    asset: <Skeletor width={200} />,
+    fundingTime: <Skeletor width={65} />,
+    fundingRate: <Skeletor width={65} />
+};
