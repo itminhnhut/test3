@@ -71,7 +71,7 @@ const commonColors = {
         bgShadow: '#000921',
         red: '#DC1F4E',
         tooltip: '#0E1D32',
-    }
+    },
 };
 
 module.exports = {
@@ -305,6 +305,7 @@ module.exports = {
         extend: {
             screens: {
                 'nao': '1160px',
+                'xsm': '320px',
                 'xxs': '360px'
             },
             spacing: {
@@ -406,7 +407,11 @@ module.exports = {
                 bgCondition: {
                     DEFAULT: 'rgba(255, 247, 235, 0.2)',
                     dark: 'rgba(255, 247, 235, 0.2)',
-                }
+                },
+                bgButtonDisabled: {
+                    DEFAULT: '#ebedf3',
+                    dark: commonColors.darkBlue3,
+                },
             },
             fontWeight: { bold: 600 },
             dropShadow: {
@@ -423,8 +428,8 @@ module.exports = {
                 funding: '0px -4px 10px rgba(0, 0, 0, 0.05)'
             },
             cursor: {
-                grabbing: 'grabbing'
-            }
+                grabbing: 'grabbing',
+            },
         },
     },
     variants: {

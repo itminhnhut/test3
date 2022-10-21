@@ -331,7 +331,7 @@ const ReTableWrapper = styled.div`
 
   .rc-table-cell-fix-right {
     z-index: 15;
-    
+
     ::after {
       visibility: ${({ shadowWithFixedCol }) => shadowWithFixedCol ? 'visible' : 'hidden'};
       box-shadow: ${({ isDark }) => isDark ? 'inset -10px 0 8px -8px #263459'
@@ -380,7 +380,7 @@ const ReTableWrapper = styled.div`
       position: relative;
       cursor: ${({ useRowHover }) => useRowHover ? 'pointer' : 'normal'} !important;
     }
-    
+
     tbody tr {
       .rc-table-cell-fix-right:last-child:not(.rc-table-cell-fix-sticky) {
         background: ${({ isDark }) => isDark ? colors.darkBlue2 : colors.white} !important;
@@ -390,6 +390,7 @@ const ReTableWrapper = styled.div`
     tbody tr:last-child {
       td {
         border-bottom-width: 0;
+         ${({ lastRowStyle }) => lastRowStyle ? {...lastRowStyle} : ''};
       }
     }
 
@@ -416,16 +417,19 @@ const ReTableWrapper = styled.div`
       border-bottom-right-radius: ${({ rowRadius }) => rowRadius ? rowRadius : 0};
     }
 
+  thead tr th > * {
+    ${({ headerStyle }) => headerStyle ? {...headerStyle} : ''};
+  }
+
     thead tr {
       ${({ headerStyle }) => headerStyle ? {...headerStyle} : ''};
       user-select: none;
-
         th {
             ${({ headerFontStyle }) => headerFontStyle ? {...headerFontStyle} : ''};
         }
     }
 
-    tbody tr {
+    tbody tr > * {
       ${({ rowStyle }) => rowStyle ? {...rowStyle} : ''}
       transition: all .2s ease;
 

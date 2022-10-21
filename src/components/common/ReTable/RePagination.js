@@ -39,16 +39,16 @@ const scrollAfterPageChange = (id) => {
 }
 
 const PaginationWrapper = styled.div`
-  
+
   .rc-pagination-item, .rc-pagination-prev button, .rc-pagination-next button {
     border: none;
     background-color: transparent;
-    
+
     a {
       font-family: Barlow, serif !important;
       font-weight: 500 !important;
     }
-    
+
     @media (min-width: 1366px) {
       a {
         font-size: 16px;
@@ -59,9 +59,9 @@ const PaginationWrapper = styled.div`
   .rc-pagination-item a, .rc-pagination-prev button, .rc-pagination-next button {
     color: ${({ isDark }) => isDark ? colors.grey4 : colors.darkBlue};
   }
-  
-  
-  
+
+
+
   .rc-pagination-item-active a, .rc-pagination-item:focus a, .rc-pagination-item:hover a {
     color: ${colors.teal};
   }

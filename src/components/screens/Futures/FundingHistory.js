@@ -11,6 +11,8 @@ import styled from 'styled-components';
 import colors from 'styles/colors';
 import FundingHistoryTable from 'components/screens/Futures/FundingHistoryTabs/FundingHistoryTable';
 import { TAB_TYPE } from '../../common/Tab';
+import { isMobile } from 'react-device-detect';
+import LayoutMobile from 'components/common/layouts/LayoutMobile';
 
 export const CURRENCIES = [
     {
@@ -51,15 +53,15 @@ export default function FundingHistory(props) {
     const renderHeading = () => {
         const selectedClassName = 'text-white bg-primary-500 bg-dominant';
         const unselectedClassName =
-            'text-txtSecondary dark:text-txtSecondary-dark bg-opacity-10 bg-bgTabInactive dark:bg-bgTabInactive-dark';
+            'text-txtSecondary dark:text-txtSecondary-dark bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark';
         const defaultClassName =
-            'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-sm font-normal leading-6';
+            'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-xs lg:text-sm font-normal leading-6';
         return (
             <div className="flex justify-between mb-[40px] px-4 items-center">
                 <div>
                     <p
                         className={
-                            'text-txtPrimary  dark:text-txtPrimary-dark font-semibold leading-[40px] text-[26px]'
+                            'text-txtPrimary  dark:text-txtPrimary-dark font-semibold leading-[40px] text-[20px] lg:text-[26px]'
                         }
                     >
                         {t('futures:funding_history_tab:information')}
@@ -85,11 +87,12 @@ export default function FundingHistory(props) {
         );
     };
 
+    const Wrapper = isMobile ? MaldivesLayout : MaldivesLayout;
+
     return (
-        <>
-            <MaldivesLayout>
+            <Wrapper>
                 <Background isDark={currentTheme === THEME_MODE.DARK}>
-                    <div className={'pt-[40px]'}>
+                    <div className={'lg:pt-10 pt-[34px]'}>
                         {renderHeading()}
                         <div className="px-4">{renderScreenTab()}</div>
                         {/* Content Tab */}
@@ -97,8 +100,7 @@ export default function FundingHistory(props) {
                         {/*<FundingHistoryTable currency={selectedCurrency} />*/}
                     </div>
                 </Background>
-            </MaldivesLayout>
-        </>
+            </Wrapper>
     );
 }
 
