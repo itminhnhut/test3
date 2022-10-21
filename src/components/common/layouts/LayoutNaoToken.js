@@ -10,6 +10,107 @@ import { useWindowSize } from 'utils/customHooks';
 import { getS3Url } from 'redux/actions/utils';
 import AlertNaoV2Modal from 'components/screens/Nao/AlertNaoV2Modal';
 export const AlertContext = createContext(null);
+import vi from 'date-fns/locale/vi'
+import en from 'date-fns/locale/en-US'
+vi.localize = {
+    day: (n) => days[n]['vi'],
+    month: (n) => months[n]['vi'],
+    ordinalNumber: () => undefined,
+    era: () => undefined,
+    quarter: () => undefined,
+    dayPeriod: () => undefined,
+}
+
+en.localize = {
+    day: (n) => days[n]['en'],
+    month: (n) => months[n]['en'],
+    ordinalNumber: () => undefined,
+    era: () => undefined,
+    quarter: () => undefined,
+    dayPeriod: () => undefined,
+}
+
+const months = [
+    {
+        en: 'January',
+        vi: 'Tháng 1',
+    },
+    {
+        en: 'February',
+        vi: 'Tháng 2',
+    },
+    {
+        en: 'March',
+        vi: 'Tháng 3',
+    },
+    {
+        en: 'April',
+        vi: 'Tháng 4',
+    },
+    {
+        en: 'May',
+        vi: 'Tháng 5',
+    },
+    {
+        en: 'June',
+        vi: 'Tháng 6',
+    },
+    {
+        en: 'July',
+        vi: 'Tháng 7',
+    },
+    {
+        en: 'August',
+        vi: 'Tháng 8',
+    },
+    {
+        en: 'September',
+        vi: 'Tháng 9',
+    },
+    {
+        en: 'October',
+        vi: 'Tháng 10',
+    },
+    {
+        en: 'November',
+        vi: 'Tháng 11',
+    },
+    {
+        en: 'December',
+        vi: 'Tháng 12',
+    },
+]
+
+const days = [
+    {
+        en: 'SUN',
+        vi: 'CN',
+    },
+    {
+        en: 'MON',
+        vi: 'T2',
+    },
+    {
+        en: 'TUE',
+        vi: 'T3',
+    },
+    {
+        en: 'WED',
+        vi: 'T4',
+    },
+    {
+        en: 'THU',
+        vi: 'T5',
+    },
+    {
+        en: 'FRI',
+        vi: 'T6',
+    },
+    {
+        en: 'SAT',
+        vi: 'T7',
+    },
+]
 
 const LayoutNaoToken = ({ children, isHeader = true }) => {
     const alert = useRef(null);

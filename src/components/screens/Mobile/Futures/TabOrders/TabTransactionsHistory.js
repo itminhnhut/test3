@@ -29,6 +29,7 @@ const categories = [
     TransactionCategory.DEPOSIT, //T: 4
     TransactionCategory.VNDC_DIRECT_WITHDRAW, // 723
     TransactionCategory.PAY_INTEREST_STAKE_TRANSACTION, // 1019
+    TransactionCategory.FUTURE_FUNDING_FEE, // 611
 
 ]
 
@@ -43,7 +44,8 @@ const noteCases = [
     '^BALANCE: Liquidate active position (\\d+) liquidate fee$',
     '^BALANCE: Liquidate active position (\\d+) close fee$',
     '^BALANCE: Liquidate active position (\\d+) raw profit$',
-    '^BALANCE: Close future order (\\d+) swap fee$'
+    '^BALANCE: Close future order (\\d+) swap fee$',
+    '^BALANCE: Future order (\\d+) funding fee$'
 ]
 
 const getOrderIdFromNote = (note) => {

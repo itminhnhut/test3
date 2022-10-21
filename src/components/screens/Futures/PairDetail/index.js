@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState, } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, getDecimalScale, secondToMinutesAndSeconds, } from 'redux/actions/utils';
+import { formatNumber, getDecimalScale, secondToMinutesAndSeconds, Countdown, getS3Url } from 'redux/actions/utils';
 import { usePrevious } from 'react-use';
 import { ChevronDown } from 'react-feather';
 import { roundTo } from 'round-to';
@@ -10,6 +10,7 @@ import FuturesPairDetailItem from './PairDetailItem';
 import FuturesPairList from '../PairList';
 import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
+import Modal from 'components/common/ReModal';
 
 const FuturesPairDetail = ({
                                pairPrice,
@@ -147,7 +148,7 @@ const FuturesPairDetail = ({
 
     const renderPairPriceItems = useCallback(() => {
         return PAIR_PRICE_DETAIL_ITEMS.map((detail) => {
-            const { key, code, localized: localizedPath } = detail
+            const { key, code, localized: localizedPath, icon } = detail
 
             let minWidth = itemsPriceMinW || 0
             let value = null,
@@ -155,6 +156,9 @@ const FuturesPairDetail = ({
             let localized = t(localizedPath)
 
             switch (code) {
+                case 'fundingCountdown':
+                    value = <div><span>{pairPrice?.fundingRate ? formatNumber(pairPrice?.fundingRate * 100, 4, 0, true) : 0}%</span> / <Countdown date={pairPrice?.fundingTime} /></div>
+                    break
                 case '24hHigh':
                     value = formatNumber(
                         roundTo(pairPrice?.highPrice || 0, pricePrecision),
@@ -245,6 +249,7 @@ const FuturesPairDetail = ({
                         label={localized}
                         containerClassName={`${className} mr-5`}
                         value={value}
+                        icon={icon}
                     />
                 </div>
             )
@@ -351,7 +356,36 @@ const MARK_PRICE_ITEMS = [
     },
 ]
 
+
+const PopoverFunding = () => {
+    const { t } = useTranslation()
+    const [showModal, setShowModal] = useState(false)
+
+    const onClose = () => {
+        setShowModal(false)
+    }
+
+    const onRedirect = () => {
+        window.open('/futures/funding-history')
+    }
+
+    return (
+        <>
+            <div className="cursor-pointer min-w-[10px]" onClick={() => setShowModal(true)}>
+                <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
+            </div>
+            <Modal isVisible={showModal} onBackdropCb={onClose} containerClassName="max-w-[342px]"
+            >
+                <div className="font-semibold">{t('futures:funding_countdown')}</div>
+                <div className="text-gray4 text-sm pt-4"> {t('futures:funding_rate_des')} <span className="text-teal font-semibold cursor-pointer">{t('common:read_more')}</span></div>
+                <div onClick={onRedirect} className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center">{t('futures:funding_history')}</div>
+            </Modal>
+        </>
+    )
+}
+
 const PAIR_PRICE_DETAIL_ITEMS = [
+    { key: 2, code: 'fundingCountdown', localized: 'futures:funding_countdown', icon: <PopoverFunding /> },
     { key: 3, code: '24hChange', localized: 'futures:24h_change' },
     { key: 4, code: 'bestBid', localized: 'futures:best_bid' },
     { key: 5, code: 'bestAsk', localized: 'futures:best_ask' },
@@ -360,6 +394,7 @@ const PAIR_PRICE_DETAIL_ITEMS = [
     { key: 8, code: '24hBaseVolume', localized: 'futures:24h_volume' },
     { key: 9, code: '24hQuoteVolume', localized: 'futures:24h_volume' },
 ]
+
 
 export default FuturesPairDetail
 

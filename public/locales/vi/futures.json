@@ -313,7 +313,8 @@
                 "1019": "Lãi Staking",
                 "open_fee": "Phí mở lệnh",
                 "close_fee": "Phí đóng lệnh",
-                "refund_of_open_fee": "Hoàn phí mở lệnh"
+                "refund_of_open_fee": "Hoàn phí mở lệnh",
+                "611": "Phí funding"
             },
             "close": "Đóng"
         },
@@ -421,14 +422,18 @@
     "open_orders": "Lệnh mở",
     "load_more": "Xem thêm",
     "transaction_histories": "Lịch sử giao dịch",
+    "countdown": "Đếm ngược",
+    "funding_fee": "Phí funding",
+    "funding_rate": "Tỉ lệ funding",
+    "funding_rate_des": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
+    "funding_history": "Lịch sử funding",
+    "information": "Thông tin",
     "funding": "Funding",
     "funding_rate_tooltip": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
     "count_down": "đếm ngược",
-    "funding_fee": "Phí funding",
-    "funding_rate": "Tỷ lệ funding",
-    "funding_history": {
-        "tab_ratio_realtime": "Tỷ lệ funding theo thời gian thực",
-        "tab_history": "Lịch sử phí funding",
+    "funding_history_tab":{
+        "tab_ratio_realtime":"Tỷ lệ funding theo thời gian thực",
+        "tab_history":"Lịch sử phí funding",
 
         "find_pair": "Tìm hợp đồng",
 

@@ -54,7 +54,7 @@ const Tab = memo(({
             return series.map(s => {
                 return (
                     <div key={`tab_${name}__${s?.key}`}
-                         style={itemStyles ? {...itemStyle} : undefined}
+                         style={itemStyles ? {...itemStyles} : undefined}
                          onClick={() => {
                              onChangeTab && onChangeTab(s?.key)
                          }}>

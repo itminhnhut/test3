@@ -8,7 +8,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import useDarkMode from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
-import React, { Fragment, useCallback, useEffect, useState, useRef } from 'react';
+import {Fragment, useCallback, useEffect, useState, useRef, useMemo} from 'react';
 import { load } from 'react-cookies';
 import { isMobile } from 'react-device-detect';
 import { Search, X } from 'react-feather';
@@ -19,6 +19,7 @@ import Skeletor from 'components/common/Skeletor';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
 import MCard from 'components/common/MCard';
+import { ChevronDown } from 'react-feather';
 
 export const CURRENCIES = [
     {
@@ -31,13 +32,13 @@ export const CURRENCIES = [
     }
 ];
 
-const sortAscending = (arr, key, isString) => {
+const sortDescending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => a[key].localeCompare(b[key]));
     return arr.sort(function (a, b) {
         return a[key] - b[key];
     });
 };
-const sortDescending = (arr, key, isString) => {
+const sortAscending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => b[key].localeCompare(a[key]));
     return arr.sort(function (a, b) {
         return b[key] - a[key];
@@ -46,15 +47,15 @@ const sortDescending = (arr, key, isString) => {
 
 const FILTER_OPTS = [
     {
-        label: 'futures:funding_history:opt_default',
-        placeholder: 'futures:funding_history:opt_default_place',
+        label: 'futures:funding_history_tab:opt_default',
+        placeholder: 'futures:funding_history_tab:opt_default_place',
         index: 0,
         keySort: 'symbol',
         sort: (arr, key) => arr
     },
     {
-        label: 'futures:funding_history:opt_contract_a_z',
-        placeholder: 'futures:funding_history:opt_contract_a_z_place',
+        label: 'futures:funding_history_tab:opt_contract_a_z',
+        placeholder: 'futures:funding_history_tab:opt_contract_a_z_place',
         index: 1,
         keySort: 'symbol',
         sort: (data, key) => {
@@ -62,8 +63,8 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_contract_z_a',
-        placeholder: 'futures:funding_history:opt_contract_z_a_place',
+        label: 'futures:funding_history_tab:opt_contract_z_a',
+        placeholder: 'futures:funding_history_tab:opt_contract_z_a_place',
         index: 2,
         keySort: 'symbol',
         sort: (data, key) => {
@@ -71,8 +72,8 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_rate_inc',
-        placeholder: 'futures:funding_history:opt_rate_inc_place',
+        label: 'futures:funding_history_tab:opt_rate_inc',
+        placeholder: 'futures:funding_history_tab:opt_rate_inc_place',
         index: 3,
         keySort: 'fundingRate',
         sort: (data, key) => {
@@ -80,8 +81,8 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_rate_desc',
-        placeholder: 'futures:funding_history:opt_rate_desc_place',
+        label: 'futures:funding_history_tab:opt_rate_desc',
+        placeholder: 'futures:funding_history_tab:opt_rate_desc_place',
         index: 4,
         keySort: 'fundingRate',
         sort: (data, key) => {
@@ -102,7 +103,8 @@ export default function FundingHistory({ currency }) {
     const prevCurrency = usePrevious(currency);
 
     const [isLoading, setIsLoading] = useState(true);
-    const tableRef =  useRef(null)
+    const tableRef = useRef(null);
+    const firstLoadRef =  useRef(true)
 
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
@@ -138,7 +140,7 @@ export default function FundingHistory({ currency }) {
                                     <p className="text-base font-semibold lg:font-medium leading-[22px] lg:leading-6 text-txtPrimary dark:text-txtPrimary-dark">
                                         {`${data?.baseAsset + '/' + data?.quoteAsset} `}
                                         <span className="ml-2 lg:ml-[5px]">
-                                            {t('futures:funding_history:perpetual')}
+                                            {t('futures:funding_history_tab:perpetual')}
                                         </span>
                                     </p>
                                 </div>
@@ -156,9 +158,17 @@ export default function FundingHistory({ currency }) {
                 ];
             } else return pre;
         }, []);
-        // setDataTable(res);
-        setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-        setIsLoading(false);
+        if(firstLoadRef.current){
+            setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+            setIsLoading(false);
+            firstLoadRef.current = false
+        }else{
+            setTimeout(() => {
+                setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+                setIsLoading(false);
+            }, 700);
+        }
+
     };
 
     useEffect(() => {
@@ -168,7 +178,7 @@ export default function FundingHistory({ currency }) {
 
     useEffect(() => {
         const marketWatchKies = Object.entries(marketWatch || {});
-        if (dataTable?.length) return;
+        // if (dataTable?.length) return;
 
         if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 20) return;
         if (currency !== prevCurrency) {
@@ -222,22 +232,22 @@ export default function FundingHistory({ currency }) {
      */
     const renderSearch = () => {
         return (
-            <div className="flex flex-col justify-between mb-8 lg:flex-row lg:mb-[40px] px-4 lg:px-0">
+            <div className="flex flex-col justify-between px-4 lg:mb-8 lg:flex-row lg:px-0">
                 <div className="flex items-center justify-between gap-6 mb-6 lg:mb-0 mb:justify-end">
-                    <div className="flex items-center w-[165px] lg:w-[224px] order-2 px-3 rounded-md lg:order-1 h-9 lg:mt-0 lg:px-5  bg-gray-5 dark:bg-darkBlue-4">
+                    <div className="flex items-center w-[165px] lg:w-[224px] px-3 rounded-md h-9 lg:mt-0 lg:px-5 bg-bgTabInactive dark:bg-bgTabInactive-dark">
                         <Search
-                            size={width >= 768 ? 16 : 16}
+                            size={width >= 768 ? 20 : 16}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
                         />
                         <input
-                            className="text-sm p-[8px] font-medium leading-6 text-txtSecondary dark:text-txtSecondary-dark"
+                            className="py-[6px] w-[105px] lg:w-auto px-2 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark leading-6 placeholder:text-txtSecondary placeholder:dark:text-txtSecondary-dark bg-bgTabInactive dark:bg-bgTabInactive-dark"
                             value={selectedSymbol}
                             onChange={(e) => handleSearch(e?.target?.value)}
-                            placeholder={t('futures:funding_history:find_pair')}
+                            placeholder={t('futures:funding_history_tab:find_pair')}
                         />
                         {selectedSymbol && (
                             <X
-                                size={width >= 768 ? 16 : 16}
+                                size={width >= 768 ? 20 : 16}
                                 className="cursor-pointer"
                                 onClick={() => {
                                     setFilteredDataTable([]);
@@ -249,21 +259,20 @@ export default function FundingHistory({ currency }) {
                     </div>
                     {isMobile ? (
                         <div>
-                            <Popover className="relative order-1 lg:order-2">
+                            <Popover className="relative">
                                 {({ open, close }) => (
                                     <>
                                         <Popover.Button>
                                             <div className="px-2 bg-bgInput dark:bg-bgInput-dark rounded-md flex items-center justify-between w-[170px] lg:w-[210px] h-9">
-                                                <p className="text-sm truncate text-txtSecondary dark:text-txtSecondary-dark">
+                                                <p className="text-sm font-medium leading-5 truncate text-txtPrimary dark:text-txtPrimary-dark">
                                                     {t(selectedFilter.placeholder)}
                                                 </p>
-                                                <img
-                                                    alt=""
-                                                    src={getS3Url(
-                                                        '/images/nao/ic_arrow_bottom.png'
+                                                <ChevronDown
+                                                    size={16}
+                                                    className={classNames(
+                                                        'mt-1 ml-2 transition-transform duration-75 text-txtSecondary dark:txtSecondary-dark',
+                                                        { 'rotate-180': open }
                                                     )}
-                                                    height="16"
-                                                    width="16"
                                                 />
                                             </div>
                                         </Popover.Button>
@@ -276,7 +285,7 @@ export default function FundingHistory({ currency }) {
                                             leaveFrom="opacity-100 translate-y-0"
                                             leaveTo="opacity-0 translate-y-1"
                                         >
-                                            <Popover.Panel className="absolute left-0 z-50 mt-1 rounded-md top-8 bg-bgInput dark:bg-bgInput-dark">
+                                            <Popover.Panel className="absolute left-0 z-50 mt-2 rounded-md top-8 bg-bgPrimary dark:bg-bgPrimary-dark dark:border dark:border-darkBlue">
                                                 {FILTER_OPTS.map((item) => {
                                                     const { label, index } = item;
                                                     return (
@@ -288,7 +297,7 @@ export default function FundingHistory({ currency }) {
                                                                     close();
                                                                 }}
                                                                 className={classNames(
-                                                                    'cursor-pointer px-3 py-3 w-[170px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col',
+                                                                    'cursor-pointer px-3 py-3 w-[170px] lg:min-w-[210px] text-sm shadow-onlyLight font-medium flex flex-col font-base leading-5',
                                                                     {
                                                                         'text-dominant':
                                                                             selectedFilter.index ===
@@ -298,7 +307,9 @@ export default function FundingHistory({ currency }) {
                                                             >
                                                                 {t(label)}
                                                             </div>
-                                                            <Divider />
+                                                            <div className="px-3">
+                                                                <Divider />
+                                                            </div>
                                                         </>
                                                     );
                                                 })}
@@ -315,7 +326,7 @@ export default function FundingHistory({ currency }) {
                         'underline cursor-pointer flex text-sm leading-6 text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
                     }
                 >
-                    {t('futures:funding_history:link_overview')}
+                    {t('futures:funding_history_tab:link_overview')}
                 </div>
             </div>
         );
@@ -347,7 +358,7 @@ export default function FundingHistory({ currency }) {
         {
             key: 'asset',
             dataIndex: 'asset',
-            title: t('futures:funding_history:contract'),
+            title: t('futures:funding_history_tab:contract'),
             align: 'left',
             width: '50%',
             // sorter: false,
@@ -356,7 +367,7 @@ export default function FundingHistory({ currency }) {
         {
             key: 'fundingTime',
             dataIndex: 'fundingTime',
-            title: t('futures:funding_history:time_left_to_next_funding'),
+            title: t('futures:funding_history_tab:time_left_to_next_funding'),
             align: 'left',
             width: '20%',
             preventSort: true,
@@ -365,23 +376,27 @@ export default function FundingHistory({ currency }) {
             // sorter:  (a, b) => b.fundingTime - a.fundingTime,
             fixed: width >= 992 ? 'none' : 'left',
             render: (data, item) =>
-                !item?.isSkeleton ? renderTimeLeft({ targetDate: data }) : '00:00:00'
+                !item?.isSkeleton ? renderTimeLeft({ targetDate: data }) : item?.fundingTime
         },
         {
             key: 'fundingRate',
             dataIndex: 'fundingRate',
-            title: t('futures:funding_history:funding_rate'),
+            title: t('futures:funding_history_tab:funding_rate'),
             align: 'left',
             width: '20%',
             fixed: width >= 992 ? 'none' : 'left',
-            render: (data, item) => (!item?.isSkeleton ? data + '%' : '-%')
+            render: (data, item) => (!item?.isSkeleton ? data + '%' : item?.fundingRate)
         }
     ];
 
-    const skeletons = [];
-    for (let i = 0; i < 10; ++i) {
-        skeletons.push({ ...ROW_SKELETON, isSkeleton: true, key: `asset__skeleton__${i}` });
-    }
+    const skeletons = useMemo(() => {
+        const skeletons = [];
+        for (let i = 0; i < 10; ++i) {
+            skeletons.push({ ...ROW_SKELETON, isSkeleton: true, key: `asset__skeleton__${i}` });
+        }
+        return skeletons;
+    }, []);
+
     return (
         <div className="lg:px-12">
             {renderSearch()}
@@ -425,10 +440,12 @@ export default function FundingHistory({ currency }) {
                                 },
                                 headerStyle: {
                                     fontSize: '0.875rem !important',
-                                    color:"red !important",
-                                    paddingTop: '20px !important',
+                                    color: 'red !important',
+                                    paddingTop: '20px !important'
                                 },
-                                rowStyle: {},
+                                rowStyle: {
+                                    // fontSize: '0.875rem !important',
+                                },
                                 shadowWithFixedCol: width < 1366,
                                 noDataStyle: {
                                     minHeight: '480px'

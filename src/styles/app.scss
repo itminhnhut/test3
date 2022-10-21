@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "theme";
-@import "theme.tailwind";
+@import 'theme';
+@import 'theme.tailwind';
+@import 'datepicker';
 
 html,
 body {
@@ -857,5 +858,5 @@ input[type="number"] {
         border-radius: 20px;
         border: none !important;
     }
-    
+
 }

@@ -40,7 +40,6 @@ class FuturesMarketWatch {
         this.bid = options.bid
         this.fundingRate = options.fundingRate
         this.fundingTime = options.fundingTime
-
     }
 
     static create(source, mode = 'VNDC') {
@@ -68,7 +67,7 @@ class FuturesMarketWatch {
             weightedAveragePrice: +source?.w,
             ask: source?.ap,
             bid: source?.bp,
-            fundingRate: source?.r,
+            fundingRate: source?.r || 0,
             fundingTime: source?.ft
         })
     }

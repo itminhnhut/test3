@@ -16,7 +16,7 @@ import { API_ORDER_DETAIL } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { ApiStatus, ChartMode } from 'redux/actions/const';
 import colors from 'styles/colors';
-import { getType } from "components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc";
+import get from 'lodash/get';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
@@ -115,8 +115,8 @@ const OrderDetail = ({
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
         const decimal = currency === 72 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
-        const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : order[key];
-        return data ? formatNumber(data, decimal) + ' ' + assetCode : '-';
+        const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : get(order, key, 0);
+        return data ? data > 0 ? '' : '-' + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
 
     };
 
@@ -700,7 +700,31 @@ const OrderDetail = ({
                         </Label>
                         <Span>{renderFee(order, 'liquidate_order')}</Span>
                     </Row>
-                    <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                    {!!order?.swap && <>
+                        <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                            className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                            overridePosition={(e) => ({
+                                left: 0,
+                                top: e.top
+                            })}
+                        >
+                            <div>
+                                <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
+                                <div className="text-sm mt-3">{t('futures:mobile:info_swap_fee')}</div>
+                            </div>
+                        </Tooltip>
+                        <Row>
+                            <Label className="flex">
+                                {t('futures:mobile:swap_fee')}
+                                <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
+                                    <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
+                                </div>
+                            </Label>
+                            <Span>{renderFee(order, 'swap')} {renderSwapHours(order)}</Span>
+                        </Row>
+                    </>
+                    }
+                    <Tooltip id="funding-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
                         overridePosition={(e) => ({
                             left: 0,
@@ -708,18 +732,18 @@ const OrderDetail = ({
                         })}
                     >
                         <div>
-                            <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
-                            <div className="text-sm mt-3">{t('futures:mobile:info_swap_fee')}</div>
+                            <label className="text-sm font-semibold">{t('futures:funding_rate')}</label>
+                            <div className="text-sm mt-3">{t('futures:funding_rate_des')}</div>
                         </div>
                     </Tooltip>
                     <Row>
                         <Label className="flex">
-                            {t('futures:mobile:swap_fee')}
-                            <div className="px-2" data-tip="" data-for="swap-fee" id="tooltip-swap-fee">
+                            {t('futures:funding_fee')}
+                            <div className="px-2" data-tip="" data-for="funding-fee" id="tooltip-funding-fee">
                                 <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
                             </div>
                         </Label>
-                        <Span>{renderFee(order, 'swap')} {renderSwapHours(order)}</Span>
+                        <Span>{renderFee(order, 'funding_fee.total')}</Span>
                     </Row>
                 </>
                 }

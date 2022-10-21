@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IconLoading } from 'components/common/Icons';
-import { getTradingViewTimezone, formatNumber } from 'redux/actions/utils';
+import { getTradingViewTimezone, getS3Url, Countdown, formatNumber } from 'redux/actions/utils';
 import colors from '../../../styles/colors';
 import { widget } from '../../TradingView/charting_library/charting_library.min';
 import Datafeed from '../api';
@@ -13,6 +13,9 @@ import IndicatorBars, {
     subIndicators
 } from 'components/TVChartContainer/MobileTradingView/IndicatorBars';
 import { find, set } from 'lodash';
+import Modal from 'components/common/ReModal';
+import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux'
 
 const CONTAINER_ID = 'nami-mobile-tv';
 const CHART_VERSION = '1.0.8';
@@ -643,6 +646,9 @@ export class MobileTradingView extends React.PureComponent {
                             />
                         }
                     </div>
+                    {!this.props.isDetail &&
+                        <Funding symbol={this.props.symbol} />
+                    }
                     {/*<div className="!w-32 cheat-watermark">*/}
                     {/*    <NamiExchangeSvg color={colors.grey4}/>*/}
                     {/*</div>*/}
@@ -650,6 +656,53 @@ export class MobileTradingView extends React.PureComponent {
             </>
         );
     }
+}
+
+
+const Funding = ({ symbol }) => {
+    const { t } = useTranslation()
+    const [showModal, setShowModal] = React.useState(false)
+    const marketWatch = useSelector((state) => state.futures.marketWatch);
+    return (
+        <>
+            {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
+            <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-onus-line">
+                <div className="w-full flex items-center justify-between space-x-2 text-xs">
+                    <div className='flex items-center space-x-1' onClick={() => setShowModal(true)}>
+                        <span className="text-onus-textSecondary">Funding:</span>
+                        <div>
+                            <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
+                        </div>
+                    </div>
+                    <div>{marketWatch[symbol]?.fundingRate ? formatNumber(marketWatch[symbol]?.fundingRate * 100, 4, 0, true) : 0}%</div>
+                </div>
+                <div className="w-full flex items-center justify-between space-x-2 text-xs">
+                    <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
+                    <div><Countdown date={marketWatch[symbol]?.fundingTime} /></div>
+                </div>
+            </div>
+        </>
+
+    )
+}
+
+const ModalFundingRate = ({ onClose, t }) => {
+
+    const onRedirect = () => {
+        window.open('/futures/funding-history')
+    }
+
+    return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
+    >
+        <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
+        <div className="text-sm pt-4 text-center text-onus-grey">
+            {t('futures:funding_rate_des')} <span className="text-onus-base font-semibold">{t('common:read_more')}</span>
+        </div>
+        <div className="flex items-center space-x-4 pt-8 text-center">
+            <div onClick={onClose} className="w-full bg-onus-bg2 rounded-md px-5 py-3">{t('common:close')}</div>
+            <div onClick={onRedirect} className="w-full bg-onus-base rounded-md px-5 py-3">{t('futures:funding_history')}</div>
+        </div>
+    </Modal>
 }
 
 MobileTradingView.defaultProps = {
