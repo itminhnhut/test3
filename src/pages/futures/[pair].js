@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { FUTURES_DEFAULT_SYMBOL } from './index';
 import LayoutMobile from 'components/common/layouts/LayoutMobile';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 const FuturesComponent = dynamic(() => import('components/screens/Futures/futures'), {
     ssr: false
@@ -13,7 +14,7 @@ const FundingHistory = dynamic(() => import('components/screens/Futures/FundingH
 
 const Futures = ({ params }) => {
     if (!params?.pair || params?.pair === 'funding-history') {
-        return <LayoutMobile><FundingHistory /> </LayoutMobile> ;
+        return <FundingHistory />
     }
     return <FuturesComponent />;
 };

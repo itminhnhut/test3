@@ -51,9 +51,9 @@ export default function FundingHistory(props) {
     }, [selectedTab]);
 
     const renderHeading = () => {
-        const selectedClassName = 'text-white bg-primary-500 bg-dominant';
+        const selectedClassName = 'text-white bg-primary-500 bg-dominant font-semibold';
         const unselectedClassName =
-            'text-txtSecondary dark:text-txtSecondary-dark bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark';
+            'text-txtSecondary dark:text-txtSecondary-dark bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark font-normal';
         const defaultClassName =
             'h-[36px] text-center py-[6px] px-4 rounded-lg cursor-pointer hover:opacity-80 text-[12px] lg:text-sm font-normal !leading-6';
         return (
@@ -130,6 +130,7 @@ const CustomContainer = styled.div.attrs({ className: 'mal-container px-4' })`
 
 const Background = styled.div.attrs({ className: 'w-full h-full pt-5' })`
     background-color: ${({ isDark }) => (isDark ? colors.darkBlue1 : '#F8F9FA')};
+    font-family: "Barlow", sans-serif;
 `;
 
 const SCREEN_TAB_SERIES = [
