@@ -77,6 +77,7 @@ export default function FundingHistory(props) {
                                     [selectedClassName]: selectedCurrency === value,
                                     [unselectedClassName]: selectedCurrency !== value,
                                     'dark:text-txtPrimary-dark': isMobile && selectedCurrency === value,
+                                    '!text-txtBtnPrimary': !isMobile && selectedCurrency === value
                                 })}
                             >
                                 {name}
