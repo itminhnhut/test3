@@ -324,7 +324,7 @@ export default function FundingHistory({ currency }) {
                 </div>
                 <div
                     className={
-                        'underline cursor-pointer flex text-sm leading-6 text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
+                        'underline cursor-pointer flex text-sm leading-6 lg:font-semibold font-medium text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
                     }
                 >
                     {t('futures:funding_history_tab:link_overview')}
