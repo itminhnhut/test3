@@ -20,6 +20,7 @@ import { THEME_MODE } from 'hooks/useDarkMode';
 import { RETABLE_SORTBY } from 'components/common/ReTable';
 import MCard from 'components/common/MCard';
 import { ChevronDown } from 'react-feather';
+import { Countdown } from 'redux/actions/utils';
 
 export const CURRENCIES = [
     {
@@ -159,16 +160,18 @@ export default function FundingHistory({ currency }) {
                 ];
             } else return pre;
         }, []);
-        if(firstLoadRef.current){
-            setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-            setIsLoading(false);
-            firstLoadRef.current = false
-        }else{
-            setTimeout(() => {
-                setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-                setIsLoading(false);
-            }, 700);
-        }
+        setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+        setIsLoading(false);
+        // if(firstLoadRef.current){
+        //     setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+        //     setIsLoading(false);
+        //     firstLoadRef.current = false
+        // }else{
+        //     setTimeout(() => {
+        //         setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
+        //         setIsLoading(false);
+        //     }, 700);
+        // }
 
     };
 
@@ -179,7 +182,7 @@ export default function FundingHistory({ currency }) {
 
     useEffect(() => {
         const marketWatchKies = Object.entries(marketWatch || {});
-        // if (dataTable?.length) return;
+        if (dataTable?.length) return;
 
         if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 20) return;
         if (currency !== prevCurrency) {
@@ -377,7 +380,9 @@ export default function FundingHistory({ currency }) {
             // sorter:  (a, b) => b.fundingTime - a.fundingTime,
             fixed: width >= 992 ? 'none' : 'left',
             render: (data, item) =>
-                !item?.isSkeleton ? renderTimeLeft({ targetDate: data }) : item?.fundingTime
+                !item?.isSkeleton ? Countdown({
+                    date: data, onEnded: ()=>{generateDataTable()}
+                }) : item?.fundingTime
         },
         {
             key: 'fundingRate',

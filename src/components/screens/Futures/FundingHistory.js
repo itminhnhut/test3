@@ -75,7 +75,8 @@ export default function FundingHistory(props) {
                                 onClick={() => setSelectedCurrency(value)}
                                 className={classNames(defaultClassName, {
                                     [selectedClassName]: selectedCurrency === value,
-                                    [unselectedClassName]: selectedCurrency !== value
+                                    [unselectedClassName]: selectedCurrency !== value,
+                                    'dark:text-txtPrimary-dark': isMobile && selectedCurrency === value,
                                 })}
                             >
                                 {name}
