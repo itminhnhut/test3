@@ -427,7 +427,7 @@
     "funding_rate": "Funding Rate",
     "funding_rate_des": "The payment rate exchanged between the long and short positions for the next funding. If the funding rate is positive, longs pay shorts. If negative, shorts pay longs.",
     "funding_history": "Funding History",
-    "information": "Information"
+    "information": "Information",
     "transaction_histories": "Transaction History",
     "funding": "Funding",
     "funding_fee": "Funding fee",
