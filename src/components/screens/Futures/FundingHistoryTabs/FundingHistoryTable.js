@@ -241,7 +241,16 @@ export default function FundingHistoryTable({ currency }) {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: { display: false },
+            legend: {
+                display: false
+            },
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        return [formatNumber(context.raw, 0, 6, true) + '%']
+                    },
+                },
+            },
         },
         interaction: {
             intersect: false,
