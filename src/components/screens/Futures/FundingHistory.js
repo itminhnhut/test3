@@ -9,7 +9,7 @@ import { WALLET_SCREENS } from 'pages/wallet';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
-
+import FundingHistoryTable from 'components/screens/Futures/FundingHistoryTabs/FundingHistoryTable';
 export const CURRENCIES = [
     {
         name: 'VNDC',
@@ -137,7 +137,8 @@ export default function FundingHistory(props) {
                         {renderHeading()}
                         <div className="mb-[3rem]">{renderScreenTab()}</div>
                         {/* Content Tab */}
-                        {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : null}
+                        {/* {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />} */}
+                        <FundingHistoryTable currency={selectedCurrency} />
                     </div>
                 </Background>
             </MaldivesLayout>

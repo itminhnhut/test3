@@ -202,8 +202,8 @@ export const API_CLOSE_ALL_ORDER =
     API_V3_PREFIX + "futures/vndc/close-all-by-condition";
 export const API_ORDER_DETAIL = API_V3_PREFIX + "futures/vndc/order-detail";
 export const API_UPDATE_FUTURES_SYMBOL_VIEW = API_V3_PREFIX + "futures/view";
-export const API_GET_FUTURES_ORDER_HISTORY =
-    API_V3_PREFIX + "futures/vndc/history_order";
+export const API_GET_FUTURES_ORDER_HISTORY = API_V3_PREFIX + "futures/vndc/history_order";
+export const API_GET_FUNDING_RATE_HISTORY = API_V3_PREFIX + "futures/get-funding-rate-history";
 
 export const DIRECT_WITHDRAW_VNDC = API_PREFIX + "vndc/direct_withdraw_vndc";
 export const DIRECT_WITHDRAW_ONUS = API_PREFIX + "vndc/direct_withdraw_onus";
