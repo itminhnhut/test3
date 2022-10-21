@@ -29,6 +29,7 @@ const categories = [
     TransactionCategory.DEPOSIT, //T: 4
     TransactionCategory.VNDC_DIRECT_WITHDRAW, // 723
     TransactionCategory.PAY_INTEREST_STAKE_TRANSACTION, // 1019
+    TransactionCategory.FUTURE_FUNDING_FEE, // 611
 
 ]
 
