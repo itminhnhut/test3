@@ -31,7 +31,7 @@ export default function ListFundingMobile({ dataTable, currency }) {
                     <div className="mb-[10px]">{item.asset}</div>
                     <div className="flex justify-between w-full mb-1">
                         <p className="text-sm leading-5 text-txtTabInactive dark:text-txtTabInactive-dark">
-                            {t('futures:funding_history:time_left_to_next_funding')}
+                            {t('futures:funding_history_tab:time_left_to_next_funding')}
                         </p>
                         <p className="text-sm leading-5 text-txtPrimary dark:text-txtPrimary-dark">
                             {item?.isSkeleton
@@ -42,7 +42,7 @@ export default function ListFundingMobile({ dataTable, currency }) {
                     {/*  */}
                     <div className="flex justify-between w-full">
                         <p className="text-sm leading-5 text-txtTabInactive dark:text-txtTabInactive-dark">
-                            {t('futures:funding_history:funding_rate')}
+                            {t('futures:funding_history_tab:funding_rate')}
                         </p>
                         <p className="text-sm leading-5 text-txtPrimary dark:text-txtPrimary-dark">
                             {item?.isSkeleton ? item.fundingTime : `${item.fundingRate}%`}
@@ -57,7 +57,7 @@ export default function ListFundingMobile({ dataTable, currency }) {
                             'w-full text-center underline text-txtBtnSecondary dark:text-txtBtnSecondary-dark text-sm leading-6 !mb-4'
                         }
                     >
-                        {t('futures:funding_history:more')}
+                        {t('futures:funding_history_tab:more')}
                     </div>
                 ) : (
                     <div className="px-4">

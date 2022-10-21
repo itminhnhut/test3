@@ -61,7 +61,7 @@ export default function FundingHistory(props) {
                             'text-txtPrimary  dark:text-txtPrimary-dark font-semibold leading-[40px] text-[26px]'
                         }
                     >
-                        {t('futures:funding_history:information')}
+                        {t('futures:funding_history_tab:information')}
                     </p>
                 </div>
                 <div className={'flex lg:gap-[6px] gap-3'}>
@@ -135,12 +135,12 @@ const SCREEN_TAB_SERIES = [
         key: 0,
         code: WALLET_SCREENS.OVERVIEW,
         title: 'Overview',
-        localized: 'futures:funding_history:tab_ratio_realtime'
+        localized: 'futures:funding_history_tab:tab_ratio_realtime'
     },
     {
         key: 1,
         code: WALLET_SCREENS.EXCHANGE,
         title: 'Exchange',
-        localized: 'futures:funding_history:tab_history'
+        localized: 'futures:funding_history_tab:tab_history'
     }
 ];

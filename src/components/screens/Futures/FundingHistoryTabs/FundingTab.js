@@ -47,15 +47,15 @@ const sortAscending = (arr, key, isString) => {
 
 const FILTER_OPTS = [
     {
-        label: 'futures:funding_history:opt_default',
-        placeholder: 'futures:funding_history:opt_default_place',
+        label: 'futures:funding_history_tab:opt_default',
+        placeholder: 'futures:funding_history_tab:opt_default_place',
         index: 0,
         keySort: 'symbol',
         sort: (arr, key) => arr
     },
     {
-        label: 'futures:funding_history:opt_contract_a_z',
-        placeholder: 'futures:funding_history:opt_contract_a_z_place',
+        label: 'futures:funding_history_tab:opt_contract_a_z',
+        placeholder: 'futures:funding_history_tab:opt_contract_a_z_place',
         index: 1,
         keySort: 'symbol',
         sort: (data, key) => {
@@ -63,8 +63,8 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_contract_z_a',
-        placeholder: 'futures:funding_history:opt_contract_z_a_place',
+        label: 'futures:funding_history_tab:opt_contract_z_a',
+        placeholder: 'futures:funding_history_tab:opt_contract_z_a_place',
         index: 2,
         keySort: 'symbol',
         sort: (data, key) => {
@@ -72,8 +72,8 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_rate_inc',
-        placeholder: 'futures:funding_history:opt_rate_inc_place',
+        label: 'futures:funding_history_tab:opt_rate_inc',
+        placeholder: 'futures:funding_history_tab:opt_rate_inc_place',
         index: 3,
         keySort: 'fundingRate',
         sort: (data, key) => {
@@ -81,8 +81,8 @@ const FILTER_OPTS = [
         }
     },
     {
-        label: 'futures:funding_history:opt_rate_desc',
-        placeholder: 'futures:funding_history:opt_rate_desc_place',
+        label: 'futures:funding_history_tab:opt_rate_desc',
+        placeholder: 'futures:funding_history_tab:opt_rate_desc_place',
         index: 4,
         keySort: 'fundingRate',
         sort: (data, key) => {
@@ -139,7 +139,7 @@ export default function FundingHistory({ currency }) {
                                     <p className="text-base font-semibold lg:font-medium leading-[22px] lg:leading-6 text-txtPrimary dark:text-txtPrimary-dark">
                                         {`${data?.baseAsset + '/' + data?.quoteAsset} `}
                                         <span className="ml-2 lg:ml-[5px]">
-                                            {t('futures:funding_history:perpetual')}
+                                            {t('futures:funding_history_tab:perpetual')}
                                         </span>
                                     </p>
                                 </div>
@@ -234,7 +234,7 @@ export default function FundingHistory({ currency }) {
                             className="py-[6px] w-[105px] lg:w-auto px-2 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark leading-6 placeholder:text-txtSecondary placeholder:dark:text-txtSecondary-dark bg-bgTabInactive dark:bg-bgTabInactive-dark"
                             value={selectedSymbol}
                             onChange={(e) => handleSearch(e?.target?.value)}
-                            placeholder={t('futures:funding_history:find_pair')}
+                            placeholder={t('futures:funding_history_tab:find_pair')}
                         />
                         {selectedSymbol && (
                             <X
@@ -317,7 +317,7 @@ export default function FundingHistory({ currency }) {
                         'underline cursor-pointer flex text-sm leading-6 text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
                     }
                 >
-                    {t('futures:funding_history:link_overview')}
+                    {t('futures:funding_history_tab:link_overview')}
                 </div>
             </div>
         );
@@ -349,7 +349,7 @@ export default function FundingHistory({ currency }) {
         {
             key: 'asset',
             dataIndex: 'asset',
-            title: t('futures:funding_history:contract'),
+            title: t('futures:funding_history_tab:contract'),
             align: 'left',
             width: '50%',
             // sorter: false,
@@ -358,7 +358,7 @@ export default function FundingHistory({ currency }) {
         {
             key: 'fundingTime',
             dataIndex: 'fundingTime',
-            title: t('futures:funding_history:time_left_to_next_funding'),
+            title: t('futures:funding_history_tab:time_left_to_next_funding'),
             align: 'left',
             width: '20%',
             preventSort: true,
@@ -372,7 +372,7 @@ export default function FundingHistory({ currency }) {
         {
             key: 'fundingRate',
             dataIndex: 'fundingRate',
-            title: t('futures:funding_history:funding_rate'),
+            title: t('futures:funding_history_tab:funding_rate'),
             align: 'left',
             width: '20%',
             fixed: width >= 992 ? 'none' : 'left',
@@ -387,7 +387,7 @@ export default function FundingHistory({ currency }) {
         }
         return skeletons;
     }, []);
-    
+
     return (
         <div className="lg:px-12">
             {renderSearch()}

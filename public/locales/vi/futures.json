@@ -428,13 +428,10 @@
     "funding_rate_des": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
     "funding_history": "Lịch sử funding",
     "information": "Thông tin",
-    "transaction_histories": "Lịch sử giao dịch",
     "funding": "Funding",
     "funding_rate_tooltip": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
     "count_down": "đếm ngược",
-    "funding_fee": "Phí funding",
-    "funding_rate": "Tỷ lệ funding",
-    "funding_history":{
+    "funding_history_tab":{
         "tab_ratio_realtime":"Tỷ lệ funding theo thời gian thực",
         "tab_history":"Lịch sử phí funding",
 
