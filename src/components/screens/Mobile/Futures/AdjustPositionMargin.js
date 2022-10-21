@@ -74,10 +74,11 @@ const calMinProfitAllow = (leverage) => {
     return minMarginRatio
 }
 
-const calLiqPrice = (side, quantity, open_price, margin, fee) => {
+const calLiqPrice = (side, quantity, open_price, margin, fee, order) => {
     const size = (side === VndcFutureOrderType.Side.SELL ? -quantity : quantity)
     const number = (side === VndcFutureOrderType.Side.SELL ? -1 : 1);
-    return (size * open_price + fee - margin) / (quantity * (number - DefaultFuturesFee.NamiFrameOnus))
+    const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
+    return (size * open_price + fee + funding - margin) / (quantity * (number - DefaultFuturesFee.NamiFrameOnus))
 }
 
 const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) => {
@@ -123,7 +124,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
         const newMargin = +order?.margin + (adjustType === ADJUST_TYPE.REMOVE ? -amount : +amount)
         return {
             newMargin,
-            newLiqPrice: calLiqPrice(order.side, order.quantity, order.open_price, newMargin, order.fee),
+            newLiqPrice: calLiqPrice(order.side, order.quantity, order.open_price, newMargin, order.fee, order),
             minMarginRatio,
             initMargin,
             maxRemovable: maxRemovable * .9 // Minus 10% to ensure valid in server
