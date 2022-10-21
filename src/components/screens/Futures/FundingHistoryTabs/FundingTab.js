@@ -223,23 +223,23 @@ export default function FundingHistory({ currency }) {
      */
     const renderSearch = () => {
         return (
-            <div className="flex flex-col justify-between mb-8 lg:flex-row lg:mb-[40px] px-4 lg:px-0">
+            <div className="flex flex-col justify-between lg:mb-8 lg:flex-row lg:mb-[40px] px-4 lg:px-0">
                 <div className="flex items-center justify-between gap-6 mb-6 lg:mb-0 mb:justify-end">
                     <div className="flex items-center w-[165px] lg:w-[224px] px-3 rounded-md h-9 lg:mt-0 lg:px-5 bg-bgTabInactive dark:bg-bgTabInactive-dark">
                         <Search
-                            size={width >= 768 ? 16 : 16}
+                            size={width >= 768 ? 20 : 16}
                             className="text-txtSecondary dark:text-txtSecondary-dark"
                         />
                         <input
-                            className="py-[6px] p-4  text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark leading-6 placeholder:text-txtSecondary placeholder:dark:text-txtSecondary-dark bg-bgTabInactive dark:bg-bgTabInactive-dark"
+                            className="py-[6px] w-[105px] lg:w-auto py-4 px-2 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark leading-6 placeholder:text-txtSecondary placeholder:dark:text-txtSecondary-dark bg-bgTabInactive dark:bg-bgTabInactive-dark"
                             value={selectedSymbol}
                             onChange={(e) => handleSearch(e?.target?.value)}
                             placeholder={t('futures:funding_history:find_pair')}
                         />
                         {selectedSymbol && (
                             <X
-                                size={width >= 768 ? 16 : 16}
-                                className="mx-0 cursor-pointer"
+                                size={width >= 768 ? 20 : 16}
+                                className="cursor-pointer"
                                 onClick={() => {
                                     setFilteredDataTable([]);
                                     setSelectedSymbol('');
