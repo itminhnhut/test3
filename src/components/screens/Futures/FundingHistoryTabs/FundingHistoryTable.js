@@ -26,6 +26,7 @@ import { PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import TableNoData from 'components/common/table.old/TableNoData';
 import reverse from 'lodash/reverse'
+import { useRouter } from 'next/router'
 
 ChartJS.register(
     CategoryScale,
@@ -115,46 +116,29 @@ const days = [
 const limit = 10;
 
 export default function FundingHistoryTable({ currency }) {
-
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
+    const router = useRouter()
+    const { t, i18n: { language } } = useTranslation();
     const { width } = useWindowSize();
     const isMobile = width && width <= 820;
     const pairConfigs = useSelector((state) => state.futures.pairConfigs);
-    const publicSocket = useSelector((state) => state.socket.publicSocket);
     const [data, setData] = useState({
         dataSource: [],
         total: 0
     });
     const [activePairList, setActivePairList] = useState(false);
-    const [pairPrice, setPairPrice] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [filter, setFilter] = useState({
         pageSize: days[0].value,
-        symbol: currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT'
-    });
+        symbol: null
+    })
 
     const pairConfig = useMemo(() => {
         return pairConfigs.find(rs => rs.symbol === filter.symbol);
     }, [filter]);
 
-    useEffect(() => {
-        if (!pairConfig) return;
-        publicSocket.emit('subscribe:futures:ticker', pairConfig?.symbol);
-        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol, async (data) => {
-            const _pairPrice = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-            if (pairConfig?.symbol === _pairPrice?.symbol && _pairPrice?.lastPrice > 0) {
-                setPairPrice(_pairPrice);
-            }
-        });
-        return () => {
-            Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol);
-        };
-    }, [publicSocket, pairConfig]);
 
     async function getHistoryData() {
+        if (!filter.symbol) return
         try {
             const { data } = await FetchApi({
                 url: API_GET_FUNDING_RATE_HISTORY,
@@ -173,11 +157,16 @@ export default function FundingHistoryTable({ currency }) {
     }
 
     useEffect(() => {
-        setFilter({
-            ...filter,
-            symbol: currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT'
-        });
-    }, [currency]);
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        let symbol = urlParams.get('symbol')
+        if (!symbol?.includes(currency)) {
+            symbol = currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT'
+        }
+        const url = `/${router.locale}/futures/funding-history?symbol=${symbol}`;
+        window.history.pushState(null, null, url);
+        setFilter({ ...filter, symbol: symbol })
+    }, [currency, router])
 
     useEffect(() => {
         setCurrentPage(1);
@@ -213,7 +202,7 @@ export default function FundingHistoryTable({ currency }) {
             width: 100,
             sorter: false,
             fixed: width >= 992 ? 'none' : 'left',
-            render: (data) => <span>{formatTime(data, 'yyyy-MM-dd HH:mm:ss')}</span>
+            render: (data) => <span>{formatTime(data, 'yyyy/MM/dd HH:mm:ss')}</span>
 
         },
         {
@@ -261,6 +250,9 @@ export default function FundingHistoryTable({ currency }) {
             y: {
                 ticks: {
                     color: colors.darkBlue5,
+                    callback: (value, index, values) => {
+                        return (value > 0 ? '' : '-') + (Math.abs(value)).toFixed(6) + '%'
+                    }
                 },
                 display: true,
                 grid: {
@@ -288,7 +280,7 @@ export default function FundingHistoryTable({ currency }) {
 
     let dataReverse = [...data.dataSource]
     reverse(dataReverse)
-    const labels = dataReverse.map(item => formatTime(item.calcTime, 'MM-dd HH:mm'));
+    const labels = dataReverse.map(item => formatTime(item.calcTime, 'dd/MM'));
     const dataLine = {
         labels,
         datasets: [
@@ -303,20 +295,28 @@ export default function FundingHistoryTable({ currency }) {
     };
 
     const onChangeSymbol = (pair) => {
-        setFilter({
-            ...filter,
-            symbol: pair?.baseAsset + pair?.quoteAsset
-        });
-        setActivePairList(false);
-    };
+        const symbol = pair?.baseAsset + pair?.quoteAsset
+        const url = `/${router.locale}/futures/funding-history?symbol=${symbol}`;
+        window.history.pushState(null, null, url);
+        setFilter({ ...filter, symbol: symbol })
+        setActivePairList(false)
+    }
 
     const totalPage = useMemo(() => {
         return Math.ceil(data.dataSource.length / limit);
     }, [data]);
 
+    const fundingRate = useMemo(() => {
+        return data.dataSource.length > 0 ? data.dataSource[0].lastFundingRate : 0
+    }, [data])
+
+    const formatFundingRate = (value) => {
+        return (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true)
+    }
+
     return (
-        <div className={`rounded-[20px] shadow-funding dark:bg-[#071026] p-4 lg:p-12 pt-8 sm:pt-12 `}>
-            <div className="h-full flex items-center justify-between mb-6">
+        <div className={`dark:bg-[#071026] p-4 lg:p-12 pt-0`}>
+            <div className='h-full flex items-center justify-between mb-6'>
                 <div
                     className="group relative cursor-pointer"
                     onMouseOver={() => setActivePairList(true)}
@@ -335,7 +335,7 @@ export default function FundingHistoryTable({ currency }) {
                     </div>
                     <div className="relative z-10 font-medium flex space-x-1">
                         <span className="text-onus-grey">{t('futures:funding_rate')}:</span>
-                        <span>{pairPrice?.fundingRate ? formatNumber(pairPrice?.fundingRate * 100, 4, 0, true) : 0}%</span>
+                        <span>{formatFundingRate(fundingRate * 100)}</span>
                     </div>
                     <div
                         className="hidden group-hover:block absolute z-30 pt-4 left-0 top-full"
@@ -351,11 +351,8 @@ export default function FundingHistoryTable({ currency }) {
                 </div>
                 <div className="flex items-center space-x-4">
                     {days.map(day => (
-                        <div onClick={() => setFilter({
-                            ...filter,
-                            pageSize: day.value
-                        })}
-                             className={`px-4 py-[6px] font-medium text-xs cursor-pointer ${filter.pageSize === day.value ? 'text-teal rounded-md bg-teal-opacitier' : 'text-darkBlue-5'}`}>{day[language]}</div>
+                        <div key={day.id} onClick={() => setFilter({ ...filter, pageSize: day.value })}
+                            className={`px-4 py-[6px] font-medium text-xs cursor-pointer ${filter.pageSize === day.value ? 'text-teal rounded-md bg-teal-opacitier' : 'text-darkBlue-5'}`}>{day[language]}</div>
                     ))}
                 </div>
             </div>
@@ -367,76 +364,71 @@ export default function FundingHistoryTable({ currency }) {
                         </div>
                     </div>
                     <div className="flex w-full items-center justify-center">
-                        <Line options={options} data={dataLine} height="330"/>
+                        <Line options={options} data={dataLine} height="330" />
                     </div>
                 </div>
                 {!isMobile ? <>
-                        <div className="w-full">
-                            <div className="text-[28px] text-txtPrimary dark:text-txtPrimary-dark font-semibold mb-6">
-                                {t('futures:funding_history_tab:funding_history')}
-                            </div>
-                            <ReTable
-                                // defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                                className="funding-table"
-                                useRowHover
-                                data={data.dataSource || []}
-                                columns={columns}
-                                rowKey={(item) => item?.key}
-                                loading={!data.dataSource.length}
-                                scroll={{ x: true }}
-                                // tableStatus={}
-                                tableStyle={{
-                                    paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                                    // tableStyle: { minWidth: '1300px !important' },
-                                    headerStyle: {},
-                                    rowStyle: {},
-                                    shadowWithFixedCol: width < 1366,
-                                    noDataStyle: {
-                                        minHeight: '480px'
-                                    }
-                                }}
-                                paginationProps={{
-                                    hide: true,
-                                    current: currentPage,
-                                    pageSize: limit,
-                                    onChange: (currentPage) => setCurrentPage(currentPage)
-                                }}
-                            />
+                    <div className="w-full">
+                        <div className="text-[28px] text-txtPrimary dark:text-txtPrimary-dark font-semibold mb-6">
+                            {t('futures:funding_history_tab:funding_history')}
                         </div>
-                        {renderPagination()}
-                    </>
+                        <ReTable
+                            // defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                            className="funding-table"
+                            useRowHover
+                            data={data.dataSource || []}
+                            columns={columns}
+                            rowKey={(item) => item?.key}
+                            loading={!data.dataSource.length}
+                            scroll={{ x: true }}
+                            // tableStatus={}
+                            tableStyle={{
+                                paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                                // tableStyle: { minWidth: '1300px !important' },
+                                headerStyle: {},
+                                rowStyle: {},
+                                shadowWithFixedCol: width < 1366,
+                                noDataStyle: {
+                                    minHeight: '480px'
+                                }
+                            }}
+                            paginationProps={{
+                                hide: true,
+                                current: currentPage,
+                                pageSize: limit,
+                                onChange: (currentPage) => setCurrentPage(currentPage)
+                            }}
+                        />
+                    </div>
+                    {renderPagination()}
+                </>
                     :
                     <div className="w-full mt-8">
                         {data.dataSource.length > 0 ? <>
-                                <div className="divide-y divide-divider dark:divide-darkBlue-3">
-                                    {data.dataSource.map((item, index) => {
-                                        const hidden = index + 1 > currentPage * limit;
-                                        return (
-                                            <div key={index}
-                                                 className={classNames(`${index === 0 ? 'pb-6' : 'py-6'}`, { 'hidden': hidden })}>
-                                                <div
-                                                    className="font-semibold">{formatTime(item?.calcTime, 'yyyy/MM/dd  HH:mm:ss')}</div>
-                                                <div className="text-sm mt-2">
-                                                    <div className="flex items-center justify-between">
-                                                        <div
-                                                            className="dark:text-darkBlue-5">{t('futures:funding_history_tab:funding_range')}</div>
-                                                        <div>{item?.fundingIntervalHours} {t('common:hours')}</div>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <div
-                                                            className="dark:text-darkBlue-5">{t('futures:funding_rate')}</div>
-                                                        <div>{formatNumber(item?.lastFundingRate * 100, 0, 6, true) + '%'}</div>
-                                                    </div>
+                            <div className="divide-y divide-divider dark:divide-darkBlue-3">
+                                {data.dataSource.map((item, index) => {
+                                    const hidden = index + 1 > currentPage * limit
+                                    return (
+                                        <div key={index} className={classNames(`${index === 0 ? 'pb-6' : 'py-6'}`, { 'hidden': hidden })}>
+                                            <div className="font-semibold">{formatTime(item?.calcTime, 'yyyy/MM/dd  HH:mm:ss')}</div>
+                                            <div className="text-sm mt-2 font-medium">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="dark:text-darkBlue-5">{t('futures:funding_history_tab:funding_range')}</div>
+                                                    <div>{item?.fundingIntervalHours} {t('common:hours')}</div>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <div className="dark:text-darkBlue-5">{t('futures:funding_rate')}</div>
+                                                    <div>{formatFundingRate(item?.lastFundingRate * 100)}</div>
                                                 </div>
                                             </div>
-                                        );
-                                    })}
-                                </div>
-                                {totalPage > currentPage && <div onClick={() => setCurrentPage(currentPage + 1)}
-                                                                 className="text-teal text-sm font-medium underline text-center cursor-pointer">{t('futures:load_more')}</div>}
-                            </>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            {totalPage > currentPage && <div onClick={() => setCurrentPage(currentPage + 1)} className="text-teal text-sm font-medium underline text-center cursor-pointer">{t('futures:load_more')}</div>}
+                        </>
                             :
-                            <TableNoData title={t('common:no_data')}/>
+                            <TableNoData title={t('common:no_data')} />
                         }
 
                     </div>
@@ -466,7 +458,7 @@ const PairList = memo(({
         return data?.map((pair, indx) => {
             return (
                 <div onClick={() => onChangeSymbol(pair)} key={indx}
-                     className={`text-sm font-medium flex items-center ${indx == 0 ? 'pb-3' : 'py-3'}`}>
+                    className={`text-sm font-medium flex items-center ${indx == 0 ? 'pb-3' : 'py-3'}`}>
                     <div>{pair?.baseAsset}</div>
                     <div className="text-gray-1">/{pair?.quoteAsset}</div>
                 </div>

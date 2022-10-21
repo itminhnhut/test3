@@ -12,7 +12,6 @@ import colors from 'styles/colors';
 import FundingHistoryTable from 'components/screens/Futures/FundingHistoryTabs/FundingHistoryTable';
 import { TAB_TYPE } from '../../common/Tab';
 import { isMobile } from 'react-device-detect';
-import LayoutMobile from 'components/common/layouts/LayoutMobile';
 
 export const CURRENCIES = [
     {
@@ -99,13 +98,14 @@ export default function FundingHistory(props) {
                         <div className="px-4">{renderScreenTab()}</div>
                         {/* Content Tab */}
                         <div
-                            className="rounded-[20px] pt-[2rem] lg:pt-[3rem] lg:mx-4 pb-12  lg:pb-8"
+                            className="rounded-[20px] pt-[2rem] lg:pt-[3rem] shadow-funding lg:mx-4 pb-12  lg:pb-8"
                             style={{
                                 backgroundColor:
                                     currentTheme === THEME_MODE.DARK ? '#071026' : '#FCFCFC'
                             }}
                         >
-                            {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />}                        </div>
+                            {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />}
+                        </div>
                     </div>
                 </Background>
             </Wrapper>
