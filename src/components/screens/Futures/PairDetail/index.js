@@ -11,15 +11,16 @@ import FuturesPairList from '../PairList';
 import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
 import Modal from 'components/common/ReModal';
+import useDarkMode from 'hooks/useDarkMode';
 
 const FuturesPairDetail = ({
-                               pairPrice,
-                               markPrice,
-                               pairConfig,
-                               forceUpdateState,
-                               isVndcFutures,
-                               isAuth
-                           }) => {
+    pairPrice,
+    markPrice,
+    pairConfig,
+    forceUpdateState,
+    isVndcFutures,
+    isAuth
+}) => {
     // ? Xử lí minW để khi giá thay đổi, giao diện này sẽ không bị xê dịch.
     // ? Nguyên nhân: Font sida (;_;)
     const [itemsPriceMinW, setItemsPriceMinW] = useState(0)
@@ -358,6 +359,8 @@ const MARK_PRICE_ITEMS = [
 
 
 const PopoverFunding = () => {
+    const router = useRouter()
+    const [currentTheme] = useDarkMode();
     const { t } = useTranslation()
     const [showModal, setShowModal] = useState(false)
 
@@ -366,7 +369,7 @@ const PopoverFunding = () => {
     }
 
     const onRedirect = () => {
-        window.open('/futures/funding-history')
+        window.open(`/${router.locale}/futures/funding-history?theme=${currentTheme}`)
     }
 
     return (
