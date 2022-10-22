@@ -427,5 +427,43 @@
     "funding_rate": "Tỉ lệ funding",
     "funding_rate_des": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
     "funding_history": "Lịch sử funding",
-    "information": "Thông tin"
+    "information": "Thông tin",
+    "funding": "Funding",
+    "funding_rate_tooltip": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
+    "count_down": "đếm ngược",
+    "funding_history_tab":{
+        "tab_ratio_realtime":"Tỷ lệ funding theo thời gian thực",
+        "tab_history":"Lịch sử phí funding",
+
+        "find_pair": "Tìm hợp đồng",
+
+        "opt_order_default": "Sắp xếp theo mặc định",
+        "opt_default": "Sắp xếp theo mặc định",
+        "opt_contract_a_z": "Theo hợp đồng (A->Z)",
+        "opt_contract_z_a": "Theo hợp đồng (Z->A)",
+        "opt_rate_inc": "Theo tỷ lệ tăng dần",
+        "opt_rate_desc": "Theo tỷ lệ giảm dần",
+
+        "opt_order_default_place": "Mặc định",
+        "opt_default_place": "Mặc định",
+        "opt_contract_a_z_place": "Tên hợp đồng (A->Z)",
+        "opt_contract_z_a_place": "Tên hợp đồng (Z->A)",
+        "opt_rate_inc_place": "Tỷ lệ funding tăng dần",
+        "opt_rate_desc_place": "Tỷ lệ funding giảm dần",
+
+        "contract": "Hợp đồng",
+
+        "link_overview": "Giới thiệu tỷ lệ funding",
+        "pair": "Cặp",
+        "time_left_to_next_funding": "Thời gian đến funding tiếp theo",
+        "funding_rate": "Tỷ lệ funding",
+        "days": "ngày",
+        "more": "Xem thêm",
+        "hours": "giờ",
+
+        "funding_range": "Khoảng funding",
+        "perpetual": "Vĩnh cửu",
+        "information": "Thông tin",
+        "funding_history": "Lịch sử funding"
+    }
 }

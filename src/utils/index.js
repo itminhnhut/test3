@@ -118,7 +118,9 @@ export function initFuturesMarketWatchItem(pair, debug = false) {
         placeCurrency: get(pair, 'pa', null), // placeCurrency: FuturesCurrency.fromName(source.pa),
         lastChangePercentage: isNumeric(lcp) ? lcp * 100 : 0, // lastChangePercentage: isNumeric(source.lcp) ?
                                                               // +source.lcp * 100 : 0,
-        hideInMarketWatch: get(pair, 'hide_in_market_watch', null) // hideInMarketWatch: source.hide_in_market_watch,
+        hideInMarketWatch: get(pair, 'hide_in_market_watch', null), // hideInMarketWatch: source.hide_in_market_watch,
+        fundingTime: get(pair, 't', 0),
+        fundingRate: get(pair, 'fr', 0)
     }
     debug && log.d('FuturesPair: ', _)
     return _

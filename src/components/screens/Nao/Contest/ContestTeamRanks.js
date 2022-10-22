@@ -22,7 +22,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
 
     useEffect(() => {
         getRanks(tab);
-    }, [])
+    }, [contest_id])
 
     useEffect(() => {
         const queryString = window.location.search;
