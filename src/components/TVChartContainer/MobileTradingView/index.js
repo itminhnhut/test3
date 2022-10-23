@@ -691,13 +691,13 @@ const ModalFundingRate = ({ onClose, t }) => {
     const router = useRouter()
 
     const onRedirect = () => {
-        window.open(`/${router.locale}/futures/funding-history?theme=dark`)
+        window.open(`/${router.locale}/futures/funding-history?theme=dark&source=app`)
     }
 
     const onDetail = () => {
         const url = router.locale === 'en'
-            ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures'
-            : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures'
+            ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures?theme=dark&source=app'
+            : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures?theme=dark&source=app'
         window.open(url)
     }
 

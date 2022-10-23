@@ -53,7 +53,7 @@ const TopicsLayout = ({
 
     return (
         <MaldivesLayout>
-            <div className="bg-[#F2F4F6] pt-8 lg:pt-0">
+            <div className="bg-[#F2F4F6] dark:bg-bgPrimary-dark pt-8 lg:pt-0">
                 <SupportBanner
                     title={
                         mode === 'announcement'
