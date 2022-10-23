@@ -694,11 +694,18 @@ const ModalFundingRate = ({ onClose, t }) => {
         window.open(`/${router.locale}/futures/funding-history?theme=dark`)
     }
 
+    const onDetail = () => {
+        const url = router.locale === 'en'
+            ? 'https://nami.exchange/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures'
+            : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures'
+        window.open(url)
+    }
+
     return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
     >
         <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
         <div className="text-sm pt-4 text-center text-onus-grey">
-            {t('futures:funding_rate_des')} <span className="text-onus-base font-semibold">{t('common:read_more')}</span>
+            {t('futures:funding_rate_des')} <span onClick={onDetail} className="text-onus-base font-semibold">{t('common:read_more')}</span>
         </div>
         <div className="flex items-center space-x-4 pt-8 text-center">
             <div onClick={onClose} className="w-full bg-onus-bg2 rounded-md px-5 py-3">{t('common:close')}</div>
