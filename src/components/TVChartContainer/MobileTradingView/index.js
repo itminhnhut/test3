@@ -28,6 +28,7 @@ const ChartStatus = {
 import { formatPrice } from 'src/redux/actions/utils';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
+import { useRouter } from 'next/router';
 
 export class MobileTradingView extends React.PureComponent {
     state = {
@@ -687,9 +688,10 @@ const Funding = ({ symbol }) => {
 }
 
 const ModalFundingRate = ({ onClose, t }) => {
+    const router = useRouter()
 
     const onRedirect = () => {
-        window.open('/futures/funding-history')
+        window.open(`/${router.locale}/futures/funding-history?theme=dark`)
     }
 
     return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}

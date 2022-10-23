@@ -221,7 +221,7 @@ export default function FundingHistoryTable({ currency }) {
             align: 'right',
             width: 120,
             sorter: false,
-            render: (data, item) => formatNumber(data * 100, 0, 6, true) + '%'
+            render: (data, item) => formatFundingRate(data * 100)
 
         },
     ];
@@ -311,7 +311,7 @@ export default function FundingHistoryTable({ currency }) {
     }, [data])
 
     const formatFundingRate = (value) => {
-        return (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true)
+        return (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) + '%'
     }
 
     return (
