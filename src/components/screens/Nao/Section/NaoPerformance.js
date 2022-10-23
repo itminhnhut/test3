@@ -11,9 +11,8 @@ import { useSelector } from 'react-redux';
 import colors from 'styles/colors';
 import { Check } from 'react-feather';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
-import DateRangePicker from 'components/screens/Nao/Section/DateRangePicker';
-import { addMonths, addWeeks, endOfDay, startOfDay, subDays } from 'date-fns';
 import { useRouter } from 'next/router';
+import useWindowSize from 'hooks/useWindowSize';
 
 const days = [
     {
@@ -72,65 +71,6 @@ const filterFeeAsset = [
 ];
 
 const NaoPerformance = memo(() => {
-
-    const days = useMemo(() => {
-        const now = new Date();
-        return [
-            {
-                id: 'today',
-                en: 'Today',
-                vi: 'Hôm nay',
-                from: startOfDay(now)
-                    .valueOf(),
-                to: endOfDay(now)
-                    .valueOf(),
-            },
-            {
-                id: 'yesterday',
-                en: 'Yesterday',
-                vi: 'Hôm qua',
-                from: startOfDay(subDays(now, 1))
-                    .valueOf(),
-                to: endOfDay(subDays(now, 1))
-                    .valueOf(),
-            },
-            {
-                id: '7days',
-                en: '7 days',
-                vi: '7 ngày',
-                from: startOfDay(addWeeks(now, -1))
-                    .valueOf(),
-                to: endOfDay(now)
-                    .valueOf(),
-            },
-            {
-                id: '30days',
-                en: '30 days',
-                vi: '30 ngày',
-                from: startOfDay(addMonths(now, -1))
-                    .valueOf(),
-                to: endOfDay(now)
-                    .valueOf(),
-            },
-            {
-                id: '60days',
-                en: '60 days',
-                vi: '60 ngày',
-                from: startOfDay(addMonths(now, -2))
-                    .valueOf(),
-                to: endOfDay(now)
-                    .valueOf(),
-            },
-            {
-                id: 'all',
-                en: 'All Time',
-                vi: 'Tất cả',
-                from: null,
-                to: null,
-            }
-        ];
-    }, []);
-
     const {
         t,
         i18n: { language }
@@ -140,18 +80,25 @@ const NaoPerformance = memo(() => {
     const [dataSource, setDataSource] = useState(null);
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState({
-        marginCurrency: WalletCurrency.VNDC,
-        ...days[0]
+        day: 'd',
+        marginCurrency: WalletCurrency.VNDC
     });
     const [fee, setFee] = useState(WalletCurrency.VNDC);
     const [referencePrice, setReferencePrice] = useState({});
+
     const assetConfig = useSelector(state => state.utils.assetConfig);
-    const [showFilterModal, setShowFilterModal] = useState(false);
-    const [date, setDate] = useState({
-        startDate: new Date(),
-        endDate: new Date(),
-        key: 'selection',
-    });
+
+    // const [getQueryByName , updateQuery] = useAddQuery('date')
+
+    useEffect(() => {
+        const { date } = router.query;
+        if (date) {
+            setFilter({
+                ...filter,
+                day: date
+            });
+        }
+    }, [router.isReady]);
 
     useEffect(() => {
         getRef();
@@ -168,8 +115,7 @@ const NaoPerformance = memo(() => {
                 url: API_NAO_DASHBOARD_STATISTIC,
                 options: { method: 'GET' },
                 params: {
-                    from: filter?.from,
-                    to: filter?.to,
+                    range: filter.day,
                     marginCurrency: filter.marginCurrency
                 },
             });
@@ -238,6 +184,25 @@ const NaoPerformance = memo(() => {
         setFee(currency);
     };
 
+    const updateDateRangeUrl = (dateValue) => {
+        router.push({
+            pathname: router.pathname,
+            query: {
+                date: dateValue,
+            }
+        });
+    };
+
+    const handleChangeDateRange = (day) => {
+        if (day !== filter.day) {
+            setFilter({
+                ...filter,
+                day
+            });
+            updateDateRangeUrl(day);
+        }
+    };
+
     return (
         <section id="nao_performance" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-5">
@@ -247,46 +212,21 @@ const NaoPerformance = memo(() => {
                     <span
                         className="text-sm sm:text-[1rem] text-nao-grey">{t('nao:onus_performance:description')}</span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
                     <RangePopover language={language} active={days.find(d => d.value === filter.day)}
-                                  onChange={day => {
-                                      setFilter({
-                                          ...filter,
-                                          day
-                                      });
-                                  }}/>
-                    <ButtonNao
-                        className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC })}
-                        onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
-                    >Futures VNDC</ButtonNao>
-                    <ButtonNao
-                        className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.USDT })}
-                        onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
-                    >Futures USDT</ButtonNao>
+                                  onChange={handleChangeDateRange} className="flex order-last lg:order-first"
+                                  popoverClassName={'lg:mr-2 '}/>
+                    <div className="order-first gap-2 lg:order-last flex gap-last">
+                        <ButtonNao
+                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC })}
+                            onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
+                        >Futures VNDC</ButtonNao>
+                        <ButtonNao
+                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.USDT })}
+                            onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
+                        >Futures USDT</ButtonNao>
+                    </div>
                 </div>
-            </div>
-            <div className="mt-10 hidden lg:flex items-center justify-between">
-                <div className="flex items-center text-sm space-x-2">
-                    {days.map((day, index) => {
-                        return (
-                            <div
-                                key={day.id}
-                                onClick={() => {
-                                    setFilter({ ...filter, ...day });
-                                }}
-                                className={classNames('py-2 px-4 cursor-pointer leading-6 bg-nao-bg3 rounded-md', { 'bg-nao-blue2 font-medium': day?.id === filter?.id })}>
-                                <span>{day[language]}</span>
-                            </div>
-                        );
-                    })}
-                    <DateRangePicker
-                        date={date}
-                        onChange={onChangePicker}
-                        customLabel={renderLabel}/>
-
-                </div>
-                <div onClick={onReset}
-                     className="px-4 py-2 text-nao-blue2 text-sm bg-nao-bg3 rounded-md cursor-pointer">{t('common:reset')}</div>
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
                 <CardNao>
