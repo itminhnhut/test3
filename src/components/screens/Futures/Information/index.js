@@ -59,11 +59,11 @@ const ITEMS_WITH_TOOLTIPS = [
         tooltip: 'liq_fee_rate_tooltips',
         leftPercent: 41
     },
-    {
-        title: 'swap_fee',
-        tooltip: 'swap_fee_tooltips',
-        leftPercent: 30
-    }
+    // {
+    //     title: 'swap_fee',
+    //     tooltip: 'swap_fee_tooltips',
+    //     leftPercent: 30
+    // }
 ];
 
 export default function OrderInformation({ pair }) {
