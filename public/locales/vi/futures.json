@@ -1,4 +1,4 @@
-{
+    {
     "mark_price": "Giá đánh dấu",
     "index_price": "Chỉ số",
     "funding_countdown": "Funding / Đếm ngược",
@@ -465,5 +465,28 @@
         "perpetual": "Vĩnh cửu",
         "information": "Thông tin",
         "funding_history": "Lịch sử funding"
-    }
+    },
+    "order_information": "Thông tin",
+    "trading_rules": "Quy định giao dịch",
+    "min_order_size": "KL giao dịch tối thiểu",
+    "max_order_size": "KL giao dịch tối đa",
+    "total_max_trading_volumn": "Tổng KL tối đa",
+    "max_number_order": "Số lượng lệnh/vị thế tối đa",
+    "min_limit_order_price": "Giá kích hoạt tối thiểu",
+    "max_limit_order_price": "Giá kích hoạt tối đa",
+    "liq_fee_rate": "Phí thanh lý",
+    "max_leverage": "Đòn bẩy tối đa",
+    "swap_fee": "Phí swap",
+    "order": "lệnh",
+
+    "min_order_size_tooltips": "Khối lượng giao dịch tối thiểu khi đặt lệnh.",
+    "max_order_size_tooltips": "Khối lượng giao dịch tối đa khi đặt lệnh.",
+    "total_max_trading_volumn_tooltips": "Tổng khối lượng giao dịch tối đa có thể mở của một cặp giao dịch.",
+    "max_number_order_tooltips": "Số lượng tối đa của các lệnh chờ và vị thế đang mở trên một tài khoản.",
+    "min_limit_order_price_tooltips": "Mức giá thấp nhất người dùng có thể đặt đối với lệnh chờ.",
+    "max_limit_order_price_tooltips": "Mức giá cao nhất người dùng có thể đặt đối với lệnh chờ.",
+    "liq_fee_rate_tooltips": "Với mỗi vị thế Futures bị thanh lý, phí thanh lý được tính bằng 1% khối lượng giao dịch và được thanh toán bằng số dư tài khoản Futures.",
+    "max_leverage_tooltips": "Đòn bẩy tối đa khi mở lệnh.",
+    "swap_fee_tooltips": "Với mỗi vị thế Futures đang mở, Nami Exchange áp dụng mức phí duy trì vị thế là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì vị thế và được tính vào lợi nhuận dự kiến của vị thế."
+
 }

@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import FuturesRecordTableTab, { FUTURES_RECORD_CODE } from 'components/screens/Futures/TradeRecord/RecordTableTab';
-import FuturesOrderHistory from 'components/screens/Futures/TradeRecord/OrderHistory';
 import FuturesTradeHistory from 'components/screens/Futures/TradeRecord/TradeHistory';
 import FuturesPosition from 'components/screens/Futures/TradeRecord/Position';
 import CheckBox from 'components/common/CheckBox';
-import FuturesOpenOrders from 'components/screens/Futures/TradeRecord/OpenOrders';
 import FuturesTxHistory from 'components/screens/Futures/TradeRecord/TxHistory';
 import FuturesAssets from 'components/screens/Futures/TradeRecord/Assets';
 import FuturesOpenOrdersVndc from 'components/screens/Futures/PlaceOrder/Vndc/OpenOrdersVndc';
@@ -14,42 +12,52 @@ import { getLoginUrl } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 
-const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice, isAuth, pair, }) => {
-    const ordersList = useSelector(state => state?.futures?.ordersList)
+const FuturesTradeRecord = ({
+    isVndcFutures,
+    layoutConfig,
+    pairConfig,
+    pairPrice,
+    isAuth,
+    pair,
+}) => {
+    const ordersList = useSelector(state => state?.futures?.ordersList);
     const router = useRouter();
-    const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.openOrders)
-    const [hideOther, setHideOther] = useState(false)
+    const [tabActive, setTabActive] = useState(FUTURES_RECORD_CODE.openOrders);
+    const [hideOther, setHideOther] = useState(false);
     const [pickedTime, setPickedTime] = useState({
         [FUTURES_RECORD_CODE.openOrders]: null,
         [FUTURES_RECORD_CODE.orderHistory]: null,
+        [FUTURES_RECORD_CODE.information]: null,
         [FUTURES_RECORD_CODE.tradingHistory]: null,
         [FUTURES_RECORD_CODE.txHistory]: null,
         [FUTURES_RECORD_CODE.orderHistoryVndc]: null,
-    })
-    const [forceUpdateState, setForceUpdateState] = useState(0)
-    const tableRef = useRef(null)
+    });
+    const [forceUpdateState, setForceUpdateState] = useState(0);
+    const tableRef = useRef(null);
     const { t } = useTranslation();
 
     // ? Helper
-    const onChangeTab = (tab) => tab !== tabActive && setTabActive(tab)
+    const onChangeTab = (tab) => tab !== tabActive && setTabActive(tab);
 
-    const hideOtherToggle = () => setHideOther((prevState) => !prevState)
+    const hideOtherToggle = () => setHideOther((prevState) => !prevState);
 
     const onForceUpdate = () =>
-        setForceUpdateState((prevState) => (prevState > 15 ? 0 : prevState + 1))
+        setForceUpdateState((prevState) => (prevState > 15 ? 0 : prevState + 1));
 
     const onChangeTimePicker = (field, nextPickedTime) =>
-        setPickedTime({ ...pickedTime, [field]: nextPickedTime })
-
+        setPickedTime({
+            ...pickedTime,
+            [field]: nextPickedTime
+        });
 
     useEffect(() => {
         if (tableRef?.current?.clientHeight) {
             // console.log('Re-calculate height ')
-            const tableHeight = tableRef.current.clientHeight - 42
+            const tableHeight = tableRef.current.clientHeight - 42;
             const tableHeaderElement =
-                document.getElementsByClassName('rdt_TableHead')?.[0]
+                document.getElementsByClassName('rdt_TableHead')?.[0];
             const tableBodyElement =
-                document.getElementsByClassName('rdt_TableBody')?.[0]
+                document.getElementsByClassName('rdt_TableBody')?.[0];
 
             if (tableHeight && tableHeaderElement && tableBodyElement) {
                 if (
@@ -60,28 +68,28 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                 ) {
                     let offsetH = 32;
                     if (tabActive === FUTURES_RECORD_CODE.orderHistory) {
-                        offsetH += 56
+                        offsetH += 56;
                     }
                     if (tabActive === FUTURES_RECORD_CODE.openOrders) {
                         offsetH += layoutConfig?.w < 15 ? 10 : 5;
                     }
-                    tableBodyElement.style.height = `${tableHeight - tableHeaderElement?.clientHeight - 15 - offsetH}px`
+                    tableBodyElement.style.height = `${tableHeight - tableHeaderElement?.clientHeight - 15 - offsetH}px`;
 
                 } else {
                     tableBodyElement.style.maxHeight = `${tableHeight - tableHeaderElement?.clientHeight - 15
-                        }px`
+                    }px`;
                 }
             }
         }
-    }, [layoutConfig?.h, tableRef, tabActive, forceUpdateState])
+    }, [layoutConfig?.h, tableRef, tabActive, forceUpdateState]);
 
     const onLogin = () => {
-        router.push(getLoginUrl('sso'))
-    }
+        router.push(getLoginUrl('sso'));
+    };
 
     return (
-        <div ref={tableRef} className='h-full flex flex-col overflow-y-hidden'>
-            <div className='min-h-[42px] px-5 flex items-center border-b border-divider dark:border-divider-dark'>
+        <div ref={tableRef} className="flex flex-col h-full overflow-y-hidden">
+            <div className="min-h-[42px] px-5 flex items-center border-b border-divider dark:border-divider-dark">
                 <FuturesRecordTableTab
                     tabActive={tabActive}
                     onChangeTab={onChangeTab}
@@ -89,17 +97,17 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                     countOrders={ordersList.length}
                 />
                 <div
-                    className='flex items-center text-sm font-medium select-none cursor-pointer'
+                    className="flex items-center text-sm font-medium cursor-pointer select-none"
                     onClick={hideOtherToggle}
                 >
-                    <CheckBox active={hideOther} />{' '}
-                    <span className='ml-1 whitespace-nowrap text-gray dark:text-txtSecondary-dark font-medium'>
+                    <CheckBox active={hideOther}/>{' '}
+                    <span className="ml-1 font-medium whitespace-nowrap text-gray dark:text-txtSecondary-dark">
                         {t('futures:hide_other_symbols')}
                     </span>
                 </div>
             </div>
-            <div className='flex-grow'>
-                <div className='custom_trading_record h-full overflow-auto'>
+            <div className="flex-grow">
+                <div className="h-full overflow-auto custom_trading_record">
                     {tabActive === FUTURES_RECORD_CODE.position && !isVndcFutures && (
                         <FuturesPosition
                             pairConfig={pairConfig}
@@ -127,8 +135,8 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                             pairPrice={pairPrice}
                             pickedTime={
                                 pickedTime?.[
-                                FUTURES_RECORD_CODE.orderHistoryVndc
-                                ]
+                                    FUTURES_RECORD_CODE.orderHistoryVndc
+                                    ]
                             }
                             onChangeTimePicker={onChangeTimePicker}
                             isAuth={isAuth}
@@ -156,13 +164,13 @@ const FuturesTradeRecord = ({ isVndcFutures, layoutConfig, pairConfig, pairPrice
                         />
                     )}
                     {tabActive === FUTURES_RECORD_CODE.assets && !isVndcFutures && (
-                        <FuturesAssets pairConfig={pairConfig} />
+                        <FuturesAssets pairConfig={pairConfig}/>
                     )}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export const customTableStyles = {
     headCells: {
@@ -175,6 +183,6 @@ export const customTableStyles = {
             marginBottom: '8px',
         },
     },
-}
+};
 
-export default FuturesTradeRecord
+export default FuturesTradeRecord;

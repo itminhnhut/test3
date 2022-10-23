@@ -33,6 +33,7 @@ export const FUTURES_RECORD_CODE = {
     tradingHistory: 'tradingHistory',
     txHistory: 'txHistory',
     assets: 'assets',
+    information: 'information'
 }
 
 export const RECORD_TAB_VNDC = [
@@ -61,6 +62,12 @@ export const RECORD_TAB_VNDC_MOBILE = [
         key: 1,
         code: FUTURES_RECORD_CODE.openOrders,
         title: 'futures:open_orders',
+        localized: null,
+    },
+    {
+        key: 4,
+        code: FUTURES_RECORD_CODE.information,
+        title: 'futures:order_information',
         localized: null,
     },
     {

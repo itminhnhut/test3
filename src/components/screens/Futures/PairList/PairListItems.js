@@ -14,68 +14,71 @@ import { roundTo } from 'round-to';
 import Star from 'components/svg/Star';
 import colors from 'styles/colors';
 import { favoriteAction } from 'redux/actions/user';
-import { TRADING_MODE } from 'src/redux/actions/const';
+import { TRADING_MODE } from 'redux/actions/const';
 import { getFuturesFavoritePairs } from '../../../../redux/actions/futures';
 
-const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite, isAuth }) => {
-    const [pairTicker, setPairTicker] = useState(null)
+const FuturesPairListItems = ({
+    pairConfig,
+    changePercent24h,
+    isDark,
+    isFavorite,
+    isAuth,
+    onSelectPair = null
+}) => {
+    const [pairTicker, setPairTicker] = useState(null);
     const dispatch = useDispatch();
-    const publicSocket = useSelector((state) => state.futures.publicSocket)
-    const marketWatch = useSelector((state) => state.futures.marketWatch)
+    const publicSocket = useSelector((state) => state.futures.publicSocket);
+    const marketWatch = useSelector((state) => state.futures.marketWatch);
 
-    const prevLastPrice = usePrevious(pairTicker?.lastPrice)
-    const prev24hChangePercent = usePrevious(pairTicker?.priceChangePercent)
+    const prevLastPrice = usePrevious(pairTicker?.lastPrice);
+    const prev24hChangePercent = usePrevious(pairTicker?.priceChangePercent);
 
-    const router = useRouter()
+    const router = useRouter();
 
-    const onReceiveTicker = debounce((ticker) => setPairTicker(ticker), 1000)
+    const onReceiveTicker = debounce((ticker) => setPairTicker(ticker), 1000);
     const isClickFavorite = useRef(false);
 
     const handleSetFavorite = async () => {
         isClickFavorite.current = true;
-        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset)
-        dispatch(getFuturesFavoritePairs())
+        await favoriteAction(
+            isFavorite ? 'delete' : 'put',
+            TRADING_MODE.FUTURES,
+            pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset
+        );
+        dispatch(getFuturesFavoritePairs());
         isClickFavorite.current = false;
-    }
+    };
 
     const renderContract = useCallback(() => {
         return (
-            <div style={{ flex: '1 1 0%' }} className='flex items-center'>
-                {isAuth &&
+            <div style={{ flex: '1 1 0%' }} className="flex items-center">
+                {isAuth && (
                     <Star
                         onClick={handleSetFavorite}
                         size={14}
-                        fill={isFavorite
-                            ? colors.yellow
-                            : isDark
-                                ? colors.darkBlue5
-                                : colors.grey2
-                        }
-                        className='cursor-pointer mr-[10px]'
+                        fill={isFavorite ? colors.yellow : isDark ? colors.darkBlue5 : colors.grey2}
+                        className="cursor-pointer mr-[10px]"
                     />
-                }
+                )}
                 <div></div> {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
             </div>
-        )
-    }, [pairConfig?.pair, isFavorite])
+        );
+    }, [pairConfig?.pair, isFavorite]);
 
     const renderLastPrice = useCallback(() => {
         return (
             <div
                 style={{ flex: '1 1 0%' }}
                 className={classNames('justify-end text-right text-dominant', {
-                    '!text-red': pairTicker?.lastPrice < prevLastPrice,
+                    '!text-red': pairTicker?.lastPrice < prevLastPrice
                 })}
             >
                 {pairTicker?.lastPrice
-                    ? formatNumber(
-                        pairTicker?.lastPrice,
-                        pairConfig?.pricePrecision
-                    )
+                    ? formatNumber(pairTicker?.lastPrice, pairConfig?.pricePrecision)
                     : '--'}
             </div>
-        )
-    }, [pairTicker?.lastPrice, prevLastPrice])
+        );
+    }, [pairTicker?.lastPrice, prevLastPrice]);
 
     const render24hChange = useCallback(() => {
         return (
@@ -84,38 +87,34 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
                 className={classNames(
                     'justify-end text-right text-dominant', //text-darkBlue-5 dark:text-darkBlue-5
                     {
-                        '!text-red': pairTicker?.priceChangePercent < 0,
+                        '!text-red': pairTicker?.priceChangePercent < 0
                     }
                 )}
             >
                 {pairTicker?.priceChangePercent
-                    ? formatNumber(
-                        roundTo(pairTicker.priceChangePercent * 100, 2),
-                        2,
-                        2,
-                        true
-                    ) + '%'
+                    ? formatNumber(roundTo(pairTicker.priceChangePercent * 100, 2), 2, 2, true) +
+                      '%'
                     : '--'}
             </div>
-        )
-    }, [pairTicker?.priceChangePercent])
+        );
+    }, [pairTicker?.priceChangePercent]);
 
     const renderTotalVolume = useCallback(() => {
         return (
             <div
                 style={{ flex: '1 1 0%' }}
-                className='justify-end text-right text-darkBlue-5 dark:text-darkBlue-5'
+                className="justify-end text-right text-darkBlue-5 dark:text-darkBlue-5"
             >
                 {pairTicker?.priceChangePercent || '--'}
             </div>
-        )
-    }, [])
+        );
+    }, []);
 
     useEffect(() => {
         if (pairConfig?.pair && !pairTicker && marketWatch) {
-            setPairTicker(marketWatch[pairConfig?.pair])
+            setPairTicker(marketWatch[pairConfig?.pair]);
         }
-    }, [pairTicker, marketWatch, pairConfig?.pair])
+    }, [pairTicker, marketWatch, pairConfig?.pair]);
 
     useEffect(() => {
         if (pairConfig?.pair) {
@@ -123,32 +122,44 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
                 PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair,
                 async (data) => {
                     if (data) {
-                        const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset)
+                        const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
                         if (_pairTicker?.symbol === pairConfig.pair) {
-                            setPairTicker(_pairTicker)
+                            setPairTicker(_pairTicker);
                         }
                     }
                 }
-            )
+            );
         }
 
-        return () => Emitter.off(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair)
-    }, [publicSocket, pairConfig?.pair])
+        return () => Emitter.off(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair);
+    }, [publicSocket, pairConfig?.pair]);
 
     // useEffect(() => console.log('MinTicker => ', pairTicker), [pairTicker])
-
+    const handleClickItem = () => {
+        if (!isClickFavorite.current) {
+            if (isFunction(onSelectPair)) {
+                // callback function for modal trading rule 
+                onSelectPair(pairConfig?.pair);
+            } else {
+                router.push(PATHS.FUTURES_V2.DEFAULT + `/${pairConfig?.pair}`);
+            }
+        }
+        // !isClickFavorite.current && router.push(PATHS.FUTURES_V2.DEFAULT + `/${pairConfig?.pair}`); // old logic handle onClick
+    };
     return (
         <div
-            className='px-4 py-0.5 flex items-center justify-between font-medium text-xs rounded-[2px] hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer select-none'
-            onClick={() =>
-                !isClickFavorite.current && router.push(PATHS.FUTURES_V2.DEFAULT + `/${pairConfig?.pair}`)
-            }
+            className="px-4 py-0.5 flex items-center justify-between font-medium text-xs rounded-[2px] hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer select-none"
+            onClick={handleClickItem}
         >
             {renderContract()}
             {renderLastPrice()}
             {render24hChange()}
         </div>
-    )
+    );
+};
+
+function isFunction(functionToCheck) {
+    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
 
-export default FuturesPairListItems
+export default FuturesPairListItems;

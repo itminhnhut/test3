@@ -317,6 +317,13 @@ const PlaceOrderForm = ({ symbol }) => {
                             )} ${quote}`,
                         });
                         break;
+                    case ExchangeOrderEnum.Filter.MAX_TOTAL_VOLUME:
+                        content = t('error:MAX_TOTAL_VOLUME', {
+                            value: `${formatPrice(
+                                data?.notional,
+                            )} ${quote}`,
+                        });
+                        break;
                     default:
                         break;
                 }

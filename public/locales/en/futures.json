@@ -421,7 +421,6 @@
     "positions": "Positions",
     "open_orders": "Open Orders",
     "load_more": "Load more",
-    "transaction_histories": "Transaction History",
     "countdown": "Countdown",
     "funding_fee": "Funding Fee",
     "funding_rate": "Funding Rate",
@@ -463,5 +462,28 @@
         "perpetual": "Perpetual",
         "information": "Information",
         "funding_history": "Funding History"
-    }
+    },
+    "transaction_histories": "Transaction History",
+    "order_information": "Infor",
+    "trading_rules": "Trading Rule",
+    "min_order_size": "Min Trading Volume",
+    "max_order_size": "Max Trading Volume",
+    "total_max_trading_volumn": "Total Max Trading Volume",
+    "max_number_order": "Max Number Of Orders/Positions",
+    "min_limit_order_price": "Min Activation Price",
+    "max_limit_order_price": "Max Activation Price",
+    "liq_fee_rate": "Liquidation Fee Rate",
+    "max_leverage": "Max Leverage",
+    "swap_fee": "Swap Fee Rate",
+    "order": "orders",
+
+    "min_order_size_tooltips": "Minimum trading volume required to place an order.",
+    "max_order_size_tooltips": "Maximum trading volume required to place an order.",
+    "total_max_trading_volumn_tooltips": "Total maximum open trading volume of a trading pair.",
+    "max_number_order_tooltips": "Maximum number of pending orders and open positions allowed for an account.",
+    "min_limit_order_price_tooltips": "The minimum price a user can set for a pending order.",
+    "max_limit_order_price_tooltips": "The maximum price a user can set for a pending order.",
+    "liq_fee_rate_tooltips": "For each order liquidated, the liquidation fee is calculated at 1% of the volume and is paid by the Futures account balance.",
+    "max_leverage_tooltips": "Maximum leverage allowed at order opening.",
+    "swap_fee_tooltips": "For every active futures position, Nami Exchange applies a swap fee of 0.0015% of position's volume minus margin for every maintaining hour and is calculated to the position's PNL."
 }
