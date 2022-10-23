@@ -29,11 +29,11 @@ const ITEMS_WITH_TOOLTIPS = [
         tooltip: 'max_order_size_tooltips',
         leftPercent: 40
     },
-    {
-        title: 'total_max_trading_volumn',
-        tooltip: 'total_max_trading_volumn_tooltips',
-        leftPercent: 60
-    },
+    // {
+    //     title: 'total_max_trading_volumn',
+    //     tooltip: 'total_max_trading_volumn_tooltips',
+    //     leftPercent: 60
+    // },
     {
         title: 'max_number_order',
         tooltip: 'max_number_order_tooltips',
