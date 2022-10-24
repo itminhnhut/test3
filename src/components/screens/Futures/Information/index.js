@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import Tooltip from 'components/common/Tooltip';
-import { countDecimals, formatBalance, formatPrice, formatWallet, getFilter, getS3Url } from 'redux/actions/utils';
+import { countDecimals, formatFundingRate, formatNumber, formatPrice, Countdown, getFilter, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ExchangeOrderEnum, PublicSocketEvent } from 'redux/actions/const';
 import Emitter from 'redux/actions/emitter';
@@ -20,20 +20,25 @@ const getPairPrice = createSelector(
 
 const ITEMS_WITH_TOOLTIPS = [
     {
+        title: 'funding_countdown',
+        tooltip: 'funding_rate_tooltip',
+        leftPercent: 40
+    },
+    {
         title: 'min_order_size',
         tooltip: 'min_order_size_tooltips',
         leftPercent: 40
     },
     {
-        title: 'max_order_size',
-        tooltip: 'max_order_size_tooltips',
+        title: 'max_order_size_limit',
+        tooltip: 'max_order_size_limit_tooltip',
         leftPercent: 40
     },
-    // {
-    //     title: 'total_max_trading_volumn',
-    //     tooltip: 'total_max_trading_volumn_tooltips',
-    //     leftPercent: 60
-    // },
+    {
+        title: 'max_order_size_market',
+        tooltip: 'max_order_size_market_tooltip',
+        leftPercent: 60
+    },
     {
         title: 'max_number_order',
         tooltip: 'max_number_order_tooltips',
@@ -116,7 +121,10 @@ export default function OrderInformation({ pair }) {
             ExchangeOrderEnum.Filter.MAX_TOTAL_VOLUME, exchange || []);
         const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, exchange || []);
         const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, exchange || []);
-
+        const quantityFilterMarket = getFilter(
+            ExchangeOrderEnum.Filter.MARKET_LOT_SIZE,
+            exchange || []
+        );
         return {
             priceFilter,
             exchange,
@@ -124,7 +132,8 @@ export default function OrderInformation({ pair }) {
             minNotionalFilter,
             maxNumOrderFilter,
             maxNumberVolumeFilter,
-            percentPriceFilter
+            percentPriceFilter,
+            quantityFilterMarket
         };
     }, [allPairConfigs, pair]);
 
@@ -138,7 +147,7 @@ export default function OrderInformation({ pair }) {
 
     const renderContent = (title) => {
         const quoteAsset = currentExchangeConfig?.exchange?.quoteAsset || '';
-        const currentAssetConfig =  assetConfig?.find(item => item.assetCode === quoteAsset);
+        const currentAssetConfig = assetConfig?.find(item => item.assetCode === quoteAsset);
         switch (title) {
             case 'min_order_size': {
                 return formatPrice(currentExchangeConfig.minNotionalFilter?.notional,) + ' ' + quoteAsset;
@@ -153,12 +162,12 @@ export default function OrderInformation({ pair }) {
             case 'min_limit_order_price': {
                 const _minPrice = currentExchangeConfig.priceFilter?.minPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown),currentAssetConfig?.assetDigit  || 0) + ' ' + quoteAsset;
+                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown), currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
             }
             case 'max_limit_order_price': {
                 const _maxPrice = currentExchangeConfig.priceFilter?.maxPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp),currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
+                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp), currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
             }
             case 'max_leverage':
                 return (currentExchangeConfig.exchange?.leverageConfig?.max || '-') + 'x';
@@ -166,6 +175,18 @@ export default function OrderInformation({ pair }) {
                 return '1%';
             case 'swap_fee':
                 return '0.0015%';
+            case 'funding_countdown': {
+                return <div>
+                    <span>{formatFundingRate(_pairPrice?.fundingRate * 100)}</span> /
+                    <Countdown date={_pairPrice?.fundingTime} />
+                </div>;
+            }
+            case 'max_order_size_limit': {
+                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQty) + ' ' + quoteAsset;
+            }
+            case 'max_order_size_market': {
+                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQty) + ' ' + quoteAsset;
+            }
             default:
                 return '-';
         }
@@ -183,17 +204,18 @@ export default function OrderInformation({ pair }) {
                     leftPercent
                 }, index) => (
                     <div
+                        key={index}
                         className={classNames('px-3 w-full', {
                             'divide-y divide-[#36445A]': !(index === ITEMS_WITH_TOOLTIPS.length - 1)
                         })}
                     >
                         <div className="py-[13px] flex  w-full w-100">
                             <Tooltip id={title} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                     className={`!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2`}
-                                     overridePosition={(e) => ({
-                                         left: 0,
-                                         top: e.top
-                                     })}
+                                className={`!mx-7 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2`}
+                                overridePosition={(e) => ({
+                                    left: 0,
+                                    top: e.top
+                                })}
                             >
                                 <div>
                                     <label
@@ -206,7 +228,7 @@ export default function OrderInformation({ pair }) {
                                 <Label className="">
                                     {t('futures:' + title)}
                                     <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                        <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14}/>
+                                        <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
                                     </div>
                                 </Label>
                                 <Span className="">{renderContent(title)}</Span>

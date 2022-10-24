@@ -1,4 +1,4 @@
-    {
+{
     "mark_price": "Giá đánh dấu",
     "index_price": "Chỉ số",
     "funding_countdown": "Funding / Đếm ngược",
@@ -431,9 +431,9 @@
     "funding": "Funding",
     "funding_rate_tooltip": "Tỷ lệ thanh toán qua lại giữa vị thế mua (long) và vị thế bán (short) cho lần funding tiếp theo. Nếu tỷ lệ funding dương, long trả tiền cho short. Nếu âm, short trả tiền cho long.",
     "count_down": "đếm ngược",
-    "funding_history_tab":{
-        "tab_ratio_realtime":"Tỷ lệ funding theo thời gian thực",
-        "tab_history":"Lịch sử phí funding",
+    "funding_history_tab": {
+        "tab_ratio_realtime": "Tỷ lệ funding theo thời gian thực",
+        "tab_history": "Lịch sử phí funding",
 
         "find_pair": "Tìm hợp đồng",
 
@@ -468,7 +468,7 @@
     },
     "order_information": "Thông tin",
     "trading_rules": "Quy định giao dịch",
-    "min_order_size": "KL giao dịch tối thiểu",
+    "min_order_size": "KLGD tối thiểu",
     "max_order_size": "KL giao dịch tối đa",
     "total_max_trading_volumn": "Tổng KL tối đa",
     "max_number_order": "Số lượng lệnh/vị thế tối đa",
@@ -487,6 +487,9 @@
     "max_limit_order_price_tooltips": "Mức giá cao nhất người dùng có thể đặt đối với lệnh chờ.",
     "liq_fee_rate_tooltips": "Với mỗi vị thế Futures bị thanh lý, phí thanh lý được tính bằng 1% khối lượng giao dịch và được thanh toán bằng số dư tài khoản Futures.",
     "max_leverage_tooltips": "Đòn bẩy tối đa khi mở lệnh.",
-    "swap_fee_tooltips": "Với mỗi vị thế Futures đang mở, Nami Exchange áp dụng mức phí duy trì vị thế là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì vị thế và được tính vào lợi nhuận dự kiến của vị thế."
-
+    "swap_fee_tooltips": "Với mỗi vị thế Futures đang mở, Nami Exchange áp dụng mức phí duy trì vị thế là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì vị thế và được tính vào lợi nhuận dự kiến của vị thế.",
+    "max_order_size_limit": "KLGD tối đa lệnh giới hạn",
+    "max_order_size_limit_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh giới hạn.",
+    "max_order_size_market": "KLGD tối đa cho lệnh thị trường",
+    "max_order_size_market_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh thị trường và stop market."
 }

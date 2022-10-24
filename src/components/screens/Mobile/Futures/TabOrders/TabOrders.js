@@ -241,9 +241,11 @@ const TabOrders = memo(({
                                     {t('futures:hide_other_symbols')}
                                 </span>
                 </div>}
-                <TabContent active={tab === FUTURES_RECORD_CODE.information}>
-                    <OrderInformation pair={pair} />
-                </TabContent>
+                {tab === FUTURES_RECORD_CODE.information &&
+                    <TabContent active={tab === FUTURES_RECORD_CODE.information}>
+                        <OrderInformation pair={pair} />
+                    </TabContent>
+                }
                 <TabContent
                     active={tab === FUTURES_RECORD_CODE.openOrders || tab === FUTURES_RECORD_CODE.position}>
                     <TabOpenOrders

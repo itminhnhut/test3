@@ -109,14 +109,15 @@ const OrderDetail = ({
         }
     };
 
-    const renderFee = (order, key) => {
+    const renderFee = (order, key, negative = false) => {
         if (!order) return '-';
         const currency = order?.fee_metadata[key]?.currency ?? order?.margin_currency
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
         const decimal = currency === 72 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : get(order, key, 0);
-        return data ? (data < 0 ? '-' : '') + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
+        const prefix = negative ? (data < 0 ? '-' : '+') : ''
+        return data ? prefix + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
 
     };
 
@@ -743,7 +744,7 @@ const OrderDetail = ({
                                 <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20} />
                             </div>
                         </Label>
-                        <Span>{renderFee(order, 'funding_fee.total')}</Span>
+                        <Span className={order?.funding_fee?.total > 0 ? 'text-onus-green' : 'text-onus-red'}>{renderFee(order, 'funding_fee.total', true)}</Span>
                     </Row>
                 </>
                 }

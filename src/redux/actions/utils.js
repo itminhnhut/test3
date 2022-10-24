@@ -992,7 +992,7 @@ export const getSuggestTp = (side, activePrice = 0, leverage = 10, profitRatio =
 }
 
 
-export const Countdown = ({ date, onEnded }) => {
+export const Countdown = ({ date, onEnded, isDays = false }) => {
     const timer = useRef(null)
     const [count, setCount] = useState({
         days: 0,
@@ -1002,7 +1002,7 @@ export const Countdown = ({ date, onEnded }) => {
     })
 
     const formatN = (number) => {
-        return number > 0 ? number > 9 ? number : `0${number}` : 0
+        return number > 9 ? number : `0${number}`
     }
 
     const startCountDown = (date) => {
@@ -1034,7 +1034,11 @@ export const Countdown = ({ date, onEnded }) => {
 
     return (
         <>
-            {count?.days ? count?.days + 'D' : ''} {count?.hours}:{count?.minutes}:{count?.seconds}
+            {isDays ? count?.days + 'D' : ''} {count?.hours}:{count?.minutes}:{count?.seconds}
         </>
     )
+}
+
+export const formatFundingRate = (value) => {
+    return (value ? (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) : 0) + '%'
 }

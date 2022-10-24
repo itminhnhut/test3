@@ -485,5 +485,9 @@
     "max_limit_order_price_tooltips": "The maximum price a user can set for a pending order.",
     "liq_fee_rate_tooltips": "For each order liquidated, the liquidation fee is calculated at 1% of the volume and is paid by the Futures account balance.",
     "max_leverage_tooltips": "Maximum leverage allowed at order opening.",
-    "swap_fee_tooltips": "For every active futures position, Nami Exchange applies a swap fee of 0.0015% of position's volume minus margin for every maintaining hour and is calculated to the position's PNL."
+    "swap_fee_tooltips": "For every active futures position, Nami Exchange applies a swap fee of 0.0015% of position's volume minus margin for every maintaining hour and is calculated to the position's PNL.",
+    "max_order_size_limit": "Max Limit Order Volume",
+    "max_order_size_limit_tooltip": "Maximum trading volume required to place an Limit order.",
+    "max_order_size_market": "Max Market Order Volume",
+    "max_order_size_market_tooltip": "Maximum trading volume required to place an Market or Stop Market order."
 }

@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, formatTime } from 'redux/actions/utils';
+import { formatNumber, formatTime, formatFundingRate } from 'redux/actions/utils';
 import useWindowSize from 'hooks/useWindowSize';
 import classNames from 'classnames';
 import { ChevronDown, Search, X } from 'react-feather';
@@ -309,10 +309,6 @@ export default function FundingHistoryTable({ currency }) {
     const fundingRate = useMemo(() => {
         return data.dataSource.length > 0 ? data.dataSource[0].lastFundingRate : 0
     }, [data])
-
-    const formatFundingRate = (value) => {
-        return (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) + '%'
-    }
 
     return (
         <div className={`dark:bg-[#071026] p-4 lg:p-12 pt-0`}>
