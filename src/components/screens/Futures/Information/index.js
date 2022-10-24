@@ -182,10 +182,10 @@ export default function OrderInformation({ pair }) {
                 </div>;
             }
             case 'max_order_size_limit': {
-                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQty) + ' ' + quoteAsset;
+                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQty * _pairPrice?.lastPrice) + ' ' + quoteAsset;
             }
             case 'max_order_size_market': {
-                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQty) + ' ' + quoteAsset;
+                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQty * _pairPrice?.lastPrice) + ' ' + quoteAsset;
             }
             default:
                 return '-';
