@@ -116,7 +116,7 @@ const OrderDetail = ({
         const decimal = currency === 72 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : get(order, key, 0);
-        return data ? (data < 0 ? '' : '-') + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
+        return data ? (data < 0 ? '-' : '') + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
 
     };
 
