@@ -296,6 +296,7 @@ const TransactionDetail = ({ t, visible, onClose, transaction, assetConfig = {} 
     const orderId = getOrderIdFromNote(transaction?.note) || '--'
     const assetDigit = assetConfig?.assetDigit ?? 0;
     const isUSDT = assetConfig.assetCode === 'USDT';
+    const decimal = transaction?.category === TransactionCategory.FUTURE_FUNDING_FEE ? (isUSDT ? 6 : 4) : (isUSDT ? assetDigit + 2 : assetDigit)
     const _renderCategory = (item) => {
         if (!item) return '-'
         const note = (item.note).toLowerCase()
@@ -322,7 +323,7 @@ const TransactionDetail = ({ t, visible, onClose, transaction, assetConfig = {} 
                 {/* {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'} */}
             </div>
             <div className="text-2xl font-bold">
-                <span>{transaction?.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(transaction?.money_use), isUSDT ? assetDigit + 2 : assetDigit, null)}</span>
+                <span>{transaction?.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(transaction?.money_use), decimal, null)}</span>
                 <span className="ml-1">{assetConfig.assetCode}</span>
             </div>
         </div>
