@@ -23,7 +23,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
 
     useEffect(() => {
         getRanks(tab);
-    }, [])
+    }, [contest_id])
 
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
@@ -92,15 +92,17 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
 
     return (
         <section className="contest_individual_ranks pt-[4.125rem]">
-            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
-                backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-personal-rank" >
-                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) }} >
-                </div>
-            </Tooltip>
+            {minVolumeInd &&
+                <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
+                    backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-personal-rank" >
+                    <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: minVolumeInd?.isHtml ? t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) : minVolumeInd[language] }} >
+                    </div>
+                </Tooltip>
+            }
             <div className="flex justify-between flex-wrap gap-4">
                 <div className="flex items-center space-x-4">
                     <TextLiner>{t('nao:contest:individual_ranking')}</TextLiner>
-                    <img data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer" src={getS3Url('/images/nao/ic_info.png')} width="20" height="20" alt="" />
+                    {minVolumeInd && <img data-tip={''} data-for="tooltip-personal-rank" className="cursor-pointer" src={getS3Url('/images/nao/ic_info.png')} width="20" height="20" alt="" />}
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                     <ButtonNao

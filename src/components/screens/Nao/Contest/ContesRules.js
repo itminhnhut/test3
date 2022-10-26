@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import { ButtonNao, CardNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 
@@ -8,6 +8,8 @@ import { useRouter } from 'next/router';
 import { Popover, Transition } from '@headlessui/react';
 import { Check } from 'react-feather';
 import colors from 'styles/colors';
+import orderBy from 'lodash/orderBy'
+import slice from 'lodash/slice'
 
 const ContesRules = ({ inHome = false, previous, season, start, end, seasons, title, rules, total_rewards, title_detail }) => {
     const { t, i18n: { language } } = useTranslation();
@@ -69,8 +71,23 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
         }
     };
 
+    const array_move = (arr, old_index, new_index) => {
+        if (new_index >= arr.length) {
+            var k = new_index - arr.length + 1;
+            while (k--) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+        return arr;
+    };
+
     const current = seasons[seasons.length - 1];
-    // const seasonsFilter = seasons?.filter(e => e?.season !== current?.season);
+    const seasonsFilter = useMemo(() => {
+        const dataFilter = orderBy(seasons, 'season', 'desc')
+        const active = dataFilter.findIndex(rs => rs.active)
+        return array_move(dataFilter, active, 0)
+    }, [seasons])
 
     return (
         <section
@@ -89,7 +106,7 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
                             :
                             <ButtonNao onClick={() => router.push(rules)} className='px-[18px] text-sm font-semibold w-max !rounded-md'>{t('nao:contest:detail_rules')}</ButtonNao>
                     }
-                    <DropdownPreSeason t={t} language={language} seasonsFilter={seasons} router={router} season={season} />
+                    <DropdownPreSeason t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
                     <CardNao customHeight={'sm:min-h-[40px] lg:min-h-[40] min-h-[50px]'} noBg
                         className="flex !flex-row !justify-center md:!justify-start !py-3 items-center gap-3 sm:!bg-none flex-wrap">
                         {renderCountDown()}

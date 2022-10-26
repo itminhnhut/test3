@@ -22,7 +22,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
 
     useEffect(() => {
         getRanks(tab);
-    }, [])
+    }, [contest_id])
 
     useEffect(() => {
         const queryString = window.location.search;
@@ -97,15 +97,16 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
 
     return (
         <section className="contest_individual_ranks pt-[4.125rem]">
-            <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
+            {minVolumeTeam && <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
                 backgroundColor={colors.nao.tooltip} arrowColor="transparent" id="tooltip-team-rank" >
-                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: t('nao:contest:tooltip_team', { value: minVolumeTeam[language] }) }}>
+                <div className="font-medium text-sm text-nao-grey2 " dangerouslySetInnerHTML={{ __html: minVolumeTeam?.isHtml ? t('nao:contest:tooltip_team', { value: minVolumeTeam[language] }) : minVolumeTeam[language] }}>
                 </div>
             </Tooltip>
+            }
             <div className="flex justify-between flex-wrap gap-4">
                 <div className="flex items-center space-x-4">
                     <TextLiner>{t('nao:contest:team_ranking')}</TextLiner>
-                    <img data-tip={''} data-for="tooltip-team-rank" className="cursor-pointer" src={getS3Url('/images/nao/ic_info.png')} width="20" height="20" alt="" />
+                    {minVolumeTeam && <img data-tip={''} data-for="tooltip-team-rank" className="cursor-pointer" src={getS3Url('/images/nao/ic_info.png')} width="20" height="20" alt="" />}
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                     <ButtonNao

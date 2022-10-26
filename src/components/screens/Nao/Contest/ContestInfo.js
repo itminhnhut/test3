@@ -26,7 +26,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
         if (user) {
             getData();
         }
-    }, [user]);
+    }, [user, contest_id]);
 
     const getData = async (day) => {
         try {
