@@ -68,7 +68,8 @@ const FuturesPairDetail = ({
     const pairListModalRef = useRef();
     const prevLastPrice = usePrevious(pairPrice?.lastPrice);
     const prevLastPriceModal = usePrevious(priceFromMarketWatch?.lastPrice);
-
+    const [currentTheme] = useDarkMode();
+    
     const currentExchangeConfig = useMemo(() => {
         if (!currentSelectedPair && !currentSelectedPair?.symbol) return;
         const symbol = currentSelectedPair?.symbol || currentSelectedPair;
@@ -202,7 +203,7 @@ const FuturesPairDetail = ({
 
             return (
                 <div key={`markPrice_items_${key}`} style={{ minWidth }}>
-                    <FuturesPairDetailItem containerClassName="" label={localized} value={value}/>
+                    <FuturesPairDetailItem containerClassName="" label={localized} value={value} />
                 </div>
             );
         });
@@ -236,7 +237,7 @@ const FuturesPairDetail = ({
                 case 'fundingCountdown':
                     value = <div>
                         <span>{pairPrice?.fundingRate ? formatNumber(pairPrice?.fundingRate * 100, 4, 0, true) : 0}%</span> / <Countdown
-                        date={pairPrice?.fundingTime}/></div>;
+                            date={pairPrice?.fundingTime} /></div>;
                     break;
                 case '24hHigh':
                     value = formatNumber(
@@ -487,6 +488,10 @@ const FuturesPairDetail = ({
             ));
         };
 
+        const onViewAll = () => {
+            window.open(`/${router.locale}/futures/trading-rule?theme=${currentTheme}`)
+        }
+
         return (
             <Modal
                 isVisible={isShowModalInfo}
@@ -580,6 +585,9 @@ const FuturesPairDetail = ({
                     <div className={'flex flex-1 flex-col pl-4'}>
                         {renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}
                     </div>
+                </div>
+                <div onClick={onViewAll} className="text-sm h-11 rounded-md bg-teal w-full mt-6 flex items-center justify-center font-medium cursor-pointer">
+                    {t('futures:view_all_trading_rule')}
                 </div>
             </Modal>
         );
@@ -688,16 +696,16 @@ const PopoverFunding = () => {
     return (
         <>
             <div className="cursor-pointer min-w-[10px]" onClick={() => setShowModal(true)}>
-                <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10}/>
+                <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
             </div>
             <Modal isVisible={showModal} onBackdropCb={onClose} containerClassName="max-w-[342px]"
             >
                 <div className="font-semibold">{t('futures:funding_countdown')}</div>
                 <div className="text-gray4 text-sm pt-4"> {t('futures:funding_rate_des')} <span onClick={onDetail}
-                                                                                                className="text-teal font-semibold cursor-pointer">{t('common:read_more')}</span>
+                    className="text-teal font-semibold cursor-pointer">{t('common:read_more')}</span>
                 </div>
                 <div onClick={onRedirect}
-                     className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center">{t('futures:funding_history')}</div>
+                    className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center">{t('futures:funding_history')}</div>
             </Modal>
         </>
     );
@@ -708,7 +716,7 @@ const PAIR_PRICE_DETAIL_ITEMS = [
         key: 2,
         code: 'fundingCountdown',
         localized: 'futures:funding_countdown',
-        icon: <PopoverFunding/>
+        icon: <PopoverFunding />
     },
     {
         key: 3,

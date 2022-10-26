@@ -1,8 +1,6 @@
 import dynamic from 'next/dynamic';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { FUTURES_DEFAULT_SYMBOL } from './index';
-import LayoutMobile from 'components/common/layouts/LayoutMobile';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 const FuturesComponent = dynamic(() => import('components/screens/Futures/futures'), {
     ssr: false
@@ -10,15 +8,24 @@ const FuturesComponent = dynamic(() => import('components/screens/Futures/future
 const FundingHistory = dynamic(() => import('components/screens/Futures/FundingHistory'), {
     ssr: false
 });
+const TradingRule = dynamic(() => import('components/screens/Futures/TradingRule/TradingRule'), {
+    ssr: false
+});
 
 const Futures = ({ params }) => {
-    if (!params?.pair || params?.pair === 'funding-history') {
-        return <FundingHistory />
+    switch (params?.pair) {
+        case 'funding-history':
+            return <FundingHistory />
+        case 'trading-rule':
+            return <TradingRule />
+        default:
+            return <FuturesComponent />;
     }
-    return <FuturesComponent />;
 };
 
-export const getStaticProps = async ({ locale, params }) => {
+
+
+export const getServerSideProps = async ({ locale, params }) => {
     return {
         props: {
             ...(await serverSideTranslations(locale, [
@@ -35,11 +42,11 @@ export const getStaticProps = async ({ locale, params }) => {
     };
 };
 
-export const getStaticPaths = async () => {
-    return {
-        paths: [{ params: { pair: FUTURES_DEFAULT_SYMBOL } }],
-        fallback: true
-    };
-};
+// export const getStaticPaths = async () => {
+//     return {
+//         paths: [{ params: { pair: FUTURES_DEFAULT_SYMBOL } }],
+//         fallback: true
+//     };
+// };
 
 export default Futures;

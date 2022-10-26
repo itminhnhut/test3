@@ -1,14 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import Tooltip from 'components/common/Tooltip';
 import { countDecimals, formatFundingRate, formatNumber, formatPrice, Countdown, getFilter, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
-import { ExchangeOrderEnum, PublicSocketEvent } from 'redux/actions/const';
-import Emitter from 'redux/actions/emitter';
-import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import { ExchangeOrderEnum } from 'redux/actions/const';
 import styled from 'styled-components';
 import { createSelector } from 'reselect';
+import { useRouter } from 'next/router'
 
 const getPairPrice = createSelector(
     [
@@ -72,6 +71,7 @@ const ITEMS_WITH_TOOLTIPS = [
 ];
 
 export default function OrderInformation({ pair }) {
+    const router = useRouter()
     const { t } = useTranslation();
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const assetConfig = useSelector(state => state.utils.assetConfig);
@@ -192,6 +192,10 @@ export default function OrderInformation({ pair }) {
         }
     };
 
+    const onViewAll = () => {
+        window.open(`/${router.locale}/futures/trading-rule?theme=dark&source=app`)
+    }
+
     return (
         <div className={'py-4 px-4'}>
             <p className="text-lg my-4 leading-6 font-semibold">
@@ -238,6 +242,7 @@ export default function OrderInformation({ pair }) {
                     </div>
                 ))}
             </div>
+            <div onClick={onViewAll} className="text-onus-base text-sm font-medium mt-6">{t('futures:view_all_trading_rule')}</div>
         </div>
     );
 }

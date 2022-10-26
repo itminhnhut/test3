@@ -491,5 +491,6 @@
     "max_order_size_limit": "KLGD tối đa lệnh giới hạn",
     "max_order_size_limit_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh giới hạn.",
     "max_order_size_market": "KLGD tối đa cho lệnh thị trường",
-    "max_order_size_market_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh thị trường và stop market."
+    "max_order_size_market_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh thị trường và stop market.",
+    "view_all_trading_rule": "Xem tất cả quy tắc giao dịch của các cặp giao dịch"
 }

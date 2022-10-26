@@ -4,7 +4,7 @@ import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 
-const Tooltip = ({ children, ...restProps }) => {
+const Tooltip = ({ children, arrowColor, ...restProps }) => {
     const [currentTheme] = useDarkMode()
     const ref = useRef()
 
@@ -13,7 +13,7 @@ const Tooltip = ({ children, ...restProps }) => {
             <ReactTooltip
                 ref={ref}
                 className='!text-txtPrimary dark:!text-txtPrimary-dark !bg-gray-3 dark:!bg-darkBlue-4 !rounded-lg !opacity-100'
-                arrowColor={
+                arrowColor={arrowColor ? arrowColor :
                     currentTheme === THEME_MODE.DARK
                         ? colors.darkBlue4
                         : colors.grey3
