@@ -8,7 +8,8 @@ import {
     getDecimalScale,
     getFilter,
     getS3Url,
-    secondToMinutesAndSeconds
+    secondToMinutesAndSeconds,
+    formatFundingRate
 } from 'redux/actions/utils';
 import { usePrevious } from 'react-use';
 import { ChevronDown, X } from 'react-feather';
@@ -69,7 +70,7 @@ const FuturesPairDetail = ({
     const prevLastPrice = usePrevious(pairPrice?.lastPrice);
     const prevLastPriceModal = usePrevious(priceFromMarketWatch?.lastPrice);
     const [currentTheme] = useDarkMode();
-    
+
     const currentExchangeConfig = useMemo(() => {
         if (!currentSelectedPair && !currentSelectedPair?.symbol) return;
         const symbol = currentSelectedPair?.symbol || currentSelectedPair;
@@ -236,7 +237,7 @@ const FuturesPairDetail = ({
             switch (code) {
                 case 'fundingCountdown':
                     value = <div>
-                        <span>{pairPrice?.fundingRate ? formatNumber(pairPrice?.fundingRate * 100, 4, 0, true) : 0}%</span> / <Countdown
+                        <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> / <Countdown
                             date={pairPrice?.fundingTime} /></div>;
                     break;
                 case '24hHigh':

@@ -171,21 +171,22 @@ const TradingRule = () => {
             priceFilter, percentPriceFilter, minNotionalFilter,
             quantityFilterMarket, maxNumOrderFilter, quantityFilter
         } = general(item)
+        const decimal = currentAssetConfig?.assetDigit || 0
         switch (key) {
             case 'min_order_size':
                 return formatPrice(minNotionalFilter?.notional,) + ' ' + quoteAsset;
             case 'max_order_size_limit':
-                return lastPrice ? formatNumber(quantityFilter?.maxQty * lastPrice) + ' ' + quoteAsset : '-';
+                return lastPrice ? formatNumber(quantityFilter?.maxQty * lastPrice, decimal) + ' ' + quoteAsset : '-';
             case 'max_order_size_market':
-                return lastPrice ? formatNumber(quantityFilterMarket?.maxQty * lastPrice) + ' ' + quoteAsset : '-';
+                return lastPrice ? formatNumber(quantityFilterMarket?.maxQty * lastPrice, decimal) + ' ' + quoteAsset : '-';
             case 'max_number_order':
                 return (maxNumOrderFilter?.limit || 0) + ' ' + t('futures:order');
             case 'min_limit_order_price':
                 const _minPrice = priceFilter?.minPrice;
-                return lastPrice ? formatPrice(Math.max(_minPrice, lastPrice * percentPriceFilter?.multiplierDown), currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset : '-';
+                return lastPrice ? formatPrice(Math.max(_minPrice, lastPrice * percentPriceFilter?.multiplierDown), decimal) + ' ' + quoteAsset : '-';
             case 'max_limit_order_price':
                 const _maxPrice = priceFilter?.maxPrice;
-                return lastPrice ? formatPrice(Math.min(_maxPrice, lastPrice * percentPriceFilter?.multiplierUp), currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset : '-';
+                return lastPrice ? formatPrice(Math.min(_maxPrice, lastPrice * percentPriceFilter?.multiplierUp), decimal) + ' ' + quoteAsset : '-';
             case 'max_leverage':
                 return (item?.leverageConfig?.max || '-') + 'x';
             case 'liq_fee_rate':

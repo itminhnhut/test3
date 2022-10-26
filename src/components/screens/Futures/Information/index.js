@@ -148,6 +148,7 @@ export default function OrderInformation({ pair }) {
     const renderContent = (title) => {
         const quoteAsset = currentExchangeConfig?.exchange?.quoteAsset || '';
         const currentAssetConfig = assetConfig?.find(item => item.assetCode === quoteAsset);
+        const decimal = currentAssetConfig?.assetDigit || 0
         switch (title) {
             case 'min_order_size': {
                 return formatPrice(currentExchangeConfig.minNotionalFilter?.notional,) + ' ' + quoteAsset;
@@ -162,12 +163,12 @@ export default function OrderInformation({ pair }) {
             case 'min_limit_order_price': {
                 const _minPrice = currentExchangeConfig.priceFilter?.minPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown), currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
+                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown), decimal) + ' ' + quoteAsset;
             }
             case 'max_limit_order_price': {
                 const _maxPrice = currentExchangeConfig.priceFilter?.maxPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp), currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
+                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp), decimal) + ' ' + quoteAsset;
             }
             case 'max_leverage':
                 return (currentExchangeConfig.exchange?.leverageConfig?.max || '-') + 'x';
@@ -182,10 +183,10 @@ export default function OrderInformation({ pair }) {
                 </div>;
             }
             case 'max_order_size_limit': {
-                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQty * _pairPrice?.lastPrice) + ' ' + quoteAsset;
+                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQty * _pairPrice?.lastPrice, decimal) + ' ' + quoteAsset;
             }
             case 'max_order_size_market': {
-                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQty * _pairPrice?.lastPrice) + ' ' + quoteAsset;
+                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQty * _pairPrice?.lastPrice, decimal) + ' ' + quoteAsset;
             }
             default:
                 return '-';
