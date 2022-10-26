@@ -16,8 +16,8 @@ export const seasons = [
         contest_id: 4, button: 'nao:contest:last_season',
         title_detail: { vi: 'ONUS Futures mùa đầu tiên', en: 'ONUS Futures Trading Contest Season 1' },
         title: { vi: 'Đua TOP giao dịch ONUS Futures mùa đầu tiên', en: 'ONUS Futures Trading Contest Season 1' },
-        minVolumeInd: { vi: '1 tỷ VNDC', en: '1 billion VNDC' },
-        minVolumeTeam: { vi: '5 tỷ VNDC', en: '5 billion VNDC' },
+        minVolumeInd: { vi: '1 tỷ VNDC', en: '1 billion VNDC', isHtml: true },
+        minVolumeTeam: { vi: '5 tỷ VNDC', en: '5 billion VNDC', isHtml: true },
         rules: 'https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien',
         total_rewards: '300,000,000 VNDC', quoteAsset: 'VNDC',
         active: false
@@ -27,8 +27,8 @@ export const seasons = [
         contest_id: 5,
         title_detail: { vi: 'ONUS Futures mùa hai', en: 'ONUS Futures Trading Contest Season 2' },
         title: { vi: 'Đua TOP giao dịch ONUS Futures mùa hai', en: 'ONUS Futures Trading Contest Season 2' },
-        minVolumeInd: { vi: '10 tỷ VNDC', en: '10 billion VNDC' },
-        minVolumeTeam: { vi: '50 tỷ VNDC', en: '50 billion VNDC' },
+        minVolumeInd: { vi: '10 tỷ VNDC', en: '10 billion VNDC', isHtml: true },
+        minVolumeTeam: { vi: '50 tỷ VNDC', en: '50 billion VNDC', isHtml: true },
         rules: 'https://goonus.io/onus-x-nami-dua-top-giao-dich-onus-futures-mua-02',
         total_rewards: '300,000,000 VNDC', quoteAsset: 'VNDC',
         active: false
@@ -38,8 +38,8 @@ export const seasons = [
         contest_id: 6,
         title_detail: { vi: 'ONUS Futures USDT – Nami Championship mùa 1', en: 'ONUS Futures USDT – Nami Championship Season 1' },
         title: { vi: 'Giải đấu ONUS Futures USDT – Nami Championship mùa 1', en: 'ONUS Futures USDT – Nami Championship Season 1' },
-        minVolumeInd: { vi: '50,000 USDT', en: '50,000 USDT' },
-        minVolumeTeam: { vi: '50,000 USDT', en: '50,000 USDT' },
+        minVolumeInd: { vi: '50,000 USDT', en: '50,000 USDT', isHtml: true },
+        minVolumeTeam: { vi: '50,000 USDT', en: '50,000 USDT', isHtml: true },
         rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-usdt-nami-championship-mua-1',
         total_rewards: '30,000 USDT', quoteAsset: 'USDT',
         active: false
@@ -49,12 +49,27 @@ export const seasons = [
         contest_id: 7,
         title_detail: { vi: 'ONUS Futures VNDC – Nami Championship mùa 1', en: 'ONUS Futures VNDC – Nami Championship Season 1' },
         title: { vi: 'Giải đấu ONUS Futures VNDC – Nami Championship mùa 1', en: 'ONUS Futures VNDC – Nami Championship Season 1' },
-        minVolumeInd: { vi: '1 tỷ VNDC', en: '1 billion VNDC' },
-        minVolumeTeam: { vi: '10 tỷ VNDC', en: '10 billion VNDC' },
+        minVolumeInd: { vi: '1 tỷ VNDC', en: '1 billion VNDC', isHtml: true },
+        minVolumeTeam: { vi: '10 tỷ VNDC', en: '10 billion VNDC', isHtml: true },
         rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-1',
         total_rewards: '1,000,000,000 VNDC', quoteAsset: 'VNDC',
         time_to_create: { start: '2022-09-21T17:00:00.000Z', end: '2022-10-07T17:00:00.000Z' },
         active: true
+    },
+    {
+        season: 5, start: '2022-10-31T17:00:00.000Z', end: '2022-11-29T17:00:00.000Z',
+        contest_id: 8,
+        title_detail: { vi: 'ONUS Futures VNDC – Nami Championship mùa 2', en: 'ONUS Futures VNDC – Nami Championship Season 2' },
+        title: { vi: 'Giải đấu ONUS Futures VNDC – Nami Championship mùa 2', en: 'ONUS Futures VNDC – Nami Championship Season 2' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
+            en: 'Traders need to meet the Basic Conditions to be ranked. For details',
+            isHtml: false
+        },
+        rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-2',
+        total_rewards: '1,000,000,000 VNDC', quoteAsset: 'VNDC',
+        time_to_create: { start: '2022-10-25T17:00:00.000Z', end: '2022-11-09T17:00:00.000Z' },
+        active: false
     },
 ]
 
