@@ -218,7 +218,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
             </section>
             {showCreateTeamModal && <CreateTeamModal contest_id={contest_id} userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} />}
             {
-                !userData?.group_name && !previous && <div className="sm:hidden bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
+                (!userData?.group_name && !previous) && <div className="sm:hidden bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
                     <ButtonNao onClick={() => onShowCreate()} className="!rounded-md">{t('nao:contest:create_team')}</ButtonNao>
                 </div>
             }

@@ -7,7 +7,7 @@ const Contest = dynamic(() => import('components/screens/Nao/Contest/Contest'), 
 })
 const Season = ({ season }) => {
     const current = seasons.find(season => season.active)
-    return <Contest previous={current?.season !== season?.season} {...season} />
+    return <Contest previous={!season?.active} {...season} />
 };
 
 export const getServerSideProps = async (context) => {
