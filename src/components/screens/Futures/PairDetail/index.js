@@ -735,16 +735,6 @@ const PAIR_PRICE_DETAIL_ITEMS = [
         code: '24hLow',
         localized: 'futures:24h_low'
     },
-    {
-        key: 8,
-        code: '24hBaseVolume',
-        localized: 'futures:24h_volume'
-    },
-    {
-        key: 9,
-        code: '24hQuoteVolume',
-        localized: 'futures:24h_volume'
-    }
 ];
 
 const ITEMS_WITH_TOOLTIPS = [
