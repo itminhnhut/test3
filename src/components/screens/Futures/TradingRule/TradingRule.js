@@ -96,7 +96,7 @@ const TradingRule = () => {
 
     const pairConfigsFilter = useMemo(() => {
         return pairConfigs.filter(i => i.quoteAsset === tab)
-    }, [tab])
+    }, [tab, pairConfigs])
 
     const dataSource = useMemo(() => {
         let dataFilter = pairConfigsFilter
@@ -141,7 +141,7 @@ const TradingRule = () => {
                     </div>
                 </Tooltip>
                 }
-                <div className="flex items-center space-x-1 md:space-x-3">
+                <div className="text-sm flex items-center space-x-1 md:space-x-3">
                     <span>{t(title)}</span>
                     {!isMobile && <div className="min-w-[1rem]" data-tip="" data-for={title} id={tooltip}>
                         <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
@@ -213,7 +213,7 @@ const TradingRule = () => {
             {
                 key: 'symbol',
                 dataIndex: 'symbol',
-                title: t('futures:funding_history_tab:contract'),
+                title: <span className="text-sm">{t('futures:funding_history_tab:contract')}</span>,
                 align: 'left',
                 width: 250,
                 sorter: false,
@@ -227,7 +227,7 @@ const TradingRule = () => {
                     align: 'left',
                     width: c?.width ?? 180,
                     sorter: false,
-                    render: (data, item) => renderContent(c.title, item)
+                    render: (data, item) => <span className="text-sm">{renderContent(c.title, item)}</span>
                 }
             }))
 
@@ -249,7 +249,7 @@ const TradingRule = () => {
                             <div key={index}
                                 onClick={() => setTab(item.value)}
                                 className={classNames('rounded-md text-sm leading-6 font-medium cursor-pointer px-4 py-[6px] text-white',
-                                    { 'bg-teal ': tab === item.value, 'bg-darkBlue-3': tab !== item.value })}>
+                                    { 'bg-teal ': tab === item.value, 'bg-gray-3 dark:bg-darkBlue-3 text-gray dark:text-darkBlue-5': tab !== item.value })}>
                                 {item.name}
                             </div>
                         ))}

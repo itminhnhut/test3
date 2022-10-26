@@ -490,7 +490,7 @@ const FuturesPairDetail = ({
         };
 
         const onViewAll = () => {
-            window.open(`/${router.locale}/futures/trading-rule?theme=${currentTheme}`)
+            window.open(`/${router.locale}/futures/trading-rule`)
         }
 
         return (
@@ -587,7 +587,7 @@ const FuturesPairDetail = ({
                         {renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}
                     </div>
                 </div>
-                <div onClick={onViewAll} className="text-sm h-11 rounded-md bg-teal w-full mt-6 flex items-center justify-center font-medium cursor-pointer">
+                <div onClick={onViewAll} className="text-sm h-11 rounded-md bg-teal text-white w-full mt-6 flex items-center justify-center font-medium cursor-pointer">
                     {t('futures:view_all_trading_rule')}
                 </div>
             </Modal>
