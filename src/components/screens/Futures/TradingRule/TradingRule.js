@@ -12,6 +12,7 @@ import { formatNumber, formatPrice, getFilter, getS3Url } from 'redux/actions/ut
 import Tooltip from 'components/common/Tooltip';
 import { ExchangeOrderEnum } from 'redux/actions/const';
 import TableNoData from 'components/common/table.old/TableNoData';
+import Head from 'next/head';
 
 export const CURRENCIES = [
     {
@@ -240,90 +241,96 @@ const TradingRule = () => {
 
 
     return (
-        <MaldivesLayout>
-            <div className={'md:pt-10 pt-8'}>
-                <div className="flex items-center justify-between px-4 md:px-5 mb-8">
-                    <div className="md:text-[1.625rem] text-xl leading-10 font-semibold">{t('futures:trading_rules')}</div>
-                    <div className="flex items-center space-x-3">
-                        {CURRENCIES.map((item, index) => (
-                            <div key={index}
-                                onClick={() => setTab(item.value)}
-                                className={classNames('rounded-md text-sm leading-6 font-medium cursor-pointer px-4 py-[6px] text-white',
-                                    { 'bg-teal ': tab === item.value, 'bg-gray-3 dark:bg-darkBlue-3 text-gray dark:text-darkBlue-5': tab !== item.value })}>
-                                {item.name}
-                            </div>
-                        ))}
+        <>
+            <Head>
+                <meta name="viewport"
+                    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"></meta>
+            </Head>
+            <MaldivesLayout>
+                <div className={'md:pt-10 pt-8'}>
+                    <div className="flex items-center justify-between px-4 md:px-5 mb-8">
+                        <div className="md:text-[1.625rem] text-xl leading-10 font-semibold">{t('futures:trading_rules')}</div>
+                        <div className="flex items-center space-x-3">
+                            {CURRENCIES.map((item, index) => (
+                                <div key={index}
+                                    onClick={() => setTab(item.value)}
+                                    className={classNames('rounded-md text-sm leading-6 font-medium cursor-pointer px-4 py-[6px] text-white',
+                                        { 'bg-teal ': tab === item.value, 'bg-gray-3 dark:bg-darkBlue-3 text-gray dark:text-darkBlue-5': tab !== item.value })}>
+                                    {item.name}
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
-                <div className="md:mx-5 px-4 py-8 sm:p-8 lg:p-12 dark:bg-[#071026] rounded-[20px] shadow-funding">
-                    <CSearch t={t} onChange={onChangeInput} />
-                    <div className="mt-8 md:mt-6">
-                        {isMobile ?
-                            dataSource.length > 0 ?
-                                <>
-                                    <div className='divide-y divide-darkBlue-3'>
-                                        {dataSource.map((item, index) => {
-                                            const hidden = index + 1 > currentPage * limit
-                                            return (
-                                                <div key={index} className={`space-y-2 flex flex-col ${index !== 0 ? 'py-6' : 'pb-6'} ${hidden ? 'hidden' : ''}`}>
-                                                    <div>{renderLogo(item)}</div>
-                                                    <div className="text-sm font-medium space-y-2 flex flex-col ">
-                                                        {initColumns.map(c => (
-                                                            <div className="flex items-center justify-between leading-7">
-                                                                <div className="text-darkBlue-5">{renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}</div>
-                                                                <div>{renderContent(c.title, item)} </div>
-                                                            </div>
-                                                        ))}
+                    <div className="md:mx-5 px-4 py-8 sm:p-8 lg:p-12 dark:bg-[#071026] rounded-[20px] shadow-funding">
+                        <CSearch t={t} onChange={onChangeInput} />
+                        <div className="mt-8 md:mt-6">
+                            {isMobile ?
+                                dataSource.length > 0 ?
+                                    <>
+                                        <div className='divide-y divide-darkBlue-3'>
+                                            {dataSource.map((item, index) => {
+                                                const hidden = index + 1 > currentPage * limit
+                                                return (
+                                                    <div key={index} className={`space-y-2 flex flex-col ${index !== 0 ? 'py-6' : 'pb-6'} ${hidden ? 'hidden' : ''}`}>
+                                                        <div>{renderLogo(item)}</div>
+                                                        <div className="text-sm font-medium space-y-2 flex flex-col ">
+                                                            {initColumns.map(c => (
+                                                                <div className="flex items-center justify-between leading-7">
+                                                                    <div className="text-darkBlue-5">{renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}</div>
+                                                                    <div>{renderContent(c.title, item)} </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                    {totalPage > currentPage &&
-                                        <div onClick={() => setCurrentPage(currentPage + 1)}
-                                            className="text-teal text-sm font-medium underline text-center cursor-pointer">
-                                            {t('futures:load_more')}
+                                                )
+                                            })}
                                         </div>
-                                    }
-                                </>
-                                :
-                                <TableNoData title={t('common:no_data')} />
-                            :
-                            <>
-                                <ReTable
-                                    // defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                                    className="funding-table"
-                                    useRowHover
-                                    data={dataSource || []}
-                                    columns={columns}
-                                    rowKey={(item) => item?.key}
-                                    loading={!dataSource.length}
-                                    scroll={{ x: true }}
-                                    // tableStatus={}
-                                    tableStyle={{
-                                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                                        tableStyle: { minWidth: '1300px !important' },
-                                        headerStyle: { paddingTop: '8px' },
-                                        rowStyle: {},
-                                        shadowWithFixedCol: width < 1366,
-                                        noDataStyle: {
-                                            minHeight: '480px'
+                                        {totalPage > currentPage &&
+                                            <div onClick={() => setCurrentPage(currentPage + 1)}
+                                                className="text-teal text-sm font-medium underline text-center cursor-pointer">
+                                                {t('futures:load_more')}
+                                            </div>
                                         }
-                                    }}
-                                    paginationProps={{
-                                        hide: true,
-                                        current: currentPage,
-                                        pageSize: limit,
-                                        onChange: (currentPage) => setCurrentPage(currentPage)
-                                    }}
-                                />
-                                {renderPagination()}
-                            </>
-                        }
+                                    </>
+                                    :
+                                    <TableNoData title={t('common:no_data')} />
+                                :
+                                <>
+                                    <ReTable
+                                        // defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                                        className="funding-table"
+                                        useRowHover
+                                        data={dataSource || []}
+                                        columns={columns}
+                                        rowKey={(item) => item?.key}
+                                        loading={!dataSource.length}
+                                        scroll={{ x: true }}
+                                        // tableStatus={}
+                                        tableStyle={{
+                                            paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                                            tableStyle: { minWidth: '1300px !important' },
+                                            headerStyle: { paddingTop: '8px' },
+                                            rowStyle: {},
+                                            shadowWithFixedCol: width < 1366,
+                                            noDataStyle: {
+                                                minHeight: '480px'
+                                            }
+                                        }}
+                                        paginationProps={{
+                                            hide: true,
+                                            current: currentPage,
+                                            pageSize: limit,
+                                            onChange: (currentPage) => setCurrentPage(currentPage)
+                                        }}
+                                    />
+                                    {renderPagination()}
+                                </>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-        </MaldivesLayout>
+            </MaldivesLayout>
+        </>
     );
 };
 
