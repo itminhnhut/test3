@@ -82,8 +82,8 @@ const AddVolume = ({
 
     const fee = useMemo(() => {
         const _fee = order?.fee ?? 0;
-        const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
-        return funding + _fee
+        // const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
+        return _fee
     }, [order])
 
     const configSymbol = useMemo(() => {

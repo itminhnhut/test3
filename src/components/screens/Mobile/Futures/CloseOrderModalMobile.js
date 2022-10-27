@@ -150,14 +150,14 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
         const formatProfit = formatNumber(profit, configSymbol.isVndcFutures ? configSymbol.decimalSymbol : configSymbol.decimalSymbol + 2, 0, true)
         const totalPercent = (formatProfit > 0 ? '+' : '-') + formatNumber(Math.abs(profit / order?.margin) * 100, 2, 0, true)
         let est_pnl = 0;
-        const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
+        // const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
         if (type !== FuturesOrderTypes.Market) {
             const _price = +price
             const size = volume / _price;
             if (side === VndcFutureOrderType.Side.BUY) {
-                est_pnl = size * (_price - order?.open_price) - size * (_price + order?.open_price) * DefaultFuturesFee.NamiFrameOnus + funding
+                est_pnl = size * (_price - order?.open_price) - size * (_price + order?.open_price) * DefaultFuturesFee.NamiFrameOnus
             } else {
-                est_pnl = size * (order?.open_price - _price) - size * (_price + order?.open_price) * DefaultFuturesFee.NamiFrameOnus + funding
+                est_pnl = size * (order?.open_price - _price) - size * (_price + order?.open_price) * DefaultFuturesFee.NamiFrameOnus
             }
         } else {
             est_pnl = (percent / 100) * profit;
