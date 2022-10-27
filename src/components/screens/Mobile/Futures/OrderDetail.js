@@ -324,7 +324,7 @@ const OrderDetail = ({
             <>
                 <Row>
                     <Label>{t('futures:mobile:adjust_margin:adjustment_type')}</Label>
-                    <Span>{t('futures:mobile:adjust_margin:remove_margin_funding')} ({t('futures:funding_fee')})</Span>
+                    <Span>{t('futures:mobile:adjust_margin:remove_margin_funding')} <span className="lowercase">({t('futures:funding_fee')})</span></Span>
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
