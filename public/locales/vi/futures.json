@@ -290,7 +290,8 @@
             "order_completed": "Lệnh hoàn tất",
             "close_position": "Đóng lệnh",
             "pending_closed_volume": "Khối lượng chờ đóng",
-            "tooltip_pending_close_volume": "Tổng KL các lệnh đang chờ đóng một phần"
+            "tooltip_pending_close_volume": "Tổng KL các lệnh đang chờ đóng một phần",
+            "remove_margin_funding": "Bớt ký quỹ"
         },
         "transaction_histories": {
             "id": "Id",
@@ -492,5 +493,5 @@
     "max_order_size_limit_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh giới hạn.",
     "max_order_size_market": "KLGD tối đa cho lệnh thị trường",
     "max_order_size_market_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh thị trường và stop market.",
-    "view_all_trading_rule": "Xem tất cả quy tắc giao dịch của các cặp giao dịch"
+    "view_all_trading_rule": "Xem tất cả quy tắc giao dịch."
 }

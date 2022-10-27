@@ -290,7 +290,8 @@
             "order_completed": "Completed",
             "close_position": "Close Position",
             "pending_closed_volume": "Pending closed volume",
-            "tooltip_pending_close_volume": "Total pending partially closed orders"
+            "tooltip_pending_close_volume": "Total pending partially closed orders",
+            "remove_margin_funding": "Remove margin"
         },
         "transaction_histories": {
             "id": "ID",
@@ -490,5 +491,5 @@
     "max_order_size_limit_tooltip": "Maximum trading volume required to place an Limit order.",
     "max_order_size_market": "Max Market Order Volume",
     "max_order_size_market_tooltip": "Maximum trading volume required to place an Market or Stop Market order.",
-    "view_all_trading_rule": "View all trading rules of trading pairs"
+    "view_all_trading_rule": "View all trading rules."
 }
