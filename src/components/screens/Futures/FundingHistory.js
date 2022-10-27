@@ -6,12 +6,13 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
 import { WALLET_SCREENS } from 'pages/wallet';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import FundingHistoryTable from 'components/screens/Futures/FundingHistoryTabs/FundingHistoryTable';
 import { TAB_TYPE } from '../../common/Tab';
 import { isMobile } from 'react-device-detect';
+import useApp from 'hooks/useApp';
 
 export const CURRENCIES = [
     {
@@ -28,6 +29,7 @@ export default function FundingHistory(props) {
     const [currentTheme] = useDarkMode();
     const { t } = useTranslation();
     const { width } = useWindowSize();
+    const isApp = useApp()
 
     const [selectedTab, setSelectedTab] = React.useState(0);
     const [selectedCurrency, setSelectedCurrency] = React.useState(CURRENCIES[0].value);
@@ -48,6 +50,15 @@ export default function FundingHistory(props) {
             />
         );
     }, [selectedTab]);
+
+    useEffect(() => {
+        if (isApp) {
+            document.body.classList.add('hidden-scrollbar')
+        }
+        return () => {
+            document.body.classList.remove('hidden-scrollbar')
+        }
+    }, [isApp])
 
     const renderHeading = () => {
         const selectedClassName = 'text-white bg-primary-500 bg-dominant font-semibold';
@@ -91,24 +102,24 @@ export default function FundingHistory(props) {
     const Wrapper = isMobile ? MaldivesLayout : MaldivesLayout;
 
     return (
-            <Wrapper>
-                <Background isDark={currentTheme === THEME_MODE.DARK}>
-                    <div className={'lg:pt-10 pt-[34px]'}>
-                        {renderHeading()}
-                        <div className="px-4">{renderScreenTab()}</div>
-                        {/* Content Tab */}
-                        <div
-                            className="rounded-[20px] pt-[2rem] lg:pt-[3rem] shadow-funding lg:mx-4 pb-12  lg:pb-8"
-                            style={{
-                                backgroundColor:
-                                    currentTheme === THEME_MODE.DARK ? '#071026' : '#FCFCFC'
-                            }}
-                        >
-                            {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />}
-                        </div>
+        <Wrapper>
+            <Background isDark={currentTheme === THEME_MODE.DARK}>
+                <div className={'lg:pt-10 pt-[34px]'}>
+                    {renderHeading()}
+                    <div className="px-4">{renderScreenTab()}</div>
+                    {/* Content Tab */}
+                    <div
+                        className="rounded-[20px] pt-[2rem] lg:pt-[3rem] shadow-funding lg:mx-4 pb-12  lg:pb-8"
+                        style={{
+                            backgroundColor:
+                                currentTheme === THEME_MODE.DARK ? '#071026' : '#FCFCFC'
+                        }}
+                    >
+                        {selectedTab === 0 ? <FundingTab currency={selectedCurrency} /> : <FundingHistoryTable currency={selectedCurrency} />}
                     </div>
-                </Background>
-            </Wrapper>
+                </div>
+            </Background>
+        </Wrapper>
     );
 }
 

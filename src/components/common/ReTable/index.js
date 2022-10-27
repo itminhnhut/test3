@@ -93,6 +93,10 @@ const ReTable = memo(({
         })
     }
 
+    useEffect(()=>{
+      setOwnColumns(columns)
+    },[columns])
+
     // * Overriding
     const components = {
         header: {

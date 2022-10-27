@@ -1,14 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import Tooltip from 'components/common/Tooltip';
-import { countDecimals, formatFundingRate, formatNumber, formatPrice, Countdown, getFilter, getS3Url } from 'redux/actions/utils';
+import { countDecimals, formatFundingRate , formatNumber, formatPrice, Countdown, getFilter, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
-import { ExchangeOrderEnum, PublicSocketEvent } from 'redux/actions/const';
-import Emitter from 'redux/actions/emitter';
-import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import { ExchangeOrderEnum } from 'redux/actions/const';
 import styled from 'styled-components';
 import { createSelector } from 'reselect';
+import { useRouter } from 'next/router'
 
 const getPairPrice = createSelector(
     [
@@ -72,6 +71,7 @@ const ITEMS_WITH_TOOLTIPS = [
 ];
 
 export default function OrderInformation({ pair }) {
+    const router = useRouter()
     const { t } = useTranslation();
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const assetConfig = useSelector(state => state.utils.assetConfig);
@@ -148,6 +148,7 @@ export default function OrderInformation({ pair }) {
     const renderContent = (title) => {
         const quoteAsset = currentExchangeConfig?.exchange?.quoteAsset || '';
         const currentAssetConfig = assetConfig?.find(item => item.assetCode === quoteAsset);
+        const decimal = currentAssetConfig?.assetDigit || 0
         switch (title) {
             case 'min_order_size': {
                 return formatPrice(currentExchangeConfig.minNotionalFilter?.notional,) + ' ' + quoteAsset;
@@ -162,12 +163,12 @@ export default function OrderInformation({ pair }) {
             case 'min_limit_order_price': {
                 const _minPrice = currentExchangeConfig.priceFilter?.minPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown), currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
+                return formatPrice(Math.max(_minPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierDown), decimal) + ' ' + quoteAsset;
             }
             case 'max_limit_order_price': {
                 const _maxPrice = currentExchangeConfig.priceFilter?.maxPrice;
                 let _activePrice = _pairPrice?.lastPrice;
-                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp), currentAssetConfig?.assetDigit || 0) + ' ' + quoteAsset;
+                return formatPrice(Math.min(_maxPrice, _activePrice * currentExchangeConfig?.percentPriceFilter?.multiplierUp), decimal) + ' ' + quoteAsset;
             }
             case 'max_leverage':
                 return (currentExchangeConfig.exchange?.leverageConfig?.max || '-') + 'x';
@@ -182,15 +183,19 @@ export default function OrderInformation({ pair }) {
                 </div>;
             }
             case 'max_order_size_limit': {
-                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQty * _pairPrice?.lastPrice) + ' ' + quoteAsset;
+                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQty * _pairPrice?.lastPrice, decimal) + ' ' + quoteAsset;
             }
             case 'max_order_size_market': {
-                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQty * _pairPrice?.lastPrice) + ' ' + quoteAsset;
+                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQty * _pairPrice?.lastPrice, decimal) + ' ' + quoteAsset;
             }
             default:
                 return '-';
         }
     };
+
+    const onViewAll = () => {
+        window.open(`/${router.locale}/futures/trading-rule?theme=dark&source=app`)
+    }
 
     return (
         <div className={'py-4 px-4'}>
@@ -238,6 +243,7 @@ export default function OrderInformation({ pair }) {
                     </div>
                 ))}
             </div>
+            <div onClick={onViewAll} className="text-onus-base text-sm font-medium mt-6">{t('futures:view_all_trading_rule')}</div>
         </div>
     );
 }
