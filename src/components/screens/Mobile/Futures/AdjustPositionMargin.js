@@ -77,8 +77,8 @@ const calMinProfitAllow = (leverage) => {
 const calLiqPrice = (side, quantity, open_price, margin, fee, order) => {
     const size = (side === VndcFutureOrderType.Side.SELL ? -quantity : quantity)
     const number = (side === VndcFutureOrderType.Side.SELL ? -1 : 1);
-    const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
-    return (size * open_price + fee + funding - margin) / (quantity * (number - DefaultFuturesFee.NamiFrameOnus))
+    // const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
+    return (size * open_price + fee - margin) / (quantity * (number - DefaultFuturesFee.NamiFrameOnus))
 }
 
 const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) => {
@@ -247,7 +247,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                                 inputMode='decimal'
                                 allowedDecimalSeparators={[',', '.']}
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
-                                // onFocus={scrollFocusInput}
+                            // onFocus={scrollFocusInput}
                             />
                             <div
                                 className='flex items-center'

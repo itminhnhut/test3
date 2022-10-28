@@ -113,7 +113,8 @@ const OrderDetail = ({
         if (!order) return '-';
         const currency = order?.fee_metadata[key]?.currency ?? order?.margin_currency
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
-        const decimal = currency === 72 ? assetDigit : assetDigit + 2;
+        const decimalFunding = currency === 72 ? 4 : 6
+        const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : get(order, key, 0);
         const prefix = negative ? (data < 0 ? '-' : '+') : ''
@@ -214,6 +215,14 @@ const OrderDetail = ({
                         <div className="text-right">{getValue(metadata?.modify_liq_price?.after)} </div>
                     </div> : null;
                 return value;
+            case 'remove_margin_funding':
+                value = metadata?.remove_margin ?
+                    <div className="flex items-center justify-between">
+                        <div className="text-left">{getValue(metadata?.remove_margin?.before, true)}</div>
+                        &nbsp;<ArrowRight size={14} />&nbsp;
+                        <div className="text-right">{getValue(metadata?.remove_margin?.after, true)} </div>
+                    </div> : null;
+                return value;
             default:
                 return value;
         }
@@ -305,6 +314,25 @@ const OrderDetail = ({
                 <Row>
                     <Label>{t('futures:margin')}</Label>
                     <Span>{renderModify(item?.metadata, 'margin')}</Span>
+                </Row>
+            </>
+        )
+    }
+
+    const renderLogRemoveMarginFunding = (item) => {
+        return (
+            <>
+                <Row>
+                    <Label>{t('futures:mobile:adjust_margin:adjustment_type')}</Label>
+                    <Span>{t('futures:mobile:adjust_margin:remove_margin_funding')} <span className="lowercase">({t('futures:funding_fee')})</span></Span>
+                </Row>
+                <Row>
+                    <Label>{t('common:time')}</Label>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                </Row>
+                <Row>
+                    <Label>{t('futures:mobile:adjust_margin:remove_margin_funding')}</Label>
+                    <Span>{renderModify(item?.metadata, 'remove_margin_funding')}</Span>
                 </Row>
             </>
         )
@@ -838,6 +866,7 @@ const OrderDetail = ({
                                 {dataSource.map((item, index) => (
                                     <div key={index} className="bg-onus-bg3 px-3 rounded-lg mb-3">
                                         {item?.type === 'MODIFY_MARGIN' && renderLogModifyMargin(item)}
+                                        {item?.type === 'REMOVE_MARGIN_FUNDING_FEE' && renderLogRemoveMarginFunding(item)}
                                         {item?.type === 'MODIFY' && renderLogModifySlTp(item)}
                                         {item?.type === 'ADD_VOLUME' && renderLogAddVolume(item)}
                                         {item?.type === 'PARTIAL_CLOSE' && renderLogPartialClose(item)}
