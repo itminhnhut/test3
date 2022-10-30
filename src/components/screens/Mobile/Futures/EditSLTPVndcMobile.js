@@ -13,6 +13,7 @@ import Slider from 'components/trade/InputSlider';
 import { Dot, ThumbLabel } from 'components/trade/StyleInputSlider';
 import colors from 'styles/colors';
 import { DefaultFuturesFee } from 'redux/actions/const';
+import { isNumeric } from 'utils';
 
 const EditSLTPVndcMobile = ({
     onClose,
@@ -165,8 +166,10 @@ const EditSLTPVndcMobile = ({
             isChangeSlide.current = false;
             return;
         }
-        const value = +e.value === 0 ? '' : +e.value;
-        const decimals = countDecimals(decimalScalePrice?.tickSize);
+        let value = ''
+        if(isNumeric(e.floatValue)){
+            value = e.floatValue
+        }
         profit.current[key] = value ? getProfitSLTP(value) : 0;
         setPercent({
             ...percent,
