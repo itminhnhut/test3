@@ -54,7 +54,7 @@ export const seasons = [
         rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-1',
         total_rewards: '1,000,000,000 VNDC', quoteAsset: 'VNDC',
         time_to_create: { start: '2022-09-21T17:00:00.000Z', end: '2022-10-07T17:00:00.000Z' },
-        active: true
+        active: false
     },
     {
         season: 5, start: '2022-10-31T17:00:00.000Z', end: '2022-11-29T17:00:00.000Z',
