@@ -214,6 +214,10 @@ const PocketFooter = ({ active, parentState }) => {
                               className="cursor-pointer">
                             {language === LANGUAGE_TAG.VI ? 'FAQs' : 'FAQs'}
                         </Link>
+                        <Link href="/futures/trading-rule"
+                              className="cursor-pointer">
+                            {language === LANGUAGE_TAG.VI ? 'Quy tắc giao dịch' : 'Trading Rules'}
+                        </Link>
 
                         <a onClick={() => window.fcWidget.open()}
                            className="cursor-pointer invisible">
