@@ -11,7 +11,7 @@ import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router'
 
-const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort }) => {
+const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort, top_ranks_team }) => {
     const [tab, setTab] = useState(sort);
     const { t, i18n: { language } } = useTranslation();
     const { width } = useWindowSize()
@@ -88,12 +88,14 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
         const _rank = data || '-';
         return (
             <div className="min-w-[24px] text-center">
-                {data && data <= 20 ?
+                {data && data <= top_ranks_team ?
                     <img src={getS3Url(`/images/nao/contest/ic_top_${item?.rowIndex + 4}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
                     : <span >{_rank}</span>}
             </div>
         )
     }
+
+    console.log(top_ranks_team)
 
     return (
         <section className="contest_individual_ranks pt-[4.125rem]">
@@ -176,7 +178,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                                     <div onClick={() => onShowDetail(item, tab)} key={index} className={`flex gap-4 sm:gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
                                         <div className="min-w-[31px] text-nao-grey text-sm font-medium ">
                                             {loading ? <Skeletor width={24} height={24} circle /> :
-                                                item?.[rank] && item?.[rank] <= 20 ?
+                                                item?.[rank] && item?.[rank] <= top_ranks_team ?
                                                     <img src={getS3Url(`/images/nao/contest/ic_top_${index + 4}.png`)} className="min-w-[24px] min-h-[24px]" width="24" height="24" alt="" />
                                                     : item?.[rank] || '-'
                                             }
