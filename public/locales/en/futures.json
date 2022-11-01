@@ -297,6 +297,7 @@
             "id": "ID",
             "time": "Time",
             "order_id": "Order ID",
+            "note": "Note",
             "cancel": "Cancel",
             "done": "Done",
             "categories": {
@@ -311,6 +312,7 @@
                 "723": "Withdraw",
                 "608": "Insurance",
                 "609": "Promotion",
+                "612": "Reward",
                 "1019": "Staking Interest",
                 "open_fee": "Order Opening Fee",
                 "close_fee": "Order Closing Fee",

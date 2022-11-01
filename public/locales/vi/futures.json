@@ -297,6 +297,7 @@
             "id": "Id",
             "time": "Thời gian",
             "order_id": "ID lệnh",
+            "note": "Ghi chú",
             "cancel": "Huỷ",
             "done": "Đồng ý",
             "categories": {
@@ -311,6 +312,7 @@
                 "723": "Rút tiền",
                 "608": "Bù từ quỹ bảo hiểm",
                 "609": "Khuyến mãi",
+                "612": "Phần thưởng",
                 "1019": "Lãi Staking",
                 "open_fee": "Phí mở lệnh",
                 "close_fee": "Phí đóng lệnh",
