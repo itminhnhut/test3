@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import { CopyToClipboard } from 'react-copy-to-clipboard/lib/Component';
 import TableNoData from 'components/common/table.old/TableNoData';
 import { TransactionCategory } from '../../../../../redux/actions/const';
+import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const categories = [
     'all',// "All",
@@ -46,11 +47,21 @@ const noteCases = [
     '^BALANCE: Liquidate active position (\\d+) raw profit$',
     '^BALANCE: Close future order (\\d+) swap fee$',
     '^BALANCE: Future order (\\d+) funding fee$',
+];
+
+const contentCases = [
     '^BALANCE: (.+)$'
 ];
 
 const getOrderIdFromNote = (note) => {
     const regex = noteCases.map(e => new RegExp(e))
+        .find(r => r.test(note));
+    if (!regex) return;
+    return note.replace(regex, '$1');
+};
+
+const getContentFromNote = (note) => {
+    const regex = contentCases.map(e => new RegExp(e))
         .find(r => r.test(note));
     if (!regex) return;
     return note.replace(regex, '$1');
@@ -75,7 +86,7 @@ function TabTransactionsHistory({
     const [transactionDetail, setTransactionDetail] = useState();
     const assetConfigs = useSelector(state => state.utils.assetConfig);
     const timestamp = useSelector((state) => state.heath.timestamp);
-
+    const [currentLocale, onChangeLang] = useLanguage();
     const { t } = useTranslation();
 
     const assetConfigMap = useMemo(() => {
@@ -101,8 +112,10 @@ function TabTransactionsHistory({
             const res = await fetchApi({
                 url: API_GET_VNDC_FUTURES_TRANSACTION_HISTORIES,
                 params: {
-                    timeFrom: range.start ? startOfDay(range.start).valueOf() : '',
-                    timeTo: range.end ? endOfDay(range.end).valueOf() : '',
+                    timeFrom: range.start ? startOfDay(range.start)
+                        .valueOf() : '',
+                    timeTo: range.end ? endOfDay(range.end)
+                        .valueOf() : '',
                     category: category !== 'all' ? category : '',
                     lastId: isLoadMore ? last(data.result)?._id : ''
                 }
@@ -156,13 +169,22 @@ function TabTransactionsHistory({
             const decimal = item?.category === TransactionCategory.FUTURE_FUNDING_FEE ? (isUSDT ? 6 : 4) : (isUSDT ? assetDigit + 2 : assetDigit);
 
             let orderIdItem = <span>--</span>;
+
             if (orderId) {
-                orderIdItem = item.category === 612 ? <>
-                    <div className="ml-1 truncate w-44">{orderId}</div>
-                </> : <>
+                orderIdItem = <>
                     <span>ID:</span>
                     <span className="ml-1">{orderId}</span>
-                </>
+                </>;
+            }
+
+            if (item.category === 612 && item?.metadata?.en && item?.metadata?.vi) {
+                const content = currentLocale === LANGUAGE_TAG.EN ? item?.metadata?.en  : item?.metadata?.vi
+                if (content) {
+                    orderIdItem = <div className="ml-1"  dangerouslySetInnerHTML={{
+                        __html: content,
+                    }}></div>
+                }
+
             }
             return <div
                 key={item._id}
@@ -221,6 +243,7 @@ function TabTransactionsHistory({
             onClose={() => setTransactionDetail()}
             transaction={transactionDetail}
             assetConfig={assetConfigMap[transactionDetail?.currency]}
+            language={currentLocale}
         />
         <div className="sticky top-[2.625rem] bg-onus z-10 flex justify-between text-xs text-onus-grey px-4 pt-2">
             <div className="flex items-center p-2 -ml-2" onClick={() => setVisibleDateRangePicker(true)}>
@@ -312,9 +335,19 @@ const TransactionDetail = ({
     visible,
     onClose,
     transaction,
-    assetConfig = {}
+    assetConfig = {},
+    language,
 }) => {
-    const orderId = getOrderIdFromNote(transaction?.note) || '--';
+    let orderId = getOrderIdFromNote(transaction?.note) || '--';
+    if (transaction?.category === 612 && transaction?.metadata?.en && transaction?.metadata?.vi) {
+        const content = language === LANGUAGE_TAG.EN ? transaction?.metadata?.en  : transaction?.metadata?.vi
+        if (content) {
+            orderId  = <div className="ml-1"  dangerouslySetInnerHTML={{
+                __html: content,
+            }}></div>
+        }
+
+    }
     const assetDigit = assetConfig?.assetDigit ?? 0;
     const isUSDT = assetConfig.assetCode === 'USDT';
     const decimal = transaction?.category === TransactionCategory.FUTURE_FUNDING_FEE ? (isUSDT ? 6 : 4) : (isUSDT ? assetDigit + 2 : assetDigit);
@@ -362,12 +395,13 @@ const TransactionDetail = ({
                 </div>
             </div>
             <div className="flex justify-between text-sm leading-[1.375rem]">
-                <span className="text-onus-grey">{transaction?.category === 612 ? t('futures:mobile:transaction_histories:note'):  t('futures:mobile:transaction_histories:order_id')}</span>
+                <span
+                    className="text-onus-grey">{transaction?.category === 612 ? t('futures:mobile:transaction_histories:note') : t('futures:mobile:transaction_histories:order_id')}</span>
                 <div className="flex flex-1 min-w-0 items-center">
-                    <div className="flex-1 min-w-0 overflow-hidden text-right">{orderId}</div>
-                    <CopyToClipboard text={orderId}>
+                    <div className="flex-1 min-w-0 overflow-hidden text-right pl-4">{orderId}</div>
+                    {transaction?.category !== 612 && <CopyToClipboard text={orderId}>
                         <Copy className="ml-2" size={14} color={colors.onus.grey}/>
-                    </CopyToClipboard>
+                    </CopyToClipboard>}
                 </div>
             </div>
             <div className="flex justify-between text-sm">
