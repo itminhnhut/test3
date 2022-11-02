@@ -1510,7 +1510,7 @@ const ExchangeWithdraw = () => {
     ])
 
     const renderKycRequiredModal = useCallback(() => {
-        const isVisible = auth.kyc_status !== 2
+        const isVisible = auth?.kyc_status !== 2
 
         return (
             <ReModal
