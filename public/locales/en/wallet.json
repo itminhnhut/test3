@@ -98,7 +98,7 @@
         "transfer_source_wallet_issues": "Please select source wallet",
         "transfer_destination_wallet_issues": "Please select destination wallet",
         "invalid_amount": "Invalid amount",
-        "invalid_kyc_status": "Please verify your account to perform this action.",
+        "invalid_kyc_status": "You need to complete KYC process to use this function.",
         "decimal_scale_limit": "Please enter amount with no more than {{ value }} decimal places",
         "withdraw_disabled": "Withdrawal is currently under maintenance, please try again later.",
         "minimum_amount": "Minimum amount is {{min}}",

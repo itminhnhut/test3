@@ -17,7 +17,7 @@ import {
     shortHashAddress,
 } from 'redux/actions/utils';
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper';
-import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { PATHS } from 'constants/paths';
 import { log } from 'utils';
 
@@ -102,6 +102,7 @@ const ExchangeWithdraw = () => {
     const amountInputRef = useRef()
     const addressInputRef = useRef()
 
+    const [currentLocale] = useLanguage()
     // Rdx
     const paymentConfigs = useSelector((state) => state.wallet.paymentConfigs)
     const userSocket = useSelector((state) => state.socket.userSocket) || null
@@ -1509,7 +1510,7 @@ const ExchangeWithdraw = () => {
     ])
 
     const renderKycRequiredModal = useCallback(() => {
-        const isVisible = auth?.vndc_user_id > 0 && auth.kyc_status !== 2
+        const isVisible = auth.kyc_status !== 2
 
         return (
             <ReModal
@@ -1525,17 +1526,18 @@ const ExchangeWithdraw = () => {
                 <div className='mt-6 flex items-center justify-between'>
                     <div className='w-[47%]'>
                         <Button
-                            componentType='button'
-                            onClick={() => router?.back && router.back()}
-                            title={t('common:back_to_home')}
+                            title={t('common:view_manual')}
+                            type='primary'
+                            href={currentLocale === 'en' ? 'https://nami.exchange/support/announcement/announcement/important-update-about-nami-exchange-identity-verification-kyc' : 'https://nami.exchange/vi/support/announcement/thong-bao/cap-nhat-quy-dinh-ve-xac-thuc-tai-khoan-kyc' }
+                            target='_blank'
                             className='!py-[8px]'
                         />
                     </div>
                     <div className='w-[47%]'>
                         <Button
-                            title={t('common:view_manual')}
+                            title={t('common:kyc_now')}
                             type='primary'
-                            href='https://nami.io/tutorial-vi/huong-dan-xac-minh-tai-khoan-kyc-tren-nami-exchange/'
+                            href='https://nami.exchange/account/identification'
                             target='_blank'
                             className='!py-[8px]'
                         />
