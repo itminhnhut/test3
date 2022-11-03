@@ -40,6 +40,7 @@
         "spot": "Spot Trading",
         "spot_description": "Trading quickly with {{pairsLength}} tokens listed with high liquidity",
         "futures": "Futures",
+        "mobile_futures": "Futures",
         "futures_description": "Trading Futures with leverage up to x125",
         "margin": "Margin",
         "margin_description": "",

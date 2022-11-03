@@ -40,6 +40,7 @@
         "spot": "Giao dịch Spot",
         "spot_description": "Giao dịch {{pairsLength}} token được niêm yết với thanh khoản cao",
         "futures": "Futures",
+        "mobile_futures": "Futures",
         "futures_description": "Giao dịch hợp đồng tương lai với đòn bẩy lên đến x125",
         "margin": "Margin",
         "margin_description": "",
