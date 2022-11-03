@@ -97,6 +97,7 @@
   "UNKNOWN_ERROR": "Lỗi không rõ, vui lòng liên hệ với hỗ trợ",
   "ASSET_NOT_SUPPORT": "Tài sản này chưa được hỗ trợ {{ function }}",
   "INVALID_KYC_STATUS": "Please verify your account",
+  "ORDER_ALREADY_CLOSED": "Lệnh đã được đóng",
   "futures": {
     "INVALID_ORDER_TYPE": "Loại lệnh chưa được hỗ trợ với cặp tiền này",
     "INVALID_SIDE": "Hành động không hợp lệ",

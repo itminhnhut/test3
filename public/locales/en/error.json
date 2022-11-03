@@ -97,6 +97,7 @@
   "UNKNOWN_ERROR": "Error unknown, please contact support",
   "ASSET_NOT_SUPPORT": "Currently, this asset have no support {{ function }}",
   "INVALID_KYC_STATUS": "Please verify your account",
+  "ORDER_ALREADY_CLOSED": "The order has been closed",
   "futures": {
     "INVALID_ORDER_TYPE": "Order type not supported for this currency pair",
     "INVALID_SIDE": "Invalid action",
