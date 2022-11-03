@@ -37,7 +37,7 @@ const SocketLayout = ({
                 setPairPrice(_pairPrice);
             }
         });
-
+   
         // ? Unsubscribe publicSocket
         return () => {
             if (pairParent) return;

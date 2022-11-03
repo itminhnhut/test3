@@ -512,6 +512,7 @@ export const PublicSocketEvent = {
     FUTURES_TICKER_UPDATE: 'futures:ticker:update',
     FUTURES_MINI_TICKER_UPDATE: 'futures:mini_ticker:update',
     FUTURES_MARK_PRICE_UPDATE: 'futures:mark_price:update',
+    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
     // FUTURES_RECENT_TRADE_ADD: 'futures:recent_trade:add',
 
     IEO_PERCENTAGE_UPDATE: 'ieo:project_update',
@@ -830,7 +831,8 @@ export const UserSocketEvent = {
     EXCHANGE_PLACE_MARKET_ORDER_RESULT: 'exchange:place_market_order_result',
     UPDATE_BALANCE: 'user:update_balance',
     FUTURES_OPEN_ORDER: 'future:update_opening_order',
-    FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders'
+    FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders',
+    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error'
 };
 
 export const EarnOrder_Status = {
