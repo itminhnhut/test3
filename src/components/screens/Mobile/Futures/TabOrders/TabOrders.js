@@ -77,7 +77,7 @@ const TabOrders = memo(({
             });
 
             userSocket.on(UserSocketEvent.FUTURE_PROCESSING_ORDER_ERROR, async (data) => {
-                alertContext.alert.show('error', t('common:failed'), t('error:' + data[0].error.status ?? 'BROKER_ERROR'))
+                alertContext.alert.show('error', t('common:failed'), t('error:futures:' + data?.[0]?.error?.status || 'BROKER_ERROR'))
             });
         }
         return () => {
