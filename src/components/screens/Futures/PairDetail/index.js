@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import {
+    Countdown,
     formatNumber,
     formatPrice,
     getDecimalScale,
@@ -14,7 +15,6 @@ import { usePrevious } from 'react-use';
 import { ChevronDown, X } from 'react-feather';
 import { roundTo } from 'round-to';
 
-import Countdown from 'react-countdown';
 import FuturesPairDetailItem from './PairDetailItem';
 import FuturesPairList from '../PairList';
 import InfoSlider from 'components/markets/InfoSlider';
@@ -238,7 +238,7 @@ const FuturesPairDetail = ({
                 case 'fundingCountdown':
                     value = <div>
                         <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> / <Countdown
-                            date={pairPrice?.fundingTime+500} daysInHours={true} intervalDelay={100}/></div>;
+                            date={pairPrice?.fundingTime} /></div>;
                     break;
                 case '24hHigh':
                     value = formatNumber(

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { IconLoading } from 'components/common/Icons';
-import { getTradingViewTimezone, getS3Url, formatFundingRate } from 'redux/actions/utils';
-import Countdown from 'react-countdown';
-
+import { getTradingViewTimezone, getS3Url, Countdown, formatFundingRate } from 'redux/actions/utils';
 import colors from '../../../styles/colors';
 import { widget } from '../../TradingView/charting_library/charting_library.min';
 import Datafeed from '../api';
@@ -681,7 +679,7 @@ const Funding = ({ symbol }) => {
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
-                    <div><Countdown date={marketWatch[symbol]?.fundingTime+500} daysInHours={true} intervalDelay={100}/></div>
+                    <div><Countdown date={marketWatch[symbol]?.fundingTime} /></div>
                 </div>
             </div>
         </>
