@@ -1042,3 +1042,8 @@ export const Countdown = ({ date, onEnded, isDays = false }) => {
 export const formatFundingRate = (value) => {
     return (value ? (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) : 0) + '%'
 }
+
+export function checkLargeVolume(notional, isVndc  = true) {
+    if(isVndc) return notional >= 600e6
+    else return notional >= 30e3
+}

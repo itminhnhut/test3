@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef, useContext } from "react";
 import { useTranslation } from "next-i18next";
-import { formatNumber, countDecimals } from "redux/actions/utils";
+import { formatNumber, countDecimals, checkLargeVolume } from 'redux/actions/utils';
 import { useSelector } from "react-redux";
 import TradingInput from "components/trade/TradingInput";
 import { Minus, Plus, ChevronDown } from "react-feather";
@@ -231,6 +231,7 @@ const AddVolume = ({
             quoteQty: +volume,
         };
         setLoading(true);
+        const isLargeVolume = checkLargeVolume(+volume, configSymbol.isVndcFutures)
         try {
             const { status, data, message } = await fetchApi({
                 url: API_DCA_ORDER,
@@ -240,8 +241,8 @@ const AddVolume = ({
             if (status === ApiStatus.SUCCESS) {
                 context.alert.show("success",
                     t("futures:mobile:adjust_margin:add_volume_success"),
-                    t("futures:mobile:adjust_margin:add_volume_success_message"),
-                    null, null,
+                    t("futures:place_order_success_message"),
+                    isLargeVolume ? t('futures:high_volume_note'): null, null,
                     () => {
                         onClose()
                         // if (forceFetchOrder) forceFetchOrder()

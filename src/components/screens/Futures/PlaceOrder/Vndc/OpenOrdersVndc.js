@@ -225,7 +225,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 {
                     message: t('futures:close_order:request_successfully', { value: rowData.current?.displaying_id }),
                     title: t('futures:close_order:modal_title', { value: rowData.current?.displaying_id }),
-                    type: 'success'
+                    type: 'success',
                 },
                 1800,
                 'bottom',

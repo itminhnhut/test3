@@ -30,7 +30,7 @@ import {
     SET_FUTURES_USER_SETTINGS
 } from './types';
 import { favoriteAction } from './user';
-import { formatNumber } from 'redux/actions/utils';
+import { checkLargeVolume, formatNumber } from 'redux/actions/utils';
 
 export const setUsingSltp = (payload) => (dispatch) => dispatch({
     type: SET_FUTURES_USE_SLTP,
@@ -165,10 +165,11 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
         const { data } = await Axios.post(API_GET_FUTURES_ORDER, {
             ...params,
         });
+        const isLargeVolume = checkLargeVolume(+params.quoteQty, (params.symbol).includes('VNDC'))
         if (data?.status === ApiStatus.SUCCESS) {
             log.i('placeFuturesOrder result: ', data);
             if (utils?.alert) {
-                utils.alert.show('success', t('futures:place_order_success'), t('futures:place_order_success_message'));
+                utils.alert.show('success', t('futures:place_order_success'), t('futures:place_order_success_message'), isLargeVolume ? t('futures:high_volume_note'): null);
             } else {
                 showNotification(
                     {

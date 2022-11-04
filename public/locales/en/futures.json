@@ -50,7 +50,7 @@
         "confirm_message": "Do you want to close your order with ticket <span class='font-medium'>#{{value}}</span>?",
         "future_note": "* Eco Close mode will close your order by placing Limit order close to the current price and get a discount on fees compared to normal order. See details at ",
         "close_successfully": "Close order #{{value}} successfully",
-        "request_successfully": "Submit request successfully",
+        "request_successfully": "Your request of closing an order is processing",
         "title": "Close order",
         "btn_ok": "OK",
         "btn_cancel": "Cancel"
@@ -209,7 +209,8 @@
     "value": "Value",
     "price_market": "Price market",
     "cancel": "Cancel",
-    "place_order_success_message": "Your request was successful",
+    "place_order_success_message": "Your request of opening an order is processing",
+    "high_volume_note": "Risk Warning: Orders with high volume will need longer time to be executed, please manage your positions carefully to reduce risks",
     "place_order_failed": "Place order failed",
     "place_order": "Place order",
     "mobile": {

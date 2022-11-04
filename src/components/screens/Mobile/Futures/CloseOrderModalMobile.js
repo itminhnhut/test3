@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect, useContext } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, countDecimals, getS3Url } from "redux/actions/utils";
+import { formatNumber, countDecimals, getS3Url, isLargeVolume, checkLargeVolume } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import Switcher from 'components/common/Switcher';
 import TradingInput from "components/trade/TradingInput";
@@ -187,7 +187,13 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
             closeVolume: +volume,
             special_mode: 1
         };
+        let isLargeVolume = false
         const isPartialClose = partialClose && percent < 100
+        if(isPartialClose){
+            isLargeVolume = checkLargeVolume(+volume, configSymbol.isVndcFutures)
+        }else{
+            isLargeVolume = checkLargeVolume(order.order_value, configSymbol.isVndcFutures)
+        }
         setLoading(true)
         try {
             const { status, data, message } = await fetchApi({
@@ -199,8 +205,8 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                 if (isPartialClose) {
                     context.alert.show("success",
                         t("futures:mobile:adjust_margin:add_volume_success"),
-                        t("futures:mobile:adjust_margin:partially_closed_success_message"),
-                        null, null,
+                        t('futures:close_order:request_successfully'),
+                        isLargeVolume ? t('futures:high_volume_note'): null, null,
                         () => {
                             onClose()
                             // if (forceFetchOrder) forceFetchOrder()
@@ -210,7 +216,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
                     context.alert.show('success',
                         t('futures:close_order:modal_title', { value: order?.displaying_id }),
                         t('futures:close_order:request_successfully', { value: order?.displaying_id }),
-                        null, null,
+                        isLargeVolume ? t('futures:high_volume_note'): null, null,
                         () => {
                             onClose()
                             if (forceFetchOrder) forceFetchOrder()
