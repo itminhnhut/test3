@@ -149,12 +149,12 @@ const PlaceOrder = ({
         onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? _lastPrice : _price);
     }, [side, type, decimals, leverage, stopPrice, price]);
 
-    useEffect(() => {
-        if (firstTime.current) return;
-        if (type === OrderTypes.Market) {
-            onChangeQuoteQty(lastPrice, leverage);
-        }
-    }, [leverage]);
+    // useEffect(() => {
+    //     if (firstTime.current) return;
+    //     if (type === OrderTypes.Market) {
+    //         onChangeQuoteQty(lastPrice, leverage);
+    //     }
+    // }, [leverage]);
 
     useEffect(() => {
         if (firstTime.current) return;
@@ -201,7 +201,7 @@ const PlaceOrder = ({
         if (firstTime.current) return;
         if (newDataLeverage.current) {
             const _lastPrice = _pairPrice?.lastPrice ?? lastPrice;
-            onChangeQuoteQty(_lastPrice, newDataLeverage?.current);
+            // onChangeQuoteQty(_lastPrice, newDataLeverage?.current);
             onChangeSlTp(newDataLeverage.current, _lastPrice);
         }
     }, [firstTime.current, newDataLeverage.current]);
