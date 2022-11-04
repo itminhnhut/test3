@@ -2,7 +2,9 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import Tooltip from 'components/common/Tooltip';
-import { countDecimals, formatFundingRate , formatNumber, formatPrice, Countdown, getFilter, getS3Url } from 'redux/actions/utils';
+import { countDecimals, formatFundingRate , formatNumber, formatPrice, getFilter, getS3Url } from 'redux/actions/utils';
+
+import Countdown from 'react-countdown';
 import { useSelector } from 'react-redux';
 import { ExchangeOrderEnum } from 'redux/actions/const';
 import styled from 'styled-components';
@@ -179,7 +181,7 @@ export default function OrderInformation({ pair }) {
             case 'funding_countdown': {
                 return <div>
                     <span>{formatFundingRate(_pairPrice?.fundingRate * 100)}</span> /
-                    <Countdown date={_pairPrice?.fundingTime} />
+                    <Countdown date={_pairPrice?.fundingTime + 500} daysInHours={true} intervalDelay={100}/>
                 </div>;
             }
             case 'max_order_size_limit': {
