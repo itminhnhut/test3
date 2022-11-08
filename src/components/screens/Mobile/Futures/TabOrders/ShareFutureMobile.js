@@ -41,7 +41,7 @@ export const getShareModalData = ({ order, pairPrice }) => {
         closePrice: formatNumber(order?.close_price, 8),
         symbol: order?.symbol,
         side: order?.side,
-        time: formatTime(order?.created_at),
+        time: formatTime(order?.opened_at),
         quoteAsset: pairPrice?.quoteAsset ?? '',
         bg: _percent > 0 ? 'green' : 'red',
         status,

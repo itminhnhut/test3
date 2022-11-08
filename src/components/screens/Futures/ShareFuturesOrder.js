@@ -70,7 +70,7 @@ const ShareFuturesOrder = ({
             price: formatNumber(price, 8),
             markPrice: formatNumber(pairPrice?.lastPrice, 8),
             closePrice: formatNumber(order?.close_price, 8),
-            time: formatTime(order?.created_at),
+            time: formatTime(order?.opened_at),
         }
     }, [order?.displaying_id, pairPrice])
 

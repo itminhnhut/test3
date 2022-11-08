@@ -288,9 +288,9 @@ const OrderOpenDetail = ({
             <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 leading-[1.125rem]">
                 <div>ID #{order?.displaying_id}</div>
                 <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
-                <div>{formatTime(order?.created_at, 'yyyy-MM-dd')}</div>
+                <div>{formatTime(order?.opened_at || order?.created_at, 'yyyy-MM-dd')}</div>
                 <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
-                <div>{formatTime(order?.created_at, 'HH:mm:ss')}</div>
+                <div>{formatTime(order?.opened_at || order?.created_at, 'HH:mm:ss')}</div>
             </div>
             <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-[2px]">
