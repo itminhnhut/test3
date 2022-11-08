@@ -99,6 +99,7 @@
   "INVALID_KYC_STATUS": "Please verify your account",
   "ORDER_ALREADY_CLOSED": "The order has been closed",
   "futures": {
+    "SYSTEM_BUSY": "The server is busy, please try again later.",
     "INVALID_ORDER_TYPE": "Order type not supported for this currency pair",
     "INVALID_SIDE": "Invalid action",
     "BAD_SYMBOL": "The currency pair is not yet supported for trading",

@@ -99,6 +99,7 @@
   "INVALID_KYC_STATUS": "Please verify your account",
   "ORDER_ALREADY_CLOSED": "Lệnh đã được đóng",
   "futures": {
+    "SYSTEM_BUSY": "Máy chủ đang bận, vui lòng thử lại sau.",
     "INVALID_ORDER_TYPE": "Loại lệnh chưa được hỗ trợ với cặp tiền này",
     "INVALID_SIDE": "Hành động không hợp lệ",
     "BAD_SYMBOL": "Cặp giao dịch này đang bảo trì, vui lòng quay lại sau.",

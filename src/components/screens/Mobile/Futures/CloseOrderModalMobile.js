@@ -192,7 +192,7 @@ const CloseOrderModalMobile = ({ onClose, pairPrice, order, forceFetchOrder }) =
         if(isPartialClose){
             isLargeVolume = checkLargeVolume(+volume, configSymbol.isVndcFutures)
         }else{
-            isLargeVolume = checkLargeVolume(order.order_value, configSymbol.isVndcFutures)
+            isLargeVolume = checkLargeVolume(order?.order_value, configSymbol.isVndcFutures)
         }
         setLoading(true)
         try {
