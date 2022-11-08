@@ -512,7 +512,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
-                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss.ms')}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:reason_close')}</Label>
@@ -565,7 +565,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
-                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss.ms')}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:reason_close')}</Label>
@@ -655,7 +655,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
-                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss.ms')}</Span>
                 </Row>
                 {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
                     <Row>
@@ -670,7 +670,7 @@ const OrderDetail = ({
                 {!isAddedVolOrClose && <>
                     <Row>
                         <Label>{t('futures:mobile:close_time')}</Label>
-                        <Span>{order?.closed_at ? formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss') : '-'}</Span>
+                        <Span>{order?.closed_at ? formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss.ms') : '-'}</Span>
                     </Row>
                     <Row>
                         <Label>{t('futures:order_table:close_price')}</Label>
