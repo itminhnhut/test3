@@ -21,6 +21,7 @@ import { RETABLE_SORTBY } from 'components/common/ReTable';
 import MCard from 'components/common/MCard';
 import { ChevronDown } from 'react-feather';
 import { Countdown } from 'redux/actions/utils';
+import useLanguage from 'hooks/useLanguage';
 
 export const CURRENCIES = [
     {
@@ -112,6 +113,7 @@ export default function FundingHistory({ currency }) {
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allAssetConfig = useSelector((state) => state.utils.assetConfig);
 
+    const [currentLocale, onChangeLang] = useLanguage()
     const [dataTable, setDataTable] = useState([]);
     const [selectedSymbol, setSelectedSymbol] = useState('');
     const [selectedFilter, setSelectedFilter] = useState(FILTER_OPTS[0]);
@@ -325,13 +327,17 @@ export default function FundingHistory({ currency }) {
                         </div>
                     ) : null}
                 </div>
-                <div
+                <a
+                    href={currentLocale === 'en'
+                        ? 'https://nami.exchange/en/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures'
+                        : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures'
+                }
                     className={
                         'underline cursor-pointer flex text-sm leading-6 lg:font-semibold font-medium text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
                     }
                 >
                     {t('futures:funding_history_tab:link_overview')}
-                </div>
+                </a>
             </div>
         );
     };

@@ -219,6 +219,11 @@ const PocketFooter = ({ active, parentState }) => {
                             {language === LANGUAGE_TAG.VI ? 'Quy tắc giao dịch' : 'Trading Rules'}
                         </Link>
 
+                        <Link href="/futures/funding-history"
+                              className="cursor-pointer">
+                            {language === LANGUAGE_TAG.VI ? 'Lịch sử Funding' : 'Funding Histories'}
+                        </Link>
+
                         <a onClick={() => window.fcWidget.open()}
                            className="cursor-pointer invisible">
                             {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}
