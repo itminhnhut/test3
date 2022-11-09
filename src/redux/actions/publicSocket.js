@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import * as types from 'src/redux/actions/types';
-import { SET_MULTI_FUTURES_MARKET_WATCH } from 'src/redux/actions/types';
+import { SET_MULTI_FUTURES_MARKET_WATCH, SET_TIME_SYNC_OFFSET, SET_TIME_SYNC } from 'src/redux/actions/types';
 
 import Emitter from 'src/redux/actions/emitter';
 import { PublicSocketEvent } from 'src/redux/actions/const';
@@ -58,6 +58,42 @@ function initPublicSocket() {
                 payload: WS,
             });
 
+            // Timesync
+            let ts = global.timesync.create({
+                server: WS,
+                interval: 50000,
+            });
+            ts.on('change', function (offset) {
+                dispatch({
+                    type: SET_TIME_SYNC_OFFSET,
+                    payload: offset,
+                })
+            });
+
+            ts.send = function (socket, data, timeout) {
+                if (!socket) return
+                return new Promise(function (resolve, reject) {
+                    var timeoutFn = setTimeout(reject, timeout);
+
+                    socket.emit('timesync', data, function () {
+                        clearTimeout(timeoutFn);
+                        resolve();
+                    });
+                });
+            };
+
+            WS.on('timesync', function (data) {
+                // console.log('__receive', data);
+                ts.receive(null, data);
+            });
+
+            dispatch({
+                type: SET_TIME_SYNC,
+                payload: ts
+            })
+
+
+
             WS.on(PublicSocketEvent.SPOT_DEPTH_UPDATE, (data) => {
                 Emitter.emit(
                     PublicSocketEvent.SPOT_DEPTH_UPDATE + 'order_book',
@@ -98,6 +134,8 @@ function initPublicSocket() {
             WS.on(PublicSocketEvent.FUTURES_DEPTH_UPDATE, (data) => {
                 Emitter.emit(PublicSocketEvent.FUTURES_DEPTH_UPDATE, data);
             });
+
+
         });
 
         WS.on('reconnect', () => {
@@ -118,5 +156,6 @@ export function reconnectPublicSocket() {
         WS.reconnect();
     }
 }
+
 
 export default initPublicSocket;

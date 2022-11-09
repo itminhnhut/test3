@@ -75,6 +75,7 @@ export default function OrderInformation({ pair }) {
     const { t } = useTranslation();
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const assetConfig = useSelector(state => state.utils.assetConfig);
+    const timesync = useSelector(state => state.utils.timesync)
 
 
     const getDecimalPrice = (config) => {
@@ -179,7 +180,11 @@ export default function OrderInformation({ pair }) {
             case 'funding_countdown': {
                 return <div>
                     <span>{formatFundingRate(_pairPrice?.fundingRate * 100)}</span> /
-                    <Countdown date={_pairPrice?.fundingTime} />
+                    <Countdown
+                        now={() => timesync ? timesync.now() : Date.now()}
+                        date={_pairPrice?.fundingTime} renderer={({hours, minutes, seconds}) => {
+                        return <span>{hours}:{minutes}:{seconds}</span>
+                    }}/>
                 </div>;
             }
             case 'max_order_size_limit': {

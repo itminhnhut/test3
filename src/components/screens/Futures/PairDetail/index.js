@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import {
-    Countdown,
     formatNumber,
     formatPrice,
     getDecimalScale,
@@ -11,6 +10,7 @@ import {
     secondToMinutesAndSeconds,
     formatFundingRate
 } from 'redux/actions/utils';
+import Countdown from 'react-countdown-now'
 import { usePrevious } from 'react-use';
 import { ChevronDown, X } from 'react-feather';
 import { roundTo } from 'round-to';
@@ -56,6 +56,7 @@ const FuturesPairDetail = ({
     const assetConfig = useSelector((state) => state.utils.assetConfig);
     const pair = currentSelectedPair?.symbol || currentSelectedPair;
     const priceFromMarketWatch = useSelector((state) => getPairPrice(state, pair));
+    const timesync = useSelector(state => state.utils.timesync)
     const _pairPrice = priceFromMarketWatch || pairPrice;
     const lastPrice = _pairPrice?.lastPrice;
 
@@ -237,8 +238,13 @@ const FuturesPairDetail = ({
             switch (code) {
                 case 'fundingCountdown':
                     value = <div>
-                        <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> / <Countdown
-                            date={pairPrice?.fundingTime} /></div>;
+                        <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
+                        <Countdown
+                            now={() => timesync ? timesync.now() : Date.now()}
+                            date={pairPrice?.fundingTime} renderer={({hours, minutes, seconds}) => {
+                            return <span>{hours}:{minutes}:{seconds}</span>
+                        }}/>
+                    </div>
                     break;
                 case '24hHigh':
                     value = formatNumber(

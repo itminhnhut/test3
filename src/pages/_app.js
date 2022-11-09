@@ -140,7 +140,7 @@ const App = ({
             indexingArticles(language);
         }
     }, [language]);
-    
+
     useEffect(() => {
         if (!isMobile) {
             function initFreshChat() {
@@ -153,9 +153,9 @@ const App = ({
                     //     // hideFAQ: false,
                     //     content: {
                     //         actions: {
-                
+
                     //             tab_faq: 'Solutions',
-                        
+
                     //           },
                     //         headers: {
                     //             chat: currentLocale === 'en' ? 'Message us': 'Liên hệ với chúng tôi',

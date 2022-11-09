@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IconLoading } from 'components/common/Icons';
-import { getTradingViewTimezone, getS3Url, Countdown, formatFundingRate } from 'redux/actions/utils';
+import { getTradingViewTimezone, getS3Url, formatFundingRate } from 'redux/actions/utils';
+import Countdown from 'react-countdown-now'
 import colors from '../../../styles/colors';
 import { widget } from '../../TradingView/charting_library/charting_library.min';
 import Datafeed from '../api';
@@ -663,7 +664,9 @@ export class MobileTradingView extends React.PureComponent {
 const Funding = ({ symbol }) => {
     const { t } = useTranslation()
     const [showModal, setShowModal] = React.useState(false)
+    const timesync = useSelector(state => state.utils.timesync)
     const marketWatch = useSelector((state) => state.futures.marketWatch);
+    if(timesync) console.log('__ timesync 111', timesync.now());
     return (
         <>
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
@@ -679,7 +682,13 @@ const Funding = ({ symbol }) => {
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
-                    <div><Countdown date={marketWatch[symbol]?.fundingTime} /></div>
+                    <div>
+                        <Countdown
+                            now={() => timesync ? timesync.now() : Date.now()}
+                            date={marketWatch[symbol]?.fundingTime} renderer={({hours, minutes, seconds}) => {
+                            return <span>{hours}:{minutes}:{seconds}</span>
+                        }}/>
+                    </div>
                 </div>
             </div>
         </>

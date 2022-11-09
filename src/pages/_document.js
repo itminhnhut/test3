@@ -26,6 +26,7 @@ class MyDocument extends Document {
                         rel='stylesheet'
                     />
                     <script src='/library/trading_view/tv.js' />
+                    <script src="/library/timesync/timesync.min.js" />
                     <script
                         type='text/javascript'
                         src='/library/trading_view/datafeeds/udf/dist/polyfills.js'

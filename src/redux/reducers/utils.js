@@ -2,13 +2,17 @@
 /* eslint-disable no-case-declarations */
 
 import * as types from '../actions/types';
+import { SET_TIME_SYNC, SET_TIME_SYNC_OFFSET } from '../actions/types';
 
 export const initialState = {
     assetConfig: [],
     exchangeConfig: [],
     transferModal: false,
     usdRate: null,
-    bottomNav: null
+    bottomNav: null,
+    timesync: null,
+    timeOffset: null, // Thoi gian chenh lech giua server vs client ( = server time - client time)
+
 }
 
 export default (state = initialState, action) => {
@@ -26,6 +30,10 @@ export default (state = initialState, action) => {
                 ...state,
                 bottomNav: action.payload,
             }
+        case SET_TIME_SYNC:
+            return {...state, timesync: action.payload}
+        case SET_TIME_SYNC_OFFSET:
+            return {...state, timeOffset: action.payload}
         default:
             return state
     }
