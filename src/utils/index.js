@@ -205,13 +205,15 @@ export const getSupportArticles = async (tag, language) => {
     return await ghost.posts.browse(options)
 }
 
-export const getLastedArticles = async (tag = '', limit = 10, language = 'vi', isHighlighted = false) => {
+export const getLastedArticles = async (tag = '', limit = 10, page = 1,language = 'vi', isHighlighted = false) => {
     const filter = []
     const options = {
-        limit: limit,
+        page,
+        limit,
         include: 'tags',
         order: 'published_at DESC'
     }
+
     const lang = language === 'vi' ? '-en' : 'en'
 
     if (tag) {

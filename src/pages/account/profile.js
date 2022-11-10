@@ -147,7 +147,7 @@ const AccountProfile = () => {
     const getAnnouncements = async (lang = 'vi') => {
         setState({ loadingAnnouncements: true });
         try {
-            const lastedArticles = await getLastedArticles(undefined, 10, language);
+            const lastedArticles = await getLastedArticles(undefined, 10, 1, language);
             // const { status, data: announcements } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`)
             setState({ announcements: lastedArticles });
         } catch (e) {

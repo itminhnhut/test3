@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import colors from 'styles/colors';
 
 import 'rc-pagination/assets/index.css';
+import React from 'react';
 
 const RePagination = ({ name, total, current, pageSize, onChange, fromZero, ...restProps }) => {
 

@@ -93,7 +93,7 @@ const FaqArticle = (props) => {
 export async function getServerSideProps({ res, locale, query }) {
     try {
         const article = await getArticle(query.articles)
-        const lastedArticles = await getLastedArticles('faq', 8, locale)
+        const lastedArticles = await getLastedArticles('faq', 8, 1, locale)
 
         return {
             props: {

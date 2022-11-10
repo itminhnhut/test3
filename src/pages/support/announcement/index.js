@@ -23,7 +23,7 @@ const SupportAnnouncement = () => {
     const getData = async (language) => {
         setLoading(true)
         const categories = await getSupportCategories(language)
-        const lastedArticles = await getLastedArticles('noti', 10, language)
+        const lastedArticles = await getLastedArticles('noti', 10, 1, language)
 
         setCategories(categories.announcementCategories)
         setLastedArticles(lastedArticles)

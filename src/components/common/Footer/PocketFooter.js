@@ -221,7 +221,7 @@ const PocketFooter = ({ active, parentState }) => {
 
                         <Link href="/futures/funding-history"
                               className="cursor-pointer">
-                            {language === LANGUAGE_TAG.VI ? 'Lịch sử phí Funding' : 'Funding Rate History'}
+                            {language === LANGUAGE_TAG.VI ? 'Lịch sử funding' : 'Funding Rate History'}
                         </Link>
 
                         <a onClick={() => window.fcWidget.open()}

@@ -9,15 +9,20 @@ import useApp from 'hooks/useApp';
 import { ChevronLeft } from 'react-feather';
 import { useTranslation } from 'next-i18next';
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
-import { useEffect } from "react";
-
+import { useCallback, useEffect, useState } from "react";
+// import RePagination from 'components/common/ReTable/RePagination';
+import dynamic from 'next/dynamic'
+const RePagination = dynamic(() => import('components/common/ReTable/RePagination'), { ssr: false });
 
 const AnnouncementTopics = (props) => {
     const router = useRouter()
     const isApp = useApp()
-    const [theme ,, setTheme] = useDarkMode()
-
-    const { t } = useTranslation()
+    const [theme, , setTheme] = useDarkMode()
+    const { t, i18n: { language } } = useTranslation()
+    const [page, setPage] = useState(1)
+    const [data, setData] = useState([])
+    const [total, setTotal] = useState(0)
+    const [search, setSearch] = useState('')
 
     useEffect(() => {
         const themeLocal = localStorage.getItem("theme");
@@ -28,17 +33,43 @@ const AnnouncementTopics = (props) => {
         }
     }, [router?.query]);
 
+    useEffect(() => {
+        getLastedArticles(
+            `noti-${language}-${router?.query?.topic}`,
+            25,
+            page,
+            language
+        ).then((articles) => {
+            setData(articles)
+            setTotal(articles.meta?.pagination?.total)
+        })
+    }, [page])
+
+    const renderPagination = useCallback(() => {
+        if (!total) return null;
+        return (
+            <div className="flex items-center justify-center mt-8">
+                <RePagination
+                    total={total}
+                    current={page}
+                    pageSize={25}
+                    showTitle={false}
+                    onChange={(currentPage) => setPage(currentPage)}
+                />
+            </div>
+        );
+    }, [page, data, total]);
+
     const renderTopics = () => {
-        if (!props?.data?.articles || !props?.data?.articles?.length) {
+        if (!data || !data?.length) {
             return <div>{t('support-center:no_articles')}</div>
         }
 
-        return props?.data?.articles?.map((item) => (
+        return data?.map((item) => (
             <Link
                 href={
                     PATHS.SUPPORT.ANNOUNCEMENT +
-                    `/${router?.query?.topic}/${item.slug}${
-                        isApp ? '?source=app' : ''
+                    `/${router?.query?.topic}/${item.slug}${isApp ? '?source=app' : ''
                     }`
                 }
                 key={item.uuid}
@@ -75,19 +106,22 @@ const AnnouncementTopics = (props) => {
         <>
             {renderAppHeader()}
             <TopicsLayout
-                useTopicTitle={!!props?.data?.articles?.length}
+                useTopicTitle={!!data?.length}
                 mode='announcement'
             >
                 {renderTopics()}
+                {renderPagination()}
             </TopicsLayout>
         </>
     )
 }
 
 export async function getServerSideProps({ locale, query }) {
+    console.log('query?.topic.page', query)
     const articles = await getLastedArticles(
         `noti-${locale}-${query?.topic}`,
         25,
+        1,
         locale
     )
     return {

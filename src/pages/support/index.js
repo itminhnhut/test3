@@ -211,8 +211,7 @@ const Support = () => {
                     key={article.id}
                     href={
                         PATHS.SUPPORT.DEFAULT +
-                        `/${mode}/${topic}/${article.slug.toString()}${
-                            isApp ? '?source=app' : ''
+                        `/${mode}/${topic}/${article.slug.toString()}${isApp ? '?source=app' : ''
                         }`
                     }
                     title={
@@ -296,8 +295,7 @@ const Support = () => {
                     key={article.id}
                     href={
                         PATHS.SUPPORT.DEFAULT +
-                        `/${mode}/${topic}/${article.slug}${
-                            isApp ? '?source=app' : ''
+                        `/${mode}/${topic}/${article.slug}${isApp ? '?source=app' : ''
                         }`
                     }
                     title={
@@ -318,10 +316,11 @@ const Support = () => {
     useAsync(async () => {
         setLoading(true)
 
-        const lastedArticles = await getLastedArticles(undefined, 5, language)
+        const lastedArticles = await getLastedArticles(undefined, 5, 1, language)
         const highlightedArticles = await getLastedArticles(
             undefined,
             5,
+            1,
             language,
             true
         )

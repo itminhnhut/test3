@@ -8,7 +8,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import useDarkMode from 'hooks/useDarkMode';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
-import {Fragment, useCallback, useEffect, useState, useRef, useMemo} from 'react';
+import { Fragment, useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { load } from 'react-cookies';
 import { isMobile } from 'react-device-detect';
 import { Search, X } from 'react-feather';
@@ -107,12 +107,13 @@ export default function FundingHistory({ currency }) {
 
     const [isLoading, setIsLoading] = useState(true);
     const tableRef = useRef(null);
-    const firstLoadRef =  useRef(true)
-
+    const firstLoadRef = useRef(true)
     const marketWatch = useSelector((state) => state.futures?.marketWatch);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allAssetConfig = useSelector((state) => state.utils.assetConfig);
 
+
+    const [reload, setReload] = useState(false)
     const [currentLocale, onChangeLang] = useLanguage()
     const [dataTable, setDataTable] = useState([]);
     const [selectedSymbol, setSelectedSymbol] = useState('');
@@ -130,6 +131,7 @@ export default function FundingHistory({ currency }) {
      */
     const generateDataTable = () => {
         const marketWatchKies = Object.entries(marketWatch || {});
+        console.log('marketWatchKies', marketWatchKies)
         const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
             if (data?.quoteAsset === currency) {
@@ -186,7 +188,7 @@ export default function FundingHistory({ currency }) {
         const marketWatchKies = Object.entries(marketWatch || {});
         if (dataTable?.length) return;
 
-        if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 20) return;
+        if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 100) return setReload(!reload);
         if (currency !== prevCurrency) {
             setIsLoading(true);
             setCurrentPage(1);
@@ -199,7 +201,7 @@ export default function FundingHistory({ currency }) {
             setCurrentPage(1);
             generateDataTable();
         }
-    }, [dataTable, prevCurrency, currency]);
+    }, [dataTable, prevCurrency, currency, reload]);
 
     /**
      * It takes in an item, sets the selected filter to that item, and then calls the generateDataTable
@@ -331,7 +333,7 @@ export default function FundingHistory({ currency }) {
                     href={currentLocale === 'en'
                         ? 'https://nami.exchange/en/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures'
                         : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures'
-                }
+                    }
                     className={
                         'underline cursor-pointer flex text-sm leading-6 lg:font-semibold font-medium text-txtBtnSecondary dark:text-txtBtnSecondary-dark'
                     }
@@ -351,8 +353,8 @@ export default function FundingHistory({ currency }) {
                         selectedSymbol
                             ? filteredDataTable?.length
                             : isLoading
-                            ? skeletons?.length
-                            : dataTable?.length
+                                ? skeletons?.length
+                                : dataTable?.length
                     }
                     current={currentPage}
                     pageSize={10}
@@ -387,7 +389,7 @@ export default function FundingHistory({ currency }) {
             fixed: width >= 992 ? 'none' : 'left',
             render: (data, item) =>
                 !item?.isSkeleton ? Countdown({
-                    date: data, onEnded: ()=>{generateDataTable()}
+                    date: data, onEnded: () => { generateDataTable() }
                 }) : item?.fundingTime
         },
         {
@@ -434,8 +436,8 @@ export default function FundingHistory({ currency }) {
                                 selectedSymbol
                                     ? filteredDataTable
                                     : isLoading
-                                    ? skeletons
-                                    : dataTable
+                                        ? skeletons
+                                        : dataTable
                             }
                             sort={!isMobile}
                             defaultSort={{ key: 'symbol', direction: 'asc' }}
@@ -454,11 +456,11 @@ export default function FundingHistory({ currency }) {
                                     fontSize: '0.875rem !important',
                                     'margin-top': '24px !important',
                                 },
-                                headerFontStyle:{
+                                headerFontStyle: {
                                 },
                                 // custom last row
-                                lastRowStyle:{
-                                    'padding-bottom':'42px'
+                                lastRowStyle: {
+                                    'padding-bottom': '42px'
                                 },
                                 rowStyle: {
                                     'font-size': '14px !important',

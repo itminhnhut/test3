@@ -140,7 +140,7 @@ const SupportAnnouncement = () => {
     useAsync(async () => {
         setLoading(true)
         const categories = await getSupportCategories(language)
-        const lastedArticles = await getLastedArticles('faq', 10, language)
+        const lastedArticles = await getLastedArticles('faq', 10, 1, language)
 
         setCategories(categories.faqCategories)
         setLastedArticles(lastedArticles)

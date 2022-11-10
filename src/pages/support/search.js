@@ -101,7 +101,7 @@ const SupportSearchResult = () => {
     useAsync(async () => {
         const tagFilters = [language === 'en' ? language : `-en`]
         const tab = {
-            0: "faq",
+            2: "faq",
             1: "noti",
         }[state.tab]
         if (tab) {
@@ -110,7 +110,8 @@ const SupportSearchResult = () => {
         const algoSearch = await algoliaIndex.search(state.query, {
             page: state.currentPage - 1,
             hitsPerPage: 15,
-            facetFilters: tagFilters.map(t => `tags.slug:${t}`)
+            facetFilters: tagFilters.map(t => `tags.slug:${t}`),
+            // ranking: ['desc(post_date_timestamp)']
         })
         setState({ totalArticle: algoSearch?.nbHits, searchResult: algoSearch?.hits })
     }, [state.query, state.currentPage, language, state.tab])
@@ -171,8 +172,8 @@ const SupportSearchResult = () => {
 const TAB_SERIES = [
     {
         key: 0,
-        title: 'Câu hỏi thường gặp',
-        localizedPath: 'support-center:faq'
+        title: 'Tất cả',
+        localizedPath: 'common:all'
     },
     {
         key: 1,
@@ -181,9 +182,9 @@ const TAB_SERIES = [
     },
     {
         key: 2,
-        title: 'Tất cả',
-        localizedPath: 'common:all'
-    }
+        title: 'Câu hỏi thường gặp',
+        localizedPath: 'support-center:faq'
+    },
 ]
 
 export const getStaticProps = async ({ locale }) => ({

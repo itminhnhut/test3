@@ -99,7 +99,7 @@ const AnnouncementArticle = (props) => {
 export async function getServerSideProps({locale, query}) {
     try {
         const article = await getArticle(query.articles)
-        const lastedArticles = await getLastedArticles('noti', 8, locale)
+        const lastedArticles = await getLastedArticles('noti', 8, 1, locale)
 
         return {
             props: {
