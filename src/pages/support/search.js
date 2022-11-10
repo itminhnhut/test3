@@ -107,6 +107,7 @@ const SupportSearchResult = () => {
         if (tab) {
             tagFilters.push(tab)
         }
+        console.log('tagFilters', tagFilters)
         const algoSearch = await algoliaIndex.search(state.query, {
             page: state.currentPage - 1,
             hitsPerPage: 15,
