@@ -233,7 +233,7 @@ export default function OrderInformation({ pair }) {
                                             <label
                                                 className="font-medium text-white text-sm leading-[18px]">Funding</label>
                                             <div
-                                                className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:funding_rate_tooltip')}</div>
+                                                className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:funding_rate_des')}</div>
                                         </div>
                                     </Tooltip>
                                     <Tooltip id={'countdown-tooltip'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"

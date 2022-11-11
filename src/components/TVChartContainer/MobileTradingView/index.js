@@ -687,7 +687,7 @@ const Funding = ({ symbol }) => {
                             className={`!bg-onus-bg2 !opacity-100 max-w-[300px] !rounded-lg after:!border-t-onus-bg2`}
                         />
                         <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
-                        <div >
+                        <div className="w-3 h-3">
                             <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
                         </div>
                     </div>
