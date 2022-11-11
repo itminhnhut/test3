@@ -131,7 +131,6 @@ export default function FundingHistory({ currency }) {
      */
     const generateDataTable = () => {
         const marketWatchKies = Object.entries(marketWatch || {});
-        console.log('marketWatchKies', marketWatchKies)
         const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
             if (data?.quoteAsset === currency) {

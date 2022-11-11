@@ -177,8 +177,6 @@ export default function FundingHistoryTable({ currency }) {
         setCurrentPage(1);
     }, [isMobile]);
 
-    console.log('data.dataSource', data.dataSource)
-
     const renderPagination = useCallback(() => {
         if (data.dataSource?.length === 0) return null;
         return (
