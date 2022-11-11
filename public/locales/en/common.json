@@ -329,5 +329,6 @@
     "several_days": "Several Days",
     "filter": "Filter",
     "custom": "Custom",
-    "custom_date": "Custom Date"
+    "custom_date": "Custom Date",
+    "countdown_tooltip": "For reference only, actual funding time will be determined based on server time"
 }

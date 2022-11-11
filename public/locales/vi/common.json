@@ -325,5 +325,6 @@
     "several_days": "Nhiều ngày",
     "filter": "Lọc",
     "custom": "Tùy chỉnh",
-    "custom_date": "Tùy chỉnh"
+    "custom_date": "Tùy chỉnh",
+    "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ"
 }

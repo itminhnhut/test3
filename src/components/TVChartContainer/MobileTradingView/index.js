@@ -17,6 +17,7 @@ import { find, set } from 'lodash';
 import Modal from 'components/common/ReModal';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux'
+import Tooltip from 'components/common/Tooltip';
 
 const CONTAINER_ID = 'nami-mobile-tv';
 const CHART_VERSION = '1.0.8';
@@ -666,7 +667,7 @@ const Funding = ({ symbol }) => {
     const [showModal, setShowModal] = React.useState(false)
     const timesync = useSelector(state => state.utils.timesync)
     const marketWatch = useSelector((state) => state.futures.marketWatch);
-    if(timesync) console.log('__ timesync 111', timesync.now());
+    if (timesync) console.log('__ timesync 111', timesync.now());
     return (
         <>
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
@@ -681,13 +682,21 @@ const Funding = ({ symbol }) => {
                     <div>{formatFundingRate(marketWatch[symbol]?.fundingRate * 100)}</div>
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
-                    <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
+                    <div className='flex items-center space-x-1' data-tip={t('common:countdown_tooltip')} data-for="tooltip-countdown">
+                        <Tooltip id={'tooltip-countdown'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                            className={`!bg-onus-bg2 !opacity-100 max-w-[300px] !rounded-lg after:!border-t-onus-bg2`}
+                        />
+                        <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
+                        <div >
+                            <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
+                        </div>
+                    </div>
                     <div>
                         <Countdown
                             now={() => timesync ? timesync.now() : Date.now()}
-                            date={marketWatch[symbol]?.fundingTime} renderer={({hours, minutes, seconds}) => {
-                            return <span>{hours}:{minutes}:{seconds}</span>
-                        }}/>
+                            date={marketWatch[symbol]?.fundingTime} renderer={({ hours, minutes, seconds }) => {
+                                return <span>{hours}:{minutes}:{seconds}</span>
+                            }} />
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import Tooltip from 'components/common/Tooltip';
-import { countDecimals, formatFundingRate , formatNumber, formatPrice, Countdown, getFilter, getS3Url } from 'redux/actions/utils';
+import { countDecimals, formatFundingRate, formatNumber, formatPrice, Countdown, getFilter, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ExchangeOrderEnum } from 'redux/actions/const';
 import styled from 'styled-components';
@@ -182,9 +182,9 @@ export default function OrderInformation({ pair }) {
                     <span>{formatFundingRate(_pairPrice?.fundingRate * 100)}</span> /
                     <Countdown
                         now={() => timesync ? timesync.now() : Date.now()}
-                        date={_pairPrice?.fundingTime} renderer={({hours, minutes, seconds}) => {
-                        return <span>{hours}:{minutes}:{seconds}</span>
-                    }}/>
+                        date={_pairPrice?.fundingTime} renderer={({ hours, minutes, seconds }) => {
+                            return <span>{hours}:{minutes}:{seconds}</span>
+                        }} />
                 </div>;
             }
             case 'max_order_size_limit': {
@@ -220,28 +220,80 @@ export default function OrderInformation({ pair }) {
                         })}
                     >
                         <div className="py-[13px] flex  w-full w-100">
-                            <Tooltip id={title} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                className={`!mx-7 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2`}
-                                overridePosition={(e) => ({
-                                    left: 0,
-                                    top: e.top
-                                })}
-                            >
-                                <div>
-                                    <label
-                                        className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label>
-                                    <div
-                                        className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
-                                </div>
-                            </Tooltip>
-                            <Row>
-                                <Label className="">
-                                    {t('futures:' + title)}
-                                    <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                        <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
+                            {title === 'funding_countdown' ?
+                                <>
+                                    <Tooltip id={'funding_countdown'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                        className={`!mx-7 !px-3 !py-5 max-w-[300px] !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-none`}
+                                        overridePosition={(e) => ({
+                                            left: 0,
+                                            top: e.top
+                                        })}
+                                    >
+                                        <div>
+                                            <label
+                                                className="font-medium text-white text-sm leading-[18px]">Funding</label>
+                                            <div
+                                                className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:funding_rate_tooltip')}</div>
+                                        </div>
+                                    </Tooltip>
+                                    <Tooltip id={'countdown-tooltip'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                        className={`!mx-7 !px-3 !py-5 !bg-onus-bg2 max-w-[300px] !opacity-100 !rounded-lg after:!border-none`}
+                                        overridePosition={(e) => ({
+                                            left: e.left - 50,
+                                            top: e.top
+                                        })}
+                                    >
+                                        <div>
+                                            <label
+                                                className="font-medium text-white text-sm leading-[18px]">{t('futures:countdown')}</label>
+                                            <div
+                                                className="mt-3 text-3 font-normal text-white leading-[18px]">{t('common:countdown_tooltip')}</div>
+                                        </div>
+                                    </Tooltip>
+                                </>
+                                :
+                                <Tooltip id={title} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                                    className={`!mx-7 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2`}
+                                    overridePosition={(e) => ({
+                                        left: 0,
+                                        top: e.top
+                                    })}
+                                >
+                                    <div>
+                                        <label
+                                            className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label>
+                                        <div
+                                            className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
                                     </div>
-                                </Label>
-                                <Span className="">{renderContent(title)}</Span>
+                                </Tooltip>
+                            }
+                            <Row>
+                                {title === 'funding_countdown' ? <>
+                                    <div className="flex items-center space-x-1">
+                                        <Label className=""> Funding
+                                            <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
+                                                <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
+                                            </div>
+                                        </Label>
+                                        <span className="text-onus-grey ">/</span>
+                                        <Label className="">{t('futures:countdown')}
+                                            <div className="flex px-2" data-tip="" data-for={'countdown-tooltip'} >
+                                                <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
+                                            </div>
+                                        </Label>
+                                    </div>
+                                    <Span className="">{renderContent(title)}</Span>
+                                </> :
+                                    <>
+                                        <Label className="">
+                                            {t('futures:' + title)}
+                                            <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
+                                                <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
+                                            </div>
+                                        </Label>
+                                        <Span className="">{renderContent(title)}</Span>
+                                    </>}
+
                             </Row>
                         </div>
                         <div className="divide-y divide-[#36445A]"></div>

@@ -59,6 +59,8 @@ const FuturesPairDetail = ({
     const timesync = useSelector(state => state.utils.timesync)
     const _pairPrice = priceFromMarketWatch || pairPrice;
     const lastPrice = _pairPrice?.lastPrice;
+    const [showPopover, setShowPopover] = useState(false)
+    const isFunding = useRef(true)
 
     const router = useRouter();
     const { t } = useTranslation();
@@ -241,9 +243,9 @@ const FuturesPairDetail = ({
                         <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
                         <Countdown
                             now={() => timesync ? timesync.now() : Date.now()}
-                            date={pairPrice?.fundingTime} renderer={({hours, minutes, seconds}) => {
-                            return <span>{hours}:{minutes}:{seconds}</span>
-                        }}/>
+                            date={pairPrice?.fundingTime} renderer={({ hours, minutes, seconds }) => {
+                                return <span>{hours}:{minutes}:{seconds}</span>
+                            }} />
                     </div>
                     break;
                 case '24hHigh':
@@ -330,7 +332,7 @@ const FuturesPairDetail = ({
             return (
                 <div key={`pairPrice_items_${key}`} style={{ minWidth: minWidth || 0 }}>
                     <FuturesPairDetailItem
-                        label={localized}
+                        label={code === 'fundingCountdown' ? renderFunding() : localized}
                         containerClassName={`${className} mr-5`}
                         value={value}
                         icon={icon}
@@ -339,6 +341,31 @@ const FuturesPairDetail = ({
             );
         });
     }, [pairPrice, itemsPriceMinW, pricePrecision, isVndcFutures]);
+
+    const onClickFunding = (mode) => {
+        isFunding.current = mode
+        setShowPopover(true)
+    }
+
+    const renderFunding = () => {
+        return (
+            <div className="flex items-center space-x-1">
+                <div className="flex items-center" onClick={() => onClickFunding(true)}>
+                    <span>Funding</span>
+                    <div className="flex px-2" >
+                        <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
+                    </div>
+                </div>
+                <span className="text-onus-grey ">/</span>
+                <div className="flex items-center" onClick={() => onClickFunding(false)}>
+                    <span>{t('futures:countdown')}</span>
+                    <div className="flex px-2" >
+                        <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     useEffect(() => {
         setItemsPriceMinW(undefined);
@@ -610,6 +637,7 @@ const FuturesPairDetail = ({
     return (
         <div className="flex items-center h-full pl-5">
             {/* Pair */}
+            <PopoverFunding visible={showPopover} onClose={() => setShowPopover(false)} isFunding={isFunding.current} />
             <div
                 className="relative cursor-pointer group"
                 onMouseOver={() => setActivePairList(true)}
@@ -679,15 +707,10 @@ const MARK_PRICE_ITEMS = [
     }
 ];
 
-const PopoverFunding = () => {
+const PopoverFunding = ({ visible, onClose, isFunding }) => {
     const router = useRouter();
     const [currentTheme] = useDarkMode();
     const { t } = useTranslation();
-    const [showModal, setShowModal] = useState(false);
-
-    const onClose = () => {
-        setShowModal(false);
-    };
 
     const onRedirect = () => {
         window.open(`/${router.locale}/futures/funding-history?theme=${currentTheme}`);
@@ -702,17 +725,17 @@ const PopoverFunding = () => {
 
     return (
         <>
-            <div className="cursor-pointer min-w-[10px]" onClick={() => setShowModal(true)}>
+            {/* <div className="cursor-pointer min-w-[10px]" onClick={() => setShowModal(true)}>
                 <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
-            </div>
-            <Modal isVisible={showModal} onBackdropCb={onClose} containerClassName="max-w-[342px]"
+            </div> */}
+            <Modal isVisible={visible} onBackdropCb={onClose} containerClassName="max-w-[342px]"
             >
-                <div className="font-semibold">{t('futures:funding_countdown')}</div>
-                <div className="text-gray4 text-sm pt-4"> {t('futures:funding_rate_des')} <span onClick={onDetail}
-                    className="text-teal font-semibold cursor-pointer">{t('common:read_more')}</span>
+                <div className="font-semibold">{isFunding ? 'Funding' : t('futures:countdown')}</div>
+                <div className="text-gray4 text-sm pt-4"> {isFunding ? t('futures:funding_rate_des') : t('common:countdown_tooltip')}
+                    {isFunding && <span onClick={onDetail} className="text-teal font-semibold cursor-pointer">{t('common:read_more')}</span>}
                 </div>
-                <div onClick={onRedirect}
-                    className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center">{t('futures:funding_history')}</div>
+                {isFunding && <div onClick={onRedirect}
+                    className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center">{t('futures:funding_history')}</div>}
             </Modal>
         </>
     );
@@ -723,7 +746,7 @@ const PAIR_PRICE_DETAIL_ITEMS = [
         key: 2,
         code: 'fundingCountdown',
         localized: 'futures:funding_countdown',
-        icon: <PopoverFunding />
+        // icon: <PopoverFunding />
     },
     {
         key: 3,
