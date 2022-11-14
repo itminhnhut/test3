@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import CollapsibleRefCard, { FilterContainer, FilterIcon } from '../CollapsibleRefCard'
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
-import { Line } from '..';
+import { FilterTabs, Line, RefButton } from '..';
 import ReferralLevelIcon from '../../../svg/DiamondIcon';
+import PopupModal, { CalendarIcon } from '../PopupModal';
 
 const languages = {
     isKYC: {
@@ -22,15 +23,18 @@ const languages = {
         en: 'People'
     }
 }
-
 const title = {
     en: 'Friend list',
     vi: 'Danh sách bạn bè'
 }
-
+const typeTabs = [
+    { title: 'Tất cả', value: 1 },
+    { title: 'Chưa KYC', value: 2 },
+    { title: 'Đã KYC', value: 3 },
+]
 const FriendList = () => {
     const { t, i18n: { language } } = useTranslation()
-
+    const [showFilter, setShowFilter] = useState(false)
     const fakeData = [{
         userId: 'Nami112SHT1118',
         date: Date.now(),
@@ -71,7 +75,7 @@ const FriendList = () => {
         indirectCommission: 41116,
         level: 2,
         symbol: 'VNDC'
-    },{
+    }, {
         userId: 'Nami112SHT1118',
         date: Date.now(),
         kyc: true,
@@ -81,8 +85,8 @@ const FriendList = () => {
         indirectCommission: 41116,
         level: 5,
         symbol: 'VNDC'
-    },]
-
+    }]
+  
     const renderData = () => {
         return fakeData.map((data, index) => (
             <div>
@@ -142,12 +146,58 @@ const FriendList = () => {
         ))
     }
 
+    const [typeTab, setTypeTab] = useState(typeTabs[0].value)
+    const renderFilterModal = useMemo(() => {
+        return (
+            <PopupModal
+                isVisible={showFilter}
+                onBackdropCb={() => setShowFilter(false)}
+                title='Lọc kết quả'
+            >
+                <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1'>
+                        <div>
+                            Ngày giới thiệu
+                        </div>
+                        <div>
+                            <div className='p-3 flex gap-2 items-center bg-gray-4 rounded-[4px]'>
+                                <CalendarIcon />
+                                <div className='text-darkBlue'>22/03/2022</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1'>
+                        <div>
+                            Tổng hoa hồng theo thời gian
+                        </div>
+                        <div>
+                            <div className='p-3 flex gap-2 items-center bg-gray-4 rounded-[4px]'>
+                                <CalendarIcon />
+                                <div className='text-darkBlue'>22/03/2022 - 01/04/2022</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='flex flex-col gap-3 font-medium text-sm leading-6 text-gray-1 mb-4'>
+                        <div>
+                            Tình trạng
+                        </div>
+                        <div className='flex'>
+                            <FilterTabs className='!px-4 !py-3 !font-medium !text-sm' tabs={typeTabs} type={typeTab} setType={setTypeTab} />
+                        </div>
+                    </div>
+                    <RefButton title={t('common:confirm')} />
+                </div>
+            </PopupModal>
+        )
+    }, [showFilter, typeTab])
+
     return (
         <div className='px-4'>
+            {renderFilterModal}
             <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>
                     <div className='flex flex-wrap gap-2'>
-                        <FilterContainer>
+                        <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> Lọc kêt quả
                         </FilterContainer>
                         <FilterContainer>

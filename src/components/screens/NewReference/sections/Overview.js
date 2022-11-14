@@ -1,26 +1,9 @@
+import classNames from 'classnames'
 import React from 'react'
+import { renderRefInfo } from '../PopupModal'
 import RefCard from '../RefCard'
 
 const Overview = () => {
-    const renderRefInfo = (text) => {
-        return (
-            <div className='w-full h-11 px-3 rounded-[3px] flex justify-between items-center bg-[#f5f6f7]'>
-                <div className='font-medium text-sm text-darkBlue w-3/4 truncate'>
-                    {text}
-                </div>
-                <div>
-                    <CopyIcon
-                        onClick={() => {
-                            copy(text)
-                        }}
-                        size={15}
-                        className="cursor-pointer"
-                    />
-                </div>
-            </div>
-        )
-    }
-
     const renderSocials = () => {
         const icons = [{
             svg: <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,7 +103,7 @@ const Overview = () => {
                             <div>Ban nhan 10% - Ban be nhan 5%</div>
                         </div>
                         <div className='mt-1'>
-                            {renderRefInfo('https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670', true)}
+                            {renderRefInfo('https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670')}
                         </div>
                         <div className='mt-6'>
                             {renderSocials()}
@@ -134,29 +117,5 @@ const Overview = () => {
         </div>
     )
 }
-
-const CopyIcon = ({ size = 12, color = '#B2B7BC', className = '', onClick }) => {
-    return (
-        <svg onClick={onClick} className={className} width={size} height={size} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.222 5.444h-8c-.982 0-1.778.796-1.778 1.778v8c0 .982.796 1.778 1.778 1.778h8c.982 0 1.778-.796 1.778-1.778v-8c0-.982-.796-1.778-1.778-1.778z" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M3.667 12.556h-.89A1.778 1.778 0 0 1 1 10.778v-8A1.778 1.778 0 0 1 2.778 1h8a1.778 1.778 0 0 1 1.778 1.778v.889" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-    )
-}
-
-const copy = (text, cb) => {
-    if (navigator.clipboard && navigator.permissions) {
-        navigator.clipboard.writeText(text).then(cb)
-    } else if (document.queryCommandSupported('copy')) {
-        const ele = document.createElement('textarea')
-        ele.value = text
-        document.body.appendChild(ele)
-        ele.select()
-        document.execCommand('copy')
-        document.body.removeChild(ele)
-        cb?.()
-    }
-}
-
 
 export default Overview

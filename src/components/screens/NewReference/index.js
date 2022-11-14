@@ -91,13 +91,13 @@ export const Line = styled.div.attrs(({ className }) => ({
 `
 export default NewReference
 
-export const FilterTabs = ({ tabs, type, setType, reversed = false }) => {
+export const FilterTabs = ({ tabs, type, setType, reversed = false, className }) => {
     const bgColor = reversed ? 'bg-white' : 'bg-gray-4'
     return (
         <>
             {tabs.map((tab, index) => {
                 return (
-                    <div className={`flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${type === index + 1 ? `${bgColor} rounded-md text-darkBlue` : 'text-darkBlue-5'}`}
+                    <div className={`flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${type === index + 1 ? `${bgColor} rounded-md text-darkBlue` : 'text-darkBlue-5'} ${className ? className : null}`}
                         onClick={_.debounce(() => {
                             setType(tab.value), 200
                         })}>
@@ -108,3 +108,9 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false }) => {
         </>
     )
 }
+
+export const RefButton = ({ title, onClick }) => (
+    <div className='w-full h-11 rounded-md flex justify-center items-center bg-teal text-sm font-semibold text-white leading-6' onClick={onClick}>
+        {title}
+    </div>
+)

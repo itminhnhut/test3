@@ -1,11 +1,201 @@
-import React from 'react'
+import classNames from 'classnames'
+import { useTranslation } from 'next-i18next'
+import React, { useMemo, useState } from 'react'
 import styledComponents from 'styled-components'
 import { Line } from '..'
+import PopupModal, { copy, CopyIcon } from '../PopupModal'
 import RefCard from '../RefCard'
 
+const languages = {
+    isDefault: {
+        'true': {
+            en: 'Default',
+            vi: 'Mặc định'
+        },
+        'false': {
+            en: 'Set default',
+            vi: 'Đặt làm mặc định'
+        }
+    },
+}
+
 const Info = () => {
+    const [showRef, setShowRef] = useState(false)
+    const { t, i18n: { language } } = useTranslation()
+
+    const fakeData = [{
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: true
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    }, {
+        ref: 'P5V10NRN',
+        you: 10,
+        they: 5,
+        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
+        totalFriends: 21,
+        note: 'TraderSG',
+        isDefault: false
+    },]
+
+    const renderFilterModal = useMemo(() => {
+        return (
+            <PopupModal
+                isVisible={showRef}
+                onBackdropCb={() => setShowRef(false)}
+                title='Quản lý Referral'
+                useFullScreen
+            >
+                <div>
+                    <div className='max-h-[calc(100vh-206px)] overflow-auto no-scrollbar'>
+                        {fakeData.map((data, index) => (
+                            <>
+                                <div className='flex w-full justify-between font-semibold text-sm leading-6 items-center'>
+                                    <div className='flex gap-2 items-center'>
+                                        {data.ref}
+                                        <CopyIcon
+                                            onClick={() => {
+                                                copy(data.ref)
+                                            }}
+                                            size={16}
+                                            className="cursor-pointer"
+                                        />
+                                    </div>
+                                    <div>
+                                        <div className={classNames('px-2 py-1 rounded-md font-semibold text-sm leading-6', data.isDefault ? 'text-teal bg-teal/[.05]' : 'text-gray-1 bg-gray-1/[.05]')}>
+                                            {languages?.isDefault[data.isDefault][language]}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='mt-3 font-medium leading-5 flex flex-col gap-2'>
+                                    <div className='w-full flex justify-between items-center'>
+                                        <div className='text-gray-1 text-xs '>
+                                            Bạn nhận / Bạn bè nhận
+                                        </div>
+                                        <div className='text-teal text-sm'>
+                                            {data.you}% / {data.they}%
+                                        </div>
+                                    </div>
+                                    <div className='w-full flex justify-between items-center'>
+                                        <div className='text-gray-1 text-xs'>
+                                            Ref Link
+                                        </div>
+                                        <div className='text-darkBlue text-sm flex gap-2 justify-end items-center w-fit'>
+                                            <div className='max-w-[140px] truncate'>
+                                                {data.refLink}
+                                            </div>
+                                            <CopyIcon
+                                                onClick={() => {
+                                                    copy(data.refLink)
+                                                }}
+                                                size={12}
+                                                className="cursor-pointer"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className='w-full flex justify-between items-center'>
+                                        <div className='text-gray-1 text-xs '>
+                                            Bạn bè
+                                        </div>
+                                        <div className='text-darkBlue text-sm '>
+                                            {data.totalFriends}
+                                        </div>
+                                    </div>
+                                    <div className='w-full flex justify-between items-center'>
+                                        <div className='text-gray-1 text-xs '>
+                                            Ghi chú
+                                        </div>
+                                        <div className='text-darkBlue text-sm'>
+                                            {data.note}
+                                        </div>
+                                    </div>
+                                </div>
+                                {fakeData.length === index + 1 ? null : <Line className='my-4' />}
+                            </>
+                        ))}
+                    </div>
+                    <div className='h-[116px] w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0' style={{
+                        boxShadow: '0 -7px 23px 0 rgba(0, 0, 0, 0.05)'
+                    }}>
+                        <div className='h-11 bg-teal rounded-md w-full flex items-center justify-center text-white font-semibold text-sm'>
+                            Thêm Referral mới
+                        </div>
+                    </div>
+                </div>
+            </PopupModal>
+        )
+    }, [showRef])
+
     return (
         <div className='w-full px-4'>
+            {renderFilterModal}
             <RefCard>
                 <div className='flex h-12 gap-4'>
                     <div className='bg-red h-full w-12 rounded-full'>
@@ -78,15 +268,16 @@ const Info = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='mt-6 text-center leading-6 font-medium text-sm text-teal underline cursor-pointer'>
-                            Quản lý Referral
+                    <div className='mt-6 text-center leading-6 font-medium text-sm text-teal underline cursor-pointer'
+                        onClick={() => setShowRef(true)}
+                    >
+                        Quản lý Referral
                     </div>
                 </div>
             </RefCard>
         </div>
     )
 }
-
 
 const Progressbar = styledComponents.div.attrs(({ height = 10 }) => ({
     className: `rounded-lg transition-all`,

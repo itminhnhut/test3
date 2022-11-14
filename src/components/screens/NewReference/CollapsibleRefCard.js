@@ -5,11 +5,11 @@ const CollapsibleRefCard = ({ wrapperClassName = '', children, title, hide = fal
     const [isCollapsed, setIsCollapsed] = useState(hide)
     return (
         <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName)}>
-            <div className='text-base font-semibold leading-5 flex w-full justify-between items-center'>
-                <div>
-                    {title}
-                </div>
-                <div className='cursor-pointer' onClick={() => setIsCollapsed(!isCollapsed)} >
+            <div className='text-base font-semibold leading-5 flex w-full justify-between items-center'
+                onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+                <div>{title}</div>
+                <div className='cursor-pointer' >
                     {isCollapsed ? <DownArrow /> : <UpArrow />}
                 </div>
             </div>
@@ -40,7 +40,7 @@ export const FilterIcon = () => <svg width="16" height="16" viewBox="0 0 16 16" 
     </defs>
 </svg>
 
-export const FilterContainer = ({ children }) => <div className='text-gray-1 text-xs leading-5 font-medium flex gap-2 items-center bg-[#f5f6f7] py-1 px-2 rounded-md'>
+export const FilterContainer = ({ children, onClick }) => <div onClick={onClick} className='text-gray-1 text-xs leading-5 font-medium flex gap-2 items-center bg-[#f5f6f7] py-1 px-2 rounded-md'>
     {children}
 </div>
 

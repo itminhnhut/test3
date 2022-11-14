@@ -3,7 +3,8 @@ import CollapsibleRefCard, { FilterContainer, FilterIcon } from '../CollapsibleR
 import AssetLogo from 'components/wallet/AssetLogo';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
-import { Line } from '..';
+import { FilterTabs, Line, RefButton } from '..';
+import PopupModal, { CalendarIcon } from '../PopupModal';
 
 const commissionTypes = {
     0: 'Spot',
@@ -27,6 +28,26 @@ const title = {
     vi: 'Lịch sử hoàn phí hoa hồng',
     en: 'Commission history'
 }
+const levelTabs = [
+    { title: 'Tất cả', value: 1 },
+    { title: '01', value: 2 },
+    { title: '02', value: 3 },
+    { title: '03', value: 4 },
+    { title: '04', value: 5 },
+    { title: '05', value: 6 },
+]
+const typeTabs = [
+    { title: 'Tất cả', value: 1 },
+    { title: 'Spot', value: 2 },
+    { title: 'Futures', value: 3 },
+]
+const assetTabs = [
+    { title: 'Tất cả', value: 1 },
+    { title: 'VNDC', value: 2 },
+    { title: 'USDT', value: 3 },
+    { title: 'NAO', value: 4 },
+    { title: 'NAMI', value: 5 },
+]
 
 const CommissionHistory = () => {
     const { t, i18n: { language } } = useTranslation()
@@ -141,12 +162,68 @@ const CommissionHistory = () => {
         )
     }
 
+    const [showFilter, setShowFilter] = useState(false)
+    const [levelTab, setLevelTab] = useState(levelTabs[0].value)
+    const [typeTab, setTypeTab] = useState(typeTabs[0].value)
+    const [assetTab, setAssetTab] = useState(assetTabs[0].value)
+
+    const renderFilterModal = useMemo(() => {
+        return (
+            <PopupModal
+                isVisible={showFilter}
+                onBackdropCb={() => setShowFilter(false)}
+                title='Lọc kết quả'
+            >
+                <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1'>
+                        <div>
+                            Ngày giới thiệu
+                        </div>
+                        <div>
+                            <div className='p-3 flex gap-2 items-center bg-gray-4 rounded-[4px]'>
+                                <CalendarIcon />
+                                <div className='text-darkBlue'>22/03/2022</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='flex flex-col gap-3 font-medium text-sm leading-6 text-gray-1'>
+                        <div>
+                            Cấp
+                        </div>
+                        <div className='flex'>
+                            <FilterTabs className='!px-4 !py-3 !font-medium !text-sm' tabs={levelTabs} type={levelTab} setType={setLevelTab} />
+                        </div>
+                    </div>
+                    <div className='flex flex-col gap-3 font-medium text-sm leading-6 text-gray-1'>
+                        <div>
+                            Sản phẩm
+                        </div>
+                        <div className='flex'>
+                            <FilterTabs className='!px-4 !py-3 !font-medium !text-sm' tabs={typeTabs} type={typeTab} setType={setTypeTab} />
+                        </div>
+                    </div>
+                    <div className='flex flex-col gap-3 font-medium text-sm leading-6 text-gray-1 mb-4'>
+                        <div>
+                            Tài sản
+                        </div>
+                        <div className='flex'>
+                            <FilterTabs className='!px-4 !py-3 !font-medium !text-sm' tabs={assetTabs} type={assetTab} setType={setAssetTab} />
+                        </div>
+                    </div>
+                    <RefButton title={t('common:confirm')} />
+                </div>
+            </PopupModal>
+        )
+    }, [showFilter, assetTab, typeTab, levelTab])
+
+
     return (
         <div className='px-4'>
+            {renderFilterModal}
             <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>
                     <div className='flex flex-wrap gap-2'>
-                        <FilterContainer>
+                        <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> Lọc kêt quả
                         </FilterContainer>
                         <FilterContainer>

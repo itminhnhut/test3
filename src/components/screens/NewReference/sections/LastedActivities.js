@@ -15,14 +15,12 @@ const tags = [{
     vi: 'Người dùng mới nhất',
     en: 'Lasted user'
 },]
-
 const tier = {
     0: {
         en: 'Diamond',
         vi: 'Kim cương'
     }
 }
-
 const languages = {
     newUser: {
         en: 'New user',
@@ -41,7 +39,6 @@ const languages = {
         vi: 'Cấp'
     }
 }
-
 const title ={
     en: 'Lasted actitivies',
     vi: 'Hoạt động mới nhất'
