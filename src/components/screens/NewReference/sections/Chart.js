@@ -23,6 +23,10 @@ const timeTabs = [
     { title: '1 Tháng', value: 3 },
     { title: 'Tuỳ Chỉnh', value: 4 },
 ]
+const title = {
+    en: 'Chart',
+    vi: 'Biểu đồ biến động'
+}
 
 const Chart = () => {
     const { t, i18n: { language } } = useTranslation()
@@ -91,7 +95,7 @@ const Chart = () => {
 
     return (
         <div className='px-4'>
-            <CollapsibleRefCard title='Biểu đồ biến động' >
+            <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm flex justify-start gap-7' >
                         {tags.map(e =>
@@ -108,8 +112,8 @@ const Chart = () => {
                             {renderChart()}
                         </div>
                         <div className='px-2 mt-4' style={{
-                             display: 'grid',
-                             gridTemplateColumns: 'repeat(3, 200px)'
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(3, 200px)'
                         }}>
                             {colors.map((color, index) => (
                                 <div className='flex items-center gap-2 leading-5 text-xs font-medium text-gray-1'>

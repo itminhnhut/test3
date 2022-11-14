@@ -23,6 +23,10 @@ const languages = {
         en: 'Commission type'
     }
 }
+const title = {
+    vi: 'Lịch sử hoàn phí hoa hồng',
+    en: 'Commission history'
+}
 
 const CommissionHistory = () => {
     const { t, i18n: { language } } = useTranslation()
@@ -139,7 +143,7 @@ const CommissionHistory = () => {
 
     return (
         <div className='px-4'>
-            <CollapsibleRefCard title='Lịch sử hoàn phí hoa hồng' >
+            <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>
                     <div className='flex flex-wrap gap-2'>
                         <FilterContainer>

@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 import React, { useState } from 'react'
 
-const CollapsibleRefCard = ({ wrapperClassName = '', children, title }) => {
-    const [isCollapsed, setIsCollapsed] = useState(false)
+const CollapsibleRefCard = ({ wrapperClassName = '', children, title, hide = false }) => {
+    const [isCollapsed, setIsCollapsed] = useState(hide)
     return (
         <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName)}>
             <div className='text-base font-semibold leading-5 flex w-full justify-between items-center'>

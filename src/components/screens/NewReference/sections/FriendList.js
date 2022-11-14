@@ -23,6 +23,11 @@ const languages = {
     }
 }
 
+const title = {
+    en: 'Friend list',
+    vi: 'Danh sách bạn bè'
+}
+
 const FriendList = () => {
     const { t, i18n: { language } } = useTranslation()
 
@@ -79,7 +84,7 @@ const FriendList = () => {
     },]
 
     const renderData = () => {
-        return fakeData.map(data => (
+        return fakeData.map((data, index) => (
             <div>
                 <div className='flex justify-between'>
                     <div className='flex flex-col justify-center items-start'>
@@ -132,14 +137,14 @@ const FriendList = () => {
                         </div>
                     </div>
                 </div>
-                <Line className='my-4' />
+                {fakeData.length === index + 1 ? null : <Line className='my-4' />}
             </div>
         ))
     }
 
     return (
         <div className='px-4'>
-            <CollapsibleRefCard title='Danh sách bạn bè' >
+            <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>
                     <div className='flex flex-wrap gap-2'>
                         <FilterContainer>

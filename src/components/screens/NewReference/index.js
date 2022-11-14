@@ -8,6 +8,8 @@ import LastedActivities from './sections/LastedActivities'
 import Chart from './sections/Chart'
 import FriendList from './sections/FriendList'
 import CommissionHistory from './sections/CommissionHistory'
+import QnA from './sections/QnA'
+import Term from './sections/Term'
 
 const tabs = {
     Overview: 'Overview',
@@ -71,6 +73,8 @@ function NewReference() {
                 <Chart />
                 <FriendList />
                 <CommissionHistory />
+                <QnA />
+                <Term />
             </div>
         </div>
     )
