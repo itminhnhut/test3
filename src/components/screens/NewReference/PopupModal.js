@@ -22,7 +22,8 @@ const PopupModal = ({
     modalClassName = '',
     center = false,
     isAlertModal,
-    useFullScreen = false
+    useFullScreen = false,
+    zIndex = 100
 }) => {
 
     const wrapperRef = useRef(null);
@@ -67,15 +68,17 @@ const PopupModal = ({
                         }),
                     }}
                     className={classNames(
-                        'absolute z-[9999999] top-0 left-0 w-full h-full transition-opacity duration-200',
+                        'absolute top-0 left-0 w-full h-full transition-opacity duration-200',
                         { 'visible opacity-100': isVisible },
                         { 'invisible opacity-0': !isVisible },
+                        `z-[${zIndex}]`
                     )}
                 />
                 <div style={{ ...containerStyle }}
                     className={classNames(
-                        `fixed min-w-[280px] min-h-[100px] z-[99999999] rounded-lg dark:drop-shadow-dark bg-[transparent] left-0 top-0 w-full h-full p-0`,
+                        `fixed min-w-[280px] min-h-[100px] rounded-lg dark:drop-shadow-dark bg-[transparent] left-0 top-0 w-full h-full p-0`,
                         containerClassName,
+                        `z-[${zIndex + 100}]`
                     )}
                 >
                     <div className={`justify-end h-full flex flex-col relative`}>
