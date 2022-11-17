@@ -283,3 +283,9 @@ export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + "portfolio/futures/overvie
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + "portfolio/futures/account";
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + "portfolio/futures/summary";
 
+
+//referal
+
+export const API_GET_LIST_FRIENDS = API_V3_PREFIX + "users/referral/friends";
+export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + "users/referral/commission-history";
+
