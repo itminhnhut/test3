@@ -44,8 +44,8 @@ const languages = {
     [tabs.CommissionHistory]: {
         en: 'Commission History',
         vi: 'Lịch sử hoàn phí hoa hồng'
-    },
-}
+    }
+};
 
 function NewReference() {
     const { t, i18n: { language } } = useTranslation()
@@ -79,8 +79,8 @@ function NewReference() {
     }, [doScroll])
 
     return (
-        <div className='bg-[#f5f6f7] pb-[68px]'>
-            <div className='bg-white'>
+        <div className="bg-[#f5f6f7] pb-[68px]">
+            <div className="bg-white">
                 <Tabs tab={tab}>
                     <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
                         {languages[tabs.Overview][language]}
@@ -110,40 +110,52 @@ function NewReference() {
                 <Term />
             </div>
         </div>
-    )
+    );
 }
 
 export const Line = styled.div.attrs(({ className }) => ({
-    className,
+    className
 }))`
     width: 100%;
     height: 1px;
     flex-grow: 0;
     transform: rotate(-360deg);
     background-color: rgba(160, 174, 192, 0.15);
-`
-export default NewReference
+`;
+export default NewReference;
 
-export const FilterTabs = ({ tabs, type, setType, reversed = false, className }) => {
-    const bgColor = reversed ? 'bg-white' : 'bg-gray-4'
+export const FilterTabs = ({ tabs, type, setType, reversed = false, className = '' }) => {
+    const bgColor = reversed ? 'bg-white' : 'bg-gray-4';
     return (
         <>
             {tabs.map((tab, index) => {
                 return (
-                    <div className={`flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${type === index + 1 ? `${bgColor} rounded-md text-darkBlue` : 'text-darkBlue-5'} ${className ? className : null}`}
+                    <div
+                        key={index}
+                        className={classNames(
+                            `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${
+                                type === tab.value
+                                    ? `bg-gray-4 rounded-md text-darkBlue`
+                                    : 'text-darkBlue-5'
+                            } ${className}`
+                        )}
                         onClick={_.debounce(() => {
-                            setType(tab.value), 200
-                        })}>
+                            setType(tab.value), 200;
+                        })}
+                    >
                         {tab.title}
                     </div>
-                )
+                );
             })}
         </>
-    )
-}
+    );
+};
 
 export const RefButton = ({ title, onClick }) => (
-    <div className='w-full h-11 rounded-md flex justify-center items-center bg-teal text-sm font-semibold text-white leading-6' onClick={onClick}>
+    <div
+        className="w-full h-11 rounded-md flex justify-center items-center bg-teal text-sm font-semibold text-white leading-6"
+        onClick={onClick}
+    >
         {title}
     </div>
 )

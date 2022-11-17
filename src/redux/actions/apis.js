@@ -292,3 +292,7 @@ export const API_NEW_REFERRAL_SET_DEFAULT = API_V3_PREFIX + "users/referral/:cod
 export const API_NEW_REFERRAL_EDIT_NOTE = API_V3_PREFIX + "users/referral/:code/change-note"; // .replace(':code', realCode)
 
 
+//referal
+export const API_GET_LIST_FRIENDS = API_V3_PREFIX + "users/referral/friends";
+export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + "users/referral/commission-history";
+

@@ -325,5 +325,8 @@
     "several_days": "Nhiều ngày",
     "filter": "Lọc",
     "custom": "Tùy chỉnh",
-    "custom_date": "Tùy chỉnh"
+    "custom_date": "Tùy chỉnh",
+    "users": "{{value}} người",
+    "level": "Cấp {{level}}",
+    "show_more": "Xem thêm danh sách"
 }

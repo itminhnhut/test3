@@ -329,5 +329,8 @@
     "several_days": "Several Days",
     "filter": "Filter",
     "custom": "Custom",
-    "custom_date": "Custom Date"
+    "custom_date": "Custom Date",
+    "users": "{{value}} users",
+    "level": "Level {{level}}",
+    "show_more": "Show More"
 }
