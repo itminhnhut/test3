@@ -15,16 +15,15 @@ const PopupModal = ({
     title,
     children = null,
     containerClassName = '',
-    useCross = false,
     onBackdropCb,
-    onClose,
-    containerStyle,
     contentClassname = '',
     modalClassName = '',
     center = false,
     isAlertModal,
     useFullScreen = false,
-    useAboveAll = false
+    useAboveAll = false,
+    useCenter = false,
+    background
 }) => {
 
     const wrapperRef = useRef(null);
@@ -81,10 +80,14 @@ const PopupModal = ({
                     { '!z-[1001]': useAboveAll }
                 )}
                 >
-                    <div className={`justify-end h-full flex flex-col relative`}>
-                        <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>
-                        <div ref={wrapperRef} className={classNames(`${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[100%] overflow-y-auto`, { 'h-full !rounded-none': useFullScreen })} >
-                            {useFullScreen ? null : <div style={{ transform: 'translate(-50%,0)' }}
+                    <div className={classNames(`justify-end h-full flex flex-col relative`, { '!justify-center !items-center !mx-[25px]': useCenter })}
+
+                    >
+                        {!useCenter && <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>}
+                        <div ref={wrapperRef} className={classNames(`${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[100%] overflow-y-auto`, { 'h-full !rounded-none': useFullScreen }, { '!rounded-xl !px-6': useCenter })}
+                            style={{ backgroundImage: background ?? null, backgroundSize: background ? "cover" : null }}
+                        >
+                            {useFullScreen || useCenter ? null : <div style={{ transform: 'translate(-50%,0)' }}
                                 className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-gray-1  absolute top-2 left-1/2 ">
                             </div>}
                             <div className='w-full flex justify-between items-center'>
@@ -96,11 +99,11 @@ const PopupModal = ({
                                         className='w-24 h-24 flex-center hover:bg-gray-3 dark:hover:bg-darkBlue-4 rounded-md cursor-pointer'
                                         onClick={() => onBackdropCb && onBackdropCb()}
                                     >
-                                        <X color='#718096' />
+                                        <X color={useCenter ? '#fff' : '#718096'} />
                                     </div>
                                 </div>
                             </div>
-                            {useFullScreen ? <div className='h-6'></div> : <Line className='mt-3 mb-6' />}
+                            {useFullScreen || useCenter ? <div className='h-6'></div> : <Line className='mt-3 mb-6' />}
                             {children}
                         </div>
                     </div>

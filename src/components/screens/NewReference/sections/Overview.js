@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { renderRefInfo } from '../PopupModal'
 import RefCard from '../RefCard'
+import InviteModal from './InviteModal'
 
 const Overview = ({ data, id }) => {
+    const [showInvite, setShowInvite] = useState(false)
     const renderSocials = () => {
         const icons = [{
             svg: <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,6 +78,7 @@ const Overview = ({ data, id }) => {
     }
     return (
         <div className="px-4 py-[60px]" style={{backgroundImage: "url('/images/reference/background.png')"}} id={id}>
+            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode}/>
             <div className='font-semibold text-3xl text-gray-4'>
                 Mời Bạn Bè Mới <br />
                 Thêm Thu Nhập Thụ Động
@@ -108,7 +111,9 @@ const Overview = ({ data, id }) => {
                         </div>
                     </div>
                 </RefCard>
-                <div className='w-full mt-8 h-11 bg-teal flex items-center justify-center text-sm font-medium text-gray-4 rounded-md'>
+                <div className='w-full mt-8 h-11 bg-teal flex items-center justify-center text-sm font-medium text-gray-4 rounded-md'
+                    onClick={() => setShowInvite(true)}
+                >
                     Moi ngay
                 </div>
             </div>

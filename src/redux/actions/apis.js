@@ -285,6 +285,7 @@ export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + "portfolio/futures/summary"
 
 // new referral
 export const API_NEW_REFERRAL = API_V3_PREFIX + "users/referral";
+export const API_NEW_REFERRAL_ADD_REF = API_V3_PREFIX + "users/referral"
 export const API_NEW_REFERRAL_OVERVIEW = API_V3_PREFIX + "users/referral/profile";
 export const API_NEW_REFERRAL_NEW_COMMISSIONS = API_V3_PREFIX + "users/referral/new-commission-history";
 export const API_NEW_REFERRAL_NEW_FRIENDS = API_V3_PREFIX + "users/referral/new-friends";
