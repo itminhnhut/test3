@@ -77,7 +77,7 @@ const Overview = ({ data, id }) => {
         )
     }
     return (
-        <div className="px-4 py-[60px]" style={{backgroundImage: "url('/images/reference/background.png')"}} id={id}>
+        <div className="px-4 py-[60px]" style={{backgroundImage: "url('/images/reference/background.png')", backgroundSize: 'cover'}} id={id}>
             <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode}/>
             <div className='font-semibold text-3xl text-gray-4'>
                 Mời Bạn Bè Mới <br />
