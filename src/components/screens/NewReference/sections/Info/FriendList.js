@@ -1,8 +1,7 @@
 import React from 'react'
 import PopupModal from '../../PopupModal'
 import { formatTime } from 'redux/actions/utils';
-import SvgEmpty from '../../../../svg/SvgEmpty';
-import { data } from 'autoprefixer';
+import { NoData } from '../..';
 
 const FriendList = ({ isShow, onClose }) => {
     const fakeData = [{
@@ -51,8 +50,7 @@ const FriendList = ({ isShow, onClose }) => {
                 <div className='mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer'>
                     Xem thêm danh sách
                 </div>
-            </div> : <div className='w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><SvgEmpty />Không có bạn bè</div>}
-
+            </div> : <div className='w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text='Không có bạn bè' /></div>}
         </PopupModal>
     )
 }

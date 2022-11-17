@@ -49,7 +49,7 @@ const assetTabs = [
     { title: 'NAMI', value: 5 },
 ]
 
-const CommissionHistory = () => {
+const CommissionHistory = ({ id }) => {
     const { t, i18n: { language } } = useTranslation()
     const [showMore, setShowMore] = useState(5)
 
@@ -218,7 +218,7 @@ const CommissionHistory = () => {
 
 
     return (
-        <div className='px-4'>
+        <div className='px-4' id={id}>
             {renderFilterModal}
             <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>

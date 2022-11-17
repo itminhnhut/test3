@@ -28,7 +28,7 @@ const title = {
     vi: 'Biểu đồ biến động'
 }
 
-const Chart = () => {
+const Chart = ({ id }) => {
     const { t, i18n: { language } } = useTranslation()
     const [tab, setTab] = useState(tags[0].value)
     const [timeTab, setTimeTab] = useState(timeTabs[0].value)
@@ -94,7 +94,7 @@ const Chart = () => {
     }
 
     return (
-        <div className='px-4'>
+        <div className='px-4' id={id} >
             <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm flex justify-start gap-7' >

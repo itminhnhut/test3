@@ -1,110 +1,63 @@
 import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
-import React, { useState } from 'react'
-import { Line } from '../..'
+import React, { useEffect, useState } from 'react'
+import { Line, NoData } from '../..'
 import PopupModal, { copy, CopyIcon } from '../../PopupModal'
 import FriendList from './FriendList'
 import AddNewRef from './AddNewRef'
 import EditNote from './EditNote'
+import { API_NEW_REFERRAL, API_NEW_REFERRAL_SET_DEFAULT } from 'redux/actions/apis';
+import FetchApi from 'utils/fetch-api';
+import { commisionConfig } from 'config/referral'
 
 const languages = {
     isDefault: {
-        'true': {
+        1: {
             en: 'Default',
             vi: 'Mặc định'
         },
-        'false': {
+        0: {
             en: 'Set default',
             vi: 'Đặt làm mặc định'
         }
     },
 }
-const RefDetail = ({ isShow = false, onClose }) => {
+const RefDetail = ({ isShow = false, onClose, rank }) => {
     const { t, i18n: { language } } = useTranslation()
+    const [refs, setRefs] = useState([])
     const [showAddRef, setShowAddRef] = useState(false)
     const [showFriendList, setShowFriendList] = useState(false)
     const [showEditNote, setShowEditNote] = useState(false)
-    const fakeData = [{
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: true
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    }, {
-        ref: 'P5V10NRN',
-        you: 10,
-        they: 5,
-        refLink: 'https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670',
-        totalFriends: 21,
-        note: 'TraderSG',
-        isDefault: false
-    },]
+    const [doRefresh, setDoRefresh] = useState(false)
+    const [code, setCode] = useState('')
+
+    useEffect(() => {
+        FetchApi({
+            url: API_NEW_REFERRAL,
+            options: {
+                method: 'GET',
+            },
+        }).then(({ data, status }) => {
+            if (status === 'ok') {
+                setRefs(data)
+            } else {
+                setRefs([])
+            }
+        });
+    }, [doRefresh])
+
+    const handleSetDefault = _.throttle(async (code) => {
+        const { status } = await FetchApi({
+            url: API_NEW_REFERRAL_SET_DEFAULT.replace(':code', code),
+            options: {
+                method: 'PATCH',
+            },
+        })
+        if (status === 'ok') {
+            setDoRefresh(!doRefresh)
+        } else {
+        }
+    }, 1000)
 
     return (
         <PopupModal
@@ -114,26 +67,24 @@ const RefDetail = ({ isShow = false, onClose }) => {
             useFullScreen
         >
             <div>
-                <AddNewRef isShow={showAddRef} onClose={() => setShowAddRef(false)} />
+                <AddNewRef isShow={showAddRef} onClose={() => setShowAddRef(false)} doRefresh={() => setDoRefresh(!doRefresh)} />
                 <FriendList isShow={showFriendList} onClose={() => setShowFriendList(false)} />
-                <EditNote isShow={showEditNote} onClose={() => setShowEditNote(false)} />
+                <EditNote isShow={showEditNote} onClose={() => setShowEditNote(false)} code={code} doRefresh={() => setDoRefresh(!doRefresh)} />
                 <div className='!max-h-[calc(100vh-206px)] !overflow-auto no-scrollbar'>
-                    {fakeData.map((data, index) => (
+                    {!refs.length ? <NoData text='No data' className='mt-4' /> : refs.map((data, index) => (
                         <>
                             <div className='flex w-full justify-between font-semibold text-sm leading-6 items-center'>
                                 <div className='flex gap-2 items-center'>
-                                    {data.ref}
+                                    {data.code}
                                     <CopyIcon
-                                        onClick={() => {
-                                            copy(data.ref)
-                                        }}
+                                        data={data.code}
                                         size={16}
                                         className="cursor-pointer"
                                     />
                                 </div>
-                                <div onClick={() => {}}>
-                                    <div className={classNames('px-2 py-1 rounded-md font-semibold text-sm leading-6', data.isDefault ? 'text-teal bg-teal/[.05]' : 'text-gray-1 bg-gray-1/[.05]')}>
-                                        {languages?.isDefault[data.isDefault][language]}
+                                <div onClick={() => handleSetDefault(data.code)}>
+                                    <div className={classNames('px-2 py-1 rounded-md font-semibold text-sm leading-6', data.status ? 'text-teal bg-teal/[.05]' : 'text-gray-1 bg-gray-1/[.05]')}>
+                                        {languages?.isDefault[data.status][language]}
                                     </div>
                                 </div>
                             </div>
@@ -143,7 +94,7 @@ const RefDetail = ({ isShow = false, onClose }) => {
                                         Bạn nhận / Bạn bè nhận
                                     </div>
                                     <div className='text-teal text-sm'>
-                                        {data.you}% / {data.they}%
+                                        {data.remunerationRate}% / {commisionConfig[rank]?.direct?.futures - data.remunerationRate}%
                                     </div>
                                 </div>
                                 <div className='w-full flex justify-between items-center'>
@@ -152,12 +103,10 @@ const RefDetail = ({ isShow = false, onClose }) => {
                                     </div>
                                     <div className='text-darkBlue text-sm flex gap-2 justify-end items-center w-fit'>
                                         <div className='max-w-[140px] truncate'>
-                                            {data.refLink}
+                                            {data.code}
                                         </div>
                                         <CopyIcon
-                                            onClick={() => {
-                                                copy(data.refLink)
-                                            }}
+                                            data={`https://nami.exchange/ref/${data.code}`}
                                             size={12}
                                             className="cursor-pointer"
                                         />
@@ -170,7 +119,7 @@ const RefDetail = ({ isShow = false, onClose }) => {
                                     <div className='text-darkBlue text-sm flex items-center gap-1'
                                         onClick={() => setShowFriendList(true)}
                                     >
-                                        {data.totalFriends} <FriendListIcon />
+                                        {data.invitedCount ?? 0} <FriendListIcon />
                                     </div>
                                 </div>
                                 <div className='w-full flex justify-between items-center'>
@@ -178,13 +127,16 @@ const RefDetail = ({ isShow = false, onClose }) => {
                                         Ghi chú
                                     </div>
                                     <div className='text-darkBlue text-sm flex items-center gap-1'
-                                        onClick={() => setShowEditNote(true)}
+                                        onClick={() => {
+                                            setCode(data.code)
+                                            setShowEditNote(true)
+                                        }}
                                     >
                                         {data.note} <NoteIcon />
                                     </div>
                                 </div>
                             </div>
-                            {fakeData.length === index + 1 ? null : <Line className='my-4' />}
+                            {refs.length === index + 1 ? null : <Line className='my-4' />}
                         </>
                     ))}
                 </div>

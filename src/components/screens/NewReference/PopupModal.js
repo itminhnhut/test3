@@ -8,6 +8,7 @@ import colors from '../../../styles/colors';
 import { useOutside } from "components/screens/Nao/NaoStyle";
 import { Line } from '.';
 import React from 'react';
+import { useState } from 'react';
 
 const PopupModal = ({
     isVisible,
@@ -114,16 +115,6 @@ const PopupModal = ({
 export const CalendarIcon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12.667 2.667H3.333C2.597 2.667 2 3.263 2 4v9.333c0 .737.597 1.333 1.333 1.333h9.334c.736 0 1.333-.596 1.333-1.333V4c0-.737-.597-1.333-1.333-1.333zM10.667 1.333V4M5.333 1.333V4M2 6.667h12" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
 </svg>
-
-export const CopyIcon = ({ size = 12, color = '#B2B7BC', className = '', onClick }) => {
-    return (
-        <svg onClick={onClick} className={className} width={size} height={size} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.222 5.444h-8c-.982 0-1.778.796-1.778 1.778v8c0 .982.796 1.778 1.778 1.778h8c.982 0 1.778-.796 1.778-1.778v-8c0-.982-.796-1.778-1.778-1.778z" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M3.667 12.556h-.89A1.778 1.778 0 0 1 1 10.778v-8A1.778 1.778 0 0 1 2.778 1h8a1.778 1.778 0 0 1 1.778 1.778v.889" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-    )
-}
-
 export const copy = (text, cb) => {
     if (navigator.clipboard && navigator.permissions) {
         navigator.clipboard.writeText(text).then(cb)
@@ -137,6 +128,25 @@ export const copy = (text, cb) => {
         cb?.()
     }
 }
+export const CopyIcon = ({ size = 12, color = '#B2B7BC', className = '', data }) => {
+    const [isClicked, setIsClicked] = useState(false)
+    const onClick = () => {
+        copy(data)
+        setIsClicked(true)
+        setTimeout(async () => {
+            setIsClicked(false)
+        }, 600);
+    }
+    return isClicked ? <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.0598 2.85758C14.2766 3.02869 14.3136 3.3431 14.1424 3.55984L6.64244 13.0598C6.55397 13.1719 6.4218 13.2408 6.27926 13.2492C6.13672 13.2575 5.99741 13.2045 5.89645 13.1036L1.89645 9.10357C1.70118 8.90831 1.70118 8.59173 1.89645 8.39647C2.09171 8.2012 2.40829 8.2012 2.60355 8.39647L6.20597 11.9989L13.3576 2.9402C13.5287 2.72346 13.8431 2.68647 14.0598 2.85758Z" fill="#00C8BC" />
+    </svg>
+        : (
+            <svg onClick={() => onClick()} className={className} width={size} height={size} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.222 5.444h-8c-.982 0-1.778.796-1.778 1.778v8c0 .982.796 1.778 1.778 1.778h8c.982 0 1.778-.796 1.778-1.778v-8c0-.982-.796-1.778-1.778-1.778z" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M3.667 12.556h-.89A1.778 1.778 0 0 1 1 10.778v-8A1.778 1.778 0 0 1 2.778 1h8a1.778 1.778 0 0 1 1.778 1.778v.889" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        )
+}
 
 export const renderRefInfo = (text, className = '', size = 15) => {
     return (
@@ -146,9 +156,7 @@ export const renderRefInfo = (text, className = '', size = 15) => {
             </div>
             <div>
                 <CopyIcon
-                    onClick={() => {
-                        copy(text)
-                    }}
+                    data={text}
                     size={size}
                     className="cursor-pointer"
                 />

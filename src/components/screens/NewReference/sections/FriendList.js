@@ -32,7 +32,7 @@ const typeTabs = [
     { title: 'Chưa KYC', value: 2 },
     { title: 'Đã KYC', value: 3 },
 ]
-const FriendList = () => {
+const FriendList = ({ id }) => {
     const { t, i18n: { language } } = useTranslation()
     const [showFilter, setShowFilter] = useState(false)
     const fakeData = [{
@@ -86,7 +86,7 @@ const FriendList = () => {
         level: 5,
         symbol: 'VNDC'
     }]
-  
+
     const renderData = () => {
         return fakeData.map((data, index) => (
             <div>
@@ -192,7 +192,7 @@ const FriendList = () => {
     }, [showFilter, typeTab])
 
     return (
-        <div className='px-4'>
+        <div className='px-4' id={id}>
             {renderFilterModal}
             <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>

@@ -4,25 +4,37 @@ import styledComponents from 'styled-components'
 import { Line } from '../..'
 import RefCard from '../../RefCard'
 import RefDetail from './RefDetail'
+import { formatNumber } from 'redux/actions/utils';
 
-const Info = () => {
+const rank = {
+    '0': { vi: 'THƯỜNG', en: 'CASUAL' },
+    '1': { vi: 'CHÍNH THỨC', en: 'OFFICAL' },
+    '2': { vi: 'BẠC', en: 'SILVER' },
+    '3': { vi: 'VÀNG', en: 'GOLD' },
+    '4': { vi: 'BẠCH KIM', en: 'PLATINUM' },
+    '5': { vi: 'KIM CƯƠNG', en: 'DIAMOND' },
+}
+
+const formatter = Intl.NumberFormat('en', {
+    notation: 'compact',
+})
+
+const Info = ({ data }) => {
     const [showRef, setShowRef] = useState(false)
     const { t, i18n: { language } } = useTranslation()
-
     return (
         <div className='w-full px-4'>
-            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} />
+            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1}/>
             <RefCard>
                 <div className='flex h-12 gap-4'>
                     <div className='bg-red h-full w-12 rounded-full'>
-
                     </div>
                     <div className='h-full flex flex-col justify-center'>
                         <div className='font-semibold text-base text-darkBlue'>
-                            Nguyen Ngoc Hoan My
+                            {data?.name ?? t('common:unknown')}
                         </div>
                         <div className='font-medium text-xs text-gray-1'>
-                            CAP BAC: <span className='text-teal font-semibold'>VANG</span>
+                            CAP BAC: <span className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '0'][language]}</span>
                         </div>
                     </div>
                 </div>
@@ -33,15 +45,15 @@ const Info = () => {
                             Giao dich Spot
                         </div>
                         <div className='text-darkBlue'>
-                            500, 000 USDT
+                            +{formatNumber(data?.volume?.mine?.spot, 2)} VNDC
                         </div>
                     </div>
                     <div className='flex w-full justify-between font-medium text-sm'>
                         <div className='text-gray-1'>
-                            Giao dich Spot
+                            Giao dich Futures
                         </div>
                         <div className='text-darkBlue'>
-                            500, 000 USDT
+                            +{formatNumber(data?.volume?.mine?.futures, 2)} VNDC VNDC
                         </div>
                     </div>
                 </div>
@@ -67,20 +79,20 @@ const Info = () => {
                     <div className='w-full flex flex-col'>
                         <div className='w-full flex justify-between font-medium text-xs text-darkBlue-1'>
                             <div>
-                                Spot: 500K USDT
+                                Spot: {formatter.format(data?.volume?.current?.spot)} VNDC
                             </div>
                             <div>
-                                Spot: 1M USDT
+                                Spot: {formatter.format(data?.volume?.target?.spot)} VNDC
                             </div>
 
                         </div>
                         <div className='w-full flex justify-between font-medium text-xs text-darkBlue-1'>
 
                             <div>
-                                Futures: 500K USDT
+                                Futures: {formatter.format(data?.volume?.current?.futures)} VNDC
                             </div>
                             <div>
-                                Futures: 1M USDT
+                                Futures: {formatter.format(data?.volume?.target?.futures)} VNDC
                             </div>
                         </div>
                     </div>

@@ -283,3 +283,12 @@ export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + "portfolio/futures/overvie
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + "portfolio/futures/account";
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + "portfolio/futures/summary";
 
+// new referral
+export const API_NEW_REFERRAL = API_V3_PREFIX + "users/referral";
+export const API_NEW_REFERRAL_OVERVIEW = API_V3_PREFIX + "users/referral/profile";
+export const API_NEW_REFERRAL_NEW_COMMISSIONS = API_V3_PREFIX + "users/referral/new-commission-history";
+export const API_NEW_REFERRAL_NEW_FRIENDS = API_V3_PREFIX + "users/referral/new-friends";
+export const API_NEW_REFERRAL_SET_DEFAULT = API_V3_PREFIX + "users/referral/:code/set-default"; // .replace(':code', realCode)
+export const API_NEW_REFERRAL_EDIT_NOTE = API_V3_PREFIX + "users/referral/:code/change-note"; // .replace(':code', realCode)
+
+

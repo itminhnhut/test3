@@ -1,9 +1,8 @@
-import classNames from 'classnames'
 import React from 'react'
 import { renderRefInfo } from '../PopupModal'
 import RefCard from '../RefCard'
 
-const Overview = () => {
+const Overview = ({ data, id }) => {
     const renderSocials = () => {
         const icons = [{
             svg: <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,9 +74,8 @@ const Overview = () => {
             </div>
         )
     }
-
     return (
-        <div className='px-4 py-[60px] bg-[#3f5eaf]'>
+        <div className='px-4 py-[60px] bg-[#3f5eaf]' id={id} >
             <div className='font-semibold text-3xl text-gray-4'>
                 Mời Bạn Bè Mới <br />
                 Thêm Thu Nhập Thụ Động
@@ -96,14 +94,14 @@ const Overview = () => {
                             <div>Ban nhan 10% - Ban be nhan 5%</div>
                         </div>
                         <div className='mt-1'>
-                            {renderRefInfo('ABCCCCC')}
+                            {renderRefInfo(data?.defaultRefCode)}
                         </div>
                         <div className='flex w-full justify-between text-xs font-medium text-darkBlue mt-4'>
                             <div>Ref Link</div>
                             <div>Ban nhan 10% - Ban be nhan 5%</div>
                         </div>
                         <div className='mt-1'>
-                            {renderRefInfo('https://app.zeplin.io/project/636ca9563ace7e844c568eb2/screen/636ca981664e172f3b878670')}
+                            {renderRefInfo('https://nami.exchange/ref/' + data?.defaultRefCode)}
                         </div>
                         <div className='mt-6'>
                             {renderSocials()}

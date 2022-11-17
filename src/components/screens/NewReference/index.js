@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs'
 import Info from './sections/Info'
 import Overview from './sections/Overview'
@@ -10,33 +10,38 @@ import FriendList from './sections/FriendList'
 import CommissionHistory from './sections/CommissionHistory'
 import QnA from './sections/QnA'
 import Term from './sections/Term'
+import { useEffect } from 'react'
+import FetchApi from 'utils/fetch-api';
+import { API_NEW_REFERRAL_OVERVIEW } from 'redux/actions/apis'
+import SvgEmpty from 'components/svg/SvgEmpty'
+import classNames from 'classnames'
 
 const tabs = {
-    Overview: 'Overview',
-    LastedActivities: 'LastedActivities',
-    Chart: 'Chart',
-    FriendList: 'FriendList',
-    CommissionHistory: 'CommissionHistory',
+    Overview: 'overview',
+    LastedActivities: 'lasted_activities',
+    Chart: 'chart',
+    FriendList: 'friend_list',
+    CommissionHistory: 'commission_history',
 }
 
 const languages = {
-    Overview: {
+    [tabs.Overview]: {
         en: 'Overview',
         vi: 'Tổng quan'
     },
-    LastedActivities: {
+    [tabs.LastedActivities]: {
         en: 'Lasted Activities',
         vi: 'Hoạt động mới nhất'
     },
-    Chart: {
+    [tabs.Chart]: {
         en: 'Chart',
         vi: 'Biểu đồ'
     },
-    FriendList: {
+    [tabs.FriendList]: {
         en: 'Friend List',
         vi: 'Danh sách bạn bè'
     },
-    CommissionHistory: {
+    [tabs.CommissionHistory]: {
         en: 'Commission History',
         vi: 'Lịch sử hoàn phí hoa hồng'
     },
@@ -45,34 +50,62 @@ const languages = {
 function NewReference() {
     const { t, i18n: { language } } = useTranslation()
     const [tab, setTab] = useState(tabs.Overview)
+    const [doScroll, setDoScroll] = useState(false)
+    const [overviewData, setOverviewData] = useState()
+    useEffect(() => {
+        FetchApi({
+            url: API_NEW_REFERRAL_OVERVIEW,
+            options: {
+                method: 'GET',
+            },
+        }).then(({ data, status }) => {
+            if (status === 'ok') {
+                setOverviewData(data)
+            } else {
+                setOverviewData(null)
+            }
+        });
+    }, [])
+
+
+    const handleClickTab = (tab) => {
+        setTab(tab)
+        setDoScroll(!doScroll)
+    }
+
+    useEffect(() => {
+        const scrollTo = document.getElementById(tab)
+        scrollTo.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, [doScroll])
+
     return (
         <div className='bg-[#f5f6f7] pb-[68px]'>
             <div className='bg-white'>
                 <Tabs tab={tab}>
-                    <TabItem value={tabs.Overview} onClick={() => setTab(tabs.Overview)}>
+                    <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
                         {languages[tabs.Overview][language]}
                     </TabItem>
-                    <TabItem value={tabs.LastedActivities} onClick={() => setTab(tabs.LastedActivities)}>
+                    <TabItem value={tabs.LastedActivities} onClick={() => handleClickTab(tabs.LastedActivities)}>
                         {languages[tabs.LastedActivities][language]}
                     </TabItem>
-                    <TabItem value={tabs.Chart} onClick={() => setTab(tabs.Chart)}>
+                    <TabItem value={tabs.Chart} onClick={() => handleClickTab(tabs.Chart)}>
                         {languages[tabs.Chart][language]}
                     </TabItem>
-                    <TabItem value={tabs.FriendList} onClick={() => setTab(tabs.FriendList)}>
+                    <TabItem value={tabs.FriendList} onClick={() => handleClickTab(tabs.FriendList)}>
                         {languages[tabs.FriendList][language]}
                     </TabItem>
-                    <TabItem value={tabs.CommissionHistory} onClick={() => setTab(tabs.CommissionHistory)}>
+                    <TabItem value={tabs.CommissionHistory} onClick={() => handleClickTab(tabs.CommissionHistory)}>
                         {languages[tabs.CommissionHistory][language]}
                     </TabItem>
                 </Tabs>
             </div>
             <div className='flex flex-col gap-8'>
-                <Overview />
-                <Info />
-                <LastedActivities />
-                <Chart />
-                <FriendList />
-                <CommissionHistory />
+                <Overview data={overviewData} id={tabs.Overview} />
+                <Info data={overviewData} />
+                <LastedActivities id={tabs.LastedActivities} />
+                <Chart id={tabs.Chart} />
+                <FriendList id={tabs.FriendList} />
+                <CommissionHistory id={tabs.CommissionHistory} />
                 <QnA />
                 <Term />
             </div>
@@ -114,3 +147,5 @@ export const RefButton = ({ title, onClick }) => (
         {title}
     </div>
 )
+
+export const NoData = ({ text, className }) => (<div className={classNames('w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2', className)}><SvgEmpty />{text}</div>)

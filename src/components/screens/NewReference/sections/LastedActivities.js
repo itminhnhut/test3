@@ -1,10 +1,12 @@
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs'
 import { useTranslation } from 'next-i18next'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CollapsibleRefCard from '../CollapsibleRefCard'
 import { formatNumber, formatTime } from 'redux/actions/utils';
-import { Line } from '..';
+import { Line, NoData } from '..';
 import classNames from 'classnames';
+import FetchApi from 'utils/fetch-api';
+import { API_NEW_REFERRAL_NEW_COMMISSIONS, API_NEW_REFERRAL_NEW_FRIENDS } from 'redux/actions/apis';
 
 const tags = [{
     value: 'receivedCommision',
@@ -16,10 +18,26 @@ const tags = [{
     en: 'Lasted user'
 },]
 const tier = {
-    0: {
+    1: {
+        vi: 'Thường',
+        en: 'Casual'
+    },
+    2: {
+        vi: 'Chính thức',
+        en: 'Offical'
+    },
+    3: {
+        en: 'Gold',
+        vi: 'Vàng'
+    },
+    4: {
+        vi: 'Bạch Kim',
+        en: 'Platinum'
+    },
+    5: {
         en: 'Diamond',
-        vi: 'Kim cương'
-    }
+        vi: 'Kim Cương'
+    },
 }
 const languages = {
     newUser: {
@@ -39,96 +57,73 @@ const languages = {
         vi: 'Cấp'
     }
 }
-const title ={
+const title = {
     en: 'Lasted actitivies',
     vi: 'Hoạt động mới nhất'
 }
 
-const LastedActivities = () => {
+const LastedActivities = ({ id }) => {
     const { t, i18n: { language } } = useTranslation()
+    const [lastedCommissions, setLastedCommissions] = useState([])
+    const [lastedFriends, setLastedFriends] = useState([])
     const [tab, setTab] = useState(tags[0].value)
+    useEffect(() => {
+        FetchApi({
+            url: API_NEW_REFERRAL_NEW_COMMISSIONS,
+            options: {
+                method: 'GET',
+            },
+        }).then(({ data, status }) => {
+            if (status === 'ok') {
+                setLastedCommissions(data)
+            } else {
+                setLastedCommissions([])
+            }
+        });
+        FetchApi({
+            url: API_NEW_REFERRAL_NEW_FRIENDS,
+            options: {
+                method: 'GET',
+            },
+        }).then(({ data, status }) => {
+            if (status === 'ok') {
+                setLastedFriends(data)
+            } else {
+                setLastedFriends([])
+            }
+        });
+    }, [])
 
-    const commissionData = [{
-        userId: 'Nami112SHT1118',
-        level: 1,
-        date: Date.now(),
-        type: 'Spot',
-        profit: 84115,
-        symbol: 'VNDC'
-    }, {
-        userId: 'Nami112SHT1118',
-        level: 1,
-        date: Date.now(),
-        type: 'Spot',
-        profit: 84115,
-        symbol: 'VNDC'
-    }, {
-        userId: 'Nami112SHT1118',
-        level: 1,
-        date: Date.now(),
-        type: 'Spot',
-        profit: 84115,
-        symbol: 'VNDC'
-    }, {
-        userId: 'Nami112SHT1118',
-        level: 1,
-        date: Date.now(),
-        type: 'Spot',
-        profit: 84115,
-        symbol: 'VNDC'
-    },]
-
-    const userData = [{
-        userId: 'Nami112SHT1118',
-        ref: {
-            userId: 'Nami112SHT1118',
-            level: 1,
-            tier: 0
-        }
-    }, {
-        userId: 'Nami112SHT1118',
-        ref: {
-            userId: 'Nami112SHT1118',
-            level: 11,
-            tier: 0
-        }
-    }, {
-        userId: 'Nami112SHT1118',
-        ref: {
-            userId: 'Nami112SHT1118',
-            level: 1,
-            tier: 0
-        }
-    },]
+    console.log('lastedFriends', lastedFriends)
 
     const renderData = () => {
         switch (tab) {
             case tags[0].value:
-                return commissionData.map((data, index) =>
+                return !lastedCommissions.length ? <><NoData text="Không có dữ liệu" /></> : lastedCommissions.map((data, index) =>
                     <>
                         <div className='flex flex-col gap-1'>
                             <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
                                 <div>
-                                    {data.userId} (cấp {data.level < 10 ? 0 : null}{data.level})
+                                    {data.formUserCode} (Cấp {data.level < 10 ? 0 : null}{data.level})
                                 </div>
                                 <div className='text-teal'>
-                                    +{formatNumber(data.profit, data.symbol.includes('VNDC') ? 2 : 4)} {data.symbol}
+                                    +{formatNumber(data.value, 2)} VNDC
                                 </div>
                             </div>
                             <div className='flex w-full justify-between items-center text-gray-1 font-medium text-xs leading-[14px]'>
                                 <div>
-                                    {formatTime(data.date, 'yyyy-MM-dd hh:mm:ss')}
+                                    {formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}
                                 </div>
                                 <div>
-                                    Loại hoa hồng: {data.type}
+                                    Loại hoa hồng: {data.kind}
                                 </div>
                             </div>
                         </div>
-                        {commissionData.length === index + 1 ? null : <Line className='my-4' />}
+                        {lastedCommissions.length === index + 1 ? null : <Line className='my-4' />}
                     </>
                 )
             case tags[1].value:
-                return userData.map(data =>
+                return !lastedFriends.length ? <><NoData text="Không có dữ liệu" /></> : lastedFriends.map(data =>
                     <>
                         <div className='flex gap-2 items-center'>
                             <UserIcon />
@@ -148,7 +143,7 @@ const LastedActivities = () => {
     }
 
     return (
-        <div className='px-4'>
+        <div className='px-4' id={id} >
             <CollapsibleRefCard title={title[language]}  >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm flex justify-start gap-7' >
@@ -199,7 +194,7 @@ const RefInfo = ({ data, language, className }) => (
                     {languages.level[language]}
                 </div>
                 <div className='text-darkBlue'>
-                    {data.ref?.level < 10 ? 0 : null}{data.ref?.level}
+                    {data.rank < 10 ? 0 : null}{data.rank}
                 </div>
             </div>
             <Line className='my-1' />
@@ -208,7 +203,7 @@ const RefInfo = ({ data, language, className }) => (
                     {languages.tier[language]}
                 </div>
                 <div className='text-darkBlue'>
-                    {tier[data.ref?.tier][language]}
+                    {tier[data.rank][language]}
                 </div>
             </div>
         </div>
